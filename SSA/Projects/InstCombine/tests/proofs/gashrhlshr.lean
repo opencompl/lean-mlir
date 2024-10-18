@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gashrhlshr_statements
-                                                    
+
 def ashr_known_pos_exact_before := [llvm|
 {
 ^0(%arg35 : i8, %arg36 : i8):
@@ -38,7 +38,7 @@ theorem ashr_known_pos_exact_proof : ashr_known_pos_exact_before ⊑ ashr_known_
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN ashr_known_pos_exact
   apply ashr_known_pos_exact_thm
@@ -72,7 +72,7 @@ theorem lshr_mul_times_3_div_2_proof : lshr_mul_times_3_div_2_before ⊑ lshr_mu
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lshr_mul_times_3_div_2
   apply lshr_mul_times_3_div_2_thm
@@ -106,7 +106,7 @@ theorem lshr_mul_times_3_div_2_exact_proof : lshr_mul_times_3_div_2_exact_before
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lshr_mul_times_3_div_2_exact
   apply lshr_mul_times_3_div_2_exact_thm
@@ -140,7 +140,7 @@ theorem lshr_mul_times_3_div_2_exact_2_proof : lshr_mul_times_3_div_2_exact_2_be
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lshr_mul_times_3_div_2_exact_2
   apply lshr_mul_times_3_div_2_exact_2_thm
@@ -174,7 +174,7 @@ theorem lshr_mul_times_5_div_4_proof : lshr_mul_times_5_div_4_before ⊑ lshr_mu
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lshr_mul_times_5_div_4
   apply lshr_mul_times_5_div_4_thm
@@ -208,7 +208,7 @@ theorem lshr_mul_times_5_div_4_exact_proof : lshr_mul_times_5_div_4_exact_before
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lshr_mul_times_5_div_4_exact
   apply lshr_mul_times_5_div_4_exact_thm
@@ -242,7 +242,7 @@ theorem lshr_mul_times_5_div_4_exact_2_proof : lshr_mul_times_5_div_4_exact_2_be
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lshr_mul_times_5_div_4_exact_2
   apply lshr_mul_times_5_div_4_exact_2_thm
@@ -276,7 +276,7 @@ theorem ashr_mul_times_3_div_2_proof : ashr_mul_times_3_div_2_before ⊑ ashr_mu
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN ashr_mul_times_3_div_2
   apply ashr_mul_times_3_div_2_thm
@@ -310,7 +310,7 @@ theorem ashr_mul_times_3_div_2_exact_proof : ashr_mul_times_3_div_2_exact_before
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN ashr_mul_times_3_div_2_exact
   apply ashr_mul_times_3_div_2_exact_thm
@@ -344,7 +344,7 @@ theorem ashr_mul_times_3_div_2_exact_2_proof : ashr_mul_times_3_div_2_exact_2_be
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN ashr_mul_times_3_div_2_exact_2
   apply ashr_mul_times_3_div_2_exact_2_thm
@@ -378,7 +378,7 @@ theorem ashr_mul_times_5_div_4_proof : ashr_mul_times_5_div_4_before ⊑ ashr_mu
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN ashr_mul_times_5_div_4
   apply ashr_mul_times_5_div_4_thm
@@ -412,7 +412,7 @@ theorem ashr_mul_times_5_div_4_exact_proof : ashr_mul_times_5_div_4_exact_before
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN ashr_mul_times_5_div_4_exact
   apply ashr_mul_times_5_div_4_exact_thm
@@ -446,7 +446,7 @@ theorem ashr_mul_times_5_div_4_exact_2_proof : ashr_mul_times_5_div_4_exact_2_be
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN ashr_mul_times_5_div_4_exact_2
   apply ashr_mul_times_5_div_4_exact_2_thm
@@ -485,7 +485,7 @@ theorem lsb_mask_sign_zext_wrong_cst2_proof : lsb_mask_sign_zext_wrong_cst2_befo
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lsb_mask_sign_zext_wrong_cst2
   apply lsb_mask_sign_zext_wrong_cst2_thm
@@ -524,7 +524,7 @@ theorem lsb_mask_sign_sext_wrong_cst2_proof : lsb_mask_sign_sext_wrong_cst2_befo
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lsb_mask_sign_sext_wrong_cst2
   apply lsb_mask_sign_sext_wrong_cst2_thm

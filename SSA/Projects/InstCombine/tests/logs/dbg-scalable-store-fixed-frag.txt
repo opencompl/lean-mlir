@@ -1,0 +1,2 @@
+3: dbg-scalable-store-fixed-frag.ll: parsing has failed
+

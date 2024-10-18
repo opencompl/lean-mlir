@@ -1,0 +1,21 @@
+1: "ffs"
+5: "ffs" is empty
+
+1: "sink"
+5: "sink" is empty
+
+1: "fold_ffs"
+4: "fold_ffs" has unsupported operation: llvm.call
+
+4: "fold_ffs" has unsupported operation: llvm.call
+
+4: "fold_ffs" has unsupported operation: llvm.call
+
+4: "fold_ffs" has unsupported operation: llvm.call
+
+4: "fold_ffs" has unsupported operation: llvm.call
+
+4: "fold_ffs" has unsupported operation: llvm.call
+
+4: "fold_ffs" has unsupported operation: llvm.return
+

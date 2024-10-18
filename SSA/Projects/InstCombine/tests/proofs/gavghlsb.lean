@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gavghlsb_statements
-                                                    
+
 def avg_lsb_before := [llvm|
 {
 ^0(%arg4 : i8, %arg5 : i8):
@@ -40,7 +40,7 @@ theorem avg_lsb_proof : avg_lsb_before ⊑ avg_lsb_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN avg_lsb
   apply avg_lsb_thm

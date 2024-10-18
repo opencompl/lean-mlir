@@ -1,0 +1,97 @@
+1: "use"
+5: "use" is empty
+
+1: "match_unsigned"
+4: "match_unsigned" has unsupported operation after optimization: llvm.udiv
+
+1: "match_unsigned_vector"
+"match_unsigned_vector" contains vectors which are unsupported
+
+1: "match_andAsRem_lshrAsDiv_shlAsMul"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.lshr
+2: llvm.urem
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "match_signed"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.sdiv
+2: llvm.srem
+2: llvm.sdiv
+2: llvm.srem
+2: llvm.mul
+2: llvm.add
+2: llvm.mul
+2: llvm.add
+2: llvm.return
+
+1: "match_signed_vector"
+"match_signed_vector" contains vectors which are unsupported
+
+1: "not_match_inconsistent_signs"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.urem
+2: llvm.sdiv
+2: llvm.urem
+2: llvm.mul
+2: llvm.add
+2: llvm.return
+
+1: "not_match_inconsistent_values"
+4: "not_match_inconsistent_values" has unsupported operation: llvm.udiv
+
+1: "not_match_overflow"
+4: "not_match_overflow" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "fold_add_udiv_urem"
+4: "fold_add_udiv_urem" has unsupported operation: llvm.udiv
+
+1: "fold_add_sdiv_srem"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.shl
+2: llvm.srem
+2: llvm.add
+2: llvm.return
+
+1: "fold_add_udiv_urem_to_mul"
+4: "fold_add_udiv_urem_to_mul" has unsupported operation after optimization: llvm.udiv
+
+1: "fold_add_udiv_urem_to_mul_multiuse"
+4: "fold_add_udiv_urem_to_mul_multiuse" has unsupported operation: llvm.call
+
+1: "fold_add_udiv_urem_commuted"
+4: "fold_add_udiv_urem_commuted" has unsupported operation: llvm.udiv
+
+1: "fold_add_udiv_urem_or_disjoint"
+4: "fold_add_udiv_urem_or_disjoint" has unsupported operation: llvm.udiv
+
+1: "fold_add_udiv_urem_without_noundef"
+4: "fold_add_udiv_urem_without_noundef" has unsupported operation: llvm.udiv
+
+1: "fold_add_udiv_urem_multiuse_mul"
+4: "fold_add_udiv_urem_multiuse_mul" has unsupported operation: llvm.udiv
+
+4: "fold_add_udiv_urem_multiuse_mul" has unsupported operation: llvm.call
+
+1: "fold_add_udiv_srem"
+4: "fold_add_udiv_srem" has unsupported operation: llvm.udiv
+
+1: "fold_add_udiv_urem_non_constant"
+4: "fold_add_udiv_urem_non_constant" has unsupported operation: llvm.udiv
+

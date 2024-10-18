@@ -1,0 +1,9 @@
+1: "foo"
+4: "foo" has unsupported operation: llvm.call
+
+1: "sqrt"
+5: "sqrt" is empty
+
+1: "sqrtf"
+5: "sqrtf" is empty
+

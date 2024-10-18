@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gapinthadd_statements
-                                                    
+
 def test1_before := [llvm|
 {
 ^0(%arg12 : i1):
@@ -35,7 +35,7 @@ theorem test1_proof : test1_before ⊑ test1_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test1
   all_goals (try extract_goal ; sorry)
@@ -65,7 +65,7 @@ theorem test2_proof : test2_before ⊑ test2_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test2
   all_goals (try extract_goal ; sorry)
@@ -95,7 +95,7 @@ theorem test3_proof : test3_before ⊑ test3_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test3
   all_goals (try extract_goal ; sorry)
@@ -128,7 +128,7 @@ theorem test4_proof : test4_before ⊑ test4_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test4
   all_goals (try extract_goal ; sorry)
@@ -160,7 +160,7 @@ theorem test5_proof : test5_before ⊑ test5_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test5
   all_goals (try extract_goal ; sorry)
@@ -192,7 +192,7 @@ theorem test6_proof : test6_before ⊑ test6_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test6
   all_goals (try extract_goal ; sorry)
@@ -224,7 +224,7 @@ theorem test7_proof : test7_before ⊑ test7_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test7
   all_goals (try extract_goal ; sorry)
@@ -260,7 +260,7 @@ theorem test8_proof : test8_before ⊑ test8_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test8
   all_goals (try extract_goal ; sorry)
@@ -295,7 +295,7 @@ theorem test9_proof : test9_before ⊑ test9_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test9
   all_goals (try extract_goal ; sorry)

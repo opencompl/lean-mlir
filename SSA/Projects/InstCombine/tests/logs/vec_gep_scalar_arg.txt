@@ -1,0 +1,2 @@
+3: vec_gep_scalar_arg.ll: parsing has failed
+

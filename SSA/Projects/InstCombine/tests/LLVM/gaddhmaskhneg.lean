@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gaddhmaskhneg_statements
-                                                    
+
 def dec_mask_neg_i32_before := [llvm|
 {
 ^0(%arg7 : i32):
@@ -41,7 +41,7 @@ theorem dec_mask_neg_i32_proof : dec_mask_neg_i32_before ⊑ dec_mask_neg_i32_af
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN dec_mask_neg_i32
   all_goals (try extract_goal ; sorry)
@@ -81,7 +81,7 @@ theorem dec_mask_commute_neg_i32_proof : dec_mask_commute_neg_i32_before ⊑ dec
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN dec_mask_commute_neg_i32
   all_goals (try extract_goal ; sorry)
@@ -117,7 +117,7 @@ theorem dec_commute_mask_neg_i32_proof : dec_commute_mask_neg_i32_before ⊑ dec
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN dec_commute_mask_neg_i32
   all_goals (try extract_goal ; sorry)

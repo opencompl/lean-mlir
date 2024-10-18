@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section ginverthvariablehmaskhinhmaskedhmergehscalar_statements
-                                                    
+
 def scalar_before := [llvm|
 {
 ^0(%arg43 : i4, %arg44 : i4, %arg45 : i4):
@@ -40,7 +40,7 @@ theorem scalar_proof : scalar_before ⊑ scalar_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN scalar
   all_goals (try extract_goal ; sorry)
@@ -73,7 +73,7 @@ theorem in_constant_varx_mone_invmask_proof : in_constant_varx_mone_invmask_befo
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN in_constant_varx_mone_invmask
   all_goals (try extract_goal ; sorry)
@@ -110,7 +110,7 @@ theorem in_constant_varx_6_invmask_proof : in_constant_varx_6_invmask_before ⊑
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN in_constant_varx_6_invmask
   all_goals (try extract_goal ; sorry)
@@ -145,7 +145,7 @@ theorem in_constant_mone_vary_invmask_proof : in_constant_mone_vary_invmask_befo
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN in_constant_mone_vary_invmask
   all_goals (try extract_goal ; sorry)
@@ -182,7 +182,7 @@ theorem in_constant_6_vary_invmask_proof : in_constant_6_vary_invmask_before ⊑
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN in_constant_6_vary_invmask
   all_goals (try extract_goal ; sorry)
@@ -217,7 +217,7 @@ theorem c_1_0_0_proof : c_1_0_0_before ⊑ c_1_0_0_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN c_1_0_0
   all_goals (try extract_goal ; sorry)
@@ -252,7 +252,7 @@ theorem c_0_1_0_proof : c_0_1_0_before ⊑ c_0_1_0_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN c_0_1_0
   all_goals (try extract_goal ; sorry)
@@ -287,7 +287,7 @@ theorem c_1_1_0_proof : c_1_1_0_before ⊑ c_1_1_0_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN c_1_1_0
   all_goals (try extract_goal ; sorry)
@@ -324,7 +324,7 @@ theorem commutativity_constant_varx_6_invmask_proof : commutativity_constant_var
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN commutativity_constant_varx_6_invmask
   all_goals (try extract_goal ; sorry)
@@ -361,7 +361,7 @@ theorem commutativity_constant_6_vary_invmask_proof : commutativity_constant_6_v
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN commutativity_constant_6_vary_invmask
   all_goals (try extract_goal ; sorry)

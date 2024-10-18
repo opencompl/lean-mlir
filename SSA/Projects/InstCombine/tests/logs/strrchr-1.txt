@@ -1,0 +1,65 @@
+1: "strrchr"
+5: "strrchr" is empty
+
+1: "test_simplify1"
+4: "test_simplify1" has unsupported operation: llvm.mlir.addressof
+
+4: "test_simplify1" has unsupported operation: llvm.getelementptr
+
+4: "test_simplify1" has unsupported operation: llvm.mlir.addressof
+
+4: "test_simplify1" has unsupported operation: llvm.store
+
+4: "test_simplify1" has unsupported operation: llvm.return
+
+1: "test_simplify2"
+4: "test_simplify2" has unsupported operation: llvm.mlir.zero
+
+4: "test_simplify2" has unsupported operation: llvm.mlir.addressof
+
+4: "test_simplify2" has unsupported operation: llvm.store
+
+4: "test_simplify2" has unsupported operation: llvm.return
+
+1: "test_simplify3"
+4: "test_simplify3" has unsupported operation: llvm.mlir.addressof
+
+4: "test_simplify3" has unsupported operation: llvm.getelementptr
+
+4: "test_simplify3" has unsupported operation: llvm.mlir.addressof
+
+4: "test_simplify3" has unsupported operation: llvm.store
+
+4: "test_simplify3" has unsupported operation: llvm.return
+
+1: "test_simplify4"
+4: "test_simplify4" has unsupported operation: llvm.mlir.addressof
+
+4: "test_simplify4" has unsupported operation: llvm.getelementptr
+
+4: "test_simplify4" has unsupported operation: llvm.mlir.addressof
+
+4: "test_simplify4" has unsupported operation: llvm.store
+
+4: "test_simplify4" has unsupported operation: llvm.return
+
+1: "test_xform_to_memrchr"
+4: "test_xform_to_memrchr" has unsupported operation: llvm.mlir.addressof
+
+4: "test_xform_to_memrchr" has unsupported operation: llvm.mlir.addressof
+
+4: "test_xform_to_memrchr" has unsupported operation: llvm.call
+
+4: "test_xform_to_memrchr" has unsupported operation: llvm.store
+
+4: "test_xform_to_memrchr" has unsupported operation: llvm.return
+
+1: "test1"
+4: "test1" has unsupported operation: llvm.call
+
+1: "test2"
+4: "test2" has unsupported operation: llvm.call
+
+1: "memrchr"
+5: "memrchr" is empty
+

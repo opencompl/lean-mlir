@@ -1,0 +1,2 @@
+3: wcslen-6.ll: parsing has failed
+

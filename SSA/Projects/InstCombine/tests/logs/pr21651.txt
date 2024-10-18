@@ -1,0 +1,5 @@
+1: "PR21651"
+4: "PR21651" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "PR21651" has unsupported operation: llvm.return
+

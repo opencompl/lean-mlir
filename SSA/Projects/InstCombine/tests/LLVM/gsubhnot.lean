@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gsubhnot_statements
-                                                    
+
 def sub_not_before := [llvm|
 {
 ^0(%arg22 : i8, %arg23 : i8):
@@ -38,7 +38,7 @@ theorem sub_not_proof : sub_not_before ⊑ sub_not_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sub_not
   all_goals (try extract_goal ; sorry)
@@ -71,7 +71,7 @@ theorem dec_sub_proof : dec_sub_before ⊑ dec_sub_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN dec_sub
   all_goals (try extract_goal ; sorry)
@@ -104,7 +104,7 @@ theorem sub_inc_proof : sub_inc_before ⊑ sub_inc_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sub_inc
   all_goals (try extract_goal ; sorry)
@@ -137,7 +137,7 @@ theorem sub_dec_proof : sub_dec_before ⊑ sub_dec_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sub_dec
   all_goals (try extract_goal ; sorry)

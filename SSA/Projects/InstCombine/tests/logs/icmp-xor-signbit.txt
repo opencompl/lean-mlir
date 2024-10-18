@@ -1,0 +1,94 @@
+1: "slt_to_ult"
+4: "slt_to_ult" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "slt_to_ult_splat"
+4: "slt_to_ult_splat" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ult_to_slt"
+4: "ult_to_slt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ult_to_slt_splat"
+4: "ult_to_slt_splat" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "slt_to_ugt"
+4: "slt_to_ugt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "slt_to_ugt_splat"
+4: "slt_to_ugt_splat" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ult_to_sgt"
+4: "ult_to_sgt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ult_to_sgt_splat"
+4: "ult_to_sgt_splat" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sge_to_ugt"
+4: "sge_to_ugt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sge_to_ugt_splat"
+4: "sge_to_ugt_splat" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "uge_to_sgt"
+4: "uge_to_sgt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "uge_to_sgt_splat"
+4: "uge_to_sgt_splat" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sge_to_ult"
+4: "sge_to_ult" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sge_to_ult_splat"
+4: "sge_to_ult_splat" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "uge_to_slt"
+4: "uge_to_slt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "uge_to_slt_splat"
+4: "uge_to_slt_splat" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sgt_to_ugt_bitcasted_splat"
+4: "sgt_to_ugt_bitcasted_splat" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "sgt_to_ugt_bitcasted_splat" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "sgt_to_ugt_bitcasted_splat" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "negative_simplify_splat"
+"negative_simplify_splat" contains vectors which are unsupported
+
+1: "slt_zero_eq_i1"
+4: "slt_zero_eq_i1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "slt_zero_eq_i1_fail"
+4: "slt_zero_eq_i1_fail" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "slt_zero_eq_i1_fail" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "slt_zero_eq_ne_0"
+4: "slt_zero_eq_ne_0" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "slt_zero_ne_ne_0"
+4: "slt_zero_ne_ne_0" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "slt_zero_eq_ne_0_vec"
+4: "slt_zero_eq_ne_0_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "slt_zero_ne_ne_b"
+4: "slt_zero_ne_ne_b" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "slt_zero_ne_ne_b" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "slt_zero_eq_ne_0_fail1"
+4: "slt_zero_eq_ne_0_fail1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "slt_zero_eq_ne_0_fail1" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "slt_zero_eq_ne_0_fail1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "slt_zero_eq_ne_0_fail2"
+4: "slt_zero_eq_ne_0_fail2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "slt_zero_eq_ne_0_fail2" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "slt_zero_eq_ne_0_fail2" has unsupported operation: builtin.unregistered: llvm.icmp
+

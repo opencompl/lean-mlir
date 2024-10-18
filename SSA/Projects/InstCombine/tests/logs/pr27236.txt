@@ -1,0 +1,5 @@
+1: "test1"
+4: "test1" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "test1" has unsupported operation: builtin.unregistered: llvm.uitofp
+

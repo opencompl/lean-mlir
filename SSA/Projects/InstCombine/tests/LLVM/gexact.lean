@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gexact_statements
-                                                    
+
 def sdiv2_before := [llvm|
 {
 ^0(%arg39 : i32):
@@ -36,7 +36,7 @@ theorem sdiv2_proof : sdiv2_before ⊑ sdiv2_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sdiv2
   all_goals (try extract_goal ; sorry)
@@ -66,7 +66,7 @@ theorem sdiv4_proof : sdiv4_before ⊑ sdiv4_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sdiv4
   all_goals (try extract_goal ; sorry)
@@ -99,7 +99,7 @@ theorem sdiv6_proof : sdiv6_before ⊑ sdiv6_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sdiv6
   all_goals (try extract_goal ; sorry)
@@ -134,7 +134,7 @@ theorem mul_of_sdiv_proof : mul_of_sdiv_before ⊑ mul_of_sdiv_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN mul_of_sdiv
   all_goals (try extract_goal ; sorry)
@@ -167,7 +167,7 @@ theorem mul_of_sdiv_fail_ub_proof : mul_of_sdiv_fail_ub_before ⊑ mul_of_sdiv_f
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN mul_of_sdiv_fail_ub
   all_goals (try extract_goal ; sorry)

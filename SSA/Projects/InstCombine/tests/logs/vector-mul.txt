@@ -1,0 +1,120 @@
+1: "Zero_i8"
+"Zero_i8" contains vectors which are unsupported
+
+1: "Identity_i8"
+"Identity_i8" contains vectors which are unsupported
+
+1: "AddToSelf_i8"
+"AddToSelf_i8" contains vectors which are unsupported
+
+1: "SplatPow2Test1_i8"
+"SplatPow2Test1_i8" contains vectors which are unsupported
+
+1: "SplatPow2Test2_i8"
+"SplatPow2Test2_i8" contains vectors which are unsupported
+
+1: "MulTest1_i8"
+"MulTest1_i8" contains vectors which are unsupported
+
+1: "MulTest2_i8"
+7: "MulTest2_i8" is unchanged by InstCombine
+
+1: "MulTest3_i8"
+"MulTest3_i8" contains vectors which are unsupported
+
+1: "MulTest4_i8"
+7: "MulTest4_i8" is unchanged by InstCombine
+
+1: "Zero_i16"
+"Zero_i16" contains vectors which are unsupported
+
+1: "Identity_i16"
+"Identity_i16" contains vectors which are unsupported
+
+1: "AddToSelf_i16"
+"AddToSelf_i16" contains vectors which are unsupported
+
+1: "SplatPow2Test1_i16"
+"SplatPow2Test1_i16" contains vectors which are unsupported
+
+1: "SplatPow2Test2_i16"
+"SplatPow2Test2_i16" contains vectors which are unsupported
+
+1: "MulTest1_i16"
+"MulTest1_i16" contains vectors which are unsupported
+
+1: "MulTest2_i16"
+7: "MulTest2_i16" is unchanged by InstCombine
+
+1: "MulTest3_i16"
+"MulTest3_i16" contains vectors which are unsupported
+
+1: "MulTest4_i16"
+7: "MulTest4_i16" is unchanged by InstCombine
+
+1: "Zero_i32"
+"Zero_i32" contains vectors which are unsupported
+
+1: "Identity_i32"
+"Identity_i32" contains vectors which are unsupported
+
+1: "AddToSelf_i32"
+"AddToSelf_i32" contains vectors which are unsupported
+
+1: "SplatPow2Test1_i32"
+"SplatPow2Test1_i32" contains vectors which are unsupported
+
+1: "SplatPow2Test2_i32"
+"SplatPow2Test2_i32" contains vectors which are unsupported
+
+1: "MulTest1_i32"
+"MulTest1_i32" contains vectors which are unsupported
+
+1: "MulTest2_i32"
+7: "MulTest2_i32" is unchanged by InstCombine
+
+1: "MulTest3_i32"
+"MulTest3_i32" contains vectors which are unsupported
+
+1: "MulTest4_i32"
+7: "MulTest4_i32" is unchanged by InstCombine
+
+1: "Zero_i64"
+"Zero_i64" contains vectors which are unsupported
+
+1: "Identity_i64"
+"Identity_i64" contains vectors which are unsupported
+
+1: "AddToSelf_i64"
+"AddToSelf_i64" contains vectors which are unsupported
+
+1: "SplatPow2Test1_i64"
+"SplatPow2Test1_i64" contains vectors which are unsupported
+
+1: "SplatPow2Test2_i64"
+"SplatPow2Test2_i64" contains vectors which are unsupported
+
+1: "MulTest1_i64"
+"MulTest1_i64" contains vectors which are unsupported
+
+1: "MulTest2_i64"
+7: "MulTest2_i64" is unchanged by InstCombine
+
+1: "MulTest3_i64"
+"MulTest3_i64" contains vectors which are unsupported
+
+1: "MulTest4_i64"
+7: "MulTest4_i64" is unchanged by InstCombine
+
+1: "ShiftMulTest1"
+"ShiftMulTest1" contains vectors which are unsupported
+
+1: "ShiftMulTest2"
+"ShiftMulTest2" contains vectors which are unsupported
+
+1: "ShiftMulTest3"
+"ShiftMulTest3" contains vectors which are unsupported
+
+1: "ShiftMulTest4"
+"ShiftMulTest4" contains vectors which are unsupported
+

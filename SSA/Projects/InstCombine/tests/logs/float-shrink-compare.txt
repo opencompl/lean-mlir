@@ -1,0 +1,236 @@
+1: "test1"
+4: "test1" has unsupported operation: builtin.unregistered: llvm.intr.ceil
+
+4: "test1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test1_intrin"
+4: "test1_intrin" has unsupported operation: builtin.unregistered: llvm.intr.ceil
+
+4: "test1_intrin" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test2"
+4: "test2" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test2_intrin"
+4: "test2_intrin" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test2_intrin" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fmf_test2"
+4: "fmf_test2" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "fmf_test2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test3"
+4: "test3" has unsupported operation: builtin.unregistered: llvm.intr.floor
+
+4: "test3" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test3_intrin"
+4: "test3_intrin" has unsupported operation: builtin.unregistered: llvm.intr.floor
+
+4: "test3_intrin" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test4"
+4: "test4" has unsupported operation: builtin.unregistered: llvm.intr.nearbyint
+
+4: "test4" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "shrink_nearbyint_intrin"
+4: "shrink_nearbyint_intrin" has unsupported operation: builtin.unregistered: llvm.intr.nearbyint
+
+4: "shrink_nearbyint_intrin" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test5"
+4: "test5" has unsupported operation: builtin.unregistered: llvm.intr.rint
+
+4: "test5" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test6"
+4: "test6" has unsupported operation: builtin.unregistered: llvm.intr.round
+
+4: "test6" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test6_intrin"
+4: "test6_intrin" has unsupported operation: builtin.unregistered: llvm.intr.round
+
+4: "test6_intrin" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test6a"
+4: "test6a" has unsupported operation: builtin.unregistered: llvm.intr.roundeven
+
+4: "test6a" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test6a_intrin"
+4: "test6a_intrin" has unsupported operation: builtin.unregistered: llvm.intr.roundeven
+
+4: "test6a_intrin" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test7"
+4: "test7" has unsupported operation: builtin.unregistered: llvm.intr.trunc
+
+4: "test7" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test7_intrin"
+4: "test7_intrin" has unsupported operation: builtin.unregistered: llvm.intr.trunc
+
+4: "test7_intrin" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test8"
+4: "test8" has unsupported operation: builtin.unregistered: llvm.intr.ceil
+
+4: "test8" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test8_intrin"
+4: "test8_intrin" has unsupported operation: builtin.unregistered: llvm.intr.ceil
+
+4: "test8_intrin" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test9"
+4: "test9" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test9" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test9_intrin"
+4: "test9_intrin" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test9_intrin" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test10"
+4: "test10" has unsupported operation: builtin.unregistered: llvm.intr.floor
+
+4: "test10" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test10_intrin"
+4: "test10_intrin" has unsupported operation: builtin.unregistered: llvm.intr.floor
+
+4: "test10_intrin" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test11"
+4: "test11" has unsupported operation: builtin.unregistered: llvm.intr.nearbyint
+
+4: "test11" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test11_intrin"
+4: "test11_intrin" has unsupported operation: builtin.unregistered: llvm.intr.nearbyint
+
+4: "test11_intrin" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test12"
+4: "test12" has unsupported operation: builtin.unregistered: llvm.intr.rint
+
+4: "test12" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test13"
+4: "test13" has unsupported operation: builtin.unregistered: llvm.intr.round
+
+4: "test13" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test13_intrin"
+4: "test13_intrin" has unsupported operation: builtin.unregistered: llvm.intr.round
+
+4: "test13_intrin" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test13a"
+4: "test13a" has unsupported operation: builtin.unregistered: llvm.intr.roundeven
+
+4: "test13a" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test13a_intrin"
+4: "test13a_intrin" has unsupported operation: builtin.unregistered: llvm.intr.roundeven
+
+4: "test13a_intrin" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test14"
+4: "test14" has unsupported operation: builtin.unregistered: llvm.intr.trunc
+
+4: "test14" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test14_intrin"
+4: "test14_intrin" has unsupported operation: builtin.unregistered: llvm.intr.trunc
+
+4: "test14_intrin" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test15"
+4: "test15" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+4: "test15" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test16"
+4: "test16" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+4: "test16" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test17"
+4: "test17" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
+
+4: "test17" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test18"
+4: "test18" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
+
+4: "test18" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test19"
+4: "test19" has unsupported operation: llvm.call
+
+4: "test19" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test20"
+4: "test20" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+4: "test20" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test21"
+4: "test21" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "test21" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "test21" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+4: "test21" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fabs"
+5: "fabs" is empty
+
+1: "ceil"
+5: "ceil" is empty
+
+1: "copysign"
+5: "copysign" is empty
+
+1: "floor"
+5: "floor" is empty
+
+1: "nearbyint"
+5: "nearbyint" is empty
+
+1: "rint"
+5: "rint" is empty
+
+1: "round"
+5: "round" is empty
+
+1: "roundeven"
+5: "roundeven" is empty
+
+1: "trunc"
+5: "trunc" is empty
+
+1: "fmin"
+5: "fmin" is empty
+
+1: "fmax"
+5: "fmax" is empty
+
+1: "fminf"
+5: "fminf" is empty
+
+1: "fmaxf"
+5: "fmaxf" is empty
+
+1: "copysignf"
+5: "copysignf" is empty
+

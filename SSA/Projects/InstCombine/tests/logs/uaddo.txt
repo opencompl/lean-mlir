@@ -1,0 +1,60 @@
+1: "uaddo_commute1"
+4: "uaddo_commute1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "uaddo_commute1" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "uaddo_commute2"
+4: "uaddo_commute2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "uaddo_commute2" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "uaddo_commute3"
+4: "uaddo_commute3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "uaddo_commute3" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "uaddo_commute4"
+4: "uaddo_commute4" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "uaddo_commute4" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "uaddo_commute5"
+4: "uaddo_commute5" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "uaddo_commute5" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "uaddo_commute6"
+4: "uaddo_commute6" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "uaddo_commute6" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "uaddo_commute7"
+4: "uaddo_commute7" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "uaddo_commute7" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "uaddo_commute8"
+4: "uaddo_commute8" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "uaddo_commute8" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "uaddo_wrong_pred1"
+4: "uaddo_wrong_pred1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "uaddo_wrong_pred1" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "uaddo_wrong_pred2"
+4: "uaddo_wrong_pred2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "uaddo_wrong_pred2" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "uaddo_1"
+4: "uaddo_1" has unsupported operation: llvm.store
+
+4: "uaddo_1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "uaddo_neg1"
+4: "uaddo_neg1" has unsupported operation: llvm.store
+
+4: "uaddo_neg1" has unsupported operation: builtin.unregistered: llvm.icmp
+

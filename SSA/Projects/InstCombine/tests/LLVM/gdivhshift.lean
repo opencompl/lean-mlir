@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gdivhshift_statements
-                                                    
+
 def t7_before := [llvm|
 {
 ^0(%arg209 : i32):
@@ -36,7 +36,7 @@ theorem t7_proof : t7_before ⊑ t7_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t7
   all_goals (try extract_goal ; sorry)
@@ -67,7 +67,7 @@ theorem t10_proof : t10_before ⊑ t10_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t10
   all_goals (try extract_goal ; sorry)
@@ -100,7 +100,7 @@ theorem sdiv_mul_shl_nsw_proof : sdiv_mul_shl_nsw_before ⊑ sdiv_mul_shl_nsw_af
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sdiv_mul_shl_nsw
   all_goals (try extract_goal ; sorry)
@@ -133,7 +133,7 @@ theorem sdiv_mul_shl_nsw_exact_commute1_proof : sdiv_mul_shl_nsw_exact_commute1_
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sdiv_mul_shl_nsw_exact_commute1
   all_goals (try extract_goal ; sorry)
@@ -164,7 +164,7 @@ theorem sdiv_shl_shl_nsw2_nuw_proof : sdiv_shl_shl_nsw2_nuw_before ⊑ sdiv_shl_
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sdiv_shl_shl_nsw2_nuw
   all_goals (try extract_goal ; sorry)
@@ -197,7 +197,7 @@ theorem sdiv_shl_pair_const_proof : sdiv_shl_pair_const_before ⊑ sdiv_shl_pair
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sdiv_shl_pair_const
   all_goals (try extract_goal ; sorry)
@@ -230,7 +230,7 @@ theorem sdiv_shl_pair1_proof : sdiv_shl_pair1_before ⊑ sdiv_shl_pair1_after :=
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sdiv_shl_pair1
   all_goals (try extract_goal ; sorry)
@@ -263,7 +263,7 @@ theorem sdiv_shl_pair2_proof : sdiv_shl_pair2_before ⊑ sdiv_shl_pair2_after :=
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sdiv_shl_pair2
   all_goals (try extract_goal ; sorry)
@@ -296,7 +296,7 @@ theorem sdiv_shl_pair3_proof : sdiv_shl_pair3_before ⊑ sdiv_shl_pair3_after :=
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sdiv_shl_pair3
   all_goals (try extract_goal ; sorry)

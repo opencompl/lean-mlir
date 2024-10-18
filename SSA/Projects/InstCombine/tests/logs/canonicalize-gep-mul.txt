@@ -1,0 +1,43 @@
+1: "mul4"
+4: "mul4" has unsupported operation: llvm.getelementptr
+
+1: "mul4_nuw"
+4: "mul4_nuw" has unsupported operation: llvm.getelementptr
+
+1: "mul5"
+4: "mul5" has unsupported operation: llvm.getelementptr
+
+1: "noinbounds"
+4: "noinbounds" has unsupported operation: llvm.getelementptr
+
+1: "usemul"
+4: "usemul" has unsupported operation: llvm.getelementptr
+
+4: "usemul" has unsupported operation: llvm.call
+
+1: "multiple"
+4: "multiple" has unsupported operation: llvm.getelementptr
+
+4: "multiple" has unsupported operation: llvm.getelementptr
+
+4: "multiple" has unsupported operation: llvm.call
+
+4: "multiple" has unsupported operation: llvm.return
+
+1: "multiplestore"
+4: "multiplestore" has unsupported operation: llvm.getelementptr
+
+4: "multiplestore" has unsupported operation: llvm.getelementptr
+
+4: "multiplestore" has unsupported operation: llvm.store
+
+4: "multiplestore" has unsupported operation: llvm.store
+
+4: "multiplestore" has unsupported operation: llvm.return
+
+1: "use"
+5: "use" is empty
+
+1: "use2"
+5: "use2" is empty
+

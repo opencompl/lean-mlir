@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gunfoldhmaskedhmergehwithhconsthmaskhscalar_statements
-                                                    
+
 def scalar0_before := [llvm|
 {
 ^0(%arg32 : i4, %arg33 : i4):
@@ -41,7 +41,7 @@ theorem scalar0_proof : scalar0_before ⊑ scalar0_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN scalar0
   all_goals (try extract_goal ; sorry)
@@ -77,7 +77,7 @@ theorem scalar1_proof : scalar1_before ⊑ scalar1_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN scalar1
   all_goals (try extract_goal ; sorry)
@@ -111,7 +111,7 @@ theorem in_constant_varx_mone_proof : in_constant_varx_mone_before ⊑ in_consta
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN in_constant_varx_mone
   all_goals (try extract_goal ; sorry)
@@ -145,7 +145,7 @@ theorem in_constant_varx_14_proof : in_constant_varx_14_before ⊑ in_constant_v
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN in_constant_varx_14
   all_goals (try extract_goal ; sorry)
@@ -179,7 +179,7 @@ theorem in_constant_mone_vary_proof : in_constant_mone_vary_before ⊑ in_consta
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN in_constant_mone_vary
   all_goals (try extract_goal ; sorry)
@@ -213,7 +213,7 @@ theorem in_constant_14_vary_proof : in_constant_14_vary_before ⊑ in_constant_1
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN in_constant_14_vary
   all_goals (try extract_goal ; sorry)
@@ -249,7 +249,7 @@ theorem c_1_0_0_proof : c_1_0_0_before ⊑ c_1_0_0_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN c_1_0_0
   all_goals (try extract_goal ; sorry)
@@ -285,7 +285,7 @@ theorem c_0_1_0_proof : c_0_1_0_before ⊑ c_0_1_0_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN c_0_1_0
   all_goals (try extract_goal ; sorry)
@@ -321,7 +321,7 @@ theorem c_1_1_0_proof : c_1_1_0_before ⊑ c_1_1_0_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN c_1_1_0
   all_goals (try extract_goal ; sorry)
@@ -355,7 +355,7 @@ theorem commutativity_constant_14_vary_proof : commutativity_constant_14_vary_be
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN commutativity_constant_14_vary
   all_goals (try extract_goal ; sorry)

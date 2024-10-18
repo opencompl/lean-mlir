@@ -1,0 +1,131 @@
+error: build failed
+⚠ [2443/2457] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2447/2457] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [2451/2457] Replayed SSA.Experimental.Bits.AutoStructs.Basic
+warning: ././././SSA/Experimental/Bits/AutoStructs/Basic.lean:99:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Basic.lean:102:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Basic.lean:104:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Basic.lean:106:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Basic.lean:109:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Basic.lean:111:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Basic.lean:113:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Basic.lean:116:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Basic.lean:127:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Basic.lean:164:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Basic.lean:335:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Basic.lean:408:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Basic.lean:443:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Basic.lean:477:6: declaration uses 'sorry'
+⚠ [2453/2457] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:24:38: structure ... :=' has been deprecated in favor of 'structure ... where'.
+note: this linter can be disabled with `set_option linter.deprecated false`
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:511:59: structure ... :=' has been deprecated in favor of 'structure ... where'.
+note: this linter can be disabled with `set_option linter.deprecated false`
+✖ [2457/2457] Building SSA.Projects.InstCombine.tests.LLVM.gand
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/MD4Lean/.lake/build/lib:././.lake/packages/UnicodeBasic/.lake/build/lib:././.lake/packages/BibtexQuery/.lake/build/lib:././.lake/packages/doc-gen4/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lfrenot/.elan/toolchains/leanprover--lean4---nightly-2024-10-15/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gand.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gand.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gand.c --json
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:43:17: theorem extracted_1 (x : BitVec 32) :
+  (Option.bind (if 32#32 ≤ x then none else some (4#32 <<< x.toNat)) fun x' => some (x' &&& 1#32)) ⊑ some 0#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:33:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:75:17: theorem extracted_1 (x : BitVec 32) :
+  (Option.bind (if 32#32 ≤ x then none else some (4294967292#32 <<< x.toNat)) fun x' => some (x' &&& 1#32)) ⊑
+    some 0#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:65:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:134:17: theorem extracted_1 (x : BitVec 32) : x &&& 4294967295#32 = x := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:124:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:142:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:150:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:154:22: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:154:22: tactic 'rfl' failed, the left-hand side
+  ⟦?m.94396⟧
+is not definitionally equal to the right-hand side
+  Option ?m.94394
+test3_before test3_after : Com InstCombine.LLVM ?m.94395 EffectKind.pure ?m.94396
+⊢ ⟦?m.94396⟧ = Option ?m.94394
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:172:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:184:2: tactic 'unfold' failed to unfold 'test4_before' at
+  (test4_before ⊑ test4_after) ⋯
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:280:17: theorem extracted_1 (x : BitVec 32) : x &&& (x ^^^ 4294967295#32) = 0#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:270:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:312:17: theorem extracted_1 (x : BitVec 8) : x &&& 3#8 &&& 4#8 = 0#8 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:302:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:346:17: theorem extracted_1 (x : BitVec 32) : (x &&& 12#32 ^^^ 15#32) &&& 1#32 = 1#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:336:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:378:17: theorem extracted_1 (x : BitVec 8) : x >>> 7 &&& 2#8 = 0#8 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:368:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:410:17: theorem extracted_1 (x : BitVec 8) : x <<< 2 &&& 3#8 = 0#8 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:400:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:443:17: theorem extracted_1 (x : BitVec 32) : x <<< 3 &&& 4294967294#32 = x <<< 3 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:433:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:476:17: theorem extracted_1 (x : BitVec 8) : x >>> 7 &&& 1#8 = x >>> 7 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:466:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:511:17: theorem extracted_1 (x : BitVec 8) : ((x &&& 4#8) - 16#8 &&& 240#8) + 16#8 = 0#8 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:501:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:544:17: theorem extracted_1 (x : BitVec 32) : x.sshiftRight 24 &&& 255#32 = x >>> 24 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:534:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:578:17: theorem extracted_1 (x : BitVec 32) : (x &&& 16#32) >>> 2 &&& 1#32 = 0#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:568:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:613:17: theorem extracted_1 (x : BitVec 32) : x &&& 4294967294#32 ||| x &&& 1#32 ^^^ 1#32 = x ^^^ 1#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:603:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:648:17: theorem extracted_1 (x : BitVec 32) : x &&& 1#32 ^^^ 1#32 ||| x &&& 4294967294#32 = x ^^^ 1#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:638:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:677:17: theorem extracted_1 (x x_1 : BitVec 32) : (x_1 ||| x) &&& x_1 = x_1 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:667:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:712:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 ^^^ 4294967295#32 ^^^ x_1 * x) &&& (x_2 ||| x_1 * x) = x_1 * x &&& x_2 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:702:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:747:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 ||| x_1 * x) &&& (x_2 ^^^ 4294967295#32 ^^^ x_1 * x) = x_1 * x &&& x_2 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:737:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:779:17: theorem extracted_1 (x x_1 : BitVec 32) : (x_1 ^^^ 4294967295#32 ||| x) &&& x_1 = x &&& x_1 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:769:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:811:17: theorem extracted_1 (x x_1 : BitVec 32) : (x_1 ||| x ^^^ 4294967295#32) &&& x = x_1 &&& x := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:801:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:843:17: theorem extracted_1 (x x_1 : BitVec 32) : x_1 &&& (x_1 ^^^ 4294967295#32 ||| x) = x_1 &&& x := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:833:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:875:17: theorem extracted_1 (x x_1 : BitVec 32) : x_1 &&& (x ||| x_1 ^^^ 4294967295#32) = x_1 &&& x := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:865:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:908:17: theorem extracted_1 (x : BitVec 8) : x + 192#8 &&& 63#8 = x &&& 63#8 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:898:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:941:17: theorem extracted_1 (x : BitVec 8) : x + 16#8 &&& 16#8 = x &&& 16#8 ^^^ 16#8 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:931:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:978:17: theorem extracted_1 (x x_1 : BitVec 8) :
+  (x_1.sshiftRight 6 ^^^ 255#8) &&& x = x &&& (x_1.sshiftRight 6 ^^^ 255#8) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:968:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1015:17: theorem extracted_1 (x x_1 : BitVec 8) : (x_1 >>> 7 ^^^ 255#8) &&& x = x &&& (x_1 >>> 7 ^^^ 255#8) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1005:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1049:17: theorem extracted_1 (x : BitVec 16) :
+  (Option.bind (if 16#16 ≤ x then none else some (4096#16 <<< x.toNat)) fun x => some (x >>> 6 &&& 8#16)) ⊑
+    some 0#16 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1039:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1083:17: theorem extracted_1 (x : BitVec 16) :
+  (Option.bind (if 16#16 ≤ x then none else some (8#16 <<< x.toNat)) fun x => some (x >>> 6 &&& 32768#16)) ⊑
+    some 0#16 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1073:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1120:17: theorem extracted_1 (x : BitVec 16) :
+  (Option.bind (if 16#16 ≤ x then none else some (2047#16 >>> x.toNat)) fun x => some (x >>> 6 &&& 4#16)) ⊑
+    Option.bind (if 16#16 ≤ x then none else some (31#16 >>> x.toNat)) fun x' => some (x' &&& 4#16) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1110:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1157:17: theorem extracted_1 (x : BitVec 16) :
+  (Option.bind (if 16#16 ≤ x then none else some (8192#16 >>> x.toNat)) fun x => some (x >>> 6 &&& 3#16)) ⊑
+    Option.bind (if 16#16 ≤ x then none else some (128#16 >>> x.toNat)) fun x' => some (x' &&& 3#16) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1147:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1191:17: theorem extracted_1 (x : BitVec 16) :
+  (Option.bind (if 16#16 ≤ x then none else some (32768#16 >>> x.toNat)) fun x => some (x >>> 15 &&& 4#16)) ⊑
+    some 0#16 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1181:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1225:17: theorem extracted_1 (x : BitVec 16) :
+  (Option.bind (if 16#16 ≤ x then none else some (8192#16 >>> x.toNat)) fun x => some (x <<< 6 &&& 32#16)) ⊑
+    some 0#16 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1215:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1260:17: theorem extracted_1 (x : BitVec 32) : x + 16#32 &&& 24#32 = x &&& 24#32 ^^^ 16#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1250:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1297:17: theorem extracted_1 (x x_1 : BitVec 32) : (x_1 + 16#32 ||| x) &&& 24#32 = (x_1 ^^^ 16#32 ||| x) &&& 24#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1287:8: declaration uses 'sorry'
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.gand
+error: build failed

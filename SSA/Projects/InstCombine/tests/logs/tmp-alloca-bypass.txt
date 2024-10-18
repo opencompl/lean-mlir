@@ -1,0 +1,44 @@
+1: "test"
+4: "test" has unsupported operation: llvm.mlir.addressof
+
+4: "test" has unsupported operation: llvm.mlir.addressof
+
+4: "test" has unsupported operation: llvm.alloca
+
+4: "test" has unsupported operation: llvm.call
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "test" has unsupported operation: llvm.return
+
+1: "test2"
+4: "test2" has unsupported operation: llvm.mlir.undef
+
+4: "test2" has unsupported operation: llvm.mlir.addressof
+
+4: "test2" has unsupported operation: llvm.mlir.addressof
+
+4: "test2" has unsupported operation: llvm.alloca
+
+4: "test2" has unsupported operation: llvm.call
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "test2" has unsupported operation: llvm.call
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+1: "func"
+5: "func" is empty
+
+1: "get_cond"
+5: "get_cond" is empty
+

@@ -1,0 +1,85 @@
+1: "neg"
+4: "neg" has unsupported operation: llvm.udiv
+
+1: "neg_vec"
+4: "neg_vec" has unsupported operation: llvm.udiv
+
+1: "neg_vec_poison"
+4: "neg_vec_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "neg_vec_poison" has unsupported operation: llvm.mlir.undef
+
+4: "neg_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "neg_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "neg_vec_poison" has unsupported operation: llvm.udiv
+
+1: "not"
+4: "not" has unsupported operation: llvm.udiv
+
+1: "not_vec"
+4: "not_vec" has unsupported operation: llvm.udiv
+
+1: "not_vec_poison"
+4: "not_vec_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "not_vec_poison" has unsupported operation: llvm.mlir.undef
+
+4: "not_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "not_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "not_vec_poison" has unsupported operation: llvm.udiv
+
+1: "use"
+5: "use" is empty
+
+1: "use_vec"
+5: "use_vec" is empty
+
+1: "fneg"
+4: "fneg" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fneg" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fneg" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fneg" has unsupported operation: llvm.call
+
+1: "unary_fneg"
+4: "unary_fneg" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "unary_fneg" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "unary_fneg" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "unary_fneg" has unsupported operation: llvm.call
+
+1: "fneg_vec"
+4: "fneg_vec" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fneg_vec" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fneg_vec" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fneg_vec" has unsupported operation: llvm.call
+
+1: "fneg_vec_poison"
+4: "fneg_vec_poison" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fneg_vec_poison" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fneg_vec_poison" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fneg_vec_poison" has unsupported operation: llvm.call
+
+1: "unary_fneg_vec"
+4: "unary_fneg_vec" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "unary_fneg_vec" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "unary_fneg_vec" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "unary_fneg_vec" has unsupported operation: llvm.call
+

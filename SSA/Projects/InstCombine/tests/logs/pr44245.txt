@@ -1,0 +1,86 @@
+1: "test"
+4: "test" has unsupported operation: llvm.mlir.undef
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test" has unsupported operation: llvm.inttoptr
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test" has unsupported operation: llvm.store
+
+4: "test" has unsupported operation: llvm.return
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test" has unsupported operation: llvm.load
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test" has unsupported operation: llvm.load
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test" has unsupported operation: llvm.load
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test" has unsupported operation: llvm.load
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test" has unsupported operation: llvm.load
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test" has unsupported operation: llvm.load
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test" has unsupported operation: llvm.load
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test" has unsupported operation: llvm.load
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test" has unsupported operation: llvm.store
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_2"
+4: "test_2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test_2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_2" has unsupported operation: llvm.store
+
+4: "test_2" has unsupported operation: builtin.unregistered: llvm.br
+

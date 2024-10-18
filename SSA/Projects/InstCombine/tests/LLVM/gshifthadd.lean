@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gshifthadd_statements
-                                                    
+
 def ashr_C1_add_A_C2_i32_before := [llvm|
 {
 ^0(%arg77 : i32):
@@ -39,7 +39,7 @@ theorem ashr_C1_add_A_C2_i32_proof : ashr_C1_add_A_C2_i32_before ⊑ ashr_C1_add
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN ashr_C1_add_A_C2_i32
   all_goals (try extract_goal ; sorry)
@@ -76,7 +76,7 @@ theorem lshr_C1_add_A_C2_i32_proof : lshr_C1_add_A_C2_i32_before ⊑ lshr_C1_add
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lshr_C1_add_A_C2_i32
   all_goals (try extract_goal ; sorry)
@@ -109,7 +109,7 @@ theorem shl_add_nuw_proof : shl_add_nuw_before ⊑ shl_add_nuw_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_add_nuw
   all_goals (try extract_goal ; sorry)
@@ -141,7 +141,7 @@ theorem shl_nuw_add_nuw_proof : shl_nuw_add_nuw_before ⊑ shl_nuw_add_nuw_after
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_nuw_add_nuw
   all_goals (try extract_goal ; sorry)
@@ -174,7 +174,7 @@ theorem shl_nsw_add_nuw_proof : shl_nsw_add_nuw_before ⊑ shl_nsw_add_nuw_after
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_nsw_add_nuw
   all_goals (try extract_goal ; sorry)
@@ -207,7 +207,7 @@ theorem lshr_exact_add_nuw_proof : lshr_exact_add_nuw_before ⊑ lshr_exact_add_
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lshr_exact_add_nuw
   all_goals (try extract_goal ; sorry)
@@ -240,7 +240,7 @@ theorem ashr_exact_add_nuw_proof : ashr_exact_add_nuw_before ⊑ ashr_exact_add_
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN ashr_exact_add_nuw
   all_goals (try extract_goal ; sorry)
@@ -273,7 +273,7 @@ theorem lshr_exact_add_negative_shift_positive_proof : lshr_exact_add_negative_s
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lshr_exact_add_negative_shift_positive
   all_goals (try extract_goal ; sorry)
@@ -306,7 +306,7 @@ theorem ashr_exact_add_negative_shift_negative_proof : ashr_exact_add_negative_s
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN ashr_exact_add_negative_shift_negative
   all_goals (try extract_goal ; sorry)
@@ -339,7 +339,7 @@ theorem shl_nsw_add_negative_proof : shl_nsw_add_negative_before ⊑ shl_nsw_add
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_nsw_add_negative
   all_goals (try extract_goal ; sorry)
@@ -374,7 +374,7 @@ theorem shl_nsw_add_negative_invalid_constant3_proof : shl_nsw_add_negative_inva
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_nsw_add_negative_invalid_constant3
   all_goals (try extract_goal ; sorry)
@@ -413,7 +413,7 @@ theorem lshr_16_add_known_16_leading_zeroes_proof : lshr_16_add_known_16_leading
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lshr_16_add_known_16_leading_zeroes
   all_goals (try extract_goal ; sorry)
@@ -454,7 +454,7 @@ theorem lshr_16_add_not_known_16_leading_zeroes_proof : lshr_16_add_not_known_16
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lshr_16_add_not_known_16_leading_zeroes
   all_goals (try extract_goal ; sorry)
@@ -493,7 +493,7 @@ theorem lshr_32_add_known_32_leading_zeroes_proof : lshr_32_add_known_32_leading
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lshr_32_add_known_32_leading_zeroes
   all_goals (try extract_goal ; sorry)
@@ -534,7 +534,7 @@ theorem lshr_32_add_not_known_32_leading_zeroes_proof : lshr_32_add_not_known_32
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lshr_32_add_not_known_32_leading_zeroes
   all_goals (try extract_goal ; sorry)
@@ -567,7 +567,7 @@ theorem shl_fold_or_disjoint_cnt_proof : shl_fold_or_disjoint_cnt_before ⊑ shl
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_fold_or_disjoint_cnt
   all_goals (try extract_goal ; sorry)

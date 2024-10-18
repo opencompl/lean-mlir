@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gpr53357_statements
-                                                    
+
 def src_before := [llvm|
 {
 ^0(%arg16 : i32, %arg17 : i32):
@@ -40,7 +40,7 @@ theorem src_proof : src_before ⊑ src_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN src
   all_goals (try extract_goal ; sorry)
@@ -75,7 +75,7 @@ theorem src2_proof : src2_before ⊑ src2_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN src2
   all_goals (try extract_goal ; sorry)
@@ -111,7 +111,7 @@ theorem src3_proof : src3_before ⊑ src3_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN src3
   all_goals (try extract_goal ; sorry)
@@ -146,7 +146,7 @@ theorem src4_proof : src4_before ⊑ src4_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN src4
   all_goals (try extract_goal ; sorry)
@@ -181,7 +181,7 @@ theorem src5_proof : src5_before ⊑ src5_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN src5
   all_goals (try extract_goal ; sorry)

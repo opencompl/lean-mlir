@@ -1,0 +1,13 @@
+1: "main"
+4: "main" has unsupported operation: llvm.call
+
+4: "main" has unsupported operation: builtin.unregistered: llvm.intr.memset
+
+4: "main" has unsupported operation: llvm.return
+
+1: "__memset_chk"
+5: "__memset_chk" is empty
+
+1: "opendir"
+5: "opendir" is empty
+

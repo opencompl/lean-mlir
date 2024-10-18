@@ -1,0 +1,62 @@
+1: "t0_shl"
+4: "t0_shl" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "t1_lshr"
+4: "t1_lshr" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "t2_ashr"
+4: "t2_ashr" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "t3_vec_shl"
+4: "t3_vec_shl" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "t4_vec_lshr"
+4: "t4_vec_lshr" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "t5_vec_ashr"
+4: "t5_vec_ashr" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "t6_twoshifts"
+4: "t6_twoshifts" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "t6_twoshifts" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "t6_twoshifts" has unsupported operation: builtin.unregistered: llvm.sext
+
+1: "n7_fshl"
+4: "n7_fshl" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "n7_fshl" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "n8_fshr"
+4: "n8_fshr" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "n8_fshr" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "t9_fshl"
+4: "t9_fshl" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "t9_fshl" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "t10_fshr"
+4: "t10_fshr" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "t10_fshr" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "use32"
+5: "use32" is empty
+
+1: "n11_extrause"
+4: "n11_extrause" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "n11_extrause" has unsupported operation: llvm.call
+
+1: "n12_twoshifts_and_extrause"
+4: "n12_twoshifts_and_extrause" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "n12_twoshifts_and_extrause" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "n12_twoshifts_and_extrause" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "n12_twoshifts_and_extrause" has unsupported operation: llvm.call
+

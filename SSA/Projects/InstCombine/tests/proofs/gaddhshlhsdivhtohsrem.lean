@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gaddhshlhsdivhtohsrem_statements
-                                                    
+
 def addhshlhsdivhscalar0_before := [llvm|
 {
 ^0(%arg19 : i8):
@@ -39,7 +39,7 @@ theorem addhshlhsdivhscalar0_proof : addhshlhsdivhscalar0_before ⊑ addhshlhsdi
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN addhshlhsdivhscalar0
   apply addhshlhsdivhscalar0_thm
@@ -73,7 +73,7 @@ theorem addhshlhsdivhscalar1_proof : addhshlhsdivhscalar1_before ⊑ addhshlhsdi
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN addhshlhsdivhscalar1
   apply addhshlhsdivhscalar1_thm
@@ -107,7 +107,7 @@ theorem addhshlhsdivhscalar2_proof : addhshlhsdivhscalar2_before ⊑ addhshlhsdi
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN addhshlhsdivhscalar2
   apply addhshlhsdivhscalar2_thm
@@ -144,7 +144,7 @@ theorem addhshlhsdivhnegative0_proof : addhshlhsdivhnegative0_before ⊑ addhshl
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN addhshlhsdivhnegative0
   apply addhshlhsdivhnegative0_thm
@@ -178,7 +178,7 @@ theorem addhshlhsdivhnegative1_proof : addhshlhsdivhnegative1_before ⊑ addhshl
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN addhshlhsdivhnegative1
   apply addhshlhsdivhnegative1_thm

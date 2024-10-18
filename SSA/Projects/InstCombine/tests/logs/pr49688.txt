@@ -1,0 +1,16 @@
+1: "f"
+4: "f" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "f" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "f" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "f2"
+4: "f2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "f2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "f2" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "f2" has unsupported operation: builtin.unregistered: llvm.zext
+

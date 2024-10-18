@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section g2008h07h09hSubAndError_statements
-                                                    
+
 def foo_before := [llvm|
 {
 ^0(%arg0 : i32):
@@ -40,7 +40,7 @@ theorem foo_proof : foo_before ⊑ foo_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN foo
   all_goals (try extract_goal ; sorry)

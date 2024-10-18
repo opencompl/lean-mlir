@@ -1,0 +1,11 @@
+1: "test_load_combine_aa"
+4: "test_load_combine_aa" has unsupported operation: llvm.load
+
+4: "test_load_combine_aa" has unsupported operation: llvm.store
+
+4: "test_load_combine_aa" has unsupported operation: llvm.store
+
+4: "test_load_combine_aa" has unsupported operation: llvm.store
+
+4: "test_load_combine_aa" has unsupported operation: llvm.return
+

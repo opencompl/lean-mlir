@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section g2008h02h16hSDivOverflow2_statements
-                                                    
+
 def i_before := [llvm|
 {
 ^0(%arg0 : i8):
@@ -37,7 +37,7 @@ theorem i_proof : i_before ⊑ i_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN i
   apply i_thm

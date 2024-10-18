@@ -1,0 +1,183 @@
+1: "strlcpy"
+5: "strlcpy" is empty
+
+1: "sink"
+5: "sink" is empty
+
+1: "fold_strlcpy_s0"
+4: "fold_strlcpy_s0" has unsupported operation: llvm.call
+
+4: "fold_strlcpy_s0" has unsupported operation: llvm.store
+
+4: "fold_strlcpy_s0" has unsupported operation: llvm.call
+
+4: "fold_strlcpy_s0" has unsupported operation: llvm.store
+
+4: "fold_strlcpy_s0" has unsupported operation: llvm.call
+
+4: "fold_strlcpy_s0" has unsupported operation: llvm.return
+
+1: "fold_strlcpy_s1"
+4: "fold_strlcpy_s1" has unsupported operation: llvm.call
+
+4: "fold_strlcpy_s1" has unsupported operation: llvm.store
+
+4: "fold_strlcpy_s1" has unsupported operation: llvm.call
+
+4: "fold_strlcpy_s1" has unsupported operation: llvm.store
+
+4: "fold_strlcpy_s1" has unsupported operation: llvm.call
+
+4: "fold_strlcpy_s1" has unsupported operation: llvm.store
+
+4: "fold_strlcpy_s1" has unsupported operation: llvm.call
+
+4: "fold_strlcpy_s1" has unsupported operation: llvm.store
+
+4: "fold_strlcpy_s1" has unsupported operation: llvm.call
+
+4: "fold_strlcpy_s1" has unsupported operation: llvm.return
+
+1: "fold_strlcpy_s5"
+4: "fold_strlcpy_s5" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strlcpy_s5" has unsupported operation: llvm.call
+
+4: "fold_strlcpy_s5" has unsupported operation: llvm.store
+
+4: "fold_strlcpy_s5" has unsupported operation: llvm.call
+
+4: "fold_strlcpy_s5" has unsupported operation: llvm.store
+
+4: "fold_strlcpy_s5" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlcpy_s5" has unsupported operation: llvm.store
+
+4: "fold_strlcpy_s5" has unsupported operation: llvm.call
+
+4: "fold_strlcpy_s5" has unsupported operation: llvm.store
+
+4: "fold_strlcpy_s5" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlcpy_s5" has unsupported operation: llvm.store
+
+4: "fold_strlcpy_s5" has unsupported operation: llvm.call
+
+4: "fold_strlcpy_s5" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "fold_strlcpy_s5" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlcpy_s5" has unsupported operation: llvm.store
+
+4: "fold_strlcpy_s5" has unsupported operation: llvm.call
+
+4: "fold_strlcpy_s5" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "fold_strlcpy_s5" has unsupported operation: llvm.call
+
+4: "fold_strlcpy_s5" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "fold_strlcpy_s5" has unsupported operation: llvm.call
+
+4: "fold_strlcpy_s5" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "fold_strlcpy_s5" has unsupported operation: llvm.call
+
+4: "fold_strlcpy_s5" has unsupported operation: llvm.return
+
+1: "fold_strlcpy_s_0"
+4: "fold_strlcpy_s_0" has unsupported operation: llvm.store
+
+4: "fold_strlcpy_s_0" has unsupported operation: llvm.call
+
+4: "fold_strlcpy_s_0" has unsupported operation: llvm.call
+
+4: "fold_strlcpy_s_0" has unsupported operation: llvm.call
+
+4: "fold_strlcpy_s_0" has unsupported operation: llvm.call
+
+4: "fold_strlcpy_s_0" has unsupported operation: llvm.call
+
+4: "fold_strlcpy_s_0" has unsupported operation: llvm.call
+
+4: "fold_strlcpy_s_0" has unsupported operation: llvm.return
+
+1: "call_strlcpy_s0_n"
+4: "call_strlcpy_s0_n" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strlcpy_s0_n" has unsupported operation: llvm.getelementptr
+
+4: "call_strlcpy_s0_n" has unsupported operation: llvm.getelementptr
+
+4: "call_strlcpy_s0_n" has unsupported operation: llvm.call
+
+4: "call_strlcpy_s0_n" has unsupported operation: llvm.call
+
+4: "call_strlcpy_s0_n" has unsupported operation: llvm.call
+
+4: "call_strlcpy_s0_n" has unsupported operation: llvm.call
+
+4: "call_strlcpy_s0_n" has unsupported operation: llvm.call
+
+4: "call_strlcpy_s0_n" has unsupported operation: llvm.call
+
+4: "call_strlcpy_s0_n" has unsupported operation: llvm.call
+
+4: "call_strlcpy_s0_n" has unsupported operation: llvm.call
+
+4: "call_strlcpy_s0_n" has unsupported operation: llvm.call
+
+4: "call_strlcpy_s0_n" has unsupported operation: llvm.call
+
+4: "call_strlcpy_s0_n" has unsupported operation: llvm.call
+
+4: "call_strlcpy_s0_n" has unsupported operation: llvm.call
+
+4: "call_strlcpy_s0_n" has unsupported operation: llvm.return
+
+1: "fold_strlcpy_a5"
+4: "fold_strlcpy_a5" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strlcpy_a5" has unsupported operation: llvm.call
+
+4: "fold_strlcpy_a5" has unsupported operation: llvm.store
+
+4: "fold_strlcpy_a5" has unsupported operation: llvm.call
+
+4: "fold_strlcpy_a5" has unsupported operation: llvm.store
+
+4: "fold_strlcpy_a5" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlcpy_a5" has unsupported operation: llvm.store
+
+4: "fold_strlcpy_a5" has unsupported operation: llvm.call
+
+4: "fold_strlcpy_a5" has unsupported operation: llvm.store
+
+4: "fold_strlcpy_a5" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlcpy_a5" has unsupported operation: llvm.store
+
+4: "fold_strlcpy_a5" has unsupported operation: llvm.call
+
+4: "fold_strlcpy_a5" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "fold_strlcpy_a5" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlcpy_a5" has unsupported operation: llvm.store
+
+4: "fold_strlcpy_a5" has unsupported operation: llvm.call
+
+4: "fold_strlcpy_a5" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "fold_strlcpy_a5" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlcpy_a5" has unsupported operation: llvm.store
+
+4: "fold_strlcpy_a5" has unsupported operation: llvm.call
+
+4: "fold_strlcpy_a5" has unsupported operation: llvm.return
+
+1: "strlen"
+5: "strlen" is empty
+

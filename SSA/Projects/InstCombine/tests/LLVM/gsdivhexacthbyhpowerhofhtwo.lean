@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gsdivhexacthbyhpowerhofhtwo_statements
-                                                    
+
 def t0_before := [llvm|
 {
 ^0(%arg22 : i8):
@@ -36,7 +36,7 @@ theorem t0_proof : t0_before ⊑ t0_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t0
   all_goals (try extract_goal ; sorry)
@@ -67,7 +67,7 @@ theorem shl1_nsw_proof : shl1_nsw_before ⊑ shl1_nsw_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl1_nsw
   all_goals (try extract_goal ; sorry)
@@ -100,7 +100,7 @@ theorem shl1_nsw_not_exact_proof : shl1_nsw_not_exact_before ⊑ shl1_nsw_not_ex
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl1_nsw_not_exact
   all_goals (try extract_goal ; sorry)
@@ -135,7 +135,7 @@ theorem prove_exact_with_high_mask_proof : prove_exact_with_high_mask_before ⊑
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN prove_exact_with_high_mask
   all_goals (try extract_goal ; sorry)
@@ -168,7 +168,7 @@ theorem prove_exact_with_high_mask_limit_proof : prove_exact_with_high_mask_limi
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN prove_exact_with_high_mask_limit
   all_goals (try extract_goal ; sorry)

@@ -1,0 +1,366 @@
+1: "ugt_and_min"
+4: "ugt_and_min" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "ugt_and_min" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "ugt_and_min" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "ugt_and_min_logical"
+4: "ugt_and_min_logical" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "ugt_and_min_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "ugt_and_min_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "ugt_and_min_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "ugt_and_min_commute"
+4: "ugt_and_min_commute" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "ugt_and_min_commute" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "ugt_and_min_commute" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "ugt_and_min_commute_logical"
+4: "ugt_and_min_commute_logical" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "ugt_and_min_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "ugt_and_min_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "ugt_and_min_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "ugt_swap_and_min"
+4: "ugt_swap_and_min" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "ugt_swap_and_min" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "ugt_swap_and_min" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "ugt_swap_and_min_logical"
+4: "ugt_swap_and_min_logical" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "ugt_swap_and_min_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "ugt_swap_and_min_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "ugt_swap_and_min_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "ugt_swap_and_min_commute"
+4: "ugt_swap_and_min_commute" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "ugt_swap_and_min_commute" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "ugt_swap_and_min_commute" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "ugt_swap_and_min_commute_logical"
+4: "ugt_swap_and_min_commute_logical" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "ugt_swap_and_min_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "ugt_swap_and_min_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "ugt_swap_and_min_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "ule_or_not_min"
+4: "ule_or_not_min" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "ule_or_not_min" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "ule_or_not_min" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "ule_or_not_min_logical"
+4: "ule_or_not_min_logical" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "ule_or_not_min_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "ule_or_not_min_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "ule_or_not_min_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "ule_or_not_min_commute"
+4: "ule_or_not_min_commute" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "ule_or_not_min_commute" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "ule_or_not_min_commute" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "ule_or_not_min_commute_logical"
+4: "ule_or_not_min_commute_logical" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "ule_or_not_min_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "ule_or_not_min_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "ule_or_not_min_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "ule_swap_or_not_min"
+4: "ule_swap_or_not_min" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "ule_swap_or_not_min" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "ule_swap_or_not_min" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "ule_swap_or_not_min_logical"
+4: "ule_swap_or_not_min_logical" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "ule_swap_or_not_min_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "ule_swap_or_not_min_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "ule_swap_or_not_min_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "ule_swap_or_not_min_commute"
+4: "ule_swap_or_not_min_commute" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "ule_swap_or_not_min_commute" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "ule_swap_or_not_min_commute" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "ule_swap_or_not_min_commute_logical"
+4: "ule_swap_or_not_min_commute_logical" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "ule_swap_or_not_min_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "ule_swap_or_not_min_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "ule_swap_or_not_min_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "ule_and_min"
+4: "ule_and_min" has unsupported operation: llvm.mlir.zero
+
+4: "ule_and_min" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ule_and_min_logical"
+4: "ule_and_min_logical" has unsupported operation: llvm.mlir.zero
+
+4: "ule_and_min_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ule_and_min_commute"
+4: "ule_and_min_commute" has unsupported operation: llvm.mlir.zero
+
+4: "ule_and_min_commute" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ule_and_min_commute_logical"
+4: "ule_and_min_commute_logical" has unsupported operation: llvm.mlir.zero
+
+4: "ule_and_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ule_swap_and_min"
+4: "ule_swap_and_min" has unsupported operation: llvm.mlir.zero
+
+4: "ule_swap_and_min" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ule_swap_and_min_logical"
+4: "ule_swap_and_min_logical" has unsupported operation: llvm.mlir.zero
+
+4: "ule_swap_and_min_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ule_swap_and_min_commute"
+4: "ule_swap_and_min_commute" has unsupported operation: llvm.mlir.zero
+
+4: "ule_swap_and_min_commute" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ule_swap_and_min_commute_logical"
+4: "ule_swap_and_min_commute_logical" has unsupported operation: llvm.mlir.zero
+
+4: "ule_swap_and_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ule_or_min"
+4: "ule_or_min" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ule_or_min_logical"
+4: "ule_or_min_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ule_or_min_commute"
+4: "ule_or_min_commute" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ule_or_min_commute_logical"
+4: "ule_or_min_commute_logical" has unsupported operation: llvm.mlir.zero
+
+4: "ule_or_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "ule_or_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "ule_or_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "ule_swap_or_min"
+4: "ule_swap_or_min" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ule_swap_or_min_logical"
+4: "ule_swap_or_min_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ule_swap_or_min_commute"
+4: "ule_swap_or_min_commute" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ule_swap_or_min_commute_logical"
+4: "ule_swap_or_min_commute_logical" has unsupported operation: llvm.mlir.zero
+
+4: "ule_swap_or_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "ule_swap_or_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "ule_swap_or_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "ugt_and_not_min"
+4: "ugt_and_not_min" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ugt_and_not_min_logical"
+4: "ugt_and_not_min_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ugt_and_not_min_commute"
+4: "ugt_and_not_min_commute" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ugt_and_not_min_commute_logical"
+4: "ugt_and_not_min_commute_logical" has unsupported operation: llvm.mlir.zero
+
+4: "ugt_and_not_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "ugt_and_not_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "ugt_and_not_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "ugt_swap_and_not_min"
+4: "ugt_swap_and_not_min" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ugt_swap_and_not_min_logical"
+4: "ugt_swap_and_not_min_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ugt_swap_and_not_min_commute"
+4: "ugt_swap_and_not_min_commute" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ugt_swap_and_not_min_commute_logical"
+4: "ugt_swap_and_not_min_commute_logical" has unsupported operation: llvm.mlir.zero
+
+4: "ugt_swap_and_not_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "ugt_swap_and_not_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "ugt_swap_and_not_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "ugt_or_not_min"
+4: "ugt_or_not_min" has unsupported operation: llvm.mlir.zero
+
+4: "ugt_or_not_min" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ugt_or_not_min_logical"
+4: "ugt_or_not_min_logical" has unsupported operation: llvm.mlir.zero
+
+4: "ugt_or_not_min_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ugt_or_not_min_commute"
+4: "ugt_or_not_min_commute" has unsupported operation: llvm.mlir.zero
+
+4: "ugt_or_not_min_commute" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ugt_or_not_min_commute_logical"
+4: "ugt_or_not_min_commute_logical" has unsupported operation: llvm.mlir.zero
+
+4: "ugt_or_not_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ugt_swap_or_not_min"
+4: "ugt_swap_or_not_min" has unsupported operation: llvm.mlir.zero
+
+4: "ugt_swap_or_not_min" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ugt_swap_or_not_min_logical"
+4: "ugt_swap_or_not_min_logical" has unsupported operation: llvm.mlir.zero
+
+4: "ugt_swap_or_not_min_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ugt_swap_or_not_min_commute"
+4: "ugt_swap_or_not_min_commute" has unsupported operation: llvm.mlir.zero
+
+4: "ugt_swap_or_not_min_commute" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ugt_swap_or_not_min_commute_logical"
+4: "ugt_swap_or_not_min_commute_logical" has unsupported operation: llvm.mlir.zero
+
+4: "ugt_swap_or_not_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sgt_and_min"
+4: "sgt_and_min" has unsupported operation: llvm.mlir.zero
+
+4: "sgt_and_min" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sgt_and_min" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sgt_and_min_logical"
+4: "sgt_and_min_logical" has unsupported operation: llvm.mlir.zero
+
+4: "sgt_and_min_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sgt_and_min_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sle_or_not_min"
+4: "sle_or_not_min" has unsupported operation: llvm.mlir.zero
+
+4: "sle_or_not_min" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sle_or_not_min" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sle_or_not_min_logical"
+4: "sle_or_not_min_logical" has unsupported operation: llvm.mlir.zero
+
+4: "sle_or_not_min_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sle_or_not_min_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sle_and_min"
+4: "sle_and_min" has unsupported operation: llvm.mlir.zero
+
+4: "sle_and_min" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sle_and_min" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sle_and_min_logical"
+4: "sle_and_min_logical" has unsupported operation: llvm.mlir.zero
+
+4: "sle_and_min_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sle_and_min_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sgt_and_not_min"
+4: "sgt_and_not_min" has unsupported operation: llvm.mlir.zero
+
+4: "sgt_and_not_min" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sgt_and_not_min" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sgt_and_not_min_logical"
+4: "sgt_and_not_min_logical" has unsupported operation: llvm.mlir.zero
+
+4: "sgt_and_not_min_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sgt_and_not_min_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sgt_or_not_min"
+4: "sgt_or_not_min" has unsupported operation: llvm.mlir.zero
+
+4: "sgt_or_not_min" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sgt_or_not_min" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sgt_or_not_min_logical"
+4: "sgt_or_not_min_logical" has unsupported operation: llvm.mlir.zero
+
+4: "sgt_or_not_min_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sgt_or_not_min_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "slt_and_min"
+4: "slt_and_min" has unsupported operation: llvm.mlir.zero
+
+4: "slt_and_min" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "slt_and_min" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "slt_and_min_logical"
+4: "slt_and_min_logical" has unsupported operation: llvm.mlir.zero
+
+4: "slt_and_min_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "slt_and_min_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "slt_and_min_logical" has unsupported operation: builtin.unregistered: llvm.select
+

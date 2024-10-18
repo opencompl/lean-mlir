@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gAddOverFlow_statements
-                                                    
+
 def oppositesign_before := [llvm|
 {
 ^0(%arg32 : i16, %arg33 : i16):
@@ -42,7 +42,7 @@ theorem oppositesign_proof : oppositesign_before ⊑ oppositesign_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN oppositesign
   all_goals (try extract_goal ; sorry)
@@ -77,7 +77,7 @@ theorem zero_sign_bit_proof : zero_sign_bit_before ⊑ zero_sign_bit_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN zero_sign_bit
   all_goals (try extract_goal ; sorry)
@@ -112,7 +112,7 @@ theorem zero_sign_bit2_proof : zero_sign_bit2_before ⊑ zero_sign_bit2_after :=
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN zero_sign_bit2
   all_goals (try extract_goal ; sorry)
@@ -149,7 +149,7 @@ theorem ripple_nsw1_proof : ripple_nsw1_before ⊑ ripple_nsw1_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN ripple_nsw1
   all_goals (try extract_goal ; sorry)
@@ -186,7 +186,7 @@ theorem ripple_nsw2_proof : ripple_nsw2_before ⊑ ripple_nsw2_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN ripple_nsw2
   all_goals (try extract_goal ; sorry)
@@ -223,7 +223,7 @@ theorem ripple_nsw3_proof : ripple_nsw3_before ⊑ ripple_nsw3_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN ripple_nsw3
   all_goals (try extract_goal ; sorry)
@@ -260,7 +260,7 @@ theorem ripple_nsw4_proof : ripple_nsw4_before ⊑ ripple_nsw4_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN ripple_nsw4
   all_goals (try extract_goal ; sorry)
@@ -297,7 +297,7 @@ theorem ripple_nsw5_proof : ripple_nsw5_before ⊑ ripple_nsw5_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN ripple_nsw5
   all_goals (try extract_goal ; sorry)
@@ -334,7 +334,7 @@ theorem ripple_nsw6_proof : ripple_nsw6_before ⊑ ripple_nsw6_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN ripple_nsw6
   all_goals (try extract_goal ; sorry)
@@ -371,7 +371,7 @@ theorem ripple_no_nsw2_proof : ripple_no_nsw2_before ⊑ ripple_no_nsw2_after :=
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN ripple_no_nsw2
   all_goals (try extract_goal ; sorry)
@@ -406,7 +406,7 @@ theorem PR38021_proof : PR38021_before ⊑ PR38021_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN PR38021
   all_goals (try extract_goal ; sorry)

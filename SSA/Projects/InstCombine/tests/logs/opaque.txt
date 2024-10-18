@@ -1,0 +1,10 @@
+1: "rt_swift_slowAlloc"
+5: "rt_swift_slowAlloc" is empty
+
+1: "_TwTkV"
+4: "_TwTkV" has unsupported operation: llvm.call
+
+4: "_TwTkV" has unsupported operation: llvm.store
+
+4: "_TwTkV" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+

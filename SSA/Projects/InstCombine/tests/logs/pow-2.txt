@@ -1,0 +1,6 @@
+1: "pow"
+5: "pow" is empty
+
+1: "test_no_simplify1"
+4: "test_no_simplify1" has unsupported operation: llvm.call
+

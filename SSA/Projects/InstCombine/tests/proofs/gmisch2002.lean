@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gmisch2002_statements
-                                                    
+
 def missed_const_prop_2002h12h05_before := [llvm|
 {
 ^0(%arg0 : i32):
@@ -40,7 +40,7 @@ theorem missed_const_prop_2002h12h05_proof : missed_const_prop_2002h12h05_before
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN missed_const_prop_2002h12h05
   all_goals (try extract_goal ; sorry)

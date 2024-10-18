@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section glshr_statements
-                                                    
+
 def lshr_exact_before := [llvm|
 {
 ^0(%arg183 : i8):
@@ -41,7 +41,7 @@ theorem lshr_exact_proof : lshr_exact_before ⊑ lshr_exact_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lshr_exact
   apply lshr_exact_thm
@@ -77,7 +77,7 @@ theorem shl_add_proof : shl_add_before ⊑ shl_add_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_add
   apply shl_add_thm
@@ -108,7 +108,7 @@ theorem mul_splat_fold_proof : mul_splat_fold_before ⊑ mul_splat_fold_after :=
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN mul_splat_fold
   apply mul_splat_fold_thm
@@ -140,7 +140,7 @@ theorem shl_add_lshr_flag_preservation_proof : shl_add_lshr_flag_preservation_be
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_add_lshr_flag_preservation
   apply shl_add_lshr_flag_preservation_thm
@@ -172,7 +172,7 @@ theorem shl_add_lshr_proof : shl_add_lshr_before ⊑ shl_add_lshr_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_add_lshr
   apply shl_add_lshr_thm
@@ -206,7 +206,7 @@ theorem shl_add_lshr_comm_proof : shl_add_lshr_comm_before ⊑ shl_add_lshr_comm
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_add_lshr_comm
   apply shl_add_lshr_comm_thm
@@ -238,7 +238,7 @@ theorem shl_sub_lshr_proof : shl_sub_lshr_before ⊑ shl_sub_lshr_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_sub_lshr
   apply shl_sub_lshr_thm
@@ -270,7 +270,7 @@ theorem shl_sub_lshr_reverse_proof : shl_sub_lshr_reverse_before ⊑ shl_sub_lsh
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_sub_lshr_reverse
   apply shl_sub_lshr_reverse_thm
@@ -302,7 +302,7 @@ theorem shl_sub_lshr_reverse_no_nsw_proof : shl_sub_lshr_reverse_no_nsw_before �
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_sub_lshr_reverse_no_nsw
   apply shl_sub_lshr_reverse_no_nsw_thm
@@ -334,7 +334,7 @@ theorem shl_sub_lshr_reverse_nsw_on_op1_proof : shl_sub_lshr_reverse_nsw_on_op1_
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_sub_lshr_reverse_nsw_on_op1
   apply shl_sub_lshr_reverse_nsw_on_op1_thm
@@ -366,7 +366,7 @@ theorem shl_or_lshr_proof : shl_or_lshr_before ⊑ shl_or_lshr_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_or_lshr
   apply shl_or_lshr_thm
@@ -398,7 +398,7 @@ theorem shl_or_disjoint_lshr_proof : shl_or_disjoint_lshr_before ⊑ shl_or_disj
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_or_disjoint_lshr
   apply shl_or_disjoint_lshr_thm
@@ -430,7 +430,7 @@ theorem shl_or_lshr_comm_proof : shl_or_lshr_comm_before ⊑ shl_or_lshr_comm_af
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_or_lshr_comm
   apply shl_or_lshr_comm_thm
@@ -462,7 +462,7 @@ theorem shl_or_disjoint_lshr_comm_proof : shl_or_disjoint_lshr_comm_before ⊑ s
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_or_disjoint_lshr_comm
   apply shl_or_disjoint_lshr_comm_thm
@@ -494,7 +494,7 @@ theorem shl_xor_lshr_proof : shl_xor_lshr_before ⊑ shl_xor_lshr_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_xor_lshr
   apply shl_xor_lshr_thm
@@ -526,7 +526,7 @@ theorem shl_xor_lshr_comm_proof : shl_xor_lshr_comm_before ⊑ shl_xor_lshr_comm
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_xor_lshr_comm
   apply shl_xor_lshr_comm_thm
@@ -558,7 +558,7 @@ theorem shl_and_lshr_proof : shl_and_lshr_before ⊑ shl_and_lshr_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_and_lshr
   apply shl_and_lshr_thm
@@ -590,7 +590,7 @@ theorem shl_and_lshr_comm_proof : shl_and_lshr_comm_before ⊑ shl_and_lshr_comm
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_and_lshr_comm
   apply shl_and_lshr_comm_thm
@@ -622,7 +622,7 @@ theorem shl_lshr_and_exact_proof : shl_lshr_and_exact_before ⊑ shl_lshr_and_ex
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_lshr_and_exact
   apply shl_lshr_and_exact_thm
@@ -656,7 +656,7 @@ theorem mul_splat_fold_no_nuw_proof : mul_splat_fold_no_nuw_before ⊑ mul_splat
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN mul_splat_fold_no_nuw
   apply mul_splat_fold_no_nuw_thm
@@ -687,7 +687,7 @@ theorem mul_splat_fold_too_narrow_proof : mul_splat_fold_too_narrow_before ⊑ m
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN mul_splat_fold_too_narrow
   apply mul_splat_fold_too_narrow_thm
@@ -721,7 +721,7 @@ theorem negative_and_odd_proof : negative_and_odd_before ⊑ negative_and_odd_af
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN negative_and_odd
   apply negative_and_odd_thm

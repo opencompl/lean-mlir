@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gorhshiftedhmasks_statements
-                                                    
+
 def or_and_shifts1_before := [llvm|
 {
 ^0(%arg14 : i32):
@@ -50,7 +50,7 @@ theorem or_and_shifts1_proof : or_and_shifts1_before ⊑ or_and_shifts1_after :=
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_and_shifts1
   all_goals (try extract_goal ; sorry)
@@ -95,7 +95,7 @@ theorem or_and_shift_shift_and_proof : or_and_shift_shift_and_before ⊑ or_and_
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_and_shift_shift_and
   all_goals (try extract_goal ; sorry)
@@ -147,7 +147,7 @@ theorem multiuse1_proof : multiuse1_before ⊑ multiuse1_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN multiuse1
   all_goals (try extract_goal ; sorry)
@@ -210,7 +210,7 @@ theorem multiuse2_proof : multiuse2_before ⊑ multiuse2_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN multiuse2
   all_goals (try extract_goal ; sorry)
@@ -265,7 +265,7 @@ theorem multiuse3_proof : multiuse3_before ⊑ multiuse3_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN multiuse3
   all_goals (try extract_goal ; sorry)
@@ -302,7 +302,7 @@ theorem shl_mask_proof : shl_mask_before ⊑ shl_mask_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_mask
   all_goals (try extract_goal ; sorry)
@@ -339,7 +339,7 @@ theorem shl_mask_wrong_shl_const_proof : shl_mask_wrong_shl_const_before ⊑ shl
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_mask_wrong_shl_const
   all_goals (try extract_goal ; sorry)
@@ -376,7 +376,7 @@ theorem shl_mask_weird_type_proof : shl_mask_weird_type_before ⊑ shl_mask_weir
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_mask_weird_type
   all_goals (try extract_goal ; sorry)
@@ -417,7 +417,7 @@ theorem shl_mul_mask_proof : shl_mul_mask_before ⊑ shl_mul_mask_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_mul_mask
   all_goals (try extract_goal ; sorry)
@@ -458,7 +458,7 @@ theorem shl_mul_mask_wrong_mul_const_proof : shl_mul_mask_wrong_mul_const_before
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_mul_mask_wrong_mul_const
   all_goals (try extract_goal ; sorry)

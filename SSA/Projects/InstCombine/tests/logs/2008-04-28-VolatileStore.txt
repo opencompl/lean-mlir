@@ -1,0 +1,7 @@
+1: "test"
+4: "test" has unsupported operation: llvm.alloca
+
+4: "test" has unsupported operation: llvm.store
+
+4: "test" has unsupported operation: llvm.return
+

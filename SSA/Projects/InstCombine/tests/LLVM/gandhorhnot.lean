@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gandhorhnot_statements
-                                                    
+
 def and_to_xor1_before := [llvm|
 {
 ^0(%arg119 : i32, %arg120 : i32):
@@ -38,7 +38,7 @@ theorem and_to_xor1_proof : and_to_xor1_before ⊑ and_to_xor1_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_to_xor1
   all_goals (try extract_goal ; sorry)
@@ -71,7 +71,7 @@ theorem and_to_xor2_proof : and_to_xor2_before ⊑ and_to_xor2_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_to_xor2
   all_goals (try extract_goal ; sorry)
@@ -104,7 +104,7 @@ theorem and_to_xor3_proof : and_to_xor3_before ⊑ and_to_xor3_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_to_xor3
   all_goals (try extract_goal ; sorry)
@@ -137,7 +137,7 @@ theorem and_to_xor4_proof : and_to_xor4_before ⊑ and_to_xor4_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_to_xor4
   all_goals (try extract_goal ; sorry)
@@ -172,7 +172,7 @@ theorem or_to_nxor1_proof : or_to_nxor1_before ⊑ or_to_nxor1_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_to_nxor1
   all_goals (try extract_goal ; sorry)
@@ -207,7 +207,7 @@ theorem or_to_nxor2_proof : or_to_nxor2_before ⊑ or_to_nxor2_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_to_nxor2
   all_goals (try extract_goal ; sorry)
@@ -242,7 +242,7 @@ theorem or_to_nxor3_proof : or_to_nxor3_before ⊑ or_to_nxor3_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_to_nxor3
   all_goals (try extract_goal ; sorry)
@@ -277,7 +277,7 @@ theorem or_to_nxor4_proof : or_to_nxor4_before ⊑ or_to_nxor4_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_to_nxor4
   all_goals (try extract_goal ; sorry)
@@ -308,7 +308,7 @@ theorem xor_to_xor1_proof : xor_to_xor1_before ⊑ xor_to_xor1_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN xor_to_xor1
   all_goals (try extract_goal ; sorry)
@@ -339,7 +339,7 @@ theorem xor_to_xor2_proof : xor_to_xor2_before ⊑ xor_to_xor2_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN xor_to_xor2
   all_goals (try extract_goal ; sorry)
@@ -370,7 +370,7 @@ theorem xor_to_xor3_proof : xor_to_xor3_before ⊑ xor_to_xor3_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN xor_to_xor3
   all_goals (try extract_goal ; sorry)
@@ -401,7 +401,7 @@ theorem xor_to_xor4_proof : xor_to_xor4_before ⊑ xor_to_xor4_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN xor_to_xor4
   all_goals (try extract_goal ; sorry)
@@ -440,7 +440,7 @@ theorem PR32830_proof : PR32830_before ⊑ PR32830_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN PR32830
   all_goals (try extract_goal ; sorry)
@@ -473,7 +473,7 @@ theorem simplify_or_common_op_commute0_proof : simplify_or_common_op_commute0_be
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN simplify_or_common_op_commute0
   all_goals (try extract_goal ; sorry)
@@ -506,7 +506,7 @@ theorem simplify_or_common_op_commute1_proof : simplify_or_common_op_commute1_be
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN simplify_or_common_op_commute1
   all_goals (try extract_goal ; sorry)
@@ -541,7 +541,7 @@ theorem simplify_or_common_op_commute2_proof : simplify_or_common_op_commute2_be
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN simplify_or_common_op_commute2
   all_goals (try extract_goal ; sorry)
@@ -574,7 +574,7 @@ theorem simplify_and_common_op_commute1_proof : simplify_and_common_op_commute1_
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN simplify_and_common_op_commute1
   all_goals (try extract_goal ; sorry)
@@ -609,7 +609,7 @@ theorem simplify_and_common_op_commute2_proof : simplify_and_common_op_commute2_
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN simplify_and_common_op_commute2
   all_goals (try extract_goal ; sorry)
@@ -641,7 +641,7 @@ theorem reduce_xor_common_op_commute0_proof : reduce_xor_common_op_commute0_befo
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN reduce_xor_common_op_commute0
   all_goals (try extract_goal ; sorry)
@@ -673,7 +673,7 @@ theorem reduce_xor_common_op_commute1_proof : reduce_xor_common_op_commute1_befo
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN reduce_xor_common_op_commute1
   all_goals (try extract_goal ; sorry)
@@ -708,7 +708,7 @@ theorem annihilate_xor_common_op_commute2_proof : annihilate_xor_common_op_commu
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN annihilate_xor_common_op_commute2
   all_goals (try extract_goal ; sorry)

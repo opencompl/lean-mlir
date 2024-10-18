@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section greassociatehnuw_statements
-                                                    
+
 def reassoc_add_nuw_before := [llvm|
 {
 ^0(%arg26 : i32):
@@ -38,7 +38,7 @@ theorem reassoc_add_nuw_proof : reassoc_add_nuw_before ⊑ reassoc_add_nuw_after
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN reassoc_add_nuw
   apply reassoc_add_nuw_thm
@@ -71,7 +71,7 @@ theorem reassoc_sub_nuw_proof : reassoc_sub_nuw_before ⊑ reassoc_sub_nuw_after
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN reassoc_sub_nuw
   apply reassoc_sub_nuw_thm
@@ -104,7 +104,7 @@ theorem reassoc_mul_nuw_proof : reassoc_mul_nuw_before ⊑ reassoc_mul_nuw_after
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN reassoc_mul_nuw
   apply reassoc_mul_nuw_thm
@@ -137,7 +137,7 @@ theorem no_reassoc_add_nuw_none_proof : no_reassoc_add_nuw_none_before ⊑ no_re
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN no_reassoc_add_nuw_none
   apply no_reassoc_add_nuw_none_thm
@@ -170,7 +170,7 @@ theorem no_reassoc_add_none_nuw_proof : no_reassoc_add_none_nuw_before ⊑ no_re
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN no_reassoc_add_none_nuw
   apply no_reassoc_add_none_nuw_thm
@@ -205,7 +205,7 @@ theorem reassoc_x2_add_nuw_proof : reassoc_x2_add_nuw_before ⊑ reassoc_x2_add_
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN reassoc_x2_add_nuw
   apply reassoc_x2_add_nuw_thm
@@ -240,7 +240,7 @@ theorem reassoc_x2_mul_nuw_proof : reassoc_x2_mul_nuw_before ⊑ reassoc_x2_mul_
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN reassoc_x2_mul_nuw
   apply reassoc_x2_mul_nuw_thm
@@ -275,7 +275,7 @@ theorem reassoc_x2_sub_nuw_proof : reassoc_x2_sub_nuw_before ⊑ reassoc_x2_sub_
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN reassoc_x2_sub_nuw
   apply reassoc_x2_sub_nuw_thm
@@ -307,7 +307,7 @@ theorem tryFactorization_add_nuw_mul_nuw_proof : tryFactorization_add_nuw_mul_nu
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN tryFactorization_add_nuw_mul_nuw
   apply tryFactorization_add_nuw_mul_nuw_thm
@@ -339,7 +339,7 @@ theorem tryFactorization_add_nuw_mul_nuw_int_max_proof : tryFactorization_add_nu
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN tryFactorization_add_nuw_mul_nuw_int_max
   apply tryFactorization_add_nuw_mul_nuw_int_max_thm
@@ -371,7 +371,7 @@ theorem tryFactorization_add_mul_nuw_proof : tryFactorization_add_mul_nuw_before
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN tryFactorization_add_mul_nuw
   apply tryFactorization_add_mul_nuw_thm
@@ -403,7 +403,7 @@ theorem tryFactorization_add_nuw_mul_proof : tryFactorization_add_nuw_mul_before
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN tryFactorization_add_nuw_mul
   apply tryFactorization_add_nuw_mul_thm
@@ -435,7 +435,7 @@ theorem tryFactorization_add_nuw_mul_nuw_mul_nuw_var_proof : tryFactorization_ad
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN tryFactorization_add_nuw_mul_nuw_mul_nuw_var
   apply tryFactorization_add_nuw_mul_nuw_mul_nuw_var_thm
@@ -467,7 +467,7 @@ theorem tryFactorization_add_nuw_mul_mul_nuw_var_proof : tryFactorization_add_nu
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN tryFactorization_add_nuw_mul_mul_nuw_var
   apply tryFactorization_add_nuw_mul_mul_nuw_var_thm
@@ -499,7 +499,7 @@ theorem tryFactorization_add_nuw_mul_nuw_mul_var_proof : tryFactorization_add_nu
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN tryFactorization_add_nuw_mul_nuw_mul_var
   apply tryFactorization_add_nuw_mul_nuw_mul_var_thm
@@ -531,7 +531,7 @@ theorem tryFactorization_add_mul_nuw_mul_var_proof : tryFactorization_add_mul_nu
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN tryFactorization_add_mul_nuw_mul_var
   apply tryFactorization_add_mul_nuw_mul_var_thm

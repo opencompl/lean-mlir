@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gshlhfactor_statements
-                                                    
+
 def add_shl_same_amount_before := [llvm|
 {
 ^0(%arg59 : i6, %arg60 : i6, %arg61 : i6):
@@ -37,7 +37,7 @@ theorem add_shl_same_amount_proof : add_shl_same_amount_before ⊑ add_shl_same_
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_shl_same_amount
   all_goals (try extract_goal ; sorry)
@@ -69,7 +69,7 @@ theorem add_shl_same_amount_nuw_proof : add_shl_same_amount_nuw_before ⊑ add_s
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_shl_same_amount_nuw
   all_goals (try extract_goal ; sorry)
@@ -101,7 +101,7 @@ theorem add_shl_same_amount_partial_nsw1_proof : add_shl_same_amount_partial_nsw
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_shl_same_amount_partial_nsw1
   all_goals (try extract_goal ; sorry)
@@ -133,7 +133,7 @@ theorem add_shl_same_amount_partial_nsw2_proof : add_shl_same_amount_partial_nsw
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_shl_same_amount_partial_nsw2
   all_goals (try extract_goal ; sorry)
@@ -165,7 +165,7 @@ theorem add_shl_same_amount_partial_nuw1_proof : add_shl_same_amount_partial_nuw
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_shl_same_amount_partial_nuw1
   all_goals (try extract_goal ; sorry)
@@ -197,7 +197,7 @@ theorem add_shl_same_amount_partial_nuw2_proof : add_shl_same_amount_partial_nuw
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_shl_same_amount_partial_nuw2
   all_goals (try extract_goal ; sorry)
@@ -229,7 +229,7 @@ theorem sub_shl_same_amount_proof : sub_shl_same_amount_before ⊑ sub_shl_same_
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sub_shl_same_amount
   all_goals (try extract_goal ; sorry)
@@ -261,7 +261,7 @@ theorem sub_shl_same_amount_nuw_proof : sub_shl_same_amount_nuw_before ⊑ sub_s
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sub_shl_same_amount_nuw
   all_goals (try extract_goal ; sorry)
@@ -293,7 +293,7 @@ theorem sub_shl_same_amount_partial_nsw1_proof : sub_shl_same_amount_partial_nsw
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sub_shl_same_amount_partial_nsw1
   all_goals (try extract_goal ; sorry)
@@ -325,7 +325,7 @@ theorem sub_shl_same_amount_partial_nsw2_proof : sub_shl_same_amount_partial_nsw
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sub_shl_same_amount_partial_nsw2
   all_goals (try extract_goal ; sorry)
@@ -357,7 +357,7 @@ theorem sub_shl_same_amount_partial_nuw1_proof : sub_shl_same_amount_partial_nuw
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sub_shl_same_amount_partial_nuw1
   all_goals (try extract_goal ; sorry)
@@ -389,7 +389,7 @@ theorem sub_shl_same_amount_partial_nuw2_proof : sub_shl_same_amount_partial_nuw
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sub_shl_same_amount_partial_nuw2
   all_goals (try extract_goal ; sorry)
@@ -423,7 +423,7 @@ theorem add_shl_same_amount_constants_proof : add_shl_same_amount_constants_befo
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_shl_same_amount_constants
   all_goals (try extract_goal ; sorry)

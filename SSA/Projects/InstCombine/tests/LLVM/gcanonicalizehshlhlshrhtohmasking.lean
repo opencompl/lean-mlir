@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gcanonicalizehshlhlshrhtohmasking_statements
-                                                    
+
 def positive_samevar_before := [llvm|
 {
 ^0(%arg36 : i32, %arg37 : i32):
@@ -37,7 +37,7 @@ theorem positive_samevar_proof : positive_samevar_before ⊑ positive_samevar_af
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN positive_samevar
   all_goals (try extract_goal ; sorry)
@@ -69,7 +69,7 @@ theorem positive_sameconst_proof : positive_sameconst_before ⊑ positive_sameco
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN positive_sameconst
   all_goals (try extract_goal ; sorry)
@@ -104,7 +104,7 @@ theorem positive_biggerShl_proof : positive_biggerShl_before ⊑ positive_bigger
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN positive_biggerShl
   all_goals (try extract_goal ; sorry)
@@ -139,7 +139,7 @@ theorem positive_biggerLshr_proof : positive_biggerLshr_before ⊑ positive_bigg
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN positive_biggerLshr
   all_goals (try extract_goal ; sorry)
@@ -174,7 +174,7 @@ theorem positive_biggerLshr_lshrexact_proof : positive_biggerLshr_lshrexact_befo
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN positive_biggerLshr_lshrexact
   all_goals (try extract_goal ; sorry)
@@ -203,7 +203,7 @@ theorem positive_samevar_shlnuw_proof : positive_samevar_shlnuw_before ⊑ posit
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN positive_samevar_shlnuw
   all_goals (try extract_goal ; sorry)
@@ -233,7 +233,7 @@ theorem positive_sameconst_shlnuw_proof : positive_sameconst_shlnuw_before ⊑ p
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN positive_sameconst_shlnuw
   all_goals (try extract_goal ; sorry)
@@ -266,7 +266,7 @@ theorem positive_biggerShl_shlnuw_proof : positive_biggerShl_shlnuw_before ⊑ p
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN positive_biggerShl_shlnuw
   all_goals (try extract_goal ; sorry)
@@ -299,7 +299,7 @@ theorem positive_biggerLshr_shlnuw_proof : positive_biggerLshr_shlnuw_before ⊑
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN positive_biggerLshr_shlnuw
   all_goals (try extract_goal ; sorry)
@@ -332,7 +332,7 @@ theorem positive_biggerLshr_shlnuw_lshrexact_proof : positive_biggerLshr_shlnuw_
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN positive_biggerLshr_shlnuw_lshrexact
   all_goals (try extract_goal ; sorry)

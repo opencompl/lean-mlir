@@ -1,0 +1,102 @@
+1: "use64"
+5: "use64" is empty
+
+1: "mul_unkV_oddC_eq"
+4: "mul_unkV_oddC_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_unkV_oddC_eq_nonzero"
+4: "mul_unkV_oddC_eq_nonzero" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_unkV_oddC_ne_vec"
+4: "mul_unkV_oddC_ne_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_assumeoddV_asumeoddV_eq"
+4: "mul_assumeoddV_asumeoddV_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "mul_assumeoddV_asumeoddV_eq" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "mul_assumeoddV_asumeoddV_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "mul_assumeoddV_asumeoddV_eq" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "mul_unkV_oddC_sge"
+4: "mul_unkV_oddC_sge" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_reused_unkV_oddC_ne"
+4: "mul_reused_unkV_oddC_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "mul_reused_unkV_oddC_ne" has unsupported operation: llvm.call
+
+1: "mul_assumeoddV_unkV_eq"
+4: "mul_assumeoddV_unkV_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "mul_assumeoddV_unkV_eq" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "mul_assumeoddV_unkV_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_reusedassumeoddV_unkV_ne"
+4: "mul_reusedassumeoddV_unkV_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "mul_reusedassumeoddV_unkV_ne" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "mul_reusedassumeoddV_unkV_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "mul_reusedassumeoddV_unkV_ne" has unsupported operation: llvm.call
+
+1: "mul_setoddV_unkV_ne"
+4: "mul_setoddV_unkV_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_broddV_unkV_eq"
+4: "mul_broddV_unkV_eq" has unsupported operation: llvm.mlir.addressof
+
+4: "mul_broddV_unkV_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "mul_broddV_unkV_eq" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "mul_broddV_unkV_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "mul_broddV_unkV_eq" has unsupported operation: llvm.call
+
+1: "mul_unkV_evenC_ne"
+4: "mul_unkV_evenC_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_assumenzV_asumenzV_eq"
+4: "mul_assumenzV_asumenzV_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "mul_assumenzV_asumenzV_eq" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "mul_assumenzV_asumenzV_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "mul_assumenzV_asumenzV_eq" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "mul_assumenzV_asumenzV_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_assumenzV_unkV_nsw_ne"
+4: "mul_assumenzV_unkV_nsw_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "mul_assumenzV_unkV_nsw_ne" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "mul_assumenzV_unkV_nsw_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_selectnzV_unkV_nsw_ne"
+4: "mul_selectnzV_unkV_nsw_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "mul_selectnzV_unkV_nsw_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "mul_selectnzV_unkV_nsw_ne" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "mul_unkV_unkV_nsw_nuw_ne"
+4: "mul_unkV_unkV_nsw_nuw_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_setnzV_unkV_nuw_eq"
+4: "mul_setnzV_unkV_nuw_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_brnzV_unkV_nuw_eq"
+4: "mul_brnzV_unkV_nuw_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "mul_brnzV_unkV_nuw_eq" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "mul_brnzV_unkV_nuw_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "mul_brnzV_unkV_nuw_eq" has unsupported operation: llvm.call
+

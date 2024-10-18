@@ -1,0 +1,333 @@
+1: "use1"
+5: "use1" is empty
+
+1: "use32"
+5: "use32" is empty
+
+1: "use64"
+5: "use64" is empty
+
+1: "use_vec"
+5: "use_vec" is empty
+
+1: "test_sext_zext"
+4: "test_sext_zext" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "test2"
+4: "test2" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "test3"
+"test3" contains vectors which are unsupported
+
+1: "test4"
+"test4" contains vectors which are unsupported
+
+1: "fold_xor_zext_sandwich"
+4: "fold_xor_zext_sandwich" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "fold_xor_zext_sandwich_vec"
+4: "fold_xor_zext_sandwich_vec" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "fold_and_zext_icmp"
+4: "fold_and_zext_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "fold_and_zext_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "fold_and_zext_icmp" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "fold_or_zext_icmp"
+4: "fold_or_zext_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "fold_or_zext_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "fold_or_zext_icmp" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "fold_xor_zext_icmp"
+4: "fold_xor_zext_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "fold_xor_zext_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "fold_xor_zext_icmp" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "fold_nested_logic_zext_icmp"
+4: "fold_nested_logic_zext_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "fold_nested_logic_zext_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "fold_nested_logic_zext_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "fold_nested_logic_zext_icmp" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "sext_zext_apint1"
+4: "sext_zext_apint1" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "sext_zext_apint2"
+4: "sext_zext_apint2" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "masked_bit_set"
+4: "masked_bit_set" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "masked_bit_set" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+
+1: "masked_bit_clear"
+"masked_bit_clear" contains vectors which are unsupported
+
+1: "masked_bit_set_commute"
+"masked_bit_set_commute" contains vectors which are unsupported
+
+1: "masked_bit_clear_commute"
+4: "masked_bit_clear_commute" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "masked_bit_clear_commute" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+
+1: "masked_bit_set_use1"
+4: "masked_bit_set_use1" has unsupported operation: llvm.call
+
+1: "masked_bit_set_use2"
+4: "masked_bit_set_use2" has unsupported operation: llvm.call
+
+4: "masked_bit_set_use2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "masked_bit_set_use2" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "masked_bit_set_use3"
+4: "masked_bit_set_use3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "masked_bit_set_use3" has unsupported operation: llvm.call
+
+4: "masked_bit_set_use3" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "masked_bit_clear_use1"
+4: "masked_bit_clear_use1" has unsupported operation: llvm.call
+
+1: "masked_bit_clear_use2"
+4: "masked_bit_clear_use2" has unsupported operation: llvm.call
+
+4: "masked_bit_clear_use2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "masked_bit_clear_use2" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "masked_bit_clear_use3"
+4: "masked_bit_clear_use3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "masked_bit_clear_use3" has unsupported operation: llvm.call
+
+4: "masked_bit_clear_use3" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "masked_bits_set"
+4: "masked_bits_set" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "masked_bits_set" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "div_bit_set"
+4: "div_bit_set" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "div_bit_set" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "masked_bit_set_nonzero_cmp"
+4: "masked_bit_set_nonzero_cmp" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "masked_bit_set_nonzero_cmp" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "masked_bit_wrong_pred"
+4: "masked_bit_wrong_pred" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "masked_bit_wrong_pred" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "zext_or_masked_bit_test"
+4: "zext_or_masked_bit_test" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "zext_or_masked_bit_test" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "zext_or_masked_bit_test" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "zext_or_masked_bit_test_uses"
+4: "zext_or_masked_bit_test_uses" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "zext_or_masked_bit_test_uses" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "zext_or_masked_bit_test_uses" has unsupported operation: llvm.call
+
+4: "zext_or_masked_bit_test_uses" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "zext_masked_bit_zero_to_smaller_bitwidth"
+4: "zext_masked_bit_zero_to_smaller_bitwidth" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "zext_masked_bit_zero_to_smaller_bitwidth_v4i32"
+4: "zext_masked_bit_zero_to_smaller_bitwidth_v4i32" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "zext_masked_bit_zero_to_smaller_bitwidth_multi_use_shl"
+4: "zext_masked_bit_zero_to_smaller_bitwidth_multi_use_shl" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "zext_masked_bit_zero_to_smaller_bitwidth_multi_use_shl" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "zext_masked_bit_zero_to_smaller_bitwidth_multi_use_shl" has unsupported operation: llvm.call
+
+1: "zext_masked_bit_nonzero_to_smaller_bitwidth"
+4: "zext_masked_bit_nonzero_to_smaller_bitwidth" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "zext_masked_bit_nonzero_to_smaller_bitwidth_multi_use_shl"
+4: "zext_masked_bit_nonzero_to_smaller_bitwidth_multi_use_shl" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "zext_masked_bit_nonzero_to_smaller_bitwidth_multi_use_shl" has unsupported operation: llvm.call
+
+1: "zext_masked_bit_zero_to_larger_bitwidth"
+4: "zext_masked_bit_zero_to_larger_bitwidth" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "zext_masked_bit_zero_to_larger_bitwidth_v4i32"
+4: "zext_masked_bit_zero_to_larger_bitwidth_v4i32" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "notneg_zext_wider"
+4: "notneg_zext_wider" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "notneg_zext_wider" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "notneg_zext_narrower"
+4: "notneg_zext_narrower" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "notneg_zext_narrower" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "notneg_zext_wider_use"
+4: "notneg_zext_wider_use" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "notneg_zext_wider_use" has unsupported operation: llvm.call
+
+4: "notneg_zext_wider_use" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "notneg_zext_narrower_use"
+4: "notneg_zext_narrower_use" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "notneg_zext_narrower_use" has unsupported operation: llvm.call
+
+4: "notneg_zext_narrower_use" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "disguised_signbit_clear_test"
+4: "disguised_signbit_clear_test" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "disguised_signbit_clear_test" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "pr57899"
+4: "pr57899" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "pr57899" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "and_trunc_extra_use1"
+4: "and_trunc_extra_use1" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "and_trunc_extra_use1" has unsupported operation: llvm.call
+
+4: "and_trunc_extra_use1" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "and_trunc_extra_use1_commute"
+4: "and_trunc_extra_use1_commute" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "and_trunc_extra_use1_commute" has unsupported operation: llvm.call
+
+4: "and_trunc_extra_use1_commute" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "and_trunc_extra_use2"
+4: "and_trunc_extra_use2" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "and_trunc_extra_use2" has unsupported operation: llvm.call
+
+4: "and_trunc_extra_use2" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "and_trunc_extra_use2_constant"
+4: "and_trunc_extra_use2_constant" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "and_trunc_extra_use2_constant" has unsupported operation: llvm.call
+
+1: "and_trunc_extra_use3_constant_vec"
+4: "and_trunc_extra_use3_constant_vec" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "and_trunc_extra_use3_constant_vec" has unsupported operation: llvm.call
+
+4: "and_trunc_extra_use3_constant_vec" has unsupported operation: llvm.call
+
+1: "and_trunc_extra_use1_wider_src"
+4: "and_trunc_extra_use1_wider_src" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "and_trunc_extra_use1_wider_src" has unsupported operation: llvm.call
+
+4: "and_trunc_extra_use1_wider_src" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "zext_icmp_eq0_pow2"
+4: "zext_icmp_eq0_pow2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "zext_icmp_eq0_pow2" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "zext_icmp_eq0_pow2_use1"
+4: "zext_icmp_eq0_pow2_use1" has unsupported operation: llvm.call
+
+4: "zext_icmp_eq0_pow2_use1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "zext_icmp_eq0_pow2_use1" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "zext_icmp_eq0_pow2_use2"
+4: "zext_icmp_eq0_pow2_use2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "zext_icmp_eq0_pow2_use2" has unsupported operation: llvm.call
+
+4: "zext_icmp_eq0_pow2_use2" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "zext_icmp_eq_pow2"
+4: "zext_icmp_eq_pow2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "zext_icmp_eq_pow2" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "zext_icmp_eq_bool_0"
+4: "zext_icmp_eq_bool_0" has unsupported operation: llvm.load
+
+1: "zext_icmp_eq_bool_1"
+4: "zext_icmp_eq_bool_1" has unsupported operation: llvm.load
+
+1: "zext_icmp_ne_bool_0"
+4: "zext_icmp_ne_bool_0" has unsupported operation: llvm.load
+
+1: "zext_icmp_ne_bool_1"
+4: "zext_icmp_ne_bool_1" has unsupported operation: llvm.load
+
+1: "zext_icmp_eq0_no_shift"
+4: "zext_icmp_eq0_no_shift" has unsupported operation: llvm.load
+
+4: "zext_icmp_eq0_no_shift" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "evaluate_zexted_const_expr"
+4: "evaluate_zexted_const_expr" has unsupported operation: llvm.mlir.addressof
+
+4: "evaluate_zexted_const_expr" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "evaluate_zexted_const_expr" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "evaluate_zexted_const_expr" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "evaluate_zexted_const_expr" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "evaluate_zexted_const_expr" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "zext_nneg_flag_drop"
+4: "zext_nneg_flag_drop" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "zext_nneg_redundant_and"
+4: "zext_nneg_redundant_and" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "zext_nneg_redundant_and_neg"
+4: "zext_nneg_redundant_and_neg" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "zext_nneg_signbit_extract"
+4: "zext_nneg_signbit_extract" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+
+1: "zext_nneg_demanded_constant"
+4: "zext_nneg_demanded_constant" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "zext_nneg_demanded_constant" has unsupported operation: llvm.call
+
+1: "zext_nneg_i1"
+4: "zext_nneg_i1" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+
+1: "zext_nneg_i1_vec"
+"zext_nneg_i1_vec" contains vectors which are unsupported
+
+1: "zext_nneg_i2"
+4: "zext_nneg_i2" has unsupported operation: builtin.unregistered: llvm.zext
+

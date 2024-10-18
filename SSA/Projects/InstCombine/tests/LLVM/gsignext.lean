@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gsignext_statements
-                                                    
+
 def sextinreg_before := [llvm|
 {
 ^0(%arg14 : i32):
@@ -41,7 +41,7 @@ theorem sextinreg_proof : sextinreg_before ⊑ sextinreg_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sextinreg
   all_goals (try extract_goal ; sorry)
@@ -77,7 +77,7 @@ theorem sextinreg_alt_proof : sextinreg_alt_before ⊑ sextinreg_alt_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sextinreg_alt
   all_goals (try extract_goal ; sorry)
@@ -113,7 +113,7 @@ theorem sextinreg2_proof : sextinreg2_before ⊑ sextinreg2_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sextinreg2
   all_goals (try extract_goal ; sorry)
@@ -148,7 +148,7 @@ theorem ashr_proof : ashr_before ⊑ ashr_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN ashr
   all_goals (try extract_goal ; sorry)

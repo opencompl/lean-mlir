@@ -1,0 +1,121 @@
+1: "sdiv_common_divisor"
+4: "sdiv_common_divisor" has unsupported operation: builtin.unregistered: llvm.freeze
+
+4: "sdiv_common_divisor" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "srem_common_divisor"
+4: "srem_common_divisor" has unsupported operation: builtin.unregistered: llvm.freeze
+
+4: "srem_common_divisor" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "udiv_common_divisor"
+4: "udiv_common_divisor" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "udiv_common_divisor" has unsupported operation: llvm.udiv
+
+1: "urem_common_divisor"
+4: "urem_common_divisor" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "sdiv_common_dividend"
+4: "sdiv_common_dividend" has unsupported operation: builtin.unregistered: llvm.freeze
+
+4: "sdiv_common_dividend" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "srem_common_dividend"
+4: "srem_common_dividend" has unsupported operation: builtin.unregistered: llvm.freeze
+
+4: "srem_common_dividend" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "udiv_common_dividend"
+4: "udiv_common_dividend" has unsupported operation: builtin.unregistered: llvm.freeze
+
+4: "udiv_common_dividend" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "udiv_common_dividend" has unsupported operation: llvm.udiv
+
+1: "urem_common_dividend"
+4: "urem_common_dividend" has unsupported operation: builtin.unregistered: llvm.freeze
+
+4: "urem_common_dividend" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "sdiv_common_divisor_defined_cond"
+4: "sdiv_common_divisor_defined_cond" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "srem_common_divisor_defined_cond"
+4: "srem_common_divisor_defined_cond" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "udiv_common_divisor_defined_cond"
+4: "udiv_common_divisor_defined_cond" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "udiv_common_divisor_defined_cond" has unsupported operation: llvm.udiv
+
+1: "urem_common_divisor_defined_cond"
+4: "urem_common_divisor_defined_cond" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "sdiv_common_dividend_defined_cond"
+4: "sdiv_common_dividend_defined_cond" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "srem_common_dividend_defined_cond"
+4: "srem_common_dividend_defined_cond" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "udiv_common_dividend_defined_cond"
+4: "udiv_common_dividend_defined_cond" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "udiv_common_dividend_defined_cond" has unsupported operation: llvm.udiv
+
+1: "urem_common_dividend_defined_cond"
+4: "urem_common_dividend_defined_cond" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "rem_euclid_1"
+4: "rem_euclid_1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "rem_euclid_1" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "rem_euclid_2"
+4: "rem_euclid_2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "rem_euclid_2" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "rem_euclid_wrong_sign_test"
+4: "rem_euclid_wrong_sign_test" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "rem_euclid_wrong_sign_test" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "rem_euclid_add_different_const"
+4: "rem_euclid_add_different_const" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "rem_euclid_add_different_const" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "rem_euclid_wrong_operands_select"
+4: "rem_euclid_wrong_operands_select" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "rem_euclid_wrong_operands_select" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "rem_euclid_vec"
+"rem_euclid_vec" contains vectors which are unsupported
+
+1: "rem_euclid_i128"
+4: "rem_euclid_i128" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "rem_euclid_i128" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "rem_euclid_non_const_pow2"
+4: "rem_euclid_non_const_pow2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "rem_euclid_non_const_pow2" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "rem_euclid_pow2_true_arm_folded"
+4: "rem_euclid_pow2_true_arm_folded" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "rem_euclid_pow2_true_arm_folded" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "rem_euclid_pow2_false_arm_folded"
+4: "rem_euclid_pow2_false_arm_folded" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "rem_euclid_pow2_false_arm_folded" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "pr89516"
+4: "pr89516" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "pr89516" has unsupported operation: builtin.unregistered: llvm.select
+

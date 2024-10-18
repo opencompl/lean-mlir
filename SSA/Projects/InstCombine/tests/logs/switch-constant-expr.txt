@@ -1,0 +1,14 @@
+1: "single_case"
+4: "single_case" has unsupported operation: llvm.mlir.addressof
+
+4: "single_case" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "single_case" has unsupported operation: builtin.unregistered: llvm.switch
+
+1: "multiple_cases"
+4: "multiple_cases" has unsupported operation: llvm.mlir.addressof
+
+4: "multiple_cases" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "multiple_cases" has unsupported operation: builtin.unregistered: llvm.switch
+

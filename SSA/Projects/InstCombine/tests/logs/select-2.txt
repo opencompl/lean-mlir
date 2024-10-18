@@ -1,0 +1,35 @@
+1: "t1"
+4: "t1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "t1" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "t2"
+4: "t2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "t2" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "t3"
+4: "t3" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "t3" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "t3" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "ashr_exact_poison_constant_fold"
+4: "ashr_exact_poison_constant_fold" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "ashr_exact"
+4: "ashr_exact" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "shl_nsw_nuw_poison_constant_fold"
+4: "shl_nsw_nuw_poison_constant_fold" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "shl_nsw_nuw"
+4: "shl_nsw_nuw" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "add_nsw_poison_constant_fold"
+4: "add_nsw_poison_constant_fold" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "add_nsw"
+4: "add_nsw" has unsupported operation: builtin.unregistered: llvm.select
+

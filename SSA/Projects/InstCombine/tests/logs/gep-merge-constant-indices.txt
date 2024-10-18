@@ -1,0 +1,2 @@
+3: gep-merge-constant-indices.ll: parsing has failed
+

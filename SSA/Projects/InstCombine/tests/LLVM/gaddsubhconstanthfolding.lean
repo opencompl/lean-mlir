@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gaddsubhconstanthfolding_statements
-                                                    
+
 def add_const_add_const_before := [llvm|
 {
 ^0(%arg71 : i32):
@@ -38,7 +38,7 @@ theorem add_const_add_const_proof : add_const_add_const_before ⊑ add_const_add
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_const_add_const
   all_goals (try extract_goal ; sorry)
@@ -71,7 +71,7 @@ theorem add_const_sub_const_proof : add_const_sub_const_before ⊑ add_const_sub
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_const_sub_const
   all_goals (try extract_goal ; sorry)
@@ -104,7 +104,7 @@ theorem add_const_const_sub_proof : add_const_const_sub_before ⊑ add_const_con
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_const_const_sub
   all_goals (try extract_goal ; sorry)
@@ -137,7 +137,7 @@ theorem add_nsw_const_const_sub_nsw_proof : add_nsw_const_const_sub_nsw_before �
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_nsw_const_const_sub_nsw
   all_goals (try extract_goal ; sorry)
@@ -170,7 +170,7 @@ theorem add_nsw_const_const_sub_proof : add_nsw_const_const_sub_before ⊑ add_n
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_nsw_const_const_sub
   all_goals (try extract_goal ; sorry)
@@ -203,7 +203,7 @@ theorem add_const_const_sub_nsw_proof : add_const_const_sub_nsw_before ⊑ add_c
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_const_const_sub_nsw
   all_goals (try extract_goal ; sorry)
@@ -236,7 +236,7 @@ theorem add_nsw_const_const_sub_nsw_ov_proof : add_nsw_const_const_sub_nsw_ov_be
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_nsw_const_const_sub_nsw_ov
   all_goals (try extract_goal ; sorry)
@@ -269,7 +269,7 @@ theorem add_nuw_const_const_sub_nuw_proof : add_nuw_const_const_sub_nuw_before �
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_nuw_const_const_sub_nuw
   all_goals (try extract_goal ; sorry)
@@ -302,7 +302,7 @@ theorem add_nuw_const_const_sub_proof : add_nuw_const_const_sub_before ⊑ add_n
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_nuw_const_const_sub
   all_goals (try extract_goal ; sorry)
@@ -335,7 +335,7 @@ theorem add_const_const_sub_nuw_proof : add_const_const_sub_nuw_before ⊑ add_c
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_const_const_sub_nuw
   all_goals (try extract_goal ; sorry)
@@ -368,7 +368,7 @@ theorem sub_const_add_const_proof : sub_const_add_const_before ⊑ sub_const_add
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sub_const_add_const
   all_goals (try extract_goal ; sorry)
@@ -401,7 +401,7 @@ theorem sub_const_sub_const_proof : sub_const_sub_const_before ⊑ sub_const_sub
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sub_const_sub_const
   all_goals (try extract_goal ; sorry)
@@ -434,7 +434,7 @@ theorem sub_const_const_sub_proof : sub_const_const_sub_before ⊑ sub_const_con
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sub_const_const_sub
   all_goals (try extract_goal ; sorry)
@@ -467,7 +467,7 @@ theorem const_sub_add_const_proof : const_sub_add_const_before ⊑ const_sub_add
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN const_sub_add_const
   all_goals (try extract_goal ; sorry)
@@ -500,7 +500,7 @@ theorem const_sub_sub_const_proof : const_sub_sub_const_before ⊑ const_sub_sub
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN const_sub_sub_const
   all_goals (try extract_goal ; sorry)
@@ -533,7 +533,7 @@ theorem const_sub_const_sub_proof : const_sub_const_sub_before ⊑ const_sub_con
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN const_sub_const_sub
   all_goals (try extract_goal ; sorry)
@@ -568,7 +568,7 @@ theorem addsub_combine_constants_proof : addsub_combine_constants_before ⊑ add
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN addsub_combine_constants
   all_goals (try extract_goal ; sorry)
@@ -601,7 +601,7 @@ theorem sub_from_constant_proof : sub_from_constant_before ⊑ sub_from_constant
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sub_from_constant
   all_goals (try extract_goal ; sorry)
@@ -636,7 +636,7 @@ theorem sub_from_constant_commute_proof : sub_from_constant_commute_before ⊑ s
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sub_from_constant_commute
   all_goals (try extract_goal ; sorry)

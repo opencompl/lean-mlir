@@ -1,0 +1,294 @@
+1: "test_memccpy"
+4: "test_memccpy" has unsupported operation: llvm.mlir.addressof
+
+4: "test_memccpy" has unsupported operation: llvm.mlir.addressof
+
+4: "test_memccpy" has unsupported operation: llvm.call
+
+1: "test_not_memccpy"
+4: "test_not_memccpy" has unsupported operation: llvm.mlir.addressof
+
+4: "test_not_memccpy" has unsupported operation: llvm.mlir.addressof
+
+4: "test_not_memccpy" has unsupported operation: llvm.call
+
+1: "test_memccpy_tail"
+4: "test_memccpy_tail" has unsupported operation: llvm.mlir.addressof
+
+4: "test_memccpy_tail" has unsupported operation: llvm.mlir.addressof
+
+4: "test_memccpy_tail" has unsupported operation: llvm.call
+
+1: "test_mempcpy"
+4: "test_mempcpy" has unsupported operation: llvm.mlir.addressof
+
+4: "test_mempcpy" has unsupported operation: llvm.mlir.addressof
+
+4: "test_mempcpy" has unsupported operation: llvm.getelementptr
+
+4: "test_mempcpy" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+1: "test_not_mempcpy"
+4: "test_not_mempcpy" has unsupported operation: llvm.mlir.addressof
+
+4: "test_not_mempcpy" has unsupported operation: llvm.mlir.addressof
+
+4: "test_not_mempcpy" has unsupported operation: llvm.call
+
+1: "test_mempcpy_tail"
+4: "test_mempcpy_tail" has unsupported operation: llvm.mlir.addressof
+
+4: "test_mempcpy_tail" has unsupported operation: llvm.mlir.addressof
+
+4: "test_mempcpy_tail" has unsupported operation: llvm.getelementptr
+
+4: "test_mempcpy_tail" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+1: "test_snprintf"
+4: "test_snprintf" has unsupported operation: llvm.mlir.addressof
+
+4: "test_snprintf" has unsupported operation: llvm.mlir.addressof
+
+4: "test_snprintf" has unsupported operation: llvm.call
+
+1: "test_not_snprintf"
+4: "test_not_snprintf" has unsupported operation: llvm.mlir.addressof
+
+4: "test_not_snprintf" has unsupported operation: llvm.mlir.addressof
+
+4: "test_not_snprintf" has unsupported operation: llvm.call
+
+4: "test_not_snprintf" has unsupported operation: llvm.call
+
+1: "test_snprintf_tail"
+4: "test_snprintf_tail" has unsupported operation: llvm.mlir.addressof
+
+4: "test_snprintf_tail" has unsupported operation: llvm.mlir.addressof
+
+4: "test_snprintf_tail" has unsupported operation: llvm.call
+
+1: "test_sprintf"
+4: "test_sprintf" has unsupported operation: llvm.mlir.addressof
+
+4: "test_sprintf" has unsupported operation: llvm.mlir.addressof
+
+4: "test_sprintf" has unsupported operation: llvm.call
+
+1: "test_not_sprintf"
+4: "test_not_sprintf" has unsupported operation: llvm.mlir.addressof
+
+4: "test_not_sprintf" has unsupported operation: llvm.mlir.addressof
+
+4: "test_not_sprintf" has unsupported operation: llvm.call
+
+4: "test_not_sprintf" has unsupported operation: llvm.call
+
+1: "test_sprintf_tail"
+4: "test_sprintf_tail" has unsupported operation: llvm.mlir.addressof
+
+4: "test_sprintf_tail" has unsupported operation: llvm.mlir.addressof
+
+4: "test_sprintf_tail" has unsupported operation: llvm.call
+
+1: "test_strcat"
+4: "test_strcat" has unsupported operation: llvm.mlir.addressof
+
+4: "test_strcat" has unsupported operation: llvm.mlir.addressof
+
+4: "test_strcat" has unsupported operation: llvm.call
+
+1: "test_not_strcat"
+4: "test_not_strcat" has unsupported operation: llvm.mlir.addressof
+
+4: "test_not_strcat" has unsupported operation: llvm.mlir.addressof
+
+4: "test_not_strcat" has unsupported operation: llvm.call
+
+1: "test_strcat_tail"
+4: "test_strcat_tail" has unsupported operation: llvm.mlir.addressof
+
+4: "test_strcat_tail" has unsupported operation: llvm.mlir.addressof
+
+4: "test_strcat_tail" has unsupported operation: llvm.call
+
+1: "test_strlcat"
+4: "test_strlcat" has unsupported operation: llvm.mlir.addressof
+
+4: "test_strlcat" has unsupported operation: llvm.mlir.addressof
+
+4: "test_strlcat" has unsupported operation: llvm.call
+
+1: "test_not_strlcat"
+4: "test_not_strlcat" has unsupported operation: llvm.mlir.addressof
+
+4: "test_not_strlcat" has unsupported operation: llvm.mlir.addressof
+
+4: "test_not_strlcat" has unsupported operation: llvm.call
+
+1: "test_strlcat_tail"
+4: "test_strlcat_tail" has unsupported operation: llvm.mlir.addressof
+
+4: "test_strlcat_tail" has unsupported operation: llvm.mlir.addressof
+
+4: "test_strlcat_tail" has unsupported operation: llvm.call
+
+1: "test_strncat"
+4: "test_strncat" has unsupported operation: llvm.mlir.addressof
+
+4: "test_strncat" has unsupported operation: llvm.mlir.addressof
+
+4: "test_strncat" has unsupported operation: llvm.call
+
+1: "test_not_strncat"
+4: "test_not_strncat" has unsupported operation: llvm.mlir.addressof
+
+4: "test_not_strncat" has unsupported operation: llvm.mlir.addressof
+
+4: "test_not_strncat" has unsupported operation: llvm.call
+
+1: "test_strncat_tail"
+4: "test_strncat_tail" has unsupported operation: llvm.mlir.addressof
+
+4: "test_strncat_tail" has unsupported operation: llvm.mlir.addressof
+
+4: "test_strncat_tail" has unsupported operation: llvm.call
+
+1: "test_strlcpy"
+4: "test_strlcpy" has unsupported operation: llvm.mlir.addressof
+
+4: "test_strlcpy" has unsupported operation: llvm.mlir.addressof
+
+4: "test_strlcpy" has unsupported operation: llvm.call
+
+1: "test_not_strlcpy"
+4: "test_not_strlcpy" has unsupported operation: llvm.mlir.addressof
+
+4: "test_not_strlcpy" has unsupported operation: llvm.mlir.addressof
+
+4: "test_not_strlcpy" has unsupported operation: llvm.call
+
+1: "test_strlcpy_tail"
+4: "test_strlcpy_tail" has unsupported operation: llvm.mlir.addressof
+
+4: "test_strlcpy_tail" has unsupported operation: llvm.mlir.addressof
+
+4: "test_strlcpy_tail" has unsupported operation: llvm.call
+
+1: "test_vsnprintf"
+4: "test_vsnprintf" has unsupported operation: llvm.mlir.addressof
+
+4: "test_vsnprintf" has unsupported operation: llvm.mlir.addressof
+
+4: "test_vsnprintf" has unsupported operation: llvm.mlir.zero
+
+4: "test_vsnprintf" has unsupported operation: llvm.call
+
+1: "test_not_vsnprintf"
+4: "test_not_vsnprintf" has unsupported operation: llvm.mlir.addressof
+
+4: "test_not_vsnprintf" has unsupported operation: llvm.mlir.addressof
+
+4: "test_not_vsnprintf" has unsupported operation: llvm.mlir.zero
+
+4: "test_not_vsnprintf" has unsupported operation: llvm.call
+
+4: "test_not_vsnprintf" has unsupported operation: llvm.call
+
+1: "test_vsnprintf_tail"
+4: "test_vsnprintf_tail" has unsupported operation: llvm.mlir.addressof
+
+4: "test_vsnprintf_tail" has unsupported operation: llvm.mlir.addressof
+
+4: "test_vsnprintf_tail" has unsupported operation: llvm.mlir.zero
+
+4: "test_vsnprintf_tail" has unsupported operation: llvm.call
+
+1: "test_vsprintf"
+4: "test_vsprintf" has unsupported operation: llvm.mlir.addressof
+
+4: "test_vsprintf" has unsupported operation: llvm.mlir.addressof
+
+4: "test_vsprintf" has unsupported operation: llvm.mlir.zero
+
+4: "test_vsprintf" has unsupported operation: llvm.call
+
+1: "test_not_vsprintf"
+4: "test_not_vsprintf" has unsupported operation: llvm.mlir.addressof
+
+4: "test_not_vsprintf" has unsupported operation: llvm.mlir.addressof
+
+4: "test_not_vsprintf" has unsupported operation: llvm.mlir.zero
+
+4: "test_not_vsprintf" has unsupported operation: llvm.call
+
+4: "test_not_vsprintf" has unsupported operation: llvm.call
+
+1: "test_vsprintf_tail"
+4: "test_vsprintf_tail" has unsupported operation: llvm.mlir.addressof
+
+4: "test_vsprintf_tail" has unsupported operation: llvm.mlir.addressof
+
+4: "test_vsprintf_tail" has unsupported operation: llvm.mlir.zero
+
+4: "test_vsprintf_tail" has unsupported operation: llvm.call
+
+1: "__mempcpy_chk"
+5: "__mempcpy_chk" is empty
+
+1: "__memccpy_chk"
+5: "__memccpy_chk" is empty
+
+1: "__snprintf_chk"
+5: "__snprintf_chk" is empty
+
+1: "__sprintf_chk"
+5: "__sprintf_chk" is empty
+
+1: "__strcat_chk"
+5: "__strcat_chk" is empty
+
+1: "__strlcat_chk"
+5: "__strlcat_chk" is empty
+
+1: "__strncat_chk"
+5: "__strncat_chk" is empty
+
+1: "__strlcpy_chk"
+5: "__strlcpy_chk" is empty
+
+1: "__vsnprintf_chk"
+5: "__vsnprintf_chk" is empty
+
+1: "__vsprintf_chk"
+5: "__vsprintf_chk" is empty
+
+1: "memccpy"
+5: "memccpy" is empty
+
+1: "mempcpy"
+5: "mempcpy" is empty
+
+1: "snprintf"
+5: "snprintf" is empty
+
+1: "sprintf"
+5: "sprintf" is empty
+
+1: "strcat"
+5: "strcat" is empty
+
+1: "strlcat"
+5: "strlcat" is empty
+
+1: "strncat"
+5: "strncat" is empty
+
+1: "strlcpy"
+5: "strlcpy" is empty
+
+1: "vsnprintf"
+5: "vsnprintf" is empty
+
+1: "vsprintf"
+5: "vsprintf" is empty
+

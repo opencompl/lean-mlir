@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gnegatedhbitmask_statements
-                                                    
+
 def neg_mask1_lshr_before := [llvm|
 {
 ^0(%arg22 : i8):
@@ -42,7 +42,7 @@ theorem neg_mask1_lshr_proof : neg_mask1_lshr_before ⊑ neg_mask1_lshr_after :=
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN neg_mask1_lshr
   all_goals (try extract_goal ; sorry)
@@ -80,7 +80,7 @@ theorem sub_mask1_lshr_proof : sub_mask1_lshr_before ⊑ sub_mask1_lshr_after :=
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sub_mask1_lshr
   all_goals (try extract_goal ; sorry)
@@ -119,7 +119,7 @@ theorem neg_mask2_lshr_proof : neg_mask2_lshr_before ⊑ neg_mask2_lshr_after :=
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN neg_mask2_lshr
   all_goals (try extract_goal ; sorry)

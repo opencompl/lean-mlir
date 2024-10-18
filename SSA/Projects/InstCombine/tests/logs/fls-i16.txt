@@ -1,0 +1,21 @@
+1: "fls"
+5: "fls" is empty
+
+1: "sink"
+5: "sink" is empty
+
+1: "fold_fls"
+4: "fold_fls" has unsupported operation: llvm.call
+
+4: "fold_fls" has unsupported operation: llvm.call
+
+4: "fold_fls" has unsupported operation: llvm.call
+
+4: "fold_fls" has unsupported operation: llvm.call
+
+4: "fold_fls" has unsupported operation: llvm.call
+
+4: "fold_fls" has unsupported operation: llvm.call
+
+4: "fold_fls" has unsupported operation: llvm.return
+

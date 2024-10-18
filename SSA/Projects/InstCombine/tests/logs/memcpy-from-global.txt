@@ -1,0 +1,2 @@
+3: memcpy-from-global.ll: parsing has failed
+

@@ -1,0 +1,2 @@
+3: narrow-switch.ll: parsing has failed
+

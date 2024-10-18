@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gdistribute_statements
-                                                    
+
 def factorize_before := [llvm|
 {
 ^0(%arg9 : i32, %arg10 : i32):
@@ -37,7 +37,7 @@ theorem factorize_proof : factorize_before ⊑ factorize_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN factorize
   apply factorize_thm
@@ -69,7 +69,7 @@ theorem factorize2_proof : factorize2_before ⊑ factorize2_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN factorize2
   apply factorize2_thm
@@ -101,7 +101,7 @@ theorem factorize3_proof : factorize3_before ⊑ factorize3_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN factorize3
   apply factorize3_thm
@@ -134,7 +134,7 @@ theorem factorize4_proof : factorize4_before ⊑ factorize4_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN factorize4
   apply factorize4_thm
@@ -167,7 +167,7 @@ theorem factorize5_proof : factorize5_before ⊑ factorize5_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN factorize5
   apply factorize5_thm
@@ -201,7 +201,7 @@ theorem expand_proof : expand_before ⊑ expand_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN expand
   apply expand_thm

@@ -1,0 +1,30 @@
+1: "vec_select"
+4: "vec_select" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "vec_select" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "vec_select" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "vec_select" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "vec_select_alternate_sign_bit_test"
+4: "vec_select_alternate_sign_bit_test" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "vec_select_alternate_sign_bit_test" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "is_negative_poison_elt"
+"is_negative_poison_elt" contains vectors which are unsupported
+
+1: "is_positive_poison_elt"
+4: "is_positive_poison_elt" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "is_positive_poison_elt" has unsupported operation: llvm.mlir.undef
+
+4: "is_positive_poison_elt" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "is_positive_poison_elt" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "is_positive_poison_elt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "is_positive_poison_elt" has unsupported operation: builtin.unregistered: llvm.sext
+

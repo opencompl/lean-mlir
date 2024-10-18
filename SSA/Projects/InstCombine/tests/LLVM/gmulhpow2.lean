@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gmulhpow2_statements
-                                                    
+
 def shl_add_log_may_cause_poison_pr62175_with_nuw_before := [llvm|
 {
 ^0(%arg2 : i8, %arg3 : i8):
@@ -38,7 +38,7 @@ theorem shl_add_log_may_cause_poison_pr62175_with_nuw_proof : shl_add_log_may_ca
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_add_log_may_cause_poison_pr62175_with_nuw
   all_goals (try extract_goal ; sorry)
@@ -71,7 +71,7 @@ theorem shl_add_log_may_cause_poison_pr62175_with_nsw_proof : shl_add_log_may_ca
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_add_log_may_cause_poison_pr62175_with_nsw
   all_goals (try extract_goal ; sorry)

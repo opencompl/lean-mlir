@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gsubhxor_statements
-                                                    
+
 def low_mask_nsw_nuw_before := [llvm|
 {
 ^0(%arg13 : i32):
@@ -40,7 +40,7 @@ theorem low_mask_nsw_nuw_proof : low_mask_nsw_nuw_before ⊑ low_mask_nsw_nuw_af
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN low_mask_nsw_nuw
   all_goals (try extract_goal ; sorry)
@@ -75,7 +75,7 @@ theorem arbitrary_mask_sub_i8_proof : arbitrary_mask_sub_i8_before ⊑ arbitrary
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN arbitrary_mask_sub_i8
   all_goals (try extract_goal ; sorry)
@@ -110,7 +110,7 @@ theorem not_masked_sub_i8_proof : not_masked_sub_i8_before ⊑ not_masked_sub_i8
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_masked_sub_i8
   all_goals (try extract_goal ; sorry)
@@ -146,7 +146,7 @@ theorem xor_add_proof : xor_add_before ⊑ xor_add_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN xor_add
   all_goals (try extract_goal ; sorry)

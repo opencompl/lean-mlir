@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gfoldhinchofhaddhofhnothxhandhyhtohsubhxhfromhy_statements
-                                                    
+
 def t0_before := [llvm|
 {
 ^0(%arg22 : i32, %arg23 : i32):
@@ -38,7 +38,7 @@ theorem t0_proof : t0_before ⊑ t0_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t0
   all_goals (try extract_goal ; sorry)
@@ -75,7 +75,7 @@ theorem n12_proof : n12_before ⊑ n12_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN n12
   all_goals (try extract_goal ; sorry)

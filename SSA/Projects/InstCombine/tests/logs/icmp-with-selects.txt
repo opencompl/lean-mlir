@@ -1,0 +1,78 @@
+1: "use"
+5: "use" is empty
+
+1: "both_sides_fold_slt"
+4: "both_sides_fold_slt" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+4: "both_sides_fold_slt" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+4: "both_sides_fold_slt" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "both_sides_fold_eq"
+4: "both_sides_fold_eq" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+4: "both_sides_fold_eq" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+4: "both_sides_fold_eq" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "one_side_fold_slt"
+4: "one_side_fold_slt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "one_side_fold_slt" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "one_side_fold_sgt"
+4: "one_side_fold_sgt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "one_side_fold_sgt" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "one_side_fold_eq"
+4: "one_side_fold_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "one_side_fold_eq" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "no_side_fold_cond"
+4: "no_side_fold_cond" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "no_side_fold_cond" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "no_side_fold_cond" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "no_side_fold_op"
+4: "no_side_fold_op" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "no_side_fold_op" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "no_side_fold_op" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "one_select_mult_use"
+4: "one_select_mult_use" has unsupported operation: llvm.mlir.addressof
+
+4: "one_select_mult_use" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "one_select_mult_use" has unsupported operation: llvm.call
+
+4: "one_select_mult_use" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "one_select_mult_use" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "both_select_mult_use"
+4: "both_select_mult_use" has unsupported operation: llvm.mlir.addressof
+
+4: "both_select_mult_use" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "both_select_mult_use" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "both_select_mult_use" has unsupported operation: llvm.call
+
+4: "both_select_mult_use" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "fold_vector_ops"
+4: "fold_vector_ops" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "fold_vector_ops" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "fold_vector_cond_ops"
+4: "fold_vector_cond_ops" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "fold_vector_cond_ops" has unsupported operation: builtin.unregistered: llvm.select
+

@@ -1,0 +1,43 @@
+1: "test_i1_0"
+"test_i1_0" contains vectors which are unsupported
+
+1: "test_i1_0_2"
+"test_i1_0_2" contains vectors which are unsupported
+
+1: "test_i1_m1"
+"test_i1_m1" contains vectors which are unsupported
+
+1: "test_i8_pattern"
+4: "test_i8_pattern" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test_i8_pattern_2"
+4: "test_i8_pattern_2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test_i8_pattern_3"
+4: "test_i8_pattern_3" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test_i8_pattern_3" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "test_i8_pattern_3" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "test_i8_pattern_3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test_i8_nopattern"
+4: "test_i8_nopattern" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test_i8_nopattern" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_i8_nopattern" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "test_i8_nopattern" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "test_i8_nopattern" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test_i8_ult_pattern"
+4: "test_i8_ult_pattern" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "extending_shuffle_with_weird_types"
+4: "extending_shuffle_with_weird_types" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "extending_shuffle_with_weird_types" has unsupported operation: builtin.unregistered: llvm.icmp
+

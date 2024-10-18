@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gbinophofhdisplacedhshifts_statements
-                                                    
+
 def shl_or_before := [llvm|
 {
 ^0(%arg25 : i8):
@@ -41,7 +41,7 @@ theorem shl_or_proof : shl_or_before ⊑ shl_or_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_or
   all_goals (try extract_goal ; sorry)
@@ -77,7 +77,7 @@ theorem lshr_or_proof : lshr_or_before ⊑ lshr_or_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lshr_or
   all_goals (try extract_goal ; sorry)
@@ -113,7 +113,7 @@ theorem ashr_or_proof : ashr_or_before ⊑ ashr_or_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN ashr_or
   all_goals (try extract_goal ; sorry)
@@ -149,7 +149,7 @@ theorem shl_xor_proof : shl_xor_before ⊑ shl_xor_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_xor
   all_goals (try extract_goal ; sorry)
@@ -185,7 +185,7 @@ theorem lshr_xor_proof : lshr_xor_before ⊑ lshr_xor_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lshr_xor
   all_goals (try extract_goal ; sorry)
@@ -221,7 +221,7 @@ theorem ashr_xor_proof : ashr_xor_before ⊑ ashr_xor_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN ashr_xor
   all_goals (try extract_goal ; sorry)
@@ -257,7 +257,7 @@ theorem shl_and_proof : shl_and_before ⊑ shl_and_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_and
   all_goals (try extract_goal ; sorry)
@@ -293,7 +293,7 @@ theorem lshr_and_proof : lshr_and_before ⊑ lshr_and_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lshr_and
   all_goals (try extract_goal ; sorry)
@@ -329,7 +329,7 @@ theorem ashr_and_proof : ashr_and_before ⊑ ashr_and_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN ashr_and
   all_goals (try extract_goal ; sorry)
@@ -365,7 +365,7 @@ theorem shl_add_proof : shl_add_before ⊑ shl_add_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_add
   all_goals (try extract_goal ; sorry)
@@ -406,7 +406,7 @@ theorem lshr_add_fail_proof : lshr_add_fail_before ⊑ lshr_add_fail_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lshr_add_fail
   all_goals (try extract_goal ; sorry)
@@ -442,7 +442,7 @@ theorem shl_or_commuted_proof : shl_or_commuted_before ⊑ shl_or_commuted_after
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_or_commuted
   all_goals (try extract_goal ; sorry)
@@ -478,7 +478,7 @@ theorem shl_or_with_or_disjoint_instead_of_add_proof : shl_or_with_or_disjoint_i
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_or_with_or_disjoint_instead_of_add
   all_goals (try extract_goal ; sorry)

@@ -1,0 +1,2 @@
+3: sprintf-2.ll: parsing has failed
+

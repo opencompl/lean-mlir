@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gapinthsub_statements
-                                                    
+
 def test1_before := [llvm|
 {
 ^0(%arg26 : i23):
@@ -34,7 +34,7 @@ theorem test1_proof : test1_before ⊑ test1_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test1
   all_goals (try extract_goal ; sorry)
@@ -63,7 +63,7 @@ theorem test2_proof : test2_before ⊑ test2_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test2
   all_goals (try extract_goal ; sorry)
@@ -93,7 +93,7 @@ theorem test3_proof : test3_before ⊑ test3_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test3
   all_goals (try extract_goal ; sorry)
@@ -124,7 +124,7 @@ theorem test4_proof : test4_before ⊑ test4_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test4
   all_goals (try extract_goal ; sorry)
@@ -155,7 +155,7 @@ theorem test5_proof : test5_before ⊑ test5_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test5
   all_goals (try extract_goal ; sorry)
@@ -187,7 +187,7 @@ theorem test6_proof : test6_before ⊑ test6_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test6
   all_goals (try extract_goal ; sorry)
@@ -218,7 +218,7 @@ theorem test7_proof : test7_before ⊑ test7_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test7
   all_goals (try extract_goal ; sorry)
@@ -250,7 +250,7 @@ theorem test8_proof : test8_before ⊑ test8_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test8
   all_goals (try extract_goal ; sorry)
@@ -282,7 +282,7 @@ theorem test9_proof : test9_before ⊑ test9_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test9
   all_goals (try extract_goal ; sorry)
@@ -315,7 +315,7 @@ theorem test12_proof : test12_before ⊑ test12_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test12
   all_goals (try extract_goal ; sorry)
@@ -348,7 +348,7 @@ theorem test13_proof : test13_before ⊑ test13_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test13
   all_goals (try extract_goal ; sorry)
@@ -381,7 +381,7 @@ theorem test16_proof : test16_before ⊑ test16_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test16
   all_goals (try extract_goal ; sorry)
@@ -413,7 +413,7 @@ theorem test18_proof : test18_before ⊑ test18_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test18
   all_goals (try extract_goal ; sorry)
@@ -442,7 +442,7 @@ theorem test19_proof : test19_before ⊑ test19_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test19
   all_goals (try extract_goal ; sorry)

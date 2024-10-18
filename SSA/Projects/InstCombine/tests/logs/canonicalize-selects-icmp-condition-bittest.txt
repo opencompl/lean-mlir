@@ -1,0 +1,65 @@
+1: "use8"
+5: "use8" is empty
+
+1: "use1"
+5: "use1" is empty
+
+1: "p0"
+4: "p0" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "p0" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "p1"
+4: "p1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "p1" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "n2"
+4: "n2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "n2" has unsupported operation: llvm.call
+
+4: "n2" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "t3"
+4: "t3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "t3" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "t3" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "t3" has unsupported operation: llvm.store
+
+4: "t3" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "t3" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "t4"
+4: "t4" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "t4" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "t4" has unsupported operation: llvm.store
+
+4: "t4" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "n5"
+4: "n5" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "n5" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "n6"
+4: "n6" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "n6" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "n7"
+4: "n7" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "n7" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "n8"
+4: "n8" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "n8" has unsupported operation: builtin.unregistered: llvm.select
+

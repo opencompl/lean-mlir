@@ -1,0 +1,85 @@
+1: "pow"
+5: "pow" is empty
+
+1: "test_simplify_3"
+4: "test_simplify_3" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+1: "test_simplify_4f"
+4: "test_simplify_4f" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+1: "test_simplify_4"
+4: "test_simplify_4" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+1: "test_simplify_15"
+4: "test_simplify_15" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+1: "test_simplify_neg_7"
+4: "test_simplify_neg_7" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+1: "test_simplify_neg_19"
+4: "test_simplify_neg_19" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+1: "test_simplify_11_23"
+4: "test_simplify_11_23" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "test_simplify_32"
+4: "test_simplify_32" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+1: "test_simplify_33"
+4: "test_simplify_33" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+1: "test_simplify_16_5"
+4: "test_simplify_16_5" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "test_simplify_16_5" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "test_simplify_16_5" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test_simplify_neg_16_5"
+4: "test_simplify_neg_16_5" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "test_simplify_neg_16_5" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "test_simplify_neg_16_5" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test_simplify_0_5_libcall"
+4: "test_simplify_0_5_libcall" has unsupported operation: llvm.call
+
+1: "test_simplify_neg_0_5_libcall"
+4: "test_simplify_neg_0_5_libcall" has unsupported operation: llvm.call
+
+4: "test_simplify_neg_0_5_libcall" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "test_simplify_neg_8_5"
+4: "test_simplify_neg_8_5" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "test_simplify_neg_8_5" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "test_simplify_neg_8_5" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test_simplify_7_5"
+4: "test_simplify_7_5" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "test_simplify_7_5" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "test_simplify_7_5" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test_simplify_3_5"
+4: "test_simplify_3_5" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "test_simplify_3_5" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "test_simplify_3_5" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "shrink_pow_libcall_half"
+4: "shrink_pow_libcall_half" has unsupported operation: llvm.call
+
+1: "PR43233"
+4: "PR43233" has unsupported operation after optimization: builtin.unregistered: llvm.intr.pow
+
+1: "sqrt"
+5: "sqrt" is empty
+
+1: "sqrtf"
+5: "sqrtf" is empty
+

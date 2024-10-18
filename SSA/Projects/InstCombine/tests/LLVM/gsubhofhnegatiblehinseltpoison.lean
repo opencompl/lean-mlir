@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gsubhofhnegatiblehinseltpoison_statements
-                                                    
+
 def t0_before := [llvm|
 {
 ^0(%arg206 : i8):
@@ -36,7 +36,7 @@ theorem t0_proof : t0_before ⊑ t0_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t0
   all_goals (try extract_goal ; sorry)
@@ -69,7 +69,7 @@ theorem t2_proof : t2_before ⊑ t2_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t2
   all_goals (try extract_goal ; sorry)
@@ -100,7 +100,7 @@ theorem t9_proof : t9_before ⊑ t9_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t9
   all_goals (try extract_goal ; sorry)
@@ -133,7 +133,7 @@ theorem neg_of_sub_from_constant_proof : neg_of_sub_from_constant_before ⊑ neg
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN neg_of_sub_from_constant
   all_goals (try extract_goal ; sorry)
@@ -166,7 +166,7 @@ theorem sub_from_constant_of_sub_from_constant_proof : sub_from_constant_of_sub_
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sub_from_constant_of_sub_from_constant
   all_goals (try extract_goal ; sorry)
@@ -199,7 +199,7 @@ theorem sub_from_variable_of_sub_from_constant_proof : sub_from_variable_of_sub_
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sub_from_variable_of_sub_from_constant
   all_goals (try extract_goal ; sorry)
@@ -232,7 +232,7 @@ theorem neg_of_add_with_constant_proof : neg_of_add_with_constant_before ⊑ neg
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN neg_of_add_with_constant
   all_goals (try extract_goal ; sorry)
@@ -265,7 +265,7 @@ theorem sub_from_constant_of_add_with_constant_proof : sub_from_constant_of_add_
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sub_from_constant_of_add_with_constant
   all_goals (try extract_goal ; sorry)
@@ -300,7 +300,7 @@ theorem negate_xor_proof : negate_xor_before ⊑ negate_xor_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN negate_xor
   all_goals (try extract_goal ; sorry)
@@ -337,7 +337,7 @@ theorem negate_shl_xor_proof : negate_shl_xor_before ⊑ negate_shl_xor_after :=
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN negate_shl_xor
   all_goals (try extract_goal ; sorry)
@@ -370,7 +370,7 @@ theorem negate_sdiv_proof : negate_sdiv_before ⊑ negate_sdiv_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN negate_sdiv
   all_goals (try extract_goal ; sorry)
@@ -403,7 +403,7 @@ theorem negate_ashr_proof : negate_ashr_before ⊑ negate_ashr_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN negate_ashr
   all_goals (try extract_goal ; sorry)
@@ -436,7 +436,7 @@ theorem negate_lshr_proof : negate_lshr_before ⊑ negate_lshr_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN negate_lshr
   all_goals (try extract_goal ; sorry)
@@ -472,7 +472,7 @@ theorem negation_of_increment_via_or_with_no_common_bits_set_proof : negation_of
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN negation_of_increment_via_or_with_no_common_bits_set
   all_goals (try extract_goal ; sorry)
@@ -505,7 +505,7 @@ theorem negate_add_with_single_negatible_operand_proof : negate_add_with_single_
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN negate_add_with_single_negatible_operand
   all_goals (try extract_goal ; sorry)
@@ -540,7 +540,7 @@ theorem negate_add_with_single_negatible_operand_depth2_proof : negate_add_with_
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN negate_add_with_single_negatible_operand_depth2
   all_goals (try extract_goal ; sorry)

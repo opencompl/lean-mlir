@@ -1,0 +1,9 @@
+1: "test_switch_with_neg"
+4: "test_switch_with_neg" has unsupported operation: builtin.unregistered: llvm.switch
+
+1: "test_switch_with_sub"
+4: "test_switch_with_sub" has unsupported operation: builtin.unregistered: llvm.switch
+
+1: "test_switch_with_sub_nonconst"
+4: "test_switch_with_sub_nonconst" has unsupported operation: builtin.unregistered: llvm.switch
+

@@ -1,0 +1,107 @@
+1: "narrow_sext_and"
+4: "narrow_sext_and" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "narrow_zext_and"
+4: "narrow_zext_and" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "narrow_sext_or"
+4: "narrow_sext_or" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "narrow_zext_or"
+4: "narrow_zext_or" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "narrow_sext_xor"
+4: "narrow_sext_xor" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "narrow_zext_xor"
+4: "narrow_zext_xor" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "narrow_sext_add"
+4: "narrow_sext_add" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "narrow_zext_add"
+4: "narrow_zext_add" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "narrow_sext_sub"
+4: "narrow_sext_sub" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "narrow_zext_sub"
+4: "narrow_zext_sub" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "narrow_sext_mul"
+4: "narrow_sext_mul" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "narrow_zext_mul"
+4: "narrow_zext_mul" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "narrow_sext_and_commute"
+4: "narrow_sext_and_commute" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "narrow_zext_and_commute"
+4: "narrow_zext_and_commute" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "narrow_sext_or_commute"
+4: "narrow_sext_or_commute" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "narrow_zext_or_commute"
+4: "narrow_zext_or_commute" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "narrow_sext_xor_commute"
+4: "narrow_sext_xor_commute" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "narrow_zext_xor_commute"
+4: "narrow_zext_xor_commute" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "narrow_sext_add_commute"
+4: "narrow_sext_add_commute" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "narrow_zext_add_commute"
+4: "narrow_zext_add_commute" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "narrow_sext_sub_commute"
+4: "narrow_sext_sub_commute" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "narrow_zext_sub_commute"
+4: "narrow_zext_sub_commute" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "narrow_sext_mul_commute"
+4: "narrow_sext_mul_commute" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "narrow_zext_mul_commute"
+4: "narrow_zext_mul_commute" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "narrow_zext_ashr_keep_trunc"
+4: "narrow_zext_ashr_keep_trunc" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "narrow_zext_ashr_keep_trunc" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "narrow_zext_ashr_keep_trunc" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "narrow_zext_ashr_keep_trunc2"
+4: "narrow_zext_ashr_keep_trunc2" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "narrow_zext_ashr_keep_trunc2" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "narrow_zext_ashr_keep_trunc2" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "narrow_zext_ashr_keep_trunc3"
+4: "narrow_zext_ashr_keep_trunc3" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "narrow_zext_ashr_keep_trunc3" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "narrow_zext_ashr_keep_trunc3" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "narrow_zext_ashr_keep_trunc_vector"
+4: "narrow_zext_ashr_keep_trunc_vector" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "narrow_zext_ashr_keep_trunc_vector" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "narrow_zext_ashr_keep_trunc_vector" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "dont_narrow_zext_ashr_keep_trunc"
+4: "dont_narrow_zext_ashr_keep_trunc" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "dont_narrow_zext_ashr_keep_trunc" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "dont_narrow_zext_ashr_keep_trunc" has unsupported operation: builtin.unregistered: llvm.trunc
+

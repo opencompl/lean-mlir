@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gpr14365_statements
-                                                    
+
 def test0_before := [llvm|
 {
 ^0(%arg3 : i32):
@@ -41,7 +41,7 @@ theorem test0_proof : test0_before ⊑ test0_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test0
   all_goals (try extract_goal ; sorry)
@@ -81,7 +81,7 @@ theorem test1_proof : test1_before ⊑ test1_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test1
   all_goals (try extract_goal ; sorry)

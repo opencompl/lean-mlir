@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gaddhmask_statements
-                                                    
+
 def add_mask_ashr28_i32_before := [llvm|
 {
 ^0(%arg2 : i32):
@@ -41,7 +41,7 @@ theorem add_mask_ashr28_i32_proof : add_mask_ashr28_i32_before ⊑ add_mask_ashr
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_mask_ashr28_i32
   apply add_mask_ashr28_i32_thm
@@ -78,7 +78,7 @@ theorem add_mask_ashr28_non_pow2_i32_proof : add_mask_ashr28_non_pow2_i32_before
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_mask_ashr28_non_pow2_i32
   apply add_mask_ashr28_non_pow2_i32_thm
@@ -115,7 +115,7 @@ theorem add_mask_ashr27_i32_proof : add_mask_ashr27_i32_before ⊑ add_mask_ashr
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_mask_ashr27_i32
   apply add_mask_ashr27_i32_thm

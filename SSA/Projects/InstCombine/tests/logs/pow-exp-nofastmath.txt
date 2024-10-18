@@ -1,0 +1,8 @@
+1: "mypow"
+4: "mypow" has unsupported operation: llvm.call
+
+4: "mypow" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "exp"
+5: "exp" is empty
+

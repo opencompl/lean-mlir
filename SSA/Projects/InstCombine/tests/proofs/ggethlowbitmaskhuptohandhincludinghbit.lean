@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section ggethlowbitmaskhuptohandhincludinghbit_statements
-                                                    
+
 def t0_before := [llvm|
 {
 ^0(%arg18 : i8):
@@ -41,7 +41,7 @@ theorem t0_proof : t0_before ⊑ t0_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t0
   apply t0_thm
@@ -77,7 +77,7 @@ theorem t1_proof : t1_before ⊑ t1_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t1
   apply t1_thm
@@ -116,7 +116,7 @@ theorem t9_nocse_proof : t9_nocse_before ⊑ t9_nocse_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t9_nocse
   apply t9_nocse_thm
@@ -155,7 +155,7 @@ theorem t17_nocse_mismatching_x_proof : t17_nocse_mismatching_x_before ⊑ t17_n
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t17_nocse_mismatching_x
   apply t17_nocse_mismatching_x_thm

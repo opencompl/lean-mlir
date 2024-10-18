@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gadd2_statements
-                                                    
+
 def test2_before := [llvm|
 {
 ^0(%arg59 : i32):
@@ -39,7 +39,7 @@ theorem test2_proof : test2_before ⊑ test2_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test2
   all_goals (try extract_goal ; sorry)
@@ -76,7 +76,7 @@ theorem test3_proof : test3_before ⊑ test3_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test3
   all_goals (try extract_goal ; sorry)
@@ -106,7 +106,7 @@ theorem test4_proof : test4_before ⊑ test4_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test4
   all_goals (try extract_goal ; sorry)
@@ -140,7 +140,7 @@ theorem test9_proof : test9_before ⊑ test9_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test9
   all_goals (try extract_goal ; sorry)
@@ -181,7 +181,7 @@ theorem test10_proof : test10_before ⊑ test10_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test10
   all_goals (try extract_goal ; sorry)
@@ -218,7 +218,7 @@ theorem test11_proof : test11_before ⊑ test11_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test11
   all_goals (try extract_goal ; sorry)
@@ -255,7 +255,7 @@ theorem test12_proof : test12_before ⊑ test12_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test12
   all_goals (try extract_goal ; sorry)
@@ -292,7 +292,7 @@ theorem test13_proof : test13_before ⊑ test13_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test13
   all_goals (try extract_goal ; sorry)
@@ -329,7 +329,7 @@ theorem test14_proof : test14_before ⊑ test14_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test14
   all_goals (try extract_goal ; sorry)
@@ -365,7 +365,7 @@ theorem test15_proof : test15_before ⊑ test15_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test15
   all_goals (try extract_goal ; sorry)
@@ -401,7 +401,7 @@ theorem test16_proof : test16_before ⊑ test16_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test16
   all_goals (try extract_goal ; sorry)
@@ -436,7 +436,7 @@ theorem test17_proof : test17_before ⊑ test17_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test17
   all_goals (try extract_goal ; sorry)
@@ -472,7 +472,7 @@ theorem test18_proof : test18_before ⊑ test18_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test18
   all_goals (try extract_goal ; sorry)
@@ -503,7 +503,7 @@ theorem add_nsw_mul_nsw_proof : add_nsw_mul_nsw_before ⊑ add_nsw_mul_nsw_after
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_nsw_mul_nsw
   all_goals (try extract_goal ; sorry)
@@ -535,7 +535,7 @@ theorem mul_add_to_mul_1_proof : mul_add_to_mul_1_before ⊑ mul_add_to_mul_1_af
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN mul_add_to_mul_1
   all_goals (try extract_goal ; sorry)
@@ -567,7 +567,7 @@ theorem mul_add_to_mul_2_proof : mul_add_to_mul_2_before ⊑ mul_add_to_mul_2_af
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN mul_add_to_mul_2
   all_goals (try extract_goal ; sorry)
@@ -601,7 +601,7 @@ theorem mul_add_to_mul_3_proof : mul_add_to_mul_3_before ⊑ mul_add_to_mul_3_af
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN mul_add_to_mul_3
   all_goals (try extract_goal ; sorry)
@@ -635,7 +635,7 @@ theorem mul_add_to_mul_4_proof : mul_add_to_mul_4_before ⊑ mul_add_to_mul_4_af
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN mul_add_to_mul_4
   all_goals (try extract_goal ; sorry)
@@ -669,7 +669,7 @@ theorem mul_add_to_mul_5_proof : mul_add_to_mul_5_before ⊑ mul_add_to_mul_5_af
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN mul_add_to_mul_5
   all_goals (try extract_goal ; sorry)
@@ -703,7 +703,7 @@ theorem mul_add_to_mul_6_proof : mul_add_to_mul_6_before ⊑ mul_add_to_mul_6_af
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN mul_add_to_mul_6
   all_goals (try extract_goal ; sorry)
@@ -735,7 +735,7 @@ theorem mul_add_to_mul_7_proof : mul_add_to_mul_7_before ⊑ mul_add_to_mul_7_af
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN mul_add_to_mul_7
   all_goals (try extract_goal ; sorry)
@@ -769,7 +769,7 @@ theorem mul_add_to_mul_8_proof : mul_add_to_mul_8_before ⊑ mul_add_to_mul_8_af
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN mul_add_to_mul_8
   all_goals (try extract_goal ; sorry)
@@ -802,7 +802,7 @@ theorem mul_add_to_mul_9_proof : mul_add_to_mul_9_before ⊑ mul_add_to_mul_9_af
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN mul_add_to_mul_9
   all_goals (try extract_goal ; sorry)
@@ -833,7 +833,7 @@ theorem add_or_and_proof : add_or_and_before ⊑ add_or_and_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_or_and
   all_goals (try extract_goal ; sorry)
@@ -864,7 +864,7 @@ theorem add_or_and_commutative_proof : add_or_and_commutative_before ⊑ add_or_
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_or_and_commutative
   all_goals (try extract_goal ; sorry)
@@ -895,7 +895,7 @@ theorem add_and_or_proof : add_and_or_before ⊑ add_and_or_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_and_or
   all_goals (try extract_goal ; sorry)
@@ -926,7 +926,7 @@ theorem add_and_or_commutative_proof : add_and_or_commutative_before ⊑ add_and
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_and_or_commutative
   all_goals (try extract_goal ; sorry)
@@ -957,7 +957,7 @@ theorem add_nsw_or_and_proof : add_nsw_or_and_before ⊑ add_nsw_or_and_after :=
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_nsw_or_and
   all_goals (try extract_goal ; sorry)
@@ -988,7 +988,7 @@ theorem add_nuw_or_and_proof : add_nuw_or_and_before ⊑ add_nuw_or_and_after :=
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_nuw_or_and
   all_goals (try extract_goal ; sorry)
@@ -1019,7 +1019,7 @@ theorem add_nuw_nsw_or_and_proof : add_nuw_nsw_or_and_before ⊑ add_nuw_nsw_or_
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_nuw_nsw_or_and
   all_goals (try extract_goal ; sorry)
@@ -1051,7 +1051,7 @@ theorem add_of_mul_proof : add_of_mul_before ⊑ add_of_mul_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_of_mul
   all_goals (try extract_goal ; sorry)
@@ -1088,7 +1088,7 @@ theorem add_undemanded_low_bits_proof : add_undemanded_low_bits_before ⊑ add_u
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_undemanded_low_bits
   all_goals (try extract_goal ; sorry)
@@ -1125,7 +1125,7 @@ theorem sub_undemanded_low_bits_proof : sub_undemanded_low_bits_before ⊑ sub_u
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sub_undemanded_low_bits
   all_goals (try extract_goal ; sorry)

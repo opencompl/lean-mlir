@@ -1,0 +1,131 @@
+1: "clamp255_i32"
+4: "clamp255_i32" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "sub_ashr_or_i8"
+4: "sub_ashr_or_i8" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sub_ashr_or_i8" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "sub_ashr_or_i16"
+4: "sub_ashr_or_i16" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sub_ashr_or_i16" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "sub_ashr_or_i32"
+4: "sub_ashr_or_i32" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sub_ashr_or_i32" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "sub_ashr_or_i64"
+4: "sub_ashr_or_i64" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sub_ashr_or_i64" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "neg_or_ashr_i32"
+4: "neg_or_ashr_i32" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "neg_or_ashr_i32" has unsupported operation: builtin.unregistered: llvm.sext
+
+1: "sub_ashr_or_i32_nuw_nsw"
+4: "sub_ashr_or_i32_nuw_nsw" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sub_ashr_or_i32_nuw_nsw" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "sub_ashr_or_i32_commute"
+4: "sub_ashr_or_i32_commute" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sub_ashr_or_i32_commute" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "neg_or_ashr_i32_commute"
+4: "neg_or_ashr_i32_commute" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "neg_or_ashr_i32_commute" has unsupported operation: builtin.unregistered: llvm.sext
+
+1: "sub_ashr_or_i32_vec"
+4: "sub_ashr_or_i32_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sub_ashr_or_i32_vec" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "sub_ashr_or_i32_vec_nuw_nsw"
+4: "sub_ashr_or_i32_vec_nuw_nsw" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sub_ashr_or_i32_vec_nuw_nsw" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "neg_or_ashr_i32_vec"
+4: "neg_or_ashr_i32_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "neg_or_ashr_i32_vec" has unsupported operation: builtin.unregistered: llvm.sext
+
+1: "sub_ashr_or_i32_vec_commute"
+4: "sub_ashr_or_i32_vec_commute" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sub_ashr_or_i32_vec_commute" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "neg_or_ashr_i32_vec_commute"
+4: "neg_or_ashr_i32_vec_commute" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "neg_or_ashr_i32_vec_commute" has unsupported operation: builtin.unregistered: llvm.sext
+
+1: "sub_ashr_or_i32_extra_use_sub"
+4: "sub_ashr_or_i32_extra_use_sub" has unsupported operation: llvm.store
+
+4: "sub_ashr_or_i32_extra_use_sub" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sub_ashr_or_i32_extra_use_sub" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "sub_ashr_or_i32_extra_use_or"
+4: "sub_ashr_or_i32_extra_use_or" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sub_ashr_or_i32_extra_use_or" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "sub_ashr_or_i32_extra_use_or" has unsupported operation: llvm.store
+
+1: "neg_extra_use_or_ashr_i32"
+4: "neg_extra_use_or_ashr_i32" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "neg_extra_use_or_ashr_i32" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "neg_extra_use_or_ashr_i32" has unsupported operation: llvm.store
+
+1: "sub_ashr_or_i32_extra_use_ashr"
+4: "sub_ashr_or_i32_extra_use_ashr" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sub_ashr_or_i32_extra_use_ashr" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "sub_ashr_or_i32_extra_use_ashr" has unsupported operation: llvm.store
+
+1: "sub_ashr_or_i32_no_nsw_nuw"
+7: "sub_ashr_or_i32_no_nsw_nuw" is unchanged by InstCombine
+
+1: "neg_or_extra_use_ashr_i32"
+4: "neg_or_extra_use_ashr_i32" has unsupported operation: llvm.store
+
+1: "sub_ashr_or_i32_vec_undef1"
+4: "sub_ashr_or_i32_vec_undef1" has unsupported operation: llvm.mlir.undef
+
+4: "sub_ashr_or_i32_vec_undef1" has unsupported operation: llvm.mlir.undef
+
+4: "sub_ashr_or_i32_vec_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "sub_ashr_or_i32_vec_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "sub_ashr_or_i32_vec_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "sub_ashr_or_i32_vec_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "sub_ashr_or_i32_vec_undef2"
+4: "sub_ashr_or_i32_vec_undef2" has unsupported operation: llvm.mlir.undef
+
+4: "sub_ashr_or_i32_vec_undef2" has unsupported operation: llvm.mlir.undef
+
+4: "sub_ashr_or_i32_vec_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "sub_ashr_or_i32_vec_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "sub_ashr_or_i32_vec_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "sub_ashr_or_i32_vec_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "sub_ashr_or_i32_shift_wrong_bit"
+7: "sub_ashr_or_i32_shift_wrong_bit" is unchanged by InstCombine
+

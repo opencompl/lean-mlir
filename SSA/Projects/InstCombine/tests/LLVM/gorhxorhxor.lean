@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gorhxorhxor_statements
-                                                    
+
 def or_xor_xor_normal_variant1_before := [llvm|
 {
 ^0(%arg17 : i1, %arg18 : i1):
@@ -37,7 +37,7 @@ theorem or_xor_xor_normal_variant1_proof : or_xor_xor_normal_variant1_before ⊑
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_xor_xor_normal_variant1
   all_goals (try extract_goal ; sorry)
@@ -69,7 +69,7 @@ theorem or_xor_xor_normal_variant2_proof : or_xor_xor_normal_variant2_before ⊑
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_xor_xor_normal_variant2
   all_goals (try extract_goal ; sorry)
@@ -101,7 +101,7 @@ theorem or_xor_xor_normal_variant3_proof : or_xor_xor_normal_variant3_before ⊑
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_xor_xor_normal_variant3
   all_goals (try extract_goal ; sorry)
@@ -133,7 +133,7 @@ theorem or_xor_xor_normal_variant4_proof : or_xor_xor_normal_variant4_before ⊑
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_xor_xor_normal_variant4
   all_goals (try extract_goal ; sorry)
@@ -167,7 +167,7 @@ theorem or_xor_xor_normal_binops_proof : or_xor_xor_normal_binops_before ⊑ or_
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_xor_xor_normal_binops
   all_goals (try extract_goal ; sorry)

@@ -1,0 +1,104 @@
+1: "test1"
+4: "test1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test1vec"
+4: "test1vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test2"
+4: "test2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test2vec"
+4: "test2vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test3"
+4: "test3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test3vec"
+4: "test3vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test4"
+4: "test4" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test4vec"
+4: "test4vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test5"
+4: "test5" has unsupported operation after optimization: llvm.udiv
+
+4: "test5" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test5vec"
+"test5vec" contains vectors which are unsupported
+
+1: "test6"
+4: "test6" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test6vec"
+4: "test6vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test7"
+4: "test7" has unsupported operation after optimization: llvm.udiv
+
+4: "test7" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test7vec"
+"test7vec" contains vectors which are unsupported
+
+1: "test8"
+4: "test8" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test8vec"
+4: "test8vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test9"
+4: "test9" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test9vec"
+4: "test9vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test10"
+4: "test10" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test10vec"
+4: "test10vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test11"
+4: "test11" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test11vec"
+4: "test11vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test12"
+4: "test12" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test12vec"
+4: "test12vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test13"
+4: "test13" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test13vec"
+4: "test13vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test14"
+4: "test14" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test14vec"
+4: "test14vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test15"
+4: "test15" has unsupported operation after optimization: llvm.udiv
+
+4: "test15" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test15vec"
+"test15vec" contains vectors which are unsupported
+
+1: "test16"
+4: "test16" has unsupported operation after optimization: llvm.udiv
+
+4: "test16" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test16vec"
+"test16vec" contains vectors which are unsupported
+

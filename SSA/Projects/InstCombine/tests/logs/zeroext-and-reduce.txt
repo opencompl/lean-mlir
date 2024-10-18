@@ -1,0 +1,3 @@
+1: "test1"
+4: "test1" has unsupported operation: builtin.unregistered: llvm.zext
+

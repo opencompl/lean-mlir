@@ -1,0 +1,545 @@
+1: "use"
+5: "use" is empty
+
+1: "use_vec"
+5: "use_vec" is empty
+
+1: "select_icmp_eq_and_1_0_or_2"
+4: "select_icmp_eq_and_1_0_or_2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_eq_and_1_0_or_2" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "select_icmp_eq_and_1_0_or_2_vec"
+"select_icmp_eq_and_1_0_or_2_vec" contains vectors which are unsupported
+
+1: "select_icmp_eq_and_1_0_or_2_vec_poison1"
+4: "select_icmp_eq_and_1_0_or_2_vec_poison1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "select_icmp_eq_and_1_0_or_2_vec_poison1" has unsupported operation: llvm.mlir.undef
+
+4: "select_icmp_eq_and_1_0_or_2_vec_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "select_icmp_eq_and_1_0_or_2_vec_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "select_icmp_eq_and_1_0_or_2_vec_poison2"
+"select_icmp_eq_and_1_0_or_2_vec_poison2" contains vectors which are unsupported
+
+1: "select_icmp_eq_and_1_0_or_2_vec_poison3"
+"select_icmp_eq_and_1_0_or_2_vec_poison3" contains vectors which are unsupported
+
+1: "select_icmp_eq_and_1_0_xor_2"
+4: "select_icmp_eq_and_1_0_xor_2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_eq_and_1_0_xor_2" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "select_icmp_eq_and_1_0_and_not_2"
+4: "select_icmp_eq_and_1_0_and_not_2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_eq_and_1_0_and_not_2" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_icmp_eq_and_32_0_or_8"
+4: "select_icmp_eq_and_32_0_or_8" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_eq_and_32_0_or_8" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "select_icmp_eq_and_32_0_or_8_vec"
+"select_icmp_eq_and_32_0_or_8_vec" contains vectors which are unsupported
+
+1: "select_icmp_eq_and_32_0_xor_8"
+4: "select_icmp_eq_and_32_0_xor_8" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_eq_and_32_0_xor_8" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "select_icmp_eq_and_32_0_and_not_8"
+4: "select_icmp_eq_and_32_0_and_not_8" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_eq_and_32_0_and_not_8" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_icmp_ne_0_and_4096_or_4096"
+4: "select_icmp_ne_0_and_4096_or_4096" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_ne_0_and_4096_or_4096" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "select_icmp_ne_0_and_4096_or_4096_vec"
+"select_icmp_ne_0_and_4096_or_4096_vec" contains vectors which are unsupported
+
+1: "select_icmp_ne_0_and_4096_xor_4096"
+4: "select_icmp_ne_0_and_4096_xor_4096" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_ne_0_and_4096_xor_4096" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "select_icmp_ne_0_and_4096_and_not_4096"
+4: "select_icmp_ne_0_and_4096_and_not_4096" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_ne_0_and_4096_and_not_4096" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_icmp_eq_and_4096_0_or_4096"
+4: "select_icmp_eq_and_4096_0_or_4096" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_eq_and_4096_0_or_4096" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "select_icmp_eq_and_4096_0_or_4096_vec"
+"select_icmp_eq_and_4096_0_or_4096_vec" contains vectors which are unsupported
+
+1: "select_icmp_eq_and_4096_0_xor_4096"
+4: "select_icmp_eq_and_4096_0_xor_4096" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_eq_and_4096_0_xor_4096" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "select_icmp_eq_and_4096_0_and_not_4096"
+4: "select_icmp_eq_and_4096_0_and_not_4096" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_eq_and_4096_0_and_not_4096" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_icmp_eq_0_and_1_or_1"
+4: "select_icmp_eq_0_and_1_or_1" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "select_icmp_eq_0_and_1_or_1_vec"
+4: "select_icmp_eq_0_and_1_or_1_vec" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "select_icmp_eq_0_and_1_xor_1"
+4: "select_icmp_eq_0_and_1_xor_1" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "select_icmp_eq_0_and_1_and_not_1"
+4: "select_icmp_eq_0_and_1_and_not_1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_eq_0_and_1_and_not_1" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_icmp_ne_0_and_4096_or_32"
+4: "select_icmp_ne_0_and_4096_or_32" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_ne_0_and_4096_or_32" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "select_icmp_ne_0_and_4096_xor_32"
+4: "select_icmp_ne_0_and_4096_xor_32" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_ne_0_and_4096_xor_32" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "select_icmp_ne_0_and_4096_and_not_32"
+4: "select_icmp_ne_0_and_4096_and_not_32" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_ne_0_and_4096_and_not_32" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_icmp_ne_0_and_32_or_4096"
+4: "select_icmp_ne_0_and_32_or_4096" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_ne_0_and_32_or_4096" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "select_icmp_ne_0_and_32_or_4096_vec"
+"select_icmp_ne_0_and_32_or_4096_vec" contains vectors which are unsupported
+
+1: "select_icmp_ne_0_and_32_xor_4096"
+4: "select_icmp_ne_0_and_32_xor_4096" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_ne_0_and_32_xor_4096" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "select_icmp_ne_0_and_32_and_not_4096"
+4: "select_icmp_ne_0_and_32_and_not_4096" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_ne_0_and_32_and_not_4096" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_icmp_ne_0_and_1073741824_or_8"
+4: "select_icmp_ne_0_and_1073741824_or_8" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_ne_0_and_1073741824_or_8" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_icmp_ne_0_and_1073741824_xor_8"
+4: "select_icmp_ne_0_and_1073741824_xor_8" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_ne_0_and_1073741824_xor_8" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_icmp_ne_0_and_1073741824_and_not_8"
+4: "select_icmp_ne_0_and_1073741824_and_not_8" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_ne_0_and_1073741824_and_not_8" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_icmp_ne_0_and_8_or_1073741824"
+4: "select_icmp_ne_0_and_8_or_1073741824" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_ne_0_and_8_or_1073741824" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_icmp_ne_0_and_8_xor_1073741824"
+4: "select_icmp_ne_0_and_8_xor_1073741824" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_ne_0_and_8_xor_1073741824" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_icmp_ne_0_and_8_and_not_1073741824"
+4: "select_icmp_ne_0_and_8_and_not_1073741824" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_ne_0_and_8_and_not_1073741824" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_icmp_eq_and_1_0_or_vector_of_2s"
+4: "select_icmp_eq_and_1_0_or_vector_of_2s" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_eq_and_1_0_or_vector_of_2s" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_icmp_and_8_ne_0_xor_8"
+4: "select_icmp_and_8_ne_0_xor_8" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_and_8_ne_0_xor_8" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "select_icmp_and_8_eq_0_xor_8"
+4: "select_icmp_and_8_eq_0_xor_8" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_and_8_eq_0_xor_8" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "select_icmp_x_and_8_eq_0_y_xor_8"
+4: "select_icmp_x_and_8_eq_0_y_xor_8" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "select_icmp_x_and_8_ne_0_y_xor_8"
+4: "select_icmp_x_and_8_ne_0_y_xor_8" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "select_icmp_x_and_8_ne_0_y_or_8"
+4: "select_icmp_x_and_8_ne_0_y_or_8" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "select_icmp_x_and_8_ne_0_y_or_8_vec"
+4: "select_icmp_x_and_8_ne_0_y_or_8_vec" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "select_icmp_x_and_8_ne_0_y_and_not_8"
+4: "select_icmp_x_and_8_ne_0_y_and_not_8" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_x_and_8_ne_0_y_and_not_8" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_icmp_and_2147483648_ne_0_xor_2147483648"
+4: "select_icmp_and_2147483648_ne_0_xor_2147483648" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_and_2147483648_ne_0_xor_2147483648" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "select_icmp_and_2147483648_eq_0_xor_2147483648"
+4: "select_icmp_and_2147483648_eq_0_xor_2147483648" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_and_2147483648_eq_0_xor_2147483648" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "select_icmp_x_and_2147483648_ne_0_or_2147483648"
+4: "select_icmp_x_and_2147483648_ne_0_or_2147483648" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_x_and_2147483648_ne_0_or_2147483648" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test68"
+4: "test68" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test68" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test68vec"
+"test68vec" contains vectors which are unsupported
+
+1: "test68_xor"
+4: "test68_xor" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test68_xor" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test68_and"
+4: "test68_and" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test68_and" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "test69"
+4: "test69" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test69" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test69vec"
+"test69vec" contains vectors which are unsupported
+
+1: "test69_xor"
+4: "test69_xor" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test69_xor" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test69_and"
+4: "test69_and" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test69_and" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "test70"
+4: "test70" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test70" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test70_multiuse"
+4: "test70_multiuse" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test70_multiuse" has unsupported operation: llvm.call
+
+4: "test70_multiuse" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "shift_no_xor_multiuse_or"
+4: "shift_no_xor_multiuse_or" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "shift_no_xor_multiuse_or" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "shift_no_xor_multiuse_xor"
+4: "shift_no_xor_multiuse_xor" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "shift_no_xor_multiuse_xor" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "shift_no_xor_multiuse_and"
+4: "shift_no_xor_multiuse_and" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "shift_no_xor_multiuse_and" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "no_shift_no_xor_multiuse_or"
+4: "no_shift_no_xor_multiuse_or" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "no_shift_no_xor_multiuse_or" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "no_shift_no_xor_multiuse_xor"
+4: "no_shift_no_xor_multiuse_xor" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "no_shift_no_xor_multiuse_xor" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "no_shift_no_xor_multiuse_and"
+4: "no_shift_no_xor_multiuse_and" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "no_shift_no_xor_multiuse_and" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "no_shift_xor_multiuse_or"
+4: "no_shift_xor_multiuse_or" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "no_shift_xor_multiuse_or" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "no_shift_xor_multiuse_xor"
+4: "no_shift_xor_multiuse_xor" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "no_shift_xor_multiuse_xor" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "no_shift_xor_multiuse_and"
+4: "no_shift_xor_multiuse_and" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "no_shift_xor_multiuse_and" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "shift_xor_multiuse_or"
+4: "shift_xor_multiuse_or" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "shift_xor_multiuse_or" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "shift_xor_multiuse_xor"
+4: "shift_xor_multiuse_xor" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "shift_xor_multiuse_xor" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "shift_xor_multiuse_and"
+4: "shift_xor_multiuse_and" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "shift_xor_multiuse_and" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "shift_no_xor_multiuse_cmp"
+4: "shift_no_xor_multiuse_cmp" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "shift_no_xor_multiuse_cmp" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "shift_no_xor_multiuse_cmp_with_xor"
+4: "shift_no_xor_multiuse_cmp_with_xor" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "shift_no_xor_multiuse_cmp_with_xor" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "shift_no_xor_multiuse_cmp_with_and"
+4: "shift_no_xor_multiuse_cmp_with_and" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "shift_no_xor_multiuse_cmp_with_and" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "shift_no_xor_multiuse_cmp_with_and" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "no_shift_no_xor_multiuse_cmp"
+4: "no_shift_no_xor_multiuse_cmp" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "no_shift_no_xor_multiuse_cmp" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "no_shift_no_xor_multiuse_cmp_with_xor"
+4: "no_shift_no_xor_multiuse_cmp_with_xor" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "no_shift_no_xor_multiuse_cmp_with_xor" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "no_shift_no_xor_multiuse_cmp_with_and"
+4: "no_shift_no_xor_multiuse_cmp_with_and" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "no_shift_no_xor_multiuse_cmp_with_and" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "no_shift_no_xor_multiuse_cmp_with_and" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "no_shift_xor_multiuse_cmp"
+4: "no_shift_xor_multiuse_cmp" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "no_shift_xor_multiuse_cmp" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "no_shift_xor_multiuse_cmp_with_xor"
+4: "no_shift_xor_multiuse_cmp_with_xor" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "no_shift_xor_multiuse_cmp_with_xor" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "no_shift_xor_multiuse_cmp_with_and"
+4: "no_shift_xor_multiuse_cmp_with_and" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "no_shift_xor_multiuse_cmp_with_and" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "no_shift_xor_multiuse_cmp_with_and" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "shift_xor_multiuse_cmp"
+4: "shift_xor_multiuse_cmp" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "shift_xor_multiuse_cmp" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "shift_xor_multiuse_cmp" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "shift_xor_multiuse_cmp_with_xor"
+4: "shift_xor_multiuse_cmp_with_xor" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "shift_xor_multiuse_cmp_with_xor" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "shift_xor_multiuse_cmp_with_xor" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "shift_xor_multiuse_cmp_with_and"
+4: "shift_xor_multiuse_cmp_with_and" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "shift_xor_multiuse_cmp_with_and" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "shift_xor_multiuse_cmp_with_and" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "shift_no_xor_multiuse_cmp_or"
+4: "shift_no_xor_multiuse_cmp_or" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "shift_no_xor_multiuse_cmp_or" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "shift_no_xor_multiuse_cmp_or" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "shift_no_xor_multiuse_cmp_xor"
+4: "shift_no_xor_multiuse_cmp_xor" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "shift_no_xor_multiuse_cmp_xor" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "shift_no_xor_multiuse_cmp_xor" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "shift_no_xor_multiuse_cmp_and"
+4: "shift_no_xor_multiuse_cmp_and" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "shift_no_xor_multiuse_cmp_and" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "shift_no_xor_multiuse_cmp_and" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "no_shift_no_xor_multiuse_cmp_or"
+4: "no_shift_no_xor_multiuse_cmp_or" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "no_shift_no_xor_multiuse_cmp_or" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "no_shift_no_xor_multiuse_cmp_xor"
+4: "no_shift_no_xor_multiuse_cmp_xor" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "no_shift_no_xor_multiuse_cmp_xor" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "no_shift_no_xor_multiuse_cmp_and"
+4: "no_shift_no_xor_multiuse_cmp_and" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "no_shift_no_xor_multiuse_cmp_and" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "no_shift_no_xor_multiuse_cmp_and" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "no_shift_xor_multiuse_cmp_or"
+4: "no_shift_xor_multiuse_cmp_or" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "no_shift_xor_multiuse_cmp_or" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "no_shift_xor_multiuse_cmp_or" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "no_shift_xor_multiuse_cmp_xor"
+4: "no_shift_xor_multiuse_cmp_xor" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "no_shift_xor_multiuse_cmp_xor" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "no_shift_xor_multiuse_cmp_xor" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "no_shift_xor_multiuse_cmp_and"
+4: "no_shift_xor_multiuse_cmp_and" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "no_shift_xor_multiuse_cmp_and" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "no_shift_xor_multiuse_cmp_and" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "shift_xor_multiuse_cmp_or"
+4: "shift_xor_multiuse_cmp_or" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "shift_xor_multiuse_cmp_or" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "shift_xor_multiuse_cmp_or" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "shift_xor_multiuse_cmp_xor"
+4: "shift_xor_multiuse_cmp_xor" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "shift_xor_multiuse_cmp_xor" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "shift_xor_multiuse_cmp_xor" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "shift_xor_multiuse_cmp_and"
+4: "shift_xor_multiuse_cmp_and" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "shift_xor_multiuse_cmp_and" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "shift_xor_multiuse_cmp_and" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "set_bits"
+4: "set_bits" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "set_bits_not_inverse_constant"
+4: "set_bits_not_inverse_constant" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "set_bits_extra_use1"
+4: "set_bits_extra_use1" has unsupported operation: llvm.call
+
+4: "set_bits_extra_use1" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "set_bits_extra_use2"
+4: "set_bits_extra_use2" has unsupported operation: llvm.call
+
+4: "set_bits_extra_use2" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "clear_bits"
+4: "clear_bits" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "clear_bits_not_inverse_constant"
+4: "clear_bits_not_inverse_constant" has unsupported operation: llvm.mlir.undef
+
+4: "clear_bits_not_inverse_constant" has unsupported operation: llvm.mlir.undef
+
+4: "clear_bits_not_inverse_constant" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "clear_bits_not_inverse_constant" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "clear_bits_not_inverse_constant" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "clear_bits_extra_use1"
+4: "clear_bits_extra_use1" has unsupported operation: llvm.call
+
+4: "clear_bits_extra_use1" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "clear_bits_extra_use2"
+4: "clear_bits_extra_use2" has unsupported operation: llvm.call
+
+4: "clear_bits_extra_use2" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "xor_i8_to_i64_shl_save_and_eq"
+4: "xor_i8_to_i64_shl_save_and_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "xor_i8_to_i64_shl_save_and_eq" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "xor_i8_to_i64_shl_save_and_ne"
+4: "xor_i8_to_i64_shl_save_and_ne" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "select_icmp_eq_and_1_0_srem_2_fail_null_identity"
+4: "select_icmp_eq_and_1_0_srem_2_fail_null_identity" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_eq_and_1_0_srem_2_fail_null_identity" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_icmp_eq_and_1_0_sdiv_2_fail_null_1_identity"
+4: "select_icmp_eq_and_1_0_sdiv_2_fail_null_1_identity" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_eq_and_1_0_sdiv_2_fail_null_1_identity" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_icmp_eq_and_1_0_lshr_fv"
+4: "select_icmp_eq_and_1_0_lshr_fv" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_eq_and_1_0_lshr_fv" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "select_icmp_eq_and_1_0_lshr_tv"
+4: "select_icmp_eq_and_1_0_lshr_tv" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "select_icmp_eq_and_1_0_lshr_tv" has unsupported operation after optimization: builtin.unregistered: llvm.select
+

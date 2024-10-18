@@ -1,0 +1,98 @@
+1: "use"
+5: "use" is empty
+
+1: "rol_eq"
+4: "rol_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "rol_ne"
+4: "rol_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ror_eq"
+4: "ror_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ror_ne"
+4: "ror_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "rol_eq_use"
+4: "rol_eq_use" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+4: "rol_eq_use" has unsupported operation: llvm.call
+
+4: "rol_eq_use" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "rol_eq_uses"
+4: "rol_eq_uses" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+4: "rol_eq_uses" has unsupported operation: llvm.call
+
+4: "rol_eq_uses" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+4: "rol_eq_uses" has unsupported operation: llvm.call
+
+4: "rol_eq_uses" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "rol_eq_vec"
+4: "rol_eq_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ror_eq_vec"
+4: "ror_eq_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "rol_eq_cst"
+4: "rol_eq_cst" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "rol_ne_cst"
+4: "rol_ne_cst" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "rol_eq_cst_use"
+4: "rol_eq_cst_use" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+4: "rol_eq_cst_use" has unsupported operation: llvm.call
+
+4: "rol_eq_cst_use" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ror_eq_cst"
+4: "ror_eq_cst" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ror_ne_cst"
+4: "ror_ne_cst" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "rol_eq_cst_vec"
+4: "rol_eq_cst_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "rol_eq_cst_undef"
+4: "rol_eq_cst_undef" has unsupported operation: llvm.mlir.undef
+
+4: "rol_eq_cst_undef" has unsupported operation: llvm.mlir.undef
+
+4: "rol_eq_cst_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "rol_eq_cst_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "rol_eq_cst_undef" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+4: "rol_eq_cst_undef" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "no_rotate"
+4: "no_rotate" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+4: "no_rotate" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+4: "no_rotate" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "wrong_pred"
+4: "wrong_pred" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+4: "wrong_pred" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+4: "wrong_pred" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "amounts_mismatch"
+4: "amounts_mismatch" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+4: "amounts_mismatch" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "wrong_pred2"
+4: "wrong_pred2" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+4: "wrong_pred2" has unsupported operation: builtin.unregistered: llvm.icmp
+

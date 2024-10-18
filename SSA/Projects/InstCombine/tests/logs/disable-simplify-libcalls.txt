@@ -1,0 +1,287 @@
+1: "ceil"
+5: "ceil" is empty
+
+1: "copysign"
+5: "copysign" is empty
+
+1: "cos"
+5: "cos" is empty
+
+1: "fabs"
+5: "fabs" is empty
+
+1: "floor"
+5: "floor" is empty
+
+1: "strcat"
+5: "strcat" is empty
+
+1: "strncat"
+5: "strncat" is empty
+
+1: "strchr"
+5: "strchr" is empty
+
+1: "strrchr"
+5: "strrchr" is empty
+
+1: "strcmp"
+5: "strcmp" is empty
+
+1: "strncmp"
+5: "strncmp" is empty
+
+1: "strcpy"
+5: "strcpy" is empty
+
+1: "stpcpy"
+5: "stpcpy" is empty
+
+1: "strncpy"
+5: "strncpy" is empty
+
+1: "strlen"
+5: "strlen" is empty
+
+1: "strpbrk"
+5: "strpbrk" is empty
+
+1: "strspn"
+5: "strspn" is empty
+
+1: "strtod"
+5: "strtod" is empty
+
+1: "strtof"
+5: "strtof" is empty
+
+1: "strtold"
+5: "strtold" is empty
+
+1: "strtol"
+5: "strtol" is empty
+
+1: "strtoll"
+5: "strtoll" is empty
+
+1: "strtoul"
+5: "strtoul" is empty
+
+1: "strtoull"
+5: "strtoull" is empty
+
+1: "strcspn"
+5: "strcspn" is empty
+
+1: "abs"
+5: "abs" is empty
+
+1: "ffs"
+5: "ffs" is empty
+
+1: "ffsl"
+5: "ffsl" is empty
+
+1: "ffsll"
+5: "ffsll" is empty
+
+1: "fprintf"
+5: "fprintf" is empty
+
+1: "isascii"
+5: "isascii" is empty
+
+1: "isdigit"
+5: "isdigit" is empty
+
+1: "toascii"
+5: "toascii" is empty
+
+1: "labs"
+5: "labs" is empty
+
+1: "llabs"
+5: "llabs" is empty
+
+1: "printf"
+5: "printf" is empty
+
+1: "sprintf"
+5: "sprintf" is empty
+
+1: "t1"
+4: "t1" has unsupported operation: builtin.unregistered: llvm.intr.ceil
+
+1: "t2"
+4: "t2" has unsupported operation: llvm.call
+
+1: "t3"
+4: "t3" has unsupported operation: llvm.call
+
+1: "t4"
+4: "t4" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "t5"
+4: "t5" has unsupported operation: builtin.unregistered: llvm.intr.floor
+
+1: "t6"
+4: "t6" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "t6" has unsupported operation after optimization: llvm.call
+
+1: "t7"
+4: "t7" has unsupported operation: llvm.mlir.addressof
+
+4: "t7" has unsupported operation: llvm.call
+
+1: "t8"
+4: "t8" has unsupported operation: llvm.mlir.addressof
+
+4: "t8" has unsupported operation: llvm.getelementptr
+
+1: "t9"
+4: "t9" has unsupported operation: llvm.mlir.addressof
+
+4: "t9" has unsupported operation: llvm.getelementptr
+
+1: "t10"
+4: "t10" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "t10" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "t10" has unsupported operation after optimization: llvm.call
+
+1: "t11"
+4: "t11" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "t11" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "t11" has unsupported operation after optimization: llvm.call
+
+1: "t12"
+4: "t12" has unsupported operation: llvm.store
+
+1: "t13"
+4: "t13" has unsupported operation: llvm.getelementptr
+
+4: "t13" has unsupported operation: llvm.store
+
+1: "t14"
+4: "t14" has unsupported operation: llvm.mlir.addressof
+
+4: "t14" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+1: "t15"
+4: "t15" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "t15" has unsupported operation after optimization: llvm.call
+
+1: "t16"
+4: "t16" has unsupported operation: llvm.mlir.zero
+
+1: "t17"
+4: "t17" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "t17" has unsupported operation after optimization: llvm.call
+
+1: "t18"
+4: "t18" has unsupported operation: llvm.mlir.addressof
+
+4: "t18" has unsupported operation: llvm.call
+
+1: "t19"
+4: "t19" has unsupported operation: llvm.mlir.addressof
+
+4: "t19" has unsupported operation: llvm.call
+
+1: "t20"
+4: "t20" has unsupported operation: llvm.mlir.addressof
+
+4: "t20" has unsupported operation: llvm.call
+
+1: "t21"
+4: "t21" has unsupported operation: llvm.mlir.addressof
+
+4: "t21" has unsupported operation: llvm.call
+
+1: "t22"
+4: "t22" has unsupported operation: llvm.mlir.addressof
+
+4: "t22" has unsupported operation: llvm.call
+
+1: "t23"
+4: "t23" has unsupported operation: llvm.mlir.addressof
+
+4: "t23" has unsupported operation: llvm.call
+
+1: "t24"
+4: "t24" has unsupported operation: llvm.mlir.addressof
+
+4: "t24" has unsupported operation: llvm.call
+
+1: "t25"
+4: "t25" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "t25" has unsupported operation after optimization: llvm.call
+
+1: "t26"
+4: "t26" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "t27"
+4: "t27" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+4: "t27" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "t27" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "t28"
+4: "t28" has unsupported operation: llvm.call
+
+1: "t29"
+4: "t29" has unsupported operation: llvm.call
+
+1: "t30"
+4: "t30" has unsupported operation: llvm.mlir.zero
+
+4: "t30" has unsupported operation: llvm.mlir.addressof
+
+4: "t30" has unsupported operation: llvm.call
+
+4: "t30" has unsupported operation: llvm.return
+
+1: "t31"
+4: "t31" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "t31" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "t32"
+4: "t32" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "t32" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "t33"
+4: "t33" has unsupported operation after optimization: llvm.call
+
+1: "t34"
+4: "t34" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "t35"
+4: "t35" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "t36"
+4: "t36" has unsupported operation: llvm.mlir.addressof
+
+4: "t36" has unsupported operation: llvm.call
+
+4: "t36" has unsupported operation: llvm.return
+
+1: "t37"
+4: "t37" has unsupported operation: llvm.mlir.addressof
+
+4: "t37" has unsupported operation: llvm.call
+
+4: "t37" has unsupported operation: llvm.return
+
+1: "memrchr"
+5: "memrchr" is empty
+

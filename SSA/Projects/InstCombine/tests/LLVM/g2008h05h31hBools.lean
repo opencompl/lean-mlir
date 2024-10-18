@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section g2008h05h31hBools_statements
-                                                    
+
 def foo1_before := [llvm|
 {
 ^0(%arg6 : i1, %arg7 : i1):
@@ -34,7 +34,7 @@ theorem foo1_proof : foo1_before ⊑ foo1_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN foo1
   all_goals (try extract_goal ; sorry)
@@ -63,7 +63,7 @@ theorem foo2_proof : foo2_before ⊑ foo2_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN foo2
   all_goals (try extract_goal ; sorry)
@@ -91,7 +91,7 @@ theorem foo4_proof : foo4_before ⊑ foo4_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN foo4
   all_goals (try extract_goal ; sorry)

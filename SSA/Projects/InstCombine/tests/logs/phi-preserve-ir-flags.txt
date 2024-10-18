@@ -1,0 +1,36 @@
+1: "func1"
+4: "func1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "func1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func1" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "func2"
+4: "func2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "func2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func2" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "func3"
+4: "func3" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "func3" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func3" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func3" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "func4"
+4: "func4" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "func4" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func4" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func4" has unsupported operation: builtin.unregistered: llvm.fadd
+

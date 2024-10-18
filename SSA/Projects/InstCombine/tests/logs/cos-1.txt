@@ -1,0 +1,190 @@
+1: "cos"
+5: "cos" is empty
+
+1: "cosf"
+5: "cosf" is empty
+
+1: "sin"
+5: "sin" is empty
+
+1: "sinf"
+5: "sinf" is empty
+
+1: "tan"
+5: "tan" is empty
+
+1: "tanl"
+5: "tanl" is empty
+
+1: "fabs"
+5: "fabs" is empty
+
+1: "fabsf"
+5: "fabsf" is empty
+
+1: "cos_negated_arg"
+4: "cos_negated_arg" has unsupported operation: llvm.call
+
+1: "cos_negated_arg_tail"
+4: "cos_negated_arg_tail" has unsupported operation: llvm.call
+
+1: "cos_negated_arg_musttail"
+4: "cos_negated_arg_musttail" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "cos_negated_arg_musttail" has unsupported operation: llvm.call
+
+1: "cos_unary_negated_arg"
+4: "cos_unary_negated_arg" has unsupported operation: llvm.call
+
+1: "cosf_negated_arg"
+4: "cosf_negated_arg" has unsupported operation: llvm.call
+
+1: "cosf_unary_negated_arg"
+4: "cosf_unary_negated_arg" has unsupported operation: llvm.call
+
+1: "cosf_negated_arg_FMF"
+4: "cosf_negated_arg_FMF" has unsupported operation: llvm.call
+
+1: "cosf_unary_negated_arg_FMF"
+4: "cosf_unary_negated_arg_FMF" has unsupported operation: llvm.call
+
+1: "cos_unary_fabs_arg"
+4: "cos_unary_fabs_arg" has unsupported operation: llvm.call
+
+1: "cosf_unary_fabs_arg"
+4: "cosf_unary_fabs_arg" has unsupported operation: llvm.call
+
+1: "cosf_unary_fabs_arg_FMF"
+4: "cosf_unary_fabs_arg_FMF" has unsupported operation: llvm.call
+
+1: "cos_copysign_arg"
+4: "cos_copysign_arg" has unsupported operation: llvm.call
+
+1: "cosf_unary_copysign_arg"
+4: "cosf_unary_copysign_arg" has unsupported operation: llvm.call
+
+1: "cosf_copysign_arg_FMF"
+4: "cosf_copysign_arg_FMF" has unsupported operation: llvm.call
+
+1: "sin_negated_arg"
+4: "sin_negated_arg" has unsupported operation: llvm.call
+
+4: "sin_negated_arg" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "sin_unary_negated_arg"
+4: "sin_unary_negated_arg" has unsupported operation: llvm.call
+
+4: "sin_unary_negated_arg" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "sin_unary_negated_arg_musttail"
+4: "sin_unary_negated_arg_musttail" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "sin_unary_negated_arg_musttail" has unsupported operation: llvm.call
+
+1: "sinf_negated_arg"
+4: "sinf_negated_arg" has unsupported operation: llvm.call
+
+4: "sinf_negated_arg" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "sinf_unary_negated_arg"
+4: "sinf_unary_negated_arg" has unsupported operation: llvm.call
+
+4: "sinf_unary_negated_arg" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "sinf_negated_arg_FMF"
+4: "sinf_negated_arg_FMF" has unsupported operation: llvm.call
+
+4: "sinf_negated_arg_FMF" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "sinf_unary_negated_arg_FMF"
+4: "sinf_unary_negated_arg_FMF" has unsupported operation: llvm.call
+
+4: "sinf_unary_negated_arg_FMF" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "use"
+5: "use" is empty
+
+1: "sin_negated_arg_extra_use"
+4: "sin_negated_arg_extra_use" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "sin_negated_arg_extra_use" has unsupported operation: llvm.call
+
+4: "sin_negated_arg_extra_use" has unsupported operation: llvm.call
+
+1: "sin_unary_negated_arg_extra_use"
+4: "sin_unary_negated_arg_extra_use" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "sin_unary_negated_arg_extra_use" has unsupported operation: llvm.call
+
+4: "sin_unary_negated_arg_extra_use" has unsupported operation: llvm.call
+
+1: "neg_sin_negated_arg"
+4: "neg_sin_negated_arg" has unsupported operation: llvm.call
+
+1: "unary_neg_sin_unary_negated_arg"
+4: "unary_neg_sin_unary_negated_arg" has unsupported operation: llvm.call
+
+1: "neg_sin_unary_negated_arg"
+4: "neg_sin_unary_negated_arg" has unsupported operation: llvm.call
+
+1: "unary_neg_sin_negated_arg"
+4: "unary_neg_sin_negated_arg" has unsupported operation: llvm.call
+
+1: "tan_negated_arg"
+4: "tan_negated_arg" has unsupported operation: llvm.call
+
+4: "tan_negated_arg" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "tan_negated_arg_tail"
+4: "tan_negated_arg_tail" has unsupported operation: llvm.call
+
+4: "tan_negated_arg_tail" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "tan_negated_arg_musttail"
+4: "tan_negated_arg_musttail" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "tan_negated_arg_musttail" has unsupported operation: llvm.call
+
+1: "tan_unary_negated_arg"
+4: "tan_unary_negated_arg" has unsupported operation: llvm.call
+
+4: "tan_unary_negated_arg" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "tanl_negated_arg"
+4: "tanl_negated_arg" has unsupported operation: llvm.call
+
+4: "tanl_negated_arg" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "tanl_unary_negated_arg"
+4: "tanl_unary_negated_arg" has unsupported operation: llvm.call
+
+4: "tanl_unary_negated_arg" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "negated_and_shrinkable_libcall"
+4: "negated_and_shrinkable_libcall" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "negated_and_shrinkable_libcall" has unsupported operation: llvm.call
+
+4: "negated_and_shrinkable_libcall" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "unary_negated_and_shrinkable_libcall"
+4: "unary_negated_and_shrinkable_libcall" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "unary_negated_and_shrinkable_libcall" has unsupported operation: llvm.call
+
+4: "unary_negated_and_shrinkable_libcall" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "negated_and_shrinkable_intrinsic"
+4: "negated_and_shrinkable_intrinsic" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "negated_and_shrinkable_intrinsic" has unsupported operation: builtin.unregistered: llvm.intr.cos
+
+4: "negated_and_shrinkable_intrinsic" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "unary_negated_and_shrinkable_intrinsic"
+4: "unary_negated_and_shrinkable_intrinsic" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "unary_negated_and_shrinkable_intrinsic" has unsupported operation: builtin.unregistered: llvm.intr.cos
+
+4: "unary_negated_and_shrinkable_intrinsic" has unsupported operation: builtin.unregistered: llvm.fptrunc
+

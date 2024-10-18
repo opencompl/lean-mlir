@@ -1,0 +1,67 @@
+1: "test_or_fshl"
+4: "test_or_fshl" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "test_and_fshl"
+4: "test_and_fshl" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "test_xor_fshl"
+4: "test_xor_fshl" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "test_or_fshr"
+4: "test_or_fshr" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "test_or_fshl_cascade"
+4: "test_or_fshl_cascade" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "test_or_bitreverse"
+4: "test_or_bitreverse" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+1: "test_or_bitreverse_constant"
+4: "test_or_bitreverse_constant" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+1: "test_or_bswap"
+4: "test_or_bswap" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "test_or_bswap_constant"
+4: "test_or_bswap_constant" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "test_or_fshl_fshr"
+4: "test_or_fshl_fshr" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+4: "test_or_fshl_fshr" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "test_or_bitreverse_bswap"
+4: "test_or_bitreverse_bswap" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+4: "test_or_bitreverse_bswap" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "test_or_fshl_mismatched_shamt"
+4: "test_or_fshl_mismatched_shamt" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+4: "test_or_fshl_mismatched_shamt" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "test_add_fshl"
+4: "test_add_fshl" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+4: "test_add_fshl" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "test_or_fshl_multiuse"
+4: "test_or_fshl_multiuse" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+4: "test_or_fshl_multiuse" has unsupported operation: llvm.call
+
+4: "test_or_fshl_multiuse" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "test_or_bitreverse_multiuse"
+4: "test_or_bitreverse_multiuse" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+4: "test_or_bitreverse_multiuse" has unsupported operation: llvm.call
+
+4: "test_or_bitreverse_multiuse" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+1: "test_or_fshl_constant"
+4: "test_or_fshl_constant" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "use"
+5: "use" is empty
+

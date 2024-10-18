@@ -1,0 +1,367 @@
+1: "use"
+5: "use" is empty
+
+1: "logic_and_logic_or_1"
+4: "logic_and_logic_or_1" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_and_logic_or_1" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "logic_and_logic_or_2"
+4: "logic_and_logic_or_2" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_and_logic_or_2" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "logic_and_logic_or_3"
+4: "logic_and_logic_or_3" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_and_logic_or_3" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "logic_and_logic_or_4"
+4: "logic_and_logic_or_4" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_and_logic_or_4" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "logic_and_logic_or_5"
+4: "logic_and_logic_or_5" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_and_logic_or_5" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "logic_and_logic_or_6"
+4: "logic_and_logic_or_6" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_and_logic_or_6" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "logic_and_logic_or_7"
+4: "logic_and_logic_or_7" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_and_logic_or_7" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "logic_and_logic_or_8"
+4: "logic_and_logic_or_8" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_and_logic_or_8" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "logic_and_logic_or_vector"
+4: "logic_and_logic_or_vector" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_and_logic_or_vector" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "logic_and_logic_or_vector_poison1"
+4: "logic_and_logic_or_vector_poison1" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_and_logic_or_vector_poison1" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "logic_and_logic_or_vector_poison2"
+4: "logic_and_logic_or_vector_poison2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "logic_and_logic_or_vector_poison2" has unsupported operation: llvm.mlir.undef
+
+4: "logic_and_logic_or_vector_poison2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "logic_and_logic_or_vector_poison2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "logic_and_logic_or_vector_poison2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "logic_and_logic_or_vector_poison2" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_and_logic_or_vector_poison2" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_and_logic_or_vector_poison2" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "logic_and_logic_or_vector_poison3"
+4: "logic_and_logic_or_vector_poison3" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "logic_and_logic_or_vector_poison3" has unsupported operation: llvm.mlir.undef
+
+4: "logic_and_logic_or_vector_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "logic_and_logic_or_vector_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "logic_and_logic_or_vector_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "logic_and_logic_or_vector_poison3" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_and_logic_or_vector_poison3" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "logic_and_logic_or_not_one_use"
+4: "logic_and_logic_or_not_one_use" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_and_logic_or_not_one_use" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_and_logic_or_not_one_use" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_and_logic_or_not_one_use" has unsupported operation: llvm.call
+
+4: "logic_and_logic_or_not_one_use" has unsupported operation: llvm.call
+
+1: "and_logic_and_logic_or_1"
+4: "and_logic_and_logic_or_1" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "and_logic_and_logic_or_1" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "and_logic_and_logic_or_2"
+4: "and_logic_and_logic_or_2" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "and_logic_and_logic_or_2" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "and_logic_and_logic_or_3"
+4: "and_logic_and_logic_or_3" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "and_logic_and_logic_or_3" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "and_logic_and_logic_or_4"
+4: "and_logic_and_logic_or_4" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "and_logic_and_logic_or_4" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "and_logic_and_logic_or_5"
+4: "and_logic_and_logic_or_5" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "and_logic_and_logic_or_5" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "and_logic_and_logic_or_6"
+4: "and_logic_and_logic_or_6" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "and_logic_and_logic_or_7"
+4: "and_logic_and_logic_or_7" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "and_logic_and_logic_or_7" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "and_logic_and_logic_or_8"
+4: "and_logic_and_logic_or_8" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "and_logic_and_logic_or_vector"
+4: "and_logic_and_logic_or_vector" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "and_logic_and_logic_or_vector" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "and_logic_and_logic_or_vector_poison1"
+4: "and_logic_and_logic_or_vector_poison1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "and_logic_and_logic_or_vector_poison1" has unsupported operation: llvm.mlir.undef
+
+4: "and_logic_and_logic_or_vector_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "and_logic_and_logic_or_vector_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "and_logic_and_logic_or_vector_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "and_logic_and_logic_or_vector_poison1" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "and_logic_and_logic_or_vector_poison1" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "and_logic_and_logic_or_vector_poison2"
+4: "and_logic_and_logic_or_vector_poison2" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "and_logic_and_logic_or_vector_poison2" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "and_logic_and_logic_or_not_one_use"
+4: "and_logic_and_logic_or_not_one_use" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "and_logic_and_logic_or_not_one_use" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "and_logic_and_logic_or_not_one_use" has unsupported operation: llvm.call
+
+4: "and_logic_and_logic_or_not_one_use" has unsupported operation: llvm.call
+
+1: "and_and_logic_or_1"
+4: "and_and_logic_or_1" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "and_and_logic_or_2"
+4: "and_and_logic_or_2" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "and_and_logic_or_vector"
+4: "and_and_logic_or_vector" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "and_and_logic_or_vector_poison"
+4: "and_and_logic_or_vector_poison" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "and_and_logic_or_not_one_use"
+4: "and_and_logic_or_not_one_use" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "and_and_logic_or_not_one_use" has unsupported operation: llvm.call
+
+4: "and_and_logic_or_not_one_use" has unsupported operation: llvm.call
+
+1: "logic_or_logic_and_1"
+4: "logic_or_logic_and_1" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_or_logic_and_1" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "logic_or_logic_and_2"
+4: "logic_or_logic_and_2" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_or_logic_and_2" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "logic_or_logic_and_3"
+4: "logic_or_logic_and_3" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_or_logic_and_3" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "logic_or_logic_and_4"
+4: "logic_or_logic_and_4" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_or_logic_and_4" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "logic_or_logic_and_5"
+4: "logic_or_logic_and_5" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_or_logic_and_5" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "logic_or_logic_and_6"
+4: "logic_or_logic_and_6" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_or_logic_and_6" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "logic_or_logic_and_7"
+4: "logic_or_logic_and_7" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_or_logic_and_7" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "logic_or_logic_and_8"
+4: "logic_or_logic_and_8" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_or_logic_and_8" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "logic_or_logic_and_vector"
+4: "logic_or_logic_and_vector" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_or_logic_and_vector" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "logic_or_logic_and_vector_poison1"
+4: "logic_or_logic_and_vector_poison1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "logic_or_logic_and_vector_poison1" has unsupported operation: llvm.mlir.undef
+
+4: "logic_or_logic_and_vector_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "logic_or_logic_and_vector_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "logic_or_logic_and_vector_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "logic_or_logic_and_vector_poison1" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_or_logic_and_vector_poison1" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_or_logic_and_vector_poison1" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "logic_or_logic_and_vector_poison2"
+4: "logic_or_logic_and_vector_poison2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "logic_or_logic_and_vector_poison2" has unsupported operation: llvm.mlir.undef
+
+4: "logic_or_logic_and_vector_poison2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "logic_or_logic_and_vector_poison2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "logic_or_logic_and_vector_poison2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "logic_or_logic_and_vector_poison2" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_or_logic_and_vector_poison2" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "logic_or_logic_and_vector_poison3"
+4: "logic_or_logic_and_vector_poison3" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_or_logic_and_vector_poison3" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "logic_or_logic_and_not_one_use"
+4: "logic_or_logic_and_not_one_use" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_or_logic_and_not_one_use" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_or_logic_and_not_one_use" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logic_or_logic_and_not_one_use" has unsupported operation: llvm.call
+
+4: "logic_or_logic_and_not_one_use" has unsupported operation: llvm.call
+
+1: "or_logic_or_logic_and_1"
+4: "or_logic_or_logic_and_1" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "or_logic_or_logic_and_1" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "or_logic_or_logic_and_2"
+4: "or_logic_or_logic_and_2" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "or_logic_or_logic_and_2" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "or_logic_or_logic_and_3"
+4: "or_logic_or_logic_and_3" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "or_logic_or_logic_and_3" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "or_logic_or_logic_and_4"
+4: "or_logic_or_logic_and_4" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "or_logic_or_logic_and_5"
+4: "or_logic_or_logic_and_5" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "or_logic_or_logic_and_5" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "or_logic_or_logic_and_6"
+4: "or_logic_or_logic_and_6" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "or_logic_or_logic_and_6" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "or_logic_or_logic_and_7"
+4: "or_logic_or_logic_and_7" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "or_logic_or_logic_and_7" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "or_logic_or_logic_and_8"
+4: "or_logic_or_logic_and_8" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "or_logic_or_logic_and_vector"
+4: "or_logic_or_logic_and_vector" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "or_logic_or_logic_and_vector" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "or_logic_or_logic_and_vector_poison1"
+4: "or_logic_or_logic_and_vector_poison1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "or_logic_or_logic_and_vector_poison1" has unsupported operation: llvm.mlir.undef
+
+4: "or_logic_or_logic_and_vector_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "or_logic_or_logic_and_vector_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "or_logic_or_logic_and_vector_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "or_logic_or_logic_and_vector_poison1" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "or_logic_or_logic_and_vector_poison1" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "or_logic_or_logic_and_vector_poison2"
+4: "or_logic_or_logic_and_vector_poison2" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "or_logic_or_logic_and_vector_poison2" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "or_logic_or_logic_and_not_one_use"
+4: "or_logic_or_logic_and_not_one_use" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "or_logic_or_logic_and_not_one_use" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "or_logic_or_logic_and_not_one_use" has unsupported operation: llvm.call
+
+4: "or_logic_or_logic_and_not_one_use" has unsupported operation: llvm.call
+
+1: "or_or_logic_and_1"
+4: "or_or_logic_and_1" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "or_or_logic_and_2"
+4: "or_or_logic_and_2" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "or_or_logic_and_vector"
+4: "or_or_logic_and_vector" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "or_or_logic_and_vector_poison"
+4: "or_or_logic_and_vector_poison" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "or_or_logic_and_not_one_use"
+4: "or_or_logic_and_not_one_use" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "or_or_logic_and_not_one_use" has unsupported operation: llvm.call
+
+4: "or_or_logic_and_not_one_use" has unsupported operation: llvm.call
+

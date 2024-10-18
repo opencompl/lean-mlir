@@ -1,0 +1,34 @@
+1: "test1"
+2: llvm.func
+2: llvm.and
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "test2"
+2: llvm.func
+2: llvm.and
+2: llvm.or
+2: llvm.xor
+2: llvm.return
+
+1: "PR38781"
+4: "PR38781" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "PR38781" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "PR75692_1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.and
+2: llvm.return
+
+1: "PR75692_2"
+7: "PR75692_2" is unchanged by InstCombine
+
+1: "PR75692_3"
+7: "PR75692_3" is unchanged by InstCombine
+

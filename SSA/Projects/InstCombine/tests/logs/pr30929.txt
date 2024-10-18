@@ -1,0 +1,8 @@
+1: "main"
+4: "main" has unsupported operation: llvm.call
+
+4: "main" has unsupported operation: llvm.return
+
+1: "acosf"
+5: "acosf" is empty
+

@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gfreehinversion_statements
-                                                    
+
 def lshr_not_nneg2_before := [llvm|
 {
 ^0(%arg20 : i8):
@@ -41,7 +41,7 @@ theorem lshr_not_nneg2_proof : lshr_not_nneg2_before ⊑ lshr_not_nneg2_after :=
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lshr_not_nneg2
   all_goals (try extract_goal ; sorry)

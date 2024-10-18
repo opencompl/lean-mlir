@@ -1,0 +1,59 @@
+1: "use"
+5: "use" is empty
+
+1: "cmpeq_xor_cst1"
+4: "cmpeq_xor_cst1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "cmpeq_xor_cst2"
+4: "cmpeq_xor_cst2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "cmpeq_xor_cst3"
+4: "cmpeq_xor_cst3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "cmpne_xor_cst1"
+4: "cmpne_xor_cst1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "cmpne_xor_cst2"
+4: "cmpne_xor_cst2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "cmpne_xor_cst3"
+4: "cmpne_xor_cst3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "cmpeq_xor_cst1_multiuse"
+4: "cmpeq_xor_cst1_multiuse" has unsupported operation: llvm.call
+
+4: "cmpeq_xor_cst1_multiuse" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "cmpeq_xor_cst1_commuted"
+4: "cmpeq_xor_cst1_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "cmpeq_xor_cst1_vec"
+4: "cmpeq_xor_cst1_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "foo1"
+4: "foo1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "foo2"
+4: "foo2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "foo3"
+4: "foo3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "use.i8"
+5: "use.i8" is empty
+
+1: "fold_xorC_eq0_multiuse"
+4: "fold_xorC_eq0_multiuse" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "fold_xorC_eq0_multiuse" has unsupported operation: llvm.call
+
+1: "fold_xorC_eq1_multiuse_fail"
+4: "fold_xorC_eq1_multiuse_fail" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "fold_xorC_eq1_multiuse_fail" has unsupported operation: llvm.call
+
+1: "fold_xorC_neC_multiuse"
+4: "fold_xorC_neC_multiuse" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "fold_xorC_neC_multiuse" has unsupported operation: llvm.call
+

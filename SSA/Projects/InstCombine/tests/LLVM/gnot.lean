@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gnot_statements
-                                                    
+
 def test1_before := [llvm|
 {
 ^0(%arg153 : i32):
@@ -35,7 +35,7 @@ theorem test1_proof : test1_before ⊑ test1_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test1
   all_goals (try extract_goal ; sorry)
@@ -67,7 +67,7 @@ theorem not_ashr_not_proof : not_ashr_not_before ⊑ not_ashr_not_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_ashr_not
   all_goals (try extract_goal ; sorry)
@@ -100,7 +100,7 @@ theorem not_ashr_const_proof : not_ashr_const_before ⊑ not_ashr_const_after :=
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_ashr_const
   all_goals (try extract_goal ; sorry)
@@ -133,7 +133,7 @@ theorem not_lshr_const_proof : not_lshr_const_before ⊑ not_lshr_const_after :=
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_lshr_const
   all_goals (try extract_goal ; sorry)
@@ -166,7 +166,7 @@ theorem not_sub_proof : not_sub_before ⊑ not_sub_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_sub
   all_goals (try extract_goal ; sorry)
@@ -199,7 +199,7 @@ theorem not_add_proof : not_add_before ⊑ not_add_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_add
   all_goals (try extract_goal ; sorry)
@@ -235,7 +235,7 @@ theorem not_or_neg_proof : not_or_neg_before ⊑ not_or_neg_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_or_neg
   all_goals (try extract_goal ; sorry)
@@ -271,7 +271,7 @@ theorem test_invert_demorgan_and2_proof : test_invert_demorgan_and2_before ⊑ t
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test_invert_demorgan_and2
   all_goals (try extract_goal ; sorry)

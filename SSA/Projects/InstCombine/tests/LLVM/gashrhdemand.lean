@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gashrhdemand_statements
-                                                    
+
 def srem2_ashr_mask_before := [llvm|
 {
 ^0(%arg6 : i32):
@@ -40,7 +40,7 @@ theorem srem2_ashr_mask_proof : srem2_ashr_mask_before ⊑ srem2_ashr_mask_after
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN srem2_ashr_mask
   all_goals (try extract_goal ; sorry)

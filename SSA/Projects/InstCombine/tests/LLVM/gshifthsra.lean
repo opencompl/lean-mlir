@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gshifthsra_statements
-                                                    
+
 def ashr_ashr_before := [llvm|
 {
 ^0(%arg7 : i32):
@@ -38,7 +38,7 @@ theorem ashr_ashr_proof : ashr_ashr_before ⊑ ashr_ashr_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN ashr_ashr
   all_goals (try extract_goal ; sorry)
@@ -71,7 +71,7 @@ theorem ashr_overshift_proof : ashr_overshift_before ⊑ ashr_overshift_after :=
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN ashr_overshift
   all_goals (try extract_goal ; sorry)

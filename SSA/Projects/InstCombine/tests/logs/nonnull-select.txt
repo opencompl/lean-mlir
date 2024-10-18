@@ -1,0 +1,68 @@
+1: "pr48975"
+4: "pr48975" has unsupported operation: llvm.mlir.zero
+
+4: "pr48975" has unsupported operation: llvm.load
+
+4: "pr48975" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "pr48975" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "nonnull_ret"
+4: "nonnull_ret" has unsupported operation: llvm.mlir.zero
+
+4: "nonnull_ret" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "nonnull_ret2"
+4: "nonnull_ret2" has unsupported operation: llvm.mlir.zero
+
+4: "nonnull_ret2" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "nonnull_noundef_ret"
+4: "nonnull_noundef_ret" has unsupported operation: llvm.mlir.zero
+
+4: "nonnull_noundef_ret" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "nonnull_noundef_ret2"
+4: "nonnull_noundef_ret2" has unsupported operation: llvm.mlir.zero
+
+4: "nonnull_noundef_ret2" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "nonnull_call"
+4: "nonnull_call" has unsupported operation: llvm.mlir.zero
+
+4: "nonnull_call" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "nonnull_call" has unsupported operation: llvm.call
+
+4: "nonnull_call" has unsupported operation: llvm.return
+
+1: "nonnull_call2"
+4: "nonnull_call2" has unsupported operation: llvm.mlir.zero
+
+4: "nonnull_call2" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "nonnull_call2" has unsupported operation: llvm.call
+
+4: "nonnull_call2" has unsupported operation: llvm.return
+
+1: "nonnull_noundef_call"
+4: "nonnull_noundef_call" has unsupported operation: llvm.mlir.zero
+
+4: "nonnull_noundef_call" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "nonnull_noundef_call" has unsupported operation: llvm.call
+
+4: "nonnull_noundef_call" has unsupported operation: llvm.return
+
+1: "nonnull_noundef_call2"
+4: "nonnull_noundef_call2" has unsupported operation: llvm.mlir.zero
+
+4: "nonnull_noundef_call2" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "nonnull_noundef_call2" has unsupported operation: llvm.call
+
+4: "nonnull_noundef_call2" has unsupported operation: llvm.return
+
+1: "f"
+5: "f" is empty
+

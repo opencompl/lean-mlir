@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gfoldhsubhofhnothtohinchofhadd_statements
-                                                    
+
 def p0_scalar_before := [llvm|
 {
 ^0(%arg14 : i32, %arg15 : i32):
@@ -38,7 +38,7 @@ theorem p0_scalar_proof : p0_scalar_before ⊑ p0_scalar_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN p0_scalar
   all_goals (try extract_goal ; sorry)

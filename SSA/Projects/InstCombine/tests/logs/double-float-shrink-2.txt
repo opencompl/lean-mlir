@@ -1,0 +1,334 @@
+1: "floor"
+5: "floor" is empty
+
+1: "ceil"
+5: "ceil" is empty
+
+1: "round"
+5: "round" is empty
+
+1: "roundeven"
+5: "roundeven" is empty
+
+1: "nearbyint"
+5: "nearbyint" is empty
+
+1: "trunc"
+5: "trunc" is empty
+
+1: "fabs"
+5: "fabs" is empty
+
+1: "test_shrink_libcall_floor"
+4: "test_shrink_libcall_floor" has unsupported operation: builtin.unregistered: llvm.intr.floor
+
+1: "test_shrink_libcall_ceil"
+4: "test_shrink_libcall_ceil" has unsupported operation: builtin.unregistered: llvm.intr.ceil
+
+1: "test_shrink_libcall_round"
+4: "test_shrink_libcall_round" has unsupported operation: builtin.unregistered: llvm.intr.round
+
+1: "test_shrink_libcall_roundeven"
+4: "test_shrink_libcall_roundeven" has unsupported operation: builtin.unregistered: llvm.intr.roundeven
+
+1: "test_shrink_libcall_nearbyint"
+4: "test_shrink_libcall_nearbyint" has unsupported operation: builtin.unregistered: llvm.intr.nearbyint
+
+1: "test_shrink_libcall_trunc"
+4: "test_shrink_libcall_trunc" has unsupported operation: builtin.unregistered: llvm.intr.trunc
+
+1: "test_shrink_libcall_fabs"
+4: "test_shrink_libcall_fabs" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "test_shrink_libcall_fabs_fast"
+4: "test_shrink_libcall_fabs_fast" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "test_shrink_intrin_ceil"
+4: "test_shrink_intrin_ceil" has unsupported operation: builtin.unregistered: llvm.intr.ceil
+
+1: "test_shrink_intrin_fabs"
+4: "test_shrink_intrin_fabs" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "test_shrink_intrin_floor"
+4: "test_shrink_intrin_floor" has unsupported operation: builtin.unregistered: llvm.intr.floor
+
+1: "test_shrink_intrin_nearbyint"
+4: "test_shrink_intrin_nearbyint" has unsupported operation: builtin.unregistered: llvm.intr.nearbyint
+
+1: "test_shrink_intrin_rint"
+4: "test_shrink_intrin_rint" has unsupported operation: builtin.unregistered: llvm.intr.rint
+
+1: "test_shrink_intrin_round"
+4: "test_shrink_intrin_round" has unsupported operation: builtin.unregistered: llvm.intr.round
+
+1: "test_shrink_intrin_roundeven"
+4: "test_shrink_intrin_roundeven" has unsupported operation: builtin.unregistered: llvm.intr.roundeven
+
+1: "test_shrink_intrin_trunc"
+4: "test_shrink_intrin_trunc" has unsupported operation: builtin.unregistered: llvm.intr.trunc
+
+1: "use_v2f64"
+5: "use_v2f64" is empty
+
+1: "use_v2f32"
+5: "use_v2f32" is empty
+
+1: "test_shrink_intrin_ceil_multi_use"
+4: "test_shrink_intrin_ceil_multi_use" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "test_shrink_intrin_ceil_multi_use" has unsupported operation: builtin.unregistered: llvm.intr.ceil
+
+4: "test_shrink_intrin_ceil_multi_use" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+4: "test_shrink_intrin_ceil_multi_use" has unsupported operation: llvm.call
+
+1: "test_shrink_intrin_fabs_multi_use"
+4: "test_shrink_intrin_fabs_multi_use" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test_shrink_intrin_fabs_multi_use" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "test_shrink_intrin_fabs_multi_use" has unsupported operation: llvm.call
+
+1: "test_shrink_intrin_floor_multi_use"
+4: "test_shrink_intrin_floor_multi_use" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "test_shrink_intrin_floor_multi_use" has unsupported operation: builtin.unregistered: llvm.intr.floor
+
+4: "test_shrink_intrin_floor_multi_use" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+4: "test_shrink_intrin_floor_multi_use" has unsupported operation: llvm.call
+
+4: "test_shrink_intrin_floor_multi_use" has unsupported operation: llvm.call
+
+1: "test_shrink_intrin_nearbyint_multi_use"
+4: "test_shrink_intrin_nearbyint_multi_use" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "test_shrink_intrin_nearbyint_multi_use" has unsupported operation: builtin.unregistered: llvm.intr.nearbyint
+
+4: "test_shrink_intrin_nearbyint_multi_use" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+4: "test_shrink_intrin_nearbyint_multi_use" has unsupported operation: llvm.call
+
+1: "test_shrink_intrin_rint_multi_use"
+4: "test_shrink_intrin_rint_multi_use" has unsupported operation: builtin.unregistered: llvm.intr.rint
+
+4: "test_shrink_intrin_rint_multi_use" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "test_shrink_intrin_rint_multi_use" has unsupported operation: llvm.call
+
+1: "test_shrink_intrin_round_multi_use"
+4: "test_shrink_intrin_round_multi_use" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "test_shrink_intrin_round_multi_use" has unsupported operation: builtin.unregistered: llvm.intr.round
+
+4: "test_shrink_intrin_round_multi_use" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+4: "test_shrink_intrin_round_multi_use" has unsupported operation: llvm.call
+
+4: "test_shrink_intrin_round_multi_use" has unsupported operation: llvm.call
+
+1: "test_shrink_intrin_roundeven_multi_use"
+4: "test_shrink_intrin_roundeven_multi_use" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "test_shrink_intrin_roundeven_multi_use" has unsupported operation: builtin.unregistered: llvm.intr.roundeven
+
+4: "test_shrink_intrin_roundeven_multi_use" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+4: "test_shrink_intrin_roundeven_multi_use" has unsupported operation: llvm.call
+
+4: "test_shrink_intrin_roundeven_multi_use" has unsupported operation: llvm.call
+
+1: "test_shrink_intrin_trunc_multi_use"
+4: "test_shrink_intrin_trunc_multi_use" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "test_shrink_intrin_trunc_multi_use" has unsupported operation: builtin.unregistered: llvm.intr.trunc
+
+4: "test_shrink_intrin_trunc_multi_use" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+4: "test_shrink_intrin_trunc_multi_use" has unsupported operation: llvm.call
+
+1: "test_shrink_intrin_fabs_fast"
+4: "test_shrink_intrin_fabs_fast" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "test_no_shrink_intrin_floor"
+4: "test_no_shrink_intrin_floor" has unsupported operation: builtin.unregistered: llvm.intr.floor
+
+4: "test_no_shrink_intrin_floor" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "test_no_shrink_intrin_ceil"
+4: "test_no_shrink_intrin_ceil" has unsupported operation: builtin.unregistered: llvm.intr.ceil
+
+4: "test_no_shrink_intrin_ceil" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "test_no_shrink_intrin_round"
+4: "test_no_shrink_intrin_round" has unsupported operation: builtin.unregistered: llvm.intr.round
+
+4: "test_no_shrink_intrin_round" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "test_no_shrink_intrin_roundeven"
+4: "test_no_shrink_intrin_roundeven" has unsupported operation: builtin.unregistered: llvm.intr.roundeven
+
+4: "test_no_shrink_intrin_roundeven" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "test_no_shrink_intrin_nearbyint"
+4: "test_no_shrink_intrin_nearbyint" has unsupported operation: builtin.unregistered: llvm.intr.nearbyint
+
+4: "test_no_shrink_intrin_nearbyint" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "test_no_shrink_intrin_trunc"
+4: "test_no_shrink_intrin_trunc" has unsupported operation: builtin.unregistered: llvm.intr.trunc
+
+4: "test_no_shrink_intrin_trunc" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "test_shrink_intrin_fabs_double_src"
+4: "test_shrink_intrin_fabs_double_src" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+4: "test_shrink_intrin_fabs_double_src" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "test_shrink_intrin_fabs_fast_double_src"
+4: "test_shrink_intrin_fabs_fast_double_src" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+4: "test_shrink_intrin_fabs_fast_double_src" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "test_shrink_float_convertible_constant_intrin_floor"
+4: "test_shrink_float_convertible_constant_intrin_floor" has unsupported operation after optimization: builtin.unregistered: llvm.intr.floor
+
+4: "test_shrink_float_convertible_constant_intrin_floor" has unsupported operation after optimization: builtin.unregistered: llvm.fptrunc
+
+1: "test_shrink_float_convertible_constant_intrin_ceil"
+4: "test_shrink_float_convertible_constant_intrin_ceil" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ceil
+
+4: "test_shrink_float_convertible_constant_intrin_ceil" has unsupported operation after optimization: builtin.unregistered: llvm.fptrunc
+
+1: "test_shrink_float_convertible_constant_intrin_round"
+4: "test_shrink_float_convertible_constant_intrin_round" has unsupported operation after optimization: builtin.unregistered: llvm.intr.round
+
+4: "test_shrink_float_convertible_constant_intrin_round" has unsupported operation after optimization: builtin.unregistered: llvm.fptrunc
+
+1: "test_shrink_float_convertible_constant_intrin_roundeven"
+4: "test_shrink_float_convertible_constant_intrin_roundeven" has unsupported operation after optimization: builtin.unregistered: llvm.intr.roundeven
+
+4: "test_shrink_float_convertible_constant_intrin_roundeven" has unsupported operation after optimization: builtin.unregistered: llvm.fptrunc
+
+1: "test_shrink_float_convertible_constant_intrin_nearbyint"
+4: "test_shrink_float_convertible_constant_intrin_nearbyint" has unsupported operation after optimization: builtin.unregistered: llvm.intr.nearbyint
+
+4: "test_shrink_float_convertible_constant_intrin_nearbyint" has unsupported operation after optimization: builtin.unregistered: llvm.fptrunc
+
+1: "test_shrink_float_convertible_constant_intrin_trunc"
+4: "test_shrink_float_convertible_constant_intrin_trunc" has unsupported operation after optimization: builtin.unregistered: llvm.intr.trunc
+
+4: "test_shrink_float_convertible_constant_intrin_trunc" has unsupported operation after optimization: builtin.unregistered: llvm.fptrunc
+
+1: "test_shrink_float_convertible_constant_intrin_fabs"
+4: "test_shrink_float_convertible_constant_intrin_fabs" has unsupported operation after optimization: builtin.unregistered: llvm.intr.fabs
+
+4: "test_shrink_float_convertible_constant_intrin_fabs" has unsupported operation after optimization: builtin.unregistered: llvm.fptrunc
+
+1: "test_shrink_float_convertible_constant_intrin_fabs_fast"
+4: "test_shrink_float_convertible_constant_intrin_fabs_fast" has unsupported operation after optimization: builtin.unregistered: llvm.intr.fabs
+
+4: "test_shrink_float_convertible_constant_intrin_fabs_fast" has unsupported operation after optimization: builtin.unregistered: llvm.fptrunc
+
+1: "test_no_shrink_mismatched_type_intrin_floor"
+4: "test_no_shrink_mismatched_type_intrin_floor" has unsupported operation: builtin.unregistered: llvm.intr.floor
+
+4: "test_no_shrink_mismatched_type_intrin_floor" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "test_no_shrink_mismatched_type_intrin_ceil"
+4: "test_no_shrink_mismatched_type_intrin_ceil" has unsupported operation: builtin.unregistered: llvm.intr.ceil
+
+4: "test_no_shrink_mismatched_type_intrin_ceil" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "test_no_shrink_mismatched_type_intrin_round"
+4: "test_no_shrink_mismatched_type_intrin_round" has unsupported operation: builtin.unregistered: llvm.intr.round
+
+4: "test_no_shrink_mismatched_type_intrin_round" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "test_no_shrink_mismatched_type_intrin_roundeven"
+4: "test_no_shrink_mismatched_type_intrin_roundeven" has unsupported operation: builtin.unregistered: llvm.intr.roundeven
+
+4: "test_no_shrink_mismatched_type_intrin_roundeven" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "test_no_shrink_mismatched_type_intrin_nearbyint"
+4: "test_no_shrink_mismatched_type_intrin_nearbyint" has unsupported operation: builtin.unregistered: llvm.intr.nearbyint
+
+4: "test_no_shrink_mismatched_type_intrin_nearbyint" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "test_no_shrink_mismatched_type_intrin_trunc"
+4: "test_no_shrink_mismatched_type_intrin_trunc" has unsupported operation: builtin.unregistered: llvm.intr.trunc
+
+4: "test_no_shrink_mismatched_type_intrin_trunc" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "test_shrink_mismatched_type_intrin_fabs_double_src"
+4: "test_shrink_mismatched_type_intrin_fabs_double_src" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+4: "test_shrink_mismatched_type_intrin_fabs_double_src" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "test_mismatched_type_intrin_fabs_fast_double_src"
+4: "test_mismatched_type_intrin_fabs_fast_double_src" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+4: "test_mismatched_type_intrin_fabs_fast_double_src" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "test_shrink_intrin_floor_fp16_vec"
+4: "test_shrink_intrin_floor_fp16_vec" has unsupported operation: builtin.unregistered: llvm.intr.floor
+
+4: "test_shrink_intrin_floor_fp16_vec" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "test_shrink_intrin_ceil_fp16_src"
+4: "test_shrink_intrin_ceil_fp16_src" has unsupported operation: builtin.unregistered: llvm.intr.ceil
+
+4: "test_shrink_intrin_ceil_fp16_src" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "test_shrink_intrin_round_fp16_vec"
+4: "test_shrink_intrin_round_fp16_vec" has unsupported operation: builtin.unregistered: llvm.intr.round
+
+4: "test_shrink_intrin_round_fp16_vec" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "test_shrink_intrin_roundeven_fp16_vec"
+4: "test_shrink_intrin_roundeven_fp16_vec" has unsupported operation: builtin.unregistered: llvm.intr.roundeven
+
+4: "test_shrink_intrin_roundeven_fp16_vec" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "test_shrink_intrin_nearbyint_fp16_src"
+4: "test_shrink_intrin_nearbyint_fp16_src" has unsupported operation: builtin.unregistered: llvm.intr.nearbyint
+
+4: "test_shrink_intrin_nearbyint_fp16_src" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "test_shrink_intrin_trunc_fp16_src"
+4: "test_shrink_intrin_trunc_fp16_src" has unsupported operation: builtin.unregistered: llvm.intr.trunc
+
+4: "test_shrink_intrin_trunc_fp16_src" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "test_shrink_intrin_fabs_fp16_src"
+4: "test_shrink_intrin_fabs_fp16_src" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test_shrink_intrin_fabs_fp16_src" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "test_shrink_intrin_fabs_fast_fp16_src"
+4: "test_shrink_intrin_fabs_fast_fp16_src" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test_shrink_intrin_fabs_fast_fp16_src" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "test_no_shrink_intrin_floor_multi_use_fpext"
+4: "test_no_shrink_intrin_floor_multi_use_fpext" has unsupported operation: llvm.mlir.undef
+
+4: "test_no_shrink_intrin_floor_multi_use_fpext" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "test_no_shrink_intrin_floor_multi_use_fpext" has unsupported operation: llvm.store
+
+4: "test_no_shrink_intrin_floor_multi_use_fpext" has unsupported operation: builtin.unregistered: llvm.intr.floor
+
+4: "test_no_shrink_intrin_floor_multi_use_fpext" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "test_no_shrink_intrin_fabs_multi_use_fpext"
+4: "test_no_shrink_intrin_fabs_multi_use_fpext" has unsupported operation: llvm.mlir.undef
+
+4: "test_no_shrink_intrin_fabs_multi_use_fpext" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "test_no_shrink_intrin_fabs_multi_use_fpext" has unsupported operation: llvm.store
+
+4: "test_no_shrink_intrin_fabs_multi_use_fpext" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test_no_shrink_intrin_fabs_multi_use_fpext" has unsupported operation: builtin.unregistered: llvm.fptrunc
+

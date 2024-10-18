@@ -1,0 +1,52 @@
+1: "putchar"
+5: "putchar" is empty
+
+1: "puts"
+5: "puts" is empty
+
+1: "printf"
+5: "printf" is empty
+
+1: "xform_printf"
+4: "xform_printf" has unsupported operation: llvm.mlir.addressof
+
+4: "xform_printf" has unsupported operation: llvm.mlir.addressof
+
+4: "xform_printf" has unsupported operation: llvm.mlir.addressof
+
+4: "xform_printf" has unsupported operation: llvm.mlir.addressof
+
+4: "xform_printf" has unsupported operation: llvm.mlir.addressof
+
+4: "xform_printf" has unsupported operation: llvm.mlir.addressof
+
+4: "xform_printf" has unsupported operation: llvm.call
+
+4: "xform_printf" has unsupported operation: llvm.call
+
+4: "xform_printf" has unsupported operation: llvm.call
+
+4: "xform_printf" has unsupported operation: llvm.call
+
+4: "xform_printf" has unsupported operation: llvm.call
+
+4: "xform_printf" has unsupported operation: llvm.call
+
+4: "xform_printf" has unsupported operation: llvm.call
+
+4: "xform_printf" has unsupported operation: llvm.call
+
+4: "xform_printf" has unsupported operation: llvm.call
+
+4: "xform_printf" has unsupported operation: llvm.call
+
+4: "xform_printf" has unsupported operation: llvm.call
+
+4: "xform_printf" has unsupported operation: llvm.call
+
+4: "xform_printf" has unsupported operation: llvm.call
+
+4: "xform_printf" has unsupported operation: llvm.call
+
+4: "xform_printf" has unsupported operation: llvm.return
+

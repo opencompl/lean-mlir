@@ -1,0 +1,23 @@
+1: "ScaleObjectAdd"
+4: "ScaleObjectAdd" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+4: "ScaleObjectAdd" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+
+4: "ScaleObjectAdd" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+4: "ScaleObjectAdd" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+
+4: "ScaleObjectAdd" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+4: "ScaleObjectAdd" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+
+4: "ScaleObjectAdd" has unsupported operation after optimization: builtin.unregistered: llvm.trunc
+
+4: "ScaleObjectAdd" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+4: "ScaleObjectAdd" has unsupported operation after optimization: builtin.unregistered: llvm.trunc
+
+4: "ScaleObjectAdd" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+4: "ScaleObjectAdd" has unsupported operation after optimization: builtin.unregistered: llvm.fadd
+

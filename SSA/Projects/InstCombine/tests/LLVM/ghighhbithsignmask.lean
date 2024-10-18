@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section ghighhbithsignmask_statements
-                                                    
+
 def t0_before := [llvm|
 {
 ^0(%arg10 : i64):
@@ -38,7 +38,7 @@ theorem t0_proof : t0_before ⊑ t0_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t0
   all_goals (try extract_goal ; sorry)
@@ -71,7 +71,7 @@ theorem t0_exact_proof : t0_exact_before ⊑ t0_exact_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t0_exact
   all_goals (try extract_goal ; sorry)
@@ -104,7 +104,7 @@ theorem t2_proof : t2_before ⊑ t2_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t2
   all_goals (try extract_goal ; sorry)
@@ -137,7 +137,7 @@ theorem t3_exact_proof : t3_exact_before ⊑ t3_exact_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t3_exact
   all_goals (try extract_goal ; sorry)
@@ -172,7 +172,7 @@ theorem n9_proof : n9_before ⊑ n9_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN n9
   all_goals (try extract_goal ; sorry)
