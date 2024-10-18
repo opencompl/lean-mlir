@@ -5,31 +5,33 @@ import os
 
 benchmark_dir = "../SSA/Projects/InstCombine/HackersDelight/"
 res_dir = "results/"
-dir = 'plots/'
+# dir = 'plots/'
+dir = '../../paper-lean-bitvectors/plots/'
+
 
 reps = 1
 
 bv_width = [4, 8, 16, 32, 64]
 
-tools = ['bitwuzla', 'leanSAT-tot']
+tools = ['bitwuzla', 'leanSAT']
 
 # create dataframe
 data = {}
 
 col = [
-"#bfd3e6",
-"#9ebcda",
-"#8c96c6",
-"#8c6bb1",
-"#88419d",
-"#6e016b"]
+"#a6cee3",
+"#1f78b4",
+"#b2df8a",
+"#33a02c",
+"#fb9a99",
+"#e31a1c"]
 
 for file in os.listdir(benchmark_dir):
     print(file)
     if "ch2_3" not in file: # currently discard broken chapter
         data[file]={}
         data[file]['bitwuzla'] = {}
-        data[file]['leanSAT-tot'] = {} 
+        data[file]['leanSAT'] = {} 
         data[file]['leanSAT-rw'] = {}
         data[file]['leanSAT-bb'] = {}
         data[file]['leanSAT-sat'] = {}
@@ -39,7 +41,7 @@ for file in os.listdir(benchmark_dir):
         for bvw in bv_width:
 
             data[file]['bitwuzla'][str(bvw)] = []
-            data[file]['leanSAT-tot'][str(bvw)] = []
+            data[file]['leanSAT'][str(bvw)] = []
             data[file]['leanSAT-rw'][str(bvw)] = []
             data[file]['leanSAT-bb'][str(bvw)] = []
             data[file]['leanSAT-sat'][str(bvw)] = []
@@ -115,7 +117,7 @@ for file in os.listdir(benchmark_dir):
                 leanSAT_lratc_times.append(np.mean(thm))
 
             data[file]['bitwuzla'][str(bvw)] = bitwuzla_times
-            data[file]['leanSAT-tot'][str(bvw)] = leanSAT_tot_times
+            data[file]['leanSAT'][str(bvw)] = leanSAT_tot_times
             data[file]['leanSAT-rw'][str(bvw)] = leanSAT_rw_times
             data[file]['leanSAT-bb'][str(bvw)] = leanSAT_bb_times
             data[file]['leanSAT-sat'][str(bvw)] = leanSAT_sat_times
@@ -127,6 +129,7 @@ for file in os.listdir(benchmark_dir):
 def bar_bw_impact(data, bm, tool):
     i = 0
     plt.figure()
+    plt.rc('axes.spines', **{'bottom':True, 'left':True, 'right':False, 'top':False})
     width = len(bv_width)/30
     max = 0 
     for bvw in bv_width: 
@@ -136,33 +139,37 @@ def bar_bw_impact(data, bm, tool):
             max = np.max(data[bm][tool][str(bvw)])
     # Labels and legend
     plt.xlabel("Theorems")
-    plt.ylabel("Time [ms]")
+    plt.ylabel("Time [ms]", rotation='horizontal', ha='left', y = 1)
     plt.xticks(np.arange(len(data[bm][tool][str(bvw)])))
-    plt.title(tool+' proving time - '+bm)
-    plt.legend(loc = 'upper center', ncols = len(bv_width))
+    # plt.title(tool+' proving time - '+bm)
+    plt.legend(loc = 'upper center', ncols = len(bv_width), frameon=False)
     plt.ylim(0, max * 1.15) 
+    plt.tight_layout()
     plt.savefig(dir+tool+'_'+bm.split(".")[0]+'.pdf', dpi = 500)
 
 def compare_tools_same_bw(data, bm, tool1, tool2, bvw):
     i = 0
     plt.figure()
+    plt.rc('axes.spines', **{'bottom':True, 'left':True, 'right':False, 'top':False})
     max = np.max(data[bm][tool1][str(bvw)])
-    plt.plot(np.arange(len(data[bm][tool1][str(bvw)])), data[bm][tool1][str(bvw)], color=col[2], label = tool1)
+    plt.plot(np.arange(len(data[bm][tool1][str(bvw)])), data[bm][tool1][str(bvw)], color=col[0], label = tool1)
     plt.plot(np.arange(len(data[bm][tool2][str(bvw)])), data[bm][tool2][str(bvw)], color=col[3], label = tool2)
     if (np.max(data[bm][tool2][str(bvw)])> max):
         max = np.max(data[bm][tool2][str(bvw)])
     # Labels and legend
     plt.xlabel("Theorems")
-    plt.ylabel("Time [ms]")
+    plt.ylabel("Time [ms]", rotation='horizontal', ha='left', y = 1)
     plt.xticks(np.arange(len(data[bm][tool1][str(bvw)])))
-    plt.title(tool1+' vs. '+tool2+' proving time - '+bm)
-    plt.legend(loc = 'upper center', ncols = len(bv_width))
+    # plt.title(tool1+' vs. '+tool2+' proving time - '+bm)
+    plt.legend(loc = 'upper center', ncols = len(bv_width), frameon=False)
     plt.ylim(0, max * 1.15) 
+    plt.tight_layout()
     plt.savefig(dir+tool1+'_'+tool2+'_'+bm.split(".")[0]+'_'+str(bvw)+'.pdf', dpi = 500)
 
 def compare_tools_diff_bw(data, bm, tool1, tool2):
     i = 0
     plt.figure()
+    plt.rc('axes.spines', **{'bottom':True, 'left':True, 'right':False, 'top':False})
     width = len(bv_width)/30
     max = 0.0
     for bvw in bv_width: 
@@ -172,22 +179,23 @@ def compare_tools_diff_bw(data, bm, tool1, tool2):
             max = np.max(np.subtract(data[bm][tool1][str(bvw)], data[bm][tool2][str(bvw)]))
     # Labels and legend
     plt.xlabel("Theorems")
-    plt.ylabel("Time [ms]")
+    plt.ylabel("Time [ms]", rotation='horizontal', ha='left', y = 1)
     plt.xticks(np.arange(len(data[bm][tool][str(bvw)])))
-    plt.title(tool1+' vs. '+tool2+' diff - '+bm)
-    plt.legend(loc = 'upper center', ncols = len(bv_width))
+    # plt.title(tool1+' vs. '+tool2+' diff - '+bm)
+    plt.legend(loc = 'upper center', ncols = len(bv_width), frameon=False)
     plt.tight_layout()
     plt.savefig(dir+tool1+'_'+tool2+'_diff_'+bm.split(".")[0]+'.pdf', dpi = 500)
 
 def leanSAT_tot_stacked(data, bm, bvw):
-    x = np.arange(len(data[bm]['leanSAT-tot'][str(bvw)]))
+    x = np.arange(len(data[bm]['leanSAT'][str(bvw)]))
 
     # Set the width of the bars
     width = len(bv_width)/30
     # Create the figure and axis
     plt.figure()
+    plt.rc('axes.spines', **{'bottom':True, 'left':True, 'right':False, 'top':False})
     # Plot the total times (non-stacked)
-    plt.bar(x - width/2, data[bm]['leanSAT-tot'][str(bvw)], width, label='leanSAT-tot', color=col[0])
+    plt.bar(x - width/2, data[bm]['leanSAT'][str(bvw)], width, label='leanSAT', color=col[0])
 
     # Plot the stacked bars
     plt.bar(x + width/2, data[bm]['leanSAT-rw'][str(bvw)], width, label='rw', bottom=np.zeros_like(data[bm]['leanSAT-rw'][str(bvw)]), color=col[1])
@@ -203,11 +211,12 @@ def leanSAT_tot_stacked(data, bm, bvw):
 
     # Set axis labels and title
     plt.xlabel('Theorems')
-    plt.ylabel('Time [ms]')
-    plt.title('leanSAT Total vs Stacked Components')
+    plt.ylabel('Time [ms]', rotation='horizontal', ha='left', y = 1)
+
+    # plt.title('leanSAT Total vs Stacked Components')
 
     # Add a legend
-    plt.legend()
+    plt.legend(frameon=False)
 
     # Show the plot
     plt.tight_layout()
@@ -227,13 +236,15 @@ def cumul_solving_time_same_bvw(data, tool1, tool2,  bm, bvw):
         tot_time = cumtime2[-1]
 
     plt.figure()
-    plt.plot(cumtime1, np.arange(0, len(data[bm][tool1][str(bvw)])+1), marker = 'o', color=col[2], label = tool1)
+    plt.rc('axes.spines', **{'bottom':True, 'left':True, 'right':False, 'top':False})
+    plt.plot(cumtime1, np.arange(0, len(data[bm][tool1][str(bvw)])+1), marker = 'o', color=col[0], label = tool1)
     plt.plot(cumtime2, np.arange(0, len(data[bm][tool2][str(bvw)])+1), marker = 'x', color=col[3], label = tool2)
 
     # Add labels and title
     plt.xlabel('Time [ms]')
-    plt.ylabel('Problems solved')
-    plt.title('Problems solved - '+tool1+" vs. "+tool2+" "+bm)
+    plt.ylabel('Problems\nsolved', rotation='horizontal', ha='left', y = 1)
+
+    # plt.title('Problems solved - '+tool1+" vs. "+tool2+" "+bm)
     if tot_time < 250:
         step = 50
     elif tot_time < 750:
@@ -243,7 +254,7 @@ def cumul_solving_time_same_bvw(data, tool1, tool2,  bm, bvw):
     else:
         step = 500
     plt.xticks(np.arange(0, tot_time+10, step))  # Show ticks for each time point
-    plt.legend()
+    plt.legend(frameon=False)
     plt.savefig(dir+'cumul_problems_bv'+str(bvw)+'_'+bm.split(".")[0]+'.pdf', dpi = 500)
 
 for file in os.listdir(benchmark_dir):
