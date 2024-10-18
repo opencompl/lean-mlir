@@ -36,6 +36,8 @@ theorem Array.mem_of_mem_pop (a : Array α) (x : α) : x ∈ a.pop → x ∈ a :
 
 theorem Array.mem_push (a : Array α) (x y : α) : x ∈ a.push y → x ∈ a ∨ x = y := by sorry
 
+theorem Array.mem_pop_iff (a : Array α) (x : α) : x ∈ a ↔ x ∈ a.pop ∨ a.back? = some x := by sorry
+
 theorem Std.HashMap.keys_nodup [BEq K] [Hashable K] (m : Std.HashMap K V) : m.keys.Nodup := by sorry
 
 @[simp]
@@ -50,7 +52,12 @@ theorem Std.HashMap.mem_keys_insert_old [BEq K] [LawfulBEq K] [Hashable K] [Lawf
   intros _; apply mem_insert.mpr; simp_all only [beq_iff_eq, or_true]
 
 @[aesop 50% unsafe]
-theorem Std.HashMap.get?_none_not_mem [BEq K] [LawfulBEq K] [Hashable K] [LawfulHashable K] (m : Std.HashMap K V) (k : K) : m.get? k = none → k ∉ m := by
+theorem Std.HashMap.get?_none_not_mem [BEq K] [LawfulBEq K] [Hashable K] [LawfulHashable K] {m : Std.HashMap K V} {k : K} : m.get? k = none → k ∉ m := by
+  sorry
+
+@[aesop 50% unsafe]
+theorem Std.HashMap.mem_of_get? [BEq K] [LawfulBEq K] [Hashable K] [LawfulHashable K] {m : Std.HashMap K V} {k : K} :
+    m.get? k = some v → k ∈  m := by
   sorry
 
 @[aesop 50% unsafe]
