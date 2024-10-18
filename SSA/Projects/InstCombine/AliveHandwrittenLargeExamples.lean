@@ -177,6 +177,8 @@ def alive_simplifyMulDivRem805 (w : Nat) :
                 rw [Nat.mod_eq_of_lt (by omega)]
               subst h1
               simp [BitVec.sdiv_one_one]
+              intro h
+              simp [h]
             · have hcases : (1 + BitVec.toNat x = 2 ^ Nat.succ (Nat.succ w'') ∨
                   1 + BitVec.toNat x = 2 ^ Nat.succ (Nat.succ w'') + 1) := by
                 omega
@@ -240,12 +242,20 @@ def alive_simplifyMulDivRem805' (w : Nat) :
   · simp only [h, ofBool_true, ofNat_eq_ofNat, Refinement.some_some]
     by_cases a_0 : a = 0; subst a_0; simp at c
     by_cases a_1 : a = 1; subst a_1; simp [sdiv_one_one]
-    rw [BitVec.toNat_eq] at a_0 a_1
+    rw [BitVec.toNat_eq] at a_0
+    intro h
+    simp [h]
     simp only [ofNat_eq_ofNat, toNat_ofNat, Nat.zero_mod] at a_0 a_1
-    by_cases w_1 : w = 1; subst w_1; omega
+    by_cases w_1 : w = 1
+    · subst w_1
+      have hh := BitVec.eq_zero_or_eq_one a
+      simp [a_0] at hh
+      simp [a_1] at hh
     have w_gt_1 : 1 < w := by omega
-    have el_one: 1 % 2^w = 1 := by rw [Nat.mod_eq_of_lt]; omega
-    rw [el_one] at a_1
+    have el_one: 1 % 2^w = 1 := by
+      rw [Nat.mod_eq_of_lt]
+      have aa := Nat.lt_two_pow w
+      omega
     have el_three: 3 % 2^w = 3 := by
       rw [Nat.mod_eq_of_lt];
       have x := @Nat.pow_le_pow_of_le 2 2 w (by omega) (by omega);
@@ -259,6 +269,9 @@ def alive_simplifyMulDivRem805' (w : Nat) :
       simp [x]
     · rw [Nat.add_mod_of_add_mod_lt] at h
       simp only [el_one, toNat_mod_cancel] at h
+      simp_all
+      simp [bv_toNat] at a_0
+      simp [bv_toNat, show 0 < w by omega] at a_1
       omega
       simp only [el_one, toNat_mod_cancel]
       rw [BitVec.toNat_eq] at a_allones

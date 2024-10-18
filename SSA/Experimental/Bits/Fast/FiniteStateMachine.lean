@@ -303,7 +303,7 @@ def sub : FSM Bool :=
 theorem carry_sub (x : Bool → BitStream) : ∀ (n : ℕ), sub.carry x (n+1) =
     fun _ => (BitStream.subAux (x true) (x false) n).2
   | 0 => by
-    simp [carry, nextBit, Function.funext_iff, BitStream.subAux, sub]
+    simp [carry, nextBit, funext_iff, BitStream.subAux, sub]
   | n+1 => by
     rw [carry, carry_sub _ n]
     simp [nextBit, eval, sub, BitStream.sub, BitStream.subAux, Bool.xor_not_left']
@@ -329,7 +329,7 @@ def neg : FSM Unit :=
 theorem carry_neg (x : Unit → BitStream) : ∀ (n : ℕ), neg.carry x (n+1) =
     fun _ => (BitStream.negAux (x ()) n).2
   | 0 => by
-    simp [carry, nextBit, Function.funext_iff, BitStream.negAux, neg]
+    simp [carry, nextBit, funext_iff, BitStream.negAux, neg]
   | n+1 => by
     rw [carry, carry_neg _ n]
     simp [nextBit, eval, neg, BitStream.neg, BitStream.negAux, Bool.xor_not_left']
@@ -397,7 +397,7 @@ def ls (b : Bool) : FSM Unit :=
 theorem carry_ls (b : Bool) (x : Unit → BitStream) : ∀ (n : ℕ),
     (ls b).carry x (n+1) = fun _ => x () n
   | 0 => by
-    simp [carry, nextBit, Function.funext_iff, ls]
+    simp [carry, nextBit, funext_iff, ls]
   | n+1 => by
     rw [carry, carry_ls _ _ n]
     simp [nextBit, eval, ls]
@@ -429,7 +429,7 @@ def incr : FSM Unit :=
 theorem carry_incr (x : Unit → BitStream) : ∀ (n : ℕ),
     incr.carry x (n+1) = fun _ => (BitStream.incrAux (x ()) n).2
   | 0 => by
-    simp [carry, nextBit, Function.funext_iff, BitStream.incrAux, incr]
+    simp [carry, nextBit, funext_iff, BitStream.incrAux, incr]
   | n+1 => by
     rw [carry, carry_incr _ n]
     simp [nextBit, eval, incr, incr, BitStream.incrAux]
@@ -452,7 +452,7 @@ def decr : FSM Unit :=
 theorem carry_decr (x : Unit → BitStream) : ∀ (n : ℕ), decr.carry x (n+1) =
     fun _ => (BitStream.decrAux (x ()) n).2
   | 0 => by
-    simp [carry, nextBit, Function.funext_iff, BitStream.decrAux, decr]
+    simp [carry, nextBit, funext_iff, BitStream.decrAux, decr]
   | n+1 => by
     rw [carry, carry_decr _ n]
     simp [nextBit, eval, decr, BitStream.decrAux]

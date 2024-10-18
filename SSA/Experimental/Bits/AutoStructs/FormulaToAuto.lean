@@ -8,6 +8,7 @@ import Mathlib.Data.Finset.Basic
 import Mathlib.Data.FinEnum
 import Mathlib.Tactic.FinCases
 import SSA.Experimental.Bits.AutoStructs.Basic
+import SSA.Experimental.Bits.AutoStructs.Constructions
 import SSA.Experimental.Bits.AutoStructs.Defs
 import SSA.Experimental.Bits.AutoStructs.FinEnum
 import SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
