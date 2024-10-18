@@ -141,7 +141,7 @@ def bar_bw_impact(data, bm, tool):
     plt.title(tool+' proving time - '+bm)
     plt.legend(loc = 'upper center', ncols = len(bv_width))
     plt.ylim(0, max * 1.15) 
-    plt.savefig(dir+tool+'_'+bm+'.png', dpi = 500)
+    plt.savefig(dir+tool+'_'+bm.split(".")[0]+'.pdf', dpi = 500)
 
 def compare_tools_same_bw(data, bm, tool1, tool2, bvw):
     i = 0
@@ -158,7 +158,7 @@ def compare_tools_same_bw(data, bm, tool1, tool2, bvw):
     plt.title(tool1+' vs. '+tool2+' proving time - '+bm)
     plt.legend(loc = 'upper center', ncols = len(bv_width))
     plt.ylim(0, max * 1.15) 
-    plt.savefig(dir+tool1+'_'+tool2+'_'+bm+'_'+str(bvw)+'.png', dpi = 500)
+    plt.savefig(dir+tool1+'_'+tool2+'_'+bm.split(".")[0]+'_'+str(bvw)+'.pdf', dpi = 500)
 
 def compare_tools_diff_bw(data, bm, tool1, tool2):
     i = 0
@@ -177,7 +177,7 @@ def compare_tools_diff_bw(data, bm, tool1, tool2):
     plt.title(tool1+' vs. '+tool2+' diff - '+bm)
     plt.legend(loc = 'upper center', ncols = len(bv_width))
     plt.tight_layout()
-    plt.savefig(dir+tool1+'_'+tool2+'_diff_'+bm+'.png', dpi = 500)
+    plt.savefig(dir+tool1+'_'+tool2+'_diff_'+bm.split(".")[0]+'.pdf', dpi = 500)
 
 def leanSAT_tot_stacked(data, bm, bvw):
     x = np.arange(len(data[bm]['leanSAT-tot'][str(bvw)]))
@@ -185,7 +185,7 @@ def leanSAT_tot_stacked(data, bm, bvw):
     # Set the width of the bars
     width = len(bv_width)/30
     # Create the figure and axis
-
+    plt.figure()
     # Plot the total times (non-stacked)
     plt.bar(x - width/2, data[bm]['leanSAT-tot'][str(bvw)], width, label='leanSAT-tot', color=col[0])
 
@@ -211,7 +211,7 @@ def leanSAT_tot_stacked(data, bm, bvw):
 
     # Show the plot
     plt.tight_layout()
-    plt.savefig(dir+'leanSAT_stacked_'+bm+'.png', dpi = 500)
+    plt.savefig(dir+'leanSAT_stacked_'+bm.split(".")[0]+'.pdf', dpi = 500)
 
 for file in os.listdir(benchmark_dir):
     if "ch2_3" not in file: # currently discard broken chapter
