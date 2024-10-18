@@ -224,6 +224,11 @@
 
 4: "extractelt_insertion" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "extractelt_insertion" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "collectShuffleElts"
 4: "collectShuffleElts" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 

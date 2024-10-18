@@ -13,10 +13,14 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gavghlsb_statements
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
                                                     
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def avg_lsb_before := [llvm|
 {
 ^0(%arg4 : i8, %arg5 : i8):
@@ -45,10 +49,14 @@ theorem avg_lsb_proof : avg_lsb_before ⊑ avg_lsb_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN avg_lsb
   apply avg_lsb_thm

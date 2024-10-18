@@ -81,6 +81,11 @@
 
 4: "fold_mask_cmps_to_false_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "fold_mask_cmps_to_false_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "fold_mask_cmps_to_true"
 4: "fold_mask_cmps_to_true" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -91,6 +96,11 @@
 
 4: "fold_mask_cmps_to_true_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "fold_mask_cmps_to_true_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "nomask_splat_and_B_allones"
 4: "nomask_splat_and_B_allones" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -146,6 +156,11 @@
 
 4: "masked_icmps_mask_notallzeros_bmask_mixed_2_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "masked_icmps_mask_notallzeros_bmask_mixed_2_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "masked_icmps_mask_notallzeros_bmask_mixed_3"
 4: "masked_icmps_mask_notallzeros_bmask_mixed_3" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -190,6 +205,11 @@
 
 4: "masked_icmps_mask_notallzeros_bmask_mixed_7_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "masked_icmps_mask_notallzeros_bmask_mixed_7_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "masked_icmps_mask_notallzeros_bmask_mixed_7b"
 4: "masked_icmps_mask_notallzeros_bmask_mixed_7b" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -200,6 +220,11 @@
 
 4: "masked_icmps_mask_notallzeros_bmask_mixed_7b_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "masked_icmps_mask_notallzeros_bmask_mixed_7b_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "masked_icmps_mask_notallzeros_bmask_mixed_negated_0"
 4: "masked_icmps_mask_notallzeros_bmask_mixed_negated_0" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -236,6 +261,11 @@
 
 4: "masked_icmps_mask_notallzeros_bmask_mixed_negated_2_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "masked_icmps_mask_notallzeros_bmask_mixed_negated_2_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "masked_icmps_mask_notallzeros_bmask_mixed_negated_3"
 4: "masked_icmps_mask_notallzeros_bmask_mixed_negated_3" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -280,6 +310,11 @@
 
 4: "masked_icmps_mask_notallzeros_bmask_mixed_negated_7_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "masked_icmps_mask_notallzeros_bmask_mixed_negated_7_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "masked_icmps_mask_notallzeros_bmask_mixed_negated_7b"
 4: "masked_icmps_mask_notallzeros_bmask_mixed_negated_7b" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -290,6 +325,11 @@
 
 4: "masked_icmps_mask_notallzeros_bmask_mixed_negated_7b_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "masked_icmps_mask_notallzeros_bmask_mixed_negated_7b_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "masked_icmps_mask_notallzeros_bmask_mixed_swapped_0"
 4: "masked_icmps_mask_notallzeros_bmask_mixed_swapped_0" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -326,6 +366,11 @@
 
 4: "masked_icmps_mask_notallzeros_bmask_mixed_swapped_2_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "masked_icmps_mask_notallzeros_bmask_mixed_swapped_2_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "masked_icmps_mask_notallzeros_bmask_mixed_swapped_3"
 4: "masked_icmps_mask_notallzeros_bmask_mixed_swapped_3" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -370,6 +415,11 @@
 
 4: "masked_icmps_mask_notallzeros_bmask_mixed_swapped_7_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "masked_icmps_mask_notallzeros_bmask_mixed_swapped_7_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "masked_icmps_mask_notallzeros_bmask_mixed_swapped_7b"
 4: "masked_icmps_mask_notallzeros_bmask_mixed_swapped_7b" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -380,6 +430,11 @@
 
 4: "masked_icmps_mask_notallzeros_bmask_mixed_swapped_7b_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "masked_icmps_mask_notallzeros_bmask_mixed_swapped_7b_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "masked_icmps_mask_notallzeros_bmask_mixed_negated_swapped_0"
 4: "masked_icmps_mask_notallzeros_bmask_mixed_negated_swapped_0" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -416,6 +471,11 @@
 
 4: "masked_icmps_mask_notallzeros_bmask_mixed_negated_swapped_2_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "masked_icmps_mask_notallzeros_bmask_mixed_negated_swapped_2_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "masked_icmps_mask_notallzeros_bmask_mixed_negated_swapped_3"
 4: "masked_icmps_mask_notallzeros_bmask_mixed_negated_swapped_3" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -460,6 +520,11 @@
 
 4: "masked_icmps_mask_notallzeros_bmask_mixed_negated_swapped_7_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "masked_icmps_mask_notallzeros_bmask_mixed_negated_swapped_7_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "masked_icmps_mask_notallzeros_bmask_mixed_negated_swapped_7b"
 4: "masked_icmps_mask_notallzeros_bmask_mixed_negated_swapped_7b" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -470,6 +535,11 @@
 
 4: "masked_icmps_mask_notallzeros_bmask_mixed_negated_swapped_7b_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "masked_icmps_mask_notallzeros_bmask_mixed_negated_swapped_7b_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "masked_icmps_bmask_notmixed_or"
 4: "masked_icmps_bmask_notmixed_or" has unsupported operation: builtin.unregistered: llvm.icmp
 

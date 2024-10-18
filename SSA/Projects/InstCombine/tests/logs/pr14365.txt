@@ -10,7 +10,11 @@
 2: llvm.return
 
 1: "test0_vec"
+<<<<<<< HEAD
 8: "test0_vec" contains vectors which are unsupported
+=======
+"test0_vec" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "test1"
 2: llvm.func
@@ -25,5 +29,9 @@
 2: llvm.return
 
 1: "test1_vec"
+<<<<<<< HEAD
 8: "test1_vec" contains vectors which are unsupported
+=======
+"test1_vec" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 

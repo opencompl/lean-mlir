@@ -22,6 +22,11 @@
 
 4: "pr4917_2" has unsupported operation: llvm.extractvalue
 
+<<<<<<< HEAD
+=======
+4: "pr4917_2" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "pr4917_3"
 4: "pr4917_3" has unsupported operation: builtin.unregistered: llvm.zext
 
@@ -29,6 +34,11 @@
 
 4: "pr4917_3" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "pr4917_3" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "pr4917_4"
 4: "pr4917_4" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
 
@@ -52,6 +62,11 @@
 
 4: "pr4917_5" has unsupported operation: llvm.extractvalue
 
+<<<<<<< HEAD
+=======
+4: "pr4917_5" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "pr4918_1"
 4: "pr4918_1" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
 

@@ -13,10 +13,14 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gshifthaddhinseltpoison_statements
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
                                                     
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def ashr_C1_add_A_C2_i32_before := [llvm|
 {
 ^0(%arg7 : i32):
@@ -46,6 +50,7 @@ theorem ashr_C1_add_A_C2_i32_proof : ashr_C1_add_A_C2_i32_before ⊑ ashr_C1_add
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -53,6 +58,8 @@ theorem ashr_C1_add_A_C2_i32_proof : ashr_C1_add_A_C2_i32_before ⊑ ashr_C1_add
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN ashr_C1_add_A_C2_i32
   apply ashr_C1_add_A_C2_i32_thm
@@ -92,6 +99,7 @@ theorem lshr_C1_add_A_C2_i32_proof : lshr_C1_add_A_C2_i32_before ⊑ lshr_C1_add
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -99,6 +107,8 @@ theorem lshr_C1_add_A_C2_i32_proof : lshr_C1_add_A_C2_i32_before ⊑ lshr_C1_add
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN lshr_C1_add_A_C2_i32
   apply lshr_C1_add_A_C2_i32_thm

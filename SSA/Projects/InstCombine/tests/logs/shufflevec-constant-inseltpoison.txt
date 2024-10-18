@@ -1,3 +1,7 @@
 1: "__inff4"
+<<<<<<< HEAD
 8: "__inff4" contains vectors which are unsupported
+=======
+"__inff4" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 

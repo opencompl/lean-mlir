@@ -144,6 +144,11 @@
 
 4: "select_alloca_unrelated_ptr" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "select_alloca_unrelated_ptr" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "select_alloca_unrelated_ptr" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "select_alloca_unrelated_ptr" has unsupported operation: llvm.call

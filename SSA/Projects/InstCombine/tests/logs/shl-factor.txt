@@ -9,7 +9,11 @@
 2: llvm.return
 
 1: "add_shl_same_amount_nsw"
+<<<<<<< HEAD
 8: "add_shl_same_amount_nsw" contains vectors which are unsupported
+=======
+"add_shl_same_amount_nsw" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "add_shl_same_amount_nuw"
 2: llvm.func
@@ -65,7 +69,11 @@
 2: llvm.return
 
 1: "sub_shl_same_amount_nsw"
+<<<<<<< HEAD
 8: "sub_shl_same_amount_nsw" contains vectors which are unsupported
+=======
+"sub_shl_same_amount_nsw" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "sub_shl_same_amount_nuw"
 2: llvm.func

@@ -103,7 +103,11 @@
 4: "t15_vec_x_is_one_or_zero" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "t16_vec_y_is_one_or_zero"
+<<<<<<< HEAD
 8: "t16_vec_y_is_one_or_zero" contains vectors which are unsupported
+=======
+"t16_vec_y_is_one_or_zero" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "rawspeed_signbit"
 4: "rawspeed_signbit" has unsupported operation: builtin.unregistered: llvm.icmp

@@ -47,11 +47,21 @@
 1: "no_cttz_abs"
 4: "no_cttz_abs" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "no_cttz_abs" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "no_cttz_abs" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
 1: "no_cttz_abs2"
 4: "no_cttz_abs2" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "no_cttz_abs2" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "no_cttz_abs2" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
 1: "no_cttz_abs3"
@@ -59,16 +69,31 @@
 
 4: "no_cttz_abs3" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
+=======
+4: "no_cttz_abs3" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "no_cttz_abs3" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
 1: "no_cttz_abs_vec"
 4: "no_cttz_abs_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "no_cttz_abs_vec" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "no_cttz_abs_vec" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
 1: "no_cttz_nabs_vec"
 4: "no_cttz_nabs_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "no_cttz_nabs_vec" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "no_cttz_nabs_vec" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
 1: "cttz_abs_intrin"

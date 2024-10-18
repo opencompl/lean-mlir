@@ -11,6 +11,11 @@
 
 4: "sqrt_intrinsic" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+<<<<<<< HEAD
+=======
+4: "sqrt_intrinsic" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "shrink_libcall"
 4: "shrink_libcall" has unsupported operation: llvm.call
 

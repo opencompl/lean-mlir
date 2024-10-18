@@ -17,10 +17,17 @@
 4: "test2" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "test3"
+<<<<<<< HEAD
 8: "test3" contains vectors which are unsupported
 
 1: "test4"
 8: "test4" contains vectors which are unsupported
+=======
+"test3" contains vectors which are unsupported
+
+1: "test4"
+"test4" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "fold_xor_zext_sandwich"
 4: "fold_xor_zext_sandwich" has unsupported operation: builtin.unregistered: llvm.zext
@@ -70,10 +77,17 @@
 4: "masked_bit_set" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 
 1: "masked_bit_clear"
+<<<<<<< HEAD
 8: "masked_bit_clear" contains vectors which are unsupported
 
 1: "masked_bit_set_commute"
 8: "masked_bit_set_commute" contains vectors which are unsupported
+=======
+"masked_bit_clear" contains vectors which are unsupported
+
+1: "masked_bit_set_commute"
+"masked_bit_set_commute" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "masked_bit_clear_commute"
 4: "masked_bit_clear_commute" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
@@ -301,6 +315,11 @@
 
 4: "evaluate_zexted_const_expr" has unsupported operation: builtin.unregistered: llvm.trunc
 
+<<<<<<< HEAD
+=======
+4: "evaluate_zexted_const_expr" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "evaluate_zexted_const_expr" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "zext_nneg_flag_drop"
@@ -324,7 +343,11 @@
 4: "zext_nneg_i1" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 
 1: "zext_nneg_i1_vec"
+<<<<<<< HEAD
 8: "zext_nneg_i1_vec" contains vectors which are unsupported
+=======
+"zext_nneg_i1_vec" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "zext_nneg_i2"
 4: "zext_nneg_i2" has unsupported operation: builtin.unregistered: llvm.zext

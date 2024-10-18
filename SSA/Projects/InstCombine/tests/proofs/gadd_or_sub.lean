@@ -13,10 +13,14 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gadd_or_sub_statements
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
                                                     
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def add_or_sub_comb_i32_commuted1_nuw_before := [llvm|
 {
 ^0(%arg16 : i32):
@@ -41,10 +45,14 @@ theorem add_or_sub_comb_i32_commuted1_nuw_proof : add_or_sub_comb_i32_commuted1_
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN add_or_sub_comb_i32_commuted1_nuw
   apply add_or_sub_comb_i32_commuted1_nuw_thm
@@ -81,10 +89,14 @@ theorem add_or_sub_comb_i8_commuted2_nsw_proof : add_or_sub_comb_i8_commuted2_ns
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN add_or_sub_comb_i8_commuted2_nsw
   apply add_or_sub_comb_i8_commuted2_nsw_thm
@@ -118,10 +130,14 @@ theorem add_or_sub_comb_i128_commuted3_nuw_nsw_proof : add_or_sub_comb_i128_comm
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN add_or_sub_comb_i128_commuted3_nuw_nsw
   apply add_or_sub_comb_i128_commuted3_nuw_nsw_thm
@@ -158,10 +174,14 @@ theorem add_or_sub_comb_i64_commuted4_proof : add_or_sub_comb_i64_commuted4_befo
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN add_or_sub_comb_i64_commuted4
   apply add_or_sub_comb_i64_commuted4_thm
@@ -197,10 +217,14 @@ theorem add_or_sub_comb_i8_negative_y_sub_proof : add_or_sub_comb_i8_negative_y_
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN add_or_sub_comb_i8_negative_y_sub
   apply add_or_sub_comb_i8_negative_y_sub_thm
@@ -236,10 +260,14 @@ theorem add_or_sub_comb_i8_negative_y_or_proof : add_or_sub_comb_i8_negative_y_o
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN add_or_sub_comb_i8_negative_y_or
   apply add_or_sub_comb_i8_negative_y_or_thm
@@ -275,10 +303,14 @@ theorem add_or_sub_comb_i8_negative_y_add_proof : add_or_sub_comb_i8_negative_y_
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN add_or_sub_comb_i8_negative_y_add
   apply add_or_sub_comb_i8_negative_y_add_thm
@@ -314,10 +346,14 @@ theorem add_or_sub_comb_i8_negative_xor_instead_or_proof : add_or_sub_comb_i8_ne
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN add_or_sub_comb_i8_negative_xor_instead_or
   apply add_or_sub_comb_i8_negative_xor_instead_or_thm

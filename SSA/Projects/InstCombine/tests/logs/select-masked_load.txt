@@ -7,6 +7,11 @@
 1: "masked_load_and_zero_inactive_3"
 4: "masked_load_and_zero_inactive_3" has unsupported operation: builtin.unregistered: llvm.intr.masked.load
 
+<<<<<<< HEAD
+=======
+4: "masked_load_and_zero_inactive_3" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "masked_load_and_zero_inactive_4"
 4: "masked_load_and_zero_inactive_4" has unsupported operation: builtin.unregistered: llvm.intr.masked.load
 
@@ -16,9 +21,19 @@
 1: "masked_load_and_zero_inactive_6"
 4: "masked_load_and_zero_inactive_6" has unsupported operation: builtin.unregistered: llvm.intr.masked.load
 
+<<<<<<< HEAD
 1: "masked_load_and_zero_inactive_7"
 4: "masked_load_and_zero_inactive_7" has unsupported operation: builtin.unregistered: llvm.intr.masked.load
 
+=======
+4: "masked_load_and_zero_inactive_6" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "masked_load_and_zero_inactive_7"
+4: "masked_load_and_zero_inactive_7" has unsupported operation: builtin.unregistered: llvm.intr.masked.load
+
+4: "masked_load_and_zero_inactive_7" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "masked_load_and_zero_inactive_8"
 4: "masked_load_and_zero_inactive_8" has unsupported operation: builtin.unregistered: llvm.intr.masked.load
 
@@ -27,3 +42,8 @@
 
 4: "masked_load_and_scalar_select_cond" has unsupported operation: builtin.unregistered: llvm.intr.masked.load
 
+<<<<<<< HEAD
+=======
+4: "masked_load_and_scalar_select_cond" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)

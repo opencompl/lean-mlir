@@ -46,11 +46,15 @@
 4: "test_simplify8" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test_simplify9"
+<<<<<<< HEAD
 4: "test_simplify9" has unsupported operation after optimization: llvm.mlir.addressof
 
 4: "test_simplify9" has unsupported operation after optimization: llvm.mlir.addressof
 
 4: "test_simplify9" has unsupported operation after optimization: llvm.call
+=======
+4: "test_simplify9" has unsupported operation: builtin.unregistered: llvm.select
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "test_simplify10"
 4: "test_simplify10" has unsupported operation: builtin.unregistered: llvm.sext

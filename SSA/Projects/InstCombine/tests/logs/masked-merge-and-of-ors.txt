@@ -8,7 +8,11 @@
 2: llvm.return
 
 1: "p_splatvec"
+<<<<<<< HEAD
 8: "p_splatvec" contains vectors which are unsupported
+=======
+"p_splatvec" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "p_vec_undef"
 4: "p_vec_undef" has unsupported operation: llvm.mlir.undef

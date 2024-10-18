@@ -71,6 +71,7 @@ theorem foo2_proof : foo2_before ⊑ foo2_after := by
 
 
 
+<<<<<<< HEAD
 def foo3_before := [llvm|
 {
 ^0(%arg2 : i1, %arg3 : i1):
@@ -99,6 +100,8 @@ theorem foo3_proof : foo3_before ⊑ foo3_after := by
 
 
 
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def foo4_before := [llvm|
 {
 ^0(%arg0 : i1, %arg1 : i1):

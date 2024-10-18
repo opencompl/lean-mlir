@@ -13,10 +13,14 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gbinophofhdisplacedhshifts_statements
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
                                                     
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def shl_or_before := [llvm|
 {
 ^0(%arg25 : i8):
@@ -46,10 +50,14 @@ theorem shl_or_proof : shl_or_before ⊑ shl_or_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN shl_or
   apply shl_or_thm
@@ -86,10 +94,14 @@ theorem lshr_or_proof : lshr_or_before ⊑ lshr_or_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN lshr_or
   apply lshr_or_thm
@@ -126,10 +138,14 @@ theorem ashr_or_proof : ashr_or_before ⊑ ashr_or_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN ashr_or
   apply ashr_or_thm
@@ -166,10 +182,14 @@ theorem shl_xor_proof : shl_xor_before ⊑ shl_xor_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN shl_xor
   apply shl_xor_thm
@@ -206,10 +226,14 @@ theorem lshr_xor_proof : lshr_xor_before ⊑ lshr_xor_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN lshr_xor
   apply lshr_xor_thm
@@ -246,10 +270,14 @@ theorem ashr_xor_proof : ashr_xor_before ⊑ ashr_xor_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN ashr_xor
   apply ashr_xor_thm
@@ -286,10 +314,14 @@ theorem shl_and_proof : shl_and_before ⊑ shl_and_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN shl_and
   apply shl_and_thm
@@ -326,10 +358,14 @@ theorem lshr_and_proof : lshr_and_before ⊑ lshr_and_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN lshr_and
   apply lshr_and_thm
@@ -366,10 +402,14 @@ theorem ashr_and_proof : ashr_and_before ⊑ ashr_and_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN ashr_and
   apply ashr_and_thm
@@ -406,10 +446,14 @@ theorem shl_add_proof : shl_add_before ⊑ shl_add_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN shl_add
   apply shl_add_thm
@@ -451,10 +495,14 @@ theorem lshr_add_fail_proof : lshr_add_fail_before ⊑ lshr_add_fail_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN lshr_add_fail
   apply lshr_add_fail_thm
@@ -491,10 +539,14 @@ theorem shl_or_commuted_proof : shl_or_commuted_before ⊑ shl_or_commuted_after
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN shl_or_commuted
   apply shl_or_commuted_thm
@@ -531,10 +583,14 @@ theorem shl_or_with_or_disjoint_instead_of_add_proof : shl_or_with_or_disjoint_i
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN shl_or_with_or_disjoint_instead_of_add
   apply shl_or_with_or_disjoint_instead_of_add_thm

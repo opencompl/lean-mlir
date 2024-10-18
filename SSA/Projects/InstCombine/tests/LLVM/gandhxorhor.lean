@@ -13,6 +13,7 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gandhxorhor_statements
 
+<<<<<<< HEAD
 def and_xor_common_op_before := [llvm|
 {
 ^0(%arg695 : i32, %arg696 : i32):
@@ -133,6 +134,8 @@ theorem and_xor_common_op_commute2_proof : and_xor_common_op_commute2_before ⊑
 
 
 
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def and_xor_not_common_op_before := [llvm|
 {
 ^0(%arg686 : i32, %arg687 : i32):
@@ -1639,10 +1642,17 @@ theorem and_not_or_commute5_proof : and_not_or_commute5_before ⊑ and_not_or_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
   try simp
+=======
+  -- simp?
+  -- simp_alive_case_bash
+  -- try intros
+  -- try simp
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   ---BEGIN and_not_or_commute5
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_commute5
@@ -4802,5 +4812,3 @@ theorem canonicalize_logic_first_xor_0_nswnuw_proof : canonicalize_logic_first_x
   ---BEGIN canonicalize_logic_first_xor_0_nswnuw
   all_goals (try extract_goal ; sorry)
   ---END canonicalize_logic_first_xor_0_nswnuw
-
-

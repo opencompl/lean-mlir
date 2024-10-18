@@ -13,10 +13,14 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section g2008h02h16hSDivOverflow2_statements
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
                                                     
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def i_before := [llvm|
 {
 ^0(%arg0 : i8):
@@ -42,10 +46,14 @@ theorem i_proof : i_before ⊑ i_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN i
   apply i_thm

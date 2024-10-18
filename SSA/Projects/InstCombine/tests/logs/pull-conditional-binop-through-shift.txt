@@ -1,4 +1,5 @@
 1: "and_signbit_select_shl"
+<<<<<<< HEAD
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.mlir.constant
@@ -189,4 +190,76 @@
 
 1: "add_nosignbit_select_ashr"
 7: "add_nosignbit_select_ashr" is unchanged by InstCombine
+=======
+4: "and_signbit_select_shl" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "and_nosignbit_select_shl"
+4: "and_nosignbit_select_shl" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "or_signbit_select_shl"
+4: "or_signbit_select_shl" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "or_nosignbit_select_shl"
+4: "or_nosignbit_select_shl" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "xor_signbit_select_shl"
+4: "xor_signbit_select_shl" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "xor_nosignbit_select_shl"
+4: "xor_nosignbit_select_shl" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "add_signbit_select_shl"
+4: "add_signbit_select_shl" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "add_nosignbit_select_shl"
+4: "add_nosignbit_select_shl" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "and_signbit_select_lshr"
+4: "and_signbit_select_lshr" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "and_nosignbit_select_lshr"
+4: "and_nosignbit_select_lshr" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "or_signbit_select_lshr"
+4: "or_signbit_select_lshr" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "or_nosignbit_select_lshr"
+4: "or_nosignbit_select_lshr" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "xor_signbit_select_lshr"
+4: "xor_signbit_select_lshr" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "xor_nosignbit_select_lshr"
+4: "xor_nosignbit_select_lshr" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "add_signbit_select_lshr"
+4: "add_signbit_select_lshr" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "add_nosignbit_select_lshr"
+4: "add_nosignbit_select_lshr" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "and_signbit_select_ashr"
+4: "and_signbit_select_ashr" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "and_nosignbit_select_ashr"
+4: "and_nosignbit_select_ashr" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "or_signbit_select_ashr"
+4: "or_signbit_select_ashr" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "or_nosignbit_select_ashr"
+4: "or_nosignbit_select_ashr" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "xor_signbit_select_ashr"
+4: "xor_signbit_select_ashr" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "xor_nosignbit_select_ashr"
+4: "xor_nosignbit_select_ashr" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "add_signbit_select_ashr"
+4: "add_signbit_select_ashr" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "add_nosignbit_select_ashr"
+4: "add_nosignbit_select_ashr" has unsupported operation: builtin.unregistered: llvm.select
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 

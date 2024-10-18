@@ -12,7 +12,11 @@
 4: "sub_not_extra_use" has unsupported operation: llvm.call
 
 1: "sub_not_vec"
+<<<<<<< HEAD
 8: "sub_not_vec" contains vectors which are unsupported
+=======
+"sub_not_vec" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "dec_sub"
 2: llvm.func
@@ -25,7 +29,11 @@
 4: "dec_sub_extra_use" has unsupported operation: llvm.call
 
 1: "dec_sub_vec"
+<<<<<<< HEAD
 8: "dec_sub_vec" contains vectors which are unsupported
+=======
+"dec_sub_vec" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "sub_inc"
 2: llvm.func
@@ -38,7 +46,11 @@
 4: "sub_inc_extra_use" has unsupported operation: llvm.call
 
 1: "sub_inc_vec"
+<<<<<<< HEAD
 8: "sub_inc_vec" contains vectors which are unsupported
+=======
+"sub_inc_vec" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "sub_dec"
 2: llvm.func
@@ -51,5 +63,9 @@
 4: "sub_dec_extra_use" has unsupported operation: llvm.call
 
 1: "sub_dec_vec"
+<<<<<<< HEAD
 8: "sub_dec_vec" contains vectors which are unsupported
+=======
+"sub_dec_vec" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 

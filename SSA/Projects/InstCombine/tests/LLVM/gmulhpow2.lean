@@ -13,6 +13,7 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gmulhpow2_statements
 
+<<<<<<< HEAD
 def mul_selectp2_x_before := [llvm|
 {
 ^0(%arg22 : i8, %arg23 : i1):
@@ -155,6 +156,8 @@ theorem mul_x_selectp2_proof : mul_x_selectp2_before ⊑ mul_x_selectp2_after :=
 
 
 
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def shl_add_log_may_cause_poison_pr62175_with_nuw_before := [llvm|
 {
 ^0(%arg2 : i8, %arg3 : i8):

@@ -45,11 +45,21 @@
 
 4: "select_clz_to_ctz_i64_wrong_icmp_cst" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
+<<<<<<< HEAD
+=======
+4: "select_clz_to_ctz_i64_wrong_icmp_cst" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_clz_to_ctz_i64_wrong_icmp_pred"
 4: "select_clz_to_ctz_i64_wrong_icmp_pred" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
 4: "select_clz_to_ctz_i64_wrong_icmp_pred" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "select_clz_to_ctz_i64_wrong_icmp_pred" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_clz_to_ctz_vec_with_undef"
 4: "select_clz_to_ctz_vec_with_undef" has unsupported operation: llvm.mlir.undef
 
@@ -66,6 +76,11 @@
 
 4: "select_clz_to_ctz_wrong_constant_for_zero" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "select_clz_to_ctz_wrong_constant_for_zero" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "PR45762"
 4: "PR45762" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
@@ -73,6 +88,11 @@
 
 4: "PR45762" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "PR45762" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "PR45762_logical"
 4: "PR45762_logical" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
@@ -80,3 +100,8 @@
 
 4: "PR45762_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "PR45762_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)

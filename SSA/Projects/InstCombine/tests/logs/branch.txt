@@ -34,20 +34,45 @@
 4: "test02" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "logical_and_not"
+<<<<<<< HEAD
 4: "logical_and_not" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "logical_and_or"
 4: "logical_and_or" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "logical_or_not"
+=======
+4: "logical_and_not" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logical_and_not" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "logical_and_or"
+4: "logical_and_or" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logical_and_or" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "logical_or_not"
+4: "logical_or_not" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "logical_or_not" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "logical_and_not_use1"
 4: "logical_and_not_use1" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
 4: "logical_and_not_use1" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "logical_and_not_use2"
+=======
+4: "logical_and_not_use1" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "logical_and_not_use1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "logical_and_not_use2"
+4: "logical_and_not_use2" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "logical_and_not_use2" has unsupported operation: llvm.call
 
 4: "logical_and_not_use2" has unsupported operation: builtin.unregistered: llvm.cond_br

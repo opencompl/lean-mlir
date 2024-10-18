@@ -1,12 +1,20 @@
 1: "modulo2"
 4: "modulo2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 1: "modulo2_vec"
 8: "modulo2_vec" contains vectors which are unsupported
+=======
+4: "modulo2" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "modulo2_vec"
+"modulo2_vec" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "modulo3"
 4: "modulo3" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 1: "modulo3_vec"
 4: "modulo3_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -15,10 +23,27 @@
 
 1: "modulo4_vec"
 8: "modulo4_vec" contains vectors which are unsupported
+=======
+4: "modulo3" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "modulo3_vec"
+4: "modulo3_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "modulo3_vec" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "modulo4"
+4: "modulo4" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "modulo4" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "modulo4_vec"
+"modulo4_vec" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "modulo7"
 4: "modulo7" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 1: "modulo7_vec"
 4: "modulo7_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -27,7 +52,28 @@
 
 1: "modulo32_vec"
 8: "modulo32_vec" contains vectors which are unsupported
+=======
+4: "modulo7" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "modulo7_vec"
+4: "modulo7_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "modulo7_vec" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "modulo32"
+4: "modulo32" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "modulo32" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "modulo32_vec"
+"modulo32_vec" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "modulo16_32_vec"
 4: "modulo16_32_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "modulo16_32_vec" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)

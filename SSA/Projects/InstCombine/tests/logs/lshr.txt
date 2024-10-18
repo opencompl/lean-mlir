@@ -41,6 +41,7 @@
 4: "lshr_cttz_zero_is_undef" has unsupported operation after optimization: builtin.unregistered: llvm.intr.cttz
 
 1: "lshr_ctlz_zero_is_undef_splat_vec"
+<<<<<<< HEAD
 8: "lshr_ctlz_zero_is_undef_splat_vec" contains vectors which are unsupported
 
 1: "lshr_ctlz_zero_is_undef_vec"
@@ -51,6 +52,18 @@
 
 1: "lshr_cttz_zero_is_undef_vec"
 8: "lshr_cttz_zero_is_undef_vec" contains vectors which are unsupported
+=======
+"lshr_ctlz_zero_is_undef_splat_vec" contains vectors which are unsupported
+
+1: "lshr_ctlz_zero_is_undef_vec"
+"lshr_ctlz_zero_is_undef_vec" contains vectors which are unsupported
+
+1: "lshr_cttz_zero_is_undef_splat_vec"
+"lshr_cttz_zero_is_undef_splat_vec" contains vectors which are unsupported
+
+1: "lshr_cttz_zero_is_undef_vec"
+"lshr_cttz_zero_is_undef_vec" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "lshr_exact"
 2: llvm.func
@@ -62,10 +75,17 @@
 2: llvm.return
 
 1: "lshr_exact_splat_vec"
+<<<<<<< HEAD
 8: "lshr_exact_splat_vec" contains vectors which are unsupported
 
 1: "lshr_exact_splat_vec_nuw"
 8: "lshr_exact_splat_vec_nuw" contains vectors which are unsupported
+=======
+"lshr_exact_splat_vec" contains vectors which are unsupported
+
+1: "lshr_exact_splat_vec_nuw"
+"lshr_exact_splat_vec_nuw" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "shl_add"
 2: llvm.func
@@ -76,7 +96,11 @@
 2: llvm.return
 
 1: "shl_add_commute_vec"
+<<<<<<< HEAD
 8: "shl_add_commute_vec" contains vectors which are unsupported
+=======
+"shl_add_commute_vec" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "shl_add_use1"
 4: "shl_add_use1" has unsupported operation: llvm.call
@@ -306,7 +330,11 @@
 2: llvm.return
 
 1: "negative_and_odd_vec"
+<<<<<<< HEAD
 8: "negative_and_odd_vec" contains vectors which are unsupported
+=======
+"negative_and_odd_vec" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "negative_and_odd_uses"
 4: "negative_and_odd_uses" has unsupported operation: llvm.store
@@ -378,21 +406,38 @@
 4: "trunc_sandwich_big_sum_shift2_use1" has unsupported operation: llvm.call
 
 1: "lshr_sext_i1_to_i16"
+<<<<<<< HEAD
 4: "lshr_sext_i1_to_i16" has unsupported operation after optimization: builtin.unregistered: llvm.sext
 
 1: "lshr_sext_i1_to_i128"
 4: "lshr_sext_i1_to_i128" has unsupported operation after optimization: builtin.unregistered: llvm.sext
+=======
+4: "lshr_sext_i1_to_i16" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "lshr_sext_i1_to_i128"
+4: "lshr_sext_i1_to_i128" has unsupported operation: builtin.unregistered: llvm.select
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "lshr_sext_i1_to_i32_use"
 4: "lshr_sext_i1_to_i32_use" has unsupported operation: builtin.unregistered: llvm.sext
 
 4: "lshr_sext_i1_to_i32_use" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
+=======
+4: "lshr_sext_i1_to_i32_use" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "lshr_sext_i1_to_i14_splat_vec_use1"
 4: "lshr_sext_i1_to_i14_splat_vec_use1" has unsupported operation: builtin.unregistered: llvm.sext
 
 4: "lshr_sext_i1_to_i14_splat_vec_use1" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
+=======
+4: "lshr_sext_i1_to_i14_splat_vec_use1" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "icmp_ule"
 4: "icmp_ule" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 

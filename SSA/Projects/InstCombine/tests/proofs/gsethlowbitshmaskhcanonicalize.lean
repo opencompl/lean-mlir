@@ -13,10 +13,14 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gsethlowbitshmaskhcanonicalize_statements
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
                                                     
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def shl_add_before := [llvm|
 {
 ^0(%arg26 : i32):
@@ -44,10 +48,14 @@ theorem shl_add_proof : shl_add_before ⊑ shl_add_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN shl_add
   apply shl_add_thm
@@ -82,10 +90,14 @@ theorem shl_add_nsw_proof : shl_add_nsw_before ⊑ shl_add_nsw_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN shl_add_nsw
   apply shl_add_nsw_thm
@@ -118,10 +130,14 @@ theorem shl_add_nuw_proof : shl_add_nuw_before ⊑ shl_add_nuw_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN shl_add_nuw
   apply shl_add_nuw_thm
@@ -154,10 +170,14 @@ theorem shl_add_nsw_nuw_proof : shl_add_nsw_nuw_before ⊑ shl_add_nsw_nuw_after
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN shl_add_nsw_nuw
   apply shl_add_nsw_nuw_thm
@@ -192,10 +212,14 @@ theorem shl_nsw_add_proof : shl_nsw_add_before ⊑ shl_nsw_add_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN shl_nsw_add
   apply shl_nsw_add_thm
@@ -230,10 +254,14 @@ theorem shl_nsw_add_nsw_proof : shl_nsw_add_nsw_before ⊑ shl_nsw_add_nsw_after
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN shl_nsw_add_nsw
   apply shl_nsw_add_nsw_thm
@@ -266,10 +294,14 @@ theorem shl_nsw_add_nuw_proof : shl_nsw_add_nuw_before ⊑ shl_nsw_add_nuw_after
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN shl_nsw_add_nuw
   apply shl_nsw_add_nuw_thm
@@ -302,10 +334,14 @@ theorem shl_nsw_add_nsw_nuw_proof : shl_nsw_add_nsw_nuw_before ⊑ shl_nsw_add_n
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN shl_nsw_add_nsw_nuw
   apply shl_nsw_add_nsw_nuw_thm
@@ -340,10 +376,14 @@ theorem shl_nuw_add_proof : shl_nuw_add_before ⊑ shl_nuw_add_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN shl_nuw_add
   apply shl_nuw_add_thm
@@ -378,10 +418,14 @@ theorem shl_nuw_add_nsw_proof : shl_nuw_add_nsw_before ⊑ shl_nuw_add_nsw_after
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN shl_nuw_add_nsw
   apply shl_nuw_add_nsw_thm
@@ -414,10 +458,14 @@ theorem shl_nuw_add_nuw_proof : shl_nuw_add_nuw_before ⊑ shl_nuw_add_nuw_after
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN shl_nuw_add_nuw
   apply shl_nuw_add_nuw_thm
@@ -450,10 +498,14 @@ theorem shl_nuw_add_nsw_nuw_proof : shl_nuw_add_nsw_nuw_before ⊑ shl_nuw_add_n
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN shl_nuw_add_nsw_nuw
   apply shl_nuw_add_nsw_nuw_thm
@@ -488,10 +540,14 @@ theorem shl_nsw_nuw_add_proof : shl_nsw_nuw_add_before ⊑ shl_nsw_nuw_add_after
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN shl_nsw_nuw_add
   apply shl_nsw_nuw_add_thm
@@ -526,10 +582,14 @@ theorem shl_nsw_nuw_add_nsw_proof : shl_nsw_nuw_add_nsw_before ⊑ shl_nsw_nuw_a
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN shl_nsw_nuw_add_nsw
   apply shl_nsw_nuw_add_nsw_thm
@@ -562,10 +622,14 @@ theorem shl_nsw_nuw_add_nuw_proof : shl_nsw_nuw_add_nuw_before ⊑ shl_nsw_nuw_a
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN shl_nsw_nuw_add_nuw
   apply shl_nsw_nuw_add_nuw_thm
@@ -598,10 +662,14 @@ theorem shl_nsw_nuw_add_nsw_nuw_proof : shl_nsw_nuw_add_nsw_nuw_before ⊑ shl_n
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN shl_nsw_nuw_add_nsw_nuw
   apply shl_nsw_nuw_add_nsw_nuw_thm
@@ -635,10 +703,14 @@ theorem bad_add0_proof : bad_add0_before ⊑ bad_add0_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN bad_add0
   apply bad_add0_thm
@@ -672,10 +744,14 @@ theorem bad_add1_proof : bad_add1_before ⊑ bad_add1_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN bad_add1
   apply bad_add1_thm
@@ -711,10 +787,14 @@ theorem bad_add2_proof : bad_add2_before ⊑ bad_add2_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN bad_add2
   apply bad_add2_thm

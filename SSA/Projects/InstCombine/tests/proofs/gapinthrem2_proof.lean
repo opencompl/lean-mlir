@@ -8,10 +8,14 @@ theorem test1_thm (x : BitVec 333) : x % 70368744177664#333 = x &&& 703687441776
 
 theorem test2_thm (x : BitVec 499) :
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   (Option.bind (if 499 % 2 ^ 499 ≤ 111 % 2 ^ 499 then none else some (4096#499 <<< (111 % 2 ^ 499))) fun y' =>
       if y' = 0#499 then none else some (x % y')) ⊑
     some (x &&& 10633823966279326983230456482242756607#499) := sorry
 
+<<<<<<< HEAD
 theorem test3_thm (x : BitVec 1) (x_1 : BitVec 599) :
   (Option.bind
       (match some x with
@@ -32,3 +36,5 @@ theorem test3_thm (x : BitVec 1) (x_1 : BitVec 599) :
     some (x &&& 10633823966279326983230456482242756607#499) := sorry
 
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)

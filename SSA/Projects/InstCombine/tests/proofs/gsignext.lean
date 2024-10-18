@@ -13,10 +13,14 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gsignext_statements
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
                                                     
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def sextinreg_before := [llvm|
 {
 ^0(%arg14 : i32):
@@ -46,10 +50,14 @@ theorem sextinreg_proof : sextinreg_before ⊑ sextinreg_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN sextinreg
   apply sextinreg_thm
@@ -86,10 +94,14 @@ theorem sextinreg_alt_proof : sextinreg_alt_before ⊑ sextinreg_alt_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN sextinreg_alt
   apply sextinreg_alt_thm
@@ -126,10 +138,14 @@ theorem sextinreg2_proof : sextinreg2_before ⊑ sextinreg2_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN sextinreg2
   apply sextinreg2_thm
@@ -165,10 +181,14 @@ theorem ashr_proof : ashr_before ⊑ ashr_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN ashr
   apply ashr_thm

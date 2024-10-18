@@ -41,9 +41,19 @@
 4: "aligned_alloc_constant_size" has unsupported operation: llvm.call
 
 1: "aligned_alloc_unknown_size_nonzero"
+<<<<<<< HEAD
 4: "aligned_alloc_unknown_size_nonzero" has unsupported operation: llvm.call
 
 1: "aligned_alloc_unknown_size_possibly_zero"
+=======
+4: "aligned_alloc_unknown_size_nonzero" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "aligned_alloc_unknown_size_nonzero" has unsupported operation: llvm.call
+
+1: "aligned_alloc_unknown_size_possibly_zero"
+4: "aligned_alloc_unknown_size_possibly_zero" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "aligned_alloc_unknown_size_possibly_zero" has unsupported operation: llvm.call
 
 1: "aligned_alloc_unknown_align"
@@ -65,9 +75,19 @@
 4: "memalign_constant_size" has unsupported operation: llvm.call
 
 1: "memalign_unknown_size_nonzero"
+<<<<<<< HEAD
 4: "memalign_unknown_size_nonzero" has unsupported operation: llvm.call
 
 1: "memalign_unknown_size_possibly_zero"
+=======
+4: "memalign_unknown_size_nonzero" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "memalign_unknown_size_nonzero" has unsupported operation: llvm.call
+
+1: "memalign_unknown_size_possibly_zero"
+4: "memalign_unknown_size_possibly_zero" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "memalign_unknown_size_possibly_zero" has unsupported operation: llvm.call
 
 1: "memalign_unknown_align"

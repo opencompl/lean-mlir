@@ -1,6 +1,7 @@
 1: "fold_select_trunc_nuw_true"
 4: "fold_select_trunc_nuw_true" has unsupported operation: builtin.unregistered: llvm.trunc
 
+<<<<<<< HEAD
 1: "fold_select_trunc_nuw_false"
 4: "fold_select_trunc_nuw_false" has unsupported operation: builtin.unregistered: llvm.trunc
 
@@ -16,3 +17,32 @@
 1: "fold_select_trunc_vector"
 4: "fold_select_trunc_vector" has unsupported operation: builtin.unregistered: llvm.trunc
 
+=======
+4: "fold_select_trunc_nuw_true" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "fold_select_trunc_nuw_false"
+4: "fold_select_trunc_nuw_false" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "fold_select_trunc_nuw_false" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "fold_select_trunc_nsw_true"
+4: "fold_select_trunc_nsw_true" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "fold_select_trunc_nsw_true" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "fold_select_trunc_nsw_false"
+4: "fold_select_trunc_nsw_false" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "fold_select_trunc_nsw_false" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "fold_select_trunc_negative"
+4: "fold_select_trunc_negative" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "fold_select_trunc_negative" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "fold_select_trunc_vector"
+4: "fold_select_trunc_vector" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "fold_select_trunc_vector" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)

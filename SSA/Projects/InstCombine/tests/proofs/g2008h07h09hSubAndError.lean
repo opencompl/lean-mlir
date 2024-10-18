@@ -13,10 +13,14 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section g2008h07h09hSubAndError_statements
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
                                                     
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def foo_before := [llvm|
 {
 ^0(%arg0 : i32):
@@ -47,6 +51,7 @@ theorem foo_proof : foo_before ⊑ foo_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -54,6 +59,8 @@ theorem foo_proof : foo_before ⊑ foo_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN foo
   apply foo_thm

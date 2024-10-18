@@ -19,11 +19,16 @@ theorem test10_thm (x : BitVec 123) : x &&& 127#123 &&& 128#123 = 0#123 := sorry
 
 theorem test13_thm (x : BitVec 1024) :
 <<<<<<< HEAD
+<<<<<<< HEAD
   (Option.bind (if 1024 % 2 ^ 1024 ≤ 1016 % 2 ^ 1024 then none else some (x.sshiftRight (1016 % 2 ^ 1024))) fun x' =>
       some (x' &&& 255#1024)) ⊑
 =======
   (Option.bind (if 1024 % 2 ^ 1024 ≤ 1016 % 2 ^ 1024 then none else some (x.sshiftRight (1016 % 2 ^ 1024))) fun a =>
       some (a &&& 255#1024)) ⊑
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+  (Option.bind (if 1024 % 2 ^ 1024 ≤ 1016 % 2 ^ 1024 then none else some (x.sshiftRight (1016 % 2 ^ 1024))) fun x' =>
+      some (x' &&& 255#1024)) ⊑
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
     if 1024 % 2 ^ 1024 ≤ 1016 % 2 ^ 1024 then none else some (x >>> (1016 % 2 ^ 1024)) := sorry
 

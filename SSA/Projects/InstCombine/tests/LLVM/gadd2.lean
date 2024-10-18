@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gadd2_statements
-                                                    
+
 def test2_before := [llvm|
 {
 ^0(%arg59 : i32):

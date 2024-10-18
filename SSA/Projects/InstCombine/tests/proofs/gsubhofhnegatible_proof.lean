@@ -10,6 +10,7 @@ theorem t2_thm (x x_1 : BitVec 8) :
   (Option.bind (if 8#8 ≤ x then none else some (214#8 <<< x.toNat)) fun y' => some (x_1 - y')) ⊑
     Option.bind (if 8#8 ≤ x then none else some (42#8 <<< x.toNat)) fun a => some (a + x_1) := sorry
 
+<<<<<<< HEAD
 theorem t4_thm (x : BitVec 1) (x_1 : BitVec 8) :
   (Option.bind
       (match some x with
@@ -71,6 +72,8 @@ info: ././././SSA/Projects/InstCombine/tests/LLVM/gsubhofhnegatible.lean:181:17:
           else if 8#8 ≤ x then none else some (255#8 <<< x.toNat))
         fun a => some (a + x_2) := sorry
 
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 theorem neg_of_sub_from_constant_thm (x : BitVec 8) : x - 42#8 = x + 214#8 := sorry
 
 theorem sub_from_constant_of_sub_from_constant_thm (x : BitVec 8) : 11#8 - (42#8 - x) = x + 225#8 := sorry

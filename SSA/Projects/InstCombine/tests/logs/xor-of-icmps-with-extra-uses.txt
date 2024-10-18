@@ -1,6 +1,11 @@
 1: "v0_select_of_consts"
 4: "v0_select_of_consts" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "v0_select_of_consts" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "v0_select_of_consts" has unsupported operation: llvm.store
 
 4: "v0_select_of_consts" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -8,6 +13,11 @@
 1: "v1_select_of_var_and_const"
 4: "v1_select_of_var_and_const" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "v1_select_of_var_and_const" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "v1_select_of_var_and_const" has unsupported operation: llvm.store
 
 4: "v1_select_of_var_and_const" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -15,6 +25,11 @@
 1: "v2_select_of_const_and_var"
 4: "v2_select_of_const_and_var" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "v2_select_of_const_and_var" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "v2_select_of_const_and_var" has unsupported operation: llvm.store
 
 4: "v2_select_of_const_and_var" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -44,6 +59,11 @@
 1: "v5_select_and_not"
 4: "v5_select_and_not" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "v5_select_and_not" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "v5_select_and_not" has unsupported operation: llvm.store
 
 4: "v5_select_and_not" has unsupported operation: llvm.store
@@ -55,6 +75,11 @@
 
 4: "n6_select_and_not" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "n6_select_and_not" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "n6_select_and_not" has unsupported operation: llvm.store
 
 4: "n6_select_and_not" has unsupported operation: llvm.store

@@ -13,10 +13,14 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section ggethlowbitmaskhuptohandhincludinghbit_statements
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
                                                     
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def t0_before := [llvm|
 {
 ^0(%arg18 : i8):
@@ -48,6 +52,7 @@ theorem t0_proof : t0_before ⊑ t0_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -55,6 +60,8 @@ theorem t0_proof : t0_before ⊑ t0_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN t0
   apply t0_thm
@@ -93,6 +100,7 @@ theorem t1_proof : t1_before ⊑ t1_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -100,6 +108,8 @@ theorem t1_proof : t1_before ⊑ t1_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN t1
   apply t1_thm
@@ -141,6 +151,7 @@ theorem t9_nocse_proof : t9_nocse_before ⊑ t9_nocse_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -148,6 +159,8 @@ theorem t9_nocse_proof : t9_nocse_before ⊑ t9_nocse_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN t9_nocse
   apply t9_nocse_thm
@@ -189,6 +202,7 @@ theorem t17_nocse_mismatching_x_proof : t17_nocse_mismatching_x_before ⊑ t17_n
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -196,6 +210,8 @@ theorem t17_nocse_mismatching_x_proof : t17_nocse_mismatching_x_before ⊑ t17_n
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN t17_nocse_mismatching_x
   apply t17_nocse_mismatching_x_thm

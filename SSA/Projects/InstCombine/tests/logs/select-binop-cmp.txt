@@ -10,6 +10,7 @@
 1: "select_xor_icmp"
 4: "select_xor_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 1: "select_xor_icmp2"
 4: "select_xor_icmp2" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -31,35 +32,105 @@
 1: "select_xor_icmp_vec"
 4: "select_xor_icmp_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
+=======
+4: "select_xor_icmp" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_xor_icmp2"
+4: "select_xor_icmp2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_xor_icmp2" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_xor_icmp_meta"
+4: "select_xor_icmp_meta" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_xor_icmp_meta" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_mul_icmp"
+4: "select_mul_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_mul_icmp" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_add_icmp"
+4: "select_add_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_add_icmp" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_or_icmp"
+4: "select_or_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_or_icmp" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_and_icmp"
+4: "select_and_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_and_icmp" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_xor_icmp_vec"
+4: "select_xor_icmp_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_xor_icmp_vec" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_xor_icmp_vec_use"
 4: "select_xor_icmp_vec_use" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "select_xor_icmp_vec_use" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
 1: "select_xor_inv_icmp"
 4: "select_xor_inv_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
 
+=======
+4: "select_xor_icmp_vec_use" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_xor_inv_icmp"
+4: "select_xor_inv_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_xor_inv_icmp" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_xor_inv_icmp2"
 4: "select_xor_inv_icmp2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "select_xor_inv_icmp2" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
 1: "select_fadd_fcmp"
 4: "select_fadd_fcmp" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "select_fadd_fcmp_poszero"
 4: "select_fadd_fcmp_poszero" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+=======
+4: "select_xor_inv_icmp2" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_fadd_fcmp"
+4: "select_fadd_fcmp" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fadd_fcmp" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_fadd_fcmp_poszero"
+4: "select_fadd_fcmp_poszero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fadd_fcmp_poszero" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fadd_fcmp_2"
 4: "select_fadd_fcmp_2" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fadd_fcmp_2" has unsupported operation: builtin.unregistered: llvm.fadd
 
+<<<<<<< HEAD
+=======
+4: "select_fadd_fcmp_2" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fadd_fcmp_2_poszero"
 4: "select_fadd_fcmp_2_poszero" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fadd_fcmp_2_poszero" has unsupported operation: builtin.unregistered: llvm.fadd
 
+<<<<<<< HEAD
 1: "select_fadd_fcmp_3"
 4: "select_fadd_fcmp_3" has unsupported operation: builtin.unregistered: llvm.fcmp
 
@@ -72,16 +143,46 @@
 1: "select_fadd_fcmp_4_poszero"
 4: "select_fadd_fcmp_4_poszero" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+=======
+4: "select_fadd_fcmp_2_poszero" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_fadd_fcmp_3"
+4: "select_fadd_fcmp_3" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fadd_fcmp_3" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_fadd_fcmp_3_poszero"
+4: "select_fadd_fcmp_3_poszero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fadd_fcmp_3_poszero" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_fadd_fcmp_4"
+4: "select_fadd_fcmp_4" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fadd_fcmp_4" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_fadd_fcmp_4_poszero"
+4: "select_fadd_fcmp_4_poszero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fadd_fcmp_4_poszero" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fadd_fcmp_5"
 4: "select_fadd_fcmp_5" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fadd_fcmp_5" has unsupported operation: builtin.unregistered: llvm.fadd
 
+<<<<<<< HEAD
+=======
+4: "select_fadd_fcmp_5" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fadd_fcmp_5_poszero"
 4: "select_fadd_fcmp_5_poszero" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fadd_fcmp_5_poszero" has unsupported operation: builtin.unregistered: llvm.fadd
 
+<<<<<<< HEAD
 1: "select_fadd_fcmp_6"
 4: "select_fadd_fcmp_6" has unsupported operation: builtin.unregistered: llvm.fcmp
 
@@ -103,40 +204,115 @@
 1: "select_sub_icmp"
 4: "select_sub_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
 
+=======
+4: "select_fadd_fcmp_5_poszero" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_fadd_fcmp_6"
+4: "select_fadd_fcmp_6" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fadd_fcmp_6" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_fadd_fcmp_6_poszero"
+4: "select_fadd_fcmp_6_poszero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fadd_fcmp_6_poszero" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_fmul_fcmp"
+4: "select_fmul_fcmp" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fmul_fcmp" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_fsub_fcmp"
+4: "select_fsub_fcmp" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fsub_fcmp" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_fsub_fcmp_negzero"
+4: "select_fsub_fcmp_negzero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fsub_fcmp_negzero" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_fdiv_fcmp"
+4: "select_fdiv_fcmp" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fdiv_fcmp" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_sub_icmp"
+4: "select_sub_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_sub_icmp" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_sub_icmp_2"
 4: "select_sub_icmp_2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "select_sub_icmp_2" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
+=======
+4: "select_sub_icmp_2" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_sub_icmp_3"
 4: "select_sub_icmp_3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "select_sub_icmp_3" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
 1: "select_sub_icmp_vec"
 4: "select_sub_icmp_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
+=======
+4: "select_sub_icmp_3" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_sub_icmp_vec"
+4: "select_sub_icmp_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_sub_icmp_vec" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_shl_icmp"
 4: "select_shl_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "select_shl_icmp" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
 1: "select_lshr_icmp"
 4: "select_lshr_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
 
+=======
+4: "select_shl_icmp" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_lshr_icmp"
+4: "select_lshr_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_lshr_icmp" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_ashr_icmp"
 4: "select_ashr_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "select_ashr_icmp" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
 1: "select_udiv_icmp"
 4: "select_udiv_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
 
+=======
+4: "select_ashr_icmp" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_udiv_icmp"
+4: "select_udiv_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_udiv_icmp" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_sdiv_icmp"
 4: "select_sdiv_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "select_sdiv_icmp" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
 1: "select_xor_icmp_bad_1"
 4: "select_xor_icmp_bad_1" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -158,6 +334,45 @@
 1: "select_xor_icmp_vec_bad"
 4: "select_xor_icmp_vec_bad" has unsupported operation: builtin.unregistered: llvm.icmp
 
+=======
+4: "select_sdiv_icmp" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_xor_icmp_bad_1"
+4: "select_xor_icmp_bad_1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_xor_icmp_bad_1" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_xor_icmp_bad_2"
+4: "select_xor_icmp_bad_2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_xor_icmp_bad_2" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_xor_icmp_bad_3"
+4: "select_xor_icmp_bad_3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_xor_icmp_bad_3" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_xor_fcmp_bad_4"
+4: "select_xor_fcmp_bad_4" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_xor_fcmp_bad_4" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_xor_icmp_bad_5"
+4: "select_xor_icmp_bad_5" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_xor_icmp_bad_5" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_xor_icmp_bad_6"
+4: "select_xor_icmp_bad_6" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_xor_icmp_bad_6" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_xor_icmp_vec_bad"
+4: "select_xor_icmp_vec_bad" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_xor_icmp_vec_bad" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "vec_select_no_equivalence"
 4: "vec_select_no_equivalence" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
@@ -165,6 +380,11 @@
 
 4: "vec_select_no_equivalence" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "vec_select_no_equivalence" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_xor_icmp_vec_undef"
 4: "select_xor_icmp_vec_undef" has unsupported operation: llvm.mlir.undef
 
@@ -176,6 +396,7 @@
 
 4: "select_xor_icmp_vec_undef" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 1: "select_mul_icmp_bad"
 4: "select_mul_icmp_bad" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -203,41 +424,125 @@
 1: "select_lshr_icmp_const_different_values"
 4: "select_lshr_icmp_const_different_values" has unsupported operation: builtin.unregistered: llvm.icmp
 
+=======
+4: "select_xor_icmp_vec_undef" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_mul_icmp_bad"
+4: "select_mul_icmp_bad" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_mul_icmp_bad" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_add_icmp_bad"
+4: "select_add_icmp_bad" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_add_icmp_bad" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_and_icmp_zero"
+4: "select_and_icmp_zero" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_and_icmp_zero" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_or_icmp_bad"
+4: "select_or_icmp_bad" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_or_icmp_bad" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_lshr_icmp_const"
+4: "select_lshr_icmp_const" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "select_lshr_icmp_const" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "select_lshr_icmp_const_reordered"
+4: "select_lshr_icmp_const_reordered" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "select_lshr_icmp_const_reordered" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "select_exact_lshr_icmp_const"
+4: "select_exact_lshr_icmp_const" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "select_exact_lshr_icmp_const" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "select_lshr_icmp_const_large_exact_range"
+4: "select_lshr_icmp_const_large_exact_range" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_lshr_icmp_const_large_exact_range" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_lshr_icmp_const_different_values"
+4: "select_lshr_icmp_const_different_values" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_lshr_icmp_const_different_values" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fadd_fcmp_bad"
 4: "select_fadd_fcmp_bad" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fadd_fcmp_bad" has unsupported operation: builtin.unregistered: llvm.fadd
 
+<<<<<<< HEAD
+=======
+4: "select_fadd_fcmp_bad" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fadd_fcmp_bad_2"
 4: "select_fadd_fcmp_bad_2" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fadd_fcmp_bad_2" has unsupported operation: builtin.unregistered: llvm.fadd
 
+<<<<<<< HEAD
+=======
+4: "select_fadd_fcmp_bad_2" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fadd_fcmp_bad_3"
 4: "select_fadd_fcmp_bad_3" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fadd_fcmp_bad_3" has unsupported operation: builtin.unregistered: llvm.fadd
 
+<<<<<<< HEAD
+=======
+4: "select_fadd_fcmp_bad_3" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fadd_fcmp_bad_4"
 4: "select_fadd_fcmp_bad_4" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fadd_fcmp_bad_4" has unsupported operation: builtin.unregistered: llvm.fadd
 
+<<<<<<< HEAD
+=======
+4: "select_fadd_fcmp_bad_4" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fadd_fcmp_bad_5"
 4: "select_fadd_fcmp_bad_5" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fadd_fcmp_bad_5" has unsupported operation: builtin.unregistered: llvm.fadd
 
+<<<<<<< HEAD
+=======
+4: "select_fadd_fcmp_bad_5" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fadd_fcmp_bad_6"
 4: "select_fadd_fcmp_bad_6" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fadd_fcmp_bad_6" has unsupported operation: builtin.unregistered: llvm.fadd
 
+<<<<<<< HEAD
+=======
+4: "select_fadd_fcmp_bad_6" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fadd_fcmp_bad_7"
 4: "select_fadd_fcmp_bad_7" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fadd_fcmp_bad_7" has unsupported operation: builtin.unregistered: llvm.fadd
 
+<<<<<<< HEAD
+=======
+4: "select_fadd_fcmp_bad_7" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fadd_fcmp_bad_8"
 4: "select_fadd_fcmp_bad_8" has unsupported operation: builtin.unregistered: llvm.fcmp
 
@@ -245,11 +550,21 @@
 
 4: "select_fadd_fcmp_bad_8" has unsupported operation: builtin.unregistered: llvm.fadd
 
+<<<<<<< HEAD
+=======
+4: "select_fadd_fcmp_bad_8" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fadd_fcmp_bad_9"
 4: "select_fadd_fcmp_bad_9" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fadd_fcmp_bad_9" has unsupported operation: builtin.unregistered: llvm.fadd
 
+<<<<<<< HEAD
+=======
+4: "select_fadd_fcmp_bad_9" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fadd_fcmp_bad_10"
 4: "select_fadd_fcmp_bad_10" has unsupported operation: builtin.unregistered: llvm.fcmp
 
@@ -257,82 +572,163 @@
 
 4: "select_fadd_fcmp_bad_10" has unsupported operation: builtin.unregistered: llvm.fadd
 
+<<<<<<< HEAD
+=======
+4: "select_fadd_fcmp_bad_10" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fadd_fcmp_bad_11"
 4: "select_fadd_fcmp_bad_11" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fadd_fcmp_bad_11" has unsupported operation: builtin.unregistered: llvm.fadd
 
+<<<<<<< HEAD
+=======
+4: "select_fadd_fcmp_bad_11" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fadd_fcmp_bad_12"
 4: "select_fadd_fcmp_bad_12" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fadd_fcmp_bad_12" has unsupported operation: builtin.unregistered: llvm.fadd
 
+<<<<<<< HEAD
+=======
+4: "select_fadd_fcmp_bad_12" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fadd_fcmp_bad_13"
 4: "select_fadd_fcmp_bad_13" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fadd_fcmp_bad_13" has unsupported operation: builtin.unregistered: llvm.fadd
 
+<<<<<<< HEAD
+=======
+4: "select_fadd_fcmp_bad_13" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fadd_fcmp_bad_14"
 4: "select_fadd_fcmp_bad_14" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fadd_fcmp_bad_14" has unsupported operation: builtin.unregistered: llvm.fadd
 
+<<<<<<< HEAD
+=======
+4: "select_fadd_fcmp_bad_14" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fmul_fcmp_bad"
 4: "select_fmul_fcmp_bad" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fmul_fcmp_bad" has unsupported operation: builtin.unregistered: llvm.fmul
 
+<<<<<<< HEAD
+=======
+4: "select_fmul_fcmp_bad" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fmul_fcmp_bad_2"
 4: "select_fmul_fcmp_bad_2" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fmul_fcmp_bad_2" has unsupported operation: builtin.unregistered: llvm.fmul
 
+<<<<<<< HEAD
+=======
+4: "select_fmul_fcmp_bad_2" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fmul_icmp_bad"
 4: "select_fmul_icmp_bad" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "select_fmul_icmp_bad" has unsupported operation: builtin.unregistered: llvm.fmul
 
+<<<<<<< HEAD
+=======
+4: "select_fmul_icmp_bad" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fmul_icmp_bad_2"
 4: "select_fmul_icmp_bad_2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "select_fmul_icmp_bad_2" has unsupported operation: builtin.unregistered: llvm.fmul
 
+<<<<<<< HEAD
+=======
+4: "select_fmul_icmp_bad_2" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fdiv_fcmp_bad"
 4: "select_fdiv_fcmp_bad" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fdiv_fcmp_bad" has unsupported operation: builtin.unregistered: llvm.fdiv
 
+<<<<<<< HEAD
+=======
+4: "select_fdiv_fcmp_bad" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fdiv_fcmp_bad_2"
 4: "select_fdiv_fcmp_bad_2" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fdiv_fcmp_bad_2" has unsupported operation: builtin.unregistered: llvm.fdiv
 
+<<<<<<< HEAD
+=======
+4: "select_fdiv_fcmp_bad_2" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fsub_fcmp_bad"
 4: "select_fsub_fcmp_bad" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fsub_fcmp_bad" has unsupported operation: builtin.unregistered: llvm.fsub
 
+<<<<<<< HEAD
+=======
+4: "select_fsub_fcmp_bad" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fsub_fcmp_bad_2"
 4: "select_fsub_fcmp_bad_2" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fsub_fcmp_bad_2" has unsupported operation: builtin.unregistered: llvm.fsub
 
+<<<<<<< HEAD
 1: "select_sub_icmp_bad"
 4: "select_sub_icmp_bad" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "select_sub_icmp_bad_2"
 4: "select_sub_icmp_bad_2" has unsupported operation: builtin.unregistered: llvm.icmp
 
+=======
+4: "select_fsub_fcmp_bad_2" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_sub_icmp_bad"
+4: "select_sub_icmp_bad" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_sub_icmp_bad" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_sub_icmp_bad_2"
+4: "select_sub_icmp_bad_2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_sub_icmp_bad_2" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_sub_icmp_bad_3"
 4: "select_sub_icmp_bad_3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "select_sub_icmp_bad_3" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
+=======
+4: "select_sub_icmp_bad_3" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_sub_icmp_4"
 4: "select_sub_icmp_4" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "select_sub_icmp_4" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
 1: "select_sub_icmp_bad_4"
 4: "select_sub_icmp_bad_4" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -357,28 +753,104 @@
 1: "select_replace_one_use"
 4: "select_replace_one_use" has unsupported operation: builtin.unregistered: llvm.icmp
 
+=======
+4: "select_sub_icmp_4" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_sub_icmp_bad_4"
+4: "select_sub_icmp_bad_4" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_sub_icmp_bad_4" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_sub_icmp_bad_5"
+4: "select_sub_icmp_bad_5" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_sub_icmp_bad_5" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_shl_icmp_bad"
+4: "select_shl_icmp_bad" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_shl_icmp_bad" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_lshr_icmp_bad"
+4: "select_lshr_icmp_bad" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_lshr_icmp_bad" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_ashr_icmp_bad"
+4: "select_ashr_icmp_bad" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_ashr_icmp_bad" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_udiv_icmp_bad"
+4: "select_udiv_icmp_bad" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_udiv_icmp_bad" has unsupported operation: llvm.udiv
+
+4: "select_udiv_icmp_bad" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_sdiv_icmp_bad"
+4: "select_sdiv_icmp_bad" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_sdiv_icmp_bad" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_replace_one_use"
+4: "select_replace_one_use" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_replace_one_use" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_replace_multi_use"
 4: "select_replace_multi_use" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "select_replace_multi_use" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
 1: "select_replace_fold"
 4: "select_replace_fold" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "select_replace_nested"
 4: "select_replace_nested" has unsupported operation: builtin.unregistered: llvm.icmp
 
+=======
+4: "select_replace_multi_use" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_replace_fold"
+4: "select_replace_fold" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_replace_fold" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_replace_nested"
+4: "select_replace_nested" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_replace_nested" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_replace_nested_extra_use"
 4: "select_replace_nested_extra_use" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "select_replace_nested_extra_use" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
 1: "select_replace_nested_no_simplify"
 4: "select_replace_nested_no_simplify" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "select_replace_deeply_nested"
 4: "select_replace_deeply_nested" has unsupported operation: builtin.unregistered: llvm.icmp
 
+=======
+4: "select_replace_nested_extra_use" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_replace_nested_no_simplify"
+4: "select_replace_nested_no_simplify" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_replace_nested_no_simplify" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_replace_deeply_nested"
+4: "select_replace_deeply_nested" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_replace_deeply_nested" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_replace_constexpr"
 4: "select_replace_constexpr" has unsupported operation: llvm.mlir.addressof
 
@@ -386,6 +858,11 @@
 
 4: "select_replace_constexpr" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "select_replace_constexpr" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_replace_undef"
 4: "select_replace_undef" has unsupported operation: llvm.mlir.undef
 
@@ -397,21 +874,37 @@
 
 4: "select_replace_undef" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "select_replace_undef" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_replace_call_speculatable"
 4: "select_replace_call_speculatable" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "select_replace_call_speculatable" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
+=======
+4: "select_replace_call_speculatable" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_replace_call_speculatable_intrinsic"
 4: "select_replace_call_speculatable_intrinsic" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "select_replace_call_speculatable_intrinsic" has unsupported operation: builtin.unregistered: llvm.intr.smax
 
+<<<<<<< HEAD
+=======
+4: "select_replace_call_speculatable_intrinsic" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_replace_call_non_speculatable"
 4: "select_replace_call_non_speculatable" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "select_replace_call_non_speculatable" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
 1: "select_replace_sdiv_speculatable"
 4: "select_replace_sdiv_speculatable" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -424,11 +917,44 @@
 1: "select_replace_udiv_non_speculatable"
 4: "select_replace_udiv_non_speculatable" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+=======
+4: "select_replace_call_non_speculatable" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_replace_sdiv_speculatable"
+4: "select_replace_sdiv_speculatable" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_replace_sdiv_speculatable" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_replace_sdiv_non_speculatable"
+4: "select_replace_sdiv_non_speculatable" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_replace_sdiv_non_speculatable" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_replace_udiv_speculatable"
+4: "select_replace_udiv_speculatable" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "select_replace_udiv_speculatable" has unsupported operation: llvm.udiv
+
+4: "select_replace_udiv_speculatable" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_replace_udiv_non_speculatable"
+4: "select_replace_udiv_non_speculatable" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "select_replace_udiv_non_speculatable" has unsupported operation after optimization: llvm.udiv
+
+4: "select_replace_udiv_non_speculatable" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_replace_phi"
 4: "select_replace_phi" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "select_replace_phi" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "select_replace_phi" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "select_replace_phi" has unsupported operation: llvm.call
 
 4: "select_replace_phi" has unsupported operation: builtin.unregistered: llvm.br

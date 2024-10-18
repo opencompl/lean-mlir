@@ -71,7 +71,11 @@
 4: "bazzzz" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 1: "bazzzzz"
+<<<<<<< HEAD
 8: "bazzzzz" contains vectors which are unsupported
+=======
+"bazzzzz" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "bazzzzzz"
 4: "bazzzzzz" has unsupported operation: llvm.mlir.undef

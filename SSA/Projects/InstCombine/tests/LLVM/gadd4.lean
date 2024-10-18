@@ -13,6 +13,7 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gadd4_statements
 
+<<<<<<< HEAD
 def match_unsigned_before := [llvm|
 {
 ^0(%arg18 : i64):
@@ -49,6 +50,8 @@ theorem match_unsigned_proof : match_unsigned_before ⊑ match_unsigned_after :=
 
 
 
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def match_andAsRem_lshrAsDiv_shlAsMul_before := [llvm|
 {
 ^0(%arg16 : i64):

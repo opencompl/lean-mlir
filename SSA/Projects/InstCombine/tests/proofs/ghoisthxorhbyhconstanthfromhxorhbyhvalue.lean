@@ -13,10 +13,14 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section ghoisthxorhbyhconstanthfromhxorhbyhvalue_statements
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
                                                     
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def t0_scalar_before := [llvm|
 {
 ^0(%arg10 : i8, %arg11 : i8):
@@ -41,6 +45,7 @@ theorem t0_scalar_proof : t0_scalar_before ⊑ t0_scalar_after := by
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
@@ -48,6 +53,11 @@ theorem t0_scalar_proof : t0_scalar_before ⊑ t0_scalar_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+  try simp
+  simp_alive_case_bash
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN t0_scalar
   apply t0_scalar_thm

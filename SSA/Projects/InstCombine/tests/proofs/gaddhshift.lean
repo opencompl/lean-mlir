@@ -13,10 +13,14 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gaddhshift_statements
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
                                                     
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def flip_add_of_shift_neg_before := [llvm|
 {
 ^0(%arg12 : i8, %arg13 : i8, %arg14 : i8):
@@ -45,6 +49,7 @@ theorem flip_add_of_shift_neg_proof : flip_add_of_shift_neg_before ⊑ flip_add_
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -52,6 +57,8 @@ theorem flip_add_of_shift_neg_proof : flip_add_of_shift_neg_before ⊑ flip_add_
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN flip_add_of_shift_neg
   apply flip_add_of_shift_neg_thm

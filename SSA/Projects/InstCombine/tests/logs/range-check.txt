@@ -6,6 +6,11 @@
 
 4: "test_and1_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "test_and1_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "test_and2"
 4: "test_and2" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -14,6 +19,11 @@
 
 4: "test_and2_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "test_and2_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "test_and3"
 4: "test_and3" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -34,6 +44,11 @@
 
 4: "test_or1_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "test_or1_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "test_or2"
 4: "test_or2" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -42,6 +57,11 @@
 
 4: "test_or2_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "test_or2_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "test_or3"
 4: "test_or3" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -84,6 +104,11 @@
 
 4: "negative3_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "negative3_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "negative4"
 4: "negative4" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -104,3 +129,8 @@
 
 4: "negative5_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "negative5_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)

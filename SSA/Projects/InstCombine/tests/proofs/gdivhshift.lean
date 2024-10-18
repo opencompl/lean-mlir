@@ -13,6 +13,7 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gdivhshift_statements
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 def t5_before := [llvm|
 {
@@ -56,6 +57,9 @@ theorem t5_proof : t5_before ⊑ t5_after := by
 =======
                                                     
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def t7_before := [llvm|
 {
 ^0(%arg209 : i32):
@@ -82,6 +86,7 @@ theorem t7_proof : t7_before ⊑ t7_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -89,6 +94,8 @@ theorem t7_proof : t7_before ⊑ t7_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN t7
   apply t7_thm
@@ -122,6 +129,7 @@ theorem t10_proof : t10_before ⊑ t10_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -129,6 +137,8 @@ theorem t10_proof : t10_before ⊑ t10_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN t10
   apply t10_thm
@@ -229,6 +239,7 @@ theorem sdiv_mul_shl_nsw_proof : sdiv_mul_shl_nsw_before ⊑ sdiv_mul_shl_nsw_af
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -236,6 +247,8 @@ theorem sdiv_mul_shl_nsw_proof : sdiv_mul_shl_nsw_before ⊑ sdiv_mul_shl_nsw_af
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN sdiv_mul_shl_nsw
   apply sdiv_mul_shl_nsw_thm
@@ -271,6 +284,7 @@ theorem sdiv_mul_shl_nsw_exact_commute1_proof : sdiv_mul_shl_nsw_exact_commute1_
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -278,6 +292,8 @@ theorem sdiv_mul_shl_nsw_exact_commute1_proof : sdiv_mul_shl_nsw_exact_commute1_
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN sdiv_mul_shl_nsw_exact_commute1
   apply sdiv_mul_shl_nsw_exact_commute1_thm
@@ -506,6 +522,7 @@ theorem sdiv_shl_shl_nsw2_nuw_proof : sdiv_shl_shl_nsw2_nuw_before ⊑ sdiv_shl_
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -513,6 +530,8 @@ theorem sdiv_shl_shl_nsw2_nuw_proof : sdiv_shl_shl_nsw2_nuw_before ⊑ sdiv_shl_
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN sdiv_shl_shl_nsw2_nuw
   apply sdiv_shl_shl_nsw2_nuw_thm
@@ -582,6 +601,7 @@ theorem sdiv_shl_pair_const_proof : sdiv_shl_pair_const_before ⊑ sdiv_shl_pair
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -589,6 +609,8 @@ theorem sdiv_shl_pair_const_proof : sdiv_shl_pair_const_before ⊑ sdiv_shl_pair
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN sdiv_shl_pair_const
   apply sdiv_shl_pair_const_thm
@@ -660,6 +682,7 @@ theorem sdiv_shl_pair1_proof : sdiv_shl_pair1_before ⊑ sdiv_shl_pair1_after :=
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -667,6 +690,8 @@ theorem sdiv_shl_pair1_proof : sdiv_shl_pair1_before ⊑ sdiv_shl_pair1_after :=
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN sdiv_shl_pair1
   apply sdiv_shl_pair1_thm
@@ -702,6 +727,7 @@ theorem sdiv_shl_pair2_proof : sdiv_shl_pair2_before ⊑ sdiv_shl_pair2_after :=
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -709,6 +735,8 @@ theorem sdiv_shl_pair2_proof : sdiv_shl_pair2_before ⊑ sdiv_shl_pair2_after :=
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN sdiv_shl_pair2
   apply sdiv_shl_pair2_thm
@@ -744,6 +772,7 @@ theorem sdiv_shl_pair3_proof : sdiv_shl_pair3_before ⊑ sdiv_shl_pair3_after :=
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -751,6 +780,8 @@ theorem sdiv_shl_pair3_proof : sdiv_shl_pair3_before ⊑ sdiv_shl_pair3_after :=
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN sdiv_shl_pair3
   apply sdiv_shl_pair3_thm

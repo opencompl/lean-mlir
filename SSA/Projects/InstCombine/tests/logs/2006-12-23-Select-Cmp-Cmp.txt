@@ -5,6 +5,11 @@
 
 4: "mng_write_basi" has unsupported operation: llvm.load
 
+<<<<<<< HEAD
+=======
+4: "mng_write_basi" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "mng_write_basi" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "mng_write_basi" has unsupported operation: builtin.unregistered: llvm.cond_br

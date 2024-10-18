@@ -6,6 +6,11 @@
 
 4: "fold_strnlen_s3_s5_0" has unsupported operation after optimization: llvm.mlir.addressof
 
+<<<<<<< HEAD
+=======
+4: "fold_strnlen_s3_s5_0" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "fold_strnlen_s3_s5_0" has unsupported operation after optimization: llvm.call
 
 1: "fold_strnlen_s3_s5_1"
@@ -13,6 +18,11 @@
 
 4: "fold_strnlen_s3_s5_1" has unsupported operation after optimization: llvm.mlir.addressof
 
+<<<<<<< HEAD
+=======
+4: "fold_strnlen_s3_s5_1" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "fold_strnlen_s3_s5_1" has unsupported operation after optimization: llvm.call
 
 1: "fold_strnlen_s3_s5_1_asan"
@@ -20,6 +30,11 @@
 
 4: "fold_strnlen_s3_s5_1_asan" has unsupported operation: llvm.mlir.addressof
 
+<<<<<<< HEAD
+=======
+4: "fold_strnlen_s3_s5_1_asan" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "fold_strnlen_s3_s5_1_asan" has unsupported operation: llvm.load
 
 4: "fold_strnlen_s3_s5_1_asan" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -31,6 +46,11 @@
 
 4: "fold_strnlen_s3_s5_3" has unsupported operation: llvm.mlir.addressof
 
+<<<<<<< HEAD
+=======
+4: "fold_strnlen_s3_s5_3" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "fold_strnlen_s3_s5_3" has unsupported operation: llvm.call
 
 1: "fold_strnlen_s3_s5_4"
@@ -38,6 +58,11 @@
 
 4: "fold_strnlen_s3_s5_4" has unsupported operation: llvm.mlir.addressof
 
+<<<<<<< HEAD
+=======
+4: "fold_strnlen_s3_s5_4" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "fold_strnlen_s3_s5_4" has unsupported operation: llvm.call
 
 1: "fold_strnlen_s3_s5_5"
@@ -45,6 +70,11 @@
 
 4: "fold_strnlen_s3_s5_5" has unsupported operation: llvm.mlir.addressof
 
+<<<<<<< HEAD
+=======
+4: "fold_strnlen_s3_s5_5" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "fold_strnlen_s3_s5_5" has unsupported operation: llvm.call
 
 1: "fold_strnlen_s5_6"
@@ -52,6 +82,11 @@
 
 4: "fold_strnlen_s5_6" has unsupported operation: llvm.mlir.addressof
 
+<<<<<<< HEAD
+=======
+4: "fold_strnlen_s5_6" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "fold_strnlen_s5_6" has unsupported operation: llvm.call
 
 1: "fold_strnlen_s3_s5_s7_4"
@@ -65,6 +100,13 @@
 
 4: "fold_strnlen_s3_s5_s7_4" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "fold_strnlen_s3_s5_s7_4" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "fold_strnlen_s3_s5_s7_4" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "fold_strnlen_s3_s5_s7_4" has unsupported operation: llvm.call
 
 1: "fold_strnlen_s3_s5_s7_6"
@@ -78,6 +120,13 @@
 
 4: "fold_strnlen_s3_s5_s7_6" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "fold_strnlen_s3_s5_s7_6" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "fold_strnlen_s3_s5_s7_6" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "fold_strnlen_s3_s5_s7_6" has unsupported operation: llvm.call
 
 1: "fold_strnlen_s3_s5_s7_8"
@@ -91,5 +140,12 @@
 
 4: "fold_strnlen_s3_s5_s7_8" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "fold_strnlen_s3_s5_s7_8" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "fold_strnlen_s3_s5_s7_8" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "fold_strnlen_s3_s5_s7_8" has unsupported operation: llvm.call
 

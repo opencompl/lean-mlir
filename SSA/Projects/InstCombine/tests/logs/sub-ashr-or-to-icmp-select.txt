@@ -4,6 +4,7 @@
 1: "sub_ashr_or_i8"
 4: "sub_ashr_or_i8" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 1: "sub_ashr_or_i16"
 4: "sub_ashr_or_i16" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -13,6 +14,25 @@
 1: "sub_ashr_or_i64"
 4: "sub_ashr_or_i64" has unsupported operation: builtin.unregistered: llvm.icmp
 
+=======
+4: "sub_ashr_or_i8" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "sub_ashr_or_i16"
+4: "sub_ashr_or_i16" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sub_ashr_or_i16" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "sub_ashr_or_i32"
+4: "sub_ashr_or_i32" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sub_ashr_or_i32" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "sub_ashr_or_i64"
+4: "sub_ashr_or_i64" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sub_ashr_or_i64" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "neg_or_ashr_i32"
 4: "neg_or_ashr_i32" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -21,9 +41,19 @@
 1: "sub_ashr_or_i32_nuw_nsw"
 4: "sub_ashr_or_i32_nuw_nsw" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 1: "sub_ashr_or_i32_commute"
 4: "sub_ashr_or_i32_commute" has unsupported operation: builtin.unregistered: llvm.icmp
 
+=======
+4: "sub_ashr_or_i32_nuw_nsw" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "sub_ashr_or_i32_commute"
+4: "sub_ashr_or_i32_commute" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sub_ashr_or_i32_commute" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "neg_or_ashr_i32_commute"
 4: "neg_or_ashr_i32_commute" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -32,9 +62,19 @@
 1: "sub_ashr_or_i32_vec"
 4: "sub_ashr_or_i32_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 1: "sub_ashr_or_i32_vec_nuw_nsw"
 4: "sub_ashr_or_i32_vec_nuw_nsw" has unsupported operation: builtin.unregistered: llvm.icmp
 
+=======
+4: "sub_ashr_or_i32_vec" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "sub_ashr_or_i32_vec_nuw_nsw"
+4: "sub_ashr_or_i32_vec_nuw_nsw" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sub_ashr_or_i32_vec_nuw_nsw" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "neg_or_ashr_i32_vec"
 4: "neg_or_ashr_i32_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -43,6 +83,11 @@
 1: "sub_ashr_or_i32_vec_commute"
 4: "sub_ashr_or_i32_vec_commute" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "sub_ashr_or_i32_vec_commute" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "neg_or_ashr_i32_vec_commute"
 4: "neg_or_ashr_i32_vec_commute" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -53,9 +98,19 @@
 
 4: "sub_ashr_or_i32_extra_use_sub" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 1: "sub_ashr_or_i32_extra_use_or"
 4: "sub_ashr_or_i32_extra_use_or" has unsupported operation: builtin.unregistered: llvm.icmp
 
+=======
+4: "sub_ashr_or_i32_extra_use_sub" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "sub_ashr_or_i32_extra_use_or"
+4: "sub_ashr_or_i32_extra_use_or" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sub_ashr_or_i32_extra_use_or" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "sub_ashr_or_i32_extra_use_or" has unsupported operation: llvm.store
 
 1: "neg_extra_use_or_ashr_i32"

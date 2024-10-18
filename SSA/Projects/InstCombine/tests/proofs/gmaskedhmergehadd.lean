@@ -13,10 +13,14 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gmaskedhmergehadd_statements
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
                                                     
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def p_before := [llvm|
 {
 ^0(%arg60 : i32, %arg61 : i32, %arg62 : i32):
@@ -49,6 +53,7 @@ theorem p_proof : p_before ⊑ p_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -56,6 +61,8 @@ theorem p_proof : p_before ⊑ p_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN p
   apply p_thm
@@ -95,6 +102,7 @@ theorem p_constmask_proof : p_constmask_before ⊑ p_constmask_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -102,6 +110,8 @@ theorem p_constmask_proof : p_constmask_before ⊑ p_constmask_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN p_constmask
   apply p_constmask_thm
@@ -141,6 +151,7 @@ theorem p_constmask2_proof : p_constmask2_before ⊑ p_constmask2_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -148,6 +159,8 @@ theorem p_constmask2_proof : p_constmask2_before ⊑ p_constmask2_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN p_constmask2
   apply p_constmask2_thm
@@ -187,6 +200,7 @@ theorem p_commutative0_proof : p_commutative0_before ⊑ p_commutative0_after :=
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -194,6 +208,8 @@ theorem p_commutative0_proof : p_commutative0_before ⊑ p_commutative0_after :=
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN p_commutative0
   apply p_commutative0_thm
@@ -233,6 +249,7 @@ theorem p_commutative2_proof : p_commutative2_before ⊑ p_commutative2_after :=
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -240,6 +257,8 @@ theorem p_commutative2_proof : p_commutative2_before ⊑ p_commutative2_after :=
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN p_commutative2
   apply p_commutative2_thm
@@ -279,6 +298,7 @@ theorem p_commutative4_proof : p_commutative4_before ⊑ p_commutative4_after :=
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -286,6 +306,8 @@ theorem p_commutative4_proof : p_commutative4_before ⊑ p_commutative4_after :=
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN p_commutative4
   apply p_commutative4_thm
@@ -325,6 +347,7 @@ theorem p_constmask_commutative_proof : p_constmask_commutative_before ⊑ p_con
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -332,6 +355,8 @@ theorem p_constmask_commutative_proof : p_constmask_commutative_before ⊑ p_con
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN p_constmask_commutative
   apply p_constmask_commutative_thm
@@ -371,6 +396,7 @@ theorem n2_badmask_proof : n2_badmask_before ⊑ n2_badmask_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -378,6 +404,8 @@ theorem n2_badmask_proof : n2_badmask_before ⊑ n2_badmask_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN n2_badmask
   apply n2_badmask_thm
@@ -415,6 +443,7 @@ theorem n3_constmask_samemask_proof : n3_constmask_samemask_before ⊑ n3_constm
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -422,6 +451,8 @@ theorem n3_constmask_samemask_proof : n3_constmask_samemask_before ⊑ n3_constm
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN n3_constmask_samemask
   apply n3_constmask_samemask_thm

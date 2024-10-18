@@ -25,6 +25,7 @@
 1: "test_shl_nuw_nsw__nsw_is_safe"
 4: "test_shl_nuw_nsw__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 1: "test_shl_nuw__nsw_is_safe"
 4: "test_shl_nuw__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -34,6 +35,25 @@
 1: "test_shl__nsw_is_safe"
 4: "test_shl__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+=======
+4: "test_shl_nuw_nsw__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_shl_nuw__nsw_is_safe"
+4: "test_shl_nuw__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_shl_nuw__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_shl_nsw__nsw_is_safe"
+4: "test_shl_nsw__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_shl_nsw__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_shl__nsw_is_safe"
+4: "test_shl__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_shl__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "test_shl_nuw_nsw__none_are_safe"
 4: "test_shl_nuw_nsw__none_are_safe" has unsupported operation: builtin.unregistered: llvm.zext
 
@@ -73,6 +93,7 @@
 1: "test_add_nuw_nsw__all_are_safe"
 4: "test_add_nuw_nsw__all_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 1: "test_add_nuw__all_are_safe"
 4: "test_add_nuw__all_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -214,3 +235,242 @@
 1: "test_mul__none_are_safe"
 4: "test_mul__none_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+=======
+4: "test_add_nuw_nsw__all_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_add_nuw__all_are_safe"
+4: "test_add_nuw__all_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_add_nuw__all_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_add_nsw__all_are_safe"
+4: "test_add_nsw__all_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_add_nsw__all_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_add__all_are_safe"
+4: "test_add__all_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_add__all_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_add_nuw_nsw__nuw_is_safe"
+4: "test_add_nuw_nsw__nuw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_add_nuw_nsw__nuw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_add_nuw__nuw_is_safe"
+4: "test_add_nuw__nuw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_add_nuw__nuw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_add_nsw__nuw_is_safe"
+4: "test_add_nsw__nuw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_add_nsw__nuw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_add__nuw_is_safe"
+4: "test_add__nuw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_add__nuw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_add_nuw_nsw__nsw_is_safe"
+4: "test_add_nuw_nsw__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_add_nuw_nsw__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_add_nuw__nsw_is_safe"
+4: "test_add_nuw__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_add_nuw__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_add_nsw__nsw_is_safe"
+4: "test_add_nsw__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_add_nsw__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_add__nsw_is_safe"
+4: "test_add__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_add__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_add_nuw_nsw__none_are_safe"
+4: "test_add_nuw_nsw__none_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_add_nuw_nsw__none_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_add_nuw__none_are_safe"
+4: "test_add_nuw__none_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_add_nuw__none_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_add_nsw__none_are_safe"
+4: "test_add_nsw__none_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_add_nsw__none_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_add__none_are_safe"
+4: "test_add__none_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_add__none_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_sub_nuw_nsw__all_are_safe"
+4: "test_sub_nuw_nsw__all_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_sub_nuw_nsw__all_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_sub_nuw__all_are_safe"
+4: "test_sub_nuw__all_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_sub_nuw__all_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_sub_nsw__all_are_safe"
+4: "test_sub_nsw__all_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_sub_nsw__all_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_sub__all_are_safe"
+4: "test_sub__all_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_sub__all_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_sub_nuw_nsw__nuw_is_safe"
+4: "test_sub_nuw_nsw__nuw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_sub_nuw_nsw__nuw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_sub_nuw__nuw_is_safe"
+4: "test_sub_nuw__nuw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_sub_nuw__nuw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_sub_nsw__nuw_is_safe"
+4: "test_sub_nsw__nuw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_sub_nsw__nuw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_sub__nuw_is_safe"
+4: "test_sub__nuw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_sub__nuw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_sub_nuw_nsw__nsw_is_safe"
+4: "test_sub_nuw_nsw__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_sub_nuw_nsw__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_sub_nuw__nsw_is_safe"
+4: "test_sub_nuw__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_sub_nuw__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_sub_nsw__nsw_is_safe"
+4: "test_sub_nsw__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_sub_nsw__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_sub__nsw_is_safe"
+4: "test_sub__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_sub__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_sub_nuw_nsw__none_are_safe"
+4: "test_sub_nuw_nsw__none_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_sub_nuw_nsw__none_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_sub_nuw__none_are_safe"
+4: "test_sub_nuw__none_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_sub_nuw__none_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_sub_nsw__none_are_safe"
+4: "test_sub_nsw__none_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_sub_nsw__none_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_sub__none_are_safe"
+4: "test_sub__none_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_sub__none_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_mul_nuw_nsw__all_are_safe"
+4: "test_mul_nuw_nsw__all_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_mul_nuw_nsw__all_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_mul_nuw__all_are_safe"
+4: "test_mul_nuw__all_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_mul_nuw__all_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_mul_nsw__all_are_safe"
+4: "test_mul_nsw__all_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_mul_nsw__all_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_mul__all_are_safe"
+4: "test_mul__all_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_mul__all_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_mul_nuw_nsw__nuw_is_safe"
+4: "test_mul_nuw_nsw__nuw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_mul_nuw_nsw__nuw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_mul_nuw__nuw_is_safe"
+4: "test_mul_nuw__nuw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_mul_nuw__nuw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_mul_nsw__nuw_is_safe"
+4: "test_mul_nsw__nuw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_mul_nsw__nuw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_mul__nuw_is_safe"
+4: "test_mul__nuw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_mul__nuw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_mul_nuw_nsw__nsw_is_safe"
+4: "test_mul_nuw_nsw__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_mul_nuw_nsw__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_mul_nuw__nsw_is_safe"
+4: "test_mul_nuw__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_mul_nuw__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_mul_nsw__nsw_is_safe"
+4: "test_mul_nsw__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_mul_nsw__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_mul__nsw_is_safe"
+4: "test_mul__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_mul__nsw_is_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_mul_nuw_nsw__none_are_safe"
+4: "test_mul_nuw_nsw__none_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_mul_nuw_nsw__none_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_mul_nuw__none_are_safe"
+4: "test_mul_nuw__none_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_mul_nuw__none_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_mul_nsw__none_are_safe"
+4: "test_mul_nsw__none_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_mul_nsw__none_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "test_mul__none_are_safe"
+4: "test_mul__none_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test_mul__none_are_safe" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)

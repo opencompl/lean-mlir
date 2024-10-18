@@ -231,10 +231,17 @@
 2: llvm.return
 
 1: "positive_samevar_vec"
+<<<<<<< HEAD
 8: "positive_samevar_vec" contains vectors which are unsupported
 
 1: "positive_sameconst_vec"
 8: "positive_sameconst_vec" contains vectors which are unsupported
+=======
+"positive_samevar_vec" contains vectors which are unsupported
+
+1: "positive_sameconst_vec"
+"positive_sameconst_vec" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "positive_sameconst_vec_undef0"
 4: "positive_sameconst_vec_undef0" has unsupported operation: llvm.mlir.undef
@@ -270,7 +277,11 @@
 4: "positive_sameconst_vec_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 1: "positive_biggerlshr_vec"
+<<<<<<< HEAD
 8: "positive_biggerlshr_vec" contains vectors which are unsupported
+=======
+"positive_biggerlshr_vec" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "positive_biggerlshr_vec_undef0"
 4: "positive_biggerlshr_vec_undef0" has unsupported operation: llvm.mlir.undef
@@ -314,7 +325,11 @@
 4: "positive_biggerlshr_vec_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 1: "positive_biggershl_vec"
+<<<<<<< HEAD
 8: "positive_biggershl_vec" contains vectors which are unsupported
+=======
+"positive_biggershl_vec" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "positive_biggershl_vec_undef0"
 4: "positive_biggershl_vec_undef0" has unsupported operation: llvm.mlir.undef

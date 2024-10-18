@@ -14,6 +14,7 @@
 4: "shl_cttz_true" has unsupported operation after optimization: builtin.unregistered: llvm.intr.cttz
 
 1: "vec2_lshr_ctlz_true"
+<<<<<<< HEAD
 8: "vec2_lshr_ctlz_true" contains vectors which are unsupported
 
 1: "vec2_shl_nuw_ctlz_true"
@@ -27,6 +28,21 @@
 
 1: "vec2_shl_cttz_true"
 8: "vec2_shl_cttz_true" contains vectors which are unsupported
+=======
+"vec2_lshr_ctlz_true" contains vectors which are unsupported
+
+1: "vec2_shl_nuw_ctlz_true"
+"vec2_shl_nuw_ctlz_true" contains vectors which are unsupported
+
+1: "vec2_shl_nuw_nsw_ctlz_true"
+"vec2_shl_nuw_nsw_ctlz_true" contains vectors which are unsupported
+
+1: "vec2_lshr_exact_cttz_true"
+"vec2_lshr_exact_cttz_true" contains vectors which are unsupported
+
+1: "vec2_shl_cttz_true"
+"vec2_shl_cttz_true" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "vec2_shl_nsw_ctlz_true_neg"
 4: "vec2_shl_nsw_ctlz_true_neg" has unsupported operation: builtin.unregistered: llvm.intr.ctlz

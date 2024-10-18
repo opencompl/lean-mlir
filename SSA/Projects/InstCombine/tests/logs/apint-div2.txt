@@ -1,4 +1,5 @@
 1: "test1"
+<<<<<<< HEAD
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.udiv
@@ -19,4 +20,13 @@
 2: builtin.unregistered: llvm.select
 2: llvm.udiv
 2: llvm.return
+=======
+4: "test1" has unsupported operation after optimization: llvm.udiv
+
+1: "test2"
+4: "test2" has unsupported operation after optimization: llvm.udiv
+
+1: "test3"
+4: "test3" has unsupported operation: builtin.unregistered: llvm.select
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 

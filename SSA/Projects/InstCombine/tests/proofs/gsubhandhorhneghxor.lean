@@ -13,10 +13,14 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gsubhandhorhneghxor_statements
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
                                                     
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def sub_to_xor_before := [llvm|
 {
 ^0(%arg14 : i32, %arg15 : i32):
@@ -43,10 +47,14 @@ theorem sub_to_xor_proof : sub_to_xor_before ⊑ sub_to_xor_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN sub_to_xor
   apply sub_to_xor_thm
@@ -80,10 +88,14 @@ theorem sub_to_xor_or_commuted_proof : sub_to_xor_or_commuted_before ⊑ sub_to_
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN sub_to_xor_or_commuted
   apply sub_to_xor_or_commuted_thm
@@ -117,10 +129,14 @@ theorem sub_to_xor_and_commuted_proof : sub_to_xor_and_commuted_before ⊑ sub_t
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN sub_to_xor_and_commuted
   apply sub_to_xor_and_commuted_thm

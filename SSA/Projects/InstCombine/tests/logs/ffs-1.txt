@@ -48,6 +48,11 @@
 
 4: "test_simplify13" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "test_simplify13" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "test_simplify14"
 4: "test_simplify14" has unsupported operation: llvm.call
 

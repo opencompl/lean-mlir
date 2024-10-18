@@ -8,6 +8,11 @@
 
 4: "pow_intrinsic_half_no_FMF" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+<<<<<<< HEAD
+=======
+4: "pow_intrinsic_half_no_FMF" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "pow_libcall_half_approx"
 4: "pow_libcall_half_approx" has unsupported operation: llvm.call
 
@@ -18,6 +23,11 @@
 
 4: "pow_intrinsic_half_approx" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+<<<<<<< HEAD
+=======
+4: "pow_intrinsic_half_approx" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "powf_intrinsic_half_fast"
 4: "powf_intrinsic_half_fast" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
 
@@ -46,6 +56,11 @@
 
 4: "pow_intrinsic_half_nsz" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+<<<<<<< HEAD
+=======
+4: "pow_intrinsic_half_nsz" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "pow_libcall_half_ninf_nsz"
 4: "pow_libcall_half_ninf_nsz" has unsupported operation: llvm.call
 
@@ -83,6 +98,11 @@
 
 4: "pow_intrinsic_neghalf_reassoc" has unsupported operation: builtin.unregistered: llvm.fdiv
 
+<<<<<<< HEAD
+=======
+4: "pow_intrinsic_neghalf_reassoc" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "pow_intrinsic_neghalf_afn"
 4: "pow_intrinsic_neghalf_afn" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
 
@@ -92,6 +112,11 @@
 
 4: "pow_intrinsic_neghalf_afn" has unsupported operation: builtin.unregistered: llvm.fdiv
 
+<<<<<<< HEAD
+=======
+4: "pow_intrinsic_neghalf_afn" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "pow_libcall_neghalf_ninf"
 4: "pow_libcall_neghalf_ninf" has unsupported operation: llvm.call
 
@@ -116,6 +141,11 @@
 
 4: "pow_intrinsic_neghalf_nsz" has unsupported operation: builtin.unregistered: llvm.fdiv
 
+<<<<<<< HEAD
+=======
+4: "pow_intrinsic_neghalf_nsz" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "pow_intrinsic_neghalf_ninf_nsz"
 4: "pow_intrinsic_neghalf_ninf_nsz" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
 

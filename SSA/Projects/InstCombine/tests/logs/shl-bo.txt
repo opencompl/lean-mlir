@@ -12,7 +12,11 @@
 2: llvm.return
 
 1: "lshr_add_commute_splat"
+<<<<<<< HEAD
 8: "lshr_add_commute_splat" contains vectors which are unsupported
+=======
+"lshr_add_commute_splat" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "lshr_sub"
 2: llvm.func
@@ -25,7 +29,11 @@
 2: llvm.return
 
 1: "lshr_sub_commute_splat"
+<<<<<<< HEAD
 8: "lshr_sub_commute_splat" contains vectors which are unsupported
+=======
+"lshr_sub_commute_splat" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "lshr_and"
 2: llvm.func
@@ -38,7 +46,11 @@
 2: llvm.return
 
 1: "lshr_and_commute_splat"
+<<<<<<< HEAD
 8: "lshr_and_commute_splat" contains vectors which are unsupported
+=======
+"lshr_and_commute_splat" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "lshr_or"
 2: llvm.func
@@ -51,7 +63,11 @@
 2: llvm.return
 
 1: "lshr_or_commute_splat"
+<<<<<<< HEAD
 8: "lshr_or_commute_splat" contains vectors which are unsupported
+=======
+"lshr_or_commute_splat" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "lshr_xor"
 2: llvm.func
@@ -64,7 +80,11 @@
 2: llvm.return
 
 1: "lshr_xor_commute_splat"
+<<<<<<< HEAD
 8: "lshr_xor_commute_splat" contains vectors which are unsupported
+=======
+"lshr_xor_commute_splat" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "lshr_add_use1"
 4: "lshr_add_use1" has unsupported operation: llvm.call
@@ -85,7 +105,11 @@
 2: llvm.return
 
 1: "lshr_and_add_commute_splat"
+<<<<<<< HEAD
 8: "lshr_and_add_commute_splat" contains vectors which are unsupported
+=======
+"lshr_and_add_commute_splat" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "lshr_and_sub"
 2: llvm.func
@@ -100,7 +124,11 @@
 2: llvm.return
 
 1: "lshr_and_sub_commute_splat"
+<<<<<<< HEAD
 8: "lshr_and_sub_commute_splat" contains vectors which are unsupported
+=======
+"lshr_and_sub_commute_splat" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "lshr_and_and"
 2: llvm.func
@@ -115,7 +143,11 @@
 2: llvm.return
 
 1: "lshr_and_and_commute_splat"
+<<<<<<< HEAD
 8: "lshr_and_and_commute_splat" contains vectors which are unsupported
+=======
+"lshr_and_and_commute_splat" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "lshr_and_or"
 2: llvm.func
@@ -154,7 +186,11 @@
 2: llvm.return
 
 1: "lshr_and_or_commute_splat"
+<<<<<<< HEAD
 8: "lshr_and_or_commute_splat" contains vectors which are unsupported
+=======
+"lshr_and_or_commute_splat" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "lshr_and_xor"
 2: llvm.func
@@ -169,7 +205,11 @@
 2: llvm.return
 
 1: "lshr_and_xor_commute_splat"
+<<<<<<< HEAD
 8: "lshr_and_xor_commute_splat" contains vectors which are unsupported
+=======
+"lshr_and_xor_commute_splat" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "lshr_and_add_use1"
 4: "lshr_and_add_use1" has unsupported operation: llvm.call
@@ -224,7 +264,11 @@
 2: llvm.return
 
 1: "lshr_add_and_shl_v2i32"
+<<<<<<< HEAD
 8: "lshr_add_and_shl_v2i32" contains vectors which are unsupported
+=======
+"lshr_add_and_shl_v2i32" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "lshr_add_and_shl_v2i32_undef"
 4: "lshr_add_and_shl_v2i32_undef" has unsupported operation: llvm.mlir.undef
@@ -255,7 +299,11 @@
 2: llvm.return
 
 1: "shl_add_and_lshr_v2i32"
+<<<<<<< HEAD
 8: "shl_add_and_lshr_v2i32" contains vectors which are unsupported
+=======
+"shl_add_and_lshr_v2i32" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "shl_add_and_lshr_v2i32_undef"
 4: "shl_add_and_lshr_v2i32_undef" has unsupported operation: llvm.mlir.undef
@@ -276,6 +324,7 @@
 7: "shl_add_and_lshr_v2i32_nonuniform" is unchanged by InstCombine
 
 1: "test_FoldShiftByConstant_CreateSHL"
+<<<<<<< HEAD
 8: "test_FoldShiftByConstant_CreateSHL" contains vectors which are unsupported
 
 1: "test_FoldShiftByConstant_CreateSHL2"
@@ -283,4 +332,13 @@
 
 1: "test_FoldShiftByConstant_CreateAnd"
 8: "test_FoldShiftByConstant_CreateAnd" contains vectors which are unsupported
+=======
+"test_FoldShiftByConstant_CreateSHL" contains vectors which are unsupported
+
+1: "test_FoldShiftByConstant_CreateSHL2"
+"test_FoldShiftByConstant_CreateSHL2" contains vectors which are unsupported
+
+1: "test_FoldShiftByConstant_CreateAnd"
+"test_FoldShiftByConstant_CreateAnd" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 

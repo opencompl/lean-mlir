@@ -13,6 +13,11 @@
 
 4: "gimp_operation_color_balance_map" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "gimp_operation_color_balance_map" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "gimp_operation_color_balance_map" has unsupported operation: builtin.unregistered: llvm.fadd
 
 4: "gimp_operation_color_balance_map" has unsupported operation: builtin.unregistered: llvm.fmul
@@ -22,5 +27,10 @@
 1: "foo"
 4: "foo" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "foo" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "foo" has unsupported operation: builtin.unregistered: llvm.fadd
 

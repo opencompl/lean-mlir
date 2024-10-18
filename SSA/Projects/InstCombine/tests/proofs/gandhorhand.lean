@@ -13,10 +13,14 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gandhorhand_statements
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
                                                     
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def test1_before := [llvm|
 {
 ^0(%arg10 : i32, %arg11 : i32):
@@ -47,6 +51,7 @@ theorem test1_proof : test1_before ⊑ test1_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -54,6 +59,8 @@ theorem test1_proof : test1_before ⊑ test1_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN test1
   apply test1_thm
@@ -89,6 +96,7 @@ theorem test3_proof : test3_before ⊑ test3_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -96,6 +104,8 @@ theorem test3_proof : test3_before ⊑ test3_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN test3
   apply test3_thm
@@ -132,6 +142,7 @@ theorem test4_proof : test4_before ⊑ test4_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -139,6 +150,8 @@ theorem test4_proof : test4_before ⊑ test4_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN test4
   apply test4_thm
@@ -172,6 +185,7 @@ theorem or_test1_proof : or_test1_before ⊑ or_test1_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -179,6 +193,8 @@ theorem or_test1_proof : or_test1_before ⊑ or_test1_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN or_test1
   apply or_test1_thm
@@ -213,6 +229,7 @@ theorem or_test2_proof : or_test2_before ⊑ or_test2_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -220,6 +237,8 @@ theorem or_test2_proof : or_test2_before ⊑ or_test2_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN or_test2
   apply or_test2_thm

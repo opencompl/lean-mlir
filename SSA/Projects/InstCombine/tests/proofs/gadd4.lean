@@ -13,6 +13,7 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gadd4_statements
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 def match_unsigned_before := [llvm|
 {
@@ -53,6 +54,9 @@ theorem match_unsigned_proof : match_unsigned_before ⊑ match_unsigned_after :=
 =======
                                                     
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def match_andAsRem_lshrAsDiv_shlAsMul_before := [llvm|
 {
 ^0(%arg16 : i64):
@@ -83,10 +87,14 @@ theorem match_andAsRem_lshrAsDiv_shlAsMul_proof : match_andAsRem_lshrAsDiv_shlAs
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN match_andAsRem_lshrAsDiv_shlAsMul
   apply match_andAsRem_lshrAsDiv_shlAsMul_thm
@@ -129,10 +137,14 @@ theorem match_signed_proof : match_signed_before ⊑ match_signed_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN match_signed
   apply match_signed_thm
@@ -174,10 +186,14 @@ theorem not_match_inconsistent_signs_proof : not_match_inconsistent_signs_before
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN not_match_inconsistent_signs
   apply not_match_inconsistent_signs_thm
@@ -300,10 +316,14 @@ theorem fold_add_sdiv_srem_proof : fold_add_sdiv_srem_before ⊑ fold_add_sdiv_s
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN fold_add_sdiv_srem
   apply fold_add_sdiv_srem_thm

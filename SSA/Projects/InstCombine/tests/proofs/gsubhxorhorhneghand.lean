@@ -13,10 +13,14 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gsubhxorhorhneghand_statements
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
                                                     
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def sub_to_and_before := [llvm|
 {
 ^0(%arg14 : i32, %arg15 : i32):
@@ -45,6 +49,7 @@ theorem sub_to_and_proof : sub_to_and_before ⊑ sub_to_and_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -52,6 +57,8 @@ theorem sub_to_and_proof : sub_to_and_before ⊑ sub_to_and_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN sub_to_and
   apply sub_to_and_thm
@@ -87,6 +94,7 @@ theorem sub_to_and_or_commuted_proof : sub_to_and_or_commuted_before ⊑ sub_to_
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -94,6 +102,8 @@ theorem sub_to_and_or_commuted_proof : sub_to_and_or_commuted_before ⊑ sub_to_
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN sub_to_and_or_commuted
   apply sub_to_and_or_commuted_thm
@@ -129,6 +139,7 @@ theorem sub_to_and_and_commuted_proof : sub_to_and_and_commuted_before ⊑ sub_t
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -136,6 +147,8 @@ theorem sub_to_and_and_commuted_proof : sub_to_and_and_commuted_before ⊑ sub_t
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN sub_to_and_and_commuted
   apply sub_to_and_and_commuted_thm

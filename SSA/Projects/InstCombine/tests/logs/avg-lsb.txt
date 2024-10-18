@@ -11,5 +11,9 @@
 7: "avg_lsb_mismatch" is unchanged by InstCombine
 
 1: "avg_lsb_vector"
+<<<<<<< HEAD
 8: "avg_lsb_vector" contains vectors which are unsupported
+=======
+"avg_lsb_vector" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 

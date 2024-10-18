@@ -29,21 +29,41 @@
 
 4: "une_could_be_negzero" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
+=======
+4: "une_could_be_negzero" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "une_swapped_could_be_negzero"
 4: "une_swapped_could_be_negzero" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "une_swapped_could_be_negzero" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
+=======
+4: "une_swapped_could_be_negzero" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "one"
 4: "one" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "one" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
+=======
+4: "one" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "one_swapped"
 4: "one_swapped" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "one_swapped" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
+=======
+4: "one_swapped" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "fcmp_oeq_select"
 4: "fcmp_oeq_select" has unsupported operation: builtin.unregistered: llvm.fcmp
 
@@ -51,6 +71,13 @@
 4: "fcmp_uno_select" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "fcmp_ogt_select"
+<<<<<<< HEAD
+=======
+4: "fcmp_ogt_select" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "fcmp_ogt_select" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "fcmp_ogt_select" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "test_fcmp_select_const_const"
@@ -61,19 +88,38 @@
 
 4: "test_fcmp_select_var_const" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+<<<<<<< HEAD
+=======
+4: "test_fcmp_select_var_const" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "test_fcmp_select_var_const_fmf"
 4: "test_fcmp_select_var_const_fmf" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "test_fcmp_select_var_const_fmf" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+<<<<<<< HEAD
+=======
+4: "test_fcmp_select_var_const_fmf" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "test_fcmp_select_const_const_vec"
 4: "test_fcmp_select_const_const_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "test_fcmp_select_clamp"
 4: "test_fcmp_select_clamp" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+<<<<<<< HEAD
 4: "test_fcmp_select_clamp" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+=======
+4: "test_fcmp_select_clamp" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "test_fcmp_select_clamp" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test_fcmp_select_clamp" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "test_fcmp_select_maxnum"
 4: "test_fcmp_select_maxnum" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
 
@@ -82,6 +128,11 @@
 1: "test_fcmp_select_const_const_multiuse"
 4: "test_fcmp_select_const_const_multiuse" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+<<<<<<< HEAD
+=======
+4: "test_fcmp_select_const_const_multiuse" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "test_fcmp_select_const_const_multiuse" has unsupported operation: llvm.call
 
 4: "test_fcmp_select_const_const_multiuse" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -94,3 +145,8 @@
 
 4: "test_fcmp_select_var_const_unordered" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+<<<<<<< HEAD
+=======
+4: "test_fcmp_select_var_const_unordered" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)

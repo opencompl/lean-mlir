@@ -118,6 +118,11 @@
 
 4: "pr51551_neg2" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "pr51551_neg2" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "pr51551_demand3bits"
 2: llvm.func
 2: llvm.mlir.constant

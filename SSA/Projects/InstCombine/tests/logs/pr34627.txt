@@ -1,3 +1,7 @@
 1: "patatino"
+<<<<<<< HEAD
 8: "patatino" contains vectors which are unsupported
+=======
+"patatino" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 

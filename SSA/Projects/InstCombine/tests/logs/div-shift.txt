@@ -20,6 +20,7 @@
 4: "t4" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
 1: "t5"
+<<<<<<< HEAD
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.mlir.constant
@@ -29,10 +30,20 @@
 2: builtin.unregistered: llvm.select
 2: llvm.udiv
 2: llvm.return
+=======
+4: "t5" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "t5" has unsupported operation: builtin.unregistered: llvm.select
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "t6"
 4: "t6" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
+<<<<<<< HEAD
+=======
+4: "t6" has unsupported operation: llvm.udiv
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "udiv_umin"
 4: "udiv_umin" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
@@ -42,17 +53,37 @@
 1: "udiv_umin_"
 4: "udiv_umin_" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
+<<<<<<< HEAD
+=======
+4: "udiv_umin_" has unsupported operation: llvm.udiv
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "udiv_umin_extra_use"
 4: "udiv_umin_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
 4: "udiv_umin_extra_use" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
 1: "udiv_smin"
 4: "udiv_smin" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
 1: "udiv_smax"
 4: "udiv_smax" has unsupported operation: builtin.unregistered: llvm.intr.smax
 
+=======
+4: "udiv_umin_extra_use" has unsupported operation: llvm.udiv
+
+1: "udiv_smin"
+4: "udiv_smin" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "udiv_smin" has unsupported operation: llvm.udiv
+
+1: "udiv_smax"
+4: "udiv_smax" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "udiv_smax" has unsupported operation: llvm.udiv
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "t7"
 2: llvm.func
 2: llvm.mlir.constant
@@ -64,7 +95,11 @@
 7: "t8" is unchanged by InstCombine
 
 1: "t9"
+<<<<<<< HEAD
 8: "t9" contains vectors which are unsupported
+=======
+"t9" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "t10"
 2: llvm.func
@@ -73,6 +108,7 @@
 2: llvm.return
 
 1: "t11"
+<<<<<<< HEAD
 8: "t11" contains vectors which are unsupported
 
 1: "t12"
@@ -96,6 +132,24 @@
 
 1: "t16"
 8: "t16" contains vectors which are unsupported
+=======
+"t11" contains vectors which are unsupported
+
+1: "t12"
+4: "t12" has unsupported operation after optimization: llvm.udiv
+
+1: "t13"
+4: "t13" has unsupported operation: llvm.udiv
+
+1: "t14"
+"t14" contains vectors which are unsupported
+
+1: "t15"
+4: "t15" has unsupported operation after optimization: llvm.udiv
+
+1: "t16"
+"t16" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "sdiv_mul_shl_nsw"
 2: llvm.func
@@ -135,6 +189,7 @@
 7: "sdiv_mul_shl_missing_nsw2" is unchanged by InstCombine
 
 1: "udiv_mul_shl_nuw"
+<<<<<<< HEAD
 2: llvm.func
 2: llvm.mul
 2: llvm.shl
@@ -150,6 +205,15 @@
 
 1: "udiv_mul_shl_nuw_commute2"
 7: "udiv_mul_shl_nuw_commute2" is unchanged by InstCombine
+=======
+4: "udiv_mul_shl_nuw" has unsupported operation after optimization: llvm.udiv
+
+1: "udiv_mul_shl_nuw_exact_commute1"
+4: "udiv_mul_shl_nuw_exact_commute1" has unsupported operation after optimization: llvm.udiv
+
+1: "udiv_mul_shl_nuw_commute2"
+4: "udiv_mul_shl_nuw_commute2" has unsupported operation: llvm.udiv
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "udiv_mul_shl_nsw_use1"
 4: "udiv_mul_shl_nsw_use1" has unsupported operation: llvm.call
@@ -163,6 +227,7 @@
 4: "udiv_mul_shl_nsw_use3" has unsupported operation: llvm.call
 
 1: "udiv_shl_mul_nuw"
+<<<<<<< HEAD
 2: llvm.func
 2: llvm.shl
 2: llvm.mul
@@ -185,22 +250,50 @@
 
 1: "udiv_shl_mul_nuw_vec"
 8: "udiv_shl_mul_nuw_vec" contains vectors which are unsupported
+=======
+4: "udiv_shl_mul_nuw" has unsupported operation: llvm.udiv
+
+1: "udiv_shl_mul_nuw_swap"
+4: "udiv_shl_mul_nuw_swap" has unsupported operation: llvm.udiv
+
+1: "udiv_shl_mul_nuw_exact"
+4: "udiv_shl_mul_nuw_exact" has unsupported operation: llvm.udiv
+
+1: "udiv_shl_mul_nuw_vec"
+4: "udiv_shl_mul_nuw_vec" has unsupported operation: llvm.udiv
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "udiv_shl_mul_nuw_extra_use_of_shl"
 4: "udiv_shl_mul_nuw_extra_use_of_shl" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
 1: "udiv_shl_mul_nuw_extra_use_of_mul"
 4: "udiv_shl_mul_nuw_extra_use_of_mul" has unsupported operation: llvm.call
 
+=======
+4: "udiv_shl_mul_nuw_extra_use_of_shl" has unsupported operation: llvm.udiv
+
+1: "udiv_shl_mul_nuw_extra_use_of_mul"
+4: "udiv_shl_mul_nuw_extra_use_of_mul" has unsupported operation: llvm.call
+
+4: "udiv_shl_mul_nuw_extra_use_of_mul" has unsupported operation: llvm.udiv
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "udiv_shl_mul_nuw_extra_use"
 4: "udiv_shl_mul_nuw_extra_use" has unsupported operation: llvm.call
 
 4: "udiv_shl_mul_nuw_extra_use" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
+=======
+4: "udiv_shl_mul_nuw_extra_use" has unsupported operation: llvm.udiv
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "sdiv_shl_mul_nuw"
 7: "sdiv_shl_mul_nuw" is unchanged by InstCombine
 
 1: "udiv_mul_shl_missing_nsw1"
+<<<<<<< HEAD
 7: "udiv_mul_shl_missing_nsw1" is unchanged by InstCombine
 
 1: "udiv_mul_shl_missing_nsw2"
@@ -214,10 +307,26 @@
 
 1: "udiv_shl"
 7: "udiv_shl" is unchanged by InstCombine
+=======
+4: "udiv_mul_shl_missing_nsw1" has unsupported operation: llvm.udiv
+
+1: "udiv_mul_shl_missing_nsw2"
+4: "udiv_mul_shl_missing_nsw2" has unsupported operation: llvm.udiv
+
+1: "udiv_shl_nuw"
+4: "udiv_shl_nuw" has unsupported operation: llvm.udiv
+
+1: "udiv_shl_nuw_exact"
+4: "udiv_shl_nuw_exact" has unsupported operation: llvm.udiv
+
+1: "udiv_shl"
+4: "udiv_shl" has unsupported operation: llvm.udiv
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "udiv_shl_nuw_use"
 4: "udiv_shl_nuw_use" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
 1: "udiv_lshr_mul_nuw"
 2: llvm.func
 2: llvm.mul
@@ -230,6 +339,18 @@
 
 1: "udiv_lshr_mul_nuw_commute2"
 7: "udiv_lshr_mul_nuw_commute2" is unchanged by InstCombine
+=======
+4: "udiv_shl_nuw_use" has unsupported operation: llvm.udiv
+
+1: "udiv_lshr_mul_nuw"
+4: "udiv_lshr_mul_nuw" has unsupported operation after optimization: llvm.udiv
+
+1: "udiv_lshr_mul_nuw_exact_commute1"
+"udiv_lshr_mul_nuw_exact_commute1" contains vectors which are unsupported
+
+1: "udiv_lshr_mul_nuw_commute2"
+4: "udiv_lshr_mul_nuw_commute2" has unsupported operation: llvm.udiv
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "udiv_lshr_mul_nuw_use1"
 4: "udiv_lshr_mul_nuw_use1" has unsupported operation: llvm.call
@@ -243,7 +364,11 @@
 4: "udiv_lshr_mul_nuw_use3" has unsupported operation: llvm.call
 
 1: "udiv_lshr_mul_nsw"
+<<<<<<< HEAD
 7: "udiv_lshr_mul_nsw" is unchanged by InstCombine
+=======
+4: "udiv_lshr_mul_nsw" has unsupported operation: llvm.udiv
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "sdiv_lshr_mul_nsw"
 7: "sdiv_lshr_mul_nsw" is unchanged by InstCombine
@@ -268,13 +393,18 @@
 7: "sdiv_shl_shl_nuw_nsw2" is unchanged by InstCombine
 
 1: "udiv_shl_shl_nuw2"
+<<<<<<< HEAD
 8: "udiv_shl_shl_nuw2" contains vectors which are unsupported
+=======
+4: "udiv_shl_shl_nuw2" has unsupported operation: llvm.udiv
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "udiv_shl_shl_nuw2_exact_use2"
 4: "udiv_shl_shl_nuw2_exact_use2" has unsupported operation: llvm.call
 
 4: "udiv_shl_shl_nuw2_exact_use2" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
 1: "udiv_shl_shl_nuw_nsw"
 7: "udiv_shl_shl_nuw_nsw" is unchanged by InstCombine
 
@@ -290,13 +420,38 @@
 
 1: "udiv_shl_nuw_divisor"
 7: "udiv_shl_nuw_divisor" is unchanged by InstCombine
+=======
+4: "udiv_shl_shl_nuw2_exact_use2" has unsupported operation: llvm.udiv
+
+1: "udiv_shl_shl_nuw_nsw"
+4: "udiv_shl_shl_nuw_nsw" has unsupported operation: llvm.udiv
+
+1: "udiv_shl_shl_nsw_nuw"
+4: "udiv_shl_shl_nsw_nuw" has unsupported operation: llvm.udiv
+
+1: "udiv_shl_shl_nuw_nsw2"
+4: "udiv_shl_shl_nuw_nsw2" has unsupported operation: llvm.udiv
+
+1: "udiv_shl_nuw_divisor"
+4: "udiv_shl_nuw_divisor" has unsupported operation: llvm.udiv
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "udiv_fail_shl_overflow"
 4: "udiv_fail_shl_overflow" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
+<<<<<<< HEAD
 1: "udiv_shl_no_overflow"
 4: "udiv_shl_no_overflow" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umax
 
+=======
+4: "udiv_fail_shl_overflow" has unsupported operation: llvm.udiv
+
+1: "udiv_shl_no_overflow"
+4: "udiv_shl_no_overflow" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umax
+
+4: "udiv_shl_no_overflow" has unsupported operation after optimization: llvm.udiv
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "sdiv_shl_pair_const"
 2: llvm.func
 2: llvm.mlir.constant
@@ -307,6 +462,7 @@
 2: llvm.return
 
 1: "udiv_shl_pair_const"
+<<<<<<< HEAD
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.mlir.constant
@@ -314,6 +470,9 @@
 2: llvm.shl
 2: llvm.udiv
 2: llvm.return
+=======
+4: "udiv_shl_pair_const" has unsupported operation after optimization: llvm.udiv
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "sdiv_shl_pair1"
 2: llvm.func
@@ -340,6 +499,7 @@
 7: "sdiv_shl_no_pair_fail" is unchanged by InstCombine
 
 1: "udiv_shl_pair1"
+<<<<<<< HEAD
 2: llvm.func
 2: llvm.shl
 2: llvm.shl
@@ -359,6 +519,15 @@
 2: llvm.shl
 2: llvm.udiv
 2: llvm.return
+=======
+4: "udiv_shl_pair1" has unsupported operation after optimization: llvm.udiv
+
+1: "udiv_shl_pair2"
+4: "udiv_shl_pair2" has unsupported operation after optimization: llvm.udiv
+
+1: "udiv_shl_pair3"
+4: "udiv_shl_pair3" has unsupported operation after optimization: llvm.udiv
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "sdiv_shl_pair_overflow_fail1"
 7: "sdiv_shl_pair_overflow_fail1" is unchanged by InstCombine
@@ -367,6 +536,7 @@
 7: "sdiv_shl_pair_overflow_fail2" is unchanged by InstCombine
 
 1: "udiv_shl_pair_overflow_fail1"
+<<<<<<< HEAD
 7: "udiv_shl_pair_overflow_fail1" is unchanged by InstCombine
 
 1: "udiv_shl_pair_overflow_fail2"
@@ -374,6 +544,15 @@
 
 1: "udiv_shl_pair_overflow_fail3"
 7: "udiv_shl_pair_overflow_fail3" is unchanged by InstCombine
+=======
+4: "udiv_shl_pair_overflow_fail1" has unsupported operation: llvm.udiv
+
+1: "udiv_shl_pair_overflow_fail2"
+4: "udiv_shl_pair_overflow_fail2" has unsupported operation: llvm.udiv
+
+1: "udiv_shl_pair_overflow_fail3"
+4: "udiv_shl_pair_overflow_fail3" has unsupported operation: llvm.udiv
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "sdiv_shl_pair_multiuse1"
 4: "sdiv_shl_pair_multiuse1" has unsupported operation: llvm.call

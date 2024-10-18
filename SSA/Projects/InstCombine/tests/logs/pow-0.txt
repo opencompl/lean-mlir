@@ -11,6 +11,7 @@
 4: "fast_minus_zero" has unsupported operation after optimization: builtin.unregistered: llvm.intr.pow
 
 1: "vec_zero"
+<<<<<<< HEAD
 8: "vec_zero" contains vectors which are unsupported
 
 1: "vec_minus_zero"
@@ -21,4 +22,16 @@
 
 1: "vec_fast_minus_zero"
 8: "vec_fast_minus_zero" contains vectors which are unsupported
+=======
+"vec_zero" contains vectors which are unsupported
+
+1: "vec_minus_zero"
+"vec_minus_zero" contains vectors which are unsupported
+
+1: "vec_fast_zero"
+"vec_fast_zero" contains vectors which are unsupported
+
+1: "vec_fast_minus_zero"
+"vec_fast_minus_zero" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 

@@ -127,6 +127,7 @@
 2: llvm.return
 
 1: "shl_add_vec"
+<<<<<<< HEAD
 8: "shl_add_vec" contains vectors which are unsupported
 
 1: "shl_add_vec_poison0"
@@ -137,6 +138,18 @@
 
 1: "shl_add_vec_poison2"
 8: "shl_add_vec_poison2" contains vectors which are unsupported
+=======
+"shl_add_vec" contains vectors which are unsupported
+
+1: "shl_add_vec_poison0"
+"shl_add_vec_poison0" contains vectors which are unsupported
+
+1: "shl_add_vec_poison1"
+"shl_add_vec_poison1" contains vectors which are unsupported
+
+1: "shl_add_vec_poison2"
+"shl_add_vec_poison2" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "use32"
 5: "use32" is empty

@@ -14,6 +14,7 @@ set_option linter.unusedTactic false
 <<<<<<< HEAD
 section gapinthandhxorhmerge_statements
 
+<<<<<<< HEAD
 =======
 <<<<<<<< HEAD:SSA/Projects/InstCombine/tests/proofs/gapinthrem2.lean
 section gapinthrem2_statements
@@ -26,6 +27,8 @@ section gapinthandhxorhmerge_statements
                                                     
 >>>>>>> 43a49182 (re-ran scripts)
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def test1_before := [llvm|
 {
 ^0(%arg3 : i57, %arg4 : i57, %arg5 : i57):
@@ -52,6 +55,7 @@ theorem test1_proof : test1_before ⊑ test1_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 <<<<<<<< HEAD:SSA/Projects/InstCombine/tests/proofs/gapinthrem2.lean
 <<<<<<< HEAD
@@ -66,6 +70,8 @@ theorem test1_proof : test1_before ⊑ test1_after := by
   intros
 >>>>>>> 43a49182 (re-ran scripts)
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN test1
   apply test1_thm
@@ -98,6 +104,7 @@ theorem test2_proof : test2_before ⊑ test2_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 <<<<<<<< HEAD:SSA/Projects/InstCombine/tests/proofs/gapinthrem2.lean
 <<<<<<< HEAD
@@ -112,6 +119,8 @@ theorem test2_proof : test2_before ⊑ test2_after := by
   intros
 >>>>>>> 43a49182 (re-ran scripts)
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN test2
   apply test2_thm

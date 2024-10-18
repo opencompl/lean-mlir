@@ -2,6 +2,7 @@
 5: "use" is empty
 
 1: "match_unsigned"
+<<<<<<< HEAD
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.mlir.constant
@@ -14,6 +15,12 @@
 
 1: "match_unsigned_vector"
 8: "match_unsigned_vector" contains vectors which are unsupported
+=======
+4: "match_unsigned" has unsupported operation after optimization: llvm.udiv
+
+1: "match_unsigned_vector"
+"match_unsigned_vector" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "match_andAsRem_lshrAsDiv_shlAsMul"
 2: llvm.func
@@ -45,7 +52,11 @@
 2: llvm.return
 
 1: "match_signed_vector"
+<<<<<<< HEAD
 8: "match_signed_vector" contains vectors which are unsupported
+=======
+"match_signed_vector" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "not_match_inconsistent_signs"
 2: llvm.func
@@ -59,6 +70,7 @@
 2: llvm.return
 
 1: "not_match_inconsistent_values"
+<<<<<<< HEAD
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.mlir.constant
@@ -69,11 +81,15 @@
 2: llvm.mul
 2: llvm.add
 2: llvm.return
+=======
+4: "not_match_inconsistent_values" has unsupported operation: llvm.udiv
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "not_match_overflow"
 4: "not_match_overflow" has unsupported operation: builtin.unregistered: llvm.freeze
 
 1: "fold_add_udiv_urem"
+<<<<<<< HEAD
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.mlir.constant
@@ -82,6 +98,9 @@
 2: llvm.urem
 2: llvm.add
 2: llvm.return
+=======
+4: "fold_add_udiv_urem" has unsupported operation: llvm.udiv
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "fold_add_sdiv_srem"
 2: llvm.func
@@ -94,6 +113,7 @@
 2: llvm.return
 
 1: "fold_add_udiv_urem_to_mul"
+<<<<<<< HEAD
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.mlir.constant
@@ -104,11 +124,15 @@
 2: llvm.mul
 2: llvm.add
 2: llvm.return
+=======
+4: "fold_add_udiv_urem_to_mul" has unsupported operation after optimization: llvm.udiv
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "fold_add_udiv_urem_to_mul_multiuse"
 4: "fold_add_udiv_urem_to_mul_multiuse" has unsupported operation: llvm.call
 
 1: "fold_add_udiv_urem_commuted"
+<<<<<<< HEAD
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.mlir.constant
@@ -146,4 +170,24 @@
 
 1: "fold_add_udiv_urem_non_constant"
 7: "fold_add_udiv_urem_non_constant" is unchanged by InstCombine
+=======
+4: "fold_add_udiv_urem_commuted" has unsupported operation: llvm.udiv
+
+1: "fold_add_udiv_urem_or_disjoint"
+4: "fold_add_udiv_urem_or_disjoint" has unsupported operation: llvm.udiv
+
+1: "fold_add_udiv_urem_without_noundef"
+4: "fold_add_udiv_urem_without_noundef" has unsupported operation: llvm.udiv
+
+1: "fold_add_udiv_urem_multiuse_mul"
+4: "fold_add_udiv_urem_multiuse_mul" has unsupported operation: llvm.udiv
+
+4: "fold_add_udiv_urem_multiuse_mul" has unsupported operation: llvm.call
+
+1: "fold_add_udiv_srem"
+4: "fold_add_udiv_srem" has unsupported operation: llvm.udiv
+
+1: "fold_add_udiv_urem_non_constant"
+4: "fold_add_udiv_urem_non_constant" has unsupported operation: llvm.udiv
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 

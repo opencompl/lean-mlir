@@ -143,6 +143,7 @@
 4: "u32_half_u12" has unsupported operation: builtin.unregistered: llvm.fptoui
 
 1: "i8_vec_sitofp_test1"
+<<<<<<< HEAD
 8: "i8_vec_sitofp_test1" contains vectors which are unsupported
 
 1: "i8_vec_sitofp_test2"
@@ -150,6 +151,15 @@
 
 1: "i8_vec_sitofp_test3"
 8: "i8_vec_sitofp_test3" contains vectors which are unsupported
+=======
+"i8_vec_sitofp_test1" contains vectors which are unsupported
+
+1: "i8_vec_sitofp_test2"
+"i8_vec_sitofp_test2" contains vectors which are unsupported
+
+1: "i8_vec_sitofp_test3"
+"i8_vec_sitofp_test3" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "i8_vec_sitofp_test4"
 4: "i8_vec_sitofp_test4" has unsupported operation: builtin.unregistered: llvm.icmp

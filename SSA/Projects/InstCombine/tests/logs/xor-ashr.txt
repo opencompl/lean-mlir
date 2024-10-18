@@ -7,6 +7,7 @@
 1: "testi8i8"
 4: "testi8i8" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 1: "testi16i8"
 4: "testi16i8" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -19,6 +20,30 @@
 1: "testv4i16i8"
 4: "testv4i16i8" has unsupported operation: builtin.unregistered: llvm.icmp
 
+=======
+4: "testi8i8" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "testi16i8"
+4: "testi16i8" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "testi16i8" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "testi64i32"
+4: "testi64i32" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "testi64i32" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "testi128i128"
+4: "testi128i128" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "testi128i128" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "testv4i16i8"
+4: "testv4i16i8" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "testv4i16i8" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "testv4i16i8_poison"
 4: "testv4i16i8_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
@@ -44,6 +69,11 @@
 
 4: "testv4i16i8_poison" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "testv4i16i8_poison" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "wrongimm"
 4: "wrongimm" has unsupported operation: builtin.unregistered: llvm.trunc
 
@@ -64,6 +94,11 @@
 
 4: "extrause_trunc1" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "extrause_trunc1" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "extrause_trunc2"
 4: "extrause_trunc2" has unsupported operation: builtin.unregistered: llvm.trunc
 

@@ -8,6 +8,11 @@
 
 4: "test1_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "test1_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "test2"
 4: "test2" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -23,3 +28,8 @@
 
 4: "test3_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "test3_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)

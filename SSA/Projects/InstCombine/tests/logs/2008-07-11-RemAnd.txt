@@ -7,5 +7,9 @@
 2: llvm.return
 
 1: "a_vec"
+<<<<<<< HEAD
 8: "a_vec" contains vectors which are unsupported
+=======
+"a_vec" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 

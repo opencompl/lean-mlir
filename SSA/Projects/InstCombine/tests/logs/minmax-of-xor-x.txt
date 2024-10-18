@@ -2,7 +2,11 @@
 5: "barrier" is empty
 
 1: "umax_xor_Cpow2"
+<<<<<<< HEAD
 8: "umax_xor_Cpow2" contains vectors which are unsupported
+=======
+"umax_xor_Cpow2" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "umin_xor_Cpow2"
 4: "umin_xor_Cpow2" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umin
@@ -11,10 +15,17 @@
 4: "smax_xor_Cpow2_pos" has unsupported operation after optimization: builtin.unregistered: llvm.intr.smax
 
 1: "smin_xor_Cpow2_pos"
+<<<<<<< HEAD
 8: "smin_xor_Cpow2_pos" contains vectors which are unsupported
 
 1: "smax_xor_Cpow2_neg"
 8: "smax_xor_Cpow2_neg" contains vectors which are unsupported
+=======
+"smin_xor_Cpow2_pos" contains vectors which are unsupported
+
+1: "smax_xor_Cpow2_neg"
+"smax_xor_Cpow2_neg" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "smin_xor_Cpow2_neg"
 4: "smin_xor_Cpow2_neg" has unsupported operation after optimization: builtin.unregistered: llvm.intr.smin
@@ -23,7 +34,11 @@
 4: "umax_xor_pow2" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umax
 
 1: "umin_xor_pow2"
+<<<<<<< HEAD
 8: "umin_xor_pow2" contains vectors which are unsupported
+=======
+"umin_xor_pow2" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "smax_xor_pow2_unk"
 4: "smax_xor_pow2_unk" has unsupported operation: builtin.unregistered: llvm.intr.smax

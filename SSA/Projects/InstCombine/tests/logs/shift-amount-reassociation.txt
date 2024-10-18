@@ -9,10 +9,17 @@
 2: llvm.return
 
 1: "t1_vec_splat"
+<<<<<<< HEAD
 8: "t1_vec_splat" contains vectors which are unsupported
 
 1: "t2_vec_nonsplat"
 8: "t2_vec_nonsplat" contains vectors which are unsupported
+=======
+"t1_vec_splat" contains vectors which are unsupported
+
+1: "t2_vec_nonsplat"
+"t2_vec_nonsplat" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "t3_vec_nonsplat_poison0"
 4: "t3_vec_nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.mlir.poison

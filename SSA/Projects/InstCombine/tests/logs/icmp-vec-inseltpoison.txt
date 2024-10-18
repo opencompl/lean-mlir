@@ -17,7 +17,11 @@
 4: "sge_zero" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "uge_zero"
+<<<<<<< HEAD
 8: "uge_zero" contains vectors which are unsupported
+=======
+"uge_zero" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "sle_zero"
 4: "sle_zero" has unsupported operation: builtin.unregistered: llvm.icmp

@@ -8,6 +8,11 @@
 
 4: "fold_strnlen_s3_pi_s5_n" has unsupported operation: llvm.getelementptr
 
+<<<<<<< HEAD
+=======
+4: "fold_strnlen_s3_pi_s5_n" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "fold_strnlen_s3_pi_s5_n" has unsupported operation: llvm.call
 
 1: "call_strnlen_s3_pi_xbounds_s5_n"
@@ -17,6 +22,11 @@
 
 4: "call_strnlen_s3_pi_xbounds_s5_n" has unsupported operation: llvm.getelementptr
 
+<<<<<<< HEAD
+=======
+4: "call_strnlen_s3_pi_xbounds_s5_n" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "call_strnlen_s3_pi_xbounds_s5_n" has unsupported operation: llvm.call
 
 1: "call_strnlen_s3_pi_sx_n"
@@ -26,6 +36,11 @@
 
 4: "call_strnlen_s3_pi_sx_n" has unsupported operation: llvm.getelementptr
 
+<<<<<<< HEAD
+=======
+4: "call_strnlen_s3_pi_sx_n" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "call_strnlen_s3_pi_sx_n" has unsupported operation: llvm.call
 
 1: "fold_strnlen_s3_s5_pi_n"
@@ -33,5 +48,10 @@
 
 4: "fold_strnlen_s3_s5_pi_n" has unsupported operation: llvm.mlir.addressof
 
+<<<<<<< HEAD
+=======
+4: "fold_strnlen_s3_s5_pi_n" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "fold_strnlen_s3_s5_pi_n" has unsupported operation: llvm.call
 

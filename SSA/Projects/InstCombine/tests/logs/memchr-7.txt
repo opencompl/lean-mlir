@@ -46,8 +46,17 @@
 
 4: "memchr_no_zero_cmp2" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 4: "memchr_no_zero_cmp2" has unsupported operation: builtin.unregistered: llvm.icmp
 
+=======
+4: "memchr_no_zero_cmp2" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "memchr_no_zero_cmp2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "memchr_no_zero_cmp2" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "memchr_n_equals_len_minsize"
 4: "memchr_n_equals_len_minsize" has unsupported operation: llvm.mlir.addressof
 

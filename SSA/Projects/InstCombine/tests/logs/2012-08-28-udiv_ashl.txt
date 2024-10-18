@@ -1,4 +1,5 @@
 1: "udiv400"
+<<<<<<< HEAD
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.mlir.constant
@@ -27,4 +28,19 @@
 
 1: "no_crash_notconst_udiv"
 7: "no_crash_notconst_udiv" is unchanged by InstCombine
+=======
+4: "udiv400" has unsupported operation: llvm.udiv
+
+1: "udiv400_no"
+4: "udiv400_no" has unsupported operation: llvm.udiv
+
+1: "sdiv400_yes"
+4: "sdiv400_yes" has unsupported operation: llvm.udiv
+
+1: "udiv_i80"
+4: "udiv_i80" has unsupported operation: llvm.udiv
+
+1: "no_crash_notconst_udiv"
+4: "no_crash_notconst_udiv" has unsupported operation: llvm.udiv
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 

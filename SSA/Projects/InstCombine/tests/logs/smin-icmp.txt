@@ -49,41 +49,81 @@
 1: "sle_smin1"
 4: "sle_smin1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "sle_smin1" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "sle_smin1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "sle_smin2"
 4: "sle_smin2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "sle_smin2" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "sle_smin2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "sle_smin3"
 4: "sle_smin3" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "sle_smin3" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "sle_smin3" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "sle_smin4"
 4: "sle_smin4" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "sle_smin4" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "sle_smin4" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "sgt_smin1"
 4: "sgt_smin1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "sgt_smin1" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "sgt_smin1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "sgt_smin2"
 4: "sgt_smin2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "sgt_smin2" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "sgt_smin2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "sgt_smin3"
 4: "sgt_smin3" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "sgt_smin3" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "sgt_smin3" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "sgt_smin4"
 4: "sgt_smin4" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "sgt_smin4" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "sgt_smin4" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "use"

@@ -38,6 +38,7 @@
 4: "n3" has unsupported operation: llvm.call
 
 1: "t4"
+<<<<<<< HEAD
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.mlir.constant
@@ -63,10 +64,32 @@
 
 1: "n5"
 7: "n5" is unchanged by InstCombine
+=======
+4: "t4" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_of_constants_multi_use"
+4: "select_of_constants_multi_use" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "select_of_constants_multi_use" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "select_of_constants_multi_use" has unsupported operation: llvm.call
+
+1: "PR52261"
+4: "PR52261" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+1: "n4"
+4: "n4" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "n4" has unsupported operation: llvm.call
+
+1: "n5"
+4: "n5" has unsupported operation: builtin.unregistered: llvm.select
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "t6"
 4: "t6" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
 1: "t7"
 2: llvm.func
 2: llvm.mlir.constant
@@ -75,10 +98,21 @@
 2: builtin.unregistered: llvm.select
 2: llvm.sub
 2: llvm.return
+=======
+4: "t6" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "t7"
+4: "t7" has unsupported operation: builtin.unregistered: llvm.select
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "n8"
 4: "n8" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
+=======
+4: "n8" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "t9"
 2: llvm.func
 2: llvm.mlir.constant
@@ -223,7 +257,11 @@
 2: llvm.return
 
 1: "negate_xor_vec"
+<<<<<<< HEAD
 8: "negate_xor_vec" contains vectors which are unsupported
+=======
+"negate_xor_vec" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "negate_xor_use"
 4: "negate_xor_use" has unsupported operation: llvm.call
@@ -484,8 +522,15 @@
 1: "negate_select_of_op_vs_negated_op"
 4: "negate_select_of_op_vs_negated_op" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
 1: "dont_negate_ordinary_select"
 7: "dont_negate_ordinary_select" is unchanged by InstCombine
+=======
+4: "negate_select_of_op_vs_negated_op" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "dont_negate_ordinary_select"
+4: "dont_negate_ordinary_select" has unsupported operation: builtin.unregistered: llvm.select
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "negate_select_of_negation_poison"
 4: "negate_select_of_negation_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -496,6 +541,11 @@
 
 4: "negate_select_of_negation_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
 
+<<<<<<< HEAD
+=======
+4: "negate_select_of_negation_poison" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "negate_freeze"
 4: "negate_freeze" has unsupported operation: builtin.unregistered: llvm.freeze
 

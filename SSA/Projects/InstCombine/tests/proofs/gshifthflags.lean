@@ -13,10 +13,14 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gshifthflags_statements
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
                                                     
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def shl_add_nuw_before := [llvm|
 {
 ^0(%arg16 : i8, %arg17 : i8):
@@ -49,6 +53,7 @@ theorem shl_add_nuw_proof : shl_add_nuw_before ⊑ shl_add_nuw_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -56,6 +61,8 @@ theorem shl_add_nuw_proof : shl_add_nuw_before ⊑ shl_add_nuw_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN shl_add_nuw
   apply shl_add_nuw_thm
@@ -95,6 +102,7 @@ theorem shl_add_nuw_and_nsw_proof : shl_add_nuw_and_nsw_before ⊑ shl_add_nuw_a
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -102,6 +110,8 @@ theorem shl_add_nuw_and_nsw_proof : shl_add_nuw_and_nsw_before ⊑ shl_add_nuw_a
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN shl_add_nuw_and_nsw
   apply shl_add_nuw_and_nsw_thm
@@ -141,6 +151,7 @@ theorem shl_add_nsw_proof : shl_add_nsw_before ⊑ shl_add_nsw_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -148,6 +159,8 @@ theorem shl_add_nsw_proof : shl_add_nsw_before ⊑ shl_add_nsw_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN shl_add_nsw
   apply shl_add_nsw_thm

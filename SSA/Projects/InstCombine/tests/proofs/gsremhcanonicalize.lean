@@ -13,10 +13,14 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gsremhcanonicalize_statements
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
                                                     
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def test_srem_canonicalize_op0_before := [llvm|
 {
 ^0(%arg8 : i32, %arg9 : i32):
@@ -43,10 +47,14 @@ theorem test_srem_canonicalize_op0_proof : test_srem_canonicalize_op0_before ⊑
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN test_srem_canonicalize_op0
   apply test_srem_canonicalize_op0_thm

@@ -8,6 +8,7 @@ theorem test1_thm (x : BitVec 33) : x % 4096#33 = x &&& 4095#33 := sorry
 
 theorem test2_thm (x : BitVec 49) : x % 8388608#49 = x &&& 8388607#49 := sorry
 
+<<<<<<< HEAD
 theorem test3_thm (x : BitVec 1) (x_1 : BitVec 59) :
   (Option.bind
       (match some x with
@@ -22,3 +23,5 @@ theorem test3_thm (x : BitVec 1) (x_1 : BitVec 59) :
       | some { toFin := ⟨0, ⋯⟩ } => some 4095#59)
       fun y' => some (x_1 &&& y') := sorry
 
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)

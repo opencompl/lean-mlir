@@ -62,6 +62,11 @@
 
 4: "PR4641" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
+=======
+4: "PR4641" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "PR4641" has unsupported operation: llvm.call
 
 4: "PR4641" has unsupported operation: builtin.unregistered: llvm.unreachable

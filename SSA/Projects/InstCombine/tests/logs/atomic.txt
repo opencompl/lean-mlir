@@ -101,11 +101,21 @@
 
 4: "test15" has unsupported operation: llvm.load
 
+<<<<<<< HEAD
+=======
+4: "test15" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "test16"
 4: "test16" has unsupported operation: llvm.mlir.addressof
 
 4: "test16" has unsupported operation: llvm.mlir.addressof
 
+<<<<<<< HEAD
+=======
+4: "test16" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "test16" has unsupported operation: llvm.load
 
 1: "test17"
@@ -113,6 +123,11 @@
 
 4: "test17" has unsupported operation: llvm.mlir.addressof
 
+<<<<<<< HEAD
+=======
+4: "test17" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "test17" has unsupported operation: llvm.load
 
 1: "test22"

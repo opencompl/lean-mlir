@@ -3,3 +3,8 @@
 
 4: "\01_gfortrani_max_value" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "\01_gfortrani_max_value" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)

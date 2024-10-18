@@ -13,10 +13,14 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gsdivhcanonicalize_statements
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
                                                     
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def test_sdiv_canonicalize_op0_before := [llvm|
 {
 ^0(%arg15 : i32, %arg16 : i32):
@@ -45,6 +49,7 @@ theorem test_sdiv_canonicalize_op0_proof : test_sdiv_canonicalize_op0_before ⊑
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -52,6 +57,8 @@ theorem test_sdiv_canonicalize_op0_proof : test_sdiv_canonicalize_op0_before ⊑
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN test_sdiv_canonicalize_op0
   apply test_sdiv_canonicalize_op0_thm
@@ -87,6 +94,7 @@ theorem test_sdiv_canonicalize_op0_exact_proof : test_sdiv_canonicalize_op0_exac
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -94,6 +102,8 @@ theorem test_sdiv_canonicalize_op0_exact_proof : test_sdiv_canonicalize_op0_exac
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN test_sdiv_canonicalize_op0_exact
   apply test_sdiv_canonicalize_op0_exact_thm

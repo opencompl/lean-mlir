@@ -425,6 +425,7 @@ theorem test14a_proof : test14a_before ⊑ test14a_after := by
 
 
 
+<<<<<<< HEAD
 def test15_before := [llvm|
 {
 ^0(%arg24 : i1):
@@ -460,6 +461,8 @@ theorem test15_proof : test15_before ⊑ test15_after := by
 
 
 
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def shl_lshr_eq_amt_multi_use_before := [llvm|
 {
 ^0(%arg7 : i44):

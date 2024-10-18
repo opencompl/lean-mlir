@@ -12,7 +12,11 @@
 7: "test_srem_canonicalize_nonsw" is unchanged by InstCombine
 
 1: "test_srem_canonicalize_vec"
+<<<<<<< HEAD
 8: "test_srem_canonicalize_vec" contains vectors which are unsupported
+=======
+"test_srem_canonicalize_vec" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "test_srem_canonicalize_multiple_uses"
 7: "test_srem_canonicalize_multiple_uses" is unchanged by InstCombine

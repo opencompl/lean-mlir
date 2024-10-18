@@ -42,9 +42,19 @@
 4: "src_is_mask_xor_fail_notmask" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "src_is_mask_select"
+<<<<<<< HEAD
 4: "src_is_mask_select" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "src_is_mask_select_fail_wrong_pattern"
+=======
+4: "src_is_mask_select" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "src_is_mask_select" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "src_is_mask_select_fail_wrong_pattern"
+4: "src_is_mask_select_fail_wrong_pattern" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "src_is_mask_select_fail_wrong_pattern" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "src_is_mask_shl_lshr"
@@ -54,9 +64,19 @@
 4: "src_is_mask_shl_lshr_fail_not_allones" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "src_is_mask_lshr"
+<<<<<<< HEAD
 4: "src_is_mask_lshr" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "src_is_mask_ashr"
+=======
+4: "src_is_mask_lshr" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "src_is_mask_lshr" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "src_is_mask_ashr"
+4: "src_is_mask_ashr" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "src_is_mask_ashr" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "src_is_mask_p2_m1"
@@ -100,17 +120,37 @@
 1: "src_is_notmask_shl"
 4: "src_is_notmask_shl" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
 
+<<<<<<< HEAD
 4: "src_is_notmask_shl" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "src_is_notmask_x_xor_neg_x"
 4: "src_is_notmask_x_xor_neg_x" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "src_is_notmask_x_xor_neg_x_inv"
+=======
+4: "src_is_notmask_shl" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "src_is_notmask_shl" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "src_is_notmask_x_xor_neg_x"
+4: "src_is_notmask_x_xor_neg_x" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "src_is_notmask_x_xor_neg_x" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "src_is_notmask_x_xor_neg_x_inv"
+4: "src_is_notmask_x_xor_neg_x_inv" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "src_is_notmask_x_xor_neg_x_inv" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "src_is_notmask_shl_fail_multiuse_invert"
 4: "src_is_notmask_shl_fail_multiuse_invert" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
 
+<<<<<<< HEAD
+=======
+4: "src_is_notmask_shl_fail_multiuse_invert" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "src_is_notmask_shl_fail_multiuse_invert" has unsupported operation: llvm.call
 
 4: "src_is_notmask_shl_fail_multiuse_invert" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -152,6 +192,11 @@
 4: "src_is_mask_const_sge" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "src_x_and_mask_slt"
+<<<<<<< HEAD
+=======
+4: "src_x_and_mask_slt" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "src_x_and_mask_slt" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "src_x_and_mask_slt" has unsupported operation: builtin.unregistered: llvm.intr.assume
@@ -159,6 +204,11 @@
 4: "src_x_and_mask_slt" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "src_x_and_mask_sge"
+<<<<<<< HEAD
+=======
+4: "src_x_and_mask_sge" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "src_x_and_mask_sge" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "src_x_and_mask_sge" has unsupported operation: builtin.unregistered: llvm.intr.assume
@@ -166,14 +216,25 @@
 4: "src_x_and_mask_sge" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "src_x_and_mask_slt_fail_maybe_neg"
+<<<<<<< HEAD
 4: "src_x_and_mask_slt_fail_maybe_neg" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "src_x_and_mask_sge_fail_maybe_neg"
+=======
+4: "src_x_and_mask_slt_fail_maybe_neg" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "src_x_and_mask_slt_fail_maybe_neg" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "src_x_and_mask_sge_fail_maybe_neg"
+4: "src_x_and_mask_sge_fail_maybe_neg" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "src_x_and_mask_sge_fail_maybe_neg" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "src_x_and_nmask_eq"
 4: "src_x_and_nmask_eq" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 1: "src_x_and_nmask_ne"
 4: "src_x_and_nmask_ne" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -183,6 +244,25 @@
 1: "src_x_and_nmask_uge"
 4: "src_x_and_nmask_uge" has unsupported operation: builtin.unregistered: llvm.icmp
 
+=======
+4: "src_x_and_nmask_eq" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "src_x_and_nmask_ne"
+4: "src_x_and_nmask_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "src_x_and_nmask_ne" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "src_x_and_nmask_ult"
+4: "src_x_and_nmask_ult" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "src_x_and_nmask_ult" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "src_x_and_nmask_uge"
+4: "src_x_and_nmask_uge" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "src_x_and_nmask_uge" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "src_x_and_nmask_slt"
 4: "src_x_and_nmask_slt" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -190,20 +270,47 @@
 4: "src_x_and_nmask_sge" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "src_x_and_nmask_slt_fail_maybe_z"
+<<<<<<< HEAD
 4: "src_x_and_nmask_slt_fail_maybe_z" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "src_x_and_nmask_sge_fail_maybe_z"
 4: "src_x_and_nmask_sge_fail_maybe_z" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "src_x_or_mask_eq"
+=======
+4: "src_x_and_nmask_slt_fail_maybe_z" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "src_x_and_nmask_slt_fail_maybe_z" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "src_x_and_nmask_sge_fail_maybe_z"
+4: "src_x_and_nmask_sge_fail_maybe_z" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "src_x_and_nmask_sge_fail_maybe_z" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "src_x_or_mask_eq"
+4: "src_x_or_mask_eq" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "src_x_or_mask_eq" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "src_x_or_mask_eq" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
 4: "src_x_or_mask_eq" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "src_x_or_mask_ne"
+<<<<<<< HEAD
 4: "src_x_or_mask_ne" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "src_x_or_mask_ne_fail_multiuse"
+=======
+4: "src_x_or_mask_ne" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "src_x_or_mask_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "src_x_or_mask_ne_fail_multiuse"
+4: "src_x_or_mask_ne_fail_multiuse" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "src_x_or_mask_ne_fail_multiuse" has unsupported operation: llvm.call
 
 4: "src_x_or_mask_ne_fail_multiuse" has unsupported operation: builtin.unregistered: llvm.icmp

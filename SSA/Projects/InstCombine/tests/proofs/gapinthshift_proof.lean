@@ -22,6 +22,7 @@ theorem test14_thm (x : BitVec 35) : (x >>> 4 ||| 1234#35) <<< 4 = x &&& 3435971
 
 theorem test14a_thm (x : BitVec 79) : (x <<< 4 &&& 1234#79) >>> 4 = x &&& 77#79 := sorry
 
+<<<<<<< HEAD
 theorem test15_thm (x : BitVec 1) :
   (Option.bind
       (match some x with
@@ -34,6 +35,8 @@ theorem test15_thm (x : BitVec 1) :
     | some { toFin := ⟨1, ⋯⟩ } => some 12#45
     | some { toFin := ⟨0, ⋯⟩ } => some 4#45 := sorry
 
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 theorem shl_lshr_eq_amt_multi_use_thm (x : BitVec 44) : x <<< 33 + x <<< 33 >>> 33 = x <<< 33 ||| x &&& 2047#44 := sorry
 
 theorem test25_thm (x x_1 : BitVec 37) :

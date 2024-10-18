@@ -13,10 +13,14 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gdistribute_statements
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
                                                     
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def factorize_before := [llvm|
 {
 ^0(%arg9 : i32, %arg10 : i32):
@@ -44,6 +48,7 @@ theorem factorize_proof : factorize_before ⊑ factorize_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -51,6 +56,8 @@ theorem factorize_proof : factorize_before ⊑ factorize_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN factorize
   apply factorize_thm
@@ -85,6 +92,7 @@ theorem factorize2_proof : factorize2_before ⊑ factorize2_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -92,6 +100,8 @@ theorem factorize2_proof : factorize2_before ⊑ factorize2_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN factorize2
   apply factorize2_thm
@@ -126,6 +136,7 @@ theorem factorize3_proof : factorize3_before ⊑ factorize3_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -133,6 +144,8 @@ theorem factorize3_proof : factorize3_before ⊑ factorize3_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN factorize3
   apply factorize3_thm
@@ -168,6 +181,7 @@ theorem factorize4_proof : factorize4_before ⊑ factorize4_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -175,6 +189,8 @@ theorem factorize4_proof : factorize4_before ⊑ factorize4_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN factorize4
   apply factorize4_thm
@@ -210,6 +226,7 @@ theorem factorize5_proof : factorize5_before ⊑ factorize5_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -217,6 +234,8 @@ theorem factorize5_proof : factorize5_before ⊑ factorize5_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN factorize5
   apply factorize5_thm
@@ -253,6 +272,7 @@ theorem expand_proof : expand_before ⊑ expand_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -260,6 +280,8 @@ theorem expand_proof : expand_before ⊑ expand_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN expand
   apply expand_thm

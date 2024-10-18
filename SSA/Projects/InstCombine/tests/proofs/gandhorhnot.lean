@@ -13,10 +13,14 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gandhorhnot_statements
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
                                                     
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def and_to_xor1_before := [llvm|
 {
 ^0(%arg119 : i32, %arg120 : i32):
@@ -43,10 +47,14 @@ theorem and_to_xor1_proof : and_to_xor1_before ⊑ and_to_xor1_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN and_to_xor1
   apply and_to_xor1_thm
@@ -80,10 +88,14 @@ theorem and_to_xor2_proof : and_to_xor2_before ⊑ and_to_xor2_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN and_to_xor2
   apply and_to_xor2_thm
@@ -117,10 +129,14 @@ theorem and_to_xor3_proof : and_to_xor3_before ⊑ and_to_xor3_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN and_to_xor3
   apply and_to_xor3_thm
@@ -154,10 +170,14 @@ theorem and_to_xor4_proof : and_to_xor4_before ⊑ and_to_xor4_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN and_to_xor4
   apply and_to_xor4_thm
@@ -193,10 +213,14 @@ theorem or_to_nxor1_proof : or_to_nxor1_before ⊑ or_to_nxor1_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN or_to_nxor1
   apply or_to_nxor1_thm
@@ -232,10 +256,14 @@ theorem or_to_nxor2_proof : or_to_nxor2_before ⊑ or_to_nxor2_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN or_to_nxor2
   apply or_to_nxor2_thm
@@ -271,10 +299,14 @@ theorem or_to_nxor3_proof : or_to_nxor3_before ⊑ or_to_nxor3_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN or_to_nxor3
   apply or_to_nxor3_thm
@@ -310,10 +342,14 @@ theorem or_to_nxor4_proof : or_to_nxor4_before ⊑ or_to_nxor4_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN or_to_nxor4
   apply or_to_nxor4_thm
@@ -345,10 +381,14 @@ theorem xor_to_xor1_proof : xor_to_xor1_before ⊑ xor_to_xor1_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN xor_to_xor1
   apply xor_to_xor1_thm
@@ -380,10 +420,14 @@ theorem xor_to_xor2_proof : xor_to_xor2_before ⊑ xor_to_xor2_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN xor_to_xor2
   apply xor_to_xor2_thm
@@ -415,10 +459,14 @@ theorem xor_to_xor3_proof : xor_to_xor3_before ⊑ xor_to_xor3_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN xor_to_xor3
   apply xor_to_xor3_thm
@@ -450,10 +498,14 @@ theorem xor_to_xor4_proof : xor_to_xor4_before ⊑ xor_to_xor4_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN xor_to_xor4
   apply xor_to_xor4_thm
@@ -493,10 +545,14 @@ theorem PR32830_proof : PR32830_before ⊑ PR32830_after := by
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN PR32830
   apply PR32830_thm
@@ -530,10 +586,14 @@ theorem simplify_or_common_op_commute0_proof : simplify_or_common_op_commute0_be
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN simplify_or_common_op_commute0
   apply simplify_or_common_op_commute0_thm
@@ -567,10 +627,14 @@ theorem simplify_or_common_op_commute1_proof : simplify_or_common_op_commute1_be
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN simplify_or_common_op_commute1
   apply simplify_or_common_op_commute1_thm
@@ -606,10 +670,14 @@ theorem simplify_or_common_op_commute2_proof : simplify_or_common_op_commute2_be
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN simplify_or_common_op_commute2
   apply simplify_or_common_op_commute2_thm
@@ -643,10 +711,14 @@ theorem simplify_and_common_op_commute1_proof : simplify_and_common_op_commute1_
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN simplify_and_common_op_commute1
   apply simplify_and_common_op_commute1_thm
@@ -682,10 +754,14 @@ theorem simplify_and_common_op_commute2_proof : simplify_and_common_op_commute2_
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN simplify_and_common_op_commute2
   apply simplify_and_common_op_commute2_thm
@@ -718,10 +794,14 @@ theorem reduce_xor_common_op_commute0_proof : reduce_xor_common_op_commute0_befo
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN reduce_xor_common_op_commute0
   apply reduce_xor_common_op_commute0_thm
@@ -754,10 +834,14 @@ theorem reduce_xor_common_op_commute1_proof : reduce_xor_common_op_commute1_befo
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN reduce_xor_common_op_commute1
   apply reduce_xor_common_op_commute1_thm
@@ -793,10 +877,14 @@ theorem annihilate_xor_common_op_commute2_proof : annihilate_xor_common_op_commu
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN annihilate_xor_common_op_commute2
   apply annihilate_xor_common_op_commute2_thm

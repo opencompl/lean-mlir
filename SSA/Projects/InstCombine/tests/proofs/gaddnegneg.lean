@@ -13,10 +13,14 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gaddnegneg_statements
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
                                                     
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def l_before := [llvm|
 {
 ^0(%arg0 : i32, %arg1 : i32, %arg2 : i32, %arg3 : i32):
@@ -46,6 +50,7 @@ theorem l_proof : l_before ⊑ l_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -53,6 +58,8 @@ theorem l_proof : l_before ⊑ l_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN l
   apply l_thm

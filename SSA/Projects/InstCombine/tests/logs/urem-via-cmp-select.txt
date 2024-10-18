@@ -7,6 +7,11 @@
 
 4: "urem_assume" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "urem_assume" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "urem_assume_without_nuw"
 4: "urem_assume_without_nuw" has unsupported operation: builtin.unregistered: llvm.freeze
 
@@ -16,6 +21,11 @@
 
 4: "urem_assume_without_nuw" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "urem_assume_without_nuw" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "urem_assume_eq"
 4: "urem_assume_eq" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -36,6 +46,11 @@
 
 4: "urem_without_assume" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "urem_without_assume" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "urem_with_dominating_condition"
 4: "urem_with_dominating_condition" has unsupported operation: builtin.unregistered: llvm.freeze
 
@@ -45,6 +60,11 @@
 
 4: "urem_with_dominating_condition" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "urem_with_dominating_condition" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "urem_with_dominating_condition_false"
 4: "urem_with_dominating_condition_false" has unsupported operation: builtin.unregistered: llvm.freeze
 
@@ -54,6 +74,11 @@
 
 4: "urem_with_dominating_condition_false" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "urem_with_dominating_condition_false" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "urem_with_opposite_condition"
 4: "urem_with_opposite_condition" has unsupported operation: builtin.unregistered: llvm.icmp
 

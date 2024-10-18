@@ -13,10 +13,14 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gapinthand_statements
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
                                                     
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def test0_before := [llvm|
 {
 ^0(%arg13 : i39):
@@ -38,6 +42,7 @@ theorem test0_proof : test0_before ⊑ test0_after := by
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
@@ -45,6 +50,11 @@ theorem test0_proof : test0_before ⊑ test0_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+  try simp
+  simp_alive_case_bash
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN test0
   all_goals (try extract_goal ; sorry)
@@ -72,6 +82,7 @@ theorem test2_proof : test2_before ⊑ test2_after := by
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
@@ -79,6 +90,11 @@ theorem test2_proof : test2_before ⊑ test2_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+  try simp
+  simp_alive_case_bash
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN test2
   apply test2_thm
@@ -109,6 +125,7 @@ theorem test3_proof : test3_before ⊑ test3_after := by
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
@@ -116,6 +133,11 @@ theorem test3_proof : test3_before ⊑ test3_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+  try simp
+  simp_alive_case_bash
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN test3
   apply test3_thm
@@ -147,6 +169,7 @@ theorem test7_proof : test7_before ⊑ test7_after := by
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
@@ -154,6 +177,11 @@ theorem test7_proof : test7_before ⊑ test7_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+  try simp
+  simp_alive_case_bash
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN test7
   apply test7_thm
@@ -182,6 +210,7 @@ theorem test8_proof : test8_before ⊑ test8_after := by
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
@@ -189,6 +218,11 @@ theorem test8_proof : test8_before ⊑ test8_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+  try simp
+  simp_alive_case_bash
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN test8
   all_goals (try extract_goal ; sorry)
@@ -216,6 +250,7 @@ theorem test9_proof : test9_before ⊑ test9_after := by
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
@@ -223,6 +258,11 @@ theorem test9_proof : test9_before ⊑ test9_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+  try simp
+  simp_alive_case_bash
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN test9
   apply test9_thm
@@ -253,6 +293,7 @@ theorem test10_proof : test10_before ⊑ test10_after := by
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
@@ -260,6 +301,11 @@ theorem test10_proof : test10_before ⊑ test10_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+  try simp
+  simp_alive_case_bash
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN test10
   apply test10_thm
@@ -291,6 +337,7 @@ theorem test13_proof : test13_before ⊑ test13_after := by
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
@@ -298,6 +345,11 @@ theorem test13_proof : test13_before ⊑ test13_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+  try simp
+  simp_alive_case_bash
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN test13
   apply test13_thm

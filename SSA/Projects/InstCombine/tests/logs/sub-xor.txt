@@ -10,7 +10,11 @@
 2: llvm.return
 
 1: "low_mask_nsw_nuw_vec"
+<<<<<<< HEAD
 8: "low_mask_nsw_nuw_vec" contains vectors which are unsupported
+=======
+"low_mask_nsw_nuw_vec" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "arbitrary_mask_sub_i8"
 2: llvm.func
@@ -30,7 +34,11 @@
 7: "arbitrary_mask_sub_nuw_high_bit_dont_care_i8" is unchanged by InstCombine
 
 1: "arbitrary_mask_sub_v2i5"
+<<<<<<< HEAD
 8: "arbitrary_mask_sub_v2i5" contains vectors which are unsupported
+=======
+"arbitrary_mask_sub_v2i5" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "not_masked_sub_i8"
 2: llvm.func
@@ -56,7 +64,11 @@
 4: "xor_add_extra_use" has unsupported operation: llvm.call
 
 1: "xor_add_splat"
+<<<<<<< HEAD
 8: "xor_add_splat" contains vectors which are unsupported
+=======
+"xor_add_splat" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "xor_add_splat_undef"
 4: "xor_add_splat_undef" has unsupported operation: llvm.mlir.undef

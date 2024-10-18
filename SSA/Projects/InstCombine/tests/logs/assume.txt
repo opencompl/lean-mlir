@@ -270,6 +270,11 @@
 
 4: "unreachable_assume_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "unreachable_assume_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "unreachable_assume_logical" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 4: "unreachable_assume_logical" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -308,6 +313,11 @@
 
 4: "unreachable_assumes_and_store_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "unreachable_assumes_and_store_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "unreachable_assumes_and_store_logical" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 4: "unreachable_assumes_and_store_logical" has unsupported operation: builtin.unregistered: llvm.icmp

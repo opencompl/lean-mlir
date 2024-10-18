@@ -4,6 +4,7 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
 
 section grem_proof
+<<<<<<< HEAD
 theorem test3_thm (x : BitVec 32) : x % 8#32 = x &&& 7#32 := sorry
 
 theorem test4_thm (x : BitVec 1) (x_1 : BitVec 32) :
@@ -19,6 +20,11 @@ theorem test4_thm (x : BitVec 1) (x_1 : BitVec 32) :
       | some { toFin := ⟨1, ⋯⟩ } => some 0#32
       | some { toFin := ⟨0, ⋯⟩ } => some 7#32)
       fun y' => some (x_1 &&& y') := sorry
+=======
+theorem test1_thm (x : BitVec 32) : x - x.sdiv 1#32 = 0#32 := sorry
+
+theorem test3_thm (x : BitVec 32) : x % 8#32 = x &&& 7#32 := sorry
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 theorem test7_thm (x : BitVec 32) : x * 8#32 - (x * 8#32).sdiv 4#32 * 4#32 = 0#32 := sorry
 
@@ -31,8 +37,12 @@ theorem test11_thm (x : BitVec 32) : (x &&& 4294967294#32) * 2#32 % 4#32 = 0#32 
 theorem test12_thm (x : BitVec 32) : (x &&& 4294967292#32) - (x &&& 4294967292#32).sdiv 2#32 * 2#32 = 0#32 := sorry
 
 theorem test13_thm (x : BitVec 32) :
+<<<<<<< HEAD
   Option.map (fun div => x - div * x)
       (if x = 0#32 ∨ x = intMin 32 ∧ x = 4294967295#32 then none else some (if x = 0#32 then 0#32 else 1#32)) ⊑
+=======
+  Option.map (fun div => x - div * x) (if x = 0#32 ∨ x = intMin 32 ∧ x = 4294967295#32 then none else some (x.sdiv x)) ⊑
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
     some 0#32 := sorry
 
 theorem test16_thm (x x_1 : BitVec 32) :
@@ -95,6 +105,7 @@ theorem test22_thm (x : BitVec 32) :
   (x &&& 2147483647#32) - (x &&& 2147483647#32).sdiv 2147483647#32 * 2147483647#32 =
     (x &&& 2147483647#32) % 2147483647#32 := sorry
 
+<<<<<<< HEAD
 theorem srem_constant_dividend_select_of_constants_divisor_thm (x : BitVec 1) :
   (Option.bind
       (match some x with
@@ -141,3 +152,5 @@ theorem urem_constant_dividend_select_of_constants_divisor_0_arm_thm (x : BitVec
       fun y' => if y' = 0#32 then none else some (42#32 % y')) ⊑
     some 6#32 := sorry
 
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)

@@ -13,10 +13,14 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gnothadd_statements
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
                                                     
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def basic_before := [llvm|
 {
 ^0(%arg25 : i8, %arg26 : i8):
@@ -44,6 +48,7 @@ theorem basic_proof : basic_before ⊑ basic_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -51,6 +56,8 @@ theorem basic_proof : basic_before ⊑ basic_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN basic
   apply basic_thm
@@ -85,6 +92,7 @@ theorem basic_com_add_proof : basic_com_add_before ⊑ basic_com_add_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -92,6 +100,8 @@ theorem basic_com_add_proof : basic_com_add_before ⊑ basic_com_add_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN basic_com_add
   apply basic_com_add_thm
@@ -126,6 +136,7 @@ theorem basic_preserve_nsw_proof : basic_preserve_nsw_before ⊑ basic_preserve_
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -133,6 +144,8 @@ theorem basic_preserve_nsw_proof : basic_preserve_nsw_before ⊑ basic_preserve_
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN basic_preserve_nsw
   apply basic_preserve_nsw_thm
@@ -167,6 +180,7 @@ theorem basic_preserve_nuw_proof : basic_preserve_nuw_before ⊑ basic_preserve_
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -174,6 +188,8 @@ theorem basic_preserve_nuw_proof : basic_preserve_nuw_before ⊑ basic_preserve_
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN basic_preserve_nuw
   apply basic_preserve_nuw_thm
@@ -208,6 +224,7 @@ theorem basic_preserve_nuw_nsw_proof : basic_preserve_nuw_nsw_before ⊑ basic_p
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -215,6 +232,8 @@ theorem basic_preserve_nuw_nsw_proof : basic_preserve_nuw_nsw_before ⊑ basic_p
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN basic_preserve_nuw_nsw
   apply basic_preserve_nuw_nsw_thm

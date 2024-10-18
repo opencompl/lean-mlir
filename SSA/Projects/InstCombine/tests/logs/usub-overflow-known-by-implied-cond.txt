@@ -82,6 +82,11 @@
 1: "test9_logical"
 4: "test9_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "test9_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "test9_logical" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test9_logical" has unsupported operation: builtin.unregistered: llvm.cond_br
@@ -102,6 +107,11 @@
 1: "test10_logical"
 4: "test10_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "test10_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "test10_logical" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test10_logical" has unsupported operation: builtin.unregistered: llvm.intr.usub.with.overflow
@@ -128,6 +138,11 @@
 1: "test11_logical"
 4: "test11_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "test11_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "test11_logical" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test11_logical" has unsupported operation: builtin.unregistered: llvm.intr.usub.with.overflow
@@ -154,6 +169,11 @@
 1: "test12_logical"
 4: "test12_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "test12_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "test12_logical" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test12_logical" has unsupported operation: builtin.unregistered: llvm.intr.usub.with.overflow

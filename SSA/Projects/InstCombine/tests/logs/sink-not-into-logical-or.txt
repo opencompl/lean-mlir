@@ -6,6 +6,7 @@
 
 4: "t0" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 1: "n1"
 4: "n1" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -14,6 +15,22 @@
 
 1: "n3"
 7: "n3" is unchanged by InstCombine
+=======
+4: "t0" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "n1"
+4: "n1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "n1" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "n2"
+4: "n2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "n2" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "n3"
+4: "n3" has unsupported operation: builtin.unregistered: llvm.select
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "n4"
 4: "n4" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -22,6 +39,11 @@
 
 4: "n4" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
+=======
+4: "n4" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "n5"
 4: "n5" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -29,6 +51,11 @@
 
 4: "n5" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
+=======
+4: "n5" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "n6"
 4: "n6" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -38,6 +65,11 @@
 
 4: "n6" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
+=======
+4: "n6" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "t7"
 4: "t7" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -45,6 +77,11 @@
 
 4: "t7" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "t7" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "t8"
 4: "t8" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -52,6 +89,11 @@
 
 4: "t8" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
+=======
+4: "t8" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "t9"
 4: "t9" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -61,11 +103,21 @@
 
 4: "t9" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
+=======
+4: "t9" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "n10"
 4: "n10" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "n10" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "n10" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "n10" has unsupported operation: llvm.call
 
 1: "t11"
@@ -73,5 +125,12 @@
 
 4: "t11" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "t11" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "t11" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "t11" has unsupported operation: llvm.call
 

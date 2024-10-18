@@ -164,6 +164,11 @@
 
 4: "fold16" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "fold16" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "fold16" has unsupported operation: builtin.unregistered: llvm.fadd
 
 1: "fneg1"

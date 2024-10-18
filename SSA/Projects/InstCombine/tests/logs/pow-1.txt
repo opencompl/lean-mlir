@@ -11,7 +11,11 @@
 4: "test_simplify1_noerrno" has unsupported operation after optimization: llvm.call
 
 1: "test_simplify1v"
+<<<<<<< HEAD
 8: "test_simplify1v" contains vectors which are unsupported
+=======
+"test_simplify1v" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "test_simplify2"
 4: "test_simplify2" has unsupported operation after optimization: llvm.call
@@ -20,7 +24,11 @@
 4: "test_simplify2_noerrno" has unsupported operation after optimization: llvm.call
 
 1: "test_simplify2v"
+<<<<<<< HEAD
 8: "test_simplify2v" contains vectors which are unsupported
+=======
+"test_simplify2v" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "test_simplify3"
 4: "test_simplify3" has unsupported operation: llvm.call
@@ -72,7 +80,11 @@
 4: "test_simplify5_noerrno" has unsupported operation after optimization: llvm.call
 
 1: "test_simplify5v"
+<<<<<<< HEAD
 8: "test_simplify5v" contains vectors which are unsupported
+=======
+"test_simplify5v" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "test_simplify6"
 4: "test_simplify6" has unsupported operation after optimization: llvm.call
@@ -81,7 +93,11 @@
 4: "test_simplify6_noerrno" has unsupported operation after optimization: llvm.call
 
 1: "test_simplify6v"
+<<<<<<< HEAD
 8: "test_simplify6v" contains vectors which are unsupported
+=======
+"test_simplify6v" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "powf_libcall_half_ninf"
 4: "powf_libcall_half_ninf" has unsupported operation: llvm.call
@@ -141,6 +157,11 @@
 
 4: "pow_libcall_half_no_FMF_noerrno" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+<<<<<<< HEAD
+=======
+4: "pow_libcall_half_no_FMF_noerrno" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "test_simplify9"
 4: "test_simplify9" has unsupported operation after optimization: builtin.unregistered: llvm.intr.pow
 
@@ -154,7 +175,11 @@
 4: "test_simplify11_noerrno" has unsupported operation after optimization: llvm.call
 
 1: "test_simplify11v"
+<<<<<<< HEAD
 8: "test_simplify11v" contains vectors which are unsupported
+=======
+"test_simplify11v" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "test_simplify12"
 4: "test_simplify12" has unsupported operation after optimization: llvm.call
@@ -163,7 +188,11 @@
 4: "test_simplify12_noerrno" has unsupported operation after optimization: llvm.call
 
 1: "test_simplify12v"
+<<<<<<< HEAD
 8: "test_simplify12v" contains vectors which are unsupported
+=======
+"test_simplify12v" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "pow2_strict"
 4: "pow2_strict" has unsupported operation: builtin.unregistered: llvm.fmul
@@ -214,6 +243,11 @@
 
 4: "pow_intrinsic_half_no_FMF" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+<<<<<<< HEAD
+=======
+4: "pow_intrinsic_half_no_FMF" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "test_simplify18"
 4: "test_simplify18" has unsupported operation: llvm.call
 

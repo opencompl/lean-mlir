@@ -141,3 +141,8 @@
 1: "scalar_select_of_vectors"
 4: "scalar_select_of_vectors" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "scalar_select_of_vectors" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)

@@ -28,6 +28,11 @@
 1: "positive_with_extra_and_logical"
 4: "positive_with_extra_and_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "positive_with_extra_and_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "positive_vec_splat"
 4: "positive_vec_splat" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -106,6 +111,11 @@
 
 4: "positive_different_trunc_both_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "positive_different_trunc_both_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "use32"
 5: "use32" is empty
 
@@ -205,6 +215,11 @@
 
 4: "oneuse_shl_ashr_logical" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
+=======
+4: "oneuse_shl_ashr_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "oneuse_trunc_sext"
 4: "oneuse_trunc_sext" has unsupported operation: builtin.unregistered: llvm.trunc
 
@@ -247,6 +262,11 @@
 
 4: "oneuse_trunc_sext_logical" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
+=======
+4: "oneuse_trunc_sext_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "negative_not_arg"
 4: "negative_not_arg" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -257,6 +277,11 @@
 
 4: "negative_not_arg_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "negative_not_arg_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "negative_trunc_not_arg"
 4: "negative_trunc_not_arg" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -267,6 +292,11 @@
 
 4: "negative_trunc_not_arg_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "negative_trunc_not_arg_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "positive_with_mask_not_arg"
 4: "positive_with_mask_not_arg" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -277,6 +307,11 @@
 
 4: "positive_with_mask_not_arg_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "positive_with_mask_not_arg_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "negative_with_nonuniform_bad_mask"
 4: "negative_with_nonuniform_bad_mask" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -317,6 +352,11 @@
 
 4: "negative_not_less_than_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "negative_not_less_than_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "negative_not_power_of_two"
 4: "negative_not_power_of_two" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -349,3 +389,8 @@
 
 4: "bad_trunc_stc_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "bad_trunc_stc_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)

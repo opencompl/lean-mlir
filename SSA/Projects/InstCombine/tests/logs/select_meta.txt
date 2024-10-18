@@ -1,12 +1,29 @@
 1: "foo"
 4: "foo" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 1: "shrink_select"
 4: "shrink_select" has unsupported operation: builtin.unregistered: llvm.trunc
 
 1: "min_max_bitcast"
 4: "min_max_bitcast" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+=======
+4: "foo" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "shrink_select"
+4: "shrink_select" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "shrink_select" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "min_max_bitcast"
+4: "min_max_bitcast" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "min_max_bitcast" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "min_max_bitcast" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "min_max_bitcast" has unsupported operation: llvm.store
 
 4: "min_max_bitcast" has unsupported operation: llvm.store
@@ -16,12 +33,22 @@
 1: "foo2"
 4: "foo2" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "foo2" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "test43"
 4: "test43" has unsupported operation: builtin.unregistered: llvm.intr.smax
 
 4: "test43" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "scalar_select_of_vectors_sext"
+<<<<<<< HEAD
+=======
+4: "scalar_select_of_vectors_sext" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "scalar_select_of_vectors_sext" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "t7"
@@ -72,6 +99,7 @@
 4: "umax2" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
 1: "not_cond"
+<<<<<<< HEAD
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.xor
@@ -109,5 +137,35 @@
 4: "select_fmul" has unsupported operation: builtin.unregistered: llvm.fmul
 
 1: "select_fdiv"
+=======
+4: "not_cond" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "not_cond_vec"
+4: "not_cond_vec" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "not_cond_vec_poison"
+4: "not_cond_vec_poison" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_add"
+4: "select_add" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_or"
+4: "select_or" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_sub"
+4: "select_sub" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_ashr"
+4: "select_ashr" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_fmul"
+4: "select_fmul" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "select_fmul" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "select_fdiv"
+4: "select_fdiv" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "select_fdiv" has unsupported operation: builtin.unregistered: llvm.fdiv
 

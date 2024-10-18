@@ -13,10 +13,14 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section ghoisthnegationhouthofhbiashcalculation_statements
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
                                                     
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def t0_before := [llvm|
 {
 ^0(%arg18 : i8, %arg19 : i8):
@@ -48,6 +52,7 @@ theorem t0_proof : t0_before ⊑ t0_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -55,6 +60,8 @@ theorem t0_proof : t0_before ⊑ t0_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN t0
   apply t0_thm
@@ -91,6 +98,7 @@ theorem n7_proof : n7_before ⊑ n7_after := by
   try simp
   simp_alive_case_bash
   try intros
+<<<<<<< HEAD
 =======
 =======
   try simp
@@ -98,6 +106,8 @@ theorem n7_proof : n7_before ⊑ n7_after := by
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN n7
   apply n7_thm

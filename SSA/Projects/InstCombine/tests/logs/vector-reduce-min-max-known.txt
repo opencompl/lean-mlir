@@ -9,7 +9,11 @@
 4: "vec_reduce_umax_non_zero_fail" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "vec_reduce_umin_non_zero"
+<<<<<<< HEAD
 8: "vec_reduce_umin_non_zero" contains vectors which are unsupported
+=======
+"vec_reduce_umin_non_zero" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "vec_reduce_umin_non_zero_fail"
 4: "vec_reduce_umin_non_zero_fail" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.umin
@@ -17,7 +21,11 @@
 4: "vec_reduce_umin_non_zero_fail" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "vec_reduce_smax_non_zero0"
+<<<<<<< HEAD
 8: "vec_reduce_smax_non_zero0" contains vectors which are unsupported
+=======
+"vec_reduce_smax_non_zero0" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "vec_reduce_smax_non_zero1"
 4: "vec_reduce_smax_non_zero1" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.smax
@@ -30,7 +38,11 @@
 4: "vec_reduce_smax_non_zero_fail" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "vec_reduce_smin_non_zero0"
+<<<<<<< HEAD
 8: "vec_reduce_smin_non_zero0" contains vectors which are unsupported
+=======
+"vec_reduce_smin_non_zero0" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "vec_reduce_smin_non_zero1"
 4: "vec_reduce_smin_non_zero1" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.smin
@@ -43,7 +55,11 @@
 4: "vec_reduce_smin_non_zero_fail" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "vec_reduce_umax_known0"
+<<<<<<< HEAD
 8: "vec_reduce_umax_known0" contains vectors which are unsupported
+=======
+"vec_reduce_umax_known0" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "vec_reduce_umax_known1"
 4: "vec_reduce_umax_known1" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.umax
@@ -55,7 +71,11 @@
 4: "vec_reduce_umax_known_fail1" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.umax
 
 1: "vec_reduce_umin_known0"
+<<<<<<< HEAD
 8: "vec_reduce_umin_known0" contains vectors which are unsupported
+=======
+"vec_reduce_umin_known0" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "vec_reduce_umin_known1"
 4: "vec_reduce_umin_known1" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.umin
@@ -67,13 +87,21 @@
 4: "vec_reduce_umin_known_fail1" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.umin
 
 1: "vec_reduce_smax_known"
+<<<<<<< HEAD
 8: "vec_reduce_smax_known" contains vectors which are unsupported
+=======
+"vec_reduce_smax_known" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "vec_reduce_smax_known_fail"
 4: "vec_reduce_smax_known_fail" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.umax
 
 1: "vec_reduce_smin_known"
+<<<<<<< HEAD
 8: "vec_reduce_smin_known" contains vectors which are unsupported
+=======
+"vec_reduce_smin_known" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "vec_reduce_smin_known_fail"
 4: "vec_reduce_smin_known_fail" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.smin

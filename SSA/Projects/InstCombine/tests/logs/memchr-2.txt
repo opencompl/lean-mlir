@@ -34,6 +34,11 @@
 
 4: "fold_a12345_3_n" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "fold_a12345_3_n" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "fold_a12345_259_n"
 4: "fold_a12345_259_n" has unsupported operation: llvm.mlir.zero
 
@@ -43,6 +48,11 @@
 
 4: "fold_a12345_259_n" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "fold_a12345_259_n" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "call_ax_1_n"
 4: "call_ax_1_n" has unsupported operation: llvm.mlir.addressof
 

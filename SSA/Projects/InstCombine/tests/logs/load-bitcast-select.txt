@@ -23,14 +23,29 @@
 
 4: "_Z3foov" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+<<<<<<< HEAD
+=======
+4: "_Z3foov" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "_Z3foov" has unsupported operation: llvm.store
 
 4: "_Z3foov" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "store_bitcasted_load"
+<<<<<<< HEAD
 4: "store_bitcasted_load" has unsupported operation: llvm.load
 
 1: "bitcasted_store"
+=======
+4: "store_bitcasted_load" has unsupported operation: builtin.unregistered: llvm.select
+
+4: "store_bitcasted_load" has unsupported operation: llvm.load
+
+1: "bitcasted_store"
+4: "bitcasted_store" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "bitcasted_store" has unsupported operation: llvm.load
 
 4: "bitcasted_store" has unsupported operation: llvm.store
@@ -44,6 +59,11 @@
 
 4: "bitcasted_minmax_with_select_of_pointers" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+<<<<<<< HEAD
+=======
+4: "bitcasted_minmax_with_select_of_pointers" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "bitcasted_minmax_with_select_of_pointers" has unsupported operation: llvm.store
 
 4: "bitcasted_minmax_with_select_of_pointers" has unsupported operation: llvm.return

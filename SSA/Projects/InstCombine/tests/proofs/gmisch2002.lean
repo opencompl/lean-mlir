@@ -13,10 +13,14 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gmisch2002_statements
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
                                                     
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 def missed_const_prop_2002h12h05_before := [llvm|
 {
 ^0(%arg0 : i32):
@@ -45,10 +49,14 @@ theorem missed_const_prop_2002h12h05_proof : missed_const_prop_2002h12h05_before
   try simp
   simp_alive_case_bash
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+  try intros
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
   try simp
   ---BEGIN missed_const_prop_2002h12h05
   all_goals (try extract_goal ; sorry)

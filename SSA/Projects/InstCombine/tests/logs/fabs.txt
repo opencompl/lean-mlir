@@ -56,6 +56,7 @@
 1: "fabs_select_constant_negative_positive"
 4: "fabs_select_constant_negative_positive" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 1: "fabs_select_constant_positive_negative"
 4: "fabs_select_constant_positive_negative" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -65,6 +66,25 @@
 1: "fabs_select_constant_neg0"
 4: "fabs_select_constant_neg0" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+=======
+4: "fabs_select_constant_negative_positive" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "fabs_select_constant_positive_negative"
+4: "fabs_select_constant_positive_negative" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "fabs_select_constant_positive_negative" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "fabs_select_constant_negative_negative"
+4: "fabs_select_constant_negative_negative" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "fabs_select_constant_negative_negative" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "fabs_select_constant_neg0"
+4: "fabs_select_constant_neg0" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "fabs_select_constant_neg0" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "fabs_select_constant_neg0" has unsupported operation after optimization: builtin.unregistered: llvm.intr.fabs
 
 1: "fabs_select_var_constant_negative"
@@ -72,6 +92,11 @@
 
 4: "fabs_select_var_constant_negative" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
+<<<<<<< HEAD
+=======
+4: "fabs_select_var_constant_negative" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "square_fma_fabs_intrinsic_f32"
 4: "square_fma_fabs_intrinsic_f32" has unsupported operation: builtin.unregistered: llvm.intr.fma
 
@@ -114,6 +139,11 @@
 
 4: "select_fcmp_nnan_olt_zero" has unsupported operation: builtin.unregistered: llvm.fsub
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_olt_zero" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fcmp_nnan_ole_negzero"
 4: "select_fcmp_nnan_ole_negzero" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
@@ -128,6 +158,11 @@
 
 4: "select_nsz_fcmp_ogt_fneg" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+<<<<<<< HEAD
+=======
+4: "select_nsz_fcmp_ogt_fneg" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_nsz_nnan_fcmp_ogt_fneg"
 4: "select_nsz_nnan_fcmp_ogt_fneg" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
@@ -151,11 +186,21 @@
 
 4: "select_fcmp_nnan_oge_negzero" has unsupported operation: builtin.unregistered: llvm.fsub
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_oge_negzero" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_nsz_fcmp_olt_zero_unary_fneg"
 4: "select_nsz_fcmp_olt_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_nsz_fcmp_olt_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_nsz_fcmp_olt_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_nsz_nnan_fcmp_olt_zero_unary_fneg"
 4: "select_nsz_nnan_fcmp_olt_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
@@ -164,6 +209,11 @@
 
 4: "select_fcmp_nnan_nsz_olt_zero" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_nsz_olt_zero" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_nnan_nsz_fcmp_nnan_nsz_olt_zero"
 4: "select_nnan_nsz_fcmp_nnan_nsz_olt_zero" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
@@ -172,21 +222,41 @@
 
 4: "select_fcmp_nnan_nsz_ult_zero" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_nsz_ult_zero" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fcmp_nnan_nsz_olt_zero_unary_fneg"
 4: "select_fcmp_nnan_nsz_olt_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fcmp_nnan_nsz_olt_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_nsz_olt_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fcmp_nnan_nsz_ult_zero_unary_fneg"
 4: "select_fcmp_nnan_nsz_ult_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fcmp_nnan_nsz_ult_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_nsz_ult_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fcmp_nnan_nsz_olt_negzero"
 4: "select_fcmp_nnan_nsz_olt_negzero" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fcmp_nnan_nsz_olt_negzero" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_nsz_olt_negzero" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_nnan_ninf_nsz_fcmp_nnan_nsz_olt_negzero"
 4: "select_nnan_ninf_nsz_fcmp_nnan_nsz_olt_negzero" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
@@ -195,21 +265,41 @@
 
 4: "select_fcmp_nnan_nsz_ult_negzero" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_nsz_ult_negzero" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fcmp_nnan_nsz_olt_negzero_unary_fneg"
 4: "select_fcmp_nnan_nsz_olt_negzero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fcmp_nnan_nsz_olt_negzero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_nsz_olt_negzero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fcmp_nnan_nsz_ult_negzero_unary_fneg"
 4: "select_fcmp_nnan_nsz_ult_negzero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fcmp_nnan_nsz_ult_negzero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_nsz_ult_negzero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fcmp_nnan_nsz_ole_zero"
 4: "select_fcmp_nnan_nsz_ole_zero" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fcmp_nnan_nsz_ole_zero" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_nsz_ole_zero" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fast_fcmp_nnan_nsz_ole_zero"
 4: "select_fast_fcmp_nnan_nsz_ole_zero" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
@@ -218,21 +308,41 @@
 
 4: "select_fcmp_nnan_nsz_ule_zero" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_nsz_ule_zero" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fcmp_nnan_nsz_ole_zero_unary_fneg"
 4: "select_fcmp_nnan_nsz_ole_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fcmp_nnan_nsz_ole_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_nsz_ole_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fcmp_nnan_nsz_ule_zero_unary_fneg"
 4: "select_fcmp_nnan_nsz_ule_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fcmp_nnan_nsz_ule_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_nsz_ule_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fcmp_nnan_nsz_ole_negzero"
 4: "select_fcmp_nnan_nsz_ole_negzero" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fcmp_nnan_nsz_ole_negzero" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_nsz_ole_negzero" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_nnan_nsz_fcmp_nnan_nsz_ole_negzero"
 4: "select_nnan_nsz_fcmp_nnan_nsz_ole_negzero" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
@@ -241,21 +351,41 @@
 
 4: "select_fcmp_nnan_nsz_ule_negzero" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_nsz_ule_negzero" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fcmp_nnan_nsz_ole_negzero_unary_fneg"
 4: "select_fcmp_nnan_nsz_ole_negzero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fcmp_nnan_nsz_ole_negzero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_nsz_ole_negzero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fcmp_nnan_nsz_ule_negzero_unary_fneg"
 4: "select_fcmp_nnan_nsz_ule_negzero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fcmp_nnan_nsz_ule_negzero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_nsz_ule_negzero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_nsz_fcmp_ogt_zero_unary_fneg"
 4: "select_nsz_fcmp_ogt_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_nsz_fcmp_ogt_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_nsz_fcmp_ogt_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_nsz_nnan_fcmp_ogt_zero_unary_fneg"
 4: "select_nsz_nnan_fcmp_ogt_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
@@ -264,71 +394,141 @@
 
 4: "select_fcmp_nnan_nsz_ogt_zero" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_nsz_ogt_zero" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fcmp_nnan_nsz_ugt_zero"
 4: "select_fcmp_nnan_nsz_ugt_zero" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fcmp_nnan_nsz_ugt_zero" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_nsz_ugt_zero" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fcmp_nnan_nsz_ogt_zero_unary_fneg"
 4: "select_fcmp_nnan_nsz_ogt_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fcmp_nnan_nsz_ogt_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_nsz_ogt_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fcmp_nnan_nsz_ugt_zero_unary_fneg"
 4: "select_fcmp_nnan_nsz_ugt_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fcmp_nnan_nsz_ugt_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_nsz_ugt_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fcmp_nnan_nsz_ogt_negzero"
 4: "select_fcmp_nnan_nsz_ogt_negzero" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fcmp_nnan_nsz_ogt_negzero" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_nsz_ogt_negzero" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fcmp_nnan_nsz_ugt_negzero"
 4: "select_fcmp_nnan_nsz_ugt_negzero" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fcmp_nnan_nsz_ugt_negzero" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_nsz_ugt_negzero" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fcmp_nnan_nsz_oge_zero"
 4: "select_fcmp_nnan_nsz_oge_zero" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fcmp_nnan_nsz_oge_zero" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_nsz_oge_zero" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fcmp_nnan_nsz_uge_zero"
 4: "select_fcmp_nnan_nsz_uge_zero" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fcmp_nnan_nsz_uge_zero" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_nsz_uge_zero" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fcmp_nnan_nsz_oge_zero_unary_fneg"
 4: "select_fcmp_nnan_nsz_oge_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fcmp_nnan_nsz_oge_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_nsz_oge_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fcmp_nnan_nsz_uge_zero_unary_fneg"
 4: "select_fcmp_nnan_nsz_uge_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fcmp_nnan_nsz_uge_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_nsz_uge_zero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fcmp_nnan_nsz_oge_negzero"
 4: "select_fcmp_nnan_nsz_oge_negzero" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fcmp_nnan_nsz_oge_negzero" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_nsz_oge_negzero" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fcmp_nnan_nsz_uge_negzero"
 4: "select_fcmp_nnan_nsz_uge_negzero" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fcmp_nnan_nsz_uge_negzero" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_nsz_uge_negzero" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fcmp_nnan_nsz_oge_negzero_unary_fneg"
 4: "select_fcmp_nnan_nsz_oge_negzero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fcmp_nnan_nsz_oge_negzero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_nsz_oge_negzero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fcmp_nnan_nsz_uge_negzero_unary_fneg"
 4: "select_fcmp_nnan_nsz_uge_negzero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_fcmp_nnan_nsz_uge_negzero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fcmp_nnan_nsz_uge_negzero_unary_fneg" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "select_fneg"
 4: "select_fneg" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
@@ -342,6 +542,11 @@
 1: "select_fneg_use2"
 4: "select_fneg_use2" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "select_fneg_use2" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "select_fneg_use2" has unsupported operation: llvm.call
 
 4: "select_fneg_use2" has unsupported operation: builtin.unregistered: llvm.intr.fabs
@@ -413,6 +618,11 @@
 
 4: "test_select_nneg_negx_x_multiuse4" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
+=======
+4: "test_select_nneg_negx_x_multiuse4" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "test_select_neg_negx_x_mismatched1"
 4: "test_select_neg_negx_x_mismatched1" has unsupported operation: builtin.unregistered: llvm.bitcast
 
@@ -420,6 +630,11 @@
 
 4: "test_select_neg_negx_x_mismatched1" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "test_select_neg_negx_x_mismatched1" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "test_select_neg_negx_x_mismatched2"
 4: "test_select_neg_negx_x_mismatched2" has unsupported operation: builtin.unregistered: llvm.bitcast
 
@@ -427,6 +642,11 @@
 
 4: "test_select_neg_negx_x_mismatched2" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "test_select_neg_negx_x_mismatched2" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "test_select_neg_negx_x_mismatched3"
 4: "test_select_neg_negx_x_mismatched3" has unsupported operation: builtin.unregistered: llvm.bitcast
 
@@ -434,6 +654,11 @@
 
 4: "test_select_neg_negx_x_mismatched3" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "test_select_neg_negx_x_mismatched3" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "test_select_neg_negx_x_wrong_type"
 4: "test_select_neg_negx_x_wrong_type" has unsupported operation: builtin.unregistered: llvm.bitcast
 
@@ -441,3 +666,8 @@
 
 4: "test_select_neg_negx_x_wrong_type" has unsupported operation: builtin.unregistered: llvm.fneg
 
+<<<<<<< HEAD
+=======
+4: "test_select_neg_negx_x_wrong_type" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)

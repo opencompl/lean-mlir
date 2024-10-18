@@ -54,7 +54,11 @@
 4: "sgt_to_ugt_bitcasted_splat" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "negative_simplify_splat"
+<<<<<<< HEAD
 8: "negative_simplify_splat" contains vectors which are unsupported
+=======
+"negative_simplify_splat" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "slt_zero_eq_i1"
 4: "slt_zero_eq_i1" has unsupported operation: builtin.unregistered: llvm.icmp

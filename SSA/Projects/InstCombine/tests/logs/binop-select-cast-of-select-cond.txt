@@ -1,4 +1,5 @@
 1: "add_select_zext"
+<<<<<<< HEAD
 4: "add_select_zext" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 
 1: "add_select_sext"
@@ -26,11 +27,47 @@
 4: "mul_select_sext" has unsupported operation after optimization: builtin.unregistered: llvm.sext
 
 1: "select_zext_different_condition"
+=======
+4: "add_select_zext" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "add_select_sext"
+4: "add_select_sext" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "add_select_not_zext"
+4: "add_select_not_zext" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "add_select_not_sext"
+4: "add_select_not_sext" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "sub_select_sext"
+4: "sub_select_sext" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "sub_select_not_zext"
+4: "sub_select_not_zext" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "sub_select_not_sext"
+4: "sub_select_not_sext" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "mul_select_zext"
+4: "mul_select_zext" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "mul_select_sext"
+4: "mul_select_sext" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_zext_different_condition"
+4: "select_zext_different_condition" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "select_zext_different_condition" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "vector_test"
 4: "vector_test" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
+<<<<<<< HEAD
+=======
+4: "vector_test" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "vector_test" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "vector_test" has unsupported operation: builtin.unregistered: llvm.insertelement
@@ -38,6 +75,7 @@
 4: "vector_test" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 1: "multiuse_add"
+<<<<<<< HEAD
 4: "multiuse_add" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 
 1: "multiuse_select"
@@ -54,6 +92,24 @@
 
 1: "vectorized_add"
 8: "vectorized_add" contains vectors which are unsupported
+=======
+4: "multiuse_add" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "multiuse_select"
+4: "multiuse_select" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "select_non_const_sides"
+4: "select_non_const_sides" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "sub_select_sext_op_swapped_non_const_args"
+4: "sub_select_sext_op_swapped_non_const_args" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "sub_select_zext_op_swapped_non_const_args"
+4: "sub_select_zext_op_swapped_non_const_args" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "vectorized_add"
+4: "vectorized_add" has unsupported operation: builtin.unregistered: llvm.select
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "pr64669"
 4: "pr64669" has unsupported operation: llvm.mlir.addressof
@@ -64,3 +120,8 @@
 
 4: "pr64669" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "pr64669" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)

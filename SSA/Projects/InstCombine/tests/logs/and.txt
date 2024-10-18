@@ -70,10 +70,14 @@
 2: llvm.return
 
 1: "test3_logical"
+<<<<<<< HEAD
 2: llvm.func
 2: llvm.mlir.constant
 2: builtin.unregistered: llvm.select
 2: llvm.return
+=======
+4: "test3_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "test4"
 2: llvm.func
@@ -82,11 +86,15 @@
 2: llvm.return
 
 1: "test4_logical"
+<<<<<<< HEAD
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.mlir.constant
 2: builtin.unregistered: llvm.select
 2: llvm.return
+=======
+4: "test4_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "test5"
 2: llvm.func
@@ -99,10 +107,14 @@
 2: llvm.return
 
 1: "test6_logical"
+<<<<<<< HEAD
 2: llvm.func
 2: llvm.mlir.constant
 2: builtin.unregistered: llvm.select
 2: llvm.return
+=======
+4: "test6_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "test7"
 2: llvm.func
@@ -154,6 +166,11 @@
 
 4: "test13_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "test13_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "test14"
 4: "test14" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -266,10 +283,17 @@
 4: "test30" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "test31"
+<<<<<<< HEAD
 4: "test31" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 
 1: "and_demanded_bits_splat_vec"
 8: "and_demanded_bits_splat_vec" contains vectors which are unsupported
+=======
+4: "test31" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "and_demanded_bits_splat_vec"
+"and_demanded_bits_splat_vec" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "and_zext_demanded"
 4: "and_zext_demanded" has unsupported operation: builtin.unregistered: llvm.zext
@@ -305,10 +329,17 @@
 2: llvm.return
 
 1: "test33vec"
+<<<<<<< HEAD
 8: "test33vec" contains vectors which are unsupported
 
 1: "test33vecb"
 8: "test33vecb" contains vectors which are unsupported
+=======
+"test33vec" contains vectors which are unsupported
+
+1: "test33vecb"
+"test33vecb" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "test34"
 2: llvm.func
@@ -317,7 +348,11 @@
 2: llvm.return
 
 1: "PR24942"
+<<<<<<< HEAD
 8: "PR24942" contains vectors which are unsupported
+=======
+"PR24942" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "test35"
 4: "test35" has unsupported operation: builtin.unregistered: llvm.zext
@@ -412,6 +447,7 @@
 4: "lowmask_or_zext_commute" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "test40"
+<<<<<<< HEAD
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.mlir.constant
@@ -425,6 +461,15 @@
 
 1: "test40vec2"
 8: "test40vec2" contains vectors which are unsupported
+=======
+4: "test40" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "test40vec"
+4: "test40vec" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "test40vec2"
+4: "test40vec2" has unsupported operation: builtin.unregistered: llvm.select
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "test41"
 4: "test41" has unsupported operation: builtin.unregistered: llvm.cond_br
@@ -503,6 +548,11 @@
 
 4: "and_orn_cmp_1_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "and_orn_cmp_1_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "and_orn_cmp_2"
 4: "and_orn_cmp_2" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -518,6 +568,11 @@
 
 4: "and_orn_cmp_3_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "and_orn_cmp_3_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "or_andn_cmp_4"
 4: "or_andn_cmp_4" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -533,6 +588,11 @@
 
 4: "andn_or_cmp_1_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "andn_or_cmp_1_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "andn_or_cmp_2"
 4: "andn_or_cmp_2" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -543,6 +603,11 @@
 
 4: "andn_or_cmp_2_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "andn_or_cmp_2_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "andn_or_cmp_3"
 4: "andn_or_cmp_3" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -558,6 +623,11 @@
 
 4: "andn_or_cmp_4_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "andn_or_cmp_4_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "lowbitmask_casted_shift"
 4: "lowbitmask_casted_shift" has unsupported operation: builtin.unregistered: llvm.sext
 
@@ -649,7 +719,11 @@
 2: llvm.return
 
 1: "flip_masked_bit_uniform"
+<<<<<<< HEAD
 8: "flip_masked_bit_uniform" contains vectors which are unsupported
+=======
+"flip_masked_bit_uniform" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "flip_masked_bit_poison"
 4: "flip_masked_bit_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -661,14 +735,28 @@
 4: "flip_masked_bit_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 1: "flip_masked_bit_nonuniform"
+<<<<<<< HEAD
 8: "flip_masked_bit_nonuniform" contains vectors which are unsupported
+=======
+"flip_masked_bit_nonuniform" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "ashr_bitwidth_mask"
 4: "ashr_bitwidth_mask" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 1: "ashr_bitwidth_mask_vec_commute"
 4: "ashr_bitwidth_mask_vec_commute" has unsupported operation: builtin.unregistered: llvm.icmp
 
+=======
+4: "ashr_bitwidth_mask" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "ashr_bitwidth_mask_vec_commute"
+4: "ashr_bitwidth_mask_vec_commute" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "ashr_bitwidth_mask_vec_commute" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "ashr_bitwidth_mask_use"
 4: "ashr_bitwidth_mask_use" has unsupported operation: llvm.call
 
@@ -681,14 +769,29 @@
 1: "signbit_splat_mask"
 4: "signbit_splat_mask" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 1: "signbit_splat_mask_commute"
 4: "signbit_splat_mask_commute" has unsupported operation: builtin.unregistered: llvm.icmp
 
+=======
+4: "signbit_splat_mask" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "signbit_splat_mask_commute"
+4: "signbit_splat_mask_commute" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "signbit_splat_mask_commute" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "signbit_splat_mask_use1"
 4: "signbit_splat_mask_use1" has unsupported operation: llvm.call
 
 4: "signbit_splat_mask_use1" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "signbit_splat_mask_use1" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "signbit_splat_mask_use2"
 4: "signbit_splat_mask_use2" has unsupported operation: builtin.unregistered: llvm.sext
 
@@ -703,14 +806,29 @@
 1: "not_ashr_bitwidth_mask"
 4: "not_ashr_bitwidth_mask" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 1: "not_ashr_bitwidth_mask_vec_commute"
 4: "not_ashr_bitwidth_mask_vec_commute" has unsupported operation: builtin.unregistered: llvm.icmp
 
+=======
+4: "not_ashr_bitwidth_mask" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "not_ashr_bitwidth_mask_vec_commute"
+4: "not_ashr_bitwidth_mask_vec_commute" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "not_ashr_bitwidth_mask_vec_commute" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "not_ashr_bitwidth_mask_use1"
 4: "not_ashr_bitwidth_mask_use1" has unsupported operation: llvm.call
 
 4: "not_ashr_bitwidth_mask_use1" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "not_ashr_bitwidth_mask_use1" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "not_ashr_bitwidth_mask_use2"
 4: "not_ashr_bitwidth_mask_use2" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -718,6 +836,11 @@
 
 4: "not_ashr_bitwidth_mask_use2" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
+=======
+4: "not_ashr_bitwidth_mask_use2" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "not_ashr_not_bitwidth_mask"
 2: llvm.func
 2: llvm.mlir.constant
@@ -739,14 +862,29 @@
 1: "invert_signbit_splat_mask"
 4: "invert_signbit_splat_mask" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 1: "invert_signbit_splat_mask_commute"
 4: "invert_signbit_splat_mask_commute" has unsupported operation: builtin.unregistered: llvm.icmp
 
+=======
+4: "invert_signbit_splat_mask" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "invert_signbit_splat_mask_commute"
+4: "invert_signbit_splat_mask_commute" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "invert_signbit_splat_mask_commute" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "invert_signbit_splat_mask_use1"
 4: "invert_signbit_splat_mask_use1" has unsupported operation: llvm.call
 
 4: "invert_signbit_splat_mask_use1" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "invert_signbit_splat_mask_use1" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "invert_signbit_splat_mask_use2"
 4: "invert_signbit_splat_mask_use2" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -754,6 +892,11 @@
 
 4: "invert_signbit_splat_mask_use2" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
+=======
+4: "invert_signbit_splat_mask_use2" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "invert_signbit_splat_mask_use3"
 4: "invert_signbit_splat_mask_use3" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -761,6 +904,11 @@
 
 4: "invert_signbit_splat_mask_use3" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
+=======
+4: "invert_signbit_splat_mask_use3" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "not_invert_signbit_splat_mask1"
 4: "not_invert_signbit_splat_mask1" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -774,12 +922,27 @@
 1: "shl_lshr_pow2_const_case1"
 4: "shl_lshr_pow2_const_case1" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 1: "shl_ashr_pow2_const_case1"
 4: "shl_ashr_pow2_const_case1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "shl_lshr_pow2_const_case1_uniform_vec"
 4: "shl_lshr_pow2_const_case1_uniform_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
+=======
+4: "shl_lshr_pow2_const_case1" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "shl_ashr_pow2_const_case1"
+4: "shl_ashr_pow2_const_case1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "shl_ashr_pow2_const_case1" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "shl_lshr_pow2_const_case1_uniform_vec"
+4: "shl_lshr_pow2_const_case1_uniform_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "shl_lshr_pow2_const_case1_uniform_vec" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "shl_lshr_pow2_const_case1_non_uniform_vec"
 7: "shl_lshr_pow2_const_case1_non_uniform_vec" is unchanged by InstCombine
 
@@ -789,6 +952,11 @@
 1: "shl_lshr_pow2_const_case1_poison1_vec"
 4: "shl_lshr_pow2_const_case1_poison1_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "shl_lshr_pow2_const_case1_poison1_vec" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "shl_lshr_pow2_const_case1_poison2_vec"
 4: "shl_lshr_pow2_const_case1_poison2_vec" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
@@ -802,6 +970,11 @@
 
 4: "shl_lshr_pow2_const_case1_poison2_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "shl_lshr_pow2_const_case1_poison2_vec" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "shl_lshr_pow2_const_case1_poison3_vec"
 4: "shl_lshr_pow2_const_case1_poison3_vec" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
@@ -816,9 +989,19 @@
 1: "shl_lshr_pow2_const_case2"
 4: "shl_lshr_pow2_const_case2" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 1: "shl_lshr_pow2_not_const_case2"
 4: "shl_lshr_pow2_not_const_case2" has unsupported operation: builtin.unregistered: llvm.icmp
 
+=======
+4: "shl_lshr_pow2_const_case2" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "shl_lshr_pow2_not_const_case2"
+4: "shl_lshr_pow2_not_const_case2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "shl_lshr_pow2_not_const_case2" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "shl_lshr_pow2_const_negative_overflow1"
 2: llvm.func
 2: llvm.mlir.constant
@@ -851,6 +1034,11 @@
 1: "lshr_lshr_pow2_const"
 4: "lshr_lshr_pow2_const" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "lshr_lshr_pow2_const" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "lshr_lshr_pow2_const_negative_oneuse"
 4: "lshr_lshr_pow2_const_negative_oneuse" has unsupported operation: llvm.call
 
@@ -887,12 +1075,27 @@
 1: "lshr_shl_pow2_const_case1"
 4: "lshr_shl_pow2_const_case1" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 1: "lshr_shl_pow2_const_xor"
 4: "lshr_shl_pow2_const_xor" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "lshr_shl_pow2_const_case2"
 4: "lshr_shl_pow2_const_case2" has unsupported operation: builtin.unregistered: llvm.icmp
 
+=======
+4: "lshr_shl_pow2_const_case1" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "lshr_shl_pow2_const_xor"
+4: "lshr_shl_pow2_const_xor" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "lshr_shl_pow2_const_xor" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "lshr_shl_pow2_const_case2"
+4: "lshr_shl_pow2_const_case2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "lshr_shl_pow2_const_case2" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "lshr_shl_pow2_const_overflow"
 2: llvm.func
 2: llvm.mlir.constant
@@ -909,6 +1112,11 @@
 1: "lshr_shl_pow2_const_case1_uniform_vec"
 4: "lshr_shl_pow2_const_case1_uniform_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "lshr_shl_pow2_const_case1_uniform_vec" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "lshr_shl_pow2_const_case1_non_uniform_vec"
 7: "lshr_shl_pow2_const_case1_non_uniform_vec" is unchanged by InstCombine
 
@@ -918,6 +1126,11 @@
 1: "lshr_shl_pow2_const_case1_poison1_vec"
 4: "lshr_shl_pow2_const_case1_poison1_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "lshr_shl_pow2_const_case1_poison1_vec" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "lshr_shl_pow2_const_case1_poison2_vec"
 4: "lshr_shl_pow2_const_case1_poison2_vec" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
@@ -943,6 +1156,11 @@
 1: "negate_lowbitmask"
 4: "negate_lowbitmask" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "negate_lowbitmask" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "negate_lowbitmask_commute"
 4: "negate_lowbitmask_commute" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
@@ -960,11 +1178,21 @@
 
 4: "negate_lowbitmask_commute" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "negate_lowbitmask_commute" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "negate_lowbitmask_use1"
 4: "negate_lowbitmask_use1" has unsupported operation: llvm.call
 
 4: "negate_lowbitmask_use1" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "negate_lowbitmask_use1" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 1: "negate_lowbitmask_use2"
 4: "negate_lowbitmask_use2" has unsupported operation: llvm.call
 
@@ -974,10 +1202,17 @@
 4: "test_and_or_constexpr_infloop" has unsupported operation: builtin.unregistered: llvm.ptrtoint
 
 1: "and_zext"
+<<<<<<< HEAD
 4: "and_zext" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 
 1: "and_zext_commuted"
 4: "and_zext_commuted" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+=======
+4: "and_zext" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "and_zext_commuted"
+4: "and_zext_commuted" has unsupported operation: builtin.unregistered: llvm.select
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "and_zext_multiuse"
 4: "and_zext_multiuse" has unsupported operation: builtin.unregistered: llvm.zext
@@ -985,7 +1220,11 @@
 4: "and_zext_multiuse" has unsupported operation: llvm.call
 
 1: "and_zext_vec"
+<<<<<<< HEAD
 8: "and_zext_vec" contains vectors which are unsupported
+=======
+4: "and_zext_vec" has unsupported operation: builtin.unregistered: llvm.select
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "and_zext_eq_even"
 4: "and_zext_eq_even" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
@@ -1052,7 +1291,11 @@
 2: llvm.return
 
 1: "add_constant_equal_with_the_top_bit_of_demandedbits_pass_vector"
+<<<<<<< HEAD
 8: "add_constant_equal_with_the_top_bit_of_demandedbits_pass_vector" contains vectors which are unsupported
+=======
+"add_constant_equal_with_the_top_bit_of_demandedbits_pass_vector" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "add_constant_equal_with_the_top_bit_of_demandedbits_fail1"
 7: "add_constant_equal_with_the_top_bit_of_demandedbits_fail1" is unchanged by InstCombine
@@ -1072,3 +1315,8 @@
 1: "and_sext_multiuse"
 4: "and_sext_multiuse" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "and_sext_multiuse" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)

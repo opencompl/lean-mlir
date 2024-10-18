@@ -11,7 +11,11 @@
 2: llvm.return
 
 1: "shl_and_nonuniform"
+<<<<<<< HEAD
 8: "shl_and_nonuniform" contains vectors which are unsupported
+=======
+"shl_and_nonuniform" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "shl_or"
 2: llvm.func
@@ -49,7 +53,11 @@
 2: llvm.return
 
 1: "shl_xor_nonuniform"
+<<<<<<< HEAD
 8: "shl_xor_nonuniform" contains vectors which are unsupported
+=======
+"shl_xor_nonuniform" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "lshr_and"
 2: llvm.func
@@ -78,6 +86,7 @@
 4: "lshr_and_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 1: "lshr_or"
+<<<<<<< HEAD
 8: "lshr_or" contains vectors which are unsupported
 
 1: "lshr_xor"
@@ -88,6 +97,18 @@
 
 1: "ashr_or"
 8: "ashr_or" contains vectors which are unsupported
+=======
+"lshr_or" contains vectors which are unsupported
+
+1: "lshr_xor"
+"lshr_xor" contains vectors which are unsupported
+
+1: "ashr_and"
+"ashr_and" contains vectors which are unsupported
+
+1: "ashr_or"
+"ashr_or" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "ashr_xor"
 2: llvm.func
@@ -146,7 +167,11 @@
 2: llvm.return
 
 1: "lshr_mul_vector"
+<<<<<<< HEAD
 8: "lshr_mul_vector" contains vectors which are unsupported
+=======
+"lshr_mul_vector" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "lshr_mul_negative_noexact"
 7: "lshr_mul_negative_noexact" is unchanged by InstCombine
@@ -180,7 +205,11 @@
 4: "shl_add_multiuse_nonconstant" has unsupported operation: llvm.call
 
 1: "shl_add_nonuniform"
+<<<<<<< HEAD
 8: "shl_add_nonuniform" contains vectors which are unsupported
+=======
+"shl_add_nonuniform" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "shl_add_poison"
 4: "shl_add_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -237,7 +266,11 @@
 2: llvm.return
 
 1: "shl_sub_nonuniform"
+<<<<<<< HEAD
 8: "shl_sub_nonuniform" contains vectors which are unsupported
+=======
+"shl_sub_nonuniform" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "shl_sub_poison"
 4: "shl_sub_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison

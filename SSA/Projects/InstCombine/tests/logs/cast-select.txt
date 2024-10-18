@@ -1,21 +1,41 @@
 1: "zext"
 4: "zext" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "zext" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "zext" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "zext_vec"
 4: "zext_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "zext_vec" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "zext_vec" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "sext"
 4: "sext" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "sext" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "sext" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "sext_vec"
 4: "sext_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
+=======
+4: "sext_vec" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "sext_vec" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "trunc"
@@ -23,28 +43,58 @@
 
 4: "trunc" has unsupported operation: builtin.unregistered: llvm.trunc
 
+<<<<<<< HEAD
 1: "trunc_vec"
 4: "trunc_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
+=======
+4: "trunc" has unsupported operation: builtin.unregistered: llvm.select
+
+1: "trunc_vec"
+4: "trunc_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "trunc_vec" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "trunc_vec" has unsupported operation: builtin.unregistered: llvm.trunc
 
 1: "fpext"
 4: "fpext" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+<<<<<<< HEAD
+=======
+4: "fpext" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "fpext" has unsupported operation: builtin.unregistered: llvm.fpext
 
 1: "fpext_vec"
 4: "fpext_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+<<<<<<< HEAD
+=======
+4: "fpext_vec" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "fpext_vec" has unsupported operation: builtin.unregistered: llvm.fpext
 
 1: "fptrunc"
 4: "fptrunc" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+<<<<<<< HEAD
+=======
+4: "fptrunc" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "fptrunc" has unsupported operation: builtin.unregistered: llvm.fptrunc
 
 1: "fptrunc_vec"
 4: "fptrunc_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+<<<<<<< HEAD
+=======
+4: "fptrunc_vec" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "fptrunc_vec" has unsupported operation: builtin.unregistered: llvm.fptrunc
 

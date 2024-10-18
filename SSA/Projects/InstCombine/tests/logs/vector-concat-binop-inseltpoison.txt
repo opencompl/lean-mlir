@@ -45,6 +45,13 @@
 4: "srem" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 1: "udiv"
+<<<<<<< HEAD
+=======
+4: "udiv" has unsupported operation: llvm.udiv
+
+4: "udiv" has unsupported operation: llvm.udiv
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "udiv" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 1: "urem"
@@ -91,5 +98,9 @@
 4: "frem" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 1: "PR33026"
+<<<<<<< HEAD
 8: "PR33026" contains vectors which are unsupported
+=======
+"PR33026" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 

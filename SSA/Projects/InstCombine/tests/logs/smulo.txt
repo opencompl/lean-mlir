@@ -37,7 +37,11 @@
 4: "i1_res" has unsupported operation after optimization: llvm.extractvalue
 
 1: "v2i1_res"
+<<<<<<< HEAD
 8: "v2i1_res" contains vectors which are unsupported
+=======
+"v2i1_res" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "i1_res_by_one"
 4: "i1_res_by_one" has unsupported operation after optimization: builtin.unregistered: llvm.intr.smul.with.overflow
@@ -45,7 +49,11 @@
 4: "i1_res_by_one" has unsupported operation after optimization: llvm.extractvalue
 
 1: "v2i1_res_by_one"
+<<<<<<< HEAD
 8: "v2i1_res_by_one" contains vectors which are unsupported
+=======
+"v2i1_res_by_one" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "i1_ov"
 4: "i1_ov" has unsupported operation after optimization: builtin.unregistered: llvm.intr.smul.with.overflow
@@ -53,7 +61,11 @@
 4: "i1_ov" has unsupported operation after optimization: llvm.extractvalue
 
 1: "v2i1_ov"
+<<<<<<< HEAD
 8: "v2i1_ov" contains vectors which are unsupported
+=======
+"v2i1_ov" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 
 1: "i1_ov_by_one"
 4: "i1_ov_by_one" has unsupported operation after optimization: builtin.unregistered: llvm.intr.smul.with.overflow
@@ -61,5 +73,9 @@
 4: "i1_ov_by_one" has unsupported operation after optimization: llvm.extractvalue
 
 1: "v2i1_ov_by_one"
+<<<<<<< HEAD
 8: "v2i1_ov_by_one" contains vectors which are unsupported
+=======
+"v2i1_ov_by_one" contains vectors which are unsupported
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 

@@ -10,5 +10,10 @@
 
 4: "test_logical" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+<<<<<<< HEAD
+=======
+4: "test_logical" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
 4: "test_logical" has unsupported operation: builtin.unregistered: llvm.cond_br
 
