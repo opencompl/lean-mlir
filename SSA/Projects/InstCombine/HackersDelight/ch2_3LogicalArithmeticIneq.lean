@@ -426,12 +426,12 @@ theorem signed_min_eq_add_sub_and_sub_rightShift :
 theorem lt_sdoz_or_neg_sdoz :
     (y <ₛ x) ↔ (signedDifferenceOrZero x y ||| -(signedDifferenceOrZero x y)).msb := by
   try alive_auto
-    all_goals sorry
+  all_goals sorry
 
 theorem lt_udoz_or_neg_udoz :
     (y <ᵤ x) ↔ (unsignedDifferenceOrZero x y ||| -(unsignedDifferenceOrZero x y)).msb := by
   try alive_auto
-all_goals sorry
+  all_goals sorry
 
 theorem carry_iff_udoz_not_or_neg_udoz_not :
     BitVec.carry w x y false ↔ (unsignedDifferenceOrZero x (~~~ y) ||| - unsignedDifferenceOrZero x (~~~ y)).msb := by
