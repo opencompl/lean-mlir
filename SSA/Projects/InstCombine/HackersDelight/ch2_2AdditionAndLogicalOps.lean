@@ -10,7 +10,7 @@ namespace AdditionCombinedWithLogicalOperations
 
 set_option bv.ac_nf false
 
-variable {x y z : BitVec 32}
+variable {x y z : BitVec 64}
 
 theorem neg_eq_not_add_one :
     -x = ~~~ x + 1 := by
