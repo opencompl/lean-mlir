@@ -41,7 +41,7 @@ theorem sub_abs_ule_xor :
 theorem eq_iff_abs_sub_sub :
     x = y ↔ ((x - y).abs - 1).msb := by
   try alive_auto
-    all_goals sorry
+  all_goals sorry
 
 theorem eq_iff_not_sub_or_sub :
     x = y ↔ (~~~ (x - y ||| y - x)).msb := by
