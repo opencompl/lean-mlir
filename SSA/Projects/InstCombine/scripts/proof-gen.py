@@ -10,11 +10,25 @@ def get_lines(msg):
     pattern = re.compile(r"info: .+?:(\d+):\d+: (.+?)(?=warning)", flags=re.DOTALL)
     # Find all matches in the log
     matches = pattern.findall(msg)
-    lines = [(int(l), m) for (l, m) in matches if "no goals to be solved" not in m]
+    lines_thm = [(int(l), m) for (l, m) in matches if "no goals to be solved" not in m]
+    lines_done = [(int(l), m) for (l, m) in matches if "no goals to be solved" in m]
     # Replace this with your actual implementation
-    return lines
+    return lines_thm, lines_done
     # return [(1, "New message for line 1"), (3, "New message for line 3")]
 
+
+def gen_intro(stem):
+    return f"""
+import SSA.Projects.InstCombine.TacticAuto
+import SSA.Projects.InstCombine.LLVM.Semantics
+open BitVec
+
+section {stem}_proof
+"""
+
+def print_log(log, log_file):
+    with open(log_file, "a+") as l:
+        l.writelines(log)
 
 def process_file(file_path):
     # Run the `lake build` command and capture the output
@@ -22,17 +36,20 @@ def process_file(file_path):
     proof_name = file_path[:-5].replace("/LLVM/", "/proofs/") + "_proof"
     stem_name = file_path.split("/")[-1][:-5]
     new_file_path = file_path.replace("/LLVM/", "/proofs/")
+    log_path = file_path.replace("/LLVM/", "/logs/").replace(".lean", ".txt")
     result = subprocess.run(
         ["lake", "build", module_name], capture_output=True, text=True
     )
     print(result)
     msg = result.stdout
     if result.stderr: 
-        raise Exception(result.stderr)
+        print_log([result.stdout, result.stderr], log_path)
+        # raise Exception(result.stderr)
+        return
     print(f"msg = {msg}")
 
     # Get the lines to replace and append
-    lines_to_replace = get_lines(msg)
+    lines_to_replace, lines_done = get_lines(msg)
 
     # Read the file content
     with open(file_path, "r") as file:
@@ -43,7 +60,13 @@ def process_file(file_path):
     named = [(l, lines[l - 2][11:-1], m) for (l, m) in lines_to_replace]
     for l, n, m in named:
         if 0 <= l - 1 < len(lines):
-            lines[l - 1] = f"  apply {n}_thm" + "\n"
+            lines[l - 1] = f"  apply {n}_thm\n"
+    
+    named_done = [(l, lines[l - 2][11:-1], m) for (l, m) in lines_done]
+    for l, n, m in named_done:
+        if 0 <= l - 1 < len(lines):
+            lines[l - 1] = f"  done\n"
+            
     lines[0] = f"import SSA.Projects.InstCombine.tests.proofs.{stem_name}_proof\n"
     # Write the modified content to the new file
     with open(new_file_path, "w") as file:
@@ -51,15 +74,7 @@ def process_file(file_path):
 
     # Append the messages to the end of the file
     with open(proof_name + ".lean", "w") as file:
-        file.write(
-            f"""
-import SSA.Projects.InstCombine.TacticAuto
-import SSA.Projects.InstCombine.LLVM.Semantics
-open BitVec
-
-section {stem_name}_proof
-"""
-        )
+        file.write(gen_intro(stem_name))
         for _, n, m in named:
             print(f"m = {m}")
             print(f"n = {n}")
@@ -70,6 +85,8 @@ section {stem_name}_proof
 
 def main():
     proof_directory = "./SSA/Projects/InstCombine/tests/proofs"
+    rm_proofs = "\nrm -r " + proof_directory + "/*\n"
+    subprocess.run(rm_proofs, shell=True)
     
     directory = "./SSA/Projects/InstCombine/tests/LLVM"
     

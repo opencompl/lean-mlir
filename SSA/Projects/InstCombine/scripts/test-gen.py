@@ -86,7 +86,7 @@ theorem {name}_proof : {name}_before ⊑ {name}_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN {name}
   all_goals (try extract_goal ; sorry)
