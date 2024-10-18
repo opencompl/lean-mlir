@@ -15,14 +15,14 @@ syntax "llvm.and"     : MLIR.Pretty.uniform_op
 syntax "llvm.ashr"    : MLIR.Pretty.uniform_op
 syntax "llvm.or"      : MLIR.Pretty.uniform_op
 syntax "llvm.sdiv"    : MLIR.Pretty.uniform_op
-syntax "llvm.shl"     : MLIR.Pretty.uniform_op
+syntax "llvm.lshr"    : MLIR.Pretty.uniform_op
 syntax "llvm.srem"    : MLIR.Pretty.uniform_op
 syntax "llvm.udiv"    : MLIR.Pretty.uniform_op
 syntax "llvm.urem"    : MLIR.Pretty.uniform_op
 syntax "llvm.xor"     : MLIR.Pretty.uniform_op
 
 syntax "llvm.add"     : MLIR.Pretty.overflow_op
-syntax "llvm.lshr"    : MLIR.Pretty.overflow_op
+syntax "llvm.shl"     : MLIR.Pretty.overflow_op
 syntax "llvm.mul"     : MLIR.Pretty.overflow_op
 syntax "llvm.sub"     : MLIR.Pretty.overflow_op
 

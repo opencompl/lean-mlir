@@ -8,6 +8,7 @@ import Mathlib.Data.Finset.Basic
 import Mathlib.Data.FinEnum
 import Mathlib.Tactic.FinCases
 import SSA.Experimental.Bits.AutoStructs.Basic
+import SSA.Experimental.Bits.AutoStructs.Constructions
 import SSA.Experimental.Bits.AutoStructs.Defs
 import SSA.Experimental.Bits.AutoStructs.FinEnum
 import SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
@@ -194,6 +195,7 @@ def binopNfa {A} [BEq A] [FinEnum A] [Hashable A]
   | .impl => m1.neg.union m2
   | .equiv => (m1.neg.union m2).inter (m2.neg.union m1)
 
+
 -- TODO(leo) : why is it so slow? 40 seconds on my machine
 -- the slow part is the compilation apparently
 def nfaOfFormula (φ : Formula) : NFA (BitVec φ.arity) :=
@@ -224,101 +226,111 @@ def nfaOfFormula (φ : Formula) : NFA (BitVec φ.arity) :=
     let m2 := (nfaOfFormula φ2).lift $ liftMax2 φ1.arity φ2.arity
     binopNfa op m1 m2
 
+
+/-
+Note: it is important to define this function and not inline it, otherwise
+each call to the tactic will compile a new function, which takes ~350ms on
+my machine. -- Leo
+ -/
+def formulaIsUniversal (f : Formula) : Bool :=
+  let m := nfaOfFormula f
+  m.isUniversal'
+
 -- This is wrong, this is (hopefuly) true only for `w > 0`
 axiom decision_procedure_is_correct {w} (φ : Formula) (env : Nat → BitVec w) :
-  nfaOfFormula φ |>.isUniversal' → φ.sat' env
+  formulaIsUniversal φ → φ.sat' env
 
--- For testing the comparison operators.
-def nfaOfCompareConstants (signed : Bool) {w : Nat} (a b : BitVec w) : NFA (BitVec 0) :=
-  let m1 := NFA.ofConst a
-  let m2 := NFA.ofConst b
-  let f1 : Fin 1 → Fin 2 := fun 0 => 0
-  let m1' := m1.lift f1
-  let f2 : Fin 1 → Fin 2 := fun 0 => 1
-  let m2' := m2.lift f2
-  let meq := if signed then NFA.autSignedCmp .lt else NFA.autUnsignedCmp .lt
-  let m := NFA.inter m1' m2' |> NFA.inter meq
-  let mfinal := m.proj (liftExcecpt2 _)
-  mfinal
+-- -- For testing the comparison operators.
+-- def nfaOfCompareConstants (signed : Bool) {w : Nat} (a b : BitVec w) : NFA (BitVec 0) :=
+--   let m1 := NFA.ofConst a
+--   let m2 := NFA.ofConst b
+--   let f1 : Fin 1 → Fin 2 := fun 0 => 0
+--   let m1' := m1.lift f1
+--   let f2 : Fin 1 → Fin 2 := fun 0 => 1
+--   let m2' := m2.lift f2
+--   let meq := if signed then NFA.autSignedCmp .lt else NFA.autUnsignedCmp .lt
+--   let m := NFA.inter m1' m2' |> NFA.inter meq
+--   let mfinal := m.proj (liftExcecpt2 _)
+--   mfinal
 
-/- This case is a bit weird because we have on the one hand an
-   automaton with a singleton alphabet, denoting a singleton set.
-   Hence the correpondance between a word and the unique bitvector in
-   `BitVec 0` is not super clear... This is why we check for non-emptiness
-   rather than universality. This shoud be clarified.
--/
-def testLeq (signed : Bool) (w : Nat) : Option (BitVec w × BitVec w) :=
-  (List.range (2^w)).findSome? fun n =>
-    (List.range (2^w)).findSome? fun m =>
-      let bv := BitVec.ofNat w n
-      let bv' := BitVec.ofNat w m
-      if (if signed then bv <ₛ bv' else bv <ᵤ bv') ==
-        (nfaOfCompareConstants signed bv bv' |> NFA.isNotEmpty)
-      then none else some (bv, bv')
-/-- info: true -/
-#guard_msgs in #eval! (testLeq true 4 == none)
+-- /- This case is a bit weird because we have on the one hand an
+--    automaton with a singleton alphabet, denoting a singleton set.
+--    Hence the correpondance between a word and the unique bitvector in
+--    `BitVec 0` is not super clear... This is why we check for non-emptiness
+--    rather than universality. This shoud be clarified.
+-- -/
+-- def testLeq (signed : Bool) (w : Nat) : Option (BitVec w × BitVec w) :=
+--   (List.range (2^w)).findSome? fun n =>
+--     (List.range (2^w)).findSome? fun m =>
+--       let bv := BitVec.ofNat w n
+--       let bv' := BitVec.ofNat w m
+--       if (if signed then bv <ₛ bv' else bv <ᵤ bv') ==
+--         (nfaOfCompareConstants signed bv bv' |> NFA.isNotEmpty)
+--       then none else some (bv, bv')
+-- /-- info: true -/
+-- #guard_msgs in #eval! (testLeq true 4 == none)
 
-def nfaOfMsb {w : Nat} (a : BitVec w) : NFA (BitVec 0) :=
-  let m := NFA.ofConst a
-  let meq := NFA.autMsbSet
-  let m := m |> NFA.inter meq
-  let mfinal := m.proj $ fun _ => 0
-  mfinal
+-- def nfaOfMsb {w : Nat} (a : BitVec w) : NFA (BitVec 0) :=
+--   let m := NFA.ofConst a
+--   let meq := NFA.autMsbSet
+--   let m := m |> NFA.inter meq
+--   let mfinal := m.proj $ fun _ => 0
+--   mfinal
 
-def testMsb (w : Nat) : Bool :=
-  (List.range (2^w)).all fun n =>
-    let bv := BitVec.ofNat w n
-    (bv.msb == true) == (nfaOfMsb bv |> NFA.isNotEmpty)
-/-- info: true -/
-#guard_msgs in #eval! testMsb 8
+-- def testMsb (w : Nat) : Bool :=
+--   (List.range (2^w)).all fun n =>
+--     let bv := BitVec.ofNat w n
+--     (bv.msb == true) == (nfaOfMsb bv |> NFA.isNotEmpty)
+-- /-- info: true -/
+-- #guard_msgs in #eval! testMsb 8
 
--- -x = ~~~ (x - 1)
-def ex_formula_neg_eq_neg_not_one : Formula :=
-  open Term in
-  let x := var 0
-  Formula.atom .eq (neg x) (not $ sub x 1)
+-- -- -x = ~~~ (x - 1)
+-- def ex_formula_neg_eq_neg_not_one : Formula :=
+--   open Term in
+--   let x := var 0
+--   Formula.atom .eq (neg x) (not $ sub x 1)
 
-/-- info: true -/
-#guard_msgs in #eval! nfaOfFormula ex_formula_neg_eq_neg_not_one |> NFA.isUniversal
+-- /-- info: true -/
+-- #guard_msgs in #eval! nfaOfFormula ex_formula_neg_eq_neg_not_one |> NFA.isUniversal
 
--- x &&& ~~~ y = x - (x &&& y)
-def ex_formula_and_not_eq_sub_add : Formula :=
-  open Term in
-  let x := var 0
-  let y := var 1
-  Formula.atom .eq (and x (not y)) (sub x (and x y))
-/-- info: true -/
-#guard_msgs in #eval! nfaOfFormula ex_formula_and_not_eq_sub_add |> NFA.isUniversal
+-- -- x &&& ~~~ y = x - (x &&& y)
+-- def ex_formula_and_not_eq_sub_add : Formula :=
+--   open Term in
+--   let x := var 0
+--   let y := var 1
+--   Formula.atom .eq (and x (not y)) (sub x (and x y))
+-- /-- info: true -/
+-- #guard_msgs in #eval! nfaOfFormula ex_formula_and_not_eq_sub_add |> NFA.isUniversal
 
-/- x &&& y ≤ᵤ ~~~(x ^^^ y) -/
-def ex_formula_and_ule_not_xor : Formula :=
-  open Term in
-  let x := var 0
-  let y := var 1
-  .atom (.unsigned .le) (.and x y) (.not (.xor x y))
+-- /- x &&& y ≤ᵤ ~~~(x ^^^ y) -/
+-- def ex_formula_and_ule_not_xor : Formula :=
+--   open Term in
+--   let x := var 0
+--   let y := var 1
+--   .atom (.unsigned .le) (.and x y) (.not (.xor x y))
 
-/-- info: true -/
-#guard_msgs in #eval! nfaOfFormula ex_formula_and_ule_not_xor |> NFA.isUniversal
+-- /-- info: true -/
+-- #guard_msgs in #eval! nfaOfFormula ex_formula_and_ule_not_xor |> NFA.isUniversal
 
--- Only true for `w > 0`!
--- x = 0 ↔ (~~~ (x ||| -x)).msb
-def ex_formula_eq_zero_iff_not_or_sub : Formula :=
-  open Term in
-  let x := var 0
-  .binop .equiv
-    (.atom .eq x .zero)
-    (.msbSet (.not (.or x (.neg x))))
+-- -- Only true for `w > 0`!
+-- -- x = 0 ↔ (~~~ (x ||| -x)).msb
+-- def ex_formula_eq_zero_iff_not_or_sub : Formula :=
+--   open Term in
+--   let x := var 0
+--   .binop .equiv
+--     (.atom .eq x .zero)
+--     (.msbSet (.not (.or x (.neg x))))
 
-/-- info: true -/
-#guard_msgs in #eval! nfaOfFormula ex_formula_eq_zero_iff_not_or_sub |> NFA.isUniversal'
+-- /-- info: true -/
+-- #guard_msgs in #eval! nfaOfFormula ex_formula_eq_zero_iff_not_or_sub |> NFA.isUniversal'
 
--- (x <ₛ 0) ↔ x.msb := by
-def ex_formula_lst_iff : Formula :=
-  open Term in
-  let x := var 0
-  .binop .equiv
-    (.atom (.signed .lt) x .zero)
-    (.msbSet x)
+-- -- (x <ₛ 0) ↔ x.msb := by
+-- def ex_formula_lst_iff : Formula :=
+--   open Term in
+--   let x := var 0
+--   .binop .equiv
+--     (.atom (.signed .lt) x .zero)
+--     (.msbSet x)
 
-/-- info: true -/
-#guard_msgs in #eval! nfaOfFormula ex_formula_lst_iff |> NFA.isUniversal
+-- /-- info: true -/
+-- #guard_msgs in #eval! nfaOfFormula ex_formula_lst_iff |> NFA.isUniversal

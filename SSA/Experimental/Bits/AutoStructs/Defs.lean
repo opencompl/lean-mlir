@@ -280,4 +280,7 @@ def Formula.sat' {w : Nat} (φ : Formula) (ρ : Nat → BitVec w) : Prop :=
   | .msbSet t => (t.evalNat ρ).msb
 
 @[simp]
-def envOfArray {w} (a : Array (BitVec w)) : Nat → BitVec w := fun n => a.getD n 0
+abbrev envOfArray {w} (a : Array (BitVec w)) : Nat → BitVec w := fun n => a.getD n 0
+
+@[simp]
+abbrev envOfList {w} (a : List (BitVec w)) : Nat → BitVec w := fun n => a.getD n 0

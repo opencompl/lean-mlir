@@ -1,3 +1,4 @@
+import SSA.Projects.InstCombine.ForStd
 import SSA.Projects.InstCombine.TacticAuto
 
 set_option linter.unusedTactic false
