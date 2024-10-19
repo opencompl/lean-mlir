@@ -170,16 +170,6 @@ def sdiv_one_allOnes {w : Nat} (h : 1 < w) :
   have : ¬ (w = 1) := by omega
   simp [this]
 
-theorem width_one_cases (a : BitVec 1) : a = 0#1 ∨ a = 1#1 := by
-  obtain ⟨a, ha⟩ := a
-  simp only [pow_one] at ha
-  have acases : a = 0 ∨ a = 1 := by omega
-  rcases acases with ⟨rfl | rfl⟩
-  · simp
-  case inr h =>
-    subst h
-    simp
-
 theorem sub_eq_add_neg {w : Nat} {x y : BitVec w} : x - y = x + (- y) := by
   simp only [HAdd.hAdd, HSub.hSub, Neg.neg, Sub.sub, BitVec.sub, Add.add, BitVec.add]
   simp [BitVec.ofNat, Fin.ofNat', add_comm]
@@ -219,8 +209,7 @@ def one_sdiv { w : Nat} {a : BitVec w} (ha0 : a ≠ 0) (ha1 : a ≠ 1)
   case succ w' =>
     cases w'
     case zero =>
-      have ha' : a = 0#1 ∨ a = 1#1 := BitVec.width_one_cases a
-      rcases ha' with ⟨rfl | rfl⟩ <;> (simp only [Nat.reduceAdd, ofNat_eq_ofNat, ne_eq,
+      rcases eq_zero_or_eq_one a with ⟨rfl | rfl⟩ <;> (simp only [Nat.reduceAdd, ofNat_eq_ofNat, ne_eq,
         not_true_eq_false] at ha0)
       case inr h => subst h; contradiction
     case succ w' =>
@@ -285,12 +274,6 @@ theorem intMin_neq_one {w : Nat} (h : w > 1): BitVec.intMin w ≠ 1 := by
   have h' : w > 0 := by omega
   simp [bv_toNat, h']
   rw [← Nat.two_pow_pred_add_two_pow_pred (by omega)]
-  omega
-
-theorem width_one_cases' (x : BitVec 1) :
-    x = 0 ∨ x = 1 := by
-  obtain ⟨x, hx⟩ := x
-  simp [BitVec.toNat_eq]
   omega
 
 /- Not a simp lemma by default because we may want toFin or toInt in the future. -/
