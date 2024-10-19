@@ -220,7 +220,7 @@ def leanSAT_tot_stacked(data, bm, bvw):
 
     # Show the plot
     plt.tight_layout()
-    plt.savefig(dir+'leanSAT_stacked_'+bm.split(".")[0]+'.pdf', dpi = 500)
+    plt.savefig(dir+'leanSAT_stacked_'+bm.split(".")[0]+'_'+str(bvw)+'.pdf', dpi = 500)
 
 def cumul_solving_time_same_bvw(data, tool1, tool2,  bm, bvw):
     
