@@ -196,7 +196,7 @@ def process_file(file):
             log.append(f"{Msg.E_NOT_CHANGED.value}: {func_name} is unchanged by InstCombine\n\n")
             continue
         if "vector" in (s1 + s2):
-            log.append(f"{func_name} contains vectors which are unsupported\n\n")
+            log.append(f"{Msg.E_VECTOR.value}: {func_name} contains vectors which are unsupported\n\n")
             continue
         
         tmp_log = []

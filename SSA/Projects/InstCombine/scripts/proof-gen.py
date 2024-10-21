@@ -11,7 +11,6 @@ def get_lines(msg):
     # Find all matches in the log
     matches = pattern.findall(msg)
     lines_thm = [(int(l), m) for (l, m) in matches if "no goals to be solved" not in m]
-    lines_done = [(int(l), m) for (l, m) in matches if "no goals to be solved" in m]
     # Replace this with your actual implementation
     return lines_thm, lines_done
     # return [(1, "New message for line 1"), (3, "New message for line 3")]
@@ -49,7 +48,7 @@ def process_file(file_path):
     print(f"msg = {msg}")
 
     # Get the lines to replace and append
-    lines_to_replace, lines_done = get_lines(msg)
+    lines_to_replace = get_lines(msg)
 
     # Read the file content
     with open(file_path, "r") as file:
@@ -62,10 +61,9 @@ def process_file(file_path):
         if 0 <= l - 1 < len(lines):
             lines[l - 1] = f"  apply {n}_thm\n"
     
-    named_done = [(l, lines[l - 2][11:-1], m) for (l, m) in lines_done]
-    for l, n, m in named_done:
-        if 0 <= l - 1 < len(lines):
-            lines[l - 1] = f"  done\n"
+    for (i,line) in enumerate(lines):
+        if line == "  all_goals (try extract_goal ; sorry)":
+            lines[i] = "  done\n"
             
     lines[0] = f"import SSA.Projects.InstCombine.tests.proofs.{stem_name}_proof\n"
     # Write the modified content to the new file
