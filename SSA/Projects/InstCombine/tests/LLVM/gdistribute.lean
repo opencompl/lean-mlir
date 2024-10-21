@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gdistribute_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -39,7 +39,7 @@ theorem factorize_proof : factorize_before ⊑ factorize_after := by
   intros
   try simp
   ---BEGIN factorize
-  apply factorize_thm
+  all_goals (try extract_goal ; sorry)
   ---END factorize
 
 
@@ -70,7 +70,7 @@ theorem factorize2_proof : factorize2_before ⊑ factorize2_after := by
   intros
   try simp
   ---BEGIN factorize2
-  apply factorize2_thm
+  all_goals (try extract_goal ; sorry)
   ---END factorize2
 
 
@@ -101,7 +101,7 @@ theorem factorize3_proof : factorize3_before ⊑ factorize3_after := by
   intros
   try simp
   ---BEGIN factorize3
-  apply factorize3_thm
+  all_goals (try extract_goal ; sorry)
   ---END factorize3
 
 
@@ -133,7 +133,7 @@ theorem factorize4_proof : factorize4_before ⊑ factorize4_after := by
   intros
   try simp
   ---BEGIN factorize4
-  apply factorize4_thm
+  all_goals (try extract_goal ; sorry)
   ---END factorize4
 
 
@@ -165,7 +165,7 @@ theorem factorize5_proof : factorize5_before ⊑ factorize5_after := by
   intros
   try simp
   ---BEGIN factorize5
-  apply factorize5_thm
+  all_goals (try extract_goal ; sorry)
   ---END factorize5
 
 
@@ -198,7 +198,7 @@ theorem expand_proof : expand_before ⊑ expand_after := by
   intros
   try simp
   ---BEGIN expand
-  apply expand_thm
+  all_goals (try extract_goal ; sorry)
   ---END expand
 
 

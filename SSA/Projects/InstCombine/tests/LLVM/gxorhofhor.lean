@@ -1,4 +1,4 @@
-
+import SSA.Projects.InstCombine.tests.LLVM.gxorhofhor_proof
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -42,7 +42,7 @@ theorem t1_proof : t1_before ⊑ t1_after := by
   intros
   try simp
   ---BEGIN t1
-  all_goals (try extract_goal ; sorry)
+  apply t1_thm
   ---END t1
 
 

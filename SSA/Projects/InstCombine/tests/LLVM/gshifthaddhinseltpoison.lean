@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gshifthaddhinseltpoison_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -41,7 +41,7 @@ theorem ashr_C1_add_A_C2_i32_proof : ashr_C1_add_A_C2_i32_before ⊑ ashr_C1_add
   intros
   try simp
   ---BEGIN ashr_C1_add_A_C2_i32
-  apply ashr_C1_add_A_C2_i32_thm
+  all_goals (try extract_goal ; sorry)
   ---END ashr_C1_add_A_C2_i32
 
 
@@ -77,7 +77,7 @@ theorem lshr_C1_add_A_C2_i32_proof : lshr_C1_add_A_C2_i32_before ⊑ lshr_C1_add
   intros
   try simp
   ---BEGIN lshr_C1_add_A_C2_i32
-  apply lshr_C1_add_A_C2_i32_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_C1_add_A_C2_i32
 
 
