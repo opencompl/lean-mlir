@@ -137,10 +137,7 @@ macro "bv_auto": tactic =>
         -/
         try solve
           | ext; simp [BitVec.negOne_eq_allOnes, BitVec.allOnes_sub_eq_xor];
-            try cases BitVec.getLsbD _ _ <;> try simp
-            try cases BitVec.getLsbD _ _ <;> try simp
-            try cases BitVec.getLsbD _ _ <;> try simp
-            try cases BitVec.getLsbD _ _ <;> try simp
+            try bv_decide
           | simp [bv_ofBool]
           /-
           There are 2 main kinds of operations on BitVecs
