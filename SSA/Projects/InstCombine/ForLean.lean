@@ -510,10 +510,6 @@ theorem shiftLeft_and_distrib' {x y : BitVec w} {n m : Nat} :
     x <<< n &&& y <<< (m + n) = (x &&& y <<< m) <<< n := by
   simp [BitVec.shiftLeft_and_distrib, BitVec.shiftLeft_add]
 
-@[simp]
-theorem zero_sub {x : BitVec w} : 0#w - x = - x := by
-    simp [bv_toNat]
-
 theorem msb_neg {x : BitVec w} :
     (-x).msb = (~~~x + 1#w).msb := by
   rw [neg_eq_not_add]
