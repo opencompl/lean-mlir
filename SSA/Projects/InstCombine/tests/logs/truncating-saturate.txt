@@ -54,10 +54,6 @@
 
 4: "testtrunclowhigh" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "testtrunclowhigh" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "testtrunclowhigh" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "testi64i32addsat"
 4: "testi64i32addsat" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
 
@@ -94,18 +90,12 @@
 
 4: "testi32i8" has unsupported operation: builtin.unregistered: llvm.trunc
 
-4: "testi32i8" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "differentconsts"
 4: "differentconsts" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "differentconsts" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "differentconsts" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "differentconsts" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "differentconsts" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "badimm1"
 4: "badimm1" has unsupported operation: builtin.unregistered: llvm.trunc
@@ -116,10 +106,6 @@
 
 4: "badimm1" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "badimm1" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "badimm1" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "badimm2"
 4: "badimm2" has unsupported operation: builtin.unregistered: llvm.trunc
 
@@ -129,18 +115,12 @@
 
 4: "badimm2" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "badimm2" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "badimm2" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "badimm3"
 4: "badimm3" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "badimm3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "badimm3" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "badimm3" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "badimm4"
 4: "badimm4" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -149,20 +129,12 @@
 
 4: "badimm4" has unsupported operation: builtin.unregistered: llvm.trunc
 
-4: "badimm4" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "badimm4" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "oneusexor"
 4: "oneusexor" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "oneusexor" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "oneusexor" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "oneusexor" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "oneusexor" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "oneusexor" has unsupported operation: llvm.call
 
@@ -173,10 +145,6 @@
 
 4: "oneuseconv" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "oneuseconv" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "oneuseconv" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "oneuseconv" has unsupported operation: llvm.call
 
 1: "oneusecmp"
@@ -186,10 +154,6 @@
 
 4: "oneusecmp" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "oneusecmp" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "oneusecmp" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "oneusecmp" has unsupported operation: llvm.call
 
 1: "oneuseboth"
@@ -198,10 +162,6 @@
 4: "oneuseboth" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "oneuseboth" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "oneuseboth" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "oneuseboth" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "oneuseboth" has unsupported operation: llvm.call
 
@@ -214,10 +174,6 @@
 
 4: "oneusethree" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "oneusethree" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "oneusethree" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "oneusethree" has unsupported operation: llvm.call
 
 4: "oneusethree" has unsupported operation: llvm.call
@@ -227,13 +183,9 @@
 1: "differentconsts_usetrunc"
 4: "differentconsts_usetrunc" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "differentconsts_usetrunc" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "differentconsts_usetrunc" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "differentconsts_usetrunc" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "differentconsts_usetrunc" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "differentconsts_usetrunc" has unsupported operation: llvm.call
 
@@ -244,22 +196,14 @@
 
 4: "differentconsts_useadd" has unsupported operation: builtin.unregistered: llvm.trunc
 
-4: "differentconsts_useadd" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "differentconsts_useadd" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "differentconsts_useadd" has unsupported operation: llvm.call
 
 1: "differentconsts_useaddtrunc"
 4: "differentconsts_useaddtrunc" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "differentconsts_useaddtrunc" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "differentconsts_useaddtrunc" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "differentconsts_useaddtrunc" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "differentconsts_useaddtrunc" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "differentconsts_useaddtrunc" has unsupported operation: llvm.call
 
@@ -268,30 +212,18 @@
 1: "C0zero"
 4: "C0zero" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "C0zero" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "C0zeroV"
 4: "C0zeroV" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "C0zeroV" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "C0zeroVu"
 4: "C0zeroVu" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "C0zeroVu" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "C0zeroVu" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "C0zeroVu" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "f"
 4: "f" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "f" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "f" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "f" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "f" has unsupported operation: builtin.unregistered: llvm.select
 

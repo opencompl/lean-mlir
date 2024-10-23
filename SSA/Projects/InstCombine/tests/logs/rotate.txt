@@ -210,8 +210,6 @@
 1: "rotl_select_weird_type"
 4: "rotl_select_weird_type" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "rotl_select_weird_type" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "rotl_select_zext_shamt"
 4: "rotl_select_zext_shamt" has unsupported operation: builtin.unregistered: llvm.zext
 

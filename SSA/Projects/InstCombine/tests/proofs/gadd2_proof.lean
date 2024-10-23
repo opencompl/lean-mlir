@@ -207,6 +207,42 @@ theorem add_of_mul_thm (x x_1 x_2 : BitVec 8) :
         fun y' => if a.msb = y'.msb ∧ ¬(a + y').msb = a.msb then none else some (a + y')) ⊑
     some (x_2 * (x_1 + x)) := sorry
 
+theorem add_of_selects_thm (x : BitVec 1) :
+  (Option.bind
+      (match some x with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 0#32
+      | some { toFin := ⟨0, ⋯⟩ } => some 4294967294#32)
+      fun x' =>
+      Option.bind
+        (match some x with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => none
+        | some { toFin := ⟨0, ⋯⟩ } => some 2#32)
+        fun y' => some (x' + y')) ⊑
+    match some x with
+    | none => none
+    | some { toFin := ⟨1, ⋯⟩ } => none
+    | some { toFin := ⟨0, ⋯⟩ } => some 0#32 := sorry
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1092:17: theorem add_of_selects_thm :
+  ∀ (x : BitVec 32) (x_1 : BitVec 1),
+    (Option.bind
+        (match some x_1 with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some 0#32
+        | some { toFin := ⟨0, ⋯⟩ } => some 4294967294#32)
+        fun x' =>
+        Option.bind
+          (match some x_1 with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => some x
+          | some { toFin := ⟨0, ⋯⟩ } => some 2#32)
+          fun y' => some (x' + y')) ⊑
+      match some x_1 with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some x
+      | some { toFin := ⟨0, ⋯⟩ } => some 0#32 := sorry
+
 theorem add_undemanded_low_bits_thm (x : BitVec 32) : ((x ||| 15#32) + 1616#32) >>> 4 = (x + 1616#32) >>> 4 := sorry
 
 theorem sub_undemanded_low_bits_thm (x : BitVec 32) : ((x ||| 15#32) - 1616#32) >>> 4 = (x + 4294965680#32) >>> 4 := sorry

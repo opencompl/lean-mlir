@@ -25,7 +25,7 @@
 4: "and_cmp_is_trunc_even_with_poison_elts" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test2"
-"test2" contains vectors which are unsupported
+8: "test2" contains vectors which are unsupported
 
 1: "test3"
 4: "test3" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -87,7 +87,7 @@
 4: "bars" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "quxs"
-"quxs" contains vectors which are unsupported
+8: "quxs" contains vectors which are unsupported
 
 1: "quxt"
 7: "quxt" is unchanged by InstCombine
@@ -111,7 +111,7 @@
 4: "f" has unsupported operation: llvm.mlir.undef
 
 1: "pr24458"
-"pr24458" contains vectors which are unsupported
+8: "pr24458" contains vectors which are unsupported
 
 1: "trunc_inselt_undef"
 4: "trunc_inselt_undef" has unsupported operation: llvm.mlir.undef

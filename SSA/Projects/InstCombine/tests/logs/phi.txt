@@ -519,8 +519,6 @@
 
 4: "phi_knownnonzero_eq_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "phi_knownnonzero_eq_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "phi_knownnonzero_eq_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "phi_knownnonzero_eq_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -539,8 +537,6 @@
 4: "phi_knownnonzero_ne_multiuse_andicmp" has unsupported operation: llvm.load
 
 4: "phi_knownnonzero_ne_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "phi_knownnonzero_ne_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "phi_knownnonzero_ne_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.br
 
@@ -631,8 +627,6 @@
 4: "simplify_context_instr" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "simplify_context_instr" has unsupported operation: builtin.unregistered: llvm.cond_br
-
-4: "simplify_context_instr" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "simplify_context_instr" has unsupported operation: llvm.call
 

@@ -9,7 +9,9 @@
 2: llvm.return
 
 1: "foo3"
-4: "foo3" has unsupported operation after optimization: llvm.udiv
+2: llvm.func
+2: llvm.udiv
+2: llvm.return
 
 1: "foo4"
 2: llvm.func

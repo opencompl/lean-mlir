@@ -71,6 +71,34 @@ theorem foo2_proof : foo2_before ⊑ foo2_after := by
 
 
 
+def foo3_before := [llvm|
+{
+^0(%arg2 : i1, %arg3 : i1):
+  %0 = llvm.udiv %arg2, %arg3 : i1
+  "llvm.return"(%0) : (i1) -> ()
+}
+]
+def foo3_after := [llvm|
+{
+^0(%arg2 : i1, %arg3 : i1):
+  "llvm.return"(%arg2) : (i1) -> ()
+}
+]
+theorem foo3_proof : foo3_before ⊑ foo3_after := by
+  unfold foo3_before foo3_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN foo3
+  apply foo3_thm
+  ---END foo3
+
+
+
 def foo4_before := [llvm|
 {
 ^0(%arg0 : i1, %arg1 : i1):

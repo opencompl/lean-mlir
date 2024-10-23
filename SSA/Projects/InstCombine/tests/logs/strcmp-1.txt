@@ -32,8 +32,6 @@
 
 4: "test5" has unsupported operation: llvm.mlir.addressof
 
-4: "test5" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "test5" has unsupported operation: llvm.call
 
 1: "test6"
@@ -45,8 +43,6 @@
 4: "test7" has unsupported operation: llvm.mlir.addressof
 
 4: "test7" has unsupported operation: llvm.mlir.addressof
-
-4: "test7" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "test7" has unsupported operation: llvm.call
 

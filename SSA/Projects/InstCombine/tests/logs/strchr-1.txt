@@ -72,8 +72,6 @@
 
 4: "test_simplify7" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "test_simplify7" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "test1"
 4: "test1" has unsupported operation: llvm.call
 

@@ -1,11 +1,11 @@
 1: "test_i1_0"
-"test_i1_0" contains vectors which are unsupported
+8: "test_i1_0" contains vectors which are unsupported
 
 1: "test_i1_0_2"
-"test_i1_0_2" contains vectors which are unsupported
+8: "test_i1_0_2" contains vectors which are unsupported
 
 1: "test_i1_m1"
-"test_i1_m1" contains vectors which are unsupported
+8: "test_i1_m1" contains vectors which are unsupported
 
 1: "test_i8_pattern"
 4: "test_i8_pattern" has unsupported operation: builtin.unregistered: llvm.icmp

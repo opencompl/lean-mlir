@@ -32,7 +32,7 @@
 2: llvm.return
 
 1: "sub_to_xor_vec"
-"sub_to_xor_vec" contains vectors which are unsupported
+8: "sub_to_xor_vec" contains vectors which are unsupported
 
 1: "sub_to_xor_wrong_arg"
 7: "sub_to_xor_wrong_arg" is unchanged by InstCombine

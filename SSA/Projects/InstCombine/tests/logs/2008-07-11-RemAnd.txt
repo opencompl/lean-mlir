@@ -7,5 +7,5 @@
 2: llvm.return
 
 1: "a_vec"
-"a_vec" contains vectors which are unsupported
+8: "a_vec" contains vectors which are unsupported
 

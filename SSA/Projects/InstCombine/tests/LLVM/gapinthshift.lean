@@ -425,6 +425,41 @@ theorem test14a_proof : test14a_before ⊑ test14a_after := by
 
 
 
+def test15_before := [llvm|
+{
+^0(%arg24 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 3 : i45}> : () -> i45
+  %1 = "llvm.mlir.constant"() <{value = 1 : i45}> : () -> i45
+  %2 = "llvm.mlir.constant"() <{value = 2 : i45}> : () -> i45
+  %3 = "llvm.select"(%arg24, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i45, i45) -> i45
+  %4 = llvm.shl %3, %2 : i45
+  "llvm.return"(%4) : (i45) -> ()
+}
+]
+def test15_after := [llvm|
+{
+^0(%arg24 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 12 : i45}> : () -> i45
+  %1 = "llvm.mlir.constant"() <{value = 4 : i45}> : () -> i45
+  %2 = "llvm.select"(%arg24, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i45, i45) -> i45
+  "llvm.return"(%2) : (i45) -> ()
+}
+]
+theorem test15_proof : test15_before ⊑ test15_after := by
+  unfold test15_before test15_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test15
+  all_goals (try extract_goal ; sorry)
+  ---END test15
+
+
+
 def shl_lshr_eq_amt_multi_use_before := [llvm|
 {
 ^0(%arg7 : i44):

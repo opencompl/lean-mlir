@@ -23,12 +23,10 @@
 4: "test4vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test5"
-4: "test5" has unsupported operation after optimization: llvm.udiv
-
 4: "test5" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "test5vec"
-"test5vec" contains vectors which are unsupported
+8: "test5vec" contains vectors which are unsupported
 
 1: "test6"
 4: "test6" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -37,12 +35,10 @@
 4: "test6vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test7"
-4: "test7" has unsupported operation after optimization: llvm.udiv
-
 4: "test7" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "test7vec"
-"test7vec" contains vectors which are unsupported
+8: "test7vec" contains vectors which are unsupported
 
 1: "test8"
 4: "test8" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -87,18 +83,14 @@
 4: "test14vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test15"
-4: "test15" has unsupported operation after optimization: llvm.udiv
-
 4: "test15" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "test15vec"
-"test15vec" contains vectors which are unsupported
+8: "test15vec" contains vectors which are unsupported
 
 1: "test16"
-4: "test16" has unsupported operation after optimization: llvm.udiv
-
 4: "test16" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "test16vec"
-"test16vec" contains vectors which are unsupported
+8: "test16vec" contains vectors which are unsupported
 

@@ -1,3 +1,3 @@
 1: "patatino"
-"patatino" contains vectors which are unsupported
+8: "patatino" contains vectors which are unsupported
 

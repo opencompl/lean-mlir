@@ -7,8 +7,6 @@
 
 4: "foo" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "foo" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "foo" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "vec1"
@@ -28,14 +26,10 @@
 
 4: "vec3" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "vec3" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "PR48369"
 4: "PR48369" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "PR48369" has unsupported operation: builtin.unregistered: llvm.br
-
-4: "PR48369" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "PR48369" has unsupported operation: llvm.store
 
@@ -53,8 +47,6 @@
 
 4: "phi_trans" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "phi_trans" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "phi_trans" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "dominating_values_select_same_block"
@@ -64,8 +56,6 @@
 
 4: "dominating_values_select_same_block" has unsupported operation: llvm.load
 
-4: "dominating_values_select_same_block" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "dominating_values_select_same_block" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "dominating_values_select_not_same_block"
@@ -74,8 +64,6 @@
 4: "dominating_values_select_not_same_block" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "dominating_values_select_not_same_block" has unsupported operation: llvm.load
-
-4: "dominating_values_select_not_same_block" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "dominating_values_select_not_same_block" has unsupported operation: builtin.unregistered: llvm.br
 
@@ -89,6 +77,4 @@
 4: "not_dominating_values" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "not_dominating_values" has unsupported operation: llvm.load
-
-4: "not_dominating_values" has unsupported operation: builtin.unregistered: llvm.select
 

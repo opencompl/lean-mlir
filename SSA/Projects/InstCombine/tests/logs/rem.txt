@@ -15,35 +15,25 @@
 
 4: "big_divisor" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "big_divisor" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "biggest_divisor"
 4: "biggest_divisor" has unsupported operation: builtin.unregistered: llvm.freeze
 
 4: "biggest_divisor" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "biggest_divisor" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "urem_with_sext_bool_divisor"
 4: "urem_with_sext_bool_divisor" has unsupported operation: builtin.unregistered: llvm.freeze
 
 4: "urem_with_sext_bool_divisor" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "urem_with_sext_bool_divisor" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "urem_with_sext_bool_divisor_vec"
 4: "urem_with_sext_bool_divisor_vec" has unsupported operation: builtin.unregistered: llvm.freeze
 
 4: "urem_with_sext_bool_divisor_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "urem_with_sext_bool_divisor_vec" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "big_divisor_vec"
 4: "big_divisor_vec" has unsupported operation: builtin.unregistered: llvm.freeze
 
 4: "big_divisor_vec" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "big_divisor_vec" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "urem1"
 4: "urem1" has unsupported operation: builtin.unregistered: llvm.freeze
@@ -63,8 +53,6 @@
 1: "udiv_mul_udiv"
 4: "udiv_mul_udiv" has unsupported operation: builtin.unregistered: llvm.freeze
 
-4: "udiv_mul_udiv" has unsupported operation: llvm.udiv
-
 1: "test1"
 2: llvm.func
 2: llvm.mlir.constant
@@ -78,10 +66,10 @@
 2: llvm.return
 
 1: "vec_power_of_2_constant_splat_divisor"
-"vec_power_of_2_constant_splat_divisor" contains vectors which are unsupported
+8: "vec_power_of_2_constant_splat_divisor" contains vectors which are unsupported
 
 1: "weird_vec_power_of_2_constant_splat_divisor"
-"weird_vec_power_of_2_constant_splat_divisor" contains vectors which are unsupported
+8: "weird_vec_power_of_2_constant_splat_divisor" contains vectors which are unsupported
 
 1: "test3a"
 4: "test3a" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -90,7 +78,12 @@
 4: "test3a_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test4"
-4: "test4" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.urem
+2: llvm.return
 
 1: "test5"
 4: "test5" has unsupported operation: builtin.unregistered: llvm.zext
@@ -176,8 +169,6 @@
 1: "test18"
 4: "test18" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "test18" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "test19"
 2: llvm.func
 2: llvm.mlir.constant
@@ -219,7 +210,7 @@
 2: llvm.return
 
 1: "test20"
-4: "test20" has unsupported operation: builtin.unregistered: llvm.select
+8: "test20" contains vectors which are unsupported
 
 1: "test21"
 4: "test21" has unsupported operation: builtin.unregistered: llvm.cond_br
@@ -288,7 +279,7 @@
 2: llvm.return
 
 1: "test23"
-"test23" contains vectors which are unsupported
+8: "test23" contains vectors which are unsupported
 
 1: "test24"
 4: "test24" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -326,34 +317,40 @@
 4: "negative_and_odd_ne" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "PR34870"
-4: "PR34870" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "PR34870" has unsupported operation: builtin.unregistered: llvm.frem
 
 1: "srem_constant_dividend_select_of_constants_divisor"
-4: "srem_constant_dividend_select_of_constants_divisor" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.srem
+2: llvm.return
 
 1: "srem_constant_dividend_select_of_constants_divisor_use"
-4: "srem_constant_dividend_select_of_constants_divisor_use" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "srem_constant_dividend_select_of_constants_divisor_use" has unsupported operation: llvm.call
 
-4: "srem_constant_dividend_select_of_constants_divisor_use" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "srem_constant_dividend_select_of_constants_divisor_0_arm"
-4: "srem_constant_dividend_select_of_constants_divisor_0_arm" has unsupported operation after optimization: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.srem
+2: llvm.return
 
 1: "srem_constant_dividend_select_divisor1"
-4: "srem_constant_dividend_select_divisor1" has unsupported operation: builtin.unregistered: llvm.select
+7: "srem_constant_dividend_select_divisor1" is unchanged by InstCombine
 
 1: "srem_constant_dividend_select_divisor2"
-4: "srem_constant_dividend_select_divisor2" has unsupported operation: builtin.unregistered: llvm.select
+7: "srem_constant_dividend_select_divisor2" is unchanged by InstCombine
 
 1: "srem_constant_dividend_select_of_constants_divisor_vec"
-4: "srem_constant_dividend_select_of_constants_divisor_vec" has unsupported operation: builtin.unregistered: llvm.select
+8: "srem_constant_dividend_select_of_constants_divisor_vec" contains vectors which are unsupported
 
 1: "srem_constant_dividend_select_of_constants_divisor_vec_ub1"
-"srem_constant_dividend_select_of_constants_divisor_vec_ub1" contains vectors which are unsupported
+8: "srem_constant_dividend_select_of_constants_divisor_vec_ub1" contains vectors which are unsupported
 
 1: "srem_constant_dividend_select_of_constants_divisor_vec_ub2"
 4: "srem_constant_dividend_select_of_constants_divisor_vec_ub2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -364,48 +361,52 @@
 
 4: "srem_constant_dividend_select_of_constants_divisor_vec_ub2" has unsupported operation: builtin.unregistered: llvm.insertelement
 
-4: "srem_constant_dividend_select_of_constants_divisor_vec_ub2" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "srem_select_of_constants_divisor"
-4: "srem_select_of_constants_divisor" has unsupported operation: builtin.unregistered: llvm.select
+7: "srem_select_of_constants_divisor" is unchanged by InstCombine
 
 1: "urem_constant_dividend_select_of_constants_divisor"
-4: "urem_constant_dividend_select_of_constants_divisor" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.urem
+2: llvm.return
 
 1: "urem_constant_dividend_select_of_constants_divisor_use"
-4: "urem_constant_dividend_select_of_constants_divisor_use" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "urem_constant_dividend_select_of_constants_divisor_use" has unsupported operation: llvm.call
 
-4: "urem_constant_dividend_select_of_constants_divisor_use" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "urem_constant_dividend_select_of_constants_divisor_0_arm"
-4: "urem_constant_dividend_select_of_constants_divisor_0_arm" has unsupported operation after optimization: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.urem
+2: llvm.return
 
 1: "urem_constant_dividend_select_divisor1"
-4: "urem_constant_dividend_select_divisor1" has unsupported operation: builtin.unregistered: llvm.select
+7: "urem_constant_dividend_select_divisor1" is unchanged by InstCombine
 
 1: "urem_constant_dividend_select_divisor2"
-4: "urem_constant_dividend_select_divisor2" has unsupported operation: builtin.unregistered: llvm.select
+7: "urem_constant_dividend_select_divisor2" is unchanged by InstCombine
 
 1: "urem_constant_dividend_select_of_constants_divisor_vec"
-4: "urem_constant_dividend_select_of_constants_divisor_vec" has unsupported operation: builtin.unregistered: llvm.select
+8: "urem_constant_dividend_select_of_constants_divisor_vec" contains vectors which are unsupported
 
 1: "urem_constant_dividend_select_of_constants_divisor_vec_ub1"
-"urem_constant_dividend_select_of_constants_divisor_vec_ub1" contains vectors which are unsupported
+8: "urem_constant_dividend_select_of_constants_divisor_vec_ub1" contains vectors which are unsupported
 
 1: "urem_constant_dividend_select_of_constants_divisor_vec_ub2"
-4: "urem_constant_dividend_select_of_constants_divisor_vec_ub2" has unsupported operation: builtin.unregistered: llvm.select
+8: "urem_constant_dividend_select_of_constants_divisor_vec_ub2" contains vectors which are unsupported
 
 1: "urem_select_of_constants_divisor"
-4: "urem_select_of_constants_divisor" has unsupported operation: builtin.unregistered: llvm.select
+7: "urem_select_of_constants_divisor" is unchanged by InstCombine
 
 1: "PR62401"
 4: "PR62401" has unsupported operation: builtin.unregistered: llvm.freeze
 
 4: "PR62401" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "PR62401" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "rem_pow2_or_zero"
 4: "rem_pow2_or_zero" has unsupported operation: builtin.unregistered: llvm.intr.ctpop

@@ -16,7 +16,7 @@
 2: llvm.return
 
 1: "t2_vec"
-"t2_vec" contains vectors which are unsupported
+8: "t2_vec" contains vectors which are unsupported
 
 1: "t3_vec_poison0"
 4: "t3_vec_poison0" has unsupported operation: llvm.mlir.undef

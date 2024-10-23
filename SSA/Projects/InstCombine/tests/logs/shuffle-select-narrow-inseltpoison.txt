@@ -5,8 +5,6 @@
 
 4: "narrow_shuffle_of_select" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
-4: "narrow_shuffle_of_select" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "narrow_shuffle_of_select_overspecified_extend"
 4: "narrow_shuffle_of_select_overspecified_extend" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
@@ -14,16 +12,12 @@
 
 4: "narrow_shuffle_of_select_overspecified_extend" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
-4: "narrow_shuffle_of_select_overspecified_extend" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "narrow_shuffle_of_select_undefs"
 4: "narrow_shuffle_of_select_undefs" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
 4: "narrow_shuffle_of_select_undefs" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 4: "narrow_shuffle_of_select_undefs" has unsupported operation: builtin.unregistered: llvm.shufflevector
-
-4: "narrow_shuffle_of_select_undefs" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "use"
 5: "use" is empty
@@ -38,8 +32,6 @@
 
 4: "narrow_shuffle_of_select_use1" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
-4: "narrow_shuffle_of_select_use1" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "narrow_shuffle_of_select_use1" has unsupported operation: llvm.call
 
 4: "narrow_shuffle_of_select_use1" has unsupported operation: builtin.unregistered: llvm.shufflevector
@@ -53,8 +45,6 @@
 
 4: "narrow_shuffle_of_select_use2" has unsupported operation: llvm.call
 
-4: "narrow_shuffle_of_select_use2" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "narrow_shuffle_of_select_use2" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 1: "narrow_shuffle_of_select_mismatch_types1"
@@ -63,8 +53,6 @@
 4: "narrow_shuffle_of_select_mismatch_types1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
 4: "narrow_shuffle_of_select_mismatch_types1" has unsupported operation: builtin.unregistered: llvm.shufflevector
-
-4: "narrow_shuffle_of_select_mismatch_types1" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "narrow_shuffle_of_select_mismatch_types1" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
@@ -75,13 +63,11 @@
 
 4: "narrow_shuffle_of_select_mismatch_types2" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
-4: "narrow_shuffle_of_select_mismatch_types2" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "narrow_shuffle_of_select_mismatch_types2" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 1: "narrow_shuffle_of_select_consts"
-4: "narrow_shuffle_of_select_consts" has unsupported operation: builtin.unregistered: llvm.select
+8: "narrow_shuffle_of_select_consts" contains vectors which are unsupported
 
 1: "narrow_shuffle_of_select_with_widened_ops"
-4: "narrow_shuffle_of_select_with_widened_ops" has unsupported operation: builtin.unregistered: llvm.select
+8: "narrow_shuffle_of_select_with_widened_ops" contains vectors which are unsupported
 

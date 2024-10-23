@@ -10,13 +10,11 @@
 1: "srem8_ashr_mask"
 4: "srem8_ashr_mask" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "srem8_ashr_mask" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "srem2_ashr_mask_vector"
-"srem2_ashr_mask_vector" contains vectors which are unsupported
+8: "srem2_ashr_mask_vector" contains vectors which are unsupported
 
 1: "srem2_ashr_mask_vector_nonconstant"
-"srem2_ashr_mask_vector_nonconstant" contains vectors which are unsupported
+8: "srem2_ashr_mask_vector_nonconstant" contains vectors which are unsupported
 
 1: "ashr_can_be_lshr"
 4: "ashr_can_be_lshr" has unsupported operation: builtin.unregistered: llvm.trunc

@@ -37,7 +37,7 @@
 4: "i1_res" has unsupported operation after optimization: llvm.extractvalue
 
 1: "v2i1_res"
-"v2i1_res" contains vectors which are unsupported
+8: "v2i1_res" contains vectors which are unsupported
 
 1: "i1_res_by_one"
 4: "i1_res_by_one" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umul.with.overflow
@@ -45,7 +45,7 @@
 4: "i1_res_by_one" has unsupported operation after optimization: llvm.extractvalue
 
 1: "v2i1_res_by_one"
-"v2i1_res_by_one" contains vectors which are unsupported
+8: "v2i1_res_by_one" contains vectors which are unsupported
 
 1: "i1_ov"
 4: "i1_ov" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umul.with.overflow
@@ -53,7 +53,7 @@
 4: "i1_ov" has unsupported operation after optimization: llvm.extractvalue
 
 1: "v2i1_ov"
-"v2i1_ov" contains vectors which are unsupported
+8: "v2i1_ov" contains vectors which are unsupported
 
 1: "i1_ov_by_one"
 4: "i1_ov_by_one" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umul.with.overflow
@@ -61,5 +61,5 @@
 4: "i1_ov_by_one" has unsupported operation after optimization: llvm.extractvalue
 
 1: "v2i1_ov_by_one"
-"v2i1_ov_by_one" contains vectors which are unsupported
+8: "v2i1_ov_by_one" contains vectors which are unsupported
 

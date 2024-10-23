@@ -5,8 +5,6 @@
 
 4: "example" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "example" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 4: "example" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 4: "example" has unsupported operation after optimization: builtin.unregistered: llvm.intr.assume
@@ -17,8 +15,6 @@
 4: "example2" has unsupported operation: llvm.load
 
 4: "example2" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "example2" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "example2" has unsupported operation: builtin.unregistered: llvm.icmp
 

@@ -43,7 +43,7 @@
 7: "shl_and_and_fail2" is unchanged by InstCombine
 
 1: "lshr_and_or"
-"lshr_and_or" contains vectors which are unsupported
+8: "lshr_and_or" contains vectors which are unsupported
 
 1: "lshr_and_or_fail"
 7: "lshr_and_or_fail" is unchanged by InstCombine
@@ -150,7 +150,7 @@
 7: "shl_xor_and_no_const_fail" is unchanged by InstCombine
 
 1: "shl_and_and_no_const"
-"shl_and_and_no_const" contains vectors which are unsupported
+8: "shl_and_and_no_const" contains vectors which are unsupported
 
 1: "shl_add_add_no_const"
 2: llvm.func
@@ -164,7 +164,7 @@
 7: "lshr_add_add_no_const_fail" is unchanged by InstCombine
 
 1: "lshr_add_and"
-"lshr_add_and" contains vectors which are unsupported
+8: "lshr_add_and" contains vectors which are unsupported
 
 1: "lshr_add_or_fail_dif_masks"
 4: "lshr_add_or_fail_dif_masks" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -176,10 +176,10 @@
 4: "lshr_add_or_fail_dif_masks" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 1: "shl_or_or_good_mask"
-"shl_or_or_good_mask" contains vectors which are unsupported
+8: "shl_or_or_good_mask" contains vectors which are unsupported
 
 1: "shl_or_or_fail_bad_mask"
-"shl_or_or_fail_bad_mask" contains vectors which are unsupported
+8: "shl_or_or_fail_bad_mask" contains vectors which are unsupported
 
 1: "lshr_xor_or_good_mask"
 2: llvm.func
@@ -195,7 +195,7 @@
 7: "lshr_xor_or_fail_bad_mask" is unchanged by InstCombine
 
 1: "lshr_or_xor_good_mask"
-"lshr_or_xor_good_mask" contains vectors which are unsupported
+8: "lshr_or_xor_good_mask" contains vectors which are unsupported
 
 1: "lshr_or_xor_fail_bad_mask"
 7: "lshr_or_xor_fail_bad_mask" is unchanged by InstCombine
@@ -261,7 +261,7 @@
 2: llvm.return
 
 1: "lshr_and_add"
-"lshr_and_add" contains vectors which are unsupported
+8: "lshr_and_add" contains vectors which are unsupported
 
 1: "lshr_or_add_fail"
 7: "lshr_or_add_fail" is unchanged by InstCombine
@@ -304,13 +304,13 @@
 7: "and_ashr_not_fail_invalid_xor_constant" is unchanged by InstCombine
 
 1: "and_ashr_not_vec"
-"and_ashr_not_vec" contains vectors which are unsupported
+8: "and_ashr_not_vec" contains vectors which are unsupported
 
 1: "and_ashr_not_vec_commuted"
-"and_ashr_not_vec_commuted" contains vectors which are unsupported
+8: "and_ashr_not_vec_commuted" contains vectors which are unsupported
 
 1: "and_ashr_not_vec_poison_1"
-"and_ashr_not_vec_poison_1" contains vectors which are unsupported
+8: "and_ashr_not_vec_poison_1" contains vectors which are unsupported
 
 1: "and_ashr_not_vec_poison_2"
 4: "and_ashr_not_vec_poison_2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -343,13 +343,13 @@
 7: "or_ashr_not_fail_invalid_xor_constant" is unchanged by InstCombine
 
 1: "or_ashr_not_vec"
-"or_ashr_not_vec" contains vectors which are unsupported
+8: "or_ashr_not_vec" contains vectors which are unsupported
 
 1: "or_ashr_not_vec_commuted"
-"or_ashr_not_vec_commuted" contains vectors which are unsupported
+8: "or_ashr_not_vec_commuted" contains vectors which are unsupported
 
 1: "or_ashr_not_vec_poison_1"
-"or_ashr_not_vec_poison_1" contains vectors which are unsupported
+8: "or_ashr_not_vec_poison_1" contains vectors which are unsupported
 
 1: "or_ashr_not_vec_poison_2"
 4: "or_ashr_not_vec_poison_2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -400,13 +400,13 @@
 2: llvm.return
 
 1: "xor_ashr_not_vec"
-"xor_ashr_not_vec" contains vectors which are unsupported
+8: "xor_ashr_not_vec" contains vectors which are unsupported
 
 1: "xor_ashr_not_vec_commuted"
-"xor_ashr_not_vec_commuted" contains vectors which are unsupported
+8: "xor_ashr_not_vec_commuted" contains vectors which are unsupported
 
 1: "xor_ashr_not_vec_poison_1"
-"xor_ashr_not_vec_poison_1" contains vectors which are unsupported
+8: "xor_ashr_not_vec_poison_1" contains vectors which are unsupported
 
 1: "xor_ashr_not_vec_poison_2"
 4: "xor_ashr_not_vec_poison_2" has unsupported operation: builtin.unregistered: llvm.mlir.poison

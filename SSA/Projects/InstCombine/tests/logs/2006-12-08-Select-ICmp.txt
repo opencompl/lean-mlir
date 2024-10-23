@@ -7,8 +7,6 @@
 
 4: "visible" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "visible" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "visible" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "determinant"

@@ -53,13 +53,13 @@
 2: llvm.return
 
 1: "vector_test"
-"vector_test" contains vectors which are unsupported
+8: "vector_test" contains vectors which are unsupported
 
 1: "vector_test_poison"
-"vector_test_poison" contains vectors which are unsupported
+8: "vector_test_poison" contains vectors which are unsupported
 
 1: "vector_test_poison_nsw_nuw"
-"vector_test_poison_nsw_nuw" contains vectors which are unsupported
+8: "vector_test_poison_nsw_nuw" contains vectors which are unsupported
 
 1: "pr50308"
 4: "pr50308" has unsupported operation: builtin.unregistered: llvm.cond_br

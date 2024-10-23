@@ -25,12 +25,8 @@
 1: "fptrunc_select_true_val"
 4: "fptrunc_select_true_val" has unsupported operation: builtin.unregistered: llvm.fptrunc
 
-4: "fptrunc_select_true_val" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "fptrunc_select_false_val"
 4: "fptrunc_select_false_val" has unsupported operation: builtin.unregistered: llvm.fptrunc
-
-4: "fptrunc_select_false_val" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "use"
 5: "use" is empty
@@ -42,12 +38,8 @@
 
 4: "fptrunc_select_true_val_extra_use" has unsupported operation: builtin.unregistered: llvm.fptrunc
 
-4: "fptrunc_select_true_val_extra_use" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "fptrunc_select_true_val_extra_use_2"
 4: "fptrunc_select_true_val_extra_use_2" has unsupported operation: builtin.unregistered: llvm.fpext
-
-4: "fptrunc_select_true_val_extra_use_2" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "fptrunc_select_true_val_extra_use_2" has unsupported operation: llvm.call
 
@@ -56,14 +48,10 @@
 1: "fptrunc_select_true_val_type_mismatch"
 4: "fptrunc_select_true_val_type_mismatch" has unsupported operation: builtin.unregistered: llvm.fpext
 
-4: "fptrunc_select_true_val_type_mismatch" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "fptrunc_select_true_val_type_mismatch" has unsupported operation: builtin.unregistered: llvm.fptrunc
 
 1: "fptrunc_select_true_val_type_mismatch_fast"
 4: "fptrunc_select_true_val_type_mismatch_fast" has unsupported operation: builtin.unregistered: llvm.fpext
-
-4: "fptrunc_select_true_val_type_mismatch_fast" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "fptrunc_select_true_val_type_mismatch_fast" has unsupported operation: builtin.unregistered: llvm.fptrunc
 

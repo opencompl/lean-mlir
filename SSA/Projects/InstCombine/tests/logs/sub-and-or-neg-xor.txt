@@ -32,7 +32,7 @@
 2: llvm.return
 
 1: "sub_to_xor_vec"
-"sub_to_xor_vec" contains vectors which are unsupported
+8: "sub_to_xor_vec" contains vectors which are unsupported
 
 1: "sub_to_xor_extra_use_and_or"
 4: "sub_to_xor_extra_use_and_or" has unsupported operation: llvm.call

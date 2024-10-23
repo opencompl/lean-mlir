@@ -8,7 +8,7 @@
 2: llvm.return
 
 1: "p_splatvec"
-"p_splatvec" contains vectors which are unsupported
+8: "p_splatvec" contains vectors which are unsupported
 
 1: "p_vec_undef"
 4: "p_vec_undef" has unsupported operation: llvm.mlir.undef
@@ -42,7 +42,7 @@
 2: llvm.return
 
 1: "p_constmask_splatvec"
-"p_constmask_splatvec" contains vectors which are unsupported
+8: "p_constmask_splatvec" contains vectors which are unsupported
 
 1: "p_constmask_vec"
 7: "p_constmask_vec" is unchanged by InstCombine
@@ -76,7 +76,7 @@
 2: llvm.return
 
 1: "p_constmask2_splatvec"
-"p_constmask2_splatvec" contains vectors which are unsupported
+8: "p_constmask2_splatvec" contains vectors which are unsupported
 
 1: "p_constmask2_vec"
 7: "p_constmask2_vec" is unchanged by InstCombine

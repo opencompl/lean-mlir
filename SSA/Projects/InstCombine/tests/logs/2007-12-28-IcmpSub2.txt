@@ -7,8 +7,6 @@
 
 4: "test1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "test1" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "test2"
 4: "test2" has unsupported operation after optimization: llvm.alloca
 
@@ -17,8 +15,6 @@
 4: "test2" has unsupported operation after optimization: llvm.load
 
 4: "test2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "test2" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "test3"
 4: "test3" has unsupported operation after optimization: llvm.alloca
@@ -29,8 +25,6 @@
 
 4: "test3" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "test3" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "test4"
 4: "test4" has unsupported operation after optimization: llvm.alloca
 
@@ -39,8 +33,6 @@
 4: "test4" has unsupported operation after optimization: llvm.load
 
 4: "test4" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "test4" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "test5"
 4: "test5" has unsupported operation after optimization: llvm.alloca
@@ -51,8 +43,6 @@
 
 4: "test5" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "test5" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "test6"
 4: "test6" has unsupported operation after optimization: llvm.alloca
 
@@ -61,8 +51,6 @@
 4: "test6" has unsupported operation after optimization: llvm.load
 
 4: "test6" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "test6" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "test7"
 4: "test7" has unsupported operation after optimization: llvm.alloca
@@ -73,8 +61,6 @@
 
 4: "test7" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "test7" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "test8"
 4: "test8" has unsupported operation after optimization: llvm.alloca
 
@@ -83,6 +69,4 @@
 4: "test8" has unsupported operation after optimization: llvm.load
 
 4: "test8" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "test8" has unsupported operation after optimization: builtin.unregistered: llvm.select
 

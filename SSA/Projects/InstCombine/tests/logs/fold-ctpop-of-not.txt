@@ -50,15 +50,11 @@
 4: "fold_cmp_ne_ctpop_var_fail" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "fold_cmp_ult_ctpop_c"
-4: "fold_cmp_ult_ctpop_c" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "fold_cmp_ult_ctpop_c" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
 4: "fold_cmp_ult_ctpop_c" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "fold_cmp_sle_ctpop_c"
-4: "fold_cmp_sle_ctpop_c" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "fold_cmp_sle_ctpop_c" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
 4: "fold_cmp_sle_ctpop_c" has unsupported operation: builtin.unregistered: llvm.icmp

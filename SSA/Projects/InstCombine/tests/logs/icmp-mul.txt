@@ -394,8 +394,6 @@
 
 4: "reused_mul_nuw_xy_z_selectnonzero_ugt" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "reused_mul_nuw_xy_z_selectnonzero_ugt" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "mul_mixed_nsw_nuw_xy_z_setnonzero_vec_ule"
 4: "mul_mixed_nsw_nuw_xy_z_setnonzero_vec_ule" has unsupported operation: builtin.unregistered: llvm.icmp
 

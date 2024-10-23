@@ -23,15 +23,11 @@
 4: "not_sext_vec" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "scalar_select_of_vectors"
-4: "scalar_select_of_vectors" has unsupported operation: builtin.unregistered: llvm.select
+7: "scalar_select_of_vectors" is unchanged by InstCombine
 
 1: "test3"
 4: "test3" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "test3" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "test4"
 4: "test4" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "test4" has unsupported operation after optimization: builtin.unregistered: llvm.select
 

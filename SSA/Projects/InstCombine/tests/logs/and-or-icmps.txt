@@ -24,8 +24,6 @@
 
 4: "PR2330_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "PR2330_logical" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "or_eq_with_one_bit_diff_constants1"
 4: "or_eq_with_one_bit_diff_constants1" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -189,8 +187,6 @@
 
 4: "substitute_constant_and_eq_eq_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "substitute_constant_and_eq_eq_logical" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "substitute_constant_and_eq_eq_commute"
 4: "substitute_constant_and_eq_eq_commute" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -220,8 +216,6 @@
 4: "substitute_constant_and_eq_ne_vec_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "substitute_constant_and_eq_ne_vec_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "substitute_constant_and_eq_ne_vec_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "substitute_constant_and_eq_sgt_use"
 4: "substitute_constant_and_eq_sgt_use" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -295,8 +289,6 @@
 
 4: "substitute_constant_or_ne_swap_sle_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "substitute_constant_or_ne_swap_sle_logical" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "substitute_constant_or_ne_uge_commute"
 4: "substitute_constant_or_ne_uge_commute" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -346,8 +338,6 @@
 
 4: "substitute_constant_or_ne_slt_swap_vec_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "substitute_constant_or_ne_slt_swap_vec_logical" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "substitute_constant_or_eq_swap_ne"
 4: "substitute_constant_or_eq_swap_ne" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -357,8 +347,6 @@
 4: "substitute_constant_or_eq_swap_ne_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "substitute_constant_or_eq_swap_ne_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "substitute_constant_or_eq_swap_ne_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "substitute_constant_or_ne_sge_use"
 4: "substitute_constant_or_ne_sge_use" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -470,14 +458,10 @@
 
 4: "bitwise_and_logical_and_icmps" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "bitwise_and_logical_and_icmps" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "bitwise_and_logical_and_icmps_comm1"
 4: "bitwise_and_logical_and_icmps_comm1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "bitwise_and_logical_and_icmps_comm1" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "bitwise_and_logical_and_icmps_comm1" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "bitwise_and_logical_and_icmps_comm2"
 4: "bitwise_and_logical_and_icmps_comm2" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -486,14 +470,10 @@
 
 4: "bitwise_and_logical_and_icmps_comm2" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "bitwise_and_logical_and_icmps_comm2" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "bitwise_and_logical_and_icmps_comm3"
 4: "bitwise_and_logical_and_icmps_comm3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "bitwise_and_logical_and_icmps_comm3" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "bitwise_and_logical_and_icmps_comm3" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "logical_and_bitwise_and_icmps"
 4: "logical_and_bitwise_and_icmps" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -502,16 +482,12 @@
 
 4: "logical_and_bitwise_and_icmps" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "logical_and_bitwise_and_icmps" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "logical_and_bitwise_and_icmps_comm1"
 4: "logical_and_bitwise_and_icmps_comm1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "logical_and_bitwise_and_icmps_comm1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "logical_and_bitwise_and_icmps_comm1" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "logical_and_bitwise_and_icmps_comm1" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "logical_and_bitwise_and_icmps_comm2"
 4: "logical_and_bitwise_and_icmps_comm2" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -520,16 +496,12 @@
 
 4: "logical_and_bitwise_and_icmps_comm2" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "logical_and_bitwise_and_icmps_comm2" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "logical_and_bitwise_and_icmps_comm3"
 4: "logical_and_bitwise_and_icmps_comm3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "logical_and_bitwise_and_icmps_comm3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "logical_and_bitwise_and_icmps_comm3" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "logical_and_bitwise_and_icmps_comm3" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "logical_and_logical_and_icmps"
 4: "logical_and_logical_and_icmps" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -538,20 +510,12 @@
 
 4: "logical_and_logical_and_icmps" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "logical_and_logical_and_icmps" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "logical_and_logical_and_icmps" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "logical_and_logical_and_icmps_comm1"
 4: "logical_and_logical_and_icmps_comm1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "logical_and_logical_and_icmps_comm1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "logical_and_logical_and_icmps_comm1" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "logical_and_logical_and_icmps_comm1" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "logical_and_logical_and_icmps_comm1" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "logical_and_logical_and_icmps_comm2"
 4: "logical_and_logical_and_icmps_comm2" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -560,16 +524,10 @@
 
 4: "logical_and_logical_and_icmps_comm2" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "logical_and_logical_and_icmps_comm2" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "logical_and_logical_and_icmps_comm2" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "logical_and_logical_and_icmps_comm3"
 4: "logical_and_logical_and_icmps_comm3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "logical_and_logical_and_icmps_comm3" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "logical_and_logical_and_icmps_comm3" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "bitwise_or_bitwise_or_icmps"
 4: "bitwise_or_bitwise_or_icmps" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -596,14 +554,10 @@
 
 4: "bitwise_or_logical_or_icmps" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "bitwise_or_logical_or_icmps" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "bitwise_or_logical_or_icmps_comm1"
 4: "bitwise_or_logical_or_icmps_comm1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "bitwise_or_logical_or_icmps_comm1" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "bitwise_or_logical_or_icmps_comm1" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "bitwise_or_logical_or_icmps_comm2"
 4: "bitwise_or_logical_or_icmps_comm2" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -612,14 +566,10 @@
 
 4: "bitwise_or_logical_or_icmps_comm2" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "bitwise_or_logical_or_icmps_comm2" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "bitwise_or_logical_or_icmps_comm3"
 4: "bitwise_or_logical_or_icmps_comm3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "bitwise_or_logical_or_icmps_comm3" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "bitwise_or_logical_or_icmps_comm3" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "logical_or_bitwise_or_icmps"
 4: "logical_or_bitwise_or_icmps" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -628,16 +578,12 @@
 
 4: "logical_or_bitwise_or_icmps" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "logical_or_bitwise_or_icmps" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "logical_or_bitwise_or_icmps_comm1"
 4: "logical_or_bitwise_or_icmps_comm1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "logical_or_bitwise_or_icmps_comm1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "logical_or_bitwise_or_icmps_comm1" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "logical_or_bitwise_or_icmps_comm1" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "logical_or_bitwise_or_icmps_comm2"
 4: "logical_or_bitwise_or_icmps_comm2" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -646,16 +592,12 @@
 
 4: "logical_or_bitwise_or_icmps_comm2" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "logical_or_bitwise_or_icmps_comm2" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "logical_or_bitwise_or_icmps_comm3"
 4: "logical_or_bitwise_or_icmps_comm3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "logical_or_bitwise_or_icmps_comm3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "logical_or_bitwise_or_icmps_comm3" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "logical_or_bitwise_or_icmps_comm3" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "logical_or_logical_or_icmps"
 4: "logical_or_logical_or_icmps" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -664,20 +606,12 @@
 
 4: "logical_or_logical_or_icmps" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "logical_or_logical_or_icmps" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "logical_or_logical_or_icmps" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "logical_or_logical_or_icmps_comm1"
 4: "logical_or_logical_or_icmps_comm1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "logical_or_logical_or_icmps_comm1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "logical_or_logical_or_icmps_comm1" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "logical_or_logical_or_icmps_comm1" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "logical_or_logical_or_icmps_comm1" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "logical_or_logical_or_icmps_comm2"
 4: "logical_or_logical_or_icmps_comm2" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -686,53 +620,33 @@
 
 4: "logical_or_logical_or_icmps_comm2" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "logical_or_logical_or_icmps_comm2" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "logical_or_logical_or_icmps_comm2" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "logical_or_logical_or_icmps_comm3"
 4: "logical_or_logical_or_icmps_comm3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "logical_or_logical_or_icmps_comm3" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "logical_or_logical_or_icmps_comm3" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "bitwise_and_logical_and_masked_icmp_asymmetric"
 4: "bitwise_and_logical_and_masked_icmp_asymmetric" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "bitwise_and_logical_and_masked_icmp_asymmetric" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "bitwise_and_logical_and_masked_icmp_allzeros"
 4: "bitwise_and_logical_and_masked_icmp_allzeros" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "bitwise_and_logical_and_masked_icmp_allzeros" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "bitwise_and_logical_and_masked_icmp_allzeros_poison1"
 4: "bitwise_and_logical_and_masked_icmp_allzeros_poison1" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "bitwise_and_logical_and_masked_icmp_allzeros_poison1" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "bitwise_and_logical_and_masked_icmp_allzeros_poison2"
 4: "bitwise_and_logical_and_masked_icmp_allzeros_poison2" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "bitwise_and_logical_and_masked_icmp_allzeros_poison2" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "bitwise_and_logical_and_masked_icmp_allzeros_poison2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "bitwise_and_logical_and_masked_icmp_allones"
 4: "bitwise_and_logical_and_masked_icmp_allones" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "bitwise_and_logical_and_masked_icmp_allones" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "bitwise_and_logical_and_masked_icmp_allones_poison1"
 4: "bitwise_and_logical_and_masked_icmp_allones_poison1" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "bitwise_and_logical_and_masked_icmp_allones_poison1" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "bitwise_and_logical_and_masked_icmp_allones_poison2"
 4: "bitwise_and_logical_and_masked_icmp_allones_poison2" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "bitwise_and_logical_and_masked_icmp_allones_poison2" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "bitwise_and_logical_and_masked_icmp_allones_poison2" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -957,8 +871,6 @@
 1: "icmp_slt_0_and_icmp_sge_neg1_i64_fail"
 4: "icmp_slt_0_and_icmp_sge_neg1_i64_fail" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "icmp_slt_0_and_icmp_sge_neg1_i64_fail" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "icmp_slt_0_and_icmp_sge_neg1_i32x2"
 4: "icmp_slt_0_and_icmp_sge_neg1_i32x2" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -998,8 +910,6 @@
 1: "icmp_slt_0_and_icmp_sge_neg2_i32_multiuse2"
 4: "icmp_slt_0_and_icmp_sge_neg2_i32_multiuse2" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "icmp_slt_0_and_icmp_sge_neg2_i32_multiuse2" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "icmp_slt_0_and_icmp_sge_neg2_i32_multiuse2" has unsupported operation: llvm.call
 
 1: "icmp_slt_0_and_icmp_sge_neg2_i32_multiuse_fail0"
@@ -1020,8 +930,6 @@
 
 1: "icmp_x_slt_0_and_icmp_y_ne_neg2_i32_multiuse_fail2"
 4: "icmp_x_slt_0_and_icmp_y_ne_neg2_i32_multiuse_fail2" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "icmp_x_slt_0_and_icmp_y_ne_neg2_i32_multiuse_fail2" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "icmp_x_slt_0_and_icmp_y_ne_neg2_i32_multiuse_fail2" has unsupported operation: llvm.call
 
@@ -1075,30 +983,18 @@
 1: "logical_and_icmps1"
 4: "logical_and_icmps1" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "logical_and_icmps1" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "logical_and_icmps2"
 4: "logical_and_icmps2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "logical_and_icmps2" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 4: "logical_and_icmps2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "logical_and_icmps2" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "logical_and_icmps_vec1"
 4: "logical_and_icmps_vec1" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "logical_and_icmps_vec1" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "logical_and_icmps_fail1"
 4: "logical_and_icmps_fail1" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "logical_and_icmps_fail1" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "logical_and_icmps_fail1" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "logical_and_icmps_fail1" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "icmp_eq_or_z_or_pow2orz"
 4: "icmp_eq_or_z_or_pow2orz" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -1118,8 +1014,6 @@
 
 4: "icmp_eq_or_z_or_pow2orz_fail_logic_or" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "icmp_eq_or_z_or_pow2orz_fail_logic_or" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "icmp_ne_and_z_and_pow2orz"
 4: "icmp_ne_and_z_and_pow2orz" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -1137,8 +1031,6 @@
 4: "icmp_ne_and_z_and_pow2orz_fail_logic_and" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "icmp_ne_and_z_and_pow2orz_fail_logic_and" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "icmp_ne_and_z_and_pow2orz_fail_logic_and" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "icmp_eq_or_z_or_pow2orz_fail_not_pow2"
 4: "icmp_eq_or_z_or_pow2orz_fail_not_pow2" has unsupported operation: builtin.unregistered: llvm.icmp

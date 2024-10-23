@@ -83,13 +83,13 @@
 4: "zext_abs" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "lshr_abs"
-"lshr_abs" contains vectors which are unsupported
+8: "lshr_abs" contains vectors which are unsupported
 
 1: "and_abs"
 4: "and_abs" has unsupported operation after optimization: builtin.unregistered: llvm.intr.abs
 
 1: "select_abs"
-4: "select_abs" has unsupported operation: builtin.unregistered: llvm.select
+8: "select_abs" contains vectors which are unsupported
 
 1: "assume_abs"
 4: "assume_abs" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -147,7 +147,7 @@
 4: "demand_low_bit" has unsupported operation after optimization: builtin.unregistered: llvm.intr.abs
 
 1: "demand_low_bit_int_min_is_poison"
-"demand_low_bit_int_min_is_poison" contains vectors which are unsupported
+8: "demand_low_bit_int_min_is_poison" contains vectors which are unsupported
 
 1: "demand_low_bits"
 4: "demand_low_bits" has unsupported operation: builtin.unregistered: llvm.intr.abs

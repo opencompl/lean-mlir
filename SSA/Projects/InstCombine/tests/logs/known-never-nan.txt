@@ -4,14 +4,10 @@
 1: "select_maybe_nan_lhs"
 4: "select_maybe_nan_lhs" has unsupported operation: builtin.unregistered: llvm.fadd
 
-4: "select_maybe_nan_lhs" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "select_maybe_nan_lhs" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "select_maybe_nan_rhs"
 4: "select_maybe_nan_rhs" has unsupported operation: builtin.unregistered: llvm.fadd
-
-4: "select_maybe_nan_rhs" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "select_maybe_nan_rhs" has unsupported operation: builtin.unregistered: llvm.fcmp
 

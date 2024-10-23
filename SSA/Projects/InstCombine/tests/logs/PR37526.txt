@@ -5,8 +5,6 @@
 
 4: "PR37526" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "PR37526" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "PR37526" has unsupported operation: llvm.load
 
 4: "PR37526" has unsupported operation: llvm.store

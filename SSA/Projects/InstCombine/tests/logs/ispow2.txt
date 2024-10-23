@@ -162,8 +162,6 @@
 
 4: "is_pow2_ctpop_wrong_cmp_op1_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "is_pow2_ctpop_wrong_cmp_op1_logical" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "is_pow2_ctpop_wrong_cmp_op2"
 4: "is_pow2_ctpop_wrong_cmp_op2" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
@@ -177,8 +175,6 @@
 4: "is_pow2_ctpop_wrong_cmp_op2_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "is_pow2_ctpop_wrong_cmp_op2_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "is_pow2_ctpop_wrong_cmp_op2_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "is_pow2_ctpop_wrong_pred1"
 4: "is_pow2_ctpop_wrong_pred1" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
@@ -203,8 +199,6 @@
 4: "is_pow2_ctpop_wrong_pred2_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "is_pow2_ctpop_wrong_pred2_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "is_pow2_ctpop_wrong_pred2_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "isnot_pow2_ctpop"
 4: "isnot_pow2_ctpop" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
@@ -261,8 +255,6 @@
 
 4: "isnot_pow2_ctpop_wrong_cmp_op1_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "isnot_pow2_ctpop_wrong_cmp_op1_logical" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "isnot_pow2_ctpop_wrong_cmp_op2"
 4: "isnot_pow2_ctpop_wrong_cmp_op2" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
@@ -277,8 +269,6 @@
 
 4: "isnot_pow2_ctpop_wrong_cmp_op2_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "isnot_pow2_ctpop_wrong_cmp_op2_logical" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "isnot_pow2_ctpop_wrong_pred2"
 4: "isnot_pow2_ctpop_wrong_pred2" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
@@ -292,8 +282,6 @@
 4: "isnot_pow2_ctpop_wrong_pred2_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "isnot_pow2_ctpop_wrong_pred2_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "isnot_pow2_ctpop_wrong_pred2_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "is_pow2_negate_op"
 4: "is_pow2_negate_op" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
@@ -419,8 +407,6 @@
 
 4: "is_pow2or0_ctpop_wrong_cmp_op1_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "is_pow2or0_ctpop_wrong_cmp_op1_logical" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "is_pow2or0_ctpop_commute_vec_wrong_cmp_op1"
 4: "is_pow2or0_ctpop_commute_vec_wrong_cmp_op1" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
@@ -447,10 +433,8 @@
 
 4: "is_pow2or0_ctpop_wrong_pred2_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "is_pow2or0_ctpop_wrong_pred2_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "is_pow2or0_ctpop_commute_vec_wrong_pred3"
-"is_pow2or0_ctpop_commute_vec_wrong_pred3" contains vectors which are unsupported
+8: "is_pow2or0_ctpop_commute_vec_wrong_pred3" contains vectors which are unsupported
 
 1: "isnot_pow2nor0_ctpop"
 4: "isnot_pow2nor0_ctpop" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
@@ -516,8 +500,6 @@
 
 4: "isnot_pow2nor0_ctpop_wrong_cmp_op1_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "isnot_pow2nor0_ctpop_wrong_cmp_op1_logical" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "isnot_pow2nor0_ctpop_commute_vec_wrong_cmp_op1"
 4: "isnot_pow2nor0_ctpop_commute_vec_wrong_cmp_op1" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
@@ -544,10 +526,8 @@
 
 4: "isnot_pow2nor0_ctpop_wrong_pred2_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "isnot_pow2nor0_ctpop_wrong_pred2_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "isnot_pow2nor0_wrong_pred3_ctpop_commute_vec"
-"isnot_pow2nor0_wrong_pred3_ctpop_commute_vec" contains vectors which are unsupported
+8: "isnot_pow2nor0_wrong_pred3_ctpop_commute_vec" contains vectors which are unsupported
 
 1: "is_pow2_fail_pr63327"
 4: "is_pow2_fail_pr63327" has unsupported operation: builtin.unregistered: llvm.icmp

@@ -77,6 +77,112 @@ theorem t2_proof : t2_before ⊑ t2_after := by
 
 
 
+def t4_before := [llvm|
+{
+^0(%arg200 : i8, %arg201 : i1):
+  %0 = "llvm.mlir.constant"() <{value = -42 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 44 : i8}> : () -> i8
+  %2 = "llvm.select"(%arg201, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  %3 = llvm.sub %arg200, %2 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+def t4_after := [llvm|
+{
+^0(%arg200 : i8, %arg201 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = -44 : i8}> : () -> i8
+  %2 = "llvm.select"(%arg201, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  %3 = llvm.add %2, %arg200 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+theorem t4_proof : t4_before ⊑ t4_after := by
+  unfold t4_before t4_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN t4
+  all_goals (try extract_goal ; sorry)
+  ---END t4
+
+
+
+def PR52261_before := [llvm|
+{
+^0(%arg198 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = -2 : i32}> : () -> i32
+  %2 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %3 = "llvm.select"(%arg198, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  %4 = llvm.sub %2, %3 overflow<nsw> : i32
+  %5 = llvm.and %3, %4 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+def PR52261_after := [llvm|
+{
+^0(%arg198 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  "llvm.return"(%0) : (i32) -> ()
+}
+]
+theorem PR52261_proof : PR52261_before ⊑ PR52261_after := by
+  unfold PR52261_before PR52261_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN PR52261
+  all_goals (try extract_goal ; sorry)
+  ---END PR52261
+
+
+
+def t7_before := [llvm|
+{
+^0(%arg187 : i8, %arg188 : i1, %arg189 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
+  %2 = llvm.shl %0, %arg189 : i8
+  %3 = "llvm.select"(%arg188, %1, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  %4 = llvm.sub %arg187, %3 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+def t7_after := [llvm|
+{
+^0(%arg187 : i8, %arg188 : i1, %arg189 : i8):
+  %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
+  %2 = llvm.shl %0, %arg189 overflow<nsw> : i8
+  %3 = "llvm.select"(%arg188, %1, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  %4 = llvm.add %3, %arg187 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+theorem t7_proof : t7_before ⊑ t7_after := by
+  unfold t7_before t7_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN t7
+  all_goals (try extract_goal ; sorry)
+  ---END t7
+
+
+
 def t9_before := [llvm|
 {
 ^0(%arg182 : i8, %arg183 : i8):

@@ -145,8 +145,6 @@
 4: "sext_zext_nneg_uge_op0_wide" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "zext_sext_sgt_known_nonneg"
-4: "zext_sext_sgt_known_nonneg" has unsupported operation: llvm.udiv
-
 4: "zext_sext_sgt_known_nonneg" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "zext_sext_ugt_known_nonneg"
@@ -172,8 +170,6 @@
 4: "sext_zext_ult_known_nonneg" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "sext_zext_ne_known_nonneg"
-4: "sext_zext_ne_known_nonneg" has unsupported operation: llvm.udiv
-
 4: "sext_zext_ne_known_nonneg" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "sext_zext_sge_known_nonneg_op0_narrow"
@@ -201,5 +197,5 @@
 4: "zext_eq_sext_fail_not_i1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "zext_ne_sext"
-"zext_ne_sext" contains vectors which are unsupported
+8: "zext_ne_sext" contains vectors which are unsupported
 

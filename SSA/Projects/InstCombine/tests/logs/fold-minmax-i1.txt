@@ -11,14 +11,14 @@
 4: "smax_scalar" has unsupported operation after optimization: builtin.unregistered: llvm.intr.smax
 
 1: "umin_vector"
-"umin_vector" contains vectors which are unsupported
+8: "umin_vector" contains vectors which are unsupported
 
 1: "smin_vector"
-"smin_vector" contains vectors which are unsupported
+8: "smin_vector" contains vectors which are unsupported
 
 1: "umax_vector"
-"umax_vector" contains vectors which are unsupported
+8: "umax_vector" contains vectors which are unsupported
 
 1: "smax_vector"
-"smax_vector" contains vectors which are unsupported
+8: "smax_vector" contains vectors which are unsupported
 

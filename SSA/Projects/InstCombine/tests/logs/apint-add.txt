@@ -20,7 +20,7 @@
 2: llvm.return
 
 1: "test3vec"
-"test3vec" contains vectors which are unsupported
+8: "test3vec" contains vectors which are unsupported
 
 1: "test4"
 2: llvm.func

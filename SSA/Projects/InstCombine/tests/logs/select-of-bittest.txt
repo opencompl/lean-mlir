@@ -126,17 +126,11 @@
 1: "f_var2"
 4: "f_var2" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "f_var2" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "f_var2_splatvec"
 4: "f_var2_splatvec" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "f_var2_splatvec" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "f_var2_vec"
 4: "f_var2_vec" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "f_var2_vec" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "f_var2_vec_poison"
 4: "f_var2_vec_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -159,22 +153,14 @@
 
 4: "f_var2_vec_poison" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "f_var2_vec_poison" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "f_var3"
 4: "f_var3" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "f_var3" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "f_var3_commutative_and"
 4: "f_var3_commutative_and" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "f_var3_commutative_and" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "f_var3_splatvec"
 4: "f_var3_splatvec" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "f_var3_splatvec" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "f_var3_vec_poison"
 4: "f_var3_vec_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -197,8 +183,6 @@
 
 4: "f_var3_vec_poison" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "f_var3_vec_poison" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "use32"
 5: "use32" is empty
 
@@ -207,8 +191,6 @@
 
 1: "n_var0_oneuse"
 4: "n_var0_oneuse" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "n_var0_oneuse" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "n_var0_oneuse" has unsupported operation: llvm.call
 
@@ -221,8 +203,6 @@
 1: "n_var1_oneuse"
 4: "n_var1_oneuse" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "n_var1_oneuse" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "n_var1_oneuse" has unsupported operation: llvm.call
 
 4: "n_var1_oneuse" has unsupported operation: llvm.call
@@ -232,45 +212,27 @@
 1: "n0"
 4: "n0" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "n0" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "n1"
 4: "n1" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "n1" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "n2"
 4: "n2" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "n2" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "n3"
 4: "n3" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "n3" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "n4"
 4: "n4" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "n4" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "n5"
 4: "n5" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "n5" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "n6"
 4: "n6" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "n6" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "n7"
 4: "n7" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "n7" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "n8"
 4: "n8" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "n8" has unsupported operation: builtin.unregistered: llvm.select
 

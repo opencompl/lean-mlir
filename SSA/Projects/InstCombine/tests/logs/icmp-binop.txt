@@ -83,8 +83,6 @@
 
 4: "mul_selectnzV_unkV_nsw_ne" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "mul_selectnzV_unkV_nsw_ne" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "mul_unkV_unkV_nsw_nuw_ne"
 4: "mul_unkV_unkV_nsw_nuw_ne" has unsupported operation: builtin.unregistered: llvm.icmp
 

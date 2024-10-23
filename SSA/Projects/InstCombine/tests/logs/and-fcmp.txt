@@ -6,8 +6,6 @@
 
 4: "PR1738_logical" has unsupported operation: builtin.unregistered: llvm.fcmp
 
-4: "PR1738_logical" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "PR1738_logical_noundef"
 4: "PR1738_logical_noundef" has unsupported operation: builtin.unregistered: llvm.fcmp
 
@@ -39,11 +37,7 @@
 1: "PR41069_logical"
 4: "PR41069_logical" has unsupported operation: builtin.unregistered: llvm.fcmp
 
-4: "PR41069_logical" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "PR41069_logical" has unsupported operation: builtin.unregistered: llvm.fcmp
-
-4: "PR41069_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "PR41069_commute"
 4: "PR41069_commute" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -52,10 +46,6 @@
 4: "PR41069_commute_logical" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "PR41069_commute_logical" has unsupported operation: builtin.unregistered: llvm.fcmp
-
-4: "PR41069_commute_logical" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "PR41069_commute_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "PR41069_vec"
 4: "PR41069_vec" has unsupported operation: llvm.mlir.undef
@@ -97,8 +87,6 @@
 
 4: "PR15737_logical" has unsupported operation: builtin.unregistered: llvm.fcmp
 
-4: "PR15737_logical" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "t9"
 4: "t9" has unsupported operation: builtin.unregistered: llvm.fcmp
 
@@ -111,8 +99,6 @@
 4: "fcmp_ord_nonzero_logical" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "fcmp_ord_nonzero_logical" has unsupported operation: builtin.unregistered: llvm.fcmp
-
-4: "fcmp_ord_nonzero_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "fcmp_ord_nonzero_vec"
 4: "fcmp_ord_nonzero_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -127,14 +113,10 @@
 
 4: "auto_gen_0_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_0_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_0_logical_fmf"
 4: "auto_gen_0_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_0_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_0_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_1"
 4: "auto_gen_1" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
@@ -146,14 +128,10 @@
 
 4: "auto_gen_1_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_1_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_1_logical_fmf"
 4: "auto_gen_1_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_1_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_1_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_2"
 4: "auto_gen_2" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -174,14 +152,10 @@
 
 4: "auto_gen_3_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_3_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_3_logical_fmf"
 4: "auto_gen_3_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_3_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_3_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_4"
 4: "auto_gen_4" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
@@ -193,14 +167,10 @@
 
 4: "auto_gen_4_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_4_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_4_logical_fmf"
 4: "auto_gen_4_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_4_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_4_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_5"
 4: "auto_gen_5" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -221,14 +191,10 @@
 
 4: "auto_gen_6_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_6_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_6_logical_fmf"
 4: "auto_gen_6_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_6_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_6_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_7"
 4: "auto_gen_7" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -267,14 +233,10 @@
 
 4: "auto_gen_10_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_10_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_10_logical_fmf"
 4: "auto_gen_10_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_10_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_10_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_11"
 4: "auto_gen_11" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
@@ -286,14 +248,10 @@
 
 4: "auto_gen_11_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_11_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_11_logical_fmf"
 4: "auto_gen_11_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_11_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_11_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_12"
 4: "auto_gen_12" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
@@ -305,14 +263,10 @@
 
 4: "auto_gen_12_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_12_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_12_logical_fmf"
 4: "auto_gen_12_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_12_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_12_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_13"
 4: "auto_gen_13" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
@@ -324,14 +278,10 @@
 
 4: "auto_gen_13_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_13_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_13_logical_fmf"
 4: "auto_gen_13_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_13_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_13_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_14"
 4: "auto_gen_14" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -352,14 +302,10 @@
 
 4: "auto_gen_15_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_15_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_15_logical_fmf"
 4: "auto_gen_15_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_15_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_15_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_16"
 4: "auto_gen_16" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -380,14 +326,10 @@
 
 4: "auto_gen_17_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_17_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_17_logical_fmf"
 4: "auto_gen_17_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_17_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_17_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_18"
 4: "auto_gen_18" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -426,14 +368,10 @@
 
 4: "auto_gen_21_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_21_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_21_logical_fmf"
 4: "auto_gen_21_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_21_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_21_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_22"
 4: "auto_gen_22" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
@@ -445,14 +383,10 @@
 
 4: "auto_gen_22_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_22_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_22_logical_fmf"
 4: "auto_gen_22_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_22_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_22_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_23"
 4: "auto_gen_23" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -509,14 +443,10 @@
 
 4: "auto_gen_28_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_28_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_28_logical_fmf"
 4: "auto_gen_28_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_28_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_28_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_29"
 4: "auto_gen_29" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -583,8 +513,6 @@
 
 4: "auto_gen_35_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_35_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_36"
 4: "auto_gen_36" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
@@ -595,14 +523,10 @@
 
 4: "auto_gen_36_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_36_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_36_logical_fmf"
 4: "auto_gen_36_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_36_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_36_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_37"
 4: "auto_gen_37" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -623,14 +547,10 @@
 
 4: "auto_gen_38_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_38_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_38_logical_fmf"
 4: "auto_gen_38_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_38_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_38_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_39"
 4: "auto_gen_39" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -651,14 +571,10 @@
 
 4: "auto_gen_40_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_40_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_40_logical_fmf"
 4: "auto_gen_40_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_40_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_40_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_41"
 4: "auto_gen_41" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -679,14 +595,10 @@
 
 4: "auto_gen_42_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_42_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_42_logical_fmf"
 4: "auto_gen_42_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_42_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_42_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_43"
 4: "auto_gen_43" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -716,14 +628,10 @@
 
 4: "auto_gen_45_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_45_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_45_logical_fmf"
 4: "auto_gen_45_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_45_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_45_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_46"
 4: "auto_gen_46" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
@@ -735,14 +643,10 @@
 
 4: "auto_gen_46_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_46_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_46_logical_fmf"
 4: "auto_gen_46_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_46_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_46_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_47"
 4: "auto_gen_47" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -772,14 +676,10 @@
 
 4: "auto_gen_49_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_49_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_49_logical_fmf"
 4: "auto_gen_49_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_49_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_49_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_50"
 4: "auto_gen_50" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
@@ -791,14 +691,10 @@
 
 4: "auto_gen_50_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_50_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_50_logical_fmf"
 4: "auto_gen_50_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_50_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_50_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_51"
 4: "auto_gen_51" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -829,8 +725,6 @@
 
 4: "auto_gen_53_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_53_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_54"
 4: "auto_gen_54" has unsupported operation: builtin.unregistered: llvm.fcmp
 
@@ -850,14 +744,10 @@
 
 4: "auto_gen_55_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_55_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_55_logical_fmf"
 4: "auto_gen_55_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_55_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_55_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_56"
 4: "auto_gen_56" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -896,14 +786,10 @@
 
 4: "auto_gen_59_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_59_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_59_logical_fmf"
 4: "auto_gen_59_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_59_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_59_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_60"
 4: "auto_gen_60" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -969,14 +855,10 @@
 
 4: "auto_gen_66_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_66_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_66_logical_fmf"
 4: "auto_gen_66_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_66_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_66_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_67"
 4: "auto_gen_67" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
@@ -988,14 +870,10 @@
 
 4: "auto_gen_67_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_67_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_67_logical_fmf"
 4: "auto_gen_67_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_67_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_67_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_68"
 4: "auto_gen_68" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
@@ -1007,14 +885,10 @@
 
 4: "auto_gen_68_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_68_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_68_logical_fmf"
 4: "auto_gen_68_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_68_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_68_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_69"
 4: "auto_gen_69" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
@@ -1026,14 +900,10 @@
 
 4: "auto_gen_69_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_69_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_69_logical_fmf"
 4: "auto_gen_69_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_69_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_69_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_70"
 4: "auto_gen_70" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -1091,8 +961,6 @@
 
 4: "auto_gen_75_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_75_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_76"
 4: "auto_gen_76" has unsupported operation: builtin.unregistered: llvm.fcmp
 
@@ -1121,14 +989,10 @@
 
 4: "auto_gen_78_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_78_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_78_logical_fmf"
 4: "auto_gen_78_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_78_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_78_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_79"
 4: "auto_gen_79" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -1149,14 +1013,10 @@
 
 4: "auto_gen_80_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_80_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_80_logical_fmf"
 4: "auto_gen_80_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_80_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_80_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_81"
 4: "auto_gen_81" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -1223,8 +1083,6 @@
 
 4: "auto_gen_87_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_87_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_88"
 4: "auto_gen_88" has unsupported operation: builtin.unregistered: llvm.fcmp
 
@@ -1262,14 +1120,10 @@
 
 4: "auto_gen_91_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_91_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_91_logical_fmf"
 4: "auto_gen_91_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_91_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_91_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_92"
 4: "auto_gen_92" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
@@ -1281,14 +1135,10 @@
 
 4: "auto_gen_92_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_92_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_92_logical_fmf"
 4: "auto_gen_92_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_92_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_92_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_93"
 4: "auto_gen_93" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -1355,8 +1205,6 @@
 
 4: "auto_gen_99_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_99_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_100"
 4: "auto_gen_100" has unsupported operation: builtin.unregistered: llvm.fcmp
 
@@ -1412,14 +1260,10 @@
 
 4: "auto_gen_105_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_105_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_105_logical_fmf"
 4: "auto_gen_105_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_105_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_105_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_106"
 4: "auto_gen_106" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
@@ -1431,14 +1275,10 @@
 
 4: "auto_gen_106_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_106_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_106_logical_fmf"
 4: "auto_gen_106_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_106_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_106_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_107"
 4: "auto_gen_107" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
@@ -1450,14 +1290,10 @@
 
 4: "auto_gen_107_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_107_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_107_logical_fmf"
 4: "auto_gen_107_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_107_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_107_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_108"
 4: "auto_gen_108" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
@@ -1469,14 +1305,10 @@
 
 4: "auto_gen_108_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_108_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_108_logical_fmf"
 4: "auto_gen_108_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_108_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_108_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_109"
 4: "auto_gen_109" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
@@ -1488,14 +1320,10 @@
 
 4: "auto_gen_109_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_109_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_109_logical_fmf"
 4: "auto_gen_109_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_109_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_109_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_110"
 4: "auto_gen_110" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
@@ -1507,14 +1335,10 @@
 
 4: "auto_gen_110_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_110_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_110_logical_fmf"
 4: "auto_gen_110_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_110_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_110_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_111"
 4: "auto_gen_111" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
@@ -1526,14 +1350,10 @@
 
 4: "auto_gen_111_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_111_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_111_logical_fmf"
 4: "auto_gen_111_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_111_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_111_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_112"
 4: "auto_gen_112" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
@@ -1544,8 +1364,6 @@
 4: "auto_gen_112_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_112_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_112_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_112_logical_fmf"
 4: "auto_gen_112_logical_fmf" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -1560,8 +1378,6 @@
 4: "auto_gen_113_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_113_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_113_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_114"
 4: "auto_gen_114" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -1583,8 +1399,6 @@
 
 4: "auto_gen_115_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_115_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_116"
 4: "auto_gen_116" has unsupported operation: builtin.unregistered: llvm.fcmp
 
@@ -1604,8 +1418,6 @@
 4: "auto_gen_117_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_117_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_117_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_118"
 4: "auto_gen_118" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -1627,8 +1439,6 @@
 
 4: "auto_gen_119_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_119_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_120"
 4: "auto_gen_120" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
@@ -1639,14 +1449,10 @@
 
 4: "auto_gen_120_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_120_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_120_logical_fmf"
 4: "auto_gen_120_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_120_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_120_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "auto_gen_121"
 4: "auto_gen_121" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -1713,8 +1519,6 @@
 
 4: "auto_gen_127_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_127_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_128"
 4: "auto_gen_128" has unsupported operation: builtin.unregistered: llvm.fcmp
 
@@ -1780,8 +1584,6 @@
 
 4: "auto_gen_134_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_134_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_135"
 4: "auto_gen_135" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
@@ -1792,14 +1594,10 @@
 
 4: "auto_gen_135_logical" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
-4: "auto_gen_135_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "auto_gen_135_logical_fmf"
 4: "auto_gen_135_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 4: "auto_gen_135_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
-4: "auto_gen_135_logical_fmf" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "intersect_fmf_1"
 4: "intersect_fmf_1" has unsupported operation: builtin.unregistered: llvm.fcmp

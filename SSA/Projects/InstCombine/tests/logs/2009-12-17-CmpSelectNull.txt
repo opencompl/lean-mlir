@@ -5,5 +5,3 @@
 
 4: "demangle_qualified" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "demangle_qualified" has unsupported operation: builtin.unregistered: llvm.select
-

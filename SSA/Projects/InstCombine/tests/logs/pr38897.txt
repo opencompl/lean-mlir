@@ -1,8 +1,4 @@
 1: "sharpening"
-4: "sharpening" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "sharpening" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "sharpening" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
 4: "sharpening" has unsupported operation: builtin.unregistered: llvm.intr.smax

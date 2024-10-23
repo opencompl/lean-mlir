@@ -9,8 +9,6 @@
 
 4: "fold_add_sext_eq_4_6" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "fold_add_sext_eq_4_6" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "fold_add_zext_eq_0_fail_multiuse_exp"
 4: "fold_add_zext_eq_0_fail_multiuse_exp" has unsupported operation: builtin.unregistered: llvm.icmp
 

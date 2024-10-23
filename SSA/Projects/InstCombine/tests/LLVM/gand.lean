@@ -166,6 +166,36 @@ theorem test3_proof : test3_before ⊑ test3_after := by
 
 
 
+def test3_logical_before := [llvm|
+{
+^0(%arg306 : i1):
+  %0 = "llvm.mlir.constant"() <{value = false}> : () -> i1
+  %1 = "llvm.select"(%arg306, %0, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+def test3_logical_after := [llvm|
+{
+^0(%arg306 : i1):
+  %0 = "llvm.mlir.constant"() <{value = false}> : () -> i1
+  "llvm.return"(%0) : (i1) -> ()
+}
+]
+theorem test3_logical_proof : test3_logical_before ⊑ test3_logical_after := by
+  unfold test3_logical_before test3_logical_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test3_logical
+  all_goals (try extract_goal ; sorry)
+  ---END test3_logical
+
+
+
 def test4_before := [llvm|
 {
 ^0(%arg305 : i1):
@@ -192,6 +222,36 @@ theorem test4_proof : test4_before ⊑ test4_after := by
   ---BEGIN test4
   all_goals (try extract_goal ; sorry)
   ---END test4
+
+
+
+def test4_logical_before := [llvm|
+{
+^0(%arg304 : i1):
+  %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
+  %1 = "llvm.mlir.constant"() <{value = false}> : () -> i1
+  %2 = "llvm.select"(%arg304, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  "llvm.return"(%2) : (i1) -> ()
+}
+]
+def test4_logical_after := [llvm|
+{
+^0(%arg304 : i1):
+  "llvm.return"(%arg304) : (i1) -> ()
+}
+]
+theorem test4_logical_proof : test4_logical_before ⊑ test4_logical_after := by
+  unfold test4_logical_before test4_logical_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test4_logical
+  all_goals (try extract_goal ; sorry)
+  ---END test4_logical
 
 
 
@@ -248,6 +308,35 @@ theorem test6_proof : test6_before ⊑ test6_after := by
   ---BEGIN test6
   all_goals (try extract_goal ; sorry)
   ---END test6
+
+
+
+def test6_logical_before := [llvm|
+{
+^0(%arg301 : i1):
+  %0 = "llvm.mlir.constant"() <{value = false}> : () -> i1
+  %1 = "llvm.select"(%arg301, %arg301, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+def test6_logical_after := [llvm|
+{
+^0(%arg301 : i1):
+  "llvm.return"(%arg301) : (i1) -> ()
+}
+]
+theorem test6_logical_proof : test6_logical_before ⊑ test6_logical_after := by
+  unfold test6_logical_before test6_logical_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test6_logical
+  all_goals (try extract_goal ; sorry)
+  ---END test6_logical
 
 
 
@@ -676,6 +765,41 @@ theorem test34_proof : test34_before ⊑ test34_after := by
   ---BEGIN test34
   all_goals (try extract_goal ; sorry)
   ---END test34
+
+
+
+def test40_before := [llvm|
+{
+^0(%arg216 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 1000 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 10 : i32}> : () -> i32
+  %2 = "llvm.mlir.constant"() <{value = 123 : i32}> : () -> i32
+  %3 = "llvm.select"(%arg216, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  %4 = llvm.and %3, %2 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def test40_after := [llvm|
+{
+^0(%arg216 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 104 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 10 : i32}> : () -> i32
+  %2 = "llvm.select"(%arg216, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  "llvm.return"(%2) : (i32) -> ()
+}
+]
+theorem test40_proof : test40_before ⊑ test40_after := by
+  unfold test40_before test40_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test40
+  all_goals (try extract_goal ; sorry)
+  ---END test40
 
 
 

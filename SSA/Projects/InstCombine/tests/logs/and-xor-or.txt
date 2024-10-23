@@ -8,27 +8,40 @@
 5: "use_i1" is empty
 
 1: "and_xor_common_op"
-4: "and_xor_common_op" has unsupported operation: llvm.udiv
-
-4: "and_xor_common_op" has unsupported operation: llvm.udiv
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.udiv
+2: llvm.xor
+2: llvm.and
+2: llvm.return
 
 1: "and_xor_common_op_commute1"
-4: "and_xor_common_op_commute1" has unsupported operation: llvm.udiv
-
-4: "and_xor_common_op_commute1" has unsupported operation: llvm.udiv
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.udiv
+2: llvm.xor
+2: llvm.and
+2: llvm.return
 
 1: "and_xor_common_op_commute2"
-4: "and_xor_common_op_commute2" has unsupported operation: llvm.udiv
-
-4: "and_xor_common_op_commute2" has unsupported operation: llvm.udiv
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.udiv
+2: llvm.xor
+2: llvm.and
+2: llvm.return
 
 1: "and_xor_common_op_commute3"
-4: "and_xor_common_op_commute3" has unsupported operation: llvm.udiv
-
-4: "and_xor_common_op_commute3" has unsupported operation: llvm.udiv
+8: "and_xor_common_op_commute3" contains vectors which are unsupported
 
 1: "and_xor_common_op_constant"
-"and_xor_common_op_constant" contains vectors which are unsupported
+8: "and_xor_common_op_constant" contains vectors which are unsupported
 
 1: "and_xor_not_common_op"
 2: llvm.func
@@ -70,44 +83,92 @@
 2: llvm.return
 
 1: "and_xor_or1"
-4: "and_xor_or1" has unsupported operation: llvm.udiv
-
-4: "and_xor_or1" has unsupported operation: llvm.udiv
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.udiv
+2: llvm.udiv
+2: llvm.and
+2: llvm.xor
+2: llvm.or
+2: llvm.return
 
 1: "and_xor_or2"
-4: "and_xor_or2" has unsupported operation: llvm.udiv
-
-4: "and_xor_or2" has unsupported operation: llvm.udiv
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.udiv
+2: llvm.udiv
+2: llvm.and
+2: llvm.xor
+2: llvm.or
+2: llvm.return
 
 1: "and_xor_or3"
-4: "and_xor_or3" has unsupported operation: llvm.udiv
-
-4: "and_xor_or3" has unsupported operation: llvm.udiv
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.udiv
+2: llvm.udiv
+2: llvm.and
+2: llvm.xor
+2: llvm.or
+2: llvm.return
 
 1: "and_xor_or4"
-4: "and_xor_or4" has unsupported operation: llvm.udiv
-
-4: "and_xor_or4" has unsupported operation: llvm.udiv
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.udiv
+2: llvm.udiv
+2: llvm.and
+2: llvm.xor
+2: llvm.or
+2: llvm.return
 
 1: "and_xor_or5"
-4: "and_xor_or5" has unsupported operation: llvm.udiv
-
-4: "and_xor_or5" has unsupported operation: llvm.udiv
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.udiv
+2: llvm.udiv
+2: llvm.and
+2: llvm.xor
+2: llvm.or
+2: llvm.return
 
 1: "and_xor_or6"
-4: "and_xor_or6" has unsupported operation: llvm.udiv
-
-4: "and_xor_or6" has unsupported operation: llvm.udiv
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.udiv
+2: llvm.udiv
+2: llvm.and
+2: llvm.xor
+2: llvm.or
+2: llvm.return
 
 1: "and_xor_or7"
-4: "and_xor_or7" has unsupported operation: llvm.udiv
-
-4: "and_xor_or7" has unsupported operation: llvm.udiv
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.udiv
+2: llvm.udiv
+2: llvm.and
+2: llvm.xor
+2: llvm.or
+2: llvm.return
 
 1: "and_xor_or8"
-4: "and_xor_or8" has unsupported operation: llvm.udiv
-
-4: "and_xor_or8" has unsupported operation: llvm.udiv
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.udiv
+2: llvm.udiv
+2: llvm.and
+2: llvm.xor
+2: llvm.or
+2: llvm.return
 
 1: "and_xor_or_negative"
 7: "and_xor_or_negative" is unchanged by InstCombine
@@ -212,18 +273,10 @@
 
 4: "sext_or_chain_two_uses1" has unsupported operation: builtin.unregistered: llvm.sext
 
-4: "sext_or_chain_two_uses1" has unsupported operation: llvm.udiv
-
-4: "sext_or_chain_two_uses1" has unsupported operation: llvm.udiv
-
 1: "sext_or_chain_two_uses2"
 4: "sext_or_chain_two_uses2" has unsupported operation: builtin.unregistered: llvm.sext
 
 4: "sext_or_chain_two_uses2" has unsupported operation: builtin.unregistered: llvm.sext
-
-4: "sext_or_chain_two_uses2" has unsupported operation: llvm.udiv
-
-4: "sext_or_chain_two_uses2" has unsupported operation: llvm.udiv
 
 1: "not_and_and_not"
 2: llvm.func
@@ -237,7 +290,7 @@
 2: llvm.return
 
 1: "not_and_and_not_4i64"
-"not_and_and_not_4i64" contains vectors which are unsupported
+8: "not_and_and_not_4i64" contains vectors which are unsupported
 
 1: "not_and_and_not_commute1"
 2: llvm.func
@@ -266,7 +319,7 @@
 2: llvm.return
 
 1: "not_or_or_not_2i6"
-"not_or_or_not_2i6" contains vectors which are unsupported
+8: "not_or_or_not_2i6" contains vectors which are unsupported
 
 1: "not_or_or_not_commute1"
 2: llvm.func
@@ -1557,7 +1610,7 @@
 2: llvm.return
 
 1: "and_orn_xor_commute1"
-"and_orn_xor_commute1" contains vectors which are unsupported
+8: "and_orn_xor_commute1" contains vectors which are unsupported
 
 1: "and_orn_xor_commute2"
 4: "and_orn_xor_commute2" has unsupported operation: llvm.call
@@ -1701,25 +1754,25 @@
 2: llvm.return
 
 1: "canonicalize_logic_first_or_vector0"
-"canonicalize_logic_first_or_vector0" contains vectors which are unsupported
+8: "canonicalize_logic_first_or_vector0" contains vectors which are unsupported
 
 1: "canonicalize_logic_first_or_vector0_nsw"
-"canonicalize_logic_first_or_vector0_nsw" contains vectors which are unsupported
+8: "canonicalize_logic_first_or_vector0_nsw" contains vectors which are unsupported
 
 1: "canonicalize_logic_first_or_vector0_nswnuw"
-"canonicalize_logic_first_or_vector0_nswnuw" contains vectors which are unsupported
+8: "canonicalize_logic_first_or_vector0_nswnuw" contains vectors which are unsupported
 
 1: "canonicalize_logic_first_or_vector1"
-"canonicalize_logic_first_or_vector1" contains vectors which are unsupported
+8: "canonicalize_logic_first_or_vector1" contains vectors which are unsupported
 
 1: "canonicalize_logic_first_or_vector1_nsw"
-"canonicalize_logic_first_or_vector1_nsw" contains vectors which are unsupported
+8: "canonicalize_logic_first_or_vector1_nsw" contains vectors which are unsupported
 
 1: "canonicalize_logic_first_or_vector1_nswnuw"
-"canonicalize_logic_first_or_vector1_nswnuw" contains vectors which are unsupported
+8: "canonicalize_logic_first_or_vector1_nswnuw" contains vectors which are unsupported
 
 1: "canonicalize_logic_first_or_vector2"
-"canonicalize_logic_first_or_vector2" contains vectors which are unsupported
+8: "canonicalize_logic_first_or_vector2" contains vectors which are unsupported
 
 1: "canonicalize_logic_first_or_mult_use1"
 4: "canonicalize_logic_first_or_mult_use1" has unsupported operation: llvm.call
@@ -1752,22 +1805,22 @@
 2: llvm.return
 
 1: "canonicalize_logic_first_and_vector0"
-"canonicalize_logic_first_and_vector0" contains vectors which are unsupported
+8: "canonicalize_logic_first_and_vector0" contains vectors which are unsupported
 
 1: "canonicalize_logic_first_and_vector0_nsw"
-"canonicalize_logic_first_and_vector0_nsw" contains vectors which are unsupported
+8: "canonicalize_logic_first_and_vector0_nsw" contains vectors which are unsupported
 
 1: "canonicalize_logic_first_and_vector0_nswnuw"
-"canonicalize_logic_first_and_vector0_nswnuw" contains vectors which are unsupported
+8: "canonicalize_logic_first_and_vector0_nswnuw" contains vectors which are unsupported
 
 1: "canonicalize_logic_first_and_vector1"
-"canonicalize_logic_first_and_vector1" contains vectors which are unsupported
+8: "canonicalize_logic_first_and_vector1" contains vectors which are unsupported
 
 1: "canonicalize_logic_first_and_vector2"
-"canonicalize_logic_first_and_vector2" contains vectors which are unsupported
+8: "canonicalize_logic_first_and_vector2" contains vectors which are unsupported
 
 1: "canonicalize_logic_first_and_vector3"
-"canonicalize_logic_first_and_vector3" contains vectors which are unsupported
+8: "canonicalize_logic_first_and_vector3" contains vectors which are unsupported
 
 1: "canonicalize_logic_first_and_mult_use1"
 4: "canonicalize_logic_first_and_mult_use1" has unsupported operation: llvm.call
@@ -1800,19 +1853,19 @@
 2: llvm.return
 
 1: "canonicalize_logic_first_xor_vector0"
-"canonicalize_logic_first_xor_vector0" contains vectors which are unsupported
+8: "canonicalize_logic_first_xor_vector0" contains vectors which are unsupported
 
 1: "canonicalize_logic_first_xor_vector0_nsw"
-"canonicalize_logic_first_xor_vector0_nsw" contains vectors which are unsupported
+8: "canonicalize_logic_first_xor_vector0_nsw" contains vectors which are unsupported
 
 1: "canonicalize_logic_first_xor_vector0_nswnuw"
-"canonicalize_logic_first_xor_vector0_nswnuw" contains vectors which are unsupported
+8: "canonicalize_logic_first_xor_vector0_nswnuw" contains vectors which are unsupported
 
 1: "canonicalize_logic_first_xor_vector1"
-"canonicalize_logic_first_xor_vector1" contains vectors which are unsupported
+8: "canonicalize_logic_first_xor_vector1" contains vectors which are unsupported
 
 1: "canonicalize_logic_first_xor_vector2"
-"canonicalize_logic_first_xor_vector2" contains vectors which are unsupported
+8: "canonicalize_logic_first_xor_vector2" contains vectors which are unsupported
 
 1: "canonicalize_logic_first_xor_mult_use1"
 4: "canonicalize_logic_first_xor_mult_use1" has unsupported operation: llvm.call

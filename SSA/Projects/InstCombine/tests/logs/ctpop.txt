@@ -27,7 +27,7 @@
 4: "test5" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "test5vec"
-"test5vec" contains vectors which are unsupported
+8: "test5vec" contains vectors which are unsupported
 
 1: "test6"
 4: "test6" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctpop

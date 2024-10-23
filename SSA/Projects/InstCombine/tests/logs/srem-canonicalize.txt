@@ -12,7 +12,7 @@
 7: "test_srem_canonicalize_nonsw" is unchanged by InstCombine
 
 1: "test_srem_canonicalize_vec"
-"test_srem_canonicalize_vec" contains vectors which are unsupported
+8: "test_srem_canonicalize_vec" contains vectors which are unsupported
 
 1: "test_srem_canonicalize_multiple_uses"
 7: "test_srem_canonicalize_multiple_uses" is unchanged by InstCombine

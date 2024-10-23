@@ -4,10 +4,10 @@
 4: "test1" has unsupported operation after optimization: builtin.unregistered: llvm.trunc
 
 1: "test1_vec"
-"test1_vec" contains vectors which are unsupported
+8: "test1_vec" contains vectors which are unsupported
 
 1: "test1_vec_nonuniform"
-"test1_vec_nonuniform" contains vectors which are unsupported
+8: "test1_vec_nonuniform" contains vectors which are unsupported
 
 1: "test1_vec_undef"
 4: "test1_vec_undef" has unsupported operation: llvm.mlir.undef

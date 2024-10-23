@@ -249,8 +249,6 @@
 
 4: "PR28476_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "PR28476_logical" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "PR28476_logical" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "demorgan_plus_and_to_xor"
@@ -264,7 +262,7 @@
 2: llvm.return
 
 1: "demorgan_plus_and_to_xor_vec"
-"demorgan_plus_and_to_xor_vec" contains vectors which are unsupported
+8: "demorgan_plus_and_to_xor_vec" contains vectors which are unsupported
 
 1: "PR45984"
 2: llvm.func

@@ -243,6 +243,144 @@ theorem not_or_neg_proof : not_or_neg_before ⊑ not_or_neg_after := by
 
 
 
+def not_select_bool_const1_before := [llvm|
+{
+^0(%arg68 : i1, %arg69 : i1):
+  %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
+  %1 = "llvm.select"(%arg68, %arg69, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  %2 = llvm.xor %1, %0 : i1
+  "llvm.return"(%2) : (i1) -> ()
+}
+]
+def not_select_bool_const1_after := [llvm|
+{
+^0(%arg68 : i1, %arg69 : i1):
+  %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
+  %1 = "llvm.mlir.constant"() <{value = false}> : () -> i1
+  %2 = llvm.xor %arg69, %0 : i1
+  %3 = "llvm.select"(%arg68, %2, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+theorem not_select_bool_const1_proof : not_select_bool_const1_before ⊑ not_select_bool_const1_after := by
+  unfold not_select_bool_const1_before not_select_bool_const1_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN not_select_bool_const1
+  all_goals (try extract_goal ; sorry)
+  ---END not_select_bool_const1
+
+
+
+def not_select_bool_const4_before := [llvm|
+{
+^0(%arg62 : i1, %arg63 : i1):
+  %0 = "llvm.mlir.constant"() <{value = false}> : () -> i1
+  %1 = "llvm.mlir.constant"() <{value = true}> : () -> i1
+  %2 = "llvm.select"(%arg62, %0, %arg63) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  %3 = llvm.xor %2, %1 : i1
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+def not_select_bool_const4_after := [llvm|
+{
+^0(%arg62 : i1, %arg63 : i1):
+  %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
+  %1 = llvm.xor %arg63, %0 : i1
+  %2 = "llvm.select"(%arg62, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  "llvm.return"(%2) : (i1) -> ()
+}
+]
+theorem not_select_bool_const4_proof : not_select_bool_const4_before ⊑ not_select_bool_const4_after := by
+  unfold not_select_bool_const4_before not_select_bool_const4_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN not_select_bool_const4
+  all_goals (try extract_goal ; sorry)
+  ---END not_select_bool_const4
+
+
+
+def not_logicalAnd_not_op1_before := [llvm|
+{
+^0(%arg58 : i1, %arg59 : i1):
+  %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
+  %1 = "llvm.mlir.constant"() <{value = false}> : () -> i1
+  %2 = llvm.xor %arg59, %0 : i1
+  %3 = "llvm.select"(%arg58, %2, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  %4 = llvm.xor %3, %0 : i1
+  "llvm.return"(%4) : (i1) -> ()
+}
+]
+def not_logicalAnd_not_op1_after := [llvm|
+{
+^0(%arg58 : i1, %arg59 : i1):
+  %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
+  %1 = llvm.xor %arg58, %0 : i1
+  %2 = "llvm.select"(%1, %0, %arg59) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  "llvm.return"(%2) : (i1) -> ()
+}
+]
+theorem not_logicalAnd_not_op1_proof : not_logicalAnd_not_op1_before ⊑ not_logicalAnd_not_op1_after := by
+  unfold not_logicalAnd_not_op1_before not_logicalAnd_not_op1_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN not_logicalAnd_not_op1
+  all_goals (try extract_goal ; sorry)
+  ---END not_logicalAnd_not_op1
+
+
+
+def not_logicalOr_not_op1_before := [llvm|
+{
+^0(%arg50 : i1, %arg51 : i1):
+  %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
+  %1 = llvm.xor %arg51, %0 : i1
+  %2 = "llvm.select"(%arg50, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  %3 = llvm.xor %2, %0 : i1
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+def not_logicalOr_not_op1_after := [llvm|
+{
+^0(%arg50 : i1, %arg51 : i1):
+  %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
+  %1 = "llvm.mlir.constant"() <{value = false}> : () -> i1
+  %2 = llvm.xor %arg50, %0 : i1
+  %3 = "llvm.select"(%2, %arg51, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+theorem not_logicalOr_not_op1_proof : not_logicalOr_not_op1_before ⊑ not_logicalOr_not_op1_after := by
+  unfold not_logicalOr_not_op1_before not_logicalOr_not_op1_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN not_logicalOr_not_op1
+  all_goals (try extract_goal ; sorry)
+  ---END not_logicalOr_not_op1
+
+
+
 def test_invert_demorgan_and2_before := [llvm|
 {
 ^0(%arg7 : i64):

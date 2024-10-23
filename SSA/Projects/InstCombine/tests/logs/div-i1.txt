@@ -40,7 +40,9 @@
 2: llvm.return
 
 1: "udiv_i1_is_op0"
-4: "udiv_i1_is_op0" has unsupported operation after optimization: llvm.udiv
+2: llvm.func
+2: llvm.udiv
+2: llvm.return
 
 1: "srem_i1_is_zero"
 2: llvm.func

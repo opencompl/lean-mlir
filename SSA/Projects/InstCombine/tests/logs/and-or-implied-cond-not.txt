@@ -20,16 +20,12 @@
 1: "test_imply_not2"
 4: "test_imply_not2" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "test_imply_not2" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "test_imply_not3"
 4: "test_imply_not3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "test_imply_not3" has unsupported operation: llvm.call
 
 4: "test_imply_not3" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "test_imply_not3" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "func1"
 5: "func1" is empty

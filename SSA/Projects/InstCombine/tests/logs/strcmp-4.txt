@@ -8,7 +8,5 @@
 
 4: "fold_strcmp_s3_x_s4_s3" has unsupported operation: llvm.getelementptr
 
-4: "fold_strcmp_s3_x_s4_s3" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "fold_strcmp_s3_x_s4_s3" has unsupported operation: llvm.call
 

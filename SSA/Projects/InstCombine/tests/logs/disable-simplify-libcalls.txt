@@ -232,8 +232,6 @@
 
 4: "t27" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "t27" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "t28"
 4: "t28" has unsupported operation: llvm.call
 

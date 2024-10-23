@@ -43,6 +43,38 @@ theorem test2_proof : test2_before ⊑ test2_after := by
 
 
 
+def test2_logical_before := [llvm|
+{
+^0(%arg28 : i1, %arg29 : i1):
+  %0 = "llvm.mlir.constant"() <{value = false}> : () -> i1
+  %1 = "llvm.select"(%arg28, %arg29, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  %2 = "llvm.select"(%1, %arg28, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  "llvm.return"(%2) : (i1) -> ()
+}
+]
+def test2_logical_after := [llvm|
+{
+^0(%arg28 : i1, %arg29 : i1):
+  %0 = "llvm.mlir.constant"() <{value = false}> : () -> i1
+  %1 = "llvm.select"(%arg28, %arg29, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+theorem test2_logical_proof : test2_logical_before ⊑ test2_logical_after := by
+  unfold test2_logical_before test2_logical_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test2_logical
+  all_goals (try extract_goal ; sorry)
+  ---END test2_logical
+
+
+
 def test3_before := [llvm|
 {
 ^0(%arg26 : i32, %arg27 : i32):

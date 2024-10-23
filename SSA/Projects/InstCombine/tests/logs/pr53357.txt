@@ -8,10 +8,10 @@
 2: llvm.return
 
 1: "src_vec"
-"src_vec" contains vectors which are unsupported
+8: "src_vec" contains vectors which are unsupported
 
 1: "src_vec_poison"
-"src_vec_poison" contains vectors which are unsupported
+8: "src_vec_poison" contains vectors which are unsupported
 
 1: "src2"
 2: llvm.func

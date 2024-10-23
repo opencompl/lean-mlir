@@ -1059,6 +1059,41 @@ theorem add_of_mul_proof : add_of_mul_before ⊑ add_of_mul_after := by
 
 
 
+def add_of_selects_before := [llvm|
+{
+^0(%arg2 : i1, %arg3 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = -2 : i32}> : () -> i32
+  %2 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %3 = "llvm.select"(%arg2, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  %4 = "llvm.select"(%arg2, %arg3, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  %5 = llvm.add %3, %4 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+def add_of_selects_after := [llvm|
+{
+^0(%arg2 : i1, %arg3 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %1 = "llvm.select"(%arg2, %arg3, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  "llvm.return"(%1) : (i32) -> ()
+}
+]
+theorem add_of_selects_proof : add_of_selects_before ⊑ add_of_selects_after := by
+  unfold add_of_selects_before add_of_selects_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN add_of_selects
+  all_goals (try extract_goal ; sorry)
+  ---END add_of_selects
+
+
+
 def add_undemanded_low_bits_before := [llvm|
 {
 ^0(%arg1 : i32):

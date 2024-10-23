@@ -77,18 +77,12 @@
 4: "udiv_ne_big" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "udiv_eq_not_big"
-4: "udiv_eq_not_big" has unsupported operation: llvm.udiv
-
 4: "udiv_eq_not_big" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "udiv_slt_umax"
-4: "udiv_slt_umax" has unsupported operation: llvm.udiv
-
 4: "udiv_slt_umax" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "udiv_eq_umax_use"
-4: "udiv_eq_umax_use" has unsupported operation: llvm.udiv
-
 4: "udiv_eq_umax_use" has unsupported operation: llvm.call
 
 4: "udiv_eq_umax_use" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -151,8 +145,6 @@
 4: "ashr_x_by_const_cmp_sge_x" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "udiv_x_by_const_cmp_eq_value_neg"
-4: "udiv_x_by_const_cmp_eq_value_neg" has unsupported operation: llvm.udiv
-
 4: "udiv_x_by_const_cmp_eq_value_neg" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "sdiv_x_by_const_cmp_eq_value_neg"

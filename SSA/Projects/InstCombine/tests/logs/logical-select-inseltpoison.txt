@@ -1,63 +1,37 @@
 1: "foo"
 4: "foo" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "foo" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "bar"
 4: "bar" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "bar" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "goo"
 4: "goo" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "goo" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "poo"
 4: "poo" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "poo" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "fold_inverted_icmp_preds"
 4: "fold_inverted_icmp_preds" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "fold_inverted_icmp_preds" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "fold_inverted_icmp_preds" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "fold_inverted_icmp_preds" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "fold_inverted_icmp_preds_reverse"
 4: "fold_inverted_icmp_preds_reverse" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "fold_inverted_icmp_preds_reverse" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "fold_inverted_icmp_preds_reverse" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "fold_inverted_icmp_preds_reverse" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "fold_inverted_fcmp_preds"
 4: "fold_inverted_fcmp_preds" has unsupported operation: builtin.unregistered: llvm.fcmp
 
-4: "fold_inverted_fcmp_preds" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "fold_inverted_fcmp_preds" has unsupported operation: builtin.unregistered: llvm.fcmp
-
-4: "fold_inverted_fcmp_preds" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "fold_inverted_icmp_vector_preds"
 4: "fold_inverted_icmp_vector_preds" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "fold_inverted_icmp_vector_preds" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "fold_inverted_icmp_vector_preds" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "fold_inverted_icmp_vector_preds" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "par"
 4: "par" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "par" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "bitcast_select_swap0"
 4: "bitcast_select_swap0" has unsupported operation: builtin.unregistered: llvm.fptosi
@@ -67,8 +41,6 @@
 4: "bitcast_select_swap0" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 4: "bitcast_select_swap0" has unsupported operation: builtin.unregistered: llvm.bitcast
-
-4: "bitcast_select_swap0" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "bitcast_select_swap0" has unsupported operation: builtin.unregistered: llvm.bitcast
 
@@ -81,8 +53,6 @@
 
 4: "bitcast_select_swap1" has unsupported operation: builtin.unregistered: llvm.bitcast
 
-4: "bitcast_select_swap1" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "bitcast_select_swap1" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 1: "bitcast_select_swap2"
@@ -93,8 +63,6 @@
 4: "bitcast_select_swap2" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 4: "bitcast_select_swap2" has unsupported operation: builtin.unregistered: llvm.bitcast
-
-4: "bitcast_select_swap2" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "bitcast_select_swap2" has unsupported operation: builtin.unregistered: llvm.bitcast
 
@@ -107,8 +75,6 @@
 
 4: "bitcast_select_swap3" has unsupported operation: builtin.unregistered: llvm.bitcast
 
-4: "bitcast_select_swap3" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "bitcast_select_swap3" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 1: "bitcast_select_swap4"
@@ -119,8 +85,6 @@
 4: "bitcast_select_swap4" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 4: "bitcast_select_swap4" has unsupported operation: builtin.unregistered: llvm.bitcast
-
-4: "bitcast_select_swap4" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "bitcast_select_swap4" has unsupported operation: builtin.unregistered: llvm.bitcast
 
@@ -133,8 +97,6 @@
 
 4: "bitcast_select_swap5" has unsupported operation: builtin.unregistered: llvm.bitcast
 
-4: "bitcast_select_swap5" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "bitcast_select_swap5" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 1: "bitcast_select_swap6"
@@ -145,8 +107,6 @@
 4: "bitcast_select_swap6" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 4: "bitcast_select_swap6" has unsupported operation: builtin.unregistered: llvm.bitcast
-
-4: "bitcast_select_swap6" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "bitcast_select_swap6" has unsupported operation: builtin.unregistered: llvm.bitcast
 
@@ -159,8 +119,6 @@
 
 4: "bitcast_select_swap7" has unsupported operation: builtin.unregistered: llvm.bitcast
 
-4: "bitcast_select_swap7" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "bitcast_select_swap7" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 1: "bitcast_select_multi_uses"
@@ -171,40 +129,75 @@
 4: "bitcast_select_multi_uses" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 1: "bools"
-4: "bools" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.and
+2: llvm.or
+2: llvm.return
 
 1: "bools_logical"
-4: "bools_logical" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "bools_multi_uses1"
-4: "bools_multi_uses1" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.and
+2: llvm.or
+2: llvm.xor
+2: llvm.return
 
 1: "bools_multi_uses1_logical"
-4: "bools_multi_uses1_logical" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "bools_multi_uses1_logical" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.return
 
 1: "bools_multi_uses2"
-4: "bools_multi_uses2" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.and
+2: llvm.or
+2: llvm.add
+2: llvm.and
+2: llvm.return
 
 1: "bools_multi_uses2_logical"
-4: "bools_multi_uses2_logical" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "bools_multi_uses2_logical" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "bools_multi_uses2_logical" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "bools_multi_uses2_logical" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "vec_of_bools"
-4: "vec_of_bools" has unsupported operation: builtin.unregistered: llvm.select
+8: "vec_of_bools" contains vectors which are unsupported
 
 1: "vec_of_casted_bools"
 4: "vec_of_casted_bools" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 4: "vec_of_casted_bools" has unsupported operation: builtin.unregistered: llvm.bitcast
-
-4: "vec_of_casted_bools" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "vec_of_casted_bools" has unsupported operation: builtin.unregistered: llvm.bitcast
 
@@ -241,30 +234,20 @@
 4: "vec_not_sel_consts_undef_elts" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 1: "vec_sel_xor"
-4: "vec_sel_xor" has unsupported operation: builtin.unregistered: llvm.select
+8: "vec_sel_xor" contains vectors which are unsupported
 
 1: "vec_sel_xor_multi_use"
 4: "vec_sel_xor_multi_use" has unsupported operation: builtin.unregistered: llvm.sext
 
-4: "vec_sel_xor_multi_use" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "allSignBits"
 4: "allSignBits" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "allSignBits" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "allSignBits" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "allSignBits" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "allSignBits_vec"
 4: "allSignBits_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "allSignBits_vec" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "allSignBits_vec" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "allSignBits_vec" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "fp_bitcast"
 4: "fp_bitcast" has unsupported operation: builtin.unregistered: llvm.fptosi
@@ -292,12 +275,8 @@
 
 4: "computesignbits_through_shuffles" has unsupported operation: builtin.unregistered: llvm.trunc
 
-4: "computesignbits_through_shuffles" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "computesignbits_through_shuffles" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 1: "computesignbits_through_two_input_shuffle"
 4: "computesignbits_through_two_input_shuffle" has unsupported operation: builtin.unregistered: llvm.shufflevector
-
-4: "computesignbits_through_two_input_shuffle" has unsupported operation: builtin.unregistered: llvm.select
 

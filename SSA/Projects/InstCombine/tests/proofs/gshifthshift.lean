@@ -77,6 +77,41 @@ theorem lshr_lshr_proof : lshr_lshr_before ⊑ lshr_lshr_after := by
 
 
 
+def shl_shl_constants_div_before := [llvm|
+{
+^0(%arg27 : i32, %arg28 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %2 = llvm.shl %0, %arg28 : i32
+  %3 = llvm.shl %2, %1 : i32
+  %4 = llvm.udiv %arg27, %3 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def shl_shl_constants_div_after := [llvm|
+{
+^0(%arg27 : i32, %arg28 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %1 = llvm.add %arg28, %0 : i32
+  %2 = llvm.lshr %arg27, %1 : i32
+  "llvm.return"(%2) : (i32) -> ()
+}
+]
+theorem shl_shl_constants_div_proof : shl_shl_constants_div_before ⊑ shl_shl_constants_div_after := by
+  unfold shl_shl_constants_div_before shl_shl_constants_div_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN shl_shl_constants_div
+  apply shl_shl_constants_div_thm
+  ---END shl_shl_constants_div
+
+
+
 def ashr_shl_constants_before := [llvm|
 {
 ^0(%arg25 : i32):

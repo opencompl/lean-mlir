@@ -8,8 +8,6 @@
 
 4: "fold_strlen_s3_pi_s5" has unsupported operation: llvm.getelementptr
 
-4: "fold_strlen_s3_pi_s5" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "fold_strlen_s3_pi_s5" has unsupported operation: llvm.call
 
 1: "fold_strlen_s3_pi_p1_s5"
@@ -21,8 +19,6 @@
 
 4: "fold_strlen_s3_pi_p1_s5" has unsupported operation: llvm.getelementptr
 
-4: "fold_strlen_s3_pi_p1_s5" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "fold_strlen_s3_pi_p1_s5" has unsupported operation: llvm.call
 
 1: "call_strlen_s5_3_pi_s5"
@@ -31,8 +27,6 @@
 4: "call_strlen_s5_3_pi_s5" has unsupported operation: llvm.mlir.addressof
 
 4: "call_strlen_s5_3_pi_s5" has unsupported operation: llvm.getelementptr
-
-4: "call_strlen_s5_3_pi_s5" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "call_strlen_s5_3_pi_s5" has unsupported operation: llvm.call
 
@@ -43,8 +37,6 @@
 
 4: "call_strlen_s5_3_s5_pj" has unsupported operation: llvm.getelementptr
 
-4: "call_strlen_s5_3_s5_pj" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "call_strlen_s5_3_s5_pj" has unsupported operation: llvm.call
 
 1: "fold_strlen_s3_s5_pj"
@@ -54,8 +46,6 @@
 
 4: "fold_strlen_s3_s5_pj" has unsupported operation: llvm.getelementptr
 
-4: "fold_strlen_s3_s5_pj" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "fold_strlen_s3_s5_pj" has unsupported operation: llvm.call
 
 1: "call_strlen_s3_s5_3_pj"
@@ -64,8 +54,6 @@
 4: "call_strlen_s3_s5_3_pj" has unsupported operation: llvm.mlir.addressof
 
 4: "call_strlen_s3_s5_3_pj" has unsupported operation: llvm.getelementptr
-
-4: "call_strlen_s3_s5_3_pj" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "call_strlen_s3_s5_3_pj" has unsupported operation: llvm.call
 
@@ -77,8 +65,6 @@
 4: "fold_strlen_s3_pi_s5_pj" has unsupported operation: llvm.getelementptr
 
 4: "fold_strlen_s3_pi_s5_pj" has unsupported operation: llvm.getelementptr
-
-4: "fold_strlen_s3_pi_s5_pj" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "fold_strlen_s3_pi_s5_pj" has unsupported operation: llvm.call
 
@@ -93,10 +79,6 @@
 
 4: "fold_strlen_s3_s5_s7" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "fold_strlen_s3_s5_s7" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "fold_strlen_s3_s5_s7" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "fold_strlen_s3_s5_s7" has unsupported operation: llvm.call
 
 1: "call_strlen_sx_s5_s7"
@@ -109,10 +91,6 @@
 4: "call_strlen_sx_s5_s7" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "call_strlen_sx_s5_s7" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "call_strlen_sx_s5_s7" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "call_strlen_sx_s5_s7" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "call_strlen_sx_s5_s7" has unsupported operation: llvm.call
 

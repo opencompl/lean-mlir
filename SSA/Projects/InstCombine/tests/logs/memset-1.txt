@@ -53,23 +53,15 @@
 4: "buffer_is_modified_then_memset" has unsupported operation: builtin.unregistered: llvm.intr.memset
 
 1: "memset_size_select"
-4: "memset_size_select" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "memset_size_select" has unsupported operation: builtin.unregistered: llvm.intr.memset
 
 1: "memset_size_select2"
-4: "memset_size_select2" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "memset_size_select2" has unsupported operation: builtin.unregistered: llvm.intr.memset
 
 1: "memset_size_select3"
-4: "memset_size_select3" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "memset_size_select3" has unsupported operation: builtin.unregistered: llvm.intr.memset
 
 1: "memset_size_select4"
-4: "memset_size_select4" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "memset_size_select4" has unsupported operation: builtin.unregistered: llvm.intr.memset
 
 1: "memset_size_ashr"

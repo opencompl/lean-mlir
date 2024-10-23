@@ -15,7 +15,7 @@
 4: "sextinreg_extra_use" has unsupported operation: llvm.call
 
 1: "sextinreg_splat"
-"sextinreg_splat" contains vectors which are unsupported
+8: "sextinreg_splat" contains vectors which are unsupported
 
 1: "sextinreg_alt"
 2: llvm.func
@@ -28,7 +28,7 @@
 2: llvm.return
 
 1: "sextinreg_alt_splat"
-"sextinreg_alt_splat" contains vectors which are unsupported
+8: "sextinreg_alt_splat" contains vectors which are unsupported
 
 1: "sext"
 4: "sext" has unsupported operation: builtin.unregistered: llvm.sext
@@ -54,7 +54,7 @@
 2: llvm.return
 
 1: "sextinreg2_splat"
-"sextinreg2_splat" contains vectors which are unsupported
+8: "sextinreg2_splat" contains vectors which are unsupported
 
 1: "test5"
 7: "test5" is unchanged by InstCombine
@@ -76,5 +76,5 @@
 2: llvm.return
 
 1: "ashr_splat"
-"ashr_splat" contains vectors which are unsupported
+8: "ashr_splat" contains vectors which are unsupported
 

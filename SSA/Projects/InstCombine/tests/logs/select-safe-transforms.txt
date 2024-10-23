@@ -6,38 +6,26 @@
 
 4: "cond_eq_and" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "cond_eq_and" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "cond_eq_and_const"
 4: "cond_eq_and_const" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "cond_eq_and_const" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "cond_eq_and_const" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "cond_eq_or"
 4: "cond_eq_or" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "cond_eq_or" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "cond_eq_or" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "cond_eq_or_const"
 4: "cond_eq_or_const" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "cond_eq_or_const" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "cond_eq_or_const" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "xor_and"
 4: "xor_and" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "xor_and" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "xor_and2"
 4: "xor_and2" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "xor_and2" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "xor_and3"
 4: "xor_and3" has unsupported operation: llvm.mlir.addressof
@@ -52,17 +40,11 @@
 
 4: "xor_and3" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "xor_and3" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "xor_or"
 4: "xor_or" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "xor_or" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "xor_or2"
 4: "xor_or2" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "xor_or2" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "xor_or3"
 4: "xor_or3" has unsupported operation: llvm.mlir.addressof
@@ -77,31 +59,21 @@
 
 4: "xor_or3" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "xor_or3" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "and_orn_cmp_1_logical"
 4: "and_orn_cmp_1_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "and_orn_cmp_1_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "and_orn_cmp_1_partial_logical"
 4: "and_orn_cmp_1_partial_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "and_orn_cmp_1_partial_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "and_orn_cmp_1_partial_logical" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "and_orn_cmp_1_partial_logical_commute"
 4: "and_orn_cmp_1_partial_logical_commute" has unsupported operation: llvm.call
 
 4: "and_orn_cmp_1_partial_logical_commute" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "and_orn_cmp_1_partial_logical_commute" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "andn_or_cmp_2_logical"
 4: "andn_or_cmp_2_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "andn_or_cmp_2_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "andn_or_cmp_2_partial_logical"
 4: "andn_or_cmp_2_partial_logical" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -116,161 +88,255 @@
 
 4: "not_logical_or" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "not_logical_or" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "not_logical_or" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "not_logical_or2"
 4: "not_logical_or2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "not_logical_or2" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "not_logical_or2" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "not_logical_or2" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "bools_logical_commute0"
-4: "bools_logical_commute0" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "bools_logical_commute0_and1"
-4: "bools_logical_commute0_and1" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "bools_logical_commute0_and2"
-4: "bools_logical_commute0_and2" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "bools_logical_commute0_and1_and2"
-4: "bools_logical_commute0_and1_and2" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "bools_logical_commute1"
-4: "bools_logical_commute1" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "bools_logical_commute1_and1"
 4: "bools_logical_commute1_and1" has unsupported operation: llvm.call
 
-4: "bools_logical_commute1_and1" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "bools_logical_commute1_and2"
-4: "bools_logical_commute1_and2" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "bools_logical_commute1_and1_and2"
 4: "bools_logical_commute1_and1_and2" has unsupported operation: llvm.call
 
-4: "bools_logical_commute1_and1_and2" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "bools_logical_commute2"
-4: "bools_logical_commute2" has unsupported operation: builtin.unregistered: llvm.select
+8: "bools_logical_commute2" contains vectors which are unsupported
 
 1: "bools_logical_commute2_and1"
-4: "bools_logical_commute2_and1" has unsupported operation: builtin.unregistered: llvm.select
+8: "bools_logical_commute2_and1" contains vectors which are unsupported
 
 1: "bools_logical_commute2_and2"
-4: "bools_logical_commute2_and2" has unsupported operation: builtin.unregistered: llvm.select
+8: "bools_logical_commute2_and2" contains vectors which are unsupported
 
 1: "bools_logical_commute2_and1_and2"
-4: "bools_logical_commute2_and1_and2" has unsupported operation: builtin.unregistered: llvm.select
+8: "bools_logical_commute2_and1_and2" contains vectors which are unsupported
 
 1: "bools_logical_commute3"
 4: "bools_logical_commute3" has unsupported operation: builtin.unregistered: llvm.freeze
 
-4: "bools_logical_commute3" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "bools_logical_commute3_and1"
 4: "bools_logical_commute3_and1" has unsupported operation: llvm.call
 
-4: "bools_logical_commute3_and1" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "bools_logical_commute3_and2"
-4: "bools_logical_commute3_and2" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "bools_logical_commute3_and1_and2"
 4: "bools_logical_commute3_and1_and2" has unsupported operation: llvm.call
 
-4: "bools_logical_commute3_and1_and2" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "bools2_logical_commute0"
-4: "bools2_logical_commute0" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "bools2_logical_commute0_and1"
-4: "bools2_logical_commute0_and1" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "bools2_logical_commute0_and2"
-4: "bools2_logical_commute0_and2" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "bools2_logical_commute0_and1_and2"
-4: "bools2_logical_commute0_and1_and2" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "bools2_logical_commute1"
-4: "bools2_logical_commute1" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "bools2_logical_commute1_and1"
-4: "bools2_logical_commute1_and1" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "bools2_logical_commute1_and2"
-4: "bools2_logical_commute1_and2" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "bools2_logical_commute1_and1_and2"
-4: "bools2_logical_commute1_and1_and2" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "bools2_logical_commute2"
-4: "bools2_logical_commute2" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "bools2_logical_commute2_and1"
-4: "bools2_logical_commute2_and1" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "bools2_logical_commute2_and2"
 4: "bools2_logical_commute2_and2" has unsupported operation: llvm.call
 
-4: "bools2_logical_commute2_and2" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "bools2_logical_commute2_and1_and2"
 4: "bools2_logical_commute2_and1_and2" has unsupported operation: llvm.call
-
-4: "bools2_logical_commute2_and1_and2" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "bools2_logical_commute3"
 4: "bools2_logical_commute3" has unsupported operation: builtin.unregistered: llvm.freeze
 
-4: "bools2_logical_commute3" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "bools2_logical_commute3_nopoison"
-4: "bools2_logical_commute3_nopoison" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "bools2_logical_commute3_and1"
-4: "bools2_logical_commute3_and1" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "bools2_logical_commute3_and2"
 4: "bools2_logical_commute3_and2" has unsupported operation: llvm.call
 
-4: "bools2_logical_commute3_and2" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "bools2_logical_commute3_and1_and2"
 4: "bools2_logical_commute3_and1_and2" has unsupported operation: llvm.call
 
-4: "bools2_logical_commute3_and1_and2" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "orn_and_cmp_1_logical"
 4: "orn_and_cmp_1_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "orn_and_cmp_1_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "orn_and_cmp_1_partial_logical"
 4: "orn_and_cmp_1_partial_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "orn_and_cmp_1_partial_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "orn_and_cmp_1_partial_logical" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "orn_and_cmp_1_partial_logical_commute"
 4: "orn_and_cmp_1_partial_logical_commute" has unsupported operation: llvm.call
 
 4: "orn_and_cmp_1_partial_logical_commute" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "orn_and_cmp_1_partial_logical_commute" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "orn_and_cmp_2_logical"
 4: "orn_and_cmp_2_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "orn_and_cmp_2_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "orn_and_cmp_2_partial_logical"
 4: "orn_and_cmp_2_partial_logical" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -285,16 +351,8 @@
 
 4: "not_logical_and" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "not_logical_and" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "not_logical_and" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "not_logical_and2"
 4: "not_logical_and2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "not_logical_and2" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "not_logical_and2" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "not_logical_and2" has unsupported operation: builtin.unregistered: llvm.select
 

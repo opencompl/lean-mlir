@@ -112,8 +112,6 @@
 
 4: "test11" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "test11" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "test12"
 4: "test12" has unsupported operation: llvm.mlir.addressof
 

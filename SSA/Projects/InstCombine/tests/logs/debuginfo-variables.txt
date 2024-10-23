@@ -12,7 +12,7 @@
 4: "test_used_sext_zext" has unsupported operation: llvm.call
 
 1: "test_cast_select"
-4: "test_cast_select" has unsupported operation: builtin.unregistered: llvm.select
+4: "test_cast_select" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 
 1: "test_or"
 4: "test_or" has unsupported operation: llvm.return

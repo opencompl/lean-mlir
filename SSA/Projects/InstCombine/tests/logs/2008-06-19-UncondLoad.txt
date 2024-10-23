@@ -10,7 +10,5 @@
 
 4: "b" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "b" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "b" has unsupported operation: llvm.load
 

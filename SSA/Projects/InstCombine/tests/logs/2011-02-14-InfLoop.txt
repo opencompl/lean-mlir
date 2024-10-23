@@ -31,7 +31,5 @@
 
 4: "m_387" has unsupported operation: builtin.unregistered: llvm.insertelement
 
-4: "m_387" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "m_387" has unsupported operation: builtin.unregistered: llvm.shufflevector
 

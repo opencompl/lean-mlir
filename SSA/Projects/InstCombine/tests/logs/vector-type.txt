@@ -7,7 +7,5 @@
 
 4: "vselect1" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "vselect1" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "vselect1" has unsupported operation: builtin.unregistered: llvm.bitcast
 

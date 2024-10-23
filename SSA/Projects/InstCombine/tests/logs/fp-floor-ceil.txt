@@ -31,7 +31,7 @@
 4: "x_floor_ult" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "x_floor_olt_vec"
-"x_floor_olt_vec" contains vectors which are unsupported
+8: "x_floor_olt_vec" contains vectors which are unsupported
 
 1: "x_floor_ole_neg"
 4: "x_floor_ole_neg" has unsupported operation: builtin.unregistered: llvm.intr.floor
@@ -86,7 +86,7 @@
 4: "x_ceil_ugt" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "x_ceil_ogt_vec"
-"x_ceil_ogt_vec" contains vectors which are unsupported
+8: "x_ceil_ogt_vec" contains vectors which are unsupported
 
 1: "x_ceil_oge_neg"
 4: "x_ceil_oge_neg" has unsupported operation: builtin.unregistered: llvm.intr.ceil

@@ -1,10 +1,6 @@
 1: "func"
 4: "func" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "func" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "func" has unsupported operation: llvm.udiv
-
 4: "func" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "func" has unsupported operation: builtin.unregistered: llvm.icmp

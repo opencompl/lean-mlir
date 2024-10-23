@@ -1,11 +1,13 @@
 1: "t0"
-4: "t0" has unsupported operation: builtin.unregistered: llvm.select
+4: "t0" has unsupported operation after optimization: builtin.unregistered: llvm.sext
 
 1: "t0_vec"
-4: "t0_vec" has unsupported operation: builtin.unregistered: llvm.select
+8: "t0_vec" contains vectors which are unsupported
 
 1: "t1"
-4: "t1" has unsupported operation: builtin.unregistered: llvm.select
+4: "t1" has unsupported operation after optimization: builtin.unregistered: llvm.sext
+
+4: "t1" has unsupported operation after optimization: builtin.unregistered: llvm.sext
 
 1: "t2"
 4: "t2" has unsupported operation: builtin.unregistered: llvm.sext
@@ -21,14 +23,10 @@
 1: "xor.commuted"
 4: "xor.commuted" has unsupported operation: llvm.call
 
-4: "xor.commuted" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "extrause01_v1"
 4: "extrause01_v1" has unsupported operation: builtin.unregistered: llvm.sext
 
 4: "extrause01_v1" has unsupported operation: llvm.call
-
-4: "extrause01_v1" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "extrause10_v1"
 4: "extrause10_v1" has unsupported operation: builtin.unregistered: llvm.sext
@@ -47,14 +45,10 @@
 
 4: "extrause001_v2" has unsupported operation: llvm.call
 
-4: "extrause001_v2" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "extrause010_v2"
 4: "extrause010_v2" has unsupported operation: builtin.unregistered: llvm.sext
 
 4: "extrause010_v2" has unsupported operation: llvm.call
-
-4: "extrause010_v2" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "extrause011_v2"
 4: "extrause011_v2" has unsupported operation: builtin.unregistered: llvm.sext
@@ -65,14 +59,10 @@
 
 4: "extrause011_v2" has unsupported operation: llvm.call
 
-4: "extrause011_v2" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "extrause100_v2"
 4: "extrause100_v2" has unsupported operation: builtin.unregistered: llvm.sext
 
 4: "extrause100_v2" has unsupported operation: llvm.call
-
-4: "extrause100_v2" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "extrause101_v2"
 4: "extrause101_v2" has unsupported operation: builtin.unregistered: llvm.sext
@@ -80,8 +70,6 @@
 4: "extrause101_v2" has unsupported operation: llvm.call
 
 4: "extrause101_v2" has unsupported operation: llvm.call
-
-4: "extrause101_v2" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "extrause110_v2"
 4: "extrause110_v2" has unsupported operation: builtin.unregistered: llvm.sext

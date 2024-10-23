@@ -7,14 +7,10 @@
 
 4: "test_plain" has unsupported operation: llvm.load
 
-4: "test_plain" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "test_asan"
 4: "test_asan" has unsupported operation: llvm.alloca
 
 4: "test_asan" has unsupported operation: llvm.alloca
-
-4: "test_asan" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "test_asan" has unsupported operation: llvm.load
 
@@ -23,16 +19,12 @@
 
 4: "test_hwasan" has unsupported operation: llvm.alloca
 
-4: "test_hwasan" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "test_hwasan" has unsupported operation: llvm.load
 
 1: "test_tsan"
 4: "test_tsan" has unsupported operation: llvm.alloca
 
 4: "test_tsan" has unsupported operation: llvm.alloca
-
-4: "test_tsan" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "test_tsan" has unsupported operation: llvm.load
 
@@ -44,6 +36,4 @@
 4: "test_msan" has unsupported operation: llvm.load
 
 4: "test_msan" has unsupported operation: llvm.load
-
-4: "test_msan" has unsupported operation: builtin.unregistered: llvm.select
 

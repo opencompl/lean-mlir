@@ -12,8 +12,6 @@
 
 4: "fold_memrchr_a11111_c_5" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "fold_memrchr_a11111_c_5" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "fold_memrchr_a11111_c_n"
 4: "fold_memrchr_a11111_c_n" has unsupported operation: llvm.mlir.addressof
 
@@ -25,13 +23,9 @@
 
 4: "fold_memrchr_a11111_c_n" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "fold_memrchr_a11111_c_n" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "fold_memrchr_a11111_c_n" has unsupported operation: llvm.getelementptr
 
 4: "fold_memrchr_a11111_c_n" has unsupported operation: llvm.getelementptr
-
-4: "fold_memrchr_a11111_c_n" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "fold_memrchr_a1110111_c_3"
 4: "fold_memrchr_a1110111_c_3" has unsupported operation: llvm.mlir.addressof
@@ -43,8 +37,6 @@
 4: "fold_memrchr_a1110111_c_3" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "fold_memrchr_a1110111_c_3" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "fold_memrchr_a1110111_c_3" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "call_memrchr_a1110111_c_4"
 4: "call_memrchr_a1110111_c_4" has unsupported operation: llvm.mlir.addressof

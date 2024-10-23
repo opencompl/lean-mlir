@@ -47,14 +47,10 @@
 1: "no_cttz_abs"
 4: "no_cttz_abs" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "no_cttz_abs" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "no_cttz_abs" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
 1: "no_cttz_abs2"
 4: "no_cttz_abs2" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "no_cttz_abs2" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "no_cttz_abs2" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
@@ -63,21 +59,15 @@
 
 4: "no_cttz_abs3" has unsupported operation: llvm.call
 
-4: "no_cttz_abs3" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "no_cttz_abs3" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
 1: "no_cttz_abs_vec"
 4: "no_cttz_abs_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "no_cttz_abs_vec" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "no_cttz_abs_vec" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
 1: "no_cttz_nabs_vec"
 4: "no_cttz_nabs_vec" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "no_cttz_nabs_vec" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "no_cttz_nabs_vec" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 

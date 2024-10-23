@@ -13,10 +13,10 @@
 4: "t2" has unsupported operation: llvm.call
 
 1: "t3"
-"t3" contains vectors which are unsupported
+8: "t3" contains vectors which are unsupported
 
 1: "t4"
-"t4" contains vectors which are unsupported
+8: "t4" contains vectors which are unsupported
 
 1: "t5"
 4: "t5" has unsupported operation: llvm.mlir.undef
@@ -34,7 +34,7 @@
 4: "t5" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 1: "t6"
-"t6" contains vectors which are unsupported
+8: "t6" contains vectors which are unsupported
 
 1: "t7"
 4: "t7" has unsupported operation: llvm.mlir.undef
@@ -69,7 +69,7 @@
 4: "t8" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 1: "t9"
-"t9" contains vectors which are unsupported
+8: "t9" contains vectors which are unsupported
 
 1: "t10"
 4: "t10" has unsupported operation: llvm.mlir.undef

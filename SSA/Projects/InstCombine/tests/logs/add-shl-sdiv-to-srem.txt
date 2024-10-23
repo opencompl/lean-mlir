@@ -26,13 +26,13 @@
 2: llvm.return
 
 1: "add-shl-sdiv-splat0"
-"add-shl-sdiv-splat0" contains vectors which are unsupported
+8: "add-shl-sdiv-splat0" contains vectors which are unsupported
 
 1: "add-shl-sdiv-splat1"
-"add-shl-sdiv-splat1" contains vectors which are unsupported
+8: "add-shl-sdiv-splat1" contains vectors which are unsupported
 
 1: "add-shl-sdiv-splat2"
-"add-shl-sdiv-splat2" contains vectors which are unsupported
+8: "add-shl-sdiv-splat2" contains vectors which are unsupported
 
 1: "use32"
 5: "use32" is empty
@@ -77,8 +77,6 @@
 
 1: "add-shl-sdiv-negative2"
 4: "add-shl-sdiv-negative2" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "add-shl-sdiv-negative2" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "add-shl-sdiv-negative3"
 7: "add-shl-sdiv-negative3" is unchanged by InstCombine

@@ -134,10 +134,10 @@
 2: llvm.return
 
 1: "shl_or_splat"
-"shl_or_splat" contains vectors which are unsupported
+8: "shl_or_splat" contains vectors which are unsupported
 
 1: "shl_or_non_splat"
-"shl_or_non_splat" contains vectors which are unsupported
+8: "shl_or_non_splat" contains vectors which are unsupported
 
 1: "shl_or_poison_in_add"
 4: "shl_or_poison_in_add" has unsupported operation: builtin.unregistered: llvm.mlir.poison

@@ -25,13 +25,13 @@
 2: llvm.return
 
 1: "test5"
-"test5" contains vectors which are unsupported
+8: "test5" contains vectors which are unsupported
 
 1: "test6"
-"test6" contains vectors which are unsupported
+8: "test6" contains vectors which are unsupported
 
 1: "test7"
-"test7" contains vectors which are unsupported
+8: "test7" contains vectors which are unsupported
 
 1: "test9"
 2: llvm.func
@@ -280,7 +280,14 @@
 2: llvm.return
 
 1: "add_of_selects"
-4: "add_of_selects" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.add
+2: llvm.return
 
 1: "add_undemanded_low_bits"
 2: llvm.func

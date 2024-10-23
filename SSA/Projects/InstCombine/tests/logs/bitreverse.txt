@@ -77,10 +77,8 @@
 
 4: "rev_i1" has unsupported operation: llvm.call
 
-4: "rev_i1" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "rev_v2i1"
-4: "rev_v2i1" has unsupported operation: builtin.unregistered: llvm.select
+8: "rev_v2i1" contains vectors which are unsupported
 
 1: "rev_i2"
 4: "rev_i2" has unsupported operation: builtin.unregistered: llvm.zext

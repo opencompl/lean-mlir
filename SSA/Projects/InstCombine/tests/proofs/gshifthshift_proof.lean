@@ -8,6 +8,11 @@ theorem shl_shl_thm (x : BitVec 32) : x <<< 34 = 0#32 := sorry
 
 theorem lshr_lshr_thm (x : BitVec 232) : x >>> 232 = 0#232 := sorry
 
+theorem shl_shl_constants_div_thm (x x_1 : BitVec 32) :
+  (Option.bind (if 32#32 ≤ x then none else some (1#32 <<< x.toNat)) fun x =>
+      if x <<< 2 = 0#32 then none else some (x_1 / x <<< 2)) ⊑
+    if 32#32 ≤ x + 2#32 then none else some (x_1 >>> ((x.toNat + 2) % 4294967296)) := sorry
+
 theorem ashr_shl_constants_thm (x : BitVec 32) :
   (Option.bind (if 32#32 ≤ x then none else some ((4294967263#32).sshiftRight x.toNat)) fun x' => some (x' <<< 3)) ⊑
     Option.bind (if 32#32 ≤ x then none else some ((4294967263#32).sshiftRight x.toNat)) fun x' =>

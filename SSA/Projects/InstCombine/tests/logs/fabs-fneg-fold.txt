@@ -35,7 +35,7 @@
 4: "fabs_fneg_no_fabs" has unsupported operation: builtin.unregistered: llvm.fneg
 
 1: "fabs_fneg_splat_v2f32"
-"fabs_fneg_splat_v2f32" contains vectors which are unsupported
+8: "fabs_fneg_splat_v2f32" contains vectors which are unsupported
 
 1: "fabs_fneg_splat_poison_v2f32"
 4: "fabs_fneg_splat_poison_v2f32" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -49,7 +49,7 @@
 4: "fabs_fneg_splat_poison_v2f32" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
 1: "fabs_fneg_non_splat_v2f32"
-"fabs_fneg_non_splat_v2f32" contains vectors which are unsupported
+8: "fabs_fneg_non_splat_v2f32" contains vectors which are unsupported
 
 1: "use"
 5: "use" is empty

@@ -1,6 +1,4 @@
 1: "pr80597"
-4: "pr80597" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "pr80597" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "pr80597" has unsupported operation: builtin.unregistered: llvm.cond_br

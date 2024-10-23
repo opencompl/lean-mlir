@@ -109,19 +109,19 @@
 4: "test_two_ranges_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test_two_ranges_vec_false"
-"test_two_ranges_vec_false" contains vectors which are unsupported
+8: "test_two_ranges_vec_false" contains vectors which are unsupported
 
 1: "test_two_ranges_vec_true"
-"test_two_ranges_vec_true" contains vectors which are unsupported
+8: "test_two_ranges_vec_true" contains vectors which are unsupported
 
 1: "test_two_argument_ranges_vec"
 4: "test_two_argument_ranges_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test_two_argument_ranges_vec_false"
-"test_two_argument_ranges_vec_false" contains vectors which are unsupported
+8: "test_two_argument_ranges_vec_false" contains vectors which are unsupported
 
 1: "test_two_argument_ranges_vec_true"
-"test_two_argument_ranges_vec_true" contains vectors which are unsupported
+8: "test_two_argument_ranges_vec_true" contains vectors which are unsupported
 
 1: "create_range1"
 5: "create_range1" is empty
@@ -417,7 +417,7 @@
 4: "zext_sext_add_icmp_ugt_1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "vector_zext_sext_add_icmp_slt_1"
-"vector_zext_sext_add_icmp_slt_1" contains vectors which are unsupported
+8: "vector_zext_sext_add_icmp_slt_1" contains vectors which are unsupported
 
 1: "vector_zext_sext_add_icmp_slt_1_poison"
 4: "vector_zext_sext_add_icmp_slt_1_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -558,7 +558,7 @@
 4: "icmp_eq_zext_ne_non_boolean" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "icmp_ne_zext_eq_zero_vec"
-"icmp_ne_zext_eq_zero_vec" contains vectors which are unsupported
+8: "icmp_ne_zext_eq_zero_vec" contains vectors which are unsupported
 
 1: "icmp_ne_zext_ne_zero_vec"
 4: "icmp_ne_zext_ne_zero_vec" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -567,7 +567,7 @@
 4: "icmp_ne_zext_eq_one_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "icmp_ne_zext_ne_one_vec"
-"icmp_ne_zext_ne_one_vec" contains vectors which are unsupported
+8: "icmp_ne_zext_ne_one_vec" contains vectors which are unsupported
 
 1: "icmp_ne_zext_eq_non_boolean_vec"
 4: "icmp_ne_zext_eq_non_boolean_vec" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -625,7 +625,7 @@
 4: "icmp_eq_sext_ne_otherwise" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "icmp_ne_sext_eq_zero_vec"
-"icmp_ne_sext_eq_zero_vec" contains vectors which are unsupported
+8: "icmp_ne_sext_eq_zero_vec" contains vectors which are unsupported
 
 1: "icmp_ne_sext_ne_zero_vec"
 4: "icmp_ne_sext_ne_zero_vec" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -634,7 +634,7 @@
 4: "icmp_ne_sext_eq_allones_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "icmp_ne_sext_ne_allones_vec"
-"icmp_ne_sext_ne_allones_vec" contains vectors which are unsupported
+8: "icmp_ne_sext_ne_allones_vec" contains vectors which are unsupported
 
 1: "icmp_ne_sext_eq_otherwise_vec"
 4: "icmp_ne_sext_eq_otherwise_vec" has unsupported operation: builtin.unregistered: llvm.icmp

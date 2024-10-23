@@ -15,8 +15,6 @@
 
 4: "thisdoesnotloop" has unsupported operation: builtin.unregistered: llvm.trunc
 
-4: "thisdoesnotloop" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "original"
 4: "original" has unsupported operation: builtin.unregistered: llvm.intr.smax
 

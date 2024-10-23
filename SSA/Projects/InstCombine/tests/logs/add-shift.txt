@@ -7,7 +7,7 @@
 2: llvm.return
 
 1: "flip_add_of_shift_neg_vec"
-"flip_add_of_shift_neg_vec" contains vectors which are unsupported
+8: "flip_add_of_shift_neg_vec" contains vectors which are unsupported
 
 1: "flip_add_of_shift_neg_fail_shr"
 7: "flip_add_of_shift_neg_fail_shr" is unchanged by InstCombine

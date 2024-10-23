@@ -48,10 +48,10 @@
 2: llvm.return
 
 1: "ashr_ashr_splat_vec"
-"ashr_ashr_splat_vec" contains vectors which are unsupported
+8: "ashr_ashr_splat_vec" contains vectors which are unsupported
 
 1: "ashr_overshift_splat_vec"
-"ashr_overshift_splat_vec" contains vectors which are unsupported
+8: "ashr_overshift_splat_vec" contains vectors which are unsupported
 
 1: "hoist_ashr_ahead_of_sext_1"
 4: "hoist_ashr_ahead_of_sext_1" has unsupported operation: builtin.unregistered: llvm.sext

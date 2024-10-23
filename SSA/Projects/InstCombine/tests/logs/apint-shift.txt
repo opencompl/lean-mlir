@@ -21,7 +21,7 @@
 4: "test6a_negative_oneuse" has unsupported operation: llvm.call
 
 1: "test6a_vec"
-"test6a_vec" contains vectors which are unsupported
+8: "test6a_vec" contains vectors which are unsupported
 
 1: "test7"
 4: "test7" has unsupported operation after optimization: builtin.unregistered: llvm.zext
@@ -49,7 +49,7 @@
 2: llvm.return
 
 1: "lshr_lshr_splat_vec"
-"lshr_lshr_splat_vec" contains vectors which are unsupported
+8: "lshr_lshr_splat_vec" contains vectors which are unsupported
 
 1: "multiuse_lshr_lshr"
 2: llvm.func
@@ -61,10 +61,10 @@
 2: llvm.return
 
 1: "multiuse_lshr_lshr_splat"
-"multiuse_lshr_lshr_splat" contains vectors which are unsupported
+8: "multiuse_lshr_lshr_splat" contains vectors which are unsupported
 
 1: "shl_shl_splat_vec"
-"shl_shl_splat_vec" contains vectors which are unsupported
+8: "shl_shl_splat_vec" contains vectors which are unsupported
 
 1: "multiuse_shl_shl"
 2: llvm.func
@@ -76,19 +76,19 @@
 2: llvm.return
 
 1: "multiuse_shl_shl_splat"
-"multiuse_shl_shl_splat" contains vectors which are unsupported
+8: "multiuse_shl_shl_splat" contains vectors which are unsupported
 
 1: "eq_shl_lshr_splat_vec"
-"eq_shl_lshr_splat_vec" contains vectors which are unsupported
+8: "eq_shl_lshr_splat_vec" contains vectors which are unsupported
 
 1: "eq_lshr_shl_splat_vec"
-"eq_lshr_shl_splat_vec" contains vectors which are unsupported
+8: "eq_lshr_shl_splat_vec" contains vectors which are unsupported
 
 1: "lshr_shl_splat_vec"
-"lshr_shl_splat_vec" contains vectors which are unsupported
+8: "lshr_shl_splat_vec" contains vectors which are unsupported
 
 1: "shl_lshr_splat_vec"
-4: "shl_lshr_splat_vec" has unsupported operation: llvm.udiv
+8: "shl_lshr_splat_vec" contains vectors which are unsupported
 
 1: "test11"
 2: llvm.func
@@ -108,7 +108,7 @@
 2: llvm.return
 
 1: "test12_splat_vec"
-"test12_splat_vec" contains vectors which are unsupported
+8: "test12_splat_vec" contains vectors which are unsupported
 
 1: "test13"
 2: llvm.func
@@ -139,10 +139,16 @@
 2: llvm.return
 
 1: "test15"
-4: "test15" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.shl
+2: llvm.return
 
 1: "test15a"
-4: "test15a" has unsupported operation: builtin.unregistered: llvm.select
+4: "test15a" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 
 1: "test16"
 4: "test16" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -206,7 +212,7 @@
 2: llvm.return
 
 1: "shl_lshr_eq_amt_multi_use_splat_vec"
-"shl_lshr_eq_amt_multi_use_splat_vec" contains vectors which are unsupported
+8: "shl_lshr_eq_amt_multi_use_splat_vec" contains vectors which are unsupported
 
 1: "lshr_shl_eq_amt_multi_use"
 2: llvm.func
@@ -217,7 +223,7 @@
 2: llvm.return
 
 1: "lshr_shl_eq_amt_multi_use_splat_vec"
-"lshr_shl_eq_amt_multi_use_splat_vec" contains vectors which are unsupported
+8: "lshr_shl_eq_amt_multi_use_splat_vec" contains vectors which are unsupported
 
 1: "test25"
 2: llvm.func
@@ -235,8 +241,4 @@
 4: "ossfuzz_9880" has unsupported operation after optimization: llvm.alloca
 
 4: "ossfuzz_9880" has unsupported operation after optimization: llvm.load
-
-4: "ossfuzz_9880" has unsupported operation after optimization: llvm.udiv
-
-4: "ossfuzz_9880" has unsupported operation after optimization: llvm.udiv
 

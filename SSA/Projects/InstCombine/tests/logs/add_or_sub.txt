@@ -43,10 +43,10 @@
 2: llvm.return
 
 1: "add_or_sub_comb_i32vec"
-"add_or_sub_comb_i32vec" contains vectors which are unsupported
+8: "add_or_sub_comb_i32vec" contains vectors which are unsupported
 
 1: "add_or_sub_comb_i32vec_poison"
-"add_or_sub_comb_i32vec_poison" contains vectors which are unsupported
+8: "add_or_sub_comb_i32vec_poison" contains vectors which are unsupported
 
 1: "add_or_sub_comb_i12_multiuse_only_sub"
 4: "add_or_sub_comb_i12_multiuse_only_sub" has unsupported operation: llvm.call

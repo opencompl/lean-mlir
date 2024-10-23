@@ -9,10 +9,10 @@
 7: "p0_scalar_not_truly_negatable" is unchanged by InstCombine
 
 1: "p1_vector_splat"
-"p1_vector_splat" contains vectors which are unsupported
+8: "p1_vector_splat" contains vectors which are unsupported
 
 1: "p2_vector_poison"
-"p2_vector_poison" contains vectors which are unsupported
+8: "p2_vector_poison" contains vectors which are unsupported
 
 1: "use32"
 5: "use32" is empty

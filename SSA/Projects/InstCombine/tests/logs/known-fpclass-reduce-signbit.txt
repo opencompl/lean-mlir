@@ -1,5 +1,5 @@
 1: "vector_reduce_maximum_signbit"
-"vector_reduce_maximum_signbit" contains vectors which are unsupported
+8: "vector_reduce_maximum_signbit" contains vectors which are unsupported
 
 1: "vector_reduce_maximum_signbit_fail_maybe_nan"
 4: "vector_reduce_maximum_signbit_fail_maybe_nan" has unsupported operation: builtin.unregistered: llvm.intr.fabs
@@ -9,7 +9,7 @@
 4: "vector_reduce_maximum_signbit_fail_maybe_nan" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "vector_reduce_minimum_signbit"
-"vector_reduce_minimum_signbit" contains vectors which are unsupported
+8: "vector_reduce_minimum_signbit" contains vectors which are unsupported
 
 1: "vector_reduce_minimum_signbit_fail_maybe_nan"
 4: "vector_reduce_minimum_signbit_fail_maybe_nan" has unsupported operation: builtin.unregistered: llvm.intr.fabs
@@ -19,7 +19,7 @@
 4: "vector_reduce_minimum_signbit_fail_maybe_nan" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "vector_reduce_max_signbit"
-"vector_reduce_max_signbit" contains vectors which are unsupported
+8: "vector_reduce_max_signbit" contains vectors which are unsupported
 
 1: "vector_reduce_max_signbit_fail_maybe_nan"
 4: "vector_reduce_max_signbit_fail_maybe_nan" has unsupported operation: builtin.unregistered: llvm.intr.fabs
@@ -29,7 +29,7 @@
 4: "vector_reduce_max_signbit_fail_maybe_nan" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "vector_reduce_min_signbit"
-"vector_reduce_min_signbit" contains vectors which are unsupported
+8: "vector_reduce_min_signbit" contains vectors which are unsupported
 
 1: "vector_reduce_min_signbit_fail_maybe_nan"
 4: "vector_reduce_min_signbit_fail_maybe_nan" has unsupported operation: builtin.unregistered: llvm.intr.fabs
@@ -39,5 +39,5 @@
 4: "vector_reduce_min_signbit_fail_maybe_nan" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "vector_reduce_min_signbit_nnan_from_fmf"
-"vector_reduce_min_signbit_nnan_from_fmf" contains vectors which are unsupported
+8: "vector_reduce_min_signbit_nnan_from_fmf" contains vectors which are unsupported
 

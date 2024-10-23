@@ -77,6 +77,78 @@ theorem t2_proof : t2_before ⊑ t2_after := by
 
 
 
+def t4_before := [llvm|
+{
+^0(%arg192 : i8, %arg193 : i1):
+  %0 = "llvm.mlir.constant"() <{value = -42 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 44 : i8}> : () -> i8
+  %2 = "llvm.select"(%arg193, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  %3 = llvm.sub %arg192, %2 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+def t4_after := [llvm|
+{
+^0(%arg192 : i8, %arg193 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = -44 : i8}> : () -> i8
+  %2 = "llvm.select"(%arg193, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  %3 = llvm.add %2, %arg192 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+theorem t4_proof : t4_before ⊑ t4_after := by
+  unfold t4_before t4_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN t4
+  apply t4_thm
+  ---END t4
+
+
+
+def t7_before := [llvm|
+{
+^0(%arg181 : i8, %arg182 : i1, %arg183 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
+  %2 = llvm.shl %0, %arg183 : i8
+  %3 = "llvm.select"(%arg182, %1, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  %4 = llvm.sub %arg181, %3 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+def t7_after := [llvm|
+{
+^0(%arg181 : i8, %arg182 : i1, %arg183 : i8):
+  %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
+  %2 = llvm.shl %0, %arg183 overflow<nsw> : i8
+  %3 = "llvm.select"(%arg182, %1, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  %4 = llvm.add %3, %arg181 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+theorem t7_proof : t7_before ⊑ t7_after := by
+  unfold t7_before t7_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN t7
+  apply t7_thm
+  ---END t7
+
+
+
 def t9_before := [llvm|
 {
 ^0(%arg176 : i8, %arg177 : i8):

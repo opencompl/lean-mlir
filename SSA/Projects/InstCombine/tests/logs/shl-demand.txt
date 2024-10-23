@@ -69,7 +69,7 @@
 2: llvm.return
 
 1: "src_srem_shl_mask_vector"
-"src_srem_shl_mask_vector" contains vectors which are unsupported
+8: "src_srem_shl_mask_vector" contains vectors which are unsupported
 
 1: "src_srem_shl_mask_vector_nonconstant"
 7: "src_srem_shl_mask_vector_nonconstant" is unchanged by InstCombine

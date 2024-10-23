@@ -18,8 +18,6 @@
 
 4: "PR16462_1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "PR16462_1" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 4: "PR16462_1" has unsupported operation after optimization: builtin.unregistered: llvm.trunc
 
 4: "PR16462_1" has unsupported operation after optimization: builtin.unregistered: llvm.sext
@@ -32,8 +30,6 @@
 4: "PR16462_2" has unsupported operation after optimization: llvm.mlir.addressof
 
 4: "PR16462_2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "PR16462_2" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 4: "PR16462_2" has unsupported operation after optimization: builtin.unregistered: llvm.trunc
 

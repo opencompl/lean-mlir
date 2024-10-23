@@ -9,5 +9,3 @@
 
 4: "pr100298" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "pr100298" has unsupported operation: builtin.unregistered: llvm.select
-

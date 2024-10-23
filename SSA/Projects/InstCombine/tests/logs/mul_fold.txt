@@ -208,7 +208,7 @@
 2: llvm.return
 
 1: "mul_v2i8_low"
-"mul_v2i8_low" contains vectors which are unsupported
+8: "mul_v2i8_low" contains vectors which are unsupported
 
 1: "mul_v2i8_low_one_extra_user"
 4: "mul_v2i8_low_one_extra_user" has unsupported operation: llvm.mlir.addressof

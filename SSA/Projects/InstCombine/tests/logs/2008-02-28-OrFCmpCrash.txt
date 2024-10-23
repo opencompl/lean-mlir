@@ -10,7 +10,5 @@
 
 4: "test_logical" has unsupported operation: builtin.unregistered: llvm.fcmp
 
-4: "test_logical" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "test_logical" has unsupported operation: builtin.unregistered: llvm.cond_br
 

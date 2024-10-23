@@ -3,8 +3,6 @@
 
 4: "foo" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "foo" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 4: "foo" has unsupported operation after optimization: builtin.unregistered: llvm.trunc
 
 1: "min_max_clamp"

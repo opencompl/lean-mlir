@@ -13,10 +13,6 @@
 
 4: "sadd_x_lt_min" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "sadd_x_lt_min" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "sadd_x_lt_min" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "sadd_x_lt_max"
 4: "sadd_x_lt_max" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
 
@@ -28,10 +24,6 @@
 4: "sadd_x_le_min" has unsupported operation: llvm.extractvalue
 
 4: "sadd_x_le_min" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "sadd_x_le_min" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "sadd_x_le_min" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "sadd_x_le_max"
 4: "sadd_x_le_max" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
@@ -48,10 +40,6 @@
 
 4: "sadd_x_gt_max" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "sadd_x_gt_max" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "sadd_x_gt_max" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "sadd_x_ge_min"
 4: "sadd_x_ge_min" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
 
@@ -64,10 +52,6 @@
 
 4: "sadd_x_ge_max" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "sadd_x_ge_max" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "sadd_x_ge_max" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "sadd_y_lt_min"
 4: "sadd_y_lt_min" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
 
@@ -76,10 +60,6 @@
 4: "sadd_y_lt_min" has unsupported operation: llvm.extractvalue
 
 4: "sadd_y_lt_min" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "sadd_y_lt_min" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "sadd_y_lt_min" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "sadd_y_lt_max"
 4: "sadd_y_lt_max" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
@@ -92,10 +72,6 @@
 4: "sadd_y_le_min" has unsupported operation: llvm.extractvalue
 
 4: "sadd_y_le_min" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "sadd_y_le_min" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "sadd_y_le_min" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "sadd_y_le_max"
 4: "sadd_y_le_max" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
@@ -112,10 +88,6 @@
 
 4: "sadd_y_gt_max" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "sadd_y_gt_max" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "sadd_y_gt_max" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "sadd_y_ge_min"
 4: "sadd_y_ge_min" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
 
@@ -128,10 +100,6 @@
 
 4: "sadd_y_ge_max" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "sadd_y_ge_max" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "sadd_y_ge_max" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "ssub_x_lt_min"
 4: "ssub_x_lt_min" has unsupported operation: builtin.unregistered: llvm.intr.ssub.with.overflow
 
@@ -140,10 +108,6 @@
 4: "ssub_x_lt_min" has unsupported operation: llvm.extractvalue
 
 4: "ssub_x_lt_min" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ssub_x_lt_min" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "ssub_x_lt_min" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "ssub_x_lt_max"
 4: "ssub_x_lt_max" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
@@ -157,10 +121,6 @@
 
 4: "ssub_x_le_min" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "ssub_x_le_min" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "ssub_x_le_min" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "ssub_x_le_max"
 4: "ssub_x_le_max" has unsupported operation: builtin.unregistered: llvm.intr.ssub.with.overflow
 
@@ -170,10 +130,6 @@
 
 4: "ssub_x_le_max" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "ssub_x_le_max" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "ssub_x_le_max" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "ssub_x_lt2_min"
 4: "ssub_x_lt2_min" has unsupported operation: builtin.unregistered: llvm.intr.ssub.with.overflow
 
@@ -182,10 +138,6 @@
 4: "ssub_x_lt2_min" has unsupported operation: llvm.extractvalue
 
 4: "ssub_x_lt2_min" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ssub_x_lt2_min" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "ssub_x_lt2_min" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "ssub_x_lt2_max"
 4: "ssub_x_lt2_max" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
@@ -199,10 +151,6 @@
 
 4: "ssub_x_gt_min" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "ssub_x_gt_min" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "ssub_x_gt_min" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "ssub_x_gt_max"
 4: "ssub_x_gt_max" has unsupported operation: builtin.unregistered: llvm.intr.ssub.with.overflow
 
@@ -211,10 +159,6 @@
 4: "ssub_x_gt_max" has unsupported operation: llvm.extractvalue
 
 4: "ssub_x_gt_max" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ssub_x_gt_max" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "ssub_x_gt_max" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "ssub_x_ge_min"
 4: "ssub_x_ge_min" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
@@ -228,10 +172,6 @@
 
 4: "ssub_x_ge_max" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "ssub_x_ge_max" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "ssub_x_ge_max" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "ssub_x_gt2_min"
 4: "ssub_x_gt2_min" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
 
@@ -243,10 +183,6 @@
 4: "ssub_x_gt2_max" has unsupported operation: llvm.extractvalue
 
 4: "ssub_x_gt2_max" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ssub_x_gt2_max" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "ssub_x_gt2_max" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "ssub_y_lt_min"
 4: "ssub_y_lt_min" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
@@ -260,10 +196,6 @@
 
 4: "ssub_y_lt_max" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "ssub_y_lt_max" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "ssub_y_lt_max" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "ssub_y_le_min"
 4: "ssub_y_le_min" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
 
@@ -276,10 +208,6 @@
 
 4: "ssub_y_le_max" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "ssub_y_le_max" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "ssub_y_le_max" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "ssub_y_gt_min"
 4: "ssub_y_gt_min" has unsupported operation: builtin.unregistered: llvm.intr.ssub.with.overflow
 
@@ -288,10 +216,6 @@
 4: "ssub_y_gt_min" has unsupported operation: llvm.extractvalue
 
 4: "ssub_y_gt_min" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ssub_y_gt_min" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "ssub_y_gt_min" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "ssub_y_gt_max"
 4: "ssub_y_gt_max" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
@@ -304,10 +228,6 @@
 4: "ssub_y_ge_min" has unsupported operation: llvm.extractvalue
 
 4: "ssub_y_ge_min" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ssub_y_ge_min" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "ssub_y_ge_min" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "ssub_y_ge_max"
 4: "ssub_y_ge_max" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
@@ -327,10 +247,6 @@
 
 4: "sadd_bounds" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "sadd_bounds" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "sadd_bounds" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "ssub_bounds"
 4: "ssub_bounds" has unsupported operation: builtin.unregistered: llvm.intr.ssub.with.overflow
 
@@ -339,8 +255,4 @@
 4: "ssub_bounds" has unsupported operation: llvm.extractvalue
 
 4: "ssub_bounds" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ssub_bounds" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "ssub_bounds" has unsupported operation: builtin.unregistered: llvm.select
 

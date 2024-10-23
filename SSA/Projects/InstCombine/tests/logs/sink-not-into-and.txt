@@ -73,7 +73,5 @@
 
 4: "t11" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "t11" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "t11" has unsupported operation: llvm.call
 

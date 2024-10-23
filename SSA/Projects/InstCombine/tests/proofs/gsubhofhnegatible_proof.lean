@@ -10,6 +10,67 @@ theorem t2_thm (x x_1 : BitVec 8) :
   (Option.bind (if 8#8 ≤ x then none else some (214#8 <<< x.toNat)) fun y' => some (x_1 - y')) ⊑
     Option.bind (if 8#8 ≤ x then none else some (42#8 <<< x.toNat)) fun a => some (a + x_1) := sorry
 
+theorem t4_thm (x : BitVec 1) (x_1 : BitVec 8) :
+  (Option.bind
+      (match some x with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 214#8
+      | some { toFin := ⟨0, ⋯⟩ } => some 44#8)
+      fun y' => some (x_1 - y')) ⊑
+    Option.bind
+      (match some x with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 42#8
+      | some { toFin := ⟨0, ⋯⟩ } => some 212#8)
+      fun a => some (a + x_1) := sorry
+
+theorem PR52261_thm (x : BitVec 1) :
+  (Option.bind
+      (match some x with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 2#32
+      | some { toFin := ⟨0, ⋯⟩ } => some 4294967294#32)
+      fun x' =>
+      Option.bind
+        (match some x with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some 2#32
+        | some { toFin := ⟨0, ⋯⟩ } => some 4294967294#32)
+        fun a =>
+        (if (-signExtend 33 a).msb = (-signExtend 33 a).getMsbD 1 then some (-a) else none).bind fun y' =>
+          some (x' &&& y')) ⊑
+    some 2#32 := sorry
+
+theorem t7_thm (x : BitVec 1) (x_1 : BitVec 8) :
+  (Option.bind
+      (match some x with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 0#8
+      | some { toFin := ⟨0, ⋯⟩ } => none)
+      fun y' => some (x_1 - y')) ⊑
+    Option.bind
+      (match some x with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 0#8
+      | some { toFin := ⟨0, ⋯⟩ } => none)
+      fun a => some (a + x_1) := sorry
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gsubhofhnegatible.lean:181:17: theorem t7_thm :
+  ∀ (x : BitVec 8) (x_1 : BitVec 1) (x_2 : BitVec 8),
+    (Option.bind
+        (match some x_1 with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some 0#8
+        | some { toFin := ⟨0, ⋯⟩ } => if 8#8 ≤ x then none else some (1#8 <<< x.toNat))
+        fun y' => some (x_2 - y')) ⊑
+      Option.bind
+        (match some x_1 with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some 0#8
+        | some { toFin := ⟨0, ⋯⟩ } =>
+          if (255#8 <<< x.toNat).sshiftRight x.toNat = 255#8 then none
+          else if 8#8 ≤ x then none else some (255#8 <<< x.toNat))
+        fun a => some (a + x_2) := sorry
+
 theorem neg_of_sub_from_constant_thm (x : BitVec 8) : x - 42#8 = x + 214#8 := sorry
 
 theorem sub_from_constant_of_sub_from_constant_thm (x : BitVec 8) : 11#8 - (42#8 - x) = x + 225#8 := sorry

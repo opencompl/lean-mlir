@@ -3,5 +3,3 @@
 
 4: "\01_gfortrani_max_value" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "\01_gfortrani_max_value" has unsupported operation: builtin.unregistered: llvm.select
-

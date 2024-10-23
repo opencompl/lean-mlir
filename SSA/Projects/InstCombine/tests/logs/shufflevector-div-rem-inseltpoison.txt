@@ -1,5 +1,5 @@
 1: "test_srem_orig"
-4: "test_srem_orig" has unsupported operation: builtin.unregistered: llvm.select
+8: "test_srem_orig" contains vectors which are unsupported
 
 1: "test_srem"
 4: "test_srem" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -8,16 +8,12 @@
 
 4: "test_srem" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
-4: "test_srem" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "test_urem"
 4: "test_urem" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
 4: "test_urem" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 4: "test_urem" has unsupported operation: builtin.unregistered: llvm.shufflevector
-
-4: "test_urem" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "test_sdiv"
 4: "test_sdiv" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -26,18 +22,12 @@
 
 4: "test_sdiv" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
-4: "test_sdiv" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "test_udiv"
 4: "test_udiv" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
 4: "test_udiv" has unsupported operation: builtin.unregistered: llvm.insertelement
 
-4: "test_udiv" has unsupported operation: llvm.udiv
-
 4: "test_udiv" has unsupported operation: builtin.unregistered: llvm.shufflevector
-
-4: "test_udiv" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "test_fdiv"
 4: "test_fdiv" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -54,8 +44,6 @@
 
 4: "test_fdiv" has unsupported operation: builtin.unregistered: llvm.fdiv
 
-4: "test_fdiv" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "test_frem"
 4: "test_frem" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
@@ -70,6 +58,4 @@
 4: "test_frem" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 4: "test_frem" has unsupported operation: builtin.unregistered: llvm.frem
-
-4: "test_frem" has unsupported operation: builtin.unregistered: llvm.select
 

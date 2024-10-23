@@ -1,5 +1,5 @@
 1: "test1"
-"test1" contains vectors which are unsupported
+8: "test1" contains vectors which are unsupported
 
 1: "fabsf"
 5: "fabsf" is empty

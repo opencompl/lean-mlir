@@ -34,10 +34,10 @@
 4: "dec_mask_multiuse_neg_i32" has unsupported operation: llvm.call
 
 1: "dec_mask_neg_v2i32"
-"dec_mask_neg_v2i32" contains vectors which are unsupported
+8: "dec_mask_neg_v2i32" contains vectors which are unsupported
 
 1: "dec_mask_neg_v2i32_poison"
-"dec_mask_neg_v2i32_poison" contains vectors which are unsupported
+8: "dec_mask_neg_v2i32_poison" contains vectors which are unsupported
 
 1: "dec_mask_multiuse_neg_multiuse_v2i32"
 4: "dec_mask_multiuse_neg_multiuse_v2i32" has unsupported operation: llvm.call

@@ -101,14 +101,10 @@
 
 4: "test15" has unsupported operation: llvm.load
 
-4: "test15" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "test16"
 4: "test16" has unsupported operation: llvm.mlir.addressof
 
 4: "test16" has unsupported operation: llvm.mlir.addressof
-
-4: "test16" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "test16" has unsupported operation: llvm.load
 
@@ -116,8 +112,6 @@
 4: "test17" has unsupported operation: llvm.mlir.addressof
 
 4: "test17" has unsupported operation: llvm.mlir.addressof
-
-4: "test17" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "test17" has unsupported operation: llvm.load
 

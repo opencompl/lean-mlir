@@ -55,7 +55,7 @@
 2: llvm.return
 
 1: "not_ashr_const_splat"
-"not_ashr_const_splat" contains vectors which are unsupported
+8: "not_ashr_const_splat" contains vectors which are unsupported
 
 1: "not_lshr_const_negative"
 7: "not_lshr_const_negative" is unchanged by InstCombine
@@ -69,7 +69,7 @@
 2: llvm.return
 
 1: "not_lshr_const_splat"
-"not_lshr_const_splat" contains vectors which are unsupported
+8: "not_lshr_const_splat" contains vectors which are unsupported
 
 1: "not_sub"
 2: llvm.func
@@ -83,13 +83,13 @@
 4: "not_sub_extra_use" has unsupported operation: llvm.store
 
 1: "not_sub_splat"
-"not_sub_splat" contains vectors which are unsupported
+8: "not_sub_splat" contains vectors which are unsupported
 
 1: "not_sub_extra_use_splat"
 4: "not_sub_extra_use_splat" has unsupported operation: llvm.store
 
 1: "not_sub_vec"
-"not_sub_vec" contains vectors which are unsupported
+8: "not_sub_vec" contains vectors which are unsupported
 
 1: "not_sub_extra_use_vec"
 4: "not_sub_extra_use_vec" has unsupported operation: llvm.store
@@ -103,17 +103,15 @@
 2: llvm.return
 
 1: "not_add_splat"
-"not_add_splat" contains vectors which are unsupported
+8: "not_add_splat" contains vectors which are unsupported
 
 1: "not_add_vec"
-"not_add_vec" contains vectors which are unsupported
+8: "not_add_vec" contains vectors which are unsupported
 
 1: "not_select_cmp_cmp"
 4: "not_select_cmp_cmp" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "not_select_cmp_cmp" has unsupported operation: builtin.unregistered: llvm.fcmp
-
-4: "not_select_cmp_cmp" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "not_select_cmp_cmp_extra_use1"
 4: "not_select_cmp_cmp_extra_use1" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -122,16 +120,12 @@
 
 4: "not_select_cmp_cmp_extra_use1" has unsupported operation: builtin.unregistered: llvm.fcmp
 
-4: "not_select_cmp_cmp_extra_use1" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "not_select_cmp_cmp_extra_use2"
 4: "not_select_cmp_cmp_extra_use2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "not_select_cmp_cmp_extra_use2" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "not_select_cmp_cmp_extra_use2" has unsupported operation: llvm.call
-
-4: "not_select_cmp_cmp_extra_use2" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "not_select_cmp_cmp_extra_use3"
 4: "not_select_cmp_cmp_extra_use3" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -142,40 +136,28 @@
 
 4: "not_select_cmp_cmp_extra_use3" has unsupported operation: llvm.call
 
-4: "not_select_cmp_cmp_extra_use3" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "not_select_cmp_cmp_extra_use4"
 4: "not_select_cmp_cmp_extra_use4" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "not_select_cmp_cmp_extra_use4" has unsupported operation: builtin.unregistered: llvm.fcmp
-
-4: "not_select_cmp_cmp_extra_use4" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "not_select_cmp_cmp_extra_use4" has unsupported operation: llvm.call
 
 1: "not_select_cmpt"
 4: "not_select_cmpt" has unsupported operation: builtin.unregistered: llvm.fcmp
 
-4: "not_select_cmpt" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "not_select_cmpf"
 4: "not_select_cmpf" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "not_select_cmpf" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "not_select_cmpt_extra_use"
 4: "not_select_cmpt_extra_use" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "not_select_cmpt_extra_use" has unsupported operation: llvm.call
 
-4: "not_select_cmpt_extra_use" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "not_select_cmpf_extra_use"
 4: "not_select_cmpf_extra_use" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "not_select_cmpf_extra_use" has unsupported operation: llvm.call
-
-4: "not_select_cmpf_extra_use" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "not_or_neg"
 2: llvm.func
@@ -187,7 +169,7 @@
 2: llvm.return
 
 1: "not_or_neg_commute_vec"
-"not_or_neg_commute_vec" contains vectors which are unsupported
+8: "not_or_neg_commute_vec" contains vectors which are unsupported
 
 1: "not_or_neg_use1"
 4: "not_or_neg_use1" has unsupported operation: llvm.call
@@ -196,50 +178,62 @@
 4: "not_or_neg_use2" has unsupported operation: llvm.call
 
 1: "not_select_bool"
-4: "not_select_bool" has unsupported operation: builtin.unregistered: llvm.select
+7: "not_select_bool" is unchanged by InstCombine
 
 1: "not_select_bool_const1"
-4: "not_select_bool_const1" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.return
 
 1: "not_select_bool_const2"
-4: "not_select_bool_const2" has unsupported operation: builtin.unregistered: llvm.select
+7: "not_select_bool_const2" is unchanged by InstCombine
 
 1: "not_select_bool_const3"
-4: "not_select_bool_const3" has unsupported operation: builtin.unregistered: llvm.select
+7: "not_select_bool_const3" is unchanged by InstCombine
 
 1: "not_select_bool_const4"
-4: "not_select_bool_const4" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.return
 
 1: "not_logicalAnd_not_op0"
-4: "not_logicalAnd_not_op0" has unsupported operation: builtin.unregistered: llvm.select
+8: "not_logicalAnd_not_op0" contains vectors which are unsupported
 
 1: "not_logicalAnd_not_op1"
-4: "not_logicalAnd_not_op1" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.return
 
 1: "not_logicalAnd_not_op0_use1"
 4: "not_logicalAnd_not_op0_use1" has unsupported operation: llvm.call
 
-4: "not_logicalAnd_not_op0_use1" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "not_logicalAnd_not_op0_use2"
-4: "not_logicalAnd_not_op0_use2" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "not_logicalAnd_not_op0_use2" has unsupported operation: llvm.call
 
 1: "not_logicalOr_not_op0"
-4: "not_logicalOr_not_op0" has unsupported operation: builtin.unregistered: llvm.select
+8: "not_logicalOr_not_op0" contains vectors which are unsupported
 
 1: "not_logicalOr_not_op1"
-4: "not_logicalOr_not_op1" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.return
 
 1: "not_logicalOr_not_op0_use1"
 4: "not_logicalOr_not_op0_use1" has unsupported operation: llvm.call
 
-4: "not_logicalOr_not_op0_use1" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "not_logicalOr_not_op0_use2"
-4: "not_logicalOr_not_op0_use2" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "not_logicalOr_not_op0_use2" has unsupported operation: llvm.call
 
 1: "bitcast_to_wide_elts_sext_bool"
@@ -283,8 +277,6 @@
 4: "invert_both_cmp_operands_sub" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "invert_both_cmp_operands_complex"
-4: "invert_both_cmp_operands_complex" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "invert_both_cmp_operands_complex" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test_sext"
@@ -351,8 +343,6 @@
 
 4: "test_invert_demorgan_logical_or" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "test_invert_demorgan_logical_or" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "test_invert_demorgan_logical_or" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test_invert_demorgan_and"
@@ -386,8 +376,6 @@
 4: "test_invert_demorgan_logical_and" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "test_invert_demorgan_logical_and" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "test_invert_demorgan_logical_and" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "test_invert_demorgan_logical_and" has unsupported operation: builtin.unregistered: llvm.icmp
 

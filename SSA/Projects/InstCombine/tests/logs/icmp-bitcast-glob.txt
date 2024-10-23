@@ -23,5 +23,3 @@
 
 4: "icmp_glob" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "icmp_glob" has unsupported operation after optimization: builtin.unregistered: llvm.select
-

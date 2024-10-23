@@ -22,7 +22,7 @@
 7: "test_sdiv_canonicalize_nonsw" is unchanged by InstCombine
 
 1: "test_sdiv_canonicalize_vec"
-"test_sdiv_canonicalize_vec" contains vectors which are unsupported
+8: "test_sdiv_canonicalize_vec" contains vectors which are unsupported
 
 1: "test_sdiv_canonicalize_multiple_uses"
 7: "test_sdiv_canonicalize_multiple_uses" is unchanged by InstCombine
@@ -35,12 +35,8 @@
 1: "sdiv_abs_nsw"
 4: "sdiv_abs_nsw" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "sdiv_abs_nsw" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "sdiv_abs_nsw_vec"
 4: "sdiv_abs_nsw_vec" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "sdiv_abs_nsw_vec" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "sdiv_abs"
 4: "sdiv_abs" has unsupported operation: builtin.unregistered: llvm.intr.abs

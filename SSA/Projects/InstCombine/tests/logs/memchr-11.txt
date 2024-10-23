@@ -13,8 +13,6 @@
 
 4: "fold_memchr_a_c_n_eq_a" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "fold_memchr_a_c_n_eq_a" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "call_memchr_api_c_n_eq_a"
 4: "call_memchr_api_c_n_eq_a" has unsupported operation: llvm.mlir.addressof
 

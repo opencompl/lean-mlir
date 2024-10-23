@@ -11,3 +11,17 @@ theorem test2_thm (x : BitVec 499) :
       if y' = 0#499 then none else some (x % y')) ⊑
     some (x &&& 10633823966279326983230456482242756607#499) := sorry
 
+theorem test3_thm (x : BitVec 1) (x_1 : BitVec 599) :
+  (Option.bind
+      (match some x with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 70368744177664#599
+      | some { toFin := ⟨0, ⋯⟩ } => some 4096#599)
+      fun y' => if y' = 0#599 then none else some (x_1 % y')) ⊑
+    Option.bind
+      (match some x with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 70368744177663#599
+      | some { toFin := ⟨0, ⋯⟩ } => some 4095#599)
+      fun y' => some (x_1 &&& y') := sorry
+

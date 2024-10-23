@@ -25,8 +25,6 @@
 
 4: "test_gep_and_bitcast" has unsupported operation: llvm.store
 
-4: "test_gep_and_bitcast" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "test_gep_and_bitcast_arg"
 4: "test_gep_and_bitcast_arg" has unsupported operation: builtin.unregistered: llvm.cond_br
 
@@ -39,8 +37,6 @@
 4: "test_gep_and_bitcast_arg" has unsupported operation: llvm.load
 
 4: "test_gep_and_bitcast_arg" has unsupported operation: llvm.store
-
-4: "test_gep_and_bitcast_arg" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "test_gep_and_bitcast_phi"
 4: "test_gep_and_bitcast_phi" has unsupported operation: llvm.mlir.zero
@@ -69,8 +65,6 @@
 
 4: "test_gep_and_bitcast_phi" has unsupported operation: llvm.store
 
-4: "test_gep_and_bitcast_phi" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "test_gep_i32ptr"
 4: "test_gep_i32ptr" has unsupported operation: llvm.call
 
@@ -85,8 +79,6 @@
 4: "test_gep_i32ptr" has unsupported operation: llvm.load
 
 4: "test_gep_i32ptr" has unsupported operation: llvm.store
-
-4: "test_gep_i32ptr" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "test_gep_and_bitcast_gep_base_ptr"
 4: "test_gep_and_bitcast_gep_base_ptr" has unsupported operation: llvm.call
@@ -103,8 +95,6 @@
 
 4: "test_gep_and_bitcast_gep_base_ptr" has unsupported operation: llvm.store
 
-4: "test_gep_and_bitcast_gep_base_ptr" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "test_gep_and_bitcast_same_bb"
 4: "test_gep_and_bitcast_same_bb" has unsupported operation: llvm.call
 
@@ -117,8 +107,6 @@
 4: "test_gep_and_bitcast_same_bb" has unsupported operation: llvm.load
 
 4: "test_gep_and_bitcast_same_bb" has unsupported operation: llvm.store
-
-4: "test_gep_and_bitcast_same_bb" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "test_gep_and_bitcast_same_bb_and_extra_use"
 4: "test_gep_and_bitcast_same_bb_and_extra_use" has unsupported operation: llvm.call
@@ -137,8 +125,6 @@
 
 4: "test_gep_and_bitcast_same_bb_and_extra_use" has unsupported operation: llvm.store
 
-4: "test_gep_and_bitcast_same_bb_and_extra_use" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "test_gep"
 4: "test_gep" has unsupported operation: llvm.call
 
@@ -153,8 +139,6 @@
 4: "test_gep" has unsupported operation: llvm.load
 
 4: "test_gep" has unsupported operation: llvm.store
-
-4: "test_gep" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "test_extra_uses"
 4: "test_extra_uses" has unsupported operation: llvm.call
@@ -179,8 +163,6 @@
 
 4: "test_extra_uses" has unsupported operation: llvm.store
 
-4: "test_extra_uses" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "test_extra_uses_non_inbounds"
 4: "test_extra_uses_non_inbounds" has unsupported operation: llvm.call
 
@@ -203,8 +185,6 @@
 4: "test_extra_uses_non_inbounds" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "test_extra_uses_non_inbounds" has unsupported operation: llvm.store
-
-4: "test_extra_uses_non_inbounds" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "test_extra_uses_multiple_geps"
 4: "test_extra_uses_multiple_geps" has unsupported operation: llvm.call
@@ -229,8 +209,6 @@
 
 4: "test_extra_uses_multiple_geps" has unsupported operation: llvm.store
 
-4: "test_extra_uses_multiple_geps" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "test_gep_extra_uses"
 4: "test_gep_extra_uses" has unsupported operation: llvm.call
 
@@ -253,8 +231,6 @@
 4: "test_gep_extra_uses" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "test_gep_extra_uses" has unsupported operation: llvm.store
-
-4: "test_gep_extra_uses" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "takeAddress"
 5: "takeAddress" is empty
@@ -283,6 +259,4 @@
 4: "test_dont_optimize_swifterror" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "test_dont_optimize_swifterror" has unsupported operation: llvm.store
-
-4: "test_dont_optimize_swifterror" has unsupported operation: builtin.unregistered: llvm.select
 

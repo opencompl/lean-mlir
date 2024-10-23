@@ -11,8 +11,6 @@
 
 4: "f" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "f" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "f" has unsupported operation: llvm.call
 
 4: "f" has unsupported operation: llvm.call

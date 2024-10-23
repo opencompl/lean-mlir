@@ -7,16 +7,12 @@
 1: "t0"
 4: "t0" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "t0" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "t1"
 4: "t1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "t1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "t1" has unsupported operation: llvm.call
-
-4: "t1" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "n2"
 4: "n2" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -26,23 +22,13 @@
 
 4: "n3" has unsupported operation: llvm.call
 
-4: "n3" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "t4"
 4: "t4" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "t4" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "t4" has unsupported operation: llvm.call
-
-4: "t4" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "t4_commutative"
 4: "t4_commutative" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "t4_commutative" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "t4_commutative" has unsupported operation: llvm.call
-
-4: "t4_commutative" has unsupported operation: builtin.unregistered: llvm.select
 

@@ -59,8 +59,6 @@
 4: "cttz_of_lowest_set_bit" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
 1: "cttz_of_lowest_set_bit_commuted"
-4: "cttz_of_lowest_set_bit_commuted" has unsupported operation: llvm.udiv
-
 4: "cttz_of_lowest_set_bit_commuted" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
 1: "cttz_of_lowest_set_bit_poison_flag"
