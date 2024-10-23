@@ -122,9 +122,6 @@ lemma one_shiftLeft_mul_eq_shiftLeft {A B : BitVec w} :
   simp only [bv_toNat, Nat.mod_mul_mod, one_mul]
   rw [Nat.mul_comm]
 
-@[simp]
-lemma msb_one_of_width_one : BitVec.msb 1#1 = true := rfl
-
 def msb_allOnes {w : Nat} (h : 0 < w) : BitVec.msb (allOnes w) = true := by
   simp only [BitVec.msb, getMsbD, allOnes]
   simp only [getLsbD_ofNatLt, Nat.testBit_two_pow_sub_one, Bool.and_eq_true,
