@@ -353,18 +353,6 @@ theorem intMin_not_gt_zero : ¬ (intMin w >ₛ (0#w)):= by
     apply intMin_lt_zero
     omega
 
-theorem zero_sub_eq_neg {w : Nat} { A : BitVec w}: BitVec.ofInt w 0 - A = -A:= by
-  simp
-
--- Any bitvec of width 0 is equal to the zero bitvector
-theorem width_zero_eq_zero (x : BitVec 0) : x = BitVec.ofNat 0 0 :=
-  Subsingleton.allEq ..
-
-@[simp]
-theorem toInt_width_zero (x : BitVec 0) : BitVec.toInt x = 0 := by
-  rw [BitVec.width_zero_eq_zero x]
-  simp
-
 @[simp]
 theorem neg_of_ofNat_0_minus_self (x : BitVec w) : (BitVec.ofNat w 0) - x = -x := by
   simp
