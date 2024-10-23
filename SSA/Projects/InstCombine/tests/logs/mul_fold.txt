@@ -209,10 +209,14 @@
 
 1: "mul_v2i8_low"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "mul_v2i8_low" contains vectors which are unsupported
 =======
 "mul_v2i8_low" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "mul_v2i8_low" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "mul_v2i8_low_one_extra_user"
 4: "mul_v2i8_low_one_extra_user" has unsupported operation: llvm.mlir.addressof

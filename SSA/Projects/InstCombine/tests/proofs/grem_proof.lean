@@ -5,6 +5,7 @@ open BitVec
 
 section grem_proof
 <<<<<<< HEAD
+<<<<<<< HEAD
 theorem test3_thm (x : BitVec 32) : x % 8#32 = x &&& 7#32 := sorry
 
 theorem test4_thm (x : BitVec 1) (x_1 : BitVec 32) :
@@ -23,8 +24,24 @@ theorem test4_thm (x : BitVec 1) (x_1 : BitVec 32) :
 =======
 theorem test1_thm (x : BitVec 32) : x - x.sdiv 1#32 = 0#32 := sorry
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 theorem test3_thm (x : BitVec 32) : x % 8#32 = x &&& 7#32 := sorry
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+
+theorem test4_thm (x : BitVec 1) (x_1 : BitVec 32) :
+  (Option.bind
+      (match some x with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 1#32
+      | some { toFin := ⟨0, ⋯⟩ } => some 8#32)
+      fun y' => if y' = 0#32 then none else some (x_1 % y')) ⊑
+    Option.bind
+      (match some x with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 0#32
+      | some { toFin := ⟨0, ⋯⟩ } => some 7#32)
+      fun y' => some (x_1 &&& y') := sorry
 
 theorem test7_thm (x : BitVec 32) : x * 8#32 - (x * 8#32).sdiv 4#32 * 4#32 = 0#32 := sorry
 
@@ -38,11 +55,16 @@ theorem test12_thm (x : BitVec 32) : (x &&& 4294967292#32) - (x &&& 4294967292#3
 
 theorem test13_thm (x : BitVec 32) :
 <<<<<<< HEAD
+<<<<<<< HEAD
   Option.map (fun div => x - div * x)
       (if x = 0#32 ∨ x = intMin 32 ∧ x = 4294967295#32 then none else some (if x = 0#32 then 0#32 else 1#32)) ⊑
 =======
   Option.map (fun div => x - div * x) (if x = 0#32 ∨ x = intMin 32 ∧ x = 4294967295#32 then none else some (x.sdiv x)) ⊑
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+  Option.map (fun div => x - div * x)
+      (if x = 0#32 ∨ x = intMin 32 ∧ x = 4294967295#32 then none else some (if x = 0#32 then 0#32 else 1#32)) ⊑
+>>>>>>> edb64a33 (Updated tests)
     some 0#32 := sorry
 
 theorem test16_thm (x x_1 : BitVec 32) :
@@ -106,6 +128,9 @@ theorem test22_thm (x : BitVec 32) :
     (x &&& 2147483647#32) % 2147483647#32 := sorry
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 theorem srem_constant_dividend_select_of_constants_divisor_thm (x : BitVec 1) :
   (Option.bind
       (match some x with
@@ -152,5 +177,8 @@ theorem urem_constant_dividend_select_of_constants_divisor_0_arm_thm (x : BitVec
       fun y' => if y' = 0#32 then none else some (42#32 % y')) ⊑
     some 6#32 := sorry
 
+<<<<<<< HEAD
 =======
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)

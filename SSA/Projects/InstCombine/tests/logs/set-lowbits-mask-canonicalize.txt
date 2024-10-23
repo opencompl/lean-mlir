@@ -128,6 +128,7 @@
 
 1: "shl_add_vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "shl_add_vec" contains vectors which are unsupported
 
 1: "shl_add_vec_poison0"
@@ -140,16 +141,23 @@
 8: "shl_add_vec_poison2" contains vectors which are unsupported
 =======
 "shl_add_vec" contains vectors which are unsupported
+=======
+8: "shl_add_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "shl_add_vec_poison0"
-"shl_add_vec_poison0" contains vectors which are unsupported
+8: "shl_add_vec_poison0" contains vectors which are unsupported
 
 1: "shl_add_vec_poison1"
-"shl_add_vec_poison1" contains vectors which are unsupported
+8: "shl_add_vec_poison1" contains vectors which are unsupported
 
 1: "shl_add_vec_poison2"
+<<<<<<< HEAD
 "shl_add_vec_poison2" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "shl_add_vec_poison2" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "use32"
 5: "use32" is empty

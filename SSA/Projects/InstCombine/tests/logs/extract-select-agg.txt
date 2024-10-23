@@ -7,10 +7,13 @@
 4: "test_select_agg_constant_agg_multiuse" has unsupported operation: llvm.call
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "test_select_agg_constant_agg_multiuse" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "test_select_agg_constant_agg_multiuse" has unsupported operation: llvm.call
 
 4: "test_select_agg_constant_agg_multiuse" has unsupported operation: llvm.return
@@ -35,10 +38,13 @@
 4: "test_select_agg_constant" has unsupported operation: llvm.insertvalue
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "test_select_agg_constant" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "test_select_agg_constant" has unsupported operation: llvm.extractvalue
 
 1: "test_select_agg_multiuse"
@@ -53,10 +59,13 @@
 4: "test_select_agg_multiuse" has unsupported operation: llvm.insertvalue
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "test_select_agg_multiuse" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "test_select_agg_multiuse" has unsupported operation: llvm.extractvalue
 
 4: "test_select_agg_multiuse" has unsupported operation: llvm.call

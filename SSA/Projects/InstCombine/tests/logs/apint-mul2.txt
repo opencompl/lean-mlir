@@ -8,6 +8,7 @@
 
 1: "test2"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test2" contains vectors which are unsupported
 
 1: "test3"
@@ -18,4 +19,10 @@
 1: "test3"
 "test3" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test2" contains vectors which are unsupported
+
+1: "test3"
+8: "test3" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 

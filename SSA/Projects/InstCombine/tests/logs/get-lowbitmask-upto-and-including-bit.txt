@@ -21,6 +21,7 @@
 
 1: "t2_vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "t2_vec" contains vectors which are unsupported
 
 1: "t3_vec_poison0"
@@ -33,16 +34,23 @@
 8: "t5_vec_poison2" contains vectors which are unsupported
 =======
 "t2_vec" contains vectors which are unsupported
+=======
+8: "t2_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "t3_vec_poison0"
-"t3_vec_poison0" contains vectors which are unsupported
+8: "t3_vec_poison0" contains vectors which are unsupported
 
 1: "t4_vec_poison1"
-"t4_vec_poison1" contains vectors which are unsupported
+8: "t4_vec_poison1" contains vectors which are unsupported
 
 1: "t5_vec_poison2"
+<<<<<<< HEAD
 "t5_vec_poison2" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "t5_vec_poison2" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "t6_extrause0"
 4: "t6_extrause0" has unsupported operation: llvm.call

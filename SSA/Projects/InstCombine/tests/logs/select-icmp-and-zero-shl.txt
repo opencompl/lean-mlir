@@ -2,6 +2,7 @@
 4: "test_eq" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 1: "test_eq_vect"
 8: "test_eq_vect" contains vectors which are unsupported
 =======
@@ -10,10 +11,15 @@
 1: "test_eq_vect"
 "test_eq_vect" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+1: "test_eq_vect"
+8: "test_eq_vect" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_ne"
 4: "test_ne" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "test_ne_vect"
 8: "test_ne_vect" contains vectors which are unsupported
@@ -23,10 +29,15 @@
 1: "test_ne_vect"
 "test_ne_vect" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+1: "test_ne_vect"
+8: "test_ne_vect" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_nuw_dropped"
 4: "test_nuw_dropped" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "test_nsw_dropped"
 4: "test_nsw_dropped" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
@@ -40,6 +51,11 @@
 4: "test_nsw_dropped" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+1: "test_nsw_dropped"
+4: "test_nsw_dropped" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+>>>>>>> edb64a33 (Updated tests)
 1: "use_multi"
 5: "use_multi" is empty
 
@@ -57,6 +73,7 @@
 4: "neg_test_bits_not_match" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 1: "neg_test_icmp_non_equality"
 4: "neg_test_icmp_non_equality" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -69,19 +86,20 @@
 =======
 4: "neg_test_bits_not_match" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "neg_test_icmp_non_equality"
 4: "neg_test_icmp_non_equality" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "neg_test_icmp_non_equality" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "neg_test_select_non_zero_constant"
 4: "neg_test_select_non_zero_constant" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "neg_test_select_non_zero_constant" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "neg_test_icmp_non_zero_constant"
 4: "neg_test_icmp_non_zero_constant" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 4: "neg_test_icmp_non_zero_constant" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)

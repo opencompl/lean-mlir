@@ -36,10 +36,14 @@
 
 1: "ctpop_shl2_1_vec_nz"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "ctpop_shl2_1_vec_nz" contains vectors which are unsupported
 =======
 "ctpop_shl2_1_vec_nz" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "ctpop_shl2_1_vec_nz" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "ctpop_x_and_negx_vec"
 4: "ctpop_x_and_negx_vec" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -48,8 +52,12 @@
 
 1: "ctpop_x_and_negx_vec_nz"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "ctpop_x_and_negx_vec_nz" contains vectors which are unsupported
 =======
 "ctpop_x_and_negx_vec_nz" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "ctpop_x_and_negx_vec_nz" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 

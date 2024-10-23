@@ -1,7 +1,11 @@
 1: "foo"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "foo" contains vectors which are unsupported
 =======
 "foo" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "foo" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 

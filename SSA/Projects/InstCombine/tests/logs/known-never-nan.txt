@@ -5,20 +5,26 @@
 4: "select_maybe_nan_lhs" has unsupported operation: builtin.unregistered: llvm.fadd
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "select_maybe_nan_lhs" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "select_maybe_nan_lhs" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "select_maybe_nan_rhs"
 4: "select_maybe_nan_rhs" has unsupported operation: builtin.unregistered: llvm.fadd
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "select_maybe_nan_rhs" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "select_maybe_nan_rhs" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "nnan_fadd"

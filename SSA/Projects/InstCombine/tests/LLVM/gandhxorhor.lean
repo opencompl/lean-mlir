@@ -14,6 +14,9 @@ set_option linter.unusedTactic false
 section gandhxorhor_statements
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 def and_xor_common_op_before := [llvm|
 {
 ^0(%arg695 : i32, %arg696 : i32):
@@ -134,8 +137,11 @@ theorem and_xor_common_op_commute2_proof : and_xor_common_op_commute2_before ⊑
 
 
 
+<<<<<<< HEAD
 =======
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 def and_xor_not_common_op_before := [llvm|
 {
 ^0(%arg686 : i32, %arg687 : i32):
@@ -1643,16 +1649,22 @@ theorem and_not_or_commute5_proof : and_not_or_commute5_before ⊑ and_not_or_co
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
   try simp
   simp_alive_case_bash
   try intros
   try simp
+<<<<<<< HEAD
 =======
   -- simp?
   -- simp_alive_case_bash
   -- try intros
   -- try simp
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
   ---BEGIN and_not_or_commute5
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_commute5
@@ -4812,3 +4824,5 @@ theorem canonicalize_logic_first_xor_0_nswnuw_proof : canonicalize_logic_first_x
   ---BEGIN canonicalize_logic_first_xor_0_nswnuw
   all_goals (try extract_goal ; sorry)
   ---END canonicalize_logic_first_xor_0_nswnuw
+
+

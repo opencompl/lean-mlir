@@ -51,20 +51,26 @@
 
 1: "fold_cmp_ult_ctpop_c"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "fold_cmp_ult_ctpop_c" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "fold_cmp_ult_ctpop_c" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
 4: "fold_cmp_ult_ctpop_c" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "fold_cmp_sle_ctpop_c"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "fold_cmp_sle_ctpop_c" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "fold_cmp_sle_ctpop_c" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
 4: "fold_cmp_sle_ctpop_c" has unsupported operation: builtin.unregistered: llvm.icmp

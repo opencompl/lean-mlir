@@ -1,8 +1,11 @@
 1: "test"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "test" has unsupported operation after optimization: llvm.udiv
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "test" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 

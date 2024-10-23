@@ -109,6 +109,7 @@
 4: "pr64610" has unsupported operation after optimization: llvm.load
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "pr64610" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "icmp_eq_x_invertable_y2_todo"
@@ -121,6 +122,11 @@
 4: "icmp_eq_x_invertable_y2_todo" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+4: "pr64610" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "icmp_eq_x_invertable_y2_todo"
+>>>>>>> edb64a33 (Updated tests)
 4: "icmp_eq_x_invertable_y2_todo" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "icmp_eq_x_invertable_y2"

@@ -308,6 +308,7 @@
 
 1: "not_xor_to_or_not_vector"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "not_xor_to_or_not_vector" contains vectors which are unsupported
 
 1: "not_xor_to_or_not_vector_poison"
@@ -318,6 +319,12 @@
 1: "not_xor_to_or_not_vector_poison"
 "not_xor_to_or_not_vector_poison" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "not_xor_to_or_not_vector" contains vectors which are unsupported
+
+1: "not_xor_to_or_not_vector_poison"
+8: "not_xor_to_or_not_vector_poison" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "not_xor_to_or_not_2use"
 4: "not_xor_to_or_not_2use" has unsupported operation: llvm.call
@@ -360,6 +367,7 @@
 
 1: "xor_notand_to_or_not_vector"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "xor_notand_to_or_not_vector" contains vectors which are unsupported
 
 1: "xor_notand_to_or_not_vector_poison"
@@ -370,6 +378,12 @@
 1: "xor_notand_to_or_not_vector_poison"
 "xor_notand_to_or_not_vector_poison" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "xor_notand_to_or_not_vector" contains vectors which are unsupported
+
+1: "xor_notand_to_or_not_vector_poison"
+8: "xor_notand_to_or_not_vector_poison" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "xor_notand_to_or_not_2use"
 4: "xor_notand_to_or_not_2use" has unsupported operation: llvm.call

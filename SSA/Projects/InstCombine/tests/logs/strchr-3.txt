@@ -13,6 +13,7 @@
 4: "fold_strchr_s1_C" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "fold_strchr_s1_C" has unsupported operation: builtin.unregistered: llvm.icmp
 
 =======
@@ -23,6 +24,10 @@
 4: "fold_strchr_s1_C" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+4: "fold_strchr_s1_C" has unsupported operation: builtin.unregistered: llvm.icmp
+
+>>>>>>> edb64a33 (Updated tests)
 1: "fold_strchr_s11_C"
 4: "fold_strchr_s11_C" has unsupported operation: llvm.mlir.addressof
 
@@ -35,6 +40,7 @@
 4: "fold_strchr_s11_C" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "fold_strchr_s11_C" has unsupported operation: builtin.unregistered: llvm.icmp
 
 =======
@@ -45,6 +51,10 @@
 4: "fold_strchr_s11_C" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+4: "fold_strchr_s11_C" has unsupported operation: builtin.unregistered: llvm.icmp
+
+>>>>>>> edb64a33 (Updated tests)
 1: "fold_strchr_s111_C"
 4: "fold_strchr_s111_C" has unsupported operation: llvm.mlir.addressof
 
@@ -57,6 +67,7 @@
 4: "fold_strchr_s111_C" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "fold_strchr_s111_C" has unsupported operation: builtin.unregistered: llvm.icmp
 
 =======
@@ -67,6 +78,10 @@
 4: "fold_strchr_s111_C" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+4: "fold_strchr_s111_C" has unsupported operation: builtin.unregistered: llvm.icmp
+
+>>>>>>> edb64a33 (Updated tests)
 1: "fold_strchr_s000_C"
 4: "fold_strchr_s000_C" has unsupported operation: llvm.mlir.addressof
 
@@ -77,10 +92,13 @@
 4: "fold_strchr_s000_C" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "fold_strchr_s000_C" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "xform_strchr_s21111_C"
 4: "xform_strchr_s21111_C" has unsupported operation: llvm.mlir.addressof
 
@@ -100,6 +118,7 @@
 4: "fold_strchr_s21111p1_C" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "fold_strchr_s21111p1_C" has unsupported operation: builtin.unregistered: llvm.icmp
 
 =======
@@ -110,6 +129,10 @@
 4: "fold_strchr_s21111p1_C" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+4: "fold_strchr_s21111p1_C" has unsupported operation: builtin.unregistered: llvm.icmp
+
+>>>>>>> edb64a33 (Updated tests)
 1: "fold_strchr_s11102_C"
 4: "fold_strchr_s11102_C" has unsupported operation: llvm.mlir.addressof
 
@@ -122,6 +145,7 @@
 4: "fold_strchr_s11102_C" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "fold_strchr_s11102_C" has unsupported operation: builtin.unregistered: llvm.icmp
 
 =======
@@ -132,6 +156,10 @@
 4: "fold_strchr_s11102_C" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+4: "fold_strchr_s11102_C" has unsupported operation: builtin.unregistered: llvm.icmp
+
+>>>>>>> edb64a33 (Updated tests)
 1: "memchr"
 5: "memchr" is empty
 

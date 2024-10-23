@@ -54,12 +54,15 @@ theorem t5_proof : t5_before ⊑ t5_after := by
 
 
 
+<<<<<<< HEAD
 =======
                                                     
 >>>>>>> 43a49182 (re-ran scripts)
 =======
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 def t7_before := [llvm|
 {
 ^0(%arg209 : i32):
@@ -147,6 +150,9 @@ theorem t10_proof : t10_before ⊑ t10_after := by
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 def t12_before := [llvm|
 {
 ^0(%arg202 : i32):
@@ -209,8 +215,11 @@ theorem t15_proof : t15_before ⊑ t15_after := by
 
 
 
+<<<<<<< HEAD
 =======
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 def sdiv_mul_shl_nsw_before := [llvm|
 {
 ^0(%arg193 : i5, %arg194 : i5, %arg195 : i5):
@@ -302,6 +311,9 @@ theorem sdiv_mul_shl_nsw_exact_commute1_proof : sdiv_mul_shl_nsw_exact_commute1_
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 def udiv_mul_shl_nuw_before := [llvm|
 {
 ^0(%arg166 : i5, %arg167 : i5, %arg168 : i5):
@@ -494,8 +506,11 @@ theorem udiv_lshr_mul_nuw_proof : udiv_lshr_mul_nuw_before ⊑ udiv_lshr_mul_nuw
 
 
 
+<<<<<<< HEAD
 =======
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 def sdiv_shl_shl_nsw2_nuw_before := [llvm|
 {
 ^0(%arg82 : i8, %arg83 : i8, %arg84 : i8):
@@ -540,6 +555,9 @@ theorem sdiv_shl_shl_nsw2_nuw_proof : sdiv_shl_shl_nsw2_nuw_before ⊑ sdiv_shl_
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 def udiv_shl_shl_nuw_nsw2_before := [llvm|
 {
 ^0(%arg55 : i8, %arg56 : i8, %arg57 : i8):
@@ -571,8 +589,11 @@ theorem udiv_shl_shl_nuw_nsw2_proof : udiv_shl_shl_nuw_nsw2_before ⊑ udiv_shl_
 
 
 
+<<<<<<< HEAD
 =======
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 def sdiv_shl_pair_const_before := [llvm|
 {
 ^0(%arg47 : i32):
@@ -619,6 +640,9 @@ theorem sdiv_shl_pair_const_proof : sdiv_shl_pair_const_before ⊑ sdiv_shl_pair
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 def udiv_shl_pair_const_before := [llvm|
 {
 ^0(%arg46 : i32):
@@ -652,8 +676,11 @@ theorem udiv_shl_pair_const_proof : udiv_shl_pair_const_before ⊑ udiv_shl_pair
 
 
 
+<<<<<<< HEAD
 =======
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 def sdiv_shl_pair1_before := [llvm|
 {
 ^0(%arg43 : i32, %arg44 : i32, %arg45 : i32):
@@ -789,6 +816,9 @@ theorem sdiv_shl_pair3_proof : sdiv_shl_pair3_before ⊑ sdiv_shl_pair3_after :=
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 
 def udiv_shl_pair1_before := [llvm|
 {
@@ -888,5 +918,8 @@ theorem udiv_shl_pair3_proof : udiv_shl_pair3_before ⊑ udiv_shl_pair3_after :=
   ---END udiv_shl_pair3
 
 
+<<<<<<< HEAD
 =======
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> edb64a33 (Updated tests)

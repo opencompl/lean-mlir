@@ -168,10 +168,13 @@
 4: "select_same_addrspace_remove_alloca" has unsupported operation: llvm.mlir.addressof
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "select_same_addrspace_remove_alloca" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "select_same_addrspace_remove_alloca" has unsupported operation: llvm.load
 
 1: "select_after_memcpy_keep_alloca"
@@ -180,10 +183,13 @@
 4: "select_after_memcpy_keep_alloca" has unsupported operation: llvm.alloca
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "select_after_memcpy_keep_alloca" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "select_after_memcpy_keep_alloca" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
 
 4: "select_after_memcpy_keep_alloca" has unsupported operation: llvm.load
@@ -196,10 +202,13 @@
 4: "select_diff_addrspace_keep_alloca" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "select_diff_addrspace_keep_alloca" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "select_diff_addrspace_keep_alloca" has unsupported operation: llvm.load
 
 1: "select_diff_addrspace_remove_alloca"
@@ -212,10 +221,13 @@
 4: "select_diff_addrspace_remove_alloca" has unsupported operation after optimization: llvm.getelementptr
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "select_diff_addrspace_remove_alloca" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "select_diff_addrspace_remove_alloca" has unsupported operation after optimization: llvm.getelementptr
 
 4: "select_diff_addrspace_remove_alloca" has unsupported operation after optimization: llvm.load
@@ -228,10 +240,13 @@
 4: "select_diff_addrspace_remove_alloca_asan" has unsupported operation: llvm.getelementptr
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "select_diff_addrspace_remove_alloca_asan" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "select_diff_addrspace_remove_alloca_asan" has unsupported operation: llvm.load
 
 1: "readonly_callee"

@@ -28,15 +28,19 @@
 
 1: "n4_extrause"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "n4_extrause" has unsupported operation: llvm.udiv
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "n4_extrause" has unsupported operation: llvm.call
 
 4: "n4_extrause" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "n5_not_negone"
+<<<<<<< HEAD
 <<<<<<< HEAD
 4: "n5_not_negone" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -47,16 +51,19 @@
 =======
 4: "n5_not_negone" has unsupported operation: llvm.udiv
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "n5_not_negone" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "n6_wrong_pred0"
-4: "n6_wrong_pred0" has unsupported operation: llvm.udiv
-
 4: "n6_wrong_pred0" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "n6_wrong_pred1"
+<<<<<<< HEAD
 4: "n6_wrong_pred1" has unsupported operation: llvm.udiv
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "n6_wrong_pred1" has unsupported operation: builtin.unregistered: llvm.icmp
 

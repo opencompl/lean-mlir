@@ -278,10 +278,13 @@
 
 1: "missed_nonzero_check_on_constant_for_si_fmul"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "missed_nonzero_check_on_constant_for_si_fmul" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "missed_nonzero_check_on_constant_for_si_fmul" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "missed_nonzero_check_on_constant_for_si_fmul" has unsupported operation: builtin.unregistered: llvm.sitofp
@@ -294,10 +297,13 @@
 4: "missed_nonzero_check_on_constant_for_si_fmul_vec" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "missed_nonzero_check_on_constant_for_si_fmul_vec" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "missed_nonzero_check_on_constant_for_si_fmul_vec" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "missed_nonzero_check_on_constant_for_si_fmul_vec" has unsupported operation: builtin.unregistered: llvm.insertelement
@@ -312,10 +318,13 @@
 
 1: "negzero_check_on_constant_for_si_fmul"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "negzero_check_on_constant_for_si_fmul" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "negzero_check_on_constant_for_si_fmul" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "negzero_check_on_constant_for_si_fmul" has unsupported operation: builtin.unregistered: llvm.sitofp
@@ -338,10 +347,13 @@
 4: "nonzero_check_on_constant_for_si_fmul_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "nonzero_check_on_constant_for_si_fmul_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "nonzero_check_on_constant_for_si_fmul_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "nonzero_check_on_constant_for_si_fmul_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
@@ -358,10 +370,13 @@
 4: "nonzero_check_on_constant_for_si_fmul_nz_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "nonzero_check_on_constant_for_si_fmul_nz_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "nonzero_check_on_constant_for_si_fmul_nz_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "nonzero_check_on_constant_for_si_fmul_nz_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
@@ -384,10 +399,13 @@
 4: "nonzero_check_on_constant_for_si_fmul_negz_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "nonzero_check_on_constant_for_si_fmul_negz_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "nonzero_check_on_constant_for_si_fmul_negz_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "nonzero_check_on_constant_for_si_fmul_negz_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.insertelement

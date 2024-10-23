@@ -9,6 +9,7 @@
 4: "slt_and_max_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 1: "slt_and_max_commute"
 8: "slt_and_max_commute" contains vectors which are unsupported
 =======
@@ -17,6 +18,10 @@
 1: "slt_and_max_commute"
 "slt_and_max_commute" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+1: "slt_and_max_commute"
+8: "slt_and_max_commute" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "slt_swap_and_max"
 4: "slt_swap_and_max" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
@@ -29,10 +34,13 @@
 4: "slt_swap_and_max_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "slt_swap_and_max_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "slt_swap_and_max_commute"
 4: "slt_swap_and_max_commute" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -44,10 +52,13 @@
 4: "slt_swap_and_max_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "slt_swap_and_max_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "ult_and_max"
 4: "ult_and_max" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -59,10 +70,13 @@
 4: "ult_and_max_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "ult_and_max_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "ult_and_max_commute"
 4: "ult_and_max_commute" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -74,10 +88,13 @@
 4: "ult_and_max_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "ult_and_max_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "ult_swap_and_max"
 4: "ult_swap_and_max" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -89,10 +106,13 @@
 4: "ult_swap_and_max_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "ult_swap_and_max_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "ult_swap_and_max_commute"
 4: "ult_swap_and_max_commute" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -104,10 +124,13 @@
 4: "ult_swap_and_max_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "ult_swap_and_max_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "sgt_and_min"
 4: "sgt_and_min" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -119,10 +142,13 @@
 4: "sgt_and_min_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "sgt_and_min_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "sgt_and_min_commute"
 4: "sgt_and_min_commute" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -134,10 +160,13 @@
 4: "sgt_and_min_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "sgt_and_min_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "sgt_swap_and_min"
 4: "sgt_swap_and_min" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -149,10 +178,13 @@
 4: "sgt_swap_and_min_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "sgt_swap_and_min_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "sgt_swap_and_min_commute"
 4: "sgt_swap_and_min_commute" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -164,10 +196,13 @@
 4: "sgt_swap_and_min_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "sgt_swap_and_min_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "ugt_and_min"
 4: "ugt_and_min" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -179,10 +214,13 @@
 4: "ugt_and_min_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "ugt_and_min_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "ugt_and_min_commute"
 4: "ugt_and_min_commute" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -194,10 +232,13 @@
 4: "ugt_and_min_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "ugt_and_min_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "ugt_swap_and_min"
 4: "ugt_swap_and_min" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -209,10 +250,13 @@
 4: "ugt_swap_and_min_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "ugt_swap_and_min_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "ugt_swap_and_min_commute"
 4: "ugt_swap_and_min_commute" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -224,10 +268,13 @@
 4: "ugt_swap_and_min_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "ugt_swap_and_min_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "sge_or_not_max"
 4: "sge_or_not_max" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -239,10 +286,13 @@
 4: "sge_or_not_max_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "sge_or_not_max_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "sge_or_not_max_commute"
 4: "sge_or_not_max_commute" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -254,10 +304,13 @@
 4: "sge_or_not_max_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "sge_or_not_max_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "sge_swap_or_not_max"
 4: "sge_swap_or_not_max" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -269,10 +322,13 @@
 4: "sge_swap_or_not_max_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "sge_swap_or_not_max_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "sge_swap_or_not_max_commute"
 4: "sge_swap_or_not_max_commute" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -284,10 +340,13 @@
 4: "sge_swap_or_not_max_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "sge_swap_or_not_max_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "uge_or_not_max"
 4: "uge_or_not_max" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -299,10 +358,13 @@
 4: "uge_or_not_max_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "uge_or_not_max_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "uge_or_not_max_commute"
 4: "uge_or_not_max_commute" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -314,10 +376,13 @@
 4: "uge_or_not_max_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "uge_or_not_max_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "uge_swap_or_not_max"
 4: "uge_swap_or_not_max" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -329,10 +394,13 @@
 4: "uge_swap_or_not_max_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "uge_swap_or_not_max_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "uge_swap_or_not_max_commute"
 4: "uge_swap_or_not_max_commute" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -344,10 +412,13 @@
 4: "uge_swap_or_not_max_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "uge_swap_or_not_max_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "sle_or_not_min"
 4: "sle_or_not_min" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -359,10 +430,13 @@
 4: "sle_or_not_min_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "sle_or_not_min_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "sle_or_not_min_commute"
 4: "sle_or_not_min_commute" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -374,10 +448,13 @@
 4: "sle_or_not_min_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "sle_or_not_min_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "sle_swap_or_not_min"
 4: "sle_swap_or_not_min" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -389,10 +466,13 @@
 4: "sle_swap_or_not_min_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "sle_swap_or_not_min_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "sle_swap_or_not_min_commute"
 4: "sle_swap_or_not_min_commute" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -404,10 +484,13 @@
 4: "sle_swap_or_not_min_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "sle_swap_or_not_min_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "ule_or_not_min"
 4: "ule_or_not_min" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -419,10 +502,13 @@
 4: "ule_or_not_min_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "ule_or_not_min_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "ule_or_not_min_commute"
 4: "ule_or_not_min_commute" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -434,10 +520,13 @@
 4: "ule_or_not_min_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "ule_or_not_min_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "ule_swap_or_not_min"
 4: "ule_swap_or_not_min" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -449,10 +538,13 @@
 4: "ule_swap_or_not_min_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "ule_swap_or_not_min_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "ule_swap_or_not_min_commute"
 4: "ule_swap_or_not_min_commute" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -464,10 +556,13 @@
 4: "ule_swap_or_not_min_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "ule_swap_or_not_min_commute_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "sge_and_max"
 4: "sge_and_max" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -579,10 +674,13 @@
 4: "sge_or_max_commute_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "sge_or_max_commute_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "sge_swap_or_max"
 4: "sge_swap_or_max" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -598,10 +696,13 @@
 4: "sge_swap_or_max_commute_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "sge_swap_or_max_commute_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "uge_or_max"
 4: "uge_or_max" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -617,10 +718,13 @@
 4: "uge_or_max_commute_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "uge_or_max_commute_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "uge_swap_or_max"
 4: "uge_swap_or_max" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -636,10 +740,13 @@
 4: "uge_swap_or_max_commute_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "uge_swap_or_max_commute_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "sle_or_min"
 4: "sle_or_min" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -655,10 +762,13 @@
 4: "sle_or_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "sle_or_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "sle_swap_or_min"
 4: "sle_swap_or_min" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -674,10 +784,13 @@
 4: "sle_swap_or_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "sle_swap_or_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "ule_or_min"
 4: "ule_or_min" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -693,10 +806,13 @@
 4: "ule_or_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "ule_or_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "ule_swap_or_min"
 4: "ule_swap_or_min" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -712,10 +828,13 @@
 4: "ule_swap_or_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "ule_swap_or_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "slt_and_not_max"
 4: "slt_and_not_max" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -731,10 +850,13 @@
 4: "slt_and_not_max_commute_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "slt_and_not_max_commute_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "slt_swap_and_not_max"
 4: "slt_swap_and_not_max" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -750,10 +872,13 @@
 4: "slt_swap_and_not_max_commute_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "slt_swap_and_not_max_commute_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "ult_and_not_max"
 4: "ult_and_not_max" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -769,10 +894,13 @@
 4: "ult_and_not_max_commute_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "ult_and_not_max_commute_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "ult_swap_and_not_max"
 4: "ult_swap_and_not_max" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -788,10 +916,13 @@
 4: "ult_swap_and_not_max_commute_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "ult_swap_and_not_max_commute_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "sgt_and_not_min"
 4: "sgt_and_not_min" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -807,10 +938,13 @@
 4: "sgt_and_not_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "sgt_and_not_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "sgt_swap_and_not_min"
 4: "sgt_swap_and_not_min" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -826,10 +960,13 @@
 4: "sgt_swap_and_not_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "sgt_swap_and_not_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "ugt_and_not_min"
 4: "ugt_and_not_min" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -845,10 +982,13 @@
 4: "ugt_and_not_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "ugt_and_not_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "ugt_swap_and_not_min"
 4: "ugt_swap_and_not_min" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -864,10 +1004,13 @@
 4: "ugt_swap_and_not_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "ugt_swap_and_not_min_commute_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "slt_or_not_max"
 4: "slt_or_not_max" has unsupported operation: builtin.unregistered: llvm.icmp
 

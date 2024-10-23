@@ -200,6 +200,7 @@
 
 1: "fmuladd_a_0_b"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "fmuladd_a_0_b" contains vectors which are unsupported
 
 1: "fmuladd_0_a_b"
@@ -210,11 +211,18 @@
 1: "fmuladd_0_a_b"
 "fmuladd_0_a_b" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "fmuladd_a_0_b" contains vectors which are unsupported
+
+1: "fmuladd_0_a_b"
+8: "fmuladd_0_a_b" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "fmuladd_a_0_b_missing_flags"
 4: "fmuladd_a_0_b_missing_flags" has unsupported operation: builtin.unregistered: llvm.intr.fmuladd
 
 1: "fma_a_0_b"
+<<<<<<< HEAD
 <<<<<<< HEAD
 8: "fma_a_0_b" contains vectors which are unsupported
 
@@ -226,6 +234,12 @@
 1: "fma_0_a_b"
 "fma_0_a_b" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "fma_a_0_b" contains vectors which are unsupported
+
+1: "fma_0_a_b"
+8: "fma_0_a_b" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "fma_0_a_b_missing_flags"
 4: "fma_0_a_b_missing_flags" has unsupported operation: builtin.unregistered: llvm.intr.fma
@@ -238,6 +252,7 @@
 
 1: "fma_const_fmul_zero"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "fma_const_fmul_zero" contains vectors which are unsupported
 
 1: "fma_const_fmul_zero2"
@@ -248,6 +263,12 @@
 1: "fma_const_fmul_zero2"
 "fma_const_fmul_zero2" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "fma_const_fmul_zero" contains vectors which are unsupported
+
+1: "fma_const_fmul_zero2"
+8: "fma_const_fmul_zero2" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "fma_const_fmul_one"
 4: "fma_const_fmul_one" has unsupported operation: builtin.unregistered: llvm.fadd
@@ -256,6 +277,7 @@
 4: "fma_const_fmul_one2" has unsupported operation: builtin.unregistered: llvm.fadd
 
 1: "fma_nan_and_const_0"
+<<<<<<< HEAD
 <<<<<<< HEAD
 8: "fma_nan_and_const_0" contains vectors which are unsupported
 
@@ -275,22 +297,29 @@
 8: "fma_undef_2" contains vectors which are unsupported
 =======
 "fma_nan_and_const_0" contains vectors which are unsupported
+=======
+8: "fma_nan_and_const_0" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "fma_nan_and_const_1"
-"fma_nan_and_const_1" contains vectors which are unsupported
+8: "fma_nan_and_const_1" contains vectors which are unsupported
 
 1: "fma_nan_and_const_2"
-"fma_nan_and_const_2" contains vectors which are unsupported
+8: "fma_nan_and_const_2" contains vectors which are unsupported
 
 1: "fma_undef_0"
-"fma_undef_0" contains vectors which are unsupported
+8: "fma_undef_0" contains vectors which are unsupported
 
 1: "fma_undef_1"
-"fma_undef_1" contains vectors which are unsupported
+8: "fma_undef_1" contains vectors which are unsupported
 
 1: "fma_undef_2"
+<<<<<<< HEAD
 "fma_undef_2" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "fma_undef_2" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "fma_partial_undef_0"
 4: "fma_partial_undef_0" has unsupported operation: llvm.mlir.undef
@@ -327,6 +356,7 @@
 
 1: "fma_nan_0"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "fma_nan_0" contains vectors which are unsupported
 
 1: "fma_nan_1"
@@ -336,18 +366,26 @@
 8: "fma_nan_2" contains vectors which are unsupported
 =======
 "fma_nan_0" contains vectors which are unsupported
+=======
+8: "fma_nan_0" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "fma_nan_1"
-"fma_nan_1" contains vectors which are unsupported
+8: "fma_nan_1" contains vectors which are unsupported
 
 1: "fma_nan_2"
+<<<<<<< HEAD
 "fma_nan_2" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "fma_nan_2" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "fmuladd_const_fmul"
 4: "fmuladd_const_fmul" has unsupported operation: builtin.unregistered: llvm.fadd
 
 1: "fmuladd_nan_and_const_0"
+<<<<<<< HEAD
 <<<<<<< HEAD
 8: "fmuladd_nan_and_const_0" contains vectors which are unsupported
 
@@ -373,28 +411,35 @@
 8: "fmuladd_undef_2" contains vectors which are unsupported
 =======
 "fmuladd_nan_and_const_0" contains vectors which are unsupported
+=======
+8: "fmuladd_nan_and_const_0" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "fmuladd_nan_and_const_1"
-"fmuladd_nan_and_const_1" contains vectors which are unsupported
+8: "fmuladd_nan_and_const_1" contains vectors which are unsupported
 
 1: "fmuladd_nan_and_const_2"
-"fmuladd_nan_and_const_2" contains vectors which are unsupported
+8: "fmuladd_nan_and_const_2" contains vectors which are unsupported
 
 1: "fmuladd_nan_0"
-"fmuladd_nan_0" contains vectors which are unsupported
+8: "fmuladd_nan_0" contains vectors which are unsupported
 
 1: "fmuladd_nan_1"
-"fmuladd_nan_1" contains vectors which are unsupported
+8: "fmuladd_nan_1" contains vectors which are unsupported
 
 1: "fmuladd_undef_0"
-"fmuladd_undef_0" contains vectors which are unsupported
+8: "fmuladd_undef_0" contains vectors which are unsupported
 
 1: "fmuladd_undef_1"
-"fmuladd_undef_1" contains vectors which are unsupported
+8: "fmuladd_undef_1" contains vectors which are unsupported
 
 1: "fmuladd_undef_2"
+<<<<<<< HEAD
 "fmuladd_undef_2" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "fmuladd_undef_2" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "fma_unary_shuffle_ops"
 4: "fma_unary_shuffle_ops" has unsupported operation: builtin.unregistered: llvm.mlir.poison

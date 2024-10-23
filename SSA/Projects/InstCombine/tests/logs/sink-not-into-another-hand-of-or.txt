@@ -8,10 +8,13 @@
 4: "t0" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "t0" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "t1"
 4: "t1" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -20,10 +23,13 @@
 4: "t1" has unsupported operation: llvm.call
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "t1" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "n2"
 4: "n2" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -32,6 +38,7 @@
 
 4: "n3" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "t4"
 4: "t4" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -46,22 +53,21 @@
 =======
 4: "n3" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "t4"
 4: "t4" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "t4" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "t4" has unsupported operation: llvm.call
-
-4: "t4" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "t4_commutative"
 4: "t4_commutative" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "t4_commutative" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "t4_commutative" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
 4: "t4_commutative" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)

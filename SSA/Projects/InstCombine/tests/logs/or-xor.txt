@@ -43,10 +43,14 @@
 
 1: "test5_commuted"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test5_commuted" contains vectors which are unsupported
 =======
 "test5_commuted" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test5_commuted" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test5_commuted_x_y"
 2: llvm.func
@@ -232,6 +236,7 @@
 
 1: "or_and_xor_not_constant_commute2_splat"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "or_and_xor_not_constant_commute2_splat" contains vectors which are unsupported
 
 1: "or_and_xor_not_constant_commute3_splat"
@@ -242,6 +247,12 @@
 1: "or_and_xor_not_constant_commute3_splat"
 "or_and_xor_not_constant_commute3_splat" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "or_and_xor_not_constant_commute2_splat" contains vectors which are unsupported
+
+1: "or_and_xor_not_constant_commute3_splat"
+8: "or_and_xor_not_constant_commute3_splat" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "not_or"
 7: "not_or" is unchanged by InstCombine
@@ -366,10 +377,14 @@
 
 1: "test23v"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test23v" contains vectors which are unsupported
 =======
 "test23v" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test23v" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "PR45977_f1"
 2: llvm.func
@@ -410,10 +425,14 @@
 
 1: "or_xor_common_op_commute4"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "or_xor_common_op_commute4" contains vectors which are unsupported
 =======
 "or_xor_common_op_commute4" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "or_xor_common_op_commute4" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "or_xor_common_op_commute5"
 2: llvm.func
@@ -475,10 +494,14 @@
 
 1: "or_not_xor_common_op_commute4"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "or_not_xor_common_op_commute4" contains vectors which are unsupported
 =======
 "or_not_xor_common_op_commute4" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "or_not_xor_common_op_commute4" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "or_not_xor_common_op_commute5"
 2: llvm.func
@@ -528,10 +551,14 @@
 
 1: "or_nand_xor_common_op_commute1"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "or_nand_xor_common_op_commute1" contains vectors which are unsupported
 =======
 "or_nand_xor_common_op_commute1" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "or_nand_xor_common_op_commute1" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "or_nand_xor_common_op_commute2"
 4: "or_nand_xor_common_op_commute2" has unsupported operation: llvm.call

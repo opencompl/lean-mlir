@@ -1,9 +1,13 @@
 1: "foo"
 <<<<<<< HEAD
+<<<<<<< HEAD
 7: "foo" is unchanged by InstCombine
 =======
 4: "foo" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "foo" has unsupported operation: builtin.unregistered: llvm.select
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+7: "foo" is unchanged by InstCombine
+>>>>>>> edb64a33 (Updated tests)
 

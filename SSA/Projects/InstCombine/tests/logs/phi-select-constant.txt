@@ -8,10 +8,13 @@
 4: "foo" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "foo" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "foo" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "vec1"
@@ -32,20 +35,26 @@
 4: "vec3" has unsupported operation: builtin.unregistered: llvm.br
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "vec3" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "PR48369"
 4: "PR48369" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "PR48369" has unsupported operation: builtin.unregistered: llvm.br
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "PR48369" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "PR48369" has unsupported operation: llvm.store
 
 4: "PR48369" has unsupported operation: builtin.unregistered: llvm.br
@@ -63,10 +72,13 @@
 4: "phi_trans" has unsupported operation: builtin.unregistered: llvm.br
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "phi_trans" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "phi_trans" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "dominating_values_select_same_block"
@@ -77,10 +89,13 @@
 4: "dominating_values_select_same_block" has unsupported operation: llvm.load
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "dominating_values_select_same_block" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "dominating_values_select_same_block" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "dominating_values_select_not_same_block"
@@ -91,10 +106,13 @@
 4: "dominating_values_select_not_same_block" has unsupported operation: llvm.load
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "dominating_values_select_not_same_block" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "dominating_values_select_not_same_block" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "dominating_values_select_not_same_block" has unsupported operation: builtin.unregistered: llvm.br
@@ -109,7 +127,10 @@
 4: "not_dominating_values" has unsupported operation: llvm.load
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "not_dominating_values" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)

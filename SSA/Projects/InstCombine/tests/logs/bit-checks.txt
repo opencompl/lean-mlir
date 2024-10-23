@@ -2,6 +2,7 @@
 4: "main1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 1: "main1_logical"
 4: "main1_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -14,6 +15,11 @@
 4: "main1_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+1: "main1_logical"
+4: "main1_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+>>>>>>> edb64a33 (Updated tests)
 1: "main2"
 4: "main2" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -55,10 +61,13 @@
 4: "main3e_like_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "main3e_like_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "main3e_like_logical" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "main3c"
@@ -92,10 +101,13 @@
 4: "main3f_like_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "main3f_like_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "main3f_like_logical" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "main4"
@@ -134,10 +146,13 @@
 4: "main4e_like_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "main4e_like_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "main4e_like_logical" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "main4c"
@@ -171,10 +186,13 @@
 4: "main4f_like_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "main4f_like_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "main4f_like_logical" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "main5_like"
@@ -188,10 +206,13 @@
 4: "main5_like_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "main5_like_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "main5_like_logical" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "main5e_like"
@@ -205,10 +226,13 @@
 4: "main5e_like_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "main5e_like_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "main5e_like_logical" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "main5c_like"
@@ -222,10 +246,13 @@
 4: "main5c_like_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "main5c_like_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "main5c_like_logical" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "main5f_like"
@@ -239,10 +266,13 @@
 4: "main5f_like_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "main5f_like_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "main5f_like_logical" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "main6"
@@ -296,10 +326,13 @@
 4: "main7a_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "main7a_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "main7a_logical" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "main7b"
@@ -313,10 +346,13 @@
 4: "main7b_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "main7b_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "main7b_logical" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "main7c"
@@ -330,10 +366,13 @@
 4: "main7c_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "main7c_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "main7c_logical" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "main7d"
@@ -347,10 +386,13 @@
 4: "main7d_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "main7d_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "main7d_logical" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "main7e"
@@ -364,10 +406,13 @@
 4: "main7e_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "main7e_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "main7e_logical" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "main7f"
@@ -381,10 +426,13 @@
 4: "main7f_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "main7f_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "main7f_logical" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "main7g"
@@ -398,15 +446,19 @@
 4: "main7g_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "main7g_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "main7g_logical" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "main8"
 4: "main8" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "main8_logical"
 4: "main8_logical" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -456,102 +508,85 @@
 =======
 4: "main8" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "main8_logical"
 4: "main8_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main8_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "main9"
 4: "main9" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main9" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "main9_logical"
 4: "main9_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main9_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "main10"
 4: "main10" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main10" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "main10_logical"
 4: "main10_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main10_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "main11"
 4: "main11" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main11" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "main11_logical"
 4: "main11_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main11_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "main12"
 4: "main12" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main12" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "main12_logical"
 4: "main12_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main12_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "main13"
 4: "main13" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main13" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "main13_logical"
 4: "main13_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main13_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "main14"
 4: "main14" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main14" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "main14_logical"
 4: "main14_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main14_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "main15"
 4: "main15" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main15" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "main15_logical"
 4: "main15_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 4: "main15_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "no_masks_with_logical_or"
 4: "no_masks_with_logical_or" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "no_masks_with_logical_or" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "no_masks_with_logical_or" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "no_masks_with_logical_or2"
 4: "no_masks_with_logical_or2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "no_masks_with_logical_or2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "no_masks_with_logical_or2" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "no_masks_with_logical_or_vec_poison1"
 4: "no_masks_with_logical_or_vec_poison1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
@@ -566,10 +601,13 @@
 4: "no_masks_with_logical_or_vec_poison1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "no_masks_with_logical_or_vec_poison1" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "no_masks_with_logical_or_vec_poison2"
 4: "no_masks_with_logical_or_vec_poison2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
@@ -584,10 +622,13 @@
 4: "no_masks_with_logical_or_vec_poison2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "no_masks_with_logical_or_vec_poison2" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "only_one_masked"
 4: "only_one_masked" has unsupported operation: builtin.unregistered: llvm.icmp
 

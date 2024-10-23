@@ -9,10 +9,14 @@
 
 1: "sdiv2_vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "sdiv2_vec" contains vectors which are unsupported
 =======
 "sdiv2_vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "sdiv2_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "sdiv3"
 4: "sdiv3" has unsupported operation: builtin.unregistered: llvm.freeze
@@ -37,10 +41,14 @@
 
 1: "udiv1"
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 2: llvm.func
 2: llvm.udiv
 2: llvm.mul
 2: llvm.return
+<<<<<<< HEAD
 
 1: "udiv2"
 2: llvm.func
@@ -54,6 +62,15 @@
 1: "udiv2"
 4: "udiv2" has unsupported operation after optimization: llvm.udiv
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+
+1: "udiv2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.udiv
+2: llvm.return
+>>>>>>> edb64a33 (Updated tests)
 
 1: "ashr1"
 7: "ashr1" is unchanged by InstCombine
@@ -128,15 +145,21 @@
 
 1: "mul_of_udiv"
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.mlir.constant
 2: llvm.udiv
 2: llvm.mul
 2: llvm.return
+<<<<<<< HEAD
 =======
 4: "mul_of_udiv" has unsupported operation after optimization: llvm.udiv
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 
 1: "mul_of_sdiv"
 2: llvm.func
@@ -148,25 +171,35 @@
 
 1: "mul_of_sdiv_non_splat"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "mul_of_sdiv_non_splat" contains vectors which are unsupported
 =======
 "mul_of_sdiv_non_splat" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "mul_of_sdiv_non_splat" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "mul_of_sdiv_fail_missing_exact"
 7: "mul_of_sdiv_fail_missing_exact" is unchanged by InstCombine
 
 1: "mul_of_udiv_fail_bad_remainder"
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.mlir.constant
 2: llvm.udiv
 2: llvm.mul
 2: llvm.return
+<<<<<<< HEAD
 =======
 4: "mul_of_udiv_fail_bad_remainder" has unsupported operation: llvm.udiv
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 
 1: "mul_of_sdiv_fail_ub"
 2: llvm.func

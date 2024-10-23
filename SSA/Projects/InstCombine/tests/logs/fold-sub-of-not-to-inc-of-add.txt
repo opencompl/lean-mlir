@@ -10,6 +10,7 @@
 
 1: "p1_vector_splat"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "p1_vector_splat" contains vectors which are unsupported
 
 1: "p2_vector_poison"
@@ -20,6 +21,12 @@
 1: "p2_vector_poison"
 "p2_vector_poison" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "p1_vector_splat" contains vectors which are unsupported
+
+1: "p2_vector_poison"
+8: "p2_vector_poison" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "use32"
 5: "use32" is empty

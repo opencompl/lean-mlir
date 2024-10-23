@@ -6,12 +6,16 @@
 
 1: "andcond"
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 2: llvm.func
 2: llvm.mlir.constant
 2: builtin.unregistered: llvm.select
 2: builtin.unregistered: llvm.select
 2: builtin.unregistered: llvm.select
 2: llvm.return
+<<<<<<< HEAD
 
 1: "orcond"
 2: llvm.func
@@ -186,259 +190,190 @@
 4: "andcond" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "andcond" has unsupported operation: builtin.unregistered: llvm.select
+=======
+>>>>>>> edb64a33 (Updated tests)
 
 1: "orcond"
-4: "orcond" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "orcond" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "andcond.extrause0"
-4: "andcond.extrause0" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "andcond.extrause0" has unsupported operation: llvm.call
 
-4: "andcond.extrause0" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "andcond.extrause0" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "orcond.extrause0"
-4: "orcond.extrause0" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "orcond.extrause0" has unsupported operation: llvm.call
 
-4: "orcond.extrause0" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "orcond.extrause0" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "andcond.extrause1"
-4: "andcond.extrause1" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "andcond.extrause1" has unsupported operation: llvm.call
 
-4: "andcond.extrause1" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "andcond.extrause1" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "orcond.extrause1"
-4: "orcond.extrause1" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "orcond.extrause1" has unsupported operation: llvm.call
 
-4: "orcond.extrause1" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "orcond.extrause1" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "andcond.extrause2"
-4: "andcond.extrause2" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "andcond.extrause2" has unsupported operation: llvm.call
 
-4: "andcond.extrause2" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "andcond.extrause2" has unsupported operation: llvm.call
-
-4: "andcond.extrause2" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "orcond.extrause2"
-4: "orcond.extrause2" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "orcond.extrause2" has unsupported operation: llvm.call
 
-4: "orcond.extrause2" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "orcond.extrause2" has unsupported operation: llvm.call
-
-4: "orcond.extrause2" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "andcond.different.inner.cond"
-4: "andcond.different.inner.cond" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "andcond.different.inner.cond" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "andcond.different.inner.cond" has unsupported operation: builtin.unregistered: llvm.select
+7: "andcond.different.inner.cond" is unchanged by InstCombine
 
 1: "orcond.different.inner.cond"
-4: "orcond.different.inner.cond" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "orcond.different.inner.cond" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "orcond.different.inner.cond" has unsupported operation: builtin.unregistered: llvm.select
+7: "orcond.different.inner.cond" is unchanged by InstCombine
 
 1: "andcond.different.inner.cond.both.inverted"
-4: "andcond.different.inner.cond.both.inverted" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "andcond.different.inner.cond.both.inverted" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "andcond.different.inner.cond.both.inverted" has unsupported operation: builtin.unregistered: llvm.select
+7: "andcond.different.inner.cond.both.inverted" is unchanged by InstCombine
 
 1: "orcond.different.inner.cond.both.inverted"
-4: "orcond.different.inner.cond.both.inverted" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "orcond.different.inner.cond.both.inverted" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "orcond.different.inner.cond.both.inverted" has unsupported operation: builtin.unregistered: llvm.select
+7: "orcond.different.inner.cond.both.inverted" is unchanged by InstCombine
 
 1: "andcond.different.inner.cond.inverted.in.outer.cond"
-4: "andcond.different.inner.cond.inverted.in.outer.cond" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "andcond.different.inner.cond.inverted.in.outer.cond" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "andcond.different.inner.cond.inverted.in.outer.cond" has unsupported operation: builtin.unregistered: llvm.select
+7: "andcond.different.inner.cond.inverted.in.outer.cond" is unchanged by InstCombine
 
 1: "orcond.different.inner.cond.inverted.in.outer.cond"
-4: "orcond.different.inner.cond.inverted.in.outer.cond" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "orcond.different.inner.cond.inverted.in.outer.cond" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "orcond.different.inner.cond.inverted.in.outer.cond" has unsupported operation: builtin.unregistered: llvm.select
+7: "orcond.different.inner.cond.inverted.in.outer.cond" is unchanged by InstCombine
 
 1: "andcond.different.inner.cond.inverted.in.inner.sel"
-4: "andcond.different.inner.cond.inverted.in.inner.sel" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "andcond.different.inner.cond.inverted.in.inner.sel" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "andcond.different.inner.cond.inverted.in.inner.sel" has unsupported operation: builtin.unregistered: llvm.select
+7: "andcond.different.inner.cond.inverted.in.inner.sel" is unchanged by InstCombine
 
 1: "orcond.different.inner.cond.inverted.in.inner.sel"
-4: "orcond.different.inner.cond.inverted.in.inner.sel" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "orcond.different.inner.cond.inverted.in.inner.sel" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "orcond.different.inner.cond.inverted.in.inner.sel" has unsupported operation: builtin.unregistered: llvm.select
+7: "orcond.different.inner.cond.inverted.in.inner.sel" is unchanged by InstCombine
 
 1: "D139275_c4001580"
-4: "D139275_c4001580" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "D139275_c4001580" has unsupported operation: builtin.unregistered: llvm.select
+7: "D139275_c4001580" is unchanged by InstCombine
 
 1: "andcond.001.inv.outer.cond"
-4: "andcond.001.inv.outer.cond" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "andcond.001.inv.outer.cond" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "orcond.001.inv.outer.cond"
-4: "orcond.001.inv.outer.cond" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "orcond.001.inv.outer.cond" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "andcond.010.inv.inner.cond.in.inner.sel"
-4: "andcond.010.inv.inner.cond.in.inner.sel" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "andcond.010.inv.inner.cond.in.inner.sel" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "orcond.010.inv.inner.cond.in.inner.sel"
-4: "orcond.010.inv.inner.cond.in.inner.sel" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "orcond.010.inv.inner.cond.in.inner.sel" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "andcond.100.inv.inner.cond.in.outer.cond"
-4: "andcond.100.inv.inner.cond.in.outer.cond" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "andcond.100.inv.inner.cond.in.outer.cond" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "orcond.100.inv.inner.cond.in.outer.cond"
-4: "orcond.100.inv.inner.cond.in.outer.cond" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "orcond.100.inv.inner.cond.in.outer.cond" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "andcond.011.inv.outer.cond.inv.inner.cond.in.inner.sel"
-4: "andcond.011.inv.outer.cond.inv.inner.cond.in.inner.sel" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "andcond.011.inv.outer.cond.inv.inner.cond.in.inner.sel" has unsupported operation: llvm.call
 
-4: "andcond.011.inv.outer.cond.inv.inner.cond.in.inner.sel" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "andcond.011.inv.outer.cond.inv.inner.cond.in.inner.sel" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "orcond.011.inv.outer.cond.inv.inner.cond.in.inner.sel"
-4: "orcond.011.inv.outer.cond.inv.inner.cond.in.inner.sel" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "orcond.011.inv.outer.cond.inv.inner.cond.in.inner.sel" has unsupported operation: llvm.call
 
-4: "orcond.011.inv.outer.cond.inv.inner.cond.in.inner.sel" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "orcond.011.inv.outer.cond.inv.inner.cond.in.inner.sel" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "andcond.101.inv.outer.cond.inv.inner.cond.in.outer.cond"
-4: "andcond.101.inv.outer.cond.inv.inner.cond.in.outer.cond" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "andcond.101.inv.outer.cond.inv.inner.cond.in.outer.cond" has unsupported operation: llvm.call
 
-4: "andcond.101.inv.outer.cond.inv.inner.cond.in.outer.cond" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "andcond.101.inv.outer.cond.inv.inner.cond.in.outer.cond" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "orcond.101.inv.outer.cond.inv.inner.cond.in.outer.cond"
-4: "orcond.101.inv.outer.cond.inv.inner.cond.in.outer.cond" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "orcond.101.inv.outer.cond.inv.inner.cond.in.outer.cond" has unsupported operation: llvm.call
 
-4: "orcond.101.inv.outer.cond.inv.inner.cond.in.outer.cond" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "orcond.101.inv.outer.cond.inv.inner.cond.in.outer.cond" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "andcond.110.inv.inner.cond.in.inner.sel.inv.inner.cond.in.outer.cond"
-4: "andcond.110.inv.inner.cond.in.inner.sel.inv.inner.cond.in.outer.cond" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "andcond.110.inv.inner.cond.in.inner.sel.inv.inner.cond.in.outer.cond" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "orcond.110.inv.inner.cond.in.inner.sel.inv.inner.cond.in.outer.cond"
-4: "orcond.110.inv.inner.cond.in.inner.sel.inv.inner.cond.in.outer.cond" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "orcond.110.inv.inner.cond.in.inner.sel.inv.inner.cond.in.outer.cond" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "andcond.111.inv.all.conds"
-4: "andcond.111.inv.all.conds" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "andcond.111.inv.all.conds" has unsupported operation: llvm.call
 
-4: "andcond.111.inv.all.conds" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "andcond.111.inv.all.conds" has unsupported operation: llvm.call
-
-4: "andcond.111.inv.all.conds" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "andcond.111.inv.all.conds" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "orcond.111.inv.all.conds"
-4: "orcond.111.inv.all.conds" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "orcond.111.inv.all.conds" has unsupported operation: llvm.call
 
-4: "orcond.111.inv.all.conds" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "orcond.111.inv.all.conds" has unsupported operation: llvm.call
-
-4: "orcond.111.inv.all.conds" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "orcond.111.inv.all.conds" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "test_implied_true"
 4: "test_implied_true" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "test_implied_true" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "test_implied_true_vec"
 4: "test_implied_true_vec" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "test_implied_true_vec" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "test_implied_true_falseval"
 4: "test_implied_true_falseval" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "test_implied_true_falseval" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "test_implied_false"
 4: "test_implied_false" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 4: "test_implied_false" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "test_imply_fail"
 4: "test_imply_fail" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "test_imply_fail" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 4: "test_imply_fail" has unsupported operation: builtin.unregistered: llvm.select
@@ -446,11 +381,14 @@
 4: "test_imply_fail" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "test_imply_type_mismatch"
 4: "test_imply_type_mismatch" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "test_imply_type_mismatch" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "test_dont_crash"
 7: "test_dont_crash" is unchanged by InstCombine
@@ -462,4 +400,8 @@
 1: "test_dont_crash"
 4: "test_dont_crash" has unsupported operation: builtin.unregistered: llvm.select
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+1: "test_dont_crash"
+7: "test_dont_crash" is unchanged by InstCombine
+>>>>>>> edb64a33 (Updated tests)
 

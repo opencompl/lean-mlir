@@ -28,10 +28,14 @@
 
 1: "test_vector_uadd_overflow"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test_vector_uadd_overflow" contains vectors which are unsupported
 =======
 "test_vector_uadd_overflow" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test_vector_uadd_overflow" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_scalar_sadd_both_positive"
 4: "test_scalar_sadd_both_positive" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
@@ -60,20 +64,28 @@
 
 1: "test_vector_uadd_neg_neg"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test_vector_uadd_neg_neg" contains vectors which are unsupported
 =======
 "test_vector_uadd_neg_neg" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test_vector_uadd_neg_neg" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_scalar_uadd_nneg_nneg"
 4: "test_scalar_uadd_nneg_nneg" has unsupported operation after optimization: builtin.unregistered: llvm.intr.uadd.sat
 
 1: "test_vector_uadd_nneg_nneg"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test_vector_uadd_nneg_nneg" contains vectors which are unsupported
 =======
 "test_vector_uadd_nneg_nneg" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test_vector_uadd_nneg_nneg" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_scalar_uadd_neg_nneg"
 4: "test_scalar_uadd_neg_nneg" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
@@ -86,40 +98,56 @@
 
 1: "test_vector_uadd_never_overflows"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test_vector_uadd_never_overflows" contains vectors which are unsupported
 =======
 "test_vector_uadd_never_overflows" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test_vector_uadd_never_overflows" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_scalar_uadd_always_overflows"
 4: "test_scalar_uadd_always_overflows" has unsupported operation after optimization: builtin.unregistered: llvm.intr.uadd.sat
 
 1: "test_vector_uadd_always_overflows"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test_vector_uadd_always_overflows" contains vectors which are unsupported
 =======
 "test_vector_uadd_always_overflows" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test_vector_uadd_always_overflows" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_scalar_sadd_neg_nneg"
 4: "test_scalar_sadd_neg_nneg" has unsupported operation after optimization: builtin.unregistered: llvm.intr.sadd.sat
 
 1: "test_vector_sadd_neg_nneg"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test_vector_sadd_neg_nneg" contains vectors which are unsupported
 =======
 "test_vector_sadd_neg_nneg" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test_vector_sadd_neg_nneg" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_scalar_sadd_nneg_neg"
 4: "test_scalar_sadd_nneg_neg" has unsupported operation after optimization: builtin.unregistered: llvm.intr.sadd.sat
 
 1: "test_vector_sadd_nneg_neg"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test_vector_sadd_nneg_neg" contains vectors which are unsupported
 =======
 "test_vector_sadd_nneg_neg" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test_vector_sadd_nneg_neg" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_scalar_sadd_neg_neg"
 4: "test_scalar_sadd_neg_neg" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
@@ -131,20 +159,26 @@
 4: "test_scalar_sadd_always_overflows_low" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "test_scalar_sadd_always_overflows_low" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "test_scalar_sadd_always_overflows_low" has unsupported operation after optimization: builtin.unregistered: llvm.intr.sadd.sat
 
 1: "test_scalar_sadd_always_overflows_high"
 4: "test_scalar_sadd_always_overflows_high" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "test_scalar_sadd_always_overflows_high" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "test_scalar_sadd_always_overflows_high" has unsupported operation after optimization: builtin.unregistered: llvm.intr.sadd.sat
 
 1: "test_scalar_uadd_sub_nuw_lost_no_ov"
@@ -158,10 +192,14 @@
 
 1: "test_scalar_uadd_udiv_known_bits"
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "test_scalar_uadd_udiv_known_bits" has unsupported operation after optimization: builtin.unregistered: llvm.intr.uadd.sat
 =======
 4: "test_scalar_uadd_udiv_known_bits" has unsupported operation: llvm.udiv
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+4: "test_scalar_uadd_udiv_known_bits" has unsupported operation after optimization: builtin.unregistered: llvm.intr.uadd.sat
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_scalar_sadd_srem_no_ov"
 4: "test_scalar_sadd_srem_no_ov" has unsupported operation after optimization: builtin.unregistered: llvm.intr.sadd.sat
@@ -221,6 +259,7 @@
 4: "test_invalid_simplify_sub2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 1: "test_invalid_simplify_eq2"
 4: "test_invalid_simplify_eq2" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -233,22 +272,23 @@
 =======
 4: "test_invalid_simplify_sub2" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "test_invalid_simplify_eq2"
 4: "test_invalid_simplify_eq2" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "test_invalid_simplify_eq2" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "test_invalid_simplify_select_1"
 4: "test_invalid_simplify_select_1" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "test_invalid_simplify_select_1" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "test_invalid_simplify_other"
 4: "test_invalid_simplify_other" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 4: "test_invalid_simplify_other" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "test_vector_usub_combine"
 4: "test_vector_usub_combine" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
 
@@ -264,10 +304,14 @@
 
 1: "test_vector_usub_overflow"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test_vector_usub_overflow" contains vectors which are unsupported
 =======
 "test_vector_usub_overflow" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test_vector_usub_overflow" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_scalar_ssub_both_positive"
 4: "test_scalar_ssub_both_positive" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
@@ -302,20 +346,28 @@
 
 1: "test_vector_usub_nneg_neg"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test_vector_usub_nneg_neg" contains vectors which are unsupported
 =======
 "test_vector_usub_nneg_neg" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test_vector_usub_nneg_neg" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_scalar_usub_neg_nneg"
 4: "test_scalar_usub_neg_nneg" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
 
 1: "test_vector_usub_neg_nneg"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test_vector_usub_neg_nneg" contains vectors which are unsupported
 =======
 "test_vector_usub_neg_nneg" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test_vector_usub_neg_nneg" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_scalar_usub_nneg_nneg"
 4: "test_scalar_usub_nneg_nneg" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
@@ -328,40 +380,56 @@
 
 1: "test_vector_usub_never_overflows"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test_vector_usub_never_overflows" contains vectors which are unsupported
 =======
 "test_vector_usub_never_overflows" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test_vector_usub_never_overflows" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_scalar_usub_always_overflows"
 4: "test_scalar_usub_always_overflows" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
 
 1: "test_vector_usub_always_overflows"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test_vector_usub_always_overflows" contains vectors which are unsupported
 =======
 "test_vector_usub_always_overflows" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test_vector_usub_always_overflows" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_scalar_ssub_neg_neg"
 4: "test_scalar_ssub_neg_neg" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ssub.sat
 
 1: "test_vector_ssub_neg_neg"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test_vector_ssub_neg_neg" contains vectors which are unsupported
 =======
 "test_vector_ssub_neg_neg" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test_vector_ssub_neg_neg" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_scalar_ssub_nneg_nneg"
 4: "test_scalar_ssub_nneg_nneg" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ssub.sat
 
 1: "test_vector_ssub_nneg_nneg"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test_vector_ssub_nneg_nneg" contains vectors which are unsupported
 =======
 "test_vector_ssub_nneg_nneg" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test_vector_ssub_nneg_nneg" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_scalar_ssub_neg_nneg"
 4: "test_scalar_ssub_neg_nneg" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
@@ -373,20 +441,26 @@
 4: "test_scalar_ssub_always_overflows_low" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "test_scalar_ssub_always_overflows_low" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "test_scalar_ssub_always_overflows_low" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ssub.sat
 
 1: "test_scalar_ssub_always_overflows_high"
 4: "test_scalar_ssub_always_overflows_high" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "test_scalar_ssub_always_overflows_high" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "test_scalar_ssub_always_overflows_high" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ssub.sat
 
 1: "test_scalar_usub_add_nuw_no_ov"
@@ -415,6 +489,7 @@
 
 1: "test_vector_usub_add_nuw_no_ov"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test_vector_usub_add_nuw_no_ov" contains vectors which are unsupported
 
 1: "test_vector_usub_add_nuw_no_ov_nonsplat1"
@@ -425,6 +500,12 @@
 1: "test_vector_usub_add_nuw_no_ov_nonsplat1"
 "test_vector_usub_add_nuw_no_ov_nonsplat1" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test_vector_usub_add_nuw_no_ov" contains vectors which are unsupported
+
+1: "test_vector_usub_add_nuw_no_ov_nonsplat1"
+8: "test_vector_usub_add_nuw_no_ov_nonsplat1" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_vector_usub_add_nuw_no_ov_nonsplat1_poison"
 4: "test_vector_usub_add_nuw_no_ov_nonsplat1_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -451,6 +532,7 @@
 
 1: "test_vector_ssub_add_nsw_no_ov_splat"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test_vector_ssub_add_nsw_no_ov_splat" contains vectors which are unsupported
 
 1: "test_vector_ssub_add_nsw_no_ov_nonsplat1"
@@ -461,6 +543,12 @@
 1: "test_vector_ssub_add_nsw_no_ov_nonsplat1"
 "test_vector_ssub_add_nsw_no_ov_nonsplat1" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test_vector_ssub_add_nsw_no_ov_splat" contains vectors which are unsupported
+
+1: "test_vector_ssub_add_nsw_no_ov_nonsplat1"
+8: "test_vector_ssub_add_nsw_no_ov_nonsplat1" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_vector_ssub_add_nsw_no_ov_nonsplat2"
 4: "test_vector_ssub_add_nsw_no_ov_nonsplat2" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
@@ -544,6 +632,7 @@
 4: "uadd_sat_flipped3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 1: "uadd_sat_flipped3_neg_no_nuw"
 4: "uadd_sat_flipped3_neg_no_nuw" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -556,6 +645,11 @@
 4: "uadd_sat_flipped3_neg_no_nuw" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+1: "uadd_sat_flipped3_neg_no_nuw"
+4: "uadd_sat_flipped3_neg_no_nuw" has unsupported operation: builtin.unregistered: llvm.icmp
+
+>>>>>>> edb64a33 (Updated tests)
 1: "uadd_sat_negative_one"
 4: "uadd_sat_negative_one" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
 
@@ -570,14 +664,19 @@
 
 1: "uadd_sat_flipped4_poison_vector_compare2"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "uadd_sat_flipped4_poison_vector_compare2" contains vectors which are unsupported
 =======
 "uadd_sat_flipped4_poison_vector_compare2" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "uadd_sat_flipped4_poison_vector_compare2" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "uadd_sat_flipped_too_big"
 4: "uadd_sat_flipped_too_big" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "uadd_sat_flipped_wrong_bounds"
 4: "uadd_sat_flipped_wrong_bounds" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -606,47 +705,38 @@
 =======
 4: "uadd_sat_flipped_too_big" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "uadd_sat_flipped_wrong_bounds"
 4: "uadd_sat_flipped_wrong_bounds" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "uadd_sat_flipped_wrong_bounds" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "uadd_sat_flipped_wrong_bounds2"
 4: "uadd_sat_flipped_wrong_bounds2" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "uadd_sat_flipped_wrong_bounds2" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "uadd_sat_flipped_wrong_bounds3"
 4: "uadd_sat_flipped_wrong_bounds3" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "uadd_sat_flipped_wrong_bounds3" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "uadd_sat_flipped_wrong_bounds4"
 4: "uadd_sat_flipped_wrong_bounds4" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "uadd_sat_flipped_wrong_bounds4" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "uadd_sat_flipped_wrong_bounds5"
 4: "uadd_sat_flipped_wrong_bounds5" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "uadd_sat_flipped_wrong_bounds5" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "uadd_sat_flipped_wrong_bounds6"
 4: "uadd_sat_flipped_wrong_bounds6" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "uadd_sat_flipped_wrong_bounds6" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "uadd_sat_flipped_wrong_bounds7"
 4: "uadd_sat_flipped_wrong_bounds7" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "uadd_sat_flipped_wrong_bounds7" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "uadd_sat_flipped_wrong_bounds8"
 4: "uadd_sat_flipped_wrong_bounds8" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 4: "uadd_sat_flipped_wrong_bounds8" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "uadd_sat_nonstrict"
 4: "uadd_sat_nonstrict" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
 
@@ -681,6 +771,7 @@
 4: "not_uadd_sat" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 1: "not_uadd_sat2"
 4: "not_uadd_sat2" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -693,6 +784,11 @@
 4: "not_uadd_sat2" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+1: "not_uadd_sat2"
+4: "not_uadd_sat2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+>>>>>>> edb64a33 (Updated tests)
 1: "uadd_sat_not"
 4: "uadd_sat_not" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
 
@@ -745,6 +841,7 @@
 4: "uadd_sat_canon_nuw" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 1: "uadd_sat_canon_y_nuw"
 4: "uadd_sat_canon_y_nuw" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -757,6 +854,11 @@
 4: "uadd_sat_canon_y_nuw" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+1: "uadd_sat_canon_y_nuw"
+4: "uadd_sat_canon_y_nuw" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+>>>>>>> edb64a33 (Updated tests)
 1: "uadd_sat_constant_vec"
 4: "uadd_sat_constant_vec" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
 
@@ -818,10 +920,13 @@
 4: "uadd_sat_via_add_nonstrict" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "uadd_sat_via_add_nonstrict" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "uadd_sat_via_add_swapped_select"
 4: "uadd_sat_via_add_swapped_select" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
 
@@ -829,10 +934,13 @@
 4: "uadd_sat_via_add_swapped_select_strict" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "uadd_sat_via_add_swapped_select_strict" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "uadd_sat_via_add_swapped_cmp"
 4: "uadd_sat_via_add_swapped_cmp" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
 
@@ -840,10 +948,13 @@
 4: "uadd_sat_via_add_swapped_cmp_nonstrict" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "uadd_sat_via_add_swapped_cmp_nonstrict" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "uadd_sat_via_add_swapped_cmp_nonstric"
 4: "uadd_sat_via_add_swapped_cmp_nonstric" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
 
@@ -851,7 +962,10 @@
 4: "uadd_sat_via_add_swapped_cmp_select_nonstrict" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "uadd_sat_via_add_swapped_cmp_select_nonstrict" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)

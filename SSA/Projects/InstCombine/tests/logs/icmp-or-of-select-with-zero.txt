@@ -9,20 +9,26 @@
 
 1: "src_tv_eq_multiuse_or_fail"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "src_tv_eq_multiuse_or_fail" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "src_tv_eq_multiuse_or_fail" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "src_tv_eq_multiuse_or_fail" has unsupported operation: llvm.call
 
 1: "src_tv_eq_fail_tv_nonzero"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "src_tv_eq_fail_tv_nonzero" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "src_tv_eq_fail_tv_nonzero" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "src_fv_ne"
@@ -30,10 +36,13 @@
 
 1: "src_fv_ne_fail_maybe_zero"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "src_fv_ne_fail_maybe_zero" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "src_fv_ne_fail_maybe_zero" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "src_tv_ne"
@@ -41,10 +50,13 @@
 
 1: "src_tv_ne_fail_cmp_nonzero"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "src_tv_ne_fail_cmp_nonzero" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "src_tv_ne_fail_cmp_nonzero" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "src_fv_eq"
@@ -52,10 +64,13 @@
 
 1: "src_fv_eq_fail_cant_invert"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "src_fv_eq_fail_cant_invert" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "src_fv_eq_fail_cant_invert" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "src_fv_eq_fail_cant_invert" has unsupported operation: llvm.call
@@ -64,12 +79,15 @@
 4: "src_fv_eq_fail_cant_invert2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "src_fv_eq_fail_cant_invert2" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "src_fv_eq_fail_cant_invert2" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "src_fv_eq_fail_cant_invert2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "src_fv_eq_fail_cant_invert2" has unsupported operation: llvm.call
@@ -80,10 +98,13 @@
 4: "src_fv_eq_invert2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "src_fv_eq_invert2" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "src_fv_eq_invert2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "src_fv_eq_invert2" has unsupported operation: llvm.call
@@ -92,12 +113,15 @@
 4: "src_fv_eq_invert2_fail_wrong_binop" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "src_fv_eq_invert2_fail_wrong_binop" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "src_fv_eq_invert2_fail_wrong_binop" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "src_fv_eq_invert2_fail_wrong_binop" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "src_fv_eq_invert2_fail_wrong_binop" has unsupported operation: llvm.call
@@ -106,12 +130,15 @@
 4: "src_fv_eq_invert2_fail_bad_sel" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "src_fv_eq_invert2_fail_bad_sel" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "src_fv_eq_invert2_fail_bad_sel" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "src_fv_eq_invert2_fail_bad_sel" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "src_fv_eq_invert2_fail_bad_sel" has unsupported operation: llvm.call
@@ -122,12 +149,15 @@
 4: "src_fv_eq_invert3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "src_fv_eq_invert3" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "src_fv_eq_invert3" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "src_fv_eq_invert3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "src_fv_eq_invert3" has unsupported operation: llvm.call
@@ -140,12 +170,15 @@
 4: "src_tv_ne_invert" has unsupported operation: llvm.call
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "src_tv_ne_invert" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "src_tv_ne_invert" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "src_tv_ne_invert" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "src_tv_ne_invert" has unsupported operation: llvm.call

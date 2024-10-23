@@ -2,6 +2,7 @@
 4: "ashr_lshr_exact_ashr_only" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 1: "ashr_lshr_no_exact"
 4: "ashr_lshr_no_exact" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -43,59 +44,56 @@
 =======
 4: "ashr_lshr_exact_ashr_only" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "ashr_lshr_no_exact"
 4: "ashr_lshr_no_exact" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "ashr_lshr_no_exact" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "ashr_lshr_exact_both"
 4: "ashr_lshr_exact_both" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "ashr_lshr_exact_both" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "ashr_lshr_exact_lshr_only"
 4: "ashr_lshr_exact_lshr_only" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "ashr_lshr_exact_lshr_only" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "ashr_lshr2"
 4: "ashr_lshr2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "ashr_lshr2" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "ashr_lshr2_i128"
 4: "ashr_lshr2_i128" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "ashr_lshr2_i128" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "ashr_lshr_splat_vec"
-"ashr_lshr_splat_vec" contains vectors which are unsupported
+8: "ashr_lshr_splat_vec" contains vectors which are unsupported
 
 1: "ashr_lshr_splat_vec2"
-"ashr_lshr_splat_vec2" contains vectors which are unsupported
+8: "ashr_lshr_splat_vec2" contains vectors which are unsupported
 
 1: "ashr_lshr_splat_vec3"
-"ashr_lshr_splat_vec3" contains vectors which are unsupported
+8: "ashr_lshr_splat_vec3" contains vectors which are unsupported
 
 1: "ashr_lshr_splat_vec4"
-"ashr_lshr_splat_vec4" contains vectors which are unsupported
+8: "ashr_lshr_splat_vec4" contains vectors which are unsupported
 
 1: "ashr_lshr_nonsplat_vec"
-"ashr_lshr_nonsplat_vec" contains vectors which are unsupported
+8: "ashr_lshr_nonsplat_vec" contains vectors which are unsupported
 
 1: "ashr_lshr_nonsplat_vec2"
-"ashr_lshr_nonsplat_vec2" contains vectors which are unsupported
+8: "ashr_lshr_nonsplat_vec2" contains vectors which are unsupported
 
 1: "ashr_lshr_nonsplat_vec3"
-"ashr_lshr_nonsplat_vec3" contains vectors which are unsupported
+8: "ashr_lshr_nonsplat_vec3" contains vectors which are unsupported
 
 1: "ashr_lshr_nonsplat_vec4"
+<<<<<<< HEAD
 "ashr_lshr_nonsplat_vec4" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "ashr_lshr_nonsplat_vec4" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "ashr_lshr_cst"
 4: "ashr_lshr_cst" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "ashr_lshr_cst2"
 4: "ashr_lshr_cst2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
@@ -120,37 +118,38 @@
 =======
 4: "ashr_lshr_cst" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "ashr_lshr_cst2"
 4: "ashr_lshr_cst2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "ashr_lshr_cst2" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "ashr_lshr_inv"
 4: "ashr_lshr_inv" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "ashr_lshr_inv" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "ashr_lshr_inv2"
 4: "ashr_lshr_inv2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "ashr_lshr_inv2" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "ashr_lshr_inv_splat_vec"
-"ashr_lshr_inv_splat_vec" contains vectors which are unsupported
+8: "ashr_lshr_inv_splat_vec" contains vectors which are unsupported
 
 1: "ashr_lshr_inv_nonsplat_vec"
-"ashr_lshr_inv_nonsplat_vec" contains vectors which are unsupported
+8: "ashr_lshr_inv_nonsplat_vec" contains vectors which are unsupported
 
 1: "ashr_lshr_vec_poison"
-"ashr_lshr_vec_poison" contains vectors which are unsupported
+8: "ashr_lshr_vec_poison" contains vectors which are unsupported
 
 1: "ashr_lshr_vec_poison2"
+<<<<<<< HEAD
 "ashr_lshr_vec_poison2" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "ashr_lshr_vec_poison2" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "ashr_lshr_wrong_cst"
 4: "ashr_lshr_wrong_cst" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "ashr_lshr_wrong_cst2"
 4: "ashr_lshr_wrong_cst2" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -188,62 +187,47 @@
 =======
 4: "ashr_lshr_wrong_cst" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "ashr_lshr_wrong_cst2"
 4: "ashr_lshr_wrong_cst2" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ashr_lshr_wrong_cst2" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "ashr_lshr_wrong_cond"
 4: "ashr_lshr_wrong_cond" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "ashr_lshr_wrong_cond" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "ashr_lshr_shift_wrong_pred"
 4: "ashr_lshr_shift_wrong_pred" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ashr_lshr_shift_wrong_pred" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "ashr_lshr_shift_wrong_pred2"
 4: "ashr_lshr_shift_wrong_pred2" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "ashr_lshr_shift_wrong_pred2" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "ashr_lshr_wrong_operands"
 4: "ashr_lshr_wrong_operands" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ashr_lshr_wrong_operands" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "ashr_lshr_no_ashr"
 4: "ashr_lshr_no_ashr" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "ashr_lshr_no_ashr" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "ashr_lshr_shift_amt_mismatch"
 4: "ashr_lshr_shift_amt_mismatch" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ashr_lshr_shift_amt_mismatch" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "ashr_lshr_shift_base_mismatch"
 4: "ashr_lshr_shift_base_mismatch" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "ashr_lshr_shift_base_mismatch" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "ashr_lshr_no_lshr"
 4: "ashr_lshr_no_lshr" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ashr_lshr_no_lshr" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "ashr_lshr_vec_wrong_pred"
 4: "ashr_lshr_vec_wrong_pred" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "ashr_lshr_vec_wrong_pred" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "ashr_lshr_inv_vec_wrong_pred"
 4: "ashr_lshr_inv_vec_wrong_pred" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 4: "ashr_lshr_inv_vec_wrong_pred" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "lshr_sub_nsw"
 4: "lshr_sub_nsw" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -313,10 +297,14 @@
 
 1: "ashr_known_pos_exact_vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "ashr_known_pos_exact_vec" contains vectors which are unsupported
 =======
 "ashr_known_pos_exact_vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "ashr_known_pos_exact_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "lshr_mul_times_3_div_2"
 2: llvm.func

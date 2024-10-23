@@ -21,10 +21,13 @@
 4: "test_imply_not2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "test_imply_not2" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "test_imply_not3"
 4: "test_imply_not3" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -33,10 +36,13 @@
 4: "test_imply_not3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "test_imply_not3" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "func1"
 5: "func1" is empty
 

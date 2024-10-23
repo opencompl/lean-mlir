@@ -3,19 +3,26 @@
 
 1: "ctlz_sel_const_true_false"
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "ctlz_sel_const_true_false" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctlz
 =======
 4: "ctlz_sel_const_true_false" has unsupported operation: builtin.unregistered: llvm.select
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+4: "ctlz_sel_const_true_false" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctlz
+>>>>>>> edb64a33 (Updated tests)
 
 1: "ctlz_sel_const_true"
 4: "ctlz_sel_const_true" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "ctlz_sel_const_true" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "ctlz_sel_const_false"
 4: "ctlz_sel_const_false" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
@@ -30,6 +37,7 @@
 4: "ctlz_sel_const_false" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 1: "ctlz_sel_const_true_false_extra_use"
 =======
 4: "ctlz_sel_const_false" has unsupported operation: builtin.unregistered: llvm.select
@@ -38,20 +46,28 @@
 4: "ctlz_sel_const_true_false_extra_use" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+1: "ctlz_sel_const_true_false_extra_use"
+>>>>>>> edb64a33 (Updated tests)
 4: "ctlz_sel_const_true_false_extra_use" has unsupported operation: llvm.call
 
 4: "ctlz_sel_const_true_false_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
 1: "cttz_sel_const_true_false"
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "cttz_sel_const_true_false" has unsupported operation after optimization: builtin.unregistered: llvm.intr.cttz
 =======
 4: "cttz_sel_const_true_false" has unsupported operation: builtin.unregistered: llvm.select
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+4: "cttz_sel_const_true_false" has unsupported operation after optimization: builtin.unregistered: llvm.intr.cttz
+>>>>>>> edb64a33 (Updated tests)
 
 1: "cttz_sel_const_true"
 4: "cttz_sel_const_true" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "cttz_sel_const_false"
 4: "cttz_sel_const_false" has unsupported operation: builtin.unregistered: llvm.intr.cttz
@@ -60,29 +76,37 @@
 =======
 4: "cttz_sel_const_true" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "cttz_sel_const_false"
 4: "cttz_sel_const_false" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
-4: "cttz_sel_const_false" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "cttz_sel_const_true_false_extra_use"
+<<<<<<< HEAD
 4: "cttz_sel_const_true_false_extra_use" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "cttz_sel_const_true_false_extra_use" has unsupported operation: llvm.call
 
 4: "cttz_sel_const_true_false_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
 1: "ctpop_sel_const_true_false"
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "ctpop_sel_const_true_false" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctpop
 =======
 4: "ctpop_sel_const_true_false" has unsupported operation: builtin.unregistered: llvm.select
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+4: "ctpop_sel_const_true_false" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctpop
+>>>>>>> edb64a33 (Updated tests)
 
 1: "ctpop_sel_const_true"
 4: "ctpop_sel_const_true" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "ctpop_sel_const_false"
 4: "ctpop_sel_const_false" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
@@ -91,20 +115,24 @@
 =======
 4: "ctpop_sel_const_true" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "ctpop_sel_const_false"
 4: "ctpop_sel_const_false" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
-4: "ctpop_sel_const_false" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "ctpop_sel_const_true_false_extra_use"
+<<<<<<< HEAD
 4: "ctpop_sel_const_true_false_extra_use" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "ctpop_sel_const_true_false_extra_use" has unsupported operation: llvm.call
 
 4: "ctpop_sel_const_true_false_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
 1: "usub_sat_rhs_const_select_all_const"
+<<<<<<< HEAD
 <<<<<<< HEAD
 4: "usub_sat_rhs_const_select_all_const" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
 
@@ -116,11 +144,17 @@
 4: "usub_sat_rhs_var_select_all_const" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+4: "usub_sat_rhs_const_select_all_const" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "usub_sat_rhs_var_select_all_const"
+>>>>>>> edb64a33 (Updated tests)
 4: "usub_sat_rhs_var_select_all_const" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
 
 1: "usub_sat_rhs_const_select_one_const"
 4: "usub_sat_rhs_const_select_one_const" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "usub_sat_rhs_const_select_no_const"
 4: "usub_sat_rhs_const_select_no_const" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
@@ -130,14 +164,18 @@
 =======
 4: "usub_sat_rhs_const_select_one_const" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "usub_sat_rhs_const_select_no_const"
-4: "usub_sat_rhs_const_select_no_const" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "usub_sat_rhs_const_select_no_const" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
 
 1: "usub_sat_lhs_const_select_all_const"
+<<<<<<< HEAD
 4: "usub_sat_lhs_const_select_all_const" has unsupported operation: builtin.unregistered: llvm.select
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+4: "usub_sat_lhs_const_select_all_const" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+>>>>>>> edb64a33 (Updated tests)
 
 1: "non_speculatable"
 4: "non_speculatable" has unsupported operation: llvm.mlir.addressof
@@ -146,6 +184,7 @@
 
 4: "non_speculatable" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 4: "non_speculatable" has unsupported operation: builtin.unregistered: llvm.intr.masked.load
 
@@ -156,27 +195,33 @@
 =======
 4: "non_speculatable" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "non_speculatable" has unsupported operation: builtin.unregistered: llvm.intr.masked.load
 
 1: "vec_to_scalar_select_scalar"
-4: "vec_to_scalar_select_scalar" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "vec_to_scalar_select_scalar" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.add
 
 1: "vec_to_scalar_select_vector"
+<<<<<<< HEAD
 4: "vec_to_scalar_select_vector" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "vec_to_scalar_select_vector" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.add
 
 1: "test_drop_noundef"
 4: "test_drop_noundef" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "test_drop_noundef" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "pr85536"
 4: "pr85536" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -187,6 +232,7 @@
 4: "pr85536" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 1: "test_fabs_select1"
 4: "test_fabs_select1" has unsupported operation: builtin.unregistered: llvm.fcmp
 
@@ -196,22 +242,26 @@
 =======
 4: "pr85536" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "test_fabs_select1"
 4: "test_fabs_select1" has unsupported operation: builtin.unregistered: llvm.fcmp
-
-4: "test_fabs_select1" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "test_fabs_select1_vec"
 4: "test_fabs_select1_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+<<<<<<< HEAD
 4: "test_fabs_select1_vec" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "test_fabs_select2"
 4: "test_fabs_select2" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
 4: "test_fabs_select2" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "test_fabs_select_fmf1"
 4: "test_fabs_select_fmf1" has unsupported operation: builtin.unregistered: llvm.intr.fabs
@@ -222,14 +272,17 @@
 =======
 4: "test_fabs_select2" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "test_fabs_select_fmf1"
 4: "test_fabs_select_fmf1" has unsupported operation: builtin.unregistered: llvm.intr.fabs
-
-4: "test_fabs_select_fmf1" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "test_fabs_select_fmf2"
 4: "test_fabs_select_fmf2" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
+<<<<<<< HEAD
 4: "test_fabs_select_fmf2" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)

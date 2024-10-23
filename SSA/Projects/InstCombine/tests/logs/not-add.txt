@@ -54,6 +54,7 @@
 
 1: "vector_test"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "vector_test" contains vectors which are unsupported
 
 1: "vector_test_poison"
@@ -63,13 +64,20 @@
 8: "vector_test_poison_nsw_nuw" contains vectors which are unsupported
 =======
 "vector_test" contains vectors which are unsupported
+=======
+8: "vector_test" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "vector_test_poison"
-"vector_test_poison" contains vectors which are unsupported
+8: "vector_test_poison" contains vectors which are unsupported
 
 1: "vector_test_poison_nsw_nuw"
+<<<<<<< HEAD
 "vector_test_poison_nsw_nuw" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "vector_test_poison_nsw_nuw" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "pr50308"
 4: "pr50308" has unsupported operation: builtin.unregistered: llvm.cond_br

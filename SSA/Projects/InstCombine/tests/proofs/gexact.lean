@@ -140,6 +140,9 @@ theorem sdiv6_proof : sdiv6_before ⊑ sdiv6_after := by
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 def udiv1_before := [llvm|
 {
 ^0(%arg32 : i32, %arg33 : i32):
@@ -233,8 +236,11 @@ theorem mul_of_udiv_proof : mul_of_udiv_before ⊑ mul_of_udiv_after := by
 
 
 
+<<<<<<< HEAD
 =======
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+>>>>>>> edb64a33 (Updated tests)
 def mul_of_sdiv_before := [llvm|
 {
 ^0(%arg5 : i8):
@@ -279,6 +285,9 @@ theorem mul_of_sdiv_proof : mul_of_sdiv_before ⊑ mul_of_sdiv_after := by
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 def mul_of_udiv_fail_bad_remainder_before := [llvm|
 {
 ^0(%arg2 : i8):
@@ -314,8 +323,11 @@ theorem mul_of_udiv_fail_bad_remainder_proof : mul_of_udiv_fail_bad_remainder_be
 
 
 
+<<<<<<< HEAD
 =======
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+>>>>>>> edb64a33 (Updated tests)
 def mul_of_sdiv_fail_ub_before := [llvm|
 {
 ^0(%arg1 : i8):

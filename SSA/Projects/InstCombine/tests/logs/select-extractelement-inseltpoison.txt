@@ -5,10 +5,13 @@
 4: "extract_one_select" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "extract_one_select" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "extract_one_select" has unsupported operation: builtin.unregistered: llvm.extractelement
 
 1: "extract_two_select"
@@ -17,20 +20,26 @@
 4: "extract_two_select" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "extract_two_select" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "extract_two_select" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 1: "extract_one_select_user"
 4: "extract_one_select_user" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "extract_one_select_user" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "extract_one_select_user" has unsupported operation: builtin.unregistered: llvm.extractelement
 
 4: "extract_one_select_user" has unsupported operation: llvm.call
@@ -39,10 +48,13 @@
 4: "extract_one_vselect_user" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "extract_one_vselect_user" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "extract_one_vselect_user" has unsupported operation: builtin.unregistered: llvm.extractelement
 
 4: "extract_one_vselect_user" has unsupported operation: llvm.call
@@ -51,10 +63,13 @@
 4: "extract_one_vselect" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "extract_one_vselect" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "extract_one_vselect" has unsupported operation: builtin.unregistered: llvm.extractelement
 
 1: "extract_two_vselect"
@@ -63,10 +78,13 @@
 4: "extract_two_vselect" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "extract_two_vselect" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "extract_two_vselect" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 1: "simple_vector_select"
@@ -75,19 +93,25 @@
 4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
-=======
-4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.select
-
->>>>>>> 4bf2f937 (Re-ran the sccripts)
-4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.extractelement
-
-4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.icmp
-
 <<<<<<< HEAD
 =======
 4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
+4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.icmp
+
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.select
+
+>>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.extractelement
@@ -95,10 +119,13 @@
 4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.extractelement
@@ -106,10 +133,13 @@
 4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 1: "extract_cond"
@@ -118,20 +148,26 @@
 4: "extract_cond" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "extract_cond" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "splat_cond"
 4: "splat_cond" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
 4: "splat_cond" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "splat_cond" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "extra_use"
 5: "extra_use" is empty
 
@@ -140,6 +176,7 @@
 
 4: "extract_cond_extra_use" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "extract_cond_variable_index"
 4: "extract_cond_variable_index" has unsupported operation: builtin.unregistered: llvm.extractelement
@@ -153,13 +190,21 @@
 4: "extract_cond_variable_index" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+1: "extract_cond_variable_index"
+4: "extract_cond_variable_index" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+>>>>>>> edb64a33 (Updated tests)
 1: "extract_cond_type_mismatch"
 4: "extract_cond_type_mismatch" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
 4: "extract_cond_type_mismatch" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "extract_cond_type_mismatch" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)

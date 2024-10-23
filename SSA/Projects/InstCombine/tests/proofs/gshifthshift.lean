@@ -110,6 +110,9 @@ theorem lshr_lshr_proof : lshr_lshr_before ⊑ lshr_lshr_after := by
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 def shl_shl_constants_div_before := [llvm|
 {
 ^0(%arg27 : i32, %arg28 : i32):
@@ -145,8 +148,11 @@ theorem shl_shl_constants_div_proof : shl_shl_constants_div_before ⊑ shl_shl_c
 
 
 
+<<<<<<< HEAD
 =======
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 def ashr_shl_constants_before := [llvm|
 {
 ^0(%arg25 : i32):

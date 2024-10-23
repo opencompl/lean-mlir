@@ -6,10 +6,13 @@
 4: "example" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "example" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "example" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 4: "example" has unsupported operation after optimization: builtin.unregistered: llvm.intr.assume
@@ -22,10 +25,13 @@
 4: "example2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "example2" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "example2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "example2" has unsupported operation: builtin.unregistered: llvm.intr.assume

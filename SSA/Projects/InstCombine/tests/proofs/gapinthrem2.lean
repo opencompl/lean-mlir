@@ -76,3 +76,38 @@ theorem test2_proof : test2_before ⊑ test2_after := by
   ---END test2
 
 
+
+def test3_before := [llvm|
+{
+^0(%arg0 : i599, %arg1 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 70368744177664 : i599}> : () -> i599
+  %1 = "llvm.mlir.constant"() <{value = 4096 : i599}> : () -> i599
+  %2 = "llvm.select"(%arg1, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i599, i599) -> i599
+  %3 = llvm.urem %arg0, %2 : i599
+  "llvm.return"(%3) : (i599) -> ()
+}
+]
+def test3_after := [llvm|
+{
+^0(%arg0 : i599, %arg1 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 70368744177663 : i599}> : () -> i599
+  %1 = "llvm.mlir.constant"() <{value = 4095 : i599}> : () -> i599
+  %2 = "llvm.select"(%arg1, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i599, i599) -> i599
+  %3 = llvm.and %arg0, %2 : i599
+  "llvm.return"(%3) : (i599) -> ()
+}
+]
+theorem test3_proof : test3_before ⊑ test3_after := by
+  unfold test3_before test3_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test3
+  apply test3_thm
+  ---END test3
+
+

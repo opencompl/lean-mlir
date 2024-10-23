@@ -36,10 +36,14 @@
 
 1: "fabs_fneg_splat_v2f32"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "fabs_fneg_splat_v2f32" contains vectors which are unsupported
 =======
 "fabs_fneg_splat_v2f32" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "fabs_fneg_splat_v2f32" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "fabs_fneg_splat_poison_v2f32"
 4: "fabs_fneg_splat_poison_v2f32" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -54,10 +58,14 @@
 
 1: "fabs_fneg_non_splat_v2f32"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "fabs_fneg_non_splat_v2f32" contains vectors which are unsupported
 =======
 "fabs_fneg_non_splat_v2f32" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "fabs_fneg_non_splat_v2f32" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "use"
 5: "use" is empty

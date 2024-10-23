@@ -1,5 +1,8 @@
 1: "neg"
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.mlir.constant
@@ -7,6 +10,7 @@
 2: llvm.sub
 2: llvm.xor
 2: llvm.return
+<<<<<<< HEAD
 
 1: "neg_vec"
 8: "neg_vec" contains vectors which are unsupported
@@ -16,6 +20,11 @@
 1: "neg_vec"
 4: "neg_vec" has unsupported operation: llvm.udiv
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+
+1: "neg_vec"
+8: "neg_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "neg_vec_poison"
 4: "neg_vec_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -26,6 +35,7 @@
 
 4: "neg_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "not"
 2: llvm.func
@@ -41,12 +51,24 @@
 =======
 4: "neg_vec_poison" has unsupported operation: llvm.udiv
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "not"
-4: "not" has unsupported operation: llvm.udiv
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.xor
+2: llvm.mul
+2: llvm.return
 
 1: "not_vec"
+<<<<<<< HEAD
 4: "not_vec" has unsupported operation: llvm.udiv
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "not_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "not_vec_poison"
 4: "not_vec_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -58,10 +80,13 @@
 4: "not_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "not_vec_poison" has unsupported operation: llvm.udiv
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "use"
 5: "use" is empty
 

@@ -35,6 +35,7 @@
 
 1: "dec_mask_neg_v2i32"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "dec_mask_neg_v2i32" contains vectors which are unsupported
 
 1: "dec_mask_neg_v2i32_poison"
@@ -45,6 +46,12 @@
 1: "dec_mask_neg_v2i32_poison"
 "dec_mask_neg_v2i32_poison" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "dec_mask_neg_v2i32" contains vectors which are unsupported
+
+1: "dec_mask_neg_v2i32_poison"
+8: "dec_mask_neg_v2i32_poison" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "dec_mask_multiuse_neg_multiuse_v2i32"
 4: "dec_mask_multiuse_neg_multiuse_v2i32" has unsupported operation: llvm.call

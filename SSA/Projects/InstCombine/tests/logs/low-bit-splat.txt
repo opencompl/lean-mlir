@@ -17,10 +17,14 @@
 
 1: "t2_vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "t2_vec" contains vectors which are unsupported
 =======
 "t2_vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "t2_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "t3_vec_poison0"
 4: "t3_vec_poison0" has unsupported operation: llvm.mlir.undef

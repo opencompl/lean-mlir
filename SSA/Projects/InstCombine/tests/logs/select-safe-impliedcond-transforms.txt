@@ -2,10 +2,13 @@
 4: "a_true_implies_b_true" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "a_true_implies_b_true" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "a_true_implies_b_true_vec"
 4: "a_true_implies_b_true_vec" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
@@ -17,6 +20,7 @@
 
 4: "a_true_implies_b_true_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "a_true_implies_b_true2"
 4: "a_true_implies_b_true2" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -56,59 +60,44 @@
 
 4: "a_true_implies_b_true_vec" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "a_true_implies_b_true2"
 4: "a_true_implies_b_true2" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "a_true_implies_b_true2" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "a_true_implies_b_true2_comm"
 4: "a_true_implies_b_true2_comm" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "a_true_implies_b_true2_comm" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "a_true_implies_b_false"
 4: "a_true_implies_b_false" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "a_true_implies_b_false" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "a_true_implies_b_false2"
 4: "a_true_implies_b_false2" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "a_true_implies_b_false2" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "a_true_implies_b_false2_comm"
 4: "a_true_implies_b_false2_comm" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "a_true_implies_b_false2_comm" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "a_false_implies_b_true"
 4: "a_false_implies_b_true" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "a_false_implies_b_true" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "a_false_implies_b_true2"
 4: "a_false_implies_b_true2" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "a_false_implies_b_true2" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "a_false_implies_b_true2_comm"
 4: "a_false_implies_b_true2_comm" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "a_false_implies_b_true2_comm" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "a_false_implies_b_false"
 4: "a_false_implies_b_false" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "a_false_implies_b_false" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "a_false_implies_b_false2"
 4: "a_false_implies_b_false2" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "a_false_implies_b_false2" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "a_false_implies_b_false2_comm"
 4: "a_false_implies_b_false2_comm" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 4: "a_false_implies_b_false2_comm" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)

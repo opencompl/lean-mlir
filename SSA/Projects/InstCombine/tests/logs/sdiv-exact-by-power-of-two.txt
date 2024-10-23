@@ -14,6 +14,7 @@
 
 1: "t3_vec_splat"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "t3_vec_splat" contains vectors which are unsupported
 
 1: "t4_vec"
@@ -24,6 +25,12 @@
 1: "t4_vec"
 "t4_vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "t3_vec_splat" contains vectors which are unsupported
+
+1: "t4_vec"
+8: "t4_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "n5_vec_undef"
 4: "n5_vec_undef" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -69,10 +76,14 @@
 
 1: "prove_exact_with_high_mask_splat_vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "prove_exact_with_high_mask_splat_vec" contains vectors which are unsupported
 =======
 "prove_exact_with_high_mask_splat_vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "prove_exact_with_high_mask_splat_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "prove_exact_with_high_mask_vec"
 7: "prove_exact_with_high_mask_vec" is unchanged by InstCombine

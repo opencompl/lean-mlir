@@ -1,5 +1,8 @@
 1: "test"
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "test" has unsupported operation after optimization: llvm.alloca
 
 4: "test" has unsupported operation after optimization: llvm.alloca
@@ -11,7 +14,10 @@
 4: "test" has unsupported operation after optimization: llvm.store
 
 4: "test" has unsupported operation after optimization: llvm.load
+<<<<<<< HEAD
 =======
 4: "test" has unsupported operation: builtin.unregistered: llvm.select
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 

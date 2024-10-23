@@ -1,9 +1,13 @@
 1: "test1"
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.udiv
 2: llvm.return
+<<<<<<< HEAD
 
 1: "test2"
 2: llvm.func
@@ -22,11 +26,27 @@
 2: llvm.return
 =======
 4: "test1" has unsupported operation after optimization: llvm.udiv
+=======
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test2"
-4: "test2" has unsupported operation after optimization: llvm.udiv
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.udiv
+2: llvm.return
 
 1: "test3"
+<<<<<<< HEAD
 4: "test3" has unsupported operation: builtin.unregistered: llvm.select
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.udiv
+2: llvm.return
+>>>>>>> edb64a33 (Updated tests)
 

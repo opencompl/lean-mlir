@@ -46,10 +46,14 @@
 
 1: "icmp_sgt_x_negy"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "icmp_sgt_x_negy" contains vectors which are unsupported
 =======
 "icmp_sgt_x_negy" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "icmp_sgt_x_negy" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "icmp_sgt_x_negy_fail_partial"
 4: "icmp_sgt_x_negy_fail_partial" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -86,10 +90,13 @@
 
 1: "icmp_eq_x_invertable_y_todo"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "icmp_eq_x_invertable_y_todo" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "icmp_eq_x_invertable_y_todo" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "icmp_eq_x_invertable_y"
@@ -102,10 +109,13 @@
 
 1: "icmp_eq_x_invertable_y2_todo"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "icmp_eq_x_invertable_y2_todo" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "icmp_eq_x_invertable_y2_todo" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "icmp_eq_x_invertable_y2"

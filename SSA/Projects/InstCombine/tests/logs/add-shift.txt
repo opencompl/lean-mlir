@@ -8,10 +8,14 @@
 
 1: "flip_add_of_shift_neg_vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "flip_add_of_shift_neg_vec" contains vectors which are unsupported
 =======
 "flip_add_of_shift_neg_vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "flip_add_of_shift_neg_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "flip_add_of_shift_neg_fail_shr"
 7: "flip_add_of_shift_neg_fail_shr" is unchanged by InstCombine

@@ -1,5 +1,8 @@
 1: "xor_logic_and_logic_or1"
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.mlir.constant
@@ -7,6 +10,7 @@
 2: builtin.unregistered: llvm.select
 2: llvm.xor
 2: llvm.return
+<<<<<<< HEAD
 
 1: "xor_logic_and_logic_or2"
 2: llvm.func
@@ -22,10 +26,22 @@
 1: "xor_logic_and_logic_or2"
 4: "xor_logic_and_logic_or2" has unsupported operation: builtin.unregistered: llvm.select
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+
+1: "xor_logic_and_logic_or2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.return
+>>>>>>> edb64a33 (Updated tests)
 
 1: "xor_logic_and_logic_or3"
 4: "xor_logic_and_logic_or3" has unsupported operation: builtin.unregistered: llvm.freeze
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "xor_logic_and_logic_or4"
 2: llvm.func
@@ -41,21 +57,36 @@
 =======
 4: "xor_logic_and_logic_or3" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "xor_logic_and_logic_or4"
-4: "xor_logic_and_logic_or4" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.return
 
 1: "xor_logic_and_logic_or_vector1"
+<<<<<<< HEAD
 4: "xor_logic_and_logic_or_vector1" has unsupported operation: builtin.unregistered: llvm.select
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "xor_logic_and_logic_or_vector1" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "xor_logic_and_logic_or_vector2"
 4: "xor_logic_and_logic_or_vector2" has unsupported operation: builtin.unregistered: llvm.freeze
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "xor_logic_and_logic_or_vector2" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "xor_logic_and_logic_or_vector_poison1"
 4: "xor_logic_and_logic_or_vector_poison1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
@@ -67,6 +98,7 @@
 
 4: "xor_logic_and_logic_or_vector_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "xor_logic_and_logic_or_vector_poison2"
 8: "xor_logic_and_logic_or_vector_poison2" contains vectors which are unsupported
@@ -92,18 +124,34 @@
 =======
 4: "xor_logic_and_logic_or_vector_poison1" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "xor_logic_and_logic_or_vector_poison2"
-4: "xor_logic_and_logic_or_vector_poison2" has unsupported operation: builtin.unregistered: llvm.select
+8: "xor_logic_and_logic_or_vector_poison2" contains vectors which are unsupported
 
 1: "xor_and_logic_or1"
-4: "xor_and_logic_or1" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.xor
+2: llvm.return
 
 1: "xor_and_logic_or2"
-4: "xor_and_logic_or2" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.xor
+2: llvm.return
 
 1: "xor_and_logic_or_vector"
+<<<<<<< HEAD
 4: "xor_and_logic_or_vector" has unsupported operation: builtin.unregistered: llvm.select
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "xor_and_logic_or_vector" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "xor_and_logic_or_vector_poison"
 4: "xor_and_logic_or_vector_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -114,6 +162,7 @@
 
 4: "xor_and_logic_or_vector_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "xor_logic_and_or1"
 2: llvm.func
@@ -136,15 +185,31 @@
 =======
 4: "xor_and_logic_or_vector_poison" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "xor_logic_and_or1"
-4: "xor_logic_and_or1" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.return
 
 1: "xor_logic_and_or2"
-4: "xor_logic_and_or2" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.return
 
 1: "xor_logic_and_or_vector"
+<<<<<<< HEAD
 4: "xor_logic_and_or_vector" has unsupported operation: builtin.unregistered: llvm.select
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "xor_logic_and_or_vector" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "xor_logic_and_or_vector_poison"
 4: "xor_logic_and_or_vector_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -155,6 +220,7 @@
 
 4: "xor_logic_and_or_vector_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "xor_and_or"
 2: llvm.func
@@ -168,12 +234,22 @@
 =======
 4: "xor_logic_and_or_vector_poison" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "xor_and_or"
-4: "xor_and_or" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.or
+2: llvm.and
+2: llvm.xor
+2: llvm.return
 
 1: "xor_and_or_vector"
+<<<<<<< HEAD
 4: "xor_and_or_vector" has unsupported operation: builtin.unregistered: llvm.select
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "xor_and_or_vector" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "xor_and_or_negative_oneuse"
 4: "xor_and_or_negative_oneuse" has unsupported operation: llvm.call

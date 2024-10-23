@@ -27,6 +27,7 @@
 
 1: "add-shl-sdiv-splat0"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "add-shl-sdiv-splat0" contains vectors which are unsupported
 
 1: "add-shl-sdiv-splat1"
@@ -36,13 +37,20 @@
 8: "add-shl-sdiv-splat2" contains vectors which are unsupported
 =======
 "add-shl-sdiv-splat0" contains vectors which are unsupported
+=======
+8: "add-shl-sdiv-splat0" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "add-shl-sdiv-splat1"
-"add-shl-sdiv-splat1" contains vectors which are unsupported
+8: "add-shl-sdiv-splat1" contains vectors which are unsupported
 
 1: "add-shl-sdiv-splat2"
+<<<<<<< HEAD
 "add-shl-sdiv-splat2" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "add-shl-sdiv-splat2" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "use32"
 5: "use32" is empty
@@ -89,10 +97,13 @@
 4: "add-shl-sdiv-negative2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "add-shl-sdiv-negative2" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "add-shl-sdiv-negative3"
 7: "add-shl-sdiv-negative3" is unchanged by InstCombine
 

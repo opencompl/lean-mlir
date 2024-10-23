@@ -31,10 +31,13 @@
 4: "fold_memrchr_ax_c_1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "fold_memrchr_ax_c_1" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "fold_memrchr_a12345_5_5"
 4: "fold_memrchr_a12345_5_5" has unsupported operation: llvm.mlir.addressof
 
@@ -74,10 +77,13 @@
 4: "fold_memrchr_a12345_3_n" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "fold_memrchr_a12345_3_n" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "fold_memrchr_a12345_5_n"
 4: "fold_memrchr_a12345_5_n" has unsupported operation: llvm.mlir.zero
 
@@ -88,10 +94,13 @@
 4: "fold_memrchr_a12345_5_n" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "fold_memrchr_a12345_5_n" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "fold_memrchr_a123123_3_5"
 4: "fold_memrchr_a123123_3_5" has unsupported operation: llvm.mlir.addressof
 

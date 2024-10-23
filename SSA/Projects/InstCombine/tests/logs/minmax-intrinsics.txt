@@ -301,6 +301,7 @@
 4: "clamp_two_vals_smax_smin" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 1: "clamp_two_vals_smin_smax"
 4: "clamp_two_vals_smin_smax" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -313,22 +314,23 @@
 =======
 4: "clamp_two_vals_smax_smin" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "clamp_two_vals_smin_smax"
 4: "clamp_two_vals_smin_smax" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "clamp_two_vals_smin_smax" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "clamp_two_vals_umax_umin"
 4: "clamp_two_vals_umax_umin" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "clamp_two_vals_umax_umin" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "clamp_two_vals_umin_umax"
 4: "clamp_two_vals_umin_umax" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 4: "clamp_two_vals_umin_umax" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "clamp_two_vals_smax_umin"
 4: "clamp_two_vals_smax_umin" has unsupported operation: builtin.unregistered: llvm.intr.smax
 
@@ -824,10 +826,13 @@
 4: "umin_offset" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "umin_offset" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "umin_offset_limit"
 4: "umin_offset_limit" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umin
 
@@ -1049,20 +1054,28 @@
 
 1: "fold_umax_with_knownbits_info_poison_in_splat"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "fold_umax_with_knownbits_info_poison_in_splat" contains vectors which are unsupported
 =======
 "fold_umax_with_knownbits_info_poison_in_splat" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "fold_umax_with_knownbits_info_poison_in_splat" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "fold_umin_with_knownbits_info"
 4: "fold_umin_with_knownbits_info" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umin
 
 1: "fold_umin_with_knownbits_info_poison_in_splat"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "fold_umin_with_knownbits_info_poison_in_splat" contains vectors which are unsupported
 =======
 "fold_umin_with_knownbits_info_poison_in_splat" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "fold_umin_with_knownbits_info_poison_in_splat" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "fold_umax_with_knownbits_info_fail"
 4: "fold_umax_with_knownbits_info_fail" has unsupported operation: builtin.unregistered: llvm.intr.umax

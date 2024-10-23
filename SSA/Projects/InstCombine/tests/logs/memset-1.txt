@@ -54,6 +54,7 @@
 
 1: "memset_size_select"
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "memset_size_select" has unsupported operation: builtin.unregistered: llvm.intr.memset
 
 1: "memset_size_select2"
@@ -66,22 +67,23 @@
 =======
 4: "memset_size_select" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "memset_size_select" has unsupported operation: builtin.unregistered: llvm.intr.memset
 
 1: "memset_size_select2"
-4: "memset_size_select2" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "memset_size_select2" has unsupported operation: builtin.unregistered: llvm.intr.memset
 
 1: "memset_size_select3"
-4: "memset_size_select3" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "memset_size_select3" has unsupported operation: builtin.unregistered: llvm.intr.memset
 
 1: "memset_size_select4"
+<<<<<<< HEAD
 4: "memset_size_select4" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "memset_size_select4" has unsupported operation: builtin.unregistered: llvm.intr.memset
 
 1: "memset_size_ashr"

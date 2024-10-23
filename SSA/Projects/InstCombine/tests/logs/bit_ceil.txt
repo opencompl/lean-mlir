@@ -28,40 +28,52 @@
 4: "bit_ceil_wrong_select_constant" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "bit_ceil_wrong_select_constant" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "bit_ceil_32_wrong_cond"
 4: "bit_ceil_32_wrong_cond" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
 4: "bit_ceil_32_wrong_cond" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "bit_ceil_32_wrong_cond" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "bit_ceil_wrong_sub_constant"
 4: "bit_ceil_wrong_sub_constant" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
 4: "bit_ceil_wrong_sub_constant" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "bit_ceil_wrong_sub_constant" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "bit_ceil_32_shl_used_twice"
 4: "bit_ceil_32_shl_used_twice" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
 4: "bit_ceil_32_shl_used_twice" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "bit_ceil_32_shl_used_twice" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "bit_ceil_32_shl_used_twice" has unsupported operation: llvm.store
 
 1: "bit_ceil_32_sub_used_twice"
@@ -70,10 +82,13 @@
 4: "bit_ceil_32_sub_used_twice" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "bit_ceil_32_sub_used_twice" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "bit_ceil_32_sub_used_twice" has unsupported operation: llvm.store
 
 1: "bit_ceil_v4i32"

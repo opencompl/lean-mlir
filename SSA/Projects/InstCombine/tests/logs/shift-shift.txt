@@ -33,10 +33,14 @@
 
 1: "shl_shl_splat_vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "shl_shl_splat_vec" contains vectors which are unsupported
 =======
 "shl_shl_splat_vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "shl_shl_splat_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "shl_shl_vec"
 7: "shl_shl_vec" is unchanged by InstCombine
@@ -51,6 +55,7 @@
 
 1: "lshr_lshr_splat_vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "lshr_lshr_splat_vec" contains vectors which are unsupported
 
 1: "lshr_lshr_vec"
@@ -61,6 +66,12 @@
 1: "lshr_lshr_vec"
 "lshr_lshr_vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "lshr_lshr_splat_vec" contains vectors which are unsupported
+
+1: "lshr_lshr_vec"
+8: "lshr_lshr_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "shl_trunc_bigger_lshr"
 4: "shl_trunc_bigger_lshr" has unsupported operation: builtin.unregistered: llvm.trunc
@@ -144,6 +155,9 @@
 
 1: "shl_shl_constants_div"
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.mlir.constant
@@ -151,9 +165,12 @@
 2: llvm.shl
 2: llvm.udiv
 2: llvm.return
+<<<<<<< HEAD
 =======
 4: "shl_shl_constants_div" has unsupported operation after optimization: llvm.udiv
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 
 1: "ashr_lshr_constants"
 7: "ashr_lshr_constants" is unchanged by InstCombine
@@ -268,10 +285,14 @@
 
 1: "lshr_shl_demand5"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "lshr_shl_demand5" contains vectors which are unsupported
 =======
 "lshr_shl_demand5" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "lshr_shl_demand5" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "lshr_shl_demand5_undef_left"
 4: "lshr_shl_demand5_undef_left" has unsupported operation: llvm.mlir.undef
@@ -296,10 +317,14 @@
 
 1: "lshr_shl_demand5_nonuniform_vec_right"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "lshr_shl_demand5_nonuniform_vec_right" contains vectors which are unsupported
 =======
 "lshr_shl_demand5_nonuniform_vec_right" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "lshr_shl_demand5_nonuniform_vec_right" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "lshr_shl_demand5_nonuniform_vec_both"
 7: "lshr_shl_demand5_nonuniform_vec_both" is unchanged by InstCombine

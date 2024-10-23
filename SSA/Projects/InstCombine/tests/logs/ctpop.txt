@@ -28,10 +28,14 @@
 
 1: "test5vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test5vec" contains vectors which are unsupported
 =======
 "test5vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test5vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test6"
 4: "test6" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctpop

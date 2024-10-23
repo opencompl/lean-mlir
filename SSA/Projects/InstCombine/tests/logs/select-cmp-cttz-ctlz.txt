@@ -113,10 +113,13 @@
 4: "not_op_ctlz_wrong_xor_op1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "not_op_ctlz_wrong_xor_op1" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "not_op_ctlz_wrong_xor_op0"
 4: "not_op_ctlz_wrong_xor_op0" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
@@ -125,10 +128,13 @@
 4: "not_op_ctlz_wrong_xor_op0" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "not_op_ctlz_wrong_xor_op0" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "not_op_cttz_wrong_cmp"
 4: "not_op_cttz_wrong_cmp" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
@@ -137,10 +143,13 @@
 4: "not_op_cttz_wrong_cmp" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "not_op_cttz_wrong_cmp" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "test6d"
 4: "test6d" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
@@ -168,40 +177,52 @@
 4: "test_ctlz_not_bw" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "test_ctlz_not_bw" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "test_ctlz_not_bw_multiuse"
 4: "test_ctlz_not_bw_multiuse" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
 4: "test_ctlz_not_bw_multiuse" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "test_ctlz_not_bw_multiuse" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "test_cttz_not_bw"
 4: "test_cttz_not_bw" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
 4: "test_cttz_not_bw" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "test_cttz_not_bw" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "test_cttz_not_bw_multiuse"
 4: "test_cttz_not_bw_multiuse" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
 4: "test_cttz_not_bw_multiuse" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "test_cttz_not_bw_multiuse" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "test_ctlz_bw_vec"
 4: "test_ctlz_bw_vec" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
@@ -211,10 +232,13 @@
 4: "test_ctlz_not_bw_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "test_ctlz_not_bw_vec" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "test_cttz_bw_vec"
 4: "test_cttz_bw_vec" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
@@ -224,10 +248,13 @@
 4: "test_cttz_not_bw_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "test_cttz_not_bw_vec" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "test_multiuse_def"
 4: "test_multiuse_def" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 

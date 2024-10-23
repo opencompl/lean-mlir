@@ -104,10 +104,14 @@
 
 1: "t16_vec_y_is_one_or_zero"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "t16_vec_y_is_one_or_zero" contains vectors which are unsupported
 =======
 "t16_vec_y_is_one_or_zero" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "t16_vec_y_is_one_or_zero" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "rawspeed_signbit"
 4: "rawspeed_signbit" has unsupported operation: builtin.unregistered: llvm.icmp

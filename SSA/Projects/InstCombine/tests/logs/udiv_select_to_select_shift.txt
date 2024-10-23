@@ -1,5 +1,8 @@
 1: "test"
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.mlir.constant
@@ -10,6 +13,7 @@
 2: llvm.udiv
 2: llvm.add
 2: llvm.return
+<<<<<<< HEAD
 =======
 4: "test" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
@@ -19,6 +23,8 @@
 
 4: "test" has unsupported operation after optimization: llvm.udiv
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 
 1: "PR34856"
 4: "PR34856" has unsupported operation: builtin.unregistered: llvm.icmp

@@ -84,10 +84,13 @@
 4: "mul_selectnzV_unkV_nsw_ne" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "mul_selectnzV_unkV_nsw_ne" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "mul_unkV_unkV_nsw_nuw_ne"
 4: "mul_unkV_unkV_nsw_nuw_ne" has unsupported operation: builtin.unregistered: llvm.icmp
 

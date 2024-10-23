@@ -9,10 +9,14 @@
 
 1: "test2"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test2" contains vectors which are unsupported
 =======
 "test2" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test2" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "bitcasted_inselt_wide_source_zero_elt"
 4: "bitcasted_inselt_wide_source_zero_elt" has unsupported operation: builtin.unregistered: llvm.trunc

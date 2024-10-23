@@ -23,10 +23,14 @@
 
 1: "test_sdiv_canonicalize_vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test_sdiv_canonicalize_vec" contains vectors which are unsupported
 =======
 "test_sdiv_canonicalize_vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test_sdiv_canonicalize_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_sdiv_canonicalize_multiple_uses"
 7: "test_sdiv_canonicalize_multiple_uses" is unchanged by InstCombine
@@ -40,6 +44,7 @@
 4: "sdiv_abs_nsw" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 1: "sdiv_abs_nsw_vec"
 4: "sdiv_abs_nsw_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -52,6 +57,11 @@
 4: "sdiv_abs_nsw_vec" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+1: "sdiv_abs_nsw_vec"
+4: "sdiv_abs_nsw_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+>>>>>>> edb64a33 (Updated tests)
 1: "sdiv_abs"
 4: "sdiv_abs" has unsupported operation: builtin.unregistered: llvm.intr.abs
 

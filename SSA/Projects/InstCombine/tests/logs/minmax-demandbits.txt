@@ -2,6 +2,7 @@
 4: "and_umax_less" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 1: "and_umax_muchless"
 4: "and_umax_muchless" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -14,12 +15,18 @@
 4: "and_umax_muchless" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+1: "and_umax_muchless"
+4: "and_umax_muchless" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+>>>>>>> edb64a33 (Updated tests)
 1: "and_umax_more"
 4: "and_umax_more" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
 1: "shr_umax"
 4: "shr_umax" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "t_0_1"
 4: "t_0_1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
@@ -42,37 +49,32 @@
 =======
 4: "shr_umax" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "t_0_1"
 4: "t_0_1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "t_0_1" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "t_0_10"
 4: "t_0_10" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "t_0_10" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "t_1_10"
 4: "t_1_10" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "t_1_10" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "t_2_4"
 4: "t_2_4" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "t_2_4" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "t_2_192"
 4: "t_2_192" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "t_2_192" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "t_2_63_or"
 4: "t_2_63_or" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 4: "t_2_63_or" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "f_1_1"
 4: "f_1_1" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
@@ -89,6 +91,7 @@
 4: "and_umin" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 1: "or_umin"
 4: "or_umin" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -104,27 +107,26 @@
 =======
 4: "and_umin" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "or_umin"
 4: "or_umin" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "or_umin" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "or_min_31_30"
 4: "or_min_31_30" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "or_min_31_30" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "and_min_7_7"
 4: "and_min_7_7" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "and_min_7_7" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "and_min_7_8"
 4: "and_min_7_8" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 4: "and_min_7_8" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "and_min_7_9"
 4: "and_min_7_9" has unsupported operation: builtin.unregistered: llvm.intr.umin
 

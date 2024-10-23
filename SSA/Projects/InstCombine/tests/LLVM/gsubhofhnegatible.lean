@@ -78,6 +78,9 @@ theorem t2_proof : t2_before ⊑ t2_after := by
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 def t4_before := [llvm|
 {
 ^0(%arg200 : i8, %arg201 : i1):
@@ -184,8 +187,11 @@ theorem t7_proof : t7_before ⊑ t7_after := by
 
 
 
+<<<<<<< HEAD
 =======
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 def t9_before := [llvm|
 {
 ^0(%arg182 : i8, %arg183 : i8):

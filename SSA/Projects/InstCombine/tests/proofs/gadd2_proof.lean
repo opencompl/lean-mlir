@@ -208,6 +208,9 @@ theorem add_of_mul_thm (x x_1 x_2 : BitVec 8) :
     some (x_2 * (x_1 + x)) := sorry
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 theorem add_of_selects_thm (x : BitVec 1) :
   (Option.bind
       (match some x with
@@ -244,8 +247,11 @@ info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1092:17: theorem ad
       | some { toFin := ⟨1, ⋯⟩ } => some x
       | some { toFin := ⟨0, ⋯⟩ } => some 0#32 := sorry
 
+<<<<<<< HEAD
 =======
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+>>>>>>> edb64a33 (Updated tests)
 theorem add_undemanded_low_bits_thm (x : BitVec 32) : ((x ||| 15#32) + 1616#32) >>> 4 = (x + 1616#32) >>> 4 := sorry
 
 theorem sub_undemanded_low_bits_thm (x : BitVec 32) : ((x ||| 15#32) - 1616#32) >>> 4 = (x + 4294965680#32) >>> 4 := sorry

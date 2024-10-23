@@ -6,14 +6,20 @@
 
 1: "test2_logical"
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 2: llvm.func
 2: llvm.mlir.constant
 2: builtin.unregistered: llvm.select
 2: builtin.unregistered: llvm.select
 2: llvm.return
+<<<<<<< HEAD
 =======
 4: "test2_logical" has unsupported operation: builtin.unregistered: llvm.select
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test3"
 2: llvm.func
@@ -28,10 +34,13 @@
 4: "test7_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "test7_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "test8"
 4: "test8" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -51,10 +60,14 @@
 
 1: "test9vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test9vec" contains vectors which are unsupported
 =======
 "test9vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test9vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test10"
 2: llvm.func
@@ -105,10 +118,14 @@
 
 1: "and1_lshr1_is_cmp_eq_0_vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "and1_lshr1_is_cmp_eq_0_vec" contains vectors which are unsupported
 =======
 "and1_lshr1_is_cmp_eq_0_vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "and1_lshr1_is_cmp_eq_0_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "and1_lshr1_is_cmp_eq_0_vec_poison"
 4: "and1_lshr1_is_cmp_eq_0_vec_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison

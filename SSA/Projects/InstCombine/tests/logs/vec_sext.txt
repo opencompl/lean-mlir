@@ -2,6 +2,7 @@
 4: "vec_select" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "vec_select" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "vec_select_alternate_sign_bit_test"
@@ -12,18 +13,20 @@
 =======
 4: "vec_select" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "vec_select" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "vec_select" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "vec_select_alternate_sign_bit_test"
 4: "vec_select_alternate_sign_bit_test" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "vec_select_alternate_sign_bit_test" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "is_negative_poison_elt"
+<<<<<<< HEAD
 "is_negative_poison_elt" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "is_negative_poison_elt" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "is_positive_poison_elt"
 4: "is_positive_poison_elt" has unsupported operation: builtin.unregistered: llvm.mlir.poison

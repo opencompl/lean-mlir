@@ -77,6 +77,9 @@ theorem test2_proof : test2_before ⊑ test2_after := by
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 
 def test3_before := [llvm|
 {
@@ -112,5 +115,8 @@ theorem test3_proof : test3_before ⊑ test3_after := by
   ---END test3
 
 
+<<<<<<< HEAD
 =======
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)

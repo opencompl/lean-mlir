@@ -93,10 +93,13 @@
 4: "foo1_and_signbit_lshr_without_shifting_signbit_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "foo1_and_signbit_lshr_without_shifting_signbit_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "foo1_or_signbit_lshr_without_shifting_signbit"
 4: "foo1_or_signbit_lshr_without_shifting_signbit" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -108,10 +111,13 @@
 4: "foo1_or_signbit_lshr_without_shifting_signbit_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "foo1_or_signbit_lshr_without_shifting_signbit_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "foo1_and_signbit_lshr_without_shifting_signbit_both_sides"
 4: "foo1_and_signbit_lshr_without_shifting_signbit_both_sides" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -121,10 +127,13 @@
 4: "foo1_and_signbit_lshr_without_shifting_signbit_both_sides_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "foo1_and_signbit_lshr_without_shifting_signbit_both_sides_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "foo1_or_signbit_lshr_without_shifting_signbit_both_sides"
 4: "foo1_or_signbit_lshr_without_shifting_signbit_both_sides" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -137,10 +146,13 @@
 4: "foo1_or_signbit_lshr_without_shifting_signbit_both_sides_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "foo1_or_signbit_lshr_without_shifting_signbit_both_sides_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "foo1_and_extra_use_shl"
 4: "foo1_and_extra_use_shl" has unsupported operation: llvm.store
 
@@ -236,10 +248,13 @@
 4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_shl1_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_shl1_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_and"
 4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_and" has unsupported operation: llvm.store
 
@@ -255,10 +270,13 @@
 4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_and_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_and_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_cmp1"
 4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_cmp1" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -274,10 +292,13 @@
 4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_cmp1_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_cmp1_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_shl2"
 4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_shl2" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -293,10 +314,13 @@
 4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_shl2_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_shl2_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_cmp2"
 4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_cmp2" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -312,10 +336,13 @@
 4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_cmp2_logical" has unsupported operation: llvm.store
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_cmp2_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "foo1_and_signbit_lshr_without_shifting_signbit_not_pwr2"
 4: "foo1_and_signbit_lshr_without_shifting_signbit_not_pwr2" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -327,7 +354,10 @@
 4: "foo1_and_signbit_lshr_without_shifting_signbit_not_pwr2_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "foo1_and_signbit_lshr_without_shifting_signbit_not_pwr2_logical" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)

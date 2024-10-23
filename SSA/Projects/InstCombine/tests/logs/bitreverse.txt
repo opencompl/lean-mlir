@@ -78,6 +78,7 @@
 4: "rev_i1" has unsupported operation: llvm.call
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 1: "rev_v2i1"
 8: "rev_v2i1" contains vectors which are unsupported
 =======
@@ -86,6 +87,10 @@
 1: "rev_v2i1"
 4: "rev_v2i1" has unsupported operation: builtin.unregistered: llvm.select
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+1: "rev_v2i1"
+8: "rev_v2i1" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "rev_i2"
 4: "rev_i2" has unsupported operation: builtin.unregistered: llvm.zext

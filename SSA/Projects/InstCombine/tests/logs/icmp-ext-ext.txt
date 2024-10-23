@@ -146,10 +146,13 @@
 
 1: "zext_sext_sgt_known_nonneg"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "zext_sext_sgt_known_nonneg" has unsupported operation: llvm.udiv
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "zext_sext_sgt_known_nonneg" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "zext_sext_ugt_known_nonneg"
@@ -176,10 +179,13 @@
 
 1: "sext_zext_ne_known_nonneg"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "sext_zext_ne_known_nonneg" has unsupported operation: llvm.udiv
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "sext_zext_ne_known_nonneg" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "sext_zext_sge_known_nonneg_op0_narrow"
@@ -208,8 +214,12 @@
 
 1: "zext_ne_sext"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "zext_ne_sext" contains vectors which are unsupported
 =======
 "zext_ne_sext" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "zext_ne_sext" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 

@@ -11,6 +11,7 @@
 4: "t0" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 1: "t1"
 4: "t1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -20,23 +21,27 @@
 =======
 4: "t0" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "t1"
 4: "t1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "t1" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "t2"
 4: "t2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 4: "t2" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "t3_commutative"
 4: "t3_commutative" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "t3_commutative" has unsupported operation: llvm.call
 
 1: "t4_splat"
+<<<<<<< HEAD
 <<<<<<< HEAD
 8: "t4_splat" contains vectors which are unsupported
 
@@ -53,23 +58,31 @@
 8: "t5_splat_poison_0b1000" contains vectors which are unsupported
 =======
 "t4_splat" contains vectors which are unsupported
+=======
+8: "t4_splat" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "t5_splat_poison_0b0001"
-"t5_splat_poison_0b0001" contains vectors which are unsupported
+8: "t5_splat_poison_0b0001" contains vectors which are unsupported
 
 1: "t5_splat_poison_0b0010"
-"t5_splat_poison_0b0010" contains vectors which are unsupported
+8: "t5_splat_poison_0b0010" contains vectors which are unsupported
 
 1: "t5_splat_poison_0b0100"
-"t5_splat_poison_0b0100" contains vectors which are unsupported
+8: "t5_splat_poison_0b0100" contains vectors which are unsupported
 
 1: "t5_splat_poison_0b1000"
+<<<<<<< HEAD
 "t5_splat_poison_0b1000" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "t5_splat_poison_0b1000" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "t6_nonsplat"
 4: "t6_nonsplat" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "t7_nonsplat_bias"
 4: "t7_nonsplat_bias" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -83,6 +96,11 @@
 4: "t7_nonsplat_bias" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+1: "t7_nonsplat_bias"
+4: "t7_nonsplat_bias" has unsupported operation: builtin.unregistered: llvm.icmp
+
+>>>>>>> edb64a33 (Updated tests)
 1: "t8_nonsplat_masked_by_poison_0b0001"
 4: "t8_nonsplat_masked_by_poison_0b0001" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
@@ -95,10 +113,13 @@
 4: "t8_nonsplat_masked_by_poison_0b0001" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "t8_nonsplat_masked_by_poison_0b0001" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "t8_nonsplat_masked_by_poison_0b0010"
 4: "t8_nonsplat_masked_by_poison_0b0010" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
@@ -111,10 +132,13 @@
 4: "t8_nonsplat_masked_by_poison_0b0010" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "t8_nonsplat_masked_by_poison_0b0010" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "t8_nonsplat_masked_by_poison_0b0100"
 4: "t8_nonsplat_masked_by_poison_0b0100" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
@@ -127,10 +151,13 @@
 4: "t8_nonsplat_masked_by_poison_0b0100" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "t8_nonsplat_masked_by_poison_0b0100" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "t8_nonsplat_masked_by_poison_0b1000"
 4: "t8_nonsplat_masked_by_poison_0b1000" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
@@ -142,6 +169,7 @@
 
 4: "t8_nonsplat_masked_by_poison_0b1000" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "n9_wrong_x0"
 4: "n9_wrong_x0" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -173,62 +201,54 @@
 =======
 4: "t8_nonsplat_masked_by_poison_0b1000" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "n9_wrong_x0"
 4: "n9_wrong_x0" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "n9_wrong_x0" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "n9_wrong_x1"
 4: "n9_wrong_x1" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "n9_wrong_x1" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "n9_wrong_x2"
 4: "n9_wrong_x2" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "n9_wrong_x2" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "n10_wrong_low_bit_mask"
 4: "n10_wrong_low_bit_mask" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "n10_wrong_low_bit_mask" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "n11_wrong_high_bit_mask"
 4: "n11_wrong_high_bit_mask" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "n11_wrong_high_bit_mask" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "n12_wrong_bias"
 4: "n12_wrong_bias" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "n12_wrong_bias" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "n13_wrong_constants_alignment_is_not_power_of_two"
 4: "n13_wrong_constants_alignment_is_not_power_of_two" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "n13_wrong_constants_alignment_is_not_power_of_two" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "n14_wrong_comparison_constant"
 4: "n14_wrong_comparison_constant" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "n14_wrong_comparison_constant" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "n15_wrong_comparison_predicate_and_constant"
 4: "n15_wrong_comparison_predicate_and_constant" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 4: "n15_wrong_comparison_predicate_and_constant" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "n16_oneuse"
 4: "n16_oneuse" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "n16_oneuse" has unsupported operation: llvm.call
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "n16_oneuse" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "t17_oneuse"
 4: "t17_oneuse" has unsupported operation: llvm.call
 
@@ -246,10 +266,13 @@
 4: "t18_replacement_0b0001" has unsupported operation: llvm.call
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "t18_replacement_0b0001" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "t18_replacement_0b0010"
 4: "t18_replacement_0b0010" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
@@ -264,10 +287,13 @@
 4: "t18_replacement_0b0010" has unsupported operation: llvm.call
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "t18_replacement_0b0010" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "t18_replacement_0b0100"
 4: "t18_replacement_0b0100" has unsupported operation: llvm.call
 

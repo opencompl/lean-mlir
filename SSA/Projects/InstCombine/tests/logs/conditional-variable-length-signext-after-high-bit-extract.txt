@@ -14,10 +14,13 @@
 4: "t0_notrunc_add" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "t0_notrunc_add" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "t0_notrunc_add" has unsupported operation: llvm.call
 
 4: "t0_notrunc_add" has unsupported operation: llvm.call
@@ -32,10 +35,13 @@
 4: "t0_notrunc_or" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "t0_notrunc_or" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "t0_notrunc_or" has unsupported operation: llvm.call
 
 4: "t0_notrunc_or" has unsupported operation: llvm.call
@@ -50,10 +56,13 @@
 4: "t1_notrunc_sub" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "t1_notrunc_sub" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "t1_notrunc_sub" has unsupported operation: llvm.call
 
 4: "t1_notrunc_sub" has unsupported operation: llvm.call
@@ -131,10 +140,13 @@
 4: "t4_commutativity0" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "t4_commutativity0" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "t4_commutativity0" has unsupported operation: llvm.call
 
 4: "t4_commutativity0" has unsupported operation: llvm.call
@@ -149,10 +161,13 @@
 4: "t5_commutativity1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "t5_commutativity1" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "t5_commutativity1" has unsupported operation: llvm.call
 
 4: "t5_commutativity1" has unsupported operation: llvm.call
@@ -167,10 +182,13 @@
 4: "t6_commutativity2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "t6_commutativity2" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "t6_commutativity2" has unsupported operation: llvm.call
 
 4: "t6_commutativity2" has unsupported operation: llvm.call
@@ -208,10 +226,13 @@
 4: "t8_trunc_extrause1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "t8_trunc_extrause1" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "t8_trunc_extrause1" has unsupported operation: llvm.call
 
 4: "t8_trunc_extrause1" has unsupported operation: llvm.call
@@ -234,10 +255,13 @@
 4: "n9_trunc_extrause2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "n9_trunc_extrause2" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "n9_trunc_extrause2" has unsupported operation: llvm.call
 
 4: "n9_trunc_extrause2" has unsupported operation: llvm.call
@@ -256,10 +280,13 @@
 4: "t10_preserve_exact" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "t10_preserve_exact" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "t10_preserve_exact" has unsupported operation: llvm.call
 
 4: "t10_preserve_exact" has unsupported operation: llvm.call
@@ -280,10 +307,13 @@
 4: "t11_different_zext_of_shamt" has unsupported operation: builtin.unregistered: llvm.zext
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "t11_different_zext_of_shamt" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "t11_different_zext_of_shamt" has unsupported operation: llvm.call
 
 4: "t11_different_zext_of_shamt" has unsupported operation: llvm.call
@@ -308,10 +338,13 @@
 4: "t12_add_sext_of_magic" has unsupported operation: builtin.unregistered: llvm.zext
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "t12_add_sext_of_magic" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "t12_add_sext_of_magic" has unsupported operation: builtin.unregistered: llvm.sext
 
 4: "t12_add_sext_of_magic" has unsupported operation: llvm.call
@@ -338,10 +371,13 @@
 4: "t13_sub_zext_of_magic" has unsupported operation: builtin.unregistered: llvm.zext
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "t13_sub_zext_of_magic" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "t13_sub_zext_of_magic" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "t13_sub_zext_of_magic" has unsupported operation: llvm.call
@@ -370,10 +406,13 @@
 4: "t14_add_sext_of_shl" has unsupported operation: builtin.unregistered: llvm.sext
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "t14_add_sext_of_shl" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "t14_add_sext_of_shl" has unsupported operation: llvm.call
 
 4: "t14_add_sext_of_shl" has unsupported operation: llvm.call
@@ -400,10 +439,13 @@
 4: "t15_sub_zext_of_shl" has unsupported operation: builtin.unregistered: llvm.zext
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "t15_sub_zext_of_shl" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "t15_sub_zext_of_shl" has unsupported operation: llvm.call
 
 4: "t15_sub_zext_of_shl" has unsupported operation: llvm.call
@@ -424,10 +466,13 @@
 4: "n16" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "n16" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "n16" has unsupported operation: llvm.call
 
 4: "n16" has unsupported operation: llvm.call
@@ -442,10 +487,13 @@
 4: "n17_add" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "n17_add" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "n17_add" has unsupported operation: llvm.call
 
 4: "n17_add" has unsupported operation: llvm.call
@@ -460,10 +508,13 @@
 4: "n18" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "n18" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "n18" has unsupported operation: llvm.call
 
 4: "n18" has unsupported operation: llvm.call
@@ -478,10 +529,13 @@
 4: "n19" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "n19" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "n19" has unsupported operation: llvm.call
 
 4: "n19" has unsupported operation: llvm.call
@@ -496,10 +550,13 @@
 4: "n20" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "n20" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "n20" has unsupported operation: llvm.call
 
 4: "n20" has unsupported operation: llvm.call
@@ -514,10 +571,13 @@
 4: "n21" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "n21" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "n21" has unsupported operation: llvm.call
 
 4: "n21" has unsupported operation: llvm.call
@@ -536,10 +596,13 @@
 4: "n22" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "n22" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "n22" has unsupported operation: llvm.call
 
 4: "n22" has unsupported operation: llvm.call
@@ -558,10 +621,13 @@
 4: "n23" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "n23" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "n23" has unsupported operation: llvm.call
 
 4: "n23" has unsupported operation: llvm.call
@@ -576,10 +642,13 @@
 4: "n24" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "n24" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "n24" has unsupported operation: llvm.call
 
 4: "n24" has unsupported operation: llvm.call
@@ -594,10 +663,13 @@
 4: "n25_sub" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "n25_sub" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "n25_sub" has unsupported operation: llvm.call
 
 4: "n25_sub" has unsupported operation: llvm.call
@@ -612,10 +684,13 @@
 4: "n26" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "n26" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "n26" has unsupported operation: llvm.call
 
 4: "n26" has unsupported operation: llvm.call
@@ -634,10 +709,13 @@
 4: "n27_add_zext_of_magic" has unsupported operation: builtin.unregistered: llvm.zext
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "n27_add_zext_of_magic" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "n27_add_zext_of_magic" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "n27_add_zext_of_magic" has unsupported operation: llvm.call
@@ -664,10 +742,13 @@
 4: "n28_sub_sext_of_magic" has unsupported operation: builtin.unregistered: llvm.zext
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "n28_sub_sext_of_magic" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "n28_sub_sext_of_magic" has unsupported operation: builtin.unregistered: llvm.sext
 
 4: "n28_sub_sext_of_magic" has unsupported operation: llvm.call
@@ -690,10 +771,13 @@
 4: "n290_or_with_wrong_magic" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "n290_or_with_wrong_magic" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "n290_or_with_wrong_magic" has unsupported operation: llvm.call
 
 4: "n290_or_with_wrong_magic" has unsupported operation: llvm.call

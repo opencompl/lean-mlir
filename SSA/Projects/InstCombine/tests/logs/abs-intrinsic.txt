@@ -84,20 +84,28 @@
 
 1: "lshr_abs"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "lshr_abs" contains vectors which are unsupported
 =======
 "lshr_abs" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "lshr_abs" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "and_abs"
 4: "and_abs" has unsupported operation after optimization: builtin.unregistered: llvm.intr.abs
 
 1: "select_abs"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "select_abs" contains vectors which are unsupported
 =======
 4: "select_abs" has unsupported operation: builtin.unregistered: llvm.select
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "select_abs" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "assume_abs"
 4: "assume_abs" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -156,10 +164,14 @@
 
 1: "demand_low_bit_int_min_is_poison"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "demand_low_bit_int_min_is_poison" contains vectors which are unsupported
 =======
 "demand_low_bit_int_min_is_poison" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "demand_low_bit_int_min_is_poison" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "demand_low_bits"
 4: "demand_low_bits" has unsupported operation: builtin.unregistered: llvm.intr.abs

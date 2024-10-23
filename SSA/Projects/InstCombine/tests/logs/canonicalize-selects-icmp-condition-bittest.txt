@@ -8,6 +8,7 @@
 4: "p0" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 1: "p1"
 4: "p1" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -20,30 +21,42 @@
 4: "p1" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+1: "p1"
+4: "p1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+>>>>>>> edb64a33 (Updated tests)
 1: "n2"
 4: "n2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "n2" has unsupported operation: llvm.call
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "n2" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "t3"
 4: "t3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "t3" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "t3" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "t3" has unsupported operation: llvm.store
 
 4: "t3" has unsupported operation: builtin.unregistered: llvm.br
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "t4"
 4: "t4" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -65,33 +78,28 @@
 =======
 4: "t3" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "t4"
 4: "t4" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "t4" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "t4" has unsupported operation: llvm.store
-
-4: "t4" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "n5"
 4: "n5" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "n5" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "n6"
 4: "n6" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "n6" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "n7"
 4: "n7" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "n7" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "n8"
 4: "n8" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 4: "n8" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)

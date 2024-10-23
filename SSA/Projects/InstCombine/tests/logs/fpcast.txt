@@ -43,10 +43,13 @@
 4: "test5" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "test5" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "test5" has unsupported operation: builtin.unregistered: llvm.fptrunc
 
 1: "test6"
@@ -154,10 +157,14 @@
 
 1: "fptosi_nonnorm_copysign_vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "fptosi_nonnorm_copysign_vec" contains vectors which are unsupported
 =======
 "fptosi_nonnorm_copysign_vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "fptosi_nonnorm_copysign_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "fptosi_nonnorm_fmul"
 4: "fptosi_nonnorm_fmul" has unsupported operation: builtin.unregistered: llvm.fmul
@@ -166,10 +173,14 @@
 
 1: "fptosi_select"
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "fptosi_select" has unsupported operation after optimization: builtin.unregistered: llvm.fptosi
 =======
 4: "fptosi_select" has unsupported operation: builtin.unregistered: llvm.select
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+4: "fptosi_select" has unsupported operation after optimization: builtin.unregistered: llvm.fptosi
+>>>>>>> edb64a33 (Updated tests)
 
 1: "mul_pos_zero_convert"
 4: "mul_pos_zero_convert" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp

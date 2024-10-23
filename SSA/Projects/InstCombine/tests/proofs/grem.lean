@@ -39,10 +39,14 @@ theorem test1_proof : test1_before ⊑ test1_after := by
   try simp
   ---BEGIN test1
 <<<<<<< HEAD
+<<<<<<< HEAD
   all_goals (try extract_goal ; sorry)
 =======
   apply test1_thm
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+  all_goals (try extract_goal ; sorry)
+>>>>>>> edb64a33 (Updated tests)
   ---END test1
 
 
@@ -79,6 +83,9 @@ theorem test3_proof : test3_before ⊑ test3_after := by
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 def test4_before := [llvm|
 {
 ^0(%arg97 : i32, %arg98 : i1):
@@ -114,8 +121,11 @@ theorem test4_proof : test4_before ⊑ test4_after := by
 
 
 
+<<<<<<< HEAD
 =======
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 def test7_before := [llvm|
 {
 ^0(%arg93 : i32):
@@ -544,6 +554,9 @@ theorem test22_proof : test22_before ⊑ test22_after := by
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 
 def srem_constant_dividend_select_of_constants_divisor_before := [llvm|
 {
@@ -680,5 +693,8 @@ theorem urem_constant_dividend_select_of_constants_divisor_0_arm_proof : urem_co
   ---END urem_constant_dividend_select_of_constants_divisor_0_arm
 
 
+<<<<<<< HEAD
 =======
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)

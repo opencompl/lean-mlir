@@ -26,10 +26,14 @@
 
 1: "test2"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test2" contains vectors which are unsupported
 =======
 "test2" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test2" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test3"
 4: "test3" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -92,10 +96,14 @@
 
 1: "quxs"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "quxs" contains vectors which are unsupported
 =======
 "quxs" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "quxs" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "quxt"
 7: "quxt" is unchanged by InstCombine
@@ -120,10 +128,14 @@
 
 1: "pr24458"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "pr24458" contains vectors which are unsupported
 =======
 "pr24458" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "pr24458" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "trunc_inselt_undef"
 4: "trunc_inselt_undef" has unsupported operation: llvm.mlir.undef

@@ -1,5 +1,6 @@
 1: "splat"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "splat" contains vectors which are unsupported
 
 1: "splat_undef"
@@ -30,34 +31,41 @@
 8: "in_constant_14_vary_nonsplat" contains vectors which are unsupported
 =======
 "splat" contains vectors which are unsupported
+=======
+8: "splat" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "splat_undef"
-"splat_undef" contains vectors which are unsupported
+8: "splat_undef" contains vectors which are unsupported
 
 1: "nonsplat"
-"nonsplat" contains vectors which are unsupported
+8: "nonsplat" contains vectors which are unsupported
 
 1: "in_constant_varx_mone"
-"in_constant_varx_mone" contains vectors which are unsupported
+8: "in_constant_varx_mone" contains vectors which are unsupported
 
 1: "in_constant_varx_14"
-"in_constant_varx_14" contains vectors which are unsupported
+8: "in_constant_varx_14" contains vectors which are unsupported
 
 1: "in_constant_varx_14_nonsplat"
-"in_constant_varx_14_nonsplat" contains vectors which are unsupported
+8: "in_constant_varx_14_nonsplat" contains vectors which are unsupported
 
 1: "in_constant_varx_14_undef"
-"in_constant_varx_14_undef" contains vectors which are unsupported
+8: "in_constant_varx_14_undef" contains vectors which are unsupported
 
 1: "in_constant_mone_vary"
-"in_constant_mone_vary" contains vectors which are unsupported
+8: "in_constant_mone_vary" contains vectors which are unsupported
 
 1: "in_constant_14_vary"
-"in_constant_14_vary" contains vectors which are unsupported
+8: "in_constant_14_vary" contains vectors which are unsupported
 
 1: "in_constant_14_vary_nonsplat"
+<<<<<<< HEAD
 "in_constant_14_vary_nonsplat" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "in_constant_14_vary_nonsplat" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "in_constant_14_vary_undef"
 4: "in_constant_14_vary_undef" has unsupported operation: llvm.mlir.undef
@@ -75,6 +83,7 @@
 
 1: "c_1_0_0"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "c_1_0_0" contains vectors which are unsupported
 
 1: "c_0_1_0"
@@ -85,6 +94,12 @@
 1: "c_0_1_0"
 "c_0_1_0" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "c_1_0_0" contains vectors which are unsupported
+
+1: "c_0_1_0"
+8: "c_0_1_0" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "c_0_0_1"
 4: "c_0_0_1" has unsupported operation: llvm.call
@@ -93,10 +108,14 @@
 
 1: "c_1_1_0"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "c_1_1_0" contains vectors which are unsupported
 =======
 "c_1_1_0" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "c_1_1_0" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "c_1_0_1"
 4: "c_1_0_1" has unsupported operation: llvm.call
@@ -111,10 +130,14 @@
 
 1: "commutativity_constant_14_vary"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "commutativity_constant_14_vary" contains vectors which are unsupported
 =======
 "commutativity_constant_14_vary" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "commutativity_constant_14_vary" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "use4"
 5: "use4" is empty

@@ -18,10 +18,14 @@
 
 1: "insert_known_any_idx"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "insert_known_any_idx" contains vectors which are unsupported
 =======
 "insert_known_any_idx" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "insert_known_any_idx" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "insert_known_any_idx_fail1"
 4: "insert_known_any_idx_fail1" has unsupported operation: builtin.unregistered: llvm.insertelement

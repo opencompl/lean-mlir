@@ -13,10 +13,14 @@
 
 1: "sub_not_vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "sub_not_vec" contains vectors which are unsupported
 =======
 "sub_not_vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "sub_not_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "dec_sub"
 2: llvm.func
@@ -30,10 +34,14 @@
 
 1: "dec_sub_vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "dec_sub_vec" contains vectors which are unsupported
 =======
 "dec_sub_vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "dec_sub_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "sub_inc"
 2: llvm.func
@@ -47,10 +55,14 @@
 
 1: "sub_inc_vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "sub_inc_vec" contains vectors which are unsupported
 =======
 "sub_inc_vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "sub_inc_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "sub_dec"
 2: llvm.func
@@ -64,8 +76,12 @@
 
 1: "sub_dec_vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "sub_dec_vec" contains vectors which are unsupported
 =======
 "sub_dec_vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "sub_dec_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 

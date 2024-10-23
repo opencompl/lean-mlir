@@ -138,10 +138,14 @@
 
 1: "lshr_add_nuw"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "lshr_add_nuw" contains vectors which are unsupported
 =======
 "lshr_add_nuw" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "lshr_add_nuw" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "ashr_add_nuw"
 4: "ashr_add_nuw" has unsupported operation: llvm.store
@@ -205,10 +209,14 @@
 
 1: "lshr_exact_add_negative_shift_positive_vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "lshr_exact_add_negative_shift_positive_vec" contains vectors which are unsupported
 =======
 "lshr_exact_add_negative_shift_positive_vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "lshr_exact_add_negative_shift_positive_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "lshr_exact_add_negative_shift_lzcnt"
 7: "lshr_exact_add_negative_shift_lzcnt" is unchanged by InstCombine
@@ -235,10 +243,14 @@
 
 1: "ashr_exact_add_negative_shift_negative_vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "ashr_exact_add_negative_shift_negative_vec" contains vectors which are unsupported
 =======
 "ashr_exact_add_negative_shift_negative_vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "ashr_exact_add_negative_shift_negative_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "ashr_exact_add_negative_leading_ones_vec"
 7: "ashr_exact_add_negative_leading_ones_vec" is unchanged by InstCombine
@@ -419,6 +431,7 @@
 
 1: "ashr_fold_or_disjoint_cnt"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "ashr_fold_or_disjoint_cnt" contains vectors which are unsupported
 
 1: "lshr_fold_or_disjoint_cnt_out_of_bounds"
@@ -429,4 +442,10 @@
 1: "lshr_fold_or_disjoint_cnt_out_of_bounds"
 "lshr_fold_or_disjoint_cnt_out_of_bounds" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "ashr_fold_or_disjoint_cnt" contains vectors which are unsupported
+
+1: "lshr_fold_or_disjoint_cnt_out_of_bounds"
+8: "lshr_fold_or_disjoint_cnt_out_of_bounds" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 

@@ -13,10 +13,14 @@
 
 1: "test_cast_select"
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "test_cast_select" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 =======
 4: "test_cast_select" has unsupported operation: builtin.unregistered: llvm.select
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+4: "test_cast_select" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_or"
 4: "test_or" has unsupported operation: llvm.return

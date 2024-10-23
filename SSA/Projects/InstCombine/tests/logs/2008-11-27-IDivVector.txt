@@ -1,5 +1,6 @@
 1: "f"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "f" contains vectors which are unsupported
 
 1: "g"
@@ -10,4 +11,10 @@
 1: "g"
 "g" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "f" contains vectors which are unsupported
+
+1: "g"
+8: "g" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 

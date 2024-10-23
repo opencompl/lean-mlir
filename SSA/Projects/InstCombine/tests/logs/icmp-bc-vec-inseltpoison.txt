@@ -1,5 +1,6 @@
 1: "test_i1_0"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test_i1_0" contains vectors which are unsupported
 
 1: "test_i1_0_2"
@@ -9,13 +10,20 @@
 8: "test_i1_m1" contains vectors which are unsupported
 =======
 "test_i1_0" contains vectors which are unsupported
+=======
+8: "test_i1_0" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_i1_0_2"
-"test_i1_0_2" contains vectors which are unsupported
+8: "test_i1_0_2" contains vectors which are unsupported
 
 1: "test_i1_m1"
+<<<<<<< HEAD
 "test_i1_m1" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test_i1_m1" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_i8_pattern"
 4: "test_i8_pattern" has unsupported operation: builtin.unregistered: llvm.icmp

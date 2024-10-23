@@ -98,10 +98,14 @@
 
 1: "trunc_ashr_vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "trunc_ashr_vec" contains vectors which are unsupported
 =======
 "trunc_ashr_vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "trunc_ashr_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test7"
 4: "test7" has unsupported operation: builtin.unregistered: llvm.zext
@@ -329,6 +333,7 @@
 
 1: "trunc_shl_v8i16_v8i32_16"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "trunc_shl_v8i16_v8i32_16" contains vectors which are unsupported
 
 1: "trunc_shl_v8i16_v8i32_17"
@@ -339,6 +344,12 @@
 1: "trunc_shl_v8i16_v8i32_17"
 "trunc_shl_v8i16_v8i32_17" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "trunc_shl_v8i16_v8i32_16" contains vectors which are unsupported
+
+1: "trunc_shl_v8i16_v8i32_17"
+8: "trunc_shl_v8i16_v8i32_17" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "trunc_shl_v8i16_v8i32_4"
 4: "trunc_shl_v8i16_v8i32_4" has unsupported operation: builtin.unregistered: llvm.trunc
@@ -403,10 +414,13 @@
 4: "PR44545" has unsupported operation: builtin.unregistered: llvm.trunc
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "PR44545" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "drop_nsw_trunc"
 4: "drop_nsw_trunc" has unsupported operation: builtin.unregistered: llvm.trunc
 
@@ -432,10 +446,13 @@
 4: "pr95547" has unsupported operation: builtin.unregistered: llvm.trunc
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "pr95547" has unsupported operation: llvm.udiv
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "pr95547" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "pr95547" has unsupported operation: builtin.unregistered: llvm.cond_br

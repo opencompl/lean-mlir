@@ -10,15 +10,19 @@
 4: "icmp_select_const" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "icmp_select_const" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "icmp_select_var"
 4: "icmp_select_var" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "icmp_select_var" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "icmp_select_var_commuted"
 =======
@@ -28,27 +32,36 @@
 4: "icmp_select_var_commuted" has unsupported operation: llvm.udiv
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+1: "icmp_select_var_commuted"
+>>>>>>> edb64a33 (Updated tests)
 4: "icmp_select_var_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "icmp_select_var_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "icmp_select_var_commuted" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "icmp_select_var_select"
 4: "icmp_select_var_select" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "icmp_select_var_select" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "icmp_select_var_select" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "icmp_select_var_select" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "icmp_select_var_both_fold"
 4: "icmp_select_var_both_fold" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -56,10 +69,13 @@
 4: "icmp_select_var_extra_use" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "icmp_select_var_extra_use" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "icmp_select_var_extra_use" has unsupported operation: llvm.call
 
 4: "icmp_select_var_extra_use" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -68,10 +84,13 @@
 4: "icmp_select_var_both_fold_extra_use" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "icmp_select_var_both_fold_extra_use" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "icmp_select_var_both_fold_extra_use" has unsupported operation: llvm.call
 
 1: "icmp_select_var_pred_ne"
@@ -80,70 +99,91 @@
 4: "icmp_select_var_pred_ne" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "icmp_select_var_pred_ne" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "icmp_select_var_pred_ult"
 4: "icmp_select_var_pred_ult" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "icmp_select_var_pred_ult" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "icmp_select_var_pred_ult" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "icmp_select_var_pred_uge"
 4: "icmp_select_var_pred_uge" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "icmp_select_var_pred_uge" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "icmp_select_var_pred_uge" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "icmp_select_var_pred_uge_commuted"
 4: "icmp_select_var_pred_uge_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "icmp_select_var_pred_uge_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "icmp_select_var_pred_uge_commuted" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "icmp_select_implied_cond"
 4: "icmp_select_implied_cond" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "icmp_select_implied_cond" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "icmp_select_implied_cond" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "icmp_select_implied_cond_ne"
 4: "icmp_select_implied_cond_ne" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "icmp_select_implied_cond_ne" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "icmp_select_implied_cond_ne" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "icmp_select_implied_cond_swapped_select"
 4: "icmp_select_implied_cond_swapped_select" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "icmp_select_implied_cond_swapped_select" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "icmp_select_implied_cond_swapped_select" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "icmp_select_implied_cond_swapped_select_with_inv_cond"
 4: "icmp_select_implied_cond_swapped_select_with_inv_cond" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -152,30 +192,39 @@
 4: "icmp_select_implied_cond_swapped_select_with_inv_cond" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "icmp_select_implied_cond_swapped_select_with_inv_cond" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "icmp_select_implied_cond_relational"
 4: "icmp_select_implied_cond_relational" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "icmp_select_implied_cond_relational" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "icmp_select_implied_cond_relational" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "icmp_select_implied_cond_relational_off_by_one"
 4: "icmp_select_implied_cond_relational_off_by_one" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "icmp_select_implied_cond_relational_off_by_one" has unsupported operation: llvm.call
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "icmp_select_implied_cond_relational_off_by_one" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "icmp_select_implied_cond_relational_off_by_one" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "umin_seq_comparison"
@@ -183,6 +232,7 @@
 
 4: "umin_seq_comparison" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "select_constants_and_icmp_eq0"
 4: "select_constants_and_icmp_eq0" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
@@ -193,26 +243,26 @@
 =======
 4: "umin_seq_comparison" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "select_constants_and_icmp_eq0"
-4: "select_constants_and_icmp_eq0" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
-4: "select_constants_and_icmp_eq0" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 4: "select_constants_and_icmp_eq0" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "select_constants_and_icmp_eq0_uses"
-4: "select_constants_and_icmp_eq0_uses" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "select_constants_and_icmp_eq0_uses" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
 4: "select_constants_and_icmp_eq0_uses" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "select_constants_and_icmp_eq0_uses" has unsupported operation: llvm.call
 
 4: "select_constants_and_icmp_eq0_uses" has unsupported operation: llvm.call
 
 1: "select_constants_and_icmp_eq0_vec_splat"
+<<<<<<< HEAD
 <<<<<<< HEAD
 8: "select_constants_and_icmp_eq0_vec_splat" contains vectors which are unsupported
 
@@ -250,72 +300,48 @@
 
 =======
 "select_constants_and_icmp_eq0_vec_splat" contains vectors which are unsupported
+=======
+8: "select_constants_and_icmp_eq0_vec_splat" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "select_constants_and_icmp_eq0_common_bit"
-4: "select_constants_and_icmp_eq0_common_bit" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
-4: "select_constants_and_icmp_eq0_common_bit" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 4: "select_constants_and_icmp_eq0_common_bit" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "select_constants_and_icmp_eq0_no_common_op1"
-4: "select_constants_and_icmp_eq0_no_common_op1" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "select_constants_and_icmp_eq0_no_common_op1" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "select_constants_and_icmp_eq0_no_common_op1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "select_constants_and_icmp_eq0_no_common_op2"
-4: "select_constants_and_icmp_eq0_no_common_op2" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "select_constants_and_icmp_eq0_no_common_op2" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "select_constants_and_icmp_eq0_no_common_op2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "select_constants_and_icmp_eq0_zero_tval"
-4: "select_constants_and_icmp_eq0_zero_tval" has unsupported operation: builtin.unregistered: llvm.select
+4: "select_constants_and_icmp_eq0_zero_tval" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "select_constants_and_icmp_eq0_zero_fval"
-4: "select_constants_and_icmp_eq0_zero_fval" has unsupported operation: builtin.unregistered: llvm.select
+4: "select_constants_and_icmp_eq0_zero_fval" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "select_constants_and_icmp_eq_tval"
-4: "select_constants_and_icmp_eq_tval" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "select_constants_and_icmp_eq_tval" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "select_constants_and_icmp_eq_tval" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "select_constants_and_icmp_eq_fval"
-4: "select_constants_and_icmp_eq_fval" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "select_constants_and_icmp_eq_fval" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "select_constants_and_icmp_eq_fval" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "select_constants_and_icmp_ne0"
-4: "select_constants_and_icmp_ne0" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
-4: "select_constants_and_icmp_ne0" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 4: "select_constants_and_icmp_ne0" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "select_constants_and_icmp_ne0_uses"
-4: "select_constants_and_icmp_ne0_uses" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "select_constants_and_icmp_ne0_uses" has unsupported operation: llvm.call
-
-4: "select_constants_and_icmp_ne0_uses" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "select_constants_and_icmp_ne0_uses" has unsupported operation: llvm.call
 
 1: "select_constants_and_icmp_ne0_all_uses"
-4: "select_constants_and_icmp_ne0_all_uses" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "select_constants_and_icmp_ne0_all_uses" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
 4: "select_constants_and_icmp_ne0_all_uses" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "select_constants_and_icmp_ne0_all_uses" has unsupported operation: llvm.call
 
 4: "select_constants_and_icmp_ne0_all_uses" has unsupported operation: llvm.call
@@ -323,6 +349,7 @@
 4: "select_constants_and_icmp_ne0_all_uses" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "select_constants_and_icmp_ne0_vec_splat"
+<<<<<<< HEAD
 <<<<<<< HEAD
 8: "select_constants_and_icmp_ne0_vec_splat" contains vectors which are unsupported
 
@@ -347,47 +374,37 @@
 1: "select_constants_and_icmp_ne_fval"
 =======
 "select_constants_and_icmp_ne0_vec_splat" contains vectors which are unsupported
+=======
+8: "select_constants_and_icmp_ne0_vec_splat" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "select_constants_and_icmp_ne0_common_bit"
-4: "select_constants_and_icmp_ne0_common_bit" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
-4: "select_constants_and_icmp_ne0_common_bit" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 4: "select_constants_and_icmp_ne0_common_bit" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "select_constants_and_icmp_ne0_no_common_op1"
-4: "select_constants_and_icmp_ne0_no_common_op1" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "select_constants_and_icmp_ne0_no_common_op1" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "select_constants_and_icmp_ne0_no_common_op1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "select_constants_and_icmp_ne0_no_common_op2"
-4: "select_constants_and_icmp_ne0_no_common_op2" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "select_constants_and_icmp_ne0_no_common_op2" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "select_constants_and_icmp_ne0_no_common_op2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "select_constants_and_icmp_ne0_zero_tval"
-4: "select_constants_and_icmp_ne0_zero_tval" has unsupported operation: builtin.unregistered: llvm.select
+4: "select_constants_and_icmp_ne0_zero_tval" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "select_constants_and_icmp_ne0_zero_fval"
-4: "select_constants_and_icmp_ne0_zero_fval" has unsupported operation: builtin.unregistered: llvm.select
+4: "select_constants_and_icmp_ne0_zero_fval" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "select_constants_and_icmp_ne_tval"
-4: "select_constants_and_icmp_ne_tval" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "select_constants_and_icmp_ne_tval" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "select_constants_and_icmp_ne_tval" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "select_constants_and_icmp_ne_fval"
+<<<<<<< HEAD
 4: "select_constants_and_icmp_ne_fval" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "select_constants_and_icmp_ne_fval" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "select_constants_and_icmp_ne_fval" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "icmp_eq_select"
@@ -395,11 +412,14 @@
 
 1: "icmp_slt_select"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "icmp_slt_select" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "icmp_slt_select" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "icmp_slt_select" has unsupported operation: builtin.unregistered: llvm.icmp
 

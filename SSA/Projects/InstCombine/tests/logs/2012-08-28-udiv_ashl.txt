@@ -1,11 +1,15 @@
 1: "udiv400"
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.mlir.constant
 2: llvm.lshr
 2: llvm.udiv
 2: llvm.return
+<<<<<<< HEAD
 
 1: "udiv400_no"
 7: "udiv400_no" is unchanged by InstCombine
@@ -30,17 +34,33 @@
 7: "no_crash_notconst_udiv" is unchanged by InstCombine
 =======
 4: "udiv400" has unsupported operation: llvm.udiv
+=======
+>>>>>>> edb64a33 (Updated tests)
 
 1: "udiv400_no"
-4: "udiv400_no" has unsupported operation: llvm.udiv
+7: "udiv400_no" is unchanged by InstCombine
 
 1: "sdiv400_yes"
-4: "sdiv400_yes" has unsupported operation: llvm.udiv
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.sdiv
+2: llvm.return
 
 1: "udiv_i80"
-4: "udiv_i80" has unsupported operation: llvm.udiv
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.udiv
+2: llvm.return
 
 1: "no_crash_notconst_udiv"
+<<<<<<< HEAD
 4: "no_crash_notconst_udiv" has unsupported operation: llvm.udiv
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+7: "no_crash_notconst_udiv" is unchanged by InstCombine
+>>>>>>> edb64a33 (Updated tests)
 

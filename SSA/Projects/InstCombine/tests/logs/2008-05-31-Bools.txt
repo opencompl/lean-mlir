@@ -10,12 +10,18 @@
 
 1: "foo3"
 <<<<<<< HEAD
+<<<<<<< HEAD
 2: llvm.func
 2: llvm.udiv
 2: llvm.return
 =======
 4: "foo3" has unsupported operation after optimization: llvm.udiv
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+2: llvm.func
+2: llvm.udiv
+2: llvm.return
+>>>>>>> edb64a33 (Updated tests)
 
 1: "foo4"
 2: llvm.func

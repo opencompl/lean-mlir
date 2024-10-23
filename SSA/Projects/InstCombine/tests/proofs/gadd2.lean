@@ -1316,6 +1316,9 @@ theorem add_of_mul_proof : add_of_mul_before ⊑ add_of_mul_after := by
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 def add_of_selects_before := [llvm|
 {
 ^0(%arg2 : i1, %arg3 : i32):
@@ -1351,8 +1354,11 @@ theorem add_of_selects_proof : add_of_selects_before ⊑ add_of_selects_after :=
 
 
 
+<<<<<<< HEAD
 =======
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+>>>>>>> edb64a33 (Updated tests)
 def add_undemanded_low_bits_before := [llvm|
 {
 ^0(%arg1 : i32):

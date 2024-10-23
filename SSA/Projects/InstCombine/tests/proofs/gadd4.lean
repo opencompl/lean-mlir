@@ -51,12 +51,15 @@ theorem match_unsigned_proof : match_unsigned_before ⊑ match_unsigned_after :=
 
 
 
+<<<<<<< HEAD
 =======
                                                     
 >>>>>>> 1011dc2e (re-ran the tests)
 =======
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 def match_andAsRem_lshrAsDiv_shlAsMul_before := [llvm|
 {
 ^0(%arg16 : i64):
@@ -202,6 +205,9 @@ theorem not_match_inconsistent_signs_proof : not_match_inconsistent_signs_before
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 def not_match_inconsistent_values_before := [llvm|
 {
 ^0(%arg12 : i64):
@@ -283,8 +289,11 @@ theorem fold_add_udiv_urem_proof : fold_add_udiv_urem_before ⊑ fold_add_udiv_u
 
 
 
+<<<<<<< HEAD
 =======
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+>>>>>>> edb64a33 (Updated tests)
 def fold_add_sdiv_srem_before := [llvm|
 {
 ^0(%arg9 : i32):
@@ -331,6 +340,9 @@ theorem fold_add_sdiv_srem_proof : fold_add_sdiv_srem_before ⊑ fold_add_sdiv_s
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 
 def fold_add_udiv_urem_to_mul_before := [llvm|
 {
@@ -483,5 +495,8 @@ theorem fold_add_udiv_urem_without_noundef_proof : fold_add_udiv_urem_without_no
   ---END fold_add_udiv_urem_without_noundef
 
 
+<<<<<<< HEAD
 =======
 >>>>>>> 1011dc2e (re-ran the tests)
+=======
+>>>>>>> edb64a33 (Updated tests)

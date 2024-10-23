@@ -9,10 +9,14 @@
 
 1: "fshr_mask_simplify2"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "fshr_mask_simplify2" contains vectors which are unsupported
 =======
 "fshr_mask_simplify2" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "fshr_mask_simplify2" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "fshl_mask_simplify3"
 4: "fshl_mask_simplify3" has unsupported operation: builtin.unregistered: llvm.intr.fshl
@@ -75,6 +79,7 @@
 
 1: "fshl_op0_zero_splat_vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "fshl_op0_zero_splat_vec" contains vectors which are unsupported
 
 1: "fshl_op1_undef_splat_vec"
@@ -99,28 +104,35 @@
 8: "fshr_op1_zero_vec" contains vectors which are unsupported
 =======
 "fshl_op0_zero_splat_vec" contains vectors which are unsupported
+=======
+8: "fshl_op0_zero_splat_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "fshl_op1_undef_splat_vec"
-"fshl_op1_undef_splat_vec" contains vectors which are unsupported
+8: "fshl_op1_undef_splat_vec" contains vectors which are unsupported
 
 1: "fshr_op0_undef_splat_vec"
-"fshr_op0_undef_splat_vec" contains vectors which are unsupported
+8: "fshr_op0_undef_splat_vec" contains vectors which are unsupported
 
 1: "fshr_op1_zero_splat_vec"
-"fshr_op1_zero_splat_vec" contains vectors which are unsupported
+8: "fshr_op1_zero_splat_vec" contains vectors which are unsupported
 
 1: "fshl_op0_zero_vec"
-"fshl_op0_zero_vec" contains vectors which are unsupported
+8: "fshl_op0_zero_vec" contains vectors which are unsupported
 
 1: "fshl_op1_undef_vec"
-"fshl_op1_undef_vec" contains vectors which are unsupported
+8: "fshl_op1_undef_vec" contains vectors which are unsupported
 
 1: "fshr_op0_undef_vec"
-"fshr_op0_undef_vec" contains vectors which are unsupported
+8: "fshr_op0_undef_vec" contains vectors which are unsupported
 
 1: "fshr_op1_zero_vec"
+<<<<<<< HEAD
 "fshr_op1_zero_vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "fshr_op1_zero_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "fshl_only_op0_demanded"
 4: "fshl_only_op0_demanded" has unsupported operation after optimization: builtin.unregistered: llvm.intr.fshl
@@ -136,10 +148,14 @@
 
 1: "fshl_only_op1_demanded_vec_splat"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "fshl_only_op1_demanded_vec_splat" contains vectors which are unsupported
 =======
 "fshl_only_op1_demanded_vec_splat" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "fshl_only_op1_demanded_vec_splat" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "fshl_constant_shift_amount_modulo_bitwidth"
 4: "fshl_constant_shift_amount_modulo_bitwidth" has unsupported operation: builtin.unregistered: llvm.intr.fshl
@@ -185,6 +201,7 @@
 
 1: "fshl_undef_shift_amount_vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "fshl_undef_shift_amount_vec" contains vectors which are unsupported
 
 1: "fshr_undef_shift_amount_vec"
@@ -195,6 +212,12 @@
 1: "fshr_undef_shift_amount_vec"
 "fshr_undef_shift_amount_vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "fshl_undef_shift_amount_vec" contains vectors which are unsupported
+
+1: "fshr_undef_shift_amount_vec"
+8: "fshr_undef_shift_amount_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "rotl_common_demanded"
 4: "rotl_common_demanded" has unsupported operation: builtin.unregistered: llvm.intr.fshl
@@ -204,10 +227,14 @@
 
 1: "fshl_only_op1_demanded_vec_nonsplat"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "fshl_only_op1_demanded_vec_nonsplat" contains vectors which are unsupported
 =======
 "fshl_only_op1_demanded_vec_nonsplat" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "fshl_only_op1_demanded_vec_nonsplat" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "rotl_constant_shift_amount"
 4: "rotl_constant_shift_amount" has unsupported operation: builtin.unregistered: llvm.intr.fshl
@@ -339,6 +366,7 @@
 
 1: "fshr_mask_args_same_vector"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "fshr_mask_args_same_vector" contains vectors which are unsupported
 
 1: "fshr_mask_args_same_vector2"
@@ -349,6 +377,12 @@
 1: "fshr_mask_args_same_vector2"
 "fshr_mask_args_same_vector2" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "fshr_mask_args_same_vector" contains vectors which are unsupported
+
+1: "fshr_mask_args_same_vector2"
+8: "fshr_mask_args_same_vector2" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "fshr_mask_args_same_vector3_different_but_still_prunable"
 4: "fshr_mask_args_same_vector3_different_but_still_prunable" has unsupported operation: builtin.unregistered: llvm.intr.fshl

@@ -6,6 +6,7 @@
 
 1: "t0_basic"
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "t0_basic" has unsupported operation: llvm.call
 
 1: "t1_vector"
@@ -15,17 +16,20 @@
 =======
 4: "t0_basic" has unsupported operation: llvm.udiv
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "t0_basic" has unsupported operation: llvm.call
 
 1: "t1_vector"
-4: "t1_vector" has unsupported operation: llvm.udiv
-
 4: "t1_vector" has unsupported operation: llvm.call
 
 1: "t4_extrause"
+<<<<<<< HEAD
 4: "t4_extrause" has unsupported operation: llvm.udiv
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "t4_extrause" has unsupported operation: llvm.call
 
 4: "t4_extrause" has unsupported operation: llvm.call
@@ -37,6 +41,7 @@
 4: "t5_commutative" has unsupported operation: llvm.call
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "t5_commutative" has unsupported operation: llvm.call
 
 1: "n6_different_x"
@@ -46,16 +51,19 @@
 =======
 4: "t5_commutative" has unsupported operation: llvm.udiv
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "t5_commutative" has unsupported operation: llvm.call
 
 1: "n6_different_x"
-4: "n6_different_x" has unsupported operation: llvm.udiv
-
 4: "n6_different_x" has unsupported operation: llvm.call
 
 1: "n6_different_y"
+<<<<<<< HEAD
 4: "n6_different_y" has unsupported operation: llvm.udiv
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "n6_different_y" has unsupported operation: llvm.call
 

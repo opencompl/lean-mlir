@@ -1,9 +1,13 @@
 1: "PR38984_1"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "PR38984_1" contains vectors which are unsupported
 =======
 "PR38984_1" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "PR38984_1" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "PR38984_2"
 4: "PR38984_2" has unsupported operation: llvm.mlir.addressof

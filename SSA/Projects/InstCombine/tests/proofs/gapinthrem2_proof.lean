@@ -16,6 +16,9 @@ theorem test2_thm (x : BitVec 499) :
     some (x &&& 10633823966279326983230456482242756607#499) := sorry
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 theorem test3_thm (x : BitVec 1) (x_1 : BitVec 599) :
   (Option.bind
       (match some x with
@@ -30,6 +33,7 @@ theorem test3_thm (x : BitVec 1) (x_1 : BitVec 599) :
       | some { toFin := ⟨0, ⋯⟩ } => some 4095#599)
       fun y' => some (x_1 &&& y') := sorry
 
+<<<<<<< HEAD
 =======
   (Option.bind (if 499 % 2 ^ 499 ≤ 111 % 2 ^ 499 then none else some (4096#499 <<< (111 % 2 ^ 499))) fun a =>
       if a = 0#499 then none else some (x % a)) ⊑
@@ -38,3 +42,5 @@ theorem test3_thm (x : BitVec 1) (x_1 : BitVec 599) :
 >>>>>>> 43a49182 (re-ran scripts)
 =======
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)

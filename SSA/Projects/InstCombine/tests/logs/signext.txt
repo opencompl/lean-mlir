@@ -16,10 +16,14 @@
 
 1: "sextinreg_splat"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "sextinreg_splat" contains vectors which are unsupported
 =======
 "sextinreg_splat" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "sextinreg_splat" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "sextinreg_alt"
 2: llvm.func
@@ -33,10 +37,14 @@
 
 1: "sextinreg_alt_splat"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "sextinreg_alt_splat" contains vectors which are unsupported
 =======
 "sextinreg_alt_splat" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "sextinreg_alt_splat" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "sext"
 4: "sext" has unsupported operation: builtin.unregistered: llvm.sext
@@ -63,10 +71,14 @@
 
 1: "sextinreg2_splat"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "sextinreg2_splat" contains vectors which are unsupported
 =======
 "sextinreg2_splat" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "sextinreg2_splat" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test5"
 7: "test5" is unchanged by InstCombine
@@ -89,8 +101,12 @@
 
 1: "ashr_splat"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "ashr_splat" contains vectors which are unsupported
 =======
 "ashr_splat" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "ashr_splat" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 

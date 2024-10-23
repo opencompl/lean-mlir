@@ -43,10 +43,13 @@
 4: "t8" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "t8" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "t8" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "t9"
@@ -55,10 +58,13 @@
 4: "t9" has unsupported operation: builtin.unregistered: llvm.sext
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "t9" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "t10"
 4: "t10" has unsupported operation: builtin.unregistered: llvm.intr.smax
 
@@ -77,10 +83,13 @@
 4: "bitcasts_fcmp_1" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "bitcasts_fcmp_1" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "bitcasts_fcmp_1" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 1: "bitcasts_fcmp_2"
@@ -91,10 +100,13 @@
 4: "bitcasts_fcmp_2" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "bitcasts_fcmp_2" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "bitcasts_fcmp_2" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 1: "bitcasts_icmp"
@@ -240,10 +252,13 @@
 4: "bitcast_scalar_umax" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "bitcast_scalar_umax" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "bitcast_vector_smin"
 4: "bitcast_vector_smin" has unsupported operation: builtin.unregistered: llvm.bitcast
 
@@ -261,10 +276,13 @@
 4: "bitcast_vector_umin" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "bitcast_vector_umin" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "look_through_cast1"
 4: "look_through_cast1" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
@@ -276,10 +294,13 @@
 4: "look_through_cast2" has unsupported operation: builtin.unregistered: llvm.trunc
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "look_through_cast2" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "min_through_cast_vec1"
 4: "min_through_cast_vec1" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
@@ -342,6 +363,7 @@
 4: "not_min_of_min" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "not_min_of_min" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "not_min_of_min" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -349,21 +371,25 @@
 =======
 4: "not_min_of_min" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "not_min_of_min" has unsupported operation: builtin.unregistered: llvm.fcmp
-
-4: "not_min_of_min" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "not_min_of_min" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 4: "not_min_of_min" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "add_umin"
 4: "add_umin" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
 1: "add_umin_constant_limit"
 4: "add_umin_constant_limit" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "add_umin_simplify"
 4: "add_umin_simplify" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
@@ -374,17 +400,20 @@
 =======
 4: "add_umin_constant_limit" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "add_umin_simplify"
 4: "add_umin_simplify" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "add_umin_simplify" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "add_umin_simplify2"
 4: "add_umin_simplify2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 4: "add_umin_simplify2" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "add_umin_wrong_pred"
 4: "add_umin_wrong_pred" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
@@ -409,6 +438,7 @@
 4: "add_umax_simplify" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 1: "add_umax_simplify2"
 4: "add_umax_simplify2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -421,6 +451,11 @@
 4: "add_umax_simplify2" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+1: "add_umax_simplify2"
+4: "add_umax_simplify2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+>>>>>>> edb64a33 (Updated tests)
 1: "add_umax_wrong_pred"
 4: "add_umax_wrong_pred" has unsupported operation: builtin.unregistered: llvm.intr.smax
 
@@ -451,6 +486,7 @@
 4: "add_smin_simplify" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 1: "add_smin_simplify2"
 4: "add_smin_simplify2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -463,6 +499,11 @@
 4: "add_smin_simplify2" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+1: "add_smin_simplify2"
+4: "add_smin_simplify2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+>>>>>>> edb64a33 (Updated tests)
 1: "add_smin_wrong_pred"
 4: "add_smin_wrong_pred" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
@@ -487,6 +528,7 @@
 4: "add_smax_simplify" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 1: "add_smax_simplify2"
 4: "add_smax_simplify2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -499,6 +541,11 @@
 4: "add_smax_simplify2" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+1: "add_smax_simplify2"
+4: "add_smax_simplify2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+>>>>>>> edb64a33 (Updated tests)
 1: "add_smax_wrong_pred"
 4: "add_smax_wrong_pred" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
@@ -537,20 +584,26 @@
 4: "PR46271" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "PR46271" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "PR46271" has unsupported operation: builtin.unregistered: llvm.extractelement
 
 1: "twoway_clamp_lt"
 4: "twoway_clamp_lt" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "twoway_clamp_lt" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "twoway_clamp_gt"
 4: "twoway_clamp_gt" has unsupported operation: builtin.unregistered: llvm.intr.smax
 

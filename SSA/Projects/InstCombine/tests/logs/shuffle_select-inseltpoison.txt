@@ -1,5 +1,6 @@
 1: "add"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "add" contains vectors which are unsupported
 
 1: "add_nuw_nsw"
@@ -10,6 +11,12 @@
 1: "add_nuw_nsw"
 "add_nuw_nsw" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "add" contains vectors which are unsupported
+
+1: "add_nuw_nsw"
+8: "add_nuw_nsw" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "add_undef_mask_elt"
 4: "add_undef_mask_elt" has unsupported operation: llvm.mlir.undef
@@ -67,6 +74,7 @@
 
 1: "shl"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "shl" contains vectors which are unsupported
 
 1: "shl_nsw"
@@ -91,38 +99,49 @@
 8: "lshr_exact_undef_mask_elt" contains vectors which are unsupported
 =======
 "shl" contains vectors which are unsupported
+=======
+8: "shl" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "shl_nsw"
-"shl_nsw" contains vectors which are unsupported
+8: "shl_nsw" contains vectors which are unsupported
 
 1: "shl_undef_mask_elt"
-"shl_undef_mask_elt" contains vectors which are unsupported
+8: "shl_undef_mask_elt" contains vectors which are unsupported
 
 1: "shl_nuw_undef_mask_elt"
-"shl_nuw_undef_mask_elt" contains vectors which are unsupported
+8: "shl_nuw_undef_mask_elt" contains vectors which are unsupported
 
 1: "lshr_constant_op0"
-"lshr_constant_op0" contains vectors which are unsupported
+8: "lshr_constant_op0" contains vectors which are unsupported
 
 1: "lshr_exact_constant_op0"
-"lshr_exact_constant_op0" contains vectors which are unsupported
+8: "lshr_exact_constant_op0" contains vectors which are unsupported
 
 1: "lshr_undef_mask_elt"
-"lshr_undef_mask_elt" contains vectors which are unsupported
+8: "lshr_undef_mask_elt" contains vectors which are unsupported
 
 1: "lshr_exact_undef_mask_elt"
+<<<<<<< HEAD
 "lshr_exact_undef_mask_elt" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "lshr_exact_undef_mask_elt" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "lshr_constant_op1"
 4: "lshr_constant_op1" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 1: "ashr"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "ashr" contains vectors which are unsupported
 =======
 "ashr" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "ashr" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "and"
 4: "and" has unsupported operation: llvm.mlir.undef
@@ -142,6 +161,7 @@
 4: "or" has unsupported operation: llvm.call
 
 1: "xor"
+<<<<<<< HEAD
 <<<<<<< HEAD
 8: "xor" contains vectors which are unsupported
 
@@ -170,39 +190,38 @@
 8: "sdiv_exact_undef_mask_elt" contains vectors which are unsupported
 =======
 "xor" contains vectors which are unsupported
+=======
+8: "xor" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "udiv"
-4: "udiv" has unsupported operation: llvm.udiv
-
 4: "udiv" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 1: "udiv_exact"
-4: "udiv_exact" has unsupported operation: llvm.udiv
-
 4: "udiv_exact" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 1: "udiv_undef_mask_elt"
-4: "udiv_undef_mask_elt" has unsupported operation: llvm.udiv
-
 4: "udiv_undef_mask_elt" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 1: "udiv_exact_undef_mask_elt"
-4: "udiv_exact_undef_mask_elt" has unsupported operation: llvm.udiv
-
 4: "udiv_exact_undef_mask_elt" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 1: "sdiv"
-"sdiv" contains vectors which are unsupported
+8: "sdiv" contains vectors which are unsupported
 
 1: "sdiv_exact"
-"sdiv_exact" contains vectors which are unsupported
+8: "sdiv_exact" contains vectors which are unsupported
 
 1: "sdiv_undef_mask_elt"
-"sdiv_undef_mask_elt" contains vectors which are unsupported
+8: "sdiv_undef_mask_elt" contains vectors which are unsupported
 
 1: "sdiv_exact_undef_mask_elt"
+<<<<<<< HEAD
 "sdiv_exact_undef_mask_elt" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "sdiv_exact_undef_mask_elt" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "urem"
 4: "urem" has unsupported operation: builtin.unregistered: llvm.shufflevector
@@ -304,6 +323,7 @@
 
 1: "add_add"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "add_add" contains vectors which are unsupported
 
 1: "add_add_nsw"
@@ -314,6 +334,12 @@
 1: "add_add_nsw"
 "add_add_nsw" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "add_add" contains vectors which are unsupported
+
+1: "add_add_nsw"
+8: "add_add_nsw" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "add_add_undef_mask_elt"
 4: "add_add_undef_mask_elt" has unsupported operation: llvm.mlir.undef
@@ -343,6 +369,7 @@
 
 1: "sub_sub"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "sub_sub" contains vectors which are unsupported
 
 1: "sub_sub_nuw"
@@ -353,6 +380,12 @@
 1: "sub_sub_nuw"
 "sub_sub_nuw" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "sub_sub" contains vectors which are unsupported
+
+1: "sub_sub_nuw"
+8: "sub_sub_nuw" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "sub_sub_undef_mask_elt"
 4: "sub_sub_undef_mask_elt" has unsupported operation: llvm.mlir.undef
@@ -395,6 +428,7 @@
 
 1: "shl_shl"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "shl_shl" contains vectors which are unsupported
 
 1: "shl_shl_nuw"
@@ -413,22 +447,29 @@
 8: "ashr_ashr" contains vectors which are unsupported
 =======
 "shl_shl" contains vectors which are unsupported
+=======
+8: "shl_shl" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "shl_shl_nuw"
-"shl_shl_nuw" contains vectors which are unsupported
+8: "shl_shl_nuw" contains vectors which are unsupported
 
 1: "shl_shl_undef_mask_elt"
-"shl_shl_undef_mask_elt" contains vectors which are unsupported
+8: "shl_shl_undef_mask_elt" contains vectors which are unsupported
 
 1: "shl_shl_nuw_undef_mask_elt"
-"shl_shl_nuw_undef_mask_elt" contains vectors which are unsupported
+8: "shl_shl_nuw_undef_mask_elt" contains vectors which are unsupported
 
 1: "lshr_lshr"
-"lshr_lshr" contains vectors which are unsupported
+8: "lshr_lshr" contains vectors which are unsupported
 
 1: "ashr_ashr"
+<<<<<<< HEAD
 "ashr_ashr" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "ashr_ashr" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "and_and"
 4: "and_and" has unsupported operation: llvm.mlir.undef
@@ -449,6 +490,7 @@
 
 1: "udiv_udiv"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "udiv_udiv" has unsupported operation: llvm.udiv
 
@@ -457,11 +499,14 @@
 4: "udiv_udiv" has unsupported operation: llvm.udiv
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "udiv_udiv" has unsupported operation: llvm.call
 
 4: "udiv_udiv" has unsupported operation: llvm.call
 
 1: "sdiv_sdiv"
+<<<<<<< HEAD
 <<<<<<< HEAD
 8: "sdiv_sdiv" contains vectors which are unsupported
 
@@ -487,28 +532,35 @@
 8: "srem_srem_undef_mask_elt" contains vectors which are unsupported
 =======
 "sdiv_sdiv" contains vectors which are unsupported
+=======
+8: "sdiv_sdiv" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "sdiv_sdiv_exact"
-"sdiv_sdiv_exact" contains vectors which are unsupported
+8: "sdiv_sdiv_exact" contains vectors which are unsupported
 
 1: "sdiv_sdiv_undef_mask_elt"
-"sdiv_sdiv_undef_mask_elt" contains vectors which are unsupported
+8: "sdiv_sdiv_undef_mask_elt" contains vectors which are unsupported
 
 1: "sdiv_sdiv_exact_undef_mask_elt"
-"sdiv_sdiv_exact_undef_mask_elt" contains vectors which are unsupported
+8: "sdiv_sdiv_exact_undef_mask_elt" contains vectors which are unsupported
 
 1: "urem_urem"
-"urem_urem" contains vectors which are unsupported
+8: "urem_urem" contains vectors which are unsupported
 
 1: "urem_urem_undef_mask_elt"
-"urem_urem_undef_mask_elt" contains vectors which are unsupported
+8: "urem_urem_undef_mask_elt" contains vectors which are unsupported
 
 1: "srem_srem"
-"srem_srem" contains vectors which are unsupported
+8: "srem_srem" contains vectors which are unsupported
 
 1: "srem_srem_undef_mask_elt"
+<<<<<<< HEAD
 "srem_srem_undef_mask_elt" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "srem_srem_undef_mask_elt" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "fadd_fadd"
 4: "fadd_fadd" has unsupported operation: builtin.unregistered: llvm.fadd
@@ -706,6 +758,7 @@
 4: "udiv_2_vars" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 1: "udiv_2_vars_exact"
 4: "udiv_2_vars_exact" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
@@ -716,24 +769,23 @@
 =======
 4: "udiv_2_vars" has unsupported operation: llvm.udiv
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "udiv_2_vars_exact"
 4: "udiv_2_vars_exact" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
-4: "udiv_2_vars_exact" has unsupported operation: llvm.udiv
-
 1: "udiv_2_vars_undef_mask_elt"
-4: "udiv_2_vars_undef_mask_elt" has unsupported operation: llvm.udiv
-
-4: "udiv_2_vars_undef_mask_elt" has unsupported operation: llvm.udiv
-
 4: "udiv_2_vars_undef_mask_elt" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 1: "udiv_2_vars_exact_undef_mask_elt"
+<<<<<<< HEAD
 4: "udiv_2_vars_exact_undef_mask_elt" has unsupported operation: llvm.udiv
 
 4: "udiv_2_vars_exact_undef_mask_elt" has unsupported operation: llvm.udiv
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "udiv_2_vars_exact_undef_mask_elt" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 1: "sdiv_2_vars"
@@ -829,10 +881,14 @@
 
 1: "mul_shl"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "mul_shl" contains vectors which are unsupported
 =======
 "mul_shl" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "mul_shl" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "shl_mul"
 4: "shl_mul" has unsupported operation: llvm.mlir.undef
@@ -849,10 +905,14 @@
 
 1: "mul_is_nop_shl"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "mul_is_nop_shl" contains vectors which are unsupported
 =======
 "mul_is_nop_shl" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "mul_is_nop_shl" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "shl_mul_not_constant_shift_amount"
 4: "shl_mul_not_constant_shift_amount" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -889,6 +949,7 @@
 
 1: "add_or"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "add_or" contains vectors which are unsupported
 
 1: "or_add"
@@ -899,6 +960,12 @@
 1: "or_add"
 "or_add" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "add_or" contains vectors which are unsupported
+
+1: "or_add"
+8: "or_add" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "or_add_not_enough_masking"
 4: "or_add_not_enough_masking" has unsupported operation: builtin.unregistered: llvm.mlir.poison

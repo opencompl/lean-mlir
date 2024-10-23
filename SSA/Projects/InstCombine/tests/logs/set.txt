@@ -20,10 +20,13 @@
 4: "test1_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "test1_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "test2"
 4: "test2" has unsupported operation after optimization: llvm.mlir.addressof
 
@@ -43,10 +46,13 @@
 4: "test2_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "test2_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "test3"
 4: "test3" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -82,20 +88,28 @@
 
 1: "test13vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test13vec" contains vectors which are unsupported
 =======
 "test13vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test13vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test14"
 4: "test14" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "test14vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test14vec" contains vectors which are unsupported
 =======
 "test14vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test14vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "bool_eq0"
 4: "bool_eq0" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -184,10 +198,14 @@
 
 1: "test20vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test20vec" contains vectors which are unsupported
 =======
 "test20vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test20vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test21"
 4: "test21" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
@@ -196,10 +214,14 @@
 
 1: "test21vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test21vec" contains vectors which are unsupported
 =======
 "test21vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test21vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test22"
 4: "test22" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
@@ -212,10 +234,13 @@
 4: "test22_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "test22_logical" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "test23"
 4: "test23" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -223,10 +248,14 @@
 
 1: "test23vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test23vec" contains vectors which are unsupported
 =======
 "test23vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test23vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test24"
 4: "test24" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
@@ -235,10 +264,14 @@
 
 1: "test24vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test24vec" contains vectors which are unsupported
 =======
 "test24vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test24vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test25"
 4: "test25" has unsupported operation after optimization: builtin.unregistered: llvm.icmp

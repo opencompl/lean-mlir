@@ -1,5 +1,6 @@
 1: "test_v4i32_xor_repeated_and_0"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test_v4i32_xor_repeated_and_0" contains vectors which are unsupported
 
 1: "test_v4i32_xor_repeated_and_1"
@@ -10,6 +11,12 @@
 1: "test_v4i32_xor_repeated_and_1"
 "test_v4i32_xor_repeated_and_1" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test_v4i32_xor_repeated_and_0" contains vectors which are unsupported
+
+1: "test_v4i32_xor_repeated_and_1"
+8: "test_v4i32_xor_repeated_and_1" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_v4i32_xor_bswap_splatconst"
 4: "test_v4i32_xor_bswap_splatconst" has unsupported operation: builtin.unregistered: llvm.intr.bswap
@@ -34,6 +41,7 @@
 
 1: "test_v4i32_demorgan_and"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test_v4i32_demorgan_and" contains vectors which are unsupported
 
 1: "test_v4i32_demorgan_or"
@@ -52,22 +60,29 @@
 8: "test_v4i32_not_ashr_negative_const" contains vectors which are unsupported
 =======
 "test_v4i32_demorgan_and" contains vectors which are unsupported
+=======
+8: "test_v4i32_demorgan_and" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_v4i32_demorgan_or"
-"test_v4i32_demorgan_or" contains vectors which are unsupported
+8: "test_v4i32_demorgan_or" contains vectors which are unsupported
 
 1: "test_v4i32_not_ashr_not"
-"test_v4i32_not_ashr_not" contains vectors which are unsupported
+8: "test_v4i32_not_ashr_not" contains vectors which are unsupported
 
 1: "test_v4i32_not_ashr_not_poison"
-"test_v4i32_not_ashr_not_poison" contains vectors which are unsupported
+8: "test_v4i32_not_ashr_not_poison" contains vectors which are unsupported
 
 1: "test_v4i32_not_ashr_negative_splatconst"
-"test_v4i32_not_ashr_negative_splatconst" contains vectors which are unsupported
+8: "test_v4i32_not_ashr_negative_splatconst" contains vectors which are unsupported
 
 1: "test_v4i32_not_ashr_negative_const"
+<<<<<<< HEAD
 "test_v4i32_not_ashr_negative_const" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test_v4i32_not_ashr_negative_const" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_v4i32_not_ashr_negative_const_poison"
 4: "test_v4i32_not_ashr_negative_const_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -84,6 +99,7 @@
 
 1: "test_v4i32_not_lshr_nonnegative_splatconst"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test_v4i32_not_lshr_nonnegative_splatconst" contains vectors which are unsupported
 
 1: "test_v4i32_not_lshr_nonnegative_const"
@@ -94,6 +110,12 @@
 1: "test_v4i32_not_lshr_nonnegative_const"
 "test_v4i32_not_lshr_nonnegative_const" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test_v4i32_not_lshr_nonnegative_splatconst" contains vectors which are unsupported
+
+1: "test_v4i32_not_lshr_nonnegative_const"
+8: "test_v4i32_not_lshr_nonnegative_const" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_v4i32_not_lshr_nonnegative_const_poison"
 4: "test_v4i32_not_lshr_nonnegative_const_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -110,6 +132,7 @@
 
 1: "test_v4i32_not_sub_splatconst"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test_v4i32_not_sub_splatconst" contains vectors which are unsupported
 
 1: "test_v4i32_not_sub_const"
@@ -120,6 +143,12 @@
 1: "test_v4i32_not_sub_const"
 "test_v4i32_not_sub_const" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test_v4i32_not_sub_splatconst" contains vectors which are unsupported
+
+1: "test_v4i32_not_sub_const"
+8: "test_v4i32_not_sub_const" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_v4i32_not_sub_const_poison"
 4: "test_v4i32_not_sub_const_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -136,6 +165,7 @@
 
 1: "test_v4i32_xor_signmask_sub_splatconst"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test_v4i32_xor_signmask_sub_splatconst" contains vectors which are unsupported
 
 1: "test_v4i32_xor_signmask_sub_const"
@@ -146,6 +176,12 @@
 1: "test_v4i32_xor_signmask_sub_const"
 "test_v4i32_xor_signmask_sub_const" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test_v4i32_xor_signmask_sub_splatconst" contains vectors which are unsupported
+
+1: "test_v4i32_xor_signmask_sub_const"
+8: "test_v4i32_xor_signmask_sub_const" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_v4i32_xor_signmask_sub_const_poison"
 4: "test_v4i32_xor_signmask_sub_const_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -172,6 +208,7 @@
 
 1: "test_v4i32_xor_signmask_add_splatconst"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test_v4i32_xor_signmask_add_splatconst" contains vectors which are unsupported
 
 1: "test_v4i32_xor_signmask_add_const"
@@ -182,6 +219,12 @@
 1: "test_v4i32_xor_signmask_add_const"
 "test_v4i32_xor_signmask_add_const" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test_v4i32_xor_signmask_add_splatconst" contains vectors which are unsupported
+
+1: "test_v4i32_xor_signmask_add_const"
+8: "test_v4i32_xor_signmask_add_const" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_v4i32_xor_signmask_add_const_poison"
 4: "test_v4i32_xor_signmask_add_const_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison

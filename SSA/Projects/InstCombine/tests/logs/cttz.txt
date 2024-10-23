@@ -60,10 +60,13 @@
 
 1: "cttz_of_lowest_set_bit_commuted"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "cttz_of_lowest_set_bit_commuted" has unsupported operation: llvm.udiv
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "cttz_of_lowest_set_bit_commuted" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
 1: "cttz_of_lowest_set_bit_poison_flag"

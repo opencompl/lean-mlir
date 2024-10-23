@@ -1,9 +1,13 @@
 1: "test_srem_orig"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test_srem_orig" contains vectors which are unsupported
 =======
 4: "test_srem_orig" has unsupported operation: builtin.unregistered: llvm.select
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test_srem_orig" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_srem"
 4: "test_srem" has unsupported operation: llvm.mlir.undef
@@ -23,10 +27,13 @@
 4: "test_srem" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "test_srem" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "test_urem"
 4: "test_urem" has unsupported operation: llvm.mlir.undef
 
@@ -45,10 +52,13 @@
 4: "test_urem" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "test_urem" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "test_sdiv"
 4: "test_sdiv" has unsupported operation: llvm.mlir.undef
 
@@ -67,10 +77,13 @@
 4: "test_sdiv" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "test_sdiv" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "test_udiv"
 4: "test_udiv" has unsupported operation: llvm.mlir.undef
 
@@ -87,6 +100,7 @@
 4: "test_udiv" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "test_udiv" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 =======
@@ -97,6 +111,10 @@
 4: "test_udiv" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+4: "test_udiv" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+>>>>>>> edb64a33 (Updated tests)
 1: "test_fdiv"
 4: "test_fdiv" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
@@ -113,10 +131,13 @@
 4: "test_fdiv" has unsupported operation: builtin.unregistered: llvm.fdiv
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "test_fdiv" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "test_frem"
 4: "test_frem" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
@@ -133,7 +154,10 @@
 4: "test_frem" has unsupported operation: builtin.unregistered: llvm.frem
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "test_frem" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)

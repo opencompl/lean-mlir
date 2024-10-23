@@ -46,10 +46,13 @@
 
 1: "t6_extrause1"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "t6_extrause1" has unsupported operation: llvm.udiv
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "t6_extrause1" has unsupported operation: llvm.call
 
 4: "t6_extrause1" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -58,15 +61,19 @@
 4: "t7_extrause2" has unsupported operation: llvm.call
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "t7_extrause2" has unsupported operation: llvm.udiv
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "t7_extrause2" has unsupported operation: llvm.call
 
 4: "t7_extrause2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "n8_different_x"
+<<<<<<< HEAD
 <<<<<<< HEAD
 4: "n8_different_x" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -77,16 +84,19 @@
 =======
 4: "n8_different_x" has unsupported operation: llvm.udiv
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "n8_different_x" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "n9_different_y"
-4: "n9_different_y" has unsupported operation: llvm.udiv
-
 4: "n9_different_y" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "n10_wrong_pred"
+<<<<<<< HEAD
 4: "n10_wrong_pred" has unsupported operation: llvm.udiv
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "n10_wrong_pred" has unsupported operation: builtin.unregistered: llvm.icmp
 

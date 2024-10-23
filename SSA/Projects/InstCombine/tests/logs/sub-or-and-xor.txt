@@ -33,10 +33,14 @@
 
 1: "sub_to_xor_vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "sub_to_xor_vec" contains vectors which are unsupported
 =======
 "sub_to_xor_vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "sub_to_xor_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "sub_to_xor_wrong_arg"
 7: "sub_to_xor_wrong_arg" is unchanged by InstCombine

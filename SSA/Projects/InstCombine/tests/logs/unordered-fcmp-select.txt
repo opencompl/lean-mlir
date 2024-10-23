@@ -2,6 +2,7 @@
 4: "select_max_ugt" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 1: "select_max_uge"
 4: "select_max_uge" has unsupported operation: builtin.unregistered: llvm.fcmp
 
@@ -14,12 +15,18 @@
 4: "select_max_uge" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+1: "select_max_uge"
+4: "select_max_uge" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+>>>>>>> edb64a33 (Updated tests)
 1: "select_min_ugt"
 4: "select_min_ugt" has unsupported operation: builtin.unregistered: llvm.intr.minnum
 
 1: "select_min_uge"
 4: "select_min_uge" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "select_max_ult"
 4: "select_max_ult" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -33,12 +40,18 @@
 4: "select_max_ult" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+1: "select_max_ult"
+4: "select_max_ult" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+>>>>>>> edb64a33 (Updated tests)
 1: "select_max_ule"
 4: "select_max_ule" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
 
 1: "select_min_ult"
 4: "select_min_ult" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "select_min_ule"
 4: "select_min_ule" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -52,22 +65,23 @@
 =======
 4: "select_min_ult" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "select_min_ule"
 4: "select_min_ule" has unsupported operation: builtin.unregistered: llvm.fcmp
-
-4: "select_min_ule" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "select_fcmp_une"
 4: "select_fcmp_une" has unsupported operation: builtin.unregistered: llvm.fcmp
 
-4: "select_fcmp_une" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "select_fcmp_ueq"
 4: "select_fcmp_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+<<<<<<< HEAD
 4: "select_fcmp_ueq" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "foo"
 5: "foo" is empty
 
@@ -77,17 +91,23 @@
 4: "select_max_ugt_2_use_cmp" has unsupported operation: llvm.call
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "select_max_ugt_2_use_cmp" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "select_min_uge_2_use_cmp"
 4: "select_min_uge_2_use_cmp" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "select_min_uge_2_use_cmp" has unsupported operation: llvm.call
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "select_min_uge_2_use_cmp" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)

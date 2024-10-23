@@ -12,8 +12,12 @@
 
 1: "avg_lsb_vector"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "avg_lsb_vector" contains vectors which are unsupported
 =======
 "avg_lsb_vector" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "avg_lsb_vector" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 

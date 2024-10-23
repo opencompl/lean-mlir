@@ -9,6 +9,7 @@
 
 1: "t1_vec_splat"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "t1_vec_splat" contains vectors which are unsupported
 
 1: "t2_vec_poison0"
@@ -21,16 +22,23 @@
 8: "t4_vec_poison2" contains vectors which are unsupported
 =======
 "t1_vec_splat" contains vectors which are unsupported
+=======
+8: "t1_vec_splat" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "t2_vec_poison0"
-"t2_vec_poison0" contains vectors which are unsupported
+8: "t2_vec_poison0" contains vectors which are unsupported
 
 1: "t3_vec_poison1"
-"t3_vec_poison1" contains vectors which are unsupported
+8: "t3_vec_poison1" contains vectors which are unsupported
 
 1: "t4_vec_poison2"
+<<<<<<< HEAD
 "t4_vec_poison2" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "t4_vec_poison2" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "use32"
 5: "use32" is empty

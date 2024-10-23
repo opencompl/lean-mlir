@@ -42,6 +42,7 @@
 
 1: "aligned_alloc_unknown_size_nonzero"
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "aligned_alloc_unknown_size_nonzero" has unsupported operation: llvm.call
 
 1: "aligned_alloc_unknown_size_possibly_zero"
@@ -54,6 +55,11 @@
 4: "aligned_alloc_unknown_size_possibly_zero" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+4: "aligned_alloc_unknown_size_nonzero" has unsupported operation: llvm.call
+
+1: "aligned_alloc_unknown_size_possibly_zero"
+>>>>>>> edb64a33 (Updated tests)
 4: "aligned_alloc_unknown_size_possibly_zero" has unsupported operation: llvm.call
 
 1: "aligned_alloc_unknown_align"
@@ -76,6 +82,7 @@
 
 1: "memalign_unknown_size_nonzero"
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "memalign_unknown_size_nonzero" has unsupported operation: llvm.call
 
 1: "memalign_unknown_size_possibly_zero"
@@ -88,6 +95,11 @@
 4: "memalign_unknown_size_possibly_zero" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+4: "memalign_unknown_size_nonzero" has unsupported operation: llvm.call
+
+1: "memalign_unknown_size_possibly_zero"
+>>>>>>> edb64a33 (Updated tests)
 4: "memalign_unknown_size_possibly_zero" has unsupported operation: llvm.call
 
 1: "memalign_unknown_align"

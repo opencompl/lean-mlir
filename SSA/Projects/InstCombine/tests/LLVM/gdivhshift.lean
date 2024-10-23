@@ -14,6 +14,9 @@ set_option linter.unusedTactic false
 section gdivhshift_statements
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 def t5_before := [llvm|
 {
 ^0(%arg230 : i1, %arg231 : i1, %arg232 : i32):
@@ -53,8 +56,11 @@ theorem t5_proof : t5_before ⊑ t5_after := by
 
 
 
+<<<<<<< HEAD
 =======
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 def t7_before := [llvm|
 {
 ^0(%arg209 : i32):

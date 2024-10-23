@@ -6,6 +6,9 @@
 
 1: "xor_1"
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.mlir.constant
@@ -15,6 +18,7 @@
 2: llvm.xor
 2: llvm.xor
 2: llvm.return
+<<<<<<< HEAD
 
 1: "xor_2"
 2: llvm.func
@@ -89,35 +93,90 @@
 2: llvm.return
 =======
 4: "xor_1" has unsupported operation: builtin.unregistered: llvm.select
+=======
+>>>>>>> edb64a33 (Updated tests)
 
 1: "xor_2"
-4: "xor_2" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.xor
+2: llvm.return
 
 1: "xor_fail"
-4: "xor_fail" has unsupported operation: builtin.unregistered: llvm.select
+7: "xor_fail" is unchanged by InstCombine
 
 1: "add_1"
-4: "add_1" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.add
+2: llvm.xor
+2: llvm.return
 
 1: "add_2"
-4: "add_2" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.add
+2: llvm.xor
+2: llvm.return
 
 1: "add_fail"
-4: "add_fail" has unsupported operation: builtin.unregistered: llvm.select
+7: "add_fail" is unchanged by InstCombine
 
 1: "sub_1"
-4: "sub_1" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.sub
+2: llvm.xor
+2: llvm.return
 
 1: "sub_2"
-4: "sub_2" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.sub
+2: llvm.xor
+2: llvm.return
 
 1: "sub_3"
+<<<<<<< HEAD
 4: "sub_3" has unsupported operation: builtin.unregistered: llvm.select
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.sub
+2: llvm.xor
+2: llvm.return
+>>>>>>> edb64a33 (Updated tests)
 
 1: "sub_fail"
 4: "sub_fail" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "ashr_1"
 2: llvm.func
@@ -162,26 +221,60 @@
 =======
 4: "sub_fail" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "ashr_1"
-4: "ashr_1" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.ashr
+2: llvm.xor
+2: llvm.return
 
 1: "ashr_2_fail"
-4: "ashr_2_fail" has unsupported operation: builtin.unregistered: llvm.select
+7: "ashr_2_fail" is unchanged by InstCombine
 
 1: "select_1"
-4: "select_1" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "select_1" has unsupported operation: builtin.unregistered: llvm.select
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.return
 
 1: "select_2"
+<<<<<<< HEAD
 4: "select_2" has unsupported operation: builtin.unregistered: llvm.select
 
 4: "select_2" has unsupported operation: builtin.unregistered: llvm.select
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.return
+>>>>>>> edb64a33 (Updated tests)
 
 1: "select_logic_or_fail"
 4: "select_logic_or_fail" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "select_logic_and_fail"
 4: "select_logic_and_fail" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -201,37 +294,33 @@
 
 4: "select_logic_or_fail" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "select_logic_and_fail"
 4: "select_logic_and_fail" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "select_logic_and_fail" has unsupported operation: builtin.unregistered: llvm.select
-
-4: "select_logic_and_fail" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "smin_1"
-4: "smin_1" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "smin_1" has unsupported operation: builtin.unregistered: llvm.intr.smax
 
 1: "smin_1_fail"
-4: "smin_1_fail" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "smin_1_fail" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
 1: "umin_1_fail"
-4: "umin_1_fail" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "umin_1_fail" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
 1: "smax_1"
+<<<<<<< HEAD
 4: "smax_1" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "smax_1" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
 1: "smax_1_fail"
 4: "smax_1_fail" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 4: "smax_1_fail" has unsupported operation: builtin.unregistered: llvm.intr.smax
 
@@ -242,17 +331,20 @@
 =======
 4: "smax_1_fail" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "smax_1_fail" has unsupported operation: builtin.unregistered: llvm.intr.smax
 
 1: "umax_1"
-4: "umax_1" has unsupported operation: builtin.unregistered: llvm.select
-
 4: "umax_1" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
 1: "umax_1_fail"
+<<<<<<< HEAD
 4: "umax_1_fail" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "umax_1_fail" has unsupported operation: llvm.call
 
 4: "umax_1_fail" has unsupported operation: builtin.unregistered: llvm.intr.umax
@@ -271,10 +363,14 @@
 
 1: "select_both_freely_invertable_always"
 <<<<<<< HEAD
+<<<<<<< HEAD
 7: "select_both_freely_invertable_always" is unchanged by InstCombine
 =======
 4: "select_both_freely_invertable_always" has unsupported operation: builtin.unregistered: llvm.select
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+7: "select_both_freely_invertable_always" is unchanged by InstCombine
+>>>>>>> edb64a33 (Updated tests)
 
 1: "umin_both_freely_invertable_always"
 4: "umin_both_freely_invertable_always" has unsupported operation: builtin.unregistered: llvm.intr.umin

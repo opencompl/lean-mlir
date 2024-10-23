@@ -12,10 +12,14 @@
 
 1: "shl_and_nonuniform"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "shl_and_nonuniform" contains vectors which are unsupported
 =======
 "shl_and_nonuniform" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "shl_and_nonuniform" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "shl_or"
 2: llvm.func
@@ -54,10 +58,14 @@
 
 1: "shl_xor_nonuniform"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "shl_xor_nonuniform" contains vectors which are unsupported
 =======
 "shl_xor_nonuniform" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "shl_xor_nonuniform" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "lshr_and"
 2: llvm.func
@@ -87,6 +95,7 @@
 
 1: "lshr_or"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "lshr_or" contains vectors which are unsupported
 
 1: "lshr_xor"
@@ -99,16 +108,23 @@
 8: "ashr_or" contains vectors which are unsupported
 =======
 "lshr_or" contains vectors which are unsupported
+=======
+8: "lshr_or" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "lshr_xor"
-"lshr_xor" contains vectors which are unsupported
+8: "lshr_xor" contains vectors which are unsupported
 
 1: "ashr_and"
-"ashr_and" contains vectors which are unsupported
+8: "ashr_and" contains vectors which are unsupported
 
 1: "ashr_or"
+<<<<<<< HEAD
 "ashr_or" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "ashr_or" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "ashr_xor"
 2: llvm.func
@@ -168,10 +184,14 @@
 
 1: "lshr_mul_vector"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "lshr_mul_vector" contains vectors which are unsupported
 =======
 "lshr_mul_vector" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "lshr_mul_vector" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "lshr_mul_negative_noexact"
 7: "lshr_mul_negative_noexact" is unchanged by InstCombine
@@ -206,10 +226,14 @@
 
 1: "shl_add_nonuniform"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "shl_add_nonuniform" contains vectors which are unsupported
 =======
 "shl_add_nonuniform" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "shl_add_nonuniform" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "shl_add_poison"
 4: "shl_add_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -267,10 +291,14 @@
 
 1: "shl_sub_nonuniform"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "shl_sub_nonuniform" contains vectors which are unsupported
 =======
 "shl_sub_nonuniform" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "shl_sub_nonuniform" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "shl_sub_poison"
 4: "shl_sub_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison

@@ -14,6 +14,9 @@ set_option linter.unusedTactic false
 section gfreehinversion_statements
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 def xor_1_before := [llvm|
 {
 ^0(%arg137 : i8, %arg138 : i1, %arg139 : i8, %arg140 : i8):
@@ -408,8 +411,11 @@ theorem select_2_proof : select_2_before ⊑ select_2_after := by
 
 
 
+<<<<<<< HEAD
 =======
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 def lshr_not_nneg2_before := [llvm|
 {
 ^0(%arg20 : i8):

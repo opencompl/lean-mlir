@@ -32,10 +32,14 @@
 
 1: "x_floor_olt_vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "x_floor_olt_vec" contains vectors which are unsupported
 =======
 "x_floor_olt_vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "x_floor_olt_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "x_floor_ole_neg"
 4: "x_floor_ole_neg" has unsupported operation: builtin.unregistered: llvm.intr.floor
@@ -91,10 +95,14 @@
 
 1: "x_ceil_ogt_vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "x_ceil_ogt_vec" contains vectors which are unsupported
 =======
 "x_ceil_ogt_vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "x_ceil_ogt_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "x_ceil_oge_neg"
 4: "x_ceil_oge_neg" has unsupported operation: builtin.unregistered: llvm.intr.ceil

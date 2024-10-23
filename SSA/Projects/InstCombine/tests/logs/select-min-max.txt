@@ -1,5 +1,6 @@
 1: "smin_smin_common_op_00"
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "smin_smin_common_op_00" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
 1: "smax_smax_common_op_01"
@@ -12,6 +13,11 @@
 4: "smax_smax_common_op_01" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+4: "smin_smin_common_op_00" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "smax_smax_common_op_01"
+>>>>>>> edb64a33 (Updated tests)
 4: "smax_smax_common_op_01" has unsupported operation: builtin.unregistered: llvm.intr.smax
 
 1: "umin_umin_common_op_10"
@@ -20,10 +26,13 @@
 4: "umin_umin_common_op_10" has unsupported operation: llvm.store
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "umin_umin_common_op_10" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "umin_umin_common_op_10" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
 1: "umax_umax_common_op_11"
@@ -32,10 +41,13 @@
 4: "umax_umax_common_op_11" has unsupported operation: llvm.store
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "umax_umax_common_op_11" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "umax_umax_common_op_11" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
 1: "smin_umin_common_op_11"
@@ -44,20 +56,26 @@
 4: "smin_umin_common_op_11" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "smin_umin_common_op_11" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "smin_smin_no_common_op"
 4: "smin_smin_no_common_op" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
 4: "smin_smin_no_common_op" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "smin_smin_no_common_op" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "umin_umin_common_op_10_uses"
 4: "umin_umin_common_op_10_uses" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
@@ -67,6 +85,7 @@
 
 4: "umin_umin_common_op_10_uses" has unsupported operation: llvm.store
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "smin_select_const_const"
 4: "smin_select_const_const" has unsupported operation after optimization: builtin.unregistered: llvm.intr.smin
@@ -82,22 +101,29 @@
 =======
 4: "umin_umin_common_op_10_uses" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "smin_select_const_const"
-4: "smin_select_const_const" has unsupported operation: builtin.unregistered: llvm.select
+4: "smin_select_const_const" has unsupported operation after optimization: builtin.unregistered: llvm.intr.smin
 
 1: "smax_select_const_const"
-4: "smax_select_const_const" has unsupported operation: builtin.unregistered: llvm.select
+8: "smax_select_const_const" contains vectors which are unsupported
 
 1: "umin_select_const_const"
-4: "umin_select_const_const" has unsupported operation: builtin.unregistered: llvm.select
+4: "umin_select_const_const" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umin
 
 1: "umax_select_const_const"
+<<<<<<< HEAD
 4: "umax_select_const_const" has unsupported operation: builtin.unregistered: llvm.select
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "umax_select_const_const" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "smin_select_const"
 4: "smin_select_const" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "smax_select_const"
 4: "smax_select_const" has unsupported operation: builtin.unregistered: llvm.intr.smax
@@ -111,22 +137,23 @@
 =======
 4: "smin_select_const" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "smax_select_const"
 4: "smax_select_const" has unsupported operation: builtin.unregistered: llvm.intr.smax
-
-4: "smax_select_const" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "umin_select_const"
 4: "umin_select_const" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
-4: "umin_select_const" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "umax_select_const"
 4: "umax_select_const" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
+<<<<<<< HEAD
 4: "umax_select_const" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "smax_smin"
 4: "smax_smin" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -135,6 +162,7 @@
 1: "smin_smax"
 4: "smin_smax" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 1: "umax_umin"
 4: "umax_umin" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -157,34 +185,29 @@
 =======
 4: "smin_smax" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "umax_umin"
 4: "umax_umin" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "umax_umin" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "umin_umax"
 4: "umin_umax" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "umin_umax" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "not_smax"
 4: "not_smax" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "not_smax" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "not_smax_swap"
 4: "not_smax_swap" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "not_smax_swap" has unsupported operation: builtin.unregistered: llvm.select
-
 1: "not_smin"
 4: "not_smin" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "not_smin" has unsupported operation: builtin.unregistered: llvm.select
 
 1: "not_smin_swap"
 4: "not_smin_swap" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 4: "not_smin_swap" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)

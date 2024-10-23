@@ -1,5 +1,6 @@
 1: "test_v4i32_splatconst_pow2"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test_v4i32_splatconst_pow2" contains vectors which are unsupported
 
 1: "test_v4i32_const_pow2"
@@ -10,6 +11,12 @@
 1: "test_v4i32_const_pow2"
 "test_v4i32_const_pow2" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test_v4i32_splatconst_pow2" contains vectors which are unsupported
+
+1: "test_v4i32_const_pow2"
+8: "test_v4i32_const_pow2" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test_v4i32_const_pow2_poison"
 4: "test_v4i32_const_pow2_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -30,20 +37,26 @@
 4: "test_v4i32_negconstsplat" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "test_v4i32_negconstsplat" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "test_v4i32_negconst"
 4: "test_v4i32_negconst" has unsupported operation: builtin.unregistered: llvm.freeze
 
 4: "test_v4i32_negconst" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "test_v4i32_negconst" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "test_v4i32_negconst_poison"
 4: "test_v4i32_negconst_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 

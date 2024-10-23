@@ -14,6 +14,7 @@
 
 1: "t3"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "t3" contains vectors which are unsupported
 
 1: "t4"
@@ -24,6 +25,12 @@
 1: "t4"
 "t4" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "t3" contains vectors which are unsupported
+
+1: "t4"
+8: "t4" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "t5"
 4: "t5" has unsupported operation: llvm.mlir.undef
@@ -42,10 +49,14 @@
 
 1: "t6"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "t6" contains vectors which are unsupported
 =======
 "t6" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "t6" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "t7"
 4: "t7" has unsupported operation: llvm.mlir.undef
@@ -81,10 +92,14 @@
 
 1: "t9"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "t9" contains vectors which are unsupported
 =======
 "t9" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "t9" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "t10"
 4: "t10" has unsupported operation: llvm.mlir.undef

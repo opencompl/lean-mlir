@@ -24,10 +24,13 @@
 4: "fn3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "fn3" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "fn3" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "fn3" has unsupported operation: llvm.store

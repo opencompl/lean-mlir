@@ -11,10 +11,14 @@
 
 1: "test0_vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test0_vec" contains vectors which are unsupported
 =======
 "test0_vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test0_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "test1"
 2: llvm.func
@@ -30,8 +34,12 @@
 
 1: "test1_vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "test1_vec" contains vectors which are unsupported
 =======
 "test1_vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "test1_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 

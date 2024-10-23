@@ -27,10 +27,14 @@
 
 1: "constant_fold_minnum_v4f32"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "constant_fold_minnum_v4f32" contains vectors which are unsupported
 =======
 "constant_fold_minnum_v4f32" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "constant_fold_minnum_v4f32" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "constant_fold_minnum_f64"
 4: "constant_fold_minnum_f64" has unsupported operation after optimization: builtin.unregistered: llvm.intr.minnum

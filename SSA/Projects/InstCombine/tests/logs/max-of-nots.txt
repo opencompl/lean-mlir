@@ -90,6 +90,7 @@
 4: "max_of_min" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "max_of_min" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "max_of_min_swap"
@@ -112,40 +113,32 @@
 =======
 4: "max_of_min" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "max_of_min" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "max_of_min" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "max_of_min_swap"
 4: "max_of_min_swap" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "max_of_min_swap" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 4: "max_of_min_swap" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "max_of_min_swap" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "min_of_max"
 4: "min_of_max" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "min_of_max" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 4: "min_of_max" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "min_of_max" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
 1: "min_of_max_swap"
 4: "min_of_max_swap" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "min_of_max_swap" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 4: "min_of_max_swap" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "min_of_max_swap" has unsupported operation after optimization: builtin.unregistered: llvm.select
-
 1: "max_of_min_vec"
+<<<<<<< HEAD
 "max_of_min_vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "max_of_min_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "use"
 5: "use" is empty

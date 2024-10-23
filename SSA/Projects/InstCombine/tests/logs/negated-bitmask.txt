@@ -19,6 +19,7 @@
 
 1: "neg_mask1_lshr_vector_uniform"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "neg_mask1_lshr_vector_uniform" contains vectors which are unsupported
 
 1: "neg_mask1_lshr_vector_nonuniform"
@@ -28,13 +29,20 @@
 8: "sub_mask1_lshr_vector_nonuniform" contains vectors which are unsupported
 =======
 "neg_mask1_lshr_vector_uniform" contains vectors which are unsupported
+=======
+8: "neg_mask1_lshr_vector_uniform" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "neg_mask1_lshr_vector_nonuniform"
-"neg_mask1_lshr_vector_nonuniform" contains vectors which are unsupported
+8: "neg_mask1_lshr_vector_nonuniform" contains vectors which are unsupported
 
 1: "sub_mask1_lshr_vector_nonuniform"
+<<<<<<< HEAD
 "sub_mask1_lshr_vector_nonuniform" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "sub_mask1_lshr_vector_nonuniform" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "sub_mask1_trunc_lshr"
 4: "sub_mask1_trunc_lshr" has unsupported operation: builtin.unregistered: llvm.trunc
@@ -62,10 +70,14 @@
 
 1: "neg_mask1_lshr_vector_var"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "neg_mask1_lshr_vector_var" contains vectors which are unsupported
 =======
 "neg_mask1_lshr_vector_var" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "neg_mask1_lshr_vector_var" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "neg_mask1_lshr_extrause_mask"
 4: "neg_mask1_lshr_extrause_mask" has unsupported operation: llvm.call
@@ -111,20 +123,26 @@
 4: "neg_mask" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "neg_mask" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "neg_mask_const"
 4: "neg_mask_const" has unsupported operation: builtin.unregistered: llvm.sext
 
 4: "neg_mask_const" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "neg_mask_const" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 1: "usei8"
 5: "usei8" is empty
 

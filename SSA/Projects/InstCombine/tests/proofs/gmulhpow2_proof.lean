@@ -5,6 +5,9 @@ open BitVec
 
 section gmulhpow2_proof
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edb64a33 (Updated tests)
 theorem mul_selectp2_x_thm (x : BitVec 8) (x_1 : BitVec 1) :
   (Option.bind
       (match some x_1 with

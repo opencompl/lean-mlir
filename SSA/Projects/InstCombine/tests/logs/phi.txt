@@ -520,10 +520,13 @@
 4: "phi_knownnonzero_eq_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "phi_knownnonzero_eq_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "phi_knownnonzero_eq_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "phi_knownnonzero_eq_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -544,10 +547,13 @@
 4: "phi_knownnonzero_ne_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "phi_knownnonzero_ne_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "phi_knownnonzero_ne_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "phi_knownnonzero_ne_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -639,10 +645,13 @@
 4: "simplify_context_instr" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "simplify_context_instr" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "simplify_context_instr" has unsupported operation: llvm.call
 
 4: "simplify_context_instr" has unsupported operation: builtin.unregistered: llvm.br

@@ -8,8 +8,12 @@
 
 1: "a_vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "a_vec" contains vectors which are unsupported
 =======
 "a_vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "a_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 

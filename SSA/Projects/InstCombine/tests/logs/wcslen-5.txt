@@ -9,10 +9,13 @@
 4: "fold_wcslen_s3_pi_s5" has unsupported operation: llvm.getelementptr
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "fold_wcslen_s3_pi_s5" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "fold_wcslen_s3_pi_s5" has unsupported operation: llvm.call
 
 1: "fold_wcslen_s3_pi_p1_s5"
@@ -25,10 +28,13 @@
 4: "fold_wcslen_s3_pi_p1_s5" has unsupported operation: llvm.getelementptr
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "fold_wcslen_s3_pi_p1_s5" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "fold_wcslen_s3_pi_p1_s5" has unsupported operation: llvm.call
 
 1: "call_wcslen_s5_3_pi_s5"
@@ -39,10 +45,13 @@
 4: "call_wcslen_s5_3_pi_s5" has unsupported operation: llvm.getelementptr
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "call_wcslen_s5_3_pi_s5" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "call_wcslen_s5_3_pi_s5" has unsupported operation: llvm.call
 
 1: "call_wcslen_s5_3_s5_pj"
@@ -53,10 +62,13 @@
 4: "call_wcslen_s5_3_s5_pj" has unsupported operation: llvm.getelementptr
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "call_wcslen_s5_3_s5_pj" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "call_wcslen_s5_3_s5_pj" has unsupported operation: llvm.call
 
 1: "fold_wcslen_s3_s5_pj"
@@ -67,10 +79,13 @@
 4: "fold_wcslen_s3_s5_pj" has unsupported operation: llvm.getelementptr
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "fold_wcslen_s3_s5_pj" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "fold_wcslen_s3_s5_pj" has unsupported operation: llvm.call
 
 1: "call_wcslen_s3_s5_3_pj"
@@ -81,10 +96,13 @@
 4: "call_wcslen_s3_s5_3_pj" has unsupported operation: llvm.getelementptr
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "call_wcslen_s3_s5_3_pj" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "call_wcslen_s3_s5_3_pj" has unsupported operation: llvm.call
 
 1: "fold_wcslen_s3_pi_s5_pj"
@@ -97,9 +115,12 @@
 4: "fold_wcslen_s3_pi_s5_pj" has unsupported operation: llvm.getelementptr
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "fold_wcslen_s3_pi_s5_pj" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+>>>>>>> edb64a33 (Updated tests)
 4: "fold_wcslen_s3_pi_s5_pj" has unsupported operation: llvm.call
 

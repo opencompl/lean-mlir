@@ -12,6 +12,7 @@
 
 1: "vec_zero"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "vec_zero" contains vectors which are unsupported
 
 1: "vec_minus_zero"
@@ -24,14 +25,21 @@
 8: "vec_fast_minus_zero" contains vectors which are unsupported
 =======
 "vec_zero" contains vectors which are unsupported
+=======
+8: "vec_zero" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "vec_minus_zero"
-"vec_minus_zero" contains vectors which are unsupported
+8: "vec_minus_zero" contains vectors which are unsupported
 
 1: "vec_fast_zero"
-"vec_fast_zero" contains vectors which are unsupported
+8: "vec_fast_zero" contains vectors which are unsupported
 
 1: "vec_fast_minus_zero"
+<<<<<<< HEAD
 "vec_fast_minus_zero" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "vec_fast_minus_zero" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 

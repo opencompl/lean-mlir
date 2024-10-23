@@ -30,6 +30,7 @@
 
 1: "shl_sub_i64_vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "shl_sub_i64_vec" contains vectors which are unsupported
 
 1: "shl_sub_i64_vec_poison"
@@ -40,6 +41,12 @@
 1: "shl_sub_i64_vec_poison"
 "shl_sub_i64_vec_poison" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "shl_sub_i64_vec" contains vectors which are unsupported
+
+1: "shl_sub_i64_vec_poison"
+8: "shl_sub_i64_vec_poison" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "shl_bad_sub_i32"
 2: llvm.func
@@ -86,10 +93,14 @@
 
 1: "shl_bad_sub_i64_vec"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "shl_bad_sub_i64_vec" contains vectors which are unsupported
 =======
 "shl_bad_sub_i64_vec" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "shl_bad_sub_i64_vec" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "bad_shl_sub_i64_vec"
 7: "bad_shl_sub_i64_vec" is unchanged by InstCombine
@@ -134,10 +145,14 @@
 
 1: "shl_const_op1_sub_const_op0_splat"
 <<<<<<< HEAD
+<<<<<<< HEAD
 8: "shl_const_op1_sub_const_op0_splat" contains vectors which are unsupported
 =======
 "shl_const_op1_sub_const_op0_splat" contains vectors which are unsupported
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+8: "shl_const_op1_sub_const_op0_splat" contains vectors which are unsupported
+>>>>>>> edb64a33 (Updated tests)
 
 1: "shl_const_op1_sub_const_op0_use"
 4: "shl_const_op1_sub_const_op0_use" has unsupported operation: llvm.call
