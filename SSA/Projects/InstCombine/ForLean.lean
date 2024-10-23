@@ -82,10 +82,6 @@ theorem add_odd_iff_neq (n m : Nat) :
   <;> cases' Nat.mod_two_eq_zero_or_one m with mparity mparity
   <;> simp [mparity, nparity, Nat.add_mod]
 
-theorem mod_eq_of_eq {a b c : Nat} (h : a = b) : a % c = b % c := by
-   subst h
-   simp
-
 end Nat
 
 namespace BitVec
