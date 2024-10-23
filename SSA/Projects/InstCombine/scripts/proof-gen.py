@@ -12,7 +12,7 @@ def get_lines(msg):
     matches = pattern.findall(msg)
     lines_thm = [(int(l), m) for (l, m) in matches if "no goals to be solved" not in m]
     # Replace this with your actual implementation
-    return lines_thm, lines_done
+    return lines_thm
     # return [(1, "New message for line 1"), (3, "New message for line 3")]
 
 
@@ -32,10 +32,10 @@ def print_log(log, log_file):
 def process_file(file_path):
     # Run the `lake build` command and capture the output
     module_name = file_path[2:-5].replace("/", ".")
-    proof_name = file_path[:-5].replace("/LLVM/", "/proofs/") + "_proof"
+    proof_file = file_path[:-5].replace("/LLVM/", "/proofs/") + "_proof.lean"
     stem_name = file_path.split("/")[-1][:-5]
     new_file_path = file_path.replace("/LLVM/", "/proofs/")
-    log_path = file_path.replace("/LLVM/", "/logs/").replace(".lean", ".txt")
+    log_path = proof_file.replace("/proofs/", "/logs/").replace(".lean", ".txt")
     result = subprocess.run(
         ["lake", "build", module_name], capture_output=True, text=True
     )
@@ -71,7 +71,7 @@ def process_file(file_path):
         file.writelines(lines)
 
     # Append the messages to the end of the file
-    with open(proof_name + ".lean", "w") as file:
+    with open(proof_file, "w") as file:
         file.write(gen_intro(stem_name))
         for _, n, m in named:
             print(f"m = {m}")
