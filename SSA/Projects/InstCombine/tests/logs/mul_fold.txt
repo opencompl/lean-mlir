@@ -1,0 +1,294 @@
+1: "use8"
+5: "use8" is empty
+
+1: "use16"
+5: "use16" is empty
+
+1: "use32"
+5: "use32" is empty
+
+1: "use64"
+5: "use64" is empty
+
+1: "use128"
+5: "use128" is empty
+
+1: "use130"
+5: "use130" is empty
+
+1: "use_v2i8"
+5: "use_v2i8" is empty
+
+1: "mul8_low_A0_B0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.lshr
+2: llvm.and
+2: llvm.lshr
+2: llvm.mul
+2: llvm.mul
+2: llvm.mul
+2: llvm.add
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "mul8_low_A0_B1"
+4: "mul8_low_A0_B1" has unsupported operation: llvm.call
+
+1: "mul8_low_A0_B2"
+4: "mul8_low_A0_B2" has unsupported operation: llvm.call
+
+1: "mul8_low_A0_B3"
+4: "mul8_low_A0_B3" has unsupported operation: llvm.call
+
+4: "mul8_low_A0_B3" has unsupported operation: llvm.call
+
+1: "mul16_low_A1_B0"
+4: "mul16_low_A1_B0" has unsupported operation: llvm.mlir.addressof
+
+4: "mul16_low_A1_B0" has unsupported operation: llvm.call
+
+4: "mul16_low_A1_B0" has unsupported operation: llvm.call
+
+1: "mul16_low_A1_B1"
+4: "mul16_low_A1_B1" has unsupported operation: llvm.mlir.addressof
+
+4: "mul16_low_A1_B1" has unsupported operation: llvm.call
+
+4: "mul16_low_A1_B1" has unsupported operation: llvm.call
+
+1: "mul16_low_A1_B2"
+4: "mul16_low_A1_B2" has unsupported operation: llvm.mlir.addressof
+
+4: "mul16_low_A1_B2" has unsupported operation: llvm.call
+
+4: "mul16_low_A1_B2" has unsupported operation: llvm.call
+
+1: "mul16_low_A1_B3"
+4: "mul16_low_A1_B3" has unsupported operation: llvm.mlir.addressof
+
+4: "mul16_low_A1_B3" has unsupported operation: llvm.call
+
+4: "mul16_low_A1_B3" has unsupported operation: llvm.call
+
+1: "mul32_low_A2_B0"
+4: "mul32_low_A2_B0" has unsupported operation: llvm.mlir.addressof
+
+4: "mul32_low_A2_B0" has unsupported operation: llvm.call
+
+1: "mul32_low_A2_B1"
+4: "mul32_low_A2_B1" has unsupported operation: llvm.mlir.addressof
+
+4: "mul32_low_A2_B1" has unsupported operation: llvm.call
+
+1: "mul32_low_A2_B2"
+4: "mul32_low_A2_B2" has unsupported operation: llvm.mlir.addressof
+
+4: "mul32_low_A2_B2" has unsupported operation: llvm.call
+
+4: "mul32_low_A2_B2" has unsupported operation: llvm.call
+
+1: "mul32_low_A2_B3"
+4: "mul32_low_A2_B3" has unsupported operation: llvm.mlir.addressof
+
+4: "mul32_low_A2_B3" has unsupported operation: llvm.call
+
+4: "mul32_low_A2_B3" has unsupported operation: llvm.call
+
+1: "mul64_low_A3_B0"
+4: "mul64_low_A3_B0" has unsupported operation: llvm.mlir.addressof
+
+4: "mul64_low_A3_B0" has unsupported operation: llvm.call
+
+1: "mul64_low_A3_B1"
+4: "mul64_low_A3_B1" has unsupported operation: llvm.mlir.addressof
+
+4: "mul64_low_A3_B1" has unsupported operation: llvm.call
+
+1: "mul64_low_A3_B2"
+4: "mul64_low_A3_B2" has unsupported operation: llvm.mlir.addressof
+
+4: "mul64_low_A3_B2" has unsupported operation: llvm.call
+
+4: "mul64_low_A3_B2" has unsupported operation: llvm.call
+
+1: "mul64_low_A3_B3"
+4: "mul64_low_A3_B3" has unsupported operation: llvm.mlir.addressof
+
+4: "mul64_low_A3_B3" has unsupported operation: llvm.call
+
+4: "mul64_low_A3_B3" has unsupported operation: llvm.call
+
+1: "mul32_low_one_extra_user"
+4: "mul32_low_one_extra_user" has unsupported operation: llvm.mlir.addressof
+
+4: "mul32_low_one_extra_user" has unsupported operation: llvm.call
+
+1: "mul8_low"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.lshr
+2: llvm.and
+2: llvm.lshr
+2: llvm.mul
+2: llvm.mul
+2: llvm.mul
+2: llvm.add
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "mul16_low"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.lshr
+2: llvm.and
+2: llvm.lshr
+2: llvm.mul
+2: llvm.mul
+2: llvm.mul
+2: llvm.add
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "mul32_low"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.lshr
+2: llvm.and
+2: llvm.lshr
+2: llvm.mul
+2: llvm.mul
+2: llvm.mul
+2: llvm.add
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "mul64_low"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.lshr
+2: llvm.and
+2: llvm.lshr
+2: llvm.mul
+2: llvm.mul
+2: llvm.mul
+2: llvm.add
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "mul128_low"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.lshr
+2: llvm.and
+2: llvm.lshr
+2: llvm.mul
+2: llvm.mul
+2: llvm.mul
+2: llvm.add
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "mul_v2i8_low"
+8: "mul_v2i8_low" contains vectors which are unsupported
+
+1: "mul_v2i8_low_one_extra_user"
+4: "mul_v2i8_low_one_extra_user" has unsupported operation: llvm.mlir.addressof
+
+4: "mul_v2i8_low_one_extra_user" has unsupported operation: llvm.call
+
+1: "mul130_low"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.lshr
+2: llvm.and
+2: llvm.lshr
+2: llvm.mul
+2: llvm.mul
+2: llvm.mul
+2: llvm.add
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "mul130_low_one_extra_user"
+4: "mul130_low_one_extra_user" has unsupported operation: llvm.mlir.addressof
+
+4: "mul130_low_one_extra_user" has unsupported operation: llvm.call
+
+1: "mul9_low"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.lshr
+2: llvm.and
+2: llvm.lshr
+2: llvm.mul
+2: llvm.mul
+2: llvm.mul
+2: llvm.add
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "mul64_low_no_and"
+7: "mul64_low_no_and" is unchanged by InstCombine
+
+1: "mul16_low_miss_shift_amount"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.lshr
+2: llvm.and
+2: llvm.lshr
+2: llvm.mul
+2: llvm.mul
+2: llvm.mul
+2: llvm.add
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "mul8_low_miss_half_width"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.lshr
+2: llvm.and
+2: llvm.lshr
+2: llvm.mul
+2: llvm.mul
+2: llvm.mul
+2: llvm.add
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "mul32_low_extra_shl_use"
+4: "mul32_low_extra_shl_use" has unsupported operation: llvm.mlir.addressof
+
+4: "mul32_low_extra_shl_use" has unsupported operation: llvm.call
+

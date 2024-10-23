@@ -1,0 +1,8 @@
+1: "fprintf"
+5: "fprintf" is empty
+
+1: "test1"
+4: "test1" has unsupported operation: llvm.mlir.addressof
+
+4: "test1" has unsupported operation: llvm.call
+

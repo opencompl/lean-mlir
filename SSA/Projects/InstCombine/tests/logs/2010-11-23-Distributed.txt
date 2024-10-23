@@ -1,0 +1,11 @@
+1: "foo"
+2: llvm.func
+2: llvm.add
+2: llvm.mul
+2: llvm.mul
+2: llvm.sub
+2: llvm.return
+
+1: "bar"
+4: "bar" has unsupported operation: builtin.unregistered: llvm.icmp
+

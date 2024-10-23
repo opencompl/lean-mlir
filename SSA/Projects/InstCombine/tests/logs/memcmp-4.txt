@@ -1,0 +1,21 @@
+1: "memcmp"
+5: "memcmp" is empty
+
+1: "fold_memcmp_mismatch_too_big"
+4: "fold_memcmp_mismatch_too_big" has unsupported operation: llvm.store
+
+4: "fold_memcmp_mismatch_too_big" has unsupported operation: llvm.getelementptr
+
+4: "fold_memcmp_mismatch_too_big" has unsupported operation: llvm.store
+
+4: "fold_memcmp_mismatch_too_big" has unsupported operation: llvm.return
+
+1: "fold_memcmp_match_too_big"
+4: "fold_memcmp_match_too_big" has unsupported operation: llvm.store
+
+4: "fold_memcmp_match_too_big" has unsupported operation: llvm.getelementptr
+
+4: "fold_memcmp_match_too_big" has unsupported operation: llvm.store
+
+4: "fold_memcmp_match_too_big" has unsupported operation: llvm.return
+

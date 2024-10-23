@@ -1,0 +1,31 @@
+1: "strncmp"
+5: "strncmp" is empty
+
+1: "call_strncmp_ax_bx_uimax_p1"
+4: "call_strncmp_ax_bx_uimax_p1" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strncmp_ax_bx_uimax_p1" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strncmp_ax_bx_uimax_p1" has unsupported operation: llvm.call
+
+1: "call_strncmp_ax_bx_uimax_p2"
+4: "call_strncmp_ax_bx_uimax_p2" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strncmp_ax_bx_uimax_p2" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strncmp_ax_bx_uimax_p2" has unsupported operation: llvm.call
+
+1: "fold_strncmp_a12345_2_uimax_p2"
+4: "fold_strncmp_a12345_2_uimax_p2" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_strncmp_a12345_2_uimax_p2" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_strncmp_a12345_2_uimax_p2" has unsupported operation after optimization: llvm.call
+
+1: "fold_strncmp_a12345_2_uimax_p3"
+4: "fold_strncmp_a12345_2_uimax_p3" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_strncmp_a12345_2_uimax_p3" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_strncmp_a12345_2_uimax_p3" has unsupported operation after optimization: llvm.call
+

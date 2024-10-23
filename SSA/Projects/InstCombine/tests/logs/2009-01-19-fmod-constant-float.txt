@@ -1,0 +1,36 @@
+1: "test1"
+4: "test1" has unsupported operation: llvm.alloca
+
+4: "test1" has unsupported operation: llvm.store
+
+4: "test1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test1" has unsupported operation: llvm.load
+
+1: "test2"
+4: "test2" has unsupported operation: llvm.alloca
+
+4: "test2" has unsupported operation: llvm.store
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test2" has unsupported operation: llvm.load
+
+1: "test3"
+4: "test3" has unsupported operation: llvm.alloca
+
+4: "test3" has unsupported operation: llvm.store
+
+4: "test3" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test3" has unsupported operation: llvm.load
+
+1: "test4"
+4: "test4" has unsupported operation: llvm.alloca
+
+4: "test4" has unsupported operation: llvm.store
+
+4: "test4" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test4" has unsupported operation: llvm.load
+

@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gmaskedhmergehor_statements
-                                                    
+
 def p_before := [llvm|
 {
 ^0(%arg60 : i32, %arg61 : i32, %arg62 : i32):
@@ -40,8 +40,9 @@ theorem p_proof : p_before ⊑ p_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN p
   all_goals (try extract_goal ; sorry)
@@ -76,8 +77,9 @@ theorem p_commutative0_proof : p_commutative0_before ⊑ p_commutative0_after :=
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN p_commutative0
   all_goals (try extract_goal ; sorry)
@@ -112,8 +114,9 @@ theorem p_commutative2_proof : p_commutative2_before ⊑ p_commutative2_after :=
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN p_commutative2
   all_goals (try extract_goal ; sorry)
@@ -148,8 +151,9 @@ theorem p_commutative4_proof : p_commutative4_before ⊑ p_commutative4_after :=
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN p_commutative4
   all_goals (try extract_goal ; sorry)
@@ -184,8 +188,9 @@ theorem n2_badmask_proof : n2_badmask_before ⊑ n2_badmask_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN n2_badmask
   all_goals (try extract_goal ; sorry)
@@ -217,8 +222,9 @@ theorem n3_constmask_samemask_proof : n3_constmask_samemask_before ⊑ n3_constm
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN n3_constmask_samemask
   all_goals (try extract_goal ; sorry)

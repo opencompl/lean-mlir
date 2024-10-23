@@ -1,0 +1,45 @@
+1: "use"
+5: "use" is empty
+
+1: "test1"
+4: "test1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test1" has unsupported operation: llvm.load
+
+4: "test1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test1" has unsupported operation: llvm.call
+
+4: "test1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test1" has unsupported operation: llvm.call
+
+4: "test1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test2"
+4: "test2" has unsupported operation: llvm.mlir.zero
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test2" has unsupported operation: llvm.load
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test2" has unsupported operation: llvm.call
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test2" has unsupported operation: llvm.call
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test2" has unsupported operation: llvm.call
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.br
+

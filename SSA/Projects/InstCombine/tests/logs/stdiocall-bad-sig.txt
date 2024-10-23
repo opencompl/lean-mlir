@@ -1,0 +1,45 @@
+1: "fwrite"
+5: "fwrite" is empty
+
+1: "fputc"
+5: "fputc" is empty
+
+1: "printf"
+5: "printf" is empty
+
+1: "fprintf"
+5: "fprintf" is empty
+
+1: "sprintf"
+5: "sprintf" is empty
+
+1: "call_fwrite"
+4: "call_fwrite" has unsupported operation: llvm.mlir.addressof
+
+4: "call_fwrite" has unsupported operation: llvm.call
+
+4: "call_fwrite" has unsupported operation: llvm.return
+
+1: "call_printf"
+4: "call_printf" has unsupported operation: llvm.mlir.addressof
+
+4: "call_printf" has unsupported operation: llvm.mlir.addressof
+
+4: "call_printf" has unsupported operation: llvm.call
+
+4: "call_printf" has unsupported operation: llvm.return
+
+1: "call_fprintf"
+4: "call_fprintf" has unsupported operation: llvm.mlir.addressof
+
+4: "call_fprintf" has unsupported operation: llvm.mlir.addressof
+
+4: "call_fprintf" has unsupported operation: llvm.call
+
+1: "call_sprintf"
+4: "call_sprintf" has unsupported operation: llvm.mlir.addressof
+
+4: "call_sprintf" has unsupported operation: llvm.mlir.addressof
+
+4: "call_sprintf" has unsupported operation: llvm.call
+

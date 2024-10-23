@@ -1,0 +1,2 @@
+3: phi-of-insertvalues.ll: parsing has failed
+

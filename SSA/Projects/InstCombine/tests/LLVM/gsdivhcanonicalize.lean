@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gsdivhcanonicalize_statements
-                                                    
+
 def test_sdiv_canonicalize_op0_before := [llvm|
 {
 ^0(%arg15 : i32, %arg16 : i32):
@@ -36,8 +36,9 @@ theorem test_sdiv_canonicalize_op0_proof : test_sdiv_canonicalize_op0_before ⊑
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test_sdiv_canonicalize_op0
   all_goals (try extract_goal ; sorry)
@@ -68,8 +69,9 @@ theorem test_sdiv_canonicalize_op0_exact_proof : test_sdiv_canonicalize_op0_exac
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test_sdiv_canonicalize_op0_exact
   all_goals (try extract_goal ; sorry)

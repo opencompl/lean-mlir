@@ -1,0 +1,8 @@
+1: "f"
+4: "f" has unsupported operation: llvm.mlir.undef
+
+1: "g"
+4: "g" has unsupported operation: llvm.mlir.addressof
+
+4: "g" has unsupported operation: llvm.call
+

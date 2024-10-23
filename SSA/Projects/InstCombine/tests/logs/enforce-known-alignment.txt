@@ -1,0 +1,2 @@
+3: enforce-known-alignment.ll: parsing has failed
+

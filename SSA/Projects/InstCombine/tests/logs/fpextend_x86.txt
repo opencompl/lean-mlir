@@ -1,0 +1,41 @@
+1: "test1"
+4: "test1" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "test1" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "test1" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test1" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "test2"
+4: "test2" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "test3"
+4: "test3" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "test3" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "test3" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test3" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "test4"
+4: "test4" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "test4" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test5"
+4: "test5" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "test5" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "test5" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "test5" has unsupported operation: builtin.unregistered: llvm.fptrunc
+

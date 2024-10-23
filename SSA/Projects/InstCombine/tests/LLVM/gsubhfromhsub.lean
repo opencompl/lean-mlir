@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gsubhfromhsub_statements
-                                                    
+
 def t0_before := [llvm|
 {
 ^0(%arg51 : i8, %arg52 : i8, %arg53 : i8):
@@ -34,8 +34,9 @@ theorem t0_proof : t0_before ⊑ t0_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t0
   all_goals (try extract_goal ; sorry)
@@ -64,8 +65,9 @@ theorem t1_flags_proof : t1_flags_before ⊑ t1_flags_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t1_flags
   all_goals (try extract_goal ; sorry)
@@ -94,8 +96,9 @@ theorem t1_flags_nuw_only_proof : t1_flags_nuw_only_before ⊑ t1_flags_nuw_only
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t1_flags_nuw_only
   all_goals (try extract_goal ; sorry)
@@ -124,8 +127,9 @@ theorem t1_flags_sub_nsw_sub_proof : t1_flags_sub_nsw_sub_before ⊑ t1_flags_su
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t1_flags_sub_nsw_sub
   all_goals (try extract_goal ; sorry)
@@ -154,8 +158,9 @@ theorem t1_flags_nuw_first_proof : t1_flags_nuw_first_before ⊑ t1_flags_nuw_fi
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t1_flags_nuw_first
   all_goals (try extract_goal ; sorry)
@@ -184,8 +189,9 @@ theorem t1_flags_nuw_second_proof : t1_flags_nuw_second_before ⊑ t1_flags_nuw_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t1_flags_nuw_second
   all_goals (try extract_goal ; sorry)
@@ -214,8 +220,9 @@ theorem t1_flags_nuw_nsw_first_proof : t1_flags_nuw_nsw_first_before ⊑ t1_flag
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t1_flags_nuw_nsw_first
   all_goals (try extract_goal ; sorry)
@@ -244,8 +251,9 @@ theorem t1_flags_nuw_nsw_second_proof : t1_flags_nuw_nsw_second_before ⊑ t1_fl
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t1_flags_nuw_nsw_second
   all_goals (try extract_goal ; sorry)
@@ -276,8 +284,9 @@ theorem t3_c0_proof : t3_c0_before ⊑ t3_c0_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t3_c0
   all_goals (try extract_goal ; sorry)
@@ -308,8 +317,9 @@ theorem t4_c1_proof : t4_c1_before ⊑ t4_c1_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t4_c1
   all_goals (try extract_goal ; sorry)
@@ -340,8 +350,9 @@ theorem t5_c2_proof : t5_c2_before ⊑ t5_c2_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t5_c2
   all_goals (try extract_goal ; sorry)
@@ -372,8 +383,9 @@ theorem t9_c0_c2_proof : t9_c0_c2_before ⊑ t9_c0_c2_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t9_c0_c2
   all_goals (try extract_goal ; sorry)
@@ -404,8 +416,9 @@ theorem t10_c1_c2_proof : t10_c1_c2_before ⊑ t10_c1_c2_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t10_c1_c2
   all_goals (try extract_goal ; sorry)

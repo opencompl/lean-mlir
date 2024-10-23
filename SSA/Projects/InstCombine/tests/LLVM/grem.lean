@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section grem_statements
-                                                    
+
 def test1_before := [llvm|
 {
 ^0(%arg104 : i32):
@@ -33,8 +33,9 @@ theorem test1_proof : test1_before ⊑ test1_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test1
   all_goals (try extract_goal ; sorry)
@@ -63,12 +64,48 @@ theorem test3_proof : test3_before ⊑ test3_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test3
   all_goals (try extract_goal ; sorry)
   ---END test3
+
+
+
+def test4_before := [llvm|
+{
+^0(%arg97 : i32, %arg98 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %2 = "llvm.select"(%arg98, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  %3 = llvm.urem %arg97, %2 : i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+def test4_after := [llvm|
+{
+^0(%arg97 : i32, %arg98 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 7 : i32}> : () -> i32
+  %2 = "llvm.select"(%arg98, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  %3 = llvm.and %arg97, %2 : i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+theorem test4_proof : test4_before ⊑ test4_after := by
+  unfold test4_before test4_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test4
+  all_goals (try extract_goal ; sorry)
+  ---END test4
 
 
 
@@ -94,8 +131,9 @@ theorem test7_proof : test7_before ⊑ test7_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test7
   all_goals (try extract_goal ; sorry)
@@ -125,8 +163,9 @@ theorem test8_proof : test8_before ⊑ test8_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test8
   all_goals (try extract_goal ; sorry)
@@ -156,8 +195,9 @@ theorem test9_proof : test9_before ⊑ test9_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test9
   all_goals (try extract_goal ; sorry)
@@ -189,8 +229,9 @@ theorem test11_proof : test11_before ⊑ test11_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test11
   all_goals (try extract_goal ; sorry)
@@ -220,8 +261,9 @@ theorem test12_proof : test12_before ⊑ test12_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test12
   all_goals (try extract_goal ; sorry)
@@ -248,8 +290,9 @@ theorem test13_proof : test13_before ⊑ test13_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test13
   all_goals (try extract_goal ; sorry)
@@ -287,8 +330,9 @@ theorem test16_proof : test16_before ⊑ test16_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test16
   all_goals (try extract_goal ; sorry)
@@ -327,8 +371,9 @@ theorem test19_proof : test19_before ⊑ test19_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test19
   all_goals (try extract_goal ; sorry)
@@ -367,8 +412,9 @@ theorem test19_commutative0_proof : test19_commutative0_before ⊑ test19_commut
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test19_commutative0
   all_goals (try extract_goal ; sorry)
@@ -407,8 +453,9 @@ theorem test19_commutative1_proof : test19_commutative1_before ⊑ test19_commut
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test19_commutative1
   all_goals (try extract_goal ; sorry)
@@ -447,8 +494,9 @@ theorem test19_commutative2_proof : test19_commutative2_before ⊑ test19_commut
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test19_commutative2
   all_goals (try extract_goal ; sorry)
@@ -479,11 +527,148 @@ theorem test22_proof : test22_before ⊑ test22_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test22
   all_goals (try extract_goal ; sorry)
   ---END test22
+
+
+
+def srem_constant_dividend_select_of_constants_divisor_before := [llvm|
+{
+^0(%arg37 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 12 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = -3 : i32}> : () -> i32
+  %2 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %3 = "llvm.select"(%arg37, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  %4 = llvm.srem %2, %3 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def srem_constant_dividend_select_of_constants_divisor_after := [llvm|
+{
+^0(%arg37 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 6 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %2 = "llvm.select"(%arg37, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  "llvm.return"(%2) : (i32) -> ()
+}
+]
+theorem srem_constant_dividend_select_of_constants_divisor_proof : srem_constant_dividend_select_of_constants_divisor_before ⊑ srem_constant_dividend_select_of_constants_divisor_after := by
+  unfold srem_constant_dividend_select_of_constants_divisor_before srem_constant_dividend_select_of_constants_divisor_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN srem_constant_dividend_select_of_constants_divisor
+  all_goals (try extract_goal ; sorry)
+  ---END srem_constant_dividend_select_of_constants_divisor
+
+
+
+def srem_constant_dividend_select_of_constants_divisor_0_arm_before := [llvm|
+{
+^0(%arg35 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 12 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %2 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %3 = "llvm.select"(%arg35, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  %4 = llvm.srem %2, %3 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def srem_constant_dividend_select_of_constants_divisor_0_arm_after := [llvm|
+{
+^0(%arg35 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 6 : i32}> : () -> i32
+  "llvm.return"(%0) : (i32) -> ()
+}
+]
+theorem srem_constant_dividend_select_of_constants_divisor_0_arm_proof : srem_constant_dividend_select_of_constants_divisor_0_arm_before ⊑ srem_constant_dividend_select_of_constants_divisor_0_arm_after := by
+  unfold srem_constant_dividend_select_of_constants_divisor_0_arm_before srem_constant_dividend_select_of_constants_divisor_0_arm_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN srem_constant_dividend_select_of_constants_divisor_0_arm
+  all_goals (try extract_goal ; sorry)
+  ---END srem_constant_dividend_select_of_constants_divisor_0_arm
+
+
+
+def urem_constant_dividend_select_of_constants_divisor_before := [llvm|
+{
+^0(%arg25 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 12 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = -3 : i32}> : () -> i32
+  %2 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %3 = "llvm.select"(%arg25, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  %4 = llvm.urem %2, %3 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def urem_constant_dividend_select_of_constants_divisor_after := [llvm|
+{
+^0(%arg25 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 6 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %2 = "llvm.select"(%arg25, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  "llvm.return"(%2) : (i32) -> ()
+}
+]
+theorem urem_constant_dividend_select_of_constants_divisor_proof : urem_constant_dividend_select_of_constants_divisor_before ⊑ urem_constant_dividend_select_of_constants_divisor_after := by
+  unfold urem_constant_dividend_select_of_constants_divisor_before urem_constant_dividend_select_of_constants_divisor_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN urem_constant_dividend_select_of_constants_divisor
+  all_goals (try extract_goal ; sorry)
+  ---END urem_constant_dividend_select_of_constants_divisor
+
+
+
+def urem_constant_dividend_select_of_constants_divisor_0_arm_before := [llvm|
+{
+^0(%arg23 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 12 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %2 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %3 = "llvm.select"(%arg23, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  %4 = llvm.urem %2, %3 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def urem_constant_dividend_select_of_constants_divisor_0_arm_after := [llvm|
+{
+^0(%arg23 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 6 : i32}> : () -> i32
+  "llvm.return"(%0) : (i32) -> ()
+}
+]
+theorem urem_constant_dividend_select_of_constants_divisor_0_arm_proof : urem_constant_dividend_select_of_constants_divisor_0_arm_before ⊑ urem_constant_dividend_select_of_constants_divisor_0_arm_after := by
+  unfold urem_constant_dividend_select_of_constants_divisor_0_arm_before urem_constant_dividend_select_of_constants_divisor_0_arm_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN urem_constant_dividend_select_of_constants_divisor_0_arm
+  all_goals (try extract_goal ; sorry)
+  ---END urem_constant_dividend_select_of_constants_divisor_0_arm
 
 

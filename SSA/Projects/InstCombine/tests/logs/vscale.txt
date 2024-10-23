@@ -1,0 +1,9 @@
+1: "promote_vscale_i32_to_i64"
+4: "promote_vscale_i32_to_i64" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+
+1: "pomote_zext_shl_vscale_i32_to_i64"
+4: "pomote_zext_shl_vscale_i32_to_i64" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+
+1: "free_zext_vscale_shl_i32_to_i64"
+4: "free_zext_vscale_shl_i32_to_i64" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+

@@ -1,0 +1,112 @@
+1: "t0"
+7: "t0" is unchanged by InstCombine
+
+1: "t1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.xor
+2: llvm.return
+
+1: "t2"
+4: "t2" has unsupported operation: llvm.call
+
+1: "t3"
+8: "t3" contains vectors which are unsupported
+
+1: "t4"
+8: "t4" contains vectors which are unsupported
+
+1: "t5"
+4: "t5" has unsupported operation: llvm.mlir.undef
+
+4: "t5" has unsupported operation: llvm.mlir.undef
+
+4: "t5" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t5" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t5" has unsupported operation: llvm.mlir.undef
+
+4: "t5" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t5" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "t6"
+8: "t6" contains vectors which are unsupported
+
+1: "t7"
+4: "t7" has unsupported operation: llvm.mlir.undef
+
+4: "t7" has unsupported operation: llvm.mlir.undef
+
+4: "t7" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t7" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t7" has unsupported operation: llvm.mlir.undef
+
+4: "t7" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t7" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "t8"
+4: "t8" has unsupported operation: llvm.mlir.undef
+
+4: "t8" has unsupported operation: llvm.mlir.undef
+
+4: "t8" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t8" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t8" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "t8" has unsupported operation: llvm.mlir.undef
+
+4: "t8" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t8" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "t9"
+8: "t9" contains vectors which are unsupported
+
+1: "t10"
+4: "t10" has unsupported operation: llvm.mlir.undef
+
+4: "t10" has unsupported operation: llvm.mlir.undef
+
+4: "t10" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t10" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t10" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "t10" has unsupported operation: llvm.mlir.undef
+
+4: "t10" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t10" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "t11"
+4: "t11" has unsupported operation: llvm.mlir.addressof
+
+4: "t11" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+1: "t12"
+4: "t12" has unsupported operation: llvm.mlir.addressof
+
+4: "t12" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+1: "t13"
+4: "t13" has unsupported operation: llvm.mlir.addressof
+
+4: "t13" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "t13" has unsupported operation: llvm.mlir.addressof
+
+4: "t13" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+1: "use"
+5: "use" is empty
+

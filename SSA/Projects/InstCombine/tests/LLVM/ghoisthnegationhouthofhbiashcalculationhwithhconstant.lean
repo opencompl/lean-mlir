@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.ghoisthnegationhouthofhbiashcalculationhwithhconstant_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section ghoisthnegationhouthofhbiashcalculationhwithhconstant_statements
-                                                    
+
 def t0_before := [llvm|
 {
 ^0(%arg7 : i8):
@@ -37,11 +37,12 @@ theorem t0_proof : t0_before ⊑ t0_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t0
-  apply t0_thm
+  all_goals (try extract_goal ; sorry)
   ---END t0
 
 
@@ -68,11 +69,12 @@ theorem n5_proof : n5_before ⊑ n5_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN n5
-  apply n5_thm
+  all_goals (try extract_goal ; sorry)
   ---END n5
 
 

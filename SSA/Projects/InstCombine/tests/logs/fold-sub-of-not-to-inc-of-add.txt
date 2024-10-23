@@ -1,0 +1,31 @@
+1: "p0_scalar"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.sub
+2: llvm.return
+
+1: "p0_scalar_not_truly_negatable"
+7: "p0_scalar_not_truly_negatable" is unchanged by InstCombine
+
+1: "p1_vector_splat"
+8: "p1_vector_splat" contains vectors which are unsupported
+
+1: "p2_vector_poison"
+8: "p2_vector_poison" contains vectors which are unsupported
+
+1: "use32"
+5: "use32" is empty
+
+1: "p3_oneuse"
+4: "p3_oneuse" has unsupported operation: llvm.call
+
+1: "n4"
+7: "n4" is unchanged by InstCombine
+
+1: "n5_is_not_not"
+7: "n5_is_not_not" is unchanged by InstCombine
+
+1: "n5_is_not_not_vec_splat"
+7: "n5_is_not_not_vec_splat" is unchanged by InstCombine
+

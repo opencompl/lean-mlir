@@ -1,0 +1,2 @@
+3: str-int-3.ll: parsing has failed
+

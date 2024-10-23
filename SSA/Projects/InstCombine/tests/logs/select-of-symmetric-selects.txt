@@ -1,0 +1,44 @@
+1: "select_of_symmetric_selects"
+2: llvm.func
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_of_symmetric_selects_negative1"
+2: llvm.func
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_of_symmetric_selects_negative2"
+7: "select_of_symmetric_selects_negative2" is unchanged by InstCombine
+
+1: "use"
+5: "use" is empty
+
+1: "select_of_symmetric_selects_multi_use1"
+4: "select_of_symmetric_selects_multi_use1" has unsupported operation: llvm.call
+
+1: "select_of_symmetric_selects_multi_use2"
+4: "select_of_symmetric_selects_multi_use2" has unsupported operation: llvm.call
+
+4: "select_of_symmetric_selects_multi_use2" has unsupported operation: llvm.call
+
+1: "select_of_symmetric_selects_commuted"
+2: llvm.func
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_of_symmetric_selects_vector1"
+8: "select_of_symmetric_selects_vector1" contains vectors which are unsupported
+
+1: "select_of_symmetric_selects_vector2"
+8: "select_of_symmetric_selects_vector2" contains vectors which are unsupported
+
+1: "select_of_symmetric_selects_vector3"
+7: "select_of_symmetric_selects_vector3" is unchanged by InstCombine
+

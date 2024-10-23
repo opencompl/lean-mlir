@@ -1,0 +1,33 @@
+1: "test1"
+4: "test1" has unsupported operation: llvm.load
+
+4: "test1" has unsupported operation: llvm.store
+
+4: "test1" has unsupported operation: llvm.return
+
+1: "test2"
+4: "test2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test2" has unsupported operation: llvm.store
+
+1: "test3_multiple_fields"
+4: "test3_multiple_fields" has unsupported operation: llvm.load
+
+4: "test3_multiple_fields" has unsupported operation: llvm.store
+
+4: "test3_multiple_fields" has unsupported operation: llvm.return
+
+1: "test4_multiple_copy_first_field"
+4: "test4_multiple_copy_first_field" has unsupported operation: llvm.load
+
+4: "test4_multiple_copy_first_field" has unsupported operation: llvm.store
+
+4: "test4_multiple_copy_first_field" has unsupported operation: llvm.return
+
+1: "test5_multiple_copy_more_than_first_field"
+4: "test5_multiple_copy_more_than_first_field" has unsupported operation: llvm.load
+
+4: "test5_multiple_copy_more_than_first_field" has unsupported operation: llvm.store
+
+4: "test5_multiple_copy_more_than_first_field" has unsupported operation: llvm.return
+

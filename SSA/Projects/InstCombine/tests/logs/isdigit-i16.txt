@@ -1,0 +1,61 @@
+1: "isdigit"
+5: "isdigit" is empty
+
+1: "sink"
+5: "sink" is empty
+
+1: "fold_isdigit"
+4: "fold_isdigit" has unsupported operation: llvm.call
+
+4: "fold_isdigit" has unsupported operation: llvm.call
+
+4: "fold_isdigit" has unsupported operation: llvm.call
+
+4: "fold_isdigit" has unsupported operation: llvm.call
+
+4: "fold_isdigit" has unsupported operation: llvm.call
+
+4: "fold_isdigit" has unsupported operation: llvm.call
+
+4: "fold_isdigit" has unsupported operation: llvm.call
+
+4: "fold_isdigit" has unsupported operation: llvm.call
+
+4: "fold_isdigit" has unsupported operation: llvm.call
+
+4: "fold_isdigit" has unsupported operation: llvm.call
+
+4: "fold_isdigit" has unsupported operation: llvm.call
+
+4: "fold_isdigit" has unsupported operation: llvm.call
+
+4: "fold_isdigit" has unsupported operation: llvm.call
+
+4: "fold_isdigit" has unsupported operation: llvm.call
+
+4: "fold_isdigit" has unsupported operation: llvm.call
+
+4: "fold_isdigit" has unsupported operation: llvm.call
+
+4: "fold_isdigit" has unsupported operation: llvm.call
+
+4: "fold_isdigit" has unsupported operation: llvm.call
+
+4: "fold_isdigit" has unsupported operation: llvm.call
+
+4: "fold_isdigit" has unsupported operation: llvm.call
+
+4: "fold_isdigit" has unsupported operation: llvm.call
+
+4: "fold_isdigit" has unsupported operation: llvm.call
+
+4: "fold_isdigit" has unsupported operation: llvm.call
+
+4: "fold_isdigit" has unsupported operation: llvm.call
+
+4: "fold_isdigit" has unsupported operation: llvm.call
+
+4: "fold_isdigit" has unsupported operation: llvm.call
+
+4: "fold_isdigit" has unsupported operation: llvm.return
+

@@ -1,0 +1,99 @@
+1: "strtol"
+5: "strtol" is empty
+
+1: "atoi"
+5: "atoi" is empty
+
+1: "atol"
+5: "atol" is empty
+
+1: "atoll"
+5: "atoll" is empty
+
+1: "strtoll"
+5: "strtoll" is empty
+
+1: "strtol_dec"
+4: "strtol_dec" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "strtol_dec" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "strtol_dec" has unsupported operation after optimization: llvm.call
+
+1: "strtol_base_zero"
+4: "strtol_base_zero" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "strtol_base_zero" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "strtol_base_zero" has unsupported operation after optimization: llvm.call
+
+1: "strtol_hex"
+4: "strtol_hex" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "strtol_hex" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "strtol_hex" has unsupported operation after optimization: llvm.call
+
+1: "strtol_endptr_not_null"
+4: "strtol_endptr_not_null" has unsupported operation: llvm.mlir.addressof
+
+4: "strtol_endptr_not_null" has unsupported operation: llvm.getelementptr
+
+4: "strtol_endptr_not_null" has unsupported operation: llvm.store
+
+1: "strtol_endptr_maybe_null"
+4: "strtol_endptr_maybe_null" has unsupported operation: llvm.mlir.addressof
+
+4: "strtol_endptr_maybe_null" has unsupported operation: llvm.call
+
+1: "atoi_test"
+4: "atoi_test" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "atoi_test" has unsupported operation after optimization: llvm.call
+
+1: "strtol_not_const_str"
+4: "strtol_not_const_str" has unsupported operation: llvm.mlir.zero
+
+4: "strtol_not_const_str" has unsupported operation: llvm.call
+
+1: "atoi_not_const_str"
+4: "atoi_not_const_str" has unsupported operation: llvm.call
+
+1: "strtol_not_const_base"
+4: "strtol_not_const_base" has unsupported operation: llvm.mlir.addressof
+
+4: "strtol_not_const_base" has unsupported operation: llvm.mlir.zero
+
+4: "strtol_not_const_base" has unsupported operation: llvm.call
+
+1: "strtol_long_int"
+4: "strtol_long_int" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "strtol_long_int" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "strtol_long_int" has unsupported operation after optimization: llvm.call
+
+1: "strtol_big_overflow"
+4: "strtol_big_overflow" has unsupported operation: llvm.mlir.addressof
+
+4: "strtol_big_overflow" has unsupported operation: llvm.mlir.zero
+
+4: "strtol_big_overflow" has unsupported operation: llvm.call
+
+1: "atol_test"
+4: "atol_test" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "atol_test" has unsupported operation after optimization: llvm.call
+
+1: "atoll_test"
+4: "atoll_test" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "atoll_test" has unsupported operation after optimization: llvm.call
+
+1: "strtoll_test"
+4: "strtoll_test" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "strtoll_test" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "strtoll_test" has unsupported operation after optimization: llvm.call
+

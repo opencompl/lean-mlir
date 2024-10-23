@@ -1,0 +1,19 @@
+1: "gep_constexpr_gv_1"
+4: "gep_constexpr_gv_1" has unsupported operation: llvm.mlir.addressof
+
+4: "gep_constexpr_gv_1" has unsupported operation: llvm.getelementptr
+
+1: "gep_constexpr_gv_2"
+4: "gep_constexpr_gv_2" has unsupported operation: llvm.mlir.addressof
+
+4: "gep_constexpr_gv_2" has unsupported operation: llvm.getelementptr
+
+1: "gep_constexpr_inttoptr"
+4: "gep_constexpr_inttoptr" has unsupported operation: llvm.mlir.addressof
+
+4: "gep_constexpr_inttoptr" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "gep_constexpr_inttoptr" has unsupported operation: llvm.inttoptr
+
+4: "gep_constexpr_inttoptr" has unsupported operation: llvm.getelementptr
+

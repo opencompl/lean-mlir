@@ -1,0 +1,24 @@
+1: "zero"
+4: "zero" has unsupported operation after optimization: builtin.unregistered: llvm.intr.pow
+
+1: "minus_zero"
+4: "minus_zero" has unsupported operation after optimization: builtin.unregistered: llvm.intr.pow
+
+1: "fast_zero"
+4: "fast_zero" has unsupported operation after optimization: builtin.unregistered: llvm.intr.pow
+
+1: "fast_minus_zero"
+4: "fast_minus_zero" has unsupported operation after optimization: builtin.unregistered: llvm.intr.pow
+
+1: "vec_zero"
+8: "vec_zero" contains vectors which are unsupported
+
+1: "vec_minus_zero"
+8: "vec_minus_zero" contains vectors which are unsupported
+
+1: "vec_fast_zero"
+8: "vec_fast_zero" contains vectors which are unsupported
+
+1: "vec_fast_minus_zero"
+8: "vec_fast_minus_zero" contains vectors which are unsupported
+

@@ -1,0 +1,304 @@
+1: "use"
+5: "use" is empty
+
+1: "ult_2"
+4: "ult_2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ult_16_splat"
+4: "ult_16_splat" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ult_3"
+4: "ult_3" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "ult_3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ult_2_use"
+4: "ult_2_use" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "ult_2_use" has unsupported operation: llvm.call
+
+4: "ult_2_use" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "PR52260"
+4: "PR52260" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "PR52260" has unsupported operation after optimization: builtin.unregistered: llvm.sext
+
+4: "PR52260" has unsupported operation after optimization: llvm.getelementptr
+
+4: "PR52260" has unsupported operation after optimization: llvm.load
+
+4: "PR52260" has unsupported operation after optimization: builtin.unregistered: llvm.trunc
+
+4: "PR52260" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "ult_192"
+4: "ult_192" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ult_2044_splat"
+4: "ult_2044_splat" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ult_96"
+4: "ult_96" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "ult_96" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ult_192_use"
+4: "ult_192_use" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "ult_192_use" has unsupported operation: llvm.call
+
+4: "ult_192_use" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ugt_3"
+4: "ugt_3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ugt_7_splat"
+4: "ugt_7_splat" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ugt_4"
+4: "ugt_4" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "ugt_4" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ugt_3_use"
+4: "ugt_3_use" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "ugt_3_use" has unsupported operation: llvm.call
+
+4: "ugt_3_use" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ugt_253"
+4: "ugt_253" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ugt_2043_splat"
+4: "ugt_2043_splat" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ugt_252"
+4: "ugt_252" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "ugt_252" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ugt_253_use"
+4: "ugt_253_use" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "ugt_253_use" has unsupported operation: llvm.call
+
+4: "ugt_253_use" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "slt_0"
+4: "slt_0" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "slt_0_splat"
+4: "slt_0_splat" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "slt_1"
+4: "slt_1" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "slt_1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "slt_0_use"
+4: "slt_0_use" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "slt_0_use" has unsupported operation: llvm.call
+
+4: "slt_0_use" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sgt_n1"
+4: "sgt_n1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sgt_n1_splat"
+4: "sgt_n1_splat" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sgt_0"
+4: "sgt_0" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "sgt_0" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sgt_n1_use"
+4: "sgt_n1_use" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "sgt_n1_use" has unsupported operation: llvm.call
+
+4: "sgt_n1_use" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "trunc_eq_i32_i8"
+4: "trunc_eq_i32_i8" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "trunc_eq_i32_i8" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "trunc_eq_v2i32_v2i8"
+4: "trunc_eq_v2i32_v2i8" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "trunc_eq_v2i32_v2i8" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "trunc_ne_i64_i10"
+4: "trunc_ne_i64_i10" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "trunc_ne_i64_i10" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "shl1_trunc_eq0"
+4: "shl1_trunc_eq0" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "shl1_trunc_ne0"
+4: "shl1_trunc_ne0" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "shl1_trunc_eq0_use1"
+4: "shl1_trunc_eq0_use1" has unsupported operation: llvm.call
+
+4: "shl1_trunc_eq0_use1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "shl1_trunc_ne0_use2"
+4: "shl1_trunc_ne0_use2" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "shl1_trunc_ne0_use2" has unsupported operation: llvm.call
+
+4: "shl1_trunc_ne0_use2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "shl2_trunc_eq0"
+4: "shl2_trunc_eq0" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "shl2_trunc_eq0" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "shl2_trunc_ne0"
+4: "shl2_trunc_ne0" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "shl2_trunc_ne0" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "shl3_trunc_eq0"
+4: "shl3_trunc_eq0" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "shl3_trunc_eq0" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "shl4_trunc_ne0"
+4: "shl4_trunc_ne0" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shl4_trunc_ne0" has unsupported operation: llvm.mlir.undef
+
+4: "shl4_trunc_ne0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl4_trunc_ne0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl4_trunc_ne0" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "shl4_trunc_ne0" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "shl1_trunc_sgt0"
+4: "shl1_trunc_sgt0" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "shl1_trunc_sgt0" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "shl1_trunc_eq1"
+4: "shl1_trunc_eq1" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "shl1_trunc_eq1" has unsupported operation: llvm.call
+
+4: "shl1_trunc_eq1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "shl1_trunc_ne32"
+4: "shl1_trunc_ne32" has unsupported operation: llvm.call
+
+4: "shl1_trunc_ne32" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "shl2_trunc_eq8_i32"
+4: "shl2_trunc_eq8_i32" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "shl2_trunc_eq8_i32" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "shl2_trunc_ne8_i32"
+4: "shl2_trunc_ne8_i32" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "shl2_trunc_ne8_i32" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "shl1_trunc_sgt4"
+4: "shl1_trunc_sgt4" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "shl1_trunc_sgt4" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "eq_nuw"
+4: "eq_nuw" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "eq_nuw" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ult_nuw"
+4: "ult_nuw" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "ult_nuw" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ule_nuw"
+4: "ule_nuw" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "ule_nuw" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "ule_nuw" has unsupported operation: llvm.call
+
+1: "ugt_nuw"
+4: "ugt_nuw" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "ugt_nuw" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "uge_nuw"
+4: "uge_nuw" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "uge_nuw" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "uge_nuw" has unsupported operation: llvm.call
+
+1: "uge_nuw_i48"
+4: "uge_nuw_i48" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "uge_nuw_i48" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "uge_nuw_i48" has unsupported operation: llvm.call
+
+1: "sgt_nuw_fail"
+4: "sgt_nuw_fail" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "sgt_nuw_fail" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ne_nsw"
+4: "ne_nsw" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "ne_nsw" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "slt_nsw"
+4: "slt_nsw" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "slt_nsw" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sle_nsw"
+4: "sle_nsw" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "sle_nsw" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sle_nsw" has unsupported operation: llvm.call
+
+1: "sgt_nsw"
+4: "sgt_nsw" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "sgt_nsw" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sge_nsw"
+4: "sge_nsw" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "sge_nsw" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sge_nsw" has unsupported operation: llvm.call
+
+1: "sge_nsw_i48"
+4: "sge_nsw_i48" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "sge_nsw_i48" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sge_nsw_i48" has unsupported operation: llvm.call
+
+1: "uge_nsw"
+4: "uge_nsw" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "uge_nsw" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "uge_nsw_non_splat"
+4: "uge_nsw_non_splat" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "uge_nsw_non_splat" has unsupported operation: builtin.unregistered: llvm.icmp
+

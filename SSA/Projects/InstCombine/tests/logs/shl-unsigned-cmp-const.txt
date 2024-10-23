@@ -1,0 +1,105 @@
+1: "scalar_i8_shl_ult_const_1"
+4: "scalar_i8_shl_ult_const_1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "scalar_i8_shl_ult_const_2"
+4: "scalar_i8_shl_ult_const_2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "scalar_i8_shl_ult_const_3"
+4: "scalar_i8_shl_ult_const_3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "scalar_i16_shl_ult_const"
+4: "scalar_i16_shl_ult_const" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "scalar_i32_shl_ult_const"
+4: "scalar_i32_shl_ult_const" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "scalar_i64_shl_ult_const"
+4: "scalar_i64_shl_ult_const" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "scalar_i8_shl_uge_const"
+4: "scalar_i8_shl_uge_const" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "scalar_i8_shl_ule_const"
+4: "scalar_i8_shl_ule_const" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "scalar_i8_shl_ugt_const"
+4: "scalar_i8_shl_ugt_const" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "vector_4xi32_shl_ult_const"
+4: "vector_4xi32_shl_ult_const" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "vector_4xi32_shl_ult_const_undef1"
+4: "vector_4xi32_shl_ult_const_undef1" has unsupported operation: llvm.mlir.undef
+
+4: "vector_4xi32_shl_ult_const_undef1" has unsupported operation: llvm.mlir.undef
+
+4: "vector_4xi32_shl_ult_const_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vector_4xi32_shl_ult_const_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vector_4xi32_shl_ult_const_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vector_4xi32_shl_ult_const_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vector_4xi32_shl_ult_const_undef1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "vector_4xi32_shl_ult_const_undef2"
+4: "vector_4xi32_shl_ult_const_undef2" has unsupported operation: llvm.mlir.undef
+
+4: "vector_4xi32_shl_ult_const_undef2" has unsupported operation: llvm.mlir.undef
+
+4: "vector_4xi32_shl_ult_const_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vector_4xi32_shl_ult_const_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vector_4xi32_shl_ult_const_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vector_4xi32_shl_ult_const_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vector_4xi32_shl_ult_const_undef2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "vector_4xi32_shl_ult_const_undef3"
+4: "vector_4xi32_shl_ult_const_undef3" has unsupported operation: llvm.mlir.undef
+
+4: "vector_4xi32_shl_ult_const_undef3" has unsupported operation: llvm.mlir.undef
+
+4: "vector_4xi32_shl_ult_const_undef3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vector_4xi32_shl_ult_const_undef3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vector_4xi32_shl_ult_const_undef3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vector_4xi32_shl_ult_const_undef3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vector_4xi32_shl_ult_const_undef3" has unsupported operation: llvm.mlir.undef
+
+4: "vector_4xi32_shl_ult_const_undef3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vector_4xi32_shl_ult_const_undef3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vector_4xi32_shl_ult_const_undef3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vector_4xi32_shl_ult_const_undef3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vector_4xi32_shl_ult_const_undef3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "vector_4xi32_shl_uge_const"
+4: "vector_4xi32_shl_uge_const" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "vector_4xi32_shl_ule_const"
+4: "vector_4xi32_shl_ule_const" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "vector_4xi32_shl_ugt_const"
+4: "vector_4xi32_shl_ugt_const" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "scalar_i8_shl_ult_const_extra_use_shl"
+4: "scalar_i8_shl_ult_const_extra_use_shl" has unsupported operation: llvm.store
+
+4: "scalar_i8_shl_ult_const_extra_use_shl" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "scalar_i8_shl_slt_const"
+4: "scalar_i8_shl_slt_const" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "scalar_i8_shl_ugt_const_not_power_of_2"
+4: "scalar_i8_shl_ugt_const_not_power_of_2" has unsupported operation: builtin.unregistered: llvm.icmp
+

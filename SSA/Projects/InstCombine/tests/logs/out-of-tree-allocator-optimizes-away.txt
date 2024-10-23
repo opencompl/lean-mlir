@@ -1,0 +1,15 @@
+1: "alloc_elides_test"
+4: "alloc_elides_test" has unsupported operation: llvm.return
+
+1: "alloc_elides_test_virtual"
+4: "alloc_elides_test_virtual" has unsupported operation: llvm.return
+
+1: "__rust_alloc"
+5: "__rust_alloc" is empty
+
+1: "__rust_realloc"
+5: "__rust_realloc" is empty
+
+1: "__rust_dealloc"
+5: "__rust_dealloc" is empty
+

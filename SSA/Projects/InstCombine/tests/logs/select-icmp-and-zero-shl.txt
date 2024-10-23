@@ -1,0 +1,43 @@
+1: "test_eq"
+4: "test_eq" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test_eq_vect"
+8: "test_eq_vect" contains vectors which are unsupported
+
+1: "test_ne"
+4: "test_ne" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test_ne_vect"
+8: "test_ne_vect" contains vectors which are unsupported
+
+1: "test_nuw_dropped"
+4: "test_nuw_dropped" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test_nsw_dropped"
+4: "test_nsw_dropped" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "use_multi"
+5: "use_multi" is empty
+
+1: "test_multi_use"
+4: "test_multi_use" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_multi_use" has unsupported operation: llvm.call
+
+1: "test_multi_use_nuw_dropped"
+4: "test_multi_use_nuw_dropped" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_multi_use_nuw_dropped" has unsupported operation: llvm.call
+
+1: "neg_test_bits_not_match"
+4: "neg_test_bits_not_match" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "neg_test_icmp_non_equality"
+4: "neg_test_icmp_non_equality" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "neg_test_select_non_zero_constant"
+4: "neg_test_select_non_zero_constant" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "neg_test_icmp_non_zero_constant"
+4: "neg_test_icmp_non_zero_constant" has unsupported operation: builtin.unregistered: llvm.icmp
+

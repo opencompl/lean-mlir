@@ -1,0 +1,36 @@
+1: "positive_sign_arg"
+4: "positive_sign_arg" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "positive_sign_arg_vec_splat"
+4: "positive_sign_arg_vec_splat" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "negative_sign_arg"
+4: "negative_sign_arg" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "negative_sign_arg" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "negative_sign_arg_vec_splat"
+4: "negative_sign_arg_vec_splat" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "negative_sign_arg_vec_splat" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "known_positive_sign_arg"
+4: "known_positive_sign_arg" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "known_positive_sign_arg_vec"
+4: "known_positive_sign_arg_vec" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "not_known_positive_sign_arg"
+4: "not_known_positive_sign_arg" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
+
+4: "not_known_positive_sign_arg" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+1: "copysign_sign_arg"
+4: "copysign_sign_arg" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+1: "fneg_mag"
+4: "fneg_mag" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+1: "fabs_mag"
+4: "fabs_mag" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+

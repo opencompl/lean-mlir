@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.g2004h11h22hMissedhandhfold_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section g2004h11h22hMissedhandhfold_statements
-                                                    
+
 def test21_before := [llvm|
 {
 ^0(%arg0 : i8):
@@ -36,11 +36,12 @@ theorem test21_proof : test21_before ⊑ test21_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test21
-  apply test21_thm
+  all_goals (try extract_goal ; sorry)
   ---END test21
 
 

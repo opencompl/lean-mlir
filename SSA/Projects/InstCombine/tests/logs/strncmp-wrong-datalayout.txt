@@ -1,0 +1,6 @@
+1: "strncmp"
+5: "strncmp" is empty
+
+1: "test6"
+4: "test6" has unsupported operation: llvm.call
+

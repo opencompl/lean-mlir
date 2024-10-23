@@ -1,0 +1,43 @@
+1: "use6"
+5: "use6" is empty
+
+1: "use8"
+5: "use8" is empty
+
+1: "trunc_lshr"
+4: "trunc_lshr" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "trunc_lshr_exact_mask"
+4: "trunc_lshr_exact_mask" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "trunc_lshr_big_mask"
+4: "trunc_lshr_big_mask" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "trunc_lshr_use1"
+4: "trunc_lshr_use1" has unsupported operation: llvm.call
+
+4: "trunc_lshr_use1" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "trunc_lshr_use2"
+4: "trunc_lshr_use2" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "trunc_lshr_use2" has unsupported operation: llvm.call
+
+1: "trunc_lshr_vec_splat"
+4: "trunc_lshr_vec_splat" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "trunc_lshr_vec_splat_exact_mask"
+4: "trunc_lshr_vec_splat_exact_mask" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "trunc_lshr_big_shift"
+4: "trunc_lshr_big_shift" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "or_trunc_lshr"
+4: "or_trunc_lshr" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "or_trunc_lshr_more"
+4: "or_trunc_lshr_more" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "or_trunc_lshr_small_mask"
+4: "or_trunc_lshr_small_mask" has unsupported operation: builtin.unregistered: llvm.trunc
+

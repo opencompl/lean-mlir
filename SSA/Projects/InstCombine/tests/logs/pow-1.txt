@@ -1,0 +1,273 @@
+1: "powf"
+5: "powf" is empty
+
+1: "pow"
+5: "pow" is empty
+
+1: "test_simplify1"
+4: "test_simplify1" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify1_noerrno"
+4: "test_simplify1_noerrno" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify1v"
+8: "test_simplify1v" contains vectors which are unsupported
+
+1: "test_simplify2"
+4: "test_simplify2" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify2_noerrno"
+4: "test_simplify2_noerrno" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify2v"
+8: "test_simplify2v" contains vectors which are unsupported
+
+1: "test_simplify3"
+4: "test_simplify3" has unsupported operation: llvm.call
+
+1: "test_simplify3_noerrno"
+4: "test_simplify3_noerrno" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+1: "test_simplify3n_noerrno"
+4: "test_simplify3n_noerrno" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test_simplify3n_noerrno" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+1: "test_simplify3v"
+4: "test_simplify3v" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+1: "test_simplify3vn"
+4: "test_simplify3vn" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test_simplify3vn" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+1: "test_simplify4"
+4: "test_simplify4" has unsupported operation: llvm.call
+
+1: "test_simplify4_noerrno"
+4: "test_simplify4_noerrno" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+1: "test_simplify4n"
+4: "test_simplify4n" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test_simplify4n" has unsupported operation: llvm.call
+
+1: "test_simplify4n_noerrno"
+4: "test_simplify4n_noerrno" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test_simplify4n_noerrno" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+1: "test_simplify4v"
+4: "test_simplify4v" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+1: "test_simplify4vn"
+4: "test_simplify4vn" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "test_simplify4vn" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+1: "test_simplify5"
+4: "test_simplify5" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify5_noerrno"
+4: "test_simplify5_noerrno" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify5v"
+8: "test_simplify5v" contains vectors which are unsupported
+
+1: "test_simplify6"
+4: "test_simplify6" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify6_noerrno"
+4: "test_simplify6_noerrno" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify6v"
+8: "test_simplify6v" contains vectors which are unsupported
+
+1: "powf_libcall_half_ninf"
+4: "powf_libcall_half_ninf" has unsupported operation: llvm.call
+
+4: "powf_libcall_half_ninf" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "powf_libcall_half_ninf_noerrno"
+4: "powf_libcall_half_ninf_noerrno" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "powf_libcall_half_ninf_noerrno" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "powf_libcall_half_assume_ninf_noerrno"
+4: "powf_libcall_half_assume_ninf_noerrno" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "powf_libcall_half_assume_ninf_noerrno" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "powf_libcall_half_assume_ninf_noerrno" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "powf_libcall_half_assume_ninf_noerrno" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "powf_libcall_half_assume_ninf_noerrno" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "powf_libcall_half_ninf_tail"
+4: "powf_libcall_half_ninf_tail" has unsupported operation: llvm.call
+
+4: "powf_libcall_half_ninf_tail" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "powf_libcall_half_ninf_tail_noerrno"
+4: "powf_libcall_half_ninf_tail_noerrno" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "powf_libcall_half_ninf_tail_noerrno" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "powf_libcall_half_ninf_musttail"
+4: "powf_libcall_half_ninf_musttail" has unsupported operation: llvm.call
+
+1: "powf_libcall_half_ninf_musttail_noerrno"
+4: "powf_libcall_half_ninf_musttail_noerrno" has unsupported operation: llvm.call
+
+1: "pow_libcall_half_no_FMF"
+4: "pow_libcall_half_no_FMF" has unsupported operation: llvm.call
+
+1: "pow_libcall_half_fromdomcondition"
+4: "pow_libcall_half_fromdomcondition" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "pow_libcall_half_fromdomcondition" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "pow_libcall_half_fromdomcondition" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "pow_libcall_half_fromdomcondition" has unsupported operation: llvm.call
+
+4: "pow_libcall_half_fromdomcondition" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "pow_libcall_half_no_FMF_noerrno"
+4: "pow_libcall_half_no_FMF_noerrno" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "pow_libcall_half_no_FMF_noerrno" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "pow_libcall_half_no_FMF_noerrno" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_simplify9"
+4: "test_simplify9" has unsupported operation after optimization: builtin.unregistered: llvm.intr.pow
+
+1: "test_simplify10"
+4: "test_simplify10" has unsupported operation after optimization: builtin.unregistered: llvm.intr.pow
+
+1: "test_simplify11"
+4: "test_simplify11" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify11_noerrno"
+4: "test_simplify11_noerrno" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify11v"
+8: "test_simplify11v" contains vectors which are unsupported
+
+1: "test_simplify12"
+4: "test_simplify12" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify12_noerrno"
+4: "test_simplify12_noerrno" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify12v"
+8: "test_simplify12v" contains vectors which are unsupported
+
+1: "pow2_strict"
+4: "pow2_strict" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "pow2_strict_noerrno"
+4: "pow2_strict_noerrno" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "pow2_strictv"
+4: "pow2_strictv" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "pow2_double_strict"
+4: "pow2_double_strict" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "pow2_double_strict_noerrno"
+4: "pow2_double_strict_noerrno" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "pow2_double_strictv"
+4: "pow2_double_strictv" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "pow2_fast"
+4: "pow2_fast" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "pow2_fast_noerrno"
+4: "pow2_fast_noerrno" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "pow_neg1_strict"
+4: "pow_neg1_strict" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "pow_neg1_strict_noerrno"
+4: "pow_neg1_strict_noerrno" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "pow_neg1_strictv"
+4: "pow_neg1_strictv" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "pow_neg1_double_fast"
+4: "pow_neg1_double_fast" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "pow_neg1_double_fast_noerrno"
+4: "pow_neg1_double_fast_noerrno" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "pow_neg1_double_fastv"
+4: "pow_neg1_double_fastv" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "pow_intrinsic_half_no_FMF"
+4: "pow_intrinsic_half_no_FMF" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "pow_intrinsic_half_no_FMF" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "pow_intrinsic_half_no_FMF" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_simplify18"
+4: "test_simplify18" has unsupported operation: llvm.call
+
+1: "test_simplify18_noerrno"
+4: "test_simplify18_noerrno" has unsupported operation: llvm.call
+
+1: "test_simplify19"
+4: "test_simplify19" has unsupported operation: llvm.call
+
+1: "test_simplify19_noerrno"
+4: "test_simplify19_noerrno" has unsupported operation: llvm.call
+
+1: "test_libcall_powf_10_f32_noerrno"
+4: "test_libcall_powf_10_f32_noerrno" has unsupported operation: llvm.call
+
+1: "test_libcall_pow_10_f64_noerrno"
+4: "test_libcall_pow_10_f64_noerrno" has unsupported operation: llvm.call
+
+1: "test_pow_10_f16"
+4: "test_pow_10_f16" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "test_pow_10_f32"
+4: "test_pow_10_f32" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "test_pow_10_f64"
+4: "test_pow_10_f64" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "test_pow_10_fp128"
+4: "test_pow_10_fp128" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "test_pow_10_bf16"
+4: "test_pow_10_bf16" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "test_pow_10_v2f16"
+4: "test_pow_10_v2f16" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "test_pow_10_v2f32"
+4: "test_pow_10_v2f32" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "test_pow_10_v2f64"
+4: "test_pow_10_v2f64" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "test_pow_10_v2bf16"
+4: "test_pow_10_v2bf16" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "exp2f"
+5: "exp2f" is empty
+
+1: "exp2"
+5: "exp2" is empty
+
+1: "sqrtf"
+5: "sqrtf" is empty
+
+1: "sqrt"
+5: "sqrt" is empty
+

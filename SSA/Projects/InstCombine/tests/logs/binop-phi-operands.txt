@@ -1,0 +1,2 @@
+3: binop-phi-operands.ll: parsing has failed
+

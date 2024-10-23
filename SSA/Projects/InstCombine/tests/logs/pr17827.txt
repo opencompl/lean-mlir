@@ -1,0 +1,24 @@
+1: "test_shift_and_cmp_not_changed1"
+4: "test_shift_and_cmp_not_changed1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test_shift_and_cmp_not_changed2"
+4: "test_shift_and_cmp_not_changed2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test_shift_and_cmp_changed1"
+4: "test_shift_and_cmp_changed1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test_shift_and_cmp_changed1_vec"
+4: "test_shift_and_cmp_changed1_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test_shift_and_cmp_changed2"
+4: "test_shift_and_cmp_changed2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test_shift_and_cmp_changed2_vec"
+4: "test_shift_and_cmp_changed2_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test_shift_and_cmp_changed3"
+4: "test_shift_and_cmp_changed3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test_shift_and_cmp_changed4"
+4: "test_shift_and_cmp_changed4" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+

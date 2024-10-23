@@ -1,0 +1,57 @@
+1: "icmp_ugt_32"
+4: "icmp_ugt_32" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_ule_64"
+4: "icmp_ule_64" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_ugt_16"
+4: "icmp_ugt_16" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_ule_16x2"
+4: "icmp_ule_16x2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_ule_16x2_nonzero"
+4: "icmp_ule_16x2_nonzero" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_ule_12x2"
+4: "icmp_ule_12x2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_ult_8"
+4: "icmp_ult_8" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_uge_8x2"
+4: "icmp_uge_8x2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_ugt_16x2"
+4: "icmp_ugt_16x2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "fold_icmp_shl_nuw_c1"
+4: "fold_icmp_shl_nuw_c1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "fold_icmp_shl_nuw_c2"
+4: "fold_icmp_shl_nuw_c2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "fold_icmp_shl_nuw_c2_non_pow2"
+4: "fold_icmp_shl_nuw_c2_non_pow2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "fold_icmp_shl_nuw_c2_div_non_pow2"
+4: "fold_icmp_shl_nuw_c2_div_non_pow2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "fold_icmp_shl_nuw_c3"
+4: "fold_icmp_shl_nuw_c3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "fold_icmp_shl_nuw_c2_indivisible"
+4: "fold_icmp_shl_nuw_c2_indivisible" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "fold_icmp_shl_c2_without_nuw"
+4: "fold_icmp_shl_c2_without_nuw" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "fold_icmp_shl_nuw_c2_precondition1"
+4: "fold_icmp_shl_nuw_c2_precondition1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "fold_icmp_shl_nuw_c2_precondition2"
+4: "fold_icmp_shl_nuw_c2_precondition2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "fold_icmp_shl_nuw_c2_precondition3"
+4: "fold_icmp_shl_nuw_c2_precondition3" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+

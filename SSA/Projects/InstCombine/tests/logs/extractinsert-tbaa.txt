@@ -1,0 +1,24 @@
+1: "teststructextract"
+4: "teststructextract" has unsupported operation: llvm.load
+
+1: "testarrayextract"
+4: "testarrayextract" has unsupported operation: llvm.load
+
+1: "teststructinsert"
+4: "teststructinsert" has unsupported operation: llvm.store
+
+4: "teststructinsert" has unsupported operation: llvm.getelementptr
+
+4: "teststructinsert" has unsupported operation: llvm.store
+
+4: "teststructinsert" has unsupported operation: llvm.return
+
+1: "testarrayinsert"
+4: "testarrayinsert" has unsupported operation: llvm.store
+
+4: "testarrayinsert" has unsupported operation: llvm.getelementptr
+
+4: "testarrayinsert" has unsupported operation: llvm.store
+
+4: "testarrayinsert" has unsupported operation: llvm.return
+

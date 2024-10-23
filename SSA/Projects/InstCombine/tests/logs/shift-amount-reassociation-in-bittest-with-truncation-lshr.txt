@@ -1,0 +1,110 @@
+1: "n0"
+4: "n0" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "n0" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "n0" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "t1"
+4: "t1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "t1_single_bit"
+4: "t1_single_bit" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "n2"
+4: "n2" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "n2" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "n2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "t3"
+4: "t3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "t3_singlebit"
+4: "t3_singlebit" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "n4"
+4: "n4" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "n4" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "n4" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "t5_vec"
+4: "t5_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "n6_vec"
+4: "n6_vec" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "n6_vec" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "n6_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "t7_vec"
+4: "t7_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "n8_vec"
+4: "n8_vec" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "n8_vec" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "n8_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "t9_highest_bit"
+4: "t9_highest_bit" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "t9_highest_bit" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "t10_almost_highest_bit"
+4: "t10_almost_highest_bit" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "t10_almost_highest_bit" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "t10_almost_highest_bit" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "t11_no_shift"
+4: "t11_no_shift" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "t11_no_shift" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "t10_shift_by_one"
+4: "t10_shift_by_one" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "t10_shift_by_one" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "t10_shift_by_one" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "t11_zero_and_almost_bitwidth"
+4: "t11_zero_and_almost_bitwidth" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "t11_zero_and_almost_bitwidth" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "t11_zero_and_almost_bitwidth" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "n12_bad"
+4: "n12_bad" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "n12_bad" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "n12_bad" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "t13_x_is_one"
+4: "t13_x_is_one" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "t14_x_is_one"
+4: "t14_x_is_one" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+
+4: "t14_x_is_one" has unsupported operation after optimization: builtin.unregistered: llvm.trunc
+
+4: "t14_x_is_one" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "t15_vec_x_is_one_or_zero"
+4: "t15_vec_x_is_one_or_zero" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "t16_vec_y_is_one_or_zero"
+8: "t16_vec_y_is_one_or_zero" contains vectors which are unsupported
+
+1: "rawspeed_signbit"
+4: "rawspeed_signbit" has unsupported operation: builtin.unregistered: llvm.icmp
+

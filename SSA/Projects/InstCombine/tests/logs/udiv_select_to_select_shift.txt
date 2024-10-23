@@ -1,0 +1,17 @@
+1: "test"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.udiv
+2: builtin.unregistered: llvm.select
+2: llvm.udiv
+2: llvm.add
+2: llvm.return
+
+1: "PR34856"
+4: "PR34856" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "PR34856" has unsupported operation: builtin.unregistered: llvm.zext
+

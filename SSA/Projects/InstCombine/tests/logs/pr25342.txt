@@ -1,0 +1,2 @@
+3: pr25342.ll: parsing has failed
+

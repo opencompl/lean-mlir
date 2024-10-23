@@ -1,0 +1,2 @@
+3: load-cmp.ll: parsing has failed
+

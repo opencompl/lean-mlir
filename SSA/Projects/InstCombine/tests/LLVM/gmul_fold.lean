@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gmul_fold_statements
-                                                    
+
 def mul8_low_A0_B0_before := [llvm|
 {
 ^0(%arg60 : i8, %arg61 : i8):
@@ -43,8 +43,9 @@ theorem mul8_low_A0_B0_proof : mul8_low_A0_B0_before ⊑ mul8_low_A0_B0_after :=
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN mul8_low_A0_B0
   all_goals (try extract_goal ; sorry)
@@ -82,8 +83,9 @@ theorem mul8_low_proof : mul8_low_before ⊑ mul8_low_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN mul8_low
   all_goals (try extract_goal ; sorry)
@@ -121,8 +123,9 @@ theorem mul16_low_proof : mul16_low_before ⊑ mul16_low_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN mul16_low
   all_goals (try extract_goal ; sorry)
@@ -160,8 +163,9 @@ theorem mul32_low_proof : mul32_low_before ⊑ mul32_low_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN mul32_low
   all_goals (try extract_goal ; sorry)
@@ -199,8 +203,9 @@ theorem mul64_low_proof : mul64_low_before ⊑ mul64_low_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN mul64_low
   all_goals (try extract_goal ; sorry)
@@ -238,8 +243,9 @@ theorem mul128_low_proof : mul128_low_before ⊑ mul128_low_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN mul128_low
   all_goals (try extract_goal ; sorry)
@@ -277,8 +283,9 @@ theorem mul130_low_proof : mul130_low_before ⊑ mul130_low_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN mul130_low
   all_goals (try extract_goal ; sorry)
@@ -327,8 +334,9 @@ theorem mul9_low_proof : mul9_low_before ⊑ mul9_low_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN mul9_low
   all_goals (try extract_goal ; sorry)
@@ -377,8 +385,9 @@ theorem mul16_low_miss_shift_amount_proof : mul16_low_miss_shift_amount_before �
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN mul16_low_miss_shift_amount
   all_goals (try extract_goal ; sorry)
@@ -427,8 +436,9 @@ theorem mul8_low_miss_half_width_proof : mul8_low_miss_half_width_before ⊑ mul
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN mul8_low_miss_half_width
   all_goals (try extract_goal ; sorry)

@@ -1,0 +1,32 @@
+1: "test_v4i32_splatconst_pow2"
+8: "test_v4i32_splatconst_pow2" contains vectors which are unsupported
+
+1: "test_v4i32_const_pow2"
+8: "test_v4i32_const_pow2" contains vectors which are unsupported
+
+1: "test_v4i32_const_pow2_poison"
+4: "test_v4i32_const_pow2_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+1: "test_v4i32_one"
+4: "test_v4i32_one" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_v4i32_one" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "test_v4i32_one_poison"
+4: "test_v4i32_one_poison" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_v4i32_one_poison" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "test_v4i32_negconstsplat"
+4: "test_v4i32_negconstsplat" has unsupported operation: builtin.unregistered: llvm.freeze
+
+4: "test_v4i32_negconstsplat" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test_v4i32_negconst"
+4: "test_v4i32_negconst" has unsupported operation: builtin.unregistered: llvm.freeze
+
+4: "test_v4i32_negconst" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test_v4i32_negconst_poison"
+4: "test_v4i32_negconst_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+

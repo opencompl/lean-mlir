@@ -1,0 +1,93 @@
+1: "icmp_shl_nsw_sgt"
+4: "icmp_shl_nsw_sgt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_shl_nsw_sge0"
+4: "icmp_shl_nsw_sge0" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_shl_nsw_sge1"
+4: "icmp_shl_nsw_sge1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_shl_nsw_sge1_vec"
+4: "icmp_shl_nsw_sge1_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_shl_nsw_eq"
+4: "icmp_shl_nsw_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_shl_nsw_eq_vec"
+4: "icmp_shl_nsw_eq_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_sgt1"
+4: "icmp_sgt1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_sgt2"
+4: "icmp_sgt2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_sgt3"
+4: "icmp_sgt3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_sgt4"
+4: "icmp_sgt4" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_sgt5"
+4: "icmp_sgt5" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_sgt6"
+4: "icmp_sgt6" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_sgt7"
+4: "icmp_sgt7" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_sgt8"
+4: "icmp_sgt8" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_sgt9"
+4: "icmp_sgt9" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_sgt10"
+4: "icmp_sgt10" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_sgt11"
+4: "icmp_sgt11" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_sgt11_vec"
+4: "icmp_sgt11_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_sle1"
+4: "icmp_sle1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_sle2"
+4: "icmp_sle2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_sle3"
+4: "icmp_sle3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_sle4"
+4: "icmp_sle4" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_sle5"
+4: "icmp_sle5" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_sle6"
+4: "icmp_sle6" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_sle7"
+4: "icmp_sle7" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_sle8"
+4: "icmp_sle8" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_sle9"
+4: "icmp_sle9" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_sle10"
+4: "icmp_sle10" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_sle11"
+4: "icmp_sle11" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_eq1"
+4: "icmp_eq1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_ne1"
+4: "icmp_ne1" has unsupported operation: builtin.unregistered: llvm.icmp
+

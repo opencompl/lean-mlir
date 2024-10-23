@@ -1,0 +1,10 @@
+1: "sprintf"
+5: "sprintf" is empty
+
+1: "test_simplify1"
+4: "test_simplify1" has unsupported operation: llvm.mlir.addressof
+
+4: "test_simplify1" has unsupported operation: llvm.call
+
+4: "test_simplify1" has unsupported operation: llvm.return
+

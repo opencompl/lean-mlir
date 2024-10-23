@@ -1,0 +1,13 @@
+1: "pr80941"
+4: "pr80941" has unsupported operation: builtin.unregistered: llvm.intr.is.fpclass
+
+4: "pr80941" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "pr80941" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "pr80941" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+4: "pr80941" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+4: "pr80941" has unsupported operation: builtin.unregistered: llvm.br
+

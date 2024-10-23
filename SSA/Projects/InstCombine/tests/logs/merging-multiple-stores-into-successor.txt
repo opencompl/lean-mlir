@@ -1,0 +1,2 @@
+3: merging-multiple-stores-into-successor.ll: parsing has failed
+

@@ -1,0 +1,164 @@
+1: "is_rem2_neg_i8"
+4: "is_rem2_neg_i8" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "is_rem2_pos_v2i8"
+4: "is_rem2_pos_v2i8" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "is_rem32_pos_i8"
+4: "is_rem32_pos_i8" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "is_rem4_neg_i16"
+4: "is_rem4_neg_i16" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "use"
+5: "use" is empty
+
+1: "is_rem32_neg_i32_extra_use"
+4: "is_rem32_neg_i32_extra_use" has unsupported operation: llvm.call
+
+4: "is_rem32_neg_i32_extra_use" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "is_rem8_nonneg_i16"
+4: "is_rem8_nonneg_i16" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "is_rem3_neg_i8"
+4: "is_rem3_neg_i8" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "is_rem16_something_i8"
+4: "is_rem16_something_i8" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_div"
+4: "icmp_div" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_div" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "icmp_div" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_div" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "icmp_div" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "icmp_div2"
+4: "icmp_div2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_div2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "icmp_div2" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "icmp_div3"
+4: "icmp_div3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_div3" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "icmp_div3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_div3" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "icmp_div3" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "udiv_eq_umax"
+4: "udiv_eq_umax" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "udiv_eq_umax" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "udiv_ne_umax"
+4: "udiv_ne_umax" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "udiv_ne_umax" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "udiv_eq_big"
+4: "udiv_eq_big" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "udiv_eq_big" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "udiv_ne_big"
+4: "udiv_ne_big" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "udiv_ne_big" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "udiv_eq_not_big"
+4: "udiv_eq_not_big" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "udiv_slt_umax"
+4: "udiv_slt_umax" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "udiv_eq_umax_use"
+4: "udiv_eq_umax_use" has unsupported operation: llvm.call
+
+4: "udiv_eq_umax_use" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sdiv_eq_smin"
+4: "sdiv_eq_smin" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sdiv_eq_smin" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sdiv_ne_smin"
+4: "sdiv_ne_smin" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "sdiv_ne_smin" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sdiv_eq_small"
+4: "sdiv_eq_small" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sdiv_ne_big"
+4: "sdiv_ne_big" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sdiv_eq_not_big"
+4: "sdiv_eq_not_big" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sdiv_ult_smin"
+4: "sdiv_ult_smin" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sdiv_eq_smin_use"
+4: "sdiv_eq_smin_use" has unsupported operation: llvm.call
+
+4: "sdiv_eq_smin_use" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sdiv_x_by_const_cmp_x"
+4: "sdiv_x_by_const_cmp_x" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "udiv_x_by_const_cmp_x"
+4: "udiv_x_by_const_cmp_x" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "udiv_x_by_const_cmp_x_non_splat"
+4: "udiv_x_by_const_cmp_x_non_splat" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sdiv_x_by_const_cmp_x_non_splat"
+4: "sdiv_x_by_const_cmp_x_non_splat" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "lshr_x_by_const_cmp_x"
+4: "lshr_x_by_const_cmp_x" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "lshr_by_const_cmp_sle_value"
+4: "lshr_by_const_cmp_sle_value" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "lshr_by_const_cmp_sle_value_non_splat"
+4: "lshr_by_const_cmp_sle_value_non_splat" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ashr_by_const_cmp_sge_value_non_splat"
+4: "ashr_by_const_cmp_sge_value_non_splat" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "lshr_by_const_cmp_sge_value"
+4: "lshr_by_const_cmp_sge_value" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ashr_x_by_const_cmp_sge_x"
+4: "ashr_x_by_const_cmp_sge_x" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "udiv_x_by_const_cmp_eq_value_neg"
+4: "udiv_x_by_const_cmp_eq_value_neg" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sdiv_x_by_const_cmp_eq_value_neg"
+4: "sdiv_x_by_const_cmp_eq_value_neg" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "lshr_x_by_const_cmp_slt_value_neg"
+4: "lshr_x_by_const_cmp_slt_value_neg" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sdiv_x_by_const_cmp_ult_value_neg"
+4: "sdiv_x_by_const_cmp_ult_value_neg" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sdiv_x_by_const_cmp_sgt_value_neg"
+4: "sdiv_x_by_const_cmp_sgt_value_neg" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ashr_x_by_const_cmp_sle_value_neg"
+4: "ashr_x_by_const_cmp_sle_value_neg" has unsupported operation: builtin.unregistered: llvm.icmp
+

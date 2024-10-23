@@ -1,0 +1,52 @@
+1: "test2"
+4: "test2" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test3"
+4: "test3" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "test3" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "test3" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "test3" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test4"
+4: "test4" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "test5"
+4: "test5" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test5" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test5" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "test6"
+4: "test6" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test6" has unsupported operation: llvm.mlir.undef
+
+4: "test6" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test6" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test6" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "xor_bitcast_vec_to_vec"
+4: "xor_bitcast_vec_to_vec" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "and_bitcast_vec_to_int"
+4: "and_bitcast_vec_to_int" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "or_bitcast_int_to_vec"
+4: "or_bitcast_int_to_vec" has unsupported operation: builtin.unregistered: llvm.bitcast
+

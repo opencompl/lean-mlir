@@ -1,0 +1,178 @@
+1: "test5"
+4: "test5" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test6"
+4: "test6" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test35"
+4: "test35" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test35vec"
+4: "test35vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test35_with_trunc"
+4: "test35_with_trunc" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test36"
+4: "test36" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test36vec"
+4: "test36vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test37"
+4: "test37" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test37vec"
+4: "test37vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test65"
+4: "test65" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test65vec"
+4: "test65vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test66"
+4: "test66" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test66vec"
+4: "test66vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test66vec_scalar_and"
+4: "test66vec_scalar_and" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test67"
+4: "test67" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test67vec"
+4: "test67vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test71"
+4: "test71" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test71vec"
+4: "test71vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test72"
+4: "test72" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test72vec"
+4: "test72vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test73"
+4: "test73" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test73vec"
+4: "test73vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test74"
+4: "test74" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test74vec"
+4: "test74vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test75"
+4: "test75" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test15a"
+4: "test15a" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test15b"
+4: "test15b" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test15c"
+4: "test15c" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test15d"
+4: "test15d" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test15e"
+4: "test15e" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test15f"
+4: "test15f" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test15g"
+4: "test15g" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test15h"
+4: "test15h" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test15i"
+4: "test15i" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test15j"
+4: "test15j" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "use1"
+5: "use1" is empty
+
+1: "clear_to_set"
+4: "clear_to_set" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "clear_to_set" has unsupported operation: llvm.call
+
+1: "clear_to_clear"
+4: "clear_to_clear" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "clear_to_clear" has unsupported operation: llvm.call
+
+1: "set_to_set"
+4: "set_to_set" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "set_to_set" has unsupported operation: llvm.call
+
+1: "set_to_clear"
+4: "set_to_clear" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "set_to_clear" has unsupported operation: llvm.call
+
+1: "clear_to_set_decomposebittest"
+4: "clear_to_set_decomposebittest" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "clear_to_clear_decomposebittest"
+4: "clear_to_clear_decomposebittest" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "set_to_set_decomposebittest"
+4: "set_to_set_decomposebittest" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "set_to_clear_decomposebittest"
+4: "set_to_clear_decomposebittest" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "clear_to_set_decomposebittest_extra_use"
+4: "clear_to_set_decomposebittest_extra_use" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "clear_to_set_decomposebittest_extra_use" has unsupported operation: llvm.call
+
+1: "clear_to_clear_decomposebittest_extra_use"
+4: "clear_to_clear_decomposebittest_extra_use" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "clear_to_clear_decomposebittest_extra_use" has unsupported operation: llvm.call
+
+1: "set_to_set_decomposebittest_extra_use"
+4: "set_to_set_decomposebittest_extra_use" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "set_to_set_decomposebittest_extra_use" has unsupported operation: llvm.call
+
+1: "set_to_clear_decomposebittest_extra_use"
+4: "set_to_clear_decomposebittest_extra_use" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "set_to_clear_decomposebittest_extra_use" has unsupported operation: llvm.call
+
+1: "select_bittest_to_add"
+4: "select_bittest_to_add" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "select_bittest_to_sub"
+4: "select_bittest_to_sub" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "select_bittest_to_shl"
+4: "select_bittest_to_shl" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "select_bittest_to_lshr"
+4: "select_bittest_to_lshr" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "select_bittest_to_ashr"
+4: "select_bittest_to_ashr" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "select_bittest_to_shl_negative_test"
+4: "select_bittest_to_shl_negative_test" has unsupported operation: builtin.unregistered: llvm.icmp
+

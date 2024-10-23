@@ -1,0 +1,82 @@
+1: "fadd_fpext_op0"
+4: "fadd_fpext_op0" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "fadd_fpext_op0" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_fpext_op0" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "fsub_fpext_op1"
+4: "fsub_fpext_op1" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "fsub_fpext_op1" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "fsub_fpext_op1" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "fdiv_constant_op0"
+4: "fdiv_constant_op0" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fdiv_constant_op0" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "fmul_constant_op1"
+4: "fmul_constant_op1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fmul_constant_op1" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "fptrunc_select_true_val"
+4: "fptrunc_select_true_val" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "fptrunc_select_false_val"
+4: "fptrunc_select_false_val" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "use"
+5: "use" is empty
+
+1: "fptrunc_select_true_val_extra_use"
+4: "fptrunc_select_true_val_extra_use" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "fptrunc_select_true_val_extra_use" has unsupported operation: llvm.call
+
+4: "fptrunc_select_true_val_extra_use" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "fptrunc_select_true_val_extra_use_2"
+4: "fptrunc_select_true_val_extra_use_2" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "fptrunc_select_true_val_extra_use_2" has unsupported operation: llvm.call
+
+4: "fptrunc_select_true_val_extra_use_2" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "fptrunc_select_true_val_type_mismatch"
+4: "fptrunc_select_true_val_type_mismatch" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "fptrunc_select_true_val_type_mismatch" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "fptrunc_select_true_val_type_mismatch_fast"
+4: "fptrunc_select_true_val_type_mismatch_fast" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "fptrunc_select_true_val_type_mismatch_fast" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "ItoFtoF_s54_f64_f32"
+4: "ItoFtoF_s54_f64_f32" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+1: "ItoFtoF_u24_f32_f16"
+4: "ItoFtoF_u24_f32_f16" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "ItoFtoF_u24_f32_f16" has unsupported operation: llvm.call
+
+4: "ItoFtoF_u24_f32_f16" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "ItoFtoF_s55_f64_f32"
+4: "ItoFtoF_s55_f64_f32" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "ItoFtoF_s55_f64_f32" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "ItoFtoF_u25_f32_f16"
+4: "ItoFtoF_u25_f32_f16" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "ItoFtoF_u25_f32_f16" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "fptrunc_to_bfloat_bitcast_to_half"
+4: "fptrunc_to_bfloat_bitcast_to_half" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+4: "fptrunc_to_bfloat_bitcast_to_half" has unsupported operation: builtin.unregistered: llvm.bitcast
+

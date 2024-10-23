@@ -1,0 +1,129 @@
+1: "use"
+5: "use" is empty
+
+1: "shl_sub_i32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.shl
+2: llvm.return
+
+1: "shl_sub_multiuse_i32"
+4: "shl_sub_multiuse_i32" has unsupported operation: llvm.call
+
+1: "shl_sub_i8"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.shl
+2: llvm.return
+
+1: "shl_sub_i64"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.shl
+2: llvm.return
+
+1: "shl_sub_i64_vec"
+8: "shl_sub_i64_vec" contains vectors which are unsupported
+
+1: "shl_sub_i64_vec_poison"
+8: "shl_sub_i64_vec_poison" contains vectors which are unsupported
+
+1: "shl_bad_sub_i32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.shl
+2: llvm.return
+
+1: "bad_shl_sub_i32"
+7: "bad_shl_sub_i32" is unchanged by InstCombine
+
+1: "shl_bad_sub2_i32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.shl
+2: llvm.return
+
+1: "bad_shl2_sub_i32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.shl
+2: llvm.return
+
+1: "shl_bad_sub_i8"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.shl
+2: llvm.return
+
+1: "shl_bad_sub_i64"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.shl
+2: llvm.return
+
+1: "shl_bad_sub_i64_vec"
+8: "shl_bad_sub_i64_vec" contains vectors which are unsupported
+
+1: "bad_shl_sub_i64_vec"
+7: "bad_shl_sub_i64_vec" is unchanged by InstCombine
+
+1: "shl_sub_i64_vec_undef_bad"
+4: "shl_sub_i64_vec_undef_bad" has unsupported operation: llvm.mlir.undef
+
+4: "shl_sub_i64_vec_undef_bad" has unsupported operation: llvm.mlir.undef
+
+4: "shl_sub_i64_vec_undef_bad" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_sub_i64_vec_undef_bad" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_sub_i64_vec_undef_bad" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "shl_sub_i64_vec_poison_bad2"
+4: "shl_sub_i64_vec_poison_bad2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shl_sub_i64_vec_poison_bad2" has unsupported operation: llvm.mlir.undef
+
+4: "shl_sub_i64_vec_poison_bad2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_sub_i64_vec_poison_bad2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_sub_i64_vec_poison_bad2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_sub_i64_vec_poison_bad2" has unsupported operation: llvm.mlir.undef
+
+4: "shl_sub_i64_vec_poison_bad2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_sub_i64_vec_poison_bad2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_sub_i64_vec_poison_bad2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "shl_const_op1_sub_const_op0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.shl
+2: llvm.return
+
+1: "shl_const_op1_sub_const_op0_splat"
+8: "shl_const_op1_sub_const_op0_splat" contains vectors which are unsupported
+
+1: "shl_const_op1_sub_const_op0_use"
+4: "shl_const_op1_sub_const_op0_use" has unsupported operation: llvm.call
+

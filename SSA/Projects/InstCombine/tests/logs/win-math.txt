@@ -1,0 +1,215 @@
+1: "acos"
+5: "acos" is empty
+
+1: "float_acos"
+4: "float_acos" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "float_acos" has unsupported operation: llvm.call
+
+4: "float_acos" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "asin"
+5: "asin" is empty
+
+1: "float_asin"
+4: "float_asin" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "float_asin" has unsupported operation: llvm.call
+
+4: "float_asin" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "atan"
+5: "atan" is empty
+
+1: "float_atan"
+4: "float_atan" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "float_atan" has unsupported operation: llvm.call
+
+4: "float_atan" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "atan2"
+5: "atan2" is empty
+
+1: "float_atan2"
+4: "float_atan2" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "float_atan2" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "float_atan2" has unsupported operation: llvm.call
+
+4: "float_atan2" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "ceil"
+5: "ceil" is empty
+
+1: "float_ceil"
+4: "float_ceil" has unsupported operation: builtin.unregistered: llvm.intr.ceil
+
+1: "_copysign"
+5: "_copysign" is empty
+
+1: "float_copysign"
+4: "float_copysign" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "float_copysign" has unsupported operation: llvm.call
+
+4: "float_copysign" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "cos"
+5: "cos" is empty
+
+1: "float_cos"
+4: "float_cos" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "float_cos" has unsupported operation: llvm.call
+
+4: "float_cos" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "cosh"
+5: "cosh" is empty
+
+1: "float_cosh"
+4: "float_cosh" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "float_cosh" has unsupported operation: llvm.call
+
+4: "float_cosh" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "exp"
+5: "exp" is empty
+
+1: "float_exp"
+4: "float_exp" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "float_exp" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "float_exp" has unsupported operation: llvm.call
+
+4: "float_exp" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "fabs"
+5: "fabs" is empty
+
+1: "float_fabs"
+4: "float_fabs" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "float_fabs" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "float_fabs" has unsupported operation: llvm.call
+
+4: "float_fabs" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "floor"
+5: "floor" is empty
+
+1: "float_floor"
+4: "float_floor" has unsupported operation: builtin.unregistered: llvm.intr.floor
+
+1: "fmod"
+5: "fmod" is empty
+
+1: "float_fmod"
+4: "float_fmod" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "float_fmod" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "float_fmod" has unsupported operation: llvm.call
+
+4: "float_fmod" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "log"
+5: "log" is empty
+
+1: "float_log"
+4: "float_log" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "float_log" has unsupported operation: llvm.call
+
+4: "float_log" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "logb"
+5: "logb" is empty
+
+1: "float_logb"
+4: "float_logb" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "float_logb" has unsupported operation: llvm.call
+
+4: "float_logb" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "pow"
+5: "pow" is empty
+
+1: "float_pow"
+4: "float_pow" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "float_pow" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "float_pow" has unsupported operation: llvm.call
+
+4: "float_pow" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "sin"
+5: "sin" is empty
+
+1: "float_sin"
+4: "float_sin" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "float_sin" has unsupported operation: llvm.call
+
+4: "float_sin" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "sinh"
+5: "sinh" is empty
+
+1: "float_sinh"
+4: "float_sinh" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "float_sinh" has unsupported operation: llvm.call
+
+4: "float_sinh" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "sqrt"
+5: "sqrt" is empty
+
+1: "float_sqrt"
+4: "float_sqrt" has unsupported operation: llvm.call
+
+1: "tan"
+5: "tan" is empty
+
+1: "float_tan"
+4: "float_tan" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "float_tan" has unsupported operation: llvm.call
+
+4: "float_tan" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "tanh"
+5: "tanh" is empty
+
+1: "float_tanh"
+4: "float_tanh" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "float_tanh" has unsupported operation: llvm.call
+
+4: "float_tanh" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "round"
+5: "round" is empty
+
+1: "float_round"
+4: "float_round" has unsupported operation: builtin.unregistered: llvm.intr.round
+
+1: "powf"
+5: "powf" is empty
+
+1: "float_powsqrt"
+4: "float_powsqrt" has unsupported operation: llvm.call
+
+4: "float_powsqrt" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "sqrtf"
+5: "sqrtf" is empty
+

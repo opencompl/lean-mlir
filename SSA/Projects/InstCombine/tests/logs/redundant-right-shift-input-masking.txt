@@ -1,0 +1,88 @@
+1: "t0_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.lshr
+2: llvm.return
+
+1: "t1_sshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.ashr
+2: llvm.return
+
+1: "t2_vec"
+8: "t2_vec" contains vectors which are unsupported
+
+1: "t3_vec_undef"
+4: "t3_vec_undef" has unsupported operation: llvm.mlir.undef
+
+4: "t3_vec_undef" has unsupported operation: llvm.mlir.undef
+
+4: "t3_vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t3_vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t3_vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t3_vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "use32"
+5: "use32" is empty
+
+1: "t4_extrause0"
+4: "t4_extrause0" has unsupported operation: llvm.call
+
+1: "t5_extrause1"
+4: "t5_extrause1" has unsupported operation: llvm.call
+
+1: "t6_extrause2"
+4: "t6_extrause2" has unsupported operation: llvm.call
+
+4: "t6_extrause2" has unsupported operation: llvm.call
+
+1: "t7_noncanonical_lshr_lshr_extrauses"
+4: "t7_noncanonical_lshr_lshr_extrauses" has unsupported operation: llvm.call
+
+4: "t7_noncanonical_lshr_lshr_extrauses" has unsupported operation: llvm.call
+
+1: "t8_noncanonical_lshr_ashr_extrauses"
+4: "t8_noncanonical_lshr_ashr_extrauses" has unsupported operation: llvm.call
+
+4: "t8_noncanonical_lshr_ashr_extrauses" has unsupported operation: llvm.call
+
+1: "t9_noncanonical_ashr_lshr_extrauses"
+4: "t9_noncanonical_ashr_lshr_extrauses" has unsupported operation: llvm.call
+
+4: "t9_noncanonical_ashr_lshr_extrauses" has unsupported operation: llvm.call
+
+1: "t10_noncanonical_ashr_ashr_extrauses"
+4: "t10_noncanonical_ashr_ashr_extrauses" has unsupported operation: llvm.call
+
+4: "t10_noncanonical_ashr_ashr_extrauses" has unsupported operation: llvm.call
+
+1: "gen32"
+5: "gen32" is empty
+
+1: "t11_commutative"
+4: "t11_commutative" has unsupported operation: llvm.call
+
+1: "n12"
+7: "n12" is unchanged by InstCombine
+
+1: "n13"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.lshr
+2: llvm.return
+
+1: "n14"
+4: "n14" has unsupported operation: llvm.call
+
+4: "n14" has unsupported operation: llvm.call
+

@@ -1,0 +1,9 @@
+1: "t1"
+4: "t1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "t1" has unsupported operation: builtin.unregistered: llvm.intr.dbg.value
+
+4: "t1" has unsupported operation: builtin.unregistered: llvm.intr.dbg.value
+
+4: "t1" has unsupported operation: llvm.return
+

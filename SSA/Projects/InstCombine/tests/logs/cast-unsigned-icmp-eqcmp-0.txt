@@ -1,0 +1,54 @@
+1: "i32_cast_cmp_eq_int_0_uitofp_float"
+4: "i32_cast_cmp_eq_int_0_uitofp_float" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "i32_cast_cmp_eq_int_0_uitofp_float_vec"
+4: "i32_cast_cmp_eq_int_0_uitofp_float_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "i32_cast_cmp_eq_int_0_uitofp_float_vec_poison"
+4: "i32_cast_cmp_eq_int_0_uitofp_float_vec_poison" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "i32_cast_cmp_ne_int_0_uitofp_float"
+4: "i32_cast_cmp_ne_int_0_uitofp_float" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "i32_cast_cmp_ne_int_0_uitofp_float_vec"
+4: "i32_cast_cmp_ne_int_0_uitofp_float_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "i32_cast_cmp_ne_int_0_uitofp_float_vec_poison"
+4: "i32_cast_cmp_ne_int_0_uitofp_float_vec_poison" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "i32_cast_cmp_eq_int_0_uitofp_double"
+4: "i32_cast_cmp_eq_int_0_uitofp_double" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "i32_cast_cmp_eq_int_0_uitofp_double_vec"
+4: "i32_cast_cmp_eq_int_0_uitofp_double_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "i32_cast_cmp_eq_int_0_uitofp_double_vec_poison"
+4: "i32_cast_cmp_eq_int_0_uitofp_double_vec_poison" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "i32_cast_cmp_ne_int_0_uitofp_double"
+4: "i32_cast_cmp_ne_int_0_uitofp_double" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "i32_cast_cmp_ne_int_0_uitofp_double_vec"
+4: "i32_cast_cmp_ne_int_0_uitofp_double_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "i32_cast_cmp_ne_int_0_uitofp_double_vec_poison"
+4: "i32_cast_cmp_ne_int_0_uitofp_double_vec_poison" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "i32_cast_cmp_eq_int_0_uitofp_half"
+4: "i32_cast_cmp_eq_int_0_uitofp_half" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "i32_cast_cmp_eq_int_0_uitofp_half_vec"
+4: "i32_cast_cmp_eq_int_0_uitofp_half_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "i32_cast_cmp_eq_int_0_uitofp_half_vec_poison"
+4: "i32_cast_cmp_eq_int_0_uitofp_half_vec_poison" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "i32_cast_cmp_ne_int_0_uitofp_half"
+4: "i32_cast_cmp_ne_int_0_uitofp_half" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "i32_cast_cmp_ne_int_0_uitofp_half_vec"
+4: "i32_cast_cmp_ne_int_0_uitofp_half_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "i32_cast_cmp_ne_int_0_uitofp_half_vec_poison"
+4: "i32_cast_cmp_ne_int_0_uitofp_half_vec_poison" has unsupported operation: builtin.unregistered: llvm.icmp
+

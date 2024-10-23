@@ -1,0 +1,455 @@
+1: "use"
+5: "use" is empty
+
+1: "usev2xi8"
+5: "usev2xi8" is empty
+
+1: "squared_nsw_eq0"
+4: "squared_nsw_eq0" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "squared_nuw_eq0"
+4: "squared_nuw_eq0" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "squared_nsw_nuw_ne0"
+4: "squared_nsw_nuw_ne0" has unsupported operation: llvm.call
+
+4: "squared_nsw_nuw_ne0" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "squared_eq0"
+4: "squared_eq0" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_nsw_eq0"
+4: "mul_nsw_eq0" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "squared_nsw_eq1"
+4: "squared_nsw_eq1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "squared_nsw_sgt0"
+4: "squared_nsw_sgt0" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "slt_positive_multip_rem_zero"
+4: "slt_positive_multip_rem_zero" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "slt_negative_multip_rem_zero"
+4: "slt_negative_multip_rem_zero" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "slt_positive_multip_rem_nz"
+4: "slt_positive_multip_rem_nz" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ult_rem_zero"
+4: "ult_rem_zero" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ult_rem_zero_nsw"
+4: "ult_rem_zero_nsw" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ult_rem_nz"
+4: "ult_rem_nz" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ult_rem_nz_nsw"
+4: "ult_rem_nz_nsw" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sgt_positive_multip_rem_zero"
+4: "sgt_positive_multip_rem_zero" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sgt_negative_multip_rem_zero"
+4: "sgt_negative_multip_rem_zero" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sgt_positive_multip_rem_nz"
+4: "sgt_positive_multip_rem_nz" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ugt_rem_zero"
+4: "ugt_rem_zero" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ugt_rem_zero_nsw"
+4: "ugt_rem_zero_nsw" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ugt_rem_nz"
+4: "ugt_rem_nz" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ugt_rem_nz_nsw"
+4: "ugt_rem_nz_nsw" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "eq_nsw_rem_zero"
+4: "eq_nsw_rem_zero" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ne_nsw_rem_zero"
+4: "ne_nsw_rem_zero" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ne_nsw_rem_zero_undef1"
+4: "ne_nsw_rem_zero_undef1" has unsupported operation: llvm.mlir.undef
+
+4: "ne_nsw_rem_zero_undef1" has unsupported operation: llvm.mlir.undef
+
+4: "ne_nsw_rem_zero_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ne_nsw_rem_zero_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ne_nsw_rem_zero_undef1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ne_nsw_rem_zero_undef2"
+4: "ne_nsw_rem_zero_undef2" has unsupported operation: llvm.mlir.undef
+
+4: "ne_nsw_rem_zero_undef2" has unsupported operation: llvm.mlir.undef
+
+4: "ne_nsw_rem_zero_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ne_nsw_rem_zero_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ne_nsw_rem_zero_undef2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "eq_nsw_rem_zero_uses"
+4: "eq_nsw_rem_zero_uses" has unsupported operation: llvm.call
+
+4: "eq_nsw_rem_zero_uses" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "eq_nsw_rem_nz"
+4: "eq_nsw_rem_nz" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "ne_nsw_rem_nz"
+4: "ne_nsw_rem_nz" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "eq_nuw_rem_zero"
+4: "eq_nuw_rem_zero" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "eq_nuw_rem_zero_undef1"
+4: "eq_nuw_rem_zero_undef1" has unsupported operation: llvm.mlir.undef
+
+4: "eq_nuw_rem_zero_undef1" has unsupported operation: llvm.mlir.undef
+
+4: "eq_nuw_rem_zero_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "eq_nuw_rem_zero_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "eq_nuw_rem_zero_undef1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "eq_nuw_rem_zero_undef2"
+4: "eq_nuw_rem_zero_undef2" has unsupported operation: llvm.mlir.undef
+
+4: "eq_nuw_rem_zero_undef2" has unsupported operation: llvm.mlir.undef
+
+4: "eq_nuw_rem_zero_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "eq_nuw_rem_zero_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "eq_nuw_rem_zero_undef2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ne_nuw_rem_zero"
+4: "ne_nuw_rem_zero" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ne_nuw_rem_zero_uses"
+4: "ne_nuw_rem_zero_uses" has unsupported operation: llvm.call
+
+4: "ne_nuw_rem_zero_uses" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "eq_nuw_rem_nz"
+4: "eq_nuw_rem_nz" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "ne_nuw_rem_nz"
+4: "ne_nuw_rem_nz" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "sgt_positive_multip_rem_zero_nonsw"
+4: "sgt_positive_multip_rem_zero_nonsw" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ult_multip_rem_zero_nonsw"
+4: "ult_multip_rem_zero_nonsw" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ugt_rem_zero_nonuw"
+4: "ugt_rem_zero_nonuw" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sgt_minnum"
+4: "sgt_minnum" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "ule_bignum"
+4: "ule_bignum" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sgt_mulzero"
+4: "sgt_mulzero" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "eq_rem_zero_nonuw"
+4: "eq_rem_zero_nonuw" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ne_rem_zero_nonuw"
+4: "ne_rem_zero_nonuw" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_constant_eq"
+4: "mul_constant_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_constant_ne_splat"
+4: "mul_constant_ne_splat" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_constant_ne_extra_use1"
+4: "mul_constant_ne_extra_use1" has unsupported operation: llvm.call
+
+4: "mul_constant_ne_extra_use1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_constant_eq_extra_use2"
+4: "mul_constant_eq_extra_use2" has unsupported operation: llvm.call
+
+4: "mul_constant_eq_extra_use2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_constant_ne_extra_use3"
+4: "mul_constant_ne_extra_use3" has unsupported operation: llvm.call
+
+4: "mul_constant_ne_extra_use3" has unsupported operation: llvm.call
+
+4: "mul_constant_ne_extra_use3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_constant_eq_nsw"
+4: "mul_constant_eq_nsw" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_constant_ne_nsw_splat"
+4: "mul_constant_ne_nsw_splat" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_constant_ne_nsw_extra_use1"
+4: "mul_constant_ne_nsw_extra_use1" has unsupported operation: llvm.call
+
+4: "mul_constant_ne_nsw_extra_use1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_constant_eq_nsw_extra_use2"
+4: "mul_constant_eq_nsw_extra_use2" has unsupported operation: llvm.call
+
+4: "mul_constant_eq_nsw_extra_use2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_constant_ne_nsw_extra_use3"
+4: "mul_constant_ne_nsw_extra_use3" has unsupported operation: llvm.call
+
+4: "mul_constant_ne_nsw_extra_use3" has unsupported operation: llvm.call
+
+4: "mul_constant_ne_nsw_extra_use3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_constant_nuw_eq"
+4: "mul_constant_nuw_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_constant_ne_nuw_splat"
+4: "mul_constant_ne_nuw_splat" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_constant_ne_nuw_extra_use1"
+4: "mul_constant_ne_nuw_extra_use1" has unsupported operation: llvm.call
+
+4: "mul_constant_ne_nuw_extra_use1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_constant_eq_nuw_extra_use2"
+4: "mul_constant_eq_nuw_extra_use2" has unsupported operation: llvm.call
+
+4: "mul_constant_eq_nuw_extra_use2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_constant_ne_nuw_extra_use3"
+4: "mul_constant_ne_nuw_extra_use3" has unsupported operation: llvm.call
+
+4: "mul_constant_ne_nuw_extra_use3" has unsupported operation: llvm.call
+
+4: "mul_constant_ne_nuw_extra_use3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_constant_ult"
+4: "mul_constant_ult" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_constant_nuw_sgt"
+4: "mul_constant_nuw_sgt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_mismatch_constant_nuw_eq"
+4: "mul_mismatch_constant_nuw_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_constant_partial_nuw_eq"
+4: "mul_constant_partial_nuw_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_constant_mismatch_wrap_eq"
+4: "mul_constant_mismatch_wrap_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "eq_mul_constants_with_tz"
+4: "eq_mul_constants_with_tz" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "eq_mul_constants_with_tz_splat"
+4: "eq_mul_constants_with_tz_splat" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "oss_fuzz_39934"
+4: "oss_fuzz_39934" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_of_bool"
+4: "mul_of_bool" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+
+4: "mul_of_bool" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "mul_of_bool_commute"
+4: "mul_of_bool_commute" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "mul_of_bools"
+4: "mul_of_bools" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "not_mul_of_bool"
+4: "not_mul_of_bool" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "not_mul_of_bool" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "not_mul_of_bool_commute"
+4: "not_mul_of_bool_commute" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_of_bool_no_lz_other_op"
+4: "mul_of_bool_no_lz_other_op" has unsupported operation after optimization: builtin.unregistered: llvm.sext
+
+4: "mul_of_bool_no_lz_other_op" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "mul_of_pow2"
+4: "mul_of_pow2" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+
+4: "mul_of_pow2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "mul_of_pow2_commute"
+4: "mul_of_pow2_commute" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "mul_of_pow2s"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.mul
+2: llvm.or
+2: llvm.return
+
+1: "not_mul_of_pow2"
+4: "not_mul_of_pow2" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "not_mul_of_pow2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "not_mul_of_pow2_commute"
+4: "not_mul_of_pow2_commute" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_of_pow2_no_lz_other_op"
+4: "mul_of_pow2_no_lz_other_op" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "mul_of_pow2_no_lz_other_op" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "splat_mul_known_lz"
+4: "splat_mul_known_lz" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+
+4: "splat_mul_known_lz" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "splat_mul_unknown_lz"
+4: "splat_mul_unknown_lz" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_oddC_overflow_eq"
+4: "mul_oddC_overflow_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_oddC_eq_nomod"
+4: "mul_oddC_eq_nomod" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_evenC_ne"
+4: "mul_evenC_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_oddC_ne_vec"
+4: "mul_oddC_ne_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_oddC_ne_nosplat_vec"
+4: "mul_oddC_ne_nosplat_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_nsuw_xy_z_maybe_zero_eq"
+4: "mul_nsuw_xy_z_maybe_zero_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_xy_z_assumenozero_ne"
+4: "mul_xy_z_assumenozero_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "mul_xy_z_assumenozero_ne" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "mul_xy_z_assumenozero_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_xy_z_assumeodd_eq"
+4: "mul_xy_z_assumeodd_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "mul_xy_z_assumeodd_eq" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "mul_xy_z_assumeodd_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "reused_mul_nsw_xy_z_setnonzero_vec_ne"
+4: "reused_mul_nsw_xy_z_setnonzero_vec_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "reused_mul_nsw_xy_z_setnonzero_vec_ne" has unsupported operation: llvm.call
+
+1: "mul_mixed_nuw_nsw_xy_z_setodd_ult"
+4: "mul_mixed_nuw_nsw_xy_z_setodd_ult" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_nuw_xy_z_assumenonzero_uge"
+4: "mul_nuw_xy_z_assumenonzero_uge" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "mul_nuw_xy_z_assumenonzero_uge" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "mul_nuw_xy_z_assumenonzero_uge" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "mul_nuw_xy_z_assumenonzero_uge" has unsupported operation: llvm.call
+
+1: "mul_nuw_xy_z_setnonzero_vec_eq"
+4: "mul_nuw_xy_z_setnonzero_vec_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_nuw_xy_z_brnonzero_ult"
+4: "mul_nuw_xy_z_brnonzero_ult" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "mul_nuw_xy_z_brnonzero_ult" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "mul_nuw_xy_z_brnonzero_ult" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "mul_nuw_xy_z_brnonzero_ult" has unsupported operation: llvm.call
+
+1: "reused_mul_nuw_xy_z_selectnonzero_ugt"
+4: "reused_mul_nuw_xy_z_selectnonzero_ugt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "reused_mul_nuw_xy_z_selectnonzero_ugt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_mixed_nsw_nuw_xy_z_setnonzero_vec_ule"
+4: "mul_mixed_nsw_nuw_xy_z_setnonzero_vec_ule" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_eq_mul_nsw_nonequal"
+4: "icmp_eq_mul_nsw_nonequal" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_eq_mul_nuw_nonequal"
+4: "icmp_eq_mul_nuw_nonequal" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_eq_mul_nsw_nonequal_commuted"
+4: "icmp_eq_mul_nsw_nonequal_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_ne_mul_nsw_nonequal"
+4: "icmp_ne_mul_nsw_nonequal" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_eq_mul_nsw_mayequal"
+4: "icmp_eq_mul_nsw_mayequal" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_eq_mul_nsw_nuw_nonequal"
+4: "icmp_eq_mul_nsw_nuw_nonequal" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_ult_mul_nsw_nonequal"
+4: "icmp_ult_mul_nsw_nonequal" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_mul_nsw_slt"
+4: "icmp_mul_nsw_slt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_mul_nsw_sle"
+4: "icmp_mul_nsw_sle" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_mul_nsw_sgt"
+4: "icmp_mul_nsw_sgt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_mul_nsw_sge"
+4: "icmp_mul_nsw_sge" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_mul_nsw_slt_neg"
+4: "icmp_mul_nsw_slt_neg" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_mul_nsw_slt_neg_var"
+4: "icmp_mul_nsw_slt_neg_var" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_mul_nsw_slt_neg_var" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "icmp_mul_nsw_slt_neg_var" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_mul_nonsw_slt"
+4: "icmp_mul_nonsw_slt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_mul_nsw_slt_unknown_sign"
+4: "icmp_mul_nsw_slt_unknown_sign" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_mul_nsw_slt_may_be_zero"
+4: "icmp_mul_nsw_slt_may_be_zero" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_mul_nsw_slt_may_be_zero" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "icmp_mul_nsw_slt_may_be_zero" has unsupported operation: builtin.unregistered: llvm.icmp
+

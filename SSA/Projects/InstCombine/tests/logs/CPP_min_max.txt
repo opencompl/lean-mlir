@@ -1,0 +1,22 @@
+1: "_Z5test1RiS_"
+4: "_Z5test1RiS_" has unsupported operation: llvm.load
+
+4: "_Z5test1RiS_" has unsupported operation: llvm.load
+
+4: "_Z5test1RiS_" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "_Z5test1RiS_" has unsupported operation: llvm.store
+
+4: "_Z5test1RiS_" has unsupported operation: llvm.return
+
+1: "_Z5test2RiS_"
+4: "_Z5test2RiS_" has unsupported operation: llvm.load
+
+4: "_Z5test2RiS_" has unsupported operation: llvm.load
+
+4: "_Z5test2RiS_" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "_Z5test2RiS_" has unsupported operation: llvm.store
+
+4: "_Z5test2RiS_" has unsupported operation: llvm.return
+

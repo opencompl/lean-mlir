@@ -1,0 +1,131 @@
+1: "test_logf_pos"
+4: "test_logf_pos" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test_logf_pos" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_logf_pos" has unsupported operation: builtin.unregistered: llvm.intr.log
+
+1: "test_log_pos"
+4: "test_log_pos" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test_log_pos" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_log_pos" has unsupported operation: builtin.unregistered: llvm.intr.log
+
+1: "test_logl_pos"
+4: "test_logl_pos" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test_logl_pos" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_logl_pos" has unsupported operation: builtin.unregistered: llvm.intr.log
+
+1: "test_log10f_pos"
+4: "test_log10f_pos" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test_log10f_pos" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_log10f_pos" has unsupported operation: builtin.unregistered: llvm.intr.log10
+
+1: "test_log10_pos"
+4: "test_log10_pos" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test_log10_pos" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_log10_pos" has unsupported operation: builtin.unregistered: llvm.intr.log10
+
+1: "test_log10l_pos"
+4: "test_log10l_pos" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test_log10l_pos" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_log10l_pos" has unsupported operation: builtin.unregistered: llvm.intr.log10
+
+1: "test_log2f_pos"
+4: "test_log2f_pos" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test_log2f_pos" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_log2f_pos" has unsupported operation: builtin.unregistered: llvm.intr.log2
+
+1: "test_log2_pos"
+4: "test_log2_pos" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test_log2_pos" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_log2_pos" has unsupported operation: builtin.unregistered: llvm.intr.log2
+
+1: "test_log2l_pos"
+4: "test_log2l_pos" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test_log2l_pos" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_log2l_pos" has unsupported operation: builtin.unregistered: llvm.intr.log2
+
+1: "test_logb_pos"
+4: "test_logb_pos" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test_logb_pos" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_logb_pos" has unsupported operation: llvm.call
+
+1: "test_log1p_pos"
+4: "test_log1p_pos" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test_log1p_pos" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_log1p_pos" has unsupported operation: llvm.call
+
+1: "metadata"
+4: "metadata" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "metadata" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "metadata" has unsupported operation: builtin.unregistered: llvm.intr.log
+
+1: "test_logf_pos_denormalpreserve"
+4: "test_logf_pos_denormalpreserve" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test_logf_pos_denormalpreserve" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_logf_pos_denormalpreserve" has unsupported operation: llvm.call
+
+1: "test_logf_pos_denormaldynamic"
+4: "test_logf_pos_denormaldynamic" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test_logf_pos_denormaldynamic" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_logf_pos_denormaldynamic" has unsupported operation: llvm.call
+
+1: "log"
+5: "log" is empty
+
+1: "logf"
+5: "logf" is empty
+
+1: "logl"
+5: "logl" is empty
+
+1: "log10"
+5: "log10" is empty
+
+1: "log10f"
+5: "log10f" is empty
+
+1: "log10l"
+5: "log10l" is empty
+
+1: "log2"
+5: "log2" is empty
+
+1: "log2f"
+5: "log2f" is empty
+
+1: "log2l"
+5: "log2l" is empty
+
+1: "logb"
+5: "logb" is empty
+
+1: "log1p"
+5: "log1p" is empty
+

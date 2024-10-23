@@ -1,0 +1,15 @@
+1: "call_thunk"
+4: "call_thunk" has unsupported operation: llvm.mlir.addressof
+
+4: "call_thunk" has unsupported operation: llvm.call
+
+1: "inc_first_arg_thunk"
+4: "inc_first_arg_thunk" has unsupported operation: llvm.mlir.addressof
+
+4: "inc_first_arg_thunk" has unsupported operation: llvm.call
+
+4: "inc_first_arg_thunk" has unsupported operation: llvm.return
+
+1: "plus"
+7: "plus" is unchanged by InstCombine
+

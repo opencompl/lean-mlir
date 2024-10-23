@@ -1,0 +1,60 @@
+1: "t0_select_cond_and_v0"
+4: "t0_select_cond_and_v0" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "t0_select_cond_and_v0" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "t0_select_cond_and_v0_logical"
+4: "t0_select_cond_and_v0_logical" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "t0_select_cond_and_v0_logical" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "t1_select_cond_and_v1"
+4: "t1_select_cond_and_v1" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "t1_select_cond_and_v1" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "t1_select_cond_and_v1_logical"
+4: "t1_select_cond_and_v1_logical" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "t1_select_cond_and_v1_logical" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "t2_select_cond_or_v0"
+4: "t2_select_cond_or_v0" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "t2_select_cond_or_v0" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "t2_select_cond_or_v0_logical"
+4: "t2_select_cond_or_v0_logical" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "t2_select_cond_or_v0_logical" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "t3_select_cond_or_v1"
+4: "t3_select_cond_or_v1" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "t3_select_cond_or_v1" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "t3_select_cond_or_v1_logical"
+4: "t3_select_cond_or_v1_logical" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "t3_select_cond_or_v1_logical" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "t4_select_cond_xor_v0"
+4: "t4_select_cond_xor_v0" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "t4_select_cond_xor_v0" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "t4_select_cond_xor_v1"
+4: "t4_select_cond_xor_v1" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "t4_select_cond_xor_v1" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "t5_select_cond_xor_v2"
+4: "t5_select_cond_xor_v2" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "t5_select_cond_xor_v2" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "t5_select_cond_xor_v3"
+4: "t5_select_cond_xor_v3" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "t5_select_cond_xor_v3" has unsupported operation: builtin.unregistered: llvm.intr.smin
+

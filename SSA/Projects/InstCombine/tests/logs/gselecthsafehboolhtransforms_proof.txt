@@ -1,0 +1,598 @@
+⚠ [49/2462] Replayed Mathlib.Logic.Basic
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:155:8: `dec_em'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:159:8: `em'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:304:8: `or_congr_left'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:307:8: `or_congr_right'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:320:8: `imp_or'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:359:8: `xor_iff_not_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:418:8: `eqRec_heq'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:511:8: `forall_true_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:532:8: `exists_apply_eq_apply'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:539:6: `exists_apply_eq_apply2'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:548:6: `exists_apply_eq_apply3'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:575:8: `forall_apply_eq_imp_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:578:8: `forall_eq_apply_imp_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:638:8: `forall_prop_congr'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:711:6: `Classical.choose_eq'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:847:8: `dite_eq_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:851:8: `ite_eq_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [66/2462] Replayed Mathlib.Algebra.NeZero
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/NeZero.lean:44:6: `zero_ne_one'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/NeZero.lean:46:6: `one_ne_zero'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/NeZero.lean:48:6: `two_ne_zero'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/NeZero.lean:50:6: `three_ne_zero'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/NeZero.lean:52:6: `four_ne_zero'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [69/2462] Replayed Mathlib.Logic.ExistsUnique
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/ExistsUnique.lean:109:16: `exists_unique_eq'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [74/2462] Replayed Mathlib.Logic.Function.Basic
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:78:8: `Function.Injective.eq_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:87:8: `Function.Injective.ne_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:117:8: `Function.Injective.of_comp_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:163:8: `Function.Surjective.of_comp_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:237:8: `Function.Bijective.of_comp_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:541:8: `Function.update_comp_eq_of_forall_ne'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:552:8: `Function.update_comp_eq_of_injective'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:649:8: `Function.extend_apply'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:681:8: `Function.Injective.surjective_comp_right'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [94/2462] Replayed Mathlib.Control.Combinators
+warning: ././.lake/packages/mathlib/././Mathlib/Control/Combinators.lean:35:4: `Monad.mapM'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Control/Combinators.lean:57:4: `Monad.sequence'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [96/2462] Replayed Mathlib.Logic.IsEmpty
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/IsEmpty.lean:36:9: `Fin.isEmpty'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [229/2462] Replayed Mathlib.Data.Prod.PProd
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Prod/PProd.lean:35:8: `PProd.forall'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Prod/PProd.lean:38:8: `PProd.exists'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [230/2462] Replayed Mathlib.Data.Bool.Basic
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Bool/Basic.lean:156:8: `Bool.eq_true_of_not_eq_false'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Bool/Basic.lean:159:8: `Bool.eq_false_of_not_eq_true'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [232/2462] Replayed Mathlib.Logic.Function.Iterate
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Iterate.lean:160:8: `Function.iterate_succ'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Iterate.lean:163:8: `Function.iterate_succ_apply'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [234/2462] Replayed Mathlib.Data.Prod.Basic
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Prod/Basic.lean:31:8: `Prod.forall'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Prod/Basic.lean:34:8: `Prod.exists'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Prod/Basic.lean:51:8: `Prod.map_apply'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Prod/Basic.lean:54:8: `Prod.map_fst'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Prod/Basic.lean:57:8: `Prod.map_snd'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [235/2462] Replayed Mathlib.Data.Sigma.Basic
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Sigma/Basic.lean:90:6: `Sigma.exists'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Sigma/Basic.lean:93:6: `Sigma.forall'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [239/2462] Replayed Mathlib.Data.FunLike.Basic
+warning: ././.lake/packages/mathlib/././Mathlib/Data/FunLike/Basic.lean:187:8: `DFunLike.ext'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [244/2462] Replayed Mathlib.Logic.Relation
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Relation.lean:351:8: `Relation.TransGen.head'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Relation.lean:354:8: `Relation.TransGen.tail'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Relation.lean:444:8: `Relation.TransGen.lift'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Relation.lean:453:6: `Relation.TransGen.closed'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Relation.lean:523:8: `Relation.ReflTransGen.lift'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [245/2462] Replayed Mathlib.Logic.Unique
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Unique.lean:131:18: `Unique.subsingleton_unique'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Unique.lean:259:9: `Unique.subtypeEq'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [252/2462] Replayed Mathlib.Data.Quot
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:558:18: `Quotient.liftOn'_mk''` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:562:14: `Quotient.surjective_liftOn'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:573:18: `Quotient.liftOn₂'_mk''` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:639:8: `Quotient.hrecOn'_mk''` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:652:8: `Quotient.hrecOn₂'_mk''` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:664:8: `Quotient.map'_mk''` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:674:8: `Quotient.map₂'_mk''` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:679:8: `Quotient.exact'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:683:8: `Quotient.sound'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:687:18: `Quotient.eq'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:692:18: `Quotient.eq''` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:701:8: `Quotient.out_eq'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:704:8: `Quotient.mk_out'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [256/2462] Replayed Mathlib.Tactic.Lift
+warning: ././.lake/packages/mathlib/././Mathlib/Tactic/Lift.lean:49:9: `PiSubtype.canLift'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [409/2462] Replayed Mathlib.Algebra.Group.Defs
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Defs.lean:735:33: `pow_succ'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Defs.lean:740:6: `pow_mul_comm'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Defs.lean:749:6: `pow_three'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Defs.lean:772:6: `pow_mul'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [443/2462] Replayed Mathlib.Data.List.Defs
+warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Defs.lean:241:9: `List.decidableChain'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [474/2462] Replayed Mathlib.Control.Applicative
+warning: ././.lake/packages/mathlib/././Mathlib/Control/Applicative.lean:34:8: `Applicative.pure_seq_eq_map'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [475/2462] Replayed Mathlib.Control.Traversable.Basic
+warning: ././.lake/packages/mathlib/././Mathlib/Control/Traversable/Basic.lean:139:8: `ApplicativeTransformation.preserves_map'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [618/2462] Replayed Mathlib.Algebra.GroupWithZero.Defs
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/GroupWithZero/Defs.lean:110:8: `mul_left_inj'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/GroupWithZero/Defs.lean:113:8: `mul_right_inj'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [624/2462] Replayed Mathlib.Algebra.Group.Invertible.Defs
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Invertible/Defs.lean:97:8: `invOf_mul_self'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Invertible/Defs.lean:103:8: `mul_invOf_self'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Invertible/Defs.lean:109:8: `invOf_mul_cancel_left'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Invertible/Defs.lean:120:8: `mul_invOf_cancel_left'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Invertible/Defs.lean:131:8: `invOf_mul_cancel_right'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Invertible/Defs.lean:142:8: `mul_invOf_cancel_right'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Invertible/Defs.lean:198:8: `invOf_one'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [1184/2462] Replayed Mathlib.Control.Traversable.Lemmas
+warning: ././.lake/packages/mathlib/././Mathlib/Control/Traversable/Lemmas.lean:87:8: `Traversable.naturality'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Control/Traversable/Lemmas.lean:102:8: `Traversable.traverse_eq_map_id'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Control/Traversable/Lemmas.lean:108:8: `Traversable.traverse_map'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Control/Traversable/Lemmas.lean:113:8: `Traversable.map_traverse'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [2407/2462] Replayed Mathlib.Data.List.EditDistance.Defs
+warning: ././.lake/packages/mathlib/././Mathlib/Data/List/EditDistance/Defs.lean:214:8: `suffixLevenshtein_nil'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [2447/2462] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2451/2462] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [2452/2462] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [2457/2462] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [2458/2462] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [2462/2462] Building SSA.Projects.InstCombine.tests.LLVM.gselecthsafehboolhtransforms
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/MD4Lean/.lake/build/lib:././.lake/packages/UnicodeBasic/.lake/build/lib:././.lake/packages/BibtexQuery/.lake/build/lib:././.lake/packages/doc-gen4/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lfrenot/.elan/toolchains/leanprover--lean4---nightly-2024-10-17/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.c --json
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:19:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:28:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:33:32: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:33:32: tactic 'rfl' failed, the left-hand side
+  ⟦?m.2265⟧
+is not definitionally equal to the right-hand side
+  Option ?m.2263
+land_land_left1_before land_land_left1_after : Com InstCombine.LLVM ?m.2264 EffectKind.pure ?m.2265
+⊢ ⟦?m.2265⟧ = Option ?m.2263
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:51:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:60:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:65:32: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:65:32: tactic 'rfl' failed, the left-hand side
+  ⟦?m.4551⟧
+is not definitionally equal to the right-hand side
+  Option ?m.4549
+land_land_left2_before land_land_left2_after : Com InstCombine.LLVM ?m.4550 EffectKind.pure ?m.4551
+⊢ ⟦?m.4551⟧ = Option ?m.4549
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:83:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:92:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:97:32: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:97:32: tactic 'rfl' failed, the left-hand side
+  ⟦?m.6788⟧
+is not definitionally equal to the right-hand side
+  Option ?m.6786
+land_band_left1_before land_band_left1_after : Com InstCombine.LLVM ?m.6787 EffectKind.pure ?m.6788
+⊢ ⟦?m.6788⟧ = Option ?m.6786
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:115:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:124:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:129:32: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:129:32: tactic 'rfl' failed, the left-hand side
+  ⟦?m.9037⟧
+is not definitionally equal to the right-hand side
+  Option ?m.9035
+land_band_left2_before land_band_left2_after : Com InstCombine.LLVM ?m.9036 EffectKind.pure ?m.9037
+⊢ ⟦?m.9037⟧ = Option ?m.9035
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:147:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:148:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:161:2: tactic 'unfold' failed to unfold 'land_lor_left1_before' at
+  (land_lor_left1_before ⊑ land_lor_left1_after) ⋯
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:178:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:179:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:192:2: tactic 'unfold' failed to unfold 'land_lor_left2_before' at
+  (land_lor_left2_before ⊑ land_lor_left2_after) ⋯
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:209:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:222:2: tactic 'unfold' failed to unfold 'land_bor_left1_before' at
+  (land_bor_left1_before ⊑ land_bor_left1_after) ⋯
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:239:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:252:2: tactic 'unfold' failed to unfold 'land_bor_left2_before' at
+  (land_bor_left2_before ⊑ land_bor_left2_after) ⋯
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:269:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:283:2: tactic 'unfold' failed to unfold 'band_land_left1_before' at
+  (band_land_left1_before ⊑ band_land_left1_after) ⋯
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:300:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:314:2: tactic 'unfold' failed to unfold 'band_land_left2_before' at
+  (band_land_left2_before ⊑ band_land_left2_after) ⋯
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:331:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:344:2: tactic 'unfold' failed to unfold 'band_lor_left1_before' at
+  (band_lor_left1_before ⊑ band_lor_left1_after) ⋯
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:361:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:374:2: tactic 'unfold' failed to unfold 'band_lor_left2_before' at
+  (band_lor_left2_before ⊑ band_lor_left2_after) ⋯
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:391:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:392:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:405:2: tactic 'unfold' failed to unfold 'lor_land_left1_before' at
+  (lor_land_left1_before ⊑ lor_land_left1_after) ⋯
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:422:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:423:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:436:2: tactic 'unfold' failed to unfold 'lor_land_left2_before' at
+  (lor_land_left2_before ⊑ lor_land_left2_after) ⋯
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:453:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:466:2: tactic 'unfold' failed to unfold 'lor_band_left1_before' at
+  (lor_band_left1_before ⊑ lor_band_left1_after) ⋯
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:483:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:496:2: tactic 'unfold' failed to unfold 'lor_band_left2_before' at
+  (lor_band_left2_before ⊑ lor_band_left2_after) ⋯
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:513:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:522:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:527:30: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:527:30: tactic 'rfl' failed, the left-hand side
+  ⟦?m.39287⟧
+is not definitionally equal to the right-hand side
+  Option ?m.39285
+lor_lor_left1_before lor_lor_left1_after : Com InstCombine.LLVM ?m.39286 EffectKind.pure ?m.39287
+⊢ ⟦?m.39287⟧ = Option ?m.39285
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:545:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:554:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:559:30: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:559:30: tactic 'rfl' failed, the left-hand side
+  ⟦?m.41553⟧
+is not definitionally equal to the right-hand side
+  Option ?m.41551
+lor_lor_left2_before lor_lor_left2_after : Com InstCombine.LLVM ?m.41552 EffectKind.pure ?m.41553
+⊢ ⟦?m.41553⟧ = Option ?m.41551
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:577:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:586:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:591:30: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:591:30: tactic 'rfl' failed, the left-hand side
+  ⟦?m.43790⟧
+is not definitionally equal to the right-hand side
+  Option ?m.43788
+lor_bor_left1_before lor_bor_left1_after : Com InstCombine.LLVM ?m.43789 EffectKind.pure ?m.43790
+⊢ ⟦?m.43790⟧ = Option ?m.43788
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:609:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:618:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:623:30: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:623:30: tactic 'rfl' failed, the left-hand side
+  ⟦?m.46039⟧
+is not definitionally equal to the right-hand side
+  Option ?m.46037
+lor_bor_left2_before lor_bor_left2_after : Com InstCombine.LLVM ?m.46038 EffectKind.pure ?m.46039
+⊢ ⟦?m.46039⟧ = Option ?m.46037
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:641:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:654:2: tactic 'unfold' failed to unfold 'bor_land_left1_before' at
+  (bor_land_left1_before ⊑ bor_land_left1_after) ⋯
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:671:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:684:2: tactic 'unfold' failed to unfold 'bor_land_left2_before' at
+  (bor_land_left2_before ⊑ bor_land_left2_after) ⋯
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:701:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:715:2: tactic 'unfold' failed to unfold 'bor_lor_left1_before' at
+  (bor_lor_left1_before ⊑ bor_lor_left1_after) ⋯
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:732:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:746:2: tactic 'unfold' failed to unfold 'bor_lor_left2_before' at
+  (bor_lor_left2_before ⊑ bor_lor_left2_after) ⋯
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:763:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:772:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:777:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:777:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.58529⟧
+is not definitionally equal to the right-hand side
+  Option ?m.58527
+land_land_right1_before land_land_right1_after : Com InstCombine.LLVM ?m.58528 EffectKind.pure ?m.58529
+⊢ ⟦?m.58529⟧ = Option ?m.58527
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:795:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:804:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:809:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:809:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.60795⟧
+is not definitionally equal to the right-hand side
+  Option ?m.60793
+land_land_right2_before land_land_right2_after : Com InstCombine.LLVM ?m.60794 EffectKind.pure ?m.60795
+⊢ ⟦?m.60795⟧ = Option ?m.60793
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:827:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:836:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:841:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:841:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.63044⟧
+is not definitionally equal to the right-hand side
+  Option ?m.63042
+land_band_right1_before land_band_right1_after : Com InstCombine.LLVM ?m.63043 EffectKind.pure ?m.63044
+⊢ ⟦?m.63044⟧ = Option ?m.63042
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:859:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:868:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:873:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:873:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.65293⟧
+is not definitionally equal to the right-hand side
+  Option ?m.65291
+land_band_right2_before land_band_right2_after : Com InstCombine.LLVM ?m.65292 EffectKind.pure ?m.65293
+⊢ ⟦?m.65293⟧ = Option ?m.65291
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:891:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:892:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:905:2: tactic 'unfold' failed to unfold 'land_lor_right1_before' at
+  (land_lor_right1_before ⊑ land_lor_right1_after) ⋯
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:922:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:923:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:936:2: tactic 'unfold' failed to unfold 'land_lor_right2_before' at
+  (land_lor_right2_before ⊑ land_lor_right2_after) ⋯
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:953:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:966:2: tactic 'unfold' failed to unfold 'land_bor_right1_before' at
+  (land_bor_right1_before ⊑ land_bor_right1_after) ⋯
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:983:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:996:2: tactic 'unfold' failed to unfold 'land_bor_right2_before' at
+  (land_bor_right2_before ⊑ land_bor_right2_after) ⋯
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1013:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1022:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1027:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1027:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.76460⟧
+is not definitionally equal to the right-hand side
+  Option ?m.76458
+band_land_right1_before band_land_right1_after : Com InstCombine.LLVM ?m.76459 EffectKind.pure ?m.76460
+⊢ ⟦?m.76460⟧ = Option ?m.76458
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1045:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1054:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1059:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1059:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.78697⟧
+is not definitionally equal to the right-hand side
+  Option ?m.78695
+band_land_right2_before band_land_right2_after : Com InstCombine.LLVM ?m.78696 EffectKind.pure ?m.78697
+⊢ ⟦?m.78697⟧ = Option ?m.78695
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1077:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1090:2: tactic 'unfold' failed to unfold 'band_lor_right1_before' at
+  (band_lor_right1_before ⊑ band_lor_right1_after) ⋯
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1107:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1120:2: tactic 'unfold' failed to unfold 'band_lor_right2_before' at
+  (band_lor_right2_before ⊑ band_lor_right2_after) ⋯
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1137:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1138:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1151:2: tactic 'unfold' failed to unfold 'lor_land_right1_before' at
+  (lor_land_right1_before ⊑ lor_land_right1_after) ⋯
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1168:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1169:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1182:2: tactic 'unfold' failed to unfold 'lor_land_right2_before' at
+  (lor_land_right2_before ⊑ lor_land_right2_after) ⋯
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1199:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1212:2: tactic 'unfold' failed to unfold 'lor_band_right1_before' at
+  (lor_band_right1_before ⊑ lor_band_right1_after) ⋯
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1229:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1242:2: tactic 'unfold' failed to unfold 'lor_band_right2_before' at
+  (lor_band_right2_before ⊑ lor_band_right2_after) ⋯
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1259:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1268:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1273:31: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1273:31: tactic 'rfl' failed, the left-hand side
+  ⟦?m.94301⟧
+is not definitionally equal to the right-hand side
+  Option ?m.94299
+lor_lor_right1_before lor_lor_right1_after : Com InstCombine.LLVM ?m.94300 EffectKind.pure ?m.94301
+⊢ ⟦?m.94301⟧ = Option ?m.94299
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1291:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1300:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1305:31: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1305:31: tactic 'rfl' failed, the left-hand side
+  ⟦?m.96567⟧
+is not definitionally equal to the right-hand side
+  Option ?m.96565
+lor_lor_right2_before lor_lor_right2_after : Com InstCombine.LLVM ?m.96566 EffectKind.pure ?m.96567
+⊢ ⟦?m.96567⟧ = Option ?m.96565
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1323:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1332:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1337:31: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1337:31: tactic 'rfl' failed, the left-hand side
+  ⟦?m.98816⟧
+is not definitionally equal to the right-hand side
+  Option ?m.98814
+lor_bor_right1_before lor_bor_right1_after : Com InstCombine.LLVM ?m.98815 EffectKind.pure ?m.98816
+⊢ ⟦?m.98816⟧ = Option ?m.98814
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1355:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1364:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1369:31: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1369:31: tactic 'rfl' failed, the left-hand side
+  ⟦?m.101065⟧
+is not definitionally equal to the right-hand side
+  Option ?m.101063
+lor_bor_right2_before lor_bor_right2_after : Com InstCombine.LLVM ?m.101064 EffectKind.pure ?m.101065
+⊢ ⟦?m.101065⟧ = Option ?m.101063
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1387:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1400:2: tactic 'unfold' failed to unfold 'bor_land_right1_before' at
+  (bor_land_right1_before ⊑ bor_land_right1_after) ⋯
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1417:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1430:2: tactic 'unfold' failed to unfold 'bor_land_right2_before' at
+  (bor_land_right2_before ⊑ bor_land_right2_after) ⋯
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1447:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1456:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1461:31: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1461:31: tactic 'rfl' failed, the left-hand side
+  ⟦?m.107618⟧
+is not definitionally equal to the right-hand side
+  Option ?m.107616
+bor_lor_right1_before bor_lor_right1_after : Com InstCombine.LLVM ?m.107617 EffectKind.pure ?m.107618
+⊢ ⟦?m.107618⟧ = Option ?m.107616
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1479:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1488:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1493:31: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1493:31: tactic 'rfl' failed, the left-hand side
+  ⟦?m.109823⟧
+is not definitionally equal to the right-hand side
+  Option ?m.109821
+bor_lor_right2_before bor_lor_right2_after : Com InstCombine.LLVM ?m.109822 EffectKind.pure ?m.109823
+⊢ ⟦?m.109823⟧ = Option ?m.109821
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.gselecthsafehboolhtransforms
+error: build failed

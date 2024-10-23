@@ -1,0 +1,95 @@
+1: "use8"
+5: "use8" is empty
+
+1: "t0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.add
+2: llvm.or
+2: llvm.return
+
+1: "t1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.add
+2: llvm.or
+2: llvm.return
+
+1: "t2_vec"
+8: "t2_vec" contains vectors which are unsupported
+
+1: "t3_vec_poison0"
+8: "t3_vec_poison0" contains vectors which are unsupported
+
+1: "t4_vec_poison1"
+8: "t4_vec_poison1" contains vectors which are unsupported
+
+1: "t5_vec_poison2"
+8: "t5_vec_poison2" contains vectors which are unsupported
+
+1: "t6_extrause0"
+4: "t6_extrause0" has unsupported operation: llvm.call
+
+1: "t7_extrause1"
+4: "t7_extrause1" has unsupported operation: llvm.call
+
+1: "t8_extrause2"
+4: "t8_extrause2" has unsupported operation: llvm.call
+
+4: "t8_extrause2" has unsupported operation: llvm.call
+
+1: "t9_nocse"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.shl
+2: llvm.add
+2: llvm.or
+2: llvm.return
+
+1: "t10_nocse_extrause0"
+4: "t10_nocse_extrause0" has unsupported operation: llvm.call
+
+1: "t11_nocse_extrause1"
+4: "t11_nocse_extrause1" has unsupported operation: llvm.call
+
+1: "t12_nocse_extrause2"
+4: "t12_nocse_extrause2" has unsupported operation: llvm.call
+
+1: "t13_nocse_extrause3"
+4: "t13_nocse_extrause3" has unsupported operation: llvm.call
+
+4: "t13_nocse_extrause3" has unsupported operation: llvm.call
+
+1: "t14_nocse_extrause4"
+4: "t14_nocse_extrause4" has unsupported operation: llvm.call
+
+4: "t14_nocse_extrause4" has unsupported operation: llvm.call
+
+1: "t15_nocse_extrause5"
+4: "t15_nocse_extrause5" has unsupported operation: llvm.call
+
+4: "t15_nocse_extrause5" has unsupported operation: llvm.call
+
+1: "t16_nocse_extrause6"
+4: "t16_nocse_extrause6" has unsupported operation: llvm.call
+
+4: "t16_nocse_extrause6" has unsupported operation: llvm.call
+
+4: "t16_nocse_extrause6" has unsupported operation: llvm.call
+
+1: "t17_nocse_mismatching_x"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.shl
+2: llvm.add
+2: llvm.or
+2: llvm.return
+

@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gredundanthrighthshifthinputhmasking_statements
-                                                    
+
 def t0_lshr_before := [llvm|
 {
 ^0(%arg30 : i32, %arg31 : i32):
@@ -38,8 +38,9 @@ theorem t0_lshr_proof : t0_lshr_before ⊑ t0_lshr_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t0_lshr
   all_goals (try extract_goal ; sorry)
@@ -72,8 +73,9 @@ theorem t1_sshr_proof : t1_sshr_before ⊑ t1_sshr_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t1_sshr
   all_goals (try extract_goal ; sorry)
@@ -106,8 +108,9 @@ theorem n13_proof : n13_before ⊑ n13_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN n13
   all_goals (try extract_goal ; sorry)

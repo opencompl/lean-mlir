@@ -12,7 +12,127 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gandhxorhor_statements
-                                                    
+
+def and_xor_common_op_before := [llvm|
+{
+^0(%arg695 : i32, %arg696 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 43 : i32}> : () -> i32
+  %2 = llvm.udiv %0, %arg695 : i32
+  %3 = llvm.udiv %1, %arg696 : i32
+  %4 = llvm.xor %2, %3 : i32
+  %5 = llvm.and %2, %4 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+def and_xor_common_op_after := [llvm|
+{
+^0(%arg695 : i32, %arg696 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 43 : i32}> : () -> i32
+  %2 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %3 = llvm.udiv %0, %arg695 : i32
+  %4 = llvm.udiv %1, %arg696 : i32
+  %5 = llvm.xor %4, %2 : i32
+  %6 = llvm.and %3, %5 : i32
+  "llvm.return"(%6) : (i32) -> ()
+}
+]
+theorem and_xor_common_op_proof : and_xor_common_op_before ⊑ and_xor_common_op_after := by
+  unfold and_xor_common_op_before and_xor_common_op_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN and_xor_common_op
+  all_goals (try extract_goal ; sorry)
+  ---END and_xor_common_op
+
+
+
+def and_xor_common_op_commute1_before := [llvm|
+{
+^0(%arg693 : i32, %arg694 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 43 : i32}> : () -> i32
+  %2 = llvm.udiv %0, %arg693 : i32
+  %3 = llvm.udiv %1, %arg694 : i32
+  %4 = llvm.xor %3, %2 : i32
+  %5 = llvm.and %2, %4 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+def and_xor_common_op_commute1_after := [llvm|
+{
+^0(%arg693 : i32, %arg694 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 43 : i32}> : () -> i32
+  %2 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %3 = llvm.udiv %0, %arg693 : i32
+  %4 = llvm.udiv %1, %arg694 : i32
+  %5 = llvm.xor %4, %2 : i32
+  %6 = llvm.and %3, %5 : i32
+  "llvm.return"(%6) : (i32) -> ()
+}
+]
+theorem and_xor_common_op_commute1_proof : and_xor_common_op_commute1_before ⊑ and_xor_common_op_commute1_after := by
+  unfold and_xor_common_op_commute1_before and_xor_common_op_commute1_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN and_xor_common_op_commute1
+  all_goals (try extract_goal ; sorry)
+  ---END and_xor_common_op_commute1
+
+
+
+def and_xor_common_op_commute2_before := [llvm|
+{
+^0(%arg691 : i32, %arg692 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 43 : i32}> : () -> i32
+  %2 = llvm.udiv %0, %arg691 : i32
+  %3 = llvm.udiv %1, %arg692 : i32
+  %4 = llvm.xor %3, %2 : i32
+  %5 = llvm.and %4, %2 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+def and_xor_common_op_commute2_after := [llvm|
+{
+^0(%arg691 : i32, %arg692 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 43 : i32}> : () -> i32
+  %2 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %3 = llvm.udiv %0, %arg691 : i32
+  %4 = llvm.udiv %1, %arg692 : i32
+  %5 = llvm.xor %4, %2 : i32
+  %6 = llvm.and %3, %5 : i32
+  "llvm.return"(%6) : (i32) -> ()
+}
+]
+theorem and_xor_common_op_commute2_proof : and_xor_common_op_commute2_before ⊑ and_xor_common_op_commute2_after := by
+  unfold and_xor_common_op_commute2_before and_xor_common_op_commute2_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN and_xor_common_op_commute2
+  all_goals (try extract_goal ; sorry)
+  ---END and_xor_common_op_commute2
+
+
+
 def and_xor_not_common_op_before := [llvm|
 {
 ^0(%arg686 : i32, %arg687 : i32):
@@ -35,8 +155,9 @@ theorem and_xor_not_common_op_proof : and_xor_not_common_op_before ⊑ and_xor_n
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_xor_not_common_op
   all_goals (try extract_goal ; sorry)
@@ -66,8 +187,9 @@ theorem and_not_xor_common_op_proof : and_not_xor_common_op_before ⊑ and_not_x
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_not_xor_common_op
   all_goals (try extract_goal ; sorry)
@@ -96,8 +218,9 @@ theorem or_proof : or_before ⊑ or_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or
   all_goals (try extract_goal ; sorry)
@@ -126,12 +249,317 @@ theorem or2_proof : or2_before ⊑ or2_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or2
   all_goals (try extract_goal ; sorry)
   ---END or2
+
+
+
+def and_xor_or1_before := [llvm|
+{
+^0(%arg673 : i64, %arg674 : i64, %arg675 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg673 : i64
+  %2 = llvm.udiv %0, %arg674 : i64
+  %3 = llvm.udiv %0, %arg675 : i64
+  %4 = llvm.and %1, %2 : i64
+  %5 = llvm.xor %4, %3 : i64
+  %6 = llvm.or %5, %2 : i64
+  "llvm.return"(%6) : (i64) -> ()
+}
+]
+def and_xor_or1_after := [llvm|
+{
+^0(%arg673 : i64, %arg674 : i64, %arg675 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg674 : i64
+  %2 = llvm.udiv %0, %arg675 : i64
+  %3 = llvm.or %2, %1 : i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+theorem and_xor_or1_proof : and_xor_or1_before ⊑ and_xor_or1_after := by
+  unfold and_xor_or1_before and_xor_or1_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN and_xor_or1
+  all_goals (try extract_goal ; sorry)
+  ---END and_xor_or1
+
+
+
+def and_xor_or2_before := [llvm|
+{
+^0(%arg670 : i64, %arg671 : i64, %arg672 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg670 : i64
+  %2 = llvm.udiv %0, %arg671 : i64
+  %3 = llvm.udiv %0, %arg672 : i64
+  %4 = llvm.and %2, %1 : i64
+  %5 = llvm.xor %4, %3 : i64
+  %6 = llvm.or %5, %2 : i64
+  "llvm.return"(%6) : (i64) -> ()
+}
+]
+def and_xor_or2_after := [llvm|
+{
+^0(%arg670 : i64, %arg671 : i64, %arg672 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg671 : i64
+  %2 = llvm.udiv %0, %arg672 : i64
+  %3 = llvm.or %2, %1 : i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+theorem and_xor_or2_proof : and_xor_or2_before ⊑ and_xor_or2_after := by
+  unfold and_xor_or2_before and_xor_or2_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN and_xor_or2
+  all_goals (try extract_goal ; sorry)
+  ---END and_xor_or2
+
+
+
+def and_xor_or3_before := [llvm|
+{
+^0(%arg667 : i64, %arg668 : i64, %arg669 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg667 : i64
+  %2 = llvm.udiv %0, %arg668 : i64
+  %3 = llvm.udiv %0, %arg669 : i64
+  %4 = llvm.and %1, %2 : i64
+  %5 = llvm.xor %3, %4 : i64
+  %6 = llvm.or %5, %2 : i64
+  "llvm.return"(%6) : (i64) -> ()
+}
+]
+def and_xor_or3_after := [llvm|
+{
+^0(%arg667 : i64, %arg668 : i64, %arg669 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg668 : i64
+  %2 = llvm.udiv %0, %arg669 : i64
+  %3 = llvm.or %2, %1 : i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+theorem and_xor_or3_proof : and_xor_or3_before ⊑ and_xor_or3_after := by
+  unfold and_xor_or3_before and_xor_or3_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN and_xor_or3
+  all_goals (try extract_goal ; sorry)
+  ---END and_xor_or3
+
+
+
+def and_xor_or4_before := [llvm|
+{
+^0(%arg664 : i64, %arg665 : i64, %arg666 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg664 : i64
+  %2 = llvm.udiv %0, %arg665 : i64
+  %3 = llvm.udiv %0, %arg666 : i64
+  %4 = llvm.and %2, %1 : i64
+  %5 = llvm.xor %3, %4 : i64
+  %6 = llvm.or %5, %2 : i64
+  "llvm.return"(%6) : (i64) -> ()
+}
+]
+def and_xor_or4_after := [llvm|
+{
+^0(%arg664 : i64, %arg665 : i64, %arg666 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg665 : i64
+  %2 = llvm.udiv %0, %arg666 : i64
+  %3 = llvm.or %2, %1 : i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+theorem and_xor_or4_proof : and_xor_or4_before ⊑ and_xor_or4_after := by
+  unfold and_xor_or4_before and_xor_or4_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN and_xor_or4
+  all_goals (try extract_goal ; sorry)
+  ---END and_xor_or4
+
+
+
+def and_xor_or5_before := [llvm|
+{
+^0(%arg661 : i64, %arg662 : i64, %arg663 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg661 : i64
+  %2 = llvm.udiv %0, %arg662 : i64
+  %3 = llvm.udiv %0, %arg663 : i64
+  %4 = llvm.and %1, %2 : i64
+  %5 = llvm.xor %4, %3 : i64
+  %6 = llvm.or %2, %5 : i64
+  "llvm.return"(%6) : (i64) -> ()
+}
+]
+def and_xor_or5_after := [llvm|
+{
+^0(%arg661 : i64, %arg662 : i64, %arg663 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg662 : i64
+  %2 = llvm.udiv %0, %arg663 : i64
+  %3 = llvm.or %1, %2 : i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+theorem and_xor_or5_proof : and_xor_or5_before ⊑ and_xor_or5_after := by
+  unfold and_xor_or5_before and_xor_or5_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN and_xor_or5
+  all_goals (try extract_goal ; sorry)
+  ---END and_xor_or5
+
+
+
+def and_xor_or6_before := [llvm|
+{
+^0(%arg658 : i64, %arg659 : i64, %arg660 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg658 : i64
+  %2 = llvm.udiv %0, %arg659 : i64
+  %3 = llvm.udiv %0, %arg660 : i64
+  %4 = llvm.and %2, %1 : i64
+  %5 = llvm.xor %4, %3 : i64
+  %6 = llvm.or %2, %5 : i64
+  "llvm.return"(%6) : (i64) -> ()
+}
+]
+def and_xor_or6_after := [llvm|
+{
+^0(%arg658 : i64, %arg659 : i64, %arg660 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg659 : i64
+  %2 = llvm.udiv %0, %arg660 : i64
+  %3 = llvm.or %1, %2 : i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+theorem and_xor_or6_proof : and_xor_or6_before ⊑ and_xor_or6_after := by
+  unfold and_xor_or6_before and_xor_or6_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN and_xor_or6
+  all_goals (try extract_goal ; sorry)
+  ---END and_xor_or6
+
+
+
+def and_xor_or7_before := [llvm|
+{
+^0(%arg655 : i64, %arg656 : i64, %arg657 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg655 : i64
+  %2 = llvm.udiv %0, %arg656 : i64
+  %3 = llvm.udiv %0, %arg657 : i64
+  %4 = llvm.and %1, %2 : i64
+  %5 = llvm.xor %3, %4 : i64
+  %6 = llvm.or %2, %5 : i64
+  "llvm.return"(%6) : (i64) -> ()
+}
+]
+def and_xor_or7_after := [llvm|
+{
+^0(%arg655 : i64, %arg656 : i64, %arg657 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg656 : i64
+  %2 = llvm.udiv %0, %arg657 : i64
+  %3 = llvm.or %1, %2 : i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+theorem and_xor_or7_proof : and_xor_or7_before ⊑ and_xor_or7_after := by
+  unfold and_xor_or7_before and_xor_or7_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN and_xor_or7
+  all_goals (try extract_goal ; sorry)
+  ---END and_xor_or7
+
+
+
+def and_xor_or8_before := [llvm|
+{
+^0(%arg652 : i64, %arg653 : i64, %arg654 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg652 : i64
+  %2 = llvm.udiv %0, %arg653 : i64
+  %3 = llvm.udiv %0, %arg654 : i64
+  %4 = llvm.and %2, %1 : i64
+  %5 = llvm.xor %3, %4 : i64
+  %6 = llvm.or %2, %5 : i64
+  "llvm.return"(%6) : (i64) -> ()
+}
+]
+def and_xor_or8_after := [llvm|
+{
+^0(%arg652 : i64, %arg653 : i64, %arg654 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg653 : i64
+  %2 = llvm.udiv %0, %arg654 : i64
+  %3 = llvm.or %1, %2 : i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+theorem and_xor_or8_proof : and_xor_or8_before ⊑ and_xor_or8_after := by
+  unfold and_xor_or8_before and_xor_or8_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN and_xor_or8
+  all_goals (try extract_goal ; sorry)
+  ---END and_xor_or8
 
 
 
@@ -159,8 +587,9 @@ theorem and_shl_proof : and_shl_before ⊑ and_shl_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_shl
   all_goals (try extract_goal ; sorry)
@@ -192,8 +621,9 @@ theorem or_shl_proof : or_shl_before ⊑ or_shl_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_shl
   all_goals (try extract_goal ; sorry)
@@ -225,8 +655,9 @@ theorem or_lshr_proof : or_lshr_before ⊑ or_lshr_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_lshr
   all_goals (try extract_goal ; sorry)
@@ -258,8 +689,9 @@ theorem xor_lshr_proof : xor_lshr_before ⊑ xor_lshr_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN xor_lshr
   all_goals (try extract_goal ; sorry)
@@ -295,8 +727,9 @@ theorem xor_lshr_multiuse_proof : xor_lshr_multiuse_before ⊑ xor_lshr_multiuse
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN xor_lshr_multiuse
   all_goals (try extract_goal ; sorry)
@@ -334,8 +767,9 @@ theorem not_and_and_not_proof : not_and_and_not_before ⊑ not_and_and_not_after
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_and_and_not
   all_goals (try extract_goal ; sorry)
@@ -369,8 +803,9 @@ theorem not_and_and_not_commute1_proof : not_and_and_not_commute1_before ⊑ not
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_and_and_not_commute1
   all_goals (try extract_goal ; sorry)
@@ -408,8 +843,9 @@ theorem not_or_or_not_proof : not_or_or_not_before ⊑ not_or_or_not_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_or_or_not
   all_goals (try extract_goal ; sorry)
@@ -443,8 +879,9 @@ theorem not_or_or_not_commute1_proof : not_or_or_not_commute1_before ⊑ not_or_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_or_or_not_commute1
   all_goals (try extract_goal ; sorry)
@@ -481,8 +918,9 @@ theorem or_not_and_proof : or_not_and_before ⊑ or_not_and_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_not_and
   all_goals (try extract_goal ; sorry)
@@ -523,8 +961,9 @@ theorem or_not_and_commute1_proof : or_not_and_commute1_before ⊑ or_not_and_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_not_and_commute1
   all_goals (try extract_goal ; sorry)
@@ -565,8 +1004,9 @@ theorem or_not_and_commute2_proof : or_not_and_commute2_before ⊑ or_not_and_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_not_and_commute2
   all_goals (try extract_goal ; sorry)
@@ -603,8 +1043,9 @@ theorem or_not_and_commute3_proof : or_not_and_commute3_before ⊑ or_not_and_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_not_and_commute3
   all_goals (try extract_goal ; sorry)
@@ -645,8 +1086,9 @@ theorem or_not_and_commute4_proof : or_not_and_commute4_before ⊑ or_not_and_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_not_and_commute4
   all_goals (try extract_goal ; sorry)
@@ -689,8 +1131,9 @@ theorem or_not_and_commute5_proof : or_not_and_commute5_before ⊑ or_not_and_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_not_and_commute5
   all_goals (try extract_goal ; sorry)
@@ -727,8 +1170,9 @@ theorem or_not_and_commute6_proof : or_not_and_commute6_before ⊑ or_not_and_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_not_and_commute6
   all_goals (try extract_goal ; sorry)
@@ -765,8 +1209,9 @@ theorem or_not_and_commute7_proof : or_not_and_commute7_before ⊑ or_not_and_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_not_and_commute7
   all_goals (try extract_goal ; sorry)
@@ -809,8 +1254,9 @@ theorem or_not_and_commute8_proof : or_not_and_commute8_before ⊑ or_not_and_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_not_and_commute8
   all_goals (try extract_goal ; sorry)
@@ -855,8 +1301,9 @@ theorem or_not_and_commute9_proof : or_not_and_commute9_before ⊑ or_not_and_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_not_and_commute9
   all_goals (try extract_goal ; sorry)
@@ -897,8 +1344,9 @@ theorem or_not_and_wrong_c_proof : or_not_and_wrong_c_before ⊑ or_not_and_wron
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_not_and_wrong_c
   all_goals (try extract_goal ; sorry)
@@ -939,8 +1387,9 @@ theorem or_not_and_wrong_b_proof : or_not_and_wrong_b_before ⊑ or_not_and_wron
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_not_and_wrong_b
   all_goals (try extract_goal ; sorry)
@@ -977,8 +1426,9 @@ theorem and_not_or_proof : and_not_or_before ⊑ and_not_or_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_not_or
   all_goals (try extract_goal ; sorry)
@@ -1019,8 +1469,9 @@ theorem and_not_or_commute1_proof : and_not_or_commute1_before ⊑ and_not_or_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_not_or_commute1
   all_goals (try extract_goal ; sorry)
@@ -1061,8 +1512,9 @@ theorem and_not_or_commute2_proof : and_not_or_commute2_before ⊑ and_not_or_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_not_or_commute2
   all_goals (try extract_goal ; sorry)
@@ -1099,8 +1551,9 @@ theorem and_not_or_commute3_proof : and_not_or_commute3_before ⊑ and_not_or_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_not_or_commute3
   all_goals (try extract_goal ; sorry)
@@ -1141,8 +1594,9 @@ theorem and_not_or_commute4_proof : and_not_or_commute4_before ⊑ and_not_or_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_not_or_commute4
   all_goals (try extract_goal ; sorry)
@@ -1185,8 +1639,9 @@ theorem and_not_or_commute5_proof : and_not_or_commute5_before ⊑ and_not_or_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_not_or_commute5
   all_goals (try extract_goal ; sorry)
@@ -1223,8 +1678,9 @@ theorem and_not_or_commute6_proof : and_not_or_commute6_before ⊑ and_not_or_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_not_or_commute6
   all_goals (try extract_goal ; sorry)
@@ -1261,8 +1717,9 @@ theorem and_not_or_commute7_proof : and_not_or_commute7_before ⊑ and_not_or_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_not_or_commute7
   all_goals (try extract_goal ; sorry)
@@ -1305,8 +1762,9 @@ theorem and_not_or_commute8_proof : and_not_or_commute8_before ⊑ and_not_or_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_not_or_commute8
   all_goals (try extract_goal ; sorry)
@@ -1351,8 +1809,9 @@ theorem and_not_or_commute9_proof : and_not_or_commute9_before ⊑ and_not_or_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_not_or_commute9
   all_goals (try extract_goal ; sorry)
@@ -1393,8 +1852,9 @@ theorem and_not_or_wrong_c_proof : and_not_or_wrong_c_before ⊑ and_not_or_wron
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_not_or_wrong_c
   all_goals (try extract_goal ; sorry)
@@ -1435,8 +1895,9 @@ theorem and_not_or_wrong_b_proof : and_not_or_wrong_b_before ⊑ and_not_or_wron
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_not_or_wrong_b
   all_goals (try extract_goal ; sorry)
@@ -1472,8 +1933,9 @@ theorem or_and_not_not_proof : or_and_not_not_before ⊑ or_and_not_not_after :=
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_and_not_not
   all_goals (try extract_goal ; sorry)
@@ -1513,8 +1975,9 @@ theorem or_and_not_not_commute1_proof : or_and_not_not_commute1_before ⊑ or_an
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_and_not_not_commute1
   all_goals (try extract_goal ; sorry)
@@ -1550,8 +2013,9 @@ theorem or_and_not_not_commute2_proof : or_and_not_not_commute2_before ⊑ or_an
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_and_not_not_commute2
   all_goals (try extract_goal ; sorry)
@@ -1587,8 +2051,9 @@ theorem or_and_not_not_commute3_proof : or_and_not_not_commute3_before ⊑ or_an
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_and_not_not_commute3
   all_goals (try extract_goal ; sorry)
@@ -1624,8 +2089,9 @@ theorem or_and_not_not_commute4_proof : or_and_not_not_commute4_before ⊑ or_an
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_and_not_not_commute4
   all_goals (try extract_goal ; sorry)
@@ -1661,8 +2127,9 @@ theorem or_and_not_not_commute5_proof : or_and_not_not_commute5_before ⊑ or_an
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_and_not_not_commute5
   all_goals (try extract_goal ; sorry)
@@ -1702,8 +2169,9 @@ theorem or_and_not_not_commute6_proof : or_and_not_not_commute6_before ⊑ or_an
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_and_not_not_commute6
   all_goals (try extract_goal ; sorry)
@@ -1739,8 +2207,9 @@ theorem or_and_not_not_commute7_proof : or_and_not_not_commute7_before ⊑ or_an
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_and_not_not_commute7
   all_goals (try extract_goal ; sorry)
@@ -1779,8 +2248,9 @@ theorem or_and_not_not_wrong_a_proof : or_and_not_not_wrong_a_before ⊑ or_and_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_and_not_not_wrong_a
   all_goals (try extract_goal ; sorry)
@@ -1819,8 +2289,9 @@ theorem or_and_not_not_wrong_b_proof : or_and_not_not_wrong_b_before ⊑ or_and_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_and_not_not_wrong_b
   all_goals (try extract_goal ; sorry)
@@ -1856,8 +2327,9 @@ theorem and_or_not_not_proof : and_or_not_not_before ⊑ and_or_not_not_after :=
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_or_not_not
   all_goals (try extract_goal ; sorry)
@@ -1897,8 +2369,9 @@ theorem and_or_not_not_commute1_proof : and_or_not_not_commute1_before ⊑ and_o
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_or_not_not_commute1
   all_goals (try extract_goal ; sorry)
@@ -1934,8 +2407,9 @@ theorem and_or_not_not_commute2_proof : and_or_not_not_commute2_before ⊑ and_o
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_or_not_not_commute2
   all_goals (try extract_goal ; sorry)
@@ -1971,8 +2445,9 @@ theorem and_or_not_not_commute3_proof : and_or_not_not_commute3_before ⊑ and_o
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_or_not_not_commute3
   all_goals (try extract_goal ; sorry)
@@ -2008,8 +2483,9 @@ theorem and_or_not_not_commute4_proof : and_or_not_not_commute4_before ⊑ and_o
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_or_not_not_commute4
   all_goals (try extract_goal ; sorry)
@@ -2045,8 +2521,9 @@ theorem and_or_not_not_commute5_proof : and_or_not_not_commute5_before ⊑ and_o
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_or_not_not_commute5
   all_goals (try extract_goal ; sorry)
@@ -2086,8 +2563,9 @@ theorem and_or_not_not_commute6_proof : and_or_not_not_commute6_before ⊑ and_o
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_or_not_not_commute6
   all_goals (try extract_goal ; sorry)
@@ -2123,8 +2601,9 @@ theorem and_or_not_not_commute7_proof : and_or_not_not_commute7_before ⊑ and_o
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_or_not_not_commute7
   all_goals (try extract_goal ; sorry)
@@ -2162,8 +2641,9 @@ theorem and_or_not_not_wrong_a_proof : and_or_not_not_wrong_a_before ⊑ and_or_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_or_not_not_wrong_a
   all_goals (try extract_goal ; sorry)
@@ -2202,8 +2682,9 @@ theorem and_or_not_not_wrong_b_proof : and_or_not_not_wrong_b_before ⊑ and_or_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_or_not_not_wrong_b
   all_goals (try extract_goal ; sorry)
@@ -2242,8 +2723,9 @@ theorem and_not_or_or_not_or_xor_proof : and_not_or_or_not_or_xor_before ⊑ and
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_not_or_or_not_or_xor
   all_goals (try extract_goal ; sorry)
@@ -2282,8 +2764,9 @@ theorem and_not_or_or_not_or_xor_commute1_proof : and_not_or_or_not_or_xor_commu
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_not_or_or_not_or_xor_commute1
   all_goals (try extract_goal ; sorry)
@@ -2326,8 +2809,9 @@ theorem and_not_or_or_not_or_xor_commute2_proof : and_not_or_or_not_or_xor_commu
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_not_or_or_not_or_xor_commute2
   all_goals (try extract_goal ; sorry)
@@ -2366,8 +2850,9 @@ theorem and_not_or_or_not_or_xor_commute3_proof : and_not_or_or_not_or_xor_commu
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_not_or_or_not_or_xor_commute3
   all_goals (try extract_goal ; sorry)
@@ -2410,8 +2895,9 @@ theorem and_not_or_or_not_or_xor_commute4_proof : and_not_or_or_not_or_xor_commu
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_not_or_or_not_or_xor_commute4
   all_goals (try extract_goal ; sorry)
@@ -2450,8 +2936,9 @@ theorem and_not_or_or_not_or_xor_commute5_proof : and_not_or_or_not_or_xor_commu
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_not_or_or_not_or_xor_commute5
   all_goals (try extract_goal ; sorry)
@@ -2491,8 +2978,9 @@ theorem or_not_and_and_not_and_xor_proof : or_not_and_and_not_and_xor_before ⊑
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_not_and_and_not_and_xor
   all_goals (try extract_goal ; sorry)
@@ -2532,8 +3020,9 @@ theorem or_not_and_and_not_and_xor_commute1_proof : or_not_and_and_not_and_xor_c
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_not_and_and_not_and_xor_commute1
   all_goals (try extract_goal ; sorry)
@@ -2577,8 +3066,9 @@ theorem or_not_and_and_not_and_xor_commute2_proof : or_not_and_and_not_and_xor_c
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_not_and_and_not_and_xor_commute2
   all_goals (try extract_goal ; sorry)
@@ -2618,8 +3108,9 @@ theorem or_not_and_and_not_and_xor_commute3_proof : or_not_and_and_not_and_xor_c
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_not_and_and_not_and_xor_commute3
   all_goals (try extract_goal ; sorry)
@@ -2663,8 +3154,9 @@ theorem or_not_and_and_not_and_xor_commute4_proof : or_not_and_and_not_and_xor_c
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_not_and_and_not_and_xor_commute4
   all_goals (try extract_goal ; sorry)
@@ -2704,8 +3196,9 @@ theorem or_not_and_and_not_and_xor_commute5_proof : or_not_and_and_not_and_xor_c
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_not_and_and_not_and_xor_commute5
   all_goals (try extract_goal ; sorry)
@@ -2742,8 +3235,9 @@ theorem not_and_and_or_not_or_or_proof : not_and_and_or_not_or_or_before ⊑ not
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_and_and_or_not_or_or
   all_goals (try extract_goal ; sorry)
@@ -2780,8 +3274,9 @@ theorem not_and_and_or_not_or_or_commute1_or_proof : not_and_and_or_not_or_or_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_and_and_or_not_or_or_commute1_or
   all_goals (try extract_goal ; sorry)
@@ -2818,8 +3313,9 @@ theorem not_and_and_or_not_or_or_commute2_or_proof : not_and_and_or_not_or_or_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_and_and_or_not_or_or_commute2_or
   all_goals (try extract_goal ; sorry)
@@ -2856,8 +3352,9 @@ theorem not_and_and_or_not_or_or_commute1_and_proof : not_and_and_or_not_or_or_c
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_and_and_or_not_or_or_commute1_and
   all_goals (try extract_goal ; sorry)
@@ -2894,8 +3391,9 @@ theorem not_and_and_or_not_or_or_commute2_and_proof : not_and_and_or_not_or_or_c
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_and_and_or_not_or_or_commute2_and
   all_goals (try extract_goal ; sorry)
@@ -2932,8 +3430,9 @@ theorem not_and_and_or_not_or_or_commute1_proof : not_and_and_or_not_or_or_commu
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_and_and_or_not_or_or_commute1
   all_goals (try extract_goal ; sorry)
@@ -2974,8 +3473,9 @@ theorem not_and_and_or_not_or_or_commute2_proof : not_and_and_or_not_or_or_commu
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_and_and_or_not_or_or_commute2
   all_goals (try extract_goal ; sorry)
@@ -3016,8 +3516,9 @@ theorem not_and_and_or_not_or_or_commute3_proof : not_and_and_or_not_or_or_commu
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_and_and_or_not_or_or_commute3
   all_goals (try extract_goal ; sorry)
@@ -3058,8 +3559,9 @@ theorem not_and_and_or_not_or_or_commute4_proof : not_and_and_or_not_or_or_commu
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_and_and_or_not_or_or_commute4
   all_goals (try extract_goal ; sorry)
@@ -3096,8 +3598,9 @@ theorem not_or_or_and_not_and_and_proof : not_or_or_and_not_and_and_before ⊑ n
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_or_or_and_not_and_and
   all_goals (try extract_goal ; sorry)
@@ -3134,8 +3637,9 @@ theorem not_or_or_and_not_and_and_commute1_and_proof : not_or_or_and_not_and_and
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_or_or_and_not_and_and_commute1_and
   all_goals (try extract_goal ; sorry)
@@ -3172,8 +3676,9 @@ theorem not_or_or_and_not_and_and_commute2_and_proof : not_or_or_and_not_and_and
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_or_or_and_not_and_and_commute2_and
   all_goals (try extract_goal ; sorry)
@@ -3210,8 +3715,9 @@ theorem not_or_or_and_not_and_and_commute1_or_proof : not_or_or_and_not_and_and_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_or_or_and_not_and_and_commute1_or
   all_goals (try extract_goal ; sorry)
@@ -3248,8 +3754,9 @@ theorem not_or_or_and_not_and_and_commute2_or_proof : not_or_or_and_not_and_and_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_or_or_and_not_and_and_commute2_or
   all_goals (try extract_goal ; sorry)
@@ -3286,8 +3793,9 @@ theorem not_or_or_and_not_and_and_commute1_proof : not_or_or_and_not_and_and_com
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_or_or_and_not_and_and_commute1
   all_goals (try extract_goal ; sorry)
@@ -3328,8 +3836,9 @@ theorem not_or_or_and_not_and_and_commute2_proof : not_or_or_and_not_and_and_com
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_or_or_and_not_and_and_commute2
   all_goals (try extract_goal ; sorry)
@@ -3370,8 +3879,9 @@ theorem not_or_or_and_not_and_and_commute3_proof : not_or_or_and_not_and_and_com
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_or_or_and_not_and_and_commute3
   all_goals (try extract_goal ; sorry)
@@ -3412,8 +3922,9 @@ theorem not_or_or_and_not_and_and_commute4_proof : not_or_or_and_not_and_and_com
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_or_or_and_not_and_and_commute4
   all_goals (try extract_goal ; sorry)
@@ -3450,8 +3961,9 @@ theorem not_and_and_or_no_or_proof : not_and_and_or_no_or_before ⊑ not_and_and
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_and_and_or_no_or
   all_goals (try extract_goal ; sorry)
@@ -3488,8 +4000,9 @@ theorem not_and_and_or_no_or_commute1_and_proof : not_and_and_or_no_or_commute1_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_and_and_or_no_or_commute1_and
   all_goals (try extract_goal ; sorry)
@@ -3526,8 +4039,9 @@ theorem not_and_and_or_no_or_commute2_and_proof : not_and_and_or_no_or_commute2_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_and_and_or_no_or_commute2_and
   all_goals (try extract_goal ; sorry)
@@ -3564,8 +4078,9 @@ theorem not_and_and_or_no_or_commute1_proof : not_and_and_or_no_or_commute1_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_and_and_or_no_or_commute1
   all_goals (try extract_goal ; sorry)
@@ -3606,8 +4121,9 @@ theorem not_and_and_or_no_or_commute2_proof : not_and_and_or_no_or_commute2_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_and_and_or_no_or_commute2
   all_goals (try extract_goal ; sorry)
@@ -3648,8 +4164,9 @@ theorem not_and_and_or_no_or_commute3_proof : not_and_and_or_no_or_commute3_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_and_and_or_no_or_commute3
   all_goals (try extract_goal ; sorry)
@@ -3686,8 +4203,9 @@ theorem not_or_or_and_no_and_proof : not_or_or_and_no_and_before ⊑ not_or_or_a
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_or_or_and_no_and
   all_goals (try extract_goal ; sorry)
@@ -3724,8 +4242,9 @@ theorem not_or_or_and_no_and_commute1_or_proof : not_or_or_and_no_and_commute1_o
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_or_or_and_no_and_commute1_or
   all_goals (try extract_goal ; sorry)
@@ -3762,8 +4281,9 @@ theorem not_or_or_and_no_and_commute2_or_proof : not_or_or_and_no_and_commute2_o
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_or_or_and_no_and_commute2_or
   all_goals (try extract_goal ; sorry)
@@ -3800,8 +4320,9 @@ theorem not_or_or_and_no_and_commute1_proof : not_or_or_and_no_and_commute1_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_or_or_and_no_and_commute1
   all_goals (try extract_goal ; sorry)
@@ -3842,8 +4363,9 @@ theorem not_or_or_and_no_and_commute2_proof : not_or_or_and_no_and_commute2_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_or_or_and_no_and_commute2
   all_goals (try extract_goal ; sorry)
@@ -3884,8 +4406,9 @@ theorem not_or_or_and_no_and_commute3_proof : not_or_or_and_no_and_commute3_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_or_or_and_no_and_commute3
   all_goals (try extract_goal ; sorry)
@@ -3918,8 +4441,9 @@ theorem and_orn_xor_proof : and_orn_xor_before ⊑ and_orn_xor_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_orn_xor
   all_goals (try extract_goal ; sorry)
@@ -3956,8 +4480,9 @@ theorem and_orn_xor_commute8_proof : and_orn_xor_commute8_before ⊑ and_orn_xor
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN and_orn_xor_commute8
   all_goals (try extract_goal ; sorry)
@@ -3990,8 +4515,9 @@ theorem canonicalize_logic_first_or0_proof : canonicalize_logic_first_or0_before
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN canonicalize_logic_first_or0
   all_goals (try extract_goal ; sorry)
@@ -4024,8 +4550,9 @@ theorem canonicalize_logic_first_or0_nsw_proof : canonicalize_logic_first_or0_ns
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN canonicalize_logic_first_or0_nsw
   all_goals (try extract_goal ; sorry)
@@ -4058,8 +4585,9 @@ theorem canonicalize_logic_first_or0_nswnuw_proof : canonicalize_logic_first_or0
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN canonicalize_logic_first_or0_nswnuw
   all_goals (try extract_goal ; sorry)
@@ -4092,8 +4620,9 @@ theorem canonicalize_logic_first_and0_proof : canonicalize_logic_first_and0_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN canonicalize_logic_first_and0
   all_goals (try extract_goal ; sorry)
@@ -4126,8 +4655,9 @@ theorem canonicalize_logic_first_and0_nsw_proof : canonicalize_logic_first_and0_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN canonicalize_logic_first_and0_nsw
   all_goals (try extract_goal ; sorry)
@@ -4160,8 +4690,9 @@ theorem canonicalize_logic_first_and0_nswnuw_proof : canonicalize_logic_first_an
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN canonicalize_logic_first_and0_nswnuw
   all_goals (try extract_goal ; sorry)
@@ -4194,8 +4725,9 @@ theorem canonicalize_logic_first_xor_0_proof : canonicalize_logic_first_xor_0_be
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN canonicalize_logic_first_xor_0
   all_goals (try extract_goal ; sorry)
@@ -4228,8 +4760,9 @@ theorem canonicalize_logic_first_xor_0_nsw_proof : canonicalize_logic_first_xor_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN canonicalize_logic_first_xor_0_nsw
   all_goals (try extract_goal ; sorry)
@@ -4262,8 +4795,9 @@ theorem canonicalize_logic_first_xor_0_nswnuw_proof : canonicalize_logic_first_x
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN canonicalize_logic_first_xor_0_nswnuw
   all_goals (try extract_goal ; sorry)

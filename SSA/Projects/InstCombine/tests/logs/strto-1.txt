@@ -1,0 +1,75 @@
+1: "strtol"
+5: "strtol" is empty
+
+1: "strtod"
+5: "strtod" is empty
+
+1: "strtof"
+5: "strtof" is empty
+
+1: "strtoul"
+5: "strtoul" is empty
+
+1: "strtoll"
+5: "strtoll" is empty
+
+1: "strtold"
+5: "strtold" is empty
+
+1: "strtoull"
+5: "strtoull" is empty
+
+1: "test_simplify1"
+4: "test_simplify1" has unsupported operation: llvm.mlir.zero
+
+4: "test_simplify1" has unsupported operation: llvm.call
+
+4: "test_simplify1" has unsupported operation: llvm.return
+
+1: "test_simplify2"
+4: "test_simplify2" has unsupported operation: llvm.mlir.zero
+
+4: "test_simplify2" has unsupported operation: llvm.call
+
+4: "test_simplify2" has unsupported operation: llvm.return
+
+1: "test_simplify3"
+4: "test_simplify3" has unsupported operation: llvm.mlir.zero
+
+4: "test_simplify3" has unsupported operation: llvm.call
+
+4: "test_simplify3" has unsupported operation: llvm.return
+
+1: "test_simplify4"
+4: "test_simplify4" has unsupported operation: llvm.mlir.zero
+
+4: "test_simplify4" has unsupported operation: llvm.call
+
+4: "test_simplify4" has unsupported operation: llvm.return
+
+1: "test_simplify5"
+4: "test_simplify5" has unsupported operation: llvm.mlir.zero
+
+4: "test_simplify5" has unsupported operation: llvm.call
+
+4: "test_simplify5" has unsupported operation: llvm.return
+
+1: "test_simplify6"
+4: "test_simplify6" has unsupported operation: llvm.mlir.zero
+
+4: "test_simplify6" has unsupported operation: llvm.call
+
+4: "test_simplify6" has unsupported operation: llvm.return
+
+1: "test_simplify7"
+4: "test_simplify7" has unsupported operation: llvm.mlir.zero
+
+4: "test_simplify7" has unsupported operation: llvm.call
+
+4: "test_simplify7" has unsupported operation: llvm.return
+
+1: "test_no_simplify1"
+4: "test_no_simplify1" has unsupported operation: llvm.call
+
+4: "test_no_simplify1" has unsupported operation: llvm.return
+

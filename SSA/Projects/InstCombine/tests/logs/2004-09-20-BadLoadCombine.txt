@@ -1,0 +1,13 @@
+1: "test"
+4: "test" has unsupported operation after optimization: llvm.alloca
+
+4: "test" has unsupported operation after optimization: llvm.alloca
+
+4: "test" has unsupported operation after optimization: llvm.store
+
+4: "test" has unsupported operation after optimization: llvm.store
+
+4: "test" has unsupported operation after optimization: llvm.store
+
+4: "test" has unsupported operation after optimization: llvm.load
+

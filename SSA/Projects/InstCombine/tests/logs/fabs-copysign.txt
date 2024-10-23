@@ -1,0 +1,45 @@
+1: "use"
+5: "use" is empty
+
+1: "fabs_copysign"
+4: "fabs_copysign" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+1: "fabs_copysign_commuted"
+4: "fabs_copysign_commuted" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+1: "fabs_copysign_vec"
+4: "fabs_copysign_vec" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+1: "fabs_copysign_vec_commuted"
+4: "fabs_copysign_vec_commuted" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+1: "fabs_copysignf"
+4: "fabs_copysignf" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+1: "fabs_copysign_use"
+4: "fabs_copysign_use" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "fabs_copysign_use" has unsupported operation: llvm.call
+
+4: "fabs_copysign_use" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+1: "fabs_copysign_mismatch"
+4: "fabs_copysign_mismatch" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "fabs_copysign_mismatch" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "fabs_copysign_commuted_mismatch"
+4: "fabs_copysign_commuted_mismatch" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "fabs_copysign_commuted_mismatch" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "fabs_copysign_no_nnan"
+4: "fabs_copysign_no_nnan" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "fabs_copysign_no_nnan" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "fabs_copysign_no_ninf"
+4: "fabs_copysign_no_ninf" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "fabs_copysign_no_ninf" has unsupported operation: builtin.unregistered: llvm.fdiv
+

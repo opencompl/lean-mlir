@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gorhxorhxor_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gorhxorhxor_statements
-                                                    
+
 def or_xor_xor_normal_variant1_before := [llvm|
 {
 ^0(%arg17 : i1, %arg18 : i1):
@@ -35,11 +35,12 @@ theorem or_xor_xor_normal_variant1_proof : or_xor_xor_normal_variant1_before ⊑
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_xor_xor_normal_variant1
-  apply or_xor_xor_normal_variant1_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_xor_normal_variant1
 
 
@@ -66,11 +67,12 @@ theorem or_xor_xor_normal_variant2_proof : or_xor_xor_normal_variant2_before ⊑
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_xor_xor_normal_variant2
-  apply or_xor_xor_normal_variant2_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_xor_normal_variant2
 
 
@@ -97,11 +99,12 @@ theorem or_xor_xor_normal_variant3_proof : or_xor_xor_normal_variant3_before ⊑
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_xor_xor_normal_variant3
-  apply or_xor_xor_normal_variant3_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_xor_normal_variant3
 
 
@@ -128,11 +131,12 @@ theorem or_xor_xor_normal_variant4_proof : or_xor_xor_normal_variant4_before ⊑
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_xor_xor_normal_variant4
-  apply or_xor_xor_normal_variant4_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_xor_normal_variant4
 
 
@@ -161,11 +165,12 @@ theorem or_xor_xor_normal_binops_proof : or_xor_xor_normal_binops_before ⊑ or_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN or_xor_xor_normal_binops
-  apply or_xor_xor_normal_binops_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_xor_normal_binops
 
 

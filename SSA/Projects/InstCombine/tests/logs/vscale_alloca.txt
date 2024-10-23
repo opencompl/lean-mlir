@@ -1,0 +1,2 @@
+3: vscale_alloca.ll: parsing has failed
+

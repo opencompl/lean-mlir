@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gxor2_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gxor2_statements
-                                                    
+
 def test2_before := [llvm|
 {
 ^0(%arg120 : i32):
@@ -40,11 +40,12 @@ theorem test2_proof : test2_before ⊑ test2_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test2
-  apply test2_thm
+  all_goals (try extract_goal ; sorry)
   ---END test2
 
 
@@ -76,11 +77,12 @@ theorem test3_proof : test3_before ⊑ test3_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test3
-  apply test3_thm
+  all_goals (try extract_goal ; sorry)
   ---END test3
 
 
@@ -116,11 +118,12 @@ theorem test5_proof : test5_before ⊑ test5_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test5
-  apply test5_thm
+  all_goals (try extract_goal ; sorry)
   ---END test5
 
 
@@ -152,11 +155,12 @@ theorem test6_proof : test6_before ⊑ test6_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test6
-  apply test6_thm
+  all_goals (try extract_goal ; sorry)
   ---END test6
 
 
@@ -185,11 +189,12 @@ theorem test7_proof : test7_before ⊑ test7_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test7
-  apply test7_thm
+  all_goals (try extract_goal ; sorry)
   ---END test7
 
 
@@ -218,11 +223,12 @@ theorem test8_proof : test8_before ⊑ test8_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test8
-  apply test8_thm
+  all_goals (try extract_goal ; sorry)
   ---END test8
 
 
@@ -248,11 +254,12 @@ theorem test9_proof : test9_before ⊑ test9_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test9
-  apply test9_thm
+  all_goals (try extract_goal ; sorry)
   ---END test9
 
 
@@ -278,11 +285,12 @@ theorem test9b_proof : test9b_before ⊑ test9b_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test9b
-  apply test9b_thm
+  all_goals (try extract_goal ; sorry)
   ---END test9b
 
 
@@ -308,11 +316,12 @@ theorem test10_proof : test10_before ⊑ test10_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test10
-  apply test10_thm
+  all_goals (try extract_goal ; sorry)
   ---END test10
 
 
@@ -338,11 +347,12 @@ theorem test10b_proof : test10b_before ⊑ test10b_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test10b
-  apply test10b_thm
+  all_goals (try extract_goal ; sorry)
   ---END test10b
 
 
@@ -374,11 +384,12 @@ theorem test11_proof : test11_before ⊑ test11_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test11
-  apply test11_thm
+  all_goals (try extract_goal ; sorry)
   ---END test11
 
 
@@ -410,11 +421,12 @@ theorem test11b_proof : test11b_before ⊑ test11b_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test11b
-  apply test11b_thm
+  all_goals (try extract_goal ; sorry)
   ---END test11b
 
 
@@ -446,11 +458,12 @@ theorem test11c_proof : test11c_before ⊑ test11c_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test11c
-  apply test11c_thm
+  all_goals (try extract_goal ; sorry)
   ---END test11c
 
 
@@ -482,11 +495,12 @@ theorem test11d_proof : test11d_before ⊑ test11d_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test11d
-  apply test11d_thm
+  all_goals (try extract_goal ; sorry)
   ---END test11d
 
 
@@ -520,11 +534,12 @@ theorem test11e_proof : test11e_before ⊑ test11e_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test11e
-  apply test11e_thm
+  all_goals (try extract_goal ; sorry)
   ---END test11e
 
 
@@ -558,11 +573,12 @@ theorem test11f_proof : test11f_before ⊑ test11f_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test11f
-  apply test11f_thm
+  all_goals (try extract_goal ; sorry)
   ---END test11f
 
 
@@ -592,11 +608,12 @@ theorem test12_proof : test12_before ⊑ test12_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test12
-  apply test12_thm
+  all_goals (try extract_goal ; sorry)
   ---END test12
 
 
@@ -626,11 +643,12 @@ theorem test12commuted_proof : test12commuted_before ⊑ test12commuted_after :=
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test12commuted
-  apply test12commuted_thm
+  all_goals (try extract_goal ; sorry)
   ---END test12commuted
 
 
@@ -660,11 +678,12 @@ theorem test13_proof : test13_before ⊑ test13_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test13
-  apply test13_thm
+  all_goals (try extract_goal ; sorry)
   ---END test13
 
 
@@ -694,11 +713,12 @@ theorem test13commuted_proof : test13commuted_before ⊑ test13commuted_after :=
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test13commuted
-  apply test13commuted_thm
+  all_goals (try extract_goal ; sorry)
   ---END test13commuted
 
 
@@ -727,11 +747,12 @@ theorem xor_or_xor_common_op_commute1_proof : xor_or_xor_common_op_commute1_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN xor_or_xor_common_op_commute1
-  apply xor_or_xor_common_op_commute1_thm
+  all_goals (try extract_goal ; sorry)
   ---END xor_or_xor_common_op_commute1
 
 
@@ -760,11 +781,12 @@ theorem xor_or_xor_common_op_commute2_proof : xor_or_xor_common_op_commute2_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN xor_or_xor_common_op_commute2
-  apply xor_or_xor_common_op_commute2_thm
+  all_goals (try extract_goal ; sorry)
   ---END xor_or_xor_common_op_commute2
 
 
@@ -793,11 +815,12 @@ theorem xor_or_xor_common_op_commute3_proof : xor_or_xor_common_op_commute3_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN xor_or_xor_common_op_commute3
-  apply xor_or_xor_common_op_commute3_thm
+  all_goals (try extract_goal ; sorry)
   ---END xor_or_xor_common_op_commute3
 
 
@@ -826,11 +849,12 @@ theorem xor_or_xor_common_op_commute4_proof : xor_or_xor_common_op_commute4_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN xor_or_xor_common_op_commute4
-  apply xor_or_xor_common_op_commute4_thm
+  all_goals (try extract_goal ; sorry)
   ---END xor_or_xor_common_op_commute4
 
 
@@ -859,11 +883,12 @@ theorem xor_or_xor_common_op_commute5_proof : xor_or_xor_common_op_commute5_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN xor_or_xor_common_op_commute5
-  apply xor_or_xor_common_op_commute5_thm
+  all_goals (try extract_goal ; sorry)
   ---END xor_or_xor_common_op_commute5
 
 
@@ -892,11 +917,12 @@ theorem xor_or_xor_common_op_commute6_proof : xor_or_xor_common_op_commute6_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN xor_or_xor_common_op_commute6
-  apply xor_or_xor_common_op_commute6_thm
+  all_goals (try extract_goal ; sorry)
   ---END xor_or_xor_common_op_commute6
 
 
@@ -925,11 +951,12 @@ theorem xor_or_xor_common_op_commute7_proof : xor_or_xor_common_op_commute7_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN xor_or_xor_common_op_commute7
-  apply xor_or_xor_common_op_commute7_thm
+  all_goals (try extract_goal ; sorry)
   ---END xor_or_xor_common_op_commute7
 
 
@@ -958,11 +985,12 @@ theorem xor_or_xor_common_op_commute8_proof : xor_or_xor_common_op_commute8_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN xor_or_xor_common_op_commute8
-  apply xor_or_xor_common_op_commute8_thm
+  all_goals (try extract_goal ; sorry)
   ---END xor_or_xor_common_op_commute8
 
 
@@ -996,11 +1024,12 @@ theorem test15_proof : test15_before ⊑ test15_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test15
-  apply test15_thm
+  all_goals (try extract_goal ; sorry)
   ---END test15
 
 
@@ -1034,11 +1063,12 @@ theorem test16_proof : test16_before ⊑ test16_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test16
-  apply test16_thm
+  all_goals (try extract_goal ; sorry)
   ---END test16
 
 
@@ -1070,11 +1100,12 @@ theorem not_xor_to_or_not1_proof : not_xor_to_or_not1_before ⊑ not_xor_to_or_n
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_xor_to_or_not1
-  apply not_xor_to_or_not1_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_xor_to_or_not1
 
 
@@ -1106,11 +1137,12 @@ theorem not_xor_to_or_not2_proof : not_xor_to_or_not2_before ⊑ not_xor_to_or_n
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_xor_to_or_not2
-  apply not_xor_to_or_not2_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_xor_to_or_not2
 
 
@@ -1142,11 +1174,12 @@ theorem not_xor_to_or_not3_proof : not_xor_to_or_not3_before ⊑ not_xor_to_or_n
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_xor_to_or_not3
-  apply not_xor_to_or_not3_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_xor_to_or_not3
 
 
@@ -1178,11 +1211,12 @@ theorem not_xor_to_or_not4_proof : not_xor_to_or_not4_before ⊑ not_xor_to_or_n
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_xor_to_or_not4
-  apply not_xor_to_or_not4_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_xor_to_or_not4
 
 
@@ -1214,11 +1248,12 @@ theorem xor_notand_to_or_not1_proof : xor_notand_to_or_not1_before ⊑ xor_notan
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN xor_notand_to_or_not1
-  apply xor_notand_to_or_not1_thm
+  all_goals (try extract_goal ; sorry)
   ---END xor_notand_to_or_not1
 
 
@@ -1250,11 +1285,12 @@ theorem xor_notand_to_or_not2_proof : xor_notand_to_or_not2_before ⊑ xor_notan
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN xor_notand_to_or_not2
-  apply xor_notand_to_or_not2_thm
+  all_goals (try extract_goal ; sorry)
   ---END xor_notand_to_or_not2
 
 
@@ -1286,11 +1322,12 @@ theorem xor_notand_to_or_not3_proof : xor_notand_to_or_not3_before ⊑ xor_notan
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN xor_notand_to_or_not3
-  apply xor_notand_to_or_not3_thm
+  all_goals (try extract_goal ; sorry)
   ---END xor_notand_to_or_not3
 
 
@@ -1322,11 +1359,12 @@ theorem xor_notand_to_or_not4_proof : xor_notand_to_or_not4_before ⊑ xor_notan
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN xor_notand_to_or_not4
-  apply xor_notand_to_or_not4_thm
+  all_goals (try extract_goal ; sorry)
   ---END xor_notand_to_or_not4
 
 

@@ -1,0 +1,6 @@
+1: "test"
+4: "test" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test_vec"
+4: "test_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+

@@ -1,0 +1,32 @@
+1: "use.i8"
+5: "use.i8" is empty
+
+1: "sdiv_exact_eq_0"
+4: "sdiv_exact_eq_0" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "udiv_exact_ne_0"
+4: "udiv_exact_ne_0" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sdiv_exact_ne_1"
+4: "sdiv_exact_ne_1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "udiv_exact_eq_1"
+4: "udiv_exact_eq_1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sdiv_exact_eq_9_no_of"
+4: "sdiv_exact_eq_9_no_of" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sdiv_exact_eq_9_may_of"
+4: "sdiv_exact_eq_9_may_of" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sdiv_exact_eq_9_no_of_fail_multiuse"
+4: "sdiv_exact_eq_9_no_of_fail_multiuse" has unsupported operation: llvm.call
+
+4: "sdiv_exact_eq_9_no_of_fail_multiuse" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sdiv_exact_eq_9_must_of_todo_is_false"
+4: "sdiv_exact_eq_9_must_of_todo_is_false" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "udiv_exact_ne_30_no_of"
+4: "udiv_exact_ne_30_no_of" has unsupported operation: builtin.unregistered: llvm.icmp
+

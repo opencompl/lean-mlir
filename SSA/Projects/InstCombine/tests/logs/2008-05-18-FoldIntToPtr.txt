@@ -1,0 +1,14 @@
+1: "f1"
+4: "f1" has unsupported operation after optimization: llvm.inttoptr
+
+4: "f1" has unsupported operation after optimization: llvm.inttoptr
+
+4: "f1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "f2"
+4: "f2" has unsupported operation after optimization: llvm.inttoptr
+
+4: "f2" has unsupported operation after optimization: llvm.inttoptr
+
+4: "f2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+

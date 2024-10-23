@@ -1,0 +1,2 @@
+3: memcmp-7.ll: parsing has failed
+

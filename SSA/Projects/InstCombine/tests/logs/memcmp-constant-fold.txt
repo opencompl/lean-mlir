@@ -1,0 +1,31 @@
+1: "memcmp"
+5: "memcmp" is empty
+
+1: "memcmp_4bytes_unaligned_constant_i8"
+4: "memcmp_4bytes_unaligned_constant_i8" has unsupported operation: llvm.mlir.addressof
+
+4: "memcmp_4bytes_unaligned_constant_i8" has unsupported operation: llvm.call
+
+4: "memcmp_4bytes_unaligned_constant_i8" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "memcmp_4bytes_unaligned_constant_i16"
+4: "memcmp_4bytes_unaligned_constant_i16" has unsupported operation: llvm.mlir.addressof
+
+4: "memcmp_4bytes_unaligned_constant_i16" has unsupported operation: llvm.call
+
+4: "memcmp_4bytes_unaligned_constant_i16" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "memcmp_3bytes_aligned_constant_i32"
+4: "memcmp_3bytes_aligned_constant_i32" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "memcmp_3bytes_aligned_constant_i32" has unsupported operation after optimization: llvm.getelementptr
+
+4: "memcmp_3bytes_aligned_constant_i32" has unsupported operation after optimization: llvm.call
+
+4: "memcmp_3bytes_aligned_constant_i32" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "memcmp_4bytes_one_unaligned_i8"
+4: "memcmp_4bytes_one_unaligned_i8" has unsupported operation: llvm.call
+
+4: "memcmp_4bytes_one_unaligned_i8" has unsupported operation: builtin.unregistered: llvm.icmp
+

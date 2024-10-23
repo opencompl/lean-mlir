@@ -1,0 +1,11 @@
+1: "_Z3fooPv"
+4: "_Z3fooPv" has unsupported operation: llvm.call
+
+4: "_Z3fooPv" has unsupported operation: llvm.return
+
+1: "realloc"
+5: "realloc" is empty
+
+1: "free"
+5: "free" is empty
+

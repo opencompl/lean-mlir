@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gand_statements
-                                                    
+
 def test_with_even_before := [llvm|
 {
 ^0(%arg313 : i32):
@@ -35,8 +35,9 @@ theorem test_with_even_proof : test_with_even_before ⊑ test_with_even_after :=
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test_with_even
   all_goals (try extract_goal ; sorry)
@@ -66,8 +67,9 @@ theorem test_with_neg_even_proof : test_with_neg_even_before ⊑ test_with_neg_e
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test_with_neg_even
   all_goals (try extract_goal ; sorry)
@@ -95,8 +97,9 @@ theorem test1_proof : test1_before ⊑ test1_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test1
   all_goals (try extract_goal ; sorry)
@@ -123,8 +126,9 @@ theorem test2_proof : test2_before ⊑ test2_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test2
   all_goals (try extract_goal ; sorry)
@@ -152,12 +156,43 @@ theorem test3_proof : test3_before ⊑ test3_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test3
   all_goals (try extract_goal ; sorry)
   ---END test3
+
+
+
+def test3_logical_before := [llvm|
+{
+^0(%arg306 : i1):
+  %0 = "llvm.mlir.constant"() <{value = false}> : () -> i1
+  %1 = "llvm.select"(%arg306, %0, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+def test3_logical_after := [llvm|
+{
+^0(%arg306 : i1):
+  %0 = "llvm.mlir.constant"() <{value = false}> : () -> i1
+  "llvm.return"(%0) : (i1) -> ()
+}
+]
+theorem test3_logical_proof : test3_logical_before ⊑ test3_logical_after := by
+  unfold test3_logical_before test3_logical_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test3_logical
+  all_goals (try extract_goal ; sorry)
+  ---END test3_logical
 
 
 
@@ -180,12 +215,43 @@ theorem test4_proof : test4_before ⊑ test4_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test4
   all_goals (try extract_goal ; sorry)
   ---END test4
+
+
+
+def test4_logical_before := [llvm|
+{
+^0(%arg304 : i1):
+  %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
+  %1 = "llvm.mlir.constant"() <{value = false}> : () -> i1
+  %2 = "llvm.select"(%arg304, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  "llvm.return"(%2) : (i1) -> ()
+}
+]
+def test4_logical_after := [llvm|
+{
+^0(%arg304 : i1):
+  "llvm.return"(%arg304) : (i1) -> ()
+}
+]
+theorem test4_logical_proof : test4_logical_before ⊑ test4_logical_after := by
+  unfold test4_logical_before test4_logical_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test4_logical
+  all_goals (try extract_goal ; sorry)
+  ---END test4_logical
 
 
 
@@ -207,8 +273,9 @@ theorem test5_proof : test5_before ⊑ test5_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test5
   all_goals (try extract_goal ; sorry)
@@ -234,12 +301,42 @@ theorem test6_proof : test6_before ⊑ test6_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test6
   all_goals (try extract_goal ; sorry)
   ---END test6
+
+
+
+def test6_logical_before := [llvm|
+{
+^0(%arg301 : i1):
+  %0 = "llvm.mlir.constant"() <{value = false}> : () -> i1
+  %1 = "llvm.select"(%arg301, %arg301, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+def test6_logical_after := [llvm|
+{
+^0(%arg301 : i1):
+  "llvm.return"(%arg301) : (i1) -> ()
+}
+]
+theorem test6_logical_proof : test6_logical_before ⊑ test6_logical_after := by
+  unfold test6_logical_before test6_logical_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test6_logical
+  all_goals (try extract_goal ; sorry)
+  ---END test6_logical
 
 
 
@@ -264,8 +361,9 @@ theorem test7_proof : test7_before ⊑ test7_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test7
   all_goals (try extract_goal ; sorry)
@@ -295,8 +393,9 @@ theorem test8_proof : test8_before ⊑ test8_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test8
   all_goals (try extract_goal ; sorry)
@@ -328,8 +427,9 @@ theorem test10_proof : test10_before ⊑ test10_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test10
   all_goals (try extract_goal ; sorry)
@@ -359,8 +459,9 @@ theorem test15_proof : test15_before ⊑ test15_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test15
   all_goals (try extract_goal ; sorry)
@@ -390,8 +491,9 @@ theorem test16_proof : test16_before ⊑ test16_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test16
   all_goals (try extract_goal ; sorry)
@@ -422,8 +524,9 @@ theorem test19_proof : test19_before ⊑ test19_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test19
   all_goals (try extract_goal ; sorry)
@@ -454,8 +557,9 @@ theorem test20_proof : test20_before ⊑ test20_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test20
   all_goals (try extract_goal ; sorry)
@@ -488,8 +592,9 @@ theorem test27_proof : test27_before ⊑ test27_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test27
   all_goals (try extract_goal ; sorry)
@@ -520,8 +625,9 @@ theorem ashr_lowmask_proof : ashr_lowmask_before ⊑ ashr_lowmask_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN ashr_lowmask
   all_goals (try extract_goal ; sorry)
@@ -553,8 +659,9 @@ theorem test32_proof : test32_before ⊑ test32_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test32
   all_goals (try extract_goal ; sorry)
@@ -587,8 +694,9 @@ theorem test33_proof : test33_before ⊑ test33_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test33
   all_goals (try extract_goal ; sorry)
@@ -621,8 +729,9 @@ theorem test33b_proof : test33b_before ⊑ test33b_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test33b
   all_goals (try extract_goal ; sorry)
@@ -649,12 +758,48 @@ theorem test34_proof : test34_before ⊑ test34_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test34
   all_goals (try extract_goal ; sorry)
   ---END test34
+
+
+
+def test40_before := [llvm|
+{
+^0(%arg216 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 1000 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 10 : i32}> : () -> i32
+  %2 = "llvm.mlir.constant"() <{value = 123 : i32}> : () -> i32
+  %3 = "llvm.select"(%arg216, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  %4 = llvm.and %3, %2 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def test40_after := [llvm|
+{
+^0(%arg216 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 104 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 10 : i32}> : () -> i32
+  %2 = "llvm.select"(%arg216, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  "llvm.return"(%2) : (i32) -> ()
+}
+]
+theorem test40_proof : test40_before ⊑ test40_after := by
+  unfold test40_before test40_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test40
+  all_goals (try extract_goal ; sorry)
+  ---END test40
 
 
 
@@ -683,8 +828,9 @@ theorem test42_proof : test42_before ⊑ test42_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test42
   all_goals (try extract_goal ; sorry)
@@ -717,8 +863,9 @@ theorem test43_proof : test43_before ⊑ test43_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test43
   all_goals (try extract_goal ; sorry)
@@ -748,8 +895,9 @@ theorem test44_proof : test44_before ⊑ test44_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test44
   all_goals (try extract_goal ; sorry)
@@ -779,8 +927,9 @@ theorem test45_proof : test45_before ⊑ test45_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test45
   all_goals (try extract_goal ; sorry)
@@ -810,8 +959,9 @@ theorem test46_proof : test46_before ⊑ test46_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test46
   all_goals (try extract_goal ; sorry)
@@ -841,8 +991,9 @@ theorem test47_proof : test47_before ⊑ test47_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test47
   all_goals (try extract_goal ; sorry)
@@ -873,8 +1024,9 @@ theorem lowmask_add_2_proof : lowmask_add_2_before ⊑ lowmask_add_2_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lowmask_add_2
   all_goals (try extract_goal ; sorry)
@@ -905,8 +1057,9 @@ theorem flip_masked_bit_proof : flip_masked_bit_before ⊑ flip_masked_bit_after
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN flip_masked_bit
   all_goals (try extract_goal ; sorry)
@@ -941,8 +1094,9 @@ theorem not_ashr_not_bitwidth_mask_proof : not_ashr_not_bitwidth_mask_before ⊑
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_ashr_not_bitwidth_mask
   all_goals (try extract_goal ; sorry)
@@ -977,8 +1131,9 @@ theorem not_lshr_bitwidth_mask_proof : not_lshr_bitwidth_mask_before ⊑ not_lsh
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN not_lshr_bitwidth_mask
   all_goals (try extract_goal ; sorry)
@@ -1010,8 +1165,9 @@ theorem shl_lshr_pow2_const_negative_overflow1_proof : shl_lshr_pow2_const_negat
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_lshr_pow2_const_negative_overflow1
   all_goals (try extract_goal ; sorry)
@@ -1043,8 +1199,9 @@ theorem shl_lshr_pow2_const_negative_overflow2_proof : shl_lshr_pow2_const_negat
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_lshr_pow2_const_negative_overflow2
   all_goals (try extract_goal ; sorry)
@@ -1079,8 +1236,9 @@ theorem lshr_lshr_pow2_const_negative_nopow2_1_proof : lshr_lshr_pow2_const_nega
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lshr_lshr_pow2_const_negative_nopow2_1
   all_goals (try extract_goal ; sorry)
@@ -1115,8 +1273,9 @@ theorem lshr_lshr_pow2_const_negative_nopow2_2_proof : lshr_lshr_pow2_const_nega
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lshr_lshr_pow2_const_negative_nopow2_2
   all_goals (try extract_goal ; sorry)
@@ -1148,8 +1307,9 @@ theorem lshr_lshr_pow2_const_negative_overflow_proof : lshr_lshr_pow2_const_nega
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lshr_lshr_pow2_const_negative_overflow
   all_goals (try extract_goal ; sorry)
@@ -1181,8 +1341,9 @@ theorem lshr_shl_pow2_const_overflow_proof : lshr_shl_pow2_const_overflow_before
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lshr_shl_pow2_const_overflow
   all_goals (try extract_goal ; sorry)
@@ -1215,8 +1376,9 @@ theorem add_constant_equal_with_the_top_bit_of_demandedbits_pass_proof : add_con
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_constant_equal_with_the_top_bit_of_demandedbits_pass
   all_goals (try extract_goal ; sorry)
@@ -1251,8 +1413,9 @@ theorem add_constant_equal_with_the_top_bit_of_demandedbits_insertpt_proof : add
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN add_constant_equal_with_the_top_bit_of_demandedbits_insertpt
   all_goals (try extract_goal ; sorry)

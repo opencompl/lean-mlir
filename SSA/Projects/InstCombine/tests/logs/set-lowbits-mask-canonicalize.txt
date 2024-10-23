@@ -1,0 +1,171 @@
+1: "shl_add"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "shl_add_nsw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "shl_add_nuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "shl_add_nsw_nuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "shl_nsw_add"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "shl_nsw_add_nsw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "shl_nsw_add_nuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "shl_nsw_add_nsw_nuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "shl_nuw_add"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "shl_nuw_add_nsw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "shl_nuw_add_nuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "shl_nuw_add_nsw_nuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "shl_nsw_nuw_add"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "shl_nsw_nuw_add_nsw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "shl_nsw_nuw_add_nuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "shl_nsw_nuw_add_nsw_nuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "shl_add_vec"
+8: "shl_add_vec" contains vectors which are unsupported
+
+1: "shl_add_vec_poison0"
+8: "shl_add_vec_poison0" contains vectors which are unsupported
+
+1: "shl_add_vec_poison1"
+8: "shl_add_vec_poison1" contains vectors which are unsupported
+
+1: "shl_add_vec_poison2"
+8: "shl_add_vec_poison2" contains vectors which are unsupported
+
+1: "use32"
+5: "use32" is empty
+
+1: "bad_oneuse0"
+4: "bad_oneuse0" has unsupported operation: llvm.call
+
+1: "bad_shl"
+7: "bad_shl" is unchanged by InstCombine
+
+1: "bad_add0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "bad_add1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "bad_add2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+

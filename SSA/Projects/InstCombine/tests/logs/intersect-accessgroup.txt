@@ -1,0 +1,50 @@
+1: "arg"
+5: "arg" is empty
+
+1: "func"
+4: "func" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "func" has unsupported operation: llvm.getelementptr
+
+4: "func" has unsupported operation: llvm.load
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "func" has unsupported operation: llvm.call
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func" has unsupported operation: llvm.return
+

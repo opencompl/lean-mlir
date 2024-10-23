@@ -1,0 +1,19 @@
+1: "foo"
+4: "foo" has unsupported operation: llvm.mlir.zero
+
+4: "foo" has unsupported operation: llvm.mlir.undef
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "foo" has unsupported operation: llvm.load
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.zext
+

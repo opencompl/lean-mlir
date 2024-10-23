@@ -1,0 +1,149 @@
+1: "use"
+5: "use" is empty
+
+1: "match_unsigned"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.urem
+2: llvm.udiv
+2: llvm.urem
+2: llvm.mul
+2: llvm.add
+2: llvm.return
+
+1: "match_unsigned_vector"
+8: "match_unsigned_vector" contains vectors which are unsupported
+
+1: "match_andAsRem_lshrAsDiv_shlAsMul"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.lshr
+2: llvm.urem
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "match_signed"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.sdiv
+2: llvm.srem
+2: llvm.sdiv
+2: llvm.srem
+2: llvm.mul
+2: llvm.add
+2: llvm.mul
+2: llvm.add
+2: llvm.return
+
+1: "match_signed_vector"
+8: "match_signed_vector" contains vectors which are unsupported
+
+1: "not_match_inconsistent_signs"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.urem
+2: llvm.sdiv
+2: llvm.urem
+2: llvm.mul
+2: llvm.add
+2: llvm.return
+
+1: "not_match_inconsistent_values"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.urem
+2: llvm.udiv
+2: llvm.urem
+2: llvm.mul
+2: llvm.add
+2: llvm.return
+
+1: "not_match_overflow"
+4: "not_match_overflow" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "fold_add_udiv_urem"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.shl
+2: llvm.urem
+2: llvm.add
+2: llvm.return
+
+1: "fold_add_sdiv_srem"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.shl
+2: llvm.srem
+2: llvm.add
+2: llvm.return
+
+1: "fold_add_udiv_urem_to_mul"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.mul
+2: llvm.urem
+2: llvm.mul
+2: llvm.add
+2: llvm.return
+
+1: "fold_add_udiv_urem_to_mul_multiuse"
+4: "fold_add_udiv_urem_to_mul_multiuse" has unsupported operation: llvm.call
+
+1: "fold_add_udiv_urem_commuted"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.shl
+2: llvm.urem
+2: llvm.add
+2: llvm.return
+
+1: "fold_add_udiv_urem_or_disjoint"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.shl
+2: llvm.urem
+2: llvm.or
+2: llvm.return
+
+1: "fold_add_udiv_urem_without_noundef"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.shl
+2: llvm.urem
+2: llvm.add
+2: llvm.return
+
+1: "fold_add_udiv_urem_multiuse_mul"
+4: "fold_add_udiv_urem_multiuse_mul" has unsupported operation: llvm.call
+
+1: "fold_add_udiv_srem"
+7: "fold_add_udiv_srem" is unchanged by InstCombine
+
+1: "fold_add_udiv_urem_non_constant"
+7: "fold_add_udiv_urem_non_constant" is unchanged by InstCombine
+

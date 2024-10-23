@@ -1,0 +1,18 @@
+1: "memrchr"
+5: "memrchr" is empty
+
+1: "test1"
+4: "test1" has unsupported operation: llvm.call
+
+1: "test2"
+4: "test2" has unsupported operation: llvm.call
+
+1: "test3"
+4: "test3" has unsupported operation: llvm.call
+
+1: "test4"
+4: "test4" has unsupported operation: llvm.call
+
+1: "test5"
+4: "test5" has unsupported operation: llvm.call
+

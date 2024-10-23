@@ -1,0 +1,11 @@
+1: "_Z8wyhash64v"
+4: "_Z8wyhash64v" has unsupported operation: llvm.mlir.addressof
+
+4: "_Z8wyhash64v" has unsupported operation: llvm.load
+
+4: "_Z8wyhash64v" has unsupported operation: llvm.store
+
+4: "_Z8wyhash64v" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "_Z8wyhash64v" has unsupported operation: builtin.unregistered: llvm.trunc
+
