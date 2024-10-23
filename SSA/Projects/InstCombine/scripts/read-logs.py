@@ -15,7 +15,6 @@ def main():
     success_func = dict()
     error_dict = dict()
     log_errors = []
-    # print(os.listdir(log_path))
     func_count = 0
     build_error = 0
     for log in os.listdir(log_path):
@@ -32,9 +31,7 @@ def main():
                 s_line = re.split('"|: |\n', line)
                 s_line = [s.strip() for s in s_line if s != '']
                 if len(s_line) > 0:
-                    # print(s_line)
                     msg = Msg(int(s_line[0]))
-                    # print(msg, msg.is_error())
                     func = s_line[-1]
                     if msg == Msg.E_UNSUPPORTED:
                         add_or_1(unsupported_func, func)
@@ -50,9 +47,6 @@ def main():
                     else:
                         func_success = False
                         add_or_1(error_dict, msg)
-    # print(unsupported_func)
-    # print(success_func)
-    # print(error_dict)
     llvm_test_count = len(os.listdir(llvm_test_path))
     translated_test_count = len(os.listdir(test_path))
     proof_count = len(os.listdir(proof_path)) >> 1

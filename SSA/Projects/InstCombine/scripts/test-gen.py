@@ -117,7 +117,6 @@ def op_name(op):
         return f"builtin.unregistered: {op.op_name.data}"
     return op.name
 
-# for file in os.listdir(directory):
 def process_file(file):
     filename = os.fsdecode(file)
     print(filename)
@@ -161,7 +160,6 @@ def process_file(file):
     funcs2 = {f.sym_name.data: f for f in module2.walk() if isinstance(f, FuncOp)}
     for func in module1.walk():
         if not isinstance(func, FuncOp):
-            # log.append(f"{type(func)}\n")
             continue
         func_name = func.sym_name
         log.append(f"{Msg.FUNC_NAME.value}: {func_name}\n")

@@ -13,7 +13,6 @@ def get_lines(msg):
     lines_thm = [(int(l), m) for (l, m) in matches if "no goals to be solved" not in m]
     # Replace this with your actual implementation
     return lines_thm
-    # return [(1, "New message for line 1"), (3, "New message for line 3")]
 
 
 def gen_intro(stem):
@@ -43,7 +42,6 @@ def process_file(file_path):
     msg = result.stdout
     if result.stderr: 
         print_log([result.stdout, result.stderr], log_path)
-        # raise Exception(result.stderr)
         return
     print(f"msg = {msg}")
 
@@ -102,4 +100,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    # process_file("./SSA/Projects/InstCombine/tests/LLVM/gand.lean")
