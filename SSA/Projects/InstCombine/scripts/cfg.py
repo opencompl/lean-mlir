@@ -26,8 +26,6 @@ directory = os.fsencode(llvm_test_path)
 ctx = MLContext(allow_unregistered=True)
 ctx.load_dialect(LLVM)
 ctx.load_dialect(Builtin)
-
-
 allowed_names = {
     "llvm.return",
     "llvm.mul",
