@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.g2008h05h31hBools_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -36,7 +36,7 @@ theorem foo1_proof : foo1_before ⊑ foo1_after := by
   intros
   try simp
   ---BEGIN foo1
-  apply foo1_thm
+  all_goals (try extract_goal ; sorry)
   ---END foo1
 
 
@@ -64,8 +64,35 @@ theorem foo2_proof : foo2_before ⊑ foo2_after := by
   intros
   try simp
   ---BEGIN foo2
-  apply foo2_thm
+  all_goals (try extract_goal ; sorry)
   ---END foo2
+
+
+
+def foo3_before := [llvm|
+{
+^0(%arg2 : i1, %arg3 : i1):
+  %0 = llvm.udiv %arg2, %arg3 : i1
+  "llvm.return"(%0) : (i1) -> ()
+}
+]
+def foo3_after := [llvm|
+{
+^0(%arg2 : i1, %arg3 : i1):
+  "llvm.return"(%arg2) : (i1) -> ()
+}
+]
+theorem foo3_proof : foo3_before ⊑ foo3_after := by
+  unfold foo3_before foo3_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN foo3
+  all_goals (try extract_goal ; sorry)
+  ---END foo3
 
 
 
@@ -91,7 +118,7 @@ theorem foo4_proof : foo4_before ⊑ foo4_after := by
   intros
   try simp
   ---BEGIN foo4
-  apply foo4_thm
+  all_goals (try extract_goal ; sorry)
   ---END foo4
 
 

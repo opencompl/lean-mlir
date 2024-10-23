@@ -1,4 +1,4 @@
-
+import SSA.Projects.InstCombine.tests.LLVM.gpullhbinophthroughhshift_proof
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -42,7 +42,7 @@ theorem and_signbit_shl_proof : and_signbit_shl_before ⊑ and_signbit_shl_after
   intros
   try simp
   ---BEGIN and_signbit_shl
-  all_goals (try extract_goal ; sorry)
+  apply and_signbit_shl_thm
   ---END and_signbit_shl
 
 
@@ -76,7 +76,7 @@ theorem and_nosignbit_shl_proof : and_nosignbit_shl_before ⊑ and_nosignbit_shl
   intros
   try simp
   ---BEGIN and_nosignbit_shl
-  all_goals (try extract_goal ; sorry)
+  apply and_nosignbit_shl_thm
   ---END and_nosignbit_shl
 
 
@@ -110,7 +110,7 @@ theorem or_signbit_shl_proof : or_signbit_shl_before ⊑ or_signbit_shl_after :=
   intros
   try simp
   ---BEGIN or_signbit_shl
-  all_goals (try extract_goal ; sorry)
+  apply or_signbit_shl_thm
   ---END or_signbit_shl
 
 
@@ -144,7 +144,7 @@ theorem or_nosignbit_shl_proof : or_nosignbit_shl_before ⊑ or_nosignbit_shl_af
   intros
   try simp
   ---BEGIN or_nosignbit_shl
-  all_goals (try extract_goal ; sorry)
+  apply or_nosignbit_shl_thm
   ---END or_nosignbit_shl
 
 
@@ -178,7 +178,7 @@ theorem xor_signbit_shl_proof : xor_signbit_shl_before ⊑ xor_signbit_shl_after
   intros
   try simp
   ---BEGIN xor_signbit_shl
-  all_goals (try extract_goal ; sorry)
+  apply xor_signbit_shl_thm
   ---END xor_signbit_shl
 
 
@@ -212,7 +212,7 @@ theorem xor_nosignbit_shl_proof : xor_nosignbit_shl_before ⊑ xor_nosignbit_shl
   intros
   try simp
   ---BEGIN xor_nosignbit_shl
-  all_goals (try extract_goal ; sorry)
+  apply xor_nosignbit_shl_thm
   ---END xor_nosignbit_shl
 
 
@@ -314,7 +314,7 @@ theorem and_signbit_lshr_proof : and_signbit_lshr_before ⊑ and_signbit_lshr_af
   intros
   try simp
   ---BEGIN and_signbit_lshr
-  all_goals (try extract_goal ; sorry)
+  apply and_signbit_lshr_thm
   ---END and_signbit_lshr
 
 
@@ -348,7 +348,7 @@ theorem and_nosignbit_lshr_proof : and_nosignbit_lshr_before ⊑ and_nosignbit_l
   intros
   try simp
   ---BEGIN and_nosignbit_lshr
-  all_goals (try extract_goal ; sorry)
+  apply and_nosignbit_lshr_thm
   ---END and_nosignbit_lshr
 
 
@@ -382,7 +382,7 @@ theorem or_signbit_lshr_proof : or_signbit_lshr_before ⊑ or_signbit_lshr_after
   intros
   try simp
   ---BEGIN or_signbit_lshr
-  all_goals (try extract_goal ; sorry)
+  apply or_signbit_lshr_thm
   ---END or_signbit_lshr
 
 
@@ -416,7 +416,7 @@ theorem or_nosignbit_lshr_proof : or_nosignbit_lshr_before ⊑ or_nosignbit_lshr
   intros
   try simp
   ---BEGIN or_nosignbit_lshr
-  all_goals (try extract_goal ; sorry)
+  apply or_nosignbit_lshr_thm
   ---END or_nosignbit_lshr
 
 
@@ -450,7 +450,7 @@ theorem xor_signbit_lshr_proof : xor_signbit_lshr_before ⊑ xor_signbit_lshr_af
   intros
   try simp
   ---BEGIN xor_signbit_lshr
-  all_goals (try extract_goal ; sorry)
+  apply xor_signbit_lshr_thm
   ---END xor_signbit_lshr
 
 
@@ -484,7 +484,7 @@ theorem xor_nosignbit_lshr_proof : xor_nosignbit_lshr_before ⊑ xor_nosignbit_l
   intros
   try simp
   ---BEGIN xor_nosignbit_lshr
-  all_goals (try extract_goal ; sorry)
+  apply xor_nosignbit_lshr_thm
   ---END xor_nosignbit_lshr
 
 
@@ -518,7 +518,7 @@ theorem and_signbit_ashr_proof : and_signbit_ashr_before ⊑ and_signbit_ashr_af
   intros
   try simp
   ---BEGIN and_signbit_ashr
-  all_goals (try extract_goal ; sorry)
+  apply and_signbit_ashr_thm
   ---END and_signbit_ashr
 
 
@@ -552,7 +552,7 @@ theorem and_nosignbit_ashr_proof : and_nosignbit_ashr_before ⊑ and_nosignbit_a
   intros
   try simp
   ---BEGIN and_nosignbit_ashr
-  all_goals (try extract_goal ; sorry)
+  apply and_nosignbit_ashr_thm
   ---END and_nosignbit_ashr
 
 
@@ -586,7 +586,7 @@ theorem or_signbit_ashr_proof : or_signbit_ashr_before ⊑ or_signbit_ashr_after
   intros
   try simp
   ---BEGIN or_signbit_ashr
-  all_goals (try extract_goal ; sorry)
+  apply or_signbit_ashr_thm
   ---END or_signbit_ashr
 
 
@@ -620,7 +620,7 @@ theorem or_nosignbit_ashr_proof : or_nosignbit_ashr_before ⊑ or_nosignbit_ashr
   intros
   try simp
   ---BEGIN or_nosignbit_ashr
-  all_goals (try extract_goal ; sorry)
+  apply or_nosignbit_ashr_thm
   ---END or_nosignbit_ashr
 
 
@@ -654,7 +654,7 @@ theorem xor_signbit_ashr_proof : xor_signbit_ashr_before ⊑ xor_signbit_ashr_af
   intros
   try simp
   ---BEGIN xor_signbit_ashr
-  all_goals (try extract_goal ; sorry)
+  apply xor_signbit_ashr_thm
   ---END xor_signbit_ashr
 
 
@@ -688,7 +688,7 @@ theorem xor_nosignbit_ashr_proof : xor_nosignbit_ashr_before ⊑ xor_nosignbit_a
   intros
   try simp
   ---BEGIN xor_nosignbit_ashr
-  all_goals (try extract_goal ; sorry)
+  apply xor_nosignbit_ashr_thm
   ---END xor_nosignbit_ashr
 
 
