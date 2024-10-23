@@ -1,0 +1,17 @@
+1: "addrspace0"
+5: "addrspace0" is empty
+
+1: "addrspace1"
+5: "addrspace1" is empty
+
+1: "test"
+4: "test" has unsupported operation: llvm.mlir.addressof
+
+4: "test" has unsupported operation: llvm.mlir.addressof
+
+4: "test" has unsupported operation: llvm.call
+
+4: "test" has unsupported operation: llvm.call
+
+4: "test" has unsupported operation: llvm.return
+

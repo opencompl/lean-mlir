@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section ghoisthnegationhouthofhbiashcalculation_statements
-                                                    
+
 def t0_before := [llvm|
 {
 ^0(%arg18 : i8, %arg19 : i8):
@@ -39,8 +39,9 @@ theorem t0_proof : t0_before ⊑ t0_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t0
   all_goals (try extract_goal ; sorry)
@@ -72,8 +73,9 @@ theorem n7_proof : n7_before ⊑ n7_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN n7
   all_goals (try extract_goal ; sorry)

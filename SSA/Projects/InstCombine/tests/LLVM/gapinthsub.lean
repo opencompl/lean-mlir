@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gapinthsub_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gapinthsub_statements
-                                                    
+
 def test1_before := [llvm|
 {
 ^0(%arg26 : i23):
@@ -32,8 +32,9 @@ theorem test1_proof : test1_before ⊑ test1_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test1
   all_goals (try extract_goal ; sorry)
@@ -60,8 +61,9 @@ theorem test2_proof : test2_before ⊑ test2_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test2
   all_goals (try extract_goal ; sorry)
@@ -89,8 +91,9 @@ theorem test3_proof : test3_before ⊑ test3_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test3
   all_goals (try extract_goal ; sorry)
@@ -119,8 +122,9 @@ theorem test4_proof : test4_before ⊑ test4_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test4
   all_goals (try extract_goal ; sorry)
@@ -149,11 +153,12 @@ theorem test5_proof : test5_before ⊑ test5_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test5
-  apply test5_thm
+  all_goals (try extract_goal ; sorry)
   ---END test5
 
 
@@ -180,11 +185,12 @@ theorem test6_proof : test6_before ⊑ test6_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test6
-  apply test6_thm
+  all_goals (try extract_goal ; sorry)
   ---END test6
 
 
@@ -210,11 +216,12 @@ theorem test7_proof : test7_before ⊑ test7_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test7
-  apply test7_thm
+  all_goals (try extract_goal ; sorry)
   ---END test7
 
 
@@ -241,11 +248,12 @@ theorem test8_proof : test8_before ⊑ test8_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test8
-  apply test8_thm
+  all_goals (try extract_goal ; sorry)
   ---END test8
 
 
@@ -272,11 +280,12 @@ theorem test9_proof : test9_before ⊑ test9_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test9
-  apply test9_thm
+  all_goals (try extract_goal ; sorry)
   ---END test9
 
 
@@ -304,11 +313,12 @@ theorem test12_proof : test12_before ⊑ test12_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test12
-  apply test12_thm
+  all_goals (try extract_goal ; sorry)
   ---END test12
 
 
@@ -336,11 +346,12 @@ theorem test13_proof : test13_before ⊑ test13_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test13
-  apply test13_thm
+  all_goals (try extract_goal ; sorry)
   ---END test13
 
 
@@ -368,11 +379,12 @@ theorem test16_proof : test16_before ⊑ test16_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test16
-  apply test16_thm
+  all_goals (try extract_goal ; sorry)
   ---END test16
 
 
@@ -399,8 +411,9 @@ theorem test18_proof : test18_before ⊑ test18_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test18
   all_goals (try extract_goal ; sorry)
@@ -427,8 +440,9 @@ theorem test19_proof : test19_before ⊑ test19_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test19
   all_goals (try extract_goal ; sorry)

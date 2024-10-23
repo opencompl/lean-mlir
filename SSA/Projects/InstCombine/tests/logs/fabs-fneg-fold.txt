@@ -1,0 +1,63 @@
+1: "fabs_fneg_basic"
+4: "fabs_fneg_basic" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "fabs_fneg_v2f32"
+4: "fabs_fneg_v2f32" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "fabs_fneg_f64"
+4: "fabs_fneg_f64" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "fabs_fneg_v4f64"
+4: "fabs_fneg_v4f64" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "fabs_fneg_f16"
+4: "fabs_fneg_f16" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "fabs_copysign_nnan"
+4: "fabs_copysign_nnan" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "fabs_copysign_ninf"
+4: "fabs_copysign_ninf" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "fabs_copysign_nsz"
+4: "fabs_copysign_nsz" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "fabs_copysign_nnan_negative"
+4: "fabs_copysign_nnan_negative" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "fabs_copysign_ninf_negative"
+4: "fabs_copysign_ninf_negative" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "fabs_copysign_nsz_negative"
+4: "fabs_copysign_nsz_negative" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "fabs_fneg_no_fabs"
+4: "fabs_fneg_no_fabs" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "fabs_fneg_splat_v2f32"
+8: "fabs_fneg_splat_v2f32" contains vectors which are unsupported
+
+1: "fabs_fneg_splat_poison_v2f32"
+4: "fabs_fneg_splat_poison_v2f32" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "fabs_fneg_splat_poison_v2f32" has unsupported operation: llvm.mlir.undef
+
+4: "fabs_fneg_splat_poison_v2f32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "fabs_fneg_splat_poison_v2f32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "fabs_fneg_splat_poison_v2f32" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "fabs_fneg_non_splat_v2f32"
+8: "fabs_fneg_non_splat_v2f32" contains vectors which are unsupported
+
+1: "use"
+5: "use" is empty
+
+1: "fabs_fneg_multi_use"
+4: "fabs_fneg_multi_use" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fabs_fneg_multi_use" has unsupported operation: llvm.call
+
+4: "fabs_fneg_multi_use" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+

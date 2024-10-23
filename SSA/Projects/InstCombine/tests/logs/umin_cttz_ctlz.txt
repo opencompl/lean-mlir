@@ -1,0 +1,136 @@
+1: "umin_cttz_i8_zero_undefined"
+4: "umin_cttz_i8_zero_undefined" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "umin_cttz_i8_zero_defined"
+4: "umin_cttz_i8_zero_defined" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "umin_cttz_i8_commuted_zero_undefined"
+4: "umin_cttz_i8_commuted_zero_undefined" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "umin_cttz_i8_negative_ge_bitwidth_zero_undefined"
+4: "umin_cttz_i8_negative_ge_bitwidth_zero_undefined" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "umin_cttz_i16_zero_undefined"
+4: "umin_cttz_i16_zero_undefined" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "umin_cttz_i32_zero_undefined"
+4: "umin_cttz_i32_zero_undefined" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "umin_cttz_i64_zero_undefined"
+4: "umin_cttz_i64_zero_undefined" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "umin_cttz_i1_zero_undefined"
+4: "umin_cttz_i1_zero_undefined" has unsupported operation after optimization: builtin.unregistered: llvm.intr.cttz
+
+4: "umin_cttz_i1_zero_undefined" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umin
+
+1: "umin_cttz_i1_zero_defined"
+4: "umin_cttz_i1_zero_defined" has unsupported operation after optimization: builtin.unregistered: llvm.intr.cttz
+
+4: "umin_cttz_i1_zero_defined" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umin
+
+1: "umin_cttz_2xi32_splat_zero_undefined"
+4: "umin_cttz_2xi32_splat_zero_undefined" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "umin_cttz_2xi32_splat_poison_zero_undefined"
+4: "umin_cttz_2xi32_splat_poison_zero_undefined" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "umin_cttz_2xi32_splat_poison_zero_undefined" has unsupported operation: llvm.mlir.undef
+
+4: "umin_cttz_2xi32_splat_poison_zero_undefined" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "umin_cttz_2xi32_splat_poison_zero_undefined" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "umin_cttz_2xi32_splat_poison_zero_undefined" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "umin_cttz_2xi32_no_splat_all_lt_bitwidth_zero_undefined"
+4: "umin_cttz_2xi32_no_splat_all_lt_bitwidth_zero_undefined" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "umin_cttz_2xi32_negative_no_splat_some_lt_bitwidth_zero_undefined"
+4: "umin_cttz_2xi32_negative_no_splat_some_lt_bitwidth_zero_undefined" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+4: "umin_cttz_2xi32_negative_no_splat_some_lt_bitwidth_zero_undefined" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umin_cttz_2xi32_negative_no_splat_none_lt_bitwidth_zero_undefined"
+4: "umin_cttz_2xi32_negative_no_splat_none_lt_bitwidth_zero_undefined" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+4: "umin_cttz_2xi32_negative_no_splat_none_lt_bitwidth_zero_undefined" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umin_cttz_i16_negative_non_constant"
+4: "umin_cttz_i16_negative_non_constant" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+4: "umin_cttz_i16_negative_non_constant" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umin_cttz_i16_negative_two_uses"
+4: "umin_cttz_i16_negative_two_uses" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+4: "umin_cttz_i16_negative_two_uses" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umin_ctlz_i8_zero_undefined"
+4: "umin_ctlz_i8_zero_undefined" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "umin_ctlz_i8_zero_defined"
+4: "umin_ctlz_i8_zero_defined" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "umin_ctlz_i8_commuted_zero_undefined"
+4: "umin_ctlz_i8_commuted_zero_undefined" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "umin_ctlz_i8_negative_ge_bitwidth_zero_undefined"
+4: "umin_ctlz_i8_negative_ge_bitwidth_zero_undefined" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "umin_ctlz_i16_zero_undefined"
+4: "umin_ctlz_i16_zero_undefined" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "umin_ctlz_i32_zero_undefined"
+4: "umin_ctlz_i32_zero_undefined" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "umin_ctlz_i64_zero_undefined"
+4: "umin_ctlz_i64_zero_undefined" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "umin_ctlz_i1_zero_undefined"
+4: "umin_ctlz_i1_zero_undefined" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctlz
+
+4: "umin_ctlz_i1_zero_undefined" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umin
+
+1: "umin_ctlz_i1_zero_defined"
+4: "umin_ctlz_i1_zero_defined" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctlz
+
+4: "umin_ctlz_i1_zero_defined" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umin
+
+1: "umin_ctlz_2xi32_splat_zero_undefined"
+4: "umin_ctlz_2xi32_splat_zero_undefined" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "umin_ctlz_2xi32_splat_poison_zero_undefined"
+4: "umin_ctlz_2xi32_splat_poison_zero_undefined" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "umin_ctlz_2xi32_splat_poison_zero_undefined" has unsupported operation: llvm.mlir.undef
+
+4: "umin_ctlz_2xi32_splat_poison_zero_undefined" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "umin_ctlz_2xi32_splat_poison_zero_undefined" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "umin_ctlz_2xi32_splat_poison_zero_undefined" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "umin_ctlz_2xi32_no_splat_all_lt_bitwidth_zero_undefined"
+4: "umin_ctlz_2xi32_no_splat_all_lt_bitwidth_zero_undefined" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "umin_ctlz_2xi32_negative_no_splat_some_lt_bitwidth_zero_undefined"
+4: "umin_ctlz_2xi32_negative_no_splat_some_lt_bitwidth_zero_undefined" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+4: "umin_ctlz_2xi32_negative_no_splat_some_lt_bitwidth_zero_undefined" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umin_ctlz_2xi32_negative_no_splat_none_lt_bitwidth_zero_undefined"
+4: "umin_ctlz_2xi32_negative_no_splat_none_lt_bitwidth_zero_undefined" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+4: "umin_ctlz_2xi32_negative_no_splat_none_lt_bitwidth_zero_undefined" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umin_ctlz_i16_negative_non_constant"
+4: "umin_ctlz_i16_negative_non_constant" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+4: "umin_ctlz_i16_negative_non_constant" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umin_ctlz_i16_negative_two_uses"
+4: "umin_ctlz_i16_negative_two_uses" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+4: "umin_ctlz_i16_negative_two_uses" has unsupported operation: builtin.unregistered: llvm.intr.umin
+

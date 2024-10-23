@@ -1,0 +1,21 @@
+1: "constant_fold_fma_f32"
+4: "constant_fold_fma_f32" has unsupported operation after optimization: builtin.unregistered: llvm.intr.fma
+
+1: "constant_fold_fma_v4f32"
+8: "constant_fold_fma_v4f32" contains vectors which are unsupported
+
+1: "constant_fold_fmuladd_f32"
+4: "constant_fold_fmuladd_f32" has unsupported operation after optimization: builtin.unregistered: llvm.intr.fmuladd
+
+1: "constant_fold_fma_f64"
+4: "constant_fold_fma_f64" has unsupported operation after optimization: builtin.unregistered: llvm.intr.fma
+
+1: "constant_fold_fmuladd_f64"
+4: "constant_fold_fmuladd_f64" has unsupported operation after optimization: builtin.unregistered: llvm.intr.fmuladd
+
+1: "constant_fold_frem_f32"
+4: "constant_fold_frem_f32" has unsupported operation after optimization: builtin.unregistered: llvm.frem
+
+1: "constant_fold_frem_f64"
+4: "constant_fold_frem_f64" has unsupported operation after optimization: builtin.unregistered: llvm.frem
+

@@ -1,0 +1,12 @@
+1: "test_shift_nonnegative"
+4: "test_shift_nonnegative" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test_shift_negative"
+4: "test_shift_negative" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test_no_sign_bit_conflict1"
+4: "test_no_sign_bit_conflict1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+1: "test_no_sign_bit_conflict2"
+4: "test_no_sign_bit_conflict2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+

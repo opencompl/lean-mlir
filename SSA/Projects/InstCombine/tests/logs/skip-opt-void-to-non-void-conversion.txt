@@ -1,0 +1,13 @@
+1: "foo"
+4: "foo" has unsupported operation: llvm.return
+
+1: "bar"
+4: "bar" has unsupported operation: llvm.mlir.addressof
+
+4: "bar" has unsupported operation: llvm.call
+
+1: "goo"
+4: "goo" has unsupported operation: llvm.call
+
+4: "goo" has unsupported operation: llvm.return
+

@@ -1,0 +1,72 @@
+1: "strncmp"
+5: "strncmp" is empty
+
+1: "fold_strncmp_Aa_b"
+4: "fold_strncmp_Aa_b" has unsupported operation: llvm.store
+
+4: "fold_strncmp_Aa_b" has unsupported operation: llvm.getelementptr
+
+4: "fold_strncmp_Aa_b" has unsupported operation: llvm.store
+
+4: "fold_strncmp_Aa_b" has unsupported operation: llvm.getelementptr
+
+4: "fold_strncmp_Aa_b" has unsupported operation: llvm.store
+
+4: "fold_strncmp_Aa_b" has unsupported operation: llvm.getelementptr
+
+4: "fold_strncmp_Aa_b" has unsupported operation: llvm.store
+
+4: "fold_strncmp_Aa_b" has unsupported operation: llvm.getelementptr
+
+4: "fold_strncmp_Aa_b" has unsupported operation: llvm.store
+
+4: "fold_strncmp_Aa_b" has unsupported operation: llvm.getelementptr
+
+4: "fold_strncmp_Aa_b" has unsupported operation: llvm.store
+
+4: "fold_strncmp_Aa_b" has unsupported operation: llvm.getelementptr
+
+4: "fold_strncmp_Aa_b" has unsupported operation: llvm.store
+
+4: "fold_strncmp_Aa_b" has unsupported operation: llvm.getelementptr
+
+4: "fold_strncmp_Aa_b" has unsupported operation: llvm.store
+
+4: "fold_strncmp_Aa_b" has unsupported operation: llvm.getelementptr
+
+4: "fold_strncmp_Aa_b" has unsupported operation: llvm.store
+
+4: "fold_strncmp_Aa_b" has unsupported operation: llvm.getelementptr
+
+4: "fold_strncmp_Aa_b" has unsupported operation: llvm.store
+
+4: "fold_strncmp_Aa_b" has unsupported operation: llvm.return
+
+1: "fold_strncmp_Ab_a"
+4: "fold_strncmp_Ab_a" has unsupported operation: llvm.store
+
+4: "fold_strncmp_Ab_a" has unsupported operation: llvm.getelementptr
+
+4: "fold_strncmp_Ab_a" has unsupported operation: llvm.store
+
+4: "fold_strncmp_Ab_a" has unsupported operation: llvm.getelementptr
+
+4: "fold_strncmp_Ab_a" has unsupported operation: llvm.store
+
+4: "fold_strncmp_Ab_a" has unsupported operation: llvm.getelementptr
+
+4: "fold_strncmp_Ab_a" has unsupported operation: llvm.store
+
+4: "fold_strncmp_Ab_a" has unsupported operation: llvm.getelementptr
+
+4: "fold_strncmp_Ab_a" has unsupported operation: llvm.store
+
+4: "fold_strncmp_Ab_a" has unsupported operation: llvm.getelementptr
+
+4: "fold_strncmp_Ab_a" has unsupported operation: llvm.store
+
+4: "fold_strncmp_Ab_a" has unsupported operation: llvm.return
+
+1: "memcmp"
+5: "memcmp" is empty
+

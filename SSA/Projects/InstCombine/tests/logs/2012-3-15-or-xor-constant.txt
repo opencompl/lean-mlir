@@ -1,0 +1,5 @@
+1: "function"
+4: "function" has unsupported operation: llvm.inttoptr
+
+4: "function" has unsupported operation: llvm.store
+

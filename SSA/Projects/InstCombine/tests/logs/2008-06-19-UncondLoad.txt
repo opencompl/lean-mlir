@@ -1,0 +1,14 @@
+1: "x"
+5: "x" is empty
+
+1: "b"
+4: "b" has unsupported operation: llvm.load
+
+4: "b" has unsupported operation: llvm.load
+
+4: "b" has unsupported operation: llvm.call
+
+4: "b" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "b" has unsupported operation: llvm.load
+

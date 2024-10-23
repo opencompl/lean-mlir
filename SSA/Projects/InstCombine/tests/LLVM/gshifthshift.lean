@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gshifthshift_statements
-                                                    
+
 def shl_shl_before := [llvm|
 {
 ^0(%arg50 : i32):
@@ -35,8 +35,9 @@ theorem shl_shl_proof : shl_shl_before ⊑ shl_shl_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_shl
   all_goals (try extract_goal ; sorry)
@@ -66,12 +67,48 @@ theorem lshr_lshr_proof : lshr_lshr_before ⊑ lshr_lshr_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lshr_lshr
   all_goals (try extract_goal ; sorry)
   ---END lshr_lshr
+
+
+
+def shl_shl_constants_div_before := [llvm|
+{
+^0(%arg27 : i32, %arg28 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %2 = llvm.shl %0, %arg28 : i32
+  %3 = llvm.shl %2, %1 : i32
+  %4 = llvm.udiv %arg27, %3 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def shl_shl_constants_div_after := [llvm|
+{
+^0(%arg27 : i32, %arg28 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %1 = llvm.add %arg28, %0 : i32
+  %2 = llvm.lshr %arg27, %1 : i32
+  "llvm.return"(%2) : (i32) -> ()
+}
+]
+theorem shl_shl_constants_div_proof : shl_shl_constants_div_before ⊑ shl_shl_constants_div_after := by
+  unfold shl_shl_constants_div_before shl_shl_constants_div_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN shl_shl_constants_div
+  all_goals (try extract_goal ; sorry)
+  ---END shl_shl_constants_div
 
 
 
@@ -100,8 +137,9 @@ theorem ashr_shl_constants_proof : ashr_shl_constants_before ⊑ ashr_shl_consta
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN ashr_shl_constants
   all_goals (try extract_goal ; sorry)
@@ -136,8 +174,9 @@ theorem shl_lshr_demand1_proof : shl_lshr_demand1_before ⊑ shl_lshr_demand1_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_lshr_demand1
   all_goals (try extract_goal ; sorry)
@@ -172,8 +211,9 @@ theorem shl_lshr_demand6_proof : shl_lshr_demand6_before ⊑ shl_lshr_demand6_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_lshr_demand6
   all_goals (try extract_goal ; sorry)
@@ -208,8 +248,9 @@ theorem lshr_shl_demand1_proof : lshr_shl_demand1_before ⊑ lshr_shl_demand1_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lshr_shl_demand1
   all_goals (try extract_goal ; sorry)
@@ -244,8 +285,9 @@ theorem lshr_shl_demand3_proof : lshr_shl_demand3_before ⊑ lshr_shl_demand3_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lshr_shl_demand3
   all_goals (try extract_goal ; sorry)

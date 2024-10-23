@@ -1,0 +1,6 @@
+1: "udiv_vec8x16"
+8: "udiv_vec8x16" contains vectors which are unsupported
+
+1: "udiv_vec4x32"
+8: "udiv_vec4x32" contains vectors which are unsupported
+

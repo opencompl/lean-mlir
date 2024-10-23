@@ -1,0 +1,24 @@
+1: "umin_scalar"
+4: "umin_scalar" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umin
+
+1: "smin_scalar"
+4: "smin_scalar" has unsupported operation after optimization: builtin.unregistered: llvm.intr.smin
+
+1: "umax_scalar"
+4: "umax_scalar" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umax
+
+1: "smax_scalar"
+4: "smax_scalar" has unsupported operation after optimization: builtin.unregistered: llvm.intr.smax
+
+1: "umin_vector"
+8: "umin_vector" contains vectors which are unsupported
+
+1: "smin_vector"
+8: "smin_vector" contains vectors which are unsupported
+
+1: "umax_vector"
+8: "umax_vector" contains vectors which are unsupported
+
+1: "smax_vector"
+8: "smax_vector" contains vectors which are unsupported
+

@@ -1,0 +1,11 @@
+1: "pow_to_sqrt"
+4: "pow_to_sqrt" has unsupported operation: llvm.call
+
+4: "pow_to_sqrt" has unsupported operation: llvm.return
+
+1: "pow"
+5: "pow" is empty
+
+1: "sqrt"
+5: "sqrt" is empty
+

@@ -1,0 +1,14 @@
+1: "test1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.mul
+2: llvm.return
+
+1: "test2"
+8: "test2" contains vectors which are unsupported
+
+1: "test3"
+8: "test3" contains vectors which are unsupported
+

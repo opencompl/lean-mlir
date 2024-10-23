@@ -1,0 +1,8 @@
+1: "foo"
+4: "foo" has unsupported operation: llvm.call
+
+4: "foo" has unsupported operation: llvm.return
+
+1: "bar"
+7: "bar" is unchanged by InstCombine
+

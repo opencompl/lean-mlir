@@ -1,0 +1,474 @@
+1: "test1"
+4: "test1" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "test1" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "test1_unary"
+4: "test1_unary" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "test1_unary" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "neg_sub_nsz"
+4: "neg_sub_nsz" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "unary_neg_sub_nsz"
+4: "unary_neg_sub_nsz" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "use"
+5: "use" is empty
+
+1: "use2"
+5: "use2" is empty
+
+1: "neg_sub_nsz_extra_use"
+4: "neg_sub_nsz_extra_use" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "neg_sub_nsz_extra_use" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "neg_sub_nsz_extra_use" has unsupported operation: llvm.call
+
+1: "unary_neg_sub_nsz_extra_use"
+4: "unary_neg_sub_nsz_extra_use" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "unary_neg_sub_nsz_extra_use" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "unary_neg_sub_nsz_extra_use" has unsupported operation: llvm.call
+
+1: "sub_sub_nsz"
+4: "sub_sub_nsz" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "sub_sub_nsz" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "sub_add_neg_x"
+4: "sub_add_neg_x" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "sub_sub_known_not_negzero"
+4: "sub_sub_known_not_negzero" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "sub_sub_known_not_negzero" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test2"
+4: "test2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "constant_op1"
+4: "constant_op1" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "constant_op1_vec"
+4: "constant_op1_vec" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "constant_op1_vec_poison"
+4: "constant_op1_vec_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "constant_op1_vec_poison" has unsupported operation: llvm.mlir.undef
+
+4: "constant_op1_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "constant_op1_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "constant_op1_vec_poison" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "neg_op1"
+4: "neg_op1" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "unary_neg_op1"
+4: "unary_neg_op1" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "neg_op1_vec"
+4: "neg_op1_vec" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "unary_neg_op1_vec"
+4: "unary_neg_op1_vec" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "neg_op1_vec_poison"
+4: "neg_op1_vec_poison" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "neg_ext_op1"
+4: "neg_ext_op1" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "neg_ext_op1" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "unary_neg_ext_op1"
+4: "unary_neg_ext_op1" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "unary_neg_ext_op1" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "neg_trunc_op1"
+4: "neg_trunc_op1" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+4: "neg_trunc_op1" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "unary_neg_trunc_op1"
+4: "unary_neg_trunc_op1" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+4: "unary_neg_trunc_op1" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "neg_ext_op1_fast"
+4: "neg_ext_op1_fast" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "neg_ext_op1_fast" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "unary_neg_ext_op1_fast"
+4: "unary_neg_ext_op1_fast" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "unary_neg_ext_op1_fast" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "neg_ext_op1_extra_use"
+4: "neg_ext_op1_extra_use" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "neg_ext_op1_extra_use" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "neg_ext_op1_extra_use" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "neg_ext_op1_extra_use" has unsupported operation: llvm.call
+
+1: "unary_neg_ext_op1_extra_use"
+4: "unary_neg_ext_op1_extra_use" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "unary_neg_ext_op1_extra_use" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "unary_neg_ext_op1_extra_use" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "unary_neg_ext_op1_extra_use" has unsupported operation: llvm.call
+
+1: "neg_trunc_op1_extra_use"
+4: "neg_trunc_op1_extra_use" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+4: "neg_trunc_op1_extra_use" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "neg_trunc_op1_extra_use" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "neg_trunc_op1_extra_use" has unsupported operation: llvm.call
+
+1: "unary_neg_trunc_op1_extra_use"
+4: "unary_neg_trunc_op1_extra_use" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+4: "unary_neg_trunc_op1_extra_use" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "unary_neg_trunc_op1_extra_use" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "unary_neg_trunc_op1_extra_use" has unsupported operation: llvm.call
+
+1: "neg_trunc_op1_extra_uses"
+4: "neg_trunc_op1_extra_uses" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "neg_trunc_op1_extra_uses" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+4: "neg_trunc_op1_extra_uses" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "neg_trunc_op1_extra_uses" has unsupported operation: llvm.call
+
+1: "unary_neg_trunc_op1_extra_uses"
+4: "unary_neg_trunc_op1_extra_uses" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "unary_neg_trunc_op1_extra_uses" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+4: "unary_neg_trunc_op1_extra_uses" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "unary_neg_trunc_op1_extra_uses" has unsupported operation: llvm.call
+
+1: "PR37605"
+4: "PR37605" has unsupported operation: llvm.mlir.addressof
+
+4: "PR37605" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "PR37605" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "PR37605" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fsub_fdiv_fneg1"
+4: "fsub_fdiv_fneg1" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fsub_fdiv_fneg1" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fsub_fdiv_fneg2"
+4: "fsub_fdiv_fneg2" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fsub_fdiv_fneg2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fsub_fmul_fneg1"
+4: "fsub_fmul_fneg1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fsub_fmul_fneg1" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fsub_fmul_fneg2"
+4: "fsub_fmul_fneg2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fsub_fmul_fneg2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fsub_fdiv_fneg1_extra_use"
+4: "fsub_fdiv_fneg1_extra_use" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fsub_fdiv_fneg1_extra_use" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fsub_fdiv_fneg1_extra_use" has unsupported operation: llvm.call
+
+4: "fsub_fdiv_fneg1_extra_use" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fsub_fdiv_fneg2_extra_use"
+4: "fsub_fdiv_fneg2_extra_use" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fsub_fdiv_fneg2_extra_use" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fsub_fdiv_fneg2_extra_use" has unsupported operation: llvm.call
+
+4: "fsub_fdiv_fneg2_extra_use" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "use_vec"
+5: "use_vec" is empty
+
+1: "fsub_fmul_fneg1_extra_use"
+4: "fsub_fmul_fneg1_extra_use" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fsub_fmul_fneg1_extra_use" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fsub_fmul_fneg1_extra_use" has unsupported operation: llvm.call
+
+4: "fsub_fmul_fneg1_extra_use" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fsub_fmul_fneg2_extra_use"
+4: "fsub_fmul_fneg2_extra_use" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fsub_fmul_fneg2_extra_use" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fsub_fmul_fneg2_extra_use" has unsupported operation: llvm.call
+
+4: "fsub_fmul_fneg2_extra_use" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fsub_fdiv_fneg1_extra_use2"
+4: "fsub_fdiv_fneg1_extra_use2" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fsub_fdiv_fneg1_extra_use2" has unsupported operation: llvm.call
+
+4: "fsub_fdiv_fneg1_extra_use2" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fsub_fdiv_fneg1_extra_use2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fsub_fdiv_fneg2_extra_use2"
+4: "fsub_fdiv_fneg2_extra_use2" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fsub_fdiv_fneg2_extra_use2" has unsupported operation: llvm.call
+
+4: "fsub_fdiv_fneg2_extra_use2" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fsub_fdiv_fneg2_extra_use2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fsub_fmul_fneg1_extra_use2"
+4: "fsub_fmul_fneg1_extra_use2" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fsub_fmul_fneg1_extra_use2" has unsupported operation: llvm.call
+
+4: "fsub_fmul_fneg1_extra_use2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fsub_fmul_fneg1_extra_use2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fsub_fmul_fneg2_extra_use2"
+4: "fsub_fmul_fneg2_extra_use2" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fsub_fmul_fneg2_extra_use2" has unsupported operation: llvm.call
+
+4: "fsub_fmul_fneg2_extra_use2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fsub_fmul_fneg2_extra_use2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fsub_fdiv_fneg1_extra_use3"
+4: "fsub_fdiv_fneg1_extra_use3" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fsub_fdiv_fneg1_extra_use3" has unsupported operation: llvm.call
+
+4: "fsub_fdiv_fneg1_extra_use3" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fsub_fdiv_fneg1_extra_use3" has unsupported operation: llvm.call
+
+4: "fsub_fdiv_fneg1_extra_use3" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fsub_fdiv_fneg2_extra_use3"
+4: "fsub_fdiv_fneg2_extra_use3" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fsub_fdiv_fneg2_extra_use3" has unsupported operation: llvm.call
+
+4: "fsub_fdiv_fneg2_extra_use3" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fsub_fdiv_fneg2_extra_use3" has unsupported operation: llvm.call
+
+4: "fsub_fdiv_fneg2_extra_use3" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fsub_fmul_fneg1_extra_use3"
+4: "fsub_fmul_fneg1_extra_use3" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fsub_fmul_fneg1_extra_use3" has unsupported operation: llvm.call
+
+4: "fsub_fmul_fneg1_extra_use3" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fsub_fmul_fneg1_extra_use3" has unsupported operation: llvm.call
+
+4: "fsub_fmul_fneg1_extra_use3" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fsub_fmul_fneg2_extra_use3"
+4: "fsub_fmul_fneg2_extra_use3" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fsub_fmul_fneg2_extra_use3" has unsupported operation: llvm.call
+
+4: "fsub_fmul_fneg2_extra_use3" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fsub_fmul_fneg2_extra_use3" has unsupported operation: llvm.call
+
+4: "fsub_fmul_fneg2_extra_use3" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fsub_fsub"
+4: "fsub_fsub" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "fsub_fsub" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fsub_fsub_nsz"
+4: "fsub_fsub_nsz" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "fsub_fsub_nsz" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fsub_fsub_reassoc"
+4: "fsub_fsub_reassoc" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "fsub_fsub_reassoc" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fsub_fsub_nsz_reassoc"
+4: "fsub_fsub_nsz_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fsub_fsub_nsz_reassoc" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fsub_fsub_fast_vec"
+4: "fsub_fsub_fast_vec" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fsub_fsub_fast_vec" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fsub_fsub_nsz_reassoc_extra_use"
+4: "fsub_fsub_nsz_reassoc_extra_use" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "fsub_fsub_nsz_reassoc_extra_use" has unsupported operation: llvm.call
+
+4: "fsub_fsub_nsz_reassoc_extra_use" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fneg_fsub"
+4: "fneg_fsub" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fneg_fsub" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fneg_fsub_nsz"
+4: "fneg_fsub_nsz" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fneg_fsub_nsz" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "fake_fneg_fsub_fast"
+4: "fake_fneg_fsub_fast" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fake_fneg_fsub_fast" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "fake_fneg_fsub_fast_extra_use"
+4: "fake_fneg_fsub_fast_extra_use" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fake_fneg_fsub_fast_extra_use" has unsupported operation: llvm.call
+
+4: "fake_fneg_fsub_fast_extra_use" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fake_fneg_fsub_vec"
+4: "fake_fneg_fsub_vec" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fake_fneg_fsub_vec" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "fneg_fsub_constant"
+4: "fneg_fsub_constant" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fsub_fadd_fsub_reassoc"
+4: "fsub_fadd_fsub_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fsub_fadd_fsub_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fsub_fadd_fsub_reassoc" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fsub_fadd_fsub_reassoc_commute"
+4: "fsub_fadd_fsub_reassoc_commute" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fsub_fadd_fsub_reassoc_commute" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fsub_fadd_fsub_reassoc_commute" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fsub_fadd_fsub_reassoc_commute" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fsub_fadd_fsub_reassoc_twice"
+4: "fsub_fadd_fsub_reassoc_twice" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fsub_fadd_fsub_reassoc_twice" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fsub_fadd_fsub_reassoc_twice" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fsub_fadd_fsub_reassoc_twice" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fsub_fadd_fsub_not_reassoc"
+4: "fsub_fadd_fsub_not_reassoc" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "fsub_fadd_fsub_not_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fsub_fadd_fsub_not_reassoc" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fsub_fadd_fsub_reassoc_use1"
+4: "fsub_fadd_fsub_reassoc_use1" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "fsub_fadd_fsub_reassoc_use1" has unsupported operation: llvm.call
+
+4: "fsub_fadd_fsub_reassoc_use1" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fsub_fadd_fsub_reassoc_use1" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fsub_fadd_fsub_reassoc_use2"
+4: "fsub_fadd_fsub_reassoc_use2" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "fsub_fadd_fsub_reassoc_use2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fsub_fadd_fsub_reassoc_use2" has unsupported operation: llvm.call
+
+4: "fsub_fadd_fsub_reassoc_use2" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fmul_c1"
+4: "fmul_c1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fmul_c1" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fmul_c1_fmf"
+4: "fmul_c1_fmf" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fmul_c1_fmf" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fmul_c1_use"
+4: "fmul_c1_use" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fmul_c1_use" has unsupported operation: llvm.call
+
+4: "fmul_c1_use" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fdiv_c0"
+4: "fdiv_c0" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fdiv_c0" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fdiv_c0_fmf"
+4: "fdiv_c0_fmf" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fdiv_c0_fmf" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fdiv_c1"
+4: "fdiv_c1" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fdiv_c1" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fdiv_c1_fmf"
+4: "fdiv_c1_fmf" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fdiv_c1_fmf" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fdiv_c1_use"
+4: "fdiv_c1_use" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fdiv_c1_use" has unsupported operation: llvm.call
+
+4: "fdiv_c1_use" has unsupported operation: builtin.unregistered: llvm.fsub
+

@@ -1,0 +1,6 @@
+1: "scalar_zext_slt"
+4: "scalar_zext_slt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "vector_zext_slt"
+4: "vector_zext_slt" has unsupported operation: builtin.unregistered: llvm.icmp
+

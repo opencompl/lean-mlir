@@ -1,0 +1,131 @@
+1: "use"
+5: "use" is empty
+
+1: "mul_mask_pow2_eq0"
+4: "mul_mask_pow2_eq0" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_mask_pow2_ne0_use1"
+4: "mul_mask_pow2_ne0_use1" has unsupported operation: llvm.call
+
+4: "mul_mask_pow2_ne0_use1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_mask_pow2_ne0_use2"
+4: "mul_mask_pow2_ne0_use2" has unsupported operation: llvm.call
+
+4: "mul_mask_pow2_ne0_use2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_mask_pow2_sgt0"
+4: "mul_mask_pow2_sgt0" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_mask_fakepow2_ne0"
+4: "mul_mask_fakepow2_ne0" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_mask_pow2_eq4"
+4: "mul_mask_pow2_eq4" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "mul_mask_notpow2_ne"
+4: "mul_mask_notpow2_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "pr40493"
+4: "pr40493" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "pr40493_neg1"
+4: "pr40493_neg1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "pr40493_neg2"
+4: "pr40493_neg2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "pr40493_neg3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.and
+2: llvm.return
+
+1: "pr40493_vec1"
+4: "pr40493_vec1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "pr40493_vec2"
+4: "pr40493_vec2" has unsupported operation: llvm.mlir.undef
+
+4: "pr40493_vec2" has unsupported operation: llvm.mlir.undef
+
+4: "pr40493_vec2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr40493_vec2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr40493_vec2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr40493_vec2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr40493_vec2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "pr40493_vec3"
+4: "pr40493_vec3" has unsupported operation: llvm.mlir.undef
+
+4: "pr40493_vec3" has unsupported operation: llvm.mlir.undef
+
+4: "pr40493_vec3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr40493_vec3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr40493_vec3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr40493_vec3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr40493_vec3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "pr40493_vec4"
+4: "pr40493_vec4" has unsupported operation: llvm.mlir.undef
+
+4: "pr40493_vec4" has unsupported operation: llvm.mlir.undef
+
+4: "pr40493_vec4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr40493_vec4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr40493_vec4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr40493_vec4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr40493_vec4" has unsupported operation: llvm.mlir.undef
+
+4: "pr40493_vec4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr40493_vec4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr40493_vec4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr40493_vec4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr40493_vec4" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "pr40493_vec5"
+4: "pr40493_vec5" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "pr51551"
+4: "pr51551" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "pr51551_2"
+4: "pr51551_2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "pr51551_neg1"
+4: "pr51551_neg1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "pr51551_neg2"
+4: "pr51551_neg2" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "pr51551_neg2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "pr51551_demand3bits"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.or
+2: llvm.mul
+2: llvm.and
+2: llvm.return
+

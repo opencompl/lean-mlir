@@ -1,0 +1,59 @@
+1: "use.i8"
+5: "use.i8" is empty
+
+1: "test1"
+4: "test1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test1vec"
+4: "test1vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test2"
+4: "test2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test2vec"
+4: "test2vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test3"
+4: "test3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test3vec"
+4: "test3vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test_ne_cp2"
+4: "test_ne_cp2" has unsupported operation: llvm.call
+
+4: "test_ne_cp2" has unsupported operation: llvm.call
+
+4: "test_ne_cp2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test_ne_cp2_2"
+4: "test_ne_cp2_2" has unsupported operation: llvm.call
+
+4: "test_ne_cp2_2" has unsupported operation: llvm.call
+
+4: "test_ne_cp2_2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test_ne_cp2_other_okay_all_ones"
+4: "test_ne_cp2_other_okay_all_ones" has unsupported operation: llvm.call
+
+4: "test_ne_cp2_other_okay_all_ones" has unsupported operation: llvm.call
+
+4: "test_ne_cp2_other_okay_all_ones" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test_ne_cp2_other_fail2"
+4: "test_ne_cp2_other_fail2" has unsupported operation: llvm.call
+
+4: "test_ne_cp2_other_fail2" has unsupported operation: llvm.call
+
+4: "test_ne_cp2_other_fail2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test_ne_cp2_other_okay"
+4: "test_ne_cp2_other_okay" has unsupported operation: llvm.call
+
+4: "test_ne_cp2_other_okay" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test_ne_cp2_other_okay2"
+4: "test_ne_cp2_other_okay2" has unsupported operation: llvm.call
+
+4: "test_ne_cp2_other_okay2" has unsupported operation: builtin.unregistered: llvm.icmp
+

@@ -1,0 +1,22 @@
+1: "takes_i32"
+5: "takes_i32" is empty
+
+1: "takes_i32_inalloca"
+5: "takes_i32_inalloca" is empty
+
+1: "f"
+4: "f" has unsupported operation: llvm.mlir.addressof
+
+4: "f" has unsupported operation: llvm.alloca
+
+4: "f" has unsupported operation: llvm.call
+
+4: "f" has unsupported operation: llvm.return
+
+1: "g"
+4: "g" has unsupported operation: llvm.mlir.addressof
+
+4: "g" has unsupported operation: llvm.call
+
+4: "g" has unsupported operation: llvm.return
+

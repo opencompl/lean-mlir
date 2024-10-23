@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gicmphmulhand_statements
-                                                    
+
 def pr40493_neg3_before := [llvm|
 {
 ^0(%arg15 : i32):
@@ -38,8 +38,9 @@ theorem pr40493_neg3_proof : pr40493_neg3_before ⊑ pr40493_neg3_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN pr40493_neg3
   all_goals (try extract_goal ; sorry)
@@ -73,8 +74,9 @@ theorem pr51551_demand3bits_proof : pr51551_demand3bits_before ⊑ pr51551_deman
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN pr51551_demand3bits
   all_goals (try extract_goal ; sorry)

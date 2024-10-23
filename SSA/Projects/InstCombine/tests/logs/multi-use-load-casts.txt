@@ -1,0 +1,88 @@
+1: "t0"
+4: "t0" has unsupported operation: llvm.load
+
+4: "t0" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "t0" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "t0" has unsupported operation: llvm.call
+
+4: "t0" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "t0" has unsupported operation: llvm.inttoptr
+
+4: "t0" has unsupported operation: llvm.call
+
+4: "t0" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "t0" has unsupported operation: llvm.inttoptr
+
+4: "t0" has unsupported operation: llvm.call
+
+4: "t0" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "t0" has unsupported operation: llvm.return
+
+1: "n1"
+4: "n1" has unsupported operation: llvm.load
+
+4: "n1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "n1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "n1" has unsupported operation: llvm.call
+
+4: "n1" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "n1" has unsupported operation: llvm.inttoptr
+
+4: "n1" has unsupported operation: llvm.call
+
+4: "n1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "n1" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "n1" has unsupported operation: llvm.call
+
+4: "n1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "n1" has unsupported operation: llvm.return
+
+1: "n2"
+4: "n2" has unsupported operation: llvm.load
+
+4: "n2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "n2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "n2" has unsupported operation: llvm.call
+
+4: "n2" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "n2" has unsupported operation: llvm.inttoptr
+
+4: "n2" has unsupported operation: llvm.call
+
+4: "n2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "n2" has unsupported operation: llvm.call
+
+4: "n2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "n2" has unsupported operation: llvm.return
+
+1: "abort"
+5: "abort" is empty
+
+1: "sink0"
+5: "sink0" is empty
+
+1: "sink1"
+5: "sink1" is empty
+
+1: "sink2"
+5: "sink2" is empty
+
+1: "sink3"
+5: "sink3" is empty
+

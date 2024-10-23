@@ -1,0 +1,2 @@
+3: exp2-to-ldexp.ll: parsing has failed
+

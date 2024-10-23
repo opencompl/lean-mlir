@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gsubhandhorhneghxor_statements
-                                                    
+
 def sub_to_xor_before := [llvm|
 {
 ^0(%arg14 : i32, %arg15 : i32):
@@ -36,8 +36,9 @@ theorem sub_to_xor_proof : sub_to_xor_before ⊑ sub_to_xor_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sub_to_xor
   all_goals (try extract_goal ; sorry)
@@ -68,8 +69,9 @@ theorem sub_to_xor_or_commuted_proof : sub_to_xor_or_commuted_before ⊑ sub_to_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sub_to_xor_or_commuted
   all_goals (try extract_goal ; sorry)
@@ -100,8 +102,9 @@ theorem sub_to_xor_and_commuted_proof : sub_to_xor_and_commuted_before ⊑ sub_t
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sub_to_xor_and_commuted
   all_goals (try extract_goal ; sorry)

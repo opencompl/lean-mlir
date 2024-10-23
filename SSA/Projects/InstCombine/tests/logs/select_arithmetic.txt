@@ -1,0 +1,39 @@
+1: "test1a"
+4: "test1a" has unsupported operation after optimization: builtin.unregistered: llvm.fadd
+
+1: "test1b"
+4: "test1b" has unsupported operation after optimization: builtin.unregistered: llvm.fadd
+
+4: "test1b" has unsupported operation after optimization: builtin.unregistered: llvm.fadd
+
+4: "test1b" has unsupported operation after optimization: builtin.unregistered: llvm.fadd
+
+1: "test2"
+4: "test2" has unsupported operation after optimization: builtin.unregistered: llvm.fsub
+
+1: "test3"
+4: "test3" has unsupported operation after optimization: builtin.unregistered: llvm.fmul
+
+1: "use_float"
+5: "use_float" is empty
+
+1: "test4"
+4: "test4" has unsupported operation: llvm.call
+
+1: "test5"
+4: "test5" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test5" has unsupported operation: llvm.call
+
+1: "fmul_nnan_nsz"
+4: "fmul_nnan_nsz" has unsupported operation after optimization: builtin.unregistered: llvm.fmul
+
+1: "fadd_nsz"
+8: "fadd_nsz" contains vectors which are unsupported
+
+1: "fsub_nnan"
+4: "fsub_nnan" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fdiv_nnan_nsz"
+4: "fdiv_nnan_nsz" has unsupported operation: builtin.unregistered: llvm.fdiv
+

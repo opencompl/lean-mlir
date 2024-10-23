@@ -1,0 +1,71 @@
+1: "use16"
+5: "use16" is empty
+
+1: "use32"
+5: "use32" is empty
+
+1: "testi8i8"
+4: "testi8i8" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "testi16i8"
+4: "testi16i8" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "testi64i32"
+4: "testi64i32" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "testi128i128"
+4: "testi128i128" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "testv4i16i8"
+4: "testv4i16i8" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "testv4i16i8_poison"
+4: "testv4i16i8_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "testv4i16i8_poison" has unsupported operation: llvm.mlir.undef
+
+4: "testv4i16i8_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "testv4i16i8_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "testv4i16i8_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "testv4i16i8_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "testv4i16i8_poison" has unsupported operation: llvm.mlir.undef
+
+4: "testv4i16i8_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "testv4i16i8_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "testv4i16i8_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "testv4i16i8_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "testv4i16i8_poison" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "wrongimm"
+4: "wrongimm" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "vectorpoison"
+4: "vectorpoison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "vectorpoison" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "vectorpoison" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "vectorpoison" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "extrause"
+4: "extrause" has unsupported operation: llvm.call
+
+1: "extrause_trunc1"
+4: "extrause_trunc1" has unsupported operation: llvm.call
+
+4: "extrause_trunc1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "extrause_trunc2"
+4: "extrause_trunc2" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "extrause_trunc2" has unsupported operation: llvm.call
+

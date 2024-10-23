@@ -1,0 +1,5 @@
+1: "test1"
+4: "test1" has unsupported operation after optimization: builtin.unregistered: llvm.trunc
+
+4: "test1" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+

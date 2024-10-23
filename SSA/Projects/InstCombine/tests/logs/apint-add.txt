@@ -1,0 +1,91 @@
+1: "test1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.add
+2: llvm.return
+
+1: "test2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.add
+2: llvm.return
+
+1: "test3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.add
+2: llvm.return
+
+1: "test3vec"
+8: "test3vec" contains vectors which are unsupported
+
+1: "test4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.add
+2: llvm.return
+
+1: "sext"
+4: "sext" has unsupported operation: builtin.unregistered: llvm.sext
+
+1: "sext_vec"
+4: "sext_vec" has unsupported operation: builtin.unregistered: llvm.sext
+
+1: "sext_multiuse"
+4: "sext_multiuse" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "sext_multiuse" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "sext_multiuse" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "test5"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.xor
+2: llvm.add
+2: llvm.return
+
+1: "test6"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.xor
+2: llvm.add
+2: llvm.return
+
+1: "test7"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.xor
+2: llvm.add
+2: llvm.return
+
+1: "test8"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.ashr
+2: llvm.xor
+2: llvm.add
+2: llvm.return
+
+1: "test9"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.add
+2: llvm.return
+

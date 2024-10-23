@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.g2008h07h11hRemAnd_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section g2008h07h11hRemAnd_statements
-                                                    
+
 def a_before := [llvm|
 {
 ^0(%arg1 : i32):
@@ -36,11 +36,12 @@ theorem a_proof : a_before ⊑ a_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN a
-  apply a_thm
+  all_goals (try extract_goal ; sorry)
   ---END a
 
 

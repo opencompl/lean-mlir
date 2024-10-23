@@ -1,0 +1,2 @@
+3: 2013-03-05-Combine-BitcastTy-Into-Alloca.ll: parsing has failed
+

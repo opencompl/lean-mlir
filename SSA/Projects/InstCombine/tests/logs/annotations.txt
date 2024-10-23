@@ -1,0 +1,88 @@
+1: "fold_to_new_instruction"
+4: "fold_to_new_instruction" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "fold_to_new_instruction2"
+4: "fold_to_new_instruction2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "do_not_add_annotation_to_existing_instr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.add
+2: llvm.return
+
+1: "copy_1_byte"
+4: "copy_1_byte" has unsupported operation: llvm.load
+
+4: "copy_1_byte" has unsupported operation: llvm.store
+
+4: "copy_1_byte" has unsupported operation: llvm.return
+
+1: "memcpy"
+5: "memcpy" is empty
+
+1: "libcallcopy_1_byte"
+4: "libcallcopy_1_byte" has unsupported operation: llvm.load
+
+4: "libcallcopy_1_byte" has unsupported operation: llvm.store
+
+4: "libcallcopy_1_byte" has unsupported operation: llvm.return
+
+1: "__memcpy_chk"
+5: "__memcpy_chk" is empty
+
+1: "libcallcopy_1_byte_chk"
+4: "libcallcopy_1_byte_chk" has unsupported operation: llvm.load
+
+4: "libcallcopy_1_byte_chk" has unsupported operation: llvm.store
+
+4: "libcallcopy_1_byte_chk" has unsupported operation: llvm.return
+
+1: "move_1_byte"
+4: "move_1_byte" has unsupported operation: llvm.load
+
+4: "move_1_byte" has unsupported operation: llvm.store
+
+4: "move_1_byte" has unsupported operation: llvm.return
+
+1: "memmove"
+5: "memmove" is empty
+
+1: "libcallmove_1_byte"
+4: "libcallmove_1_byte" has unsupported operation: llvm.load
+
+4: "libcallmove_1_byte" has unsupported operation: llvm.store
+
+4: "libcallmove_1_byte" has unsupported operation: llvm.return
+
+1: "__memmove_chk"
+5: "__memmove_chk" is empty
+
+1: "libcallmove_1_byte_chk"
+4: "libcallmove_1_byte_chk" has unsupported operation: llvm.load
+
+4: "libcallmove_1_byte_chk" has unsupported operation: llvm.store
+
+4: "libcallmove_1_byte_chk" has unsupported operation: llvm.return
+
+1: "set_1_byte"
+4: "set_1_byte" has unsupported operation: llvm.store
+
+4: "set_1_byte" has unsupported operation: llvm.return
+
+1: "memset"
+5: "memset" is empty
+
+1: "libcall_set_1_byte"
+4: "libcall_set_1_byte" has unsupported operation: llvm.store
+
+4: "libcall_set_1_byte" has unsupported operation: llvm.return
+
+1: "__memset_chk"
+5: "__memset_chk" is empty
+
+1: "libcall_set_1_byte_chk"
+4: "libcall_set_1_byte_chk" has unsupported operation: llvm.store
+
+4: "libcall_set_1_byte_chk" has unsupported operation: llvm.return
+

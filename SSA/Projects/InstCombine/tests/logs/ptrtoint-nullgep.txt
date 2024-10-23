@@ -1,0 +1,2 @@
+3: ptrtoint-nullgep.ll: parsing has failed
+

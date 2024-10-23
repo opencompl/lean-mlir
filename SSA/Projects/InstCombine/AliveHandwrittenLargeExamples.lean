@@ -139,7 +139,7 @@ def alive_simplifyMulDivRem805 (w : Nat) :
       case zero =>
         simp only [Nat.zero_eq, toNat_add, toNat_ofNat, Nat.reduceSucc, pow_one,
           Nat.mod_succ, Nat.reduceMod, Nat.lt_one_iff]
-        have hxcases := BitVec.width_one_cases x
+        have hxcases := eq_zero_or_eq_one x
         have hxone : x = 1 := by
           cases hxcases
           case inl => contradiction

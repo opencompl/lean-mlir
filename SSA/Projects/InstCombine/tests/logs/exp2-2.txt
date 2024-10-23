@@ -1,0 +1,8 @@
+1: "exp2"
+5: "exp2" is empty
+
+1: "test_no_simplify1"
+4: "test_no_simplify1" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "test_no_simplify1" has unsupported operation: llvm.call
+

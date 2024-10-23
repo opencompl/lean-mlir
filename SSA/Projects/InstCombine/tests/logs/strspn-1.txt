@@ -1,0 +1,23 @@
+1: "strspn"
+5: "strspn" is empty
+
+1: "test_simplify1"
+4: "test_simplify1" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test_simplify1" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify2"
+4: "test_simplify2" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test_simplify2" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify3"
+4: "test_simplify3" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test_simplify3" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test_simplify3" has unsupported operation after optimization: llvm.call
+
+1: "test_no_simplify1"
+4: "test_no_simplify1" has unsupported operation: llvm.call
+

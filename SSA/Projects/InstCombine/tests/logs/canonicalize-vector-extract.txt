@@ -1,0 +1,2 @@
+3: canonicalize-vector-extract.ll: parsing has failed
+

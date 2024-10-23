@@ -1,0 +1,28 @@
+1: "bzero"
+5: "bzero" is empty
+
+1: "bcopy"
+5: "bcopy" is empty
+
+1: "bcmp"
+5: "bcmp" is empty
+
+1: "fputs"
+5: "fputs" is empty
+
+1: "fputs_unlocked"
+5: "fputs_unlocked" is empty
+
+1: "function"
+4: "function" has unsupported operation: llvm.mlir.addressof
+
+4: "function" has unsupported operation: llvm.alloca
+
+4: "function" has unsupported operation: llvm.load
+
+4: "function" has unsupported operation: llvm.store
+
+4: "function" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "function" has unsupported operation: llvm.load
+

@@ -1,0 +1,96 @@
+1: "use"
+5: "use" is empty
+
+1: "usef64"
+5: "usef64" is empty
+
+1: "oeq"
+4: "oeq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "oeq" has unsupported operation: llvm.call
+
+1: "oeq_swapped"
+4: "oeq_swapped" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "oeq_swapped" has unsupported operation: llvm.call
+
+1: "une"
+4: "une" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "une" has unsupported operation: llvm.call
+
+1: "une_swapped"
+4: "une_swapped" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "une_swapped" has unsupported operation: llvm.call
+
+1: "une_could_be_negzero"
+4: "une_could_be_negzero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "une_could_be_negzero" has unsupported operation: llvm.call
+
+1: "une_swapped_could_be_negzero"
+4: "une_swapped_could_be_negzero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "une_swapped_could_be_negzero" has unsupported operation: llvm.call
+
+1: "one"
+4: "one" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "one" has unsupported operation: llvm.call
+
+1: "one_swapped"
+4: "one_swapped" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "one_swapped" has unsupported operation: llvm.call
+
+1: "fcmp_oeq_select"
+4: "fcmp_oeq_select" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_uno_select"
+4: "fcmp_uno_select" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ogt_select"
+4: "fcmp_ogt_select" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_fcmp_select_const_const"
+4: "test_fcmp_select_const_const" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_fcmp_select_var_const"
+4: "test_fcmp_select_var_const" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test_fcmp_select_var_const" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_fcmp_select_var_const_fmf"
+4: "test_fcmp_select_var_const_fmf" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test_fcmp_select_var_const_fmf" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_fcmp_select_const_const_vec"
+4: "test_fcmp_select_const_const_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_fcmp_select_clamp"
+4: "test_fcmp_select_clamp" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test_fcmp_select_clamp" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_fcmp_select_maxnum"
+4: "test_fcmp_select_maxnum" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
+
+4: "test_fcmp_select_maxnum" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+1: "test_fcmp_select_const_const_multiuse"
+4: "test_fcmp_select_const_const_multiuse" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test_fcmp_select_const_const_multiuse" has unsupported operation: llvm.call
+
+4: "test_fcmp_select_const_const_multiuse" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_fcmp_select_const_const_unordered"
+4: "test_fcmp_select_const_const_unordered" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_fcmp_select_var_const_unordered"
+4: "test_fcmp_select_var_const_unordered" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test_fcmp_select_var_const_unordered" has unsupported operation: builtin.unregistered: llvm.fcmp
+

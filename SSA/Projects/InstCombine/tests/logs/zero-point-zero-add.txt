@@ -1,0 +1,9 @@
+1: "fabs"
+5: "fabs" is empty
+
+1: "test"
+4: "test" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test1"
+4: "test1" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+

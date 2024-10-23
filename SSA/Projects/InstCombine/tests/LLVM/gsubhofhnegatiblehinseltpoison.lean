@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gsubhofhnegatiblehinseltpoison_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gsubhofhnegatiblehinseltpoison_statements
-                                                    
+
 def t0_before := [llvm|
 {
 ^0(%arg206 : i8):
@@ -34,11 +34,12 @@ theorem t0_proof : t0_before ⊑ t0_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t0
-  apply t0_thm
+  all_goals (try extract_goal ; sorry)
   ---END t0
 
 
@@ -66,12 +67,85 @@ theorem t2_proof : t2_before ⊑ t2_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t2
-  apply t2_thm
+  all_goals (try extract_goal ; sorry)
   ---END t2
+
+
+
+def t4_before := [llvm|
+{
+^0(%arg192 : i8, %arg193 : i1):
+  %0 = "llvm.mlir.constant"() <{value = -42 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 44 : i8}> : () -> i8
+  %2 = "llvm.select"(%arg193, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  %3 = llvm.sub %arg192, %2 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+def t4_after := [llvm|
+{
+^0(%arg192 : i8, %arg193 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = -44 : i8}> : () -> i8
+  %2 = "llvm.select"(%arg193, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  %3 = llvm.add %2, %arg192 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+theorem t4_proof : t4_before ⊑ t4_after := by
+  unfold t4_before t4_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN t4
+  all_goals (try extract_goal ; sorry)
+  ---END t4
+
+
+
+def t7_before := [llvm|
+{
+^0(%arg181 : i8, %arg182 : i1, %arg183 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
+  %2 = llvm.shl %0, %arg183 : i8
+  %3 = "llvm.select"(%arg182, %1, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  %4 = llvm.sub %arg181, %3 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+def t7_after := [llvm|
+{
+^0(%arg181 : i8, %arg182 : i1, %arg183 : i8):
+  %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
+  %2 = llvm.shl %0, %arg183 overflow<nsw> : i8
+  %3 = "llvm.select"(%arg182, %1, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  %4 = llvm.add %3, %arg181 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+theorem t7_proof : t7_before ⊑ t7_after := by
+  unfold t7_before t7_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN t7
+  all_goals (try extract_goal ; sorry)
+  ---END t7
 
 
 
@@ -96,8 +170,9 @@ theorem t9_proof : t9_before ⊑ t9_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t9
   all_goals (try extract_goal ; sorry)
@@ -128,11 +203,12 @@ theorem neg_of_sub_from_constant_proof : neg_of_sub_from_constant_before ⊑ neg
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN neg_of_sub_from_constant
-  apply neg_of_sub_from_constant_thm
+  all_goals (try extract_goal ; sorry)
   ---END neg_of_sub_from_constant
 
 
@@ -160,11 +236,12 @@ theorem sub_from_constant_of_sub_from_constant_proof : sub_from_constant_of_sub_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sub_from_constant_of_sub_from_constant
-  apply sub_from_constant_of_sub_from_constant_thm
+  all_goals (try extract_goal ; sorry)
   ---END sub_from_constant_of_sub_from_constant
 
 
@@ -192,11 +269,12 @@ theorem sub_from_variable_of_sub_from_constant_proof : sub_from_variable_of_sub_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sub_from_variable_of_sub_from_constant
-  apply sub_from_variable_of_sub_from_constant_thm
+  all_goals (try extract_goal ; sorry)
   ---END sub_from_variable_of_sub_from_constant
 
 
@@ -224,11 +302,12 @@ theorem neg_of_add_with_constant_proof : neg_of_add_with_constant_before ⊑ neg
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN neg_of_add_with_constant
-  apply neg_of_add_with_constant_thm
+  all_goals (try extract_goal ; sorry)
   ---END neg_of_add_with_constant
 
 
@@ -256,11 +335,12 @@ theorem sub_from_constant_of_add_with_constant_proof : sub_from_constant_of_add_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN sub_from_constant_of_add_with_constant
-  apply sub_from_constant_of_add_with_constant_thm
+  all_goals (try extract_goal ; sorry)
   ---END sub_from_constant_of_add_with_constant
 
 
@@ -290,11 +370,12 @@ theorem negate_xor_proof : negate_xor_before ⊑ negate_xor_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN negate_xor
-  apply negate_xor_thm
+  all_goals (try extract_goal ; sorry)
   ---END negate_xor
 
 
@@ -326,11 +407,12 @@ theorem negate_shl_xor_proof : negate_shl_xor_before ⊑ negate_shl_xor_after :=
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN negate_shl_xor
-  apply negate_shl_xor_thm
+  all_goals (try extract_goal ; sorry)
   ---END negate_shl_xor
 
 
@@ -358,11 +440,12 @@ theorem negate_sdiv_proof : negate_sdiv_before ⊑ negate_sdiv_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN negate_sdiv
-  apply negate_sdiv_thm
+  all_goals (try extract_goal ; sorry)
   ---END negate_sdiv
 
 
@@ -390,11 +473,12 @@ theorem negate_ashr_proof : negate_ashr_before ⊑ negate_ashr_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN negate_ashr
-  apply negate_ashr_thm
+  all_goals (try extract_goal ; sorry)
   ---END negate_ashr
 
 
@@ -422,11 +506,12 @@ theorem negate_lshr_proof : negate_lshr_before ⊑ negate_lshr_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN negate_lshr
-  apply negate_lshr_thm
+  all_goals (try extract_goal ; sorry)
   ---END negate_lshr
 
 
@@ -457,11 +542,12 @@ theorem negation_of_increment_via_or_with_no_common_bits_set_proof : negation_of
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN negation_of_increment_via_or_with_no_common_bits_set
-  apply negation_of_increment_via_or_with_no_common_bits_set_thm
+  all_goals (try extract_goal ; sorry)
   ---END negation_of_increment_via_or_with_no_common_bits_set
 
 
@@ -489,11 +575,12 @@ theorem negate_add_with_single_negatible_operand_proof : negate_add_with_single_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN negate_add_with_single_negatible_operand
-  apply negate_add_with_single_negatible_operand_thm
+  all_goals (try extract_goal ; sorry)
   ---END negate_add_with_single_negatible_operand
 
 
@@ -523,11 +610,12 @@ theorem negate_add_with_single_negatible_operand_depth2_proof : negate_add_with_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN negate_add_with_single_negatible_operand_depth2
-  apply negate_add_with_single_negatible_operand_depth2_thm
+  all_goals (try extract_goal ; sorry)
   ---END negate_add_with_single_negatible_operand_depth2
 
 

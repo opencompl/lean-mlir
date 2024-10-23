@@ -1,0 +1,14 @@
+1: "visible"
+4: "visible" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "visible" has unsupported operation: llvm.call
+
+4: "visible" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "visible" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "visible" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "determinant"
+5: "determinant" is empty
+

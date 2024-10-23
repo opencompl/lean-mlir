@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gshlhsub_statements
-                                                    
+
 def shl_sub_i32_before := [llvm|
 {
 ^0(%arg18 : i32):
@@ -36,8 +36,9 @@ theorem shl_sub_i32_proof : shl_sub_i32_before ⊑ shl_sub_i32_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_sub_i32
   all_goals (try extract_goal ; sorry)
@@ -68,8 +69,9 @@ theorem shl_sub_i8_proof : shl_sub_i8_before ⊑ shl_sub_i8_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_sub_i8
   all_goals (try extract_goal ; sorry)
@@ -100,8 +102,9 @@ theorem shl_sub_i64_proof : shl_sub_i64_before ⊑ shl_sub_i64_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_sub_i64
   all_goals (try extract_goal ; sorry)
@@ -134,8 +137,9 @@ theorem shl_bad_sub_i32_proof : shl_bad_sub_i32_before ⊑ shl_bad_sub_i32_after
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_bad_sub_i32
   all_goals (try extract_goal ; sorry)
@@ -168,8 +172,9 @@ theorem shl_bad_sub2_i32_proof : shl_bad_sub2_i32_before ⊑ shl_bad_sub2_i32_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_bad_sub2_i32
   all_goals (try extract_goal ; sorry)
@@ -202,8 +207,9 @@ theorem bad_shl2_sub_i32_proof : bad_shl2_sub_i32_before ⊑ bad_shl2_sub_i32_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN bad_shl2_sub_i32
   all_goals (try extract_goal ; sorry)
@@ -236,8 +242,9 @@ theorem shl_bad_sub_i8_proof : shl_bad_sub_i8_before ⊑ shl_bad_sub_i8_after :=
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_bad_sub_i8
   all_goals (try extract_goal ; sorry)
@@ -270,8 +277,9 @@ theorem shl_bad_sub_i64_proof : shl_bad_sub_i64_before ⊑ shl_bad_sub_i64_after
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_bad_sub_i64
   all_goals (try extract_goal ; sorry)
@@ -304,8 +312,9 @@ theorem shl_const_op1_sub_const_op0_proof : shl_const_op1_sub_const_op0_before �
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_const_op1_sub_const_op0
   all_goals (try extract_goal ; sorry)

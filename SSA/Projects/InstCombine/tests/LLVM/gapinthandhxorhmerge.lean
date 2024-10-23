@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gapinthandhxorhmerge_statements
-                                                    
+
 def test1_before := [llvm|
 {
 ^0(%arg3 : i57, %arg4 : i57, %arg5 : i57):
@@ -35,8 +35,9 @@ theorem test1_proof : test1_before ⊑ test1_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test1
   all_goals (try extract_goal ; sorry)
@@ -65,8 +66,9 @@ theorem test2_proof : test2_before ⊑ test2_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test2
   all_goals (try extract_goal ; sorry)

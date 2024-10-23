@@ -1,0 +1,10 @@
+1: "__isnan"
+4: "__isnan" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "__isnan" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "__isnan" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "icmp_shl7"
+4: "icmp_shl7" has unsupported operation: builtin.unregistered: llvm.icmp
+

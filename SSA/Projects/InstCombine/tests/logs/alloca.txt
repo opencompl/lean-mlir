@@ -1,0 +1,2 @@
+3: alloca.ll: parsing has failed
+

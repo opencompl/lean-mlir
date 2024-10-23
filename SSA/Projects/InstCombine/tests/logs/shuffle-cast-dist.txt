@@ -1,0 +1,81 @@
+1: "vtrn1"
+4: "vtrn1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "vtrn1" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "vtrn1" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "vtrn2"
+4: "vtrn2" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "vtrn2" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "bc_shuf_lenchange"
+4: "bc_shuf_lenchange" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "bc_shuf_lenchange" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "bc_shuf_nonvec"
+4: "bc_shuf_nonvec" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bc_shuf_nonvec" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bc_shuf_nonvec" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "bc_shuf_size"
+4: "bc_shuf_size" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bc_shuf_size" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bc_shuf_size" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "bc_shuf_mismatch"
+4: "bc_shuf_mismatch" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bc_shuf_mismatch" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bc_shuf_mismatch" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "bc_shuf_i8_float"
+4: "bc_shuf_i8_float" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bc_shuf_i8_float" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bc_shuf_i8_float" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "bc_shuf_elemtype_mismatch"
+4: "bc_shuf_elemtype_mismatch" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bc_shuf_elemtype_mismatch" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bc_shuf_elemtype_mismatch" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "bc_shuf_reuse"
+4: "bc_shuf_reuse" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "bc_shuf_reuse" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bc_shuf_reuse" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "bc_shuf_y_hasoneuse"
+4: "bc_shuf_y_hasoneuse" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bc_shuf_y_hasoneuse" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "bc_shuf_y_hasoneuse" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bc_shuf_y_hasoneuse" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "bc_shuf_neither_hasoneuse"
+4: "bc_shuf_neither_hasoneuse" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "bc_shuf_neither_hasoneuse" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bc_shuf_neither_hasoneuse" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bc_shuf_neither_hasoneuse" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "bc_shuf_neither_hasoneuse" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "bc_shuf_neither_hasoneuse" has unsupported operation: builtin.unregistered: llvm.fadd
+

@@ -1,0 +1,206 @@
+1: "use"
+5: "use" is empty
+
+1: "test1"
+4: "test1" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test1" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "test1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test1_logical"
+4: "test1_logical" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test1_logical" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "test1_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test1_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test2"
+4: "test2" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test2" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "test2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test2_logical"
+4: "test2_logical" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test2_logical" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "test2_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test2_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test3"
+4: "test3" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test4"
+4: "test4" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test5"
+4: "test5" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test6"
+4: "test6" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test7"
+4: "test7" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test8"
+4: "test8" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test9"
+4: "test9" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test10"
+4: "test10" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test11"
+4: "test11" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test12"
+4: "test12" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test13"
+4: "test13" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test13vec"
+8: "test13vec" contains vectors which are unsupported
+
+1: "test14"
+4: "test14" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test14vec"
+8: "test14vec" contains vectors which are unsupported
+
+1: "bool_eq0"
+4: "bool_eq0" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "bool_eq0_logical"
+4: "bool_eq0_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "xor_of_icmps"
+4: "xor_of_icmps" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "xor_of_icmps_commute"
+4: "xor_of_icmps_commute" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "xor_of_icmps_to_ne"
+4: "xor_of_icmps_to_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "xor_of_icmps_to_ne_commute"
+4: "xor_of_icmps_to_ne_commute" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "xor_of_icmps_neg_to_ne"
+4: "xor_of_icmps_neg_to_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "xor_of_icmps_to_ne_vector"
+4: "xor_of_icmps_to_ne_vector" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "xor_of_icmps_to_ne_no_common_operand"
+4: "xor_of_icmps_to_ne_no_common_operand" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "xor_of_icmps_to_ne_no_common_operand" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "xor_of_icmps_to_ne_extra_use_one"
+4: "xor_of_icmps_to_ne_extra_use_one" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "xor_of_icmps_to_ne_extra_use_one" has unsupported operation: llvm.call
+
+4: "xor_of_icmps_to_ne_extra_use_one" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "xor_of_icmps_to_ne_extra_use_two"
+4: "xor_of_icmps_to_ne_extra_use_two" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "xor_of_icmps_to_ne_extra_use_two" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "xor_of_icmps_to_ne_extra_use_two" has unsupported operation: llvm.call
+
+4: "xor_of_icmps_to_ne_extra_use_two" has unsupported operation: llvm.call
+
+1: "xor_of_icmps_to_eq"
+4: "xor_of_icmps_to_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "PR2844"
+4: "PR2844" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "PR2844" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "PR2844" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "PR2844_logical"
+4: "PR2844_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "PR2844_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "PR2844_logical" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "test16"
+4: "test16" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test17"
+4: "test17" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test18"
+4: "test18" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test18" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test19"
+4: "test19" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+
+4: "test19" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+
+4: "test19" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test20"
+4: "test20" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test20" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+
+1: "test20vec"
+8: "test20vec" contains vectors which are unsupported
+
+1: "test21"
+4: "test21" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test21" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+
+1: "test21vec"
+8: "test21vec" contains vectors which are unsupported
+
+1: "test22"
+4: "test22" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test22" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test22_logical"
+4: "test22_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test22_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+1: "test23"
+4: "test23" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test23" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+
+1: "test23vec"
+8: "test23vec" contains vectors which are unsupported
+
+1: "test24"
+4: "test24" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "test24" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+
+1: "test24vec"
+8: "test24vec" contains vectors which are unsupported
+
+1: "test25"
+4: "test25" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+

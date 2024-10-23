@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gshifthamounthreassociation_statements
-                                                    
+
 def t0_before := [llvm|
 {
 ^0(%arg43 : i32, %arg44 : i32):
@@ -38,8 +38,9 @@ theorem t0_proof : t0_before ⊑ t0_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t0
   all_goals (try extract_goal ; sorry)
@@ -72,8 +73,9 @@ theorem t6_shl_proof : t6_shl_before ⊑ t6_shl_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t6_shl
   all_goals (try extract_goal ; sorry)
@@ -106,8 +108,9 @@ theorem t7_ashr_proof : t7_ashr_before ⊑ t7_ashr_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t7_ashr
   all_goals (try extract_goal ; sorry)
@@ -140,8 +143,9 @@ theorem t8_lshr_exact_flag_preservation_proof : t8_lshr_exact_flag_preservation_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t8_lshr_exact_flag_preservation
   all_goals (try extract_goal ; sorry)
@@ -174,8 +178,9 @@ theorem t9_ashr_exact_flag_preservation_proof : t9_ashr_exact_flag_preservation_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t9_ashr_exact_flag_preservation
   all_goals (try extract_goal ; sorry)
@@ -208,8 +213,9 @@ theorem t10_shl_nuw_flag_preservation_proof : t10_shl_nuw_flag_preservation_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t10_shl_nuw_flag_preservation
   all_goals (try extract_goal ; sorry)
@@ -242,8 +248,9 @@ theorem t11_shl_nsw_flag_preservation_proof : t11_shl_nsw_flag_preservation_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t11_shl_nsw_flag_preservation
   all_goals (try extract_goal ; sorry)

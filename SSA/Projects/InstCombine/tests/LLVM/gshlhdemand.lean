@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gshlhdemand_statements
-                                                    
+
 def src_srem_shl_demand_max_signbit_before := [llvm|
 {
 ^0(%arg24 : i32):
@@ -40,8 +40,9 @@ theorem src_srem_shl_demand_max_signbit_proof : src_srem_shl_demand_max_signbit_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN src_srem_shl_demand_max_signbit
   all_goals (try extract_goal ; sorry)
@@ -76,8 +77,9 @@ theorem src_srem_shl_demand_min_signbit_proof : src_srem_shl_demand_min_signbit_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN src_srem_shl_demand_min_signbit
   all_goals (try extract_goal ; sorry)
@@ -112,8 +114,9 @@ theorem src_srem_shl_demand_max_mask_proof : src_srem_shl_demand_max_mask_before
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN src_srem_shl_demand_max_mask
   all_goals (try extract_goal ; sorry)
@@ -150,8 +153,9 @@ theorem src_srem_shl_demand_max_signbit_mask_hit_first_demand_proof : src_srem_s
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN src_srem_shl_demand_max_signbit_mask_hit_first_demand
   all_goals (try extract_goal ; sorry)
@@ -188,8 +192,9 @@ theorem src_srem_shl_demand_min_signbit_mask_hit_last_demand_proof : src_srem_sh
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN src_srem_shl_demand_min_signbit_mask_hit_last_demand
   all_goals (try extract_goal ; sorry)
@@ -226,8 +231,9 @@ theorem src_srem_shl_demand_eliminate_signbit_proof : src_srem_shl_demand_elimin
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN src_srem_shl_demand_eliminate_signbit
   all_goals (try extract_goal ; sorry)
@@ -264,8 +270,9 @@ theorem src_srem_shl_demand_max_mask_hit_demand_proof : src_srem_shl_demand_max_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN src_srem_shl_demand_max_mask_hit_demand
   all_goals (try extract_goal ; sorry)
@@ -300,8 +307,9 @@ theorem set_shl_mask_proof : set_shl_mask_before ⊑ set_shl_mask_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN set_shl_mask
   all_goals (try extract_goal ; sorry)

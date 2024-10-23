@@ -1,0 +1,6 @@
+1: "le"
+4: "le" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "llvm.scmp.i32.i32"
+5: "llvm.scmp.i32.i32" is empty
+

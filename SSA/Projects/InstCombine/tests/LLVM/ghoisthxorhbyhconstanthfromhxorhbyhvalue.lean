@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section ghoisthxorhbyhconstanthfromhxorhbyhvalue_statements
-                                                    
+
 def t0_scalar_before := [llvm|
 {
 ^0(%arg10 : i8, %arg11 : i8):
@@ -36,8 +36,9 @@ theorem t0_scalar_proof : t0_scalar_before ⊑ t0_scalar_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t0_scalar
   all_goals (try extract_goal ; sorry)

@@ -1,0 +1,14 @@
+1: "foo"
+4: "foo" has unsupported operation: llvm.call
+
+1: "bar"
+4: "bar" has unsupported operation: llvm.call
+
+4: "bar" has unsupported operation: llvm.call
+
+1: "sqr"
+4: "sqr" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "sqrtf"
+5: "sqrtf" is empty
+

@@ -1,0 +1,7 @@
+1: "f0"
+4: "f0" has unsupported operation after optimization: llvm.load
+
+4: "f0" has unsupported operation after optimization: builtin.unregistered: llvm.uitofp
+
+4: "f0" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+

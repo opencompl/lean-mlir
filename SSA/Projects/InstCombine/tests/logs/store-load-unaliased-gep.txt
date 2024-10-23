@@ -1,0 +1,11 @@
+1: "test1"
+4: "test1" has unsupported operation after optimization: llvm.alloca
+
+4: "test1" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test1" has unsupported operation after optimization: llvm.store
+
+4: "test1" has unsupported operation after optimization: llvm.store
+
+4: "test1" has unsupported operation after optimization: llvm.load
+

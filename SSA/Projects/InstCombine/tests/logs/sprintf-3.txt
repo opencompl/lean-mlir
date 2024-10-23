@@ -1,0 +1,15 @@
+1: "sprintf"
+5: "sprintf" is empty
+
+1: "PR51200"
+4: "PR51200" has unsupported operation: llvm.call
+
+4: "PR51200" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "PR51200" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "PR51200" has unsupported operation: builtin.unregistered: llvm.trunc
+
+1: "stpcpy"
+5: "stpcpy" is empty
+

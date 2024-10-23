@@ -1,0 +1,39 @@
+1: "remquo_f32"
+4: "remquo_f32" has unsupported operation: llvm.store
+
+1: "remquo_f32_quo_sign"
+4: "remquo_f32_quo_sign" has unsupported operation: llvm.store
+
+1: "remquo_f32_round"
+4: "remquo_f32_round" has unsupported operation: llvm.store
+
+1: "remquo_f64"
+4: "remquo_f64" has unsupported operation: llvm.store
+
+1: "remquo_f32_inf_x"
+4: "remquo_f32_inf_x" has unsupported operation: llvm.call
+
+1: "remquo_f32_zero_y"
+4: "remquo_f32_zero_y" has unsupported operation: llvm.call
+
+1: "remquo_f32_nzero_y"
+4: "remquo_f32_nzero_y" has unsupported operation: llvm.call
+
+1: "remquo_f32_nan_x"
+4: "remquo_f32_nan_x" has unsupported operation: llvm.call
+
+1: "remquo_f32_nan_y"
+4: "remquo_f32_nan_y" has unsupported operation: llvm.call
+
+1: "remquo_f32_strictfp"
+4: "remquo_f32_strictfp" has unsupported operation: llvm.call
+
+1: "remquo_f32_zero_y_strictfp"
+4: "remquo_f32_zero_y_strictfp" has unsupported operation: llvm.call
+
+1: "remquof"
+5: "remquof" is empty
+
+1: "remquo"
+5: "remquo" is empty
+

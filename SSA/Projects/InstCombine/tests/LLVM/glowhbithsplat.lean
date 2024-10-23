@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section glowhbithsplat_statements
-                                                    
+
 def t0_before := [llvm|
 {
 ^0(%arg12 : i8):
@@ -37,8 +37,9 @@ theorem t0_proof : t0_before ⊑ t0_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t0
   all_goals (try extract_goal ; sorry)
@@ -70,8 +71,9 @@ theorem t1_otherbitwidth_proof : t1_otherbitwidth_before ⊑ t1_otherbitwidth_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN t1_otherbitwidth
   all_goals (try extract_goal ; sorry)

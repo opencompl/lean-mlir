@@ -1,0 +1,157 @@
+1: "sprintf"
+5: "sprintf" is empty
+
+1: "foo"
+4: "foo" has unsupported operation: llvm.call
+
+4: "foo" has unsupported operation: llvm.return
+
+1: "test1"
+4: "test1" has unsupported operation: llvm.mlir.addressof
+
+4: "test1" has unsupported operation: llvm.getelementptr
+
+1: "strchr"
+5: "strchr" is empty
+
+1: "test2"
+4: "test2" has unsupported operation: llvm.mlir.addressof
+
+4: "test2" has unsupported operation: llvm.getelementptr
+
+1: "test3"
+4: "test3" has unsupported operation: llvm.mlir.zero
+
+1: "memcmp"
+5: "memcmp" is empty
+
+1: "PR2341"
+4: "PR2341" has unsupported operation: llvm.mlir.addressof
+
+4: "PR2341" has unsupported operation: llvm.load
+
+4: "PR2341" has unsupported operation: llvm.call
+
+4: "PR2341" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "PR4284"
+4: "PR4284" has unsupported operation after optimization: llvm.alloca
+
+4: "PR4284" has unsupported operation after optimization: llvm.alloca
+
+4: "PR4284" has unsupported operation after optimization: llvm.store
+
+4: "PR4284" has unsupported operation after optimization: llvm.store
+
+4: "PR4284" has unsupported operation after optimization: llvm.call
+
+1: "PR4641"
+4: "PR4641" has unsupported operation: llvm.mlir.addressof
+
+4: "PR4641" has unsupported operation: llvm.mlir.addressof
+
+4: "PR4641" has unsupported operation: llvm.call
+
+4: "PR4641" has unsupported operation: llvm.call
+
+4: "PR4641" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+1: "fopen"
+5: "fopen" is empty
+
+1: "exit"
+5: "exit" is empty
+
+1: "PR4645"
+4: "PR4645" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "PR4645" has unsupported operation: llvm.call
+
+4: "PR4645" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "PR4645" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+1: "MemCpy"
+4: "MemCpy" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "MemCpy" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "MemCpy" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "MemCpy" has unsupported operation after optimization: llvm.alloca
+
+4: "MemCpy" has unsupported operation after optimization: builtin.unregistered: llvm.intr.memcpy
+
+4: "MemCpy" has unsupported operation after optimization: builtin.unregistered: llvm.intr.memcpy
+
+4: "MemCpy" has unsupported operation after optimization: builtin.unregistered: llvm.intr.memcpy
+
+1: "strcmp"
+5: "strcmp" is empty
+
+1: "test9"
+4: "test9" has unsupported operation: llvm.return
+
+1: "isdigit"
+5: "isdigit" is empty
+
+1: "isascii"
+5: "isascii" is empty
+
+1: "toascii"
+5: "toascii" is empty
+
+1: "fake_isdigit"
+4: "fake_isdigit" has unsupported operation: llvm.call
+
+1: "fake_isascii"
+4: "fake_isascii" has unsupported operation: llvm.call
+
+1: "fake_toascii"
+4: "fake_toascii" has unsupported operation: llvm.call
+
+1: "pow"
+5: "pow" is empty
+
+1: "exp2"
+5: "exp2" is empty
+
+1: "fake_exp2"
+4: "fake_exp2" has unsupported operation: llvm.call
+
+1: "fake_ldexp"
+4: "fake_ldexp" has unsupported operation: llvm.call
+
+1: "fake_ldexp_16"
+4: "fake_ldexp_16" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "fake_ldexp_16" has unsupported operation: llvm.call
+
+1: "snprintf"
+5: "snprintf" is empty
+
+1: "fake_snprintf"
+4: "fake_snprintf" has unsupported operation: llvm.call
+
+1: "strlen"
+4: "strlen" has unsupported operation: llvm.call
+
+1: "__stpncpy_chk"
+5: "__stpncpy_chk" is empty
+
+1: "emit_stpncpy"
+4: "emit_stpncpy" has unsupported operation: llvm.mlir.addressof
+
+4: "emit_stpncpy" has unsupported operation: llvm.mlir.addressof
+
+4: "emit_stpncpy" has unsupported operation: llvm.call
+
+1: "strcpy"
+5: "strcpy" is empty
+
+1: "ldexp"
+5: "ldexp" is empty
+
+1: "stpncpy"
+5: "stpncpy" is empty
+

@@ -1,0 +1,79 @@
+1: "p0_scalar_urem_by_const"
+4: "p0_scalar_urem_by_const" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "p1_scalar_urem_by_nonconst"
+4: "p1_scalar_urem_by_nonconst" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "p2_scalar_shifted_urem_by_const"
+4: "p2_scalar_shifted_urem_by_const" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "p3_scalar_shifted2_urem_by_const"
+4: "p3_scalar_shifted2_urem_by_const" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "p4_vector_urem_by_const__splat"
+4: "p4_vector_urem_by_const__splat" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "p5_vector_urem_by_const__nonsplat"
+4: "p5_vector_urem_by_const__nonsplat" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "p6_vector_urem_by_const__nonsplat_poison0"
+4: "p6_vector_urem_by_const__nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "p6_vector_urem_by_const__nonsplat_poison0" has unsupported operation: llvm.mlir.undef
+
+4: "p6_vector_urem_by_const__nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p6_vector_urem_by_const__nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p6_vector_urem_by_const__nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p6_vector_urem_by_const__nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p6_vector_urem_by_const__nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "p7_vector_urem_by_const__nonsplat_poison2"
+4: "p7_vector_urem_by_const__nonsplat_poison2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "p7_vector_urem_by_const__nonsplat_poison2" has unsupported operation: llvm.mlir.undef
+
+4: "p7_vector_urem_by_const__nonsplat_poison2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p7_vector_urem_by_const__nonsplat_poison2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p7_vector_urem_by_const__nonsplat_poison2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p7_vector_urem_by_const__nonsplat_poison2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p7_vector_urem_by_const__nonsplat_poison2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "p8_vector_urem_by_const__nonsplat_poison3"
+4: "p8_vector_urem_by_const__nonsplat_poison3" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "p8_vector_urem_by_const__nonsplat_poison3" has unsupported operation: llvm.mlir.undef
+
+4: "p8_vector_urem_by_const__nonsplat_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p8_vector_urem_by_const__nonsplat_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p8_vector_urem_by_const__nonsplat_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p8_vector_urem_by_const__nonsplat_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p8_vector_urem_by_const__nonsplat_poison3" has unsupported operation: llvm.mlir.undef
+
+4: "p8_vector_urem_by_const__nonsplat_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p8_vector_urem_by_const__nonsplat_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p8_vector_urem_by_const__nonsplat_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p8_vector_urem_by_const__nonsplat_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p8_vector_urem_by_const__nonsplat_poison3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "n0_urem_of_maybe_not_power_of_two"
+4: "n0_urem_of_maybe_not_power_of_two" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "n1_urem_by_maybe_power_of_two"
+4: "n1_urem_by_maybe_power_of_two" has unsupported operation: builtin.unregistered: llvm.icmp
+

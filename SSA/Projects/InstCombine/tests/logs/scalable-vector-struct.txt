@@ -1,0 +1,2 @@
+3: scalable-vector-struct.ll: parsing has failed
+

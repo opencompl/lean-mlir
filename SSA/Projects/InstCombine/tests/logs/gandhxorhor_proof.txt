@@ -1,0 +1,925 @@
+⚠ [49/2462] Replayed Mathlib.Logic.Basic
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:155:8: `dec_em'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:159:8: `em'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:304:8: `or_congr_left'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:307:8: `or_congr_right'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:320:8: `imp_or'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:359:8: `xor_iff_not_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:418:8: `eqRec_heq'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:511:8: `forall_true_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:532:8: `exists_apply_eq_apply'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:539:6: `exists_apply_eq_apply2'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:548:6: `exists_apply_eq_apply3'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:575:8: `forall_apply_eq_imp_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:578:8: `forall_eq_apply_imp_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:638:8: `forall_prop_congr'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:711:6: `Classical.choose_eq'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:847:8: `dite_eq_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:851:8: `ite_eq_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [66/2462] Replayed Mathlib.Algebra.NeZero
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/NeZero.lean:44:6: `zero_ne_one'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/NeZero.lean:46:6: `one_ne_zero'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/NeZero.lean:48:6: `two_ne_zero'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/NeZero.lean:50:6: `three_ne_zero'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/NeZero.lean:52:6: `four_ne_zero'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [69/2462] Replayed Mathlib.Logic.ExistsUnique
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/ExistsUnique.lean:109:16: `exists_unique_eq'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [74/2462] Replayed Mathlib.Logic.Function.Basic
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:78:8: `Function.Injective.eq_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:87:8: `Function.Injective.ne_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:117:8: `Function.Injective.of_comp_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:163:8: `Function.Surjective.of_comp_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:237:8: `Function.Bijective.of_comp_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:541:8: `Function.update_comp_eq_of_forall_ne'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:552:8: `Function.update_comp_eq_of_injective'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:649:8: `Function.extend_apply'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:681:8: `Function.Injective.surjective_comp_right'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [94/2462] Replayed Mathlib.Control.Combinators
+warning: ././.lake/packages/mathlib/././Mathlib/Control/Combinators.lean:35:4: `Monad.mapM'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Control/Combinators.lean:57:4: `Monad.sequence'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [96/2462] Replayed Mathlib.Logic.IsEmpty
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/IsEmpty.lean:36:9: `Fin.isEmpty'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [229/2462] Replayed Mathlib.Data.Prod.PProd
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Prod/PProd.lean:35:8: `PProd.forall'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Prod/PProd.lean:38:8: `PProd.exists'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [230/2462] Replayed Mathlib.Data.Bool.Basic
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Bool/Basic.lean:156:8: `Bool.eq_true_of_not_eq_false'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Bool/Basic.lean:159:8: `Bool.eq_false_of_not_eq_true'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [232/2462] Replayed Mathlib.Logic.Function.Iterate
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Iterate.lean:160:8: `Function.iterate_succ'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Iterate.lean:163:8: `Function.iterate_succ_apply'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [234/2462] Replayed Mathlib.Data.Prod.Basic
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Prod/Basic.lean:31:8: `Prod.forall'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Prod/Basic.lean:34:8: `Prod.exists'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Prod/Basic.lean:51:8: `Prod.map_apply'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Prod/Basic.lean:54:8: `Prod.map_fst'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Prod/Basic.lean:57:8: `Prod.map_snd'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [235/2462] Replayed Mathlib.Data.Sigma.Basic
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Sigma/Basic.lean:90:6: `Sigma.exists'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Sigma/Basic.lean:93:6: `Sigma.forall'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [239/2462] Replayed Mathlib.Data.FunLike.Basic
+warning: ././.lake/packages/mathlib/././Mathlib/Data/FunLike/Basic.lean:187:8: `DFunLike.ext'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [244/2462] Replayed Mathlib.Logic.Relation
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Relation.lean:351:8: `Relation.TransGen.head'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Relation.lean:354:8: `Relation.TransGen.tail'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Relation.lean:444:8: `Relation.TransGen.lift'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Relation.lean:453:6: `Relation.TransGen.closed'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Relation.lean:523:8: `Relation.ReflTransGen.lift'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [245/2462] Replayed Mathlib.Logic.Unique
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Unique.lean:131:18: `Unique.subsingleton_unique'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Unique.lean:259:9: `Unique.subtypeEq'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [252/2462] Replayed Mathlib.Data.Quot
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:558:18: `Quotient.liftOn'_mk''` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:562:14: `Quotient.surjective_liftOn'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:573:18: `Quotient.liftOn₂'_mk''` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:639:8: `Quotient.hrecOn'_mk''` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:652:8: `Quotient.hrecOn₂'_mk''` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:664:8: `Quotient.map'_mk''` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:674:8: `Quotient.map₂'_mk''` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:679:8: `Quotient.exact'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:683:8: `Quotient.sound'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:687:18: `Quotient.eq'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:692:18: `Quotient.eq''` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:701:8: `Quotient.out_eq'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:704:8: `Quotient.mk_out'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [256/2462] Replayed Mathlib.Tactic.Lift
+warning: ././.lake/packages/mathlib/././Mathlib/Tactic/Lift.lean:49:9: `PiSubtype.canLift'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [409/2462] Replayed Mathlib.Algebra.Group.Defs
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Defs.lean:735:33: `pow_succ'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Defs.lean:740:6: `pow_mul_comm'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Defs.lean:749:6: `pow_three'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Defs.lean:772:6: `pow_mul'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [443/2462] Replayed Mathlib.Data.List.Defs
+warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Defs.lean:241:9: `List.decidableChain'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [474/2462] Replayed Mathlib.Control.Applicative
+warning: ././.lake/packages/mathlib/././Mathlib/Control/Applicative.lean:34:8: `Applicative.pure_seq_eq_map'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [475/2462] Replayed Mathlib.Control.Traversable.Basic
+warning: ././.lake/packages/mathlib/././Mathlib/Control/Traversable/Basic.lean:139:8: `ApplicativeTransformation.preserves_map'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [618/2462] Replayed Mathlib.Algebra.GroupWithZero.Defs
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/GroupWithZero/Defs.lean:110:8: `mul_left_inj'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/GroupWithZero/Defs.lean:113:8: `mul_right_inj'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [624/2462] Replayed Mathlib.Algebra.Group.Invertible.Defs
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Invertible/Defs.lean:97:8: `invOf_mul_self'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Invertible/Defs.lean:103:8: `mul_invOf_self'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Invertible/Defs.lean:109:8: `invOf_mul_cancel_left'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Invertible/Defs.lean:120:8: `mul_invOf_cancel_left'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Invertible/Defs.lean:131:8: `invOf_mul_cancel_right'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Invertible/Defs.lean:142:8: `mul_invOf_cancel_right'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Invertible/Defs.lean:198:8: `invOf_one'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [1184/2462] Replayed Mathlib.Control.Traversable.Lemmas
+warning: ././.lake/packages/mathlib/././Mathlib/Control/Traversable/Lemmas.lean:87:8: `Traversable.naturality'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Control/Traversable/Lemmas.lean:102:8: `Traversable.traverse_eq_map_id'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Control/Traversable/Lemmas.lean:108:8: `Traversable.traverse_map'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Control/Traversable/Lemmas.lean:113:8: `Traversable.map_traverse'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [2407/2462] Replayed Mathlib.Data.List.EditDistance.Defs
+warning: ././.lake/packages/mathlib/././Mathlib/Data/List/EditDistance/Defs.lean:214:8: `suffixLevenshtein_nil'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [2447/2462] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2451/2462] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [2452/2462] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [2457/2462] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [2458/2462] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [2462/2462] Building SSA.Projects.InstCombine.tests.LLVM.gandhxorhor
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/MD4Lean/.lake/build/lib:././.lake/packages/UnicodeBasic/.lake/build/lib:././.lake/packages/BibtexQuery/.lake/build/lib:././.lake/packages/doc-gen4/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lfrenot/.elan/toolchains/leanprover--lean4---nightly-2024-10-17/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.c --json
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:51:17: theorem extracted_1 (x x_1 : BitVec 32) :
+  (Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun a =>
+      Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun a_1 =>
+        Option.bind (if x = 0#32 then none else some (43#32 / x)) fun x => some (a &&& (a_1 ^^^ x))) ⊑
+    Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun a =>
+      Option.bind (if x = 0#32 then none else some (43#32 / x)) fun x => some (a &&& (x ^^^ 4294967295#32)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:41:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:91:17: theorem extracted_1 (x x_1 : BitVec 32) :
+  (Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun a =>
+      Option.bind (if x = 0#32 then none else some (43#32 / x)) fun a_1 =>
+        Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun x => some (a &&& (a_1 ^^^ x))) ⊑
+    Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun a =>
+      Option.bind (if x = 0#32 then none else some (43#32 / x)) fun x => some (a &&& (x ^^^ 4294967295#32)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:81:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:131:17: theorem extracted_1 (x x_1 : BitVec 32) :
+  (Option.bind (if x_1 = 0#32 then none else some (43#32 / x_1)) fun a =>
+      Option.bind (if x = 0#32 then none else some (42#32 / x)) fun a_1 =>
+        Option.bind (if x = 0#32 then none else some (42#32 / x)) fun y' => some ((a ^^^ a_1) &&& y')) ⊑
+    Option.bind (if x = 0#32 then none else some (42#32 / x)) fun a =>
+      Option.bind (if x_1 = 0#32 then none else some (43#32 / x_1)) fun x => some (a &&& (x ^^^ 4294967295#32)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:121:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:163:17: theorem extracted_1 (x x_1 : BitVec 32) : (x_1 ^^^ (x ^^^ 4294967295#32)) &&& x_1 = x_1 &&& x := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:153:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:195:17: theorem extracted_1 (x x_1 : BitVec 32) : (x_1 ^^^ x ^^^ 4294967295#32) &&& x = x &&& x_1 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:185:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:257:17: theorem extracted_1 (x x_1 : BitVec 64) : x_1 &&& x ||| x_1 ^^^ x = x_1 ||| x := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:247:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:295:17: theorem extracted_1 (x x_1 x_2 : BitVec 64) :
+  (Option.bind (if x_2 = 0#64 then none else some (42#64 / x_2)) fun a =>
+      Option.bind (if x_1 = 0#64 then none else some (42#64 / x_1)) fun a_1 =>
+        Option.bind (if x = 0#64 then none else some (42#64 / x)) fun a_2 =>
+          Option.bind (if x_1 = 0#64 then none else some (42#64 / x_1)) fun y' => some (a &&& a_1 ^^^ a_2 ||| y')) ⊑
+    Option.bind (if x = 0#64 then none else some (42#64 / x)) fun a =>
+      Option.bind (if x_1 = 0#64 then none else some (42#64 / x_1)) fun y' => some (a ||| y') := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:285:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:333:17: theorem extracted_1 (x x_1 x_2 : BitVec 64) :
+  (Option.bind (if x_2 = 0#64 then none else some (42#64 / x_2)) fun a =>
+      Option.bind (if x_1 = 0#64 then none else some (42#64 / x_1)) fun a_1 =>
+        Option.bind (if x = 0#64 then none else some (42#64 / x)) fun a_2 =>
+          Option.bind (if x_2 = 0#64 then none else some (42#64 / x_2)) fun y' => some (a &&& a_1 ^^^ a_2 ||| y')) ⊑
+    Option.bind (if x = 0#64 then none else some (42#64 / x)) fun a =>
+      Option.bind (if x_2 = 0#64 then none else some (42#64 / x_2)) fun y' => some (a ||| y') := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:323:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:371:17: theorem extracted_1 (x x_1 x_2 : BitVec 64) :
+  (Option.bind (if x_2 = 0#64 then none else some (42#64 / x_2)) fun a =>
+      Option.bind (if x_1 = 0#64 then none else some (42#64 / x_1)) fun a_1 =>
+        Option.bind (if x = 0#64 then none else some (42#64 / x)) fun a_2 =>
+          Option.bind (if x = 0#64 then none else some (42#64 / x)) fun y' => some (a ^^^ a_1 &&& a_2 ||| y')) ⊑
+    Option.bind (if x_2 = 0#64 then none else some (42#64 / x_2)) fun a =>
+      Option.bind (if x = 0#64 then none else some (42#64 / x)) fun y' => some (a ||| y') := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:361:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:409:17: theorem extracted_1 (x x_1 x_2 : BitVec 64) :
+  (Option.bind (if x_2 = 0#64 then none else some (42#64 / x_2)) fun a =>
+      Option.bind (if x_1 = 0#64 then none else some (42#64 / x_1)) fun a_1 =>
+        Option.bind (if x = 0#64 then none else some (42#64 / x)) fun a_2 =>
+          Option.bind (if x_1 = 0#64 then none else some (42#64 / x_1)) fun y' => some (a ^^^ a_1 &&& a_2 ||| y')) ⊑
+    Option.bind (if x_2 = 0#64 then none else some (42#64 / x_2)) fun a =>
+      Option.bind (if x_1 = 0#64 then none else some (42#64 / x_1)) fun y' => some (a ||| y') := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:399:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:447:17: theorem extracted_1 (x x_1 x_2 : BitVec 64) :
+  (Option.bind (if x_2 = 0#64 then none else some (42#64 / x_2)) fun a =>
+      Option.bind (if x_1 = 0#64 then none else some (42#64 / x_1)) fun a_1 =>
+        Option.bind (if x_2 = 0#64 then none else some (42#64 / x_2)) fun a_2 =>
+          Option.bind (if x = 0#64 then none else some (42#64 / x)) fun x => some (a ||| a_1 &&& a_2 ^^^ x)) ⊑
+    Option.bind (if x_2 = 0#64 then none else some (42#64 / x_2)) fun a =>
+      Option.bind (if x = 0#64 then none else some (42#64 / x)) fun y' => some (a ||| y') := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:437:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:485:17: theorem extracted_1 (x x_1 x_2 : BitVec 64) :
+  (Option.bind (if x_2 = 0#64 then none else some (42#64 / x_2)) fun a =>
+      Option.bind (if x_2 = 0#64 then none else some (42#64 / x_2)) fun a_1 =>
+        Option.bind (if x_1 = 0#64 then none else some (42#64 / x_1)) fun a_2 =>
+          Option.bind (if x = 0#64 then none else some (42#64 / x)) fun x => some (a ||| a_1 &&& a_2 ^^^ x)) ⊑
+    Option.bind (if x_2 = 0#64 then none else some (42#64 / x_2)) fun a =>
+      Option.bind (if x = 0#64 then none else some (42#64 / x)) fun y' => some (a ||| y') := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:475:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:523:17: theorem extracted_1 (x x_1 x_2 : BitVec 64) :
+  (Option.bind (if x_2 = 0#64 then none else some (42#64 / x_2)) fun a =>
+      Option.bind (if x_1 = 0#64 then none else some (42#64 / x_1)) fun a_1 =>
+        Option.bind (if x = 0#64 then none else some (42#64 / x)) fun a_2 =>
+          Option.bind (if x_2 = 0#64 then none else some (42#64 / x_2)) fun x => some (a ||| a_1 ^^^ a_2 &&& x)) ⊑
+    Option.bind (if x_2 = 0#64 then none else some (42#64 / x_2)) fun a =>
+      Option.bind (if x_1 = 0#64 then none else some (42#64 / x_1)) fun y' => some (a ||| y') := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:513:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:561:17: theorem extracted_1 (x x_1 x_2 : BitVec 64) :
+  (Option.bind (if x_2 = 0#64 then none else some (42#64 / x_2)) fun a =>
+      Option.bind (if x_1 = 0#64 then none else some (42#64 / x_1)) fun a_1 =>
+        Option.bind (if x_2 = 0#64 then none else some (42#64 / x_2)) fun a_2 =>
+          Option.bind (if x = 0#64 then none else some (42#64 / x)) fun x => some (a ||| a_1 ^^^ a_2 &&& x)) ⊑
+    Option.bind (if x_2 = 0#64 then none else some (42#64 / x_2)) fun a =>
+      Option.bind (if x_1 = 0#64 then none else some (42#64 / x_1)) fun y' => some (a ||| y') := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:551:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:595:17: theorem extracted_1 (x x_1 x_2 x_3 : BitVec 8) :
+  (Option.bind (if 8#8 ≤ x_2 then none else some (x_3 <<< x_2.toNat)) fun a =>
+      Option.bind (if 8#8 ≤ x_2 then none else some (x_1 <<< x_2.toNat)) fun a_1 => some (a &&& (a_1 &&& x))) ⊑
+    Option.bind (if 8#8 ≤ x_2 then none else some ((x_1 &&& x_3) <<< x_2.toNat)) fun a => some (a &&& x) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:585:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:629:17: theorem extracted_1 (x x_1 x_2 x_3 : BitVec 8) :
+  (Option.bind (if 8#8 ≤ x_2 then none else some (x_3 <<< x_2.toNat)) fun a =>
+      Option.bind (if 8#8 ≤ x_2 then none else some (x <<< x_2.toNat)) fun y' => some (a ||| x_1 ||| y')) ⊑
+    Option.bind (if 8#8 ≤ x_2 then none else some ((x_3 ||| x) <<< x_2.toNat)) fun a => some (a ||| x_1) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:619:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:663:17: theorem extracted_1 (x x_1 x_2 x_3 : BitVec 8) :
+  (Option.bind (if 8#8 ≤ x_2 then none else some (x_3 >>> x_2.toNat)) fun a =>
+      Option.bind (if 8#8 ≤ x_2 then none else some (x_1 >>> x_2.toNat)) fun a_1 => some (a ||| (a_1 ||| x))) ⊑
+    Option.bind (if 8#8 ≤ x_2 then none else some ((x_1 ||| x_3) >>> x_2.toNat)) fun a => some (a ||| x) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:653:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:697:17: theorem extracted_1 (x x_1 x_2 x_3 : BitVec 8) :
+  (Option.bind (if 8#8 ≤ x_2 then none else some (x_3 >>> x_2.toNat)) fun a =>
+      Option.bind (if 8#8 ≤ x_2 then none else some (x >>> x_2.toNat)) fun y' => some (a ^^^ x_1 ^^^ y')) ⊑
+    Option.bind (if 8#8 ≤ x_2 then none else some ((x_3 ^^^ x) >>> x_2.toNat)) fun a => some (a ^^^ x_1) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:687:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:725:88: (deterministic) timeout at `whnf`, maximum number of heartbeats (200000) has been reached
+Use `set_option maxHeartbeats <num>` to set the limit.
+Additional diagnostic information may be available using the `set_option diagnostics true` command.
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:775:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2)) fun a =>
+      some (a &&& (x_1 ^^^ 4294967295#32) &&& (x ^^^ 4294967295#32))) ⊑
+    Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+      fun a => some (a &&& ((x_1 ||| x) ^^^ 4294967295#32)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:765:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:811:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 ^^^ 4294967295#32) &&& x_1 &&& (x ^^^ 4294967295#32) = x_1 &&& ((x_2 ||| x) ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:801:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:851:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2)) fun a =>
+      some (a ||| x_1 ^^^ 4294967295#32 ||| x ^^^ 4294967295#32)) ⊑
+    Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+      fun a => some (a ||| x_1 &&& x ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:841:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:887:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  x_2 ^^^ 4294967295#32 ||| x_1 ||| x ^^^ 4294967295#32 = x_1 ||| x_2 &&& x ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:877:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:926:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  ((x_2 ||| x_1) ^^^ 4294967295#32) &&& x ||| ((x_2 ||| x) ^^^ 4294967295#32) &&& x_1 =
+    (x_1 ^^^ x) &&& (x_2 ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:916:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:969:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (Option.bind (if x_1 = 0#32 ∨ 42#32 = intMin 32 ∧ x_1 = 4294967295#32 then none else some ((42#32).sdiv x_1)) fun a =>
+      Option.bind (if x_1 = 0#32 ∨ 42#32 = intMin 32 ∧ x_1 = 4294967295#32 then none else some ((42#32).sdiv x_1))
+        fun a_1 => some (((x_2 ||| a) ^^^ 4294967295#32) &&& x ||| a_1 &&& ((x_2 ||| x) ^^^ 4294967295#32))) ⊑
+    Option.bind (if x_1 = 0#32 ∨ 42#32 = intMin 32 ∧ x_1 = 4294967295#32 then none else some ((42#32).sdiv x_1))
+      fun a => some ((a ^^^ x) &&& (x_2 ^^^ 4294967295#32)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:959:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1012:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2)) fun a =>
+      Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+        fun a_1 => some (a &&& ((x_1 ||| x) ^^^ 4294967295#32) ||| ((x_1 ||| a_1) ^^^ 4294967295#32) &&& x)) ⊑
+    Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+      fun a => some ((x ^^^ a) &&& (x_1 ^^^ 4294967295#32)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1002:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1051:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  ((x_2 ||| x_1) ^^^ 4294967295#32) &&& x ||| ((x ||| x_1) ^^^ 4294967295#32) &&& x_2 =
+    (x_2 ^^^ x) &&& (x_1 ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1041:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1094:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2)) fun a =>
+      Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+        fun a_1 => some (a &&& ((x_1 ||| x) ^^^ 4294967295#32) ||| ((x_1 ||| a_1) ^^^ 4294967295#32) &&& x)) ⊑
+    Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+      fun a => some ((x ^^^ a) &&& (x_1 ^^^ 4294967295#32)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1084:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1129:94: (deterministic) timeout at `whnf`, maximum number of heartbeats (200000) has been reached
+Use `set_option maxHeartbeats <num>` to set the limit.
+Additional diagnostic information may be available using the `set_option diagnostics true` command.
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1178:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  ((x_2 ||| x_1) ^^^ 4294967295#32) &&& x ||| ((x ||| x_2) ^^^ 4294967295#32) &&& x_1 =
+    (x_1 ^^^ x) &&& (x_2 ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1168:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1217:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  ((x_2 ||| x_1) ^^^ 4294967295#32) &&& x ||| ((x_1 ||| x) ^^^ 4294967295#32) &&& x_2 =
+    (x_2 ^^^ x) &&& (x_1 ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1207:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1252:94: (deterministic) timeout at `whnf`, maximum number of heartbeats (200000) has been reached
+Use `set_option maxHeartbeats <num>` to set the limit.
+Additional diagnostic information may be available using the `set_option diagnostics true` command.
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1299:94: (deterministic) timeout at `whnf`, maximum number of heartbeats (200000) has been reached
+Use `set_option maxHeartbeats <num>` to set the limit.
+Additional diagnostic information may be available using the `set_option diagnostics true` command.
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1352:17: theorem extracted_1 (x x_1 x_2 x_3 : BitVec 32) :
+  ((x_3 ||| x_2) ^^^ 4294967295#32) &&& x_1 ||| ((x_3 ||| x) ^^^ 4294967295#32) &&& x_2 =
+    x_1 &&& ((x_3 ||| x_2) ^^^ 4294967295#32) ||| x_2 &&& ((x_3 ||| x) ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1342:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1395:17: theorem extracted_1 (x x_1 x_2 x_3 : BitVec 32) :
+  ((x_3 ||| x_2) ^^^ 4294967295#32) &&& x_1 ||| ((x_3 ||| x_1) ^^^ 4294967295#32) &&& x =
+    x_1 &&& ((x_3 ||| x_2) ^^^ 4294967295#32) ||| x &&& ((x_3 ||| x_1) ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1385:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1434:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 &&& x_1 ^^^ 4294967295#32 ||| x) &&& (x_2 &&& x ^^^ 4294967295#32 ||| x_1) =
+    (x_1 ^^^ x) &&& x_2 ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1424:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1477:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (Option.bind (if x_1 = 0#32 ∨ 42#32 = intMin 32 ∧ x_1 = 4294967295#32 then none else some ((42#32).sdiv x_1)) fun a =>
+      Option.bind (if x_1 = 0#32 ∨ 42#32 = intMin 32 ∧ x_1 = 4294967295#32 then none else some ((42#32).sdiv x_1))
+        fun a_1 => some ((x_2 &&& a ^^^ 4294967295#32 ||| x) &&& (a_1 ||| x_2 &&& x ^^^ 4294967295#32))) ⊑
+    Option.bind (if x_1 = 0#32 ∨ 42#32 = intMin 32 ∧ x_1 = 4294967295#32 then none else some ((42#32).sdiv x_1))
+      fun a => some ((a ^^^ x) &&& x_2 ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1467:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1520:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2)) fun a =>
+      Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+        fun a_1 => some ((a ||| x_1 &&& x ^^^ 4294967295#32) &&& (x_1 &&& a_1 ^^^ 4294967295#32 ||| x))) ⊑
+    Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+      fun a => some ((x ^^^ a) &&& x_1 ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1510:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1559:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 &&& x_1 ^^^ 4294967295#32 ||| x) &&& (x &&& x_1 ^^^ 4294967295#32 ||| x_2) =
+    (x_2 ^^^ x) &&& x_1 ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1549:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1602:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2)) fun a =>
+      Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+        fun a_1 => some ((a ||| x_1 &&& x ^^^ 4294967295#32) &&& (x_1 &&& a_1 ^^^ 4294967295#32 ||| x))) ⊑
+    Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+      fun a => some ((x ^^^ a) &&& x_1 ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1592:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1637:94: (deterministic) timeout at `whnf`, maximum number of heartbeats (200000) has been reached
+Use `set_option maxHeartbeats <num>` to set the limit.
+Additional diagnostic information may be available using the `set_option diagnostics true` command.
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1686:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 &&& x_1 ^^^ 4294967295#32 ||| x) &&& (x &&& x_2 ^^^ 4294967295#32 ||| x_1) =
+    (x_1 ^^^ x) &&& x_2 ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1676:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1725:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 &&& x_1 ^^^ 4294967295#32 ||| x) &&& (x_1 &&& x ^^^ 4294967295#32 ||| x_2) =
+    (x_2 ^^^ x) &&& x_1 ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1715:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1760:94: (deterministic) timeout at `whnf`, maximum number of heartbeats (200000) has been reached
+Use `set_option maxHeartbeats <num>` to set the limit.
+Additional diagnostic information may be available using the `set_option diagnostics true` command.
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1807:94: (deterministic) timeout at `whnf`, maximum number of heartbeats (200000) has been reached
+Use `set_option maxHeartbeats <num>` to set the limit.
+Additional diagnostic information may be available using the `set_option diagnostics true` command.
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1860:17: theorem extracted_1 (x x_1 x_2 x_3 : BitVec 32) :
+  (x_3 &&& x_2 ^^^ 4294967295#32 ||| x_1) &&& (x_3 &&& x ^^^ 4294967295#32 ||| x_2) =
+    (x_1 ||| x_3 &&& x_2 ^^^ 4294967295#32) &&& (x_2 ||| x_3 &&& x ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1850:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1903:17: theorem extracted_1 (x x_1 x_2 x_3 : BitVec 32) :
+  (x_3 &&& x_2 ^^^ 4294967295#32 ||| x_1) &&& (x_3 &&& x_1 ^^^ 4294967295#32 ||| x) =
+    (x_1 ||| x_3 &&& x_2 ^^^ 4294967295#32) &&& (x ||| x_3 &&& x_1 ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1893:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1941:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  ((x_2 ||| x_1) ^^^ 4294967295#32) &&& x ||| (x ||| x_2) ^^^ 4294967295#32 =
+    (x_1 &&& x ||| x_2) ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1931:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1983:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2)) fun a =>
+      Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+        fun a_1 => some (a &&& ((x_1 ||| x) ^^^ 4294967295#32) ||| (a_1 ||| x_1) ^^^ 4294967295#32)) ⊑
+    Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+      fun a => some ((x &&& a ||| x_1) ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:1973:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2021:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  ((x_2 ||| x_1) ^^^ 4294967295#32) &&& x ||| (x ||| x_2) ^^^ 4294967295#32 =
+    (x_1 &&& x ||| x_2) ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2011:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2059:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  ((x_2 ||| x_1) ^^^ 4294967295#32) &&& x ||| (x ||| x_1) ^^^ 4294967295#32 =
+    (x_2 &&& x ||| x_1) ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2049:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2097:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  ((x_2 ||| x_1) ^^^ 4294967295#32) &&& x ||| (x_2 ||| x) ^^^ 4294967295#32 =
+    (x_1 &&& x ||| x_2) ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2087:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2135:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 ||| x_1) ^^^ 4294967295#32 ||| ((x_1 ||| x) ^^^ 4294967295#32) &&& x_2 =
+    (x &&& x_2 ||| x_1) ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2125:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2177:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2)) fun a =>
+      Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+        fun a_1 => some (a &&& ((x_1 ||| x) ^^^ 4294967295#32) ||| (a_1 ||| x) ^^^ 4294967295#32)) ⊑
+    Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+      fun a => some ((x_1 &&& a ||| x) ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2167:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2215:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  ((x_2 ||| x_1) ^^^ 4294967295#32) &&& x ||| (x_1 ||| x) ^^^ 4294967295#32 =
+    (x_2 &&& x ||| x_1) ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2205:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2256:17: theorem extracted_1 (x x_1 x_2 x_3 : BitVec 32) :
+  ((x_3 ||| x_2) ^^^ 4294967295#32) &&& x_1 ||| (x_1 ||| x) ^^^ 4294967295#32 =
+    x_1 &&& ((x_3 ||| x_2) ^^^ 4294967295#32) ||| (x_1 ||| x) ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2246:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2297:17: theorem extracted_1 (x x_1 x_2 x_3 : BitVec 32) :
+  ((x_3 ||| x_2) ^^^ 4294967295#32) &&& x_1 ||| (x ||| x_3) ^^^ 4294967295#32 =
+    x_1 &&& ((x_3 ||| x_2) ^^^ 4294967295#32) ||| (x ||| x_3) ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2287:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2335:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 &&& x_1 ^^^ 4294967295#32 ||| x) &&& (x &&& x_2 ^^^ 4294967295#32) =
+    (x_1 ||| x) &&& x_2 ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2325:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2377:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2)) fun a =>
+      Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+        fun a_1 => some ((a ||| x_1 &&& x ^^^ 4294967295#32) &&& (a_1 &&& x_1 ^^^ 4294967295#32))) ⊑
+    Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+      fun a => some ((x ||| a) &&& x_1 ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2367:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2415:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 &&& x_1 ^^^ 4294967295#32 ||| x) &&& (x &&& x_2 ^^^ 4294967295#32) =
+    (x_1 ||| x) &&& x_2 ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2405:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2453:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 &&& x_1 ^^^ 4294967295#32 ||| x) &&& (x &&& x_1 ^^^ 4294967295#32) =
+    (x_2 ||| x) &&& x_1 ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2443:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2491:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 &&& x_1 ^^^ 4294967295#32 ||| x) &&& (x_2 &&& x ^^^ 4294967295#32) =
+    (x_1 ||| x) &&& x_2 ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2481:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2529:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 &&& x_1 ^^^ 4294967295#32) &&& (x_1 &&& x ^^^ 4294967295#32 ||| x_2) =
+    (x ||| x_2) &&& x_1 ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2519:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2571:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2)) fun a =>
+      Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+        fun a_1 => some ((a ||| x_1 &&& x ^^^ 4294967295#32) &&& (a_1 &&& x ^^^ 4294967295#32))) ⊑
+    Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+      fun a => some ((x_1 ||| a) &&& x ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2561:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2609:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 &&& x_1 ^^^ 4294967295#32 ||| x) &&& (x_1 &&& x ^^^ 4294967295#32) =
+    (x_2 ||| x) &&& x_1 ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2599:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2649:17: theorem extracted_1 (x x_1 x_2 x_3 : BitVec 32) :
+  (x_3 &&& x_2 ^^^ 4294967295#32 ||| x_1) &&& (x_1 &&& x ^^^ 4294967295#32) =
+    x_1 &&& x ^^^ (x_1 ||| x_3 &&& x_2 ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2639:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2690:17: theorem extracted_1 (x x_1 x_2 x_3 : BitVec 32) :
+  (x_3 &&& x_2 ^^^ 4294967295#32 ||| x_1) &&& (x &&& x_3 ^^^ 4294967295#32) =
+    (x_1 ||| x_3 &&& x_2 ^^^ 4294967295#32) &&& (x &&& x_3 ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2680:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2731:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  ((x_2 ||| x_1) ^^^ 4294967295#32) &&& x ||| (x_2 ^^^ x_1 ||| x) ^^^ 4294967295#32 =
+    (x_2 ||| x_1) &&& (x_2 ^^^ x_1 ||| x) ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2721:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2772:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  ((x_2 ||| x_1) ^^^ 4294967295#32) &&& x ||| (x_1 ^^^ x_2 ||| x) ^^^ 4294967295#32 =
+    (x_2 ||| x_1) &&& (x_1 ^^^ x_2 ||| x) ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2762:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2817:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2)) fun a =>
+      Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+        fun x_3 => some (a &&& ((x_1 ||| x) ^^^ 4294967295#32) ||| (x_1 ^^^ x ||| x_3) ^^^ 4294967295#32)) ⊑
+    Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+      fun x_3 => some ((x_1 ||| x) &&& (x_1 ^^^ x ||| x_3) ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2807:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2858:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  ((x_2 ||| x_1) ^^^ 4294967295#32) &&& x ||| (x_1 ^^^ x_2 ||| x) ^^^ 4294967295#32 =
+    (x_2 ||| x_1) &&& (x_1 ^^^ x_2 ||| x) ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2848:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2903:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2)) fun a =>
+      Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+        fun a_1 => some (a &&& ((x_1 ||| x) ^^^ 4294967295#32) ||| (a_1 ||| x_1 ^^^ x) ^^^ 4294967295#32)) ⊑
+    Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+      fun a => some ((x_1 ||| x) &&& (a ||| x_1 ^^^ x) ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2893:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2944:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 ^^^ x_1 ||| x) ^^^ 4294967295#32 ||| ((x_2 ||| x_1) ^^^ 4294967295#32) &&& x =
+    (x_2 ||| x_1) &&& (x_2 ^^^ x_1 ||| x) ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2934:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2986:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 &&& x_1 ^^^ 4294967295#32 ||| x) &&& ((x_2 ^^^ x_1) &&& x ^^^ 4294967295#32) =
+    (x_2 ^^^ x_1) &&& x ^^^ (x ||| x_2 &&& x_1 ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:2976:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3028:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 &&& x_1 ^^^ 4294967295#32 ||| x) &&& ((x_1 ^^^ x_2) &&& x ^^^ 4294967295#32) =
+    (x_1 ^^^ x_2) &&& x ^^^ (x ||| x_2 &&& x_1 ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3018:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3074:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2)) fun a =>
+      Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+        fun x_3 => some ((a ||| x_1 &&& x ^^^ 4294967295#32) &&& ((x_1 ^^^ x) &&& x_3 ^^^ 4294967295#32))) ⊑
+    Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+      fun a =>
+      Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+        fun a_1 => some ((x_1 ^^^ x) &&& a ^^^ (a_1 ||| x_1 &&& x ^^^ 4294967295#32)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3064:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3116:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 &&& x_1 ^^^ 4294967295#32 ||| x) &&& ((x_1 ^^^ x_2) &&& x ^^^ 4294967295#32) =
+    (x_1 ^^^ x_2) &&& x ^^^ (x ||| x_2 &&& x_1 ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3106:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3162:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2)) fun a =>
+      Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+        fun a_1 => some ((a ||| x_1 &&& x ^^^ 4294967295#32) &&& (a_1 &&& (x_1 ^^^ x) ^^^ 4294967295#32))) ⊑
+    Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+      fun a =>
+      Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+        fun a_1 => some (a &&& (x_1 ^^^ x) ^^^ (a_1 ||| x_1 &&& x ^^^ 4294967295#32)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3152:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3204:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  ((x_2 ^^^ x_1) &&& x ^^^ 4294967295#32) &&& (x_2 &&& x_1 ^^^ 4294967295#32 ||| x) =
+    (x_2 ^^^ x_1) &&& x ^^^ (x ||| x_2 &&& x_1 ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3194:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3243:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 ^^^ 4294967295#32) &&& x_1 &&& x ||| (x_1 ||| x_2 ||| x) ^^^ 4294967295#32 =
+    (x ^^^ x_1 ||| x_2) ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3233:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3282:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 ^^^ 4294967295#32) &&& x_1 &&& x ||| (x ||| x_2 ||| x_1) ^^^ 4294967295#32 =
+    (x ^^^ x_1 ||| x_2) ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3272:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3321:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 ^^^ 4294967295#32) &&& x_1 &&& x ||| (x_1 ||| x ||| x_2) ^^^ 4294967295#32 =
+    (x ^^^ x_1 ||| x_2) ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3311:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3360:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 ^^^ 4294967295#32) &&& x_1 &&& x ||| (x ||| x_2 ||| x_1) ^^^ 4294967295#32 =
+    (x ^^^ x_1 ||| x_2) ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3350:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3399:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  x_2 &&& x_1 &&& (x ^^^ 4294967295#32) ||| (x_2 ||| x ||| x_1) ^^^ 4294967295#32 =
+    (x_2 ^^^ x_1 ||| x) ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3389:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3438:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 ^^^ 4294967295#32) &&& x_1 &&& x ||| (x_2 ||| x_1 ||| x) ^^^ 4294967295#32 =
+    (x ^^^ x_1 ||| x_2) ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3428:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3481:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (Option.bind (if x = 0#32 ∨ 42#32 = intMin 32 ∧ x = 4294967295#32 then none else some ((42#32).sdiv x)) fun a =>
+      Option.bind (if x = 0#32 ∨ 42#32 = intMin 32 ∧ x = 4294967295#32 then none else some ((42#32).sdiv x)) fun a_1 =>
+        some ((x_2 ^^^ 4294967295#32) &&& x_1 &&& a ||| (a_1 ||| (x_1 ||| x_2)) ^^^ 4294967295#32)) ⊑
+    Option.bind (if x = 0#32 ∨ 42#32 = intMin 32 ∧ x = 4294967295#32 then none else some ((42#32).sdiv x)) fun a =>
+      some ((a ^^^ x_1 ||| x_2) ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3471:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3524:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2)) fun a =>
+      Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+        fun a_1 => some (a &&& (x_1 ^^^ 4294967295#32) &&& x ||| (a_1 ||| x_1 ||| x) ^^^ 4294967295#32)) ⊑
+    Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+      fun a => some ((x ^^^ a ||| x_1) ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3514:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3567:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2)) fun a =>
+      Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+        fun x_3 => some (a &&& ((x_1 ^^^ 4294967295#32) &&& x) ||| (x ||| x_1 ||| x_3) ^^^ 4294967295#32)) ⊑
+    Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+      fun a => some ((a ^^^ x ||| x_1) ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3557:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3606:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 ^^^ 4294967295#32 ||| x_1 ||| x) &&& (x_1 &&& x_2 &&& x ^^^ 4294967295#32) =
+    x ^^^ x_1 ||| x_2 ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3596:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3645:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 ^^^ 4294967295#32 ||| x_1 ||| x) &&& (x &&& x_2 &&& x_1 ^^^ 4294967295#32) =
+    x ^^^ x_1 ||| x_2 ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3635:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3684:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 ^^^ 4294967295#32 ||| x_1 ||| x) &&& (x_1 &&& x &&& x_2 ^^^ 4294967295#32) =
+    x ^^^ x_1 ||| x_2 ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3674:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3723:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 ^^^ 4294967295#32 ||| x_1 ||| x) &&& (x &&& x_2 &&& x_1 ^^^ 4294967295#32) =
+    x ^^^ x_1 ||| x_2 ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3713:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3762:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 ||| x_1 ||| x ^^^ 4294967295#32) &&& (x_2 &&& x &&& x_1 ^^^ 4294967295#32) =
+    x_2 ^^^ x_1 ||| x ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3752:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3801:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 ^^^ 4294967295#32 ||| x_1 ||| x) &&& (x_2 &&& x_1 &&& x ^^^ 4294967295#32) =
+    x ^^^ x_1 ||| x_2 ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3791:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3844:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (Option.bind (if x = 0#32 ∨ 42#32 = intMin 32 ∧ x = 4294967295#32 then none else some ((42#32).sdiv x)) fun a =>
+      Option.bind (if x = 0#32 ∨ 42#32 = intMin 32 ∧ x = 4294967295#32 then none else some ((42#32).sdiv x)) fun a_1 =>
+        some ((x_2 ^^^ 4294967295#32 ||| x_1 ||| a) &&& (a_1 &&& (x_1 &&& x_2) ^^^ 4294967295#32))) ⊑
+    Option.bind (if x = 0#32 ∨ 42#32 = intMin 32 ∧ x = 4294967295#32 then none else some ((42#32).sdiv x)) fun a =>
+      some (a ^^^ x_1 ||| x_2 ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3834:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3887:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2)) fun a =>
+      Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+        fun a_1 => some ((a ||| x_1 ^^^ 4294967295#32 ||| x) &&& (a_1 &&& x_1 &&& x ^^^ 4294967295#32))) ⊑
+    Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+      fun a => some (x ^^^ a ||| x_1 ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3877:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3930:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2)) fun a =>
+      Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+        fun x_3 => some ((a ||| (x_1 ^^^ 4294967295#32 ||| x)) &&& (x &&& x_1 &&& x_3 ^^^ 4294967295#32))) ⊑
+    Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+      fun a => some (a ^^^ x ||| x_1 ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3920:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3969:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 ^^^ 4294967295#32) &&& x_1 &&& x ||| (x_1 ||| x_2) ^^^ 4294967295#32 =
+    (x ||| x_1 ^^^ 4294967295#32) &&& (x_2 ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3959:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4008:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  x_2 &&& x_1 &&& (x ^^^ 4294967295#32) ||| (x_1 ||| x) ^^^ 4294967295#32 =
+    (x_2 ||| x_1 ^^^ 4294967295#32) &&& (x ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:3998:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4047:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 ^^^ 4294967295#32) &&& x_1 &&& x ||| (x ||| x_2) ^^^ 4294967295#32 =
+    (x_1 ||| x ^^^ 4294967295#32) &&& (x_2 ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4037:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4086:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 ^^^ 4294967295#32) &&& x_1 &&& x ||| (x_2 ||| x_1) ^^^ 4294967295#32 =
+    (x ||| x_1 ^^^ 4294967295#32) &&& (x_2 ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4076:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4129:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2)) fun a =>
+      Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+        fun a_1 => some (a &&& (x_1 ^^^ 4294967295#32) &&& x ||| (a_1 ||| x_1) ^^^ 4294967295#32)) ⊑
+    Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+      fun a => some ((x ||| a ^^^ 4294967295#32) &&& (x_1 ^^^ 4294967295#32)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4119:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4172:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2)) fun a =>
+      some (a &&& ((x_1 ^^^ 4294967295#32) &&& x) ||| (x ||| x_1) ^^^ 4294967295#32)) ⊑
+    Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+      fun a => some ((a ||| x ^^^ 4294967295#32) &&& (x_1 ^^^ 4294967295#32)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4162:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4211:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 ^^^ 4294967295#32 ||| x_1 ||| x) &&& (x_1 &&& x_2 ^^^ 4294967295#32) =
+    x &&& (x_1 ^^^ 4294967295#32) ||| x_2 ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4201:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4250:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 ||| x_1 ||| x ^^^ 4294967295#32) &&& (x_1 &&& x ^^^ 4294967295#32) =
+    x_2 &&& (x_1 ^^^ 4294967295#32) ||| x ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4240:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4289:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 ^^^ 4294967295#32 ||| x_1 ||| x) &&& (x &&& x_2 ^^^ 4294967295#32) =
+    x_1 &&& (x ^^^ 4294967295#32) ||| x_2 ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4279:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4328:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (x_2 ^^^ 4294967295#32 ||| x_1 ||| x) &&& (x_2 &&& x_1 ^^^ 4294967295#32) =
+    x &&& (x_1 ^^^ 4294967295#32) ||| x_2 ^^^ 4294967295#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4318:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4371:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2)) fun a =>
+      Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+        fun a_1 => some ((a ||| x_1 ^^^ 4294967295#32 ||| x) &&& (a_1 &&& x_1 ^^^ 4294967295#32))) ⊑
+    Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+      fun a => some (x &&& (a ^^^ 4294967295#32) ||| x_1 ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4361:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4414:17: theorem extracted_1 (x x_1 x_2 : BitVec 32) :
+  (Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2)) fun a =>
+      some ((a ||| (x_1 ^^^ 4294967295#32 ||| x)) &&& (x &&& x_1 ^^^ 4294967295#32))) ⊑
+    Option.bind (if x_2 = 0#32 ∨ 42#32 = intMin 32 ∧ x_2 = 4294967295#32 then none else some ((42#32).sdiv x_2))
+      fun a => some (a &&& (x ^^^ 4294967295#32) ||| x_1 ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4404:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4449:17: theorem extracted_1 (x x_1 : BitVec 4) : (x_1 ^^^ 15#4 ||| x) &&& (x_1 ^^^ x) = x &&& (x_1 ^^^ 15#4) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4439:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4488:17: theorem extracted_1 (x x_1 : BitVec 32) :
+  (x_1 * x_1 ^^^ x * x) &&& (x_1 * x_1 ||| x * x ^^^ 4294967295#32) = x_1 * x_1 &&& (x * x ^^^ 4294967295#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4478:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4523:17: theorem extracted_1 (x : BitVec 32) : x + 112#32 ||| 15#32 = (x ||| 15#32) + 112#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4513:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4558:17: theorem extracted_1 (x : BitVec 32) :
+  ((if x.msb = (112#32).msb ∧ ¬(x + 112#32).msb = x.msb then none else some (x + 112#32)).bind fun x' =>
+      some (x' ||| 15#32)) ⊑
+    if (x.msb || (15#32).msb) = (112#32).msb ∧ ¬((x ||| 15#32) + 112#32).msb = (x.msb || (15#32).msb) then none
+    else some ((x ||| 15#32) + 112#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4548:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4593:17: theorem extracted_1 (x : BitVec 32) :
+  ((if x.msb = (112#32).msb ∧ ¬(x + 112#32).msb = x.msb then none
+        else if x + 112#32 < x ∨ x + 112#32 < 112#32 then none else some (x + 112#32)).bind
+      fun x' => some (x' ||| 15#32)) ⊑
+    if (x.msb || (15#32).msb) = (112#32).msb ∧ ¬((x ||| 15#32) + 112#32).msb = (x.msb || (15#32).msb) then none
+    else
+      if (x ||| 15#32) + 112#32 < x ||| 15#32 ∨ (x ||| 15#32) + 112#32 < 112#32 then none
+      else some ((x ||| 15#32) + 112#32) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4583:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4628:17: theorem extracted_1 (x : BitVec 8) : x + 48#8 &&& 246#8 = (x &&& 246#8) + 48#8 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4618:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4663:17: theorem extracted_1 (x : BitVec 8) :
+  ((if x.msb = (48#8).msb ∧ ¬(x + 48#8).msb = x.msb then none else some (x + 48#8)).bind fun x' =>
+      some (x' &&& 246#8)) ⊑
+    if (x.msb && (246#8).msb) = (48#8).msb ∧ ¬((x &&& 246#8) + 48#8).msb = (x.msb && (246#8).msb) then none
+    else some ((x &&& 246#8) + 48#8) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4653:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4698:17: theorem extracted_1 (x : BitVec 8) :
+  ((if x.msb = (48#8).msb ∧ ¬(x + 48#8).msb = x.msb then none
+        else if x + 48#8 < x ∨ x + 48#8 < 48#8 then none else some (x + 48#8)).bind
+      fun x' => some (x' &&& 246#8)) ⊑
+    if (x.msb && (246#8).msb) = (48#8).msb ∧ ¬((x &&& 246#8) + 48#8).msb = (x.msb && (246#8).msb) then none
+    else
+      if (x &&& 246#8) + 48#8 < x &&& 246#8 ∨ (x &&& 246#8) + 48#8 < 48#8 then none
+      else some ((x &&& 246#8) + 48#8) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4688:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4733:17: theorem extracted_1 (x : BitVec 8) : x + 96#8 ^^^ 31#8 = (x ^^^ 31#8) + 96#8 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4723:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4768:17: theorem extracted_1 (x : BitVec 8) :
+  ((if x.msb = (96#8).msb ∧ ¬(x + 96#8).msb = x.msb then none else some (x + 96#8)).bind fun x' => some (x' ^^^ 31#8)) ⊑
+    if (x.msb ^^ (31#8).msb) = (96#8).msb ∧ ¬((x ^^^ 31#8) + 96#8).msb = (x.msb ^^ (31#8).msb) then none
+    else some ((x ^^^ 31#8) + 96#8) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4758:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4803:17: theorem extracted_1 (x : BitVec 8) :
+  ((if x.msb = (96#8).msb ∧ ¬(x + 96#8).msb = x.msb then none
+        else if x + 96#8 < x ∨ x + 96#8 < 96#8 then none else some (x + 96#8)).bind
+      fun x' => some (x' ^^^ 31#8)) ⊑
+    if (x.msb ^^ (31#8).msb) = (96#8).msb ∧ ¬((x ^^^ 31#8) + 96#8).msb = (x.msb ^^ (31#8).msb) then none
+    else
+      if (x ^^^ 31#8) + 96#8 < x ^^^ 31#8 ∨ (x ^^^ 31#8) + 96#8 < 96#8 then none
+      else some ((x ^^^ 31#8) + 96#8) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4793:8: declaration uses 'sorry'
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.gandhxorhor
+error: build failed

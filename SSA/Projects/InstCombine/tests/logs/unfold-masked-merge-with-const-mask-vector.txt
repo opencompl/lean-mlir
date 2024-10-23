@@ -1,0 +1,92 @@
+1: "splat"
+8: "splat" contains vectors which are unsupported
+
+1: "splat_undef"
+8: "splat_undef" contains vectors which are unsupported
+
+1: "nonsplat"
+8: "nonsplat" contains vectors which are unsupported
+
+1: "in_constant_varx_mone"
+8: "in_constant_varx_mone" contains vectors which are unsupported
+
+1: "in_constant_varx_14"
+8: "in_constant_varx_14" contains vectors which are unsupported
+
+1: "in_constant_varx_14_nonsplat"
+8: "in_constant_varx_14_nonsplat" contains vectors which are unsupported
+
+1: "in_constant_varx_14_undef"
+8: "in_constant_varx_14_undef" contains vectors which are unsupported
+
+1: "in_constant_mone_vary"
+8: "in_constant_mone_vary" contains vectors which are unsupported
+
+1: "in_constant_14_vary"
+8: "in_constant_14_vary" contains vectors which are unsupported
+
+1: "in_constant_14_vary_nonsplat"
+8: "in_constant_14_vary_nonsplat" contains vectors which are unsupported
+
+1: "in_constant_14_vary_undef"
+4: "in_constant_14_vary_undef" has unsupported operation: llvm.mlir.undef
+
+4: "in_constant_14_vary_undef" has unsupported operation: llvm.mlir.undef
+
+4: "in_constant_14_vary_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "in_constant_14_vary_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "in_constant_14_vary_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "gen4"
+5: "gen4" is empty
+
+1: "c_1_0_0"
+8: "c_1_0_0" contains vectors which are unsupported
+
+1: "c_0_1_0"
+8: "c_0_1_0" contains vectors which are unsupported
+
+1: "c_0_0_1"
+4: "c_0_0_1" has unsupported operation: llvm.call
+
+4: "c_0_0_1" has unsupported operation: llvm.call
+
+1: "c_1_1_0"
+8: "c_1_1_0" contains vectors which are unsupported
+
+1: "c_1_0_1"
+4: "c_1_0_1" has unsupported operation: llvm.call
+
+1: "c_0_1_1"
+4: "c_0_1_1" has unsupported operation: llvm.call
+
+1: "c_1_1_1"
+4: "c_1_1_1" has unsupported operation: llvm.call
+
+4: "c_1_1_1" has unsupported operation: llvm.call
+
+1: "commutativity_constant_14_vary"
+8: "commutativity_constant_14_vary" contains vectors which are unsupported
+
+1: "use4"
+5: "use4" is empty
+
+1: "n_oneuse_D"
+4: "n_oneuse_D" has unsupported operation: llvm.call
+
+1: "n_oneuse_A"
+4: "n_oneuse_A" has unsupported operation: llvm.call
+
+1: "n_oneuse_AD"
+4: "n_oneuse_AD" has unsupported operation: llvm.call
+
+4: "n_oneuse_AD" has unsupported operation: llvm.call
+
+1: "n_var_mask"
+7: "n_var_mask" is unchanged by InstCombine
+
+1: "n_differenty"
+7: "n_differenty" is unchanged by InstCombine
+

@@ -1,0 +1,2 @@
+3: mul_full_32.ll: parsing has failed
+

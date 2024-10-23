@@ -1,0 +1,32 @@
+1: "strncpy"
+5: "strncpy" is empty
+
+1: "fill_with_zeros"
+4: "fill_with_zeros" has unsupported operation: llvm.store
+
+4: "fill_with_zeros" has unsupported operation: llvm.return
+
+1: "fill_with_zeros2"
+4: "fill_with_zeros2" has unsupported operation: llvm.store
+
+4: "fill_with_zeros2" has unsupported operation: llvm.return
+
+1: "fill_with_zeros3"
+4: "fill_with_zeros3" has unsupported operation: llvm.store
+
+4: "fill_with_zeros3" has unsupported operation: llvm.return
+
+1: "fill_with_zeros4"
+4: "fill_with_zeros4" has unsupported operation: llvm.mlir.addressof
+
+4: "fill_with_zeros4" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "fill_with_zeros4" has unsupported operation: llvm.return
+
+1: "no_simplify"
+4: "no_simplify" has unsupported operation: llvm.mlir.addressof
+
+4: "no_simplify" has unsupported operation: llvm.call
+
+4: "no_simplify" has unsupported operation: llvm.return
+

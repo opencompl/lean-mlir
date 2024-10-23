@@ -1,0 +1,2 @@
+3: ptr-int-cast.ll: parsing has failed
+

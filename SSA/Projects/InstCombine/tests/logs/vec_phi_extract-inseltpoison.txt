@@ -1,0 +1,74 @@
+1: "f"
+4: "f" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "f" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "f" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "f" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "f" has unsupported operation: llvm.getelementptr
+
+4: "f" has unsupported operation: llvm.store
+
+4: "f" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "f" has unsupported operation: llvm.return
+
+1: "copy"
+4: "copy" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "copy" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "copy" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "copy" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "copy" has unsupported operation: llvm.getelementptr
+
+4: "copy" has unsupported operation: llvm.store
+
+4: "copy" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "copy" has unsupported operation: llvm.return
+
+1: "nocopy"
+4: "nocopy" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "nocopy" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "nocopy" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "nocopy" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "nocopy" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "nocopy" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "nocopy" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "nocopy" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "nocopy" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "nocopy" has unsupported operation: llvm.getelementptr
+
+4: "nocopy" has unsupported operation: llvm.store
+
+4: "nocopy" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "nocopy" has unsupported operation: llvm.return
+
+1: "g"
+4: "g" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "g" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "g" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "g" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "g" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "g" has unsupported operation: builtin.unregistered: llvm.icmp
+

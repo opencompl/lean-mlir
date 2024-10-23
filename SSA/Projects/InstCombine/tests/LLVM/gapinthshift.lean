@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gapinthshift_statements
-                                                    
+
 def test6_before := [llvm|
 {
 ^0(%arg48 : i55):
@@ -36,8 +36,9 @@ theorem test6_proof : test6_before ⊑ test6_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test6
   all_goals (try extract_goal ; sorry)
@@ -68,8 +69,9 @@ theorem test6a_proof : test6a_before ⊑ test6a_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test6a
   all_goals (try extract_goal ; sorry)
@@ -99,8 +101,9 @@ theorem test8_proof : test8_before ⊑ test8_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test8
   all_goals (try extract_goal ; sorry)
@@ -130,8 +133,9 @@ theorem test9_proof : test9_before ⊑ test9_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test9
   all_goals (try extract_goal ; sorry)
@@ -161,8 +165,9 @@ theorem test10_proof : test10_before ⊑ test10_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test10
   all_goals (try extract_goal ; sorry)
@@ -197,8 +202,9 @@ theorem multiuse_lshr_lshr_proof : multiuse_lshr_lshr_before ⊑ multiuse_lshr_l
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN multiuse_lshr_lshr
   all_goals (try extract_goal ; sorry)
@@ -233,8 +239,9 @@ theorem multiuse_shl_shl_proof : multiuse_shl_shl_before ⊑ multiuse_shl_shl_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN multiuse_shl_shl
   all_goals (try extract_goal ; sorry)
@@ -269,8 +276,9 @@ theorem test11_proof : test11_before ⊑ test11_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test11
   all_goals (try extract_goal ; sorry)
@@ -300,8 +308,9 @@ theorem test12_proof : test12_before ⊑ test12_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test12
   all_goals (try extract_goal ; sorry)
@@ -336,8 +345,9 @@ theorem test13_proof : test13_before ⊑ test13_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test13
   all_goals (try extract_goal ; sorry)
@@ -371,8 +381,9 @@ theorem test14_proof : test14_before ⊑ test14_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test14
   all_goals (try extract_goal ; sorry)
@@ -404,12 +415,48 @@ theorem test14a_proof : test14a_before ⊑ test14a_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test14a
   all_goals (try extract_goal ; sorry)
   ---END test14a
+
+
+
+def test15_before := [llvm|
+{
+^0(%arg24 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 3 : i45}> : () -> i45
+  %1 = "llvm.mlir.constant"() <{value = 1 : i45}> : () -> i45
+  %2 = "llvm.mlir.constant"() <{value = 2 : i45}> : () -> i45
+  %3 = "llvm.select"(%arg24, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i45, i45) -> i45
+  %4 = llvm.shl %3, %2 : i45
+  "llvm.return"(%4) : (i45) -> ()
+}
+]
+def test15_after := [llvm|
+{
+^0(%arg24 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 12 : i45}> : () -> i45
+  %1 = "llvm.mlir.constant"() <{value = 4 : i45}> : () -> i45
+  %2 = "llvm.select"(%arg24, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i45, i45) -> i45
+  "llvm.return"(%2) : (i45) -> ()
+}
+]
+theorem test15_proof : test15_before ⊑ test15_after := by
+  unfold test15_before test15_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test15
+  all_goals (try extract_goal ; sorry)
+  ---END test15
 
 
 
@@ -439,8 +486,9 @@ theorem shl_lshr_eq_amt_multi_use_proof : shl_lshr_eq_amt_multi_use_before ⊑ s
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN shl_lshr_eq_amt_multi_use
   all_goals (try extract_goal ; sorry)
@@ -474,8 +522,9 @@ theorem lshr_shl_eq_amt_multi_use_proof : lshr_shl_eq_amt_multi_use_before ⊑ l
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lshr_shl_eq_amt_multi_use
   all_goals (try extract_goal ; sorry)
@@ -509,8 +558,9 @@ theorem test25_proof : test25_before ⊑ test25_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN test25
   all_goals (try extract_goal ; sorry)

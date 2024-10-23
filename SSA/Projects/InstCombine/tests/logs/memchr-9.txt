@@ -1,0 +1,2 @@
+3: memchr-9.ll: parsing has failed
+

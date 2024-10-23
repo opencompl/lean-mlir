@@ -1,0 +1,78 @@
+1: "const"
+4: "const" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "const" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "const" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "vec"
+4: "vec" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "vec" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "vec" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "vec_undef"
+4: "vec_undef" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "vec_undef" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "vec_undef" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "one"
+4: "one" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "one" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "one" has unsupported operation: builtin.unregistered: llvm.freeze
+
+4: "one" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "two"
+4: "two" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "two" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "two" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "two" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "two_undef"
+4: "two_undef" has unsupported operation: llvm.mlir.undef
+
+4: "two_undef" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "two_undef" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "two_undef" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "two_undef" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "two_undef" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "one_undef"
+4: "one_undef" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "one_undef" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "one_undef" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "one_undef" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "one_constexpr"
+4: "one_constexpr" has unsupported operation: llvm.mlir.addressof
+
+4: "one_constexpr" has unsupported operation: llvm.getelementptr
+
+4: "one_constexpr" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "one_constexpr" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "one_constexpr" has unsupported operation: builtin.unregistered: llvm.freeze
+
+4: "one_constexpr" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "one_constexpr" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "one_constexpr" has unsupported operation: builtin.unregistered: llvm.br
+

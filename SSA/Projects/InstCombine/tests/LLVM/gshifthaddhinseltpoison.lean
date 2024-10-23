@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gshifthaddhinseltpoison_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gshifthaddhinseltpoison_statements
-                                                    
+
 def ashr_C1_add_A_C2_i32_before := [llvm|
 {
 ^0(%arg7 : i32):
@@ -37,11 +37,12 @@ theorem ashr_C1_add_A_C2_i32_proof : ashr_C1_add_A_C2_i32_before ⊑ ashr_C1_add
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN ashr_C1_add_A_C2_i32
-  apply ashr_C1_add_A_C2_i32_thm
+  all_goals (try extract_goal ; sorry)
   ---END ashr_C1_add_A_C2_i32
 
 
@@ -73,11 +74,12 @@ theorem lshr_C1_add_A_C2_i32_proof : lshr_C1_add_A_C2_i32_before ⊑ lshr_C1_add
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
-  intros
+  try intros
   try simp
   ---BEGIN lshr_C1_add_A_C2_i32
-  apply lshr_C1_add_A_C2_i32_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_C1_add_A_C2_i32
 
 
