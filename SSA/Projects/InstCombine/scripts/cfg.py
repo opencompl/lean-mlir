@@ -14,6 +14,7 @@ if len(llvm_path) == 0:
     raise ValueError("You need to give the path to llvm in config.py")
 
 test_path = "SSA/Projects/InstCombine/tests/LLVM"
+proof_path = "SSA/Projects/InstCombine/tests/proofs"
 log_path = "SSA/Projects/InstCombine/tests/logs"
 llvm_test_path = llvm_path + "/llvm/test/Transforms/InstCombine"
 expensive_files = [
@@ -45,8 +46,12 @@ allowed_names = {
     "llvm.mul",
     "llvm.sub",
     "llvm.sdiv",
+    "llvm.udiv",
 }
-allowed_unregistered = set()
+
+allowed_unregistered = {
+    "llvm.select",
+}
 
 class Msg(Enum):
     FUNC_NAME = 1
