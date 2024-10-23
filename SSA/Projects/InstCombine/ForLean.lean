@@ -354,10 +354,6 @@ theorem intMin_not_gt_zero : ¬ (intMin w >ₛ (0#w)):= by
     omega
 
 @[simp]
-theorem neg_of_ofNat_0_minus_self (x : BitVec w) : (BitVec.ofNat w 0) - x = -x := by
-  simp
-
-@[simp]
 lemma carry_and_xor_false : carry i (a &&& b) (a ^^^ b) false = false := by
   induction i
   case zero =>
