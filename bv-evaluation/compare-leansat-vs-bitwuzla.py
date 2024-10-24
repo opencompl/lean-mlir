@@ -14,9 +14,9 @@ bv_width = [4, 8, 16, 32, 64]
 
 # import Leanwuzla and uncomment relevant line 
 
-os.system('sed \'s,-- import Leanwuzla,import Leanwuzla,g\' ../SSA/Projects/InstCombine/TacticAuto.lean')
-os.system('sed \'s,-- bv_compare \"/usr/local/bin/bitwuzla\",bv_compare \"/usr/local/bin/bitwuzla\",g\' ../SSA/Projects/InstCombine/TacticAuto.lean')
-os.system('sed \'s,bv_decide -- test,-- bv_decide -- test,g\' ../SSA/Projects/InstCombine/TacticAuto.lean')
+os.system('sed -i -E \'s,-- import Leanwuzla,import Leanwuzla,g\' ../SSA/Projects/InstCombine/TacticAuto.lean')
+os.system('sed -i -E \'s,-- bv_compare \"/usr/local/bin/bitwuzla\",bv_compare \"/usr/local/bin/bitwuzla\",g\' ../SSA/Projects/InstCombine/TacticAuto.lean')
+os.system('sed -i -E \'s,bv_decide -- test,-- bv_decide -- test,g\' ../SSA/Projects/InstCombine/TacticAuto.lean')
 
 
 for file in os.listdir(benchmark_dir):
@@ -29,6 +29,6 @@ for file in os.listdir(benchmark_dir):
             #restore file to original state after testing 
             os.system('sed -i -E \'s,bv_compare\'\\\'\',sorry,g\' '+benchmark_dir+file)
 
-os.system('sed \'s,import Leanwuzla,-- import Leanwuzla,g\' ../SSA/Projects/InstCombine/TacticAuto.lean')
-os.system('sed \'s,bv_compare \"/usr/local/bin/bitwuzla\",-- bv_compare \"/usr/local/bin/bitwuzla"\",g\' ../SSA/Projects/InstCombine/TacticAuto.lean')
-os.system('sed \'s,-- bv_decide -- test,bv_decide -- test,g\' ../SSA/Projects/InstCombine/TacticAuto.lean')
+os.system('sed -i -E \'s,import Leanwuzla,-- import Leanwuzla,g\' ../SSA/Projects/InstCombine/TacticAuto.lean')
+os.system('sed -i -E \'s,bv_compare \"/usr/local/bin/bitwuzla\",-- bv_compare \"/usr/local/bin/bitwuzla"\",g\' ../SSA/Projects/InstCombine/TacticAuto.lean')
+os.system('sed -i -E \'s,-- bv_decide -- test,bv_decide -- test,g\' ../SSA/Projects/InstCombine/TacticAuto.lean')
