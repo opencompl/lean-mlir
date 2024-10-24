@@ -564,30 +564,30 @@ def neg {w : Nat} (x : IntW w) : IntW w := do
 
 
 @[simp_llvm]
-def trunc? {w: Nat} (x: BitVec w) (w': Nat) : IntW w' := do
+def trunc? {w: Nat} (w': Nat) (x: BitVec w) : IntW w' := do
   pure <| (BitVec.truncate w' x)
 
 @[simp_llvm_option]
-def trunc {w: Nat} (x: IntW w) (w': Nat) : IntW w' := do
+def trunc {w: Nat} (w': Nat) (x: IntW w) : IntW w' := do
   let x' <- x
-  trunc? x' w'
+  trunc? w' x'
 
 @[simp_llvm]
-def zext? {w: Nat} (x: BitVec w) (w': Nat) : IntW w' := do
+def zext? {w: Nat} (w': Nat) (x: BitVec w) : IntW w' := do
   pure <| (BitVec.zeroExtend w' x)
 
 @[simp_llvm_option]
-def zext {w: Nat} (x: IntW w) (w': Nat) : IntW w' := do
+def zext {w: Nat} (w': Nat) (x: IntW w) : IntW w' := do
   let x' <- x
-  zext? x' w'
+  zext? w' x'
 
 @[simp_llvm]
-def sext? {w: Nat} (x: BitVec w) (w': Nat) : IntW w' := do
+def sext? {w: Nat} (w': Nat) (x: BitVec w) : IntW w' := do
   pure <| (BitVec.signExtend w' x)
 
 @[simp_llvm_option]
-def sext {w: Nat} (x: IntW w) (w': Nat) : IntW w' := do
+def sext {w: Nat} (w': Nat) (x: IntW w) : IntW w' := do
   let x' <- x
-  sext? x' w'
+  sext? w' x'
 
 end LLVM

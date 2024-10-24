@@ -84,6 +84,9 @@ inductive MOp.UnaryOp : Type
   | neg
   | not
   | copy
+  | trunc
+  | zext
+  | sext
 deriving Repr, DecidableEq, Inhabited
 
 /-- Homogeneous, binary operations -/
@@ -155,6 +158,10 @@ namespace MOp
 @[match_pattern] def neg    (w : Width φ) : MOp φ := .unary w .neg
 @[match_pattern] def not    (w : Width φ) : MOp φ := .unary w .not
 @[match_pattern] def copy   (w : Width φ) : MOp φ := .unary w .copy
+@[match_pattern] def trunc  (w : Width φ) : MOp φ := .unary w .trunc
+@[match_pattern] def zext   (w : Width φ) : MOp φ := .unary w .zext
+@[match_pattern] def sext   (w : Width φ) : MOp φ := .unary w .sext
+
 
 @[match_pattern] def and    (w : Width φ) : MOp φ := .binary w .and
 @[match_pattern] def xor    (w : Width φ) : MOp φ := .binary w .xor
@@ -198,6 +205,9 @@ namespace MOp
 def deepCasesOn {motive : ∀ {φ}, MOp φ → Sort*}
     (neg    : ∀ {φ} {w : Width φ},              motive (neg  w))
     (not    : ∀ {φ} {w : Width φ},              motive (not  w))
+    (trunc  : ∀ {φ} {w : Width φ},              motive (trunc  w))
+    (zext   : ∀ {φ} {w : Width φ},              motive (zext  w))
+    (sext   : ∀ {φ} {w : Width φ},              motive (sext  w))
     (copy   : ∀ {φ} {w : Width φ},              motive (copy w))
     (and    : ∀ {φ} {w : Width φ},              motive (and  w))
     (or     : ∀ {φ DisjointFlag} {w : Width φ}, motive (or w DisjointFlag))
@@ -218,6 +228,9 @@ def deepCasesOn {motive : ∀ {φ}, MOp φ → Sort*}
     ∀ {φ} (op : MOp φ), motive op
   | _, .neg _    => neg
   | _, .not _    => not
+  | _, .trunc _  => trunc
+  | _, .zext _   => zext
+  | _, .sext _   => sext
   | _, .copy _   => copy
   | _, .and _    => and
   | _, .or _ _   => or
@@ -255,6 +268,9 @@ instance : ToString (MOp φ) where
   | .sub _ _   => "sub"
   | .neg _     => "neg"
   | .copy _    => "copy"
+  | .trunc _   => "trunc"
+  | .zext _    => "zext"
+  | .sext _    => "sext"
   | .sdiv _ _  => "sdiv"
   | .udiv _ _  => "udiv"
   | .icmp ty _ => s!"icmp {ty}"
@@ -269,6 +285,9 @@ namespace Op
 
 @[match_pattern] abbrev and    : Nat → Op := MOp.and    ∘ .concrete
 @[match_pattern] abbrev not    : Nat → Op := MOp.not    ∘ .concrete
+@[match_pattern] abbrev trunc  : Nat → Op := MOp.trunc  ∘ .concrete
+@[match_pattern] abbrev zext   : Nat → Op := MOp.zext   ∘ .concrete
+@[match_pattern] abbrev sext   : Nat → Op := MOp.sext   ∘ .concrete
 @[match_pattern] abbrev xor    : Nat → Op := MOp.xor    ∘ .concrete
 @[match_pattern] abbrev urem   : Nat → Op := MOp.urem   ∘ .concrete
 @[match_pattern] abbrev srem   : Nat → Op := MOp.srem   ∘ .concrete
@@ -336,24 +355,27 @@ def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (DialectSignature.sig 
     (TyDenote.toType <| DialectSignature.outTy o) :=
   match o with
   | Op.const _ val => const? val
-  | Op.copy _      =>             (op.getN 0)
-  | Op.not _       => LLVM.not    (op.getN 0)
-  | Op.neg _       => LLVM.neg    (op.getN 0)
-  | Op.and _       => LLVM.and    (op.getN 0) (op.getN 1)
-  | Op.or _ flag   => LLVM.or     (op.getN 0) (op.getN 1) flag
-  | Op.xor _       => LLVM.xor    (op.getN 0) (op.getN 1)
-  | Op.shl _ flags => LLVM.shl    (op.getN 0) (op.getN 1) flags
-  | Op.lshr _ flag => LLVM.lshr   (op.getN 0) (op.getN 1) flag
-  | Op.ashr _ flag => LLVM.ashr   (op.getN 0) (op.getN 1) flag
-  | Op.sub _ flags => LLVM.sub    (op.getN 0) (op.getN 1) flags
-  | Op.add _ flags => LLVM.add    (op.getN 0) (op.getN 1) flags
-  | Op.mul _ flags => LLVM.mul    (op.getN 0) (op.getN 1) flags
-  | Op.sdiv _ flag => LLVM.sdiv   (op.getN 0) (op.getN 1) flag
-  | Op.udiv _ flag => LLVM.udiv   (op.getN 0) (op.getN 1) flag
-  | Op.urem _      => LLVM.urem   (op.getN 0) (op.getN 1)
-  | Op.srem _      => LLVM.srem   (op.getN 0) (op.getN 1)
-  | Op.icmp c _    => LLVM.icmp c (op.getN 0) (op.getN 1)
-  | Op.select _    => LLVM.select (op.getN 0) (op.getN 1) (op.getN 2)
+  | Op.copy _      =>              (op.getN 0)
+  | Op.not _       => LLVM.not     (op.getN 0)
+  | Op.neg _       => LLVM.neg     (op.getN 0)
+  | Op.trunc w     => LLVM.trunc w (op.getN 0)
+  | Op.zext w      => LLVM.zext  w (op.getN 0)
+  | Op.sext w      => LLVM.sext  w (op.getN 0)
+  | Op.and _       => LLVM.and     (op.getN 0) (op.getN 1)
+  | Op.or _ flag   => LLVM.or      (op.getN 0) (op.getN 1) flag
+  | Op.xor _       => LLVM.xor     (op.getN 0) (op.getN 1)
+  | Op.shl _ flags => LLVM.shl     (op.getN 0) (op.getN 1) flags
+  | Op.lshr _ flag => LLVM.lshr    (op.getN 0) (op.getN 1) flag
+  | Op.ashr _ flag => LLVM.ashr    (op.getN 0) (op.getN 1) flag
+  | Op.sub _ flags => LLVM.sub     (op.getN 0) (op.getN 1) flags
+  | Op.add _ flags => LLVM.add     (op.getN 0) (op.getN 1) flags
+  | Op.mul _ flags => LLVM.mul     (op.getN 0) (op.getN 1) flags
+  | Op.sdiv _ flag => LLVM.sdiv    (op.getN 0) (op.getN 1) flag
+  | Op.udiv _ flag => LLVM.udiv    (op.getN 0) (op.getN 1) flag
+  | Op.urem _      => LLVM.urem    (op.getN 0) (op.getN 1)
+  | Op.srem _      => LLVM.srem    (op.getN 0) (op.getN 1)
+  | Op.icmp c _    => LLVM.icmp  c (op.getN 0) (op.getN 1)
+  | Op.select _    => LLVM.select  (op.getN 0) (op.getN 1) (op.getN 2)
 
 instance : DialectDenote LLVM := ⟨
   fun o args _ => Op.denote o args
