@@ -15,7 +15,7 @@ bv_width = [4, 8, 16, 32, 64]
 # import Leanwuzla and uncomment relevant line 
 
 os.system('sed -i \'\' -E \'s,-- import Leanwuzla,import Leanwuzla,g\' ../SSA/Projects/InstCombine/TacticAuto.lean')
-os.system('sed -i \'\' -E \'s,-- bv_compare,bv_compare,g\' ../SSA/Projects/InstCombine/TacticAuto.lean')
+os.system('sed -i \'\' -E \'s,-- bv_compare \",bv_compare \",g\' ../SSA/Projects/InstCombine/TacticAuto.lean')
 os.system('sed -i \'\' -E \'s,bv_decide -- replace this with bv_compare to evaluate performance,-- bv_decide -- replace this with bv_compare to evaluate performance,g\' ../SSA/Projects/InstCombine/TacticAuto.lean')
 
 
@@ -29,5 +29,5 @@ for file in os.listdir(benchmark_dir):
                 os.system(f'cd ../ && lake build '+benchmark_dir_lake+'.'+file.split(".")[0]+' 2>&1 > '+results_dir+file.split(".")[0]+'_'+str(bvw)+'_'+'r'+str(r)+'.txt')
 
 os.system('sed -i \'\' -E \'s,import Leanwuzla,-- import Leanwuzla,g\' ../SSA/Projects/InstCombine/TacticAuto.lean')
-os.system('sed -i \'\' -E \'s,bv_compare,-- bv_compare,g\' ../SSA/Projects/InstCombine/TacticAuto.lean')
+os.system('sed -i \'\' -E \'s,bv_compare \",-- bv_compare \",g\' ../SSA/Projects/InstCombine/TacticAuto.lean')
 os.system('sed -i \'\' -E \'s,-- bv_decide -- replace this with -- bv_compare to evaluate performance,bv_decide -- replace this with -- bv_compare to evaluate performance,g\' ../SSA/Projects/InstCombine/TacticAuto.lean')
