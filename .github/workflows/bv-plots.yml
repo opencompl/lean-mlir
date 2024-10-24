@@ -43,6 +43,9 @@ jobs:
             cd bitwuzla
             ./configure.py
             cd build && ninja install
+            python3 -m venv venv
+            source venv/bin/activate
+            pip install meson
 
       - name: Run Hackers' Delight Performance Tests
         run : |
