@@ -39,13 +39,13 @@ jobs:
 
       - name: Install bitwuzla
         run: |
+            python3 -m venv venv
+            source venv/bin/activate
+            pip install meson
             git clone https://github.com/bitwuzla/bitwuzla
             cd bitwuzla
             ./configure.py
             cd build && ninja install
-            python3 -m venv venv
-            source venv/bin/activate
-            pip install meson
 
       - name: Run Hackers' Delight Performance Tests
         run : |
