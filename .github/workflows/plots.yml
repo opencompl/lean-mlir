@@ -1,0 +1,38 @@
+name: bitvector performance testing
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+  merge_group:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: bitvector performance testing
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Install elan 🕑
+        run: |
+          set -o pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- --default-toolchain none -y
+          ~/.elan/bin/lean --version
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Cache `.lake` folder
+        id: cache-lake
+        uses: actions/cache@v4
+        with:
+          path: .lake
+          key: ${{ runner.os }}-lake-tools-${{ hashFiles('lake-manifest.json') }}
+
+      - name: Run Hackers' Delight Performance Tests
+        run : |
+          cd bv-evaluation
+          python3 compare-leansat-vs-bitwuzla.py
+          python3 plot-leansat-vs-bitwuzla.py
