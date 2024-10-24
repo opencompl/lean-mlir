@@ -2,7 +2,7 @@ name: bitvector performance testing
 on:
   push:
     branches:
-      - "main"
+      - "plots-bv"
   pull_request:
   merge_group:
 
