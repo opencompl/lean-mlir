@@ -26,7 +26,7 @@ for file in os.listdir(benchmark_dir):
             os.system('sed -i -E \'s,sorry,bv_compare\'\\\'\',g\' '+benchmark_dir+file)
             for r in range(reps):
                 os.system(f'cd ../ && lake build '+benchmark_dir_lake+'.'+file.split(".")[0]+' 2>&1 > '+results_dir+file.split(".")[0]+'_'+str(bvw)+'_'+'r'+str(r)+'.txt')
-            #restore file to original state after testing 
+            # restore file to original state after testing 
             os.system('sed -i -E \'s,bv_compare\'\\\'\',sorry,g\' '+benchmark_dir+file)
 
 os.system('sed -i -E \'s,import Leanwuzla,-- import Leanwuzla,g\' ../SSA/Projects/InstCombine/TacticAuto.lean')
