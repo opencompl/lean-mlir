@@ -186,6 +186,6 @@ macro "bv_compare'": tactic =>
   `(tactic|
       (
         -- bv_compare "/usr/local/bin/bitwuzla"
-        bv_decide -- replace this with -- bv_compare to evaluate performance
+        bv_decide -- replace this with bv_compare to evaluate performance
       )
    )
