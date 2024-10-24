@@ -82,10 +82,6 @@ theorem add_odd_iff_neq (n m : Nat) :
   <;> cases' Nat.mod_two_eq_zero_or_one m with mparity mparity
   <;> simp [mparity, nparity, Nat.add_mod]
 
-theorem mod_eq_of_eq {a b c : Nat} (h : a = b) : a % c = b % c := by
-   subst h
-   simp
-
 end Nat
 
 namespace BitVec
@@ -125,9 +121,6 @@ lemma one_shiftLeft_mul_eq_shiftLeft {A B : BitVec w} :
   apply BitVec.eq_of_toNat_eq
   simp only [bv_toNat, Nat.mod_mul_mod, one_mul]
   rw [Nat.mul_comm]
-
-@[simp]
-lemma msb_one_of_width_one : BitVec.msb 1#1 = true := rfl
 
 def msb_allOnes {w : Nat} (h : 0 < w) : BitVec.msb (allOnes w) = true := by
   simp only [BitVec.msb, getMsbD, allOnes]
@@ -170,16 +163,6 @@ def sdiv_one_allOnes {w : Nat} (h : 1 < w) :
   have : ¬ (w = 1) := by omega
   simp [this]
 
-theorem width_one_cases (a : BitVec 1) : a = 0#1 ∨ a = 1#1 := by
-  obtain ⟨a, ha⟩ := a
-  simp only [pow_one] at ha
-  have acases : a = 0 ∨ a = 1 := by omega
-  rcases acases with ⟨rfl | rfl⟩
-  · simp
-  case inr h =>
-    subst h
-    simp
-
 theorem sub_eq_add_neg {w : Nat} {x y : BitVec w} : x - y = x + (- y) := by
   simp only [HAdd.hAdd, HSub.hSub, Neg.neg, Sub.sub, BitVec.sub, Add.add, BitVec.add]
   simp [BitVec.ofNat, Fin.ofNat', add_comm]
@@ -219,8 +202,7 @@ def one_sdiv { w : Nat} {a : BitVec w} (ha0 : a ≠ 0) (ha1 : a ≠ 1)
   case succ w' =>
     cases w'
     case zero =>
-      have ha' : a = 0#1 ∨ a = 1#1 := BitVec.width_one_cases a
-      rcases ha' with ⟨rfl | rfl⟩ <;> (simp only [Nat.reduceAdd, ofNat_eq_ofNat, ne_eq,
+      rcases eq_zero_or_eq_one a with ⟨rfl | rfl⟩ <;> (simp only [Nat.reduceAdd, ofNat_eq_ofNat, ne_eq,
         not_true_eq_false] at ha0)
       case inr h => subst h; contradiction
     case succ w' =>
@@ -285,12 +267,6 @@ theorem intMin_neq_one {w : Nat} (h : w > 1): BitVec.intMin w ≠ 1 := by
   have h' : w > 0 := by omega
   simp [bv_toNat, h']
   rw [← Nat.two_pow_pred_add_two_pow_pred (by omega)]
-  omega
-
-theorem width_one_cases' (x : BitVec 1) :
-    x = 0 ∨ x = 1 := by
-  obtain ⟨x, hx⟩ := x
-  simp [BitVec.toNat_eq]
   omega
 
 /- Not a simp lemma by default because we may want toFin or toInt in the future. -/
@@ -369,22 +345,6 @@ theorem intMin_not_gt_zero : ¬ (intMin w >ₛ (0#w)):= by
     rw [sge_of_sgt]
     apply intMin_lt_zero
     omega
-
-theorem zero_sub_eq_neg {w : Nat} { A : BitVec w}: BitVec.ofInt w 0 - A = -A:= by
-  simp
-
--- Any bitvec of width 0 is equal to the zero bitvector
-theorem width_zero_eq_zero (x : BitVec 0) : x = BitVec.ofNat 0 0 :=
-  Subsingleton.allEq ..
-
-@[simp]
-theorem toInt_width_zero (x : BitVec 0) : BitVec.toInt x = 0 := by
-  rw [BitVec.width_zero_eq_zero x]
-  simp
-
-@[simp]
-theorem neg_of_ofNat_0_minus_self (x : BitVec w) : (BitVec.ofNat w 0) - x = -x := by
-  simp
 
 @[simp]
 lemma carry_and_xor_false : carry i (a &&& b) (a ^^^ b) false = false := by
