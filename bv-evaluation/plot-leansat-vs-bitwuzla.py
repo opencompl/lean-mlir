@@ -229,11 +229,16 @@ def leanSAT_tot_stacked(data, bm, bvw):
 
 def cumul_solving_time_same_bvw(data, tool1, tool2,  bm, bvw):
     
+    # sort before cumulating 
+
+    sorted1 = np.sort(data[bm][tool1][str(bvw)])
+    sorted2 = np.sort(data[bm][tool2][str(bvw)])
+
 
     cumtime1 = [0]
-    cumtime1.extend(np.cumsum(data[bm][tool1][str(bvw)]))
+    cumtime1.extend(sorted1)
     cumtime2 = [0]
-    cumtime2.extend(np.cumsum(data[bm][tool2][str(bvw)]))
+    cumtime2.extend(sorted2)
 
     if cumtime1[-1]>cumtime2[-1]:
         tot_time = cumtime1[-1]
