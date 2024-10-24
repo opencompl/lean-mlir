@@ -1,4 +1,3 @@
-import SSA.Projects.InstCombine.ForStd
 import SSA.Projects.InstCombine.TacticAuto
 
 set_option linter.unusedTactic false
@@ -7,7 +6,7 @@ set_option linter.unreachableTactic false
 namespace HackersDelight
 
 namespace Ch2Basics
-variable {x y z : BitVec 32}
+variable {x y z : BitVec 16}
 
 /- 2–3 Inequalities among Logical and Arithmetic Expressions -/
 
