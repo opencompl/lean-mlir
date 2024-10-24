@@ -30,6 +30,15 @@ jobs:
         with:
           path: .lake
           key: ${{ runner.os }}-lake-tools-${{ hashFiles('lake-manifest.json') }}
+      
+      - name: Get mathlib cache (only if no cache available) 
+        if: steps.cache-lake.outputs.cache-hit != 'true'
+        run: |
+          lake -R exe cache get # download cache of mathlib docs.
+
+      - name: Compile Library 🧐
+        run: |
+          lake -R build SSA
 
       - name: Run Hackers' Delight Performance Tests
         run : |
