@@ -404,8 +404,6 @@ def ashr {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW 
 
 /--
  If the condition is an i1 and it evaluates to 1, the instruction returns the first value argument; otherwise, it returns the second value argument.
-
- If the condition is an i1 and it evaluates to 1, the instruction returns the first value argument; otherwise, it returns the second value argument.
 -/
 @[simp_llvm_option]
 def select {w : Nat} (c? : IntW 1) (x? y? : IntW w ) : IntW w :=
@@ -563,5 +561,33 @@ theorem neg?_eq : LLVM.neg? a = .some (BitVec.neg a) := rfl
 def neg {w : Nat} (x : IntW w) : IntW w := do
   let x' ← x
   neg? x'
+
+
+@[simp_llvm]
+def trunc? {w: Nat} (w': Nat) (x: BitVec w) : IntW w' := do
+  pure <| (BitVec.truncate w' x)
+
+@[simp_llvm_option]
+def trunc {w: Nat} (w': Nat) (x: IntW w) : IntW w' := do
+  let x' <- x
+  trunc? w' x'
+
+@[simp_llvm]
+def zext? {w: Nat} (w': Nat) (x: BitVec w) : IntW w' := do
+  pure <| (BitVec.zeroExtend w' x)
+
+@[simp_llvm_option]
+def zext {w: Nat} (w': Nat) (x: IntW w) : IntW w' := do
+  let x' <- x
+  zext? w' x'
+
+@[simp_llvm]
+def sext? {w: Nat} (w': Nat) (x: BitVec w) : IntW w' := do
+  pure <| (BitVec.signExtend w' x)
+
+@[simp_llvm_option]
+def sext {w: Nat} (w': Nat) (x: IntW w) : IntW w' := do
+  let x' <- x
+  sext? w' x'
 
 end LLVM
