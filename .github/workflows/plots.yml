@@ -34,5 +34,10 @@ jobs:
       - name: Run Hackers' Delight Performance Tests
         run : |
           cd bv-evaluation
+          python3 -m venv venv
+          source venv/bin/activate
+          pip install pandas
+          pip install numpy
+          pip install matplotlib
           python3 compare-leansat-vs-bitwuzla.py
           python3 plot-leansat-vs-bitwuzla.py
