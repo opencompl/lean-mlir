@@ -3,9 +3,5 @@
 
 4: "bork" has unsupported operation: builtin.unregistered: llvm.ptrtoint
 
-4: "bork" has unsupported operation: llvm.trunc
-
-4: "bork" has unsupported operation: llvm.zext
-
 4: "bork" has unsupported operation: llvm.inttoptr
 

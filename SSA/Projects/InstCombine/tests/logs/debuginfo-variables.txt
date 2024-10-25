@@ -2,17 +2,21 @@
 5: "escape32" is empty
 
 1: "test_sext_zext"
-4: "test_sext_zext" has unsupported operation: llvm.zext
+2: llvm.func
+2: llvm.zext
+2: llvm.sext
+2: llvm.return
 
 1: "test_used_sext_zext"
-4: "test_used_sext_zext" has unsupported operation: llvm.zext
-
-4: "test_used_sext_zext" has unsupported operation: llvm.zext
-
 4: "test_used_sext_zext" has unsupported operation: llvm.call
 
 1: "test_cast_select"
-4: "test_cast_select" has unsupported operation after optimization: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.zext
+2: llvm.return
 
 1: "test_or"
 4: "test_or" has unsupported operation: llvm.return

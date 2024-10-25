@@ -1,9 +1,9 @@
 1: "test0"
-4: "test0" has unsupported operation: llvm.trunc
+7: "test0" is unchanged by InstCombine
 
 1: "test1"
-4: "test1" has unsupported operation: llvm.trunc
+7: "test1" is unchanged by InstCombine
 
 1: "test0vec"
-4: "test0vec" has unsupported operation: llvm.trunc
+7: "test0vec" is unchanged by InstCombine
 

@@ -1,32 +1,20 @@
 1: "zext"
 4: "zext" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "zext" has unsupported operation: llvm.zext
-
 1: "zext_vec"
 4: "zext_vec" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "zext_vec" has unsupported operation: llvm.zext
 
 1: "sext"
 4: "sext" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "sext" has unsupported operation: llvm.sext
-
 1: "sext_vec"
 4: "sext_vec" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "sext_vec" has unsupported operation: llvm.sext
 
 1: "trunc"
 4: "trunc" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "trunc" has unsupported operation: llvm.trunc
-
 1: "trunc_vec"
 4: "trunc_vec" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "trunc_vec" has unsupported operation: llvm.trunc
 
 1: "fpext"
 4: "fpext" has unsupported operation: builtin.unregistered: llvm.fcmp

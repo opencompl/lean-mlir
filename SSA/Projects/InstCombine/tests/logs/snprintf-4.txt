@@ -66,8 +66,6 @@
 
 4: "fold_snprintf_pcnt_c" has unsupported operation: llvm.load
 
-4: "fold_snprintf_pcnt_c" has unsupported operation: llvm.trunc
-
 4: "fold_snprintf_pcnt_c" has unsupported operation: llvm.store
 
 4: "fold_snprintf_pcnt_c" has unsupported operation: llvm.getelementptr

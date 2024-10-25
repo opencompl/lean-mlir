@@ -75,25 +75,32 @@
 7: "src_srem_shl_mask_vector_nonconstant" is unchanged by InstCombine
 
 1: "sext_shl_trunc_same_size"
-4: "sext_shl_trunc_same_size" has unsupported operation: llvm.zext
-
-4: "sext_shl_trunc_same_size" has unsupported operation: llvm.trunc
+2: llvm.func
+2: llvm.sext
+2: llvm.shl
+2: llvm.trunc
+2: llvm.return
 
 1: "sext_shl_trunc_smaller"
-4: "sext_shl_trunc_smaller" has unsupported operation: llvm.zext
-
-4: "sext_shl_trunc_smaller" has unsupported operation: llvm.trunc
+2: llvm.func
+2: llvm.sext
+2: llvm.shl
+2: llvm.trunc
+2: llvm.return
 
 1: "sext_shl_trunc_larger"
-4: "sext_shl_trunc_larger" has unsupported operation: llvm.sext
-
-4: "sext_shl_trunc_larger" has unsupported operation: llvm.trunc
+7: "sext_shl_trunc_larger" is unchanged by InstCombine
 
 1: "sext_shl_mask"
-4: "sext_shl_mask" has unsupported operation: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.shl
+2: llvm.and
+2: llvm.return
 
 1: "sext_shl_mask_higher"
-4: "sext_shl_mask_higher" has unsupported operation: llvm.sext
+7: "sext_shl_mask_higher" is unchanged by InstCombine
 
 1: "set_shl_mask"
 2: llvm.func
@@ -105,8 +112,22 @@
 2: llvm.return
 
 1: "must_drop_poison"
-4: "must_drop_poison" has unsupported operation: llvm.trunc
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.shl
+2: llvm.trunc
+2: llvm.return
 
 1: "f_t15_t01_t09"
-4: "f_t15_t01_t09" has unsupported operation: llvm.trunc
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.shl
+2: llvm.ashr
+2: llvm.shl
+2: llvm.return
 

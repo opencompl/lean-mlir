@@ -6,8 +6,6 @@
 
 4: "foo" has unsupported operation: llvm.call
 
-4: "foo" has unsupported operation: llvm.sext
-
 4: "foo" has unsupported operation: llvm.call
 
 4: "foo" has unsupported operation: llvm.return

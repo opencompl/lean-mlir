@@ -8,7 +8,5 @@
 
 4: "main" has unsupported operation: builtin.unregistered: llvm.ptrtoint
 
-4: "main" has unsupported operation: llvm.zext
-
 4: "main" has unsupported operation: llvm.call
 

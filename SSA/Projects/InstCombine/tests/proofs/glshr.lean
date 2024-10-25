@@ -85,6 +85,103 @@ theorem shl_add_proof : shl_add_before ⊑ shl_add_after := by
 
 
 
+def bool_zext_before := [llvm|
+{
+^0(%arg172 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 15 : i16}> : () -> i16
+  %1 = llvm.sext %arg172 : i1 to i16
+  %2 = llvm.lshr %1, %0 : i16
+  "llvm.return"(%2) : (i16) -> ()
+}
+]
+def bool_zext_after := [llvm|
+{
+^0(%arg172 : i1):
+  %0 = llvm.zext %arg172 : i1 to i16
+  "llvm.return"(%0) : (i16) -> ()
+}
+]
+theorem bool_zext_proof : bool_zext_before ⊑ bool_zext_after := by
+  unfold bool_zext_before bool_zext_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN bool_zext
+  apply bool_zext_thm
+  ---END bool_zext
+
+
+
+def smear_sign_and_widen_before := [llvm|
+{
+^0(%arg169 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 24 : i32}> : () -> i32
+  %1 = llvm.sext %arg169 : i8 to i32
+  %2 = llvm.lshr %1, %0 : i32
+  "llvm.return"(%2) : (i32) -> ()
+}
+]
+def smear_sign_and_widen_after := [llvm|
+{
+^0(%arg169 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 7 : i8}> : () -> i8
+  %1 = llvm.ashr %arg169, %0 : i8
+  %2 = llvm.zext %1 : i8 to i32
+  "llvm.return"(%2) : (i32) -> ()
+}
+]
+theorem smear_sign_and_widen_proof : smear_sign_and_widen_before ⊑ smear_sign_and_widen_after := by
+  unfold smear_sign_and_widen_before smear_sign_and_widen_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN smear_sign_and_widen
+  apply smear_sign_and_widen_thm
+  ---END smear_sign_and_widen
+
+
+
+def fake_sext_before := [llvm|
+{
+^0(%arg166 : i3):
+  %0 = "llvm.mlir.constant"() <{value = 17 : i18}> : () -> i18
+  %1 = llvm.sext %arg166 : i3 to i18
+  %2 = llvm.lshr %1, %0 : i18
+  "llvm.return"(%2) : (i18) -> ()
+}
+]
+def fake_sext_after := [llvm|
+{
+^0(%arg166 : i3):
+  %0 = "llvm.mlir.constant"() <{value = 2 : i3}> : () -> i3
+  %1 = llvm.lshr %arg166, %0 : i3
+  %2 = llvm.zext %1 : i3 to i18
+  "llvm.return"(%2) : (i18) -> ()
+}
+]
+theorem fake_sext_proof : fake_sext_before ⊑ fake_sext_after := by
+  unfold fake_sext_before fake_sext_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN fake_sext
+  apply fake_sext_thm
+  ---END fake_sext
+
+
+
 def mul_splat_fold_before := [llvm|
 {
 ^0(%arg161 : i32):
@@ -726,5 +823,385 @@ theorem negative_and_odd_proof : negative_and_odd_before ⊑ negative_and_odd_af
   ---BEGIN negative_and_odd
   apply negative_and_odd_thm
   ---END negative_and_odd
+
+
+
+def trunc_sandwich_before := [llvm|
+{
+^0(%arg70 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 28 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 2 : i12}> : () -> i12
+  %2 = llvm.lshr %arg70, %0 : i32
+  %3 = llvm.trunc %2 : i32 to i12
+  %4 = llvm.lshr %3, %1 : i12
+  "llvm.return"(%4) : (i12) -> ()
+}
+]
+def trunc_sandwich_after := [llvm|
+{
+^0(%arg70 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 30 : i32}> : () -> i32
+  %1 = llvm.lshr %arg70, %0 : i32
+  %2 = llvm.trunc %1 : i32 to i12
+  "llvm.return"(%2) : (i12) -> ()
+}
+]
+theorem trunc_sandwich_proof : trunc_sandwich_before ⊑ trunc_sandwich_after := by
+  unfold trunc_sandwich_before trunc_sandwich_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN trunc_sandwich
+  apply trunc_sandwich_thm
+  ---END trunc_sandwich
+
+
+
+def trunc_sandwich_min_shift1_before := [llvm|
+{
+^0(%arg68 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 20 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 1 : i12}> : () -> i12
+  %2 = llvm.lshr %arg68, %0 : i32
+  %3 = llvm.trunc %2 : i32 to i12
+  %4 = llvm.lshr %3, %1 : i12
+  "llvm.return"(%4) : (i12) -> ()
+}
+]
+def trunc_sandwich_min_shift1_after := [llvm|
+{
+^0(%arg68 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 21 : i32}> : () -> i32
+  %1 = llvm.lshr %arg68, %0 : i32
+  %2 = llvm.trunc %1 : i32 to i12
+  "llvm.return"(%2) : (i12) -> ()
+}
+]
+theorem trunc_sandwich_min_shift1_proof : trunc_sandwich_min_shift1_before ⊑ trunc_sandwich_min_shift1_after := by
+  unfold trunc_sandwich_min_shift1_before trunc_sandwich_min_shift1_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN trunc_sandwich_min_shift1
+  apply trunc_sandwich_min_shift1_thm
+  ---END trunc_sandwich_min_shift1
+
+
+
+def trunc_sandwich_small_shift1_before := [llvm|
+{
+^0(%arg67 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 19 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 1 : i12}> : () -> i12
+  %2 = llvm.lshr %arg67, %0 : i32
+  %3 = llvm.trunc %2 : i32 to i12
+  %4 = llvm.lshr %3, %1 : i12
+  "llvm.return"(%4) : (i12) -> ()
+}
+]
+def trunc_sandwich_small_shift1_after := [llvm|
+{
+^0(%arg67 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 20 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 2047 : i12}> : () -> i12
+  %2 = llvm.lshr %arg67, %0 : i32
+  %3 = llvm.trunc %2 : i32 to i12
+  %4 = llvm.and %3, %1 : i12
+  "llvm.return"(%4) : (i12) -> ()
+}
+]
+theorem trunc_sandwich_small_shift1_proof : trunc_sandwich_small_shift1_before ⊑ trunc_sandwich_small_shift1_after := by
+  unfold trunc_sandwich_small_shift1_before trunc_sandwich_small_shift1_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN trunc_sandwich_small_shift1
+  apply trunc_sandwich_small_shift1_thm
+  ---END trunc_sandwich_small_shift1
+
+
+
+def trunc_sandwich_max_sum_shift_before := [llvm|
+{
+^0(%arg66 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 20 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 11 : i12}> : () -> i12
+  %2 = llvm.lshr %arg66, %0 : i32
+  %3 = llvm.trunc %2 : i32 to i12
+  %4 = llvm.lshr %3, %1 : i12
+  "llvm.return"(%4) : (i12) -> ()
+}
+]
+def trunc_sandwich_max_sum_shift_after := [llvm|
+{
+^0(%arg66 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 31 : i32}> : () -> i32
+  %1 = llvm.lshr %arg66, %0 : i32
+  %2 = llvm.trunc %1 : i32 to i12
+  "llvm.return"(%2) : (i12) -> ()
+}
+]
+theorem trunc_sandwich_max_sum_shift_proof : trunc_sandwich_max_sum_shift_before ⊑ trunc_sandwich_max_sum_shift_after := by
+  unfold trunc_sandwich_max_sum_shift_before trunc_sandwich_max_sum_shift_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN trunc_sandwich_max_sum_shift
+  apply trunc_sandwich_max_sum_shift_thm
+  ---END trunc_sandwich_max_sum_shift
+
+
+
+def trunc_sandwich_max_sum_shift2_before := [llvm|
+{
+^0(%arg65 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 30 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 1 : i12}> : () -> i12
+  %2 = llvm.lshr %arg65, %0 : i32
+  %3 = llvm.trunc %2 : i32 to i12
+  %4 = llvm.lshr %3, %1 : i12
+  "llvm.return"(%4) : (i12) -> ()
+}
+]
+def trunc_sandwich_max_sum_shift2_after := [llvm|
+{
+^0(%arg65 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 31 : i32}> : () -> i32
+  %1 = llvm.lshr %arg65, %0 : i32
+  %2 = llvm.trunc %1 : i32 to i12
+  "llvm.return"(%2) : (i12) -> ()
+}
+]
+theorem trunc_sandwich_max_sum_shift2_proof : trunc_sandwich_max_sum_shift2_before ⊑ trunc_sandwich_max_sum_shift2_after := by
+  unfold trunc_sandwich_max_sum_shift2_before trunc_sandwich_max_sum_shift2_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN trunc_sandwich_max_sum_shift2
+  apply trunc_sandwich_max_sum_shift2_thm
+  ---END trunc_sandwich_max_sum_shift2
+
+
+
+def trunc_sandwich_big_sum_shift1_before := [llvm|
+{
+^0(%arg64 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 21 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 11 : i12}> : () -> i12
+  %2 = llvm.lshr %arg64, %0 : i32
+  %3 = llvm.trunc %2 : i32 to i12
+  %4 = llvm.lshr %3, %1 : i12
+  "llvm.return"(%4) : (i12) -> ()
+}
+]
+def trunc_sandwich_big_sum_shift1_after := [llvm|
+{
+^0(%arg64 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 0 : i12}> : () -> i12
+  "llvm.return"(%0) : (i12) -> ()
+}
+]
+theorem trunc_sandwich_big_sum_shift1_proof : trunc_sandwich_big_sum_shift1_before ⊑ trunc_sandwich_big_sum_shift1_after := by
+  unfold trunc_sandwich_big_sum_shift1_before trunc_sandwich_big_sum_shift1_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN trunc_sandwich_big_sum_shift1
+  apply trunc_sandwich_big_sum_shift1_thm
+  ---END trunc_sandwich_big_sum_shift1
+
+
+
+def trunc_sandwich_big_sum_shift2_before := [llvm|
+{
+^0(%arg63 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 31 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 1 : i12}> : () -> i12
+  %2 = llvm.lshr %arg63, %0 : i32
+  %3 = llvm.trunc %2 : i32 to i12
+  %4 = llvm.lshr %3, %1 : i12
+  "llvm.return"(%4) : (i12) -> ()
+}
+]
+def trunc_sandwich_big_sum_shift2_after := [llvm|
+{
+^0(%arg63 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 0 : i12}> : () -> i12
+  "llvm.return"(%0) : (i12) -> ()
+}
+]
+theorem trunc_sandwich_big_sum_shift2_proof : trunc_sandwich_big_sum_shift2_before ⊑ trunc_sandwich_big_sum_shift2_after := by
+  unfold trunc_sandwich_big_sum_shift2_before trunc_sandwich_big_sum_shift2_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN trunc_sandwich_big_sum_shift2
+  apply trunc_sandwich_big_sum_shift2_thm
+  ---END trunc_sandwich_big_sum_shift2
+
+
+
+def lshr_sext_i1_to_i16_before := [llvm|
+{
+^0(%arg54 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 4 : i16}> : () -> i16
+  %1 = llvm.sext %arg54 : i1 to i16
+  %2 = llvm.lshr %1, %0 : i16
+  "llvm.return"(%2) : (i16) -> ()
+}
+]
+def lshr_sext_i1_to_i16_after := [llvm|
+{
+^0(%arg54 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 4095 : i16}> : () -> i16
+  %1 = "llvm.mlir.constant"() <{value = 0 : i16}> : () -> i16
+  %2 = "llvm.select"(%arg54, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i16, i16) -> i16
+  "llvm.return"(%2) : (i16) -> ()
+}
+]
+theorem lshr_sext_i1_to_i16_proof : lshr_sext_i1_to_i16_before ⊑ lshr_sext_i1_to_i16_after := by
+  unfold lshr_sext_i1_to_i16_before lshr_sext_i1_to_i16_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN lshr_sext_i1_to_i16
+  apply lshr_sext_i1_to_i16_thm
+  ---END lshr_sext_i1_to_i16
+
+
+
+def lshr_sext_i1_to_i128_before := [llvm|
+{
+^0(%arg53 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i128}> : () -> i128
+  %1 = llvm.sext %arg53 : i1 to i128
+  %2 = llvm.lshr %1, %0 : i128
+  "llvm.return"(%2) : (i128) -> ()
+}
+]
+def lshr_sext_i1_to_i128_after := [llvm|
+{
+^0(%arg53 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 77371252455336267181195263 : i128}> : () -> i128
+  %1 = "llvm.mlir.constant"() <{value = 0 : i128}> : () -> i128
+  %2 = "llvm.select"(%arg53, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i128, i128) -> i128
+  "llvm.return"(%2) : (i128) -> ()
+}
+]
+theorem lshr_sext_i1_to_i128_proof : lshr_sext_i1_to_i128_before ⊑ lshr_sext_i1_to_i128_after := by
+  unfold lshr_sext_i1_to_i128_before lshr_sext_i1_to_i128_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN lshr_sext_i1_to_i128
+  apply lshr_sext_i1_to_i128_thm
+  ---END lshr_sext_i1_to_i128
+
+
+
+def bool_add_lshr_before := [llvm|
+{
+^0(%arg14 : i1, %arg15 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i2}> : () -> i2
+  %1 = llvm.zext %arg14 : i1 to i2
+  %2 = llvm.zext %arg15 : i1 to i2
+  %3 = llvm.add %1, %2 : i2
+  %4 = llvm.lshr %3, %0 : i2
+  "llvm.return"(%4) : (i2) -> ()
+}
+]
+def bool_add_lshr_after := [llvm|
+{
+^0(%arg14 : i1, %arg15 : i1):
+  %0 = llvm.and %arg14, %arg15 : i1
+  %1 = llvm.zext %0 : i1 to i2
+  "llvm.return"(%1) : (i2) -> ()
+}
+]
+theorem bool_add_lshr_proof : bool_add_lshr_before ⊑ bool_add_lshr_after := by
+  unfold bool_add_lshr_before bool_add_lshr_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN bool_add_lshr
+  apply bool_add_lshr_thm
+  ---END bool_add_lshr
+
+
+
+def bool_add_ashr_before := [llvm|
+{
+^0(%arg10 : i1, %arg11 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i2}> : () -> i2
+  %1 = llvm.zext %arg10 : i1 to i2
+  %2 = llvm.zext %arg11 : i1 to i2
+  %3 = llvm.add %1, %2 : i2
+  %4 = llvm.ashr %3, %0 : i2
+  "llvm.return"(%4) : (i2) -> ()
+}
+]
+def bool_add_ashr_after := [llvm|
+{
+^0(%arg10 : i1, %arg11 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i2}> : () -> i2
+  %1 = llvm.zext %arg10 : i1 to i2
+  %2 = llvm.zext %arg11 : i1 to i2
+  %3 = llvm.add %1, %2 overflow<nuw> : i2
+  %4 = llvm.ashr %3, %0 : i2
+  "llvm.return"(%4) : (i2) -> ()
+}
+]
+theorem bool_add_ashr_proof : bool_add_ashr_before ⊑ bool_add_ashr_after := by
+  unfold bool_add_ashr_before bool_add_ashr_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN bool_add_ashr
+  apply bool_add_ashr_thm
+  ---END bool_add_ashr
 
 

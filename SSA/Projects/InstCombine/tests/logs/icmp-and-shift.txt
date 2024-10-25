@@ -4,167 +4,101 @@
 1: "icmp_eq_and_pow2_shl1"
 4: "icmp_eq_and_pow2_shl1" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "icmp_eq_and_pow2_shl1" has unsupported operation: llvm.zext
-
 1: "icmp_eq_and_pow2_shl1_vec"
 4: "icmp_eq_and_pow2_shl1_vec" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "icmp_eq_and_pow2_shl1_vec" has unsupported operation: llvm.zext
 
 1: "icmp_ne_and_pow2_shl1"
 4: "icmp_ne_and_pow2_shl1" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "icmp_ne_and_pow2_shl1" has unsupported operation: llvm.zext
-
 1: "icmp_ne_and_pow2_shl1_vec"
 4: "icmp_ne_and_pow2_shl1_vec" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "icmp_ne_and_pow2_shl1_vec" has unsupported operation: llvm.zext
 
 1: "icmp_eq_and_pow2_shl_pow2"
 4: "icmp_eq_and_pow2_shl_pow2" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "icmp_eq_and_pow2_shl_pow2" has unsupported operation: llvm.zext
-
 1: "icmp_eq_and_pow2_shl_pow2_vec"
 4: "icmp_eq_and_pow2_shl_pow2_vec" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "icmp_eq_and_pow2_shl_pow2_vec" has unsupported operation: llvm.zext
 
 1: "icmp_ne_and_pow2_shl_pow2"
 4: "icmp_ne_and_pow2_shl_pow2" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "icmp_ne_and_pow2_shl_pow2" has unsupported operation: llvm.zext
-
 1: "icmp_ne_and_pow2_shl_pow2_vec"
 4: "icmp_ne_and_pow2_shl_pow2_vec" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "icmp_ne_and_pow2_shl_pow2_vec" has unsupported operation: llvm.zext
 
 1: "icmp_eq_and_pow2_shl_pow2_negative1"
 4: "icmp_eq_and_pow2_shl_pow2_negative1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "icmp_eq_and_pow2_shl_pow2_negative1" has unsupported operation after optimization: llvm.zext
-
 1: "icmp_eq_and_pow2_shl_pow2_negative2"
 4: "icmp_eq_and_pow2_shl_pow2_negative2" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "icmp_eq_and_pow2_shl_pow2_negative2" has unsupported operation: llvm.zext
 
 1: "icmp_eq_and_pow2_shl_pow2_negative3"
 4: "icmp_eq_and_pow2_shl_pow2_negative3" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "icmp_eq_and_pow2_shl_pow2_negative3" has unsupported operation after optimization: llvm.zext
-
 1: "icmp_eq_and_pow2_minus1_shl1"
 4: "icmp_eq_and_pow2_minus1_shl1" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "icmp_eq_and_pow2_minus1_shl1" has unsupported operation: llvm.zext
 
 1: "icmp_eq_and_pow2_minus1_shl1_vec"
 4: "icmp_eq_and_pow2_minus1_shl1_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "icmp_eq_and_pow2_minus1_shl1_vec" has unsupported operation: llvm.zext
-
 1: "icmp_ne_and_pow2_minus1_shl1"
 4: "icmp_ne_and_pow2_minus1_shl1" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "icmp_ne_and_pow2_minus1_shl1" has unsupported operation: llvm.zext
 
 1: "icmp_ne_and_pow2_minus1_shl1_vec"
 4: "icmp_ne_and_pow2_minus1_shl1_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "icmp_ne_and_pow2_minus1_shl1_vec" has unsupported operation: llvm.zext
-
 1: "icmp_eq_and_pow2_minus1_shl_pow2"
 4: "icmp_eq_and_pow2_minus1_shl_pow2" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "icmp_eq_and_pow2_minus1_shl_pow2" has unsupported operation: llvm.zext
 
 1: "icmp_eq_and_pow2_minus1_shl_pow2_vec"
 4: "icmp_eq_and_pow2_minus1_shl_pow2_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "icmp_eq_and_pow2_minus1_shl_pow2_vec" has unsupported operation: llvm.zext
-
 1: "icmp_ne_and_pow2_minus1_shl_pow2"
 4: "icmp_ne_and_pow2_minus1_shl_pow2" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "icmp_ne_and_pow2_minus1_shl_pow2" has unsupported operation: llvm.zext
 
 1: "icmp_ne_and_pow2_minus1_shl_pow2_vec"
 4: "icmp_ne_and_pow2_minus1_shl_pow2_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "icmp_ne_and_pow2_minus1_shl_pow2_vec" has unsupported operation: llvm.zext
-
 1: "icmp_eq_and_pow2_minus1_shl1_negative1"
 4: "icmp_eq_and_pow2_minus1_shl1_negative1" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "icmp_eq_and_pow2_minus1_shl1_negative1" has unsupported operation: llvm.zext
 
 1: "icmp_eq_and_pow2_minus1_shl1_negative2"
 4: "icmp_eq_and_pow2_minus1_shl1_negative2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "icmp_eq_and_pow2_minus1_shl1_negative2" has unsupported operation after optimization: llvm.zext
-
 1: "icmp_eq_and1_lshr_pow2"
 4: "icmp_eq_and1_lshr_pow2" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "icmp_eq_and1_lshr_pow2" has unsupported operation: llvm.zext
 
 1: "icmp_eq_and1_lshr_pow2_vec"
 4: "icmp_eq_and1_lshr_pow2_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "icmp_eq_and1_lshr_pow2_vec" has unsupported operation: llvm.zext
-
 1: "icmp_ne_and1_lshr_pow2"
 4: "icmp_ne_and1_lshr_pow2" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "icmp_ne_and1_lshr_pow2" has unsupported operation: llvm.zext
 
 1: "icmp_ne_and1_lshr_pow2_vec"
 4: "icmp_ne_and1_lshr_pow2_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "icmp_ne_and1_lshr_pow2_vec" has unsupported operation: llvm.zext
-
 1: "icmp_eq_and_pow2_lshr_pow2"
 4: "icmp_eq_and_pow2_lshr_pow2" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "icmp_eq_and_pow2_lshr_pow2" has unsupported operation: llvm.zext
 
 1: "icmp_eq_and_pow2_lshr_pow2_case2"
 4: "icmp_eq_and_pow2_lshr_pow2_case2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "icmp_eq_and_pow2_lshr_pow2_case2" has unsupported operation after optimization: llvm.zext
-
 1: "icmp_eq_and_pow2_lshr_pow2_vec"
 4: "icmp_eq_and_pow2_lshr_pow2_vec" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "icmp_eq_and_pow2_lshr_pow2_vec" has unsupported operation: llvm.zext
 
 1: "icmp_ne_and_pow2_lshr_pow2"
 4: "icmp_ne_and_pow2_lshr_pow2" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "icmp_ne_and_pow2_lshr_pow2" has unsupported operation: llvm.zext
-
 1: "icmp_ne_and_pow2_lshr_pow2_case2"
 4: "icmp_ne_and_pow2_lshr_pow2_case2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "icmp_ne_and_pow2_lshr_pow2_case2" has unsupported operation after optimization: llvm.zext
 
 1: "icmp_ne_and_pow2_lshr_pow2_vec"
 4: "icmp_ne_and_pow2_lshr_pow2_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "icmp_ne_and_pow2_lshr_pow2_vec" has unsupported operation: llvm.zext
-
 1: "icmp_eq_and1_lshr_pow2_minus_one"
 4: "icmp_eq_and1_lshr_pow2_minus_one" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "icmp_eq_and1_lshr_pow2_minus_one" has unsupported operation: llvm.zext
-
 1: "icmp_eq_and1_lshr_pow2_negative2"
 4: "icmp_eq_and1_lshr_pow2_negative2" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "icmp_eq_and1_lshr_pow2_negative2" has unsupported operation: llvm.zext
 
 1: "eq_and_shl_one"
 4: "eq_and_shl_one" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -234,10 +168,10 @@
 4: "test_const_shr_and_2_ne_0_negative" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test_const_shr_and_1_ne_0_v8i8_splat_negative"
-4: "test_const_shr_and_1_ne_0_v8i8_splat_negative" has unsupported operation: llvm.trunc
+8: "test_const_shr_and_1_ne_0_v8i8_splat_negative" contains vectors which are unsupported
 
 1: "test_const_shr_and_1_ne_0_v8i8_nonsplat_negative"
-4: "test_const_shr_and_1_ne_0_v8i8_nonsplat_negative" has unsupported operation: llvm.trunc
+8: "test_const_shr_and_1_ne_0_v8i8_nonsplat_negative" contains vectors which are unsupported
 
 1: "test_const_shr_and_1_ne_0_i1_negative"
 4: "test_const_shr_and_1_ne_0_i1_negative" has unsupported operation after optimization: builtin.unregistered: llvm.icmp

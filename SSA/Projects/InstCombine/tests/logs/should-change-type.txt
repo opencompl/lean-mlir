@@ -1,28 +1,32 @@
 1: "test1"
-4: "test1" has unsupported operation after optimization: llvm.zext
-
-4: "test1" has unsupported operation after optimization: llvm.zext
-
-4: "test1" has unsupported operation after optimization: llvm.trunc
+2: llvm.func
+2: llvm.zext
+2: llvm.zext
+2: llvm.add
+2: llvm.trunc
+2: llvm.return
 
 1: "test2"
-4: "test2" has unsupported operation after optimization: llvm.zext
-
-4: "test2" has unsupported operation after optimization: llvm.zext
-
-4: "test2" has unsupported operation after optimization: llvm.trunc
+2: llvm.func
+2: llvm.zext
+2: llvm.zext
+2: llvm.add
+2: llvm.trunc
+2: llvm.return
 
 1: "test3"
-4: "test3" has unsupported operation after optimization: llvm.zext
-
-4: "test3" has unsupported operation after optimization: llvm.zext
-
-4: "test3" has unsupported operation after optimization: llvm.trunc
+2: llvm.func
+2: llvm.zext
+2: llvm.zext
+2: llvm.add
+2: llvm.trunc
+2: llvm.return
 
 1: "test4"
-4: "test4" has unsupported operation: llvm.zext
-
-4: "test4" has unsupported operation: llvm.zext
-
-4: "test4" has unsupported operation: llvm.trunc
+2: llvm.func
+2: llvm.zext
+2: llvm.zext
+2: llvm.add
+2: llvm.trunc
+2: llvm.return
 

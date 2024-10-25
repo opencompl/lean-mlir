@@ -15,10 +15,6 @@
 4: "test1" has unsupported operation: llvm.extractvalue
 
 1: "test2"
-4: "test2" has unsupported operation: llvm.sext
-
-4: "test2" has unsupported operation: llvm.sext
-
 4: "test2" has unsupported operation: llvm.store
 
 4: "test2" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -29,13 +25,7 @@
 
 4: "test2" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "test2" has unsupported operation: llvm.trunc
-
 1: "test3"
-4: "test3" has unsupported operation: llvm.sext
-
-4: "test3" has unsupported operation: llvm.sext
-
 4: "test3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "test3" has unsupported operation: builtin.unregistered: llvm.cond_br
@@ -65,6 +55,4 @@
 4: "test8" has unsupported operation: llvm.call
 
 4: "test8" has unsupported operation: builtin.unregistered: llvm.br
-
-4: "test8" has unsupported operation: llvm.trunc
 

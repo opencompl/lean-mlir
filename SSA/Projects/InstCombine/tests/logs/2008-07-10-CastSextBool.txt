@@ -1,6 +1,4 @@
 1: "PR2539_A"
-4: "PR2539_A" has unsupported operation after optimization: llvm.zext
-
 4: "PR2539_A" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "PR2539_B"

@@ -226,30 +226,40 @@
 2: llvm.return
 
 1: "demorgan_or_zext"
-4: "demorgan_or_zext" has unsupported operation: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.xor
+2: llvm.xor
+2: llvm.or
+2: llvm.return
 
 1: "demorgan_and_zext"
-4: "demorgan_and_zext" has unsupported operation: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.xor
+2: llvm.xor
+2: llvm.and
+2: llvm.return
 
 1: "demorgan_or_zext_vec"
-4: "demorgan_or_zext_vec" has unsupported operation: llvm.zext
+8: "demorgan_or_zext_vec" contains vectors which are unsupported
 
 1: "demorgan_and_zext_vec"
-4: "demorgan_and_zext_vec" has unsupported operation: llvm.zext
+8: "demorgan_and_zext_vec" contains vectors which are unsupported
 
 1: "PR28476"
 4: "PR28476" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "PR28476" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "PR28476" has unsupported operation: llvm.zext
-
 1: "PR28476_logical"
 4: "PR28476_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "PR28476_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "PR28476_logical" has unsupported operation: llvm.zext
 
 1: "demorgan_plus_and_to_xor"
 2: llvm.func

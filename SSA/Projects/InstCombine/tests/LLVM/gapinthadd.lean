@@ -136,6 +136,81 @@ theorem test4_proof : test4_before ⊑ test4_after := by
 
 
 
+def sext_before := [llvm|
+{
+^0(%arg7 : i4):
+  %0 = "llvm.mlir.constant"() <{value = -8 : i4}> : () -> i4
+  %1 = "llvm.mlir.constant"() <{value = -8 : i7}> : () -> i7
+  %2 = llvm.xor %arg7, %0 : i4
+  %3 = llvm.zext %2 : i4 to i7
+  %4 = llvm.add %3, %1 overflow<nsw> : i7
+  "llvm.return"(%4) : (i7) -> ()
+}
+]
+def sext_after := [llvm|
+{
+^0(%arg7 : i4):
+  %0 = llvm.sext %arg7 : i4 to i7
+  "llvm.return"(%0) : (i7) -> ()
+}
+]
+theorem sext_proof : sext_before ⊑ sext_after := by
+  unfold sext_before sext_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN sext
+  all_goals (try extract_goal ; sorry)
+  ---END sext
+
+
+
+def sext_multiuse_before := [llvm|
+{
+^0(%arg5 : i4):
+  %0 = "llvm.mlir.constant"() <{value = -8 : i4}> : () -> i4
+  %1 = "llvm.mlir.constant"() <{value = -8 : i7}> : () -> i7
+  %2 = llvm.xor %arg5, %0 : i4
+  %3 = llvm.zext %2 : i4 to i7
+  %4 = llvm.add %3, %1 overflow<nsw> : i7
+  %5 = llvm.sdiv %3, %4 : i7
+  %6 = llvm.trunc %5 : i7 to i4
+  %7 = llvm.sdiv %6, %2 : i4
+  "llvm.return"(%7) : (i4) -> ()
+}
+]
+def sext_multiuse_after := [llvm|
+{
+^0(%arg5 : i4):
+  %0 = "llvm.mlir.constant"() <{value = -8 : i4}> : () -> i4
+  %1 = llvm.xor %arg5, %0 : i4
+  %2 = llvm.zext %1 : i4 to i7
+  %3 = llvm.sext %arg5 : i4 to i7
+  %4 = llvm.sdiv %2, %3 : i7
+  %5 = llvm.trunc %4 : i7 to i4
+  %6 = llvm.sdiv %5, %1 : i4
+  "llvm.return"(%6) : (i4) -> ()
+}
+]
+theorem sext_multiuse_proof : sext_multiuse_before ⊑ sext_multiuse_after := by
+  unfold sext_multiuse_before sext_multiuse_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN sext_multiuse
+  all_goals (try extract_goal ; sorry)
+  ---END sext_multiuse
+
+
+
 def test5_before := [llvm|
 {
 ^0(%arg4 : i111):

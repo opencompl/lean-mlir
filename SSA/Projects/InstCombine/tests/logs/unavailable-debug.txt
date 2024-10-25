@@ -1,8 +1,6 @@
 1: "b"
 4: "b" has unsupported operation: builtin.unregistered: llvm.intr.dbg.value
 
-4: "b" has unsupported operation: llvm.trunc
-
 1: "main"
 4: "main" has unsupported operation: llvm.mlir.addressof
 
@@ -11,8 +9,6 @@
 4: "main" has unsupported operation: builtin.unregistered: llvm.intr.dbg.value
 
 4: "main" has unsupported operation: llvm.load
-
-4: "main" has unsupported operation: llvm.sext
 
 4: "main" has unsupported operation: llvm.store
 

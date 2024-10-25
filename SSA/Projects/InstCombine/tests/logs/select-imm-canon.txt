@@ -1,33 +1,23 @@
 1: "single"
 4: "single" has unsupported operation: builtin.unregistered: llvm.intr.smax
 
-4: "single" has unsupported operation: llvm.trunc
-
 1: "double"
 4: "double" has unsupported operation: builtin.unregistered: llvm.intr.smax
 
 4: "double" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
-4: "double" has unsupported operation: llvm.trunc
-
 1: "thisdoesnotloop"
 4: "thisdoesnotloop" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "thisdoesnotloop" has unsupported operation: llvm.trunc
 
 1: "original"
 4: "original" has unsupported operation: builtin.unregistered: llvm.intr.smax
 
 4: "original" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
-4: "original" has unsupported operation: llvm.trunc
-
 1: "original_logical"
 4: "original_logical" has unsupported operation: builtin.unregistered: llvm.intr.smax
 
 4: "original_logical" has unsupported operation: builtin.unregistered: llvm.intr.smin
-
-4: "original_logical" has unsupported operation: llvm.trunc
 
 1: "PR49205"
 4: "PR49205" has unsupported operation: builtin.unregistered: llvm.br

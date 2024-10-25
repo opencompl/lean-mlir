@@ -1,47 +1,29 @@
 1: "test1"
 4: "test1" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "test1" has unsupported operation: llvm.zext
-
 1: "test2"
 4: "test2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "test2" has unsupported operation after optimization: llvm.zext
 
 1: "test3"
 4: "test3" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "test3" has unsupported operation: llvm.zext
-
 1: "test3vec"
 4: "test3vec" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "test3vec" has unsupported operation: llvm.zext
 
 1: "test3vec_poison1"
 4: "test3vec_poison1" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "test3vec_poison1" has unsupported operation: llvm.zext
-
 1: "test3vec_poison2"
 4: "test3vec_poison2" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "test3vec_poison2" has unsupported operation: llvm.zext
 
 1: "test3vec_diff"
 4: "test3vec_diff" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "test3vec_diff" has unsupported operation: llvm.zext
-
 1: "test3vec_non-uniform"
 4: "test3vec_non-uniform" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "test3vec_non-uniform" has unsupported operation: llvm.zext
-
 1: "test3i"
 4: "test3i" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "test3i" has unsupported operation: llvm.zext
 
 1: "test4a"
 4: "test4a" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -64,8 +46,6 @@
 1: "shift_trunc_signbit_test_vec_uses"
 4: "shift_trunc_signbit_test_vec_uses" has unsupported operation: llvm.store
 
-4: "shift_trunc_signbit_test_vec_uses" has unsupported operation: llvm.trunc
-
 4: "shift_trunc_signbit_test_vec_uses" has unsupported operation: llvm.store
 
 4: "shift_trunc_signbit_test_vec_uses" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -74,7 +54,5 @@
 4: "shift_trunc_wrong_shift" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "shift_trunc_wrong_cmp"
-4: "shift_trunc_wrong_cmp" has unsupported operation: llvm.trunc
-
 4: "shift_trunc_wrong_cmp" has unsupported operation: builtin.unregistered: llvm.icmp
 

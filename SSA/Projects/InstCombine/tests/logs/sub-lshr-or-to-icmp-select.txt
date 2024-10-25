@@ -1,27 +1,17 @@
 1: "neg_or_lshr_i32"
 4: "neg_or_lshr_i32" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "neg_or_lshr_i32" has unsupported operation: llvm.zext
-
 1: "neg_or_lshr_i32_commute"
 4: "neg_or_lshr_i32_commute" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "neg_or_lshr_i32_commute" has unsupported operation: llvm.zext
 
 1: "neg_or_lshr_i32_vec"
 4: "neg_or_lshr_i32_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "neg_or_lshr_i32_vec" has unsupported operation: llvm.zext
-
 1: "neg_or_lshr_i32_vec_commute"
 4: "neg_or_lshr_i32_vec_commute" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "neg_or_lshr_i32_vec_commute" has unsupported operation: llvm.zext
-
 1: "neg_extra_use_or_lshr_i32"
 4: "neg_extra_use_or_lshr_i32" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "neg_extra_use_or_lshr_i32" has unsupported operation: llvm.zext
 
 4: "neg_extra_use_or_lshr_i32" has unsupported operation: llvm.store
 

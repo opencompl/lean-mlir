@@ -10,72 +10,46 @@
 1: "t0"
 4: "t0" has unsupported operation: llvm.call
 
-4: "t0" has unsupported operation: llvm.zext
-
 4: "t0" has unsupported operation: llvm.call
-
-4: "t0" has unsupported operation: llvm.call
-
-4: "t0" has unsupported operation: llvm.trunc
 
 4: "t0" has unsupported operation: llvm.call
 
 4: "t0" has unsupported operation: llvm.call
 
-4: "t0" has unsupported operation: llvm.trunc
+4: "t0" has unsupported operation: llvm.call
 
 1: "t0_zext_of_nbits"
-4: "t0_zext_of_nbits" has unsupported operation: llvm.zext
+4: "t0_zext_of_nbits" has unsupported operation: llvm.call
+
+4: "t0_zext_of_nbits" has unsupported operation: llvm.call
 
 4: "t0_zext_of_nbits" has unsupported operation: llvm.call
 
 4: "t0_zext_of_nbits" has unsupported operation: llvm.call
 
-4: "t0_zext_of_nbits" has unsupported operation: llvm.zext
-
 4: "t0_zext_of_nbits" has unsupported operation: llvm.call
 
 4: "t0_zext_of_nbits" has unsupported operation: llvm.call
 
-4: "t0_zext_of_nbits" has unsupported operation: llvm.trunc
-
 4: "t0_zext_of_nbits" has unsupported operation: llvm.call
-
-4: "t0_zext_of_nbits" has unsupported operation: llvm.call
-
-4: "t0_zext_of_nbits" has unsupported operation: llvm.zext
-
-4: "t0_zext_of_nbits" has unsupported operation: llvm.call
-
-4: "t0_zext_of_nbits" has unsupported operation: llvm.trunc
 
 1: "t0_exact"
 4: "t0_exact" has unsupported operation: llvm.call
 
-4: "t0_exact" has unsupported operation: llvm.zext
-
 4: "t0_exact" has unsupported operation: llvm.call
-
-4: "t0_exact" has unsupported operation: llvm.call
-
-4: "t0_exact" has unsupported operation: llvm.trunc
 
 4: "t0_exact" has unsupported operation: llvm.call
 
 4: "t0_exact" has unsupported operation: llvm.call
 
-4: "t0_exact" has unsupported operation: llvm.trunc
+4: "t0_exact" has unsupported operation: llvm.call
 
 1: "t1_redundant_sext"
 4: "t1_redundant_sext" has unsupported operation: llvm.call
 
-4: "t1_redundant_sext" has unsupported operation: llvm.zext
-
 4: "t1_redundant_sext" has unsupported operation: llvm.call
 
 4: "t1_redundant_sext" has unsupported operation: llvm.call
-
-4: "t1_redundant_sext" has unsupported operation: llvm.trunc
 
 4: "t1_redundant_sext" has unsupported operation: llvm.call
 
@@ -102,9 +76,7 @@
 4: "t3_notrunc_redundant_sext" has unsupported operation: llvm.call
 
 1: "t4_vec"
-4: "t4_vec" has unsupported operation: llvm.zext
-
-4: "t4_vec" has unsupported operation: llvm.trunc
+8: "t4_vec" contains vectors which are unsupported
 
 1: "t5_vec_poison"
 4: "t5_vec_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -117,37 +89,21 @@
 
 4: "t5_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
 
-4: "t5_vec_poison" has unsupported operation: llvm.zext
-
-4: "t5_vec_poison" has unsupported operation: llvm.trunc
-
 1: "t6_extrause_good0"
 4: "t6_extrause_good0" has unsupported operation: llvm.call
 
-4: "t6_extrause_good0" has unsupported operation: llvm.zext
-
 4: "t6_extrause_good0" has unsupported operation: llvm.call
-
-4: "t6_extrause_good0" has unsupported operation: llvm.call
-
-4: "t6_extrause_good0" has unsupported operation: llvm.trunc
 
 4: "t6_extrause_good0" has unsupported operation: llvm.call
 
 4: "t6_extrause_good0" has unsupported operation: llvm.call
 
-4: "t6_extrause_good0" has unsupported operation: llvm.trunc
+4: "t6_extrause_good0" has unsupported operation: llvm.call
 
 1: "t7_extrause_good1"
 4: "t7_extrause_good1" has unsupported operation: llvm.call
 
-4: "t7_extrause_good1" has unsupported operation: llvm.zext
-
 4: "t7_extrause_good1" has unsupported operation: llvm.call
-
-4: "t7_extrause_good1" has unsupported operation: llvm.call
-
-4: "t7_extrause_good1" has unsupported operation: llvm.trunc
 
 4: "t7_extrause_good1" has unsupported operation: llvm.call
 
@@ -155,18 +111,14 @@
 
 4: "t7_extrause_good1" has unsupported operation: llvm.call
 
-4: "t7_extrause_good1" has unsupported operation: llvm.trunc
+4: "t7_extrause_good1" has unsupported operation: llvm.call
 
 1: "n8_extrause_bad"
 4: "n8_extrause_bad" has unsupported operation: llvm.call
 
-4: "n8_extrause_bad" has unsupported operation: llvm.zext
-
 4: "n8_extrause_bad" has unsupported operation: llvm.call
 
 4: "n8_extrause_bad" has unsupported operation: llvm.call
-
-4: "n8_extrause_bad" has unsupported operation: llvm.trunc
 
 4: "n8_extrause_bad" has unsupported operation: llvm.call
 
@@ -177,13 +129,9 @@
 1: "n9"
 4: "n9" has unsupported operation: llvm.call
 
-4: "n9" has unsupported operation: llvm.zext
-
 4: "n9" has unsupported operation: llvm.call
 
 4: "n9" has unsupported operation: llvm.call
-
-4: "n9" has unsupported operation: llvm.trunc
 
 4: "n9" has unsupported operation: llvm.call
 
@@ -192,13 +140,9 @@
 1: "n10"
 4: "n10" has unsupported operation: llvm.call
 
-4: "n10" has unsupported operation: llvm.zext
-
 4: "n10" has unsupported operation: llvm.call
 
 4: "n10" has unsupported operation: llvm.call
-
-4: "n10" has unsupported operation: llvm.trunc
 
 4: "n10" has unsupported operation: llvm.call
 
@@ -207,13 +151,9 @@
 1: "n11"
 4: "n11" has unsupported operation: llvm.call
 
-4: "n11" has unsupported operation: llvm.zext
-
 4: "n11" has unsupported operation: llvm.call
 
 4: "n11" has unsupported operation: llvm.call
-
-4: "n11" has unsupported operation: llvm.trunc
 
 4: "n11" has unsupported operation: llvm.call
 
@@ -222,13 +162,9 @@
 1: "n12"
 4: "n12" has unsupported operation: llvm.call
 
-4: "n12" has unsupported operation: llvm.zext
-
 4: "n12" has unsupported operation: llvm.call
 
 4: "n12" has unsupported operation: llvm.call
-
-4: "n12" has unsupported operation: llvm.trunc
 
 4: "n12" has unsupported operation: llvm.call
 
@@ -239,13 +175,9 @@
 1: "n13"
 4: "n13" has unsupported operation: llvm.call
 
-4: "n13" has unsupported operation: llvm.zext
-
 4: "n13" has unsupported operation: llvm.call
 
 4: "n13" has unsupported operation: llvm.call
-
-4: "n13" has unsupported operation: llvm.trunc
 
 4: "n13" has unsupported operation: llvm.call
 
@@ -254,13 +186,9 @@
 1: "n13_extrause"
 4: "n13_extrause" has unsupported operation: llvm.call
 
-4: "n13_extrause" has unsupported operation: llvm.zext
-
 4: "n13_extrause" has unsupported operation: llvm.call
 
 4: "n13_extrause" has unsupported operation: llvm.call
-
-4: "n13_extrause" has unsupported operation: llvm.trunc
 
 4: "n13_extrause" has unsupported operation: llvm.call
 
@@ -271,13 +199,9 @@
 1: "n14"
 4: "n14" has unsupported operation: llvm.call
 
-4: "n14" has unsupported operation: llvm.zext
-
 4: "n14" has unsupported operation: llvm.call
 
 4: "n14" has unsupported operation: llvm.call
-
-4: "n14" has unsupported operation: llvm.trunc
 
 4: "n14" has unsupported operation: llvm.call
 
@@ -286,13 +210,9 @@
 1: "n14_extrause"
 4: "n14_extrause" has unsupported operation: llvm.call
 
-4: "n14_extrause" has unsupported operation: llvm.zext
-
 4: "n14_extrause" has unsupported operation: llvm.call
 
 4: "n14_extrause" has unsupported operation: llvm.call
-
-4: "n14_extrause" has unsupported operation: llvm.trunc
 
 4: "n14_extrause" has unsupported operation: llvm.call
 

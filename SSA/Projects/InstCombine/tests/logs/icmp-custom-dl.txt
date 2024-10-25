@@ -6,8 +6,6 @@
 
 4: "test59" has unsupported operation: builtin.unregistered: llvm.ptrtoint
 
-4: "test59" has unsupported operation: llvm.zext
-
 4: "test59" has unsupported operation: llvm.call
 
 1: "test59_as1"
@@ -15,47 +13,25 @@
 
 4: "test59_as1" has unsupported operation: builtin.unregistered: llvm.ptrtoint
 
-4: "test59_as1" has unsupported operation: llvm.zext
-
 4: "test59_as1" has unsupported operation: llvm.call
 
 1: "test60"
-4: "test60" has unsupported operation: llvm.trunc
-
-4: "test60" has unsupported operation: llvm.trunc
-
 4: "test60" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test60_as1"
-4: "test60_as1" has unsupported operation: llvm.trunc
-
-4: "test60_as1" has unsupported operation: llvm.trunc
-
 4: "test60_as1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test60_addrspacecast"
-4: "test60_addrspacecast" has unsupported operation: llvm.trunc
-
-4: "test60_addrspacecast" has unsupported operation: llvm.trunc
-
 4: "test60_addrspacecast" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test60_addrspacecast_smaller"
-4: "test60_addrspacecast_smaller" has unsupported operation: llvm.trunc
-
 4: "test60_addrspacecast_smaller" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test60_addrspacecast_larger"
-4: "test60_addrspacecast_larger" has unsupported operation: llvm.trunc
-
 4: "test60_addrspacecast_larger" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test61"
-4: "test61" has unsupported operation: llvm.trunc
-
 4: "test61" has unsupported operation: llvm.getelementptr
-
-4: "test61" has unsupported operation: llvm.trunc
 
 4: "test61" has unsupported operation: llvm.getelementptr
 

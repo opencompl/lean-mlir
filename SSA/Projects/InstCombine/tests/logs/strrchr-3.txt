@@ -8,8 +8,6 @@
 
 4: "fold_strrchr_sp10_x" has unsupported operation: llvm.mlir.zero
 
-4: "fold_strrchr_sp10_x" has unsupported operation: llvm.trunc
-
 4: "fold_strrchr_sp10_x" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "call_strrchr_sp9_x"

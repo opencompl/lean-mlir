@@ -10677,23 +10677,25 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: dec
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
 ✖ [2481/2481] Building SSA.Projects.InstCombine.tests.LLVM.gadd2
 trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lfrenot/.elan/toolchains/leanprover--lean4---nightly-2024-10-24/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gadd2.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gadd2.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gadd2.c --json
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:45:17: theorem extracted_1 (x : BitVec 32) : (x &&& 7#32) + (x &&& 32#32) = x &&& 39#32 := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:35:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:82:17: theorem extracted_1 (x : BitVec 32) : (x &&& 128#32) + x >>> 30 = x &&& 128#32 ||| x >>> 30 := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:72:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:112:17: theorem extracted_1 (x : BitVec 32) :
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:46:17: theorem extracted_1 (x : BitVec 64) (x_1 : BitVec 32) : setWidth 64 x_1 <<< 32 + x &&& 123#64 = x &&& 123#64 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:36:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:80:17: theorem extracted_1 (x : BitVec 32) : (x &&& 7#32) + (x &&& 32#32) = x &&& 39#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:70:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:117:17: theorem extracted_1 (x : BitVec 32) : (x &&& 128#32) + x >>> 30 = x &&& 128#32 ||| x >>> 30 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:107:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:147:17: theorem extracted_1 (x : BitVec 32) :
   (if x + x < x then none else some (x + x)) ⊑ if x <<< 1 >>> 1 = x then none else some (x <<< 1) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:102:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:146:17: theorem extracted_1 (x : BitVec 16) : x * 2#16 + x * 32767#16 = x * 32769#16 := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:136:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:187:17: theorem extracted_1 (x x_1 : BitVec 32) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:137:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:181:17: theorem extracted_1 (x : BitVec 16) : x * 2#16 + x * 32767#16 = x * 32769#16 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:171:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:222:17: theorem extracted_1 (x x_1 : BitVec 32) :
   x_1 + 1#32 + ((x.sshiftRight 3 ||| 2863311530#32) ^^^ 1431655765#32) =
     x_1 - (x.sshiftRight 3 &&& 1431655765#32) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:177:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:224:17: theorem extracted_1 (x x_1 : BitVec 32) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:212:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:259:17: theorem extracted_1 (x x_1 : BitVec 32) :
   x_1 + 1#32 + ((x ||| 2863311530#32) ^^^ 1431655765#32) = x_1 - (x &&& 1431655765#32) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:214:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:261:17: theorem extracted_1 (x x_1 : BitVec 32) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:249:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:296:17: theorem extracted_1 (x x_1 : BitVec 32) :
   ((if x_1.msb = false ∧ ¬(x_1 + 1#32).msb = x_1.msb then none else some (x_1 + 1#32)).bind fun a =>
       if
           a.msb = ((x.msb || (2863311530#32).msb) ^^ (1431655765#32).msb) ∧
@@ -10701,11 +10703,11 @@ info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:261:17: theorem ext
         none
       else some (a + ((x ||| 2863311530#32) ^^^ 1431655765#32))) ⊑
     some (x_1 - (x &&& 1431655765#32)) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:251:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:298:17: theorem extracted_1 (x x_1 : BitVec 32) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:286:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:333:17: theorem extracted_1 (x x_1 : BitVec 32) :
   x_1 + 1#32 + ((x ||| 2863311529#32) ^^^ 1431655766#32) = x_1 - (x &&& 1431655766#32) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:288:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:335:17: theorem extracted_1 (x x_1 : BitVec 32) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:323:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:370:17: theorem extracted_1 (x x_1 : BitVec 32) :
   ((if x_1.msb = false ∧ ¬(x_1 + 1#32).msb = x_1.msb then none else some (x_1 + 1#32)).bind fun a =>
       if
           a.msb = ((x.msb || (2863311529#32).msb) ^^ (1431655766#32).msb) ∧
@@ -10713,11 +10715,11 @@ info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:335:17: theorem ext
         none
       else some (a + ((x ||| 2863311529#32) ^^^ 1431655766#32))) ⊑
     some (x_1 - (x &&& 1431655766#32)) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:325:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:371:17: theorem extracted_1 (x x_1 : BitVec 32) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:360:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:406:17: theorem extracted_1 (x x_1 : BitVec 32) :
   x_1 + 1#32 + (x &&& 2863311529#32 ^^^ 2863311529#32) = x_1 - (x ||| 1431655766#32) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:361:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:407:17: theorem extracted_1 (x x_1 : BitVec 32) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:396:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:442:17: theorem extracted_1 (x x_1 : BitVec 32) :
   ((if x_1.msb = false ∧ ¬(x_1 + 1#32).msb = x_1.msb then none else some (x_1 + 1#32)).bind fun a =>
       if
           a.msb = (x.msb && (2863311529#32).msb ^^ (2863311529#32).msb) ∧
@@ -10725,8 +10727,8 @@ info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:407:17: theorem ext
         none
       else some (a + (x &&& 2863311529#32 ^^^ 2863311529#32))) ⊑
     some (x_1 - (x ||| 1431655766#32)) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:397:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:442:17: theorem extracted_1 (x x_1 : BitVec 32) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:432:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:477:17: theorem extracted_1 (x x_1 : BitVec 32) :
   (if
         (x_1.msb && (2863311530#32).msb ^^ (2863311531#32).msb) = x.msb ∧
           ¬((x_1 &&& 2863311530#32 ^^^ 2863311531#32) + x).msb =
@@ -10734,8 +10736,8 @@ info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:442:17: theorem ext
       none
     else some ((x_1 &&& 2863311530#32 ^^^ 2863311531#32) + x)) ⊑
     some (x - (x_1 ||| 1431655765#32)) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:432:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:478:17: theorem extracted_1 (x x_1 : BitVec 32) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:467:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:513:17: theorem extracted_1 (x x_1 : BitVec 32) :
   ((if x_1.msb = false ∧ ¬(x_1 + 1#32).msb = x_1.msb then none else some (x_1 + 1#32)).bind fun a =>
       if
           a.msb = (x.msb && (2863311530#32).msb ^^ (2863311530#32).msb) ∧
@@ -10743,33 +10745,33 @@ info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:478:17: theorem ext
         none
       else some (a + (x &&& 2863311530#32 ^^^ 2863311530#32))) ⊑
     some (x_1 - (x ||| 1431655765#32)) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:468:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:509:17: theorem extracted_1 (x : BitVec 16) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:503:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:544:17: theorem extracted_1 (x : BitVec 16) :
   ((if (x + x).msb = x.msb then some (x + x) else none).bind fun a =>
       if a.msb = x.msb ∧ ¬(a + x).msb = a.msb then none else some (a + x)) ⊑
     if signExtend 32 x * 3#32 < signExtend 32 (twoPow 16 15) ∨ twoPow 32 15 ≤ signExtend 32 x * 3#32 then none
     else some (x * 3#16) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:499:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:541:17: theorem extracted_1 (x : BitVec 16) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:534:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:576:17: theorem extracted_1 (x : BitVec 16) :
   ((if signExtend 32 x * 8#32 < signExtend 32 (twoPow 16 15) ∨ twoPow 32 15 ≤ signExtend 32 x * 8#32 then none
         else some (x * 8#16)).bind
       fun y' => if x.msb = y'.msb ∧ ¬(x + y').msb = x.msb then none else some (x + y')) ⊑
     if signExtend 32 x * 9#32 < signExtend 32 (twoPow 16 15) ∨ twoPow 32 15 ≤ signExtend 32 x * 9#32 then none
     else some (x * 9#16) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:531:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:573:17: theorem extracted_1 (x : BitVec 16) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:566:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:608:17: theorem extracted_1 (x : BitVec 16) :
   ((if signExtend 32 x * 8#32 < signExtend 32 (twoPow 16 15) ∨ twoPow 32 15 ≤ signExtend 32 x * 8#32 then none
         else some (x * 8#16)).bind
       fun a => if a.msb = x.msb ∧ ¬(a + x).msb = a.msb then none else some (a + x)) ⊑
     if signExtend 32 x * 9#32 < signExtend 32 (twoPow 16 15) ∨ twoPow 32 15 ≤ signExtend 32 x * 9#32 then none
     else some (x * 9#16) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:563:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:607:17: theorem extracted_1 (x : BitVec 16) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:598:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:642:17: theorem extracted_1 (x : BitVec 16) :
   (if (x * 2#16).msb = (x * 3#16).msb ∧ ¬(x * 2#16 + x * 3#16).msb = (x * 2#16).msb then none
     else some (x * 2#16 + x * 3#16)) ⊑
     some (x * 5#16) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:597:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:641:17: theorem extracted_1 (x : BitVec 16) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:632:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:676:17: theorem extracted_1 (x : BitVec 16) :
   ((if signExtend 32 x * 2#32 < signExtend 32 (twoPow 16 15) ∨ twoPow 32 15 ≤ signExtend 32 x * 2#32 then none
         else some (x * 2#16)).bind
       fun a =>
@@ -10778,8 +10780,8 @@ info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:641:17: theorem ext
         fun y' => if a.msb = y'.msb ∧ ¬(a + y').msb = a.msb then none else some (a + y')) ⊑
     if signExtend 32 x * 9#32 < signExtend 32 (twoPow 16 15) ∨ twoPow 32 15 ≤ signExtend 32 x * 9#32 then none
     else some (x * 9#16) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:631:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:675:17: theorem extracted_1 (x : BitVec 16) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:666:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:710:17: theorem extracted_1 (x : BitVec 16) :
   ((if signExtend 32 x * 3#32 < signExtend 32 (twoPow 16 15) ∨ twoPow 32 15 ≤ signExtend 32 x * 3#32 then none
         else some (x * 3#16)).bind
       fun a =>
@@ -10788,8 +10790,8 @@ info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:675:17: theorem ext
         fun y' => if a.msb = y'.msb ∧ ¬(a + y').msb = a.msb then none else some (a + y')) ⊑
     if signExtend 32 x * 10#32 < signExtend 32 (twoPow 16 15) ∨ twoPow 32 15 ≤ signExtend 32 x * 10#32 then none
     else some (x * 10#16) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:665:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:709:17: theorem extracted_1 (x x_1 : BitVec 32) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:700:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:744:17: theorem extracted_1 (x x_1 : BitVec 32) :
   ((if
             signExtend 64 x_1 * signExtend 64 x < signExtend 64 (twoPow 32 31) ∨
               twoPow 64 31 ≤ signExtend 64 x_1 * signExtend 64 x then
@@ -10813,14 +10815,14 @@ info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:709:17: theorem ext
       fun x' =>
       if signExtend 64 x' * 6#64 < signExtend 64 (twoPow 32 31) ∨ twoPow 64 31 ≤ signExtend 64 x' * 6#64 then none
       else some (x' * 6#32) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:699:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:741:17: theorem extracted_1 (x : BitVec 16) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:734:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:776:17: theorem extracted_1 (x : BitVec 16) :
   ((if signExtend 32 x * 32767#32 < signExtend 32 (twoPow 16 15) ∨ twoPow 32 15 ≤ signExtend 32 x * 32767#32 then none
         else some (x * 32767#16)).bind
       fun y' => if x.msb = y'.msb ∧ ¬(x + y').msb = x.msb then none else some (x + y')) ⊑
     some (x <<< 15) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:731:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:775:17: theorem extracted_1 (x : BitVec 16) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:766:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:810:17: theorem extracted_1 (x : BitVec 16) :
   ((if signExtend 32 x * 16383#32 < signExtend 32 (twoPow 16 15) ∨ twoPow 32 15 ≤ signExtend 32 x * 16383#32 then none
         else some (x * 16383#16)).bind
       fun a =>
@@ -10830,130 +10832,130 @@ info: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:775:17: theorem ext
         fun y' => if a.msb = y'.msb ∧ ¬(a + y').msb = a.msb then none else some (a + y')) ⊑
     if signExtend 32 x * 32767#32 < signExtend 32 (twoPow 16 15) ∨ twoPow 32 15 ≤ signExtend 32 x * 32767#32 then none
     else some (x * 32767#16) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:765:8: declaration uses 'sorry'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:765:8: (kernel) deterministic timeout
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:780:4: (kernel) deterministic timeout
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:790:4: (kernel) deterministic timeout
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:798:33: could not synthesize default value for parameter 'h' using tactics
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:798:33: tactic 'rfl' failed, the left-hand side
-  ⟦?m.1976674⟧
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:800:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:800:8: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:815:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:825:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:833:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:833:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.2022959⟧
 is not definitionally equal to the right-hand side
-  Option ?m.1976672
-mul_add_to_mul_9_before mul_add_to_mul_9_after : Com InstCombine.LLVM ?m.1976673 EffectKind.pure ?m.1976674
-⊢ ⟦?m.1976674⟧ = Option ?m.1976672
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:799:9: tactic 'unfold' failed, local variable 'mul_add_to_mul_9_before' has no definition
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:813:4: (kernel) deterministic timeout
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:822:4: (kernel) deterministic timeout
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:829:27: could not synthesize default value for parameter 'h' using tactics
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:829:27: tactic 'rfl' failed, the left-hand side
-  ⟦?m.1982612⟧
+  Option ?m.2022957
+mul_add_to_mul_9_before mul_add_to_mul_9_after : Com InstCombine.LLVM ?m.2022958 EffectKind.pure ?m.2022959
+⊢ ⟦?m.2022959⟧ = Option ?m.2022957
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:834:9: tactic 'unfold' failed, local variable 'mul_add_to_mul_9_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:848:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:857:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:864:27: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:864:27: tactic 'rfl' failed, the left-hand side
+  ⟦?m.2028897⟧
 is not definitionally equal to the right-hand side
-  Option ?m.1982610
-add_or_and_before add_or_and_after : Com InstCombine.LLVM ?m.1982611 EffectKind.pure ?m.1982612
-⊢ ⟦?m.1982612⟧ = Option ?m.1982610
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:830:9: tactic 'unfold' failed, local variable 'add_or_and_before' has no definition
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:844:4: (kernel) deterministic timeout
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:853:4: (kernel) deterministic timeout
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:860:39: could not synthesize default value for parameter 'h' using tactics
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:860:39: tactic 'rfl' failed, the left-hand side
-  ⟦?m.1988592⟧
+  Option ?m.2028895
+add_or_and_before add_or_and_after : Com InstCombine.LLVM ?m.2028896 EffectKind.pure ?m.2028897
+⊢ ⟦?m.2028897⟧ = Option ?m.2028895
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:865:9: tactic 'unfold' failed, local variable 'add_or_and_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:879:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:888:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:895:39: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:895:39: tactic 'rfl' failed, the left-hand side
+  ⟦?m.2034877⟧
 is not definitionally equal to the right-hand side
-  Option ?m.1988590
-add_or_and_commutative_before add_or_and_commutative_after : Com InstCombine.LLVM ?m.1988591 EffectKind.pure ?m.1988592
-⊢ ⟦?m.1988592⟧ = Option ?m.1988590
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:861:9: tactic 'unfold' failed, local variable 'add_or_and_commutative_before' has no definition
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:875:4: (kernel) deterministic timeout
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:884:4: (kernel) deterministic timeout
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:891:27: could not synthesize default value for parameter 'h' using tactics
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:891:27: tactic 'rfl' failed, the left-hand side
-  ⟦?m.1994572⟧
+  Option ?m.2034875
+add_or_and_commutative_before add_or_and_commutative_after : Com InstCombine.LLVM ?m.2034876 EffectKind.pure ?m.2034877
+⊢ ⟦?m.2034877⟧ = Option ?m.2034875
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:896:9: tactic 'unfold' failed, local variable 'add_or_and_commutative_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:910:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:919:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:926:27: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:926:27: tactic 'rfl' failed, the left-hand side
+  ⟦?m.2040857⟧
 is not definitionally equal to the right-hand side
-  Option ?m.1994570
-add_and_or_before add_and_or_after : Com InstCombine.LLVM ?m.1994571 EffectKind.pure ?m.1994572
-⊢ ⟦?m.1994572⟧ = Option ?m.1994570
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:892:9: tactic 'unfold' failed, local variable 'add_and_or_before' has no definition
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:906:4: (kernel) deterministic timeout
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:915:4: (kernel) deterministic timeout
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:922:39: could not synthesize default value for parameter 'h' using tactics
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:922:39: tactic 'rfl' failed, the left-hand side
-  ⟦?m.2000552⟧
+  Option ?m.2040855
+add_and_or_before add_and_or_after : Com InstCombine.LLVM ?m.2040856 EffectKind.pure ?m.2040857
+⊢ ⟦?m.2040857⟧ = Option ?m.2040855
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:927:9: tactic 'unfold' failed, local variable 'add_and_or_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:941:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:950:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:957:39: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:957:39: tactic 'rfl' failed, the left-hand side
+  ⟦?m.2046837⟧
 is not definitionally equal to the right-hand side
-  Option ?m.2000550
-add_and_or_commutative_before add_and_or_commutative_after : Com InstCombine.LLVM ?m.2000551 EffectKind.pure ?m.2000552
-⊢ ⟦?m.2000552⟧ = Option ?m.2000550
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:923:9: tactic 'unfold' failed, local variable 'add_and_or_commutative_before' has no definition
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:937:4: (kernel) deterministic timeout
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:946:4: (kernel) deterministic timeout
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:953:31: could not synthesize default value for parameter 'h' using tactics
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:953:31: tactic 'rfl' failed, the left-hand side
-  ⟦?m.2007126⟧
+  Option ?m.2046835
+add_and_or_commutative_before add_and_or_commutative_after : Com InstCombine.LLVM ?m.2046836 EffectKind.pure ?m.2046837
+⊢ ⟦?m.2046837⟧ = Option ?m.2046835
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:958:9: tactic 'unfold' failed, local variable 'add_and_or_commutative_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:972:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:981:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:988:31: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:988:31: tactic 'rfl' failed, the left-hand side
+  ⟦?m.2053411⟧
 is not definitionally equal to the right-hand side
-  Option ?m.2007124
-add_nsw_or_and_before add_nsw_or_and_after : Com InstCombine.LLVM ?m.2007125 EffectKind.pure ?m.2007126
-⊢ ⟦?m.2007126⟧ = Option ?m.2007124
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:954:9: tactic 'unfold' failed, local variable 'add_nsw_or_and_before' has no definition
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:968:4: (kernel) deterministic timeout
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:977:4: (kernel) deterministic timeout
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:984:31: could not synthesize default value for parameter 'h' using tactics
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:984:31: tactic 'rfl' failed, the left-hand side
-  ⟦?m.2013720⟧
+  Option ?m.2053409
+add_nsw_or_and_before add_nsw_or_and_after : Com InstCombine.LLVM ?m.2053410 EffectKind.pure ?m.2053411
+⊢ ⟦?m.2053411⟧ = Option ?m.2053409
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:989:9: tactic 'unfold' failed, local variable 'add_nsw_or_and_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1003:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1012:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1019:31: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1019:31: tactic 'rfl' failed, the left-hand side
+  ⟦?m.2060005⟧
 is not definitionally equal to the right-hand side
-  Option ?m.2013718
-add_nuw_or_and_before add_nuw_or_and_after : Com InstCombine.LLVM ?m.2013719 EffectKind.pure ?m.2013720
-⊢ ⟦?m.2013720⟧ = Option ?m.2013718
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:985:9: tactic 'unfold' failed, local variable 'add_nuw_or_and_before' has no definition
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:999:4: (kernel) deterministic timeout
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1008:4: (kernel) deterministic timeout
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1015:35: could not synthesize default value for parameter 'h' using tactics
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1015:35: tactic 'rfl' failed, the left-hand side
-  ⟦?m.2020307⟧
+  Option ?m.2060003
+add_nuw_or_and_before add_nuw_or_and_after : Com InstCombine.LLVM ?m.2060004 EffectKind.pure ?m.2060005
+⊢ ⟦?m.2060005⟧ = Option ?m.2060003
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1020:9: tactic 'unfold' failed, local variable 'add_nuw_or_and_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1034:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1043:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1050:35: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1050:35: tactic 'rfl' failed, the left-hand side
+  ⟦?m.2066592⟧
 is not definitionally equal to the right-hand side
-  Option ?m.2020305
-add_nuw_nsw_or_and_before add_nuw_nsw_or_and_after : Com InstCombine.LLVM ?m.2020306 EffectKind.pure ?m.2020307
-⊢ ⟦?m.2020307⟧ = Option ?m.2020305
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1016:9: tactic 'unfold' failed, local variable 'add_nuw_nsw_or_and_before' has no definition
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1030:4: (kernel) deterministic timeout
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1039:4: (kernel) deterministic timeout
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1047:27: could not synthesize default value for parameter 'h' using tactics
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1047:27: tactic 'rfl' failed, the left-hand side
-  ⟦?m.2029103⟧
-is not definitionally equal to the right-hand side
-  Option ?m.2029101
-add_of_mul_before add_of_mul_after : Com InstCombine.LLVM ?m.2029102 EffectKind.pure ?m.2029103
-⊢ ⟦?m.2029103⟧ = Option ?m.2029101
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1048:9: tactic 'unfold' failed, local variable 'add_of_mul_before' has no definition
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1062:4: (kernel) deterministic timeout
+  Option ?m.2066590
+add_nuw_nsw_or_and_before add_nuw_nsw_or_and_after : Com InstCombine.LLVM ?m.2066591 EffectKind.pure ?m.2066592
+⊢ ⟦?m.2066592⟧ = Option ?m.2066590
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1051:9: tactic 'unfold' failed, local variable 'add_nuw_nsw_or_and_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1065:4: (kernel) deterministic timeout
 error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1074:4: (kernel) deterministic timeout
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1082:31: could not synthesize default value for parameter 'h' using tactics
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1082:31: tactic 'rfl' failed, the left-hand side
-  ⟦?m.2037424⟧
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1082:27: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1082:27: tactic 'rfl' failed, the left-hand side
+  ⟦?m.2075388⟧
 is not definitionally equal to the right-hand side
-  Option ?m.2037422
-add_of_selects_before add_of_selects_after : Com InstCombine.LLVM ?m.2037423 EffectKind.pure ?m.2037424
-⊢ ⟦?m.2037424⟧ = Option ?m.2037422
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1083:9: tactic 'unfold' failed, local variable 'add_of_selects_before' has no definition
+  Option ?m.2075386
+add_of_mul_before add_of_mul_after : Com InstCombine.LLVM ?m.2075387 EffectKind.pure ?m.2075388
+⊢ ⟦?m.2075388⟧ = Option ?m.2075386
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1083:9: tactic 'unfold' failed, local variable 'add_of_mul_before' has no definition
 error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1097:4: (kernel) deterministic timeout
 error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1109:4: (kernel) deterministic timeout
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1119:40: could not synthesize default value for parameter 'h' using tactics
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1119:40: tactic 'rfl' failed, the left-hand side
-  ⟦?m.2046796⟧
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1117:31: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1117:31: tactic 'rfl' failed, the left-hand side
+  ⟦?m.2083709⟧
 is not definitionally equal to the right-hand side
-  Option ?m.2046794
+  Option ?m.2083707
+add_of_selects_before add_of_selects_after : Com InstCombine.LLVM ?m.2083708 EffectKind.pure ?m.2083709
+⊢ ⟦?m.2083709⟧ = Option ?m.2083707
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1118:9: tactic 'unfold' failed, local variable 'add_of_selects_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1132:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1144:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1154:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1154:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.2093081⟧
+is not definitionally equal to the right-hand side
+  Option ?m.2093079
 add_undemanded_low_bits_before add_undemanded_low_bits_after :
-  Com InstCombine.LLVM ?m.2046795 EffectKind.pure ?m.2046796
-⊢ ⟦?m.2046796⟧ = Option ?m.2046794
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1120:9: tactic 'unfold' failed, local variable 'add_undemanded_low_bits_before' has no definition
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1134:4: (kernel) deterministic timeout
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1146:4: (kernel) deterministic timeout
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1156:40: could not synthesize default value for parameter 'h' using tactics
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1156:40: tactic 'rfl' failed, the left-hand side
-  ⟦?m.2056318⟧
+  Com InstCombine.LLVM ?m.2093080 EffectKind.pure ?m.2093081
+⊢ ⟦?m.2093081⟧ = Option ?m.2093079
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1155:9: tactic 'unfold' failed, local variable 'add_undemanded_low_bits_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1169:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1181:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1191:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1191:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.2102603⟧
 is not definitionally equal to the right-hand side
-  Option ?m.2056316
+  Option ?m.2102601
 sub_undemanded_low_bits_before sub_undemanded_low_bits_after :
-  Com InstCombine.LLVM ?m.2056317 EffectKind.pure ?m.2056318
-⊢ ⟦?m.2056318⟧ = Option ?m.2056316
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1157:9: tactic 'unfold' failed, local variable 'sub_undemanded_low_bits_before' has no definition
+  Com InstCombine.LLVM ?m.2102602 EffectKind.pure ?m.2102603
+⊢ ⟦?m.2102603⟧ = Option ?m.2102601
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gadd2.lean:1192:9: tactic 'unfold' failed, local variable 'sub_undemanded_low_bits_before' has no definition
 error: Lean exited with code 1
 Some required builds logged failures:
 - SSA.Projects.InstCombine.tests.LLVM.gadd2

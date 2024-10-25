@@ -99,7 +99,13 @@
 4: "extra_use2" has unsupported operation: llvm.call
 
 1: "and_sel_op0"
-4: "and_sel_op0" has unsupported operation: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.return
 
 1: "and_sel_op0_use"
 4: "and_sel_op0_use" has unsupported operation: llvm.call
@@ -117,7 +123,12 @@
 4: "mul_sel_op0_use" has unsupported operation: llvm.call
 
 1: "sub_sel_op1"
-4: "sub_sel_op1" has unsupported operation: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.sub
+2: llvm.return
 
 1: "sub_sel_op1_use"
 4: "sub_sel_op1_use" has unsupported operation: llvm.call

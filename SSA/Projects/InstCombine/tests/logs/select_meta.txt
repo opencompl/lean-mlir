@@ -2,7 +2,11 @@
 4: "foo" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "shrink_select"
-4: "shrink_select" has unsupported operation: llvm.trunc
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.trunc
+2: llvm.return
 
 1: "min_max_bitcast"
 4: "min_max_bitcast" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -19,15 +23,11 @@
 1: "test43"
 4: "test43" has unsupported operation: builtin.unregistered: llvm.intr.smax
 
-4: "test43" has unsupported operation: llvm.zext
-
 1: "scalar_select_of_vectors_sext"
-4: "scalar_select_of_vectors_sext" has unsupported operation: llvm.sext
+8: "scalar_select_of_vectors_sext" contains vectors which are unsupported
 
 1: "t7"
 4: "t7" has unsupported operation: builtin.unregistered: llvm.intr.smin
-
-4: "t7" has unsupported operation: llvm.trunc
 
 1: "abs_nabs_x01"
 4: "abs_nabs_x01" has unsupported operation: builtin.unregistered: llvm.intr.abs

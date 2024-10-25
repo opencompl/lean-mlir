@@ -173,8 +173,6 @@
 1: "test_simplify_decrement_invalid_ne"
 4: "test_simplify_decrement_invalid_ne" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "test_simplify_decrement_invalid_ne" has unsupported operation: llvm.sext
-
 1: "test_invalid_simplify_sub2"
 4: "test_invalid_simplify_sub2" has unsupported operation: builtin.unregistered: llvm.icmp
 

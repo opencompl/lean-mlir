@@ -10697,13 +10697,17 @@ info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:360:17: theorem extr
 warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:350:8: declaration uses 'sorry'
 info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:389:17: theorem extracted_1 (x x_1 : BitVec 32) : x_1 ^^^ x ^^^ x_1 = x := sorry
 warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:379:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:421:17: theorem extracted_1 (x x_1 : BitVec 32) : (x_1 ^^^ 4294967295#32) &&& x ^^^ x = x &&& x_1 := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:411:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:454:17: theorem extracted_1 (x : BitVec 32) : x + 2147483649#32 ^^^ 2147483648#32 = x + 1#32 := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:444:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:487:17: theorem extracted_1 (x : BitVec 32) : 2147483649#32 - x ^^^ 2147483648#32 = 1#32 - x := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:477:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:522:17: theorem extracted_1 (x : BitVec 1) :
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:397:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:413:9: tactic 'unfold' failed, local variable 'test22_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:430:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:448:9: tactic 'unfold' failed, local variable 'fold_zext_xor_sandwich_before' has no definition
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:489:17: theorem extracted_1 (x x_1 : BitVec 32) : (x_1 ^^^ 4294967295#32) &&& x ^^^ x = x &&& x_1 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:479:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:522:17: theorem extracted_1 (x : BitVec 32) : x + 2147483649#32 ^^^ 2147483648#32 = x + 1#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:512:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:555:17: theorem extracted_1 (x : BitVec 32) : 2147483649#32 - x ^^^ 2147483648#32 = 1#32 - x := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:545:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:590:17: theorem extracted_1 (x : BitVec 1) :
   (Option.bind
       (match some x with
       | none => none
@@ -10714,157 +10718,157 @@ info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:522:17: theorem extr
     | none => none
     | some { toFin := ⟨1, ⋯⟩ } => some 915#32
     | some { toFin := ⟨0, ⋯⟩ } => some 113#32 := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:512:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:560:17: theorem extracted_1 (x x_1 : BitVec 32) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:580:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:628:17: theorem extracted_1 (x x_1 : BitVec 32) :
   (Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun a =>
       Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun a_1 =>
         Option.bind (if x = 0#32 then none else some (42#32 / x)) fun x => some (a ^^^ (a_1 ||| x))) ⊑
     Option.bind (if x = 0#32 then none else some (42#32 / x)) fun a =>
       Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun x => some (a &&& (x ^^^ 4294967295#32)) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:550:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:598:17: theorem extracted_1 (x x_1 : BitVec 32) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:618:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:666:17: theorem extracted_1 (x x_1 : BitVec 32) :
   (Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun a =>
       Option.bind (if x = 0#32 then none else some (42#32 / x)) fun a_1 =>
         Option.bind (if x = 0#32 then none else some (42#32 / x)) fun y' => some ((a ||| a_1) ^^^ y')) ⊑
     Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun a =>
       Option.bind (if x = 0#32 then none else some (42#32 / x)) fun x => some (a &&& (x ^^^ 4294967295#32)) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:588:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:636:17: theorem extracted_1 (x x_1 : BitVec 32) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:656:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:704:17: theorem extracted_1 (x x_1 : BitVec 32) :
   (Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun a =>
       Option.bind (if x = 0#32 then none else some (42#32 / x)) fun a_1 =>
         Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun y' => some ((a ||| a_1) ^^^ y')) ⊑
     Option.bind (if x = 0#32 then none else some (42#32 / x)) fun a =>
       Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun x => some (a &&& (x ^^^ 4294967295#32)) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:626:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:674:17: theorem extracted_1 (x x_1 : BitVec 32) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:694:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:742:17: theorem extracted_1 (x x_1 : BitVec 32) :
   (Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun a =>
       Option.bind (if x = 0#32 then none else some (42#32 / x)) fun a_1 =>
         Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun x => some (a ^^^ (a_1 ||| x))) ⊑
     Option.bind (if x = 0#32 then none else some (42#32 / x)) fun a =>
       Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun x => some (a &&& (x ^^^ 4294967295#32)) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:664:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:712:17: theorem extracted_1 (x x_1 : BitVec 32) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:732:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:780:17: theorem extracted_1 (x x_1 : BitVec 32) :
   (Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun a =>
       Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun a_1 =>
         Option.bind (if x = 0#32 then none else some (42#32 / x)) fun x => some (a ^^^ a_1 &&& x)) ⊑
     Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun a =>
       Option.bind (if x = 0#32 then none else some (42#32 / x)) fun x => some (a &&& (x ^^^ 4294967295#32)) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:702:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:750:17: theorem extracted_1 (x x_1 : BitVec 32) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:770:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:818:17: theorem extracted_1 (x x_1 : BitVec 32) :
   (Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun a =>
       Option.bind (if x = 0#32 then none else some (42#32 / x)) fun a_1 =>
         Option.bind (if x = 0#32 then none else some (42#32 / x)) fun y' => some (a &&& a_1 ^^^ y')) ⊑
     Option.bind (if x = 0#32 then none else some (42#32 / x)) fun a =>
       Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun x => some (a &&& (x ^^^ 4294967295#32)) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:740:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:788:17: theorem extracted_1 (x x_1 : BitVec 32) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:808:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:856:17: theorem extracted_1 (x x_1 : BitVec 32) :
   (Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun a =>
       Option.bind (if x = 0#32 then none else some (42#32 / x)) fun a_1 =>
         Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun y' => some (a &&& a_1 ^^^ y')) ⊑
     Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun a =>
       Option.bind (if x = 0#32 then none else some (42#32 / x)) fun x => some (a &&& (x ^^^ 4294967295#32)) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:778:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:826:17: theorem extracted_1 (x x_1 : BitVec 32) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:846:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:894:17: theorem extracted_1 (x x_1 : BitVec 32) :
   (Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun a =>
       Option.bind (if x = 0#32 then none else some (42#32 / x)) fun a_1 =>
         Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun x => some (a ^^^ a_1 &&& x)) ⊑
     Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun a =>
       Option.bind (if x = 0#32 then none else some (42#32 / x)) fun x => some (a &&& (x ^^^ 4294967295#32)) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:816:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:860:17: theorem extracted_1 (x x_1 x_2 : BitVec 4) : (x_2 ||| x_1) ^^^ (x_2 ||| x) = (x_1 ^^^ x) &&& (x_2 ^^^ 15#4) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:850:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:894:17: theorem extracted_1 (x x_1 x_2 : BitVec 4) : (x_2 ||| x_1) ^^^ (x_1 ||| x) = (x_2 ^^^ x) &&& (x_1 ^^^ 15#4) := sorry
 warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:884:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:928:17: theorem extracted_1 (x x_1 x_2 : BitVec 4) : (x_2 ||| x_1) ^^^ (x ||| x_2) = (x_1 ^^^ x) &&& (x_2 ^^^ 15#4) := sorry
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:928:17: theorem extracted_1 (x x_1 x_2 : BitVec 4) : (x_2 ||| x_1) ^^^ (x_2 ||| x) = (x_1 ^^^ x) &&& (x_2 ^^^ 15#4) := sorry
 warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:918:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:965:17: theorem extracted_1 (x x_1 : BitVec 32) :
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:962:17: theorem extracted_1 (x x_1 x_2 : BitVec 4) : (x_2 ||| x_1) ^^^ (x_1 ||| x) = (x_2 ^^^ x) &&& (x_1 ^^^ 15#4) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:952:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:996:17: theorem extracted_1 (x x_1 x_2 : BitVec 4) : (x_2 ||| x_1) ^^^ (x ||| x_2) = (x_1 ^^^ x) &&& (x_2 ^^^ 15#4) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:986:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1033:17: theorem extracted_1 (x x_1 : BitVec 32) :
   (x_1 ^^^ 1073741823#32) <<< 2 + x <<< 2 = x <<< 2 + (x_1 ^^^ 4294967295#32) <<< 2 := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:955:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1000:17: theorem extracted_1 (x : BitVec 8) : x <<< 7 ^^^ 128#8 = (x ^^^ 255#8) <<< 7 := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:990:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1035:17: theorem extracted_1 (x : BitVec 8) : x >>> 5 ^^^ 7#8 = (x ^^^ 255#8) >>> 5 := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1025:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1070:17: theorem extracted_1 (x : BitVec 8) : (x ^^^ 255#8).sshiftRight 5 = x.sshiftRight 5 ^^^ 255#8 := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1060:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1106:17: theorem extracted_1 (x x_1 : BitVec 33) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1023:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1068:17: theorem extracted_1 (x : BitVec 8) : x <<< 7 ^^^ 128#8 = (x ^^^ 255#8) <<< 7 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1058:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1103:17: theorem extracted_1 (x : BitVec 8) : x >>> 5 ^^^ 7#8 = (x ^^^ 255#8) >>> 5 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1093:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1138:17: theorem extracted_1 (x : BitVec 8) : (x ^^^ 255#8).sshiftRight 5 = x.sshiftRight 5 ^^^ 255#8 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1128:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1174:17: theorem extracted_1 (x x_1 : BitVec 33) :
   (Option.bind (if x_1 = 0#33 then none else some (42#33 / x_1)) fun a => some (a &&& (x ^^^ 8589934591#33) ^^^ x)) ⊑
     Option.bind (if x_1 = 0#33 then none else some (42#33 / x_1)) fun y' => some (x ||| y') := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1096:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1142:17: theorem extracted_1 (x x_1 : BitVec 32) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1164:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1210:17: theorem extracted_1 (x x_1 : BitVec 32) :
   (Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun a =>
       Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun a_1 =>
         some (a ^^^ (a_1 ^^^ 4294967295#32) &&& x)) ⊑
     Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun a => some (a ||| x) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1132:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1180:17: theorem extracted_1 (x x_1 : BitVec 32) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1200:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1248:17: theorem extracted_1 (x x_1 : BitVec 32) :
   (Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun a =>
       Option.bind (if x = 0#32 then none else some (42#32 / x)) fun a_1 =>
         Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun x =>
           some (a ^^^ a_1 &&& (x ^^^ 4294967295#32))) ⊑
     Option.bind (if x_1 = 0#32 then none else some (42#32 / x_1)) fun a =>
       Option.bind (if x = 0#32 then none else some (42#32 / x)) fun y' => some (a ||| y') := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1170:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1218:17: theorem extracted_1 (x x_1 : BitVec 8) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1238:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1286:17: theorem extracted_1 (x x_1 : BitVec 8) :
   (Option.bind (if x_1 = 0#8 then none else some (42#8 / x_1)) fun a =>
       Option.bind (if x_1 = 0#8 then none else some (42#8 / x_1)) fun a_1 => some (a ^^^ (a_1 ^^^ 255#8 ||| x))) ⊑
     Option.bind (if x_1 = 0#8 then none else some (42#8 / x_1)) fun a => some (a &&& x ^^^ 255#8) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1208:8: declaration uses 'sorry'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1223:31: Expected `Except.ok`, found Except.error TransformError.unsupportedType
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1235:30: Expected `Except.ok`, found Except.error TransformError.unsupportedType
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1246:33: could not synthesize default value for parameter 'h' using tactics
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1246:33: tactic 'rfl' failed, the left-hand side
-  ⟦?m.1933283⟧
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1276:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1291:31: Expected `Except.ok`, found Except.error TransformError.unsupportedType
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1303:30: Expected `Except.ok`, found Except.error TransformError.unsupportedType
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1314:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1314:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.1939902⟧
 is not definitionally equal to the right-hand side
-  Option ?m.1933281
-xor_orn_commute2_before xor_orn_commute2_after : Com InstCombine.LLVM ?m.1933282 EffectKind.pure ?m.1933283
-⊢ ⟦?m.1933283⟧ = Option ?m.1933281
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1247:9: tactic 'unfold' failed, local variable 'xor_orn_commute2_before' has no definition
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1261:31: Expected `Except.ok`, found Except.error TransformError.unsupportedType
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1274:30: Expected `Except.ok`, found Except.error TransformError.unsupportedType
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1286:33: could not synthesize default value for parameter 'h' using tactics
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1286:33: tactic 'rfl' failed, the left-hand side
-  ⟦?m.1935089⟧
+  Option ?m.1939900
+xor_orn_commute2_before xor_orn_commute2_after : Com InstCombine.LLVM ?m.1939901 EffectKind.pure ?m.1939902
+⊢ ⟦?m.1939902⟧ = Option ?m.1939900
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1315:9: tactic 'unfold' failed, local variable 'xor_orn_commute2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1329:31: Expected `Except.ok`, found Except.error TransformError.unsupportedType
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1342:30: Expected `Except.ok`, found Except.error TransformError.unsupportedType
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1354:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1354:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.1941708⟧
 is not definitionally equal to the right-hand side
-  Option ?m.1935087
-xor_orn_commute3_before xor_orn_commute3_after : Com InstCombine.LLVM ?m.1935088 EffectKind.pure ?m.1935089
-⊢ ⟦?m.1935089⟧ = Option ?m.1935087
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1287:9: tactic 'unfold' failed, local variable 'xor_orn_commute3_before' has no definition
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1330:17: theorem extracted_1 (x : BitVec 32) :
+  Option ?m.1941706
+xor_orn_commute3_before xor_orn_commute3_after : Com InstCombine.LLVM ?m.1941707 EffectKind.pure ?m.1941708
+⊢ ⟦?m.1941708⟧ = Option ?m.1941706
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1355:9: tactic 'unfold' failed, local variable 'xor_orn_commute3_before' has no definition
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1398:17: theorem extracted_1 (x : BitVec 32) :
   (Option.bind (if 32#32 ≤ x then none else some ((4294967293#32).sshiftRight x.toNat)) fun a =>
       Option.bind (if 32#32 ≤ x then none else some (5#32 >>> x.toNat)) fun y' => some (a ^^^ y')) ⊑
     if 32#32 ≤ x then none else some ((4294967288#32).sshiftRight x.toNat) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1320:8: declaration uses 'sorry'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1320:8: (kernel) deep recursion detected
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1364:17: theorem extracted_1 (x : BitVec 32) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1388:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1388:8: (kernel) deep recursion detected
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1432:17: theorem extracted_1 (x : BitVec 32) :
   (Option.bind (if 32#32 ≤ x then none else some (5#32 >>> x.toNat)) fun a =>
       Option.bind (if 32#32 ≤ x then none else some ((4294967293#32).sshiftRight x.toNat)) fun y' => some (a ^^^ y')) ⊑
     if 32#32 ≤ x then none else some ((4294967288#32).sshiftRight x.toNat) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1354:8: declaration uses 'sorry'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1354:8: (kernel) deep recursion detected
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1398:17: theorem extracted_1 (x : BitVec 32) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1422:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1422:8: (kernel) deep recursion detected
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1466:17: theorem extracted_1 (x : BitVec 32) :
   (Option.bind (if 32#32 ≤ x then none else some (4294967293#32 >>> x.toNat)) fun a =>
       Option.bind (if 32#32 ≤ x then none else some (5#32 >>> x.toNat)) fun y' => some (a ^^^ y')) ⊑
     if 32#32 ≤ x then none else some (4294967288#32 >>> x.toNat) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1388:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1432:17: theorem extracted_1 (x : BitVec 32) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1456:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1500:17: theorem extracted_1 (x : BitVec 32) :
   (Option.bind (if 32#32 ≤ x then none else some ((4294967293#32).sshiftRight x.toNat)) fun a =>
       Option.bind (if 32#32 ≤ x then none else some ((4294967291#32).sshiftRight x.toNat)) fun y' => some (a ^^^ y')) ⊑
     if 32#32 ≤ x then none else some (6#32 >>> x.toNat) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1422:8: declaration uses 'sorry'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1422:8: (kernel) deep recursion detected
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1469:17: theorem extracted_1 (x x_1 x_2 : BitVec 4) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1490:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1490:8: (kernel) deep recursion detected
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1537:17: theorem extracted_1 (x x_1 x_2 : BitVec 4) :
   x_2 &&& x_1 ^^^ (x_2 ^^^ 15#4) &&& x = x_2 &&& x_1 ||| x &&& (x_2 ^^^ 15#4) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1459:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1506:17: theorem extracted_1 (x x_1 x_2 : BitVec 4) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1527:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1574:17: theorem extracted_1 (x x_1 x_2 : BitVec 4) :
   x_2 &&& x_1 ^^^ (x_2 ^^^ 15#4) &&& x = x_2 &&& x_1 ||| x &&& (x_2 ^^^ 15#4) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1496:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1535:17: theorem extracted_1 (x x_1 : BitVec 32) : (x_1 ||| x) ^^^ x_1 = x := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1525:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1564:17: theorem extracted_1 (x x_1 : BitVec 32) : x_1 ^^^ (x_1 ||| x) = x := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1554:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1593:17: theorem extracted_1 (x x_1 : BitVec 32) : x_1 ^^^ (x_1 ||| x) = x := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1583:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1632:17: theorem extracted_1 (x : BitVec 32) (x_1 : BitVec 1) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1564:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1603:17: theorem extracted_1 (x x_1 : BitVec 32) : (x_1 ||| x) ^^^ x_1 = x := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1593:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1632:17: theorem extracted_1 (x x_1 : BitVec 32) : x_1 ^^^ (x_1 ||| x) = x := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1622:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1661:17: theorem extracted_1 (x x_1 : BitVec 32) : x_1 ^^^ (x_1 ||| x) = x := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1651:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1700:17: theorem extracted_1 (x : BitVec 32) (x_1 : BitVec 1) :
   (Option.bind
       (match some x_1 with
       | none => none
@@ -10881,7 +10885,7 @@ info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1632:17: theorem ext
       else
         if (a ||| x <<< 4) + 4#32 < a ||| x <<< 4 ∨ (a ||| x <<< 4) + 4#32 < 4#32 then none
         else some ((a ||| x <<< 4) + 4#32) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1622:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1690:8: declaration uses 'sorry'
 error: Lean exited with code 1
 Some required builds logged failures:
 - SSA.Projects.InstCombine.tests.LLVM.gxor

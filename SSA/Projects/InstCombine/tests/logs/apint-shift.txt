@@ -24,7 +24,11 @@
 8: "test6a_vec" contains vectors which are unsupported
 
 1: "test7"
-4: "test7" has unsupported operation after optimization: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.ashr
+2: llvm.return
 
 1: "test8"
 2: llvm.func
@@ -148,7 +152,14 @@
 2: llvm.return
 
 1: "test15a"
-4: "test15a" has unsupported operation after optimization: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.zext
+2: llvm.shl
+2: llvm.return
 
 1: "test16"
 4: "test16" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -201,7 +212,12 @@
 4: "test22" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test23"
-4: "test23" has unsupported operation: llvm.trunc
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.return
 
 1: "shl_lshr_eq_amt_multi_use"
 2: llvm.func

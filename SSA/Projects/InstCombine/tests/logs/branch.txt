@@ -65,17 +65,11 @@
 
 4: "dom_true_phi" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "dom_true_phi" has unsupported operation: llvm.zext
-
 1: "same_dest"
 4: "same_dest" has unsupported operation: builtin.unregistered: llvm.cond_br
-
-4: "same_dest" has unsupported operation: llvm.zext
 
 1: "not_dom"
 4: "not_dom" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "not_dom" has unsupported operation: builtin.unregistered: llvm.br
-
-4: "not_dom" has unsupported operation: llvm.zext
 

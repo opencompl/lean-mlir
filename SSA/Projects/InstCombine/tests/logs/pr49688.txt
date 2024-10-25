@@ -8,5 +8,3 @@
 
 4: "f2" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "f2" has unsupported operation: llvm.zext
-

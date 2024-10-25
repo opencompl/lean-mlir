@@ -1,26 +1,42 @@
 1: "zext"
-4: "zext" has unsupported operation: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "sext"
-4: "sext" has unsupported operation: llvm.sext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "not_zext"
-4: "not_zext" has unsupported operation: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "not_sext"
-4: "not_sext" has unsupported operation: llvm.sext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "zext_vec"
-4: "zext_vec" has unsupported operation: llvm.zext
+8: "zext_vec" contains vectors which are unsupported
 
 1: "sext_vec"
-4: "sext_vec" has unsupported operation: llvm.sext
+8: "sext_vec" contains vectors which are unsupported
 
 1: "not_zext_vec"
-4: "not_zext_vec" has unsupported operation: llvm.zext
+8: "not_zext_vec" contains vectors which are unsupported
 
 1: "not_sext_vec"
-4: "not_sext_vec" has unsupported operation: llvm.sext
+8: "not_sext_vec" contains vectors which are unsupported
 
 1: "scalar_select_of_vectors"
 7: "scalar_select_of_vectors" is unchanged by InstCombine

@@ -86,7 +86,12 @@
 2: llvm.return
 
 1: "test5"
-4: "test5" has unsupported operation: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.shl
+2: llvm.urem
+2: llvm.return
 
 1: "test6"
 4: "test6" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -116,11 +121,15 @@
 2: llvm.return
 
 1: "test10"
-4: "test10" has unsupported operation after optimization: llvm.zext
-
-4: "test10" has unsupported operation after optimization: llvm.sext
-
-4: "test10" has unsupported operation after optimization: llvm.trunc
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.mul
+2: llvm.sext
+2: llvm.urem
+2: llvm.trunc
+2: llvm.return
 
 1: "test11"
 2: llvm.func
@@ -146,10 +155,21 @@
 2: llvm.return
 
 1: "test14"
-4: "test14" has unsupported operation: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.zext
+2: llvm.urem
+2: llvm.return
 
 1: "test15"
-4: "test15" has unsupported operation: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.zext
+2: llvm.zext
+2: llvm.urem
+2: llvm.return
 
 1: "test16"
 2: llvm.func
@@ -163,8 +183,6 @@
 
 1: "test17"
 4: "test17" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "test17" has unsupported operation: llvm.zext
 
 1: "test18"
 4: "test18" has unsupported operation: builtin.unregistered: llvm.icmp

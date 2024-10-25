@@ -1,21 +1,36 @@
 1: "a"
-4: "a" has unsupported operation: llvm.sext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.sub
+2: llvm.add
+2: llvm.add
+2: llvm.return
 
 1: "PR30273_select"
-4: "PR30273_select" has unsupported operation: llvm.zext
+7: "PR30273_select" is unchanged by InstCombine
 
 1: "PR30273_zext_add"
-4: "PR30273_zext_add" has unsupported operation: llvm.zext
-
-4: "PR30273_zext_add" has unsupported operation: llvm.zext
+7: "PR30273_zext_add" is unchanged by InstCombine
 
 1: "PR30273_three_bools"
-4: "PR30273_three_bools" has unsupported operation: llvm.zext
-
-4: "PR30273_three_bools" has unsupported operation: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "zext_add_scalar"
-4: "zext_add_scalar" has unsupported operation after optimization: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.add
+2: llvm.return
 
 1: "zext_add_vec_splat"
 8: "zext_add_vec_splat" contains vectors which are unsupported
@@ -27,27 +42,29 @@
 5: "use" is empty
 
 1: "zext_negate"
-4: "zext_negate" has unsupported operation: llvm.sext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.sub
+2: llvm.return
 
 1: "zext_negate_extra_use"
-4: "zext_negate_extra_use" has unsupported operation: llvm.sext
-
-4: "zext_negate_extra_use" has unsupported operation: llvm.zext
-
 4: "zext_negate_extra_use" has unsupported operation: llvm.call
 
 1: "zext_negate_vec"
-4: "zext_negate_vec" has unsupported operation: llvm.sext
+8: "zext_negate_vec" contains vectors which are unsupported
 
 1: "zext_negate_vec_poison_elt"
-4: "zext_negate_vec_poison_elt" has unsupported operation: llvm.sext
+8: "zext_negate_vec_poison_elt" contains vectors which are unsupported
 
 1: "zext_sub_const"
-4: "zext_sub_const" has unsupported operation after optimization: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.sub
+2: llvm.return
 
 1: "zext_sub_const_extra_use"
-4: "zext_sub_const_extra_use" has unsupported operation: llvm.zext
-
 4: "zext_sub_const_extra_use" has unsupported operation: llvm.call
 
 1: "zext_sub_const_vec"
@@ -69,27 +86,29 @@
 4: "zext_sub_const_vec_poison_elt" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 1: "sext_negate"
-4: "sext_negate" has unsupported operation: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.sub
+2: llvm.return
 
 1: "sext_negate_extra_use"
-4: "sext_negate_extra_use" has unsupported operation: llvm.zext
-
-4: "sext_negate_extra_use" has unsupported operation: llvm.sext
-
 4: "sext_negate_extra_use" has unsupported operation: llvm.call
 
 1: "sext_negate_vec"
-4: "sext_negate_vec" has unsupported operation: llvm.zext
+8: "sext_negate_vec" contains vectors which are unsupported
 
 1: "sext_negate_vec_poison_elt"
-4: "sext_negate_vec_poison_elt" has unsupported operation: llvm.zext
+8: "sext_negate_vec_poison_elt" contains vectors which are unsupported
 
 1: "sext_sub_const"
-4: "sext_sub_const" has unsupported operation after optimization: llvm.sext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.sub
+2: llvm.return
 
 1: "sext_sub_const_extra_use"
-4: "sext_sub_const_extra_use" has unsupported operation: llvm.sext
-
 4: "sext_sub_const_extra_use" has unsupported operation: llvm.call
 
 1: "sext_sub_const_vec"
@@ -111,42 +130,52 @@
 4: "sext_sub_const_vec_poison_elt" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 1: "sext_sub"
-4: "sext_sub" has unsupported operation: llvm.zext
+2: llvm.func
+2: llvm.sext
+2: llvm.sub
+2: llvm.return
 
 1: "sext_sub_vec"
-4: "sext_sub_vec" has unsupported operation: llvm.zext
+8: "sext_sub_vec" contains vectors which are unsupported
 
 1: "sext_sub_vec_nsw"
-4: "sext_sub_vec_nsw" has unsupported operation: llvm.zext
+8: "sext_sub_vec_nsw" contains vectors which are unsupported
 
 1: "sext_sub_nuw"
-4: "sext_sub_nuw" has unsupported operation: llvm.zext
+2: llvm.func
+2: llvm.sext
+2: llvm.sub
+2: llvm.return
 
 1: "sextbool_add"
-4: "sextbool_add" has unsupported operation: llvm.sext
+2: llvm.func
+2: llvm.sext
+2: llvm.add
+2: llvm.return
 
 1: "sextbool_add_commute"
-4: "sextbool_add_commute" has unsupported operation: llvm.sext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.urem
+2: llvm.sext
+2: llvm.add
+2: llvm.return
 
 1: "use32"
 5: "use32" is empty
 
 1: "sextbool_add_uses"
-4: "sextbool_add_uses" has unsupported operation: llvm.sext
-
 4: "sextbool_add_uses" has unsupported operation: llvm.call
 
 1: "sextbool_add_vector"
-4: "sextbool_add_vector" has unsupported operation: llvm.sext
+7: "sextbool_add_vector" is unchanged by InstCombine
 
 1: "zextbool_sub"
-4: "zextbool_sub" has unsupported operation: llvm.zext
+7: "zextbool_sub" is unchanged by InstCombine
 
 1: "zextbool_sub_uses"
-4: "zextbool_sub_uses" has unsupported operation: llvm.zext
-
 4: "zextbool_sub_uses" has unsupported operation: llvm.call
 
 1: "zextbool_sub_vector"
-4: "zextbool_sub_vector" has unsupported operation: llvm.sext
+8: "zextbool_sub_vector" contains vectors which are unsupported
 

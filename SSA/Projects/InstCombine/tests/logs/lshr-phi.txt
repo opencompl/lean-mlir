@@ -9,8 +9,6 @@
 
 4: "hash_string" has unsupported operation: llvm.load
 
-4: "hash_string" has unsupported operation: llvm.sext
-
 4: "hash_string" has unsupported operation: llvm.getelementptr
 
 4: "hash_string" has unsupported operation: llvm.load

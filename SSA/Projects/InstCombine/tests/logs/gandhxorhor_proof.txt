@@ -11226,15 +11226,30 @@ warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4439:8: de
 info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4488:17: theorem extracted_1 (x x_1 : BitVec 32) :
   (x_1 * x_1 ^^^ x * x) &&& (x_1 * x_1 ||| x * x ^^^ 4294967295#32) = x_1 * x_1 &&& (x * x ^^^ 4294967295#32) := sorry
 warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4478:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4523:17: theorem extracted_1 (x : BitVec 32) : x + 112#32 ||| 15#32 = (x ||| 15#32) + 112#32 := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4513:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4558:17: theorem extracted_1 (x : BitVec 32) :
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4521:17: theorem extracted_1 (x : BitVec 4) (x_1 : BitVec 8) :
+  setWidth 16 x_1 &&& setWidth 16 x = setWidth 16 x_1 &&& setWidth 16 (setWidth 8 x) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4511:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4554:17: theorem extracted_1 (x : BitVec 8) (x_1 : BitVec 4) :
+  setWidth 16 x_1 ||| setWidth 16 x = setWidth 16 x ||| setWidth 16 (setWidth 8 x_1) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4544:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4587:17: theorem extracted_1 (x : BitVec 8) (x_1 : BitVec 4) :
+  signExtend 16 x_1 &&& signExtend 16 x = signExtend 16 (x &&& signExtend 8 x_1) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4577:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4620:17: theorem extracted_1 (x : BitVec 4) (x_1 : BitVec 8) :
+  signExtend 16 x_1 ||| signExtend 16 x = signExtend 16 (x_1 ||| signExtend 8 x) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4610:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4653:17: theorem extracted_1 (x : BitVec 4) (x_1 : BitVec 8) :
+  signExtend 16 x_1 ^^^ signExtend 16 x = signExtend 16 (x_1 ^^^ signExtend 8 x) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4643:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4688:17: theorem extracted_1 (x : BitVec 32) : x + 112#32 ||| 15#32 = (x ||| 15#32) + 112#32 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4678:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4723:17: theorem extracted_1 (x : BitVec 32) :
   ((if x.msb = (112#32).msb ∧ ¬(x + 112#32).msb = x.msb then none else some (x + 112#32)).bind fun x' =>
       some (x' ||| 15#32)) ⊑
     if (x.msb || (15#32).msb) = (112#32).msb ∧ ¬((x ||| 15#32) + 112#32).msb = (x.msb || (15#32).msb) then none
     else some ((x ||| 15#32) + 112#32) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4548:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4593:17: theorem extracted_1 (x : BitVec 32) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4713:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4758:17: theorem extracted_1 (x : BitVec 32) :
   ((if x.msb = (112#32).msb ∧ ¬(x + 112#32).msb = x.msb then none
         else if x + 112#32 < x ∨ x + 112#32 < 112#32 then none else some (x + 112#32)).bind
       fun x' => some (x' ||| 15#32)) ⊑
@@ -11242,16 +11257,16 @@ info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4593:17: theo
     else
       if (x ||| 15#32) + 112#32 < x ||| 15#32 ∨ (x ||| 15#32) + 112#32 < 112#32 then none
       else some ((x ||| 15#32) + 112#32) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4583:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4628:17: theorem extracted_1 (x : BitVec 8) : x + 48#8 &&& 246#8 = (x &&& 246#8) + 48#8 := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4618:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4663:17: theorem extracted_1 (x : BitVec 8) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4748:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4793:17: theorem extracted_1 (x : BitVec 8) : x + 48#8 &&& 246#8 = (x &&& 246#8) + 48#8 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4783:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4828:17: theorem extracted_1 (x : BitVec 8) :
   ((if x.msb = (48#8).msb ∧ ¬(x + 48#8).msb = x.msb then none else some (x + 48#8)).bind fun x' =>
       some (x' &&& 246#8)) ⊑
     if (x.msb && (246#8).msb) = (48#8).msb ∧ ¬((x &&& 246#8) + 48#8).msb = (x.msb && (246#8).msb) then none
     else some ((x &&& 246#8) + 48#8) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4653:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4698:17: theorem extracted_1 (x : BitVec 8) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4818:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4863:17: theorem extracted_1 (x : BitVec 8) :
   ((if x.msb = (48#8).msb ∧ ¬(x + 48#8).msb = x.msb then none
         else if x + 48#8 < x ∨ x + 48#8 < 48#8 then none else some (x + 48#8)).bind
       fun x' => some (x' &&& 246#8)) ⊑
@@ -11259,15 +11274,15 @@ info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4698:17: theo
     else
       if (x &&& 246#8) + 48#8 < x &&& 246#8 ∨ (x &&& 246#8) + 48#8 < 48#8 then none
       else some ((x &&& 246#8) + 48#8) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4688:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4733:17: theorem extracted_1 (x : BitVec 8) : x + 96#8 ^^^ 31#8 = (x ^^^ 31#8) + 96#8 := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4723:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4768:17: theorem extracted_1 (x : BitVec 8) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4853:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4898:17: theorem extracted_1 (x : BitVec 8) : x + 96#8 ^^^ 31#8 = (x ^^^ 31#8) + 96#8 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4888:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4933:17: theorem extracted_1 (x : BitVec 8) :
   ((if x.msb = (96#8).msb ∧ ¬(x + 96#8).msb = x.msb then none else some (x + 96#8)).bind fun x' => some (x' ^^^ 31#8)) ⊑
     if (x.msb ^^ (31#8).msb) = (96#8).msb ∧ ¬((x ^^^ 31#8) + 96#8).msb = (x.msb ^^ (31#8).msb) then none
     else some ((x ^^^ 31#8) + 96#8) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4758:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4803:17: theorem extracted_1 (x : BitVec 8) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4923:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4968:17: theorem extracted_1 (x : BitVec 8) :
   ((if x.msb = (96#8).msb ∧ ¬(x + 96#8).msb = x.msb then none
         else if x + 96#8 < x ∨ x + 96#8 < 96#8 then none else some (x + 96#8)).bind
       fun x' => some (x' ^^^ 31#8)) ⊑
@@ -11275,7 +11290,7 @@ info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4803:17: theo
     else
       if (x ^^^ 31#8) + 96#8 < x ^^^ 31#8 ∨ (x ^^^ 31#8) + 96#8 < 96#8 then none
       else some ((x ^^^ 31#8) + 96#8) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4793:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhxorhor.lean:4958:8: declaration uses 'sorry'
 error: Lean exited with code 1
 Some required builds logged failures:
 - SSA.Projects.InstCombine.tests.LLVM.gandhxorhor

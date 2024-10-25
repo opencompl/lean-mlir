@@ -82,8 +82,6 @@
 
 4: "test4" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "test4" has unsupported operation: llvm.zext
-
 4: "test4" has unsupported operation: llvm.inttoptr
 
 4: "test4" has unsupported operation: llvm.getelementptr
@@ -137,15 +135,9 @@
 1: "test8"
 4: "test8" has unsupported operation: llvm.load
 
-4: "test8" has unsupported operation: llvm.trunc
-
 4: "test8" has unsupported operation: llvm.inttoptr
 
-4: "test8" has unsupported operation: llvm.trunc
-
 4: "test8" has unsupported operation: llvm.getelementptr
-
-4: "test8" has unsupported operation: llvm.trunc
 
 4: "test8" has unsupported operation: llvm.inttoptr
 

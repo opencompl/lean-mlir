@@ -5,23 +5,15 @@
 5: "use.i16" is empty
 
 1: "src_is_mask_zext"
-4: "src_is_mask_zext" has unsupported operation: llvm.zext
-
 4: "src_is_mask_zext" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "src_is_mask_zext_fail_not_mask"
-4: "src_is_mask_zext_fail_not_mask" has unsupported operation: llvm.zext
-
 4: "src_is_mask_zext_fail_not_mask" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "src_is_mask_sext"
-4: "src_is_mask_sext" has unsupported operation: llvm.zext
-
 4: "src_is_mask_sext" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "src_is_mask_sext_fail_multiuse"
-4: "src_is_mask_sext_fail_multiuse" has unsupported operation: llvm.sext
-
 4: "src_is_mask_sext_fail_multiuse" has unsupported operation: llvm.call
 
 4: "src_is_mask_sext_fail_multiuse" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -93,8 +85,6 @@
 4: "src_is_mask_bitreverse_not_mask" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "src_is_notmask_sext"
-4: "src_is_notmask_sext" has unsupported operation: llvm.sext
-
 4: "src_is_notmask_sext" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "src_is_notmask_shl"
@@ -122,8 +112,6 @@
 4: "src_is_notmask_lshr_shl_fail_mismatch_shifts" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "src_is_notmask_ashr"
-4: "src_is_notmask_ashr" has unsupported operation: llvm.sext
-
 4: "src_is_notmask_ashr" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "src_is_notmask_neg_p2"

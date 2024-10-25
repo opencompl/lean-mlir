@@ -9,8 +9,6 @@
 
 4: "tinkywinky" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "tinkywinky" has unsupported operation: llvm.zext
-
 4: "tinkywinky" has unsupported operation: llvm.store
 
 4: "tinkywinky" has unsupported operation: llvm.return

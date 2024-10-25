@@ -1,0 +1,45 @@
+import SSA.Projects.InstCombine.tests.proofs.gapinthcasthcasthtohand_proof
+import SSA.Projects.InstCombine.LLVM.PrettyEDSL
+import SSA.Projects.InstCombine.TacticAuto
+import SSA.Projects.InstCombine.LLVM.Semantics
+open LLVM
+open BitVec
+
+open MLIR AST
+open Ctxt (Var)
+
+set_option linter.deprecated false
+set_option linter.unreachableTactic false
+set_option linter.unusedTactic false
+section gapinthcasthcasthtohand_statements
+
+def test1_before := [llvm|
+{
+^0(%arg0 : i61):
+  %0 = llvm.trunc %arg0 : i61 to i41
+  %1 = llvm.zext %0 : i41 to i61
+  "llvm.return"(%1) : (i61) -> ()
+}
+]
+def test1_after := [llvm|
+{
+^0(%arg0 : i61):
+  %0 = "llvm.mlir.constant"() <{value = 2199023255551 : i61}> : () -> i61
+  %1 = llvm.and %arg0, %0 : i61
+  "llvm.return"(%1) : (i61) -> ()
+}
+]
+theorem test1_proof : test1_before ⊑ test1_after := by
+  unfold test1_before test1_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test1
+  apply test1_thm
+  ---END test1
+
+

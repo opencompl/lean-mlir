@@ -1,42 +1,39 @@
 1: "mul"
-4: "mul" has unsupported operation after optimization: llvm.trunc
-
-4: "mul" has unsupported operation after optimization: llvm.trunc
-
-4: "mul" has unsupported operation after optimization: llvm.zext
+2: llvm.func
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.mul
+2: llvm.zext
+2: llvm.return
 
 1: "select1"
-4: "select1" has unsupported operation after optimization: llvm.trunc
-
-4: "select1" has unsupported operation after optimization: llvm.trunc
-
-4: "select1" has unsupported operation after optimization: llvm.trunc
-
-4: "select1" has unsupported operation after optimization: llvm.zext
+2: llvm.func
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.zext
+2: llvm.return
 
 1: "select2"
-4: "select2" has unsupported operation after optimization: llvm.zext
-
-4: "select2" has unsupported operation after optimization: llvm.zext
-
-4: "select2" has unsupported operation after optimization: llvm.zext
-
-4: "select2" has unsupported operation after optimization: llvm.trunc
+2: llvm.func
+2: llvm.zext
+2: llvm.zext
+2: llvm.zext
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.trunc
+2: llvm.return
 
 1: "eval_trunc_multi_use_in_one_inst"
-4: "eval_trunc_multi_use_in_one_inst" has unsupported operation: llvm.zext
-
-4: "eval_trunc_multi_use_in_one_inst" has unsupported operation: llvm.trunc
+7: "eval_trunc_multi_use_in_one_inst" is unchanged by InstCombine
 
 1: "eval_zext_multi_use_in_one_inst"
-4: "eval_zext_multi_use_in_one_inst" has unsupported operation: llvm.trunc
-
-4: "eval_zext_multi_use_in_one_inst" has unsupported operation: llvm.zext
+7: "eval_zext_multi_use_in_one_inst" is unchanged by InstCombine
 
 1: "eval_sext_multi_use_in_one_inst"
-4: "eval_sext_multi_use_in_one_inst" has unsupported operation: llvm.trunc
-
-4: "eval_sext_multi_use_in_one_inst" has unsupported operation: llvm.sext
+7: "eval_sext_multi_use_in_one_inst" is unchanged by InstCombine
 
 1: "PR36225"
 4: "PR36225" has unsupported operation: builtin.unregistered: llvm.br
@@ -49,8 +46,6 @@
 
 4: "PR36225" has unsupported operation: builtin.unregistered: llvm.switch
 
-4: "PR36225" has unsupported operation: llvm.zext
-
 4: "PR36225" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "PR36225" has unsupported operation: builtin.unregistered: llvm.cond_br
@@ -60,5 +55,7 @@
 4: "PR36225" has unsupported operation: builtin.unregistered: llvm.unreachable
 
 1: "foo"
-4: "foo" has unsupported operation after optimization: llvm.zext
+2: llvm.func
+2: llvm.zext
+2: llvm.return
 

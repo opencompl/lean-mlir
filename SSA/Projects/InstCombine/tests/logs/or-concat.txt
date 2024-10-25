@@ -15,17 +15,9 @@
 4: "concat_bswap32_unary_flip_vector" has unsupported operation: builtin.unregistered: llvm.intr.bswap
 
 1: "concat_bswap32_binary"
-4: "concat_bswap32_binary" has unsupported operation: llvm.zext
-
-4: "concat_bswap32_binary" has unsupported operation: llvm.zext
-
 4: "concat_bswap32_binary" has unsupported operation: builtin.unregistered: llvm.intr.bswap
 
 1: "concat_bswap32_binary_vector"
-4: "concat_bswap32_binary_vector" has unsupported operation: llvm.zext
-
-4: "concat_bswap32_binary_vector" has unsupported operation: llvm.zext
-
 4: "concat_bswap32_binary_vector" has unsupported operation: builtin.unregistered: llvm.intr.bswap
 
 1: "concat_bitreverse32_unary_split"
@@ -45,16 +37,8 @@
 4: "concat_bitreverse32_unary_flip_vector" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
 
 1: "concat_bitreverse32_binary"
-4: "concat_bitreverse32_binary" has unsupported operation: llvm.zext
-
-4: "concat_bitreverse32_binary" has unsupported operation: llvm.zext
-
 4: "concat_bitreverse32_binary" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
 
 1: "concat_bitreverse32_binary_vector"
-4: "concat_bitreverse32_binary_vector" has unsupported operation: llvm.zext
-
-4: "concat_bitreverse32_binary_vector" has unsupported operation: llvm.zext
-
 4: "concat_bitreverse32_binary_vector" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
 

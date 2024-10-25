@@ -5,7 +5,3 @@
 
 4: "_Z8wyhash64v" has unsupported operation: llvm.store
 
-4: "_Z8wyhash64v" has unsupported operation: llvm.zext
-
-4: "_Z8wyhash64v" has unsupported operation: llvm.trunc
-

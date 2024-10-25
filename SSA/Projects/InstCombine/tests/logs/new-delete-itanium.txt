@@ -38,8 +38,6 @@
 5: "_Znwm" is empty
 
 1: "_Znwj"
-4: "_Znwj" has unsupported operation: llvm.zext
-
 4: "_Znwj" has unsupported operation: llvm.call
 
 1: "_Znam"

@@ -1,3 +1,7 @@
 1: "test"
-4: "test" has unsupported operation: llvm.sext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.ashr
+2: llvm.return
 

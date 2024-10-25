@@ -1,5 +1,6 @@
 1: "test"
-4: "test" has unsupported operation after optimization: llvm.trunc
-
-4: "test" has unsupported operation after optimization: llvm.zext
+2: llvm.func
+2: llvm.trunc
+2: llvm.zext
+2: llvm.return
 

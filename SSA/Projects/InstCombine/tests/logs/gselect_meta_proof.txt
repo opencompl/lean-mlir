@@ -10677,15 +10677,39 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: dec
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
 ✖ [2481/2481] Building SSA.Projects.InstCombine.tests.LLVM.gselect_meta
 trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lfrenot/.elan/toolchains/leanprover--lean4---nightly-2024-10-24/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gselect_meta.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gselect_meta.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gselect_meta.c --json
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:19:40: expected i<int> or f<int>, found: true
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:33:9: tactic 'unfold' failed, local variable 'not_cond_before' has no definition
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:74:17: theorem extracted_1 (x : BitVec 1) :
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:44:17: theorem extracted_1 (x : BitVec 1) :
+  (Option.bind
+      (match some x with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => none
+      | some { toFin := ⟨0, ⋯⟩ } => some 42#32)
+      fun x' => some (setWidth 8 x')) ⊑
+    match some x with
+    | none => none
+    | some { toFin := ⟨1, ⋯⟩ } => none
+    | some { toFin := ⟨0, ⋯⟩ } => some 42#8 := sorry
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:44:17: theorem extracted_1 :
+  ∀ (x : BitVec 32) (x_1 : BitVec 1),
+    (Option.bind
+        (match some x_1 with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some x
+        | some { toFin := ⟨0, ⋯⟩ } => some 42#32)
+        fun x' => some (setWidth 8 x')) ⊑
+      match some x_1 with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (setWidth 8 x)
+      | some { toFin := ⟨0, ⋯⟩ } => some 42#8 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:34:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:52:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:66:9: tactic 'unfold' failed, local variable 'not_cond_before' has no definition
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:107:17: theorem extracted_1 (x : BitVec 1) :
   (match some x with
     | none => none
     | some { toFin := ⟨1, ⋯⟩ } => none
     | some { toFin := ⟨0, ⋯⟩ } => none) ⊑
     none := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:74:17: theorem extracted_1 :
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:107:17: theorem extracted_1 :
   ∀ (x : BitVec 64) (x_1 : BitVec 1),
     (match some x_1 with
       | none => none
@@ -10697,7 +10721,7 @@ info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:74:17: theor
         | some { toFin := ⟨1, ⋯⟩ } => none
         | some { toFin := ⟨0, ⋯⟩ } => some 0#64)
         fun y' => some (x + y') := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:74:17: theorem extracted_1 :
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:107:17: theorem extracted_1 :
   BitVec 64 →
     ∀ (x : BitVec 1),
       (match some x with
@@ -10705,7 +10729,7 @@ info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:74:17: theor
         | some { toFin := ⟨1, ⋯⟩ } => none
         | some { toFin := ⟨0, ⋯⟩ } => none) ⊑
         none := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:74:17: theorem extracted_1 :
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:107:17: theorem extracted_1 :
   ∀ (x x_1 : BitVec 64) (x_2 : BitVec 1),
     (match some x_2 with
       | none => none
@@ -10717,14 +10741,14 @@ info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:74:17: theor
         | some { toFin := ⟨1, ⋯⟩ } => some x
         | some { toFin := ⟨0, ⋯⟩ } => some 0#64)
         fun y' => some (x_1 + y') := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:64:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:106:17: theorem extracted_1 (x : BitVec 1) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:97:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:139:17: theorem extracted_1 (x : BitVec 1) :
   (match some x with
     | none => none
     | some { toFin := ⟨1, ⋯⟩ } => none
     | some { toFin := ⟨0, ⋯⟩ } => none) ⊑
     none := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:106:17: theorem extracted_1 :
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:139:17: theorem extracted_1 :
   ∀ (x : BitVec 17) (x_1 : BitVec 1),
     (match some x_1 with
       | none => none
@@ -10736,7 +10760,7 @@ info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:106:17: theo
         | some { toFin := ⟨1, ⋯⟩ } => none
         | some { toFin := ⟨0, ⋯⟩ } => some 0#17)
         fun y' => some (x - y') := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:106:17: theorem extracted_1 :
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:139:17: theorem extracted_1 :
   BitVec 17 →
     ∀ (x : BitVec 1),
       (match some x with
@@ -10744,7 +10768,7 @@ info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:106:17: theo
         | some { toFin := ⟨1, ⋯⟩ } => none
         | some { toFin := ⟨0, ⋯⟩ } => none) ⊑
         none := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:106:17: theorem extracted_1 :
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:139:17: theorem extracted_1 :
   ∀ (x x_1 : BitVec 17) (x_2 : BitVec 1),
     (match some x_2 with
       | none => none
@@ -10756,14 +10780,14 @@ info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:106:17: theo
         | some { toFin := ⟨1, ⋯⟩ } => some x
         | some { toFin := ⟨0, ⋯⟩ } => some 0#17)
         fun y' => some (x_1 - y') := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:96:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:138:17: theorem extracted_1 (x : BitVec 1) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:129:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:171:17: theorem extracted_1 (x : BitVec 1) :
   (match some x with
     | none => none
     | some { toFin := ⟨1, ⋯⟩ } => none
     | some { toFin := ⟨0, ⋯⟩ } => none) ⊑
     none := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:138:17: theorem extracted_1 :
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:171:17: theorem extracted_1 :
   ∀ (x : BitVec 128) (x_1 : BitVec 1),
     (match some x_1 with
       | none => none
@@ -10775,7 +10799,7 @@ info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:138:17: theo
         | some { toFin := ⟨1, ⋯⟩ } => none
         | some { toFin := ⟨0, ⋯⟩ } => some 0#128)
         fun y' => if 128#128 ≤ y' then none else some (x.sshiftRight y'.toNat) := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:138:17: theorem extracted_1 :
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:171:17: theorem extracted_1 :
   BitVec 128 →
     ∀ (x : BitVec 1),
       (match some x with
@@ -10783,7 +10807,7 @@ info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:138:17: theo
         | some { toFin := ⟨1, ⋯⟩ } => none
         | some { toFin := ⟨0, ⋯⟩ } => none) ⊑
         none := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:138:17: theorem extracted_1 :
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:171:17: theorem extracted_1 :
   ∀ (x x_1 : BitVec 128) (x_2 : BitVec 1),
     (match some x_2 with
       | none => none
@@ -10795,7 +10819,7 @@ info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:138:17: theo
         | some { toFin := ⟨1, ⋯⟩ } => some x
         | some { toFin := ⟨0, ⋯⟩ } => some 0#128)
         fun y' => if 128#128 ≤ y' then none else some (x_1.sshiftRight y'.toNat) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:128:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:161:8: declaration uses 'sorry'
 error: Lean exited with code 1
 Some required builds logged failures:
 - SSA.Projects.InstCombine.tests.LLVM.gselect_meta

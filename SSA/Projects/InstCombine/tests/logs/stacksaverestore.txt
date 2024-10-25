@@ -1,6 +1,4 @@
 1: "test1"
-4: "test1" has unsupported operation: llvm.zext
-
 4: "test1" has unsupported operation: llvm.alloca
 
 1: "test2"
@@ -15,11 +13,7 @@
 
 4: "foo" has unsupported operation: builtin.unregistered: llvm.intr.stacksave
 
-4: "foo" has unsupported operation: llvm.zext
-
 4: "foo" has unsupported operation: llvm.alloca
-
-4: "foo" has unsupported operation: llvm.zext
 
 4: "foo" has unsupported operation: llvm.getelementptr
 
@@ -27,15 +21,9 @@
 
 4: "foo" has unsupported operation: llvm.store
 
-4: "foo" has unsupported operation: llvm.zext
-
 4: "foo" has unsupported operation: llvm.alloca
 
-4: "foo" has unsupported operation: llvm.zext
-
 4: "foo" has unsupported operation: llvm.alloca
-
-4: "foo" has unsupported operation: llvm.zext
 
 4: "foo" has unsupported operation: llvm.alloca
 

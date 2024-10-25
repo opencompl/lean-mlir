@@ -7,317 +7,203 @@
 1: "main2"
 4: "main2" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main2" has unsupported operation: llvm.zext
-
 1: "main2_logical"
 4: "main2_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main2_logical" has unsupported operation: llvm.zext
 
 1: "main3"
 4: "main3" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main3" has unsupported operation: llvm.zext
-
 1: "main3_logical"
 4: "main3_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main3_logical" has unsupported operation: llvm.zext
 
 1: "main3b"
 4: "main3b" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main3b" has unsupported operation: llvm.zext
-
 1: "main3b_logical"
 4: "main3b_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main3b_logical" has unsupported operation: llvm.zext
-
 1: "main3e_like"
 4: "main3e_like" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main3e_like" has unsupported operation: llvm.zext
 
 1: "main3e_like_logical"
 4: "main3e_like_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "main3e_like_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main3e_like_logical" has unsupported operation: llvm.zext
-
 1: "main3c"
 4: "main3c" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main3c" has unsupported operation: llvm.zext
 
 1: "main3c_logical"
 4: "main3c_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main3c_logical" has unsupported operation: llvm.zext
-
 1: "main3d"
 4: "main3d" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main3d" has unsupported operation: llvm.zext
 
 1: "main3d_logical"
 4: "main3d_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main3d_logical" has unsupported operation: llvm.zext
-
 1: "main3f_like"
 4: "main3f_like" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main3f_like" has unsupported operation: llvm.zext
 
 1: "main3f_like_logical"
 4: "main3f_like_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "main3f_like_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main3f_like_logical" has unsupported operation: llvm.zext
-
 1: "main4"
 4: "main4" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main4" has unsupported operation: llvm.zext
 
 1: "main4_splat"
 4: "main4_splat" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main4_splat" has unsupported operation: llvm.zext
-
 1: "main4_logical"
 4: "main4_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main4_logical" has unsupported operation: llvm.zext
 
 1: "main4b"
 4: "main4b" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main4b" has unsupported operation: llvm.zext
-
 1: "main4b_logical"
 4: "main4b_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main4b_logical" has unsupported operation: llvm.zext
-
 1: "main4e_like"
 4: "main4e_like" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main4e_like" has unsupported operation: llvm.zext
 
 1: "main4e_like_logical"
 4: "main4e_like_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "main4e_like_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main4e_like_logical" has unsupported operation: llvm.zext
-
 1: "main4c"
 4: "main4c" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main4c" has unsupported operation: llvm.zext
 
 1: "main4c_logical"
 4: "main4c_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main4c_logical" has unsupported operation: llvm.zext
-
 1: "main4d"
 4: "main4d" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main4d" has unsupported operation: llvm.zext
 
 1: "main4d_logical"
 4: "main4d_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main4d_logical" has unsupported operation: llvm.zext
-
 1: "main4f_like"
 4: "main4f_like" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main4f_like" has unsupported operation: llvm.zext
 
 1: "main4f_like_logical"
 4: "main4f_like_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "main4f_like_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main4f_like_logical" has unsupported operation: llvm.zext
-
 1: "main5_like"
 4: "main5_like" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main5_like" has unsupported operation: llvm.zext
 
 1: "main5_like_logical"
 4: "main5_like_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "main5_like_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main5_like_logical" has unsupported operation: llvm.zext
-
 1: "main5e_like"
 4: "main5e_like" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main5e_like" has unsupported operation: llvm.zext
 
 1: "main5e_like_logical"
 4: "main5e_like_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "main5e_like_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main5e_like_logical" has unsupported operation: llvm.zext
-
 1: "main5c_like"
 4: "main5c_like" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main5c_like" has unsupported operation: llvm.zext
 
 1: "main5c_like_logical"
 4: "main5c_like_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "main5c_like_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main5c_like_logical" has unsupported operation: llvm.zext
-
 1: "main5f_like"
 4: "main5f_like" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main5f_like" has unsupported operation: llvm.zext
 
 1: "main5f_like_logical"
 4: "main5f_like_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "main5f_like_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main5f_like_logical" has unsupported operation: llvm.zext
-
 1: "main6"
 4: "main6" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main6" has unsupported operation: llvm.zext
 
 1: "main6_logical"
 4: "main6_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main6_logical" has unsupported operation: llvm.zext
-
 1: "main6b"
 4: "main6b" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main6b" has unsupported operation: llvm.zext
 
 1: "main6b_logical"
 4: "main6b_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main6b_logical" has unsupported operation: llvm.zext
-
 1: "main6c"
 4: "main6c" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main6c" has unsupported operation: llvm.zext
 
 1: "main6c_logical"
 4: "main6c_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main6c_logical" has unsupported operation: llvm.zext
-
 1: "main6d"
 4: "main6d" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main6d" has unsupported operation: llvm.zext
 
 1: "main6d_logical"
 4: "main6d_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main6d_logical" has unsupported operation: llvm.zext
-
 1: "main7a"
 4: "main7a" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main7a" has unsupported operation: llvm.zext
 
 1: "main7a_logical"
 4: "main7a_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "main7a_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main7a_logical" has unsupported operation: llvm.zext
-
 1: "main7b"
 4: "main7b" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main7b" has unsupported operation: llvm.zext
 
 1: "main7b_logical"
 4: "main7b_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "main7b_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main7b_logical" has unsupported operation: llvm.zext
-
 1: "main7c"
 4: "main7c" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main7c" has unsupported operation: llvm.zext
 
 1: "main7c_logical"
 4: "main7c_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "main7c_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main7c_logical" has unsupported operation: llvm.zext
-
 1: "main7d"
 4: "main7d" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main7d" has unsupported operation: llvm.zext
 
 1: "main7d_logical"
 4: "main7d_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "main7d_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main7d_logical" has unsupported operation: llvm.zext
-
 1: "main7e"
 4: "main7e" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main7e" has unsupported operation: llvm.zext
 
 1: "main7e_logical"
 4: "main7e_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "main7e_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main7e_logical" has unsupported operation: llvm.zext
-
 1: "main7f"
 4: "main7f" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main7f" has unsupported operation: llvm.zext
 
 1: "main7f_logical"
 4: "main7f_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "main7f_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "main7f_logical" has unsupported operation: llvm.zext
-
 1: "main7g"
 4: "main7g" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main7g" has unsupported operation: llvm.zext
 
 1: "main7g_logical"
 4: "main7g_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "main7g_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "main7g_logical" has unsupported operation: llvm.zext
 
 1: "main8"
 4: "main8" has unsupported operation: builtin.unregistered: llvm.icmp

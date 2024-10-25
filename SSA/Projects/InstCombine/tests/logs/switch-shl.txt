@@ -1,6 +1,4 @@
 1: "test_switch_with_shl_mask"
-4: "test_switch_with_shl_mask" has unsupported operation: llvm.trunc
-
 4: "test_switch_with_shl_mask" has unsupported operation: builtin.unregistered: llvm.switch
 
 1: "test_switch_with_shl_nuw_multiuse"

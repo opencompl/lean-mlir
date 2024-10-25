@@ -10761,12 +10761,16 @@ Use `set_option maxHeartbeats <num>` to set the limit.
 Additional diagnostic information may be available using the `set_option diagnostics true` command.
 info: ././././SSA/Projects/InstCombine/tests/LLVM/gdemorgan.lean:881:17: theorem extracted_1 (x : BitVec 32) : (x ||| 15#32) ^^^ 4294967295#32 = x &&& 4294967280#32 ^^^ 4294967280#32 := sorry
 warning: ././././SSA/Projects/InstCombine/tests/LLVM/gdemorgan.lean:871:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gdemorgan.lean:915:17: theorem extracted_1 (x x_1 : BitVec 32) :
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gdemorgan.lean:901:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gdemorgan.lean:909:33: tactic 'unfold' failed, local variable 'demorgan_or_zext_after' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gdemorgan.lean:938:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gdemorgan.lean:946:34: tactic 'unfold' failed, local variable 'demorgan_and_zext_after' has no definition
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gdemorgan.lean:989:17: theorem extracted_1 (x x_1 : BitVec 32) :
   (x_1 &&& x ||| (x_1 ||| x) ^^^ 4294967295#32) ^^^ 4294967295#32 = x_1 ^^^ x := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gdemorgan.lean:905:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gdemorgan.lean:950:17: theorem extracted_1 (x x_1 : BitVec 32) :
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gdemorgan.lean:979:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gdemorgan.lean:1024:17: theorem extracted_1 (x x_1 : BitVec 32) :
   x_1 ^^^ x ||| (x_1 ||| x) ^^^ 4294967295#32 = x_1 &&& x ^^^ 4294967295#32 := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gdemorgan.lean:940:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gdemorgan.lean:1014:8: declaration uses 'sorry'
 error: Lean exited with code 1
 Some required builds logged failures:
 - SSA.Projects.InstCombine.tests.LLVM.gdemorgan

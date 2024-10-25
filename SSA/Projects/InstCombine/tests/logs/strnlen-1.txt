@@ -22,8 +22,6 @@
 
 4: "fold_strnlen_ax_1" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "fold_strnlen_ax_1" has unsupported operation: llvm.zext
-
 1: "fold_strnlen_s5_0"
 4: "fold_strnlen_s5_0" has unsupported operation after optimization: llvm.mlir.addressof
 

@@ -8,8 +8,6 @@
 4: "ckd_add_unsigned_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "ckd_add_unsigned_imply_true"
-4: "ckd_add_unsigned_imply_true" has unsupported operation after optimization: llvm.zext
-
 4: "ckd_add_unsigned_imply_true" has unsupported operation after optimization: builtin.unregistered: llvm.intr.sadd.with.overflow
 
 4: "ckd_add_unsigned_imply_true" has unsupported operation after optimization: llvm.extractvalue

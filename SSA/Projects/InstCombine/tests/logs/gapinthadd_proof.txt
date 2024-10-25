@@ -10677,6 +10677,42 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: dec
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
 ✖ [2481/2481] Building SSA.Projects.InstCombine.tests.LLVM.gapinthadd
 trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lfrenot/.elan/toolchains/leanprover--lean4---nightly-2024-10-24/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gapinthadd.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gapinthadd.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gapinthadd.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gapinthadd.c --json
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gapinthadd.lean:19:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gapinthadd.lean:32:9: tactic 'unfold' failed, local variable 'test1_before' has no definition
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gapinthadd.lean:71:17: theorem extracted_1 (x : BitVec 47) : (x ^^^ 70368744177664#47) + 70368744177664#47 = x := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gapinthadd.lean:61:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gapinthadd.lean:101:17: theorem extracted_1 (x : BitVec 15) : (x ^^^ 16384#15) + 16384#15 = x := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gapinthadd.lean:91:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gapinthadd.lean:134:17: theorem extracted_1 (x : BitVec 49) : (x &&& 562949953421310#49) + 1#49 = x ||| 1#49 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gapinthadd.lean:124:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gapinthadd.lean:167:17: theorem extracted_1 (x : BitVec 4) :
+  (if
+        ((setWidth 7 x).msb ^^ (8#7).msb) = (120#7).msb ∧
+          ¬((setWidth 7 x ^^^ 8#7) + 120#7).msb = ((setWidth 7 x).msb ^^ (8#7).msb) then
+      none
+    else some ((setWidth 7 x ^^^ 8#7) + 120#7)) ⊑
+    some (signExtend 7 x) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gapinthadd.lean:157:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gapinthadd.lean:209:17: theorem extracted_1 (x : BitVec 4) :
+  ((if
+            ((setWidth 7 x).msb ^^ (8#7).msb) = (120#7).msb ∧
+              ¬((setWidth 7 x ^^^ 8#7) + 120#7).msb = ((setWidth 7 x).msb ^^ (8#7).msb) then
+          none
+        else some ((setWidth 7 x ^^^ 8#7) + 120#7)).bind
+      fun a =>
+      Option.bind
+        (if a = 0#7 ∨ setWidth 7 x ^^^ 8#7 = intMin 7 ∧ a = 127#7 then none else some ((setWidth 7 x ^^^ 8#7).sdiv a))
+        fun a =>
+        if x ^^^ 8#4 = 0#4 ∨ setWidth 4 a = intMin 4 ∧ x ^^^ 8#4 = 15#4 then none
+        else some ((setWidth 4 a).sdiv (x ^^^ 8#4))) ⊑
+    Option.bind
+      (if signExtend 7 x = 0#7 ∨ setWidth 7 x ^^^ 8#7 = intMin 7 ∧ signExtend 7 x = 127#7 then none
+      else some ((setWidth 7 x ^^^ 8#7).sdiv (signExtend 7 x)))
+      fun a =>
+      if x ^^^ 8#4 = 0#4 ∨ setWidth 4 a = intMin 4 ∧ x ^^^ 8#4 = 15#4 then none
+      else some ((setWidth 4 a).sdiv (x ^^^ 8#4)) := sorry
+info: stdout:
+{"severity":"warning","pos":{"line":199,"column":8},"keepFullRange":false,"fileName":"././././SSA/Projects/InstCo
 error: Lean exited with code 137
 Some required builds logged failures:
 - SSA.Projects.InstCombine.tests.LLVM.gapinthadd

@@ -12,8 +12,6 @@
 4: "nonnullAfterBitCast" has unsupported operation: llvm.return
 
 1: "nonnullAfterSExt"
-4: "nonnullAfterSExt" has unsupported operation: llvm.zext
-
 4: "nonnullAfterSExt" has unsupported operation: llvm.inttoptr
 
 4: "nonnullAfterSExt" has unsupported operation: llvm.call
@@ -21,8 +19,6 @@
 4: "nonnullAfterSExt" has unsupported operation: llvm.return
 
 1: "nonnullAfterZExt"
-4: "nonnullAfterZExt" has unsupported operation: llvm.zext
-
 4: "nonnullAfterZExt" has unsupported operation: llvm.inttoptr
 
 4: "nonnullAfterZExt" has unsupported operation: llvm.call
@@ -30,8 +26,6 @@
 4: "nonnullAfterZExt" has unsupported operation: llvm.return
 
 1: "nonnullAfterInt2Ptr"
-4: "nonnullAfterInt2Ptr" has unsupported operation: llvm.zext
-
 4: "nonnullAfterInt2Ptr" has unsupported operation: llvm.inttoptr
 
 4: "nonnullAfterInt2Ptr" has unsupported operation: llvm.call
@@ -53,8 +47,6 @@
 4: "maybenullAfterInt2Ptr" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "maybenullAfterInt2Ptr" has unsupported operation: builtin.unregistered: llvm.intr.assume
-
-4: "maybenullAfterInt2Ptr" has unsupported operation: llvm.trunc
 
 4: "maybenullAfterInt2Ptr" has unsupported operation: llvm.inttoptr
 

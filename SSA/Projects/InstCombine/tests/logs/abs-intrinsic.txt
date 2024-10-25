@@ -50,12 +50,8 @@
 1: "abs_signbits"
 4: "abs_signbits" has unsupported operation: builtin.unregistered: llvm.intr.abs
 
-4: "abs_signbits" has unsupported operation: llvm.zext
-
 1: "abs_signbits_vec"
 4: "abs_signbits_vec" has unsupported operation: builtin.unregistered: llvm.intr.abs
-
-4: "abs_signbits_vec" has unsupported operation: llvm.zext
 
 1: "abs_of_neg"
 4: "abs_of_neg" has unsupported operation: builtin.unregistered: llvm.intr.abs
@@ -80,7 +76,7 @@
 4: "abs_dom_cond_poison" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "zext_abs"
-4: "zext_abs" has unsupported operation: llvm.zext
+4: "zext_abs" has unsupported operation after optimization: builtin.unregistered: llvm.intr.abs
 
 1: "lshr_abs"
 8: "lshr_abs" contains vectors which are unsupported
@@ -102,7 +98,7 @@
 4: "abs_assume_neg" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "abs_known_neg"
-4: "abs_known_neg" has unsupported operation: llvm.zext
+4: "abs_known_neg" has unsupported operation after optimization: builtin.unregistered: llvm.intr.abs
 
 1: "abs_eq_int_min_poison"
 4: "abs_eq_int_min_poison" has unsupported operation after optimization: builtin.unregistered: llvm.intr.abs
@@ -123,16 +119,10 @@
 1: "abs_sext"
 4: "abs_sext" has unsupported operation: builtin.unregistered: llvm.intr.abs
 
-4: "abs_sext" has unsupported operation: llvm.zext
-
 1: "abs_nsw_sext"
 4: "abs_nsw_sext" has unsupported operation: builtin.unregistered: llvm.intr.abs
 
-4: "abs_nsw_sext" has unsupported operation: llvm.zext
-
 1: "abs_sext_extra_use"
-4: "abs_sext_extra_use" has unsupported operation: llvm.sext
-
 4: "abs_sext_extra_use" has unsupported operation: llvm.store
 
 4: "abs_sext_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.abs
