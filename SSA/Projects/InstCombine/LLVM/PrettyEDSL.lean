@@ -157,7 +157,7 @@ private def pretty_test_overflow :=
     llvm.return %3 : i32
   }]
 
-private def prettu_test_trunc :=
+private def pretty_test_trunc :=
   [llvm ()|{
   ^bb0(%arg0: i32):
     %0 = llvm.trunc %arg0 : i64 to i32
