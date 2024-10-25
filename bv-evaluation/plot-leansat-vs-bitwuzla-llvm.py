@@ -34,9 +34,10 @@ leanSAT_bb = []
 leanSAT_sat = []
 leanSAT_lrat = []
 
+max = 0
+
 
 for file in os.listdir(benchmark_dir):
-
 
     if "_proof" in file: # currently discard broken chapter
         
@@ -109,28 +110,33 @@ for file in os.listdir(benchmark_dir):
         
 
         for thm in bitwuzla_times_average: 
-            bitwuzla.append(np.mean(thm))
+            bitwuzla.append(np.mean(bitwuzla_times_average))
         
         for thm in leanSAT_tot_times_average: 
-            leanSAT.append(np.mean(thm))
+            leanSAT.append(np.mean(leanSAT_tot_times_average))
+            if (np.mean(leanSAT_tot_times_average) > max): 
+                max = np.mean(leanSAT_tot_times_average)
+                maxfile = file
 
         for thm in leanSAT_rw_times_average: 
-            leanSAT_rw.append(np.mean(thm))
+            leanSAT_rw.append(np.mean(leanSAT_rw_times_average))
 
         for thm in leanSAT_bb_times_average: 
-            leanSAT_bb.append(np.mean(thm))
+            leanSAT_bb.append(np.mean(leanSAT_bb_times_average))
         
         for thm in leanSAT_sat_times_average: 
-            leanSAT_sat.append(np.mean(thm))
+            leanSAT_sat.append(np.mean(leanSAT_sat_times_average))
 
         for thm in leanSAT_lrat_proc_times_average: 
-            leanSAT_lrat.append(np.mean(thm))
+            leanSAT_lrat.append(np.mean(leanSAT_lrat_proc_times_average))
 
         print(leanSAT)
         print(bitwuzla)
 
 
 data = {}
+
+print(maxfile)
 
 data['bitwuzla'] = bitwuzla
 data['leanSAT'] = leanSAT
