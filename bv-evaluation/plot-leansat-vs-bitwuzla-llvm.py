@@ -193,6 +193,5 @@ def cumul_solving_time(data, tool1, tool2):
     plt.close()
 
 get_stats(data)
-print(data)
 cumul_solving_time(data, tools[0], tools[1])
         
