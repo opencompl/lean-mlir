@@ -170,11 +170,6 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
         | "llvm.icmp.sge" => pure <| Sum.inr LLVM.IntPredicate.sge
         | "llvm.icmp.slt" => pure <| Sum.inr LLVM.IntPredicate.slt
         | "llvm.icmp.sle" => pure <| Sum.inr LLVM.IntPredicate.sle
-        -- | "llvm.icmp" => do
-        --   let attr? := opStx.attrs.getAttr "predicate"
-        --   match attr? with
-        --     | .none => throw <| .generic s!"What?"
-        --     | .some y => throw <| .generic s!"Predicate flag: {MLIR.AST.docAttrVal y}."
         | opstr => throw <|
           .unsupportedOp s!"Unsuported binary operation or invalid arguments '{opstr}'"
       return match op with
