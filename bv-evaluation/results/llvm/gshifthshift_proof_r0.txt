@@ -1,0 +1,181 @@
+⚠ [665/885] Replayed SSA.Core.ErasedContext
+warning: ././././SSA/Core/ErasedContext.lean:325:14: unused variable `t`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [672/885] Replayed SSA.Core.Framework
+warning: ././././SSA/Core/Framework.lean:1826:9: unused variable `inst`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././././SSA/Core/Framework.lean:1833:75: unused variable `inst`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././././SSA/Core/Framework.lean:2083:31: unused variable `x`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././././SSA/Core/Framework.lean:2084:33: unused variable `x`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [685/885] Replayed SSA.Core.MLIRSyntax.AST
+warning: ././././SSA/Core/MLIRSyntax/AST.lean:40:4: The namespace 'SSAVal' is duplicated in the declaration 'MLIR.AST.SSAVal.SSAVal'
+note: this linter can be disabled with `set_option linter.dupNamespace false`
+⚠ [867/885] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [871/885] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [872/885] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [878/885] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [879/885] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [885/885] Building SSA.Projects.InstCombine.tests.proofs.gshifthshift_proof
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib DYLD_LIBRARY_PATH= /Users/luisa/.elan/toolchains/leanprover--lean4---nightly-2024-10-24/bin/lean ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.c --json
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:7:60: Bitwuzla proved the goal after 71.000000ms
+LeanSAT proved the goal after 71.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 60.740583ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:9:65: Bitwuzla proved the goal after 71.000000ms
+LeanSAT proved the goal after 71.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.815000ms, LRAT processing 0.000000ms
+error: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:14:89: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:14:89: [bv] [0.030217] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x x_1 : BitVec 32
+      a✝ :
+        ¬((if 32#32 ≤ x then none else some (1#32 <<< x.toNat)).bind fun x =>
+              if x <<< 2 = 0#32 then none else some (x_1 / x <<< 2)) ⊑
+            if 32#32 ≤ x + 2#32 then none else some (x_1 >>> ((x.toNat + 2) % 4294967296))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x x_1 : BitVec 32
+      a✝ :
+        ¬((if (!32#32 >ᵤ x) = true then none else some (1#32 <<< x.toNat)).bind fun a =>
+              if (a <<< 2 == 0#32) = true then none else some (x_1 / a <<< 2)) ⊑
+            if (!32#32 >ᵤ x + 2#32) = true then none else some (x_1 >>> ((x.toNat + 2) % 4294967296))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:19:76: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:19:76: [bv] [0.024130] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 32
+      a✝ :
+        ¬((if 32#32 ≤ x then none else some ((4294967263#32).sshiftRight x.toNat)).bind fun x' => some (x' <<< 3)) ⊑
+            (if 32#32 ≤ x then none else some ((4294967263#32).sshiftRight x.toNat)).bind fun x' =>
+              if (x' <<< 3).sshiftRight 3 = x' then none else some (x' <<< 3)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 32
+      a✝ :
+        ¬((if (!32#32 >ᵤ x) = true then none else some ((4294967263#32).sshiftRight x.toNat)).bind fun a =>
+              some (a <<< 3)) ⊑
+            (if (!32#32 >ᵤ x) = true then none else some ((4294967263#32).sshiftRight x.toNat)).bind fun a =>
+              if ((a <<< 3).sshiftRight 3 == a) = true then none else some (a <<< 3)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:23:103: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:23:103: [bv] [0.019596] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 8
+      a✝ :
+        ¬((if 8#8 ≤ x then none else some (40#8 <<< x.toNat)).bind fun x => some (x >>> 3 ||| 224#8)) ⊑
+            (if 8#8 ≤ x then none else some (5#8 <<< x.toNat)).bind fun x' => some (x' ||| 224#8)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 8
+      a✝ :
+        ¬((if (!8#8 >ᵤ x) = true then none else some (40#8 <<< x.toNat)).bind fun a => some (a >>> 3 ||| 224#8)) ⊑
+            (if (!8#8 >ᵤ x) = true then none else some (5#8 <<< x.toNat)).bind fun a => some (a ||| 224#8)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:27:111: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:27:111: [bv] [0.021106] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 16
+      a✝ :
+        ¬((if 16#16 ≤ x then none else some (32912#16 <<< x.toNat)).bind fun x => some (x >>> 4 &&& 4094#16)) ⊑
+            (if 16#16 ≤ x then none else some (2057#16 <<< x.toNat)).bind fun x' => some (x' &&& 4094#16)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 16
+      a✝ :
+        ¬((if (!16#16 >ᵤ x) = true then none else some (32912#16 <<< x.toNat)).bind fun a =>
+              some (a >>> 4 &&& 4094#16)) ⊑
+            (if (!16#16 >ᵤ x) = true then none else some (2057#16 <<< x.toNat)).bind fun a => some (a &&& 4094#16)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:31:103: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:31:103: [bv] [0.018868] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 8
+      a✝ :
+        ¬((if 8#8 ≤ x then none else some (28#8 >>> x.toNat)).bind fun x => some (x <<< 3 ||| 7#8)) ⊑
+            (if 8#8 ≤ x then none else some (224#8 >>> x.toNat)).bind fun x' => some (x' ||| 7#8)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 8
+      a✝ :
+        ¬((if (!8#8 >ᵤ x) = true then none else some (28#8 >>> x.toNat)).bind fun a => some (a <<< 3 ||| 7#8)) ⊑
+            (if (!8#8 >ᵤ x) = true then none else some (224#8 >>> x.toNat)).bind fun a => some (a ||| 7#8)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:36:98: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:36:98: [bv] [0.031972] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 8
+      a✝ :
+        ¬((if 8#8 ≤ x then none else some (28#8 >>> x.toNat)).bind fun x => some (x <<< 3 ||| 3#8)) ⊑
+            (if 8#8 ≤ x then none else some (28#8 >>> x.toNat)).bind fun x =>
+              (if x <<< 3 >>> 3 = x then none else some (x <<< 3)).bind fun x' => some (x' ||| 3#8)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 8
+      a✝ :
+        ¬((if (!8#8 >ᵤ x) = true then none else some (28#8 >>> x.toNat)).bind fun a => some (a <<< 3 ||| 3#8)) ⊑
+            (if (!8#8 >ᵤ x) = true then none else some (28#8 >>> x.toNat)).bind fun a =>
+              (if (a <<< 3 >>> 3 == a) = true then none else some (a <<< 3)).bind fun a => some (a ||| 3#8)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.proofs.gshifthshift_proof

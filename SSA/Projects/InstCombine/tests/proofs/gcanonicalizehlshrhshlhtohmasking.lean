@@ -72,7 +72,7 @@ theorem positive_sameconst_proof : positive_sameconst_before ⊑ positive_sameco
   try intros
   try simp
   ---BEGIN positive_sameconst
-  all_goals (try extract_goal ; sorry)
+  all_goals (try extract_goal ; by bv_compare')
   ---END positive_sameconst
 
 

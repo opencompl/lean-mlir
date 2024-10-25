@@ -74,7 +74,7 @@ theorem missed_const_prop_2002h12h05_proof : missed_const_prop_2002h12h05_before
   try intros
   try simp
   ---BEGIN missed_const_prop_2002h12h05
-  all_goals (try extract_goal ; sorry)
+  all_goals (try extract_goal ; by bv_compare')
   ---END missed_const_prop_2002h12h05
 
 

@@ -1,0 +1,446 @@
+⚠ [665/885] Replayed SSA.Core.ErasedContext
+warning: ././././SSA/Core/ErasedContext.lean:325:14: unused variable `t`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [672/885] Replayed SSA.Core.Framework
+warning: ././././SSA/Core/Framework.lean:1826:9: unused variable `inst`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././././SSA/Core/Framework.lean:1833:75: unused variable `inst`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././././SSA/Core/Framework.lean:2083:31: unused variable `x`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././././SSA/Core/Framework.lean:2084:33: unused variable `x`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [685/885] Replayed SSA.Core.MLIRSyntax.AST
+warning: ././././SSA/Core/MLIRSyntax/AST.lean:40:4: The namespace 'SSAVal' is duplicated in the declaration 'MLIR.AST.SSAVal.SSAVal'
+note: this linter can be disabled with `set_option linter.dupNamespace false`
+⚠ [867/885] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [871/885] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [872/885] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [878/885] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [879/885] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [885/885] Building SSA.Projects.InstCombine.tests.proofs.greassociatehnuw_proof
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib DYLD_LIBRARY_PATH= /Users/luisa/.elan/toolchains/leanprover--lean4---nightly-2024-10-24/bin/lean ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.c --json
+error: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:10:79: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:10:79: [bv] [0.027737] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 32
+      a✝ :
+        ¬((if x + 4#32 < x ∨ x + 4#32 < 4#32 then none else some (x + 4#32)).bind fun x' =>
+              if x' + 64#32 < x' ∨ x' + 64#32 < 64#32 then none else some (x' + 64#32)) ⊑
+            if x + 68#32 < x ∨ x + 68#32 < 68#32 then none else some (x + 68#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 32
+      a✝ :
+        ¬((if (!((!x >ᵤ x + 4#32) && !4#32 >ᵤ x + 4#32)) = true then none else some (x + 4#32)).bind fun a =>
+              if (!((!a >ᵤ a + 64#32) && !64#32 >ᵤ a + 64#32)) = true then none else some (a + 64#32)) ⊑
+            if (!((!x >ᵤ x + 68#32) && !68#32 >ᵤ x + 68#32)) = true then none else some (x + 68#32)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:14:35: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:14:35: [bv] [0.020427] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 32
+      a✝ :
+        ¬((if x < 4#32 then none else some (x - 4#32)).bind fun x' => if x' < 64#32 then none else some (x' - 64#32)) ⊑
+            some (x + 4294967228#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 32
+      a✝ :
+        ¬((if (4#32 >ᵤ x) = true then none else some (x + 4294967292#32)).bind fun a =>
+              if (64#32 >ᵤ a) = true then none else some (a + 4294967232#32)) ⊑
+            some (x + 4294967228#32)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:19:90: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:19:90: [bv] [0.032090] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 32
+      a✝ :
+        ¬((if BitVec.twoPow 64 31 <<< 1 ≤ BitVec.setWidth 64 x * 4#64 then none else some (x * 4#32)).bind fun x' =>
+              if BitVec.twoPow 64 31 <<< 1 ≤ BitVec.setWidth 64 x' * 65#64 then none else some (x' * 65#32)) ⊑
+            if BitVec.twoPow 64 31 <<< 1 ≤ BitVec.setWidth 64 x * 260#64 then none else some (x * 260#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 32
+      a✝ :
+        ¬((if (!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 x * 4#64) = true then none else some (x * 4#32)).bind
+              fun a =>
+              if (!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 a * 65#64) = true then none
+              else some (a * 65#32)) ⊑
+            if (!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 x * 260#64) = true then none else some (x * 260#32)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:23:27: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:23:27: [bv] [0.014112] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 32
+      a✝ :
+        ¬(if x + 4#32 + 64#32 < x + 4#32 ∨ x + 4#32 + 64#32 < 64#32 then none else some (x + 4#32 + 64#32)) ⊑
+            some (x + 68#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 32
+      a✝ :
+        ¬(if (!((!x + 4#32 >ᵤ 68#32 + x) && !64#32 >ᵤ 68#32 + x)) = true then none else some (68#32 + x)) ⊑
+            some (x + 68#32)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:27:27: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:27:27: [bv] [0.015183] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 32
+      a✝ :
+        ¬((if x + 4#32 < x ∨ x + 4#32 < 4#32 then none else some (x + 4#32)).bind fun x' => some (x' + 64#32)) ⊑
+            some (x + 68#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 32
+      a✝ :
+        ¬((if (!((!x >ᵤ x + 4#32) && !4#32 >ᵤ x + 4#32)) = true then none else some (x + 4#32)).bind fun a =>
+              some (a + 64#32)) ⊑
+            some (x + 68#32)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:34:85: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:34:85: [bv] [0.058089] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x x_1 : BitVec 32
+      a✝ :
+        ¬((if x_1 + 4#32 < x_1 ∨ x_1 + 4#32 < 4#32 then none else some (x_1 + 4#32)).bind fun a =>
+              (if x + 8#32 < x ∨ x + 8#32 < 8#32 then none else some (x + 8#32)).bind fun y' =>
+                if a + y' < a ∨ a + y' < y' then none else some (a + y')) ⊑
+            (if x_1 + x < x_1 ∨ x_1 + x < x then none else some (x_1 + x)).bind fun x' =>
+              if x' + 12#32 < x' ∨ x' + 12#32 < 12#32 then none else some (x' + 12#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x x_1 : BitVec 32
+      a✝ :
+        ¬((if (!((!x_1 >ᵤ x_1 + 4#32) && !4#32 >ᵤ x_1 + 4#32)) = true then none else some (x_1 + 4#32)).bind fun a =>
+              (if (!((!x >ᵤ x + 8#32) && !8#32 >ᵤ x + 8#32)) = true then none else some (x + 8#32)).bind fun a_1 =>
+                if (!((!a >ᵤ a + a_1) && !a_1 >ᵤ a + a_1)) = true then none else some (a + a_1)) ⊑
+            (if (!((!x_1 >ᵤ x_1 + x) && !x >ᵤ x_1 + x)) = true then none else some (x_1 + x)).bind fun a =>
+              if (!((!a >ᵤ a + 12#32) && !12#32 >ᵤ a + 12#32)) = true then none else some (a + 12#32)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:40:102: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:40:102: [bv] [0.050298] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x x_1 : BitVec 32
+      a✝ :
+        ¬((if BitVec.twoPow 64 31 <<< 1 ≤ BitVec.setWidth 64 x_1 * 5#64 then none else some (x_1 * 5#32)).bind fun a =>
+              (if BitVec.twoPow 64 31 <<< 1 ≤ BitVec.setWidth 64 x * 9#64 then none else some (x * 9#32)).bind fun y' =>
+                if BitVec.twoPow 64 31 <<< 1 ≤ BitVec.setWidth 64 a * BitVec.setWidth 64 y' then none
+                else some (a * y')) ⊑
+            if BitVec.twoPow 64 31 <<< 1 ≤ BitVec.setWidth 64 (x_1 * x) * 45#64 then none else some (x_1 * x * 45#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x x_1 : BitVec 32
+      a✝ :
+        ¬((if (!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 x_1 * 5#64) = true then none
+                else some (x_1 * 5#32)).bind
+              fun a =>
+              (if (!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 x * 9#64) = true then none
+                  else some (x * 9#32)).bind
+                fun a_1 =>
+                if (!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 a * BitVec.zeroExtend 64 a_1) = true then none
+                else some (a * a_1)) ⊑
+            if (!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x_1 * x) * 45#64) = true then none
+            else some (x_1 * x * 45#32)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:45:32: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:45:32: [bv] [0.053777] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x x_1 : BitVec 32
+      a✝ :
+        ¬((if x_1 < 4#32 then none else some (x_1 - 4#32)).bind fun a =>
+              (if x < 8#32 then none else some (x - 8#32)).bind fun y' => if a < y' then none else some (a - y')) ⊑
+            some (x_1 - x + 4#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x x_1 : BitVec 32
+      a✝ :
+        ¬((if (4#32 >ᵤ x_1) = true then none else some (x_1 + 4294967292#32)).bind fun a =>
+              (if (8#32 >ᵤ x) = true then none else some (x + 4294967288#32)).bind fun a_1 =>
+                if (a_1 >ᵤ a) = true then none else some (a + (~~~a_1 + 1#32))) ⊑
+            some (x_1 + (~~~x + 1#32) + 4#32)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:50:61: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:50:61: [bv] [0.033800] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 32
+      a✝ :
+        ¬((if BitVec.twoPow 64 31 <<< 1 ≤ BitVec.setWidth 64 x * 3#64 then none else some (x * 3#32)).bind fun a =>
+              if a + x < a ∨ a + x < x then none else some (a + x)) ⊑
+            if x <<< 2 >>> 2 = x then none else some (x <<< 2)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 32
+      a✝ :
+        ¬((if (!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 x * 3#64) = true then none else some (x * 3#32)).bind
+              fun a => if (!((!a >ᵤ a + x) && !x >ᵤ a + x)) = true then none else some (a + x)) ⊑
+            if (x <<< 2 >>> 2 == x) = true then none else some (x <<< 2)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:55:64: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:55:64: [bv] [0.033707] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 32
+      a✝ :
+        ¬((if BitVec.twoPow 64 31 <<< 1 ≤ BitVec.setWidth 64 x * 2147483647#64 then none
+                else some (x * 2147483647#32)).bind
+              fun a => if a + x < a ∨ a + x < x then none else some (a + x)) ⊑
+            if x <<< 31 >>> 31 = x then none else some (x <<< 31)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 32
+      a✝ :
+        ¬((if (!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 x * 2147483647#64) = true then none
+                else some (x * 2147483647#32)).bind
+              fun a => if (!((!a >ᵤ a + x) && !x >ᵤ a + x)) = true then none else some (a + x)) ⊑
+            if (x <<< 31 >>> 31 == x) = true then none else some (x <<< 31)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:58:108: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:58:108: [bv] [0.012495] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 32
+      a✝ : ¬(if x * 3#32 + x < x * 3#32 ∨ x * 3#32 + x < x then none else some (x * 3#32 + x)) ⊑ some (x <<< 2)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 32
+      a✝ :
+        ¬(if (!((!x * 3#32 >ᵤ x * 3#32 + x) && !x >ᵤ x * 3#32 + x)) = true then none else some (x * 3#32 + x)) ⊑
+            some (x <<< 2)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:62:25: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:62:25: [bv] [0.019409] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 32
+      a✝ :
+        ¬((if BitVec.twoPow 64 31 <<< 1 ≤ BitVec.setWidth 64 x * 3#64 then none else some (x * 3#32)).bind fun a =>
+              some (a + x)) ⊑
+            some (x <<< 2)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 32
+      a✝ :
+        ¬((if (!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 x * 3#64) = true then none else some (x * 3#32)).bind
+              fun a => some (a + x)) ⊑
+            some (x <<< 2)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:68:112: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:68:112: [bv] [0.053324] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if BitVec.twoPow 64 31 <<< 1 ≤ BitVec.setWidth 64 x_2 * BitVec.setWidth 64 x_1 then none
+                else some (x_2 * x_1)).bind
+              fun a =>
+              (if BitVec.twoPow 64 31 <<< 1 ≤ BitVec.setWidth 64 x_2 * BitVec.setWidth 64 x then none
+                  else some (x_2 * x)).bind
+                fun y' => if a + y' < a ∨ a + y' < y' then none else some (a + y')) ⊑
+            if BitVec.twoPow 64 31 <<< 1 ≤ BitVec.setWidth 64 x_2 * BitVec.setWidth 64 (x_1 + x) then none
+            else some (x_2 * (x_1 + x))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if (!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 x_2 * BitVec.zeroExtend 64 x_1) = true then none
+                else some (x_2 * x_1)).bind
+              fun a =>
+              (if (!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 x_2 * BitVec.zeroExtend 64 x) = true then none
+                  else some (x_2 * x)).bind
+                fun a_1 => if (!((!a >ᵤ a + a_1) && !a_1 >ᵤ a + a_1)) = true then none else some (a + a_1)) ⊑
+            if (!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 x_2 * BitVec.zeroExtend 64 (x_1 + x)) = true then
+              none
+            else some (x_2 * (x_1 + x))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:73:33: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:73:33: [bv] [0.028203] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if BitVec.twoPow 64 31 <<< 1 ≤ BitVec.setWidth 64 x_2 * BitVec.setWidth 64 x then none
+                else some (x_2 * x)).bind
+              fun y' => if x_2 * x_1 + y' < x_2 * x_1 ∨ x_2 * x_1 + y' < y' then none else some (x_2 * x_1 + y')) ⊑
+            some (x_2 * (x_1 + x))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if (!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 x_2 * BitVec.zeroExtend 64 x) = true then none
+                else some (x_2 * x)).bind
+              fun a =>
+              if (!((!x_2 * x_1 >ᵤ x_2 * x_1 + a) && !a >ᵤ x_2 * x_1 + a)) = true then none else some (x_2 * x_1 + a)) ⊑
+            some (x_2 * (x_1 + x))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:78:33: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:78:33: [bv] [0.027865] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if BitVec.twoPow 64 31 <<< 1 ≤ BitVec.setWidth 64 x_2 * BitVec.setWidth 64 x_1 then none
+                else some (x_2 * x_1)).bind
+              fun a => if a + x_2 * x < a ∨ a + x_2 * x < x_2 * x then none else some (a + x_2 * x)) ⊑
+            some (x_2 * (x_1 + x))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if (!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 x_2 * BitVec.zeroExtend 64 x_1) = true then none
+                else some (x_2 * x_1)).bind
+              fun a =>
+              if (!((!a >ᵤ a + x_2 * x) && !x_2 * x >ᵤ a + x_2 * x)) = true then none else some (a + x_2 * x)) ⊑
+            some (x_2 * (x_1 + x))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:84:33: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/greassociatehnuw_proof.lean:84:33: [bv] [0.031506] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if BitVec.twoPow 64 31 <<< 1 ≤ BitVec.setWidth 64 x_2 * BitVec.setWidth 64 x_1 then none
+                else some (x_2 * x_1)).bind
+              fun a =>
+              (if BitVec.twoPow 64 31 <<< 1 ≤ BitVec.setWidth 64 x_2 * BitVec.setWidth 64 x then none
+                  else some (x_2 * x)).bind
+                fun y' => some (a + y')) ⊑
+            some (x_2 * (x_1 + x))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if (!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 x_2 * BitVec.zeroExtend 64 x_1) = true then none
+                else some (x_2 * x_1)).bind
+              fun a =>
+              (if (!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 x_2 * BitVec.zeroExtend 64 x) = true then none
+                  else some (x_2 * x)).bind
+                fun a_1 => some (a + a_1)) ⊑
+            some (x_2 * (x_1 + x))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.proofs.greassociatehnuw_proof

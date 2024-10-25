@@ -4,7 +4,7 @@ import pandas as pd
 import os 
 
 benchmark_dir = "../SSA/Projects/InstCombine/HackersDelight/"
-res_dir = "results/"
+res_dir = "results//HackersDelight"
 # dir = 'plots/'
 dir = '../../paper-lean-bitvectors/plots/'
 

@@ -1,0 +1,101 @@
+⚠ [665/885] Replayed SSA.Core.ErasedContext
+warning: ././././SSA/Core/ErasedContext.lean:325:14: unused variable `t`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [672/885] Replayed SSA.Core.Framework
+warning: ././././SSA/Core/Framework.lean:1826:9: unused variable `inst`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././././SSA/Core/Framework.lean:1833:75: unused variable `inst`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././././SSA/Core/Framework.lean:2083:31: unused variable `x`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././././SSA/Core/Framework.lean:2084:33: unused variable `x`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [685/885] Replayed SSA.Core.MLIRSyntax.AST
+warning: ././././SSA/Core/MLIRSyntax/AST.lean:40:4: The namespace 'SSAVal' is duplicated in the declaration 'MLIR.AST.SSAVal.SSAVal'
+note: this linter can be disabled with `set_option linter.dupNamespace false`
+⚠ [867/885] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [871/885] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [872/885] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [878/885] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [879/885] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [885/885] Building SSA.Projects.InstCombine.tests.proofs.gdistribute_proof
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib DYLD_LIBRARY_PATH= /Users/luisa/.elan/toolchains/leanprover--lean4---nightly-2024-10-24/bin/lean ././././SSA/Projects/InstCombine/tests/proofs/gdistribute_proof.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gdistribute_proof.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gdistribute_proof.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/proofs/gdistribute_proof.c --json
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdistribute_proof.lean:7:80: Bitwuzla proved the goal after 72.000000ms
+LeanSAT proved the goal after 74.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 62.537959ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdistribute_proof.lean:9:71: Bitwuzla proved the goal after 95.000000ms
+LeanSAT proved the goal after 428.000000ms: rewriting 11.532291ms, bitblasting 0.000000ms, SAT solving 171.194583ms, LRAT processing 104.746084ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdistribute_proof.lean:11:105: Bitwuzla proved the goal after 72.000000ms
+LeanSAT proved the goal after 73.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.048250ms, LRAT processing 0.000000ms
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdistribute_proof.lean:13:85: The SAT solver timed out while solving the problem.
+Consider increasing the timeout with `set_option sat.timeout <sec>`.
+If solving your problem relies inherently on using associativity or commutativity, consider enabling the `bv.ac_nf` option.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdistribute_proof.lean:13:85: [bv] [0.013197] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x x_1 : BitVec 32
+      a✝ : ¬x_1 <<< 1 * x - x * x_1 = x_1 * x
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x x_1 : BitVec 32
+      a✝ : (!x_1 <<< 1 * x + (~~~(x * x_1) + 1#32) == x_1 * x) = true
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+[Meta.Tactic.bv] New atom of width 32: x_1
+[Meta.Tactic.bv] New atom of width 32: x
+[Meta.Tactic.bv] Reflected bv logical expression: !((((<< 1 var0) * var1) + ((~ (var1 * var0)) + 0x00000001#32)) == (var0 * var1))
+[bv] [10.986998] Preparing LRAT reflection term
+  [bv] [0.011383] Bitblasting BVLogicalExpr to AIG
+  [Meta.Tactic.bv] AIG has 34867 nodes.
+  [sat] [0.012447] Converting AIG to CNF
+  [sat] [10.963107] Obtaining external proof certificate
+    [sat] [0.034469] Serializing SAT problem to DIMACS file
+    [sat] [10.927937] Running SAT solver
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdistribute_proof.lean:15:86: The SAT solver timed out while solving the problem.
+Consider increasing the timeout with `set_option sat.timeout <sec>`.
+If solving your problem relies inherently on using associativity or commutativity, consider enabling the `bv.ac_nf` option.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdistribute_proof.lean:15:86: [bv] [0.011591] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x x_1 : BitVec 32
+      a✝ : ¬x_1 * 2#32 * x - x * x_1 = x_1 * x
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x x_1 : BitVec 32
+      a✝ : (!x_1 * 2#32 * x + (~~~(x * x_1) + 1#32) == x_1 * x) = true
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+[Meta.Tactic.bv] New atom of width 32: x_1
+[Meta.Tactic.bv] New atom of width 32: x
+[Meta.Tactic.bv] Reflected bv logical expression: !((((var0 * 0x00000002#32) * var1) + ((~ (var1 * var0)) + 0x00000001#32)) == (var0 * var1))
+[bv] [10.998150] Preparing LRAT reflection term
+  [bv] [0.013390] Bitblasting BVLogicalExpr to AIG
+  [Meta.Tactic.bv] AIG has 43862 nodes.
+  [sat] [0.013441] Converting AIG to CNF
+  [sat] [10.971275] Obtaining external proof certificate
+    [sat] [0.035855] Serializing SAT problem to DIMACS file
+    [sat] [10.934856] Running SAT solver
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdistribute_proof.lean:17:87: Bitwuzla proved the goal after 72.000000ms
+LeanSAT proved the goal after 72.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.598083ms, LRAT processing 0.000000ms
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.proofs.gdistribute_proof

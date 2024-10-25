@@ -1,0 +1,155 @@
+⚠ [665/885] Replayed SSA.Core.ErasedContext
+warning: ././././SSA/Core/ErasedContext.lean:325:14: unused variable `t`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [672/885] Replayed SSA.Core.Framework
+warning: ././././SSA/Core/Framework.lean:1826:9: unused variable `inst`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././././SSA/Core/Framework.lean:1833:75: unused variable `inst`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././././SSA/Core/Framework.lean:2083:31: unused variable `x`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././././SSA/Core/Framework.lean:2084:33: unused variable `x`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [685/885] Replayed SSA.Core.MLIRSyntax.AST
+warning: ././././SSA/Core/MLIRSyntax/AST.lean:40:4: The namespace 'SSAVal' is duplicated in the declaration 'MLIR.AST.SSAVal.SSAVal'
+note: this linter can be disabled with `set_option linter.dupNamespace false`
+⚠ [867/885] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [871/885] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [872/885] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [878/885] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [879/885] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [885/885] Building SSA.Projects.InstCombine.tests.proofs.gsubhofhnegatiblehinseltpoison_proof
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib DYLD_LIBRARY_PATH= /Users/luisa/.elan/toolchains/leanprover--lean4---nightly-2024-10-24/bin/lean ././././SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.c --json
+info: ././././SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:7:59: Bitwuzla proved the goal after 0.000000ms
+LeanSAT proved the goal after 3.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT processing 0.000000ms
+error: ././././SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:11:98: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:11:98: [bv] [0.024830] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x x_1 : BitVec 8
+      a✝ :
+        ¬((if 8#8 ≤ x then none else some (214#8 <<< x.toNat)).bind fun y' => some (x_1 - y')) ⊑
+            (if 8#8 ≤ x then none else some (42#8 <<< x.toNat)).bind fun a => some (a + x_1)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x x_1 : BitVec 8
+      a✝ :
+        ¬((if (!8#8 >ᵤ x) = true then none else some (214#8 <<< x.toNat)).bind fun a => some (x_1 + (~~~a + 1#8))) ⊑
+            (if (!8#8 >ᵤ x) = true then none else some (42#8 <<< x.toNat)).bind fun a => some (a + x_1)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:17:28: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:23:28: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:25:36: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:25:36: [bv] [0.016259] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 1
+      x_1 : BitVec 8
+      a✝ : ¬(sorry.bind fun y' => some (x_1 - y')) ⊑ sorry.bind fun a => some (a + x_1)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 1
+      x_1 : BitVec 8
+      a✝ : ¬(sorry.bind fun a => some (x_1 + (~~~a + 1#8))) ⊑ sorry.bind fun a => some (a + x_1)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:31:28: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:37:28: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:39:36: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:39:36: [bv] [0.016308] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 1
+      x_1 : BitVec 8
+      a✝ : ¬(sorry.bind fun y' => some (x_1 - y')) ⊑ sorry.bind fun a => some (a + x_1)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 1
+      x_1 : BitVec 8
+      a✝ : ¬(sorry.bind fun a => some (x_1 + (~~~a + 1#8))) ⊑ sorry.bind fun a => some (a + x_1)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:40:0: unexpected identifier; expected command
+error: ././././SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:40:102: 't7_thm' has already been declared
+info: ././././SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:57:81: Bitwuzla proved the goal after 0.000000ms
+LeanSAT proved the goal after 3.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:59:104: Bitwuzla proved the goal after 80.000000ms
+LeanSAT proved the goal after 82.000000ms: rewriting 14.953959ms, bitblasting 0.000000ms, SAT solving 61.073959ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:61:113: Bitwuzla proved the goal after 81.000000ms
+LeanSAT proved the goal after 94.000000ms: rewriting 15.942458ms, bitblasting 0.000000ms, SAT solving 60.944084ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:63:83: Bitwuzla proved the goal after 0.000000ms
+LeanSAT proved the goal after 7.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:65:104: Bitwuzla proved the goal after 80.000000ms
+LeanSAT proved the goal after 82.000000ms: rewriting 14.726709ms, bitblasting 0.000000ms, SAT solving 61.051667ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:67:80: Bitwuzla proved the goal after 75.000000ms
+LeanSAT proved the goal after 70.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 56.441291ms, LRAT processing 0.000000ms
+error: ././././SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:71:88: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:71:88: [bv] [0.019048] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x x_1 : BitVec 4
+      a✝ :
+        ¬((if 4#4 ≤ x then none else some ((x_1 ^^^ 5#4) <<< x.toNat)).bind fun a => some (-a)) ⊑
+            if 4#4 ≤ x then none else some ((x_1 ^^^ 10#4) <<< x.toNat + 1#4 <<< x.toNat)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x x_1 : BitVec 4
+      a✝ :
+        ¬((if (!4#4 >ᵤ x) = true then none else some ((x_1 ^^^ 5#4) <<< x.toNat)).bind fun a => some (~~~a + 1#4)) ⊑
+            if (!4#4 >ᵤ x) = true then none else some ((x_1 ^^^ 10#4) <<< x.toNat + 1#4 <<< x.toNat)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+info: ././././SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:73:90: Bitwuzla proved the goal after 77.000000ms
+LeanSAT proved the goal after 115.000000ms: rewriting 11.303083ms, bitblasting 0.000000ms, SAT solving 61.180666ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:75:89: Bitwuzla proved the goal after 78.000000ms
+LeanSAT proved the goal after 79.000000ms: rewriting 12.592708ms, bitblasting 0.000000ms, SAT solving 60.261750ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:77:89: Bitwuzla proved the goal after 78.000000ms
+LeanSAT proved the goal after 79.000000ms: rewriting 12.011834ms, bitblasting 0.000000ms, SAT solving 61.171042ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:79:144: Bitwuzla proved the goal after 82.000000ms
+LeanSAT proved the goal after 85.000000ms: rewriting 15.009208ms, bitblasting 0.000000ms, SAT solving 61.092083ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:81:99: Bitwuzla proved the goal after 0.000000ms
+LeanSAT proved the goal after 7.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:83:127: Bitwuzla proved the goal after 684.000000ms
+LeanSAT proved the goal after 856.000000ms: rewriting 13.635000ms, bitblasting 0.000000ms, SAT solving 391.357792ms, LRAT processing 212.845833ms
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.proofs.gsubhofhnegatiblehinseltpoison_proof

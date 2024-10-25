@@ -39,7 +39,7 @@ theorem do_not_add_annotation_to_existing_instr_proof : do_not_add_annotation_to
   try intros
   try simp
   ---BEGIN do_not_add_annotation_to_existing_instr
-  all_goals (try extract_goal ; sorry)
+  all_goals (try extract_goal ; by bv_compare')
   ---END do_not_add_annotation_to_existing_instr
 
 

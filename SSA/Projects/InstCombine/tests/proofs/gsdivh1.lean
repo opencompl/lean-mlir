@@ -41,7 +41,7 @@ theorem c_proof : c_before ⊑ c_after := by
   try intros
   try simp
   ---BEGIN c
-  all_goals (try extract_goal ; sorry)
+  all_goals (try extract_goal ; by bv_compare')
   ---END c
 
 

@@ -38,7 +38,7 @@ theorem test1_proof : test1_before ⊑ test1_after := by
   try intros
   try simp
   ---BEGIN test1
-  all_goals (try extract_goal ; sorry)
+  all_goals (try extract_goal ; by bv_compare')
   ---END test1
 
 

@@ -74,7 +74,7 @@ theorem test2_proof : test2_before ⊑ test2_after := by
   try intros
   try simp
   ---BEGIN test2
-  all_goals (try extract_goal ; sorry)
+  all_goals (try extract_goal ; by bv_compare')
   ---END test2
 
 
@@ -103,7 +103,7 @@ theorem test3_proof : test3_before ⊑ test3_after := by
   try intros
   try simp
   ---BEGIN test3
-  all_goals (try extract_goal ; sorry)
+  all_goals (try extract_goal ; by bv_compare')
   ---END test3
 
 

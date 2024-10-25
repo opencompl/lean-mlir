@@ -10,5 +10,5 @@ theorem avg_lsb_thm (x x_1 : BitVec 8) :
           if (x_1 &&& 1#8) + (x &&& 1#8) < x_1 &&& 1#8 ∨ (x_1 &&& 1#8) + (x &&& 1#8) < x &&& 1#8 then none
           else some ((x_1 &&& 1#8) + (x &&& 1#8))).bind
       fun x' => some (x' >>> 1)) ⊑
-    some (x_1 &&& (x &&& 1#8)) := sorry
+    some (x_1 &&& (x &&& 1#8)) := by bv_compare'
 

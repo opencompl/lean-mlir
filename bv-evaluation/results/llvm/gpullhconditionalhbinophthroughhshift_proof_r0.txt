@@ -1,0 +1,467 @@
+⚠ [665/885] Replayed SSA.Core.ErasedContext
+warning: ././././SSA/Core/ErasedContext.lean:325:14: unused variable `t`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [672/885] Replayed SSA.Core.Framework
+warning: ././././SSA/Core/Framework.lean:1826:9: unused variable `inst`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././././SSA/Core/Framework.lean:1833:75: unused variable `inst`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././././SSA/Core/Framework.lean:2083:31: unused variable `x`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././././SSA/Core/Framework.lean:2084:33: unused variable `x`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [685/885] Replayed SSA.Core.MLIRSyntax.AST
+warning: ././././SSA/Core/MLIRSyntax/AST.lean:40:4: The namespace 'SSAVal' is duplicated in the declaration 'MLIR.AST.SSAVal.SSAVal'
+note: this linter can be disabled with `set_option linter.dupNamespace false`
+⚠ [867/885] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [871/885] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [872/885] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [878/885] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [879/885] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [885/885] Building SSA.Projects.InstCombine.tests.proofs.gpullhconditionalhbinophthroughhshift_proof
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib DYLD_LIBRARY_PATH= /Users/luisa/.elan/toolchains/leanprover--lean4---nightly-2024-10-24/bin/lean ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.c --json
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:11:28: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:16:26: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:17:45: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:17:45: [Meta.Tactic.bv] Running preprocessing pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some (x' <<< 8)) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Rerunning pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some (x' <<< 8)) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:18:0: unexpected identifier; expected command
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:18:108: 'and_signbit_select_shl_thm' has already been declared
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:35:28: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:40:26: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:41:45: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:41:45: [Meta.Tactic.bv] Running preprocessing pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some (x' <<< 8)) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Rerunning pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some (x' <<< 8)) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:42:0: unexpected identifier; expected command
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:42:108: 'and_nosignbit_select_shl_thm' has already been declared
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:59:28: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:64:26: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:65:45: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:65:45: [Meta.Tactic.bv] Running preprocessing pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some (x' <<< 8)) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Rerunning pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some (x' <<< 8)) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:66:0: unexpected identifier; expected command
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:66:109: 'or_signbit_select_shl_thm' has already been declared
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:83:28: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:88:26: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:89:45: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:89:45: [Meta.Tactic.bv] Running preprocessing pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some (x' <<< 8)) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Rerunning pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some (x' <<< 8)) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:90:0: unexpected identifier; expected command
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:90:109: 'or_nosignbit_select_shl_thm' has already been declared
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:107:28: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:112:26: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:113:45: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:113:45: [Meta.Tactic.bv] Running preprocessing pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some (x' <<< 8)) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Rerunning pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some (x' <<< 8)) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:114:0: unexpected identifier; expected command
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:114:109: 'xor_signbit_select_shl_thm' has already been declared
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:131:28: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:136:26: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:137:45: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:137:45: [Meta.Tactic.bv] Running preprocessing pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some (x' <<< 8)) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Rerunning pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some (x' <<< 8)) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:138:0: unexpected identifier; expected command
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:138:109: 'xor_nosignbit_select_shl_thm' has already been declared
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:155:28: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:160:26: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:161:45: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:161:45: [Meta.Tactic.bv] Running preprocessing pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some (x' <<< 8)) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Rerunning pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some (x' <<< 8)) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:162:0: unexpected identifier; expected command
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:162:109: 'add_signbit_select_shl_thm' has already been declared
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:179:28: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:184:26: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:185:45: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:185:45: [Meta.Tactic.bv] Running preprocessing pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some (x' <<< 8)) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Rerunning pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some (x' <<< 8)) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:186:0: unexpected identifier; expected command
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:186:109: 'add_nosignbit_select_shl_thm' has already been declared
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:203:28: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:208:26: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:209:45: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:209:45: [Meta.Tactic.bv] Running preprocessing pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some (x' >>> 8)) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Rerunning pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some (x' >>> 8)) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:210:0: unexpected identifier; expected command
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:210:109: 'and_signbit_select_lshr_thm' has already been declared
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:227:28: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:232:26: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:233:45: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:233:45: [Meta.Tactic.bv] Running preprocessing pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some (x' >>> 8)) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Rerunning pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some (x' >>> 8)) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:234:0: unexpected identifier; expected command
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:234:109: 'and_nosignbit_select_lshr_thm' has already been declared
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:251:28: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:256:26: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:257:45: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:257:45: [Meta.Tactic.bv] Running preprocessing pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some (x' >>> 8)) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Rerunning pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some (x' >>> 8)) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:258:0: unexpected identifier; expected command
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:258:109: 'or_signbit_select_lshr_thm' has already been declared
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:275:28: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:280:26: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:281:45: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:281:45: [Meta.Tactic.bv] Running preprocessing pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some (x' >>> 8)) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Rerunning pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some (x' >>> 8)) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:282:0: unexpected identifier; expected command
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:282:109: 'or_nosignbit_select_lshr_thm' has already been declared
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:299:28: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:304:26: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:305:45: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:305:45: [Meta.Tactic.bv] Running preprocessing pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some (x' >>> 8)) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Rerunning pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some (x' >>> 8)) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:306:0: unexpected identifier; expected command
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:306:109: 'xor_signbit_select_lshr_thm' has already been declared
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:323:28: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:328:26: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:329:45: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:329:45: [Meta.Tactic.bv] Running preprocessing pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some (x' >>> 8)) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Rerunning pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some (x' >>> 8)) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:330:0: unexpected identifier; expected command
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:330:109: 'xor_nosignbit_select_lshr_thm' has already been declared
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:347:28: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:352:26: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:349:22: invalid field notation, type is not of the form (C ...) where C is a constant
+  x'
+has type
+  ?m.3855
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:353:45: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:353:45: [Meta.Tactic.bv] Running preprocessing pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some ?m.3868) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Rerunning pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some ?m.3868) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:354:0: unexpected identifier; expected command
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:354:109: 'and_signbit_select_ashr_thm' has already been declared
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:371:28: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:376:26: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:373:22: invalid field notation, type is not of the form (C ...) where C is a constant
+  x'
+has type
+  ?m.4150
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:377:45: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:377:45: [Meta.Tactic.bv] Running preprocessing pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some ?m.4163) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Rerunning pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some ?m.4163) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:378:0: unexpected identifier; expected command
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:378:109: 'and_nosignbit_select_ashr_thm' has already been declared
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:395:28: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:400:26: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:397:22: invalid field notation, type is not of the form (C ...) where C is a constant
+  x'
+has type
+  ?m.4445
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:401:45: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:401:45: [Meta.Tactic.bv] Running preprocessing pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some ?m.4458) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Rerunning pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some ?m.4458) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:402:0: unexpected identifier; expected command
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:402:109: 'or_signbit_select_ashr_thm' has already been declared
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:419:28: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:424:26: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:421:22: invalid field notation, type is not of the form (C ...) where C is a constant
+  x'
+has type
+  ?m.4740
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:425:45: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:425:45: [Meta.Tactic.bv] Running preprocessing pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some ?m.4753) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Rerunning pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some ?m.4753) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:426:0: unexpected identifier; expected command
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:426:109: 'or_nosignbit_select_ashr_thm' has already been declared
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:443:28: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:448:26: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:445:22: invalid field notation, type is not of the form (C ...) where C is a constant
+  x'
+has type
+  ?m.5035
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:449:45: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:449:45: [Meta.Tactic.bv] Running preprocessing pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some ?m.5048) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Rerunning pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some ?m.5048) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:450:0: unexpected identifier; expected command
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:450:109: 'xor_signbit_select_ashr_thm' has already been declared
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:467:28: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:472:26: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:469:22: invalid field notation, type is not of the form (C ...) where C is a constant
+  x'
+has type
+  ?m.5330
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:473:45: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:473:45: [Meta.Tactic.bv] Running preprocessing pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some ?m.5343) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Rerunning pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬(sorry.bind fun x' => some ?m.5343) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:474:0: unexpected identifier; expected command
+error: ././././SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:474:109: 'xor_nosignbit_select_ashr_thm' has already been declared
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.proofs.gpullhconditionalhbinophthroughhshift_proof

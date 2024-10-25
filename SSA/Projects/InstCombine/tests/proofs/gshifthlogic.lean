@@ -308,7 +308,7 @@ theorem shl_add_proof : shl_add_before ⊑ shl_add_after := by
   try intros
   try simp
   ---BEGIN shl_add
-  all_goals (try extract_goal ; sorry)
+  all_goals (try extract_goal ; by bv_compare')
   ---END shl_add
 
 

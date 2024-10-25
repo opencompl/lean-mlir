@@ -1,0 +1,606 @@
+⚠ [665/885] Replayed SSA.Core.ErasedContext
+warning: ././././SSA/Core/ErasedContext.lean:325:14: unused variable `t`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [672/885] Replayed SSA.Core.Framework
+warning: ././././SSA/Core/Framework.lean:1826:9: unused variable `inst`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././././SSA/Core/Framework.lean:1833:75: unused variable `inst`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././././SSA/Core/Framework.lean:2083:31: unused variable `x`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././././SSA/Core/Framework.lean:2084:33: unused variable `x`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [685/885] Replayed SSA.Core.MLIRSyntax.AST
+warning: ././././SSA/Core/MLIRSyntax/AST.lean:40:4: The namespace 'SSAVal' is duplicated in the declaration 'MLIR.AST.SSAVal.SSAVal'
+note: this linter can be disabled with `set_option linter.dupNamespace false`
+⚠ [867/885] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [871/885] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [872/885] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [878/885] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [879/885] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [885/885] Building SSA.Projects.InstCombine.tests.proofs.glshr_proof
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib DYLD_LIBRARY_PATH= /Users/luisa/.elan/toolchains/leanprover--lean4---nightly-2024-10-24/bin/lean ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/glshr_proof.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/glshr_proof.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.c --json
+info: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:7:87: Bitwuzla proved the goal after 76.000000ms
+LeanSAT proved the goal after 71.000000ms: rewriting 10.508917ms, bitblasting 0.000000ms, SAT solving 56.489084ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:9:94: Bitwuzla proved the goal after 76.000000ms
+LeanSAT proved the goal after 80.000000ms: rewriting 13.974917ms, bitblasting 0.000000ms, SAT solving 61.019875ms, LRAT processing 0.000000ms
+error: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:14:17: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:14:17: [bv] [0.018003] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 32
+      a✝ :
+        ¬((if BitVec.twoPow 64 31 <<< 1 ≤ BitVec.setWidth 64 x * 65537#64 then none else some (x * 65537#32)).bind
+              fun x' => some (x' >>> 16)) ⊑
+            some x
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 32
+      a✝ :
+        ¬((if (!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 x * 65537#64) = true then none
+                else some (x * 65537#32)).bind
+              fun a => some (a >>> 16)) ⊑
+            some x
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:23:78: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:23:78: [bv] [0.084385] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if x_2 <<< x_1.toNat >>> x_1.toNat = x_2 then none
+                else if 32#32 ≤ x_1 then none else some (x_2 <<< x_1.toNat)).bind
+              fun a =>
+              (if a.msb = x.msb ∧ ¬(a + x).msb = a.msb then none
+                  else if a + x < a ∨ a + x < x then none else some (a + x)).bind
+                fun a => if 32#32 ≤ x_1 then none else some (a >>> x_1.toNat)) ⊑
+            (if 32#32 ≤ x_1 then none else some (x >>> x_1.toNat)).bind fun a =>
+              if a.msb = x_2.msb ∧ ¬(a + x_2).msb = a.msb then none
+              else if a + x_2 < a ∨ a + x_2 < x_2 then none else some (a + x_2)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if (x_2 <<< x_1.toNat >>> x_1.toNat == x_2) = true then none
+                else if (!32#32 >ᵤ x_1) = true then none else some (x_2 <<< x_1.toNat)).bind
+              fun a =>
+              (if (a.getLsbD 31 == x.getLsbD 31 && !(a + x).getLsbD 31 == a.getLsbD 31) = true then none
+                  else if (!((!a >ᵤ a + x) && !x >ᵤ a + x)) = true then none else some (a + x)).bind
+                fun a => if (!32#32 >ᵤ x_1) = true then none else some (a >>> x_1.toNat)) ⊑
+            (if (!32#32 >ᵤ x_1) = true then none else some (x >>> x_1.toNat)).bind fun a =>
+              if (a.getLsbD 31 == x_2.getLsbD 31 && !(a + x_2).getLsbD 31 == a.getLsbD 31) = true then none
+              else if (!((!a >ᵤ a + x_2) && !x_2 >ᵤ a + x_2)) = true then none else some (a + x_2)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:31:73: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:31:73: [bv] [0.048173] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if x_2 <<< x_1.toNat >>> x_1.toNat = x_2 then none
+                else if 32#32 ≤ x_1 then none else some (x_2 <<< x_1.toNat)).bind
+              fun a =>
+              (if a + x < a ∨ a + x < x then none else some (a + x)).bind fun a =>
+                if 32#32 ≤ x_1 then none else some (a >>> x_1.toNat)) ⊑
+            (if 32#32 ≤ x_1 then none else some (x >>> x_1.toNat)).bind fun a =>
+              if a + x_2 < a ∨ a + x_2 < x_2 then none else some (a + x_2)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if (x_2 <<< x_1.toNat >>> x_1.toNat == x_2) = true then none
+                else if (!32#32 >ᵤ x_1) = true then none else some (x_2 <<< x_1.toNat)).bind
+              fun a =>
+              (if (!((!a >ᵤ a + x) && !x >ᵤ a + x)) = true then none else some (a + x)).bind fun a =>
+                if (!32#32 >ᵤ x_1) = true then none else some (a >>> x_1.toNat)) ⊑
+            (if (!32#32 >ᵤ x_1) = true then none else some (x >>> x_1.toNat)).bind fun a =>
+              if (!((!a >ᵤ a + x_2) && !x_2 >ᵤ a + x_2)) = true then none else some (a + x_2)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:39:73: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:39:73: [bv] [0.047149] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if x_1 <<< x.toNat >>> x.toNat = x_1 then none else if 32#32 ≤ x then none else some (x_1 <<< x.toNat)).bind
+              fun a =>
+              (if x_2 * x_2 + a < x_2 * x_2 ∨ x_2 * x_2 + a < a then none else some (x_2 * x_2 + a)).bind fun a =>
+                if 32#32 ≤ x then none else some (a >>> x.toNat)) ⊑
+            (if 32#32 ≤ x then none else some ((x_2 * x_2) >>> x.toNat)).bind fun a =>
+              if a + x_1 < a ∨ a + x_1 < x_1 then none else some (a + x_1)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if (x_1 <<< x.toNat >>> x.toNat == x_1) = true then none
+                else if (!32#32 >ᵤ x) = true then none else some (x_1 <<< x.toNat)).bind
+              fun a =>
+              (if (!((!x_2 * x_2 >ᵤ x_2 * x_2 + a) && !a >ᵤ x_2 * x_2 + a)) = true then none
+                  else some (x_2 * x_2 + a)).bind
+                fun a => if (!32#32 >ᵤ x) = true then none else some (a >>> x.toNat)) ⊑
+            (if (!32#32 >ᵤ x) = true then none else some ((x_2 * x_2) >>> x.toNat)).bind fun a =>
+              if (!((!a >ᵤ a + x_1) && !x_1 >ᵤ a + x_1)) = true then none else some (a + x_1)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:51:22: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:51:22: [bv] [0.090149] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if x_2 <<< x_1.toNat >>> x_1.toNat = x_2 then none
+                else if 32#32 ≤ x_1 then none else some (x_2 <<< x_1.toNat)).bind
+              fun a =>
+              (if
+                      (BitVec.signExtend 33 a - BitVec.signExtend 33 x).msb =
+                        (BitVec.signExtend 33 a - BitVec.signExtend 33 x).getMsbD 1 then
+                    if a < x then none else some (a - x)
+                  else none).bind
+                fun a => if 32#32 ≤ x_1 then none else some (a >>> x_1.toNat)) ⊑
+            (if 32#32 ≤ x_1 then none else some (x >>> x_1.toNat)).bind fun y' =>
+              if
+                  (BitVec.signExtend 33 x_2 - BitVec.signExtend 33 y').msb =
+                    (BitVec.signExtend 33 x_2 - BitVec.signExtend 33 y').getMsbD 1 then
+                if x_2 < y' then none else some (x_2 - y')
+              else none
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if (x_2 <<< x_1.toNat >>> x_1.toNat == x_2) = true then none
+                else if (!32#32 >ᵤ x_1) = true then none else some (x_2 <<< x_1.toNat)).bind
+              fun a =>
+              (if
+                      ((BitVec.signExtend 33 a + (~~~BitVec.signExtend 33 x + 1#33)).getLsbD 32 ==
+                          (BitVec.signExtend 33 a + (~~~BitVec.signExtend 33 x + 1#33)).getMsbD 1) =
+                        true then
+                    if (x >ᵤ a) = true then none else some (a + (~~~x + 1#32))
+                  else none).bind
+                fun a => if (!32#32 >ᵤ x_1) = true then none else some (a >>> x_1.toNat)) ⊑
+            (if (!32#32 >ᵤ x_1) = true then none else some (x >>> x_1.toNat)).bind fun a =>
+              if
+                  ((BitVec.signExtend 33 x_2 + (~~~BitVec.signExtend 33 a + 1#33)).getLsbD 32 ==
+                      (BitVec.signExtend 33 x_2 + (~~~BitVec.signExtend 33 a + 1#33)).getMsbD 1) =
+                    true then
+                if (a >ᵤ x_2) = true then none else some (x_2 + (~~~a + 1#32))
+              else none
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:63:22: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:63:22: [bv] [0.090774] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if x_1 <<< x.toNat >>> x.toNat = x_1 then none else if 32#32 ≤ x then none else some (x_1 <<< x.toNat)).bind
+              fun a =>
+              (if
+                      (BitVec.signExtend 33 x_2 - BitVec.signExtend 33 a).msb =
+                        (BitVec.signExtend 33 x_2 - BitVec.signExtend 33 a).getMsbD 1 then
+                    if x_2 < a then none else some (x_2 - a)
+                  else none).bind
+                fun a => if 32#32 ≤ x then none else some (a >>> x.toNat)) ⊑
+            (if 32#32 ≤ x then none else some (x_2 >>> x.toNat)).bind fun a =>
+              if
+                  (BitVec.signExtend 33 a - BitVec.signExtend 33 x_1).msb =
+                    (BitVec.signExtend 33 a - BitVec.signExtend 33 x_1).getMsbD 1 then
+                if a < x_1 then none else some (a - x_1)
+              else none
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if (x_1 <<< x.toNat >>> x.toNat == x_1) = true then none
+                else if (!32#32 >ᵤ x) = true then none else some (x_1 <<< x.toNat)).bind
+              fun a =>
+              (if
+                      ((BitVec.signExtend 33 x_2 + (~~~BitVec.signExtend 33 a + 1#33)).getLsbD 32 ==
+                          (BitVec.signExtend 33 x_2 + (~~~BitVec.signExtend 33 a + 1#33)).getMsbD 1) =
+                        true then
+                    if (a >ᵤ x_2) = true then none else some (x_2 + (~~~a + 1#32))
+                  else none).bind
+                fun a => if (!32#32 >ᵤ x) = true then none else some (a >>> x.toNat)) ⊑
+            (if (!32#32 >ᵤ x) = true then none else some (x_2 >>> x.toNat)).bind fun a =>
+              if
+                  ((BitVec.signExtend 33 a + (~~~BitVec.signExtend 33 x_1 + 1#33)).getLsbD 32 ==
+                      (BitVec.signExtend 33 a + (~~~BitVec.signExtend 33 x_1 + 1#33)).getMsbD 1) =
+                    true then
+                if (x_1 >ᵤ a) = true then none else some (a + (~~~x_1 + 1#32))
+              else none
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:70:53: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:70:53: [bv] [0.053699] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if x_1 <<< x.toNat >>> x.toNat = x_1 then none else if 32#32 ≤ x then none else some (x_1 <<< x.toNat)).bind
+              fun a =>
+              (if x_2 < a then none else some (x_2 - a)).bind fun a =>
+                if 32#32 ≤ x then none else some (a >>> x.toNat)) ⊑
+            (if 32#32 ≤ x then none else some (x_2 >>> x.toNat)).bind fun a => if a < x_1 then none else some (a - x_1)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if (x_1 <<< x.toNat >>> x.toNat == x_1) = true then none
+                else if (!32#32 >ᵤ x) = true then none else some (x_1 <<< x.toNat)).bind
+              fun a =>
+              (if (a >ᵤ x_2) = true then none else some (x_2 + (~~~a + 1#32))).bind fun a =>
+                if (!32#32 >ᵤ x) = true then none else some (a >>> x.toNat)) ⊑
+            (if (!32#32 >ᵤ x) = true then none else some (x_2 >>> x.toNat)).bind fun a =>
+              if (x_1 >ᵤ a) = true then none else some (a + (~~~x_1 + 1#32))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:79:53: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:79:53: [bv] [0.053696] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if (x_1 <<< x.toNat).sshiftRight x.toNat = x_1 then none
+                else
+                  if x_1 <<< x.toNat >>> x.toNat = x_1 then none
+                  else if 32#32 ≤ x then none else some (x_1 <<< x.toNat)).bind
+              fun a =>
+              (if x_2 < a then none else some (x_2 - a)).bind fun a =>
+                if 32#32 ≤ x then none else some (a >>> x.toNat)) ⊑
+            (if 32#32 ≤ x then none else some (x_2 >>> x.toNat)).bind fun a => if a < x_1 then none else some (a - x_1)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if ((x_1 <<< x.toNat).sshiftRight x.toNat == x_1) = true then none
+                else
+                  if (x_1 <<< x.toNat >>> x.toNat == x_1) = true then none
+                  else if (!32#32 >ᵤ x) = true then none else some (x_1 <<< x.toNat)).bind
+              fun a =>
+              (if (a >ᵤ x_2) = true then none else some (x_2 + (~~~a + 1#32))).bind fun a =>
+                if (!32#32 >ᵤ x) = true then none else some (a >>> x.toNat)) ⊑
+            (if (!32#32 >ᵤ x) = true then none else some (x_2 >>> x.toNat)).bind fun a =>
+              if (x_1 >ᵤ a) = true then none else some (a + (~~~x_1 + 1#32))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:84:103: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:84:103: [bv] [0.023657] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if x_2 <<< x_1.toNat >>> x_1.toNat = x_2 then none
+                else if 32#32 ≤ x_1 then none else some (x_2 <<< x_1.toNat)).bind
+              fun a => if 32#32 ≤ x_1 then none else some ((a ||| x) >>> x_1.toNat)) ⊑
+            (if 32#32 ≤ x_1 then none else some (x >>> x_1.toNat)).bind fun a => some (a ||| x_2)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if (x_2 <<< x_1.toNat >>> x_1.toNat == x_2) = true then none
+                else if (!32#32 >ᵤ x_1) = true then none else some (x_2 <<< x_1.toNat)).bind
+              fun a => if (!32#32 >ᵤ x_1) = true then none else some ((a ||| x) >>> x_1.toNat)) ⊑
+            (if (!32#32 >ᵤ x_1) = true then none else some (x >>> x_1.toNat)).bind fun a => some (a ||| x_2)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:89:103: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:89:103: [bv] [0.023079] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if x_2 <<< x_1.toNat >>> x_1.toNat = x_2 then none
+                else if 32#32 ≤ x_1 then none else some (x_2 <<< x_1.toNat)).bind
+              fun a => if 32#32 ≤ x_1 then none else some ((a ||| x) >>> x_1.toNat)) ⊑
+            (if 32#32 ≤ x_1 then none else some (x >>> x_1.toNat)).bind fun a => some (a ||| x_2)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if (x_2 <<< x_1.toNat >>> x_1.toNat == x_2) = true then none
+                else if (!32#32 >ᵤ x_1) = true then none else some (x_2 <<< x_1.toNat)).bind
+              fun a => if (!32#32 >ᵤ x_1) = true then none else some ((a ||| x) >>> x_1.toNat)) ⊑
+            (if (!32#32 >ᵤ x_1) = true then none else some (x >>> x_1.toNat)).bind fun a => some (a ||| x_2)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:94:101: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:94:101: [bv] [0.022414] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if x_1 <<< x.toNat >>> x.toNat = x_1 then none else if 32#32 ≤ x then none else some (x_1 <<< x.toNat)).bind
+              fun a => if 32#32 ≤ x then none else some ((x_2 ||| a) >>> x.toNat)) ⊑
+            (if 32#32 ≤ x then none else some (x_2 >>> x.toNat)).bind fun a => some (a ||| x_1)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if (x_1 <<< x.toNat >>> x.toNat == x_1) = true then none
+                else if (!32#32 >ᵤ x) = true then none else some (x_1 <<< x.toNat)).bind
+              fun a => if (!32#32 >ᵤ x) = true then none else some ((x_2 ||| a) >>> x.toNat)) ⊑
+            (if (!32#32 >ᵤ x) = true then none else some (x_2 >>> x.toNat)).bind fun a => some (a ||| x_1)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:99:101: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:99:101: [bv] [0.022403] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if x_1 <<< x.toNat >>> x.toNat = x_1 then none else if 32#32 ≤ x then none else some (x_1 <<< x.toNat)).bind
+              fun a => if 32#32 ≤ x then none else some ((x_2 ||| a) >>> x.toNat)) ⊑
+            (if 32#32 ≤ x then none else some (x_2 >>> x.toNat)).bind fun a => some (a ||| x_1)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if (x_1 <<< x.toNat >>> x.toNat == x_1) = true then none
+                else if (!32#32 >ᵤ x) = true then none else some (x_1 <<< x.toNat)).bind
+              fun a => if (!32#32 >ᵤ x) = true then none else some ((x_2 ||| a) >>> x.toNat)) ⊑
+            (if (!32#32 >ᵤ x) = true then none else some (x_2 >>> x.toNat)).bind fun a => some (a ||| x_1)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:104:103: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:104:103: [bv] [0.022263] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if x_2 <<< x_1.toNat >>> x_1.toNat = x_2 then none
+                else if 32#32 ≤ x_1 then none else some (x_2 <<< x_1.toNat)).bind
+              fun a => if 32#32 ≤ x_1 then none else some ((a ^^^ x) >>> x_1.toNat)) ⊑
+            (if 32#32 ≤ x_1 then none else some (x >>> x_1.toNat)).bind fun a => some (a ^^^ x_2)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if (x_2 <<< x_1.toNat >>> x_1.toNat == x_2) = true then none
+                else if (!32#32 >ᵤ x_1) = true then none else some (x_2 <<< x_1.toNat)).bind
+              fun a => if (!32#32 >ᵤ x_1) = true then none else some ((a ^^^ x) >>> x_1.toNat)) ⊑
+            (if (!32#32 >ᵤ x_1) = true then none else some (x >>> x_1.toNat)).bind fun a => some (a ^^^ x_2)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:109:101: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:109:101: [bv] [0.024215] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if x_1 <<< x.toNat >>> x.toNat = x_1 then none else if 32#32 ≤ x then none else some (x_1 <<< x.toNat)).bind
+              fun a => if 32#32 ≤ x then none else some ((x_2 ^^^ a) >>> x.toNat)) ⊑
+            (if 32#32 ≤ x then none else some (x_2 >>> x.toNat)).bind fun a => some (a ^^^ x_1)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if (x_1 <<< x.toNat >>> x.toNat == x_1) = true then none
+                else if (!32#32 >ᵤ x) = true then none else some (x_1 <<< x.toNat)).bind
+              fun a => if (!32#32 >ᵤ x) = true then none else some ((x_2 ^^^ a) >>> x.toNat)) ⊑
+            (if (!32#32 >ᵤ x) = true then none else some (x_2 >>> x.toNat)).bind fun a => some (a ^^^ x_1)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:114:103: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:114:103: [bv] [0.025074] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if x_2 <<< x_1.toNat >>> x_1.toNat = x_2 then none
+                else if 32#32 ≤ x_1 then none else some (x_2 <<< x_1.toNat)).bind
+              fun a => if 32#32 ≤ x_1 then none else some ((a &&& x) >>> x_1.toNat)) ⊑
+            (if 32#32 ≤ x_1 then none else some (x >>> x_1.toNat)).bind fun a => some (a &&& x_2)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if (x_2 <<< x_1.toNat >>> x_1.toNat == x_2) = true then none
+                else if (!32#32 >ᵤ x_1) = true then none else some (x_2 <<< x_1.toNat)).bind
+              fun a => if (!32#32 >ᵤ x_1) = true then none else some ((a &&& x) >>> x_1.toNat)) ⊑
+            (if (!32#32 >ᵤ x_1) = true then none else some (x >>> x_1.toNat)).bind fun a => some (a &&& x_2)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:119:101: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:119:101: [bv] [0.023939] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if x_1 <<< x.toNat >>> x.toNat = x_1 then none else if 32#32 ≤ x then none else some (x_1 <<< x.toNat)).bind
+              fun a => if 32#32 ≤ x then none else some ((x_2 &&& a) >>> x.toNat)) ⊑
+            (if 32#32 ≤ x then none else some (x_2 >>> x.toNat)).bind fun a => some (a &&& x_1)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if (x_1 <<< x.toNat >>> x.toNat == x_1) = true then none
+                else if (!32#32 >ᵤ x) = true then none else some (x_1 <<< x.toNat)).bind
+              fun a => if (!32#32 >ᵤ x) = true then none else some ((x_2 &&& a) >>> x.toNat)) ⊑
+            (if (!32#32 >ᵤ x) = true then none else some (x_2 >>> x.toNat)).bind fun a => some (a &&& x_1)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:124:103: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:124:103: [bv] [0.024150] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if x_2 <<< x_1.toNat >>> x_1.toNat = x_2 then none
+                else if 32#32 ≤ x_1 then none else some (x_2 <<< x_1.toNat)).bind
+              fun a => if 32#32 ≤ x_1 then none else some ((a &&& x) >>> x_1.toNat)) ⊑
+            (if 32#32 ≤ x_1 then none else some (x >>> x_1.toNat)).bind fun a => some (a &&& x_2)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x x_1 x_2 : BitVec 32
+      a✝ :
+        ¬((if (x_2 <<< x_1.toNat >>> x_1.toNat == x_2) = true then none
+                else if (!32#32 >ᵤ x_1) = true then none else some (x_2 <<< x_1.toNat)).bind
+              fun a => if (!32#32 >ᵤ x_1) = true then none else some ((a &&& x) >>> x_1.toNat)) ⊑
+            (if (!32#32 >ᵤ x_1) = true then none else some (x >>> x_1.toNat)).bind fun a => some (a &&& x_2)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:130:92: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:130:92: [bv] [0.030201] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 32
+      a✝ :
+        ¬((if
+                    BitVec.signExtend 64 x * 65537#64 < BitVec.signExtend 64 (BitVec.twoPow 32 31) ∨
+                      BitVec.twoPow 64 31 ≤ BitVec.signExtend 64 x * 65537#64 then
+                  none
+                else some (x * 65537#32)).bind
+              fun x' => some (x' >>> 16)) ⊑
+            if x.msb = false ∧ ¬(x + x >>> 16).msb = x.msb then none else some (x + x >>> 16)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 32
+      a✝ :
+        ¬((if
+                    (!((!BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ BitVec.signExtend 64 x * 65537#64) &&
+                          BitVec.twoPow 64 31 >ᵤ BitVec.signExtend 64 x * 65537#64)) =
+                      true then
+                  none
+                else some (x * 65537#32)).bind
+              fun a => some (a >>> 16)) ⊑
+            if (!x.getLsbD 31 && !(x + x >>> 16).getLsbD 31 == x.getLsbD 31) = true then none else some (x + x >>> 16)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:134:17: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:134:17: [bv] [0.024580] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 2
+      a✝ :
+        ¬((if BitVec.twoPow 4 1 <<< 1 ≤ BitVec.setWidth 4 x * 2#4 then none else some (x * 2#2)).bind fun x' =>
+              some (x' >>> 1)) ⊑
+            some x
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 2
+      a✝ :
+        ¬((if (!BitVec.twoPow 4 1 <<< 1 >ᵤ BitVec.zeroExtend 4 x * 2#4) = true then none else some (x * 2#2)).bind
+              fun a => some (a >>> 1)) ⊑
+            some x
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+info: ././././SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:136:102: Bitwuzla proved the goal after 82.000000ms
+LeanSAT proved the goal after 1649.000000ms: rewriting 15.341459ms, bitblasting 39.381250ms, SAT solving 873.570375ms, LRAT processing 302.815958ms
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.proofs.glshr_proof

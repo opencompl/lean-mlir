@@ -1,0 +1,176 @@
+⚠ [665/885] Replayed SSA.Core.ErasedContext
+warning: ././././SSA/Core/ErasedContext.lean:325:14: unused variable `t`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [672/885] Replayed SSA.Core.Framework
+warning: ././././SSA/Core/Framework.lean:1826:9: unused variable `inst`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././././SSA/Core/Framework.lean:1833:75: unused variable `inst`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././././SSA/Core/Framework.lean:2083:31: unused variable `x`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././././SSA/Core/Framework.lean:2084:33: unused variable `x`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [685/885] Replayed SSA.Core.MLIRSyntax.AST
+warning: ././././SSA/Core/MLIRSyntax/AST.lean:40:4: The namespace 'SSAVal' is duplicated in the declaration 'MLIR.AST.SSAVal.SSAVal'
+note: this linter can be disabled with `set_option linter.dupNamespace false`
+⚠ [867/885] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [871/885] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [872/885] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [878/885] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [879/885] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+ℹ [885/885] Built SSA.Projects.InstCombine.tests.proofs.gorhxor_proof
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:7:114: Bitwuzla proved the goal after 71.000000ms
+LeanSAT proved the goal after 77.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 62.148250ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:9:114: Bitwuzla proved the goal after 72.000000ms
+LeanSAT proved the goal after 69.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 56.461625ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:11:112: Bitwuzla proved the goal after 73.000000ms
+LeanSAT proved the goal after 75.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 62.180875ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:13:112: Bitwuzla proved the goal after 71.000000ms
+LeanSAT proved the goal after 74.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.368167ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:15:112: Bitwuzla proved the goal after 73.000000ms
+LeanSAT proved the goal after 73.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 59.408250ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:18:92: Bitwuzla proved the goal after 73.000000ms
+LeanSAT proved the goal after 77.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.220584ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:20:92: Bitwuzla proved the goal after 71.000000ms
+LeanSAT proved the goal after 71.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.072375ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:22:116: Bitwuzla proved the goal after 72.000000ms
+LeanSAT proved the goal after 71.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 60.105792ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:24:126: Bitwuzla proved the goal after 69.000000ms
+LeanSAT proved the goal after 77.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.439625ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:26:114: Bitwuzla proved the goal after 72.000000ms
+LeanSAT proved the goal after 73.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.080083ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:28:112: Bitwuzla proved the goal after 67.000000ms
+LeanSAT proved the goal after 71.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 57.519625ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:31:94: Bitwuzla proved the goal after 73.000000ms
+LeanSAT proved the goal after 72.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 56.771667ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:34:94: Bitwuzla proved the goal after 72.000000ms
+LeanSAT proved the goal after 75.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 60.503042ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:36:105: Bitwuzla proved the goal after 73.000000ms
+LeanSAT proved the goal after 73.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 59.927708ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:38:105: Bitwuzla proved the goal after 73.000000ms
+LeanSAT proved the goal after 74.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.109958ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:40:114: Bitwuzla proved the goal after 73.000000ms
+LeanSAT proved the goal after 74.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.117250ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:42:87: Bitwuzla proved the goal after 67.000000ms
+LeanSAT proved the goal after 72.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 60.542375ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:45:84: Bitwuzla proved the goal after 72.000000ms
+LeanSAT proved the goal after 76.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.145083ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:48:84: Bitwuzla proved the goal after 72.000000ms
+LeanSAT proved the goal after 75.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.196583ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:51:84: Bitwuzla proved the goal after 73.000000ms
+LeanSAT proved the goal after 74.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 60.713542ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:54:84: Bitwuzla proved the goal after 72.000000ms
+LeanSAT proved the goal after 74.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 60.798875ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:56:139: Bitwuzla proved the goal after 74.000000ms
+LeanSAT proved the goal after 75.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.504917ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:58:132: Bitwuzla proved the goal after 73.000000ms
+LeanSAT proved the goal after 69.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 56.616375ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:60:101: Bitwuzla proved the goal after 80.000000ms
+LeanSAT proved the goal after 74.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.109750ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:62:84: Bitwuzla proved the goal after 72.000000ms
+LeanSAT proved the goal after 71.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 60.564375ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:64:85: Bitwuzla proved the goal after 72.000000ms
+LeanSAT proved the goal after 71.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 60.484917ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:66:99: Bitwuzla proved the goal after 72.000000ms
+LeanSAT proved the goal after 68.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 56.963209ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:68:98: Bitwuzla proved the goal after 70.000000ms
+LeanSAT proved the goal after 72.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 60.409917ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:72:68: Bitwuzla proved the goal after 70.000000ms
+LeanSAT proved the goal after 145.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 60.889167ms, LRAT processing 32.515875ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:76:68: Bitwuzla proved the goal after 77.000000ms
+LeanSAT proved the goal after 143.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.119917ms, LRAT processing 33.130750ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:79:102: Bitwuzla proved the goal after 73.000000ms
+LeanSAT proved the goal after 74.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 58.907041ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:82:102: Bitwuzla proved the goal after 73.000000ms
+LeanSAT proved the goal after 75.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.017166ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:85:102: Bitwuzla proved the goal after 73.000000ms
+LeanSAT proved the goal after 74.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 60.385709ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:88:102: Bitwuzla proved the goal after 73.000000ms
+LeanSAT proved the goal after 72.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 57.545375ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:90:92: Bitwuzla proved the goal after 70.000000ms
+LeanSAT proved the goal after 67.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 56.855000ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:93:96: Bitwuzla proved the goal after 69.000000ms
+LeanSAT proved the goal after 75.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.719375ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:95:121: Bitwuzla proved the goal after 72.000000ms
+LeanSAT proved the goal after 76.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.374291ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:97:115: Bitwuzla proved the goal after 72.000000ms
+LeanSAT proved the goal after 69.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 59.101208ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:99:117: Bitwuzla proved the goal after 71.000000ms
+LeanSAT proved the goal after 72.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.705334ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:101:117: Bitwuzla proved the goal after 72.000000ms
+LeanSAT proved the goal after 70.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 59.897250ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:103:117: Bitwuzla proved the goal after 72.000000ms
+LeanSAT proved the goal after 71.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 60.198917ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:105:137: Bitwuzla proved the goal after 70.000000ms
+LeanSAT proved the goal after 74.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 60.999084ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:108:78: Bitwuzla proved the goal after 77.000000ms
+LeanSAT proved the goal after 79.000000ms: rewriting 11.052250ms, bitblasting 0.000000ms, SAT solving 61.373834ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:111:76: Bitwuzla proved the goal after 76.000000ms
+LeanSAT proved the goal after 77.000000ms: rewriting 10.700375ms, bitblasting 0.000000ms, SAT solving 60.956875ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:114:76: Bitwuzla proved the goal after 70.000000ms
+LeanSAT proved the goal after 73.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.119667ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:117:78: Bitwuzla proved the goal after 77.000000ms
+LeanSAT proved the goal after 78.000000ms: rewriting 11.137750ms, bitblasting 0.000000ms, SAT solving 61.387292ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:120:76: Bitwuzla proved the goal after 78.000000ms
+LeanSAT proved the goal after 78.000000ms: rewriting 11.758458ms, bitblasting 0.000000ms, SAT solving 61.421875ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:122:138: Bitwuzla proved the goal after 72.000000ms
+LeanSAT proved the goal after 74.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.649500ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:124:97: Bitwuzla proved the goal after 72.000000ms
+LeanSAT proved the goal after 73.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 58.427917ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:126:117: Bitwuzla proved the goal after 72.000000ms
+LeanSAT proved the goal after 75.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.278208ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:129:92: Bitwuzla proved the goal after 73.000000ms
+LeanSAT proved the goal after 129.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 57.008584ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:132:98: Bitwuzla proved the goal after 74.000000ms
+LeanSAT proved the goal after 185.000000ms: rewriting 0.000000ms, bitblasting 14.845041ms, SAT solving 61.831375ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:136:52: Bitwuzla proved the goal after 75.000000ms
+LeanSAT proved the goal after 158.000000ms: rewriting 0.000000ms, bitblasting 24.639125ms, SAT solving 62.085292ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:140:52: Bitwuzla proved the goal after 73.000000ms
+LeanSAT proved the goal after 154.000000ms: rewriting 0.000000ms, bitblasting 24.569000ms, SAT solving 57.727292ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:144:52: Bitwuzla proved the goal after 75.000000ms
+LeanSAT proved the goal after 180.000000ms: rewriting 0.000000ms, bitblasting 23.253750ms, SAT solving 59.236250ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:148:52: Bitwuzla proved the goal after 74.000000ms
+LeanSAT proved the goal after 161.000000ms: rewriting 0.000000ms, bitblasting 24.918125ms, SAT solving 60.062042ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:152:52: Bitwuzla proved the goal after 74.000000ms
+LeanSAT proved the goal after 164.000000ms: rewriting 0.000000ms, bitblasting 25.367792ms, SAT solving 59.794292ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:156:52: Bitwuzla proved the goal after 70.000000ms
+LeanSAT proved the goal after 157.000000ms: rewriting 0.000000ms, bitblasting 24.583000ms, SAT solving 57.630333ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:160:52: Bitwuzla proved the goal after 74.000000ms
+LeanSAT proved the goal after 154.000000ms: rewriting 0.000000ms, bitblasting 23.742083ms, SAT solving 59.739500ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:164:52: Bitwuzla proved the goal after 75.000000ms
+LeanSAT proved the goal after 159.000000ms: rewriting 0.000000ms, bitblasting 24.582209ms, SAT solving 59.313583ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:168:52: Bitwuzla proved the goal after 74.000000ms
+LeanSAT proved the goal after 163.000000ms: rewriting 0.000000ms, bitblasting 25.824458ms, SAT solving 61.508000ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:172:52: Bitwuzla proved the goal after 75.000000ms
+LeanSAT proved the goal after 161.000000ms: rewriting 0.000000ms, bitblasting 24.035667ms, SAT solving 61.919000ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:176:52: Bitwuzla proved the goal after 76.000000ms
+LeanSAT proved the goal after 162.000000ms: rewriting 0.000000ms, bitblasting 25.293500ms, SAT solving 61.591625ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:180:52: Bitwuzla proved the goal after 75.000000ms
+LeanSAT proved the goal after 157.000000ms: rewriting 0.000000ms, bitblasting 26.311958ms, SAT solving 58.528750ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:184:52: Bitwuzla proved the goal after 74.000000ms
+LeanSAT proved the goal after 168.000000ms: rewriting 0.000000ms, bitblasting 24.248708ms, SAT solving 61.447750ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:188:52: Bitwuzla proved the goal after 71.000000ms
+LeanSAT proved the goal after 163.000000ms: rewriting 0.000000ms, bitblasting 24.771333ms, SAT solving 60.709250ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:192:52: Bitwuzla proved the goal after 71.000000ms
+LeanSAT proved the goal after 163.000000ms: rewriting 0.000000ms, bitblasting 26.041042ms, SAT solving 59.418500ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gorhxor_proof.lean:196:52: Bitwuzla proved the goal after 75.000000ms
+LeanSAT proved the goal after 162.000000ms: rewriting 0.000000ms, bitblasting 24.700333ms, SAT solving 58.980625ms, LRAT processing 0.000000ms
+Build completed successfully.

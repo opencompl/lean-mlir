@@ -15,4 +15,3 @@ theorem sextinreg2_thm (x : BitVec 32) : (x &&& 255#32 ^^^ 128#32) + 4294967168#
 theorem test6_thm (x : BitVec 16) : (setWidth 32 x <<< 16).sshiftRight 16 = signExtend 32 x := sorry
 
 theorem ashr_thm (x : BitVec 32) : (x >>> 5 ^^^ 67108864#32) + 4227858432#32 = x.sshiftRight 5 := sorry
-

@@ -10,5 +10,5 @@ theorem test_srem_canonicalize_op0_thm (x x_1 : BitVec 32) :
         (if x = 0#32 ∨ a = intMin 32 ∧ x = 4294967295#32 then none else some (a.sdiv x))) ⊑
     (Option.map (fun div => x_1 - div * x)
           (if x = 0#32 ∨ x_1 = intMin 32 ∧ x = 4294967295#32 then none else some (x_1.sdiv x))).bind
-      fun a => if (-signExtend 33 a).msb = (-signExtend 33 a).getMsbD 1 then some (-a) else none := sorry
+      fun a => if (-signExtend 33 a).msb = (-signExtend 33 a).getMsbD 1 then some (-a) else none := by bv_compare'
 
