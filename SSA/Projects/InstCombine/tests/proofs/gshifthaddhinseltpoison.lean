@@ -15,12 +15,50 @@ section gshifthaddhinseltpoison_statements
 <<<<<<< HEAD
 <<<<<<< HEAD
 
+<<<<<<< HEAD
 =======
                                                     
 >>>>>>> 43a49182 (re-ran scripts)
 =======
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+def shl_C1_add_A_C2_i32_before := [llvm|
+{
+^0(%arg8 : i16):
+  %0 = "llvm.mlir.constant"() <{value = 5 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 6 : i32}> : () -> i32
+  %2 = llvm.zext %arg8 : i16 to i32
+  %3 = llvm.add %2, %0 : i32
+  %4 = llvm.shl %1, %3 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def shl_C1_add_A_C2_i32_after := [llvm|
+{
+^0(%arg8 : i16):
+  %0 = "llvm.mlir.constant"() <{value = 192 : i32}> : () -> i32
+  %1 = llvm.zext %arg8 : i16 to i32
+  %2 = llvm.shl %0, %1 : i32
+  "llvm.return"(%2) : (i32) -> ()
+}
+]
+theorem shl_C1_add_A_C2_i32_proof : shl_C1_add_A_C2_i32_before ⊑ shl_C1_add_A_C2_i32_after := by
+  unfold shl_C1_add_A_C2_i32_before shl_C1_add_A_C2_i32_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN shl_C1_add_A_C2_i32
+  apply shl_C1_add_A_C2_i32_thm
+  ---END shl_C1_add_A_C2_i32
+
+
+
+>>>>>>> bd0a83c7 (Updated the generated tests)
 def ashr_C1_add_A_C2_i32_before := [llvm|
 {
 ^0(%arg7 : i32):

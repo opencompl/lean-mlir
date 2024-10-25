@@ -110,13 +110,25 @@
 4: "test20" has unsupported operation: llvm.return
 
 1: "test22"
-4: "test22" has unsupported operation: builtin.unregistered: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.zext
+2: llvm.xor
+2: llvm.return
 
 1: "fold_zext_xor_sandwich"
-4: "fold_zext_xor_sandwich" has unsupported operation: builtin.unregistered: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.zext
+2: llvm.xor
+2: llvm.return
 
 1: "fold_zext_xor_sandwich_vec"
-4: "fold_zext_xor_sandwich_vec" has unsupported operation: builtin.unregistered: llvm.zext
+8: "fold_zext_xor_sandwich_vec" contains vectors which are unsupported
 
 1: "test23"
 4: "test23" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -134,8 +146,6 @@
 
 1: "test27"
 4: "test27" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "test27" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "test28"
 2: llvm.func
@@ -538,8 +548,6 @@
 1: "not_lshr_vec"
 4: "not_lshr_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "not_lshr_vec" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "not_lshr_extra_use"
 4: "not_lshr_extra_use" has unsupported operation: llvm.call
 
@@ -559,8 +567,6 @@
 
 1: "not_ashr_vec"
 4: "not_ashr_vec" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "not_ashr_vec" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "not_ashr_extra_use"
 4: "not_ashr_extra_use" has unsupported operation: llvm.call

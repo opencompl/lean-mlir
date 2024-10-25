@@ -74,41 +74,69 @@
 >>>>>>> edb64a33 (Updated tests)
 
 1: "shl_trunc_bigger_lshr"
-4: "shl_trunc_bigger_lshr" has unsupported operation: builtin.unregistered: llvm.trunc
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.shl
+2: llvm.return
 
 1: "shl_trunc_smaller_lshr"
-4: "shl_trunc_smaller_lshr" has unsupported operation: builtin.unregistered: llvm.trunc
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.shl
+2: llvm.return
 
 1: "shl_trunc_bigger_ashr"
-4: "shl_trunc_bigger_ashr" has unsupported operation: builtin.unregistered: llvm.trunc
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.shl
+2: llvm.return
 
 1: "shl_trunc_smaller_ashr"
-4: "shl_trunc_smaller_ashr" has unsupported operation: builtin.unregistered: llvm.trunc
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.shl
+2: llvm.return
 
 1: "shl_trunc_bigger_shl"
-4: "shl_trunc_bigger_shl" has unsupported operation: builtin.unregistered: llvm.trunc
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.trunc
+2: llvm.shl
+2: llvm.return
 
 1: "shl_trunc_smaller_shl"
-4: "shl_trunc_smaller_shl" has unsupported operation: builtin.unregistered: llvm.trunc
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.trunc
+2: llvm.shl
+2: llvm.return
 
 1: "shl_trunc_bigger_lshr_use1"
 4: "shl_trunc_bigger_lshr_use1" has unsupported operation: llvm.call
 
-4: "shl_trunc_bigger_lshr_use1" has unsupported operation: builtin.unregistered: llvm.trunc
-
 1: "shl_trunc_smaller_lshr_use1"
 4: "shl_trunc_smaller_lshr_use1" has unsupported operation: llvm.call
 
-4: "shl_trunc_smaller_lshr_use1" has unsupported operation: builtin.unregistered: llvm.trunc
-
 1: "shl_trunc_bigger_lshr_use2"
-4: "shl_trunc_bigger_lshr_use2" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "shl_trunc_bigger_lshr_use2" has unsupported operation: llvm.call
 
 1: "shl_trunc_smaller_lshr_use2"
-4: "shl_trunc_smaller_lshr_use2" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "shl_trunc_smaller_lshr_use2" has unsupported operation: llvm.call
 
 1: "ashr_ashr_constants_use"
@@ -215,7 +243,7 @@
 7: "shl_lshr_demand4" is unchanged by InstCombine
 
 1: "shl_lshr_demand5"
-4: "shl_lshr_demand5" has unsupported operation: builtin.unregistered: llvm.trunc
+8: "shl_lshr_demand5" contains vectors which are unsupported
 
 1: "shl_lshr_demand5_undef_left"
 4: "shl_lshr_demand5_undef_left" has unsupported operation: llvm.mlir.undef
@@ -226,8 +254,6 @@
 
 4: "shl_lshr_demand5_undef_left" has unsupported operation: builtin.unregistered: llvm.insertelement
 
-4: "shl_lshr_demand5_undef_left" has unsupported operation: builtin.unregistered: llvm.trunc
-
 1: "shl_lshr_demand5_undef_right"
 4: "shl_lshr_demand5_undef_right" has unsupported operation: llvm.mlir.undef
 
@@ -237,16 +263,14 @@
 
 4: "shl_lshr_demand5_undef_right" has unsupported operation: builtin.unregistered: llvm.insertelement
 
-4: "shl_lshr_demand5_undef_right" has unsupported operation: builtin.unregistered: llvm.trunc
-
 1: "shl_lshr_demand5_nonuniform_vec_left"
-4: "shl_lshr_demand5_nonuniform_vec_left" has unsupported operation: builtin.unregistered: llvm.trunc
+7: "shl_lshr_demand5_nonuniform_vec_left" is unchanged by InstCombine
 
 1: "shl_lshr_demand5_nonuniform_vec_right"
-4: "shl_lshr_demand5_nonuniform_vec_right" has unsupported operation: builtin.unregistered: llvm.trunc
+8: "shl_lshr_demand5_nonuniform_vec_right" contains vectors which are unsupported
 
 1: "shl_lshr_demand5_nonuniform_vec_both"
-4: "shl_lshr_demand5_nonuniform_vec_both" has unsupported operation: builtin.unregistered: llvm.trunc
+7: "shl_lshr_demand5_nonuniform_vec_both" is unchanged by InstCombine
 
 1: "shl_lshr_demand6"
 2: llvm.func

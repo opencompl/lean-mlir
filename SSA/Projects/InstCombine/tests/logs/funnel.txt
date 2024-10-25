@@ -65,36 +65,18 @@
 4: "fshr_sub_mask_vector" has unsupported operation: builtin.unregistered: llvm.intr.fshr
 
 1: "fshl_16bit"
-4: "fshl_16bit" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "fshl_16bit" has unsupported operation: builtin.unregistered: llvm.intr.fshl
 
 1: "fshl_commute_16bit_vec"
-4: "fshl_commute_16bit_vec" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "fshl_commute_16bit_vec" has unsupported operation: builtin.unregistered: llvm.intr.fshl
 
 1: "fshr_8bit"
-4: "fshr_8bit" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "fshr_8bit" has unsupported operation: builtin.unregistered: llvm.intr.fshr
 
 1: "fshr_commute_8bit"
-4: "fshr_commute_8bit" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "fshr_commute_8bit" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "fshr_commute_8bit" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "fshr_commute_8bit" has unsupported operation: builtin.unregistered: llvm.intr.fshr
 
 1: "fshr_commute_8bit_unmasked_shl"
-4: "fshr_commute_8bit_unmasked_shl" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "fshr_commute_8bit_unmasked_shl" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "fshr_commute_8bit_unmasked_shl" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "fshr_commute_8bit_unmasked_shl" has unsupported operation: builtin.unregistered: llvm.intr.fshr
 
 1: "fshr_select"
@@ -113,69 +95,50 @@
 4: "fshl_select_vector" has unsupported operation: builtin.unregistered: llvm.intr.fshl
 
 1: "fshl_concat_i8_i24"
-4: "fshl_concat_i8_i24" has unsupported operation: builtin.unregistered: llvm.zext
-
-4: "fshl_concat_i8_i24" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "fshl_concat_i8_i24" has unsupported operation: llvm.store
 
 4: "fshl_concat_i8_i24" has unsupported operation: builtin.unregistered: llvm.intr.fshl
 
 1: "fshl_concat_i8_i8"
-4: "fshl_concat_i8_i8" has unsupported operation: builtin.unregistered: llvm.zext
-
-4: "fshl_concat_i8_i8" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "fshl_concat_i8_i8" has unsupported operation: llvm.store
 
 4: "fshl_concat_i8_i8" has unsupported operation: builtin.unregistered: llvm.intr.fshl
 
 1: "fshl_concat_i8_i8_overlap"
-4: "fshl_concat_i8_i8_overlap" has unsupported operation: builtin.unregistered: llvm.zext
-
-4: "fshl_concat_i8_i8_overlap" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "fshl_concat_i8_i8_overlap" has unsupported operation: llvm.store
 
 1: "fshl_concat_i8_i8_drop"
-4: "fshl_concat_i8_i8_drop" has unsupported operation: builtin.unregistered: llvm.zext
-
-4: "fshl_concat_i8_i8_drop" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "fshl_concat_i8_i8_drop" has unsupported operation: llvm.store
 
 1: "fshl_concat_i8_i8_different_slot"
-4: "fshl_concat_i8_i8_different_slot" has unsupported operation: builtin.unregistered: llvm.zext
-
-4: "fshl_concat_i8_i8_different_slot" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "fshl_concat_i8_i8_different_slot" has unsupported operation: llvm.store
 
 1: "fshl_concat_unknown_source"
 4: "fshl_concat_unknown_source" has unsupported operation: llvm.store
 
 1: "fshl_concat_vector"
-4: "fshl_concat_vector" has unsupported operation: builtin.unregistered: llvm.zext
-
-4: "fshl_concat_vector" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "fshl_concat_vector" has unsupported operation: llvm.store
 
 4: "fshl_concat_vector" has unsupported operation: builtin.unregistered: llvm.intr.fshl
 
 1: "unmasked_shlop_unmasked_shift_amount"
-4: "unmasked_shlop_unmasked_shift_amount" has unsupported operation: builtin.unregistered: llvm.trunc
+7: "unmasked_shlop_unmasked_shift_amount" is unchanged by InstCombine
 
 1: "unmasked_shlop_insufficient_mask_shift_amount"
-4: "unmasked_shlop_insufficient_mask_shift_amount" has unsupported operation: builtin.unregistered: llvm.trunc
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.sub
+2: llvm.shl
+2: llvm.lshr
+2: llvm.or
+2: llvm.trunc
+2: llvm.return
 
 1: "unmasked_shlop_masked_shift_amount"
-4: "unmasked_shlop_masked_shift_amount" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "unmasked_shlop_masked_shift_amount" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "unmasked_shlop_masked_shift_amount" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "unmasked_shlop_masked_shift_amount" has unsupported operation: builtin.unregistered: llvm.intr.fshr
 
 1: "test_rotl_and_neg"

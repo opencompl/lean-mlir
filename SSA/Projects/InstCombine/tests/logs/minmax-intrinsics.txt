@@ -19,75 +19,39 @@
 1: "smax_sext"
 4: "smax_sext" has unsupported operation: builtin.unregistered: llvm.intr.smax
 
-4: "smax_sext" has unsupported operation: builtin.unregistered: llvm.sext
-
 1: "smin_sext"
-4: "smin_sext" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "smin_sext" has unsupported operation: llvm.call
 
 4: "smin_sext" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
-4: "smin_sext" has unsupported operation: builtin.unregistered: llvm.sext
-
 1: "umax_sext"
-4: "umax_sext" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "umax_sext" has unsupported operation: llvm.call
 
 4: "umax_sext" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
-4: "umax_sext" has unsupported operation: builtin.unregistered: llvm.sext
-
 1: "umin_sext"
 4: "umin_sext" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
-4: "umin_sext" has unsupported operation: builtin.unregistered: llvm.sext
-
 1: "smax_zext"
-4: "smax_zext" has unsupported operation: builtin.unregistered: llvm.zext
-
-4: "smax_zext" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "smax_zext" has unsupported operation: builtin.unregistered: llvm.intr.smax
 
 1: "smin_zext"
-4: "smin_zext" has unsupported operation: builtin.unregistered: llvm.zext
-
-4: "smin_zext" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "smin_zext" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
 1: "umax_zext"
 4: "umax_zext" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
-4: "umax_zext" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "umin_zext"
 4: "umin_zext" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
-4: "umin_zext" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "umin_zext_types"
-4: "umin_zext_types" has unsupported operation: builtin.unregistered: llvm.zext
-
-4: "umin_zext_types" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "umin_zext_types" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
 1: "umin_ext"
-4: "umin_ext" has unsupported operation: builtin.unregistered: llvm.sext
-
-4: "umin_ext" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "umin_ext" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
 1: "umin_zext_uses"
-4: "umin_zext_uses" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "umin_zext_uses" has unsupported operation: llvm.call
-
-4: "umin_zext_uses" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "umin_zext_uses" has unsupported operation: llvm.call
 
@@ -96,69 +60,43 @@
 1: "smax_sext_constant"
 4: "smax_sext_constant" has unsupported operation: builtin.unregistered: llvm.intr.smax
 
-4: "smax_sext_constant" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "smax_sext_constant_big"
-4: "smax_sext_constant_big" has unsupported operation after optimization: builtin.unregistered: llvm.sext
-
 4: "smax_sext_constant_big" has unsupported operation after optimization: builtin.unregistered: llvm.intr.smax
 
 1: "smax_zext_constant"
-4: "smax_zext_constant" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "smax_zext_constant" has unsupported operation: builtin.unregistered: llvm.intr.smax
 
 1: "smin_sext_constant"
 4: "smin_sext_constant" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
-4: "smin_sext_constant" has unsupported operation: builtin.unregistered: llvm.sext
-
 1: "smin_zext_constant"
-4: "smin_zext_constant" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "smin_zext_constant" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
 1: "umax_sext_constant"
 4: "umax_sext_constant" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
-4: "umax_sext_constant" has unsupported operation: builtin.unregistered: llvm.sext
-
 1: "umax_sext_constant_big"
-4: "umax_sext_constant_big" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "umax_sext_constant_big" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
 1: "umax_zext_constant"
 4: "umax_zext_constant" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
-4: "umax_zext_constant" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "umax_zext_constant_big"
-4: "umax_zext_constant_big" has unsupported operation after optimization: builtin.unregistered: llvm.zext
-
 4: "umax_zext_constant_big" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umax
 
 1: "umin_sext_constant"
 4: "umin_sext_constant" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
-4: "umin_sext_constant" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "umin_sext_constant_big"
-4: "umin_sext_constant_big" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "umin_sext_constant_big" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
 1: "umin_zext_constant"
 4: "umin_zext_constant" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
-4: "umin_zext_constant" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "umin_zext_constant_big"
-4: "umin_zext_constant_big" has unsupported operation: builtin.unregistered: llvm.zext
+4: "umin_zext_constant_big" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umin
 
 1: "umin_zext_constant_uses"
-4: "umin_zext_constant_uses" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "umin_zext_constant_uses" has unsupported operation: llvm.call
 
 4: "umin_zext_constant_uses" has unsupported operation: builtin.unregistered: llvm.intr.umin
@@ -364,22 +302,14 @@
 1: "umin_non_zero_idiom1"
 4: "umin_non_zero_idiom1" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "umin_non_zero_idiom1" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "umin_non_zero_idiom2"
 4: "umin_non_zero_idiom2" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "umin_non_zero_idiom2" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "umin_non_zero_idiom3"
 4: "umin_non_zero_idiom3" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "umin_non_zero_idiom3" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "umin_non_zero_idiom4"
 4: "umin_non_zero_idiom4" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "umin_non_zero_idiom4" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "umin_eq_zero"
 4: "umin_eq_zero" has unsupported operation: builtin.unregistered: llvm.intr.umin

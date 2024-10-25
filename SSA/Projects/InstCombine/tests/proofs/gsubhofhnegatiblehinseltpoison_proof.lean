@@ -73,6 +73,10 @@ theorem neg_of_add_with_constant_thm (x : BitVec 8) : 214#8 + -x = 214#8 - x := 
 
 theorem sub_from_constant_of_add_with_constant_thm (x : BitVec 8) : 11#8 - (x + 42#8) = 225#8 - x := sorry
 
+theorem t20_thm (x : BitVec 16) (x_1 : BitVec 8) :
+  (Option.bind (if 16#16 ≤ x then none else some (65494#16 <<< x.toNat)) fun x => some (x_1 - setWidth 8 x)) ⊑
+    Option.bind (if 16#16 ≤ x then none else some (42#16 <<< x.toNat)) fun x => some (x_1 + setWidth 8 x) := sorry
+
 theorem negate_xor_thm (x : BitVec 4) : -(x ^^^ 5#4) = (x ^^^ 10#4) + 1#4 := sorry
 
 theorem negate_shl_xor_thm (x x_1 : BitVec 4) :
@@ -84,6 +88,10 @@ theorem negate_sdiv_thm (x x_1 : BitVec 8) : x_1 - x.sdiv 42#8 = x.sdiv 214#8 + 
 theorem negate_ashr_thm (x x_1 : BitVec 8) : x_1 - x.sshiftRight 7 = x >>> 7 + x_1 := sorry
 
 theorem negate_lshr_thm (x x_1 : BitVec 8) : x_1 - x >>> 7 = x.sshiftRight 7 + x_1 := sorry
+
+theorem negate_sext_thm (x : BitVec 1) (x_1 : BitVec 8) : x_1 - signExtend 8 x = x_1 + setWidth 8 x := sorry
+
+theorem negate_zext_thm (x : BitVec 1) (x_1 : BitVec 8) : x_1 - setWidth 8 x = x_1 + signExtend 8 x := sorry
 
 theorem negation_of_increment_via_or_with_no_common_bits_set_thm (x x_1 : BitVec 8) : x_1 - (x <<< 1 ||| 1#8) = x_1 + (x <<< 1 ^^^ 255#8) := sorry
 

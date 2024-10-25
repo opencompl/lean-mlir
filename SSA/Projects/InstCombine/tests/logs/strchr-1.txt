@@ -66,8 +66,6 @@
 4: "test_simplify6" has unsupported operation: llvm.return
 
 1: "test_simplify7"
-4: "test_simplify7" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "test_simplify7" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "test_simplify7" has unsupported operation: builtin.unregistered: llvm.icmp

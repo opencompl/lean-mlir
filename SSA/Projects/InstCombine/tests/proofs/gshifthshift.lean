@@ -111,8 +111,229 @@ theorem lshr_lshr_proof : lshr_lshr_before ⊑ lshr_lshr_after := by
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> edb64a33 (Updated tests)
+=======
+def shl_trunc_bigger_lshr_before := [llvm|
+{
+^0(%arg44 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 5 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
+  %2 = llvm.lshr %arg44, %0 : i32
+  %3 = llvm.trunc %2 : i32 to i8
+  %4 = llvm.shl %3, %1 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+def shl_trunc_bigger_lshr_after := [llvm|
+{
+^0(%arg44 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = -8 : i8}> : () -> i8
+  %2 = llvm.lshr %arg44, %0 : i32
+  %3 = llvm.trunc %2 : i32 to i8
+  %4 = llvm.and %3, %1 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+theorem shl_trunc_bigger_lshr_proof : shl_trunc_bigger_lshr_before ⊑ shl_trunc_bigger_lshr_after := by
+  unfold shl_trunc_bigger_lshr_before shl_trunc_bigger_lshr_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN shl_trunc_bigger_lshr
+  apply shl_trunc_bigger_lshr_thm
+  ---END shl_trunc_bigger_lshr
+
+
+
+def shl_trunc_smaller_lshr_before := [llvm|
+{
+^0(%arg43 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 3 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 5 : i8}> : () -> i8
+  %2 = llvm.lshr %arg43, %0 : i32
+  %3 = llvm.trunc %2 : i32 to i8
+  %4 = llvm.shl %3, %1 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+def shl_trunc_smaller_lshr_after := [llvm|
+{
+^0(%arg43 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 2 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = -32 : i8}> : () -> i8
+  %2 = llvm.trunc %arg43 : i32 to i8
+  %3 = llvm.shl %2, %0 : i8
+  %4 = llvm.and %3, %1 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+theorem shl_trunc_smaller_lshr_proof : shl_trunc_smaller_lshr_before ⊑ shl_trunc_smaller_lshr_after := by
+  unfold shl_trunc_smaller_lshr_before shl_trunc_smaller_lshr_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN shl_trunc_smaller_lshr
+  apply shl_trunc_smaller_lshr_thm
+  ---END shl_trunc_smaller_lshr
+
+
+
+def shl_trunc_bigger_ashr_before := [llvm|
+{
+^0(%arg42 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 12 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 3 : i24}> : () -> i24
+  %2 = llvm.ashr %arg42, %0 : i32
+  %3 = llvm.trunc %2 : i32 to i24
+  %4 = llvm.shl %3, %1 : i24
+  "llvm.return"(%4) : (i24) -> ()
+}
+]
+def shl_trunc_bigger_ashr_after := [llvm|
+{
+^0(%arg42 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 9 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = -8 : i24}> : () -> i24
+  %2 = llvm.ashr %arg42, %0 : i32
+  %3 = llvm.trunc %2 : i32 to i24
+  %4 = llvm.and %3, %1 : i24
+  "llvm.return"(%4) : (i24) -> ()
+}
+]
+theorem shl_trunc_bigger_ashr_proof : shl_trunc_bigger_ashr_before ⊑ shl_trunc_bigger_ashr_after := by
+  unfold shl_trunc_bigger_ashr_before shl_trunc_bigger_ashr_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN shl_trunc_bigger_ashr
+  apply shl_trunc_bigger_ashr_thm
+  ---END shl_trunc_bigger_ashr
+
+
+
+def shl_trunc_smaller_ashr_before := [llvm|
+{
+^0(%arg41 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 10 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 13 : i24}> : () -> i24
+  %2 = llvm.ashr %arg41, %0 : i32
+  %3 = llvm.trunc %2 : i32 to i24
+  %4 = llvm.shl %3, %1 : i24
+  "llvm.return"(%4) : (i24) -> ()
+}
+]
+def shl_trunc_smaller_ashr_after := [llvm|
+{
+^0(%arg41 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 3 : i24}> : () -> i24
+  %1 = "llvm.mlir.constant"() <{value = -8192 : i24}> : () -> i24
+  %2 = llvm.trunc %arg41 : i32 to i24
+  %3 = llvm.shl %2, %0 : i24
+  %4 = llvm.and %3, %1 : i24
+  "llvm.return"(%4) : (i24) -> ()
+}
+]
+theorem shl_trunc_smaller_ashr_proof : shl_trunc_smaller_ashr_before ⊑ shl_trunc_smaller_ashr_after := by
+  unfold shl_trunc_smaller_ashr_before shl_trunc_smaller_ashr_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN shl_trunc_smaller_ashr
+  apply shl_trunc_smaller_ashr_thm
+  ---END shl_trunc_smaller_ashr
+
+
+
+def shl_trunc_bigger_shl_before := [llvm|
+{
+^0(%arg40 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 4 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 2 : i8}> : () -> i8
+  %2 = llvm.shl %arg40, %0 : i32
+  %3 = llvm.trunc %2 : i32 to i8
+  %4 = llvm.shl %3, %1 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+def shl_trunc_bigger_shl_after := [llvm|
+{
+^0(%arg40 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
+  %1 = llvm.trunc %arg40 : i32 to i8
+  %2 = llvm.shl %1, %0 : i8
+  "llvm.return"(%2) : (i8) -> ()
+}
+]
+theorem shl_trunc_bigger_shl_proof : shl_trunc_bigger_shl_before ⊑ shl_trunc_bigger_shl_after := by
+  unfold shl_trunc_bigger_shl_before shl_trunc_bigger_shl_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN shl_trunc_bigger_shl
+  apply shl_trunc_bigger_shl_thm
+  ---END shl_trunc_bigger_shl
+
+
+
+def shl_trunc_smaller_shl_before := [llvm|
+{
+^0(%arg39 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 4 : i8}> : () -> i8
+  %2 = llvm.shl %arg39, %0 : i32
+  %3 = llvm.trunc %2 : i32 to i8
+  %4 = llvm.shl %3, %1 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+def shl_trunc_smaller_shl_after := [llvm|
+{
+^0(%arg39 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
+  %1 = llvm.trunc %arg39 : i32 to i8
+  %2 = llvm.shl %1, %0 : i8
+  "llvm.return"(%2) : (i8) -> ()
+}
+]
+theorem shl_trunc_smaller_shl_proof : shl_trunc_smaller_shl_before ⊑ shl_trunc_smaller_shl_after := by
+  unfold shl_trunc_smaller_shl_before shl_trunc_smaller_shl_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN shl_trunc_smaller_shl
+  apply shl_trunc_smaller_shl_thm
+  ---END shl_trunc_smaller_shl
+
+
+
+>>>>>>> bd0a83c7 (Updated the generated tests)
 def shl_shl_constants_div_before := [llvm|
 {
 ^0(%arg27 : i32, %arg28 : i32):

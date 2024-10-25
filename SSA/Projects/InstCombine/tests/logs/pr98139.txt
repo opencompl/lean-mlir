@@ -13,6 +13,7 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "pr98139" has unsupported operation: builtin.unregistered: llvm.select
 
@@ -21,3 +22,5 @@
 >>>>>>> edb64a33 (Updated tests)
 4: "pr98139" has unsupported operation: builtin.unregistered: llvm.trunc
 
+=======
+>>>>>>> bd0a83c7 (Updated the generated tests)

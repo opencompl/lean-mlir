@@ -66,6 +66,20 @@ theorem src_srem_shl_demand_max_mask_hit_demand_thm (x : BitVec 32) :
 <<<<<<< HEAD
       fun x' => some (x' &&& 4294967292#32) := sorry
 
+theorem sext_shl_trunc_same_size_thm (x : BitVec 32) (x_1 : BitVec 16) :
+  (Option.bind (if 32#32 ≤ x then none else some (signExtend 32 x_1 <<< x.toNat)) fun x' => some (setWidth 16 x')) ⊑
+    Option.bind (if 32#32 ≤ x then none else some (setWidth 32 x_1 <<< x.toNat)) fun x' =>
+      some (setWidth 16 x') := sorry
+
+theorem sext_shl_trunc_smaller_thm (x : BitVec 32) (x_1 : BitVec 16) :
+  (Option.bind (if 32#32 ≤ x then none else some (signExtend 32 x_1 <<< x.toNat)) fun x' => some (setWidth 5 x')) ⊑
+    Option.bind (if 32#32 ≤ x then none else some (setWidth 32 x_1 <<< x.toNat)) fun x' => some (setWidth 5 x') := sorry
+
+theorem sext_shl_mask_thm (x : BitVec 32) (x_1 : BitVec 16) :
+  (Option.bind (if 32#32 ≤ x then none else some (signExtend 32 x_1 <<< x.toNat)) fun x' => some (x' &&& 65535#32)) ⊑
+    Option.bind (if 32#32 ≤ x then none else some (setWidth 32 x_1 <<< x.toNat)) fun x' =>
+      some (x' &&& 65535#32) := sorry
+
 theorem set_shl_mask_thm (x x_1 : BitVec 32) :
   (Option.bind (if 32#32 ≤ x then none else some ((x_1 ||| 196609#32) <<< x.toNat)) fun x' => some (x' &&& 65536#32)) ⊑
     Option.bind (if 32#32 ≤ x then none else some ((x_1 ||| 65537#32) <<< x.toNat)) fun x' =>
@@ -86,4 +100,15 @@ theorem set_shl_mask_thm (x x_1 : BitVec 32) :
     Option.bind (if 32#32 ≤ x then none else some ((x_1 ||| 65537#32) <<< x.toNat)) fun x' =>
       some (x' &&& 65536#32) := sorry
 >>>>>>> 1011dc2e (re-ran the tests)
+
+theorem must_drop_poison_thm (x x_1 : BitVec 32) :
+  ((if ((x_1 &&& 255#32) <<< x.toNat).sshiftRight x.toNat = x_1 &&& 255#32 then none
+        else
+          if (x_1 &&& 255#32) <<< x.toNat >>> x.toNat = x_1 &&& 255#32 then none
+          else if 32#32 ≤ x then none else some ((x_1 &&& 255#32) <<< x.toNat)).bind
+      fun x' => some (setWidth 8 x')) ⊑
+    Option.bind (if 32#32 ≤ x then none else some (x_1 <<< x.toNat)) fun x' => some (setWidth 8 x') := sorry
+
+theorem f_t15_t01_t09_thm (x : BitVec 40) :
+  setWidth 32 (x.sshiftRight 31) <<< 16 = setWidth 32 (x.sshiftRight 15) &&& 4294901760#32 := sorry
 

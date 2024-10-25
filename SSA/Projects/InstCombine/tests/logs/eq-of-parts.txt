@@ -8,103 +8,47 @@
 5: "use.i1" is empty
 
 1: "eq_10"
-4: "eq_10" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_10" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "eq_10" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "eq_210"
-4: "eq_210" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_210" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "eq_210" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "eq_3210"
 4: "eq_3210" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "eq_21"
-4: "eq_21" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "eq_21" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "eq_21_comm_and"
-4: "eq_21_comm_and" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_comm_and" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "eq_21_comm_and" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "eq_21_comm_eq"
-4: "eq_21_comm_eq" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_comm_eq" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "eq_21_comm_eq" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "eq_21_comm_eq2"
-4: "eq_21_comm_eq2" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_comm_eq2" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "eq_21_comm_eq2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "eq_21_vector"
-4: "eq_21_vector" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_vector" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "eq_21_vector" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "eq_irregular_bit_widths"
-4: "eq_irregular_bit_widths" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_irregular_bit_widths" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "eq_irregular_bit_widths" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "eq_21_extra_use_lshr"
 4: "eq_21_extra_use_lshr" has unsupported operation: llvm.call
-
-4: "eq_21_extra_use_lshr" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_extra_use_lshr" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_extra_use_lshr" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_extra_use_lshr" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "eq_21_extra_use_lshr" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "eq_21_extra_use_lshr" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "eq_21_extra_use_trunc"
-4: "eq_21_extra_use_trunc" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "eq_21_extra_use_trunc" has unsupported operation: llvm.call
-
-4: "eq_21_extra_use_trunc" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_extra_use_trunc" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_extra_use_trunc" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "eq_21_extra_use_trunc" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "eq_21_extra_use_trunc" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "eq_21_extra_use_eq1"
-4: "eq_21_extra_use_eq1" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_extra_use_eq1" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_extra_use_eq1" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_extra_use_eq1" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "eq_21_extra_use_eq1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "eq_21_extra_use_eq1" has unsupported operation: llvm.call
@@ -112,14 +56,6 @@
 4: "eq_21_extra_use_eq1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "eq_21_extra_use_eq2"
-4: "eq_21_extra_use_eq2" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_extra_use_eq2" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_extra_use_eq2" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_extra_use_eq2" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "eq_21_extra_use_eq2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "eq_21_extra_use_eq2" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -127,99 +63,39 @@
 4: "eq_21_extra_use_eq2" has unsupported operation: llvm.call
 
 1: "eq_21_logical"
-4: "eq_21_logical" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_logical" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "eq_21_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "eq_21_wrong_op1"
-4: "eq_21_wrong_op1" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_wrong_op1" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_wrong_op1" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_wrong_op1" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "eq_21_wrong_op1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "eq_21_wrong_op1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "eq_21_wrong_op2"
-4: "eq_21_wrong_op2" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_wrong_op2" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_wrong_op2" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_wrong_op2" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "eq_21_wrong_op2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "eq_21_wrong_op2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "eq_21_wrong_op3"
-4: "eq_21_wrong_op3" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_wrong_op3" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_wrong_op3" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_wrong_op3" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "eq_21_wrong_op3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "eq_21_wrong_op3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "eq_21_wrong_op4"
-4: "eq_21_wrong_op4" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_wrong_op4" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_wrong_op4" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_wrong_op4" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "eq_21_wrong_op4" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "eq_21_wrong_op4" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "eq_21_wrong_shift1"
-4: "eq_21_wrong_shift1" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_wrong_shift1" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_wrong_shift1" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_wrong_shift1" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "eq_21_wrong_shift1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "eq_21_wrong_shift1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "eq_21_wrong_shift2"
-4: "eq_21_wrong_shift2" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_wrong_shift2" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_wrong_shift2" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_wrong_shift2" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "eq_21_wrong_shift2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "eq_21_wrong_shift2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "eq_21_not_adjacent"
-4: "eq_21_not_adjacent" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_not_adjacent" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_not_adjacent" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_not_adjacent" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "eq_21_not_adjacent" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "eq_21_not_adjacent" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -228,129 +104,57 @@
 4: "eq_shift_in_zeros" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "eq_21_wrong_pred1"
-4: "eq_21_wrong_pred1" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_wrong_pred1" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_wrong_pred1" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_wrong_pred1" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "eq_21_wrong_pred1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "eq_21_wrong_pred1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "eq_21_wrong_pred2"
-4: "eq_21_wrong_pred2" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_wrong_pred2" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_wrong_pred2" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_21_wrong_pred2" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "eq_21_wrong_pred2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "eq_21_wrong_pred2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "ne_10"
-4: "ne_10" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_10" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "ne_10" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "ne_210"
-4: "ne_210" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_210" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "ne_210" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "ne_3210"
 4: "ne_3210" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "ne_21"
-4: "ne_21" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "ne_21" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "ne_21_comm_or"
-4: "ne_21_comm_or" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_comm_or" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "ne_21_comm_or" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "ne_21_comm_ne"
-4: "ne_21_comm_ne" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_comm_ne" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "ne_21_comm_ne" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "ne_21_comm_ne2"
-4: "ne_21_comm_ne2" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_comm_ne2" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "ne_21_comm_ne2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "ne_21_vector"
-4: "ne_21_vector" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_vector" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "ne_21_vector" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "ne_irregular_bit_widths"
-4: "ne_irregular_bit_widths" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_irregular_bit_widths" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "ne_irregular_bit_widths" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "ne_21_extra_use_lshr"
 4: "ne_21_extra_use_lshr" has unsupported operation: llvm.call
-
-4: "ne_21_extra_use_lshr" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_extra_use_lshr" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_extra_use_lshr" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_extra_use_lshr" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "ne_21_extra_use_lshr" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "ne_21_extra_use_lshr" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "ne_21_extra_use_trunc"
-4: "ne_21_extra_use_trunc" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "ne_21_extra_use_trunc" has unsupported operation: llvm.call
-
-4: "ne_21_extra_use_trunc" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_extra_use_trunc" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_extra_use_trunc" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "ne_21_extra_use_trunc" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "ne_21_extra_use_trunc" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "ne_21_extra_use_ne1"
-4: "ne_21_extra_use_ne1" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_extra_use_ne1" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_extra_use_ne1" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_extra_use_ne1" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "ne_21_extra_use_ne1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "ne_21_extra_use_ne1" has unsupported operation: llvm.call
@@ -358,14 +162,6 @@
 4: "ne_21_extra_use_ne1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "ne_21_extra_use_ne2"
-4: "ne_21_extra_use_ne2" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_extra_use_ne2" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_extra_use_ne2" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_extra_use_ne2" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "ne_21_extra_use_ne2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "ne_21_extra_use_ne2" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -373,99 +169,39 @@
 4: "ne_21_extra_use_ne2" has unsupported operation: llvm.call
 
 1: "ne_21_logical"
-4: "ne_21_logical" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_logical" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "ne_21_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "ne_21_wrong_op1"
-4: "ne_21_wrong_op1" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_wrong_op1" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_wrong_op1" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_wrong_op1" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "ne_21_wrong_op1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "ne_21_wrong_op1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "ne_21_wrong_op2"
-4: "ne_21_wrong_op2" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_wrong_op2" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_wrong_op2" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_wrong_op2" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "ne_21_wrong_op2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "ne_21_wrong_op2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "ne_21_wrong_op3"
-4: "ne_21_wrong_op3" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_wrong_op3" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_wrong_op3" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_wrong_op3" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "ne_21_wrong_op3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "ne_21_wrong_op3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "ne_21_wrong_op4"
-4: "ne_21_wrong_op4" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_wrong_op4" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_wrong_op4" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_wrong_op4" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "ne_21_wrong_op4" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "ne_21_wrong_op4" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "ne_21_wrong_shift1"
-4: "ne_21_wrong_shift1" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_wrong_shift1" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_wrong_shift1" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_wrong_shift1" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "ne_21_wrong_shift1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "ne_21_wrong_shift1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "ne_21_wrong_shift2"
-4: "ne_21_wrong_shift2" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_wrong_shift2" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_wrong_shift2" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_wrong_shift2" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "ne_21_wrong_shift2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "ne_21_wrong_shift2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "ne_21_not_adjacent"
-4: "ne_21_not_adjacent" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_not_adjacent" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_not_adjacent" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_not_adjacent" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "ne_21_not_adjacent" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "ne_21_not_adjacent" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -474,27 +210,11 @@
 4: "ne_shift_in_zeros" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "ne_21_wrong_pred1"
-4: "ne_21_wrong_pred1" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_wrong_pred1" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_wrong_pred1" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_wrong_pred1" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "ne_21_wrong_pred1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "ne_21_wrong_pred1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "ne_21_wrong_pred2"
-4: "ne_21_wrong_pred2" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_wrong_pred2" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_wrong_pred2" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_21_wrong_pred2" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "ne_21_wrong_pred2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "ne_21_wrong_pred2" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -505,18 +225,10 @@
 1: "eq_optimized_highbits_cmp_todo_overlapping"
 4: "eq_optimized_highbits_cmp_todo_overlapping" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "eq_optimized_highbits_cmp_todo_overlapping" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_optimized_highbits_cmp_todo_overlapping" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "eq_optimized_highbits_cmp_todo_overlapping" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "eq_optimized_highbits_cmp_fail_not_pow2"
 4: "eq_optimized_highbits_cmp_fail_not_pow2" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "eq_optimized_highbits_cmp_fail_not_pow2" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "eq_optimized_highbits_cmp_fail_not_pow2" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "eq_optimized_highbits_cmp_fail_not_pow2" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -526,27 +238,15 @@
 1: "ne_optimized_highbits_cmp_fail_not_mask"
 4: "ne_optimized_highbits_cmp_fail_not_mask" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "ne_optimized_highbits_cmp_fail_not_mask" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_optimized_highbits_cmp_fail_not_mask" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "ne_optimized_highbits_cmp_fail_not_mask" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "ne_optimized_highbits_cmp_fail_no_combined_int"
 4: "ne_optimized_highbits_cmp_fail_no_combined_int" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "ne_optimized_highbits_cmp_fail_no_combined_int" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_optimized_highbits_cmp_fail_no_combined_int" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "ne_optimized_highbits_cmp_fail_no_combined_int" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "ne_optimized_highbits_cmp_todo_overlapping"
 4: "ne_optimized_highbits_cmp_todo_overlapping" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ne_optimized_highbits_cmp_todo_overlapping" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "ne_optimized_highbits_cmp_todo_overlapping" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "ne_optimized_highbits_cmp_todo_overlapping" has unsupported operation: builtin.unregistered: llvm.icmp
 

@@ -1,3 +1,7 @@
 1: "test1"
-4: "test1" has unsupported operation: builtin.unregistered: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.and
+2: llvm.return
 

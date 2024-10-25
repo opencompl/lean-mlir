@@ -184,8 +184,6 @@
 1: "max_sub_ult_c1"
 4: "max_sub_ult_c1" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "max_sub_ult_c1" has unsupported operation: builtin.unregistered: llvm.sext
-
 1: "max_sub_ult_c2"
 4: "max_sub_ult_c2" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
 

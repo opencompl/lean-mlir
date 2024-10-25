@@ -131,8 +131,6 @@
 4: "fake_ldexp" has unsupported operation: llvm.call
 
 1: "fake_ldexp_16"
-4: "fake_ldexp_16" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "fake_ldexp_16" has unsupported operation: llvm.call
 
 1: "snprintf"

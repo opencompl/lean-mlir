@@ -6,8 +6,27 @@ open BitVec
 section gdivhshift_proof
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> edb64a33 (Updated tests)
+=======
+theorem t1_thm (x : BitVec 32) (x_1 : BitVec 16) :
+  (Option.bind (if 32#32 ≤ x then none else some (2#32 <<< x.toNat)) fun y' =>
+      if y' = 0#32 ∨ setWidth 32 x_1 = intMin 32 ∧ y' = 4294967295#32 then none else some ((setWidth 32 x_1).sdiv y')) ⊑
+    if 32#32 ≤ x + 1#32 then none else some (setWidth 32 x_1 >>> ((x.toNat + 1) % 4294967296)) := sorry
+
+theorem t2_thm (x : BitVec 32) (x_1 : BitVec 64) :
+  (Option.bind (if 32#32 ≤ x then none else some (1#32 <<< x.toNat)) fun x =>
+      if setWidth 64 x = 0#64 then none else some (x_1 / setWidth 64 x)) ⊑
+    if 64#64 ≤ setWidth 64 x then none else some (x_1 >>> (x.toNat % 18446744073709551616)) := sorry
+
+theorem t3_thm (x : BitVec 32) (x_1 : BitVec 64) :
+  (Option.bind (if 32#32 ≤ x then none else some (4#32 <<< x.toNat)) fun x =>
+      if setWidth 64 x = 0#64 then none else some (x_1 / setWidth 64 x)) ⊑
+    if 64#64 ≤ setWidth 64 (x + 2#32) then none
+    else some (x_1 >>> ((x.toNat + 2) % 4294967296 % 18446744073709551616)) := sorry
+
+>>>>>>> bd0a83c7 (Updated the generated tests)
 theorem t5_thm (x : BitVec 1) (x_1 : BitVec 32) :
   (Option.bind
       (match some x with
@@ -21,7 +40,7 @@ theorem t5_thm (x : BitVec 1) (x_1 : BitVec 32) :
       | some { toFin := ⟨1, ⋯⟩ } => none
       | some { toFin := ⟨0, ⋯⟩ } => some x_1)
       fun y' => if 32#32 ≤ y' then none else some (x_1 >>> y'.toNat) := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gdivhshift.lean:50:17: theorem t5_thm :
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gdivhshift.lean:153:17: theorem t5_thm :
   ∀ (x x_1 : BitVec 1) (x_2 : BitVec 32),
     (Option.bind
         (match some x_1 with

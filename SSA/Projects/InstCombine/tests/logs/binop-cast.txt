@@ -10,7 +10,14 @@
 1: "and_sext_to_sel"
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "and_sext_to_sel" has unsupported operation after optimization: builtin.unregistered: llvm.sext
+=======
+2: llvm.func
+2: llvm.sext
+2: llvm.and
+2: llvm.return
+>>>>>>> bd0a83c7 (Updated the generated tests)
 
 1: "and_sext_to_sel_constant_vec"
 8: "and_sext_to_sel_constant_vec" contains vectors which are unsupported
@@ -35,8 +42,6 @@
 >>>>>>> edb64a33 (Updated tests)
 
 1: "and_sext_to_sel_multi_use"
-4: "and_sext_to_sel_multi_use" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "and_sext_to_sel_multi_use" has unsupported operation: llvm.call
 
 <<<<<<< HEAD
@@ -48,8 +53,6 @@
 =======
 >>>>>>> edb64a33 (Updated tests)
 1: "and_sext_to_sel_multi_use_constant_mask"
-4: "and_sext_to_sel_multi_use_constant_mask" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "and_sext_to_sel_multi_use_constant_mask" has unsupported operation: llvm.call
 
 <<<<<<< HEAD
@@ -61,8 +64,6 @@
 =======
 >>>>>>> edb64a33 (Updated tests)
 1: "and_not_sext_to_sel"
-4: "and_not_sext_to_sel" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "and_not_sext_to_sel" has unsupported operation: llvm.call
 
 <<<<<<< HEAD
@@ -74,8 +75,6 @@
 =======
 >>>>>>> edb64a33 (Updated tests)
 1: "and_not_sext_to_sel_commute"
-4: "and_not_sext_to_sel_commute" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "and_not_sext_to_sel_commute" has unsupported operation: llvm.call
 
 4: "and_not_sext_to_sel_commute" has unsupported operation: llvm.call
@@ -89,19 +88,22 @@
 =======
 >>>>>>> edb64a33 (Updated tests)
 1: "and_xor_sext_to_sel"
-4: "and_xor_sext_to_sel" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "and_xor_sext_to_sel" has unsupported operation: llvm.call
 
 1: "and_not_zext_to_sel"
-4: "and_not_zext_to_sel" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "and_not_zext_to_sel" has unsupported operation: llvm.call
 
 1: "or_sext_to_sel"
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "or_sext_to_sel" has unsupported operation after optimization: builtin.unregistered: llvm.sext
+=======
+2: llvm.func
+2: llvm.sext
+2: llvm.or
+2: llvm.return
+>>>>>>> bd0a83c7 (Updated the generated tests)
 
 1: "or_sext_to_sel_constant_vec"
 8: "or_sext_to_sel_constant_vec" contains vectors which are unsupported
@@ -126,13 +128,9 @@
 >>>>>>> edb64a33 (Updated tests)
 
 1: "or_sext_to_sel_multi_use"
-4: "or_sext_to_sel_multi_use" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "or_sext_to_sel_multi_use" has unsupported operation: llvm.call
 
 1: "or_sext_to_sel_multi_use_constant_mask"
-4: "or_sext_to_sel_multi_use_constant_mask" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "or_sext_to_sel_multi_use_constant_mask" has unsupported operation: llvm.call
 
 <<<<<<< HEAD
@@ -144,22 +142,21 @@
 =======
 >>>>>>> edb64a33 (Updated tests)
 1: "xor_sext_to_sel"
-4: "xor_sext_to_sel" has unsupported operation: builtin.unregistered: llvm.sext
+2: llvm.func
+2: llvm.sext
+2: llvm.xor
+2: llvm.return
 
 1: "xor_sext_to_sel_constant_vec"
-4: "xor_sext_to_sel_constant_vec" has unsupported operation: builtin.unregistered: llvm.sext
+8: "xor_sext_to_sel_constant_vec" contains vectors which are unsupported
 
 1: "xor_sext_to_sel_swap"
-4: "xor_sext_to_sel_swap" has unsupported operation: builtin.unregistered: llvm.sext
+7: "xor_sext_to_sel_swap" is unchanged by InstCombine
 
 1: "xor_sext_to_sel_multi_use"
-4: "xor_sext_to_sel_multi_use" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "xor_sext_to_sel_multi_use" has unsupported operation: llvm.call
 
 1: "xor_sext_to_sel_multi_use_constant_mask"
-4: "xor_sext_to_sel_multi_use_constant_mask" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "xor_sext_to_sel_multi_use_constant_mask" has unsupported operation: llvm.call
 
 1: "PR63321"
@@ -178,9 +175,8 @@
 1: "and_add_non_bool"
 4: "and_add_non_bool" has unsupported operation: llvm.load
 
-4: "and_add_non_bool" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "and_add_bool_to_select"
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 4: "and_add_bool_to_select" has unsupported operation after optimization: builtin.unregistered: llvm.zext
@@ -190,6 +186,14 @@
 =======
 4: "and_add_bool_to_select" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 >>>>>>> edb64a33 (Updated tests)
+=======
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.add
+2: llvm.and
+2: llvm.return
+>>>>>>> bd0a83c7 (Updated the generated tests)
 
 1: "and_add_bool_no_fold"
 4: "and_add_bool_no_fold" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -200,6 +204,7 @@
 8: "and_add_bool_vec_to_select" contains vectors which are unsupported
 
 1: "and_add_bool_to_select_multi_use"
+<<<<<<< HEAD
 4: "and_add_bool_to_select_multi_use" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 =======
 4: "and_add_bool_no_fold" has unsupported operation: builtin.unregistered: llvm.select
@@ -216,4 +221,13 @@
 =======
 4: "and_add_bool_to_select_multi_use" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 >>>>>>> edb64a33 (Updated tests)
+=======
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.add
+2: llvm.and
+2: llvm.add
+2: llvm.return
+>>>>>>> bd0a83c7 (Updated the generated tests)
 

@@ -18,6 +18,7 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "f2" has unsupported operation: builtin.unregistered: llvm.select
 
@@ -26,3 +27,5 @@
 >>>>>>> edb64a33 (Updated tests)
 4: "f2" has unsupported operation: builtin.unregistered: llvm.zext
 
+=======
+>>>>>>> bd0a83c7 (Updated the generated tests)

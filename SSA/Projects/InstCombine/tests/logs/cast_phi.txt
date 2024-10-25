@@ -5,8 +5,6 @@
 
 4: "MainKernel" has unsupported operation: builtin.unregistered: llvm.uitofp
 
-4: "MainKernel" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "MainKernel" has unsupported operation: llvm.getelementptr
 
 4: "MainKernel" has unsupported operation: llvm.store
@@ -34,8 +32,6 @@
 4: "MainKernel" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "MainKernel" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "MainKernel" has unsupported operation: builtin.unregistered: llvm.sext
 
 4: "MainKernel" has unsupported operation: llvm.getelementptr
 
@@ -115,8 +111,6 @@
 
 4: "zext_from_legal_to_illegal_type" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "zext_from_legal_to_illegal_type" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "zext_from_illegal_to_illegal_type"
 4: "zext_from_illegal_to_illegal_type" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -130,16 +124,12 @@
 
 4: "zext_from_illegal_to_illegal_type" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "zext_from_illegal_to_illegal_type" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "zext_from_legal_to_legal_type"
 4: "zext_from_legal_to_legal_type" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "zext_from_legal_to_legal_type" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "zext_from_legal_to_legal_type" has unsupported operation: llvm.call
-
-4: "zext_from_legal_to_legal_type" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "zext_from_legal_to_legal_type" has unsupported operation: builtin.unregistered: llvm.br
 
@@ -153,8 +143,6 @@
 4: "zext_from_illegal_to_legal_type" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "zext_from_illegal_to_legal_type" has unsupported operation: llvm.call
-
-4: "zext_from_illegal_to_legal_type" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "zext_from_illegal_to_legal_type" has unsupported operation: builtin.unregistered: llvm.br
 
@@ -171,18 +159,12 @@
 
 4: "trunc_in_loop_exit_block" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "trunc_in_loop_exit_block" has unsupported operation: builtin.unregistered: llvm.trunc
-
 1: "zext_in_loop_and_exit_block"
 4: "zext_in_loop_and_exit_block" has unsupported operation: builtin.unregistered: llvm.br
-
-4: "zext_in_loop_and_exit_block" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "zext_in_loop_and_exit_block" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "zext_in_loop_and_exit_block" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "zext_in_loop_and_exit_block" has unsupported operation: builtin.unregistered: llvm.br
-
-4: "zext_in_loop_and_exit_block" has unsupported operation: builtin.unregistered: llvm.zext
 

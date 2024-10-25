@@ -231,8 +231,6 @@
 1: "lshr_sub_nsw"
 4: "lshr_sub_nsw" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "lshr_sub_nsw" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "lshr_sub_wrong_amount"
 7: "lshr_sub_wrong_amount" is unchanged by InstCombine
 
@@ -244,8 +242,6 @@
 
 1: "lshr_sub_nsw_splat"
 4: "lshr_sub_nsw_splat" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "lshr_sub_nsw_splat" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "lshr_sub_nsw_splat_poison"
 4: "lshr_sub_nsw_splat_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -261,8 +257,6 @@
 1: "ashr_sub_nsw"
 4: "ashr_sub_nsw" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "ashr_sub_nsw" has unsupported operation: builtin.unregistered: llvm.sext
-
 1: "ashr_sub_wrong_amount"
 7: "ashr_sub_wrong_amount" is unchanged by InstCombine
 
@@ -274,8 +268,6 @@
 
 1: "ashr_sub_nsw_splat"
 4: "ashr_sub_nsw_splat" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ashr_sub_nsw_splat" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "ashr_sub_nsw_splat_poison"
 4: "ashr_sub_nsw_splat_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -432,12 +424,8 @@
 1: "lsb_mask_sign_zext"
 4: "lsb_mask_sign_zext" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "lsb_mask_sign_zext" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "lsb_mask_sign_zext_commuted"
 4: "lsb_mask_sign_zext_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "lsb_mask_sign_zext_commuted" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "lsb_mask_sign_zext_wrong_cst1"
 7: "lsb_mask_sign_zext_wrong_cst1" is unchanged by InstCombine
@@ -462,12 +450,8 @@
 1: "lsb_mask_sign_sext"
 4: "lsb_mask_sign_sext" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "lsb_mask_sign_sext" has unsupported operation: builtin.unregistered: llvm.sext
-
 1: "lsb_mask_sign_sext_commuted"
 4: "lsb_mask_sign_sext_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "lsb_mask_sign_sext_commuted" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "lsb_mask_sign_sext_wrong_cst1"
 7: "lsb_mask_sign_sext_wrong_cst1" is unchanged by InstCombine

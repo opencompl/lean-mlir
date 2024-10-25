@@ -388,6 +388,41 @@ theorem sub_from_constant_of_add_with_constant_proof : sub_from_constant_of_add_
 
 
 
+def t20_before := [llvm|
+{
+^0(%arg135 : i8, %arg136 : i16):
+  %0 = "llvm.mlir.constant"() <{value = -42 : i16}> : () -> i16
+  %1 = llvm.shl %0, %arg136 : i16
+  %2 = llvm.trunc %1 : i16 to i8
+  %3 = llvm.sub %arg135, %2 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+def t20_after := [llvm|
+{
+^0(%arg135 : i8, %arg136 : i16):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i16}> : () -> i16
+  %1 = llvm.shl %0, %arg136 : i16
+  %2 = llvm.trunc %1 : i16 to i8
+  %3 = llvm.add %arg135, %2 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+theorem t20_proof : t20_before ⊑ t20_after := by
+  unfold t20_before t20_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN t20
+  all_goals (try extract_goal ; sorry)
+  ---END t20
+
+
+
 def negate_xor_before := [llvm|
 {
 ^0(%arg132 : i4):
@@ -556,6 +591,68 @@ theorem negate_lshr_proof : negate_lshr_before ⊑ negate_lshr_after := by
   ---BEGIN negate_lshr
   all_goals (try extract_goal ; sorry)
   ---END negate_lshr
+
+
+
+def negate_sext_before := [llvm|
+{
+^0(%arg104 : i8, %arg105 : i1):
+  %0 = llvm.sext %arg105 : i1 to i8
+  %1 = llvm.sub %arg104, %0 : i8
+  "llvm.return"(%1) : (i8) -> ()
+}
+]
+def negate_sext_after := [llvm|
+{
+^0(%arg104 : i8, %arg105 : i1):
+  %0 = llvm.zext %arg105 : i1 to i8
+  %1 = llvm.add %arg104, %0 : i8
+  "llvm.return"(%1) : (i8) -> ()
+}
+]
+theorem negate_sext_proof : negate_sext_before ⊑ negate_sext_after := by
+  unfold negate_sext_before negate_sext_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN negate_sext
+  all_goals (try extract_goal ; sorry)
+  ---END negate_sext
+
+
+
+def negate_zext_before := [llvm|
+{
+^0(%arg102 : i8, %arg103 : i1):
+  %0 = llvm.zext %arg103 : i1 to i8
+  %1 = llvm.sub %arg102, %0 : i8
+  "llvm.return"(%1) : (i8) -> ()
+}
+]
+def negate_zext_after := [llvm|
+{
+^0(%arg102 : i8, %arg103 : i1):
+  %0 = llvm.sext %arg103 : i1 to i8
+  %1 = llvm.add %arg102, %0 : i8
+  "llvm.return"(%1) : (i8) -> ()
+}
+]
+theorem negate_zext_proof : negate_zext_before ⊑ negate_zext_after := by
+  unfold negate_zext_before negate_zext_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN negate_zext
+  all_goals (try extract_goal ; sorry)
+  ---END negate_zext
 
 
 

@@ -231,8 +231,6 @@
 4: "bitcast_select_swap7" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 1: "bitcast_select_multi_uses"
-4: "bitcast_select_multi_uses" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "bitcast_select_multi_uses" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 4: "bitcast_select_multi_uses" has unsupported operation: builtin.unregistered: llvm.bitcast
@@ -433,7 +431,7 @@
 >>>>>>> edb64a33 (Updated tests)
 
 1: "vec_sel_xor_multi_use"
-4: "vec_sel_xor_multi_use" has unsupported operation: builtin.unregistered: llvm.sext
+8: "vec_sel_xor_multi_use" contains vectors which are unsupported
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -482,8 +480,6 @@
 
 4: "computesignbits_through_shuffles" has unsupported operation: builtin.unregistered: llvm.fcmp
 
-4: "computesignbits_through_shuffles" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "computesignbits_through_shuffles" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 4: "computesignbits_through_shuffles" has unsupported operation: builtin.unregistered: llvm.shufflevector
@@ -492,6 +488,7 @@
 
 4: "computesignbits_through_shuffles" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
+<<<<<<< HEAD
 4: "computesignbits_through_shuffles" has unsupported operation: builtin.unregistered: llvm.trunc
 
 <<<<<<< HEAD
@@ -502,6 +499,8 @@
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
 =======
 >>>>>>> edb64a33 (Updated tests)
+=======
+>>>>>>> bd0a83c7 (Updated the generated tests)
 4: "computesignbits_through_shuffles" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 1: "computesignbits_through_two_input_shuffle"

@@ -133,7 +133,7 @@
 4: "cttz_ugt_bw_minus_one_i33" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "cttz_ult_one_v2i32"
-4: "cttz_ult_one_v2i32" has unsupported operation: builtin.unregistered: llvm.trunc
+8: "cttz_ult_one_v2i32" contains vectors which are unsupported
 
 1: "cttz_ult_other_v2i32"
 4: "cttz_ult_other_v2i32" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -185,8 +185,6 @@
 1: "trunc_cttz_ult_other_i33_i5"
 4: "trunc_cttz_ult_other_i33_i5" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
-4: "trunc_cttz_ult_other_i33_i5" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "trunc_cttz_ult_other_i33_i5" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "trunc_cttz_true_ult_other_i32_i5"
@@ -195,8 +193,6 @@
 1: "trunc_cttz_false_ult_other_i32_i5"
 4: "trunc_cttz_false_ult_other_i32_i5" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
-4: "trunc_cttz_false_ult_other_i32_i5" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "trunc_cttz_false_ult_other_i32_i5" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "trunc_cttz_false_ult_other_i32_i6"
@@ -204,8 +200,6 @@
 
 1: "trunc_cttz_false_ult_other_i32_i6_extra_use"
 4: "trunc_cttz_false_ult_other_i32_i6_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.cttz
-
-4: "trunc_cttz_false_ult_other_i32_i6_extra_use" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "trunc_cttz_false_ult_other_i32_i6_extra_use" has unsupported operation: llvm.call
 
@@ -223,8 +217,6 @@
 1: "trunc_ctlz_ugt_other_i33_i5"
 4: "trunc_ctlz_ugt_other_i33_i5" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
-4: "trunc_ctlz_ugt_other_i33_i5" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "trunc_ctlz_ugt_other_i33_i5" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "trunc_ctlz_true_ugt_other_i32_i5"
@@ -233,8 +225,6 @@
 1: "trunc_ctlz_false_ugt_other_i32_i5"
 4: "trunc_ctlz_false_ugt_other_i32_i5" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
-4: "trunc_ctlz_false_ugt_other_i32_i5" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "trunc_ctlz_false_ugt_other_i32_i5" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "trunc_ctlz_false_ugt_other_i32_i6"
@@ -242,8 +232,6 @@
 
 1: "trunc_ctlz_false_ugt_other_i32_i6_extra_use"
 4: "trunc_ctlz_false_ugt_other_i32_i6_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
-
-4: "trunc_ctlz_false_ugt_other_i32_i6_extra_use" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "trunc_ctlz_false_ugt_other_i32_i6_extra_use" has unsupported operation: llvm.call
 
@@ -257,8 +245,6 @@
 
 1: "trunc_negative_destbits_not_enough"
 4: "trunc_negative_destbits_not_enough" has unsupported operation: builtin.unregistered: llvm.intr.cttz
-
-4: "trunc_negative_destbits_not_enough" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "trunc_negative_destbits_not_enough" has unsupported operation: builtin.unregistered: llvm.icmp
 

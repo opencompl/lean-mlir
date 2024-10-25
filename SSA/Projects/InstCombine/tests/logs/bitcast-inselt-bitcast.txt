@@ -2,7 +2,7 @@
 5: "use" is empty
 
 1: "insert0_v2i8"
-4: "insert0_v2i8" has unsupported operation: builtin.unregistered: llvm.zext
+8: "insert0_v2i8" contains vectors which are unsupported
 
 1: "insert1_v2i8"
 4: "insert1_v2i8" has unsupported operation: builtin.unregistered: llvm.bitcast
@@ -12,7 +12,7 @@
 4: "insert1_v2i8" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 1: "insert0_v4i8"
-4: "insert0_v4i8" has unsupported operation: builtin.unregistered: llvm.zext
+8: "insert0_v4i8" contains vectors which are unsupported
 
 1: "insert0_v2half"
 4: "insert0_v2half" has unsupported operation: builtin.unregistered: llvm.bitcast

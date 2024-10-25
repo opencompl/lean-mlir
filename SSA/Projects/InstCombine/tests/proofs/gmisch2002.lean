@@ -15,12 +15,46 @@ section gmisch2002_statements
 <<<<<<< HEAD
 <<<<<<< HEAD
 
+<<<<<<< HEAD
 =======
                                                     
 >>>>>>> 1011dc2e (re-ran the tests)
 =======
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+def cast_test_2002h08h02_before := [llvm|
+{
+^0(%arg1 : i64):
+  %0 = llvm.trunc %arg1 : i64 to i8
+  %1 = llvm.zext %0 : i8 to i64
+  "llvm.return"(%1) : (i64) -> ()
+}
+]
+def cast_test_2002h08h02_after := [llvm|
+{
+^0(%arg1 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 255 : i64}> : () -> i64
+  %1 = llvm.and %arg1, %0 : i64
+  "llvm.return"(%1) : (i64) -> ()
+}
+]
+theorem cast_test_2002h08h02_proof : cast_test_2002h08h02_before ⊑ cast_test_2002h08h02_after := by
+  unfold cast_test_2002h08h02_before cast_test_2002h08h02_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN cast_test_2002h08h02
+  apply cast_test_2002h08h02_thm
+  ---END cast_test_2002h08h02
+
+
+
+>>>>>>> bd0a83c7 (Updated the generated tests)
 def missed_const_prop_2002h12h05_before := [llvm|
 {
 ^0(%arg0 : i32):

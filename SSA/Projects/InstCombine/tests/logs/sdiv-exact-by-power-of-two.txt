@@ -10,8 +10,6 @@
 1: "n2"
 4: "n2" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "n2" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "t3_vec_splat"
 <<<<<<< HEAD
 <<<<<<< HEAD

@@ -2,18 +2,21 @@
 5: "use" is empty
 
 1: "trunc_lshr_trunc"
-4: "trunc_lshr_trunc" has unsupported operation: builtin.unregistered: llvm.trunc
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.return
 
 1: "trunc_shl_trunc"
-4: "trunc_shl_trunc" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "trunc_shl_trunc" has unsupported operation: builtin.unregistered: llvm.trunc
+7: "trunc_shl_trunc" is unchanged by InstCombine
 
 1: "trunc_lshr_trunc_uniform"
-4: "trunc_lshr_trunc_uniform" has unsupported operation: builtin.unregistered: llvm.trunc
+8: "trunc_lshr_trunc_uniform" contains vectors which are unsupported
 
 1: "trunc_lshr_trunc_nonuniform"
-4: "trunc_lshr_trunc_nonuniform" has unsupported operation: builtin.unregistered: llvm.trunc
+8: "trunc_lshr_trunc_nonuniform" contains vectors which are unsupported
 
 1: "trunc_lshr_trunc_uniform_poison"
 4: "trunc_lshr_trunc_uniform_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -24,29 +27,33 @@
 
 4: "trunc_lshr_trunc_uniform_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
 
-4: "trunc_lshr_trunc_uniform_poison" has unsupported operation: builtin.unregistered: llvm.trunc
-
 1: "trunc_lshr_trunc_outofrange"
-4: "trunc_lshr_trunc_outofrange" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "trunc_lshr_trunc_outofrange" has unsupported operation: builtin.unregistered: llvm.trunc
+7: "trunc_lshr_trunc_outofrange" is unchanged by InstCombine
 
 1: "trunc_lshr_trunc_nonuniform_outofrange"
-4: "trunc_lshr_trunc_nonuniform_outofrange" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "trunc_lshr_trunc_nonuniform_outofrange" has unsupported operation: builtin.unregistered: llvm.trunc
+7: "trunc_lshr_trunc_nonuniform_outofrange" is unchanged by InstCombine
 
 1: "trunc_ashr_trunc"
-4: "trunc_ashr_trunc" has unsupported operation: builtin.unregistered: llvm.trunc
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.return
 
 1: "trunc_ashr_trunc_exact"
-4: "trunc_ashr_trunc_exact" has unsupported operation: builtin.unregistered: llvm.trunc
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.return
 
 1: "trunc_ashr_trunc_uniform"
-4: "trunc_ashr_trunc_uniform" has unsupported operation: builtin.unregistered: llvm.trunc
+8: "trunc_ashr_trunc_uniform" contains vectors which are unsupported
 
 1: "trunc_ashr_trunc_nonuniform"
-4: "trunc_ashr_trunc_nonuniform" has unsupported operation: builtin.unregistered: llvm.trunc
+8: "trunc_ashr_trunc_nonuniform" contains vectors which are unsupported
 
 1: "trunc_ashr_trunc_uniform_poison"
 4: "trunc_ashr_trunc_uniform_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -57,22 +64,12 @@
 
 4: "trunc_ashr_trunc_uniform_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
 
-4: "trunc_ashr_trunc_uniform_poison" has unsupported operation: builtin.unregistered: llvm.trunc
-
 1: "trunc_ashr_trunc_outofrange"
-4: "trunc_ashr_trunc_outofrange" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "trunc_ashr_trunc_outofrange" has unsupported operation: builtin.unregistered: llvm.trunc
+7: "trunc_ashr_trunc_outofrange" is unchanged by InstCombine
 
 1: "trunc_ashr_trunc_nonuniform_outofrange"
-4: "trunc_ashr_trunc_nonuniform_outofrange" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "trunc_ashr_trunc_nonuniform_outofrange" has unsupported operation: builtin.unregistered: llvm.trunc
+7: "trunc_ashr_trunc_nonuniform_outofrange" is unchanged by InstCombine
 
 1: "trunc_ashr_trunc_multiuse"
-4: "trunc_ashr_trunc_multiuse" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "trunc_ashr_trunc_multiuse" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "trunc_ashr_trunc_multiuse" has unsupported operation: llvm.call
 

@@ -79,6 +79,37 @@ theorem test6a_proof : test6a_before ⊑ test6a_after := by
 
 
 
+def test7_before := [llvm|
+{
+^0(%arg44 : i8):
+  %0 = "llvm.mlir.constant"() <{value = -1 : i29}> : () -> i29
+  %1 = llvm.zext %arg44 : i8 to i29
+  %2 = llvm.ashr %0, %1 : i29
+  "llvm.return"(%2) : (i29) -> ()
+}
+]
+def test7_after := [llvm|
+{
+^0(%arg44 : i8):
+  %0 = "llvm.mlir.constant"() <{value = -1 : i29}> : () -> i29
+  "llvm.return"(%0) : (i29) -> ()
+}
+]
+theorem test7_proof : test7_before ⊑ test7_after := by
+  unfold test7_before test7_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test7
+  apply test7_thm
+  ---END test7
+
+
+
 def test8_before := [llvm|
 {
 ^0(%arg43 : i7):
@@ -465,10 +496,81 @@ theorem test15_proof : test15_before ⊑ test15_after := by
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
 =======
 >>>>>>> edb64a33 (Updated tests)
+=======
+def test15a_before := [llvm|
+{
+^0(%arg23 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
+  %2 = "llvm.mlir.constant"() <{value = 64 : i53}> : () -> i53
+  %3 = "llvm.select"(%arg23, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  %4 = llvm.zext %3 : i8 to i53
+  %5 = llvm.shl %2, %4 : i53
+  "llvm.return"(%5) : (i53) -> ()
+}
+]
+def test15a_after := [llvm|
+{
+^0(%arg23 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 512 : i53}> : () -> i53
+  %1 = "llvm.mlir.constant"() <{value = 128 : i53}> : () -> i53
+  %2 = "llvm.select"(%arg23, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i53, i53) -> i53
+  "llvm.return"(%2) : (i53) -> ()
+}
+]
+theorem test15a_proof : test15a_before ⊑ test15a_after := by
+  unfold test15a_before test15a_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test15a
+  apply test15a_thm
+  ---END test15a
+
+
+
+def test23_before := [llvm|
+{
+^0(%arg8 : i44):
+  %0 = "llvm.mlir.constant"() <{value = 33 : i44}> : () -> i44
+  %1 = llvm.shl %arg8, %0 : i44
+  %2 = llvm.ashr %1, %0 : i44
+  %3 = llvm.trunc %2 : i44 to i11
+  "llvm.return"(%3) : (i11) -> ()
+}
+]
+def test23_after := [llvm|
+{
+^0(%arg8 : i44):
+  %0 = llvm.trunc %arg8 : i44 to i11
+  "llvm.return"(%0) : (i11) -> ()
+}
+]
+theorem test23_proof : test23_before ⊑ test23_after := by
+  unfold test23_before test23_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test23
+  apply test23_thm
+  ---END test23
+
+
+
+>>>>>>> bd0a83c7 (Updated the generated tests)
 def shl_lshr_eq_amt_multi_use_before := [llvm|
 {
 ^0(%arg7 : i44):

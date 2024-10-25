@@ -93,8 +93,6 @@
 1: "PR45762"
 4: "PR45762" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
-4: "PR45762" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "PR45762" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
@@ -107,8 +105,6 @@
 >>>>>>> edb64a33 (Updated tests)
 1: "PR45762_logical"
 4: "PR45762_logical" has unsupported operation: builtin.unregistered: llvm.intr.cttz
-
-4: "PR45762_logical" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "PR45762_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 

@@ -1,8 +1,6 @@
 1: "use"
 4: "use" has unsupported operation: llvm.call
 
-4: "use" has unsupported operation: builtin.unregistered: llvm.trunc
-
 1: "strlen"
 5: "strlen" is empty
 

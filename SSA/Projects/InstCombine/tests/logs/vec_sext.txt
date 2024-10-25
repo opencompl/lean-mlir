@@ -39,5 +39,3 @@
 
 4: "is_positive_poison_elt" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "is_positive_poison_elt" has unsupported operation: builtin.unregistered: llvm.sext
-

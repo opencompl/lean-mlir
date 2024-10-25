@@ -391,6 +391,74 @@ theorem test19_proof : test19_before ⊑ test19_after := by
 
 
 
+def test22_before := [llvm|
+{
+^0(%arg189 : i1):
+  %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
+  %1 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %2 = llvm.xor %arg189, %0 : i1
+  %3 = llvm.zext %2 : i1 to i32
+  %4 = llvm.xor %3, %1 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def test22_after := [llvm|
+{
+^0(%arg189 : i1):
+  %0 = llvm.zext %arg189 : i1 to i32
+  "llvm.return"(%0) : (i32) -> ()
+}
+]
+theorem test22_proof : test22_before ⊑ test22_after := by
+  unfold test22_before test22_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test22
+  all_goals (try extract_goal ; sorry)
+  ---END test22
+
+
+
+def fold_zext_xor_sandwich_before := [llvm|
+{
+^0(%arg188 : i1):
+  %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
+  %1 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %2 = llvm.xor %arg188, %0 : i1
+  %3 = llvm.zext %2 : i1 to i32
+  %4 = llvm.xor %3, %1 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def fold_zext_xor_sandwich_after := [llvm|
+{
+^0(%arg188 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 3 : i32}> : () -> i32
+  %1 = llvm.zext %arg188 : i1 to i32
+  %2 = llvm.xor %1, %0 : i32
+  "llvm.return"(%2) : (i32) -> ()
+}
+]
+theorem fold_zext_xor_sandwich_proof : fold_zext_xor_sandwich_before ⊑ fold_zext_xor_sandwich_after := by
+  unfold fold_zext_xor_sandwich_before fold_zext_xor_sandwich_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN fold_zext_xor_sandwich
+  all_goals (try extract_goal ; sorry)
+  ---END fold_zext_xor_sandwich
+
+
+
 def test25_before := [llvm|
 {
 ^0(%arg181 : i32, %arg182 : i32):

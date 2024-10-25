@@ -21,12 +21,8 @@
 1: "test_v4i32_negconstsplat"
 4: "test_v4i32_negconstsplat" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "test_v4i32_negconstsplat" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "test_v4i32_negconst"
 4: "test_v4i32_negconst" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "test_v4i32_negconst" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "test_v4i32_negconst_undef"
 4: "test_v4i32_negconst_undef" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -52,8 +48,8 @@
 >>>>>>> edb64a33 (Updated tests)
 
 1: "test_v4i32_zext_shl_splatconst_pow2"
-4: "test_v4i32_zext_shl_splatconst_pow2" has unsupported operation: builtin.unregistered: llvm.zext
+8: "test_v4i32_zext_shl_splatconst_pow2" contains vectors which are unsupported
 
 1: "test_v4i32_zext_shl_const_pow2"
-4: "test_v4i32_zext_shl_const_pow2" has unsupported operation: builtin.unregistered: llvm.zext
+8: "test_v4i32_zext_shl_const_pow2" contains vectors which are unsupported
 

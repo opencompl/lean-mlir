@@ -1,12 +1,21 @@
 1: "t0"
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "t0" has unsupported operation after optimization: builtin.unregistered: llvm.sext
+=======
+2: llvm.func
+2: llvm.sext
+2: llvm.add
+2: llvm.xor
+2: llvm.return
+>>>>>>> bd0a83c7 (Updated the generated tests)
 
 1: "t0_vec"
 8: "t0_vec" contains vectors which are unsupported
 
 1: "t1"
+<<<<<<< HEAD
 4: "t1" has unsupported operation after optimization: builtin.unregistered: llvm.sext
 
 4: "t1" has unsupported operation after optimization: builtin.unregistered: llvm.sext
@@ -28,17 +37,32 @@
 
 4: "t1" has unsupported operation after optimization: builtin.unregistered: llvm.sext
 >>>>>>> edb64a33 (Updated tests)
+=======
+2: llvm.func
+2: llvm.sext
+2: llvm.sext
+2: llvm.add
+2: llvm.xor
+2: llvm.return
+>>>>>>> bd0a83c7 (Updated the generated tests)
 
 1: "t2"
-4: "t2" has unsupported operation: builtin.unregistered: llvm.sext
-
-4: "t2" has unsupported operation: builtin.unregistered: llvm.sext
+2: llvm.func
+2: llvm.sext
+2: llvm.sext
+2: llvm.add
+2: llvm.xor
+2: llvm.return
 
 1: "t3"
-4: "t3" has unsupported operation: builtin.unregistered: llvm.sext
+2: llvm.func
+2: llvm.sext
+2: llvm.add
+2: llvm.xor
+2: llvm.return
 
 1: "t3_vec"
-4: "t3_vec" has unsupported operation: builtin.unregistered: llvm.sext
+8: "t3_vec" contains vectors which are unsupported
 
 1: "xor.commuted"
 4: "xor.commuted" has unsupported operation: llvm.call
@@ -52,8 +76,6 @@
 =======
 >>>>>>> edb64a33 (Updated tests)
 1: "extrause01_v1"
-4: "extrause01_v1" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "extrause01_v1" has unsupported operation: llvm.call
 
 <<<<<<< HEAD
@@ -65,20 +87,14 @@
 =======
 >>>>>>> edb64a33 (Updated tests)
 1: "extrause10_v1"
-4: "extrause10_v1" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "extrause10_v1" has unsupported operation: llvm.call
 
 1: "extrause11_v1"
-4: "extrause11_v1" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "extrause11_v1" has unsupported operation: llvm.call
 
 4: "extrause11_v1" has unsupported operation: llvm.call
 
 1: "extrause001_v2"
-4: "extrause001_v2" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "extrause001_v2" has unsupported operation: llvm.call
 
 <<<<<<< HEAD
@@ -90,8 +106,6 @@
 =======
 >>>>>>> edb64a33 (Updated tests)
 1: "extrause010_v2"
-4: "extrause010_v2" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "extrause010_v2" has unsupported operation: llvm.call
 
 <<<<<<< HEAD
@@ -103,11 +117,7 @@
 =======
 >>>>>>> edb64a33 (Updated tests)
 1: "extrause011_v2"
-4: "extrause011_v2" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "extrause011_v2" has unsupported operation: llvm.call
-
-4: "extrause011_v2" has unsupported operation: builtin.unregistered: llvm.sext
 
 4: "extrause011_v2" has unsupported operation: llvm.call
 
@@ -120,8 +130,6 @@
 =======
 >>>>>>> edb64a33 (Updated tests)
 1: "extrause100_v2"
-4: "extrause100_v2" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "extrause100_v2" has unsupported operation: llvm.call
 
 <<<<<<< HEAD
@@ -133,8 +141,6 @@
 =======
 >>>>>>> edb64a33 (Updated tests)
 1: "extrause101_v2"
-4: "extrause101_v2" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "extrause101_v2" has unsupported operation: llvm.call
 
 4: "extrause101_v2" has unsupported operation: llvm.call
@@ -148,20 +154,12 @@
 =======
 >>>>>>> edb64a33 (Updated tests)
 1: "extrause110_v2"
-4: "extrause110_v2" has unsupported operation: builtin.unregistered: llvm.sext
-
-4: "extrause110_v2" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "extrause110_v2" has unsupported operation: llvm.call
 
 4: "extrause110_v2" has unsupported operation: llvm.call
 
 1: "extrause111_v2"
-4: "extrause111_v2" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "extrause111_v2" has unsupported operation: llvm.call
-
-4: "extrause111_v2" has unsupported operation: builtin.unregistered: llvm.sext
 
 4: "extrause111_v2" has unsupported operation: llvm.call
 

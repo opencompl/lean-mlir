@@ -25,11 +25,7 @@
 1: "test_load_cast_combine_loop"
 4: "test_load_cast_combine_loop" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "test_load_cast_combine_loop" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "test_load_cast_combine_loop" has unsupported operation: llvm.getelementptr
-
-4: "test_load_cast_combine_loop" has unsupported operation: builtin.unregistered: llvm.sext
 
 4: "test_load_cast_combine_loop" has unsupported operation: llvm.getelementptr
 

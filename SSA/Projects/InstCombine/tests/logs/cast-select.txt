@@ -3,6 +3,7 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "zext" has unsupported operation: builtin.unregistered: llvm.select
 
@@ -76,6 +77,23 @@
 >>>>>>> edb64a33 (Updated tests)
 4: "trunc_vec" has unsupported operation: builtin.unregistered: llvm.trunc
 
+=======
+1: "zext_vec"
+4: "zext_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sext"
+4: "sext" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "sext_vec"
+4: "sext_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "trunc"
+4: "trunc" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "trunc_vec"
+4: "trunc_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+>>>>>>> bd0a83c7 (Updated the generated tests)
 1: "fpext"
 4: "fpext" has unsupported operation: builtin.unregistered: llvm.fcmp
 

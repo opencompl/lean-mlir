@@ -165,5 +165,3 @@
 1: "pr44802"
 4: "pr44802" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "pr44802" has unsupported operation: builtin.unregistered: llvm.zext
-

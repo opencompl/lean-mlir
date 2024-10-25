@@ -38,8 +38,6 @@
 1: "neg_or_ashr_i32"
 4: "neg_or_ashr_i32" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "neg_or_ashr_i32" has unsupported operation: builtin.unregistered: llvm.sext
-
 1: "sub_ashr_or_i32_nuw_nsw"
 4: "sub_ashr_or_i32_nuw_nsw" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -64,8 +62,6 @@
 >>>>>>> edb64a33 (Updated tests)
 1: "neg_or_ashr_i32_commute"
 4: "neg_or_ashr_i32_commute" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "neg_or_ashr_i32_commute" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "sub_ashr_or_i32_vec"
 4: "sub_ashr_or_i32_vec" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -92,8 +88,6 @@
 1: "neg_or_ashr_i32_vec"
 4: "neg_or_ashr_i32_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "neg_or_ashr_i32_vec" has unsupported operation: builtin.unregistered: llvm.sext
-
 1: "sub_ashr_or_i32_vec_commute"
 4: "sub_ashr_or_i32_vec_commute" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -107,8 +101,6 @@
 >>>>>>> edb64a33 (Updated tests)
 1: "neg_or_ashr_i32_vec_commute"
 4: "neg_or_ashr_i32_vec_commute" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "neg_or_ashr_i32_vec_commute" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "sub_ashr_or_i32_extra_use_sub"
 4: "sub_ashr_or_i32_extra_use_sub" has unsupported operation: llvm.store
@@ -139,14 +131,10 @@
 1: "neg_extra_use_or_ashr_i32"
 4: "neg_extra_use_or_ashr_i32" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "neg_extra_use_or_ashr_i32" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "neg_extra_use_or_ashr_i32" has unsupported operation: llvm.store
 
 1: "sub_ashr_or_i32_extra_use_ashr"
 4: "sub_ashr_or_i32_extra_use_ashr" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "sub_ashr_or_i32_extra_use_ashr" has unsupported operation: builtin.unregistered: llvm.sext
 
 4: "sub_ashr_or_i32_extra_use_ashr" has unsupported operation: llvm.store
 

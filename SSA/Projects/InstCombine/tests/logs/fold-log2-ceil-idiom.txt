@@ -4,12 +4,8 @@
 1: "log2_ceil_idiom_trunc"
 4: "log2_ceil_idiom_trunc" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
-4: "log2_ceil_idiom_trunc" has unsupported operation: builtin.unregistered: llvm.trunc
-
 1: "log2_ceil_idiom_zext"
 4: "log2_ceil_idiom_zext" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
-
-4: "log2_ceil_idiom_zext" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "log2_ceil_idiom_power2_test2"
 4: "log2_ceil_idiom_power2_test2" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
@@ -31,18 +27,12 @@
 
 4: "log2_ceil_idiom_x_may_be_zero" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "log2_ceil_idiom_x_may_be_zero" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "log2_ceil_idiom_trunc_too_short"
 4: "log2_ceil_idiom_trunc_too_short" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
-
-4: "log2_ceil_idiom_trunc_too_short" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "log2_ceil_idiom_trunc_too_short" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
 4: "log2_ceil_idiom_trunc_too_short" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "log2_ceil_idiom_trunc_too_short" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "log2_ceil_idiom_mismatched_operands"
 4: "log2_ceil_idiom_mismatched_operands" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
@@ -51,16 +41,12 @@
 
 4: "log2_ceil_idiom_mismatched_operands" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "log2_ceil_idiom_mismatched_operands" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "log2_ceil_idiom_wrong_constant"
 4: "log2_ceil_idiom_wrong_constant" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
 4: "log2_ceil_idiom_wrong_constant" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
 4: "log2_ceil_idiom_wrong_constant" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "log2_ceil_idiom_wrong_constant" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "log2_ceil_idiom_not_a_power2_test1"
 4: "log2_ceil_idiom_not_a_power2_test1" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
@@ -69,16 +55,12 @@
 
 4: "log2_ceil_idiom_not_a_power2_test1" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "log2_ceil_idiom_not_a_power2_test1" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "log2_ceil_idiom_not_a_power2_test2"
 4: "log2_ceil_idiom_not_a_power2_test2" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
 4: "log2_ceil_idiom_not_a_power2_test2" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
 4: "log2_ceil_idiom_not_a_power2_test2" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "log2_ceil_idiom_not_a_power2_test2" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "log2_ceil_idiom_multiuse2"
 4: "log2_ceil_idiom_multiuse2" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
@@ -89,8 +71,6 @@
 
 4: "log2_ceil_idiom_multiuse2" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "log2_ceil_idiom_multiuse2" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "log2_ceil_idiom_multiuse3"
 4: "log2_ceil_idiom_multiuse3" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
@@ -100,12 +80,8 @@
 
 4: "log2_ceil_idiom_multiuse3" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "log2_ceil_idiom_multiuse3" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "log2_ceil_idiom_trunc_multiuse4"
 4: "log2_ceil_idiom_trunc_multiuse4" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
-
-4: "log2_ceil_idiom_trunc_multiuse4" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "log2_ceil_idiom_trunc_multiuse4" has unsupported operation: llvm.call
 
@@ -113,20 +89,14 @@
 
 4: "log2_ceil_idiom_trunc_multiuse4" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "log2_ceil_idiom_trunc_multiuse4" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "log2_ceil_idiom_zext_multiuse5"
 4: "log2_ceil_idiom_zext_multiuse5" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
-
-4: "log2_ceil_idiom_zext_multiuse5" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "log2_ceil_idiom_zext_multiuse5" has unsupported operation: llvm.call
 
 4: "log2_ceil_idiom_zext_multiuse5" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
 4: "log2_ceil_idiom_zext_multiuse5" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "log2_ceil_idiom_zext_multiuse5" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "use5"
 5: "use5" is empty
