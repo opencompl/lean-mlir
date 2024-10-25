@@ -5,14 +5,18 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "sel_sext_constants" has unsupported operation after optimization: builtin.unregistered: llvm.sext
 =======
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.mlir.constant
 2: builtin.unregistered: llvm.select
 2: llvm.sext
 2: llvm.return
+<<<<<<< HEAD
 >>>>>>> bd0a83c7 (Updated the generated tests)
 
 1: "sel_zext_constants"
@@ -30,9 +34,16 @@
 =======
 4: "sel_sext_constants" has unsupported operation after optimization: builtin.unregistered: llvm.sext
 >>>>>>> edb64a33 (Updated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 1: "sel_zext_constants"
-4: "sel_zext_constants" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.zext
+2: llvm.return
 
 1: "sel_fpext_constants"
 <<<<<<< HEAD
@@ -70,13 +81,17 @@
 =======
 >>>>>>> edb64a33 (Updated tests)
 1: "sel_sext_vec"
-4: "sel_sext_vec" has unsupported operation: builtin.unregistered: llvm.sext
+8: "sel_sext_vec" contains vectors which are unsupported
 
 1: "sel_zext"
-4: "sel_zext" has unsupported operation: builtin.unregistered: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.zext
+2: llvm.return
 
 1: "sel_zext_vec"
-4: "sel_zext_vec" has unsupported operation: builtin.unregistered: llvm.zext
+8: "sel_zext_vec" contains vectors which are unsupported
 
 <<<<<<< HEAD
 4: "sel_zext_vec" has unsupported operation: builtin.unregistered: llvm.select
@@ -91,22 +106,28 @@
 2: builtin.unregistered: llvm.select
 2: llvm.sext
 2: llvm.return
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
 4: "trunc_sel_larger_sext" has unsupported operation: builtin.unregistered: llvm.select
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
 =======
 >>>>>>> edb64a33 (Updated tests)
 1: "trunc_sel_larger_sext_vec"
 8: "trunc_sel_larger_sext_vec" contains vectors which are unsupported
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
 4: "trunc_sel_larger_sext_vec" has unsupported operation: builtin.unregistered: llvm.select
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
 =======
@@ -118,17 +139,21 @@
 2: builtin.unregistered: llvm.select
 2: llvm.sext
 2: llvm.return
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
 4: "trunc_sel_smaller_sext" has unsupported operation: builtin.unregistered: llvm.select
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
 =======
 >>>>>>> edb64a33 (Updated tests)
 1: "trunc_sel_smaller_sext_vec"
 8: "trunc_sel_smaller_sext_vec" contains vectors which are unsupported
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -139,6 +164,8 @@
 2: builtin.unregistered: llvm.select
 2: llvm.sext
 2: llvm.return
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 1: "trunc_sel_equal_sext_vec"
 8: "trunc_sel_equal_sext_vec" contains vectors which are unsupported
@@ -148,9 +175,12 @@
 =======
 >>>>>>> edb64a33 (Updated tests)
 1: "trunc_sel_equal_sext"
-4: "trunc_sel_equal_sext" has unsupported operation after optimization: builtin.unregistered: llvm.trunc
-
-4: "trunc_sel_equal_sext" has unsupported operation after optimization: builtin.unregistered: llvm.sext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.trunc
+2: builtin.unregistered: llvm.select
+2: llvm.sext
+2: llvm.return
 
 1: "trunc_sel_equal_sext_vec"
 <<<<<<< HEAD
@@ -200,18 +230,26 @@
 =======
 >>>>>>> edb64a33 (Updated tests)
 1: "trunc_sel_larger_zext_vec"
-4: "trunc_sel_larger_zext_vec" has unsupported operation: builtin.unregistered: llvm.zext
+8: "trunc_sel_larger_zext_vec" contains vectors which are unsupported
 
 1: "trunc_sel_smaller_zext"
-4: "trunc_sel_smaller_zext" has unsupported operation: builtin.unregistered: llvm.trunc
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.trunc
+2: builtin.unregistered: llvm.select
+2: llvm.zext
+2: llvm.return
 
 1: "trunc_sel_smaller_zext_vec"
-4: "trunc_sel_smaller_zext_vec" has unsupported operation: builtin.unregistered: llvm.trunc
+8: "trunc_sel_smaller_zext_vec" contains vectors which are unsupported
 
 1: "trunc_sel_equal_zext"
-4: "trunc_sel_equal_zext" has unsupported operation after optimization: builtin.unregistered: llvm.trunc
-
-4: "trunc_sel_equal_zext" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.trunc
+2: builtin.unregistered: llvm.select
+2: llvm.zext
+2: llvm.return
 
 1: "trunc_sel_equal_zext_vec"
 <<<<<<< HEAD
@@ -350,27 +388,56 @@
 =======
 >>>>>>> edb64a33 (Updated tests)
 1: "test_sext1"
-4: "test_sext1" has unsupported operation: builtin.unregistered: llvm.sext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "test_sext2"
-4: "test_sext2" has unsupported operation: builtin.unregistered: llvm.sext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "test_sext3"
-4: "test_sext3" has unsupported operation: builtin.unregistered: llvm.sext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "test_sext4"
-4: "test_sext4" has unsupported operation: builtin.unregistered: llvm.sext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "test_zext1"
-4: "test_zext1" has unsupported operation: builtin.unregistered: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "test_zext2"
-4: "test_zext2" has unsupported operation: builtin.unregistered: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "test_zext3"
-4: "test_zext3" has unsupported operation: builtin.unregistered: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "test_zext4"
+<<<<<<< HEAD
 <<<<<<< HEAD
 4: "test_zext4" has unsupported operation: builtin.unregistered: llvm.select
 
@@ -379,12 +446,17 @@
 >>>>>>> edb64a33 (Updated tests)
 4: "test_zext4" has unsupported operation: builtin.unregistered: llvm.zext
 =======
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.zext
 2: builtin.unregistered: llvm.select
 2: llvm.return
+<<<<<<< HEAD
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 1: "test_negative_sext"
 7: "test_negative_sext" is unchanged by InstCombine
@@ -406,13 +478,13 @@
 =======
 >>>>>>> edb64a33 (Updated tests)
 1: "test_negative_zext"
-4: "test_negative_zext" has unsupported operation: builtin.unregistered: llvm.zext
+7: "test_negative_zext" is unchanged by InstCombine
 
 1: "test_bits_sext"
-4: "test_bits_sext" has unsupported operation: builtin.unregistered: llvm.sext
+7: "test_bits_sext" is unchanged by InstCombine
 
 1: "test_bits_zext"
-4: "test_bits_zext" has unsupported operation: builtin.unregistered: llvm.zext
+7: "test_bits_zext" is unchanged by InstCombine
 
 <<<<<<< HEAD
 4: "test_bits_zext" has unsupported operation: builtin.unregistered: llvm.select
@@ -456,6 +528,7 @@
 1: "test_op_op"
 4: "test_op_op" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 >>>>>>> edb64a33 (Updated tests)
 4: "test_op_op" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -528,42 +601,62 @@
 =======
 >>>>>>> edb64a33 (Updated tests)
 4: "test_vectors_sext" has unsupported operation: builtin.unregistered: llvm.sext
+=======
+1: "test_vectors_sext"
+8: "test_vectors_sext" contains vectors which are unsupported
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 1: "test_vectors_sext_nonsplat"
-4: "test_vectors_sext_nonsplat" has unsupported operation: builtin.unregistered: llvm.sext
+8: "test_vectors_sext_nonsplat" contains vectors which are unsupported
 
 1: "test_vectors_zext"
-4: "test_vectors_zext" has unsupported operation: builtin.unregistered: llvm.zext
+8: "test_vectors_zext" contains vectors which are unsupported
 
 1: "test_vectors_zext_nonsplat"
-4: "test_vectors_zext_nonsplat" has unsupported operation: builtin.unregistered: llvm.zext
+8: "test_vectors_zext_nonsplat" contains vectors which are unsupported
 
 1: "scalar_select_of_vectors_sext"
-4: "scalar_select_of_vectors_sext" has unsupported operation: builtin.unregistered: llvm.sext
+8: "scalar_select_of_vectors_sext" contains vectors which are unsupported
 
 1: "scalar_select_of_vectors_zext"
-4: "scalar_select_of_vectors_zext" has unsupported operation: builtin.unregistered: llvm.zext
+8: "scalar_select_of_vectors_zext" contains vectors which are unsupported
 
 1: "sext_true_val_must_be_all_ones"
-4: "sext_true_val_must_be_all_ones" has unsupported operation after optimization: builtin.unregistered: llvm.sext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "sext_true_val_must_be_all_ones_vec"
 8: "sext_true_val_must_be_all_ones_vec" contains vectors which are unsupported
 
 1: "zext_true_val_must_be_one"
-4: "zext_true_val_must_be_one" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "zext_true_val_must_be_one_vec"
 8: "zext_true_val_must_be_one_vec" contains vectors which are unsupported
 
 1: "sext_false_val_must_be_zero"
-4: "sext_false_val_must_be_zero" has unsupported operation after optimization: builtin.unregistered: llvm.sext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "sext_false_val_must_be_zero_vec"
 8: "sext_false_val_must_be_zero_vec" contains vectors which are unsupported
 
 1: "zext_false_val_must_be_zero"
-4: "zext_false_val_must_be_zero" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "zext_false_val_must_be_zero_vec"
 <<<<<<< HEAD

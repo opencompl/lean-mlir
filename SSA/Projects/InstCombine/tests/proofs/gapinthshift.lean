@@ -497,11 +497,14 @@ theorem test15_proof : test15_before ⊑ test15_after := by
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
 =======
 >>>>>>> edb64a33 (Updated tests)
 =======
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 def test15a_before := [llvm|
 {
 ^0(%arg23 : i1):
@@ -570,7 +573,10 @@ theorem test23_proof : test23_before ⊑ test23_after := by
 
 
 
+<<<<<<< HEAD
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 def shl_lshr_eq_amt_multi_use_before := [llvm|
 {
 ^0(%arg7 : i44):

@@ -4,6 +4,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "foo" has unsupported operation after optimization: builtin.unregistered: llvm.select
 
@@ -14,6 +15,8 @@
 
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 1: "min_max_clamp"
 4: "min_max_clamp" has unsupported operation: builtin.unregistered: llvm.intr.smax
 

@@ -77,6 +77,7 @@
 4: "testi32i8" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "testi32i8" has unsupported operation: builtin.unregistered: llvm.trunc
 
 <<<<<<< HEAD
@@ -89,11 +90,14 @@
 >>>>>>> edb64a33 (Updated tests)
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 1: "differentconsts"
 4: "differentconsts" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "differentconsts" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 4: "differentconsts" has unsupported operation: builtin.unregistered: llvm.trunc
 
@@ -109,6 +113,8 @@
 >>>>>>> edb64a33 (Updated tests)
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 1: "badimm1"
 4: "badimm1" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -143,6 +149,7 @@
 4: "badimm3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "badimm3" has unsupported operation: builtin.unregistered: llvm.trunc
 
 <<<<<<< HEAD
@@ -155,11 +162,14 @@
 >>>>>>> edb64a33 (Updated tests)
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 1: "badimm4"
 4: "badimm4" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "badimm4" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 4: "badimm4" has unsupported operation: builtin.unregistered: llvm.trunc
 
@@ -175,6 +185,8 @@
 >>>>>>> edb64a33 (Updated tests)
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 1: "oneusexor"
 4: "oneusexor" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -280,6 +292,7 @@
 4: "differentconsts_usetrunc" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "differentconsts_usetrunc" has unsupported operation: builtin.unregistered: llvm.trunc
 
 <<<<<<< HEAD
@@ -292,6 +305,8 @@
 >>>>>>> edb64a33 (Updated tests)
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 4: "differentconsts_usetrunc" has unsupported operation: llvm.call
 
 1: "differentconsts_useadd"
@@ -299,6 +314,7 @@
 
 4: "differentconsts_useadd" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 4: "differentconsts_useadd" has unsupported operation: builtin.unregistered: llvm.trunc
 
@@ -314,6 +330,8 @@
 >>>>>>> edb64a33 (Updated tests)
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 4: "differentconsts_useadd" has unsupported operation: llvm.call
 
 1: "differentconsts_useaddtrunc"
@@ -330,6 +348,7 @@
 4: "differentconsts_useaddtrunc" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "differentconsts_useaddtrunc" has unsupported operation: builtin.unregistered: llvm.trunc
 
 <<<<<<< HEAD
@@ -342,6 +361,8 @@
 >>>>>>> edb64a33 (Updated tests)
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 4: "differentconsts_useaddtrunc" has unsupported operation: llvm.call
 
 4: "differentconsts_useaddtrunc" has unsupported operation: llvm.call
@@ -386,6 +407,7 @@
 1: "f"
 4: "f" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 4: "f" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
@@ -409,3 +431,5 @@
 >>>>>>> edb64a33 (Updated tests)
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7

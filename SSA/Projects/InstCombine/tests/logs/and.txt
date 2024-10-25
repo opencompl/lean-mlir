@@ -305,8 +305,11 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "test31" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 =======
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.mlir.constant
@@ -314,6 +317,7 @@
 2: llvm.shl
 2: llvm.and
 2: llvm.return
+<<<<<<< HEAD
 >>>>>>> bd0a83c7 (Updated the generated tests)
 
 1: "and_demanded_bits_splat_vec"
@@ -326,6 +330,8 @@
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
 =======
 4: "test31" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 1: "and_demanded_bits_splat_vec"
 8: "and_demanded_bits_splat_vec" contains vectors which are unsupported
@@ -937,12 +943,15 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "signbit_splat_mask_use1" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
 =======
 >>>>>>> edb64a33 (Updated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 1: "signbit_splat_mask_use2"
 4: "signbit_splat_mask_use2" has unsupported operation: llvm.call
 
@@ -1426,6 +1435,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "and_zext" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 
 1: "and_zext_commuted"
@@ -1443,10 +1453,19 @@
 4: "and_zext_commuted" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 >>>>>>> edb64a33 (Updated tests)
 =======
+=======
 2: llvm.func
 2: llvm.zext
 2: llvm.and
 2: llvm.return
+
+1: "and_zext_commuted"
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
+2: llvm.func
+2: llvm.zext
+2: llvm.and
+2: llvm.return
+<<<<<<< HEAD
 
 1: "and_zext_commuted"
 2: llvm.func
@@ -1454,6 +1473,8 @@
 2: llvm.and
 2: llvm.return
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 1: "and_zext_multiuse"
 4: "and_zext_multiuse" has unsupported operation: llvm.call

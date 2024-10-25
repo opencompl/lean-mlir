@@ -16,9 +16,12 @@ section gdivhshift_statements
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> edb64a33 (Updated tests)
 =======
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 def t1_before := [llvm|
 {
 ^0(%arg241 : i16, %arg242 : i32):
@@ -122,7 +125,10 @@ theorem t3_proof : t3_before ⊑ t3_after := by
 
 
 
+<<<<<<< HEAD
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 def t5_before := [llvm|
 {
 ^0(%arg230 : i1, %arg231 : i1, %arg232 : i32):

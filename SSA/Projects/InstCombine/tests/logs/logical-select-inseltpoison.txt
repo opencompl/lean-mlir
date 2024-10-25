@@ -489,6 +489,7 @@
 4: "computesignbits_through_shuffles" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "computesignbits_through_shuffles" has unsupported operation: builtin.unregistered: llvm.trunc
 
 <<<<<<< HEAD
@@ -501,6 +502,8 @@
 >>>>>>> edb64a33 (Updated tests)
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 4: "computesignbits_through_shuffles" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 1: "computesignbits_through_two_input_shuffle"

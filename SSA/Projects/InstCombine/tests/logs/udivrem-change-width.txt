@@ -2,6 +2,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> edb64a33 (Updated tests)
 4: "udiv_i8" has unsupported operation after optimization: builtin.unregistered: llvm.zext
@@ -11,13 +12,18 @@
 4: "udiv_i8" has unsupported operation after optimization: builtin.unregistered: llvm.trunc
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 2: llvm.func
 2: llvm.zext
 2: llvm.zext
 2: llvm.udiv
 2: llvm.trunc
 2: llvm.return
+<<<<<<< HEAD
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 1: "udiv_i8_vec"
 8: "udiv_i8_vec" contains vectors which are unsupported
@@ -52,6 +58,7 @@
 2: llvm.zext
 2: llvm.udiv
 2: llvm.return
+<<<<<<< HEAD
 
 1: "udiv_i32_vec"
 <<<<<<< HEAD
@@ -75,6 +82,11 @@
 =======
 8: "udiv_i32_vec" contains vectors which are unsupported
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+
+1: "udiv_i32_vec"
+8: "udiv_i32_vec" contains vectors which are unsupported
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 1: "udiv_i32_multiuse"
 2: llvm.func
@@ -84,6 +96,7 @@
 2: llvm.add
 2: llvm.mul
 2: llvm.return
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -101,12 +114,19 @@
 >>>>>>> edb64a33 (Updated tests)
 4: "udiv_illegal_type" has unsupported operation: builtin.unregistered: llvm.zext
 =======
+=======
+
+1: "udiv_illegal_type"
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 2: llvm.func
 2: llvm.zext
 2: llvm.zext
 2: llvm.udiv
 2: llvm.return
+<<<<<<< HEAD
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 1: "urem_i32"
 2: llvm.func
@@ -138,6 +158,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "udiv_i32_c" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "udiv_i32_c_vec"
@@ -166,6 +187,16 @@
 1: "udiv_i32_c_vec"
 8: "udiv_i32_c_vec" contains vectors which are unsupported
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.udiv
+2: llvm.return
+
+1: "udiv_i32_c_vec"
+8: "udiv_i32_c_vec" contains vectors which are unsupported
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 1: "udiv_i32_c_multiuse"
 2: llvm.func
@@ -174,6 +205,7 @@
 2: llvm.udiv
 2: llvm.add
 2: llvm.return
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -191,12 +223,19 @@
 >>>>>>> edb64a33 (Updated tests)
 4: "udiv_illegal_type_c" has unsupported operation: builtin.unregistered: llvm.zext
 =======
+=======
+
+1: "udiv_illegal_type_c"
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.zext
 2: llvm.udiv
 2: llvm.return
+<<<<<<< HEAD
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 1: "urem_i32_c"
 2: llvm.func
@@ -227,6 +266,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "udiv_c_i32" has unsupported operation: llvm.udiv
 
@@ -235,12 +275,17 @@
 >>>>>>> edb64a33 (Updated tests)
 4: "udiv_c_i32" has unsupported operation: builtin.unregistered: llvm.zext
 =======
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.zext
 2: llvm.udiv
 2: llvm.return
+<<<<<<< HEAD
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 1: "urem_c_i32"
 2: llvm.func
@@ -257,6 +302,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "udiv_constexpr" has unsupported operation: llvm.udiv
 
@@ -267,11 +313,14 @@
 
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 1: "udiv_const_constexpr"
 4: "udiv_const_constexpr" has unsupported operation: llvm.mlir.addressof
 
 4: "udiv_const_constexpr" has unsupported operation: builtin.unregistered: llvm.ptrtoint
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -285,6 +334,8 @@
 
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 1: "urem_const_constexpr"
 4: "urem_const_constexpr" has unsupported operation: llvm.mlir.addressof
 
@@ -298,6 +349,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "udiv_constexpr_const" has unsupported operation: llvm.udiv
 
@@ -308,6 +360,8 @@
 
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 1: "urem_constexpr_const"
 4: "urem_constexpr_const" has unsupported operation: llvm.mlir.addressof
 

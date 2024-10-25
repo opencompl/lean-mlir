@@ -19,7 +19,11 @@
 =======
 >>>>>>> edb64a33 (Updated tests)
 1: "shrink_select"
-4: "shrink_select" has unsupported operation: builtin.unregistered: llvm.trunc
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.trunc
+2: llvm.return
 
 1: "min_max_bitcast"
 4: "min_max_bitcast" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -56,6 +60,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "scalar_select_of_vectors_sext" has unsupported operation: builtin.unregistered: llvm.select
 
@@ -66,6 +71,9 @@
 =======
 8: "scalar_select_of_vectors_sext" contains vectors which are unsupported
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+8: "scalar_select_of_vectors_sext" contains vectors which are unsupported
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 1: "t7"
 4: "t7" has unsupported operation: builtin.unregistered: llvm.intr.smin

@@ -11,9 +11,12 @@ theorem lshr_lshr_thm (x : BitVec 232) : x >>> 232 = 0#232 := sorry
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> edb64a33 (Updated tests)
 =======
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 theorem shl_trunc_bigger_lshr_thm (x : BitVec 32) : setWidth 8 (x >>> 5) <<< 3 = setWidth 8 (x >>> 2) &&& 248#8 := sorry
 
 theorem shl_trunc_smaller_lshr_thm (x : BitVec 32) : setWidth 8 (x >>> 3) <<< 5 = setWidth 8 x <<< 2 &&& 224#8 := sorry
@@ -28,7 +31,10 @@ theorem shl_trunc_bigger_shl_thm (x : BitVec 32) : setWidth 8 (x <<< 4) <<< 2 = 
 
 theorem shl_trunc_smaller_shl_thm (x : BitVec 32) : setWidth 8 (x <<< 2) <<< 4 = setWidth 8 x <<< 6 := sorry
 
+<<<<<<< HEAD
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 theorem shl_shl_constants_div_thm (x x_1 : BitVec 32) :
   (Option.bind (if 32#32 ≤ x then none else some (1#32 <<< x.toNat)) fun x =>
       if x <<< 2 = 0#32 then none else some (x_1 / x <<< 2)) ⊑

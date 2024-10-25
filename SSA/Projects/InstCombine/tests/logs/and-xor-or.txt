@@ -395,11 +395,14 @@
 
 1: "sext_or_chain_two_uses1"
 7: "sext_or_chain_two_uses1" is unchanged by InstCombine
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
 4: "sext_or_chain_two_uses1" has unsupported operation: llvm.udiv
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 4: "sext_or_chain_two_uses1" has unsupported operation: llvm.udiv
 
@@ -408,11 +411,14 @@
 >>>>>>> edb64a33 (Updated tests)
 1: "sext_or_chain_two_uses2"
 7: "sext_or_chain_two_uses2" is unchanged by InstCombine
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
 4: "sext_or_chain_two_uses2" has unsupported operation: llvm.udiv
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 4: "sext_or_chain_two_uses2" has unsupported operation: llvm.udiv
 

@@ -237,6 +237,7 @@
 4: "oneuse_trunc_sext" has unsupported operation: llvm.call
 
 1: "oneuse_trunc_sext_logical"
+<<<<<<< HEAD
 4: "oneuse_trunc_sext_logical" has unsupported operation: llvm.call
 
 4: "oneuse_trunc_sext_logical" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -245,16 +246,28 @@
 
 4: "oneuse_trunc_sext_logical" has unsupported operation: llvm.call
 
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 4: "oneuse_trunc_sext_logical" has unsupported operation: llvm.call
 
 4: "oneuse_trunc_sext_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "oneuse_trunc_sext_logical" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
 4: "oneuse_trunc_sext_logical" has unsupported operation: builtin.unregistered: llvm.select
+=======
+4: "oneuse_trunc_sext_logical" has unsupported operation: llvm.call
+
+4: "oneuse_trunc_sext_logical" has unsupported operation: llvm.call
+
+4: "oneuse_trunc_sext_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "oneuse_trunc_sext_logical" has unsupported operation: llvm.call
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
 =======

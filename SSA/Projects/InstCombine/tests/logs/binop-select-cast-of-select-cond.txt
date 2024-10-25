@@ -2,8 +2,11 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "add_select_zext" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 =======
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.mlir.constant
@@ -11,6 +14,7 @@
 2: llvm.zext
 2: llvm.add
 2: llvm.return
+<<<<<<< HEAD
 >>>>>>> bd0a83c7 (Updated the generated tests)
 
 1: "add_select_sext"
@@ -96,32 +100,87 @@
 =======
 4: "add_select_zext" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 >>>>>>> edb64a33 (Updated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 1: "add_select_sext"
-4: "add_select_sext" has unsupported operation after optimization: builtin.unregistered: llvm.sext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.sext
+2: llvm.add
+2: llvm.return
 
 1: "add_select_not_zext"
-4: "add_select_not_zext" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.zext
+2: llvm.add
+2: llvm.return
 
 1: "add_select_not_sext"
-4: "add_select_not_sext" has unsupported operation after optimization: builtin.unregistered: llvm.sext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.sext
+2: llvm.add
+2: llvm.return
 
 1: "sub_select_sext"
-4: "sub_select_sext" has unsupported operation after optimization: builtin.unregistered: llvm.sext
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.sext
+2: llvm.sub
+2: llvm.return
 
 1: "sub_select_not_zext"
-4: "sub_select_not_zext" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.zext
+2: llvm.sub
+2: llvm.return
 
 1: "sub_select_not_sext"
-4: "sub_select_not_sext" has unsupported operation after optimization: builtin.unregistered: llvm.sext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.sext
+2: llvm.sub
+2: llvm.return
 
 1: "mul_select_zext"
-4: "mul_select_zext" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.zext
+2: llvm.mul
+2: llvm.return
 
 1: "mul_select_sext"
-4: "mul_select_sext" has unsupported operation after optimization: builtin.unregistered: llvm.sext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.sext
+2: llvm.mul
+2: llvm.return
 
 1: "select_zext_different_condition"
+<<<<<<< HEAD
 <<<<<<< HEAD
 4: "select_zext_different_condition" has unsupported operation: builtin.unregistered: llvm.select
 
@@ -130,6 +189,8 @@
 >>>>>>> edb64a33 (Updated tests)
 4: "select_zext_different_condition" has unsupported operation: builtin.unregistered: llvm.zext
 =======
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.mlir.constant
@@ -137,11 +198,15 @@
 2: llvm.zext
 2: llvm.add
 2: llvm.return
+<<<<<<< HEAD
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 1: "vector_test"
 4: "vector_test" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -155,6 +220,8 @@
 
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 4: "vector_test" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 4: "vector_test" has unsupported operation: builtin.unregistered: llvm.shufflevector
@@ -163,8 +230,11 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "multiuse_add" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 =======
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.mlir.constant
@@ -173,6 +243,7 @@
 2: llvm.add
 2: llvm.add
 2: llvm.return
+<<<<<<< HEAD
 >>>>>>> bd0a83c7 (Updated the generated tests)
 
 1: "multiuse_select"
@@ -213,18 +284,39 @@
 =======
 4: "multiuse_add" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 >>>>>>> edb64a33 (Updated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 1: "multiuse_select"
-4: "multiuse_select" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.zext
+2: llvm.sub
+2: llvm.mul
+2: llvm.return
 
 1: "select_non_const_sides"
-4: "select_non_const_sides" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+2: llvm.func
+2: llvm.zext
+2: builtin.unregistered: llvm.select
+2: llvm.sub
+2: llvm.return
 
 1: "sub_select_sext_op_swapped_non_const_args"
-4: "sub_select_sext_op_swapped_non_const_args" has unsupported operation after optimization: builtin.unregistered: llvm.sext
+2: llvm.func
+2: builtin.unregistered: llvm.select
+2: llvm.sext
+2: llvm.sub
+2: llvm.return
 
 1: "sub_select_zext_op_swapped_non_const_args"
-4: "sub_select_zext_op_swapped_non_const_args" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+2: llvm.func
+2: builtin.unregistered: llvm.select
+2: llvm.zext
+2: llvm.sub
+2: llvm.return
 
 1: "vectorized_add"
 <<<<<<< HEAD

@@ -16,6 +16,7 @@ section gshifthsra_statements
 <<<<<<< HEAD
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                                                     
 >>>>>>> 1011dc2e (re-ran the tests)
@@ -23,6 +24,8 @@ section gshifthsra_statements
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
 =======
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 def test1_before := [llvm|
 {
 ^0(%arg19 : i32, %arg20 : i8):
@@ -95,7 +98,10 @@ theorem test2_proof : test2_before ⊑ test2_after := by
 
 
 
+<<<<<<< HEAD
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 def ashr_ashr_before := [llvm|
 {
 ^0(%arg7 : i32):

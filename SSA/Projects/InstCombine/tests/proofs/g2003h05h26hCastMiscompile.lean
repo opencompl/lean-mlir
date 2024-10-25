@@ -1,4 +1,12 @@
+<<<<<<< HEAD
 import SSA.Projects.InstCombine.tests.proofs.g2003h05h26hCastMiscompile_proof
+=======
+<<<<<<<< HEAD:SSA/Projects/InstCombine/tests/LLVM/g2003h05h26hCastMiscompile.lean
+
+========
+import SSA.Projects.InstCombine.tests.proofs.g2003h05h26hCastMiscompile_proof
+>>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7:SSA/Projects/InstCombine/tests/proofs/g2003h05h26hCastMiscompile.lean
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -11,6 +19,7 @@ open Ctxt (Var)
 set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
+<<<<<<< HEAD
 <<<<<<< HEAD:SSA/Projects/InstCombine/tests/proofs/g2008h02h23hMulSub.lean
 section g2008h02h23hMulSub_statements
 <<<<<<< HEAD
@@ -25,6 +34,10 @@ section g2003h05h26hCastMiscompile_statements
 =======
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
+=======
+section g2003h05h26hCastMiscompile_statements
+
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 def test_before := [llvm|
 {
 ^0(%arg0 : i64):
@@ -50,6 +63,7 @@ theorem test_proof : test_before ⊑ test_after := by
   simp_alive_case_bash
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   try intros
 =======
   intros
@@ -60,6 +74,12 @@ theorem test_proof : test_before ⊑ test_after := by
   try simp
   ---BEGIN test
   apply test_thm
+=======
+  try intros
+  try simp
+  ---BEGIN test
+  all_goals (try extract_goal ; sorry)
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
   ---END test
 
 

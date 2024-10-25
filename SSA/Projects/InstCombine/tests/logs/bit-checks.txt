@@ -49,6 +49,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "main3e_like_logical" has unsupported operation: builtin.unregistered: llvm.select
 
@@ -59,6 +60,8 @@
 
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 1: "main3c"
 4: "main3c" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -82,6 +85,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "main3f_like_logical" has unsupported operation: builtin.unregistered: llvm.select
 
@@ -92,6 +96,8 @@
 
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 1: "main4"
 4: "main4" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -118,6 +124,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "main4e_like_logical" has unsupported operation: builtin.unregistered: llvm.select
 
@@ -128,6 +135,8 @@
 
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 1: "main4c"
 4: "main4c" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -151,6 +160,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "main4f_like_logical" has unsupported operation: builtin.unregistered: llvm.select
 
@@ -161,6 +171,8 @@
 
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 1: "main5_like"
 4: "main5_like" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -169,6 +181,7 @@
 
 4: "main5_like_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -182,6 +195,8 @@
 
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 1: "main5e_like"
 4: "main5e_like" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -190,6 +205,7 @@
 
 4: "main5e_like_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -203,6 +219,8 @@
 
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 1: "main5c_like"
 4: "main5c_like" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -211,6 +229,7 @@
 
 4: "main5c_like_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -224,6 +243,8 @@
 
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 1: "main5f_like"
 4: "main5f_like" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -232,6 +253,7 @@
 
 4: "main5f_like_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -245,6 +267,8 @@
 
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 1: "main6"
 4: "main6" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -280,6 +304,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "main7a_logical" has unsupported operation: builtin.unregistered: llvm.select
 
@@ -290,6 +315,8 @@
 
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 1: "main7b"
 4: "main7b" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -298,6 +325,7 @@
 
 4: "main7b_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -311,6 +339,8 @@
 
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 1: "main7c"
 4: "main7c" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -319,6 +349,7 @@
 
 4: "main7c_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -332,6 +363,8 @@
 
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 1: "main7d"
 4: "main7d" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -340,6 +373,7 @@
 
 4: "main7d_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -353,6 +387,8 @@
 
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 1: "main7e"
 4: "main7e" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -361,6 +397,7 @@
 
 4: "main7e_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -374,6 +411,8 @@
 
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 1: "main7f"
 4: "main7f" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -382,6 +421,7 @@
 
 4: "main7f_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -395,6 +435,8 @@
 
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 1: "main7g"
 4: "main7g" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -403,6 +445,7 @@
 
 4: "main7g_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -416,6 +459,8 @@
 
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 1: "main8"
 4: "main8" has unsupported operation: builtin.unregistered: llvm.icmp
 

@@ -50,6 +50,13 @@ theorem test5_thm (x : BitVec 8) (x_1 : BitVec 32) :
         else if 32#32 ≤ setWidth 32 x then none else some (32#32 <<< (x.toNat % 4294967296))).bind
       fun x => some (x_1 &&& x + 4294967295#32) := sorry
 
+theorem test5_thm (x : BitVec 8) (x_1 : BitVec 32) :
+  (Option.bind (if 32#32 ≤ setWidth 32 x then none else some (32#32 <<< (x.toNat % 4294967296))) fun y' =>
+      if y' = 0#32 then none else some (x_1 % y')) ⊑
+    (if 32#32 <<< (x.toNat % 4294967296) >>> (x.toNat % 4294967296) = 32#32 then none
+        else if 32#32 ≤ setWidth 32 x then none else some (32#32 <<< (x.toNat % 4294967296))).bind
+      fun x => some (x_1 &&& x + 4294967295#32) := sorry
+
 theorem test7_thm (x : BitVec 32) : x * 8#32 - (x * 8#32).sdiv 4#32 * 4#32 = 0#32 := sorry
 
 theorem test8_thm (x : BitVec 32) : x <<< 4 - (x <<< 4).sdiv 8#32 * 8#32 = 0#32 := sorry

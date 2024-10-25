@@ -118,6 +118,109 @@ theorem t3_proof : t3_before ⊑ t3_after := by
 
 
 
+def t1_before := [llvm|
+{
+^0(%arg241 : i16, %arg242 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %1 = llvm.zext %arg241 : i16 to i32
+  %2 = llvm.shl %0, %arg242 : i32
+  %3 = llvm.sdiv %1, %2 : i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+def t1_after := [llvm|
+{
+^0(%arg241 : i16, %arg242 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %1 = llvm.zext %arg241 : i16 to i32
+  %2 = llvm.add %arg242, %0 : i32
+  %3 = llvm.lshr %1, %2 : i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+theorem t1_proof : t1_before ⊑ t1_after := by
+  unfold t1_before t1_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN t1
+  apply t1_thm
+  ---END t1
+
+
+
+def t2_before := [llvm|
+{
+^0(%arg237 : i64, %arg238 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %1 = llvm.shl %0, %arg238 : i32
+  %2 = llvm.zext %1 : i32 to i64
+  %3 = llvm.udiv %arg237, %2 : i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+def t2_after := [llvm|
+{
+^0(%arg237 : i64, %arg238 : i32):
+  %0 = llvm.zext %arg238 : i32 to i64
+  %1 = llvm.lshr %arg237, %0 : i64
+  "llvm.return"(%1) : (i64) -> ()
+}
+]
+theorem t2_proof : t2_before ⊑ t2_after := by
+  unfold t2_before t2_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN t2
+  apply t2_thm
+  ---END t2
+
+
+
+def t3_before := [llvm|
+{
+^0(%arg235 : i64, %arg236 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 4 : i32}> : () -> i32
+  %1 = llvm.shl %0, %arg236 : i32
+  %2 = llvm.zext %1 : i32 to i64
+  %3 = llvm.udiv %arg235, %2 : i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+def t3_after := [llvm|
+{
+^0(%arg235 : i64, %arg236 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %1 = llvm.add %arg236, %0 : i32
+  %2 = llvm.zext %1 : i32 to i64
+  %3 = llvm.lshr %arg235, %2 : i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+theorem t3_proof : t3_before ⊑ t3_after := by
+  unfold t3_before t3_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN t3
+  apply t3_thm
+  ---END t3
+
+
+
 def t5_before := [llvm|
 {
 ^0(%arg230 : i1, %arg231 : i1, %arg232 : i32):

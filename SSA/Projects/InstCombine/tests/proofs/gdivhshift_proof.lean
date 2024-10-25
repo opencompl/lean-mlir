@@ -7,9 +7,12 @@ section gdivhshift_proof
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> edb64a33 (Updated tests)
 =======
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 theorem t1_thm (x : BitVec 32) (x_1 : BitVec 16) :
   (Option.bind (if 32#32 ≤ x then none else some (2#32 <<< x.toNat)) fun y' =>
       if y' = 0#32 ∨ setWidth 32 x_1 = intMin 32 ∧ y' = 4294967295#32 then none else some ((setWidth 32 x_1).sdiv y')) ⊑
@@ -26,7 +29,10 @@ theorem t3_thm (x : BitVec 32) (x_1 : BitVec 64) :
     if 64#64 ≤ setWidth 64 (x + 2#32) then none
     else some (x_1 >>> ((x.toNat + 2) % 4294967296 % 18446744073709551616)) := sorry
 
+<<<<<<< HEAD
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 theorem t5_thm (x : BitVec 1) (x_1 : BitVec 32) :
   (Option.bind
       (match some x with

@@ -112,9 +112,12 @@ theorem lshr_lshr_proof : lshr_lshr_before ⊑ lshr_lshr_after := by
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> edb64a33 (Updated tests)
 =======
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 def shl_trunc_bigger_lshr_before := [llvm|
 {
 ^0(%arg44 : i32):
@@ -333,7 +336,10 @@ theorem shl_trunc_smaller_shl_proof : shl_trunc_smaller_shl_before ⊑ shl_trunc
 
 
 
+<<<<<<< HEAD
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 def shl_shl_constants_div_before := [llvm|
 {
 ^0(%arg27 : i32, %arg28 : i32):

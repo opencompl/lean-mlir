@@ -16,6 +16,7 @@ section gmisch2002_statements
 <<<<<<< HEAD
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                                                     
 >>>>>>> 1011dc2e (re-ran the tests)
@@ -23,6 +24,8 @@ section gmisch2002_statements
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
 =======
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 def cast_test_2002h08h02_before := [llvm|
 {
 ^0(%arg1 : i64):
@@ -54,7 +57,10 @@ theorem cast_test_2002h08h02_proof : cast_test_2002h08h02_before ⊑ cast_test_2
 
 
 
+<<<<<<< HEAD
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 def missed_const_prop_2002h12h05_before := [llvm|
 {
 ^0(%arg0 : i32):

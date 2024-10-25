@@ -1,4 +1,8 @@
+<<<<<<<< HEAD:SSA/Projects/InstCombine/tests/LLVM/g2003h05h26hCastMiscompile.lean
 
+========
+import SSA.Projects.InstCombine.tests.proofs.g2003h05h26hCastMiscompile_proof
+>>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7:SSA/Projects/InstCombine/tests/proofs/g2003h05h26hCastMiscompile.lean
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics

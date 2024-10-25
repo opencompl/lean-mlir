@@ -16,6 +16,7 @@ section gshifthaddhinseltpoison_statements
 <<<<<<< HEAD
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                                                     
 >>>>>>> 43a49182 (re-ran scripts)
@@ -23,6 +24,8 @@ section gshifthaddhinseltpoison_statements
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
 =======
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 def shl_C1_add_A_C2_i32_before := [llvm|
 {
 ^0(%arg8 : i16):
@@ -58,7 +61,10 @@ theorem shl_C1_add_A_C2_i32_proof : shl_C1_add_A_C2_i32_before ⊑ shl_C1_add_A_
 
 
 
+<<<<<<< HEAD
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 def ashr_C1_add_A_C2_i32_before := [llvm|
 {
 ^0(%arg7 : i32):

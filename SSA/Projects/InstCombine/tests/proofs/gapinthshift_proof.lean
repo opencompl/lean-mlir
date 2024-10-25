@@ -44,11 +44,14 @@ theorem test15_thm (x : BitVec 1) :
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
 =======
 >>>>>>> edb64a33 (Updated tests)
 =======
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 theorem test15a_thm (x : BitVec 1) :
   (Option.bind
       (match some x with
@@ -63,7 +66,10 @@ theorem test15a_thm (x : BitVec 1) :
 
 theorem test23_thm (x : BitVec 44) : setWidth 11 ((x <<< 33).sshiftRight 33) = setWidth 11 x := sorry
 
+<<<<<<< HEAD
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 theorem shl_lshr_eq_amt_multi_use_thm (x : BitVec 44) : x <<< 33 + x <<< 33 >>> 33 = x <<< 33 ||| x &&& 2047#44 := sorry
 
 theorem test25_thm (x x_1 : BitVec 37) :

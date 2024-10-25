@@ -280,6 +280,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "missed_nonzero_check_on_constant_for_si_fmul" has unsupported operation: builtin.unregistered: llvm.select
 
@@ -290,6 +291,8 @@
 
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 4: "missed_nonzero_check_on_constant_for_si_fmul" has unsupported operation: builtin.unregistered: llvm.sitofp
 
 4: "missed_nonzero_check_on_constant_for_si_fmul" has unsupported operation: builtin.unregistered: llvm.intr.copysign
@@ -299,6 +302,7 @@
 1: "missed_nonzero_check_on_constant_for_si_fmul_vec"
 4: "missed_nonzero_check_on_constant_for_si_fmul_vec" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -312,6 +316,8 @@
 
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 4: "missed_nonzero_check_on_constant_for_si_fmul_vec" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 4: "missed_nonzero_check_on_constant_for_si_fmul_vec" has unsupported operation: builtin.unregistered: llvm.shufflevector
@@ -326,6 +332,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "negzero_check_on_constant_for_si_fmul" has unsupported operation: builtin.unregistered: llvm.select
 
@@ -336,6 +343,8 @@
 
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 4: "negzero_check_on_constant_for_si_fmul" has unsupported operation: builtin.unregistered: llvm.sitofp
 
 4: "negzero_check_on_constant_for_si_fmul" has unsupported operation: builtin.unregistered: llvm.fneg
@@ -358,6 +367,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "nonzero_check_on_constant_for_si_fmul_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.select
 
@@ -368,6 +378,8 @@
 
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 4: "nonzero_check_on_constant_for_si_fmul_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 4: "nonzero_check_on_constant_for_si_fmul_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.shufflevector
@@ -384,6 +396,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "nonzero_check_on_constant_for_si_fmul_nz_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.select
 
@@ -394,6 +407,8 @@
 
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 4: "nonzero_check_on_constant_for_si_fmul_nz_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 4: "nonzero_check_on_constant_for_si_fmul_nz_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.shufflevector
@@ -416,6 +431,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "nonzero_check_on_constant_for_si_fmul_negz_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.select
 
@@ -426,6 +442,8 @@
 
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 4: "nonzero_check_on_constant_for_si_fmul_negz_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 4: "nonzero_check_on_constant_for_si_fmul_negz_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.shufflevector

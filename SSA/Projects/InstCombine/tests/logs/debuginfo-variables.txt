@@ -14,6 +14,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "test_cast_select" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 =======
 4: "test_cast_select" has unsupported operation: builtin.unregistered: llvm.select
@@ -22,13 +23,18 @@
 4: "test_cast_select" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 >>>>>>> edb64a33 (Updated tests)
 =======
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.mlir.constant
 2: builtin.unregistered: llvm.select
 2: llvm.zext
 2: llvm.return
+<<<<<<< HEAD
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 1: "test_or"
 4: "test_or" has unsupported operation: llvm.return

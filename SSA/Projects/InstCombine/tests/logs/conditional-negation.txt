@@ -2,19 +2,26 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "t0" has unsupported operation after optimization: builtin.unregistered: llvm.sext
 =======
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 2: llvm.func
 2: llvm.sext
 2: llvm.add
 2: llvm.xor
 2: llvm.return
+<<<<<<< HEAD
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 1: "t0_vec"
 8: "t0_vec" contains vectors which are unsupported
 
 1: "t1"
+<<<<<<< HEAD
 <<<<<<< HEAD
 4: "t1" has unsupported operation after optimization: builtin.unregistered: llvm.sext
 
@@ -38,13 +45,18 @@
 4: "t1" has unsupported operation after optimization: builtin.unregistered: llvm.sext
 >>>>>>> edb64a33 (Updated tests)
 =======
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 2: llvm.func
 2: llvm.sext
 2: llvm.sext
 2: llvm.add
 2: llvm.xor
 2: llvm.return
+<<<<<<< HEAD
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 1: "t2"
 2: llvm.func
@@ -69,6 +81,7 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "xor.commuted" has unsupported operation: builtin.unregistered: llvm.select
 
@@ -86,6 +99,11 @@
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
 =======
 >>>>>>> edb64a33 (Updated tests)
+=======
+1: "extrause01_v1"
+4: "extrause01_v1" has unsupported operation: llvm.call
+
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 1: "extrause10_v1"
 4: "extrause10_v1" has unsupported operation: llvm.call
 
@@ -99,12 +117,15 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "extrause001_v2" has unsupported operation: builtin.unregistered: llvm.select
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
 =======
 >>>>>>> edb64a33 (Updated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 1: "extrause010_v2"
 4: "extrause010_v2" has unsupported operation: llvm.call
 
@@ -117,6 +138,7 @@
 =======
 >>>>>>> edb64a33 (Updated tests)
 1: "extrause011_v2"
+<<<<<<< HEAD
 4: "extrause011_v2" has unsupported operation: llvm.call
 
 4: "extrause011_v2" has unsupported operation: llvm.call
@@ -125,6 +147,11 @@
 <<<<<<< HEAD
 =======
 4: "extrause011_v2" has unsupported operation: builtin.unregistered: llvm.select
+=======
+4: "extrause011_v2" has unsupported operation: llvm.call
+
+4: "extrause011_v2" has unsupported operation: llvm.call
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
 =======

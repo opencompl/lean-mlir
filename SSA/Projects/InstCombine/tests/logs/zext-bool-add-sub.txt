@@ -12,8 +12,9 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 1: "PR30273_select"
-4: "PR30273_select" has unsupported operation: builtin.unregistered: llvm.zext
+7: "PR30273_select" is unchanged by InstCombine
 
+<<<<<<< HEAD
 =======
 4: "a" has unsupported operation: builtin.unregistered: llvm.select
 
@@ -30,10 +31,13 @@
 4: "PR30273_select" has unsupported operation: builtin.unregistered: llvm.zext
 
 >>>>>>> edb64a33 (Updated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 1: "PR30273_zext_add"
 7: "PR30273_zext_add" is unchanged by InstCombine
 
 1: "PR30273_three_bools"
+<<<<<<< HEAD
 <<<<<<< HEAD
 4: "PR30273_three_bools" has unsupported operation: builtin.unregistered: llvm.zext
 
@@ -41,6 +45,8 @@
 <<<<<<< HEAD
 4: "PR30273_three_bools" has unsupported operation: builtin.unregistered: llvm.zext
 =======
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.zext
@@ -49,6 +55,7 @@
 2: llvm.add
 2: builtin.unregistered: llvm.select
 2: llvm.return
+<<<<<<< HEAD
 >>>>>>> bd0a83c7 (Updated the generated tests)
 
 1: "zext_add_scalar"
@@ -71,9 +78,15 @@
 =======
 >>>>>>> edb64a33 (Updated tests)
 4: "PR30273_three_bools" has unsupported operation: builtin.unregistered: llvm.zext
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 1: "zext_add_scalar"
-4: "zext_add_scalar" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.add
+2: llvm.return
 
 1: "zext_add_vec_splat"
 8: "zext_add_vec_splat" contains vectors which are unsupported
@@ -109,6 +122,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "zext_sub_const" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 =======
 4: "zext_sub_const" has unsupported operation: builtin.unregistered: llvm.select
@@ -131,6 +145,15 @@
 
 1: "zext_sub_const_extra_use"
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.sub
+2: llvm.return
+
+1: "zext_sub_const_extra_use"
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 4: "zext_sub_const_extra_use" has unsupported operation: llvm.call
 
 1: "zext_sub_const_vec"
@@ -193,6 +216,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "sext_sub_const" has unsupported operation after optimization: builtin.unregistered: llvm.sext
 =======
 4: "sext_sub_const" has unsupported operation: builtin.unregistered: llvm.select
@@ -215,6 +239,15 @@
 
 1: "sext_sub_const_extra_use"
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.sub
+2: llvm.return
+
+1: "sext_sub_const_extra_use"
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 4: "sext_sub_const_extra_use" has unsupported operation: llvm.call
 
 1: "sext_sub_const_vec"

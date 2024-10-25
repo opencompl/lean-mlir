@@ -269,6 +269,7 @@
 4: "t11_different_zext_of_shamt" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "t11_different_zext_of_shamt" has unsupported operation: builtin.unregistered: llvm.zext
 
 <<<<<<< HEAD
@@ -281,6 +282,8 @@
 >>>>>>> edb64a33 (Updated tests)
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 4: "t11_different_zext_of_shamt" has unsupported operation: llvm.call
 
 4: "t11_different_zext_of_shamt" has unsupported operation: llvm.call
@@ -301,6 +304,7 @@
 4: "t12_add_sext_of_magic" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "t12_add_sext_of_magic" has unsupported operation: builtin.unregistered: llvm.zext
 
 <<<<<<< HEAD
@@ -315,6 +319,8 @@
 
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 4: "t12_add_sext_of_magic" has unsupported operation: llvm.call
 
 4: "t12_add_sext_of_magic" has unsupported operation: llvm.call
@@ -335,6 +341,7 @@
 4: "t13_sub_zext_of_magic" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "t13_sub_zext_of_magic" has unsupported operation: builtin.unregistered: llvm.zext
 
 <<<<<<< HEAD
@@ -349,6 +356,8 @@
 
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 4: "t13_sub_zext_of_magic" has unsupported operation: llvm.call
 
 4: "t13_sub_zext_of_magic" has unsupported operation: llvm.call
@@ -369,6 +378,7 @@
 4: "t14_add_sext_of_shl" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "t14_add_sext_of_shl" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "t14_add_sext_of_shl" has unsupported operation: builtin.unregistered: llvm.sext
@@ -383,6 +393,8 @@
 >>>>>>> edb64a33 (Updated tests)
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 4: "t14_add_sext_of_shl" has unsupported operation: llvm.call
 
 4: "t14_add_sext_of_shl" has unsupported operation: llvm.call
@@ -403,6 +415,7 @@
 4: "t15_sub_zext_of_shl" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "t15_sub_zext_of_shl" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "t15_sub_zext_of_shl" has unsupported operation: builtin.unregistered: llvm.zext
@@ -417,6 +430,8 @@
 >>>>>>> edb64a33 (Updated tests)
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 4: "t15_sub_zext_of_shl" has unsupported operation: llvm.call
 
 4: "t15_sub_zext_of_shl" has unsupported operation: llvm.call
@@ -672,6 +687,7 @@
 4: "n27_add_zext_of_magic" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "n27_add_zext_of_magic" has unsupported operation: builtin.unregistered: llvm.zext
 
 <<<<<<< HEAD
@@ -686,6 +702,8 @@
 
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 4: "n27_add_zext_of_magic" has unsupported operation: llvm.call
 
 4: "n27_add_zext_of_magic" has unsupported operation: llvm.call
@@ -706,6 +724,7 @@
 4: "n28_sub_sext_of_magic" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "n28_sub_sext_of_magic" has unsupported operation: builtin.unregistered: llvm.zext
 
 <<<<<<< HEAD
@@ -720,6 +739,8 @@
 
 =======
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 4: "n28_sub_sext_of_magic" has unsupported operation: llvm.call
 
 4: "n28_sub_sext_of_magic" has unsupported operation: llvm.call

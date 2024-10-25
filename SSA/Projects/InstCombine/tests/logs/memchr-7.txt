@@ -34,6 +34,7 @@
 
 4: "memchr_no_zero_cmp2" has unsupported operation: llvm.mlir.zero
 
+<<<<<<< HEAD
 4: "memchr_no_zero_cmp2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 <<<<<<< HEAD
@@ -43,6 +44,8 @@
 =======
 4: "memchr_no_zero_cmp2" has unsupported operation: builtin.unregistered: llvm.select
 
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 4: "memchr_no_zero_cmp2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "memchr_no_zero_cmp2" has unsupported operation: builtin.unregistered: llvm.select

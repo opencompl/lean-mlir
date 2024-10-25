@@ -11,13 +11,19 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "and_sext_to_sel" has unsupported operation after optimization: builtin.unregistered: llvm.sext
 =======
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 2: llvm.func
 2: llvm.sext
 2: llvm.and
 2: llvm.return
+<<<<<<< HEAD
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 1: "and_sext_to_sel_constant_vec"
 8: "and_sext_to_sel_constant_vec" contains vectors which are unsupported
@@ -46,6 +52,7 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4: "and_sext_to_sel_multi_use" has unsupported operation: builtin.unregistered: llvm.select
 
@@ -63,6 +70,11 @@
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
 =======
 >>>>>>> edb64a33 (Updated tests)
+=======
+1: "and_sext_to_sel_multi_use_constant_mask"
+4: "and_sext_to_sel_multi_use_constant_mask" has unsupported operation: llvm.call
+
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 1: "and_not_sext_to_sel"
 4: "and_not_sext_to_sel" has unsupported operation: llvm.call
 
@@ -97,13 +109,19 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "or_sext_to_sel" has unsupported operation after optimization: builtin.unregistered: llvm.sext
 =======
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 2: llvm.func
 2: llvm.sext
 2: llvm.or
 2: llvm.return
+<<<<<<< HEAD
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 1: "or_sext_to_sel_constant_vec"
 8: "or_sext_to_sel_constant_vec" contains vectors which are unsupported
@@ -179,6 +197,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "and_add_bool_to_select" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 =======
 4: "and_add_bool_to_select" has unsupported operation: builtin.unregistered: llvm.select
@@ -187,13 +206,18 @@
 4: "and_add_bool_to_select" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 >>>>>>> edb64a33 (Updated tests)
 =======
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.zext
 2: llvm.add
 2: llvm.and
 2: llvm.return
+<<<<<<< HEAD
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 1: "and_add_bool_no_fold"
 4: "and_add_bool_no_fold" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -204,6 +228,7 @@
 8: "and_add_bool_vec_to_select" contains vectors which are unsupported
 
 1: "and_add_bool_to_select_multi_use"
+<<<<<<< HEAD
 <<<<<<< HEAD
 4: "and_add_bool_to_select_multi_use" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 =======
@@ -222,6 +247,8 @@
 4: "and_add_bool_to_select_multi_use" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 >>>>>>> edb64a33 (Updated tests)
 =======
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.zext
@@ -229,5 +256,8 @@
 2: llvm.and
 2: llvm.add
 2: llvm.return
+<<<<<<< HEAD
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 

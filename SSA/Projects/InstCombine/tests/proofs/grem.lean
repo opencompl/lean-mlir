@@ -123,11 +123,14 @@ theorem test4_proof : test4_before ⊑ test4_after := by
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
 =======
 >>>>>>> edb64a33 (Updated tests)
 =======
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 def test5_before := [llvm|
 {
 ^0(%arg95 : i32, %arg96 : i8):
@@ -165,7 +168,10 @@ theorem test5_proof : test5_before ⊑ test5_after := by
 
 
 
+<<<<<<< HEAD
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 def test7_before := [llvm|
 {
 ^0(%arg93 : i32):

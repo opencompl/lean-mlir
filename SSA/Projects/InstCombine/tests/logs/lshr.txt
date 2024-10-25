@@ -458,6 +458,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 4: "lshr_sext_i1_to_i16" has unsupported operation after optimization: builtin.unregistered: llvm.sext
 
 1: "lshr_sext_i1_to_i128"
@@ -475,11 +476,21 @@
 4: "lshr_sext_i1_to_i128" has unsupported operation after optimization: builtin.unregistered: llvm.sext
 >>>>>>> edb64a33 (Updated tests)
 =======
+=======
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.sext
 2: llvm.lshr
 2: llvm.return
+
+1: "lshr_sext_i1_to_i128"
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.lshr
+2: llvm.return
+<<<<<<< HEAD
 
 1: "lshr_sext_i1_to_i128"
 2: llvm.func
@@ -488,10 +499,13 @@
 2: llvm.lshr
 2: llvm.return
 >>>>>>> bd0a83c7 (Updated the generated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 
 1: "lshr_sext_i1_to_i32_use"
 4: "lshr_sext_i1_to_i32_use" has unsupported operation: llvm.call
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -500,6 +514,8 @@
 >>>>>>> 4bf2f937 (Re-ran the sccripts)
 =======
 >>>>>>> edb64a33 (Updated tests)
+=======
+>>>>>>> 3d133a8a07b3d7eb59d68a5bf0131917e72bade7
 1: "lshr_sext_i1_to_i14_splat_vec_use1"
 4: "lshr_sext_i1_to_i14_splat_vec_use1" has unsupported operation: llvm.call
 
