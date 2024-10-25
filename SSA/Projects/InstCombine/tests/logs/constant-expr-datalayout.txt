@@ -8,7 +8,7 @@
 
 4: "OpenFilter" has unsupported operation: builtin.unregistered: llvm.ptrtoint
 
-4: "OpenFilter" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "OpenFilter" has unsupported operation: llvm.trunc
 
-4: "OpenFilter" has unsupported operation: builtin.unregistered: llvm.zext
+4: "OpenFilter" has unsupported operation: llvm.zext
 

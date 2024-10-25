@@ -1,26 +1,26 @@
 1: "zext"
-4: "zext" has unsupported operation: builtin.unregistered: llvm.zext
+4: "zext" has unsupported operation: llvm.zext
 
 1: "sext"
-4: "sext" has unsupported operation: builtin.unregistered: llvm.sext
+4: "sext" has unsupported operation: llvm.sext
 
 1: "not_zext"
-4: "not_zext" has unsupported operation: builtin.unregistered: llvm.zext
+4: "not_zext" has unsupported operation: llvm.zext
 
 1: "not_sext"
-4: "not_sext" has unsupported operation: builtin.unregistered: llvm.sext
+4: "not_sext" has unsupported operation: llvm.sext
 
 1: "zext_vec"
-4: "zext_vec" has unsupported operation: builtin.unregistered: llvm.zext
+4: "zext_vec" has unsupported operation: llvm.zext
 
 1: "sext_vec"
-4: "sext_vec" has unsupported operation: builtin.unregistered: llvm.sext
+4: "sext_vec" has unsupported operation: llvm.sext
 
 1: "not_zext_vec"
-4: "not_zext_vec" has unsupported operation: builtin.unregistered: llvm.zext
+4: "not_zext_vec" has unsupported operation: llvm.zext
 
 1: "not_sext_vec"
-4: "not_sext_vec" has unsupported operation: builtin.unregistered: llvm.sext
+4: "not_sext_vec" has unsupported operation: llvm.sext
 
 1: "scalar_select_of_vectors"
 7: "scalar_select_of_vectors" is unchanged by InstCombine

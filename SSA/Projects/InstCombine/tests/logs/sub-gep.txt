@@ -34,7 +34,7 @@
 4: "test_nuw" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
 
 1: "test_inbounds_nuw_trunc"
-4: "test_inbounds_nuw_trunc" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "test_inbounds_nuw_trunc" has unsupported operation: llvm.trunc
 
 1: "test_inbounds_nuw_swapped"
 4: "test_inbounds_nuw_swapped" has unsupported operation after optimization: llvm.getelementptr
@@ -92,10 +92,10 @@
 4: "test_inbounds_nuw_multi_index" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
 
 1: "test23"
-4: "test23" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "test23" has unsupported operation: llvm.trunc
 
 1: "test23_as1"
-4: "test23_as1" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "test23_as1" has unsupported operation: llvm.trunc
 
 1: "test24"
 4: "test24" has unsupported operation after optimization: llvm.getelementptr
@@ -146,7 +146,7 @@
 4: "test25" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
 
 1: "test25_as1"
-4: "test25_as1" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "test25_as1" has unsupported operation: llvm.trunc
 
 1: "test30"
 4: "test30" has unsupported operation after optimization: llvm.getelementptr

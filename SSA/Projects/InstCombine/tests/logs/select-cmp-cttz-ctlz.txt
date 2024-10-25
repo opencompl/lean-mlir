@@ -43,103 +43,103 @@
 1: "test1c"
 4: "test1c" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
-4: "test1c" has unsupported operation: builtin.unregistered: llvm.zext
+4: "test1c" has unsupported operation: llvm.zext
 
 1: "test2c"
 4: "test2c" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
-4: "test2c" has unsupported operation: builtin.unregistered: llvm.zext
+4: "test2c" has unsupported operation: llvm.zext
 
 1: "test3c"
 4: "test3c" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
-4: "test3c" has unsupported operation: builtin.unregistered: llvm.zext
+4: "test3c" has unsupported operation: llvm.zext
 
 1: "test4c"
 4: "test4c" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
-4: "test4c" has unsupported operation: builtin.unregistered: llvm.zext
+4: "test4c" has unsupported operation: llvm.zext
 
 1: "test5c"
 4: "test5c" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
-4: "test5c" has unsupported operation: builtin.unregistered: llvm.zext
+4: "test5c" has unsupported operation: llvm.zext
 
 1: "test6c"
 4: "test6c" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
-4: "test6c" has unsupported operation: builtin.unregistered: llvm.zext
+4: "test6c" has unsupported operation: llvm.zext
 
 1: "test1d"
 4: "test1d" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
-4: "test1d" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "test1d" has unsupported operation: llvm.trunc
 
 1: "test2d"
 4: "test2d" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
-4: "test2d" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "test2d" has unsupported operation: llvm.trunc
 
 1: "test3d"
 4: "test3d" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
-4: "test3d" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "test3d" has unsupported operation: llvm.trunc
 
 1: "test4d"
 4: "test4d" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
-4: "test4d" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "test4d" has unsupported operation: llvm.trunc
 
 1: "test5d"
 4: "test5d" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
-4: "test5d" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "test5d" has unsupported operation: llvm.trunc
 
 1: "not_op_ctlz"
 4: "not_op_ctlz" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
-4: "not_op_ctlz" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "not_op_ctlz" has unsupported operation: llvm.trunc
 
 1: "not_op_cttz"
 4: "not_op_cttz" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
-4: "not_op_cttz" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "not_op_cttz" has unsupported operation: llvm.trunc
 
 1: "not_op_ctlz_wrong_xor_op1"
 4: "not_op_ctlz_wrong_xor_op1" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
-4: "not_op_ctlz_wrong_xor_op1" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "not_op_ctlz_wrong_xor_op1" has unsupported operation: llvm.trunc
 
 4: "not_op_ctlz_wrong_xor_op1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "not_op_ctlz_wrong_xor_op0"
 4: "not_op_ctlz_wrong_xor_op0" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
-4: "not_op_ctlz_wrong_xor_op0" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "not_op_ctlz_wrong_xor_op0" has unsupported operation: llvm.trunc
 
 4: "not_op_ctlz_wrong_xor_op0" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "not_op_cttz_wrong_cmp"
 4: "not_op_cttz_wrong_cmp" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
-4: "not_op_cttz_wrong_cmp" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "not_op_cttz_wrong_cmp" has unsupported operation: llvm.trunc
 
 4: "not_op_cttz_wrong_cmp" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test6d"
 4: "test6d" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
-4: "test6d" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "test6d" has unsupported operation: llvm.trunc
 
 1: "select_bug1"
 4: "select_bug1" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
-4: "select_bug1" has unsupported operation: builtin.unregistered: llvm.zext
+4: "select_bug1" has unsupported operation: llvm.zext
 
 1: "select_bug2"
 4: "select_bug2" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
-4: "select_bug2" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "select_bug2" has unsupported operation: llvm.trunc
 
 1: "test7"
 4: "test7" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
@@ -196,28 +196,28 @@
 1: "test_multiuse_zext_def"
 4: "test_multiuse_zext_def" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
-4: "test_multiuse_zext_def" has unsupported operation: builtin.unregistered: llvm.zext
+4: "test_multiuse_zext_def" has unsupported operation: llvm.zext
 
 4: "test_multiuse_zext_def" has unsupported operation: llvm.store
 
 1: "test_multiuse_zext_undef"
 4: "test_multiuse_zext_undef" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
-4: "test_multiuse_zext_undef" has unsupported operation: builtin.unregistered: llvm.zext
+4: "test_multiuse_zext_undef" has unsupported operation: llvm.zext
 
 4: "test_multiuse_zext_undef" has unsupported operation: llvm.store
 
 1: "test_multiuse_trunc_def"
 4: "test_multiuse_trunc_def" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
-4: "test_multiuse_trunc_def" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "test_multiuse_trunc_def" has unsupported operation: llvm.trunc
 
 4: "test_multiuse_trunc_def" has unsupported operation: llvm.store
 
 1: "test_multiuse_trunc_undef"
 4: "test_multiuse_trunc_undef" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
-4: "test_multiuse_trunc_undef" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "test_multiuse_trunc_undef" has unsupported operation: llvm.trunc
 
 4: "test_multiuse_trunc_undef" has unsupported operation: llvm.store
 

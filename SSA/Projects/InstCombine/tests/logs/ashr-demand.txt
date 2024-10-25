@@ -17,10 +17,10 @@
 8: "srem2_ashr_mask_vector_nonconstant" contains vectors which are unsupported
 
 1: "ashr_can_be_lshr"
-4: "ashr_can_be_lshr" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "ashr_can_be_lshr" has unsupported operation: llvm.trunc
 
 1: "ashr_can_be_lshr_2"
-4: "ashr_can_be_lshr_2" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+4: "ashr_can_be_lshr_2" has unsupported operation after optimization: llvm.zext
 
-4: "ashr_can_be_lshr_2" has unsupported operation after optimization: builtin.unregistered: llvm.trunc
+4: "ashr_can_be_lshr_2" has unsupported operation after optimization: llvm.trunc
 

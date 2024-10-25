@@ -1,11 +1,11 @@
 1: "sterix"
-4: "sterix" has unsupported operation: builtin.unregistered: llvm.zext
+4: "sterix" has unsupported operation: llvm.zext
 
-4: "sterix" has unsupported operation: builtin.unregistered: llvm.sext
+4: "sterix" has unsupported operation: llvm.sext
 
-4: "sterix" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "sterix" has unsupported operation: llvm.trunc
 
-4: "sterix" has unsupported operation: builtin.unregistered: llvm.zext
+4: "sterix" has unsupported operation: llvm.zext
 
 4: "sterix" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -13,7 +13,7 @@
 
 4: "sterix" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "sterix" has unsupported operation: builtin.unregistered: llvm.zext
+4: "sterix" has unsupported operation: llvm.zext
 
 4: "sterix" has unsupported operation: builtin.unregistered: llvm.br
 
@@ -22,11 +22,11 @@
 
 4: "PR33765" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "PR33765" has unsupported operation: builtin.unregistered: llvm.zext
+4: "PR33765" has unsupported operation: llvm.zext
 
 4: "PR33765" has unsupported operation: llvm.load
 
-4: "PR33765" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "PR33765" has unsupported operation: llvm.trunc
 
 4: "PR33765" has unsupported operation: llvm.store
 
@@ -44,14 +44,14 @@
 
 4: "iter_breaker" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "iter_breaker" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "iter_breaker" has unsupported operation: llvm.trunc
 
 4: "iter_breaker" has unsupported operation: llvm.call
 
 1: "PR46561"
 4: "PR46561" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "PR46561" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "PR46561" has unsupported operation: llvm.trunc
 
 4: "PR46561" has unsupported operation: builtin.unregistered: llvm.br
 

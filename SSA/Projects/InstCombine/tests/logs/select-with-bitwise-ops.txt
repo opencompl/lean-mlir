@@ -68,13 +68,13 @@
 4: "select_icmp_eq_and_4096_0_and_not_4096" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "select_icmp_eq_0_and_1_or_1"
-4: "select_icmp_eq_0_and_1_or_1" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "select_icmp_eq_0_and_1_or_1" has unsupported operation: llvm.trunc
 
 1: "select_icmp_eq_0_and_1_or_1_vec"
-4: "select_icmp_eq_0_and_1_or_1_vec" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "select_icmp_eq_0_and_1_or_1_vec" has unsupported operation: llvm.trunc
 
 1: "select_icmp_eq_0_and_1_xor_1"
-4: "select_icmp_eq_0_and_1_xor_1" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "select_icmp_eq_0_and_1_xor_1" has unsupported operation: llvm.trunc
 
 1: "select_icmp_eq_0_and_1_and_not_1"
 4: "select_icmp_eq_0_and_1_and_not_1" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -128,16 +128,16 @@
 4: "select_icmp_and_8_eq_0_xor_8" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "select_icmp_x_and_8_eq_0_y_xor_8"
-4: "select_icmp_x_and_8_eq_0_y_xor_8" has unsupported operation: builtin.unregistered: llvm.zext
+4: "select_icmp_x_and_8_eq_0_y_xor_8" has unsupported operation: llvm.zext
 
 1: "select_icmp_x_and_8_ne_0_y_xor_8"
-4: "select_icmp_x_and_8_ne_0_y_xor_8" has unsupported operation: builtin.unregistered: llvm.zext
+4: "select_icmp_x_and_8_ne_0_y_xor_8" has unsupported operation: llvm.zext
 
 1: "select_icmp_x_and_8_ne_0_y_or_8"
-4: "select_icmp_x_and_8_ne_0_y_or_8" has unsupported operation: builtin.unregistered: llvm.zext
+4: "select_icmp_x_and_8_ne_0_y_or_8" has unsupported operation: llvm.zext
 
 1: "select_icmp_x_and_8_ne_0_y_or_8_vec"
-4: "select_icmp_x_and_8_ne_0_y_or_8_vec" has unsupported operation: builtin.unregistered: llvm.zext
+4: "select_icmp_x_and_8_ne_0_y_or_8_vec" has unsupported operation: llvm.zext
 
 1: "select_icmp_x_and_8_ne_0_y_and_not_8"
 4: "select_icmp_x_and_8_ne_0_y_and_not_8" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -331,7 +331,7 @@
 4: "xor_i8_to_i64_shl_save_and_eq" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "xor_i8_to_i64_shl_save_and_ne"
-4: "xor_i8_to_i64_shl_save_and_ne" has unsupported operation: builtin.unregistered: llvm.zext
+4: "xor_i8_to_i64_shl_save_and_ne" has unsupported operation: llvm.zext
 
 1: "select_icmp_eq_and_1_0_srem_2_fail_null_identity"
 4: "select_icmp_eq_and_1_0_srem_2_fail_null_identity" has unsupported operation: builtin.unregistered: llvm.icmp

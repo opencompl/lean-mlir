@@ -418,7 +418,7 @@
 1: "same_signbit_use2"
 4: "same_signbit_use2" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "same_signbit_use2" has unsupported operation: builtin.unregistered: llvm.zext
+4: "same_signbit_use2" has unsupported operation: llvm.zext
 
 4: "same_signbit_use2" has unsupported operation: llvm.call
 
@@ -429,7 +429,7 @@
 
 4: "same_signbit_use3" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "same_signbit_use3" has unsupported operation: builtin.unregistered: llvm.zext
+4: "same_signbit_use3" has unsupported operation: llvm.zext
 
 4: "same_signbit_use3" has unsupported operation: llvm.call
 
@@ -456,14 +456,14 @@
 1: "exactly_one_set_signbit_wrong_shamt"
 4: "exactly_one_set_signbit_wrong_shamt" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "exactly_one_set_signbit_wrong_shamt" has unsupported operation: builtin.unregistered: llvm.zext
+4: "exactly_one_set_signbit_wrong_shamt" has unsupported operation: llvm.zext
 
 4: "exactly_one_set_signbit_wrong_shamt" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "exactly_one_set_signbit_wrong_shr"
 4: "exactly_one_set_signbit_wrong_shr" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "exactly_one_set_signbit_wrong_shr" has unsupported operation: builtin.unregistered: llvm.zext
+4: "exactly_one_set_signbit_wrong_shr" has unsupported operation: llvm.zext
 
 4: "exactly_one_set_signbit_wrong_shr" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -484,7 +484,7 @@
 1: "same_signbit_use2_signed"
 4: "same_signbit_use2_signed" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "same_signbit_use2_signed" has unsupported operation: builtin.unregistered: llvm.sext
+4: "same_signbit_use2_signed" has unsupported operation: llvm.sext
 
 4: "same_signbit_use2_signed" has unsupported operation: llvm.call
 
@@ -495,7 +495,7 @@
 
 4: "same_signbit_use3_signed" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "same_signbit_use3_signed" has unsupported operation: builtin.unregistered: llvm.sext
+4: "same_signbit_use3_signed" has unsupported operation: llvm.sext
 
 4: "same_signbit_use3_signed" has unsupported operation: llvm.call
 
@@ -522,7 +522,7 @@
 1: "exactly_one_set_signbit_wrong_shamt_signed"
 4: "exactly_one_set_signbit_wrong_shamt_signed" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "exactly_one_set_signbit_wrong_shamt_signed" has unsupported operation: builtin.unregistered: llvm.sext
+4: "exactly_one_set_signbit_wrong_shamt_signed" has unsupported operation: llvm.sext
 
 4: "exactly_one_set_signbit_wrong_shamt_signed" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -530,12 +530,12 @@
 4: "slt_zero_ult_i1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "slt_zero_ult_i1_fail1"
-4: "slt_zero_ult_i1_fail1" has unsupported operation: builtin.unregistered: llvm.zext
+4: "slt_zero_ult_i1_fail1" has unsupported operation: llvm.zext
 
 4: "slt_zero_ult_i1_fail1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "slt_zero_ult_i1_fail2"
-4: "slt_zero_ult_i1_fail2" has unsupported operation: builtin.unregistered: llvm.zext
+4: "slt_zero_ult_i1_fail2" has unsupported operation: llvm.zext
 
 4: "slt_zero_ult_i1_fail2" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -546,7 +546,7 @@
 4: "slt_zero_eq_i1_signed" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "slt_zero_eq_i1_fail_signed"
-4: "slt_zero_eq_i1_fail_signed" has unsupported operation: builtin.unregistered: llvm.sext
+4: "slt_zero_eq_i1_fail_signed" has unsupported operation: llvm.sext
 
 4: "slt_zero_eq_i1_fail_signed" has unsupported operation: builtin.unregistered: llvm.icmp
 

@@ -53,7 +53,7 @@
 4: "or_nontrivial_mask2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "or_extra_use1"
-4: "or_extra_use1" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "or_extra_use1" has unsupported operation: llvm.trunc
 
 4: "or_extra_use1" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -62,7 +62,7 @@
 4: "or_extra_use1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "or_extra_use2"
-4: "or_extra_use2" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "or_extra_use2" has unsupported operation: llvm.trunc
 
 4: "or_extra_use2" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -71,7 +71,7 @@
 4: "or_extra_use2" has unsupported operation: llvm.call
 
 1: "or_extra_use3"
-4: "or_extra_use3" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "or_extra_use3" has unsupported operation: llvm.trunc
 
 4: "or_extra_use3" has unsupported operation: llvm.call
 
@@ -83,42 +83,42 @@
 4: "or_extra_use4" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "or_wrong_pred1"
-4: "or_wrong_pred1" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "or_wrong_pred1" has unsupported operation: llvm.trunc
 
 4: "or_wrong_pred1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "or_wrong_pred1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "or_wrong_pred2"
-4: "or_wrong_pred2" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "or_wrong_pred2" has unsupported operation: llvm.trunc
 
 4: "or_wrong_pred2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "or_wrong_pred2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "or_wrong_pred3"
-4: "or_wrong_pred3" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "or_wrong_pred3" has unsupported operation: llvm.trunc
 
 4: "or_wrong_pred3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "or_wrong_pred3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "or_wrong_op"
-4: "or_wrong_op" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "or_wrong_op" has unsupported operation: llvm.trunc
 
 4: "or_wrong_op" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "or_wrong_op" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "or_wrong_const1"
-4: "or_wrong_const1" has unsupported operation after optimization: builtin.unregistered: llvm.trunc
+4: "or_wrong_const1" has unsupported operation after optimization: llvm.trunc
 
 4: "or_wrong_const1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 4: "or_wrong_const1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "or_wrong_const2"
-4: "or_wrong_const2" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "or_wrong_const2" has unsupported operation: llvm.trunc
 
 4: "or_wrong_const2" has unsupported operation: builtin.unregistered: llvm.icmp
 

@@ -38,7 +38,7 @@
 1: "sub_ashr_and_i32_extra_use_ashr"
 4: "sub_ashr_and_i32_extra_use_ashr" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "sub_ashr_and_i32_extra_use_ashr" has unsupported operation: builtin.unregistered: llvm.sext
+4: "sub_ashr_and_i32_extra_use_ashr" has unsupported operation: llvm.sext
 
 4: "sub_ashr_and_i32_extra_use_ashr" has unsupported operation: llvm.store
 

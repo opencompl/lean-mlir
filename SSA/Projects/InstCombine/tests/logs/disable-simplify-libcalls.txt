@@ -250,12 +250,12 @@
 1: "t31"
 4: "t31" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "t31" has unsupported operation: builtin.unregistered: llvm.zext
+4: "t31" has unsupported operation: llvm.zext
 
 1: "t32"
 4: "t32" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "t32" has unsupported operation: builtin.unregistered: llvm.zext
+4: "t32" has unsupported operation: llvm.zext
 
 1: "t33"
 4: "t33" has unsupported operation after optimization: llvm.call

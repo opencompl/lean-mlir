@@ -10,7 +10,7 @@
 1: "flsnotconst"
 4: "flsnotconst" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
-4: "flsnotconst" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "flsnotconst" has unsupported operation: llvm.trunc
 
 1: "flszero"
 4: "flszero" has unsupported operation after optimization: llvm.call

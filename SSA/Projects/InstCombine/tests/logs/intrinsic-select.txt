@@ -89,7 +89,7 @@
 1: "pr85536"
 4: "pr85536" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "pr85536" has unsupported operation: builtin.unregistered: llvm.zext
+4: "pr85536" has unsupported operation: llvm.zext
 
 4: "pr85536" has unsupported operation: builtin.unregistered: llvm.intr.smin
 

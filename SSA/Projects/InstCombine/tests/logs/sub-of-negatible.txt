@@ -207,10 +207,10 @@
 4: "phi_with_duplicate_incoming_basic_blocks" has unsupported operation: llvm.return
 
 1: "t20"
-4: "t20" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "t20" has unsupported operation: llvm.trunc
 
 1: "n21"
-4: "n21" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "n21" has unsupported operation: llvm.trunc
 
 4: "n21" has unsupported operation: llvm.call
 
@@ -283,26 +283,26 @@
 7: "negate_lshr_wrongshift" is unchanged by InstCombine
 
 1: "negate_sext"
-4: "negate_sext" has unsupported operation: builtin.unregistered: llvm.zext
+4: "negate_sext" has unsupported operation: llvm.zext
 
 1: "negate_zext"
-4: "negate_zext" has unsupported operation: builtin.unregistered: llvm.sext
+4: "negate_zext" has unsupported operation: llvm.sext
 
 1: "negate_sext_extrause"
-4: "negate_sext_extrause" has unsupported operation: builtin.unregistered: llvm.sext
+4: "negate_sext_extrause" has unsupported operation: llvm.sext
 
 4: "negate_sext_extrause" has unsupported operation: llvm.call
 
 1: "negate_zext_extrause"
-4: "negate_zext_extrause" has unsupported operation: builtin.unregistered: llvm.zext
+4: "negate_zext_extrause" has unsupported operation: llvm.zext
 
 4: "negate_zext_extrause" has unsupported operation: llvm.call
 
 1: "negate_sext_wrongwidth"
-4: "negate_sext_wrongwidth" has unsupported operation: builtin.unregistered: llvm.sext
+4: "negate_sext_wrongwidth" has unsupported operation: llvm.sext
 
 1: "negate_zext_wrongwidth"
-4: "negate_zext_wrongwidth" has unsupported operation: builtin.unregistered: llvm.zext
+4: "negate_zext_wrongwidth" has unsupported operation: llvm.zext
 
 1: "negate_shufflevector_oneinput_reverse"
 4: "negate_shufflevector_oneinput_reverse" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -337,42 +337,42 @@
 
 4: "negation_of_zeroext_of_nonnegative" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "negation_of_zeroext_of_nonnegative" has unsupported operation: builtin.unregistered: llvm.zext
+4: "negation_of_zeroext_of_nonnegative" has unsupported operation: llvm.zext
 
 1: "negation_of_zeroext_of_positive"
 4: "negation_of_zeroext_of_positive" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "negation_of_zeroext_of_positive" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "negation_of_zeroext_of_positive" has unsupported operation: builtin.unregistered: llvm.zext
+4: "negation_of_zeroext_of_positive" has unsupported operation: llvm.zext
 
 1: "negation_of_signext_of_negative"
 4: "negation_of_signext_of_negative" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "negation_of_signext_of_negative" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "negation_of_signext_of_negative" has unsupported operation: builtin.unregistered: llvm.sext
+4: "negation_of_signext_of_negative" has unsupported operation: llvm.sext
 
 1: "negation_of_signext_of_nonpositive"
 4: "negation_of_signext_of_nonpositive" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "negation_of_signext_of_nonpositive" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "negation_of_signext_of_nonpositive" has unsupported operation: builtin.unregistered: llvm.sext
+4: "negation_of_signext_of_nonpositive" has unsupported operation: llvm.sext
 
 1: "negation_of_signext_of_nonnegative__wrong_cast"
 4: "negation_of_signext_of_nonnegative__wrong_cast" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "negation_of_signext_of_nonnegative__wrong_cast" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "negation_of_signext_of_nonnegative__wrong_cast" has unsupported operation: builtin.unregistered: llvm.zext
+4: "negation_of_signext_of_nonnegative__wrong_cast" has unsupported operation: llvm.zext
 
 1: "negation_of_zeroext_of_negative_wrongcast"
 4: "negation_of_zeroext_of_negative_wrongcast" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "negation_of_zeroext_of_negative_wrongcast" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "negation_of_zeroext_of_negative_wrongcast" has unsupported operation: builtin.unregistered: llvm.zext
+4: "negation_of_zeroext_of_negative_wrongcast" has unsupported operation: llvm.zext
 
 1: "negation_of_increment_via_or_with_no_common_bits_set"
 2: llvm.func

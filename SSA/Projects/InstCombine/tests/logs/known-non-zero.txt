@@ -5,7 +5,7 @@
 
 4: "test0" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
-4: "test0" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "test0" has unsupported operation: llvm.trunc
 
 4: "test0" has unsupported operation: builtin.unregistered: llvm.br
 
@@ -16,7 +16,7 @@
 
 4: "test1" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
-4: "test1" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "test1" has unsupported operation: llvm.trunc
 
 4: "test1" has unsupported operation: builtin.unregistered: llvm.br
 

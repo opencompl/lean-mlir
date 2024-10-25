@@ -21,9 +21,9 @@
 
 4: "icmp_trunc_x_trunc_y_fail_from_illegal1" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
-4: "icmp_trunc_x_trunc_y_fail_from_illegal1" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "icmp_trunc_x_trunc_y_fail_from_illegal1" has unsupported operation: llvm.trunc
 
-4: "icmp_trunc_x_trunc_y_fail_from_illegal1" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "icmp_trunc_x_trunc_y_fail_from_illegal1" has unsupported operation: llvm.trunc
 
 4: "icmp_trunc_x_trunc_y_fail_from_illegal1" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -36,7 +36,7 @@
 
 4: "icmp_trunc_x_trunc_y_illegal_trunc_to_legal_anyways" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
-4: "icmp_trunc_x_trunc_y_illegal_trunc_to_legal_anyways" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "icmp_trunc_x_trunc_y_illegal_trunc_to_legal_anyways" has unsupported operation: llvm.trunc
 
 4: "icmp_trunc_x_trunc_y_illegal_trunc_to_legal_anyways" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -49,7 +49,7 @@
 
 4: "icmp_trunc_x_trunc_y_2_illegal_anyways" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
-4: "icmp_trunc_x_trunc_y_2_illegal_anyways" has unsupported operation: builtin.unregistered: llvm.zext
+4: "icmp_trunc_x_trunc_y_2_illegal_anyways" has unsupported operation: llvm.zext
 
 4: "icmp_trunc_x_trunc_y_2_illegal_anyways" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -62,7 +62,7 @@
 
 4: "icmp_trunc_x_trunc_y_3" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
-4: "icmp_trunc_x_trunc_y_3" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "icmp_trunc_x_trunc_y_3" has unsupported operation: llvm.trunc
 
 4: "icmp_trunc_x_trunc_y_3" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -75,9 +75,9 @@
 
 4: "icmp_trunc_x_trunc_y_fail_maybe_dirty_upper" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
-4: "icmp_trunc_x_trunc_y_fail_maybe_dirty_upper" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "icmp_trunc_x_trunc_y_fail_maybe_dirty_upper" has unsupported operation: llvm.trunc
 
-4: "icmp_trunc_x_trunc_y_fail_maybe_dirty_upper" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "icmp_trunc_x_trunc_y_fail_maybe_dirty_upper" has unsupported operation: llvm.trunc
 
 4: "icmp_trunc_x_trunc_y_fail_maybe_dirty_upper" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -90,9 +90,9 @@
 
 4: "icmp_trunc_x_trunc_y_fail_maybe_dirty_upper_2" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
-4: "icmp_trunc_x_trunc_y_fail_maybe_dirty_upper_2" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "icmp_trunc_x_trunc_y_fail_maybe_dirty_upper_2" has unsupported operation: llvm.trunc
 
-4: "icmp_trunc_x_trunc_y_fail_maybe_dirty_upper_2" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "icmp_trunc_x_trunc_y_fail_maybe_dirty_upper_2" has unsupported operation: llvm.trunc
 
 4: "icmp_trunc_x_trunc_y_fail_maybe_dirty_upper_2" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -105,7 +105,7 @@
 
 4: "icmp_trunc_x_trunc_y_swap0" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
-4: "icmp_trunc_x_trunc_y_swap0" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "icmp_trunc_x_trunc_y_swap0" has unsupported operation: llvm.trunc
 
 4: "icmp_trunc_x_trunc_y_swap0" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -118,7 +118,7 @@
 
 4: "icmp_trunc_x_trunc_y_swap1" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
-4: "icmp_trunc_x_trunc_y_swap1" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "icmp_trunc_x_trunc_y_swap1" has unsupported operation: llvm.trunc
 
 4: "icmp_trunc_x_trunc_y_swap1" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -127,7 +127,7 @@
 
 4: "icmp_trunc_x_zext_y" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
-4: "icmp_trunc_x_zext_y" has unsupported operation: builtin.unregistered: llvm.zext
+4: "icmp_trunc_x_zext_y" has unsupported operation: llvm.zext
 
 4: "icmp_trunc_x_zext_y" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -136,7 +136,7 @@
 
 4: "icmp_trunc_x_zext_y_2" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
-4: "icmp_trunc_x_zext_y_2" has unsupported operation: builtin.unregistered: llvm.zext
+4: "icmp_trunc_x_zext_y_2" has unsupported operation: llvm.zext
 
 4: "icmp_trunc_x_zext_y_2" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -145,7 +145,7 @@
 
 4: "icmp_trunc_x_zext_y_3" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
-4: "icmp_trunc_x_zext_y_3" has unsupported operation: builtin.unregistered: llvm.zext
+4: "icmp_trunc_x_zext_y_3" has unsupported operation: llvm.zext
 
 4: "icmp_trunc_x_zext_y_3" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -154,9 +154,9 @@
 
 4: "icmp_trunc_x_zext_y_3_fail_illegal" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
-4: "icmp_trunc_x_zext_y_3_fail_illegal" has unsupported operation: builtin.unregistered: llvm.zext
+4: "icmp_trunc_x_zext_y_3_fail_illegal" has unsupported operation: llvm.zext
 
-4: "icmp_trunc_x_zext_y_3_fail_illegal" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "icmp_trunc_x_zext_y_3_fail_illegal" has unsupported operation: llvm.trunc
 
 4: "icmp_trunc_x_zext_y_3_fail_illegal" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -165,9 +165,9 @@
 
 4: "icmp_trunc_x_zext_y_fail_multiuse" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
-4: "icmp_trunc_x_zext_y_fail_multiuse" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "icmp_trunc_x_zext_y_fail_multiuse" has unsupported operation: llvm.trunc
 
-4: "icmp_trunc_x_zext_y_fail_multiuse" has unsupported operation: builtin.unregistered: llvm.zext
+4: "icmp_trunc_x_zext_y_fail_multiuse" has unsupported operation: llvm.zext
 
 4: "icmp_trunc_x_zext_y_fail_multiuse" has unsupported operation: llvm.call
 
@@ -183,16 +183,16 @@
 4: "trunc_unsigned_both" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "trunc_unsigned_either"
-4: "trunc_unsigned_either" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "trunc_unsigned_either" has unsupported operation: llvm.trunc
 
-4: "trunc_unsigned_either" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "trunc_unsigned_either" has unsupported operation: llvm.trunc
 
 4: "trunc_unsigned_either" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "trunc_signed_nuw"
-4: "trunc_signed_nuw" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "trunc_signed_nuw" has unsupported operation: llvm.trunc
 
-4: "trunc_signed_nuw" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "trunc_signed_nuw" has unsupported operation: llvm.trunc
 
 4: "trunc_signed_nuw" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -203,9 +203,9 @@
 4: "trunc_signed_both" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "trunc_signed_either"
-4: "trunc_signed_either" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "trunc_signed_either" has unsupported operation: llvm.trunc
 
-4: "trunc_signed_either" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "trunc_signed_either" has unsupported operation: llvm.trunc
 
 4: "trunc_signed_either" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -219,112 +219,112 @@
 4: "trunc_equality_both" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "trunc_equality_either"
-4: "trunc_equality_either" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "trunc_equality_either" has unsupported operation: llvm.trunc
 
-4: "trunc_equality_either" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "trunc_equality_either" has unsupported operation: llvm.trunc
 
 4: "trunc_equality_either" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "trunc_unsigned_nuw_zext"
-4: "trunc_unsigned_nuw_zext" has unsupported operation: builtin.unregistered: llvm.zext
+4: "trunc_unsigned_nuw_zext" has unsupported operation: llvm.zext
 
 4: "trunc_unsigned_nuw_zext" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "trunc_unsigned_nuw_sext"
-4: "trunc_unsigned_nuw_sext" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "trunc_unsigned_nuw_sext" has unsupported operation: llvm.trunc
 
-4: "trunc_unsigned_nuw_sext" has unsupported operation: builtin.unregistered: llvm.sext
+4: "trunc_unsigned_nuw_sext" has unsupported operation: llvm.sext
 
 4: "trunc_unsigned_nuw_sext" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "trunc_unsigned_nsw_zext"
-4: "trunc_unsigned_nsw_zext" has unsupported operation: builtin.unregistered: llvm.zext
+4: "trunc_unsigned_nsw_zext" has unsupported operation: llvm.zext
 
 4: "trunc_unsigned_nsw_zext" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "trunc_unsigned_nsw_sext"
-4: "trunc_unsigned_nsw_sext" has unsupported operation: builtin.unregistered: llvm.sext
+4: "trunc_unsigned_nsw_sext" has unsupported operation: llvm.sext
 
 4: "trunc_unsigned_nsw_sext" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "trunc_signed_nsw_sext"
-4: "trunc_signed_nsw_sext" has unsupported operation: builtin.unregistered: llvm.sext
+4: "trunc_signed_nsw_sext" has unsupported operation: llvm.sext
 
 4: "trunc_signed_nsw_sext" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "trunc_signed_nsw_zext"
-4: "trunc_signed_nsw_zext" has unsupported operation: builtin.unregistered: llvm.zext
+4: "trunc_signed_nsw_zext" has unsupported operation: llvm.zext
 
 4: "trunc_signed_nsw_zext" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "trunc_signed_nuw_sext"
-4: "trunc_signed_nuw_sext" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "trunc_signed_nuw_sext" has unsupported operation: llvm.trunc
 
-4: "trunc_signed_nuw_sext" has unsupported operation: builtin.unregistered: llvm.sext
+4: "trunc_signed_nuw_sext" has unsupported operation: llvm.sext
 
 4: "trunc_signed_nuw_sext" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "trunc_signed_nuw_zext"
-4: "trunc_signed_nuw_zext" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "trunc_signed_nuw_zext" has unsupported operation: llvm.trunc
 
-4: "trunc_signed_nuw_zext" has unsupported operation: builtin.unregistered: llvm.zext
+4: "trunc_signed_nuw_zext" has unsupported operation: llvm.zext
 
 4: "trunc_signed_nuw_zext" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "trunc_equality_nuw_zext"
-4: "trunc_equality_nuw_zext" has unsupported operation: builtin.unregistered: llvm.zext
+4: "trunc_equality_nuw_zext" has unsupported operation: llvm.zext
 
 4: "trunc_equality_nuw_zext" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "trunc_equality_nuw_sext"
-4: "trunc_equality_nuw_sext" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "trunc_equality_nuw_sext" has unsupported operation: llvm.trunc
 
-4: "trunc_equality_nuw_sext" has unsupported operation: builtin.unregistered: llvm.sext
+4: "trunc_equality_nuw_sext" has unsupported operation: llvm.sext
 
 4: "trunc_equality_nuw_sext" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "trunc_equality_nsw_zext"
-4: "trunc_equality_nsw_zext" has unsupported operation: builtin.unregistered: llvm.zext
+4: "trunc_equality_nsw_zext" has unsupported operation: llvm.zext
 
 4: "trunc_equality_nsw_zext" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "trunc_equality_nsw_sext"
-4: "trunc_equality_nsw_sext" has unsupported operation: builtin.unregistered: llvm.sext
+4: "trunc_equality_nsw_sext" has unsupported operation: llvm.sext
 
 4: "trunc_equality_nsw_sext" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "trunc_equality_both_sext"
-4: "trunc_equality_both_sext" has unsupported operation: builtin.unregistered: llvm.sext
+4: "trunc_equality_both_sext" has unsupported operation: llvm.sext
 
 4: "trunc_equality_both_sext" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test_eq1"
-4: "test_eq1" has unsupported operation: builtin.unregistered: llvm.sext
+4: "test_eq1" has unsupported operation: llvm.sext
 
 4: "test_eq1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test_eq2"
-4: "test_eq2" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "test_eq2" has unsupported operation: llvm.trunc
 
 4: "test_eq2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test_ult"
-4: "test_ult" has unsupported operation: builtin.unregistered: llvm.sext
+4: "test_ult" has unsupported operation: llvm.sext
 
 4: "test_ult" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test_slt"
-4: "test_slt" has unsupported operation: builtin.unregistered: llvm.sext
+4: "test_slt" has unsupported operation: llvm.sext
 
 4: "test_slt" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test_ult_nuw"
-4: "test_ult_nuw" has unsupported operation: builtin.unregistered: llvm.zext
+4: "test_ult_nuw" has unsupported operation: llvm.zext
 
 4: "test_ult_nuw" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test_slt_nuw"
-4: "test_slt_nuw" has unsupported operation: builtin.unregistered: llvm.zext
+4: "test_slt_nuw" has unsupported operation: llvm.zext
 
 4: "test_slt_nuw" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -337,9 +337,9 @@
 
 4: "constexpr_trunc" has unsupported operation: builtin.unregistered: llvm.ptrtoint
 
-4: "constexpr_trunc" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "constexpr_trunc" has unsupported operation: llvm.trunc
 
-4: "constexpr_trunc" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "constexpr_trunc" has unsupported operation: llvm.trunc
 
 4: "constexpr_trunc" has unsupported operation: builtin.unregistered: llvm.icmp
 

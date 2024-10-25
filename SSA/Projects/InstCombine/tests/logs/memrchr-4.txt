@@ -8,7 +8,7 @@
 
 4: "fold_memrchr_a11111_c_5" has unsupported operation: llvm.mlir.zero
 
-4: "fold_memrchr_a11111_c_5" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "fold_memrchr_a11111_c_5" has unsupported operation: llvm.trunc
 
 4: "fold_memrchr_a11111_c_5" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -19,7 +19,7 @@
 
 4: "fold_memrchr_a11111_c_n" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "fold_memrchr_a11111_c_n" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "fold_memrchr_a11111_c_n" has unsupported operation: llvm.trunc
 
 4: "fold_memrchr_a11111_c_n" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -34,7 +34,7 @@
 
 4: "fold_memrchr_a1110111_c_3" has unsupported operation: llvm.mlir.zero
 
-4: "fold_memrchr_a1110111_c_3" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "fold_memrchr_a1110111_c_3" has unsupported operation: llvm.trunc
 
 4: "fold_memrchr_a1110111_c_3" has unsupported operation: builtin.unregistered: llvm.icmp
 

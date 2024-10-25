@@ -1,7 +1,7 @@
 1: "t"
 4: "t" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "t" has unsupported operation: builtin.unregistered: llvm.sext
+4: "t" has unsupported operation: llvm.sext
 
 4: "t" has unsupported operation: builtin.unregistered: llvm.bitcast
 

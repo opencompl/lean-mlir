@@ -17,7 +17,7 @@
 
 4: "test" has unsupported operation: llvm.load
 
-4: "test" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "test" has unsupported operation: llvm.trunc
 
 4: "test" has unsupported operation: llvm.store
 
@@ -27,7 +27,7 @@
 
 4: "test" has unsupported operation: llvm.load
 
-4: "test" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "test" has unsupported operation: llvm.trunc
 
 4: "test" has unsupported operation: llvm.store
 
@@ -35,19 +35,19 @@
 
 4: "test" has unsupported operation: llvm.load
 
-4: "test" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "test" has unsupported operation: llvm.trunc
 
 4: "test" has unsupported operation: llvm.store
 
 4: "test" has unsupported operation: llvm.load
 
-4: "test" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "test" has unsupported operation: llvm.trunc
 
 4: "test" has unsupported operation: llvm.store
 
 4: "test" has unsupported operation: llvm.load
 
-4: "test" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "test" has unsupported operation: llvm.trunc
 
 4: "test" has unsupported operation: llvm.store
 

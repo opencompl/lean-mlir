@@ -34,7 +34,7 @@
 
 4: "icmp_div" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "icmp_div" has unsupported operation: builtin.unregistered: llvm.sext
+4: "icmp_div" has unsupported operation: llvm.sext
 
 4: "icmp_div" has unsupported operation: builtin.unregistered: llvm.br
 
@@ -52,7 +52,7 @@
 
 4: "icmp_div3" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "icmp_div3" has unsupported operation: builtin.unregistered: llvm.sext
+4: "icmp_div3" has unsupported operation: llvm.sext
 
 4: "icmp_div3" has unsupported operation: builtin.unregistered: llvm.br
 

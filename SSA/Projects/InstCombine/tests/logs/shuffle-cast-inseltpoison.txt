@@ -1,5 +1,5 @@
 1: "trunc_little_endian"
-4: "trunc_little_endian" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "trunc_little_endian" has unsupported operation: llvm.trunc
 
 1: "trunc_big_endian"
 4: "trunc_big_endian" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -16,7 +16,7 @@
 
 4: "trunc_little_endian_extra_use" has unsupported operation: llvm.call
 
-4: "trunc_little_endian_extra_use" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "trunc_little_endian_extra_use" has unsupported operation: llvm.trunc
 
 1: "use_v12i11"
 5: "use_v12i11" is empty

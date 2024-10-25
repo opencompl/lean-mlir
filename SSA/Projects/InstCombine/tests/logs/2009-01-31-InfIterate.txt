@@ -1,15 +1,15 @@
 1: "test"
-4: "test" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "test" has unsupported operation: llvm.trunc
 
-4: "test" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "test" has unsupported operation: llvm.store
+4: "test" has unsupported operation: llvm.trunc
 
 4: "test" has unsupported operation: llvm.store
 
-4: "test" has unsupported operation: builtin.unregistered: llvm.sext
+4: "test" has unsupported operation: llvm.store
+
+4: "test" has unsupported operation: llvm.sext
 
 4: "test" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "test" has unsupported operation: builtin.unregistered: llvm.zext
+4: "test" has unsupported operation: llvm.zext
 

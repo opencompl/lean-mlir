@@ -8,7 +8,7 @@
 
 4: "fold_strchr_s1_C" has unsupported operation: llvm.mlir.zero
 
-4: "fold_strchr_s1_C" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "fold_strchr_s1_C" has unsupported operation: llvm.trunc
 
 4: "fold_strchr_s1_C" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -21,7 +21,7 @@
 
 4: "fold_strchr_s11_C" has unsupported operation: llvm.mlir.zero
 
-4: "fold_strchr_s11_C" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "fold_strchr_s11_C" has unsupported operation: llvm.trunc
 
 4: "fold_strchr_s11_C" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -34,7 +34,7 @@
 
 4: "fold_strchr_s111_C" has unsupported operation: llvm.mlir.zero
 
-4: "fold_strchr_s111_C" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "fold_strchr_s111_C" has unsupported operation: llvm.trunc
 
 4: "fold_strchr_s111_C" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -45,7 +45,7 @@
 
 4: "fold_strchr_s000_C" has unsupported operation: llvm.mlir.zero
 
-4: "fold_strchr_s000_C" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "fold_strchr_s000_C" has unsupported operation: llvm.trunc
 
 4: "fold_strchr_s000_C" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -63,7 +63,7 @@
 
 4: "fold_strchr_s21111p1_C" has unsupported operation: llvm.getelementptr
 
-4: "fold_strchr_s21111p1_C" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "fold_strchr_s21111p1_C" has unsupported operation: llvm.trunc
 
 4: "fold_strchr_s21111p1_C" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -76,7 +76,7 @@
 
 4: "fold_strchr_s11102_C" has unsupported operation: llvm.mlir.zero
 
-4: "fold_strchr_s11102_C" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "fold_strchr_s11102_C" has unsupported operation: llvm.trunc
 
 4: "fold_strchr_s11102_C" has unsupported operation: builtin.unregistered: llvm.icmp
 

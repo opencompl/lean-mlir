@@ -5,7 +5,7 @@
 
 4: "pr100298" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "pr100298" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "pr100298" has unsupported operation: llvm.trunc
 
 4: "pr100298" has unsupported operation: builtin.unregistered: llvm.icmp
 

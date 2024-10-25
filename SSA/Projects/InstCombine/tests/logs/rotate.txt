@@ -97,47 +97,47 @@
 4: "rotr_safe_v3i16" has unsupported operation: builtin.unregistered: llvm.intr.fshr
 
 1: "rotate_left_16bit"
-4: "rotate_left_16bit" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "rotate_left_16bit" has unsupported operation: llvm.trunc
 
 4: "rotate_left_16bit" has unsupported operation: builtin.unregistered: llvm.intr.fshl
 
 1: "rotate_left_commute_16bit_vec"
-4: "rotate_left_commute_16bit_vec" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "rotate_left_commute_16bit_vec" has unsupported operation: llvm.trunc
 
 4: "rotate_left_commute_16bit_vec" has unsupported operation: builtin.unregistered: llvm.intr.fshl
 
 1: "rotate_right_8bit"
-4: "rotate_right_8bit" has unsupported operation: builtin.unregistered: llvm.zext
+4: "rotate_right_8bit" has unsupported operation: llvm.zext
 
 4: "rotate_right_8bit" has unsupported operation: builtin.unregistered: llvm.intr.fshr
 
 1: "rotate_right_commute_8bit_unmasked_shl"
-4: "rotate_right_commute_8bit_unmasked_shl" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "rotate_right_commute_8bit_unmasked_shl" has unsupported operation: llvm.trunc
 
-4: "rotate_right_commute_8bit_unmasked_shl" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "rotate_right_commute_8bit_unmasked_shl" has unsupported operation: llvm.trunc
 
-4: "rotate_right_commute_8bit_unmasked_shl" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "rotate_right_commute_8bit_unmasked_shl" has unsupported operation: llvm.trunc
 
 4: "rotate_right_commute_8bit_unmasked_shl" has unsupported operation: builtin.unregistered: llvm.intr.fshr
 
 1: "rotate_right_commute_8bit"
-4: "rotate_right_commute_8bit" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "rotate_right_commute_8bit" has unsupported operation: llvm.trunc
 
-4: "rotate_right_commute_8bit" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "rotate_right_commute_8bit" has unsupported operation: llvm.trunc
 
-4: "rotate_right_commute_8bit" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "rotate_right_commute_8bit" has unsupported operation: llvm.trunc
 
 4: "rotate_right_commute_8bit" has unsupported operation: builtin.unregistered: llvm.intr.fshr
 
 1: "rotate8_not_safe"
-4: "rotate8_not_safe" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "rotate8_not_safe" has unsupported operation: llvm.trunc
 
 4: "rotate8_not_safe" has unsupported operation: builtin.unregistered: llvm.intr.fshl
 
 1: "rotate9_not_safe"
-4: "rotate9_not_safe" has unsupported operation: builtin.unregistered: llvm.zext
+4: "rotate9_not_safe" has unsupported operation: llvm.zext
 
-4: "rotate9_not_safe" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "rotate9_not_safe" has unsupported operation: llvm.trunc
 
 1: "rotateleft_16_neg_mask"
 4: "rotateleft_16_neg_mask" has unsupported operation: builtin.unregistered: llvm.intr.fshl
@@ -152,39 +152,39 @@
 4: "rotateright_8_neg_mask_commute" has unsupported operation: builtin.unregistered: llvm.intr.fshr
 
 1: "rotateright_16_neg_mask_wide_amount"
-4: "rotateright_16_neg_mask_wide_amount" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "rotateright_16_neg_mask_wide_amount" has unsupported operation: llvm.trunc
 
 4: "rotateright_16_neg_mask_wide_amount" has unsupported operation: builtin.unregistered: llvm.intr.fshr
 
 1: "rotateright_16_neg_mask_wide_amount_commute"
-4: "rotateright_16_neg_mask_wide_amount_commute" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "rotateright_16_neg_mask_wide_amount_commute" has unsupported operation: llvm.trunc
 
 4: "rotateright_16_neg_mask_wide_amount_commute" has unsupported operation: builtin.unregistered: llvm.intr.fshr
 
 1: "rotateright_64_zext_neg_mask_amount"
-4: "rotateright_64_zext_neg_mask_amount" has unsupported operation: builtin.unregistered: llvm.zext
+4: "rotateright_64_zext_neg_mask_amount" has unsupported operation: llvm.zext
 
 4: "rotateright_64_zext_neg_mask_amount" has unsupported operation: builtin.unregistered: llvm.intr.fshr
 
 1: "rotateleft_8_neg_mask_wide_amount"
-4: "rotateleft_8_neg_mask_wide_amount" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "rotateleft_8_neg_mask_wide_amount" has unsupported operation: llvm.trunc
 
 4: "rotateleft_8_neg_mask_wide_amount" has unsupported operation: builtin.unregistered: llvm.intr.fshl
 
 1: "rotateleft_8_neg_mask_wide_amount_commute"
-4: "rotateleft_8_neg_mask_wide_amount_commute" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "rotateleft_8_neg_mask_wide_amount_commute" has unsupported operation: llvm.trunc
 
 4: "rotateleft_8_neg_mask_wide_amount_commute" has unsupported operation: builtin.unregistered: llvm.intr.fshl
 
 1: "rotateleft_64_zext_neg_mask_amount"
-4: "rotateleft_64_zext_neg_mask_amount" has unsupported operation: builtin.unregistered: llvm.zext
+4: "rotateleft_64_zext_neg_mask_amount" has unsupported operation: llvm.zext
 
 4: "rotateleft_64_zext_neg_mask_amount" has unsupported operation: builtin.unregistered: llvm.intr.fshl
 
 1: "rotateleft_9_neg_mask_wide_amount_commute"
-4: "rotateleft_9_neg_mask_wide_amount_commute" has unsupported operation: builtin.unregistered: llvm.zext
+4: "rotateleft_9_neg_mask_wide_amount_commute" has unsupported operation: llvm.zext
 
-4: "rotateleft_9_neg_mask_wide_amount_commute" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "rotateleft_9_neg_mask_wide_amount_commute" has unsupported operation: llvm.trunc
 
 1: "rotl_sub_mask"
 4: "rotl_sub_mask" has unsupported operation: builtin.unregistered: llvm.intr.fshl
@@ -211,12 +211,12 @@
 4: "rotl_select_weird_type" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "rotl_select_zext_shamt"
-4: "rotl_select_zext_shamt" has unsupported operation: builtin.unregistered: llvm.zext
+4: "rotl_select_zext_shamt" has unsupported operation: llvm.zext
 
 4: "rotl_select_zext_shamt" has unsupported operation: builtin.unregistered: llvm.intr.fshl
 
 1: "rotr_select_zext_shamt"
-4: "rotr_select_zext_shamt" has unsupported operation: builtin.unregistered: llvm.zext
+4: "rotr_select_zext_shamt" has unsupported operation: llvm.zext
 
 4: "rotr_select_zext_shamt" has unsupported operation: builtin.unregistered: llvm.intr.fshr
 
@@ -226,22 +226,22 @@
 4: "rotl_constant_expr" has unsupported operation: builtin.unregistered: llvm.ptrtoint
 
 1: "rotateleft32_doubleand1"
-4: "rotateleft32_doubleand1" has unsupported operation: builtin.unregistered: llvm.zext
+4: "rotateleft32_doubleand1" has unsupported operation: llvm.zext
 
 4: "rotateleft32_doubleand1" has unsupported operation: builtin.unregistered: llvm.intr.fshl
 
 1: "rotateright32_doubleand1"
-4: "rotateright32_doubleand1" has unsupported operation: builtin.unregistered: llvm.zext
+4: "rotateright32_doubleand1" has unsupported operation: llvm.zext
 
 4: "rotateright32_doubleand1" has unsupported operation: builtin.unregistered: llvm.intr.fshr
 
 1: "unmasked_shlop_unmasked_shift_amount"
-4: "unmasked_shlop_unmasked_shift_amount" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "unmasked_shlop_unmasked_shift_amount" has unsupported operation: llvm.trunc
 
 1: "check_rotate_masked_16bit"
-4: "check_rotate_masked_16bit" has unsupported operation: builtin.unregistered: llvm.zext
+4: "check_rotate_masked_16bit" has unsupported operation: llvm.zext
 
-4: "check_rotate_masked_16bit" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "check_rotate_masked_16bit" has unsupported operation: llvm.trunc
 
 4: "check_rotate_masked_16bit" has unsupported operation: builtin.unregistered: llvm.intr.fshr
 

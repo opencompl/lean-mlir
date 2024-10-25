@@ -14,7 +14,7 @@
 4: "inttoptr_vector_constant" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "inttoptr_size_mismatch"
-4: "inttoptr_size_mismatch" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "inttoptr_size_mismatch" has unsupported operation: llvm.trunc
 
 4: "inttoptr_size_mismatch" has unsupported operation: builtin.unregistered: llvm.icmp
 

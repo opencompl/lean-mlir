@@ -5,5 +5,5 @@
 
 4: "a" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "a" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+4: "a" has unsupported operation after optimization: llvm.zext
 

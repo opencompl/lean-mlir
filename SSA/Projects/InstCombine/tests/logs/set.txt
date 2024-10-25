@@ -132,14 +132,14 @@
 
 4: "PR2844" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "PR2844" has unsupported operation: builtin.unregistered: llvm.zext
+4: "PR2844" has unsupported operation: llvm.zext
 
 1: "PR2844_logical"
 4: "PR2844_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "PR2844_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "PR2844_logical" has unsupported operation: builtin.unregistered: llvm.zext
+4: "PR2844_logical" has unsupported operation: llvm.zext
 
 1: "test16"
 4: "test16" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
@@ -153,16 +153,16 @@
 4: "test18" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "test19"
-4: "test19" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+4: "test19" has unsupported operation after optimization: llvm.zext
 
-4: "test19" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+4: "test19" has unsupported operation after optimization: llvm.zext
 
 4: "test19" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "test20"
 4: "test20" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "test20" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+4: "test20" has unsupported operation after optimization: llvm.zext
 
 1: "test20vec"
 8: "test20vec" contains vectors which are unsupported
@@ -170,7 +170,7 @@
 1: "test21"
 4: "test21" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "test21" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+4: "test21" has unsupported operation after optimization: llvm.zext
 
 1: "test21vec"
 8: "test21vec" contains vectors which are unsupported
@@ -188,7 +188,7 @@
 1: "test23"
 4: "test23" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "test23" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+4: "test23" has unsupported operation after optimization: llvm.zext
 
 1: "test23vec"
 8: "test23vec" contains vectors which are unsupported
@@ -196,7 +196,7 @@
 1: "test24"
 4: "test24" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "test24" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+4: "test24" has unsupported operation after optimization: llvm.zext
 
 1: "test24vec"
 8: "test24vec" contains vectors which are unsupported

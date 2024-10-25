@@ -7,34 +7,34 @@
 1: "test1"
 4: "test1" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
-4: "test1" has unsupported operation: builtin.unregistered: llvm.zext
+4: "test1" has unsupported operation: llvm.zext
 
 1: "test2"
 4: "test2" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
-4: "test2" has unsupported operation: builtin.unregistered: llvm.zext
+4: "test2" has unsupported operation: llvm.zext
 
 1: "test3"
 4: "test3" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
-4: "test3" has unsupported operation: builtin.unregistered: llvm.zext
+4: "test3" has unsupported operation: llvm.zext
 
 1: "test4"
-4: "test4" has unsupported operation: builtin.unregistered: llvm.zext
+4: "test4" has unsupported operation: llvm.zext
 
 1: "test5"
-4: "test5" has unsupported operation: builtin.unregistered: llvm.zext
+4: "test5" has unsupported operation: llvm.zext
 
 1: "test6"
-4: "test6" has unsupported operation: builtin.unregistered: llvm.zext
+4: "test6" has unsupported operation: llvm.zext
 
 1: "test7"
-4: "test7" has unsupported operation: builtin.unregistered: llvm.zext
+4: "test7" has unsupported operation: llvm.zext
 
 1: "test8"
-4: "test8" has unsupported operation after optimization: builtin.unregistered: llvm.trunc
+4: "test8" has unsupported operation after optimization: llvm.trunc
 
-4: "test8" has unsupported operation after optimization: builtin.unregistered: llvm.sext
+4: "test8" has unsupported operation after optimization: llvm.sext
 
 1: "test9"
 4: "test9" has unsupported operation: builtin.unregistered: llvm.cond_br
@@ -42,9 +42,9 @@
 4: "test9" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "test10"
-4: "test10" has unsupported operation after optimization: builtin.unregistered: llvm.trunc
+4: "test10" has unsupported operation after optimization: llvm.trunc
 
-4: "test10" has unsupported operation after optimization: builtin.unregistered: llvm.sext
+4: "test10" has unsupported operation after optimization: llvm.sext
 
 1: "test10_vec"
 8: "test10_vec" contains vectors which are unsupported
@@ -82,76 +82,76 @@
 1: "test11"
 4: "test11" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "test11" has unsupported operation: builtin.unregistered: llvm.sext
+4: "test11" has unsupported operation: llvm.sext
 
 4: "test11" has unsupported operation: llvm.store
 
 4: "test11" has unsupported operation: llvm.return
 
 1: "test12"
-4: "test12" has unsupported operation: builtin.unregistered: llvm.sext
+4: "test12" has unsupported operation: llvm.sext
 
 1: "test13"
 4: "test13" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "test13" has unsupported operation after optimization: builtin.unregistered: llvm.sext
+4: "test13" has unsupported operation after optimization: llvm.sext
 
 1: "test14"
-4: "test14" has unsupported operation: builtin.unregistered: llvm.sext
+4: "test14" has unsupported operation: llvm.sext
 
 1: "test15"
 4: "test15" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "test15" has unsupported operation after optimization: builtin.unregistered: llvm.sext
+4: "test15" has unsupported operation after optimization: llvm.sext
 
 1: "test16"
-4: "test16" has unsupported operation: builtin.unregistered: llvm.sext
+4: "test16" has unsupported operation: llvm.sext
 
 1: "test17"
-4: "test17" has unsupported operation: builtin.unregistered: llvm.zext
+4: "test17" has unsupported operation: llvm.zext
 
 1: "test18"
 4: "test18" has unsupported operation: builtin.unregistered: llvm.intr.smax
 
-4: "test18" has unsupported operation: builtin.unregistered: llvm.zext
+4: "test18" has unsupported operation: llvm.zext
 
 1: "test19"
-4: "test19" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "test19" has unsupported operation: llvm.trunc
 
-4: "test19" has unsupported operation: builtin.unregistered: llvm.sext
+4: "test19" has unsupported operation: llvm.sext
 
 1: "smear_set_bit"
-4: "smear_set_bit" has unsupported operation after optimization: builtin.unregistered: llvm.trunc
+4: "smear_set_bit" has unsupported operation after optimization: llvm.trunc
 
-4: "smear_set_bit" has unsupported operation after optimization: builtin.unregistered: llvm.sext
+4: "smear_set_bit" has unsupported operation after optimization: llvm.sext
 
 1: "smear_set_bit_vec_use1"
-4: "smear_set_bit_vec_use1" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "smear_set_bit_vec_use1" has unsupported operation: llvm.trunc
 
 4: "smear_set_bit_vec_use1" has unsupported operation: llvm.call
 
 1: "smear_set_bit_use2"
-4: "smear_set_bit_use2" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "smear_set_bit_use2" has unsupported operation: llvm.trunc
 
 4: "smear_set_bit_use2" has unsupported operation: llvm.call
 
-4: "smear_set_bit_use2" has unsupported operation: builtin.unregistered: llvm.sext
+4: "smear_set_bit_use2" has unsupported operation: llvm.sext
 
 1: "smear_set_bit_wrong_shift_amount"
-4: "smear_set_bit_wrong_shift_amount" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "smear_set_bit_wrong_shift_amount" has unsupported operation: llvm.trunc
 
-4: "smear_set_bit_wrong_shift_amount" has unsupported operation: builtin.unregistered: llvm.sext
+4: "smear_set_bit_wrong_shift_amount" has unsupported operation: llvm.sext
 
 1: "smear_set_bit_different_dest_type"
-4: "smear_set_bit_different_dest_type" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "smear_set_bit_different_dest_type" has unsupported operation: llvm.trunc
 
 1: "smear_set_bit_different_dest_type_extra_use"
-4: "smear_set_bit_different_dest_type_extra_use" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "smear_set_bit_different_dest_type_extra_use" has unsupported operation: llvm.trunc
 
 4: "smear_set_bit_different_dest_type_extra_use" has unsupported operation: llvm.call
 
-4: "smear_set_bit_different_dest_type_extra_use" has unsupported operation: builtin.unregistered: llvm.sext
+4: "smear_set_bit_different_dest_type_extra_use" has unsupported operation: llvm.sext
 
 1: "smear_set_bit_different_dest_type_wider_dst"
-4: "smear_set_bit_different_dest_type_wider_dst" has unsupported operation: builtin.unregistered: llvm.sext
+4: "smear_set_bit_different_dest_type_wider_dst" has unsupported operation: llvm.sext
 

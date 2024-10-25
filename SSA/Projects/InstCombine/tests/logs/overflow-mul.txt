@@ -6,14 +6,14 @@
 
 4: "pr4917_1" has unsupported operation: llvm.extractvalue
 
-4: "pr4917_1" has unsupported operation: builtin.unregistered: llvm.zext
+4: "pr4917_1" has unsupported operation: llvm.zext
 
 1: "pr4917_1a"
 4: "pr4917_1a" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
 
 4: "pr4917_1a" has unsupported operation: llvm.extractvalue
 
-4: "pr4917_1a" has unsupported operation: builtin.unregistered: llvm.zext
+4: "pr4917_1a" has unsupported operation: llvm.zext
 
 1: "pr4917_2"
 4: "pr4917_2" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
@@ -23,9 +23,9 @@
 4: "pr4917_2" has unsupported operation: llvm.extractvalue
 
 1: "pr4917_3"
-4: "pr4917_3" has unsupported operation: builtin.unregistered: llvm.zext
+4: "pr4917_3" has unsupported operation: llvm.zext
 
-4: "pr4917_3" has unsupported operation: builtin.unregistered: llvm.zext
+4: "pr4917_3" has unsupported operation: llvm.zext
 
 4: "pr4917_3" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -34,17 +34,17 @@
 
 4: "pr4917_4" has unsupported operation: llvm.extractvalue
 
-4: "pr4917_4" has unsupported operation: builtin.unregistered: llvm.zext
+4: "pr4917_4" has unsupported operation: llvm.zext
 
 1: "pr4917_4a"
 4: "pr4917_4a" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
 
 4: "pr4917_4a" has unsupported operation: llvm.extractvalue
 
-4: "pr4917_4a" has unsupported operation: builtin.unregistered: llvm.zext
+4: "pr4917_4a" has unsupported operation: llvm.zext
 
 1: "pr4917_5"
-4: "pr4917_5" has unsupported operation: builtin.unregistered: llvm.zext
+4: "pr4917_5" has unsupported operation: llvm.zext
 
 4: "pr4917_5" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
 
@@ -57,30 +57,30 @@
 
 4: "pr4918_1" has unsupported operation: llvm.extractvalue
 
-4: "pr4918_1" has unsupported operation: builtin.unregistered: llvm.zext
+4: "pr4918_1" has unsupported operation: llvm.zext
 
 1: "pr4918_2"
 4: "pr4918_2" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
 
 4: "pr4918_2" has unsupported operation: llvm.extractvalue
 
-4: "pr4918_2" has unsupported operation: builtin.unregistered: llvm.zext
+4: "pr4918_2" has unsupported operation: llvm.zext
 
 1: "pr4918_3"
 4: "pr4918_3" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
 
 4: "pr4918_3" has unsupported operation: llvm.extractvalue
 
-4: "pr4918_3" has unsupported operation: builtin.unregistered: llvm.zext
+4: "pr4918_3" has unsupported operation: llvm.zext
 
 1: "pr20113"
-4: "pr20113" has unsupported operation: builtin.unregistered: llvm.zext
+4: "pr20113" has unsupported operation: llvm.zext
 
-4: "pr20113" has unsupported operation: builtin.unregistered: llvm.zext
+4: "pr20113" has unsupported operation: llvm.zext
 
 4: "pr20113" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "pr20113" has unsupported operation: builtin.unregistered: llvm.sext
+4: "pr20113" has unsupported operation: llvm.sext
 
 1: "pr21445"
 4: "pr21445" has unsupported operation: llvm.mlir.addressof
@@ -92,55 +92,55 @@
 4: "pr21445" has unsupported operation: llvm.extractvalue
 
 1: "mul_may_overflow"
-4: "mul_may_overflow" has unsupported operation: builtin.unregistered: llvm.zext
+4: "mul_may_overflow" has unsupported operation: llvm.zext
 
-4: "mul_may_overflow" has unsupported operation: builtin.unregistered: llvm.zext
+4: "mul_may_overflow" has unsupported operation: llvm.zext
 
 4: "mul_may_overflow" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "mul_may_overflow" has unsupported operation: builtin.unregistered: llvm.zext
+4: "mul_may_overflow" has unsupported operation: llvm.zext
 
 1: "mul_known_nuw"
 4: "mul_known_nuw" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
 
 4: "mul_known_nuw" has unsupported operation: llvm.extractvalue
 
-4: "mul_known_nuw" has unsupported operation: builtin.unregistered: llvm.zext
+4: "mul_known_nuw" has unsupported operation: llvm.zext
 
 1: "extra_and_use"
 4: "extra_and_use" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
 
 4: "extra_and_use" has unsupported operation: llvm.extractvalue
 
-4: "extra_and_use" has unsupported operation: builtin.unregistered: llvm.zext
+4: "extra_and_use" has unsupported operation: llvm.zext
 
 4: "extra_and_use" has unsupported operation: llvm.extractvalue
 
 4: "extra_and_use" has unsupported operation: llvm.call
 
-4: "extra_and_use" has unsupported operation: builtin.unregistered: llvm.zext
+4: "extra_and_use" has unsupported operation: llvm.zext
 
 1: "extra_and_use_small_mask"
 4: "extra_and_use_small_mask" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
 
 4: "extra_and_use_small_mask" has unsupported operation: llvm.extractvalue
 
-4: "extra_and_use_small_mask" has unsupported operation: builtin.unregistered: llvm.zext
+4: "extra_and_use_small_mask" has unsupported operation: llvm.zext
 
 4: "extra_and_use_small_mask" has unsupported operation: llvm.extractvalue
 
 4: "extra_and_use_small_mask" has unsupported operation: llvm.call
 
-4: "extra_and_use_small_mask" has unsupported operation: builtin.unregistered: llvm.zext
+4: "extra_and_use_small_mask" has unsupported operation: llvm.zext
 
 1: "extra_and_use_mask_too_large"
-4: "extra_and_use_mask_too_large" has unsupported operation: builtin.unregistered: llvm.zext
+4: "extra_and_use_mask_too_large" has unsupported operation: llvm.zext
 
-4: "extra_and_use_mask_too_large" has unsupported operation: builtin.unregistered: llvm.zext
+4: "extra_and_use_mask_too_large" has unsupported operation: llvm.zext
 
 4: "extra_and_use_mask_too_large" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "extra_and_use_mask_too_large" has unsupported operation: llvm.call
 
-4: "extra_and_use_mask_too_large" has unsupported operation: builtin.unregistered: llvm.zext
+4: "extra_and_use_mask_too_large" has unsupported operation: llvm.zext
 

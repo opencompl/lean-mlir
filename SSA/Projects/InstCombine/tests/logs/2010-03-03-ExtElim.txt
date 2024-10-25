@@ -7,7 +7,7 @@
 
 4: "PR6486" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "PR6486" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+4: "PR6486" has unsupported operation after optimization: llvm.zext
 
 4: "PR6486" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -18,9 +18,9 @@
 
 4: "PR16462_1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "PR16462_1" has unsupported operation after optimization: builtin.unregistered: llvm.trunc
+4: "PR16462_1" has unsupported operation after optimization: llvm.trunc
 
-4: "PR16462_1" has unsupported operation after optimization: builtin.unregistered: llvm.sext
+4: "PR16462_1" has unsupported operation after optimization: llvm.sext
 
 4: "PR16462_1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
@@ -31,7 +31,7 @@
 
 4: "PR16462_2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
-4: "PR16462_2" has unsupported operation after optimization: builtin.unregistered: llvm.trunc
+4: "PR16462_2" has unsupported operation after optimization: llvm.trunc
 
 4: "PR16462_2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 

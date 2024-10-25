@@ -1,27 +1,27 @@
 1: "t1"
 4: "t1" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
-4: "t1" has unsupported operation: builtin.unregistered: llvm.sext
+4: "t1" has unsupported operation: llvm.sext
 
 1: "t2"
 4: "t2" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
-4: "t2" has unsupported operation: builtin.unregistered: llvm.sext
+4: "t2" has unsupported operation: llvm.sext
 
 1: "t3"
 4: "t3" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
-4: "t3" has unsupported operation: builtin.unregistered: llvm.zext
+4: "t3" has unsupported operation: llvm.zext
 
 1: "t4"
 4: "t4" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
-4: "t4" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "t4" has unsupported operation: llvm.trunc
 
 1: "t5"
 4: "t5" has unsupported operation: builtin.unregistered: llvm.intr.smax
 
-4: "t5" has unsupported operation: builtin.unregistered: llvm.zext
+4: "t5" has unsupported operation: llvm.zext
 
 1: "t6"
 4: "t6" has unsupported operation: builtin.unregistered: llvm.intr.smin
@@ -31,23 +31,23 @@
 1: "t7"
 4: "t7" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
-4: "t7" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "t7" has unsupported operation: llvm.trunc
 
 1: "t8"
 4: "t8" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
-4: "t8" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "t8" has unsupported operation: llvm.trunc
 
 4: "t8" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "t8" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "t8" has unsupported operation: builtin.unregistered: llvm.zext
+4: "t8" has unsupported operation: llvm.zext
 
 1: "t9"
 4: "t9" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "t9" has unsupported operation: builtin.unregistered: llvm.sext
+4: "t9" has unsupported operation: llvm.sext
 
 1: "t10"
 4: "t10" has unsupported operation: builtin.unregistered: llvm.intr.smax
@@ -238,22 +238,22 @@
 1: "look_through_cast1"
 4: "look_through_cast1" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
-4: "look_through_cast1" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "look_through_cast1" has unsupported operation: llvm.trunc
 
 1: "look_through_cast2"
 4: "look_through_cast2" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "look_through_cast2" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "look_through_cast2" has unsupported operation: llvm.trunc
 
 1: "min_through_cast_vec1"
 4: "min_through_cast_vec1" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
-4: "min_through_cast_vec1" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "min_through_cast_vec1" has unsupported operation: llvm.trunc
 
 1: "min_through_cast_vec2"
 4: "min_through_cast_vec2" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
-4: "min_through_cast_vec2" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "min_through_cast_vec2" has unsupported operation: llvm.trunc
 
 1: "common_factor_smin"
 4: "common_factor_smin" has unsupported operation: builtin.unregistered: llvm.intr.smin

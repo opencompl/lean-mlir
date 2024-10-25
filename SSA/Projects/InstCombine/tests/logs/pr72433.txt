@@ -1,9 +1,9 @@
 1: "widget"
 4: "widget" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "widget" has unsupported operation: builtin.unregistered: llvm.zext
+4: "widget" has unsupported operation: llvm.zext
 
-4: "widget" has unsupported operation: builtin.unregistered: llvm.zext
+4: "widget" has unsupported operation: llvm.zext
 
-4: "widget" has unsupported operation: builtin.unregistered: llvm.zext
+4: "widget" has unsupported operation: llvm.zext
 

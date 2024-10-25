@@ -6,7 +6,7 @@
 
 4: "fold_memcmp_a_b_n" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "fold_memcmp_a_b_n" has unsupported operation: builtin.unregistered: llvm.sext
+4: "fold_memcmp_a_b_n" has unsupported operation: llvm.sext
 
 4: "fold_memcmp_a_b_n" has unsupported operation: llvm.getelementptr
 
@@ -14,7 +14,7 @@
 
 4: "fold_memcmp_a_b_n" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "fold_memcmp_a_b_n" has unsupported operation: builtin.unregistered: llvm.sext
+4: "fold_memcmp_a_b_n" has unsupported operation: llvm.sext
 
 4: "fold_memcmp_a_b_n" has unsupported operation: llvm.getelementptr
 
@@ -22,7 +22,7 @@
 
 4: "fold_memcmp_a_b_n" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "fold_memcmp_a_b_n" has unsupported operation: builtin.unregistered: llvm.sext
+4: "fold_memcmp_a_b_n" has unsupported operation: llvm.sext
 
 4: "fold_memcmp_a_b_n" has unsupported operation: llvm.getelementptr
 
@@ -34,7 +34,7 @@
 
 4: "fold_memcmp_a_b_n" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "fold_memcmp_a_b_n" has unsupported operation: builtin.unregistered: llvm.sext
+4: "fold_memcmp_a_b_n" has unsupported operation: llvm.sext
 
 4: "fold_memcmp_a_b_n" has unsupported operation: llvm.getelementptr
 
@@ -56,13 +56,13 @@
 1: "fold_memcmp_a_c_n"
 4: "fold_memcmp_a_c_n" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "fold_memcmp_a_c_n" has unsupported operation: builtin.unregistered: llvm.sext
+4: "fold_memcmp_a_c_n" has unsupported operation: llvm.sext
 
 4: "fold_memcmp_a_c_n" has unsupported operation: llvm.store
 
 4: "fold_memcmp_a_c_n" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "fold_memcmp_a_c_n" has unsupported operation: builtin.unregistered: llvm.sext
+4: "fold_memcmp_a_c_n" has unsupported operation: llvm.sext
 
 4: "fold_memcmp_a_c_n" has unsupported operation: llvm.getelementptr
 
@@ -70,7 +70,7 @@
 
 4: "fold_memcmp_a_c_n" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "fold_memcmp_a_c_n" has unsupported operation: builtin.unregistered: llvm.sext
+4: "fold_memcmp_a_c_n" has unsupported operation: llvm.sext
 
 4: "fold_memcmp_a_c_n" has unsupported operation: llvm.getelementptr
 
@@ -78,7 +78,7 @@
 
 4: "fold_memcmp_a_c_n" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "fold_memcmp_a_c_n" has unsupported operation: builtin.unregistered: llvm.sext
+4: "fold_memcmp_a_c_n" has unsupported operation: llvm.sext
 
 4: "fold_memcmp_a_c_n" has unsupported operation: llvm.getelementptr
 
@@ -86,7 +86,7 @@
 
 4: "fold_memcmp_a_c_n" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "fold_memcmp_a_c_n" has unsupported operation: builtin.unregistered: llvm.sext
+4: "fold_memcmp_a_c_n" has unsupported operation: llvm.sext
 
 4: "fold_memcmp_a_c_n" has unsupported operation: llvm.getelementptr
 
@@ -94,7 +94,7 @@
 
 4: "fold_memcmp_a_c_n" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "fold_memcmp_a_c_n" has unsupported operation: builtin.unregistered: llvm.sext
+4: "fold_memcmp_a_c_n" has unsupported operation: llvm.sext
 
 4: "fold_memcmp_a_c_n" has unsupported operation: llvm.getelementptr
 
@@ -105,13 +105,13 @@
 1: "fold_memcmp_a_d_n"
 4: "fold_memcmp_a_d_n" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "fold_memcmp_a_d_n" has unsupported operation: builtin.unregistered: llvm.sext
+4: "fold_memcmp_a_d_n" has unsupported operation: llvm.sext
 
 4: "fold_memcmp_a_d_n" has unsupported operation: llvm.store
 
 4: "fold_memcmp_a_d_n" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "fold_memcmp_a_d_n" has unsupported operation: builtin.unregistered: llvm.sext
+4: "fold_memcmp_a_d_n" has unsupported operation: llvm.sext
 
 4: "fold_memcmp_a_d_n" has unsupported operation: llvm.getelementptr
 

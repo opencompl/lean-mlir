@@ -27,15 +27,15 @@
 8: "sub_mask1_lshr_vector_nonuniform" contains vectors which are unsupported
 
 1: "sub_mask1_trunc_lshr"
-4: "sub_mask1_trunc_lshr" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "sub_mask1_trunc_lshr" has unsupported operation: llvm.trunc
 
 1: "sub_sext_mask1_trunc_lshr"
-4: "sub_sext_mask1_trunc_lshr" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "sub_sext_mask1_trunc_lshr" has unsupported operation: llvm.trunc
 
-4: "sub_sext_mask1_trunc_lshr" has unsupported operation: builtin.unregistered: llvm.zext
+4: "sub_sext_mask1_trunc_lshr" has unsupported operation: llvm.zext
 
 1: "sub_zext_trunc_lshr"
-4: "sub_zext_trunc_lshr" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "sub_zext_trunc_lshr" has unsupported operation: llvm.trunc
 
 1: "neg_mask2_lshr"
 2: llvm.func
@@ -60,7 +60,7 @@
 4: "neg_mask1_lshr_extrause_lshr" has unsupported operation: llvm.call
 
 1: "neg_signbit"
-4: "neg_signbit" has unsupported operation: builtin.unregistered: llvm.sext
+4: "neg_signbit" has unsupported operation: llvm.sext
 
 1: "neg_signbit_use1"
 4: "neg_signbit_use1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -73,31 +73,31 @@
 
 4: "neg_signbit_use1" has unsupported operation: llvm.call
 
-4: "neg_signbit_use1" has unsupported operation: builtin.unregistered: llvm.sext
+4: "neg_signbit_use1" has unsupported operation: llvm.sext
 
 1: "neg_signbit_use2"
-4: "neg_signbit_use2" has unsupported operation: builtin.unregistered: llvm.zext
+4: "neg_signbit_use2" has unsupported operation: llvm.zext
 
 4: "neg_signbit_use2" has unsupported operation: llvm.call
 
 1: "neg_not_signbit1"
 4: "neg_not_signbit1" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "neg_not_signbit1" has unsupported operation: builtin.unregistered: llvm.zext
+4: "neg_not_signbit1" has unsupported operation: llvm.zext
 
 1: "neg_not_signbit2"
-4: "neg_not_signbit2" has unsupported operation: builtin.unregistered: llvm.zext
+4: "neg_not_signbit2" has unsupported operation: llvm.zext
 
 1: "neg_not_signbit3"
-4: "neg_not_signbit3" has unsupported operation: builtin.unregistered: llvm.zext
+4: "neg_not_signbit3" has unsupported operation: llvm.zext
 
 1: "neg_mask"
-4: "neg_mask" has unsupported operation: builtin.unregistered: llvm.sext
+4: "neg_mask" has unsupported operation: llvm.sext
 
 4: "neg_mask" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "neg_mask_const"
-4: "neg_mask_const" has unsupported operation: builtin.unregistered: llvm.sext
+4: "neg_mask_const" has unsupported operation: llvm.sext
 
 4: "neg_mask_const" has unsupported operation: builtin.unregistered: llvm.icmp
 

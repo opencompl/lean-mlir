@@ -31,17 +31,17 @@
 2: llvm.return
 
 1: "sext"
-4: "sext" has unsupported operation: builtin.unregistered: llvm.sext
+4: "sext" has unsupported operation: llvm.sext
 
 1: "sext_vec"
-4: "sext_vec" has unsupported operation: builtin.unregistered: llvm.sext
+4: "sext_vec" has unsupported operation: llvm.sext
 
 1: "sext_multiuse"
-4: "sext_multiuse" has unsupported operation: builtin.unregistered: llvm.zext
+4: "sext_multiuse" has unsupported operation: llvm.zext
 
-4: "sext_multiuse" has unsupported operation: builtin.unregistered: llvm.sext
+4: "sext_multiuse" has unsupported operation: llvm.sext
 
-4: "sext_multiuse" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "sext_multiuse" has unsupported operation: llvm.trunc
 
 1: "test5"
 2: llvm.func

@@ -1,36 +1,36 @@
 1: "sext_xor_sub"
-4: "sext_xor_sub" has unsupported operation after optimization: builtin.unregistered: llvm.sext
+4: "sext_xor_sub" has unsupported operation after optimization: llvm.sext
 
 1: "sext_xor_sub_1"
-4: "sext_xor_sub_1" has unsupported operation after optimization: builtin.unregistered: llvm.sext
+4: "sext_xor_sub_1" has unsupported operation after optimization: llvm.sext
 
 1: "sext_xor_sub_2"
-4: "sext_xor_sub_2" has unsupported operation after optimization: builtin.unregistered: llvm.sext
+4: "sext_xor_sub_2" has unsupported operation after optimization: llvm.sext
 
 1: "sext_xor_sub_3"
-4: "sext_xor_sub_3" has unsupported operation after optimization: builtin.unregistered: llvm.sext
+4: "sext_xor_sub_3" has unsupported operation after optimization: llvm.sext
 
 1: "sext_non_bool_xor_sub"
-4: "sext_non_bool_xor_sub" has unsupported operation: builtin.unregistered: llvm.sext
+4: "sext_non_bool_xor_sub" has unsupported operation: llvm.sext
 
 1: "sext_non_bool_xor_sub_1"
-4: "sext_non_bool_xor_sub_1" has unsupported operation: builtin.unregistered: llvm.sext
+4: "sext_non_bool_xor_sub_1" has unsupported operation: llvm.sext
 
 1: "sext_diff_i1_xor_sub"
-4: "sext_diff_i1_xor_sub" has unsupported operation: builtin.unregistered: llvm.sext
+4: "sext_diff_i1_xor_sub" has unsupported operation: llvm.sext
 
-4: "sext_diff_i1_xor_sub" has unsupported operation: builtin.unregistered: llvm.zext
+4: "sext_diff_i1_xor_sub" has unsupported operation: llvm.zext
 
 1: "sext_diff_i1_xor_sub_1"
-4: "sext_diff_i1_xor_sub_1" has unsupported operation: builtin.unregistered: llvm.sext
+4: "sext_diff_i1_xor_sub_1" has unsupported operation: llvm.sext
 
-4: "sext_diff_i1_xor_sub_1" has unsupported operation: builtin.unregistered: llvm.zext
+4: "sext_diff_i1_xor_sub_1" has unsupported operation: llvm.zext
 
 1: "sext_multi_uses"
-4: "sext_multi_uses" has unsupported operation after optimization: builtin.unregistered: llvm.sext
+4: "sext_multi_uses" has unsupported operation after optimization: llvm.sext
 
 1: "xor_multi_uses"
-4: "xor_multi_uses" has unsupported operation: builtin.unregistered: llvm.sext
+4: "xor_multi_uses" has unsupported operation: llvm.sext
 
 1: "absdiff"
 4: "absdiff" has unsupported operation: builtin.unregistered: llvm.icmp

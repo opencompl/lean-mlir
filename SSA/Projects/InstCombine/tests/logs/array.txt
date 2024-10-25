@@ -1,5 +1,5 @@
 1: "test"
-4: "test" has unsupported operation: builtin.unregistered: llvm.sext
+4: "test" has unsupported operation: llvm.sext
 
 4: "test" has unsupported operation: llvm.getelementptr
 
@@ -10,14 +10,14 @@
 4: "test" has unsupported operation: llvm.return
 
 1: "test_add_res_moreoneuse"
-4: "test_add_res_moreoneuse" has unsupported operation: builtin.unregistered: llvm.sext
+4: "test_add_res_moreoneuse" has unsupported operation: llvm.sext
 
 4: "test_add_res_moreoneuse" has unsupported operation: llvm.getelementptr
 
 4: "test_add_res_moreoneuse" has unsupported operation: llvm.store
 
 1: "test_addop_nonsw_flag"
-4: "test_addop_nonsw_flag" has unsupported operation: builtin.unregistered: llvm.sext
+4: "test_addop_nonsw_flag" has unsupported operation: llvm.sext
 
 4: "test_addop_nonsw_flag" has unsupported operation: llvm.getelementptr
 
@@ -26,7 +26,7 @@
 4: "test_addop_nonsw_flag" has unsupported operation: llvm.return
 
 1: "test_add_op2_not_constant"
-4: "test_add_op2_not_constant" has unsupported operation: builtin.unregistered: llvm.sext
+4: "test_add_op2_not_constant" has unsupported operation: llvm.sext
 
 4: "test_add_op2_not_constant" has unsupported operation: llvm.getelementptr
 
@@ -35,7 +35,7 @@
 4: "test_add_op2_not_constant" has unsupported operation: llvm.return
 
 1: "test_zext_nneg"
-4: "test_zext_nneg" has unsupported operation: builtin.unregistered: llvm.sext
+4: "test_zext_nneg" has unsupported operation: llvm.sext
 
 4: "test_zext_nneg" has unsupported operation: llvm.getelementptr
 
@@ -46,7 +46,7 @@
 4: "test_zext_nneg" has unsupported operation: llvm.return
 
 1: "test_zext_missing_nneg"
-4: "test_zext_missing_nneg" has unsupported operation: builtin.unregistered: llvm.zext
+4: "test_zext_missing_nneg" has unsupported operation: llvm.zext
 
 4: "test_zext_missing_nneg" has unsupported operation: llvm.getelementptr
 
@@ -116,7 +116,7 @@
 
 4: "gep_inbounds_sext_add_nonneg" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
-4: "gep_inbounds_sext_add_nonneg" has unsupported operation: builtin.unregistered: llvm.zext
+4: "gep_inbounds_sext_add_nonneg" has unsupported operation: llvm.zext
 
 4: "gep_inbounds_sext_add_nonneg" has unsupported operation: llvm.getelementptr
 
@@ -127,14 +127,14 @@
 
 4: "gep_inbounds_sext_add_not_nonneg_1" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
-4: "gep_inbounds_sext_add_not_nonneg_1" has unsupported operation: builtin.unregistered: llvm.zext
+4: "gep_inbounds_sext_add_not_nonneg_1" has unsupported operation: llvm.zext
 
 4: "gep_inbounds_sext_add_not_nonneg_1" has unsupported operation: llvm.getelementptr
 
 4: "gep_inbounds_sext_add_not_nonneg_1" has unsupported operation: llvm.getelementptr
 
 1: "gep_inbounds_sext_add_not_nonneg_2"
-4: "gep_inbounds_sext_add_not_nonneg_2" has unsupported operation: builtin.unregistered: llvm.sext
+4: "gep_inbounds_sext_add_not_nonneg_2" has unsupported operation: llvm.sext
 
 4: "gep_inbounds_sext_add_not_nonneg_2" has unsupported operation: llvm.getelementptr
 
@@ -145,7 +145,7 @@
 
 4: "gep_not_inbounds_sext_add_nonneg" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
-4: "gep_not_inbounds_sext_add_nonneg" has unsupported operation: builtin.unregistered: llvm.zext
+4: "gep_not_inbounds_sext_add_nonneg" has unsupported operation: llvm.zext
 
 4: "gep_not_inbounds_sext_add_nonneg" has unsupported operation: llvm.getelementptr
 

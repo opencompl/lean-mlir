@@ -1,8 +1,8 @@
 1: "t0"
-4: "t0" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "t0" has unsupported operation: llvm.trunc
 
 1: "t1_vec_splat"
-4: "t1_vec_splat" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "t1_vec_splat" has unsupported operation: llvm.trunc
 
 1: "t3_vec_nonsplat_poison0"
 4: "t3_vec_nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -15,7 +15,7 @@
 
 4: "t3_vec_nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
 
-4: "t3_vec_nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "t3_vec_nonsplat_poison0" has unsupported operation: llvm.trunc
 
 1: "t4_vec_nonsplat_poison1"
 4: "t4_vec_nonsplat_poison1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -28,7 +28,7 @@
 
 4: "t4_vec_nonsplat_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
 
-4: "t4_vec_nonsplat_poison1" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "t4_vec_nonsplat_poison1" has unsupported operation: llvm.trunc
 
 1: "t5_vec_nonsplat_poison1"
 4: "t5_vec_nonsplat_poison1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -41,7 +41,7 @@
 
 4: "t5_vec_nonsplat_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
 
-4: "t5_vec_nonsplat_poison1" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "t5_vec_nonsplat_poison1" has unsupported operation: llvm.trunc
 
 1: "use16"
 5: "use16" is empty
@@ -50,35 +50,35 @@
 5: "use32" is empty
 
 1: "t6_extrause0"
-4: "t6_extrause0" has unsupported operation: builtin.unregistered: llvm.zext
+4: "t6_extrause0" has unsupported operation: llvm.zext
 
-4: "t6_extrause0" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "t6_extrause0" has unsupported operation: llvm.trunc
 
 4: "t6_extrause0" has unsupported operation: llvm.call
 
-4: "t6_extrause0" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "t6_extrause0" has unsupported operation: llvm.trunc
 
 1: "t7_extrause1"
 4: "t7_extrause1" has unsupported operation: llvm.call
 
-4: "t7_extrause1" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "t7_extrause1" has unsupported operation: llvm.trunc
 
 1: "t8_extrause2"
-4: "t8_extrause2" has unsupported operation: builtin.unregistered: llvm.zext
+4: "t8_extrause2" has unsupported operation: llvm.zext
 
-4: "t8_extrause2" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "t8_extrause2" has unsupported operation: llvm.trunc
 
 4: "t8_extrause2" has unsupported operation: llvm.call
 
 4: "t8_extrause2" has unsupported operation: llvm.call
 
 1: "t9_lshr"
-4: "t9_lshr" has unsupported operation: builtin.unregistered: llvm.zext
+4: "t9_lshr" has unsupported operation: llvm.zext
 
-4: "t9_lshr" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "t9_lshr" has unsupported operation: llvm.trunc
 
 1: "n10_ashr_lshr"
-4: "n10_ashr_lshr" has unsupported operation: builtin.unregistered: llvm.zext
+4: "n10_ashr_lshr" has unsupported operation: llvm.zext
 
-4: "n10_ashr_lshr" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "n10_ashr_lshr" has unsupported operation: llvm.trunc
 

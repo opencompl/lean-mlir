@@ -55,7 +55,7 @@
 1: "and1_shl1_is_cmp_eq_0"
 4: "and1_shl1_is_cmp_eq_0" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "and1_shl1_is_cmp_eq_0" has unsupported operation: builtin.unregistered: llvm.zext
+4: "and1_shl1_is_cmp_eq_0" has unsupported operation: llvm.zext
 
 1: "and1_shl1_is_cmp_eq_0_multiuse"
 2: llvm.func
@@ -68,12 +68,12 @@
 1: "and1_shl1_is_cmp_eq_0_vec"
 4: "and1_shl1_is_cmp_eq_0_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "and1_shl1_is_cmp_eq_0_vec" has unsupported operation: builtin.unregistered: llvm.zext
+4: "and1_shl1_is_cmp_eq_0_vec" has unsupported operation: llvm.zext
 
 1: "and1_shl1_is_cmp_eq_0_vec_poison"
 4: "and1_shl1_is_cmp_eq_0_vec_poison" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "and1_shl1_is_cmp_eq_0_vec_poison" has unsupported operation: builtin.unregistered: llvm.zext
+4: "and1_shl1_is_cmp_eq_0_vec_poison" has unsupported operation: llvm.zext
 
 1: "and1_lshr1_is_cmp_eq_0"
 2: llvm.func

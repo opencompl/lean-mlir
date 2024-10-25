@@ -5,12 +5,12 @@
 4: "test1_vector" has unsupported operation: builtin.unregistered: llvm.intr.bswap
 
 1: "test1_trunc"
-4: "test1_trunc" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "test1_trunc" has unsupported operation: llvm.trunc
 
 1: "test1_trunc_extra_use"
 4: "test1_trunc_extra_use" has unsupported operation: llvm.call
 
-4: "test1_trunc_extra_use" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "test1_trunc_extra_use" has unsupported operation: llvm.trunc
 
 1: "test2"
 4: "test2" has unsupported operation: builtin.unregistered: llvm.intr.bswap
@@ -96,62 +96,62 @@
 4: "test9" has unsupported operation: builtin.unregistered: llvm.intr.bswap
 
 1: "test10"
-4: "test10" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "test10" has unsupported operation: llvm.trunc
 
 4: "test10" has unsupported operation: builtin.unregistered: llvm.intr.bswap
 
 1: "test10_vector"
-4: "test10_vector" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "test10_vector" has unsupported operation: llvm.trunc
 
 4: "test10_vector" has unsupported operation: builtin.unregistered: llvm.intr.bswap
 
 1: "PR39793_bswap_u64_as_u32"
-4: "PR39793_bswap_u64_as_u32" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "PR39793_bswap_u64_as_u32" has unsupported operation: llvm.trunc
 
 4: "PR39793_bswap_u64_as_u32" has unsupported operation: builtin.unregistered: llvm.intr.bswap
 
-4: "PR39793_bswap_u64_as_u32" has unsupported operation: builtin.unregistered: llvm.zext
+4: "PR39793_bswap_u64_as_u32" has unsupported operation: llvm.zext
 
 1: "PR39793_bswap_u64_as_u32_trunc"
-4: "PR39793_bswap_u64_as_u32_trunc" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "PR39793_bswap_u64_as_u32_trunc" has unsupported operation: llvm.trunc
 
 4: "PR39793_bswap_u64_as_u32_trunc" has unsupported operation: builtin.unregistered: llvm.intr.bswap
 
-4: "PR39793_bswap_u64_as_u32_trunc" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "PR39793_bswap_u64_as_u32_trunc" has unsupported operation: llvm.trunc
 
 1: "PR39793_bswap_u64_as_u16"
-4: "PR39793_bswap_u64_as_u16" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "PR39793_bswap_u64_as_u16" has unsupported operation: llvm.trunc
 
 4: "PR39793_bswap_u64_as_u16" has unsupported operation: builtin.unregistered: llvm.intr.bswap
 
-4: "PR39793_bswap_u64_as_u16" has unsupported operation: builtin.unregistered: llvm.zext
+4: "PR39793_bswap_u64_as_u16" has unsupported operation: llvm.zext
 
 1: "PR39793_bswap_u64_as_u16_vector"
-4: "PR39793_bswap_u64_as_u16_vector" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "PR39793_bswap_u64_as_u16_vector" has unsupported operation: llvm.trunc
 
 4: "PR39793_bswap_u64_as_u16_vector" has unsupported operation: builtin.unregistered: llvm.intr.bswap
 
-4: "PR39793_bswap_u64_as_u16_vector" has unsupported operation: builtin.unregistered: llvm.zext
+4: "PR39793_bswap_u64_as_u16_vector" has unsupported operation: llvm.zext
 
 1: "PR39793_bswap_u64_as_u16_trunc"
-4: "PR39793_bswap_u64_as_u16_trunc" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "PR39793_bswap_u64_as_u16_trunc" has unsupported operation: llvm.trunc
 
 1: "PR39793_bswap_u50_as_u16"
-4: "PR39793_bswap_u50_as_u16" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "PR39793_bswap_u50_as_u16" has unsupported operation: llvm.trunc
 
 4: "PR39793_bswap_u50_as_u16" has unsupported operation: builtin.unregistered: llvm.intr.bswap
 
-4: "PR39793_bswap_u50_as_u16" has unsupported operation: builtin.unregistered: llvm.zext
+4: "PR39793_bswap_u50_as_u16" has unsupported operation: llvm.zext
 
 1: "PR39793_bswap_u32_as_u16"
-4: "PR39793_bswap_u32_as_u16" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "PR39793_bswap_u32_as_u16" has unsupported operation: llvm.trunc
 
 4: "PR39793_bswap_u32_as_u16" has unsupported operation: builtin.unregistered: llvm.intr.bswap
 
-4: "PR39793_bswap_u32_as_u16" has unsupported operation: builtin.unregistered: llvm.zext
+4: "PR39793_bswap_u32_as_u16" has unsupported operation: llvm.zext
 
 1: "PR39793_bswap_u32_as_u16_trunc"
-4: "PR39793_bswap_u32_as_u16_trunc" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "PR39793_bswap_u32_as_u16_trunc" has unsupported operation: llvm.trunc
 
 1: "partial_bswap"
 4: "partial_bswap" has unsupported operation: builtin.unregistered: llvm.intr.bswap
@@ -225,9 +225,9 @@
 1: "trunc_bswap_i160"
 4: "trunc_bswap_i160" has unsupported operation: llvm.load
 
-4: "trunc_bswap_i160" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "trunc_bswap_i160" has unsupported operation: llvm.trunc
 
-4: "trunc_bswap_i160" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "trunc_bswap_i160" has unsupported operation: llvm.trunc
 
 1: "PR47191_problem1"
 4: "PR47191_problem1" has unsupported operation: builtin.unregistered: llvm.intr.bswap
@@ -244,7 +244,7 @@
 1: "PR50910"
 4: "PR50910" has unsupported operation: builtin.unregistered: llvm.intr.bswap
 
-4: "PR50910" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "PR50910" has unsupported operation: llvm.trunc
 
 1: "PR60690_call_fshl"
 4: "PR60690_call_fshl" has unsupported operation: builtin.unregistered: llvm.intr.bswap

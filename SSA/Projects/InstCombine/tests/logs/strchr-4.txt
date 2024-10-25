@@ -4,14 +4,14 @@
 1: "fold_strchr_s_c_eq_s"
 4: "fold_strchr_s_c_eq_s" has unsupported operation: llvm.load
 
-4: "fold_strchr_s_c_eq_s" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "fold_strchr_s_c_eq_s" has unsupported operation: llvm.trunc
 
 4: "fold_strchr_s_c_eq_s" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "fold_strchr_s_c_neq_s"
 4: "fold_strchr_s_c_neq_s" has unsupported operation: llvm.load
 
-4: "fold_strchr_s_c_neq_s" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "fold_strchr_s_c_neq_s" has unsupported operation: llvm.trunc
 
 4: "fold_strchr_s_c_neq_s" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -30,7 +30,7 @@
 4: "fold_strchr_s_nul_nez" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "fold_strchr_a_c_eq_a"
-4: "fold_strchr_a_c_eq_a" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "fold_strchr_a_c_eq_a" has unsupported operation: llvm.trunc
 
 4: "fold_strchr_a_c_eq_a" has unsupported operation: builtin.unregistered: llvm.icmp
 

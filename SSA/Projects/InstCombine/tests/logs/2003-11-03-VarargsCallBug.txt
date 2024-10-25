@@ -2,7 +2,7 @@
 5: "foo" is empty
 
 1: "test"
-4: "test" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "test" has unsupported operation: llvm.trunc
 
 4: "test" has unsupported operation: llvm.inttoptr
 

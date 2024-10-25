@@ -31,17 +31,17 @@
 8: "sextinreg_alt_splat" contains vectors which are unsupported
 
 1: "sext"
-4: "sext" has unsupported operation: builtin.unregistered: llvm.sext
+4: "sext" has unsupported operation: llvm.sext
 
 1: "sext_extra_use"
-4: "sext_extra_use" has unsupported operation: builtin.unregistered: llvm.zext
+4: "sext_extra_use" has unsupported operation: llvm.zext
 
 4: "sext_extra_use" has unsupported operation: llvm.call
 
-4: "sext_extra_use" has unsupported operation: builtin.unregistered: llvm.sext
+4: "sext_extra_use" has unsupported operation: llvm.sext
 
 1: "sext_splat"
-4: "sext_splat" has unsupported operation: builtin.unregistered: llvm.sext
+4: "sext_splat" has unsupported operation: llvm.sext
 
 1: "sextinreg2"
 2: llvm.func
@@ -60,10 +60,10 @@
 7: "test5" is unchanged by InstCombine
 
 1: "test6"
-4: "test6" has unsupported operation: builtin.unregistered: llvm.sext
+4: "test6" has unsupported operation: llvm.sext
 
 1: "test6_splat_vec"
-4: "test6_splat_vec" has unsupported operation: builtin.unregistered: llvm.sext
+4: "test6_splat_vec" has unsupported operation: llvm.sext
 
 1: "ashr"
 2: llvm.func

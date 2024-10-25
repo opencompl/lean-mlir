@@ -1,22 +1,22 @@
 1: "truncload_no_deref"
 4: "truncload_no_deref" has unsupported operation: llvm.load
 
-4: "truncload_no_deref" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "truncload_no_deref" has unsupported operation: llvm.trunc
 
 1: "truncload_small_deref"
 4: "truncload_small_deref" has unsupported operation: llvm.load
 
-4: "truncload_small_deref" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "truncload_small_deref" has unsupported operation: llvm.trunc
 
 1: "truncload_deref"
 4: "truncload_deref" has unsupported operation: llvm.load
 
-4: "truncload_deref" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "truncload_deref" has unsupported operation: llvm.trunc
 
 1: "truncload_align"
 4: "truncload_align" has unsupported operation: llvm.load
 
-4: "truncload_align" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "truncload_align" has unsupported operation: llvm.trunc
 
 1: "use"
 5: "use" is empty
@@ -26,20 +26,20 @@
 
 4: "truncload_extra_use" has unsupported operation: llvm.call
 
-4: "truncload_extra_use" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "truncload_extra_use" has unsupported operation: llvm.trunc
 
 1: "truncload_type"
 4: "truncload_type" has unsupported operation: llvm.load
 
-4: "truncload_type" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "truncload_type" has unsupported operation: llvm.trunc
 
 1: "truncload_volatile"
 4: "truncload_volatile" has unsupported operation: llvm.load
 
-4: "truncload_volatile" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "truncload_volatile" has unsupported operation: llvm.trunc
 
 1: "truncload_address_space"
 4: "truncload_address_space" has unsupported operation: llvm.load
 
-4: "truncload_address_space" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "truncload_address_space" has unsupported operation: llvm.trunc
 

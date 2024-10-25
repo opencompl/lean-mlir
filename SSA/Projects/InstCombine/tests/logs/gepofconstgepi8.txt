@@ -30,14 +30,14 @@
 1: "test_zero_sext_add_nsw"
 4: "test_zero_sext_add_nsw" has unsupported operation: llvm.getelementptr
 
-4: "test_zero_sext_add_nsw" has unsupported operation: builtin.unregistered: llvm.sext
+4: "test_zero_sext_add_nsw" has unsupported operation: llvm.sext
 
 4: "test_zero_sext_add_nsw" has unsupported operation: llvm.getelementptr
 
 4: "test_zero_sext_add_nsw" has unsupported operation: llvm.getelementptr
 
 1: "test_zero_trunc_add"
-4: "test_zero_trunc_add" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "test_zero_trunc_add" has unsupported operation: llvm.trunc
 
 4: "test_zero_trunc_add" has unsupported operation: llvm.getelementptr
 
@@ -66,7 +66,7 @@
 1: "test_sext_add_without_nsw"
 4: "test_sext_add_without_nsw" has unsupported operation: llvm.getelementptr
 
-4: "test_sext_add_without_nsw" has unsupported operation: builtin.unregistered: llvm.sext
+4: "test_sext_add_without_nsw" has unsupported operation: llvm.sext
 
 4: "test_sext_add_without_nsw" has unsupported operation: llvm.getelementptr
 

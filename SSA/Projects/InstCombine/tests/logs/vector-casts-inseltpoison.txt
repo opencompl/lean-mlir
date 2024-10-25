@@ -1,11 +1,11 @@
 1: "trunc"
-4: "trunc" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "trunc" has unsupported operation: llvm.trunc
 
 1: "and_cmp_is_trunc"
-4: "and_cmp_is_trunc" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "and_cmp_is_trunc" has unsupported operation: llvm.trunc
 
 1: "and_cmp_is_trunc_even_with_poison_elt"
-4: "and_cmp_is_trunc_even_with_poison_elt" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "and_cmp_is_trunc_even_with_poison_elt" has unsupported operation: llvm.trunc
 
 1: "and_cmp_is_trunc_even_with_poison_elts"
 4: "and_cmp_is_trunc_even_with_poison_elts" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -30,14 +30,14 @@
 1: "test3"
 4: "test3" has unsupported operation: builtin.unregistered: llvm.fcmp
 
-4: "test3" has unsupported operation: builtin.unregistered: llvm.sext
+4: "test3" has unsupported operation: llvm.sext
 
 4: "test3" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 1: "test4"
 4: "test4" has unsupported operation: builtin.unregistered: llvm.fcmp
 
-4: "test4" has unsupported operation: builtin.unregistered: llvm.sext
+4: "test4" has unsupported operation: llvm.sext
 
 4: "test4" has unsupported operation: builtin.unregistered: llvm.bitcast
 
@@ -46,7 +46,7 @@
 
 4: "test5" has unsupported operation: builtin.unregistered: llvm.fcmp
 
-4: "test5" has unsupported operation: builtin.unregistered: llvm.sext
+4: "test5" has unsupported operation: llvm.sext
 
 4: "test5" has unsupported operation: builtin.unregistered: llvm.bitcast
 
@@ -55,7 +55,7 @@
 
 4: "test6" has unsupported operation: builtin.unregistered: llvm.fcmp
 
-4: "test6" has unsupported operation: builtin.unregistered: llvm.sext
+4: "test6" has unsupported operation: llvm.sext
 
 4: "test6" has unsupported operation: builtin.unregistered: llvm.bitcast
 
@@ -64,27 +64,27 @@
 
 4: "test7" has unsupported operation: builtin.unregistered: llvm.fcmp
 
-4: "test7" has unsupported operation: builtin.unregistered: llvm.sext
+4: "test7" has unsupported operation: llvm.sext
 
 4: "test7" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 1: "convert"
-4: "convert" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "convert" has unsupported operation: llvm.trunc
 
 4: "convert" has unsupported operation: llvm.store
 
 4: "convert" has unsupported operation: llvm.return
 
 1: "foo"
-4: "foo" has unsupported operation: builtin.unregistered: llvm.zext
+4: "foo" has unsupported operation: llvm.zext
 
 1: "bar"
-4: "bar" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "bar" has unsupported operation: llvm.trunc
 
 1: "bars"
-4: "bars" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "bars" has unsupported operation: llvm.trunc
 
-4: "bars" has unsupported operation: builtin.unregistered: llvm.sext
+4: "bars" has unsupported operation: llvm.sext
 
 1: "quxs"
 8: "quxs" contains vectors which are unsupported
@@ -126,7 +126,7 @@
 
 4: "trunc_inselt_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
 
-4: "trunc_inselt_undef" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "trunc_inselt_undef" has unsupported operation: llvm.trunc
 
 4: "trunc_inselt_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
 
@@ -150,7 +150,7 @@
 
 4: "trunc_inselt1" has unsupported operation: builtin.unregistered: llvm.insertelement
 
-4: "trunc_inselt1" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "trunc_inselt1" has unsupported operation: llvm.trunc
 
 1: "fptrunc_inselt1"
 4: "fptrunc_inselt1" has unsupported operation: llvm.mlir.undef
@@ -168,7 +168,7 @@
 1: "trunc_inselt2"
 4: "trunc_inselt2" has unsupported operation: builtin.unregistered: llvm.insertelement
 
-4: "trunc_inselt2" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "trunc_inselt2" has unsupported operation: llvm.trunc
 
 1: "fptrunc_inselt2"
 4: "fptrunc_inselt2" has unsupported operation: builtin.unregistered: llvm.insertelement
@@ -176,16 +176,16 @@
 4: "fptrunc_inselt2" has unsupported operation: builtin.unregistered: llvm.fptrunc
 
 1: "sext_less_casting_with_wideop"
-4: "sext_less_casting_with_wideop" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "sext_less_casting_with_wideop" has unsupported operation: llvm.trunc
 
-4: "sext_less_casting_with_wideop" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "sext_less_casting_with_wideop" has unsupported operation: llvm.trunc
 
-4: "sext_less_casting_with_wideop" has unsupported operation: builtin.unregistered: llvm.sext
+4: "sext_less_casting_with_wideop" has unsupported operation: llvm.sext
 
 1: "zext_less_casting_with_wideop"
-4: "zext_less_casting_with_wideop" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "zext_less_casting_with_wideop" has unsupported operation: llvm.trunc
 
-4: "zext_less_casting_with_wideop" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "zext_less_casting_with_wideop" has unsupported operation: llvm.trunc
 
-4: "zext_less_casting_with_wideop" has unsupported operation: builtin.unregistered: llvm.zext
+4: "zext_less_casting_with_wideop" has unsupported operation: llvm.zext
 

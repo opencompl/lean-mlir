@@ -53,10 +53,10 @@
 4: "test_simplify9" has unsupported operation after optimization: llvm.call
 
 1: "test_simplify10"
-4: "test_simplify10" has unsupported operation: builtin.unregistered: llvm.sext
+4: "test_simplify10" has unsupported operation: llvm.sext
 
 1: "test_simplify11"
-4: "test_simplify11" has unsupported operation: builtin.unregistered: llvm.zext
+4: "test_simplify11" has unsupported operation: llvm.zext
 
 1: "test_no_simplify1"
 4: "test_no_simplify1" has unsupported operation: llvm.mlir.addressof
@@ -66,7 +66,7 @@
 1: "test_no_simplify2"
 4: "test_no_simplify2" has unsupported operation: llvm.mlir.addressof
 
-4: "test_no_simplify2" has unsupported operation: builtin.unregistered: llvm.sext
+4: "test_no_simplify2" has unsupported operation: llvm.sext
 
 4: "test_no_simplify2" has unsupported operation: llvm.getelementptr
 
@@ -75,7 +75,7 @@
 1: "test_no_simplify2_no_null_opt"
 4: "test_no_simplify2_no_null_opt" has unsupported operation: llvm.mlir.addressof
 
-4: "test_no_simplify2_no_null_opt" has unsupported operation: builtin.unregistered: llvm.sext
+4: "test_no_simplify2_no_null_opt" has unsupported operation: llvm.sext
 
 4: "test_no_simplify2_no_null_opt" has unsupported operation: llvm.getelementptr
 
@@ -84,7 +84,7 @@
 1: "test_no_simplify3"
 4: "test_no_simplify3" has unsupported operation: llvm.mlir.addressof
 
-4: "test_no_simplify3" has unsupported operation: builtin.unregistered: llvm.zext
+4: "test_no_simplify3" has unsupported operation: llvm.zext
 
 4: "test_no_simplify3" has unsupported operation: llvm.getelementptr
 
@@ -93,7 +93,7 @@
 1: "test_no_simplify3_no_null_opt"
 4: "test_no_simplify3_no_null_opt" has unsupported operation: llvm.mlir.addressof
 
-4: "test_no_simplify3_no_null_opt" has unsupported operation: builtin.unregistered: llvm.zext
+4: "test_no_simplify3_no_null_opt" has unsupported operation: llvm.zext
 
 4: "test_no_simplify3_no_null_opt" has unsupported operation: llvm.getelementptr
 
