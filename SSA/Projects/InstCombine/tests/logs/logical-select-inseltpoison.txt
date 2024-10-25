@@ -122,8 +122,6 @@
 4: "bitcast_select_swap7" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 1: "bitcast_select_multi_uses"
-4: "bitcast_select_multi_uses" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "bitcast_select_multi_uses" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 4: "bitcast_select_multi_uses" has unsupported operation: builtin.unregistered: llvm.bitcast
@@ -237,7 +235,7 @@
 8: "vec_sel_xor" contains vectors which are unsupported
 
 1: "vec_sel_xor_multi_use"
-4: "vec_sel_xor_multi_use" has unsupported operation: builtin.unregistered: llvm.sext
+8: "vec_sel_xor_multi_use" contains vectors which are unsupported
 
 1: "allSignBits"
 4: "allSignBits" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -263,8 +261,6 @@
 
 4: "computesignbits_through_shuffles" has unsupported operation: builtin.unregistered: llvm.fcmp
 
-4: "computesignbits_through_shuffles" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "computesignbits_through_shuffles" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 4: "computesignbits_through_shuffles" has unsupported operation: builtin.unregistered: llvm.shufflevector
@@ -272,8 +268,6 @@
 4: "computesignbits_through_shuffles" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 4: "computesignbits_through_shuffles" has unsupported operation: builtin.unregistered: llvm.shufflevector
-
-4: "computesignbits_through_shuffles" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "computesignbits_through_shuffles" has unsupported operation: builtin.unregistered: llvm.bitcast
 

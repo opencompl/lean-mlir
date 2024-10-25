@@ -13,6 +13,37 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gmisch2002_statements
 
+def cast_test_2002h08h02_before := [llvm|
+{
+^0(%arg1 : i64):
+  %0 = llvm.trunc %arg1 : i64 to i8
+  %1 = llvm.zext %0 : i8 to i64
+  "llvm.return"(%1) : (i64) -> ()
+}
+]
+def cast_test_2002h08h02_after := [llvm|
+{
+^0(%arg1 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 255 : i64}> : () -> i64
+  %1 = llvm.and %arg1, %0 : i64
+  "llvm.return"(%1) : (i64) -> ()
+}
+]
+theorem cast_test_2002h08h02_proof : cast_test_2002h08h02_before ⊑ cast_test_2002h08h02_after := by
+  unfold cast_test_2002h08h02_before cast_test_2002h08h02_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN cast_test_2002h08h02
+  all_goals (try extract_goal ; sorry)
+  ---END cast_test_2002h08h02
+
+
+
 def missed_const_prop_2002h12h05_before := [llvm|
 {
 ^0(%arg0 : i32):

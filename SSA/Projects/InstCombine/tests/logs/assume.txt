@@ -78,8 +78,6 @@
 
 4: "icmp1" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
-4: "icmp1" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "icmp2"
 4: "icmp2" has unsupported operation: builtin.unregistered: llvm.icmp
 

@@ -4490,6 +4490,171 @@ theorem and_orn_xor_commute8_proof : and_orn_xor_commute8_before ⊑ and_orn_xor
 
 
 
+def and_zext_zext_before := [llvm|
+{
+^0(%arg58 : i8, %arg59 : i4):
+  %0 = llvm.zext %arg58 : i8 to i16
+  %1 = llvm.zext %arg59 : i4 to i16
+  %2 = llvm.and %0, %1 : i16
+  "llvm.return"(%2) : (i16) -> ()
+}
+]
+def and_zext_zext_after := [llvm|
+{
+^0(%arg58 : i8, %arg59 : i4):
+  %0 = llvm.zext %arg59 : i4 to i8
+  %1 = llvm.and %arg58, %0 : i8
+  %2 = llvm.zext %1 : i8 to i16
+  "llvm.return"(%2) : (i16) -> ()
+}
+]
+theorem and_zext_zext_proof : and_zext_zext_before ⊑ and_zext_zext_after := by
+  unfold and_zext_zext_before and_zext_zext_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN and_zext_zext
+  all_goals (try extract_goal ; sorry)
+  ---END and_zext_zext
+
+
+
+def or_zext_zext_before := [llvm|
+{
+^0(%arg56 : i8, %arg57 : i4):
+  %0 = llvm.zext %arg56 : i8 to i16
+  %1 = llvm.zext %arg57 : i4 to i16
+  %2 = llvm.or %1, %0 : i16
+  "llvm.return"(%2) : (i16) -> ()
+}
+]
+def or_zext_zext_after := [llvm|
+{
+^0(%arg56 : i8, %arg57 : i4):
+  %0 = llvm.zext %arg57 : i4 to i8
+  %1 = llvm.or %arg56, %0 : i8
+  %2 = llvm.zext %1 : i8 to i16
+  "llvm.return"(%2) : (i16) -> ()
+}
+]
+theorem or_zext_zext_proof : or_zext_zext_before ⊑ or_zext_zext_after := by
+  unfold or_zext_zext_before or_zext_zext_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN or_zext_zext
+  all_goals (try extract_goal ; sorry)
+  ---END or_zext_zext
+
+
+
+def and_sext_sext_before := [llvm|
+{
+^0(%arg52 : i8, %arg53 : i4):
+  %0 = llvm.sext %arg52 : i8 to i16
+  %1 = llvm.sext %arg53 : i4 to i16
+  %2 = llvm.and %1, %0 : i16
+  "llvm.return"(%2) : (i16) -> ()
+}
+]
+def and_sext_sext_after := [llvm|
+{
+^0(%arg52 : i8, %arg53 : i4):
+  %0 = llvm.sext %arg53 : i4 to i8
+  %1 = llvm.and %arg52, %0 : i8
+  %2 = llvm.sext %1 : i8 to i16
+  "llvm.return"(%2) : (i16) -> ()
+}
+]
+theorem and_sext_sext_proof : and_sext_sext_before ⊑ and_sext_sext_after := by
+  unfold and_sext_sext_before and_sext_sext_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN and_sext_sext
+  all_goals (try extract_goal ; sorry)
+  ---END and_sext_sext
+
+
+
+def or_sext_sext_before := [llvm|
+{
+^0(%arg50 : i8, %arg51 : i4):
+  %0 = llvm.sext %arg50 : i8 to i16
+  %1 = llvm.sext %arg51 : i4 to i16
+  %2 = llvm.or %0, %1 : i16
+  "llvm.return"(%2) : (i16) -> ()
+}
+]
+def or_sext_sext_after := [llvm|
+{
+^0(%arg50 : i8, %arg51 : i4):
+  %0 = llvm.sext %arg51 : i4 to i8
+  %1 = llvm.or %arg50, %0 : i8
+  %2 = llvm.sext %1 : i8 to i16
+  "llvm.return"(%2) : (i16) -> ()
+}
+]
+theorem or_sext_sext_proof : or_sext_sext_before ⊑ or_sext_sext_after := by
+  unfold or_sext_sext_before or_sext_sext_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN or_sext_sext
+  all_goals (try extract_goal ; sorry)
+  ---END or_sext_sext
+
+
+
+def xor_sext_sext_before := [llvm|
+{
+^0(%arg48 : i8, %arg49 : i4):
+  %0 = llvm.sext %arg48 : i8 to i16
+  %1 = llvm.sext %arg49 : i4 to i16
+  %2 = llvm.xor %0, %1 : i16
+  "llvm.return"(%2) : (i16) -> ()
+}
+]
+def xor_sext_sext_after := [llvm|
+{
+^0(%arg48 : i8, %arg49 : i4):
+  %0 = llvm.sext %arg49 : i4 to i8
+  %1 = llvm.xor %arg48, %0 : i8
+  %2 = llvm.sext %1 : i8 to i16
+  "llvm.return"(%2) : (i16) -> ()
+}
+]
+theorem xor_sext_sext_proof : xor_sext_sext_before ⊑ xor_sext_sext_after := by
+  unfold xor_sext_sext_before xor_sext_sext_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN xor_sext_sext
+  all_goals (try extract_goal ; sorry)
+  ---END xor_sext_sext
+
+
+
 def canonicalize_logic_first_or0_before := [llvm|
 {
 ^0(%arg40 : i32):

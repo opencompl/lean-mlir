@@ -63,16 +63,20 @@
 4: "variable_shl_not_masked_enough_i64" has unsupported operation: builtin.unregistered: llvm.intr.bswap
 
 1: "test7"
-4: "test7" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "test7" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+4: "test7" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
 
 1: "test7_vector"
-4: "test7_vector" has unsupported operation: builtin.unregistered: llvm.trunc
+8: "test7_vector" contains vectors which are unsupported
 
 1: "test8"
-4: "test8" has unsupported operation: builtin.unregistered: llvm.trunc
+4: "test8" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+4: "test8" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
 
 1: "test8_vector"
-4: "test8_vector" has unsupported operation: builtin.unregistered: llvm.trunc
+8: "test8_vector" contains vectors which are unsupported
 
 1: "foo"
 4: "foo" has unsupported operation: llvm.mlir.undef

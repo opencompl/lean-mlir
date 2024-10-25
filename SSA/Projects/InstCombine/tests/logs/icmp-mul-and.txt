@@ -114,8 +114,6 @@
 4: "pr51551_neg1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "pr51551_neg2"
-4: "pr51551_neg2" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "pr51551_neg2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "pr51551_demand3bits"

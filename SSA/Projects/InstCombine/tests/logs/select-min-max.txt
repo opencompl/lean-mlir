@@ -64,8 +64,6 @@
 1: "smax_smin"
 4: "smax_smin" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "smax_smin" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "smin_smax"
 4: "smin_smax" has unsupported operation: builtin.unregistered: llvm.icmp
 

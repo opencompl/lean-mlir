@@ -47,3 +47,75 @@ theorem srem2_ashr_mask_proof : srem2_ashr_mask_before ⊑ srem2_ashr_mask_after
   ---END srem2_ashr_mask
 
 
+
+def ashr_can_be_lshr_before := [llvm|
+{
+^0(%arg1 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 16 : i32}> : () -> i32
+  %1 = llvm.ashr %arg1, %0 : i32
+  %2 = llvm.trunc %1 : i32 to i16
+  "llvm.return"(%2) : (i16) -> ()
+}
+]
+def ashr_can_be_lshr_after := [llvm|
+{
+^0(%arg1 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 16 : i32}> : () -> i32
+  %1 = llvm.lshr %arg1, %0 : i32
+  %2 = llvm.trunc %1 : i32 to i16
+  "llvm.return"(%2) : (i16) -> ()
+}
+]
+theorem ashr_can_be_lshr_proof : ashr_can_be_lshr_before ⊑ ashr_can_be_lshr_after := by
+  unfold ashr_can_be_lshr_before ashr_can_be_lshr_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN ashr_can_be_lshr
+  apply ashr_can_be_lshr_thm
+  ---END ashr_can_be_lshr
+
+
+
+def ashr_can_be_lshr_2_before := [llvm|
+{
+^0(%arg0 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 4278190080 : i64}> : () -> i64
+  %1 = "llvm.mlir.constant"() <{value = 34 : i64}> : () -> i64
+  %2 = "llvm.mlir.constant"() <{value = 32 : i64}> : () -> i64
+  %3 = llvm.zext %arg0 : i32 to i64
+  %4 = llvm.or %3, %0 : i64
+  %5 = llvm.shl %4, %1 : i64
+  %6 = llvm.ashr %5, %2 : i64
+  %7 = llvm.trunc %6 : i64 to i32
+  "llvm.return"(%7) : (i32) -> ()
+}
+]
+def ashr_can_be_lshr_2_after := [llvm|
+{
+^0(%arg0 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = -67108864 : i32}> : () -> i32
+  %2 = llvm.shl %arg0, %0 : i32
+  %3 = llvm.or %2, %1 : i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+theorem ashr_can_be_lshr_2_proof : ashr_can_be_lshr_2_before ⊑ ashr_can_be_lshr_2_after := by
+  unfold ashr_can_be_lshr_2_before ashr_can_be_lshr_2_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN ashr_can_be_lshr_2
+  apply ashr_can_be_lshr_2_thm
+  ---END ashr_can_be_lshr_2
+
+

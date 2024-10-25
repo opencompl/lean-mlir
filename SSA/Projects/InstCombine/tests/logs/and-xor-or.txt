@@ -239,44 +239,28 @@
 2: llvm.return
 
 1: "sext_or_chain"
-4: "sext_or_chain" has unsupported operation: builtin.unregistered: llvm.sext
-
-4: "sext_or_chain" has unsupported operation: builtin.unregistered: llvm.sext
+7: "sext_or_chain" is unchanged by InstCombine
 
 1: "zext_or_chain"
-4: "zext_or_chain" has unsupported operation: builtin.unregistered: llvm.zext
-
-4: "zext_or_chain" has unsupported operation: builtin.unregistered: llvm.zext
+7: "zext_or_chain" is unchanged by InstCombine
 
 1: "sext_and_chain"
-4: "sext_and_chain" has unsupported operation: builtin.unregistered: llvm.sext
-
-4: "sext_and_chain" has unsupported operation: builtin.unregistered: llvm.sext
+7: "sext_and_chain" is unchanged by InstCombine
 
 1: "zext_and_chain"
-4: "zext_and_chain" has unsupported operation: builtin.unregistered: llvm.zext
-
-4: "zext_and_chain" has unsupported operation: builtin.unregistered: llvm.zext
+7: "zext_and_chain" is unchanged by InstCombine
 
 1: "sext_xor_chain"
-4: "sext_xor_chain" has unsupported operation: builtin.unregistered: llvm.sext
-
-4: "sext_xor_chain" has unsupported operation: builtin.unregistered: llvm.sext
+7: "sext_xor_chain" is unchanged by InstCombine
 
 1: "zext_xor_chain"
-4: "zext_xor_chain" has unsupported operation: builtin.unregistered: llvm.zext
-
-4: "zext_xor_chain" has unsupported operation: builtin.unregistered: llvm.zext
+7: "zext_xor_chain" is unchanged by InstCombine
 
 1: "sext_or_chain_two_uses1"
-4: "sext_or_chain_two_uses1" has unsupported operation: builtin.unregistered: llvm.sext
-
-4: "sext_or_chain_two_uses1" has unsupported operation: builtin.unregistered: llvm.sext
+7: "sext_or_chain_two_uses1" is unchanged by InstCombine
 
 1: "sext_or_chain_two_uses2"
-4: "sext_or_chain_two_uses2" has unsupported operation: builtin.unregistered: llvm.sext
-
-4: "sext_or_chain_two_uses2" has unsupported operation: builtin.unregistered: llvm.sext
+7: "sext_or_chain_two_uses2" is unchanged by InstCombine
 
 1: "not_and_and_not"
 2: llvm.func
@@ -1645,87 +1629,69 @@
 2: llvm.return
 
 1: "zext_zext_and_uses"
-4: "zext_zext_and_uses" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "zext_zext_and_uses" has unsupported operation: llvm.call
-
-4: "zext_zext_and_uses" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "zext_zext_and_uses" has unsupported operation: llvm.call
 
 1: "sext_sext_or_uses"
-4: "sext_sext_or_uses" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "sext_sext_or_uses" has unsupported operation: llvm.call
-
-4: "sext_sext_or_uses" has unsupported operation: builtin.unregistered: llvm.sext
 
 4: "sext_sext_or_uses" has unsupported operation: llvm.call
 
 1: "trunc_trunc_xor_uses"
-4: "trunc_trunc_xor_uses" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "trunc_trunc_xor_uses" has unsupported operation: llvm.call
-
-4: "trunc_trunc_xor_uses" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "trunc_trunc_xor_uses" has unsupported operation: llvm.call
 
 1: "and_zext_zext"
-4: "and_zext_zext" has unsupported operation: builtin.unregistered: llvm.zext
-
-4: "and_zext_zext" has unsupported operation: builtin.unregistered: llvm.zext
+2: llvm.func
+2: llvm.zext
+2: llvm.zext
+2: llvm.and
+2: llvm.return
 
 1: "or_zext_zext"
-4: "or_zext_zext" has unsupported operation: builtin.unregistered: llvm.zext
-
-4: "or_zext_zext" has unsupported operation: builtin.unregistered: llvm.zext
+2: llvm.func
+2: llvm.zext
+2: llvm.zext
+2: llvm.or
+2: llvm.return
 
 1: "xor_zext_zext"
-4: "xor_zext_zext" has unsupported operation: builtin.unregistered: llvm.zext
-
-4: "xor_zext_zext" has unsupported operation: builtin.unregistered: llvm.zext
+8: "xor_zext_zext" contains vectors which are unsupported
 
 1: "and_sext_sext"
-4: "and_sext_sext" has unsupported operation: builtin.unregistered: llvm.sext
-
-4: "and_sext_sext" has unsupported operation: builtin.unregistered: llvm.sext
+2: llvm.func
+2: llvm.sext
+2: llvm.sext
+2: llvm.and
+2: llvm.return
 
 1: "or_sext_sext"
-4: "or_sext_sext" has unsupported operation: builtin.unregistered: llvm.sext
-
-4: "or_sext_sext" has unsupported operation: builtin.unregistered: llvm.sext
+2: llvm.func
+2: llvm.sext
+2: llvm.sext
+2: llvm.or
+2: llvm.return
 
 1: "xor_sext_sext"
-4: "xor_sext_sext" has unsupported operation: builtin.unregistered: llvm.sext
-
-4: "xor_sext_sext" has unsupported operation: builtin.unregistered: llvm.sext
+2: llvm.func
+2: llvm.sext
+2: llvm.sext
+2: llvm.xor
+2: llvm.return
 
 1: "and_zext_sext"
-4: "and_zext_sext" has unsupported operation: builtin.unregistered: llvm.zext
-
-4: "and_zext_sext" has unsupported operation: builtin.unregistered: llvm.sext
+7: "and_zext_sext" is unchanged by InstCombine
 
 1: "and_zext_zext_use1"
-4: "and_zext_zext_use1" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "and_zext_zext_use1" has unsupported operation: llvm.call
 
-4: "and_zext_zext_use1" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "or_sext_sext_use1"
-4: "or_sext_sext_use1" has unsupported operation: builtin.unregistered: llvm.sext
-
-4: "or_sext_sext_use1" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "or_sext_sext_use1" has unsupported operation: llvm.call
 
 1: "PR56294"
 4: "PR56294" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "PR56294" has unsupported operation after optimization: builtin.unregistered: llvm.zext
-
-4: "PR56294" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 
 4: "PR56294" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 

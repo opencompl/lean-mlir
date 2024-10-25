@@ -8,13 +8,9 @@
 4: "zext_zext_eq" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "zext_zext_sle_op0_narrow"
-4: "zext_zext_sle_op0_narrow" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "zext_zext_sle_op0_narrow" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "zext_zext_ule_op0_wide"
-4: "zext_zext_ule_op0_wide" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "zext_zext_ule_op0_wide" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "sext_sext_slt"
@@ -27,121 +23,69 @@
 4: "sext_sext_ne" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "sext_sext_sge_op0_narrow"
-4: "sext_sext_sge_op0_narrow" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "sext_sext_sge_op0_narrow" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "sext_sext_uge_op0_wide"
-4: "sext_sext_uge_op0_wide" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "sext_sext_uge_op0_wide" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "zext_sext_sgt"
-4: "zext_sext_sgt" has unsupported operation: builtin.unregistered: llvm.zext
-
-4: "zext_sext_sgt" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "zext_sext_sgt" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "zext_nneg_sext_sgt"
 4: "zext_nneg_sext_sgt" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "zext_sext_ugt"
-4: "zext_sext_ugt" has unsupported operation: builtin.unregistered: llvm.zext
-
-4: "zext_sext_ugt" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "zext_sext_ugt" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "zext_nneg_sext_ugt"
 4: "zext_nneg_sext_ugt" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "zext_sext_eq"
-4: "zext_sext_eq" has unsupported operation: builtin.unregistered: llvm.zext
-
-4: "zext_sext_eq" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "zext_sext_eq" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "zext_nneg_sext_eq"
 4: "zext_nneg_sext_eq" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "zext_sext_sle_op0_narrow"
-4: "zext_sext_sle_op0_narrow" has unsupported operation: builtin.unregistered: llvm.zext
-
-4: "zext_sext_sle_op0_narrow" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "zext_sext_sle_op0_narrow" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "zext_nneg_sext_sle_op0_narrow"
-4: "zext_nneg_sext_sle_op0_narrow" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "zext_nneg_sext_sle_op0_narrow" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "zext_sext_ule_op0_wide"
-4: "zext_sext_ule_op0_wide" has unsupported operation: builtin.unregistered: llvm.zext
-
-4: "zext_sext_ule_op0_wide" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "zext_sext_ule_op0_wide" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "zext_nneg_sext_ule_op0_wide"
-4: "zext_nneg_sext_ule_op0_wide" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "zext_nneg_sext_ule_op0_wide" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "sext_zext_slt"
-4: "sext_zext_slt" has unsupported operation: builtin.unregistered: llvm.sext
-
-4: "sext_zext_slt" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "sext_zext_slt" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "sext_zext_nneg_slt"
 4: "sext_zext_nneg_slt" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "sext_zext_ult"
-4: "sext_zext_ult" has unsupported operation: builtin.unregistered: llvm.sext
-
-4: "sext_zext_ult" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "sext_zext_ult" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "sext_zext_nneg_ult"
 4: "sext_zext_nneg_ult" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "sext_zext_ne"
-4: "sext_zext_ne" has unsupported operation: builtin.unregistered: llvm.sext
-
-4: "sext_zext_ne" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "sext_zext_ne" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "sext_zext_nneg_ne"
 4: "sext_zext_nneg_ne" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "sext_zext_sge_op0_narrow"
-4: "sext_zext_sge_op0_narrow" has unsupported operation: builtin.unregistered: llvm.sext
-
-4: "sext_zext_sge_op0_narrow" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "sext_zext_sge_op0_narrow" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "sext_zext_nneg_sge_op0_narrow"
-4: "sext_zext_nneg_sge_op0_narrow" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "sext_zext_nneg_sge_op0_narrow" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "sext_zext_uge_op0_wide"
-4: "sext_zext_uge_op0_wide" has unsupported operation: builtin.unregistered: llvm.sext
-
-4: "sext_zext_uge_op0_wide" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "sext_zext_uge_op0_wide" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "sext_zext_nneg_uge_op0_wide"
-4: "sext_zext_nneg_uge_op0_wide" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "sext_zext_nneg_uge_op0_wide" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "zext_sext_sgt_known_nonneg"
@@ -154,13 +98,9 @@
 4: "zext_sext_eq_known_nonneg" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "zext_sext_sle_known_nonneg_op0_narrow"
-4: "zext_sext_sle_known_nonneg_op0_narrow" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "zext_sext_sle_known_nonneg_op0_narrow" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "zext_sext_ule_known_nonneg_op0_wide"
-4: "zext_sext_ule_known_nonneg_op0_wide" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "zext_sext_ule_known_nonneg_op0_wide" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "sext_zext_slt_known_nonneg"
@@ -173,27 +113,15 @@
 4: "sext_zext_ne_known_nonneg" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "sext_zext_sge_known_nonneg_op0_narrow"
-4: "sext_zext_sge_known_nonneg_op0_narrow" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "sext_zext_sge_known_nonneg_op0_narrow" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "sext_zext_uge_known_nonneg_op0_wide"
-4: "sext_zext_uge_known_nonneg_op0_wide" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "sext_zext_uge_known_nonneg_op0_wide" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "zext_eq_sext"
-4: "zext_eq_sext" has unsupported operation after optimization: builtin.unregistered: llvm.zext
-
-4: "zext_eq_sext" has unsupported operation after optimization: builtin.unregistered: llvm.sext
-
 4: "zext_eq_sext" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "zext_eq_sext_fail_not_i1"
-4: "zext_eq_sext_fail_not_i1" has unsupported operation: builtin.unregistered: llvm.zext
-
-4: "zext_eq_sext_fail_not_i1" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "zext_eq_sext_fail_not_i1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "zext_ne_sext"

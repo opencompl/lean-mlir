@@ -45,6 +45,9 @@ allowed_names = {
     "llvm.sub",
     "llvm.sdiv",
     "llvm.udiv",
+    "llvm.zext",
+    "llvm.sext",
+    "llvm.trunc",
 }
 
 allowed_unregistered = {

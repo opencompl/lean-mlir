@@ -8,6 +8,12 @@ theorem lshr_exact_thm (x : BitVec 8) : (x <<< 2 + 4#8) >>> 2 = x + 1#8 &&& 63#8
 
 theorem shl_add_thm (x x_1 : BitVec 8) : (x_1 <<< 2 + x) >>> 2 = x >>> 2 + x_1 &&& 63#8 := sorry
 
+theorem bool_zext_thm (x : BitVec 1) : signExtend 16 x >>> 15 = setWidth 16 x := sorry
+
+theorem smear_sign_and_widen_thm (x : BitVec 8) : signExtend 32 x >>> 24 = setWidth 32 (x.sshiftRight 7) := sorry
+
+theorem fake_sext_thm (x : BitVec 3) : signExtend 18 x >>> 17 = setWidth 18 (x >>> 2) := sorry
+
 theorem mul_splat_fold_thm (x : BitVec 32) :
   ((if twoPow 64 31 <<< 1 ≤ setWidth 64 x * 65537#64 then none else some (x * 65537#32)).bind fun x' =>
       some (x' >>> 16)) ⊑
@@ -134,4 +140,41 @@ theorem mul_splat_fold_too_narrow_thm (x : BitVec 2) :
     some x := sorry
 
 theorem negative_and_odd_thm (x : BitVec 32) : (x - x.sdiv 2#32 * 2#32) >>> 31 = x >>> 31 &&& x := sorry
+
+theorem trunc_sandwich_thm (x : BitVec 32) : setWidth 12 (x >>> 28) >>> 2 = setWidth 12 (x >>> 30) := sorry
+
+theorem trunc_sandwich_min_shift1_thm (x : BitVec 32) : setWidth 12 (x >>> 20) >>> 1 = setWidth 12 (x >>> 21) := sorry
+
+theorem trunc_sandwich_small_shift1_thm (x : BitVec 32) : setWidth 12 (x >>> 19) >>> 1 = setWidth 12 (x >>> 20) &&& 2047#12 := sorry
+
+theorem trunc_sandwich_max_sum_shift_thm (x : BitVec 32) : setWidth 12 (x >>> 20) >>> 11 = setWidth 12 (x >>> 31) := sorry
+
+theorem trunc_sandwich_max_sum_shift2_thm (x : BitVec 32) : setWidth 12 (x >>> 30) >>> 1 = setWidth 12 (x >>> 31) := sorry
+
+theorem trunc_sandwich_big_sum_shift1_thm (x : BitVec 32) : setWidth 12 (x >>> 21) >>> 11 = 0#12 := sorry
+
+theorem trunc_sandwich_big_sum_shift2_thm (x : BitVec 32) : setWidth 12 (x >>> 31) >>> 1 = 0#12 := sorry
+
+theorem lshr_sext_i1_to_i16_thm (x : BitVec 1) :
+  some (signExtend 16 x >>> 4) ⊑
+    match some x with
+    | none => none
+    | some { toFin := ⟨1, ⋯⟩ } => some 4095#16
+    | some { toFin := ⟨0, ⋯⟩ } => some 0#16 := sorry
+
+theorem lshr_sext_i1_to_i128_thm (x : BitVec 1) :
+  some (signExtend 128 x >>> 42) ⊑
+    match some x with
+    | none => none
+    | some { toFin := ⟨1, ⋯⟩ } => some 77371252455336267181195263#128
+    | some { toFin := ⟨0, ⋯⟩ } => some 0#128 := sorry
+
+theorem bool_add_lshr_thm (x x_1 : BitVec 1) :
+  (setWidth 2 x_1 + setWidth 2 x) >>> 1 = setWidth 2 x_1 &&& setWidth 2 x := sorry
+
+theorem bool_add_ashr_thm (x x_1 : BitVec 1) :
+  some ((setWidth 2 x_1 + setWidth 2 x).sshiftRight 1) ⊑
+    (if setWidth 2 x_1 + setWidth 2 x < setWidth 2 x_1 ∨ setWidth 2 x_1 + setWidth 2 x < setWidth 2 x then none
+        else some (setWidth 2 x_1 + setWidth 2 x)).bind
+      fun x' => some (x'.sshiftRight 1) := sorry
 

@@ -24,8 +24,6 @@
 
 4: "fold_strnlen_s3_s5_1_asan" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "fold_strnlen_s3_s5_1_asan" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "fold_strnlen_s3_s5_3"
 4: "fold_strnlen_s3_s5_3" has unsupported operation: llvm.mlir.addressof
 

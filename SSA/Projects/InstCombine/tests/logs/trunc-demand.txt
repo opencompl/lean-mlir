@@ -5,39 +5,59 @@
 5: "use8" is empty
 
 1: "trunc_lshr"
-4: "trunc_lshr" has unsupported operation: builtin.unregistered: llvm.trunc
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.and
+2: llvm.return
 
 1: "trunc_lshr_exact_mask"
-4: "trunc_lshr_exact_mask" has unsupported operation: builtin.unregistered: llvm.trunc
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.and
+2: llvm.return
 
 1: "trunc_lshr_big_mask"
-4: "trunc_lshr_big_mask" has unsupported operation: builtin.unregistered: llvm.trunc
+7: "trunc_lshr_big_mask" is unchanged by InstCombine
 
 1: "trunc_lshr_use1"
 4: "trunc_lshr_use1" has unsupported operation: llvm.call
 
-4: "trunc_lshr_use1" has unsupported operation: builtin.unregistered: llvm.trunc
-
 1: "trunc_lshr_use2"
-4: "trunc_lshr_use2" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "trunc_lshr_use2" has unsupported operation: llvm.call
 
 1: "trunc_lshr_vec_splat"
-4: "trunc_lshr_vec_splat" has unsupported operation: builtin.unregistered: llvm.trunc
+8: "trunc_lshr_vec_splat" contains vectors which are unsupported
 
 1: "trunc_lshr_vec_splat_exact_mask"
-4: "trunc_lshr_vec_splat_exact_mask" has unsupported operation: builtin.unregistered: llvm.trunc
+8: "trunc_lshr_vec_splat_exact_mask" contains vectors which are unsupported
 
 1: "trunc_lshr_big_shift"
-4: "trunc_lshr_big_shift" has unsupported operation: builtin.unregistered: llvm.trunc
+7: "trunc_lshr_big_shift" is unchanged by InstCombine
 
 1: "or_trunc_lshr"
-4: "or_trunc_lshr" has unsupported operation: builtin.unregistered: llvm.trunc
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.or
+2: llvm.return
 
 1: "or_trunc_lshr_more"
-4: "or_trunc_lshr_more" has unsupported operation: builtin.unregistered: llvm.trunc
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.or
+2: llvm.return
 
 1: "or_trunc_lshr_small_mask"
-4: "or_trunc_lshr_small_mask" has unsupported operation: builtin.unregistered: llvm.trunc
+7: "or_trunc_lshr_small_mask" is unchanged by InstCombine
 

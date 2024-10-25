@@ -84,8 +84,6 @@
 
 4: "test6" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "test6" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "test6" has unsupported operation: llvm.getelementptr
 
 4: "test6" has unsupported operation: llvm.store

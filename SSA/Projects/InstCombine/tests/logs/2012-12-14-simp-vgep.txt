@@ -15,5 +15,3 @@
 
 4: "foo" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "foo" has unsupported operation: builtin.unregistered: llvm.zext
-

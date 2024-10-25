@@ -1,3 +1,9 @@
 1: "test"
-4: "test" has unsupported operation after optimization: builtin.unregistered: llvm.trunc
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.trunc
+2: llvm.srem
+2: llvm.return
 

@@ -635,6 +635,139 @@ theorem ashr_lowmask_proof : ashr_lowmask_before ⊑ ashr_lowmask_after := by
 
 
 
+def test29_before := [llvm|
+{
+^0(%arg260 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 255 : i32}> : () -> i32
+  %1 = llvm.zext %arg260 : i8 to i32
+  %2 = llvm.and %1, %0 : i32
+  "llvm.return"(%2) : (i32) -> ()
+}
+]
+def test29_after := [llvm|
+{
+^0(%arg260 : i8):
+  %0 = llvm.zext %arg260 : i8 to i32
+  "llvm.return"(%0) : (i32) -> ()
+}
+]
+theorem test29_proof : test29_before ⊑ test29_after := by
+  unfold test29_before test29_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test29
+  all_goals (try extract_goal ; sorry)
+  ---END test29
+
+
+
+def test30_before := [llvm|
+{
+^0(%arg259 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %1 = llvm.zext %arg259 : i1 to i32
+  %2 = llvm.and %1, %0 : i32
+  "llvm.return"(%2) : (i32) -> ()
+}
+]
+def test30_after := [llvm|
+{
+^0(%arg259 : i1):
+  %0 = llvm.zext %arg259 : i1 to i32
+  "llvm.return"(%0) : (i32) -> ()
+}
+]
+theorem test30_proof : test30_before ⊑ test30_after := by
+  unfold test30_before test30_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test30
+  all_goals (try extract_goal ; sorry)
+  ---END test30
+
+
+
+def test31_before := [llvm|
+{
+^0(%arg258 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 4 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 16 : i32}> : () -> i32
+  %2 = llvm.zext %arg258 : i1 to i32
+  %3 = llvm.shl %2, %0 : i32
+  %4 = llvm.and %3, %1 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def test31_after := [llvm|
+{
+^0(%arg258 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 16 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %2 = "llvm.select"(%arg258, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  "llvm.return"(%2) : (i32) -> ()
+}
+]
+theorem test31_proof : test31_before ⊑ test31_after := by
+  unfold test31_before test31_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test31
+  all_goals (try extract_goal ; sorry)
+  ---END test31
+
+
+
+def and_zext_demanded_before := [llvm|
+{
+^0(%arg255 : i16, %arg256 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 8 : i16}> : () -> i16
+  %1 = "llvm.mlir.constant"() <{value = 255 : i32}> : () -> i32
+  %2 = llvm.lshr %arg255, %0 : i16
+  %3 = llvm.zext %2 : i16 to i32
+  %4 = llvm.or %arg256, %1 : i32
+  %5 = llvm.and %4, %3 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+def and_zext_demanded_after := [llvm|
+{
+^0(%arg255 : i16, %arg256 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 8 : i16}> : () -> i16
+  %1 = llvm.lshr %arg255, %0 : i16
+  %2 = llvm.zext %1 : i16 to i32
+  "llvm.return"(%2) : (i32) -> ()
+}
+]
+theorem and_zext_demanded_proof : and_zext_demanded_before ⊑ and_zext_demanded_after := by
+  unfold and_zext_demanded_before and_zext_demanded_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN and_zext_demanded
+  all_goals (try extract_goal ; sorry)
+  ---END and_zext_demanded
+
+
+
 def test32_before := [llvm|
 {
 ^0(%arg254 : i32):
@@ -765,6 +898,430 @@ theorem test34_proof : test34_before ⊑ test34_after := by
   ---BEGIN test34
   all_goals (try extract_goal ; sorry)
   ---END test34
+
+
+
+def test35_before := [llvm|
+{
+^0(%arg246 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 0 : i64}> : () -> i64
+  %1 = "llvm.mlir.constant"() <{value = 240 : i64}> : () -> i64
+  %2 = llvm.zext %arg246 : i32 to i64
+  %3 = llvm.sub %0, %2 : i64
+  %4 = llvm.and %3, %1 : i64
+  "llvm.return"(%4) : (i64) -> ()
+}
+]
+def test35_after := [llvm|
+{
+^0(%arg246 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 240 : i32}> : () -> i32
+  %2 = llvm.sub %0, %arg246 : i32
+  %3 = llvm.and %2, %1 : i32
+  %4 = llvm.zext %3 : i32 to i64
+  "llvm.return"(%4) : (i64) -> ()
+}
+]
+theorem test35_proof : test35_before ⊑ test35_after := by
+  unfold test35_before test35_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test35
+  all_goals (try extract_goal ; sorry)
+  ---END test35
+
+
+
+def test36_before := [llvm|
+{
+^0(%arg244 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 7 : i64}> : () -> i64
+  %1 = "llvm.mlir.constant"() <{value = 240 : i64}> : () -> i64
+  %2 = llvm.zext %arg244 : i32 to i64
+  %3 = llvm.add %2, %0 : i64
+  %4 = llvm.and %3, %1 : i64
+  "llvm.return"(%4) : (i64) -> ()
+}
+]
+def test36_after := [llvm|
+{
+^0(%arg244 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 7 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 240 : i32}> : () -> i32
+  %2 = llvm.add %arg244, %0 : i32
+  %3 = llvm.and %2, %1 : i32
+  %4 = llvm.zext %3 : i32 to i64
+  "llvm.return"(%4) : (i64) -> ()
+}
+]
+theorem test36_proof : test36_before ⊑ test36_after := by
+  unfold test36_before test36_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test36
+  all_goals (try extract_goal ; sorry)
+  ---END test36
+
+
+
+def test37_before := [llvm|
+{
+^0(%arg241 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 7 : i64}> : () -> i64
+  %1 = "llvm.mlir.constant"() <{value = 240 : i64}> : () -> i64
+  %2 = llvm.zext %arg241 : i32 to i64
+  %3 = llvm.mul %2, %0 : i64
+  %4 = llvm.and %3, %1 : i64
+  "llvm.return"(%4) : (i64) -> ()
+}
+]
+def test37_after := [llvm|
+{
+^0(%arg241 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 7 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 240 : i32}> : () -> i32
+  %2 = llvm.mul %arg241, %0 : i32
+  %3 = llvm.and %2, %1 : i32
+  %4 = llvm.zext %3 : i32 to i64
+  "llvm.return"(%4) : (i64) -> ()
+}
+]
+theorem test37_proof : test37_before ⊑ test37_after := by
+  unfold test37_before test37_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test37
+  all_goals (try extract_goal ; sorry)
+  ---END test37
+
+
+
+def test38_before := [llvm|
+{
+^0(%arg238 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 7 : i64}> : () -> i64
+  %1 = "llvm.mlir.constant"() <{value = 240 : i64}> : () -> i64
+  %2 = llvm.zext %arg238 : i32 to i64
+  %3 = llvm.xor %2, %0 : i64
+  %4 = llvm.and %3, %1 : i64
+  "llvm.return"(%4) : (i64) -> ()
+}
+]
+def test38_after := [llvm|
+{
+^0(%arg238 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 240 : i32}> : () -> i32
+  %1 = llvm.and %arg238, %0 : i32
+  %2 = llvm.zext %1 : i32 to i64
+  "llvm.return"(%2) : (i64) -> ()
+}
+]
+theorem test38_proof : test38_before ⊑ test38_after := by
+  unfold test38_before test38_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test38
+  all_goals (try extract_goal ; sorry)
+  ---END test38
+
+
+
+def test39_before := [llvm|
+{
+^0(%arg237 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 7 : i64}> : () -> i64
+  %1 = "llvm.mlir.constant"() <{value = 240 : i64}> : () -> i64
+  %2 = llvm.zext %arg237 : i32 to i64
+  %3 = llvm.or %2, %0 : i64
+  %4 = llvm.and %3, %1 : i64
+  "llvm.return"(%4) : (i64) -> ()
+}
+]
+def test39_after := [llvm|
+{
+^0(%arg237 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 240 : i32}> : () -> i32
+  %1 = llvm.and %arg237, %0 : i32
+  %2 = llvm.zext %1 : i32 to i64
+  "llvm.return"(%2) : (i64) -> ()
+}
+]
+theorem test39_proof : test39_before ⊑ test39_after := by
+  unfold test39_before test39_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test39
+  all_goals (try extract_goal ; sorry)
+  ---END test39
+
+
+
+def lowmask_add_zext_before := [llvm|
+{
+^0(%arg235 : i8, %arg236 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 255 : i32}> : () -> i32
+  %1 = llvm.zext %arg235 : i8 to i32
+  %2 = llvm.add %1, %arg236 : i32
+  %3 = llvm.and %2, %0 : i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+def lowmask_add_zext_after := [llvm|
+{
+^0(%arg235 : i8, %arg236 : i32):
+  %0 = llvm.trunc %arg236 : i32 to i8
+  %1 = llvm.add %arg235, %0 : i8
+  %2 = llvm.zext %1 : i8 to i32
+  "llvm.return"(%2) : (i32) -> ()
+}
+]
+theorem lowmask_add_zext_proof : lowmask_add_zext_before ⊑ lowmask_add_zext_after := by
+  unfold lowmask_add_zext_before lowmask_add_zext_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN lowmask_add_zext
+  all_goals (try extract_goal ; sorry)
+  ---END lowmask_add_zext
+
+
+
+def lowmask_add_zext_commute_before := [llvm|
+{
+^0(%arg233 : i16, %arg234 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 65535 : i32}> : () -> i32
+  %1 = llvm.mul %arg234, %arg234 : i32
+  %2 = llvm.zext %arg233 : i16 to i32
+  %3 = llvm.add %1, %2 : i32
+  %4 = llvm.and %3, %0 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def lowmask_add_zext_commute_after := [llvm|
+{
+^0(%arg233 : i16, %arg234 : i32):
+  %0 = llvm.mul %arg234, %arg234 : i32
+  %1 = llvm.trunc %0 : i32 to i16
+  %2 = llvm.add %arg233, %1 : i16
+  %3 = llvm.zext %2 : i16 to i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+theorem lowmask_add_zext_commute_proof : lowmask_add_zext_commute_before ⊑ lowmask_add_zext_commute_after := by
+  unfold lowmask_add_zext_commute_before lowmask_add_zext_commute_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN lowmask_add_zext_commute
+  all_goals (try extract_goal ; sorry)
+  ---END lowmask_add_zext_commute
+
+
+
+def lowmask_add_zext_wrong_mask_before := [llvm|
+{
+^0(%arg231 : i8, %arg232 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 511 : i32}> : () -> i32
+  %1 = llvm.zext %arg231 : i8 to i32
+  %2 = llvm.add %1, %arg232 : i32
+  %3 = llvm.and %2, %0 : i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+def lowmask_add_zext_wrong_mask_after := [llvm|
+{
+^0(%arg231 : i8, %arg232 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 511 : i32}> : () -> i32
+  %1 = llvm.zext %arg231 : i8 to i32
+  %2 = llvm.add %arg232, %1 : i32
+  %3 = llvm.and %2, %0 : i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+theorem lowmask_add_zext_wrong_mask_proof : lowmask_add_zext_wrong_mask_before ⊑ lowmask_add_zext_wrong_mask_after := by
+  unfold lowmask_add_zext_wrong_mask_before lowmask_add_zext_wrong_mask_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN lowmask_add_zext_wrong_mask
+  all_goals (try extract_goal ; sorry)
+  ---END lowmask_add_zext_wrong_mask
+
+
+
+def lowmask_sub_zext_commute_before := [llvm|
+{
+^0(%arg223 : i5, %arg224 : i17):
+  %0 = "llvm.mlir.constant"() <{value = 31 : i17}> : () -> i17
+  %1 = llvm.zext %arg223 : i5 to i17
+  %2 = llvm.sub %arg224, %1 : i17
+  %3 = llvm.and %2, %0 : i17
+  "llvm.return"(%3) : (i17) -> ()
+}
+]
+def lowmask_sub_zext_commute_after := [llvm|
+{
+^0(%arg223 : i5, %arg224 : i17):
+  %0 = llvm.trunc %arg224 : i17 to i5
+  %1 = llvm.sub %0, %arg223 : i5
+  %2 = llvm.zext %1 : i5 to i17
+  "llvm.return"(%2) : (i17) -> ()
+}
+]
+theorem lowmask_sub_zext_commute_proof : lowmask_sub_zext_commute_before ⊑ lowmask_sub_zext_commute_after := by
+  unfold lowmask_sub_zext_commute_before lowmask_sub_zext_commute_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN lowmask_sub_zext_commute
+  all_goals (try extract_goal ; sorry)
+  ---END lowmask_sub_zext_commute
+
+
+
+def lowmask_mul_zext_before := [llvm|
+{
+^0(%arg221 : i8, %arg222 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 255 : i32}> : () -> i32
+  %1 = llvm.zext %arg221 : i8 to i32
+  %2 = llvm.mul %1, %arg222 : i32
+  %3 = llvm.and %2, %0 : i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+def lowmask_mul_zext_after := [llvm|
+{
+^0(%arg221 : i8, %arg222 : i32):
+  %0 = llvm.trunc %arg222 : i32 to i8
+  %1 = llvm.mul %arg221, %0 : i8
+  %2 = llvm.zext %1 : i8 to i32
+  "llvm.return"(%2) : (i32) -> ()
+}
+]
+theorem lowmask_mul_zext_proof : lowmask_mul_zext_before ⊑ lowmask_mul_zext_after := by
+  unfold lowmask_mul_zext_before lowmask_mul_zext_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN lowmask_mul_zext
+  all_goals (try extract_goal ; sorry)
+  ---END lowmask_mul_zext
+
+
+
+def lowmask_xor_zext_commute_before := [llvm|
+{
+^0(%arg219 : i8, %arg220 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 255 : i32}> : () -> i32
+  %1 = llvm.mul %arg220, %arg220 : i32
+  %2 = llvm.zext %arg219 : i8 to i32
+  %3 = llvm.xor %1, %2 : i32
+  %4 = llvm.and %3, %0 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def lowmask_xor_zext_commute_after := [llvm|
+{
+^0(%arg219 : i8, %arg220 : i32):
+  %0 = llvm.mul %arg220, %arg220 : i32
+  %1 = llvm.trunc %0 : i32 to i8
+  %2 = llvm.xor %arg219, %1 : i8
+  %3 = llvm.zext %2 : i8 to i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+theorem lowmask_xor_zext_commute_proof : lowmask_xor_zext_commute_before ⊑ lowmask_xor_zext_commute_after := by
+  unfold lowmask_xor_zext_commute_before lowmask_xor_zext_commute_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN lowmask_xor_zext_commute
+  all_goals (try extract_goal ; sorry)
+  ---END lowmask_xor_zext_commute
+
+
+
+def lowmask_or_zext_commute_before := [llvm|
+{
+^0(%arg217 : i16, %arg218 : i24):
+  %0 = "llvm.mlir.constant"() <{value = 65535 : i24}> : () -> i24
+  %1 = llvm.zext %arg217 : i16 to i24
+  %2 = llvm.or %arg218, %1 : i24
+  %3 = llvm.and %2, %0 : i24
+  "llvm.return"(%3) : (i24) -> ()
+}
+]
+def lowmask_or_zext_commute_after := [llvm|
+{
+^0(%arg217 : i16, %arg218 : i24):
+  %0 = llvm.trunc %arg218 : i24 to i16
+  %1 = llvm.or %arg217, %0 : i16
+  %2 = llvm.zext %1 : i16 to i24
+  "llvm.return"(%2) : (i24) -> ()
+}
+]
+theorem lowmask_or_zext_commute_proof : lowmask_or_zext_commute_before ⊑ lowmask_or_zext_commute_after := by
+  unfold lowmask_or_zext_commute_before lowmask_or_zext_commute_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN lowmask_or_zext_commute
+  all_goals (try extract_goal ; sorry)
+  ---END lowmask_or_zext_commute
 
 
 
@@ -1001,6 +1558,41 @@ theorem test47_proof : test47_before ⊑ test47_after := by
 
 
 
+def lowbitmask_casted_shift_before := [llvm|
+{
+^0(%arg157 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 2147483647 : i32}> : () -> i32
+  %2 = llvm.ashr %arg157, %0 : i8
+  %3 = llvm.sext %2 : i8 to i32
+  %4 = llvm.and %3, %1 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def lowbitmask_casted_shift_after := [llvm|
+{
+^0(%arg157 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %1 = llvm.sext %arg157 : i8 to i32
+  %2 = llvm.lshr %1, %0 : i32
+  "llvm.return"(%2) : (i32) -> ()
+}
+]
+theorem lowbitmask_casted_shift_proof : lowbitmask_casted_shift_before ⊑ lowbitmask_casted_shift_after := by
+  unfold lowbitmask_casted_shift_before lowbitmask_casted_shift_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN lowbitmask_casted_shift
+  all_goals (try extract_goal ; sorry)
+  ---END lowbitmask_casted_shift
+
+
+
 def lowmask_add_2_before := [llvm|
 {
 ^0(%arg144 : i8):
@@ -1064,6 +1656,76 @@ theorem flip_masked_bit_proof : flip_masked_bit_before ⊑ flip_masked_bit_after
   ---BEGIN flip_masked_bit
   all_goals (try extract_goal ; sorry)
   ---END flip_masked_bit
+
+
+
+def not_signbit_splat_mask1_before := [llvm|
+{
+^0(%arg109 : i8, %arg110 : i16):
+  %0 = "llvm.mlir.constant"() <{value = 7 : i8}> : () -> i8
+  %1 = llvm.ashr %arg109, %0 : i8
+  %2 = llvm.zext %1 : i8 to i16
+  %3 = llvm.and %2, %arg110 : i16
+  "llvm.return"(%3) : (i16) -> ()
+}
+]
+def not_signbit_splat_mask1_after := [llvm|
+{
+^0(%arg109 : i8, %arg110 : i16):
+  %0 = "llvm.mlir.constant"() <{value = 7 : i8}> : () -> i8
+  %1 = llvm.ashr %arg109, %0 : i8
+  %2 = llvm.zext %1 : i8 to i16
+  %3 = llvm.and %arg110, %2 : i16
+  "llvm.return"(%3) : (i16) -> ()
+}
+]
+theorem not_signbit_splat_mask1_proof : not_signbit_splat_mask1_before ⊑ not_signbit_splat_mask1_after := by
+  unfold not_signbit_splat_mask1_before not_signbit_splat_mask1_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN not_signbit_splat_mask1
+  all_goals (try extract_goal ; sorry)
+  ---END not_signbit_splat_mask1
+
+
+
+def not_signbit_splat_mask2_before := [llvm|
+{
+^0(%arg107 : i8, %arg108 : i16):
+  %0 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
+  %1 = llvm.ashr %arg107, %0 : i8
+  %2 = llvm.sext %1 : i8 to i16
+  %3 = llvm.and %2, %arg108 : i16
+  "llvm.return"(%3) : (i16) -> ()
+}
+]
+def not_signbit_splat_mask2_after := [llvm|
+{
+^0(%arg107 : i8, %arg108 : i16):
+  %0 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
+  %1 = llvm.ashr %arg107, %0 : i8
+  %2 = llvm.sext %1 : i8 to i16
+  %3 = llvm.and %arg108, %2 : i16
+  "llvm.return"(%3) : (i16) -> ()
+}
+]
+theorem not_signbit_splat_mask2_proof : not_signbit_splat_mask2_before ⊑ not_signbit_splat_mask2_after := by
+  unfold not_signbit_splat_mask2_before not_signbit_splat_mask2_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN not_signbit_splat_mask2
+  all_goals (try extract_goal ; sorry)
+  ---END not_signbit_splat_mask2
 
 
 
@@ -1138,6 +1800,45 @@ theorem not_lshr_bitwidth_mask_proof : not_lshr_bitwidth_mask_before ⊑ not_lsh
   ---BEGIN not_lshr_bitwidth_mask
   all_goals (try extract_goal ; sorry)
   ---END not_lshr_bitwidth_mask
+
+
+
+def not_invert_signbit_splat_mask2_before := [llvm|
+{
+^0(%arg81 : i8, %arg82 : i16):
+  %0 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
+  %2 = llvm.ashr %arg81, %0 : i8
+  %3 = llvm.xor %2, %1 : i8
+  %4 = llvm.sext %3 : i8 to i16
+  %5 = llvm.and %4, %arg82 : i16
+  "llvm.return"(%5) : (i16) -> ()
+}
+]
+def not_invert_signbit_splat_mask2_after := [llvm|
+{
+^0(%arg81 : i8, %arg82 : i16):
+  %0 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
+  %2 = llvm.ashr %arg81, %0 : i8
+  %3 = llvm.xor %2, %1 : i8
+  %4 = llvm.sext %3 : i8 to i16
+  %5 = llvm.and %arg82, %4 : i16
+  "llvm.return"(%5) : (i16) -> ()
+}
+]
+theorem not_invert_signbit_splat_mask2_proof : not_invert_signbit_splat_mask2_before ⊑ not_invert_signbit_splat_mask2_after := by
+  unfold not_invert_signbit_splat_mask2_before not_invert_signbit_splat_mask2_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN not_invert_signbit_splat_mask2
+  all_goals (try extract_goal ; sorry)
+  ---END not_invert_signbit_splat_mask2
 
 
 
@@ -1348,6 +2049,72 @@ theorem lshr_shl_pow2_const_overflow_proof : lshr_shl_pow2_const_overflow_before
   ---BEGIN lshr_shl_pow2_const_overflow
   all_goals (try extract_goal ; sorry)
   ---END lshr_shl_pow2_const_overflow
+
+
+
+def and_zext_before := [llvm|
+{
+^0(%arg40 : i32, %arg41 : i1):
+  %0 = llvm.zext %arg41 : i1 to i32
+  %1 = llvm.and %arg40, %0 : i32
+  "llvm.return"(%1) : (i32) -> ()
+}
+]
+def and_zext_after := [llvm|
+{
+^0(%arg40 : i32, %arg41 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %2 = llvm.and %arg40, %0 : i32
+  %3 = "llvm.select"(%arg41, %2, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+theorem and_zext_proof : and_zext_before ⊑ and_zext_after := by
+  unfold and_zext_before and_zext_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN and_zext
+  all_goals (try extract_goal ; sorry)
+  ---END and_zext
+
+
+
+def and_zext_commuted_before := [llvm|
+{
+^0(%arg38 : i32, %arg39 : i1):
+  %0 = llvm.zext %arg39 : i1 to i32
+  %1 = llvm.and %0, %arg38 : i32
+  "llvm.return"(%1) : (i32) -> ()
+}
+]
+def and_zext_commuted_after := [llvm|
+{
+^0(%arg38 : i32, %arg39 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %2 = llvm.and %arg38, %0 : i32
+  %3 = "llvm.select"(%arg39, %2, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+theorem and_zext_commuted_proof : and_zext_commuted_before ⊑ and_zext_commuted_after := by
+  unfold and_zext_commuted_before and_zext_commuted_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN and_zext_commuted
+  all_goals (try extract_goal ; sorry)
+  ---END and_zext_commuted
 
 
 
