@@ -47,6 +47,18 @@ macro_rules
     let t ← t.getDM `(mlir_type| _)
     `(mlir_op| $resName:mlir_op_operand = $opName ($x, $y) : ($t, $t) -> (i1) )
 
+declare_syntax_cat InstCombine.int_cast_op
+syntax "llvm.trunc" : InstCombine.int_cast_op
+syntax "llvm.zext" : InstCombine.int_cast_op
+syntax "llvm.sext" : InstCombine.int_cast_op
+
+syntax mlir_op_operand " = " InstCombine.int_cast_op mlir_op_operand " : " mlir_type " to " mlir_type : mlir_op
+macro_rules
+  | `(mlir_op| $resName:mlir_op_operand = $name:InstCombine.int_cast_op $x : $t to $t') => do
+    let some opName := extractOpName name.raw
+      | Macro.throwUnsupported
+    `(mlir_op| $resName:mlir_op_operand = $opName ($x) : ($t) -> $t')
+
 open MLIR.AST
 syntax mlir_op_operand " = " "llvm.mlir.constant" "("   neg_num (" : " mlir_type)? ")"
   (" : " mlir_type)? : mlir_op
@@ -143,6 +155,14 @@ private def pretty_test_overflow :=
     %2 = llvm.mul %1, %arg0 : i32
     %3 = llvm.not %2 : i32
     llvm.return %3 : i32
+  }]
+
+private def pretty_test_trunc :=
+  [llvm ()|{
+  ^bb0(%arg0: i64):
+    %0 = llvm.trunc %arg0 : i64 to i32
+    %1 = llvm.zext %0 : i32 to i64
+    llvm.return %1 : i64
   }]
 
 example : pretty_test = prettier_test_generic 32 := by

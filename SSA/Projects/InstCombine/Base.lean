@@ -80,10 +80,13 @@ instance : Repr (BitVec n) where
     | v, n => reprPrec (BitVec.toInt v) n
 
 /-- Homogeneous, unary operations -/
-inductive MOp.UnaryOp : Type
+inductive MOp.UnaryOp (φ : Nat) : Type
   | neg
   | not
   | copy
+  | trunc (w' : Width φ)
+  | zext (w' : Width φ)
+  | sext (w' : Width φ)
 deriving Repr, DecidableEq, Inhabited
 
 /-- Homogeneous, binary operations -/
@@ -142,7 +145,7 @@ instance : Repr (MOp.BinaryOp) where
 
 -- See: https://releases.llvm.org/14.0.0/docs/LangRef.html#bitwise-binary-operations
 inductive MOp (φ : Nat) : Type
-  | unary   (w : Width φ) (op : MOp.UnaryOp) :  MOp φ
+  | unary   (w : Width φ) (op : MOp.UnaryOp φ) :  MOp φ
   | binary  (w : Width φ) (op : MOp.BinaryOp) :  MOp φ
   | select  (w : Width φ) : MOp φ
   | icmp    (c : IntPredicate) (w : Width φ) : MOp φ
@@ -155,6 +158,10 @@ namespace MOp
 @[match_pattern] def neg    (w : Width φ) : MOp φ := .unary w .neg
 @[match_pattern] def not    (w : Width φ) : MOp φ := .unary w .not
 @[match_pattern] def copy   (w : Width φ) : MOp φ := .unary w .copy
+@[match_pattern] def trunc  (w w' : Width φ) : MOp φ := .unary w (.trunc w')
+@[match_pattern] def zext   (w w' : Width φ) : MOp φ := .unary w (.zext w')
+@[match_pattern] def sext   (w w' : Width φ) : MOp φ := .unary w (.sext w')
+
 
 @[match_pattern] def and    (w : Width φ) : MOp φ := .binary w .and
 @[match_pattern] def xor    (w : Width φ) : MOp φ := .binary w .xor
@@ -198,6 +205,9 @@ namespace MOp
 def deepCasesOn {motive : ∀ {φ}, MOp φ → Sort*}
     (neg    : ∀ {φ} {w : Width φ},              motive (neg  w))
     (not    : ∀ {φ} {w : Width φ},              motive (not  w))
+    (trunc  : ∀ {φ} {w w' : Width φ},              motive (trunc w w'))
+    (zext   : ∀ {φ} {w w' : Width φ},              motive (zext  w w'))
+    (sext   : ∀ {φ} {w w' : Width φ},              motive (sext  w w'))
     (copy   : ∀ {φ} {w : Width φ},              motive (copy w))
     (and    : ∀ {φ} {w : Width φ},              motive (and  w))
     (or     : ∀ {φ DisjointFlag} {w : Width φ}, motive (or w DisjointFlag))
@@ -218,6 +228,9 @@ def deepCasesOn {motive : ∀ {φ}, MOp φ → Sort*}
     ∀ {φ} (op : MOp φ), motive op
   | _, .neg _    => neg
   | _, .not _    => not
+  | _, .trunc _ _ => trunc
+  | _, .zext _ _  => zext
+  | _, .sext _  _ => sext
   | _, .copy _   => copy
   | _, .and _    => and
   | _, .or _ _   => or
@@ -255,6 +268,9 @@ instance : ToString (MOp φ) where
   | .sub _ _   => "sub"
   | .neg _     => "neg"
   | .copy _    => "copy"
+  | .trunc _ _ => "trunc"
+  | .zext _  _ => "zext"
+  | .sext _ _  => "sext"
   | .sdiv _ _  => "sdiv"
   | .udiv _ _  => "udiv"
   | .icmp ty _ => s!"icmp {ty}"
@@ -262,13 +278,24 @@ instance : ToString (MOp φ) where
 
 abbrev Op := MOp 0
 
+def MOp.UnaryOp.instantiate (as : Mathlib.Vector Nat φ) : MOp.UnaryOp φ → MOp.UnaryOp 0
+| .trunc w' => .trunc (.concrete <| w'.instantiate as)
+| .zext w' => .zext (.concrete <| w'.instantiate as)
+| .sext w' => .sext (.concrete <| w'.instantiate as)
+| .neg => .neg
+| .not => .not
+| .copy => .copy
+
 namespace Op
 
-@[match_pattern] abbrev unary   (w : Nat) (op : MOp.UnaryOp)  : Op := MOp.unary (.concrete w) op
+@[match_pattern] abbrev unary   (w : Nat) (op : MOp.UnaryOp 0)  : Op := MOp.unary (.concrete w) op
 @[match_pattern] abbrev binary  (w : Nat) (op : MOp.BinaryOp) : Op := MOp.binary (.concrete w) op
 
 @[match_pattern] abbrev and    : Nat → Op := MOp.and    ∘ .concrete
 @[match_pattern] abbrev not    : Nat → Op := MOp.not    ∘ .concrete
+@[match_pattern] abbrev trunc  : Nat → Nat → Op := fun w w' => MOp.trunc (.concrete w) (.concrete w')
+@[match_pattern] abbrev zext   : Nat → Nat → Op := fun w w' => MOp.zext (.concrete w) (.concrete w')
+@[match_pattern] abbrev sext   : Nat → Nat → Op := fun w w' => MOp.sext (.concrete w) (.concrete w')
 @[match_pattern] abbrev xor    : Nat → Op := MOp.xor    ∘ .concrete
 @[match_pattern] abbrev urem   : Nat → Op := MOp.urem   ∘ .concrete
 @[match_pattern] abbrev srem   : Nat → Op := MOp.srem   ∘ .concrete
@@ -312,9 +339,17 @@ def MOp.sig : MOp φ → List (MTy φ)
 | .const _ _ => []
 
 @[simp, reducible]
+def MOp.UnaryOp.outTy (w : Width φ) : MOp.UnaryOp φ → MTy φ
+| .trunc w' => .bitvec w'
+| .zext w' => .bitvec w'
+| .sext w' => .bitvec w'
+| _ => .bitvec w
+
+@[simp, reducible]
 def MOp.outTy : MOp φ → MTy φ
-| .binary w _ | .unary w _ | .select w | .const w _ =>
+| .binary w _ | .select w | .const w _ =>
   .bitvec w
+| .unary w op => op.outTy w
 | .icmp _ _ => .bitvec 1
 
 /-- `MetaLLVM φ` is the `LLVM` dialect with at most `φ` metavariables -/
@@ -336,24 +371,27 @@ def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (DialectSignature.sig 
     (TyDenote.toType <| DialectSignature.outTy o) :=
   match o with
   | Op.const _ val => const? val
-  | Op.copy _      =>             (op.getN 0)
-  | Op.not _       => LLVM.not    (op.getN 0)
-  | Op.neg _       => LLVM.neg    (op.getN 0)
-  | Op.and _       => LLVM.and    (op.getN 0) (op.getN 1)
-  | Op.or _ flag   => LLVM.or     (op.getN 0) (op.getN 1) flag
-  | Op.xor _       => LLVM.xor    (op.getN 0) (op.getN 1)
-  | Op.shl _ flags => LLVM.shl    (op.getN 0) (op.getN 1) flags
-  | Op.lshr _ flag => LLVM.lshr   (op.getN 0) (op.getN 1) flag
-  | Op.ashr _ flag => LLVM.ashr   (op.getN 0) (op.getN 1) flag
-  | Op.sub _ flags => LLVM.sub    (op.getN 0) (op.getN 1) flags
-  | Op.add _ flags => LLVM.add    (op.getN 0) (op.getN 1) flags
-  | Op.mul _ flags => LLVM.mul    (op.getN 0) (op.getN 1) flags
-  | Op.sdiv _ flag => LLVM.sdiv   (op.getN 0) (op.getN 1) flag
-  | Op.udiv _ flag => LLVM.udiv   (op.getN 0) (op.getN 1) flag
-  | Op.urem _      => LLVM.urem   (op.getN 0) (op.getN 1)
-  | Op.srem _      => LLVM.srem   (op.getN 0) (op.getN 1)
-  | Op.icmp c _    => LLVM.icmp c (op.getN 0) (op.getN 1)
-  | Op.select _    => LLVM.select (op.getN 0) (op.getN 1) (op.getN 2)
+  | Op.copy _      =>              (op.getN 0)
+  | Op.not _       => LLVM.not     (op.getN 0)
+  | Op.neg _       => LLVM.neg     (op.getN 0)
+  | Op.trunc w w'  => LLVM.trunc w' (op.getN 0)
+  | Op.zext w w'   => LLVM.zext  w' (op.getN 0)
+  | Op.sext w w'   => LLVM.sext  w' (op.getN 0)
+  | Op.and _       => LLVM.and     (op.getN 0) (op.getN 1)
+  | Op.or _ flag   => LLVM.or      (op.getN 0) (op.getN 1) flag
+  | Op.xor _       => LLVM.xor     (op.getN 0) (op.getN 1)
+  | Op.shl _ flags => LLVM.shl     (op.getN 0) (op.getN 1) flags
+  | Op.lshr _ flag => LLVM.lshr    (op.getN 0) (op.getN 1) flag
+  | Op.ashr _ flag => LLVM.ashr    (op.getN 0) (op.getN 1) flag
+  | Op.sub _ flags => LLVM.sub     (op.getN 0) (op.getN 1) flags
+  | Op.add _ flags => LLVM.add     (op.getN 0) (op.getN 1) flags
+  | Op.mul _ flags => LLVM.mul     (op.getN 0) (op.getN 1) flags
+  | Op.sdiv _ flag => LLVM.sdiv    (op.getN 0) (op.getN 1) flag
+  | Op.udiv _ flag => LLVM.udiv    (op.getN 0) (op.getN 1) flag
+  | Op.urem _      => LLVM.urem    (op.getN 0) (op.getN 1)
+  | Op.srem _      => LLVM.srem    (op.getN 0) (op.getN 1)
+  | Op.icmp c _    => LLVM.icmp  c (op.getN 0) (op.getN 1)
+  | Op.select _    => LLVM.select  (op.getN 0) (op.getN 1) (op.getN 2)
 
 instance : DialectDenote LLVM := ⟨
   fun o args _ => Op.denote o args
