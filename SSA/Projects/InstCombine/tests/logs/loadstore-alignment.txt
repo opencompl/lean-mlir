@@ -8,18 +8,12 @@
 1: "hem"
 4: "hem" has unsupported operation: llvm.mlir.addressof
 
-4: "hem" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "hem" has unsupported operation: llvm.getelementptr
 
 4: "hem" has unsupported operation: llvm.load
 
 1: "hem_2d"
 4: "hem_2d" has unsupported operation: llvm.mlir.addressof
-
-4: "hem_2d" has unsupported operation: builtin.unregistered: llvm.sext
-
-4: "hem_2d" has unsupported operation: builtin.unregistered: llvm.sext
 
 4: "hem_2d" has unsupported operation: llvm.getelementptr
 
@@ -49,8 +43,6 @@
 1: "hem_store"
 4: "hem_store" has unsupported operation: llvm.mlir.addressof
 
-4: "hem_store" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "hem_store" has unsupported operation: llvm.getelementptr
 
 4: "hem_store" has unsupported operation: llvm.store
@@ -59,10 +51,6 @@
 
 1: "hem_2d_store"
 4: "hem_2d_store" has unsupported operation: llvm.mlir.addressof
-
-4: "hem_2d_store" has unsupported operation: builtin.unregistered: llvm.sext
-
-4: "hem_2d_store" has unsupported operation: builtin.unregistered: llvm.sext
 
 4: "hem_2d_store" has unsupported operation: llvm.getelementptr
 

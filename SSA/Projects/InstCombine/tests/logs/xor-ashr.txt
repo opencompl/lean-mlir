@@ -45,14 +45,12 @@
 4: "testv4i16i8_poison" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "wrongimm"
-4: "wrongimm" has unsupported operation: builtin.unregistered: llvm.trunc
+7: "wrongimm" is unchanged by InstCombine
 
 1: "vectorpoison"
 4: "vectorpoison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
 4: "vectorpoison" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "vectorpoison" has unsupported operation: builtin.unregistered: llvm.sext
 
 4: "vectorpoison" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
@@ -65,7 +63,5 @@
 4: "extrause_trunc1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "extrause_trunc2"
-4: "extrause_trunc2" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "extrause_trunc2" has unsupported operation: llvm.call
 

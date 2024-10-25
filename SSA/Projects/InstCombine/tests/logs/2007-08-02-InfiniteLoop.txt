@@ -1,7 +1,8 @@
 1: "test"
-4: "test" has unsupported operation: builtin.unregistered: llvm.sext
-
-4: "test" has unsupported operation: builtin.unregistered: llvm.sext
-
-4: "test" has unsupported operation: builtin.unregistered: llvm.sext
+2: llvm.func
+2: llvm.sext
+2: llvm.sext
+2: llvm.add
+2: llvm.sext
+2: llvm.return
 

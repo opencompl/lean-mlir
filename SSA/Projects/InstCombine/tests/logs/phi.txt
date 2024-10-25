@@ -29,8 +29,6 @@
 
 4: "test6" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "test6" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "test_dead_cycle"
 4: "test_dead_cycle" has unsupported operation: builtin.unregistered: llvm.br
 
@@ -128,13 +126,7 @@
 
 4: "test14a" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "test14a" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "test14b"
-4: "test14b" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "test14b" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "test14b" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "test14b" has unsupported operation: builtin.unregistered: llvm.cond_br
@@ -150,8 +142,6 @@
 4: "test15b" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "test15b" has unsupported operation: llvm.call
-
-4: "test15b" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "test15b" has unsupported operation: builtin.unregistered: llvm.cond_br
 
@@ -868,8 +858,6 @@
 1: "cmp_sgt_phi_node_cant_fold_1"
 4: "cmp_sgt_phi_node_cant_fold_1" has unsupported operation: llvm.load
 
-4: "cmp_sgt_phi_node_cant_fold_1" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "cmp_sgt_phi_node_cant_fold_1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "cmp_sgt_phi_node_cant_fold_1" has unsupported operation: builtin.unregistered: llvm.cond_br
@@ -878,8 +866,6 @@
 
 4: "cmp_sgt_phi_node_cant_fold_1" has unsupported operation: llvm.load
 
-4: "cmp_sgt_phi_node_cant_fold_1" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "cmp_sgt_phi_node_cant_fold_1" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "cmp_sgt_phi_node_cant_fold_1" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -887,8 +873,6 @@
 1: "cmp_sgt_phi_node_cant_fold_2"
 4: "cmp_sgt_phi_node_cant_fold_2" has unsupported operation: llvm.load
 
-4: "cmp_sgt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "cmp_sgt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "cmp_sgt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.cond_br
@@ -897,8 +881,6 @@
 
 4: "cmp_sgt_phi_node_cant_fold_2" has unsupported operation: llvm.load
 
-4: "cmp_sgt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "cmp_sgt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "cmp_sgt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.cond_br
@@ -906,8 +888,6 @@
 4: "cmp_sgt_phi_node_cant_fold_2" has unsupported operation: llvm.getelementptr
 
 4: "cmp_sgt_phi_node_cant_fold_2" has unsupported operation: llvm.load
-
-4: "cmp_sgt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "cmp_sgt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.br
 
@@ -942,8 +922,6 @@
 1: "cmp_slt_phi_node_cant_fold_1"
 4: "cmp_slt_phi_node_cant_fold_1" has unsupported operation: llvm.load
 
-4: "cmp_slt_phi_node_cant_fold_1" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "cmp_slt_phi_node_cant_fold_1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "cmp_slt_phi_node_cant_fold_1" has unsupported operation: builtin.unregistered: llvm.cond_br
@@ -952,8 +930,6 @@
 
 4: "cmp_slt_phi_node_cant_fold_1" has unsupported operation: llvm.load
 
-4: "cmp_slt_phi_node_cant_fold_1" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "cmp_slt_phi_node_cant_fold_1" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "cmp_slt_phi_node_cant_fold_1" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -961,8 +937,6 @@
 1: "cmp_slt_phi_node_cant_fold_2"
 4: "cmp_slt_phi_node_cant_fold_2" has unsupported operation: llvm.load
 
-4: "cmp_slt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "cmp_slt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "cmp_slt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.cond_br
@@ -971,8 +945,6 @@
 
 4: "cmp_slt_phi_node_cant_fold_2" has unsupported operation: llvm.load
 
-4: "cmp_slt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "cmp_slt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "cmp_slt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.cond_br
@@ -980,8 +952,6 @@
 4: "cmp_slt_phi_node_cant_fold_2" has unsupported operation: llvm.getelementptr
 
 4: "cmp_slt_phi_node_cant_fold_2" has unsupported operation: llvm.load
-
-4: "cmp_slt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "cmp_slt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.br
 

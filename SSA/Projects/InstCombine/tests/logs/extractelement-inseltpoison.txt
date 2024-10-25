@@ -11,19 +11,19 @@
 8: "test2" contains vectors which are unsupported
 
 1: "bitcasted_inselt_wide_source_zero_elt"
-4: "bitcasted_inselt_wide_source_zero_elt" has unsupported operation: builtin.unregistered: llvm.trunc
+8: "bitcasted_inselt_wide_source_zero_elt" contains vectors which are unsupported
 
 1: "bitcasted_inselt_wide_source_modulo_elt"
-4: "bitcasted_inselt_wide_source_modulo_elt" has unsupported operation: builtin.unregistered: llvm.trunc
+8: "bitcasted_inselt_wide_source_modulo_elt" contains vectors which are unsupported
 
 1: "bitcasted_inselt_wide_source_not_modulo_elt"
-4: "bitcasted_inselt_wide_source_not_modulo_elt" has unsupported operation: builtin.unregistered: llvm.trunc
+8: "bitcasted_inselt_wide_source_not_modulo_elt" contains vectors which are unsupported
 
 1: "bitcasted_inselt_wide_source_not_modulo_elt_not_half"
-4: "bitcasted_inselt_wide_source_not_modulo_elt_not_half" has unsupported operation: builtin.unregistered: llvm.trunc
+8: "bitcasted_inselt_wide_source_not_modulo_elt_not_half" contains vectors which are unsupported
 
 1: "bitcasted_inselt_wide_source_not_modulo_elt_not_half_weird_types"
-4: "bitcasted_inselt_wide_source_not_modulo_elt_not_half_weird_types" has unsupported operation: builtin.unregistered: llvm.trunc
+8: "bitcasted_inselt_wide_source_not_modulo_elt_not_half_weird_types" contains vectors which are unsupported
 
 1: "bitcasted_inselt_wide_source_wrong_insert"
 4: "bitcasted_inselt_wide_source_wrong_insert" has unsupported operation: builtin.unregistered: llvm.bitcast
@@ -45,8 +45,6 @@
 4: "bitcasted_inselt_wide_source_uses" has unsupported operation: builtin.unregistered: llvm.extractelement
 
 1: "bitcasted_inselt_to_FP"
-4: "bitcasted_inselt_to_FP" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "bitcasted_inselt_to_FP" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 1: "use_v2i128"
@@ -79,8 +77,6 @@
 
 1: "bitcasted_inselt_from_FP"
 4: "bitcasted_inselt_from_FP" has unsupported operation: builtin.unregistered: llvm.bitcast
-
-4: "bitcasted_inselt_from_FP" has unsupported operation: builtin.unregistered: llvm.trunc
 
 1: "use_v2f64"
 5: "use_v2f64" is empty

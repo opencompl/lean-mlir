@@ -883,6 +883,80 @@ theorem demorganize_constant2_proof : demorganize_constant2_before ⊑ demorgani
 
 
 
+def demorgan_or_zext_before := [llvm|
+{
+^0(%arg16 : i1, %arg17 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %1 = llvm.zext %arg16 : i1 to i32
+  %2 = llvm.zext %arg17 : i1 to i32
+  %3 = llvm.xor %1, %0 : i32
+  %4 = llvm.xor %2, %0 : i32
+  %5 = llvm.or %3, %4 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+def demorgan_or_zext_after := [llvm|
+{
+^0(%arg16 : i1, %arg17 : i1):
+  %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
+  %1 = llvm.and %arg16, %arg17 : i1
+  %2 = llvm.xor %1, %0 : i1
+  %3 = llvm.zext %2 : i1 to i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+theorem demorgan_or_zext_proof : demorgan_or_zext_before ⊑ demorgan_or_zext_after := by
+  unfold demorgan_or_zext_before demorgan_or_zext_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN demorgan_or_zext
+  all_goals (try extract_goal ; sorry)
+  ---END demorgan_or_zext
+
+
+
+def demorgan_and_zext_before := [llvm|
+{
+^0(%arg14 : i1, %arg15 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %1 = llvm.zext %arg14 : i1 to i32
+  %2 = llvm.zext %arg15 : i1 to i32
+  %3 = llvm.xor %1, %0 : i32
+  %4 = llvm.xor %2, %0 : i32
+  %5 = llvm.and %3, %4 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+def demorgan_and_zext_after := [llvm|
+{
+^0(%arg14 : i1, %arg15 : i1):
+  %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
+  %1 = llvm.or %arg14, %arg15 : i1
+  %2 = llvm.xor %1, %0 : i1
+  %3 = llvm.zext %2 : i1 to i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+theorem demorgan_and_zext_proof : demorgan_and_zext_before ⊑ demorgan_and_zext_after := by
+  unfold demorgan_and_zext_before demorgan_and_zext_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN demorgan_and_zext
+  all_goals (try extract_goal ; sorry)
+  ---END demorgan_and_zext
+
+
+
 def demorgan_plus_and_to_xor_before := [llvm|
 {
 ^0(%arg4 : i32, %arg5 : i32):

@@ -22,8 +22,6 @@
 
 4: "fold_memcmp_a5pi_a5p5_n" has unsupported operation: llvm.getelementptr
 
-4: "fold_memcmp_a5pi_a5p5_n" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "fold_memcmp_a5pi_a5p5_n" has unsupported operation: llvm.getelementptr
 
 4: "fold_memcmp_a5pi_a5p5_n" has unsupported operation: llvm.call

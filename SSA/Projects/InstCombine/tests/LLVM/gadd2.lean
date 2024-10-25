@@ -13,6 +13,41 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gadd2_statements
 
+def test1_before := [llvm|
+{
+^0(%arg60 : i64, %arg61 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 32 : i64}> : () -> i64
+  %1 = "llvm.mlir.constant"() <{value = 123 : i64}> : () -> i64
+  %2 = llvm.zext %arg61 : i32 to i64
+  %3 = llvm.shl %2, %0 : i64
+  %4 = llvm.add %3, %arg60 : i64
+  %5 = llvm.and %4, %1 : i64
+  "llvm.return"(%5) : (i64) -> ()
+}
+]
+def test1_after := [llvm|
+{
+^0(%arg60 : i64, %arg61 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 123 : i64}> : () -> i64
+  %1 = llvm.and %arg60, %0 : i64
+  "llvm.return"(%1) : (i64) -> ()
+}
+]
+theorem test1_proof : test1_before ⊑ test1_after := by
+  unfold test1_before test1_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test1
+  all_goals (try extract_goal ; sorry)
+  ---END test1
+
+
+
 def test2_before := [llvm|
 {
 ^0(%arg59 : i32):

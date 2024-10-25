@@ -1,5 +1,14 @@
 1: "pr110631"
-4: "pr110631" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "pr110631" has unsupported operation: builtin.unregistered: llvm.trunc
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.zext
+2: llvm.and
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.sext
+2: llvm.xor
+2: llvm.trunc
+2: llvm.return
 

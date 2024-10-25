@@ -116,16 +116,10 @@
 1: "zext_ctpop"
 4: "zext_ctpop" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
-4: "zext_ctpop" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "zext_ctpop_vec"
 4: "zext_ctpop_vec" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
-4: "zext_ctpop_vec" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "zext_ctpop_extra_use"
-4: "zext_ctpop_extra_use" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "zext_ctpop_extra_use" has unsupported operation: llvm.store
 
 4: "zext_ctpop_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
@@ -135,8 +129,6 @@
 
 1: "parity_xor_trunc"
 4: "parity_xor_trunc" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
-
-4: "parity_xor_trunc" has unsupported operation: builtin.unregistered: llvm.trunc
 
 1: "parity_xor_vec"
 4: "parity_xor_vec" has unsupported operation: builtin.unregistered: llvm.intr.ctpop

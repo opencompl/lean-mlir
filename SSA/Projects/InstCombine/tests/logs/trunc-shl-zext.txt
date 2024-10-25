@@ -1,10 +1,6 @@
 1: "trunc_shl_zext_32"
-4: "trunc_shl_zext_32" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "trunc_shl_zext_32" has unsupported operation: builtin.unregistered: llvm.zext
+7: "trunc_shl_zext_32" is unchanged by InstCombine
 
 1: "trunc_shl_zext_64"
-4: "trunc_shl_zext_64" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "trunc_shl_zext_64" has unsupported operation: builtin.unregistered: llvm.zext
+7: "trunc_shl_zext_64" is unchanged by InstCombine
 

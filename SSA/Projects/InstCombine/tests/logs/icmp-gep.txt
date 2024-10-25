@@ -124,8 +124,6 @@
 
 4: "test59_as1" has unsupported operation: builtin.unregistered: llvm.ptrtoint
 
-4: "test59_as1" has unsupported operation: builtin.unregistered: llvm.zext
-
 4: "test59_as1" has unsupported operation: llvm.call
 
 1: "test60"
@@ -142,23 +140,15 @@
 4: "test_gep_eq_no_inbounds" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test60_as1"
-4: "test60_as1" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "test60_as1" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "test60_as1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test60_addrspacecast"
 4: "test60_addrspacecast" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test60_addrspacecast_smaller"
-4: "test60_addrspacecast_smaller" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "test60_addrspacecast_smaller" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test60_addrspacecast_larger"
-4: "test60_addrspacecast_larger" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "test60_addrspacecast_larger" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test61"

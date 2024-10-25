@@ -63,8 +63,6 @@
 4: "pr9998" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "pr9998vec"
-4: "pr9998vec" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "pr9998vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "udiv_icmp1"

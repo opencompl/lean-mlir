@@ -13,6 +13,41 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gshifthadd_statements
 
+def shl_C1_add_A_C2_i32_before := [llvm|
+{
+^0(%arg78 : i16):
+  %0 = "llvm.mlir.constant"() <{value = 5 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 6 : i32}> : () -> i32
+  %2 = llvm.zext %arg78 : i16 to i32
+  %3 = llvm.add %2, %0 : i32
+  %4 = llvm.shl %1, %3 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def shl_C1_add_A_C2_i32_after := [llvm|
+{
+^0(%arg78 : i16):
+  %0 = "llvm.mlir.constant"() <{value = 192 : i32}> : () -> i32
+  %1 = llvm.zext %arg78 : i16 to i32
+  %2 = llvm.shl %0, %1 : i32
+  "llvm.return"(%2) : (i32) -> ()
+}
+]
+theorem shl_C1_add_A_C2_i32_proof : shl_C1_add_A_C2_i32_before ⊑ shl_C1_add_A_C2_i32_after := by
+  unfold shl_C1_add_A_C2_i32_before shl_C1_add_A_C2_i32_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN shl_C1_add_A_C2_i32
+  all_goals (try extract_goal ; sorry)
+  ---END shl_C1_add_A_C2_i32
+
+
+
 def ashr_C1_add_A_C2_i32_before := [llvm|
 {
 ^0(%arg77 : i32):
@@ -382,6 +417,116 @@ theorem shl_nsw_add_negative_invalid_constant3_proof : shl_nsw_add_negative_inva
 
 
 
+def lshr_2_add_zext_basic_before := [llvm|
+{
+^0(%arg37 : i1, %arg38 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i2}> : () -> i2
+  %1 = llvm.zext %arg37 : i1 to i2
+  %2 = llvm.zext %arg38 : i1 to i2
+  %3 = llvm.add %1, %2 : i2
+  %4 = llvm.lshr %3, %0 : i2
+  "llvm.return"(%4) : (i2) -> ()
+}
+]
+def lshr_2_add_zext_basic_after := [llvm|
+{
+^0(%arg37 : i1, %arg38 : i1):
+  %0 = llvm.and %arg37, %arg38 : i1
+  %1 = llvm.zext %0 : i1 to i2
+  "llvm.return"(%1) : (i2) -> ()
+}
+]
+theorem lshr_2_add_zext_basic_proof : lshr_2_add_zext_basic_before ⊑ lshr_2_add_zext_basic_after := by
+  unfold lshr_2_add_zext_basic_before lshr_2_add_zext_basic_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN lshr_2_add_zext_basic
+  all_goals (try extract_goal ; sorry)
+  ---END lshr_2_add_zext_basic
+
+
+
+def ashr_2_add_zext_basic_before := [llvm|
+{
+^0(%arg35 : i1, %arg36 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i2}> : () -> i2
+  %1 = llvm.zext %arg35 : i1 to i2
+  %2 = llvm.zext %arg36 : i1 to i2
+  %3 = llvm.add %1, %2 : i2
+  %4 = llvm.ashr %3, %0 : i2
+  "llvm.return"(%4) : (i2) -> ()
+}
+]
+def ashr_2_add_zext_basic_after := [llvm|
+{
+^0(%arg35 : i1, %arg36 : i1):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i2}> : () -> i2
+  %1 = llvm.zext %arg35 : i1 to i2
+  %2 = llvm.zext %arg36 : i1 to i2
+  %3 = llvm.add %1, %2 overflow<nuw> : i2
+  %4 = llvm.ashr %3, %0 : i2
+  "llvm.return"(%4) : (i2) -> ()
+}
+]
+theorem ashr_2_add_zext_basic_proof : ashr_2_add_zext_basic_before ⊑ ashr_2_add_zext_basic_after := by
+  unfold ashr_2_add_zext_basic_before ashr_2_add_zext_basic_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN ashr_2_add_zext_basic
+  all_goals (try extract_goal ; sorry)
+  ---END ashr_2_add_zext_basic
+
+
+
+def lshr_16_add_zext_basic_multiuse_before := [llvm|
+{
+^0(%arg31 : i16, %arg32 : i16):
+  %0 = "llvm.mlir.constant"() <{value = 16 : i32}> : () -> i32
+  %1 = llvm.zext %arg31 : i16 to i32
+  %2 = llvm.zext %arg32 : i16 to i32
+  %3 = llvm.add %1, %2 : i32
+  %4 = llvm.lshr %3, %0 : i32
+  %5 = llvm.or %4, %1 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+def lshr_16_add_zext_basic_multiuse_after := [llvm|
+{
+^0(%arg31 : i16, %arg32 : i16):
+  %0 = "llvm.mlir.constant"() <{value = 16 : i32}> : () -> i32
+  %1 = llvm.zext %arg31 : i16 to i32
+  %2 = llvm.zext %arg32 : i16 to i32
+  %3 = llvm.add %1, %2 overflow<nsw,nuw> : i32
+  %4 = llvm.lshr %3, %0 : i32
+  %5 = llvm.or %4, %1 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+theorem lshr_16_add_zext_basic_multiuse_proof : lshr_16_add_zext_basic_multiuse_before ⊑ lshr_16_add_zext_basic_multiuse_after := by
+  unfold lshr_16_add_zext_basic_multiuse_before lshr_16_add_zext_basic_multiuse_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN lshr_16_add_zext_basic_multiuse
+  all_goals (try extract_goal ; sorry)
+  ---END lshr_16_add_zext_basic_multiuse
+
+
+
 def lshr_16_add_known_16_leading_zeroes_before := [llvm|
 {
 ^0(%arg29 : i32, %arg30 : i32):
@@ -459,6 +604,115 @@ theorem lshr_16_add_not_known_16_leading_zeroes_proof : lshr_16_add_not_known_16
   ---BEGIN lshr_16_add_not_known_16_leading_zeroes
   all_goals (try extract_goal ; sorry)
   ---END lshr_16_add_not_known_16_leading_zeroes
+
+
+
+def lshr_32_add_zext_basic_multiuse_before := [llvm|
+{
+^0(%arg23 : i32, %arg24 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 32 : i64}> : () -> i64
+  %1 = llvm.zext %arg23 : i32 to i64
+  %2 = llvm.zext %arg24 : i32 to i64
+  %3 = llvm.add %1, %2 : i64
+  %4 = llvm.lshr %3, %0 : i64
+  %5 = llvm.or %4, %2 : i64
+  "llvm.return"(%5) : (i64) -> ()
+}
+]
+def lshr_32_add_zext_basic_multiuse_after := [llvm|
+{
+^0(%arg23 : i32, %arg24 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 32 : i64}> : () -> i64
+  %1 = llvm.zext %arg23 : i32 to i64
+  %2 = llvm.zext %arg24 : i32 to i64
+  %3 = llvm.add %1, %2 overflow<nsw,nuw> : i64
+  %4 = llvm.lshr %3, %0 : i64
+  %5 = llvm.or %4, %2 : i64
+  "llvm.return"(%5) : (i64) -> ()
+}
+]
+theorem lshr_32_add_zext_basic_multiuse_proof : lshr_32_add_zext_basic_multiuse_before ⊑ lshr_32_add_zext_basic_multiuse_after := by
+  unfold lshr_32_add_zext_basic_multiuse_before lshr_32_add_zext_basic_multiuse_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN lshr_32_add_zext_basic_multiuse
+  all_goals (try extract_goal ; sorry)
+  ---END lshr_32_add_zext_basic_multiuse
+
+
+
+def lshr_31_i32_add_zext_basic_before := [llvm|
+{
+^0(%arg21 : i32, %arg22 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 31 : i64}> : () -> i64
+  %1 = llvm.zext %arg21 : i32 to i64
+  %2 = llvm.zext %arg22 : i32 to i64
+  %3 = llvm.add %1, %2 : i64
+  %4 = llvm.lshr %3, %0 : i64
+  "llvm.return"(%4) : (i64) -> ()
+}
+]
+def lshr_31_i32_add_zext_basic_after := [llvm|
+{
+^0(%arg21 : i32, %arg22 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 31 : i64}> : () -> i64
+  %1 = llvm.zext %arg21 : i32 to i64
+  %2 = llvm.zext %arg22 : i32 to i64
+  %3 = llvm.add %1, %2 overflow<nsw,nuw> : i64
+  %4 = llvm.lshr %3, %0 : i64
+  "llvm.return"(%4) : (i64) -> ()
+}
+]
+theorem lshr_31_i32_add_zext_basic_proof : lshr_31_i32_add_zext_basic_before ⊑ lshr_31_i32_add_zext_basic_after := by
+  unfold lshr_31_i32_add_zext_basic_before lshr_31_i32_add_zext_basic_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN lshr_31_i32_add_zext_basic
+  all_goals (try extract_goal ; sorry)
+  ---END lshr_31_i32_add_zext_basic
+
+
+
+def lshr_33_i32_add_zext_basic_before := [llvm|
+{
+^0(%arg19 : i32, %arg20 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 33 : i64}> : () -> i64
+  %1 = llvm.zext %arg19 : i32 to i64
+  %2 = llvm.zext %arg20 : i32 to i64
+  %3 = llvm.add %1, %2 : i64
+  %4 = llvm.lshr %3, %0 : i64
+  "llvm.return"(%4) : (i64) -> ()
+}
+]
+def lshr_33_i32_add_zext_basic_after := [llvm|
+{
+^0(%arg19 : i32, %arg20 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 0 : i64}> : () -> i64
+  "llvm.return"(%0) : (i64) -> ()
+}
+]
+theorem lshr_33_i32_add_zext_basic_proof : lshr_33_i32_add_zext_basic_before ⊑ lshr_33_i32_add_zext_basic_after := by
+  unfold lshr_33_i32_add_zext_basic_before lshr_33_i32_add_zext_basic_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN lshr_33_i32_add_zext_basic
+  all_goals (try extract_goal ; sorry)
+  ---END lshr_33_i32_add_zext_basic
 
 
 

@@ -34,8 +34,6 @@
 1: "abs_canonical_5"
 4: "abs_canonical_5" has unsupported operation: builtin.unregistered: llvm.intr.abs
 
-4: "abs_canonical_5" has unsupported operation: builtin.unregistered: llvm.zext
-
 1: "abs_canonical_6"
 4: "abs_canonical_6" has unsupported operation: builtin.unregistered: llvm.intr.abs
 
@@ -68,8 +66,6 @@
 
 1: "nabs_canonical_5"
 4: "nabs_canonical_5" has unsupported operation: builtin.unregistered: llvm.intr.abs
-
-4: "nabs_canonical_5" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "nabs_canonical_6"
 4: "nabs_canonical_6" has unsupported operation: builtin.unregistered: llvm.intr.abs

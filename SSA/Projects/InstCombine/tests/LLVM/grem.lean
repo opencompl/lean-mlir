@@ -109,6 +109,43 @@ theorem test4_proof : test4_before ⊑ test4_after := by
 
 
 
+def test5_before := [llvm|
+{
+^0(%arg95 : i32, %arg96 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 32 : i32}> : () -> i32
+  %1 = llvm.zext %arg96 : i8 to i32
+  %2 = llvm.shl %0, %1 : i32
+  %3 = llvm.urem %arg95, %2 : i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+def test5_after := [llvm|
+{
+^0(%arg95 : i32, %arg96 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 32 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %2 = llvm.zext %arg96 : i8 to i32
+  %3 = llvm.shl %0, %2 overflow<nuw> : i32
+  %4 = llvm.add %3, %1 : i32
+  %5 = llvm.and %arg95, %4 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+theorem test5_proof : test5_before ⊑ test5_after := by
+  unfold test5_before test5_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test5
+  all_goals (try extract_goal ; sorry)
+  ---END test5
+
+
+
 def test7_before := [llvm|
 {
 ^0(%arg93 : i32):
@@ -205,6 +242,41 @@ theorem test9_proof : test9_before ⊑ test9_after := by
 
 
 
+def test10_before := [llvm|
+{
+^0(%arg90 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 4 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 4 : i64}> : () -> i64
+  %2 = llvm.zext %arg90 : i8 to i32
+  %3 = llvm.mul %2, %0 : i32
+  %4 = llvm.sext %3 : i32 to i64
+  %5 = llvm.urem %4, %1 : i64
+  %6 = llvm.trunc %5 : i64 to i32
+  "llvm.return"(%6) : (i32) -> ()
+}
+]
+def test10_after := [llvm|
+{
+^0(%arg90 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  "llvm.return"(%0) : (i32) -> ()
+}
+]
+theorem test10_proof : test10_before ⊑ test10_after := by
+  unfold test10_before test10_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test10
+  all_goals (try extract_goal ; sorry)
+  ---END test10
+
+
+
 def test11_before := [llvm|
 {
 ^0(%arg89 : i32):
@@ -297,6 +369,80 @@ theorem test13_proof : test13_before ⊑ test13_after := by
   ---BEGIN test13
   all_goals (try extract_goal ; sorry)
   ---END test13
+
+
+
+def test14_before := [llvm|
+{
+^0(%arg85 : i64, %arg86 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %1 = llvm.shl %0, %arg86 : i32
+  %2 = llvm.zext %1 : i32 to i64
+  %3 = llvm.urem %arg85, %2 : i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+def test14_after := [llvm|
+{
+^0(%arg85 : i64, %arg86 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = -1 : i64}> : () -> i64
+  %2 = llvm.shl %0, %arg86 overflow<nuw> : i32
+  %3 = llvm.zext %2 : i32 to i64
+  %4 = llvm.add %3, %1 overflow<nsw> : i64
+  %5 = llvm.and %arg85, %4 : i64
+  "llvm.return"(%5) : (i64) -> ()
+}
+]
+theorem test14_proof : test14_before ⊑ test14_after := by
+  unfold test14_before test14_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test14
+  all_goals (try extract_goal ; sorry)
+  ---END test14
+
+
+
+def test15_before := [llvm|
+{
+^0(%arg83 : i32, %arg84 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %1 = llvm.shl %0, %arg84 : i32
+  %2 = llvm.zext %1 : i32 to i64
+  %3 = llvm.zext %arg83 : i32 to i64
+  %4 = llvm.urem %3, %2 : i64
+  "llvm.return"(%4) : (i64) -> ()
+}
+]
+def test15_after := [llvm|
+{
+^0(%arg83 : i32, %arg84 : i32):
+  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %1 = llvm.shl %0, %arg84 overflow<nsw> : i32
+  %2 = llvm.xor %1, %0 : i32
+  %3 = llvm.and %arg83, %2 : i32
+  %4 = llvm.zext %3 : i32 to i64
+  "llvm.return"(%4) : (i64) -> ()
+}
+]
+theorem test15_proof : test15_before ⊑ test15_after := by
+  unfold test15_before test15_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  try simp
+  simp_alive_case_bash
+  try intros
+  try simp
+  ---BEGIN test15
+  all_goals (try extract_goal ; sorry)
+  ---END test15
 
 
 

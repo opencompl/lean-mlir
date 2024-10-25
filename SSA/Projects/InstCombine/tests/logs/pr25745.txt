@@ -5,10 +5,6 @@
 5: "use.i64" is empty
 
 1: "f"
-4: "f" has unsupported operation: builtin.unregistered: llvm.sext
-
-4: "f" has unsupported operation: builtin.unregistered: llvm.sext
-
 4: "f" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "f" has unsupported operation: llvm.call

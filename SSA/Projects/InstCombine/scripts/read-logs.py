@@ -64,8 +64,6 @@ def main():
     print(f"Number of translated test files: {translated_test_count}\n")
     print(f"Number of successfully built test files: {proof_count}\n")
     
-    print(f"Empty logs: {log_errors}\n")
-    
     print(f"Number of builds that failed: {build_error}\n")
     print(f"Number of generated BitVector theorems: {theorem_count}\n")
     print(f"Occurrences of unsupported functions: {sum(unsupported_func.values())}")

@@ -23,52 +23,28 @@
 4: "testi64i32_ne" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "testi32i8"
-4: "testi32i8" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "testi32i8" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "testi32i8" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "wrongimm1"
-4: "wrongimm1" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "wrongimm1" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "wrongimm1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "wrongimm2"
-4: "wrongimm2" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "wrongimm2" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "wrongimm2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "slt"
-4: "slt" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "slt" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "slt" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "extrause_a"
-4: "extrause_a" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "extrause_a" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "extrause_a" has unsupported operation: llvm.call
 
 1: "extrause_l"
-4: "extrause_l" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "extrause_l" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "extrause_l" has unsupported operation: llvm.call
 
 1: "extrause_la"
-4: "extrause_la" has unsupported operation: builtin.unregistered: llvm.trunc
-
-4: "extrause_la" has unsupported operation: builtin.unregistered: llvm.trunc
-
 4: "extrause_la" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "extrause_la" has unsupported operation: llvm.call
