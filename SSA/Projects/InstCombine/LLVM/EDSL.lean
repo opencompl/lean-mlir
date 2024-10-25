@@ -13,8 +13,8 @@ open MLIR
 
 namespace InstcombineTransformDialect
 
-def mkUnaryOp {Γ : Ctxt (MetaLLVM φ).Ty} {w : Width φ} (op : MOp.UnaryOp)
-  (e : Ctxt.Var Γ (.bitvec w)) : Expr (MetaLLVM φ) Γ .pure (.bitvec w) :=
+def mkUnaryOp {Γ : Ctxt (MetaLLVM φ).Ty} {w : Width φ} (op : MOp.UnaryOp φ)
+  (e : Ctxt.Var Γ (.bitvec w)) : Expr (MetaLLVM φ) Γ .pure (op.outTy w) :=
   ⟨
     .unary w op,
     rfl,
@@ -69,6 +69,15 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM (MetaLLVM φ) ((MetaLLVM φ
 
 instance instTransformTy : MLIR.AST.TransformTy (MetaLLVM φ) φ where
   mkTy := mkTy
+
+def getOutputWidth (opStx : MLIR.AST.Op φ) (op : String) :
+    AST.ReaderM (MetaLLVM φ) (Width φ) := do
+  match opStx.res with
+  | res::[] =>
+    match res.2 with
+    | .int _ w => pure w
+    | _ => throw <| .generic s!"The operation {op} must output an integer type"
+  | _ => throw <| .generic s!"The operation {op} must have a single output"
 
 def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
     AST.ReaderM (MetaLLVM φ) (Σ eff ty, Expr (MetaLLVM φ) Γ eff ty) := do
@@ -172,9 +181,9 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
         | "llvm.not"   => pure .not
         | "llvm.neg"   => pure .neg
         | "llvm.copy"  => pure .copy
-        | "llvm.trunc" => pure .trunc
-        | "llvm.zext"  => pure .zext
-        | "llvm.sext"  => pure .sext
+        | "llvm.trunc" => pure <| .trunc (← getOutputWidth opStx "trunc")
+        | "llvm.zext"  => pure <| .zext (← getOutputWidth opStx "zext")
+        | "llvm.sext"  => pure <| .sext (← getOutputWidth opStx "sext")
         | _ => throw <| .generic s!"Unknown (unary) operation syntax {opStx.name}"
     return ⟨_, _, mkUnaryOp op v⟩
   | [] =>
@@ -225,7 +234,7 @@ def instantiateMTy (vals : Mathlib.Vector Nat φ) : (MetaLLVM φ).Ty → LLVM.Ty
 
 def instantiateMOp (vals : Mathlib.Vector Nat φ) : (MetaLLVM φ).Op → LLVM.Op
   | .binary w binOp => .binary (w.instantiate vals) binOp
-  | .unary w unOp => .unary (w.instantiate vals) unOp
+  | .unary w unOp => .unary (w.instantiate vals) (unOp.instantiate vals)
   | .select w => .select (w.instantiate vals)
   | .icmp c w => .icmp c (w.instantiate vals)
   | .const w val => .const (w.instantiate vals) val
@@ -241,12 +250,13 @@ def MOp.instantiateCom (vals : Mathlib.Vector Nat φ) : DialectMorphism (MetaLLV
   preserves_signature op := by
     have h1 : ∀ (φ : Nat), 1 = ConcreteOrMVar.concrete (φ := φ) 1 := by intros φ; rfl
     cases op <;>
+      (try casesm MOp.UnaryOp _) <;>
       simp only [instantiateMTy, instantiateMOp, ConcreteOrMVar.instantiate, (· <$> ·), signature,
       InstCombine.MOp.sig, InstCombine.MOp.outTy, Function.comp_apply, List.map,
       Signature.mk, Signature.mkEffectful.injEq,
       List.map_cons, List.map_nil, and_self, MTy.bitvec,
       List.cons.injEq, MTy.bitvec.injEq, and_true, true_and,
-      RegionSignature.map, Signature.map, h1]
+      RegionSignature.map, Signature.map, MOp.UnaryOp.instantiate, MOp.UnaryOp.outTy, h1]
 
 open InstCombine in
 def mkComInstantiate (reg : MLIR.AST.Region φ) :

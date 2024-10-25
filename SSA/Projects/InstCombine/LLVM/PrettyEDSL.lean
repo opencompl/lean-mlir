@@ -159,10 +159,10 @@ private def pretty_test_overflow :=
 
 private def pretty_test_trunc :=
   [llvm ()|{
-  ^bb0(%arg0: i32):
+  ^bb0(%arg0: i64):
     %0 = llvm.trunc %arg0 : i64 to i32
     %1 = llvm.zext %0 : i32 to i64
-    "llvm.return"(%1) : (i64) -> ()
+    llvm.return %1 : i64
   }]
 
 example : pretty_test = prettier_test_generic 32 := by
