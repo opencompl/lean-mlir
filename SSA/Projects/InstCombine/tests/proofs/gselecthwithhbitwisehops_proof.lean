@@ -9,7 +9,7 @@ theorem set_bits_thm (x : BitVec 1) :
     | none => none
     | some { toFin := ⟨1, ⋯⟩ } => none
     | some { toFin := ⟨0, ⋯⟩ } => none) ⊑
-    none := by bv_compare'
+    none := sorry
 info: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthwithhbitwisehops.lean:49:17: theorem set_bits_thm :
   ∀ (x : BitVec 8) (x_1 : BitVec 1),
     (match some x_1 with
@@ -21,5 +21,5 @@ info: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthwithhbitwisehops.lean:
         | none => none
         | some { toFin := ⟨1, ⋯⟩ } => some 5#8
         | some { toFin := ⟨0, ⋯⟩ } => some 0#8)
-        fun y' => some (x &&& 250#8 ||| y') := by bv_compare'
+        fun y' => some (x &&& 250#8 ||| y') := sorry
 

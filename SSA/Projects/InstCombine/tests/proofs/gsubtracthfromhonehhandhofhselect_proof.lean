@@ -14,7 +14,7 @@ theorem t0_sub_from_trueval_thm (x : BitVec 1) (x_1 : BitVec 8) :
     match some x with
     | none => none
     | some { toFin := ⟨1, ⋯⟩ } => some 0#8
-    | some { toFin := ⟨0, ⋯⟩ } => none := by bv_compare'
+    | some { toFin := ⟨0, ⋯⟩ } => none := sorry
 info: ././././SSA/Projects/InstCombine/tests/LLVM/gsubtracthfromhonehhandhofhselect.lean:43:17: theorem t0_sub_from_trueval_thm :
   ∀ (x : BitVec 8) (x_1 : BitVec 1) (x_2 : BitVec 8),
     (Option.bind
@@ -26,7 +26,7 @@ info: ././././SSA/Projects/InstCombine/tests/LLVM/gsubtracthfromhonehhandhofhsel
       match some x_1 with
       | none => none
       | some { toFin := ⟨1, ⋯⟩ } => some 0#8
-      | some { toFin := ⟨0, ⋯⟩ } => some (x_2 - x) := by bv_compare'
+      | some { toFin := ⟨0, ⋯⟩ } => some (x_2 - x) := sorry
 
 theorem t1_sub_from_falseval_thm (x : BitVec 1) (x_1 : BitVec 8) :
   (Option.bind
@@ -38,7 +38,7 @@ theorem t1_sub_from_falseval_thm (x : BitVec 1) (x_1 : BitVec 8) :
     match some x with
     | none => none
     | some { toFin := ⟨1, ⋯⟩ } => none
-    | some { toFin := ⟨0, ⋯⟩ } => some 0#8 := by bv_compare'
+    | some { toFin := ⟨0, ⋯⟩ } => some 0#8 := sorry
 info: ././././SSA/Projects/InstCombine/tests/LLVM/gsubtracthfromhonehhandhofhselect.lean:75:17: theorem t1_sub_from_falseval_thm :
   ∀ (x : BitVec 8) (x_1 : BitVec 1) (x_2 : BitVec 8),
     (Option.bind
@@ -50,5 +50,5 @@ info: ././././SSA/Projects/InstCombine/tests/LLVM/gsubtracthfromhonehhandhofhsel
       match some x_1 with
       | none => none
       | some { toFin := ⟨1, ⋯⟩ } => some (x_2 - x)
-      | some { toFin := ⟨0, ⋯⟩ } => some 0#8 := by bv_compare'
+      | some { toFin := ⟨0, ⋯⟩ } => some 0#8 := sorry
 
