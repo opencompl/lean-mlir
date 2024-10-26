@@ -499,9 +499,7 @@ theorem getMsbD_twoPow {i j w: Nat} :
     (twoPow w i).getMsbD j = (decide (i < w) && decide (j = w - i - 1)) := by
   simp only [getMsbD_eq_getLsbD, getLsbD_twoPow]
   by_cases h₀ : i < w <;> by_cases h₁ : j < w <;>
-  simp [h₀, h₁]
-  omega
-  omega
+  simp [h₀, h₁] <;> omega
 
 @[simp]
 theorem msb_twoPow {i w: Nat} :
