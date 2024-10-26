@@ -89,3 +89,4 @@ theorem negation_of_increment_via_or_with_no_common_bits_set_thm (x x_1 : BitVec
 theorem negate_add_with_single_negatible_operand_thm (x : BitVec 8) : 214#8 + -x = 214#8 - x := sorry
 
 theorem negate_add_with_single_negatible_operand_depth2_thm (x x_1 : BitVec 8) : -((x_1 + 21#8) * x) = (235#8 - x_1) * x := sorry
+

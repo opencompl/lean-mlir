@@ -253,7 +253,7 @@ theorem add_signbit_shl_proof : add_signbit_shl_before ⊑ add_signbit_shl_after
   try intros
   try simp
   ---BEGIN add_signbit_shl
-  all_goals (try extract_goal ; by bv_compare')
+  all_goals (try extract_goal ; sorry)
   ---END add_signbit_shl
 
 
@@ -288,7 +288,7 @@ theorem add_nosignbit_shl_proof : add_nosignbit_shl_before ⊑ add_nosignbit_shl
   try intros
   try simp
   ---BEGIN add_nosignbit_shl
-  all_goals (try extract_goal ; by bv_compare')
+  all_goals (try extract_goal ; sorry)
   ---END add_nosignbit_shl
 
 

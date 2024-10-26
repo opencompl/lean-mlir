@@ -24,5 +24,5 @@ theorem ashr_overshift_thm (x : BitVec 32) : (x.sshiftRight 15).sshiftRight 17 =
 
 theorem hoist_ashr_ahead_of_sext_1_thm (x : BitVec 8) : (signExtend 32 x).sshiftRight 3 = signExtend 32 (x.sshiftRight 3) := sorry
 
-
 theorem hoist_ashr_ahead_of_sext_2_thm (x : BitVec 8) : (signExtend 32 x).sshiftRight 8 = signExtend 32 (x.sshiftRight 7) := sorry
+

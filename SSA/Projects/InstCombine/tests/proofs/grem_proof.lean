@@ -33,6 +33,8 @@ theorem test8_thm (x : BitVec 32) : x <<< 4 - (x <<< 4).sdiv 8#32 * 8#32 = 0#32 
 
 theorem test9_thm (x : BitVec 32) : x * 64#32 % 32#32 = 0#32 := sorry
 
+theorem test10_thm (x : BitVec 8) : setWidth 32 (signExtend 64 (setWidth 32 x * 4#32) % 4#64) = 0#32 := sorry
+
 theorem test11_thm (x : BitVec 32) : (x &&& 4294967294#32) * 2#32 % 4#32 = 0#32 := sorry
 
 theorem test12_thm (x : BitVec 32) : (x &&& 4294967292#32) - (x &&& 4294967292#32).sdiv 2#32 * 2#32 = 0#32 := sorry
@@ -41,6 +43,25 @@ theorem test13_thm (x : BitVec 32) :
   Option.map (fun div => x - div * x)
       (if x = 0#32 ∨ x = intMin 32 ∧ x = 4294967295#32 then none else some (if x = 0#32 then 0#32 else 1#32)) ⊑
     some 0#32 := sorry
+
+theorem test14_thm (x : BitVec 32) (x_1 : BitVec 64) :
+  (Option.bind (if 32#32 ≤ x then none else some (1#32 <<< x.toNat)) fun x =>
+      if setWidth 64 x = 0#64 then none else some (x_1 % setWidth 64 x)) ⊑
+    (if 1#32 <<< x.toNat >>> x.toNat = 1#32 then none else if 32#32 ≤ x then none else some (1#32 <<< x.toNat)).bind
+      fun x =>
+      (if
+              (setWidth 64 x).msb = (18446744073709551615#64).msb ∧
+                ¬(setWidth 64 x + 18446744073709551615#64).msb = (setWidth 64 x).msb then
+            none
+          else some (setWidth 64 x + 18446744073709551615#64)).bind
+        fun y' => some (x_1 &&& y') := sorry
+
+theorem test15_thm (x x_1 : BitVec 32) :
+  (Option.bind (if 32#32 ≤ x then none else some (1#32 <<< x.toNat)) fun x =>
+      if setWidth 64 x = 0#64 then none else some (setWidth 64 x_1 % setWidth 64 x)) ⊑
+    (if (4294967295#32 <<< x.toNat).sshiftRight x.toNat = 4294967295#32 then none
+        else if 32#32 ≤ x then none else some (4294967295#32 <<< x.toNat)).bind
+      fun x => some (setWidth 64 x_1 &&& (setWidth 64 x ^^^ 4294967295#64)) := sorry
 
 theorem test16_thm (x x_1 : BitVec 32) :
   (if (x >>> 11 &&& 4#32) + 4#32 = 0#32 then none else some (x_1 % ((x >>> 11 &&& 4#32) + 4#32))) ⊑
@@ -147,3 +168,4 @@ theorem urem_constant_dividend_select_of_constants_divisor_0_arm_thm (x : BitVec
       | some { toFin := ⟨0, ⋯⟩ } => some 0#32)
       fun y' => if y' = 0#32 then none else some (42#32 % y')) ⊑
     some 6#32 := sorry
+

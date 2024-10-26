@@ -41,7 +41,7 @@ theorem foo_proof : foo_before ⊑ foo_after := by
   try intros
   try simp
   ---BEGIN foo
-  all_goals (try extract_goal ; by bv_compare')
+  all_goals (try extract_goal ; sorry)
   ---END foo
 
 

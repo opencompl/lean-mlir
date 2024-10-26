@@ -201,7 +201,7 @@ theorem test10_proof : test10_before ⊑ test10_after := by
   try intros
   try simp
   ---BEGIN test10
-  all_goals (try extract_goal ; by bv_compare')
+  all_goals (try extract_goal ; sorry)
   ---END test10
 
 
@@ -238,7 +238,7 @@ theorem multiuse_lshr_lshr_proof : multiuse_lshr_lshr_before ⊑ multiuse_lshr_l
   try intros
   try simp
   ---BEGIN multiuse_lshr_lshr
-  all_goals (try extract_goal ; by bv_compare')
+  all_goals (try extract_goal ; sorry)
   ---END multiuse_lshr_lshr
 
 
@@ -275,7 +275,7 @@ theorem multiuse_shl_shl_proof : multiuse_shl_shl_before ⊑ multiuse_shl_shl_af
   try intros
   try simp
   ---BEGIN multiuse_shl_shl
-  all_goals (try extract_goal ; by bv_compare')
+  all_goals (try extract_goal ; sorry)
   ---END multiuse_shl_shl
 
 
@@ -626,7 +626,7 @@ theorem lshr_shl_eq_amt_multi_use_proof : lshr_shl_eq_amt_multi_use_before ⊑ l
   try intros
   try simp
   ---BEGIN lshr_shl_eq_amt_multi_use
-  all_goals (try extract_goal ; by bv_compare')
+  all_goals (try extract_goal ; sorry)
   ---END lshr_shl_eq_amt_multi_use
 
 

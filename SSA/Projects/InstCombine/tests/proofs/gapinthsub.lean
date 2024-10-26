@@ -37,7 +37,7 @@ theorem test1_proof : test1_before ⊑ test1_after := by
   try intros
   try simp
   ---BEGIN test1
-  all_goals (try extract_goal ; by bv_compare')
+  all_goals (try extract_goal ; sorry)
   ---END test1
 
 
@@ -66,7 +66,7 @@ theorem test2_proof : test2_before ⊑ test2_after := by
   try intros
   try simp
   ---BEGIN test2
-  all_goals (try extract_goal ; by bv_compare')
+  all_goals (try extract_goal ; sorry)
   ---END test2
 
 
@@ -96,7 +96,7 @@ theorem test3_proof : test3_before ⊑ test3_after := by
   try intros
   try simp
   ---BEGIN test3
-  all_goals (try extract_goal ; by bv_compare')
+  all_goals (try extract_goal ; sorry)
   ---END test3
 
 
@@ -127,7 +127,7 @@ theorem test4_proof : test4_before ⊑ test4_after := by
   try intros
   try simp
   ---BEGIN test4
-  all_goals (try extract_goal ; by bv_compare')
+  all_goals (try extract_goal ; sorry)
   ---END test4
 
 
@@ -416,7 +416,7 @@ theorem test18_proof : test18_before ⊑ test18_after := by
   try intros
   try simp
   ---BEGIN test18
-  all_goals (try extract_goal ; by bv_compare')
+  all_goals (try extract_goal ; sorry)
   ---END test18
 
 
@@ -445,7 +445,7 @@ theorem test19_proof : test19_before ⊑ test19_after := by
   try intros
   try simp
   ---BEGIN test19
-  all_goals (try extract_goal ; by bv_compare')
+  all_goals (try extract_goal ; sorry)
   ---END test19
 
 

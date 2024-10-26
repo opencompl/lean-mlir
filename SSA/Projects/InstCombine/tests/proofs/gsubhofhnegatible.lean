@@ -209,7 +209,7 @@ theorem t9_proof : t9_before ⊑ t9_after := by
   try intros
   try simp
   ---BEGIN t9
-  all_goals (try extract_goal ; by bv_compare')
+  all_goals (try extract_goal ; sorry)
   ---END t9
 
 

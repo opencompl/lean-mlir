@@ -33,7 +33,7 @@ theorem t5_thm (x : BitVec 1) (x_1 : BitVec 32) :
       | some { toFin := ⟨1, ⋯⟩ } => none
       | some { toFin := ⟨0, ⋯⟩ } => some x_1)
       fun y' => if 32#32 ≤ y' then none else some (x_1 >>> y'.toNat) := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gdivhshift.lean:50:17: theorem t5_thm :
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gdivhshift.lean:153:17: theorem t5_thm :
   ∀ (x x_1 : BitVec 1) (x_2 : BitVec 32),
     (Option.bind
         (match some x_1 with
@@ -251,3 +251,4 @@ theorem udiv_shl_pair3_thm (x x_1 x_2 : BitVec 32) :
     (if 1#32 <<< x_1.toNat >>> x_1.toNat = 1#32 then none
         else if 32#32 ≤ x_1 then none else some (1#32 <<< x_1.toNat)).bind
       fun a => if 32#32 ≤ x then none else some (a >>> x.toNat) := sorry
+

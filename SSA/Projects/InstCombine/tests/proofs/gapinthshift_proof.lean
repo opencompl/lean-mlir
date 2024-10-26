@@ -56,3 +56,4 @@ theorem shl_lshr_eq_amt_multi_use_thm (x : BitVec 44) : x <<< 33 + x <<< 33 >>> 
 
 theorem test25_thm (x x_1 : BitVec 37) :
   (x_1 &&& 137438822400#37) + (x &&& 137438822400#37) = x + (x_1 &&& 137438822400#37) &&& 137438822400#37 := sorry
+
