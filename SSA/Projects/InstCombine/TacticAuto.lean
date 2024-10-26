@@ -182,11 +182,6 @@ macro "alive_auto": tactic =>
       )
    )
 
--- set_option trace.Meta.Tactic true in
--- set_option trace.Meta.Tactic.bv true in
--- example (x : BitVec 32) : x.sdiv (1#32) = x := by
---   -- bv_compare "/usr/local/bin/bitwuzla"
-
 macro "bv_compare'": tactic =>
   `(tactic|
       (
