@@ -13,8 +13,8 @@ rev = "nightly"
 
 [[require]]
 name = "leanwuzla"
-git = "https://github.com/hargoniX/Leanwuzla.git"
-rev = "main"
+git = "https://github.com/opencompl/Leanwuzla.git"
+rev = "sdiv"
 
 [[lean_lib]]
 name = "SSA"
