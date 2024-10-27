@@ -50,7 +50,7 @@ theorem test15a_thm (x : BitVec 1) :
     | some { toFin := ⟨1, ⋯⟩ } => some 512#53
     | some { toFin := ⟨0, ⋯⟩ } => some 128#53 := sorry
 
-theorem test23_thm (x : BitVec 44) : setWidth 11 ((x <<< 33).sshiftRight 33) = setWidth 11 x := by sorry
+theorem test23_thm (x : BitVec 44) : setWidth 11 ((x <<< 33).sshiftRight 33) = setWidth 11 x := sorry
 
 theorem shl_lshr_eq_amt_multi_use_thm (x : BitVec 44) : x <<< 33 + x <<< 33 >>> 33 = x <<< 33 ||| x &&& 2047#44 := sorry
 
