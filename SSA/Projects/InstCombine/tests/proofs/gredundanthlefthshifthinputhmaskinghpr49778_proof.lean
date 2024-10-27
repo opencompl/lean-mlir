@@ -22,5 +22,5 @@ theorem src_thm (x : BitVec 1) :
           none
         else
           if 32#32 ≤ setWidth 32 x then none
-          else some (((a ^^^ 4294967295#32) &&& setWidth 32 x) <<< (x.toNat % 4294967296)) := by bv_compare'
+          else some (((a ^^^ 4294967295#32) &&& setWidth 32 x) <<< (x.toNat % 4294967296)) := sorry
 

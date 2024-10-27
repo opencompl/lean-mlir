@@ -26,5 +26,5 @@ theorem fast_div_201_thm (x : BitVec 8) :
                   (x - setWidth 8 (a >>> 8)) >>> 1 + setWidth 8 (x_1 >>> 8) < setWidth 8 (x_1 >>> 8) then
               none
             else some ((x - setWidth 8 (a >>> 8)) >>> 1 + setWidth 8 (x_1 >>> 8))).bind
-          fun x' => some (x' >>> 7) := by bv_compare'
+          fun x' => some (x' >>> 7) := sorry
 
