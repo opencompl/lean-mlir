@@ -4,12 +4,12 @@ import pandas as pd
 import os 
 
 benchmark_dir = "../SSA/Projects/InstCombine/HackersDelight/"
-res_dir = "results//HackersDelight"
+res_dir = "results/HackersDelight/"
 # dir = 'plots/'
 dir = '../../paper-lean-bitvectors/plots/'
 
 
-reps = 2
+reps = 1
 
 bv_width = [4, 8, 16, 32, 64]
 
@@ -35,7 +35,7 @@ for file in os.listdir(benchmark_dir):
         data[file]['leanSAT-rw'] = {}
         data[file]['leanSAT-bb'] = {}
         data[file]['leanSAT-sat'] = {}
-        data[file]['leanSAT-lrats'] = {}
+        data[file]['leanSAT-lratt'] = {}
         data[file]['leanSAT-lratc'] = {}
 
         for bvw in bv_width:
@@ -45,7 +45,7 @@ for file in os.listdir(benchmark_dir):
             data[file]['leanSAT-rw'][str(bvw)] = []
             data[file]['leanSAT-bb'][str(bvw)] = []
             data[file]['leanSAT-sat'][str(bvw)] = []
-            data[file]['leanSAT-lrats'][str(bvw)] = []
+            data[file]['leanSAT-lratt'][str(bvw)] = []
             data[file]['leanSAT-lratc'][str(bvw)] = []
 
             bitwuzla_times_average = []
@@ -53,7 +53,7 @@ for file in os.listdir(benchmark_dir):
             leanSAT_rw_times_average = []
             leanSAT_bb_times_average = []
             leanSAT_sat_times_average = []
-            leanSAT_lrats_times_average = []
+            leanSAT_lratt_times_average = []
             leanSAT_lratc_times_average = []
 
             for r in range(reps):
@@ -70,14 +70,14 @@ for file in os.listdir(benchmark_dir):
                             leanSAT_rw_times_average.append([float(l.split("ms")[1].split("g ")[1])])
                             leanSAT_bb_times_average.append([float(l.split("ms")[2].split("g ")[1])])
                             leanSAT_sat_times_average.append([float(l.split("ms")[3].split("g ")[1])])
-                            leanSAT_lrats_times_average.append([float(l.split("ms")[4].split("g ")[1])])
+                            leanSAT_lratt_times_average.append([float(l.split("ms")[4].split("g ")[1])])
                             leanSAT_lratc_times_average.append([float(l.split("ms")[5].split("g ")[1])])
                         else: 
                             leanSAT_tot_times_average[thm].append(tot)
                             leanSAT_rw_times_average[thm].append(float(l.split("ms")[1].split("g ")[1]))
                             leanSAT_bb_times_average[thm].append(float(l.split("ms")[2].split("g ")[1]))
                             leanSAT_sat_times_average[thm].append(float(l.split("ms")[3].split("g ")[1]))
-                            leanSAT_lrats_times_average[thm].append(float(l.split("ms")[4].split("g ")[1]))
+                            leanSAT_lratt_times_average[thm].append(float(l.split("ms")[4].split("g ")[1]))
                             leanSAT_lratc_times_average[thm].append(float(l.split("ms")[5].split("g ")[1]))
                         thm = thm + 1
                     elif "Bitwuzla" in l:
@@ -92,7 +92,7 @@ for file in os.listdir(benchmark_dir):
             leanSAT_rw_times = []
             leanSAT_bb_times = []
             leanSAT_sat_times = []
-            leanSAT_lrats_times = []
+            leanSAT_lratt_times = []
             leanSAT_lratc_times = []
 
             for thm in bitwuzla_times_average: 
@@ -110,8 +110,8 @@ for file in os.listdir(benchmark_dir):
             for thm in leanSAT_sat_times_average: 
                 leanSAT_sat_times.append(np.mean(thm))
 
-            for thm in leanSAT_lrats_times_average: 
-                leanSAT_lrats_times.append(np.mean(thm))
+            for thm in leanSAT_lratt_times_average: 
+                leanSAT_lratt_times.append(np.mean(thm))
 
             for thm in leanSAT_lratc_times_average: 
                 leanSAT_lratc_times.append(np.mean(thm))
@@ -121,7 +121,7 @@ for file in os.listdir(benchmark_dir):
             data[file]['leanSAT-rw'][str(bvw)] = leanSAT_rw_times
             data[file]['leanSAT-bb'][str(bvw)] = leanSAT_bb_times
             data[file]['leanSAT-sat'][str(bvw)] = leanSAT_sat_times
-            data[file]['leanSAT-lrats'][str(bvw)] = leanSAT_lrats_times
+            data[file]['leanSAT-lratt'][str(bvw)] = leanSAT_lratt_times
             data[file]['leanSAT-lratc'][str(bvw)] = leanSAT_lratc_times
 
 # plot
@@ -138,11 +138,12 @@ def bar_bw_impact(data, bm, tool):
         if (np.max(data[bm][tool][str(bvw)])> max):
             max = np.max(data[bm][tool][str(bvw)])
     # Labels and legend
-    plt.xlabel("Theorems")
-    plt.ylabel("Time [ms]", rotation='horizontal', ha='left', y = 1)
-    plt.xticks(np.arange(len(data[bm][tool][str(bvw)])))
+    plt.xlabel("Theorems", fontsize=16)
+    plt.ylabel("Time [ms]", rotation='horizontal', ha='left', y = 1, fontsize=16)
+    plt.xticks(np.arange(len(data[bm][tool][str(bvw)])), fontsize=12)
+    plt.yticks(fontsize=16)
     # plt.title(tool+' proving time - '+bm)
-    plt.legend(loc = 'upper center', ncols = len(bv_width), frameon=False)
+    plt.legend(loc = 'upper center', ncols = 3, frameon=False, fontsize=14)
     plt.ylim(0, max * 1.15) 
     plt.tight_layout()
     plt.savefig(dir+tool+'_'+bm.split(".")[0]+'.pdf', dpi = 500)
@@ -153,16 +154,17 @@ def compare_tools_same_bw(data, bm, tool1, tool2, bvw):
     plt.figure()
     plt.rc('axes.spines', **{'bottom':True, 'left':True, 'right':False, 'top':False})
     max = np.max(data[bm][tool1][str(bvw)])
-    plt.plot(np.arange(len(data[bm][tool1][str(bvw)])), data[bm][tool1][str(bvw)], color=col[0], label = tool1)
-    plt.plot(np.arange(len(data[bm][tool2][str(bvw)])), data[bm][tool2][str(bvw)], color=col[3], label = tool2)
+    plt.plot(np.arange(len(data[bm][tool1][str(bvw)])), data[bm][tool1][str(bvw)], color=col[0], label = 'Bitwuzla')
+    plt.plot(np.arange(len(data[bm][tool2][str(bvw)])), data[bm][tool2][str(bvw)], color=col[3], label = 'bv_decide')
     if (np.max(data[bm][tool2][str(bvw)])> max):
         max = np.max(data[bm][tool2][str(bvw)])
     # Labels and legend
-    plt.xlabel("Theorems")
-    plt.ylabel("Time [ms]", rotation='horizontal', ha='left', y = 1)
-    plt.xticks(np.arange(len(data[bm][tool1][str(bvw)])))
+    plt.xlabel("Theorems", fontsize=16)
+    plt.ylabel("Time [ms]", rotation='horizontal', ha='left', y = 1, fontsize=16)
+    plt.xticks(np.arange(len(data[bm][tool1][str(bvw)])), fontsize=12)
+    plt.yticks(fontsize=16)
     # plt.title(tool1+' vs. '+tool2+' proving time - '+bm)
-    plt.legend(loc = 'upper center', ncols = len(bv_width), frameon=False)
+    plt.legend(loc = 'upper center', ncols = 3, frameon=False, fontsize=14)
     plt.ylim(0, max * 1.15) 
     plt.tight_layout()
     plt.savefig(dir+tool1+'_'+tool2+'_'+bm.split(".")[0]+'_'+str(bvw)+'.pdf', dpi = 500)
@@ -180,11 +182,12 @@ def compare_tools_diff_bw(data, bm, tool1, tool2):
         if (np.max(np.subtract(data[bm][tool1][str(bvw)], data[bm][tool2][str(bvw)]))> max):
             max = np.max(np.subtract(data[bm][tool1][str(bvw)], data[bm][tool2][str(bvw)]))
     # Labels and legend
-    plt.xlabel("Theorems")
-    plt.ylabel("Time [ms]", rotation='horizontal', ha='left', y = 1)
-    plt.xticks(np.arange(len(data[bm][tool][str(bvw)])))
+    plt.xlabel("Theorems", fontsize=16)
+    plt.ylabel("Time [ms]", rotation='horizontal', ha='left', y = 1, fontsize=16)
+    plt.xticks(np.arange(len(data[bm][tool][str(bvw)])), fontsize=12)
+    plt.yticks(fontsize=16)
     # plt.title(tool1+' vs. '+tool2+' diff - '+bm)
-    plt.legend(loc = 'upper center', ncols = len(bv_width), frameon=False)
+    plt.legend(loc = 'upper center', ncols = 3, frameon=False, fontsize=14)
     plt.tight_layout()
     plt.savefig(dir+tool1+'_'+tool2+'_diff_'+bm.split(".")[0]+'.pdf', dpi = 500)
     plt.close()
@@ -198,29 +201,30 @@ def leanSAT_tot_stacked(data, bm, bvw):
     plt.figure()
     plt.rc('axes.spines', **{'bottom':True, 'left':True, 'right':False, 'top':False})
     # Plot the total times (non-stacked)
-    plt.bar(x - width/2, data[bm]['leanSAT'][str(bvw)], width, label='leanSAT', color=col[0])
+    plt.bar(x - width/2, data[bm]['leanSAT'][str(bvw)], width, label='bv_decide', color=col[0])
 
     # Plot the stacked bars
     plt.bar(x + width/2, data[bm]['leanSAT-rw'][str(bvw)], width, label='rw', bottom=np.zeros_like(data[bm]['leanSAT-rw'][str(bvw)]), color=col[1])
     plt.bar(x + width/2, data[bm]['leanSAT-bb'][str(bvw)], width, label='bb', bottom=data[bm]['leanSAT-rw'][str(bvw)], color=col[2])
     plt.bar(x + width/2, data[bm]['leanSAT-sat'][str(bvw)], width, label='sat', bottom=np.array(data[bm]['leanSAT-rw'][str(bvw)]) + np.array(data[bm]['leanSAT-bb'][str(bvw)]), color=col[3])
-    plt.bar(x + width/2, data[bm]['leanSAT-lrats'][str(bvw)], width, label='lrat-s', bottom=np.array(data[bm]['leanSAT-rw'][str(bvw)]) + np.array(data[bm]['leanSAT-bb'][str(bvw)]) 
+    plt.bar(x + width/2, data[bm]['leanSAT-lratt'][str(bvw)], width, label='lrat-t', bottom=np.array(data[bm]['leanSAT-rw'][str(bvw)]) + np.array(data[bm]['leanSAT-bb'][str(bvw)]) 
                                     + np.array(data[bm]['leanSAT-sat'][str(bvw)]), color=col[4])
     plt.bar(x + width/2, data[bm]['leanSAT-lratc'][str(bvw)], width, label='lrat-c', bottom=np.array(data[bm]['leanSAT-rw'][str(bvw)]) + np.array(data[bm]['leanSAT-bb'][str(bvw)]) 
-                                    + np.array(data[bm]['leanSAT-sat'][str(bvw)]) + np.array(data[bm]['leanSAT-lrats'][str(bvw)]), color=col[5])
+                                    + np.array(data[bm]['leanSAT-sat'][str(bvw)]) + np.array(data[bm]['leanSAT-lratt'][str(bvw)]), color=col[5])
     
 
     # Set the x-axis labels and tick positions
-    plt.xticks(x)
+    plt.xticks(x, fontsize=12)
 
     # Set axis labels and title
-    plt.xlabel('Theorems')
-    plt.ylabel('Time [ms]', rotation='horizontal', ha='left', y = 1)
+    plt.xlabel('Theorems', fontsize=16)
+    plt.ylabel('Time [ms]', rotation='horizontal', ha='left', y = 1, fontsize=16)
+    plt.yticks(fontsize=16)
 
     # plt.title('leanSAT Total vs Stacked Components')
 
     # Add a legend
-    plt.legend(frameon=False)
+    plt.legend(frameon=False, fontsize=14, ncols = 3)
 
     # Show the plot
     plt.tight_layout()
@@ -247,12 +251,12 @@ def cumul_solving_time_same_bvw(data, tool1, tool2,  bm, bvw):
 
     plt.figure()
     plt.rc('axes.spines', **{'bottom':True, 'left':True, 'right':False, 'top':False})
-    plt.plot(cumtime1, np.arange(0, len(data[bm][tool1][str(bvw)])+1), marker = 'o', color=col[0], label = tool1)
-    plt.plot(cumtime2, np.arange(0, len(data[bm][tool2][str(bvw)])+1), marker = 'x', color=col[3], label = tool2)
+    plt.plot(cumtime1, np.arange(0, len(data[bm][tool1][str(bvw)])+1), marker = 'o', color=col[0], label = 'Bitwuzla')
+    plt.plot(cumtime2, np.arange(0, len(data[bm][tool2][str(bvw)])+1), marker = 'x', color=col[3], label = 'bv_decide')
 
     # Add labels and title
-    plt.xlabel('Time [ms]')
-    plt.ylabel('Problems\nsolved', rotation='horizontal', ha='left', y = 1)
+    plt.xlabel('Time [ms]', fontsize=16)
+    plt.ylabel('Problems solved', rotation='horizontal', ha='center', y = 1, fontsize=16)
 
     # plt.title('Problems solved - '+tool1+" vs. "+tool2+" "+bm)
     if tot_time < 250:
@@ -263,8 +267,11 @@ def cumul_solving_time_same_bvw(data, tool1, tool2,  bm, bvw):
         step = 250
     else:
         step = 500
-    plt.xticks(np.arange(0, tot_time+10, step))  # Show ticks for each time point
-    plt.legend(frameon=False)
+    plt.xticks(np.arange(0, tot_time+10, step), fontsize=12)  # Show ticks for each time point
+    plt.yticks(fontsize=16)
+    plt.legend(frameon=False, fontsize=16, ncols = 3)
+    plt.tight_layout()
+
     plt.savefig(dir+'cumul_problems_bv'+str(bvw)+'_'+bm.split(".")[0]+'.pdf', dpi = 500)
     plt.close()
 

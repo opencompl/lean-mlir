@@ -180,8 +180,14 @@ for file in os.listdir(benchmark_dir):
 
 
 print("leanSAT solved: "+str(thmTot))
-print("errors: "+str(errTot))
-print("theorems in total: "+str(errTot+thmTot))
+print("errors raised: "+str(errTot))
+
+
+err_a = np.array(err_loc_tot)
+unique_elements, counts = np.unique(err_a, return_counts=True)
+duplicates = unique_elements[counts > 1]
+
+print("Duplicate elements:", duplicates)
 
 df_err = pd.DataFrame({'locations':err_loc_tot, 'err-msg':err_msg_tot})
 

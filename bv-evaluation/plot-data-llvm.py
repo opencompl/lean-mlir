@@ -86,7 +86,7 @@ def cumul_solving_time(df, tool1, tool2, filename):
 
     # Add labels and title
     plt.xlabel('Time [ms]', fontsize = 15)
-    plt.ylabel('Problems solved', rotation='horizontal', ha='left', y = 1, fontsize = 15)
+    plt.ylabel('Problems solved', rotation='horizontal', ha='center', y = 1, fontsize = 15)
 
     # plt.title('Problems solved - '+tool1+" vs. "+tool2+" "+bm)
     if tot_time < 250:
@@ -101,6 +101,8 @@ def cumul_solving_time(df, tool1, tool2, filename):
     plt.yticks(fontsize=14) 
 
     plt.legend(frameon=False, fontsize = 15)
+    plt.tight_layout()
+
     plt.savefig(dir+filename, dpi = 500)
     plt.close()
 
