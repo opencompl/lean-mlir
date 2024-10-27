@@ -45,6 +45,9 @@ print('\n\nslowest theorems:')
 for thm in range(10):
     print(df_slowest.iloc[thm])
 
+print('\n\nA proof was found for '+str(len(df))+' theorems')
+
+
 ceg_sum_steps = np.array(df_ceg['leanSAT-rw'])+np.array(df_ceg['leanSAT-sat'])
 ceg_diff = np.array(df_ceg['leanSAT']-ceg_sum_steps)/np.array(df_ceg['leanSAT'])
 
@@ -76,14 +79,14 @@ def cumul_solving_time(df, tool1, tool2, filename):
     else:
         tot_time = cumtime2[-1]
 
-    plt.figure()
+    plt.figure(figsize =(8, 5))
     plt.rc('axes.spines', **{'bottom':True, 'left':True, 'right':False, 'top':False})
-    plt.plot(cumtime1, np.arange(0, len(sorted1)+1), marker = 'o', color=col[0], label = tool1)
-    plt.plot(cumtime2, np.arange(0, len(sorted2)+1), marker = 'x', color=col[3], label = tool2)
+    plt.plot(cumtime1, np.arange(0, len(sorted1)+1), marker = 'o', color=col[0], label = 'Bitwuzla')
+    plt.plot(cumtime2, np.arange(0, len(sorted2)+1), marker = 'x', color=col[3], label = 'bv_decide')
 
     # Add labels and title
-    plt.xlabel('Time [ms]')
-    plt.ylabel('Problems\nsolved', rotation='horizontal', ha='left', y = 1)
+    plt.xlabel('Time [ms]', fontsize = 15)
+    plt.ylabel('Problems solved', rotation='horizontal', ha='left', y = 1, fontsize = 15)
 
     # plt.title('Problems solved - '+tool1+" vs. "+tool2+" "+bm)
     if tot_time < 250:
@@ -94,11 +97,13 @@ def cumul_solving_time(df, tool1, tool2, filename):
         step = 250
     else:
         step = 1000
-    plt.xticks(np.arange(0, tot_time+10, step))  # Show ticks for each time point
-    plt.legend(frameon=False)
+    plt.xticks(np.arange(0, tot_time+10, step), fontsize=14) 
+    plt.yticks(fontsize=14) 
+
+    plt.legend(frameon=False, fontsize = 15)
     plt.savefig(dir+filename, dpi = 500)
     plt.close()
 
 
-cumul_solving_time(df, 'leanSAT', 'bitwuzla', 'llvm-cumul.pdf')
-cumul_solving_time(df_ceg, 'leanSAT', 'bitwuzla', 'llvm-ceg-cumul.pdf')
+cumul_solving_time(df, 'bv_decide', 'BitWuzla', 'llvm-cumul.pdf')
+cumul_solving_time(df_ceg, 'bv_decide', 'BitWuzla', 'llvm-ceg-cumul.pdf')

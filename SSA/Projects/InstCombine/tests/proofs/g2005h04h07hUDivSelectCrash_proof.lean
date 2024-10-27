@@ -17,4 +17,3 @@ theorem test_thm (x : BitVec 1) (x_1 : BitVec 32) :
       | some { toFin := ⟨1, ⋯⟩ } => some 3#32
       | some { toFin := ⟨0, ⋯⟩ } => some 0#32)
       fun y' => if 32#32 ≤ y' then none else some (x_1 >>> y'.toNat) := sorry
-

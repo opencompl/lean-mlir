@@ -35,6 +35,9 @@ errTot = 0
 bw_counter = 0
 ls_counter = 0
 
+err_loc_tot = []
+err_msg_tot = []
+
 
 for file in os.listdir(benchmark_dir):
 
@@ -62,6 +65,9 @@ for file in os.listdir(benchmark_dir):
 
         # collect the numbers for all repetitions
         for r in range(reps):
+            err_locations = []
+            err_msg = []
+
             res_file = open(res_dir+file.split(".")[0]+"_r"+str(r)+".txt")
             # print(res_dir+file.split(".")[0]+"_r"+str(r)+".txt")
             ls = 0
@@ -136,8 +142,13 @@ for file in os.listdir(benchmark_dir):
                                 del counter_lineNumbers[-1]
                             elif "counter example" in l and not ceg: 
                                 print("leanSAT found a counterexample, bitwuzla proved  "+file + theoremName)
-                    else : 
-                        errs = errs + 1  
+                elif ("error:" in l and "Lean" not in l):
+                    err_locations.append(l.split(" ")[1])
+                    err_msg.append(l.split(": ")[2][0:-1])
+                    errs = errs + 1  
+
+
+
                 l = res_file.readline()
         
         # for every solved theorem in the file add an entry to the dataframe
@@ -160,6 +171,10 @@ for file in os.listdir(benchmark_dir):
                 counter_leanSAT_rw.append(np.mean(counter_leanSAT_rw_times_average[id]))
                 counter_leanSAT_sat.append (np.mean(counter_leanSAT_sat_times_average[id]))
 
+        for el in err_locations:
+            err_loc_tot.append(el.split("/")[-1])
+            err_msg_tot.append(err_msg[err_locations.index(el)])
+
         thmTot += ls 
         errTot += errs
 
@@ -167,6 +182,18 @@ for file in os.listdir(benchmark_dir):
 print("leanSAT solved: "+str(thmTot))
 print("errors: "+str(errTot))
 print("theorems in total: "+str(errTot+thmTot))
+
+df_err = pd.DataFrame({'locations':err_loc_tot, 'err-msg':err_msg_tot})
+
+msg_counts = df_err['err-msg'].value_counts()
+
+df_err = df_err.assign(msg_count=df_err['err-msg'].map(msg_counts)).sort_values(by=['msg_count', 'err-msg'], ascending=[False, True])
+
+df_err_sorted = df_err.drop(columns='msg_count')
+
+df_err_sorted.to_csv('raw-data/err-llvm.csv')
+
+
 
 df = pd.DataFrame({'locations':locations, 'bitwuzla':bitwuzla, 'leanSAT':leanSAT,
                     'leanSAT-rw':leanSAT_rw, 'leanSAT-bb':leanSAT_bb, 'leanSAT-sat':leanSAT_sat, 
