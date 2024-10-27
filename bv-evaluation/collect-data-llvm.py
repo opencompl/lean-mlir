@@ -152,7 +152,7 @@ for file in os.listdir(benchmark_dir):
             leanSAT_lrat_c.append(np.mean(leanSAT_lrat_c_times_average[id]))
 
 
-        if(len(counter_bitwuzla)>0):
+        if(ceg_bw>0):
             for id in range(len(counter_lineNumbers)): 
                 counter_locations.append(file+':'+counter_lineNumbers[id])
                 counter_bitwuzla.append(np.mean(counter_bitwuzla_times_average[id]))
@@ -171,16 +171,6 @@ print("theorems in total: "+str(errTot+thmTot))
 df = pd.DataFrame({'locations':locations, 'bitwuzla':bitwuzla, 'leanSAT':leanSAT,
                     'leanSAT-rw':leanSAT_rw, 'leanSAT-bb':leanSAT_bb, 'leanSAT-sat':leanSAT_sat, 
                     'leanSAT-lrat-t':leanSAT_lrat_t, 'leanSAT-lrat-c':leanSAT_lrat_c})
-
-print(len(counter_locations))
-print(len(counter_bitwuzla))
-print(len(counter_leanSAT))
-print(len(counter_leanSAT_rw))
-print(len(counter_leanSAT_sat))
-
-
-
-
 
 df_ceg = pd.DataFrame({'locations':counter_locations, 'bitwuzla':counter_bitwuzla, 'leanSAT':counter_leanSAT,
                     'leanSAT-rw':counter_leanSAT_rw, 'leanSAT-sat':counter_leanSAT_sat})
