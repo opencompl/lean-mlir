@@ -1,7 +1,7 @@
-⚠ [665/885] Replayed SSA.Core.ErasedContext
+⚠ [667/887] Replayed SSA.Core.ErasedContext
 warning: ././././SSA/Core/ErasedContext.lean:325:14: unused variable `t`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [672/885] Replayed SSA.Core.Framework
+⚠ [674/887] Replayed SSA.Core.Framework
 warning: ././././SSA/Core/Framework.lean:1826:9: unused variable `inst`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
 warning: ././././SSA/Core/Framework.lean:1833:75: unused variable `inst`
@@ -10,15 +10,15 @@ warning: ././././SSA/Core/Framework.lean:2083:31: unused variable `x`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
 warning: ././././SSA/Core/Framework.lean:2084:33: unused variable `x`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [685/885] Replayed SSA.Core.MLIRSyntax.AST
+⚠ [687/887] Replayed SSA.Core.MLIRSyntax.AST
 warning: ././././SSA/Core/MLIRSyntax/AST.lean:40:4: The namespace 'SSAVal' is duplicated in the declaration 'MLIR.AST.SSAVal.SSAVal'
 note: this linter can be disabled with `set_option linter.dupNamespace false`
-⚠ [867/885] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+⚠ [869/887] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
-⚠ [871/885] Replayed SSA.Experimental.Bits.Fast.Tactic
+⚠ [873/887] Replayed SSA.Experimental.Bits.Fast.Tactic
 warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
-⚠ [872/885] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+⚠ [874/887] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
@@ -29,14 +29,14 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaratio
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
-⚠ [878/885] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+⚠ [880/887] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
-⚠ [879/885] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+⚠ [881/887] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-ℹ [885/885] Built SSA.Projects.InstCombine.tests.proofs.g2008h07h11hRemAnd_proof
-info: ././././SSA/Projects/InstCombine/tests/proofs/g2008h07h11hRemAnd_proof.lean:7:83: Bitwuzla proved the goal after 81.000000ms
-LeanSAT proved the goal after 170.000000ms: rewriting 14.317875ms, bitblasting 41.023792ms, SAT solving 59.298958ms, LRAT processing 0.000000ms
+ℹ [887/887] Replayed SSA.Projects.InstCombine.tests.proofs.g2008h07h11hRemAnd_proof
+info: ././././SSA/Projects/InstCombine/tests/proofs/g2008h07h11hRemAnd_proof.lean:7:83: Bitwuzla proved the goal after 82.000000ms
+LeanSAT proved the goal after 173.000000ms: rewriting 13.748625ms, bitblasting 41.461541ms, SAT solving 59.834250ms, LRAT trimming 0.000000ms, LRAT checking 48.631041ms
 Build completed successfully.

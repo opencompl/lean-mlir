@@ -1,7 +1,7 @@
-⚠ [665/885] Replayed SSA.Core.ErasedContext
+⚠ [667/887] Replayed SSA.Core.ErasedContext
 warning: ././././SSA/Core/ErasedContext.lean:325:14: unused variable `t`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [672/885] Replayed SSA.Core.Framework
+⚠ [674/887] Replayed SSA.Core.Framework
 warning: ././././SSA/Core/Framework.lean:1826:9: unused variable `inst`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
 warning: ././././SSA/Core/Framework.lean:1833:75: unused variable `inst`
@@ -10,15 +10,15 @@ warning: ././././SSA/Core/Framework.lean:2083:31: unused variable `x`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
 warning: ././././SSA/Core/Framework.lean:2084:33: unused variable `x`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [685/885] Replayed SSA.Core.MLIRSyntax.AST
+⚠ [687/887] Replayed SSA.Core.MLIRSyntax.AST
 warning: ././././SSA/Core/MLIRSyntax/AST.lean:40:4: The namespace 'SSAVal' is duplicated in the declaration 'MLIR.AST.SSAVal.SSAVal'
 note: this linter can be disabled with `set_option linter.dupNamespace false`
-⚠ [867/885] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+⚠ [869/887] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
-⚠ [871/885] Replayed SSA.Experimental.Bits.Fast.Tactic
+⚠ [873/887] Replayed SSA.Experimental.Bits.Fast.Tactic
 warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
-⚠ [872/885] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+⚠ [874/887] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
@@ -29,48 +29,48 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaratio
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
-⚠ [878/885] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+⚠ [880/887] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
-⚠ [879/885] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+⚠ [881/887] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-ℹ [885/885] Built SSA.Projects.InstCombine.tests.proofs.gpullhbinophthroughhshift_proof
-info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:7:108: Bitwuzla proved the goal after 75.000000ms
-LeanSAT proved the goal after 75.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 60.995041ms, LRAT processing 0.000000ms
-info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:9:110: Bitwuzla proved the goal after 72.000000ms
-LeanSAT proved the goal after 74.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.132333ms, LRAT processing 0.000000ms
+ℹ [887/887] Replayed SSA.Projects.InstCombine.tests.proofs.gpullhbinophthroughhshift_proof
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:7:108: Bitwuzla proved the goal after 77.000000ms
+LeanSAT proved the goal after 76.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.820167ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:9:110: Bitwuzla proved the goal after 74.000000ms
+LeanSAT proved the goal after 72.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 59.434166ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
 info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:11:107: Bitwuzla proved the goal after 74.000000ms
-LeanSAT proved the goal after 69.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 57.164708ms, LRAT processing 0.000000ms
-info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:13:109: Bitwuzla proved the goal after 73.000000ms
-LeanSAT proved the goal after 73.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.198291ms, LRAT processing 0.000000ms
-info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:15:108: Bitwuzla proved the goal after 73.000000ms
-LeanSAT proved the goal after 73.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.260666ms, LRAT processing 0.000000ms
+LeanSAT proved the goal after 74.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.536667ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:13:109: Bitwuzla proved the goal after 75.000000ms
+LeanSAT proved the goal after 69.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 57.847708ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:15:108: Bitwuzla proved the goal after 70.000000ms
+LeanSAT proved the goal after 69.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 57.090958ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
 info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:17:110: Bitwuzla proved the goal after 74.000000ms
-LeanSAT proved the goal after 73.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.244292ms, LRAT processing 0.000000ms
-info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:19:107: Bitwuzla proved the goal after 73.000000ms
-LeanSAT proved the goal after 69.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 57.604666ms, LRAT processing 0.000000ms
-info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:21:108: Bitwuzla proved the goal after 71.000000ms
-LeanSAT proved the goal after 74.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.084667ms, LRAT processing 0.000000ms
-info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:23:106: Bitwuzla proved the goal after 73.000000ms
-LeanSAT proved the goal after 69.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 57.495625ms, LRAT processing 0.000000ms
-info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:25:107: Bitwuzla proved the goal after 72.000000ms
-LeanSAT proved the goal after 72.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.100041ms, LRAT processing 0.000000ms
-info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:27:107: Bitwuzla proved the goal after 74.000000ms
-LeanSAT proved the goal after 71.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 60.209083ms, LRAT processing 0.000000ms
-info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:29:108: Bitwuzla proved the goal after 74.000000ms
-LeanSAT proved the goal after 73.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 59.920542ms, LRAT processing 0.000000ms
-info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:31:125: Bitwuzla proved the goal after 72.000000ms
-LeanSAT proved the goal after 71.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 60.846209ms, LRAT processing 0.000000ms
+LeanSAT proved the goal after 74.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.370916ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:19:107: Bitwuzla proved the goal after 76.000000ms
+LeanSAT proved the goal after 74.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.701625ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:21:108: Bitwuzla proved the goal after 73.000000ms
+LeanSAT proved the goal after 70.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 57.480291ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:23:106: Bitwuzla proved the goal after 74.000000ms
+LeanSAT proved the goal after 69.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 57.139625ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:25:107: Bitwuzla proved the goal after 71.000000ms
+LeanSAT proved the goal after 74.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.861709ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:27:107: Bitwuzla proved the goal after 71.000000ms
+LeanSAT proved the goal after 77.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 58.976208ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:29:108: Bitwuzla proved the goal after 75.000000ms
+LeanSAT proved the goal after 74.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.650334ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:31:125: Bitwuzla proved the goal after 71.000000ms
+LeanSAT proved the goal after 73.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.834834ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
 info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:33:116: Bitwuzla proved the goal after 75.000000ms
-LeanSAT proved the goal after 73.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.078792ms, LRAT processing 0.000000ms
-info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:35:116: Bitwuzla proved the goal after 73.000000ms
-LeanSAT proved the goal after 71.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 60.740500ms, LRAT processing 0.000000ms
-info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:37:123: Bitwuzla proved the goal after 69.000000ms
-LeanSAT proved the goal after 69.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 60.904375ms, LRAT processing 0.000000ms
-info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:39:125: Bitwuzla proved the goal after 70.000000ms
-LeanSAT proved the goal after 69.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 60.634667ms, LRAT processing 0.000000ms
-info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:41:124: Bitwuzla proved the goal after 108.000000ms
-LeanSAT proved the goal after 71.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 58.973791ms, LRAT processing 0.000000ms
+LeanSAT proved the goal after 74.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.577667ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:35:116: Bitwuzla proved the goal after 70.000000ms
+LeanSAT proved the goal after 72.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.542292ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:37:123: Bitwuzla proved the goal after 72.000000ms
+LeanSAT proved the goal after 68.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 57.490583ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:39:125: Bitwuzla proved the goal after 72.000000ms
+LeanSAT proved the goal after 71.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.260166ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gpullhbinophthroughhshift_proof.lean:41:124: Bitwuzla proved the goal after 72.000000ms
+LeanSAT proved the goal after 71.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.756791ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
 Build completed successfully.

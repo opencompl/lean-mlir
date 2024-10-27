@@ -1,7 +1,7 @@
-⚠ [665/885] Replayed SSA.Core.ErasedContext
+⚠ [667/887] Replayed SSA.Core.ErasedContext
 warning: ././././SSA/Core/ErasedContext.lean:325:14: unused variable `t`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [672/885] Replayed SSA.Core.Framework
+⚠ [674/887] Replayed SSA.Core.Framework
 warning: ././././SSA/Core/Framework.lean:1826:9: unused variable `inst`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
 warning: ././././SSA/Core/Framework.lean:1833:75: unused variable `inst`
@@ -10,15 +10,15 @@ warning: ././././SSA/Core/Framework.lean:2083:31: unused variable `x`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
 warning: ././././SSA/Core/Framework.lean:2084:33: unused variable `x`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [685/885] Replayed SSA.Core.MLIRSyntax.AST
+⚠ [687/887] Replayed SSA.Core.MLIRSyntax.AST
 warning: ././././SSA/Core/MLIRSyntax/AST.lean:40:4: The namespace 'SSAVal' is duplicated in the declaration 'MLIR.AST.SSAVal.SSAVal'
 note: this linter can be disabled with `set_option linter.dupNamespace false`
-⚠ [867/885] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+⚠ [869/887] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
-⚠ [871/885] Replayed SSA.Experimental.Bits.Fast.Tactic
+⚠ [873/887] Replayed SSA.Experimental.Bits.Fast.Tactic
 warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
-⚠ [872/885] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+⚠ [874/887] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
@@ -29,41 +29,62 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaratio
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
-⚠ [878/885] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+⚠ [880/887] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
-⚠ [879/885] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+⚠ [881/887] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-✖ [885/885] Building SSA.Projects.InstCombine.tests.proofs.gapinthshift_proof
-trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib DYLD_LIBRARY_PATH= /Users/luisa/.elan/toolchains/leanprover--lean4---nightly-2024-10-24/bin/lean ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.c --json
-info: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:7:68: Bitwuzla proved the goal after 71.000000ms
-LeanSAT proved the goal after 332.000000ms: rewriting 0.000000ms, bitblasting 20.437542ms, SAT solving 113.845958ms, LRAT processing 60.028625ms
-info: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:9:71: Bitwuzla proved the goal after 73.000000ms
-LeanSAT proved the goal after 326.000000ms: rewriting 0.000000ms, bitblasting 19.797250ms, SAT solving 116.078292ms, LRAT processing 56.754666ms
-info: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:11:55: Bitwuzla proved the goal after 71.000000ms
-LeanSAT proved the goal after 69.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 60.850750ms, LRAT processing 0.000000ms
-info: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:13:71: Bitwuzla proved the goal after 74.000000ms
-LeanSAT proved the goal after 73.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.251417ms, LRAT processing 0.000000ms
-info: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:15:94: Bitwuzla proved the goal after 76.000000ms
-LeanSAT proved the goal after 102.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.787250ms, LRAT processing 0.000000ms
-info: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:17:92: Bitwuzla proved the goal after 73.000000ms
-LeanSAT proved the goal after 71.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.223042ms, LRAT processing 0.000000ms
-info: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:19:99: Bitwuzla proved the goal after 74.000000ms
-LeanSAT proved the goal after 93.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 62.338542ms, LRAT processing 0.000000ms
-info: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:21:107: Bitwuzla proved the goal after 77.000000ms
-LeanSAT proved the goal after 73.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 59.600917ms, LRAT processing 0.000000ms
-info: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:23:86: Bitwuzla proved the goal after 72.000000ms
-LeanSAT proved the goal after 75.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.724208ms, LRAT processing 0.000000ms
-error: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:29:28: invalid pattern
-error: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:34:26: invalid pattern
-error: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:35:50: None of the hypotheses are in the supported BitVec fragment.
+✖ [887/887] Building SSA.Projects.InstCombine.tests.proofs.gapinthshift_proof
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib DYLD_LIBRARY_PATH= /Users/luisa/.elan/toolchains/leanprover--lean4---nightly-2024-10-25/bin/lean ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.c --json
+info: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:7:68: Bitwuzla proved the goal after 73.000000ms
+LeanSAT proved the goal after 331.000000ms: rewriting 0.000000ms, bitblasting 20.072041ms, SAT solving 113.169625ms, LRAT trimming 59.065042ms, LRAT checking 107.445459ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:9:71: Bitwuzla proved the goal after 72.000000ms
+LeanSAT proved the goal after 337.000000ms: rewriting 0.000000ms, bitblasting 21.760208ms, SAT solving 112.381583ms, LRAT trimming 58.371000ms, LRAT checking 112.451916ms
+error: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:13:28: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:35:50: [Meta.Tactic.bv] Running preprocessing pipeline on:
+info: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:13:28: [Meta.Tactic.bv] Running preprocessing pipeline on:
+    case h
+    x : BitVec 8
+    a✝ :
+      ¬(if 29#29 ≤ BitVec.setWidth 29 x then none else some ((536870911#29).sshiftRight (x.toNat % 536870912))) ⊑
+          some 536870911#29
+    ⊢ False
+[Meta.Tactic.bv] Rerunning pipeline on:
+    case h
+    x : BitVec 8
+    a✝ :
+      ¬(if (!29#29 >ᵤ BitVec.zeroExtend 29 x) = true then none
+          else some ((536870911#29).sshiftRight (x.toNat % 536870912))) ⊑
+          some 536870911#29
+    ⊢ False
+[Meta.Tactic.bv] Pipeline reached a fixpoint
+info: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:15:55: Bitwuzla proved the goal after 72.000000ms
+LeanSAT proved the goal after 70.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 60.832584ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:17:71: Bitwuzla proved the goal after 71.000000ms
+LeanSAT proved the goal after 74.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 62.193791ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:19:94: Bitwuzla proved the goal after 75.000000ms
+LeanSAT proved the goal after 101.000000ms: rewriting 10.278291ms, bitblasting 0.000000ms, SAT solving 58.204458ms, LRAT trimming 0.000000ms, LRAT checking 15.316000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:21:92: Bitwuzla proved the goal after 71.000000ms
+LeanSAT proved the goal after 71.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 60.404958ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:23:99: Bitwuzla proved the goal after 71.000000ms
+LeanSAT proved the goal after 93.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 60.891583ms, LRAT trimming 0.000000ms, LRAT checking 10.322542ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:25:107: Bitwuzla proved the goal after 75.000000ms
+LeanSAT proved the goal after 79.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.237042ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:27:86: Bitwuzla proved the goal after 74.000000ms
+LeanSAT proved the goal after 72.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 59.046833ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+error: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:33:28: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:38:26: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:39:50: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:39:50: [Meta.Tactic.bv] Running preprocessing pipeline on:
     case h
     x : BitVec 1
     a✝ : ¬(sorry.bind fun x' => some (x' <<< 2)) ⊑ sorry
@@ -74,10 +95,38 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:35:5
     a✝ : ¬(sorry.bind fun x' => some (x' <<< 2)) ⊑ sorry
     ⊢ False
 [Meta.Tactic.bv] Pipeline reached a fixpoint
-info: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:37:118: Bitwuzla proved the goal after 80.000000ms
-LeanSAT proved the goal after 80.000000ms: rewriting 11.015209ms, bitblasting 0.000000ms, SAT solving 61.930459ms, LRAT processing 0.000000ms
-info: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:40:112: Bitwuzla proved the goal after 76.000000ms
-LeanSAT proved the goal after 81.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.936875ms, LRAT processing 0.000000ms
+error: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:45:28: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:50:26: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:51:52: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:51:52: [bv] [0.018106] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 1
+      a✝ :
+        ¬(sorry.bind fun x_1 =>
+              if 53#53 ≤ BitVec.setWidth 53 x_1 then none else some (64#53 <<< (x_1.toNat % 9007199254740992))) ⊑
+            sorry
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 1
+      a✝ :
+        ¬(sorry.bind fun a =>
+              if (!53#53 >ᵤ BitVec.zeroExtend 53 a) = true then none
+              else some (64#53 <<< (a.toNat % 9007199254740992))) ⊑
+            sorry
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+info: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:53:99: Bitwuzla provided a counter example after 74.000000ms
+LeanSAT proved the goal after 73.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.504250ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:55:118: Bitwuzla proved the goal after 74.000000ms
+LeanSAT proved the goal after 79.000000ms: rewriting 10.965917ms, bitblasting 0.000000ms, SAT solving 61.731292ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gapinthshift_proof.lean:58:112: Bitwuzla proved the goal after 72.000000ms
+LeanSAT proved the goal after 77.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 57.297041ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
 error: Lean exited with code 1
 Some required builds logged failures:
 - SSA.Projects.InstCombine.tests.proofs.gapinthshift_proof

@@ -1,7 +1,7 @@
-⚠ [665/885] Replayed SSA.Core.ErasedContext
+⚠ [667/887] Replayed SSA.Core.ErasedContext
 warning: ././././SSA/Core/ErasedContext.lean:325:14: unused variable `t`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [672/885] Replayed SSA.Core.Framework
+⚠ [674/887] Replayed SSA.Core.Framework
 warning: ././././SSA/Core/Framework.lean:1826:9: unused variable `inst`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
 warning: ././././SSA/Core/Framework.lean:1833:75: unused variable `inst`
@@ -10,15 +10,15 @@ warning: ././././SSA/Core/Framework.lean:2083:31: unused variable `x`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
 warning: ././././SSA/Core/Framework.lean:2084:33: unused variable `x`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [685/885] Replayed SSA.Core.MLIRSyntax.AST
+⚠ [687/887] Replayed SSA.Core.MLIRSyntax.AST
 warning: ././././SSA/Core/MLIRSyntax/AST.lean:40:4: The namespace 'SSAVal' is duplicated in the declaration 'MLIR.AST.SSAVal.SSAVal'
 note: this linter can be disabled with `set_option linter.dupNamespace false`
-⚠ [867/885] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+⚠ [869/887] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
-⚠ [871/885] Replayed SSA.Experimental.Bits.Fast.Tactic
+⚠ [873/887] Replayed SSA.Experimental.Bits.Fast.Tactic
 warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
-⚠ [872/885] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+⚠ [874/887] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
@@ -29,25 +29,177 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaratio
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
-⚠ [878/885] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+⚠ [880/887] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
-⚠ [879/885] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+⚠ [881/887] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-✖ [885/885] Building SSA.Projects.InstCombine.tests.proofs.gshifthshift_proof
-trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib DYLD_LIBRARY_PATH= /Users/luisa/.elan/toolchains/leanprover--lean4---nightly-2024-10-24/bin/lean ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.c --json
-info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:7:60: Bitwuzla proved the goal after 71.000000ms
-LeanSAT proved the goal after 71.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 60.740583ms, LRAT processing 0.000000ms
-info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:9:65: Bitwuzla proved the goal after 71.000000ms
-LeanSAT proved the goal after 71.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.815000ms, LRAT processing 0.000000ms
-error: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:14:89: None of the hypotheses are in the supported BitVec fragment.
+✖ [887/887] Building SSA.Projects.InstCombine.tests.proofs.gshifthshift_proof
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib DYLD_LIBRARY_PATH= /Users/luisa/.elan/toolchains/leanprover--lean4---nightly-2024-10-25/bin/lean ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.c --json
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:7:60: Bitwuzla proved the goal after 73.000000ms
+LeanSAT proved the goal after 78.000000ms: rewriting 11.459333ms, bitblasting 0.000000ms, SAT solving 58.868209ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:9:65: Bitwuzla proved the goal after 75.000000ms
+LeanSAT proved the goal after 77.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 56.775792ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+error: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:11:118: The external prover produced unexpected output, stdout:
+stderr:
+[error] /var/folders/mw/4wzj975d1_s2cxywvdfyyh000000gn/T/tmp.REPHuHDF:3:92: expected terms of same sort at indices 0 and 1 as argument to 'bvshl'
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:11:118: [bv] [0.016324] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 32
+      a✝ : ¬BitVec.setWidth 8 (x >>> 5) <<< 3 = BitVec.setWidth 8 (x >>> 2) &&& 248#8
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 32
+      a✝ : (!BitVec.zeroExtend 8 (x >>> 5) <<< 3 == BitVec.zeroExtend 8 (x >>> 2) &&& 248#8) = true
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+[Meta.Tactic.bv] New atom of width 32: x
+[Meta.Tactic.bv] Reflected bv logical expression: !((<< 3 (zext 8 (>> 5 var0))) == ((zext 8 (>> 2 var0)) && 0xf8#8))
+[bv] [0.067946] Preparing LRAT reflection term
+  [Meta.Tactic.bv] Encoded as SMT: (set-logic QF_BV)
+      (declare-const x_0 (_ BitVec 32))
+      (assert (not (= (bvshl ((_ zero_extend 0) (bvlshr x_0 #b00000000000000000000000000000101)) #b00000011) (bvand ((_ zero_extend 0) (bvlshr x_0 #b00000000000000000000000000000010)) #b11111000))))
+      (check-sat)
+      (exit)
+      
+  [bv] [0.062663] Proving with bitwuzla
+error: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:13:117: The external prover produced unexpected output, stdout:
+stderr:
+[error] /var/folders/mw/4wzj975d1_s2cxywvdfyyh000000gn/T/tmp.aKcznNrG:3:92: expected terms of same sort at indices 0 and 1 as argument to 'bvshl'
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:13:117: [bv] [0.013966] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 32
+      a✝ : ¬BitVec.setWidth 8 (x >>> 3) <<< 5 = BitVec.setWidth 8 x <<< 2 &&& 224#8
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 32
+      a✝ : (!BitVec.zeroExtend 8 (x >>> 3) <<< 5 == BitVec.zeroExtend 8 x <<< 2 &&& 224#8) = true
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+[Meta.Tactic.bv] New atom of width 32: x
+[Meta.Tactic.bv] Reflected bv logical expression: !((<< 5 (zext 8 (>> 3 var0))) == ((<< 2 (zext 8 var0)) && 0xe0#8))
+[bv] [0.063374] Preparing LRAT reflection term
+  [Meta.Tactic.bv] Encoded as SMT: (set-logic QF_BV)
+      (declare-const x_0 (_ BitVec 32))
+      (assert (not (= (bvshl ((_ zero_extend 0) (bvlshr x_0 #b00000000000000000000000000000011)) #b00000101) (bvand (bvshl ((_ zero_extend 0) x_0) #b00000010) #b11100000))))
+      (check-sat)
+      (exit)
+      
+  [bv] [0.060886] Proving with bitwuzla
+error: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:16:93: The external prover produced unexpected output, stdout:
+stderr:
+[error] /var/folders/mw/4wzj975d1_s2cxywvdfyyh000000gn/T/tmp.w6uQOTgw:3:92: expected terms of same sort at indices 0 and 1 as argument to 'bvshl'
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:16:93: [bv] [0.010025] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 32
+      a✝ : ¬BitVec.setWidth 24 (x.sshiftRight 12) <<< 3 = BitVec.setWidth 24 (x.sshiftRight 9) &&& 16777208#24
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 32
+      a✝ :
+        (!BitVec.zeroExtend 24 (x.sshiftRight 12) <<< 3 == BitVec.zeroExtend 24 (x.sshiftRight 9) &&& 16777208#24) =
+          true
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+[Meta.Tactic.bv] New atom of width 32: x
+[Meta.Tactic.bv] Reflected bv logical expression: !((<< 3 (zext 24 (>>a 12 var0))) == ((zext 24 (>>a 9 var0)) && 0xfffff8#24))
+[bv] [0.063202] Preparing LRAT reflection term
+  [Meta.Tactic.bv] Encoded as SMT: (set-logic QF_BV)
+      (declare-const x_0 (_ BitVec 32))
+      (assert (not (= (bvshl ((_ zero_extend 0) (bvashr x_0 #b00000000000000000000000000001100)) #b000000000000000000000011) (bvand ((_ zero_extend 0) (bvashr x_0 #b00000000000000000000000000001001)) #b111111111111111111111000))))
+      (check-sat)
+      (exit)
+      
+  [bv] [0.060058] Proving with bitwuzla
+error: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:19:84: The external prover produced unexpected output, stdout:
+stderr:
+[error] /var/folders/mw/4wzj975d1_s2cxywvdfyyh000000gn/T/tmp.LOCRqihm:3:92: expected terms of same sort at indices 0 and 1 as argument to 'bvshl'
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:19:84: [bv] [0.011323] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 32
+      a✝ : ¬BitVec.setWidth 24 (x.sshiftRight 10) <<< 13 = BitVec.setWidth 24 x <<< 3 &&& 16769024#24
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 32
+      a✝ : (!BitVec.zeroExtend 24 (x.sshiftRight 10) <<< 13 == BitVec.zeroExtend 24 x <<< 3 &&& 16769024#24) = true
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+[Meta.Tactic.bv] New atom of width 32: x
+[Meta.Tactic.bv] Reflected bv logical expression: !((<< 13 (zext 24 (>>a 10 var0))) == ((<< 3 (zext 24 var0)) && 0xffe000#24))
+[bv] [0.064394] Preparing LRAT reflection term
+  [Meta.Tactic.bv] Encoded as SMT: (set-logic QF_BV)
+      (declare-const x_0 (_ BitVec 32))
+      (assert (not (= (bvshl ((_ zero_extend 0) (bvashr x_0 #b00000000000000000000000000001010)) #b000000000000000000001101) (bvand (bvshl ((_ zero_extend 0) x_0) #b000000000000000000000011) #b111111111110000000000000))))
+      (check-sat)
+      (exit)
+      
+  [bv] [0.061642] Proving with bitwuzla
+error: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:21:105: The external prover produced unexpected output, stdout:
+stderr:
+[error] /var/folders/mw/4wzj975d1_s2cxywvdfyyh000000gn/T/tmp.2GU9RGSu:3:91: expected terms of same sort at indices 0 and 1 as argument to 'bvshl'
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:21:105: [bv] [0.013112] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 32
+      a✝ : ¬BitVec.setWidth 8 (x <<< 4) <<< 2 = BitVec.setWidth 8 x <<< 6
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 32
+      a✝ : (!BitVec.zeroExtend 8 (x <<< 4) <<< 2 == BitVec.zeroExtend 8 x <<< 6) = true
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+[Meta.Tactic.bv] New atom of width 32: x
+[Meta.Tactic.bv] Reflected bv logical expression: !((<< 2 (zext 8 (<< 4 var0))) == (<< 6 (zext 8 var0)))
+[bv] [0.063648] Preparing LRAT reflection term
+  [Meta.Tactic.bv] Encoded as SMT: (set-logic QF_BV)
+      (declare-const x_0 (_ BitVec 32))
+      (assert (not (= (bvshl ((_ zero_extend 0) (bvshl x_0 #b00000000000000000000000000000100)) #b00000010) (bvshl ((_ zero_extend 0) x_0) #b00000110))))
+      (check-sat)
+      (exit)
+      
+  [bv] [0.061468] Proving with bitwuzla
+error: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:23:106: The external prover produced unexpected output, stdout:
+stderr:
+[error] /var/folders/mw/4wzj975d1_s2cxywvdfyyh000000gn/T/tmp.09bbUKGG:3:91: expected terms of same sort at indices 0 and 1 as argument to 'bvshl'
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:23:106: [bv] [0.011247] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 32
+      a✝ : ¬BitVec.setWidth 8 (x <<< 2) <<< 4 = BitVec.setWidth 8 x <<< 6
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 32
+      a✝ : (!BitVec.zeroExtend 8 (x <<< 2) <<< 4 == BitVec.zeroExtend 8 x <<< 6) = true
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+[Meta.Tactic.bv] New atom of width 32: x
+[Meta.Tactic.bv] Reflected bv logical expression: !((<< 4 (zext 8 (<< 2 var0))) == (<< 6 (zext 8 var0)))
+[bv] [0.063521] Preparing LRAT reflection term
+  [Meta.Tactic.bv] Encoded as SMT: (set-logic QF_BV)
+      (declare-const x_0 (_ BitVec 32))
+      (assert (not (= (bvshl ((_ zero_extend 0) (bvshl x_0 #b00000000000000000000000000000010)) #b00000100) (bvshl ((_ zero_extend 0) x_0) #b00000110))))
+      (check-sat)
+      (exit)
+      
+  [bv] [0.061310] Proving with bitwuzla
+error: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:28:89: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:14:89: [bv] [0.030217] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:28:89: [bv] [0.029449] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 : BitVec 32
@@ -65,12 +217,12 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:14:8
             if (!32#32 >ᵤ x + 2#32) = true then none else some (x_1 >>> ((x.toNat + 2) % 4294967296))
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-error: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:19:76: None of the hypotheses are in the supported BitVec fragment.
+error: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:33:76: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:19:76: [bv] [0.024130] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:33:76: [bv] [0.024116] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 32
@@ -89,12 +241,12 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:19:7
               if ((a <<< 3).sshiftRight 3 == a) = true then none else some (a <<< 3)
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-error: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:23:103: None of the hypotheses are in the supported BitVec fragment.
+error: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:37:103: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:23:103: [bv] [0.019596] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:37:103: [bv] [0.018984] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 8
@@ -110,12 +262,12 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:23:1
             (if (!8#8 >ᵤ x) = true then none else some (5#8 <<< x.toNat)).bind fun a => some (a ||| 224#8)
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-error: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:27:111: None of the hypotheses are in the supported BitVec fragment.
+error: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:41:111: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:27:111: [bv] [0.021106] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:41:111: [bv] [0.020609] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 16
@@ -132,12 +284,12 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:27:1
             (if (!16#16 >ᵤ x) = true then none else some (2057#16 <<< x.toNat)).bind fun a => some (a &&& 4094#16)
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-error: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:31:103: None of the hypotheses are in the supported BitVec fragment.
+error: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:45:103: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:31:103: [bv] [0.018868] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:45:103: [bv] [0.019569] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 8
@@ -153,12 +305,12 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:31:1
             (if (!8#8 >ᵤ x) = true then none else some (224#8 >>> x.toNat)).bind fun a => some (a ||| 7#8)
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-error: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:36:98: None of the hypotheses are in the supported BitVec fragment.
+error: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:50:98: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:36:98: [bv] [0.031972] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshifthshift_proof.lean:50:98: [bv] [0.034711] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 8

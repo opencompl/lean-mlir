@@ -1,7 +1,7 @@
-⚠ [665/885] Replayed SSA.Core.ErasedContext
+⚠ [667/887] Replayed SSA.Core.ErasedContext
 warning: ././././SSA/Core/ErasedContext.lean:325:14: unused variable `t`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [672/885] Replayed SSA.Core.Framework
+⚠ [674/887] Replayed SSA.Core.Framework
 warning: ././././SSA/Core/Framework.lean:1826:9: unused variable `inst`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
 warning: ././././SSA/Core/Framework.lean:1833:75: unused variable `inst`
@@ -10,15 +10,15 @@ warning: ././././SSA/Core/Framework.lean:2083:31: unused variable `x`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
 warning: ././././SSA/Core/Framework.lean:2084:33: unused variable `x`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [685/885] Replayed SSA.Core.MLIRSyntax.AST
+⚠ [687/887] Replayed SSA.Core.MLIRSyntax.AST
 warning: ././././SSA/Core/MLIRSyntax/AST.lean:40:4: The namespace 'SSAVal' is duplicated in the declaration 'MLIR.AST.SSAVal.SSAVal'
 note: this linter can be disabled with `set_option linter.dupNamespace false`
-⚠ [867/885] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+⚠ [869/887] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
-⚠ [871/885] Replayed SSA.Experimental.Bits.Fast.Tactic
+⚠ [873/887] Replayed SSA.Experimental.Bits.Fast.Tactic
 warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
-⚠ [872/885] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+⚠ [874/887] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
@@ -29,15 +29,15 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaratio
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
-⚠ [878/885] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+⚠ [880/887] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
-⚠ [879/885] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+⚠ [881/887] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-✖ [885/885] Building SSA.Projects.InstCombine.tests.proofs.gadd4_proof
-trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib DYLD_LIBRARY_PATH= /Users/luisa/.elan/toolchains/leanprover--lean4---nightly-2024-10-24/bin/lean ././././SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gadd4_proof.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gadd4_proof.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/proofs/gadd4_proof.c --json
+✖ [887/887] Building SSA.Projects.InstCombine.tests.proofs.gadd4_proof
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib DYLD_LIBRARY_PATH= /Users/luisa/.elan/toolchains/leanprover--lean4---nightly-2024-10-25/bin/lean ././././SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gadd4_proof.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gadd4_proof.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/proofs/gadd4_proof.c --json
 error: ././././SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:7:107: The SAT solver timed out while solving the problem.
 Consider increasing the timeout with `set_option sat.timeout <sec>`.
 If solving your problem relies inherently on using associativity or commutativity, consider enabling the `bv.ac_nf` option.
@@ -54,17 +54,17 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:7:107: [Met
 [Meta.Tactic.bv] Pipeline reached a fixpoint
 [Meta.Tactic.bv] New atom of width 64: x
 [Meta.Tactic.bv] Reflected bv logical expression: !(((var0 %ᵤ 0x000000000000012b#64) + (((var0 /ᵤ 0x000000000000012b#64) %ᵤ 0x0000000000000040#64) * 0x000000000000012b#64)) == (var0 %ᵤ 0x0000000000004ac0#64))
-[bv] [11.308961] Preparing LRAT reflection term
-  [bv] [0.139333] Bitblasting BVLogicalExpr to AIG
+[bv] [11.200957] Preparing LRAT reflection term
+  [bv] [0.143643] Bitblasting BVLogicalExpr to AIG
   [Meta.Tactic.bv] AIG has 260482 nodes.
-  [sat] [0.088835] Converting AIG to CNF
-  [sat] [11.080711] Obtaining external proof certificate
-    [sat] [0.230422] Serializing SAT problem to DIMACS file
-    [sat] [10.849696] Running SAT solver
-info: ././././SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:9:122: Bitwuzla proved the goal after 73.000000ms
-LeanSAT proved the goal after 8453.000000ms: rewriting 11.398750ms, bitblasting 63.957917ms, SAT solving 4788.204750ms, LRAT processing 1630.759958ms
+  [sat] [0.109031] Converting AIG to CNF
+  [sat] [10.948158] Obtaining external proof certificate
+    [sat] [0.224411] Serializing SAT problem to DIMACS file
+    [sat] [10.722294] Running SAT solver
+info: ././././SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:9:122: Bitwuzla proved the goal after 79.000000ms
+LeanSAT proved the goal after 8485.000000ms: rewriting 11.751500ms, bitblasting 66.207583ms, SAT solving 4814.309375ms, LRAT trimming 1601.164042ms, LRAT checking 1791.429750ms
 error: ././././SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:14:43: The SMT solver timed out while solving the problem.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:14:43: [bv] [0.031668] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:14:43: [bv] [0.034600] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 64
@@ -86,20 +86,20 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:14:43: [bv]
   [Meta.Tactic.bv] Pipeline reached a fixpoint
 [Meta.Tactic.bv] New atom of width 64: x
 [Meta.Tactic.bv] Reflected bv logical expression: !((((var0 + ((~ ((var0 /ₛ 0x000000000000012b#64) * 0x000000000000012b#64)) + 0x0000000000000001#64)) + (((var0 /ₛ 0x000000000000012b#64) + ((~ (((var0 /ₛ 0x000000000000012b#64) /ₛ 0x0000000000000040#64) * 0x0000000000000040#64)) + 0x0000000000000001#64)) * 0x000000000000012b#64)) + (((var0 /ₛ 0x0000000000004ac0#64) + ((~ (((var0 /ₛ 0x0000000000004ac0#64) /ₛ 0x0000000000000009#64) * 0x0000000000000009#64)) + 0x0000000000000001#64)) * 0x0000000000004ac0#64)) == (var0 + ((~ ((var0 /ₛ 0x000000000002a0c0#64) * 0x000000000002a0c0#64)) + 0x0000000000000001#64)))
-[bv] [10.863145] Preparing LRAT reflection term
+[bv] [10.743826] Preparing LRAT reflection term
   [Meta.Tactic.bv] Encoded as SMT: (set-logic QF_BV)
       (declare-const x_0 (_ BitVec 64))
-      (assert (not (= (bvadd (bvadd (bvadd x_0 (bvadd (bvnot (bvmul (bvsdiv x_0 #b0000000000000000000000000000000000000000000000000000000100101011) #b0000000000000000000000000000000000000000000000000000000100101011)) #b0000000000000000000000000000000000000000000000000000000000000001)) (bvmul (bvadd (bvsdiv x_0 #b0000000000000000000000000000000000000000000000000000000100101011) (bvadd (bvnot (bvmul (bvsdiv (bvsdiv x_0 #b0000000000000000000000000000000000000000000000000000000100101011) #b0000000000000000000000000000000000000000000000000000000001000000) #b0000000000000000000000000000000000000000000000000000000001000000)) #b0000000000000000000000000000000000000000000000000000000000000001)) #b0000000000000000000000000000000000000000000000000000000100101011)) (bvmul (bvadd (bvsdiv x_0 #b0000000000000000000000000000000000000000000000000100101011000000) (bvadd (bvnot (bvmul (bvsdiv (bvsdiv x_0 #b0000000000000000000000000000000000000000000000000100101011000000) #b0000000000000000000000000000000000000000000000000000000000001001) #b0000000000000000000000000000000000000000000000000000000000001001)) #b0000000000000000000000000000000000000000000000000000000000000001)) #b0000000000000000000000000000000000000000000000000100101011000000)) (bvadd x_0 (bvadd (bvnot (bvmul (bvsdiv x_0 #b0000000000000000000000000000000000000000000000101010000011000000) #b0000000000000000000000000000000000000000000000101010000011000000)) #b0000000000000000000000000000000000000000000000000000000000000001)))))
+      (assert (not (= (bvadd (bvadd (bvadd x_0 (bvadd (bvnot (bvmul (ite (= #b0000000000000000000000000000000000000000000000000000000000000000 #b0000000000000000000000000000000000000000000000000000000100101011) #b0000000000000000000000000000000000000000000000000000000000000000 (bvsdiv x_0 #b0000000000000000000000000000000000000000000000000000000100101011)) #b0000000000000000000000000000000000000000000000000000000100101011)) #b0000000000000000000000000000000000000000000000000000000000000001)) (bvmul (bvadd (ite (= #b0000000000000000000000000000000000000000000000000000000000000000 #b0000000000000000000000000000000000000000000000000000000100101011) #b0000000000000000000000000000000000000000000000000000000000000000 (bvsdiv x_0 #b0000000000000000000000000000000000000000000000000000000100101011)) (bvadd (bvnot (bvmul (ite (= #b0000000000000000000000000000000000000000000000000000000000000000 #b0000000000000000000000000000000000000000000000000000000001000000) #b0000000000000000000000000000000000000000000000000000000000000000 (bvsdiv (ite (= #b0000000000000000000000000000000000000000000000000000000000000000 #b0000000000000000000000000000000000000000000000000000000100101011) #b0000000000000000000000000000000000000000000000000000000000000000 (bvsdiv x_0 #b0000000000000000000000000000000000000000000000000000000100101011)) #b0000000000000000000000000000000000000000000000000000000001000000)) #b0000000000000000000000000000000000000000000000000000000001000000)) #b0000000000000000000000000000000000000000000000000000000000000001)) #b0000000000000000000000000000000000000000000000000000000100101011)) (bvmul (bvadd (ite (= #b0000000000000000000000000000000000000000000000000000000000000000 #b0000000000000000000000000000000000000000000000000100101011000000) #b0000000000000000000000000000000000000000000000000000000000000000 (bvsdiv x_0 #b0000000000000000000000000000000000000000000000000100101011000000)) (bvadd (bvnot (bvmul (ite (= #b0000000000000000000000000000000000000000000000000000000000000000 #b0000000000000000000000000000000000000000000000000000000000001001) #b0000000000000000000000000000000000000000000000000000000000000000 (bvsdiv (ite (= #b0000000000000000000000000000000000000000000000000000000000000000 #b0000000000000000000000000000000000000000000000000100101011000000) #b0000000000000000000000000000000000000000000000000000000000000000 (bvsdiv x_0 #b0000000000000000000000000000000000000000000000000100101011000000)) #b0000000000000000000000000000000000000000000000000000000000001001)) #b0000000000000000000000000000000000000000000000000000000000001001)) #b0000000000000000000000000000000000000000000000000000000000000001)) #b0000000000000000000000000000000000000000000000000100101011000000)) (bvadd x_0 (bvadd (bvnot (bvmul (ite (= #b0000000000000000000000000000000000000000000000000000000000000000 #b0000000000000000000000000000000000000000000000101010000011000000) #b0000000000000000000000000000000000000000000000000000000000000000 (bvsdiv x_0 #b0000000000000000000000000000000000000000000000101010000011000000)) #b0000000000000000000000000000000000000000000000101010000011000000)) #b0000000000000000000000000000000000000000000000000000000000000001)))))
       (check-sat)
       (exit)
       
-  [bv] [10.860949] Proving with bitwuzla
+  [bv] [10.740465] Proving with bitwuzla
 error: ././././SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:27:110: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:27:110: [bv] [0.053902] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:27:110: [bv] [0.059650] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 64
@@ -149,7 +149,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:40:110: [bv] [0.054268] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:40:110: [bv] [0.059051] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 64
@@ -199,7 +199,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:45:25: [bv] [0.021765] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:45:25: [bv] [0.022191] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 32
@@ -224,7 +224,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:54:34: [bv] [0.025196] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:54:34: [bv] [0.025907] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 32
@@ -251,14 +251,14 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:54:34: [bv]
               fun a => some (a + x)
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-info: ././././SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:56:108: Bitwuzla proved the goal after 779.000000ms
-LeanSAT proved the goal after 4027.000000ms: rewriting 0.000000ms, bitblasting 22.394583ms, SAT solving 2447.355041ms, LRAT processing 732.081958ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:56:108: Bitwuzla proved the goal after 607.000000ms
+LeanSAT proved the goal after 4116.000000ms: rewriting 0.000000ms, bitblasting 25.303375ms, SAT solving 2514.901458ms, LRAT trimming 802.970958ms, LRAT checking 716.294917ms
 error: ././././SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:61:25: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:61:25: [bv] [0.022566] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:61:25: [bv] [0.023172] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 32
@@ -283,7 +283,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:66:25: [bv] [0.023320] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:66:25: [bv] [0.032541] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 32
@@ -303,8 +303,8 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:66:25: [bv]
               fun a => some (a + x)
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-info: ././././SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:68:135: Bitwuzla proved the goal after 148.000000ms
-LeanSAT proved the goal after 872.000000ms: rewriting 10.427667ms, bitblasting 26.397875ms, SAT solving 497.914542ms, LRAT processing 134.391750ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:68:135: Bitwuzla proved the goal after 207.000000ms
+LeanSAT proved the goal after 926.000000ms: rewriting 11.412417ms, bitblasting 27.555125ms, SAT solving 544.138833ms, LRAT trimming 130.951000ms, LRAT checking 181.698583ms
 error: Lean exited with code 1
 Some required builds logged failures:
 - SSA.Projects.InstCombine.tests.proofs.gadd4_proof

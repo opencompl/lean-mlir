@@ -4,12 +4,12 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
 
 section gapinthrem2_proof
-theorem test1_thm (x : BitVec 333) : x % 70368744177664#333 = x &&& 70368744177663#333 := sorry
+theorem test1_thm (x : BitVec 333) : x % 70368744177664#333 = x &&& 70368744177663#333 := by bv_compare'
 
 theorem test2_thm (x : BitVec 499) :
   (Option.bind (if 499 % 2 ^ 499 ≤ 111 % 2 ^ 499 then none else some (4096#499 <<< (111 % 2 ^ 499))) fun y' =>
       if y' = 0#499 then none else some (x % y')) ⊑
-    some (x &&& 10633823966279326983230456482242756607#499) := sorry
+    some (x &&& 10633823966279326983230456482242756607#499) := by bv_compare'
 
 theorem test3_thm (x : BitVec 1) (x_1 : BitVec 599) :
   (Option.bind
@@ -23,5 +23,5 @@ theorem test3_thm (x : BitVec 1) (x_1 : BitVec 599) :
       | none => none
       | some { toFin := ⟨1, ⋯⟩ } => some 70368744177663#599
       | some { toFin := ⟨0, ⋯⟩ } => some 4095#599)
-      fun y' => some (x_1 &&& y') := sorry
+      fun y' => some (x_1 &&& y') := by bv_compare'
 

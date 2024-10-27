@@ -21,5 +21,5 @@ theorem test_thm (x : BitVec 1) (x_1 : BitVec 64) :
     if (x_1 >>> 4 + x_1 >>> 3).msb = true then none
     else
       if x_1 >>> 4 + x_1 >>> 3 < x_1 >>> 4 ∨ x_1 >>> 4 + x_1 >>> 3 < x_1 >>> 3 then none
-      else some (x_1 >>> 4 + x_1 >>> 3) := sorry
+      else some (x_1 >>> 4 + x_1 >>> 3) := by bv_compare'
 

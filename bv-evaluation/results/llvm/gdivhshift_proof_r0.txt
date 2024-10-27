@@ -1,7 +1,7 @@
-⚠ [665/885] Replayed SSA.Core.ErasedContext
+⚠ [667/887] Replayed SSA.Core.ErasedContext
 warning: ././././SSA/Core/ErasedContext.lean:325:14: unused variable `t`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [672/885] Replayed SSA.Core.Framework
+⚠ [674/887] Replayed SSA.Core.Framework
 warning: ././././SSA/Core/Framework.lean:1826:9: unused variable `inst`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
 warning: ././././SSA/Core/Framework.lean:1833:75: unused variable `inst`
@@ -10,15 +10,15 @@ warning: ././././SSA/Core/Framework.lean:2083:31: unused variable `x`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
 warning: ././././SSA/Core/Framework.lean:2084:33: unused variable `x`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [685/885] Replayed SSA.Core.MLIRSyntax.AST
+⚠ [687/887] Replayed SSA.Core.MLIRSyntax.AST
 warning: ././././SSA/Core/MLIRSyntax/AST.lean:40:4: The namespace 'SSAVal' is duplicated in the declaration 'MLIR.AST.SSAVal.SSAVal'
 note: this linter can be disabled with `set_option linter.dupNamespace false`
-⚠ [867/885] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+⚠ [869/887] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
-⚠ [871/885] Replayed SSA.Experimental.Bits.Fast.Tactic
+⚠ [873/887] Replayed SSA.Experimental.Bits.Fast.Tactic
 warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
-⚠ [872/885] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+⚠ [874/887] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
@@ -29,23 +29,104 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaratio
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
-⚠ [878/885] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+⚠ [880/887] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
-⚠ [879/885] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+⚠ [881/887] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-✖ [885/885] Building SSA.Projects.InstCombine.tests.proofs.gdivhshift_proof
-trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib DYLD_LIBRARY_PATH= /Users/luisa/.elan/toolchains/leanprover--lean4---nightly-2024-10-24/bin/lean ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.c --json
-error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:11:28: invalid pattern
-error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:17:28: invalid pattern
-error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:19:75: None of the hypotheses are in the supported BitVec fragment.
+✖ [887/887] Building SSA.Projects.InstCombine.tests.proofs.gdivhshift_proof
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib DYLD_LIBRARY_PATH= /Users/luisa/.elan/toolchains/leanprover--lean4---nightly-2024-10-25/bin/lean ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.c --json
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:10:101: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:19:75: [bv] [0.022203] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:10:101: [bv] [0.035365] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 32
+      x_1 : BitVec 16
+      a✝ :
+        ¬((if 32#32 ≤ x then none else some (2#32 <<< x.toNat)).bind fun y' =>
+              if y' = 0#32 ∨ BitVec.setWidth 32 x_1 = BitVec.intMin 32 ∧ y' = 4294967295#32 then none
+              else some ((BitVec.setWidth 32 x_1).sdiv y')) ⊑
+            if 32#32 ≤ x + 1#32 then none else some (BitVec.setWidth 32 x_1 >>> ((x.toNat + 1) % 4294967296))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 32
+      x_1 : BitVec 16
+      a✝ :
+        ¬((if (!32#32 >ᵤ x) = true then none else some (2#32 <<< x.toNat)).bind fun a =>
+              if (!(!a == 0#32 && !(BitVec.zeroExtend 32 x_1 == BitVec.intMin 32 && a == 4294967295#32))) = true then
+                none
+              else some ((BitVec.zeroExtend 32 x_1).sdiv a)) ⊑
+            if (!32#32 >ᵤ x + 1#32) = true then none
+            else some (BitVec.zeroExtend 32 x_1 >>> ((x.toNat + 1) % 4294967296))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:15:98: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:15:98: [bv] [0.026122] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 32
+      x_1 : BitVec 64
+      a✝ :
+        ¬((if 32#32 ≤ x then none else some (1#32 <<< x.toNat)).bind fun x =>
+              if BitVec.setWidth 64 x = 0#64 then none else some (x_1 / BitVec.setWidth 64 x)) ⊑
+            if 64#64 ≤ BitVec.setWidth 64 x then none else some (x_1 >>> (x.toNat % 18446744073709551616))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 32
+      x_1 : BitVec 64
+      a✝ :
+        ¬((if (!32#32 >ᵤ x) = true then none else some (1#32 <<< x.toNat)).bind fun a =>
+              if (BitVec.zeroExtend 64 a == 0#64) = true then none else some (x_1 / BitVec.zeroExtend 64 a)) ⊑
+            if (!64#64 >ᵤ BitVec.zeroExtend 64 x) = true then none else some (x_1 >>> (x.toNat % 18446744073709551616))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:21:82: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:21:82: [bv] [0.030422] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 32
+      x_1 : BitVec 64
+      a✝ :
+        ¬((if 32#32 ≤ x then none else some (4#32 <<< x.toNat)).bind fun x =>
+              if BitVec.setWidth 64 x = 0#64 then none else some (x_1 / BitVec.setWidth 64 x)) ⊑
+            if 64#64 ≤ BitVec.setWidth 64 (x + 2#32) then none
+            else some (x_1 >>> ((x.toNat + 2) % 4294967296 % 18446744073709551616))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 32
+      x_1 : BitVec 64
+      a✝ :
+        ¬((if (!32#32 >ᵤ x) = true then none else some (4#32 <<< x.toNat)).bind fun a =>
+              if (BitVec.zeroExtend 64 a == 0#64) = true then none else some (x_1 / BitVec.zeroExtend 64 a)) ⊑
+            if (!64#64 >ᵤ BitVec.zeroExtend 64 (x + 2#32)) = true then none
+            else some (x_1 >>> ((x.toNat + 2) % 4294967296 % 18446744073709551616))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:27:28: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:33:28: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:35:75: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:35:75: [bv] [0.022238] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 1
@@ -63,14 +144,14 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:19:75:
             sorry.bind fun a => if (!32#32 >ᵤ a) = true then none else some (x_1 >>> a.toNat)
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:20:0: unexpected identifier; expected command
-error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:20:81: 't5_thm' has already been declared
-error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:46:20: None of the hypotheses are in the supported BitVec fragment.
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:36:0: unexpected identifier; expected command
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:36:82: 't5_thm' has already been declared
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:62:20: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:46:20: [bv] [0.028077] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:62:20: [bv] [0.026150] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 32
@@ -89,12 +170,12 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:46:20:
             some 4#32
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:54:118: None of the hypotheses are in the supported BitVec fragment.
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:70:118: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:54:118: [bv] [0.035818] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:70:118: [bv] [0.037951] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 : BitVec 32
@@ -121,12 +202,12 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:54:118
               else if (!32#32 >ᵤ x) = true then none else some (1#32 <<< x.toNat)
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:58:20: None of the hypotheses are in the supported BitVec fragment.
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:74:20: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:58:20: [bv] [0.017380] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:74:20: [bv] [0.018286] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 32
@@ -143,12 +224,12 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:58:20:
             some 4#32
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:63:116: None of the hypotheses are in the supported BitVec fragment.
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:79:116: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:63:116: [bv] [0.024210] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:79:116: [bv] [0.025487] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 : BitVec 32
@@ -168,12 +249,12 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:63:116
             else if (!32#32 >ᵤ x) = true then none else some (1#32 <<< x.toNat)
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:76:97: None of the hypotheses are in the supported BitVec fragment.
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:92:97: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:76:97: [bv] [0.078934] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:92:97: [bv] [0.082494] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 x_2 : BitVec 5
@@ -212,12 +293,12 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:76:97:
               if (!(!a == 0#5 && !(x_1 == BitVec.intMin 5 && a == 31#5))) = true then none else some (x_1.sdiv a)
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:89:97: None of the hypotheses are in the supported BitVec fragment.
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:105:97: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:89:97: [bv] [0.081844] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:105:97: [bv] [0.084184] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 x_2 : BitVec 5
@@ -256,12 +337,12 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:89:97:
               if (!(!a == 0#5 && !(x_2 == BitVec.intMin 5 && a == 31#5))) = true then none else some (x_2.sdiv a)
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:95:59: None of the hypotheses are in the supported BitVec fragment.
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:111:59: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:95:59: [bv] [0.043237] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:111:59: [bv] [0.044777] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 x_2 : BitVec 5
@@ -287,12 +368,12 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:95:59:
             if (!5#5 >ᵤ x) = true then none else some (x_1 >>> x.toNat)
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:101:59: None of the hypotheses are in the supported BitVec fragment.
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:117:59: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:101:59: [bv] [0.042302] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:117:59: [bv] [0.044594] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 x_2 : BitVec 5
@@ -318,12 +399,12 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:101:59
             if (!5#5 >ᵤ x) = true then none else some (x_2 >>> x.toNat)
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:109:60: None of the hypotheses are in the supported BitVec fragment.
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:125:60: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:109:60: [bv] [0.052664] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:125:60: [bv] [0.055433] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 x_2 : BitVec 5
@@ -353,12 +434,12 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:109:60
               fun a => if (x == 0#5) = true then none else some (a / x)
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:117:60: None of the hypotheses are in the supported BitVec fragment.
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:133:60: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:117:60: [bv] [0.052720] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:133:60: [bv] [0.056020] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 x_2 : BitVec 5
@@ -388,12 +469,12 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:117:60
               fun a => if (x == 0#5) = true then none else some (a / x)
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:125:60: None of the hypotheses are in the supported BitVec fragment.
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:141:60: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:125:60: [bv] [0.052651] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:141:60: [bv] [0.056443] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 x_2 : BitVec 5
@@ -423,12 +504,12 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:125:60
               fun a => if (x == 0#5) = true then none else some (a / x)
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:131:59: None of the hypotheses are in the supported BitVec fragment.
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:147:59: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:131:59: [bv] [0.034966] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:147:59: [bv] [0.034021] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 x_2 : BitVec 8
@@ -452,12 +533,12 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:131:59
             if (!8#8 >ᵤ x) = true then none else some (x_1 >>> x.toNat)
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:141:83: None of the hypotheses are in the supported BitVec fragment.
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:157:83: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:141:83: [bv] [0.065562] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:157:83: [bv] [0.068432] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 x_2 : BitVec 8
@@ -489,12 +570,12 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:141:83
             if (!(!x == 0#8 && !(x_2 == BitVec.intMin 8 && x == 255#8))) = true then none else some (x_2.sdiv x)
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:152:51: None of the hypotheses are in the supported BitVec fragment.
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:168:51: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:152:51: [bv] [0.043792] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:168:51: [bv] [0.045823] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 x_2 : BitVec 8
@@ -524,12 +605,12 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:152:51
             if (x == 0#8) = true then none else some (x_2 / x)
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:158:20: None of the hypotheses are in the supported BitVec fragment.
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:174:20: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:158:20: [bv] [0.050999] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:174:20: [bv] [0.052176] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 32
@@ -550,12 +631,12 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:158:20
             some 2#32
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:163:20: None of the hypotheses are in the supported BitVec fragment.
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:179:20: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:163:20: [bv] [0.036217] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:179:20: [bv] [0.036624] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 32
@@ -575,12 +656,12 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:163:20
             some 2#32
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:177:70: None of the hypotheses are in the supported BitVec fragment.
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:193:70: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:177:70: [bv] [0.073843] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:193:70: [bv] [0.087856] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 x_2 : BitVec 32
@@ -620,12 +701,12 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:177:70
               fun a => if (!32#32 >ᵤ x) = true then none else some (a >>> x.toNat)
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:192:70: None of the hypotheses are in the supported BitVec fragment.
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:208:70: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:192:70: [bv] [0.073197] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:208:70: [bv] [0.078035] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 x_2 : BitVec 32
@@ -665,12 +746,12 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:192:70
               fun a => if (!32#32 >ᵤ x) = true then none else some (a >>> x.toNat)
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:203:70: None of the hypotheses are in the supported BitVec fragment.
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:219:70: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:203:70: [bv] [0.066740] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:219:70: [bv] [0.069540] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 x_2 : BitVec 32
@@ -702,12 +783,12 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:203:70
               fun a => if (!32#32 >ᵤ x) = true then none else some (a >>> x.toNat)
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:212:70: None of the hypotheses are in the supported BitVec fragment.
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:228:70: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:212:70: [bv] [0.049842] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:228:70: [bv] [0.051868] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 x_2 : BitVec 32
@@ -737,12 +818,12 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:212:70
               fun a => if (!32#32 >ᵤ x) = true then none else some (a >>> x.toNat)
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:226:70: None of the hypotheses are in the supported BitVec fragment.
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:242:70: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:226:70: [bv] [0.056320] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:242:70: [bv] [0.059132] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 x_2 : BitVec 32
@@ -780,12 +861,12 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:226:70
               fun a => if (!32#32 >ᵤ x) = true then none else some (a >>> x.toNat)
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:237:70: None of the hypotheses are in the supported BitVec fragment.
+error: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:253:70: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:237:70: [bv] [0.053072] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:253:70: [bv] [0.055216] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 x_2 : BitVec 32

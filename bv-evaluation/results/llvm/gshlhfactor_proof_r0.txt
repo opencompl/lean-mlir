@@ -1,7 +1,7 @@
-⚠ [665/885] Replayed SSA.Core.ErasedContext
+⚠ [667/887] Replayed SSA.Core.ErasedContext
 warning: ././././SSA/Core/ErasedContext.lean:325:14: unused variable `t`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [672/885] Replayed SSA.Core.Framework
+⚠ [674/887] Replayed SSA.Core.Framework
 warning: ././././SSA/Core/Framework.lean:1826:9: unused variable `inst`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
 warning: ././././SSA/Core/Framework.lean:1833:75: unused variable `inst`
@@ -10,15 +10,15 @@ warning: ././././SSA/Core/Framework.lean:2083:31: unused variable `x`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
 warning: ././././SSA/Core/Framework.lean:2084:33: unused variable `x`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [685/885] Replayed SSA.Core.MLIRSyntax.AST
+⚠ [687/887] Replayed SSA.Core.MLIRSyntax.AST
 warning: ././././SSA/Core/MLIRSyntax/AST.lean:40:4: The namespace 'SSAVal' is duplicated in the declaration 'MLIR.AST.SSAVal.SSAVal'
 note: this linter can be disabled with `set_option linter.dupNamespace false`
-⚠ [867/885] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+⚠ [869/887] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
-⚠ [871/885] Replayed SSA.Experimental.Bits.Fast.Tactic
+⚠ [873/887] Replayed SSA.Experimental.Bits.Fast.Tactic
 warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
-⚠ [872/885] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+⚠ [874/887] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
@@ -29,21 +29,21 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaratio
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
-⚠ [878/885] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+⚠ [880/887] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
-⚠ [879/885] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+⚠ [881/887] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-✖ [885/885] Building SSA.Projects.InstCombine.tests.proofs.gshlhfactor_proof
-trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib DYLD_LIBRARY_PATH= /Users/luisa/.elan/toolchains/leanprover--lean4---nightly-2024-10-24/bin/lean ././././SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.c --json
+✖ [887/887] Building SSA.Projects.InstCombine.tests.proofs.gshlhfactor_proof
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib DYLD_LIBRARY_PATH= /Users/luisa/.elan/toolchains/leanprover--lean4---nightly-2024-10-25/bin/lean ././././SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.c --json
 error: ././././SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.lean:10:81: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.lean:10:81: [bv] [0.025095] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.lean:10:81: [bv] [0.024126] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 x_2 : BitVec 6
@@ -66,7 +66,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.lean:18:117: [bv] [0.064054] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.lean:18:117: [bv] [0.065251] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 x_2 : BitVec 64
@@ -100,7 +100,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.lean:27:81: [bv] [0.031342] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.lean:27:81: [bv] [0.029405] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 x_2 : BitVec 6
@@ -131,7 +131,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.lean:34:81: [bv] [0.063326] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.lean:34:81: [bv] [0.061752] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 x_2 : BitVec 6
@@ -160,7 +160,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.lean:41:81: [bv] [0.032022] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.lean:41:81: [bv] [0.031672] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 x_2 : BitVec 6
@@ -191,7 +191,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.lean:48:81: [bv] [0.044028] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.lean:48:81: [bv] [0.042898] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 x_2 : BitVec 6
@@ -220,7 +220,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.lean:53:69: [bv] [0.042362] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.lean:53:69: [bv] [0.041614] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 x_2 : BitVec 6
@@ -244,7 +244,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.lean:61:117: [bv] [0.073190] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.lean:61:117: [bv] [0.070495] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 x_2 : BitVec 64
@@ -278,7 +278,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.lean:70:69: [bv] [0.050284] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.lean:70:69: [bv] [0.048795] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 x_2 : BitVec 6
@@ -309,7 +309,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.lean:79:69: [bv] [0.090625] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.lean:79:69: [bv] [0.081529] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 x_2 : BitVec 6
@@ -347,7 +347,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.lean:86:69: [bv] [0.051245] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.lean:86:69: [bv] [0.047723] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 x_2 : BitVec 6
@@ -378,7 +378,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.lean:93:69: [bv] [0.053353] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.lean:93:69: [bv] [0.053328] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 x_2 : BitVec 6
@@ -407,7 +407,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.lean:98:59: [bv] [0.023867] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhfactor_proof.lean:98:59: [bv] [0.022178] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 8

@@ -16,5 +16,5 @@ theorem rotateleft_9_neg_mask_wide_amount_commute_thm (x : BitVec 33) (x_1 : Bit
       fun a =>
       Option.bind
         (if 33#33 ≤ -x &&& 8#33 then none else some (setWidth 33 x_1 >>> ((8589934592 - x.toNat) % 8589934592 &&& 8)))
-        fun x => some (setWidth 9 a ||| setWidth 9 x) := sorry
+        fun x => some (setWidth 9 a ||| setWidth 9 x) := by bv_compare'
 

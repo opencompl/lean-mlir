@@ -16,5 +16,5 @@ theorem unmasked_shlop_insufficient_mask_shift_amount_thm (x x_1 x_2 : BitVec 16
       fun a =>
       Option.bind (if 16#16 ≤ a then none else some (x_2 <<< a.toNat)) fun a =>
         Option.bind (if 16#16 ≤ x_1 &&& 15#16 then none else some ((x &&& 255#16) >>> (x_1.toNat &&& 15))) fun x =>
-          some (setWidth 8 a ||| setWidth 8 x) := sorry
+          some (setWidth 8 a ||| setWidth 8 x) := by bv_compare'
 

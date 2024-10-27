@@ -1,7 +1,7 @@
-⚠ [665/885] Replayed SSA.Core.ErasedContext
+⚠ [667/887] Replayed SSA.Core.ErasedContext
 warning: ././././SSA/Core/ErasedContext.lean:325:14: unused variable `t`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [672/885] Replayed SSA.Core.Framework
+⚠ [674/887] Replayed SSA.Core.Framework
 warning: ././././SSA/Core/Framework.lean:1826:9: unused variable `inst`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
 warning: ././././SSA/Core/Framework.lean:1833:75: unused variable `inst`
@@ -10,15 +10,15 @@ warning: ././././SSA/Core/Framework.lean:2083:31: unused variable `x`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
 warning: ././././SSA/Core/Framework.lean:2084:33: unused variable `x`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [685/885] Replayed SSA.Core.MLIRSyntax.AST
+⚠ [687/887] Replayed SSA.Core.MLIRSyntax.AST
 warning: ././././SSA/Core/MLIRSyntax/AST.lean:40:4: The namespace 'SSAVal' is duplicated in the declaration 'MLIR.AST.SSAVal.SSAVal'
 note: this linter can be disabled with `set_option linter.dupNamespace false`
-⚠ [867/885] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+⚠ [869/887] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
-⚠ [871/885] Replayed SSA.Experimental.Bits.Fast.Tactic
+⚠ [873/887] Replayed SSA.Experimental.Bits.Fast.Tactic
 warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
-⚠ [872/885] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+⚠ [874/887] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
@@ -29,27 +29,27 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaratio
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
-⚠ [878/885] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+⚠ [880/887] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
-⚠ [879/885] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+⚠ [881/887] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-✖ [885/885] Building SSA.Projects.InstCombine.tests.proofs.gshlhdemand_proof
-trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib DYLD_LIBRARY_PATH= /Users/luisa/.elan/toolchains/leanprover--lean4---nightly-2024-10-24/bin/lean ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.c --json
-info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:8:101: Bitwuzla proved the goal after 81.000000ms
-LeanSAT proved the goal after 1687.000000ms: rewriting 14.510791ms, bitblasting 64.228958ms, SAT solving 886.768000ms, LRAT processing 292.843875ms
-info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:12:69: Bitwuzla proved the goal after 83.000000ms
-LeanSAT proved the goal after 522.000000ms: rewriting 14.569709ms, bitblasting 65.042583ms, SAT solving 117.400833ms, LRAT processing 46.804250ms
-info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:15:100: Bitwuzla proved the goal after 82.000000ms
-LeanSAT proved the goal after 1713.000000ms: rewriting 15.375416ms, bitblasting 69.956959ms, SAT solving 887.732000ms, LRAT processing 280.621333ms
+✖ [887/887] Building SSA.Projects.InstCombine.tests.proofs.gshlhdemand_proof
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib DYLD_LIBRARY_PATH= /Users/luisa/.elan/toolchains/leanprover--lean4---nightly-2024-10-25/bin/lean ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.c --json
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:8:101: Bitwuzla proved the goal after 84.000000ms
+LeanSAT proved the goal after 1746.000000ms: rewriting 15.270917ms, bitblasting 71.025375ms, SAT solving 917.620958ms, LRAT trimming 300.899459ms, LRAT checking 377.843625ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:12:69: Bitwuzla proved the goal after 82.000000ms
+LeanSAT proved the goal after 548.000000ms: rewriting 14.863708ms, bitblasting 71.374208ms, SAT solving 114.565584ms, LRAT trimming 48.799542ms, LRAT checking 222.665167ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:15:100: Bitwuzla proved the goal after 85.000000ms
+LeanSAT proved the goal after 1757.000000ms: rewriting 15.736167ms, bitblasting 68.687166ms, SAT solving 919.149708ms, LRAT trimming 295.896292ms, LRAT checking 393.949334ms
 error: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:21:50: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:21:50: [bv] [0.022967] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:21:50: [bv] [0.024139] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 32
@@ -78,7 +78,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:28:50: [bv] [0.021767] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:28:50: [bv] [0.023347] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 32
@@ -110,7 +110,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:35:41: [bv] [0.023339] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:35:41: [bv] [0.023528] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 32
@@ -142,7 +142,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:41:50: [bv] [0.023760] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:41:50: [bv] [0.023118] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 32
@@ -166,12 +166,93 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:41:50
               fun a => some (a &&& 4294967292#32)
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-error: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:46:35: None of the hypotheses are in the supported BitVec fragment.
+error: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:46:34: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:46:35: [bv] [0.018204] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:46:34: [bv] [0.017122] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 32
+      x_1 : BitVec 16
+      a✝ :
+        ¬((if 32#32 ≤ x then none else some (BitVec.signExtend 32 x_1 <<< x.toNat)).bind fun x' =>
+              some (BitVec.setWidth 16 x')) ⊑
+            (if 32#32 ≤ x then none else some (BitVec.setWidth 32 x_1 <<< x.toNat)).bind fun x' =>
+              some (BitVec.setWidth 16 x')
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 32
+      x_1 : BitVec 16
+      a✝ :
+        ¬((if (!32#32 >ᵤ x) = true then none else some (BitVec.signExtend 32 x_1 <<< x.toNat)).bind fun a =>
+              some (BitVec.zeroExtend 16 a)) ⊑
+            (if (!32#32 >ᵤ x) = true then none else some (BitVec.zeroExtend 32 x_1 <<< x.toNat)).bind fun a =>
+              some (BitVec.zeroExtend 16 a)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:50:118: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:50:118: [bv] [0.017325] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 32
+      x_1 : BitVec 16
+      a✝ :
+        ¬((if 32#32 ≤ x then none else some (BitVec.signExtend 32 x_1 <<< x.toNat)).bind fun x' =>
+              some (BitVec.setWidth 5 x')) ⊑
+            (if 32#32 ≤ x then none else some (BitVec.setWidth 32 x_1 <<< x.toNat)).bind fun x' =>
+              some (BitVec.setWidth 5 x')
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 32
+      x_1 : BitVec 16
+      a✝ :
+        ¬((if (!32#32 >ᵤ x) = true then none else some (BitVec.signExtend 32 x_1 <<< x.toNat)).bind fun a =>
+              some (BitVec.zeroExtend 5 a)) ⊑
+            (if (!32#32 >ᵤ x) = true then none else some (BitVec.zeroExtend 32 x_1 <<< x.toNat)).bind fun a =>
+              some (BitVec.zeroExtend 5 a)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:55:35: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:55:35: [bv] [0.017427] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 32
+      x_1 : BitVec 16
+      a✝ :
+        ¬((if 32#32 ≤ x then none else some (BitVec.signExtend 32 x_1 <<< x.toNat)).bind fun x' =>
+              some (x' &&& 65535#32)) ⊑
+            (if 32#32 ≤ x then none else some (BitVec.setWidth 32 x_1 <<< x.toNat)).bind fun x' =>
+              some (x' &&& 65535#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 32
+      x_1 : BitVec 16
+      a✝ :
+        ¬((if (!32#32 >ᵤ x) = true then none else some (BitVec.signExtend 32 x_1 <<< x.toNat)).bind fun a =>
+              some (a &&& 65535#32)) ⊑
+            (if (!32#32 >ᵤ x) = true then none else some (BitVec.zeroExtend 32 x_1 <<< x.toNat)).bind fun a =>
+              some (a &&& 65535#32)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:60:35: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:60:35: [bv] [0.017626] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 : BitVec 32
@@ -189,6 +270,62 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:46:35
               some (a &&& 65536#32)
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:68:106: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:68:106: [bv] [0.025966] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x x_1 : BitVec 32
+      a✝ :
+        ¬((if ((x_1 &&& 255#32) <<< x.toNat).sshiftRight x.toNat = x_1 &&& 255#32 then none
+                else
+                  if (x_1 &&& 255#32) <<< x.toNat >>> x.toNat = x_1 &&& 255#32 then none
+                  else if 32#32 ≤ x then none else some ((x_1 &&& 255#32) <<< x.toNat)).bind
+              fun x' => some (BitVec.setWidth 8 x')) ⊑
+            (if 32#32 ≤ x then none else some (x_1 <<< x.toNat)).bind fun x' => some (BitVec.setWidth 8 x')
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x x_1 : BitVec 32
+      a✝ :
+        ¬((if (((x_1 &&& 255#32) <<< x.toNat).sshiftRight x.toNat == x_1 &&& 255#32) = true then none
+                else
+                  if ((x_1 &&& 255#32) <<< x.toNat >>> x.toNat == x_1 &&& 255#32) = true then none
+                  else if (!32#32 >ᵤ x) = true then none else some ((x_1 &&& 255#32) <<< x.toNat)).bind
+              fun a => some (BitVec.zeroExtend 8 a)) ⊑
+            (if (!32#32 >ᵤ x) = true then none else some (x_1 <<< x.toNat)).bind fun a => some (BitVec.zeroExtend 8 a)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:71:97: The external prover produced unexpected output, stdout:
+stderr:
+[error] /var/folders/mw/4wzj975d1_s2cxywvdfyyh000000gn/T/tmp.FVNckvtE:3:100: expected terms of same sort at indices 0 and 1 as argument to 'bvshl'
+info: ././././SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:71:97: [bv] [0.010162] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 40
+      a✝ : ¬BitVec.setWidth 32 (x.sshiftRight 31) <<< 16 = BitVec.setWidth 32 (x.sshiftRight 15) &&& 4294901760#32
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 40
+      a✝ :
+        (!BitVec.zeroExtend 32 (x.sshiftRight 31) <<< 16 == BitVec.zeroExtend 32 (x.sshiftRight 15) &&& 4294901760#32) =
+          true
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+[Meta.Tactic.bv] New atom of width 40: x
+[Meta.Tactic.bv] Reflected bv logical expression: !((<< 16 (zext 32 (>>a 31 var0))) == ((zext 32 (>>a 15 var0)) && 0xffff0000#32))
+[bv] [0.066823] Preparing LRAT reflection term
+  [Meta.Tactic.bv] Encoded as SMT: (set-logic QF_BV)
+      (declare-const x_0 (_ BitVec 40))
+      (assert (not (= (bvshl ((_ zero_extend 0) (bvashr x_0 #b0000000000000000000000000000000000011111)) #b00000000000000000000000000010000) (bvand ((_ zero_extend 0) (bvashr x_0 #b0000000000000000000000000000000000001111)) #b11111111111111110000000000000000))))
+      (check-sat)
+      (exit)
+      
+  [bv] [0.063927] Proving with bitwuzla
 error: Lean exited with code 1
 Some required builds logged failures:
 - SSA.Projects.InstCombine.tests.proofs.gshlhdemand_proof

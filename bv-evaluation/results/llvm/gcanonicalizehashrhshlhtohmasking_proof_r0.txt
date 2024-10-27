@@ -1,7 +1,7 @@
-⚠ [665/885] Replayed SSA.Core.ErasedContext
+⚠ [667/887] Replayed SSA.Core.ErasedContext
 warning: ././././SSA/Core/ErasedContext.lean:325:14: unused variable `t`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [672/885] Replayed SSA.Core.Framework
+⚠ [674/887] Replayed SSA.Core.Framework
 warning: ././././SSA/Core/Framework.lean:1826:9: unused variable `inst`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
 warning: ././././SSA/Core/Framework.lean:1833:75: unused variable `inst`
@@ -10,15 +10,15 @@ warning: ././././SSA/Core/Framework.lean:2083:31: unused variable `x`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
 warning: ././././SSA/Core/Framework.lean:2084:33: unused variable `x`
 note: this linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [685/885] Replayed SSA.Core.MLIRSyntax.AST
+⚠ [687/887] Replayed SSA.Core.MLIRSyntax.AST
 warning: ././././SSA/Core/MLIRSyntax/AST.lean:40:4: The namespace 'SSAVal' is duplicated in the declaration 'MLIR.AST.SSAVal.SSAVal'
 note: this linter can be disabled with `set_option linter.dupNamespace false`
-⚠ [867/885] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+⚠ [869/887] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
-⚠ [871/885] Replayed SSA.Experimental.Bits.Fast.Tactic
+⚠ [873/887] Replayed SSA.Experimental.Bits.Fast.Tactic
 warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
-⚠ [872/885] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+⚠ [874/887] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
@@ -29,21 +29,21 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaratio
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
-⚠ [878/885] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+⚠ [880/887] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
-⚠ [879/885] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+⚠ [881/887] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-✖ [885/885] Building SSA.Projects.InstCombine.tests.proofs.gcanonicalizehashrhshlhtohmasking_proof
-trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib DYLD_LIBRARY_PATH= /Users/luisa/.elan/toolchains/leanprover--lean4---nightly-2024-10-24/bin/lean ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.c --json
+✖ [887/887] Building SSA.Projects.InstCombine.tests.proofs.gcanonicalizehashrhshlhtohmasking_proof
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib DYLD_LIBRARY_PATH= /Users/luisa/.elan/toolchains/leanprover--lean4---nightly-2024-10-25/bin/lean ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.c --json
 error: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:12:38: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:12:38: [bv] [0.024732] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:12:38: [bv] [0.027594] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 : BitVec 8
@@ -65,18 +65,18 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohma
               fun a => some (a &&& x_1)
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:14:90: Bitwuzla proved the goal after 73.000000ms
-LeanSAT proved the goal after 72.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.112875ms, LRAT processing 0.000000ms
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:16:105: Bitwuzla proved the goal after 67.000000ms
-LeanSAT proved the goal after 72.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.071458ms, LRAT processing 0.000000ms
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:18:96: Bitwuzla proved the goal after 74.000000ms
-LeanSAT proved the goal after 69.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 56.890583ms, LRAT processing 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:14:90: Bitwuzla proved the goal after 75.000000ms
+LeanSAT proved the goal after 72.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.613917ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:16:105: Bitwuzla proved the goal after 74.000000ms
+LeanSAT proved the goal after 69.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 58.103083ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:18:96: Bitwuzla proved the goal after 75.000000ms
+LeanSAT proved the goal after 74.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.561708ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
 error: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:25:38: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:25:38: [bv] [0.031544] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:25:38: [bv] [0.031912] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 : BitVec 8
@@ -104,7 +104,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:29:29: [bv] [0.011957] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:29:29: [bv] [0.012116] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 8
@@ -125,7 +125,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:33:43: [bv] [0.011932] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:33:43: [bv] [0.012249] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 8
@@ -146,7 +146,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:37:98: [bv] [0.019918] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:37:98: [bv] [0.021244] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 8
@@ -167,7 +167,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:44:38: [bv] [0.028890] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:44:38: [bv] [0.035353] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 : BitVec 8
@@ -196,7 +196,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:48:29: [bv] [0.010739] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:48:29: [bv] [0.011158] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 8
@@ -218,7 +218,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:52:43: [bv] [0.010709] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:52:43: [bv] [0.010811] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 8
@@ -240,7 +240,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:56:108: [bv] [0.017461] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:56:108: [bv] [0.018476] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 8
@@ -262,7 +262,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:64:38: [bv] [0.039229] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:64:38: [bv] [0.038551] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 : BitVec 8
@@ -293,7 +293,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:69:29: [bv] [0.016160] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:69:29: [bv] [0.017432] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 8
@@ -317,7 +317,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:74:43: [bv] [0.016906] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:74:43: [bv] [0.017101] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 8
@@ -341,7 +341,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:80:31: [bv] [0.027840] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:80:31: [bv] [0.029446] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 8
@@ -368,7 +368,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:85:19: [bv] [0.013591] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:85:19: [bv] [0.014731] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 : BitVec 8
@@ -386,21 +386,21 @@ info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohma
             some x_1
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:87:90: Bitwuzla provided a counter example after 71.000000ms
-LeanSAT provided a counter example after 68.000000ms: rewriting 0.000000 SAT solving 61.310375ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:87:90: Bitwuzla provided a counter example after 70.000000ms
+LeanSAT provided a counter example after 69.000000ms: rewriting 0.000000 SAT solving 61.659333ms
 error: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:87:8: (kernel) declaration has metavariables 'positive_sameconst_ashrexact_thm'
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:89:105: Bitwuzla provided a counter example after 72.000000ms
-LeanSAT provided a counter example after 68.000000ms: rewriting 0.000000 SAT solving 61.280625ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:89:105: Bitwuzla provided a counter example after 69.000000ms
+LeanSAT provided a counter example after 67.000000ms: rewriting 0.000000 SAT solving 59.955375ms
 error: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:89:8: (kernel) declaration has metavariables 'positive_biggerashr_ashrexact_thm'
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:91:96: Bitwuzla provided a counter example after 71.000000ms
-LeanSAT provided a counter example after 65.000000ms: rewriting 0.000000 SAT solving 57.227084ms
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:91:96: Bitwuzla provided a counter example after 74.000000ms
+LeanSAT provided a counter example after 70.000000ms: rewriting 0.000000 SAT solving 61.645542ms
 error: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:91:8: (kernel) declaration has metavariables 'positive_biggershl_ashrexact_thm'
 error: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:96:19: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:96:19: [bv] [0.021722] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:96:19: [bv] [0.022493] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 : BitVec 8
@@ -425,48 +425,51 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:100:17: [Meta.Tactic.bv] Running preprocessing pipeline on:
-    case h
-    x : BitVec 8
-    a✝ :
-      ¬(if (x.sshiftRight 3 <<< 3).sshiftRight 3 = x.sshiftRight 3 then none else some (x.sshiftRight 3 <<< 3)) ⊑ some x
-    ⊢ False
-[Meta.Tactic.bv] Rerunning pipeline on:
-    case h
-    x : BitVec 8
-    a✝ :
-      ¬(if ((x.sshiftRight 3 <<< 3).sshiftRight 3 == x.sshiftRight 3) = true then none
-          else some (x.sshiftRight 3 <<< 3)) ⊑
-          some x
-    ⊢ False
-[Meta.Tactic.bv] Pipeline reached a fixpoint
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:100:17: [bv] [0.010005] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 8
+      a✝ :
+        ¬(if (x.sshiftRight 3 <<< 3).sshiftRight 3 = x.sshiftRight 3 then none else some (x.sshiftRight 3 <<< 3)) ⊑
+            some x
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 8
+      a✝ :
+        ¬(if ((x.sshiftRight 3 <<< 3).sshiftRight 3 == x.sshiftRight 3) = true then none
+            else some (x.sshiftRight 3 <<< 3)) ⊑
+            some x
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
 error: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:104:33: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:104:33: [Meta.Tactic.bv] Running preprocessing pipeline on:
-    case h
-    x : BitVec 8
-    a✝ :
-      ¬(if (x.sshiftRight 6 <<< 3).sshiftRight 3 = x.sshiftRight 6 then none else some (x.sshiftRight 6 <<< 3)) ⊑
-          some (x.sshiftRight 3)
-    ⊢ False
-[Meta.Tactic.bv] Rerunning pipeline on:
-    case h
-    x : BitVec 8
-    a✝ :
-      ¬(if ((x.sshiftRight 6 <<< 3).sshiftRight 3 == x.sshiftRight 6) = true then none
-          else some (x.sshiftRight 6 <<< 3)) ⊑
-          some (x.sshiftRight 3)
-    ⊢ False
-[Meta.Tactic.bv] Pipeline reached a fixpoint
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:104:33: [bv] [0.010124] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 8
+      a✝ :
+        ¬(if (x.sshiftRight 6 <<< 3).sshiftRight 3 = x.sshiftRight 6 then none else some (x.sshiftRight 6 <<< 3)) ⊑
+            some (x.sshiftRight 3)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 8
+      a✝ :
+        ¬(if ((x.sshiftRight 6 <<< 3).sshiftRight 3 == x.sshiftRight 6) = true then none
+            else some (x.sshiftRight 6 <<< 3)) ⊑
+            some (x.sshiftRight 3)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
 error: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:108:71: None of the hypotheses are in the supported BitVec fragment.
 There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:108:71: [bv] [0.013819] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:108:71: [bv] [0.014444] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 8
@@ -488,7 +491,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:113:19: [bv] [0.021054] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:113:19: [bv] [0.022572] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 : BitVec 8
@@ -512,7 +515,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:116:112: [bv] [0.013324] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:116:112: [bv] [0.011201] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 8
@@ -531,7 +534,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:120:33: [bv] [0.010723] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:120:33: [bv] [0.011497] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 8
@@ -552,7 +555,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:124:61: [bv] [0.016280] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:124:61: [bv] [0.017908] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 8
@@ -573,7 +576,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:130:19: [bv] [0.027472] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:130:19: [bv] [0.030608] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x x_1 : BitVec 8
@@ -600,7 +603,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:135:17: [bv] [0.013858] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:135:17: [bv] [0.016911] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 8
@@ -624,7 +627,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:140:33: [bv] [0.015171] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:140:33: [bv] [0.016485] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 8
@@ -648,7 +651,7 @@ There are two potential fixes for this:
 1. If you are using custom BitVec constructs simplify them to built-in ones.
 2. If your problem is using only built-in ones it might currently be out of reach.
    Consider expressing it in terms of different operations that are better supported.
-info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:145:107: [bv] [0.024586] Normalizing goal
+info: ././././SSA/Projects/InstCombine/tests/proofs/gcanonicalizehashrhshlhtohmasking_proof.lean:145:107: [bv] [0.024882] Normalizing goal
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       x : BitVec 8

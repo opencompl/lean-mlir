@@ -18,5 +18,5 @@ theorem foo_thm (x x_1 : BitVec 32) :
               none
             else some (x_1 * x_1)).bind
           fun y' => some (a - y')) ⊑
-    some (x * x_1) := sorry
+    some (x * x_1) := by bv_compare'
 
