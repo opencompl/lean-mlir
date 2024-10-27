@@ -1,0 +1,139 @@
+⚠ [667/887] Replayed SSA.Core.ErasedContext
+warning: ././././SSA/Core/ErasedContext.lean:325:14: unused variable `t`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [674/887] Replayed SSA.Core.Framework
+warning: ././././SSA/Core/Framework.lean:1826:9: unused variable `inst`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././././SSA/Core/Framework.lean:1833:75: unused variable `inst`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././././SSA/Core/Framework.lean:2083:31: unused variable `x`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././././SSA/Core/Framework.lean:2084:33: unused variable `x`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [687/887] Replayed SSA.Core.MLIRSyntax.AST
+warning: ././././SSA/Core/MLIRSyntax/AST.lean:40:4: The namespace 'SSAVal' is duplicated in the declaration 'MLIR.AST.SSAVal.SSAVal'
+note: this linter can be disabled with `set_option linter.dupNamespace false`
+⚠ [869/887] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [873/887] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [874/887] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [880/887] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [881/887] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [887/887] Building SSA.Projects.InstCombine.tests.proofs.glshrhtrunchsexthtohashrhsext_proof
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib DYLD_LIBRARY_PATH= /Users/luisa/.elan/toolchains/leanprover--lean4---nightly-2024-10-25/bin/lean ././././SSA/Projects/InstCombine/tests/proofs/glshrhtrunchsexthtohashrhsext_proof.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/glshrhtrunchsexthtohashrhsext_proof.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/glshrhtrunchsexthtohashrhsext_proof.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/proofs/glshrhtrunchsexthtohashrhsext_proof.c --json
+error: ././././SSA/Projects/InstCombine/tests/proofs/glshrhtrunchsexthtohashrhsext_proof.lean:7:109: The external prover produced unexpected output, stdout:
+stderr:
+[error] /var/folders/mw/4wzj975d1_s2cxywvdfyyh000000gn/T/tmp.rYgGioD3:3:82: expected terms of same sort at indices 0 and 1 as argument to '='
+info: ././././SSA/Projects/InstCombine/tests/proofs/glshrhtrunchsexthtohashrhsext_proof.lean:7:109: [Meta.Tactic.bv] Running preprocessing pipeline on:
+    case h
+    x : BitVec 8
+    a✝ : ¬BitVec.signExtend 16 (BitVec.setWidth 4 (x >>> 4)) = BitVec.signExtend 16 (x.sshiftRight 4)
+    ⊢ False
+[Meta.Tactic.bv] Rerunning pipeline on:
+    case h
+    x : BitVec 8
+    a✝ : (!BitVec.signExtend 16 (BitVec.zeroExtend 4 (x >>> 4)) == BitVec.signExtend 16 (x.sshiftRight 4)) = true
+    ⊢ False
+[Meta.Tactic.bv] Pipeline reached a fixpoint
+[Meta.Tactic.bv] New atom of width 8: x
+[Meta.Tactic.bv] Reflected bv logical expression: !((sext 16 (zext 4 (>> 4 var0))) == (sext 16 (>>a 4 var0)))
+[bv] [0.064813] Preparing LRAT reflection term
+  [Meta.Tactic.bv] Encoded as SMT: (set-logic QF_BV)
+      (declare-const x_0 (_ BitVec 8))
+      (assert (not (= ((_ sign_extend 12) ((_ zero_extend 0) (bvlshr x_0 #b00000100))) ((_ sign_extend 8) (bvashr x_0 #b00000100)))))
+      (check-sat)
+      (exit)
+      
+  [bv] [0.060927] Proving with bitwuzla
+error: ././././SSA/Projects/InstCombine/tests/proofs/glshrhtrunchsexthtohashrhsext_proof.lean:9:109: The external prover produced unexpected output, stdout:
+stderr:
+[error] /var/folders/mw/4wzj975d1_s2cxywvdfyyh000000gn/T/tmp.GRBi2VWK:3:82: expected terms of same sort at indices 0 and 1 as argument to '='
+info: ././././SSA/Projects/InstCombine/tests/proofs/glshrhtrunchsexthtohashrhsext_proof.lean:9:109: [Meta.Tactic.bv] Running preprocessing pipeline on:
+    case h
+    x : BitVec 8
+    a✝ : ¬BitVec.signExtend 16 (BitVec.setWidth 3 (x >>> 5)) = BitVec.signExtend 16 (x.sshiftRight 5)
+    ⊢ False
+[Meta.Tactic.bv] Rerunning pipeline on:
+    case h
+    x : BitVec 8
+    a✝ : (!BitVec.signExtend 16 (BitVec.zeroExtend 3 (x >>> 5)) == BitVec.signExtend 16 (x.sshiftRight 5)) = true
+    ⊢ False
+[Meta.Tactic.bv] Pipeline reached a fixpoint
+[Meta.Tactic.bv] New atom of width 8: x
+[Meta.Tactic.bv] Reflected bv logical expression: !((sext 16 (zext 3 (>> 5 var0))) == (sext 16 (>>a 5 var0)))
+[bv] [0.060327] Preparing LRAT reflection term
+  [Meta.Tactic.bv] Encoded as SMT: (set-logic QF_BV)
+      (declare-const x_0 (_ BitVec 8))
+      (assert (not (= ((_ sign_extend 13) ((_ zero_extend 0) (bvlshr x_0 #b00000101))) ((_ sign_extend 8) (bvashr x_0 #b00000101)))))
+      (check-sat)
+      (exit)
+      
+  [bv] [0.057656] Proving with bitwuzla
+error: ././././SSA/Projects/InstCombine/tests/proofs/glshrhtrunchsexthtohashrhsext_proof.lean:11:109: The external prover produced unexpected output, stdout:
+stderr:
+[error] /var/folders/mw/4wzj975d1_s2cxywvdfyyh000000gn/T/tmp.G6g5ZwGv:3:81: expected terms of same sort at indices 0 and 1 as argument to '='
+info: ././././SSA/Projects/InstCombine/tests/proofs/glshrhtrunchsexthtohashrhsext_proof.lean:11:109: [Meta.Tactic.bv] Running preprocessing pipeline on:
+    case h
+    x : BitVec 7
+    a✝ : ¬BitVec.signExtend 16 (BitVec.setWidth 4 (x >>> 3)) = BitVec.signExtend 16 (x.sshiftRight 3)
+    ⊢ False
+[Meta.Tactic.bv] Rerunning pipeline on:
+    case h
+    x : BitVec 7
+    a✝ : (!BitVec.signExtend 16 (BitVec.zeroExtend 4 (x >>> 3)) == BitVec.signExtend 16 (x.sshiftRight 3)) = true
+    ⊢ False
+[Meta.Tactic.bv] Pipeline reached a fixpoint
+[Meta.Tactic.bv] New atom of width 7: x
+[Meta.Tactic.bv] Reflected bv logical expression: !((sext 16 (zext 4 (>> 3 var0))) == (sext 16 (>>a 3 var0)))
+[bv] [0.064240] Preparing LRAT reflection term
+  [Meta.Tactic.bv] Encoded as SMT: (set-logic QF_BV)
+      (declare-const x_0 (_ BitVec 7))
+      (assert (not (= ((_ sign_extend 12) ((_ zero_extend 0) (bvlshr x_0 #b0000011))) ((_ sign_extend 9) (bvashr x_0 #b0000011)))))
+      (check-sat)
+      (exit)
+      
+  [bv] [0.061645] Proving with bitwuzla
+error: ././././SSA/Projects/InstCombine/tests/proofs/glshrhtrunchsexthtohashrhsext_proof.lean:13:121: The external prover produced unexpected output, stdout:
+stderr:
+[error] /var/folders/mw/4wzj975d1_s2cxywvdfyyh000000gn/T/tmp.mfFYKUij:3:106: expected terms of same sort at indices 0 and 1 as argument to '='
+info: ././././SSA/Projects/InstCombine/tests/proofs/glshrhtrunchsexthtohashrhsext_proof.lean:13:121: [Meta.Tactic.bv] Running preprocessing pipeline on:
+    case h
+    x : BitVec 32
+    a✝ : ¬BitVec.signExtend 32 (BitVec.setWidth 8 (x >>> 24)) = x.sshiftRight 24
+    ⊢ False
+[Meta.Tactic.bv] Rerunning pipeline on:
+    case h
+    x : BitVec 32
+    a✝ : (!BitVec.signExtend 32 (BitVec.zeroExtend 8 (x >>> 24)) == x.sshiftRight 24) = true
+    ⊢ False
+[Meta.Tactic.bv] Pipeline reached a fixpoint
+[Meta.Tactic.bv] New atom of width 32: x
+[Meta.Tactic.bv] Reflected bv logical expression: !((sext 32 (zext 8 (>> 24 var0))) == (>>a 24 var0))
+[bv] [0.064662] Preparing LRAT reflection term
+  [Meta.Tactic.bv] Encoded as SMT: (set-logic QF_BV)
+      (declare-const x_0 (_ BitVec 32))
+      (assert (not (= ((_ sign_extend 24) ((_ zero_extend 0) (bvlshr x_0 #b00000000000000000000000000011000))) (bvashr x_0 #b00000000000000000000000000011000))))
+      (check-sat)
+      (exit)
+      
+  [bv] [0.061833] Proving with bitwuzla
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.proofs.glshrhtrunchsexthtohashrhsext_proof

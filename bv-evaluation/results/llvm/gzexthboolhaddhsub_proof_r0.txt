@@ -1,0 +1,204 @@
+⚠ [667/887] Replayed SSA.Core.ErasedContext
+warning: ././././SSA/Core/ErasedContext.lean:325:14: unused variable `t`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [674/887] Replayed SSA.Core.Framework
+warning: ././././SSA/Core/Framework.lean:1826:9: unused variable `inst`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././././SSA/Core/Framework.lean:1833:75: unused variable `inst`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././././SSA/Core/Framework.lean:2083:31: unused variable `x`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././././SSA/Core/Framework.lean:2084:33: unused variable `x`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [687/887] Replayed SSA.Core.MLIRSyntax.AST
+warning: ././././SSA/Core/MLIRSyntax/AST.lean:40:4: The namespace 'SSAVal' is duplicated in the declaration 'MLIR.AST.SSAVal.SSAVal'
+note: this linter can be disabled with `set_option linter.dupNamespace false`
+⚠ [869/887] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [873/887] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [874/887] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [880/887] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [881/887] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [887/887] Building SSA.Projects.InstCombine.tests.proofs.gzexthboolhaddhsub_proof
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib DYLD_LIBRARY_PATH= /Users/luisa/.elan/toolchains/leanprover--lean4---nightly-2024-10-25/bin/lean ././././SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.c --json
+error: ././././SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.lean:12:28: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.lean:14:117: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.lean:14:117: [bv] [0.037209] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x x_1 : BitVec 1
+      a✝ :
+        ¬some (BitVec.setWidth 32 x_1 + 1#32 + -BitVec.setWidth 32 x) ⊑
+            sorry.bind fun a =>
+              if a.msb = x.msb ∧ ¬(a + BitVec.signExtend 32 x).msb = a.msb then none
+              else some (a + BitVec.signExtend 32 x)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x x_1 : BitVec 1
+      a✝ :
+        ¬some (BitVec.zeroExtend 32 x_1 + 1#32 + (~~~BitVec.zeroExtend 32 x + 1#32)) ⊑
+            sorry.bind fun a =>
+              if (a.getLsbD 31 == x.getLsbD 0 && !(a + BitVec.signExtend 32 x).getLsbD 31 == a.getLsbD 31) = true then
+                none
+              else some (a + BitVec.signExtend 32 x)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.lean:19:26: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.lean:21:15: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.lean:21:15: [Meta.Tactic.bv] Running preprocessing pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬sorry ⊑ none
+    ⊢ False
+[Meta.Tactic.bv] Rerunning pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬sorry ⊑ none
+    ⊢ False
+[Meta.Tactic.bv] Pipeline reached a fixpoint
+error: ././././SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.lean:22:0: unexpected identifier; expected command
+error: ././././SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.lean:22:89: 'PR30273_three_bools_thm' has already been declared
+error: ././././SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.lean:48:0: unexpected identifier; expected command
+error: ././././SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.lean:48:89: 'PR30273_three_bools_thm' has already been declared
+error: ././././SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.lean:56:0: unexpected identifier; expected command
+error: ././././SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.lean:56:89: 'PR30273_three_bools_thm' has already been declared
+error: ././././SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.lean:95:26: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.lean:96:51: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.lean:96:51: [Meta.Tactic.bv] Running preprocessing pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬some (BitVec.setWidth 32 x + 42#32) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Rerunning pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬some (BitVec.zeroExtend 32 x + 42#32) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Pipeline reached a fixpoint
+info: ././././SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.lean:98:80: Bitwuzla proved the goal after 75.000000ms
+LeanSAT proved the goal after 77.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 60.942291ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+error: ././././SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.lean:104:26: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.lean:105:51: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.lean:105:51: [Meta.Tactic.bv] Running preprocessing pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬some (42#64 - BitVec.setWidth 64 x) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Rerunning pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬some (43#64 + ~~~BitVec.zeroExtend 64 x) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Pipeline reached a fixpoint
+info: ././././SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.lean:107:80: Bitwuzla proved the goal after 76.000000ms
+LeanSAT proved the goal after 76.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 60.017250ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+error: ././././SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.lean:113:26: invalid pattern
+error: ././././SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.lean:114:51: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.lean:114:51: [Meta.Tactic.bv] Running preprocessing pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬some (42#64 - BitVec.signExtend 64 x) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Rerunning pipeline on:
+    case h
+    x : BitVec 1
+    a✝ : ¬some (43#64 + ~~~BitVec.signExtend 64 x) ⊑ sorry
+    ⊢ False
+[Meta.Tactic.bv] Pipeline reached a fixpoint
+info: ././././SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.lean:116:103: Bitwuzla proved the goal after 81.000000ms
+LeanSAT proved the goal after 82.000000ms: rewriting 14.670208ms, bitblasting 0.000000ms, SAT solving 60.930208ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+error: ././././SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.lean:119:105: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.lean:119:105: [bv] [0.014853] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 1
+      x_1 : BitVec 8
+      a✝ :
+        ¬(if x_1 < BitVec.signExtend 8 x then none else some (x_1 - BitVec.signExtend 8 x)) ⊑
+            some (x_1 + BitVec.setWidth 8 x)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 1
+      x_1 : BitVec 8
+      a✝ :
+        ¬(if (BitVec.signExtend 8 x >ᵤ x_1) = true then none else some (x_1 + (~~~BitVec.signExtend 8 x + 1#8))) ⊑
+            some (x_1 + BitVec.zeroExtend 8 x)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+info: ././././SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.lean:121:112: Bitwuzla proved the goal after 72.000000ms
+LeanSAT proved the goal after 72.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.246875ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+error: ././././SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.lean:126:52: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+info: ././././SSA/Projects/InstCombine/tests/proofs/gzexthboolhaddhsub_proof.lean:126:52: [bv] [0.016635] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      x : BitVec 1
+      x_1 : BitVec 32
+      a✝ :
+        ¬some (x_1 % 42#32 + BitVec.signExtend 32 x) ⊑
+            if (x_1 % 42#32).msb = x.msb ∧ ¬(x_1 % 42#32 + BitVec.signExtend 32 x).msb = (x_1 % 42#32).msb then none
+            else some (x_1 % 42#32 + BitVec.signExtend 32 x)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      x : BitVec 1
+      x_1 : BitVec 32
+      a✝ :
+        ¬some (x_1 % 42#32 + BitVec.signExtend 32 x) ⊑
+            if
+                ((x_1 % 42#32).getLsbD 31 == x.getLsbD 0 &&
+                    !(x_1 % 42#32 + BitVec.signExtend 32 x).getLsbD 31 == (x_1 % 42#32).getLsbD 31) =
+                  true then
+              none
+            else some (x_1 % 42#32 + BitVec.signExtend 32 x)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.proofs.gzexthboolhaddhsub_proof
