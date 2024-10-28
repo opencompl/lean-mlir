@@ -7,7 +7,6 @@ import Std.Data.HashMap
 import Std.Data.HashMap.Lemmas
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Finset.Card
-import Mathlib.Data.List.Perm
 import SSA.Experimental.Bits.AutoStructs.ForLean
 import SSA.Experimental.Bits.AutoStructs.FinEnum
 
