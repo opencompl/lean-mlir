@@ -39,12 +39,6 @@ def shl_and_and_after := [llvm|
 theorem shl_and_and_proof : shl_and_and_before ⊑ shl_and_and_after := by
   unfold shl_and_and_before shl_and_and_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_and_and
   apply shl_and_and_thm
   ---END shl_and_and
@@ -80,12 +74,6 @@ def shl_and_and_fail_after := [llvm|
 theorem shl_and_and_fail_proof : shl_and_and_fail_before ⊑ shl_and_and_fail_after := by
   unfold shl_and_and_fail_before shl_and_and_fail_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_and_and_fail
   apply shl_and_and_fail_thm
   ---END shl_and_and_fail
@@ -118,12 +106,6 @@ def shl_add_add_after := [llvm|
 theorem shl_add_add_proof : shl_add_add_before ⊑ shl_add_add_after := by
   unfold shl_add_add_before shl_add_add_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_add_add
   apply shl_add_add_thm
   ---END shl_add_add
@@ -157,12 +139,6 @@ def shl_add_add_fail_after := [llvm|
 theorem shl_add_add_fail_proof : shl_add_add_fail_before ⊑ shl_add_add_fail_after := by
   unfold shl_add_add_fail_before shl_add_add_fail_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_add_add_fail
   apply shl_add_add_fail_thm
   ---END shl_add_add_fail
@@ -195,12 +171,6 @@ def shl_and_xor_after := [llvm|
 theorem shl_and_xor_proof : shl_and_xor_before ⊑ shl_and_xor_after := by
   unfold shl_and_xor_before shl_and_xor_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_and_xor
   apply shl_and_xor_thm
   ---END shl_and_xor
@@ -233,12 +203,6 @@ def shl_and_add_after := [llvm|
 theorem shl_and_add_proof : shl_and_add_before ⊑ shl_and_add_after := by
   unfold shl_and_add_before shl_and_add_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_and_add
   apply shl_and_add_thm
   ---END shl_and_add
@@ -271,12 +235,6 @@ def lshr_or_and_after := [llvm|
 theorem lshr_or_and_proof : lshr_or_and_before ⊑ lshr_or_and_after := by
   unfold lshr_or_and_before lshr_or_and_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_or_and
   apply lshr_or_and_thm
   ---END lshr_or_and
@@ -309,12 +267,6 @@ def lshr_or_or_fail_after := [llvm|
 theorem lshr_or_or_fail_proof : lshr_or_or_fail_before ⊑ lshr_or_or_fail_after := by
   unfold lshr_or_or_fail_before lshr_or_or_fail_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_or_or_fail
   apply lshr_or_or_fail_thm
   ---END lshr_or_or_fail
@@ -343,12 +295,6 @@ def lshr_or_or_no_const_after := [llvm|
 theorem lshr_or_or_no_const_proof : lshr_or_or_no_const_before ⊑ lshr_or_or_no_const_after := by
   unfold lshr_or_or_no_const_before lshr_or_or_no_const_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_or_or_no_const
   apply lshr_or_or_no_const_thm
   ---END lshr_or_or_no_const
@@ -377,12 +323,6 @@ def shl_xor_xor_no_const_after := [llvm|
 theorem shl_xor_xor_no_const_proof : shl_xor_xor_no_const_before ⊑ shl_xor_xor_no_const_after := by
   unfold shl_xor_xor_no_const_before shl_xor_xor_no_const_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_xor_xor_no_const
   apply shl_xor_xor_no_const_thm
   ---END shl_xor_xor_no_const
@@ -411,12 +351,6 @@ def shl_add_add_no_const_after := [llvm|
 theorem shl_add_add_no_const_proof : shl_add_add_no_const_before ⊑ shl_add_add_no_const_after := by
   unfold shl_add_add_no_const_before shl_add_add_no_const_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_add_add_no_const
   apply shl_add_add_no_const_thm
   ---END shl_add_add_no_const
@@ -449,12 +383,6 @@ def lshr_xor_or_good_mask_after := [llvm|
 theorem lshr_xor_or_good_mask_proof : lshr_xor_or_good_mask_before ⊑ lshr_xor_or_good_mask_after := by
   unfold lshr_xor_or_good_mask_before lshr_xor_or_good_mask_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_xor_or_good_mask
   apply lshr_xor_or_good_mask_thm
   ---END lshr_xor_or_good_mask
@@ -487,12 +415,6 @@ def shl_xor_xor_good_mask_after := [llvm|
 theorem shl_xor_xor_good_mask_proof : shl_xor_xor_good_mask_before ⊑ shl_xor_xor_good_mask_after := by
   unfold shl_xor_xor_good_mask_before shl_xor_xor_good_mask_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_xor_xor_good_mask
   apply shl_xor_xor_good_mask_thm
   ---END shl_xor_xor_good_mask
@@ -525,12 +447,6 @@ def shl_xor_xor_bad_mask_distribute_after := [llvm|
 theorem shl_xor_xor_bad_mask_distribute_proof : shl_xor_xor_bad_mask_distribute_before ⊑ shl_xor_xor_bad_mask_distribute_after := by
   unfold shl_xor_xor_bad_mask_distribute_before shl_xor_xor_bad_mask_distribute_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_xor_xor_bad_mask_distribute
   apply shl_xor_xor_bad_mask_distribute_thm
   ---END shl_xor_xor_bad_mask_distribute
@@ -563,12 +479,6 @@ def shl_add_and_after := [llvm|
 theorem shl_add_and_proof : shl_add_and_before ⊑ shl_add_and_after := by
   unfold shl_add_and_before shl_add_and_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_add_and
   apply shl_add_and_thm
   ---END shl_add_and
@@ -602,12 +512,6 @@ def lshr_and_add_fail_after := [llvm|
 theorem lshr_and_add_fail_proof : lshr_and_add_fail_before ⊑ lshr_and_add_fail_after := by
   unfold lshr_and_add_fail_before lshr_and_add_fail_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_and_add_fail
   apply lshr_and_add_fail_thm
   ---END lshr_and_add_fail
@@ -641,12 +545,6 @@ def lshr_add_or_fail_after := [llvm|
 theorem lshr_add_or_fail_proof : lshr_add_or_fail_before ⊑ lshr_add_or_fail_after := by
   unfold lshr_add_or_fail_before lshr_add_or_fail_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_add_or_fail
   apply lshr_add_or_fail_thm
   ---END lshr_add_or_fail
@@ -680,12 +578,6 @@ def lshr_add_xor_fail_after := [llvm|
 theorem lshr_add_xor_fail_proof : lshr_add_xor_fail_before ⊑ lshr_add_xor_fail_after := by
   unfold lshr_add_xor_fail_before lshr_add_xor_fail_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_add_xor_fail
   apply lshr_add_xor_fail_thm
   ---END lshr_add_xor_fail
@@ -719,12 +611,6 @@ def shl_add_and_fail_mismatch_shift_after := [llvm|
 theorem shl_add_and_fail_mismatch_shift_proof : shl_add_and_fail_mismatch_shift_before ⊑ shl_add_and_fail_mismatch_shift_after := by
   unfold shl_add_and_fail_mismatch_shift_before shl_add_and_fail_mismatch_shift_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_add_and_fail_mismatch_shift
   apply shl_add_and_fail_mismatch_shift_thm
   ---END shl_add_and_fail_mismatch_shift
@@ -755,12 +641,6 @@ def and_ashr_not_after := [llvm|
 theorem and_ashr_not_proof : and_ashr_not_before ⊑ and_ashr_not_after := by
   unfold and_ashr_not_before and_ashr_not_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_ashr_not
   apply and_ashr_not_thm
   ---END and_ashr_not
@@ -791,12 +671,6 @@ def and_ashr_not_commuted_after := [llvm|
 theorem and_ashr_not_commuted_proof : and_ashr_not_commuted_before ⊑ and_ashr_not_commuted_after := by
   unfold and_ashr_not_commuted_before and_ashr_not_commuted_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_ashr_not_commuted
   apply and_ashr_not_commuted_thm
   ---END and_ashr_not_commuted
@@ -827,12 +701,6 @@ def or_ashr_not_after := [llvm|
 theorem or_ashr_not_proof : or_ashr_not_before ⊑ or_ashr_not_after := by
   unfold or_ashr_not_before or_ashr_not_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_ashr_not
   apply or_ashr_not_thm
   ---END or_ashr_not
@@ -863,12 +731,6 @@ def or_ashr_not_commuted_after := [llvm|
 theorem or_ashr_not_commuted_proof : or_ashr_not_commuted_before ⊑ or_ashr_not_commuted_after := by
   unfold or_ashr_not_commuted_before or_ashr_not_commuted_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_ashr_not_commuted
   apply or_ashr_not_commuted_thm
   ---END or_ashr_not_commuted
@@ -899,12 +761,6 @@ def xor_ashr_not_after := [llvm|
 theorem xor_ashr_not_proof : xor_ashr_not_before ⊑ xor_ashr_not_after := by
   unfold xor_ashr_not_before xor_ashr_not_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN xor_ashr_not
   apply xor_ashr_not_thm
   ---END xor_ashr_not
@@ -935,12 +791,6 @@ def xor_ashr_not_commuted_after := [llvm|
 theorem xor_ashr_not_commuted_proof : xor_ashr_not_commuted_before ⊑ xor_ashr_not_commuted_after := by
   unfold xor_ashr_not_commuted_before xor_ashr_not_commuted_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN xor_ashr_not_commuted
   apply xor_ashr_not_commuted_thm
   ---END xor_ashr_not_commuted
@@ -972,12 +822,6 @@ def xor_ashr_not_fail_lshr_ashr_after := [llvm|
 theorem xor_ashr_not_fail_lshr_ashr_proof : xor_ashr_not_fail_lshr_ashr_before ⊑ xor_ashr_not_fail_lshr_ashr_after := by
   unfold xor_ashr_not_fail_lshr_ashr_before xor_ashr_not_fail_lshr_ashr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN xor_ashr_not_fail_lshr_ashr
   apply xor_ashr_not_fail_lshr_ashr_thm
   ---END xor_ashr_not_fail_lshr_ashr
@@ -1009,12 +853,6 @@ def xor_ashr_not_fail_ashr_lshr_after := [llvm|
 theorem xor_ashr_not_fail_ashr_lshr_proof : xor_ashr_not_fail_ashr_lshr_before ⊑ xor_ashr_not_fail_ashr_lshr_after := by
   unfold xor_ashr_not_fail_ashr_lshr_before xor_ashr_not_fail_ashr_lshr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN xor_ashr_not_fail_ashr_lshr
   apply xor_ashr_not_fail_ashr_lshr_thm
   ---END xor_ashr_not_fail_ashr_lshr
@@ -1045,12 +883,6 @@ def xor_ashr_not_fail_invalid_xor_constant_after := [llvm|
 theorem xor_ashr_not_fail_invalid_xor_constant_proof : xor_ashr_not_fail_invalid_xor_constant_before ⊑ xor_ashr_not_fail_invalid_xor_constant_after := by
   unfold xor_ashr_not_fail_invalid_xor_constant_before xor_ashr_not_fail_invalid_xor_constant_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN xor_ashr_not_fail_invalid_xor_constant
   apply xor_ashr_not_fail_invalid_xor_constant_thm
   ---END xor_ashr_not_fail_invalid_xor_constant

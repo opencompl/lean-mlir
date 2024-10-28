@@ -36,12 +36,6 @@ def and_signbit_shl_after := [llvm|
 theorem and_signbit_shl_proof : and_signbit_shl_before ⊑ and_signbit_shl_after := by
   unfold and_signbit_shl_before and_signbit_shl_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_signbit_shl
   apply and_signbit_shl_thm
   ---END and_signbit_shl
@@ -71,12 +65,6 @@ def and_nosignbit_shl_after := [llvm|
 theorem and_nosignbit_shl_proof : and_nosignbit_shl_before ⊑ and_nosignbit_shl_after := by
   unfold and_nosignbit_shl_before and_nosignbit_shl_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_nosignbit_shl
   apply and_nosignbit_shl_thm
   ---END and_nosignbit_shl
@@ -106,12 +94,6 @@ def or_signbit_shl_after := [llvm|
 theorem or_signbit_shl_proof : or_signbit_shl_before ⊑ or_signbit_shl_after := by
   unfold or_signbit_shl_before or_signbit_shl_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_signbit_shl
   apply or_signbit_shl_thm
   ---END or_signbit_shl
@@ -141,12 +123,6 @@ def or_nosignbit_shl_after := [llvm|
 theorem or_nosignbit_shl_proof : or_nosignbit_shl_before ⊑ or_nosignbit_shl_after := by
   unfold or_nosignbit_shl_before or_nosignbit_shl_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_nosignbit_shl
   apply or_nosignbit_shl_thm
   ---END or_nosignbit_shl
@@ -176,12 +152,6 @@ def xor_signbit_shl_after := [llvm|
 theorem xor_signbit_shl_proof : xor_signbit_shl_before ⊑ xor_signbit_shl_after := by
   unfold xor_signbit_shl_before xor_signbit_shl_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN xor_signbit_shl
   apply xor_signbit_shl_thm
   ---END xor_signbit_shl
@@ -211,12 +181,6 @@ def xor_nosignbit_shl_after := [llvm|
 theorem xor_nosignbit_shl_proof : xor_nosignbit_shl_before ⊑ xor_nosignbit_shl_after := by
   unfold xor_nosignbit_shl_before xor_nosignbit_shl_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN xor_nosignbit_shl
   apply xor_nosignbit_shl_thm
   ---END xor_nosignbit_shl
@@ -246,14 +210,8 @@ def add_signbit_shl_after := [llvm|
 theorem add_signbit_shl_proof : add_signbit_shl_before ⊑ add_signbit_shl_after := by
   unfold add_signbit_shl_before add_signbit_shl_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_signbit_shl
-  all_goals (try extract_goal ; sorry)
+  apply add_signbit_shl_thm
   ---END add_signbit_shl
 
 
@@ -281,14 +239,8 @@ def add_nosignbit_shl_after := [llvm|
 theorem add_nosignbit_shl_proof : add_nosignbit_shl_before ⊑ add_nosignbit_shl_after := by
   unfold add_nosignbit_shl_before add_nosignbit_shl_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_nosignbit_shl
-  all_goals (try extract_goal ; sorry)
+  apply add_nosignbit_shl_thm
   ---END add_nosignbit_shl
 
 
@@ -316,12 +268,6 @@ def and_signbit_lshr_after := [llvm|
 theorem and_signbit_lshr_proof : and_signbit_lshr_before ⊑ and_signbit_lshr_after := by
   unfold and_signbit_lshr_before and_signbit_lshr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_signbit_lshr
   apply and_signbit_lshr_thm
   ---END and_signbit_lshr
@@ -351,12 +297,6 @@ def and_nosignbit_lshr_after := [llvm|
 theorem and_nosignbit_lshr_proof : and_nosignbit_lshr_before ⊑ and_nosignbit_lshr_after := by
   unfold and_nosignbit_lshr_before and_nosignbit_lshr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_nosignbit_lshr
   apply and_nosignbit_lshr_thm
   ---END and_nosignbit_lshr
@@ -386,12 +326,6 @@ def or_signbit_lshr_after := [llvm|
 theorem or_signbit_lshr_proof : or_signbit_lshr_before ⊑ or_signbit_lshr_after := by
   unfold or_signbit_lshr_before or_signbit_lshr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_signbit_lshr
   apply or_signbit_lshr_thm
   ---END or_signbit_lshr
@@ -421,12 +355,6 @@ def or_nosignbit_lshr_after := [llvm|
 theorem or_nosignbit_lshr_proof : or_nosignbit_lshr_before ⊑ or_nosignbit_lshr_after := by
   unfold or_nosignbit_lshr_before or_nosignbit_lshr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_nosignbit_lshr
   apply or_nosignbit_lshr_thm
   ---END or_nosignbit_lshr
@@ -456,12 +384,6 @@ def xor_signbit_lshr_after := [llvm|
 theorem xor_signbit_lshr_proof : xor_signbit_lshr_before ⊑ xor_signbit_lshr_after := by
   unfold xor_signbit_lshr_before xor_signbit_lshr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN xor_signbit_lshr
   apply xor_signbit_lshr_thm
   ---END xor_signbit_lshr
@@ -491,12 +413,6 @@ def xor_nosignbit_lshr_after := [llvm|
 theorem xor_nosignbit_lshr_proof : xor_nosignbit_lshr_before ⊑ xor_nosignbit_lshr_after := by
   unfold xor_nosignbit_lshr_before xor_nosignbit_lshr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN xor_nosignbit_lshr
   apply xor_nosignbit_lshr_thm
   ---END xor_nosignbit_lshr
@@ -526,12 +442,6 @@ def and_signbit_ashr_after := [llvm|
 theorem and_signbit_ashr_proof : and_signbit_ashr_before ⊑ and_signbit_ashr_after := by
   unfold and_signbit_ashr_before and_signbit_ashr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_signbit_ashr
   apply and_signbit_ashr_thm
   ---END and_signbit_ashr
@@ -561,12 +471,6 @@ def and_nosignbit_ashr_after := [llvm|
 theorem and_nosignbit_ashr_proof : and_nosignbit_ashr_before ⊑ and_nosignbit_ashr_after := by
   unfold and_nosignbit_ashr_before and_nosignbit_ashr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_nosignbit_ashr
   apply and_nosignbit_ashr_thm
   ---END and_nosignbit_ashr
@@ -596,12 +500,6 @@ def or_signbit_ashr_after := [llvm|
 theorem or_signbit_ashr_proof : or_signbit_ashr_before ⊑ or_signbit_ashr_after := by
   unfold or_signbit_ashr_before or_signbit_ashr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_signbit_ashr
   apply or_signbit_ashr_thm
   ---END or_signbit_ashr
@@ -631,12 +529,6 @@ def or_nosignbit_ashr_after := [llvm|
 theorem or_nosignbit_ashr_proof : or_nosignbit_ashr_before ⊑ or_nosignbit_ashr_after := by
   unfold or_nosignbit_ashr_before or_nosignbit_ashr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_nosignbit_ashr
   apply or_nosignbit_ashr_thm
   ---END or_nosignbit_ashr
@@ -666,12 +558,6 @@ def xor_signbit_ashr_after := [llvm|
 theorem xor_signbit_ashr_proof : xor_signbit_ashr_before ⊑ xor_signbit_ashr_after := by
   unfold xor_signbit_ashr_before xor_signbit_ashr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN xor_signbit_ashr
   apply xor_signbit_ashr_thm
   ---END xor_signbit_ashr
@@ -701,12 +587,6 @@ def xor_nosignbit_ashr_after := [llvm|
 theorem xor_nosignbit_ashr_proof : xor_nosignbit_ashr_before ⊑ xor_nosignbit_ashr_after := by
   unfold xor_nosignbit_ashr_before xor_nosignbit_ashr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN xor_nosignbit_ashr
   apply xor_nosignbit_ashr_thm
   ---END xor_nosignbit_ashr

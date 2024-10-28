@@ -34,14 +34,8 @@ def shrink_xor_after := [llvm|
 theorem shrink_xor_proof : shrink_xor_before ⊑ shrink_xor_after := by
   unfold shrink_xor_before shrink_xor_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shrink_xor
-  all_goals (try extract_goal ; sorry)
+  apply shrink_xor_thm
   ---END shrink_xor
 
 
@@ -67,14 +61,8 @@ def shrink_or_after := [llvm|
 theorem shrink_or_proof : shrink_or_before ⊑ shrink_or_after := by
   unfold shrink_or_before shrink_or_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shrink_or
-  all_goals (try extract_goal ; sorry)
+  apply shrink_or_thm
   ---END shrink_or
 
 

@@ -1,0 +1,76 @@
+1: "ilogbf_const1"
+4: "ilogbf_const1" has unsupported operation: llvm.call
+
+1: "ilogb_const1"
+4: "ilogb_const1" has unsupported operation: llvm.call
+
+1: "ilogbf_const2"
+4: "ilogbf_const2" has unsupported operation: llvm.call
+
+1: "ilogb_const2"
+4: "ilogb_const2" has unsupported operation: llvm.call
+
+1: "ilogbf_zero"
+4: "ilogbf_zero" has unsupported operation: llvm.call
+
+1: "ilogb_zero"
+4: "ilogb_zero" has unsupported operation: llvm.call
+
+1: "ilogbf_neg_zero"
+4: "ilogbf_neg_zero" has unsupported operation: llvm.call
+
+1: "ilogb_neg_zero"
+4: "ilogb_neg_zero" has unsupported operation: llvm.call
+
+1: "ilogbf_inf"
+4: "ilogbf_inf" has unsupported operation: llvm.call
+
+1: "ilogb_inf"
+4: "ilogb_inf" has unsupported operation: llvm.call
+
+1: "ilogbf_nan"
+4: "ilogbf_nan" has unsupported operation: llvm.call
+
+1: "ilogb_nan"
+4: "ilogb_nan" has unsupported operation: llvm.call
+
+1: "ilogbf_zero_readnone"
+4: "ilogbf_zero_readnone" has unsupported operation: llvm.call
+
+1: "ilogb_zero_readnone"
+4: "ilogb_zero_readnone" has unsupported operation: llvm.call
+
+1: "ilogbf_neg_zero_readnone"
+4: "ilogbf_neg_zero_readnone" has unsupported operation: llvm.call
+
+1: "ilogb_neg_zero_readnone"
+4: "ilogb_neg_zero_readnone" has unsupported operation: llvm.call
+
+1: "ilogbf_inf_readnone"
+4: "ilogbf_inf_readnone" has unsupported operation: llvm.call
+
+1: "ilogb_inf_readnone"
+4: "ilogb_inf_readnone" has unsupported operation: llvm.call
+
+1: "ilogbf_nan_readnone"
+4: "ilogbf_nan_readnone" has unsupported operation: llvm.call
+
+1: "ilogb_nan_readnone"
+4: "ilogb_nan_readnone" has unsupported operation: llvm.call
+
+1: "ilogbf_poison"
+4: "ilogbf_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "ilogbf_poison" has unsupported operation: llvm.call
+
+1: "ilogb_poison"
+4: "ilogb_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "ilogb_poison" has unsupported operation: llvm.call
+
+1: "ilogbf"
+5: "ilogbf" is empty
+
+1: "ilogb"
+5: "ilogb" is empty
+

@@ -36,12 +36,6 @@ def pr40493_neg3_after := [llvm|
 theorem pr40493_neg3_proof : pr40493_neg3_before ⊑ pr40493_neg3_after := by
   unfold pr40493_neg3_before pr40493_neg3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN pr40493_neg3
   apply pr40493_neg3_thm
   ---END pr40493_neg3
@@ -72,12 +66,6 @@ def pr51551_demand3bits_after := [llvm|
 theorem pr51551_demand3bits_proof : pr51551_demand3bits_before ⊑ pr51551_demand3bits_after := by
   unfold pr51551_demand3bits_before pr51551_demand3bits_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN pr51551_demand3bits
   apply pr51551_demand3bits_thm
   ---END pr51551_demand3bits

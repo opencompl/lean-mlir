@@ -2,11 +2,31 @@
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
+open LLVM
 
 section gandhxorhmerge_proof
-theorem test1_thm (x x_1 x_2 : BitVec 32) : x_2 &&& x_1 ^^^ x_2 &&& x = x_2 &&& (x_1 ^^^ x) := sorry
+theorem test1_thm :
+  ∀ (e e_1 e_2 : IntW 32), LLVM.xor (LLVM.and e_2 e_1) (LLVM.and e_2 e) ⊑ LLVM.and e_2 (LLVM.xor e_1 e) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem test2_thm (x x_1 : BitVec 32) : x_1 &&& x ^^^ (x_1 ||| x) = x_1 ^^^ x := sorry
 
-theorem PR75692_1_thm (x : BitVec 32) : (x ^^^ 4#32) &&& (x ^^^ 4294967291#32) = 0#32 := sorry
+theorem test2_thm : ∀ (e e_1 : IntW 32), LLVM.xor (LLVM.and e_1 e) (LLVM.or e_1 e) ⊑ LLVM.xor e_1 e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem PR75692_1_thm : ∀ (e : IntW 32), LLVM.and (LLVM.xor e (const? 4)) (LLVM.xor e (const? (-5))) ⊑ const? 0 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
 

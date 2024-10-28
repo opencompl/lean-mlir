@@ -34,12 +34,6 @@ def test_sdiv_canonicalize_op0_after := [llvm|
 theorem test_sdiv_canonicalize_op0_proof : test_sdiv_canonicalize_op0_before ⊑ test_sdiv_canonicalize_op0_after := by
   unfold test_sdiv_canonicalize_op0_before test_sdiv_canonicalize_op0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test_sdiv_canonicalize_op0
   apply test_sdiv_canonicalize_op0_thm
   ---END test_sdiv_canonicalize_op0
@@ -67,12 +61,6 @@ def test_sdiv_canonicalize_op0_exact_after := [llvm|
 theorem test_sdiv_canonicalize_op0_exact_proof : test_sdiv_canonicalize_op0_exact_before ⊑ test_sdiv_canonicalize_op0_exact_after := by
   unfold test_sdiv_canonicalize_op0_exact_before test_sdiv_canonicalize_op0_exact_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test_sdiv_canonicalize_op0_exact
   apply test_sdiv_canonicalize_op0_exact_thm
   ---END test_sdiv_canonicalize_op0_exact

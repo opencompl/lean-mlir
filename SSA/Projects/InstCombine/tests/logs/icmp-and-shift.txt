@@ -155,6 +155,9 @@
 1: "test_shr_and_1_ne_0"
 4: "test_shr_and_1_ne_0" has unsupported operation: builtin.unregistered: llvm.icmp
 
+1: "test_shr_and_1_ne_0_samesign"
+4: "test_shr_and_1_ne_0_samesign" has unsupported operation: builtin.unregistered: llvm.icmp
+
 1: "test_const_shr_and_1_ne_0"
 4: "test_const_shr_and_1_ne_0" has unsupported operation: builtin.unregistered: llvm.icmp
 

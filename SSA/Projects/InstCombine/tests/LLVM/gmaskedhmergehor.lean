@@ -38,12 +38,6 @@ def p_after := [llvm|
 theorem p_proof : p_before ⊑ p_after := by
   unfold p_before p_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN p
   all_goals (try extract_goal ; sorry)
   ---END p
@@ -75,12 +69,6 @@ def p_commutative0_after := [llvm|
 theorem p_commutative0_proof : p_commutative0_before ⊑ p_commutative0_after := by
   unfold p_commutative0_before p_commutative0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN p_commutative0
   all_goals (try extract_goal ; sorry)
   ---END p_commutative0
@@ -112,12 +100,6 @@ def p_commutative2_after := [llvm|
 theorem p_commutative2_proof : p_commutative2_before ⊑ p_commutative2_after := by
   unfold p_commutative2_before p_commutative2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN p_commutative2
   all_goals (try extract_goal ; sorry)
   ---END p_commutative2
@@ -149,12 +131,6 @@ def p_commutative4_after := [llvm|
 theorem p_commutative4_proof : p_commutative4_before ⊑ p_commutative4_after := by
   unfold p_commutative4_before p_commutative4_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN p_commutative4
   all_goals (try extract_goal ; sorry)
   ---END p_commutative4
@@ -186,12 +162,6 @@ def n2_badmask_after := [llvm|
 theorem n2_badmask_proof : n2_badmask_before ⊑ n2_badmask_after := by
   unfold n2_badmask_before n2_badmask_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN n2_badmask
   all_goals (try extract_goal ; sorry)
   ---END n2_badmask
@@ -220,12 +190,6 @@ def n3_constmask_samemask_after := [llvm|
 theorem n3_constmask_samemask_proof : n3_constmask_samemask_before ⊑ n3_constmask_samemask_after := by
   unfold n3_constmask_samemask_before n3_constmask_samemask_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN n3_constmask_samemask
   all_goals (try extract_goal ; sorry)
   ---END n3_constmask_samemask

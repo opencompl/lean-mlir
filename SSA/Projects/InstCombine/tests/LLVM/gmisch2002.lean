@@ -32,12 +32,6 @@ def cast_test_2002h08h02_after := [llvm|
 theorem cast_test_2002h08h02_proof : cast_test_2002h08h02_before ⊑ cast_test_2002h08h02_after := by
   unfold cast_test_2002h08h02_before cast_test_2002h08h02_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN cast_test_2002h08h02
   all_goals (try extract_goal ; sorry)
   ---END cast_test_2002h08h02
@@ -67,12 +61,6 @@ def missed_const_prop_2002h12h05_after := [llvm|
 theorem missed_const_prop_2002h12h05_proof : missed_const_prop_2002h12h05_before ⊑ missed_const_prop_2002h12h05_after := by
   unfold missed_const_prop_2002h12h05_before missed_const_prop_2002h12h05_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN missed_const_prop_2002h12h05
   all_goals (try extract_goal ; sorry)
   ---END missed_const_prop_2002h12h05

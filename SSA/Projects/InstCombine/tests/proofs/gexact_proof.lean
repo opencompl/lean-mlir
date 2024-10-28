@@ -2,32 +2,84 @@
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
+open LLVM
 
 section gexact_proof
-theorem sdiv2_thm (x : BitVec 32) : x.sdiv 8#32 = x.sshiftRight 3 := sorry
+theorem sdiv2_thm : ∀ (e : IntW 32), LLVM.sdiv e (const? 8) ⊑ ashr e (const? 3) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem sdiv4_thm (x : BitVec 32) : x.sdiv 3#32 * 3#32 = x := sorry
 
-theorem sdiv6_thm (x : BitVec 32) : x.sdiv 3#32 * 4294967293#32 = -x := sorry
+theorem sdiv4_thm : ∀ (e : IntW 32), mul (LLVM.sdiv e (const? 3)) (const? 3) ⊑ e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem udiv1_thm (x x_1 : BitVec 32) :
-  (Option.bind (if x = 0#32 then none else some (x_1 / x)) fun a => some (a * x)) ⊑ some x_1 := sorry
 
-theorem udiv2_thm (x x_1 : BitVec 32) :
-  (Option.bind (if 32#32 ≤ x then none else some (1#32 <<< x.toNat)) fun y' =>
-      if y' = 0#32 then none else some (x_1 / y')) ⊑
-    if 32#32 ≤ x then none else some (x_1 >>> x.toNat) := sorry
+theorem sdiv6_thm : ∀ (e : IntW 32), mul (LLVM.sdiv e (const? 3)) (const? (-3)) ⊑ sub (const? 0) e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem mul_of_udiv_thm (x : BitVec 8) : x / 12#8 * 6#8 = x >>> 1 := sorry
 
-theorem mul_of_sdiv_thm (x : BitVec 8) :
-  some (x.sdiv 12#8 * 250#8) ⊑
-    if (-signExtend 9 (x.sshiftRight 1)).msb = (-signExtend 9 (x.sshiftRight 1)).getMsbD 1 then some (-x.sshiftRight 1)
-    else none := sorry
+theorem udiv1_thm : ∀ (e e_1 : IntW 32), mul (LLVM.udiv e_1 e) e ⊑ e_1 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem mul_of_udiv_fail_bad_remainder_thm (x : BitVec 8) :
-  some (x / 11#8 * 6#8) ⊑
-    if twoPow 16 7 <<< 1 ≤ setWidth 16 (x / 11#8) * 6#16 then none else some (x / 11#8 * 6#8) := sorry
 
-theorem mul_of_sdiv_fail_ub_thm (x : BitVec 8) : x.sdiv 6#8 * 250#8 = -x := sorry
+theorem udiv2_thm : ∀ (e e_1 : IntW 32), LLVM.udiv e_1 (shl (const? 1) e) ⊑ lshr e_1 e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem mul_of_udiv_thm : ∀ (e : IntW 8), mul (LLVM.udiv e (const? 12)) (const? 6) ⊑ lshr e (const? 1) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem mul_of_sdiv_thm :
+  ∀ (e : IntW 8),
+    mul (LLVM.sdiv e (const? 12)) (const? (-6)) ⊑
+      sub (const? 0) (ashr e (const? 1)) { «nsw» := true, «nuw» := false } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem mul_of_udiv_fail_bad_remainder_thm :
+  ∀ (e : IntW 8),
+    mul (LLVM.udiv e (const? 11)) (const? 6) ⊑
+      mul (LLVM.udiv e (const? 11)) (const? 6) { «nsw» := false, «nuw» := true } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem mul_of_sdiv_fail_ub_thm : ∀ (e : IntW 8), mul (LLVM.sdiv e (const? 6)) (const? (-6)) ⊑ sub (const? 0) e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
 

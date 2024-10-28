@@ -2,11 +2,17 @@
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
+open LLVM
 
 section g2007h08h02hInfiniteLoop_proof
-theorem test_thm (x x_1 : BitVec 16) :
-  some (signExtend 64 (signExtend 32 x_1 + signExtend 32 x)) ⊑
-    (if x_1.msb = x.msb ∧ ¬(signExtend 32 x_1 + signExtend 32 x).msb = x_1.msb then none
-        else some (signExtend 32 x_1 + signExtend 32 x)).bind
-      fun x' => some (signExtend 64 x') := sorry
+theorem test_thm :
+  ∀ (e e_1 : IntW 16),
+    sext 64 (add (sext 32 e_1) (sext 32 e)) ⊑
+      sext 64 (add (sext 32 e_1) (sext 32 e) { «nsw» := true, «nuw» := false }) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
 

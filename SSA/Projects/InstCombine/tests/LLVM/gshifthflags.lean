@@ -38,12 +38,6 @@ def shl_add_nuw_after := [llvm|
 theorem shl_add_nuw_proof : shl_add_nuw_before ⊑ shl_add_nuw_after := by
   unfold shl_add_nuw_before shl_add_nuw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_add_nuw
   all_goals (try extract_goal ; sorry)
   ---END shl_add_nuw
@@ -75,12 +69,6 @@ def shl_add_nuw_and_nsw_after := [llvm|
 theorem shl_add_nuw_and_nsw_proof : shl_add_nuw_and_nsw_before ⊑ shl_add_nuw_and_nsw_after := by
   unfold shl_add_nuw_and_nsw_before shl_add_nuw_and_nsw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_add_nuw_and_nsw
   all_goals (try extract_goal ; sorry)
   ---END shl_add_nuw_and_nsw
@@ -112,12 +100,6 @@ def shl_add_nsw_after := [llvm|
 theorem shl_add_nsw_proof : shl_add_nsw_before ⊑ shl_add_nsw_after := by
   unfold shl_add_nsw_before shl_add_nsw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_add_nsw
   all_goals (try extract_goal ; sorry)
   ---END shl_add_nsw

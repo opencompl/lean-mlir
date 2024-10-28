@@ -36,12 +36,6 @@ def t0_after := [llvm|
 theorem t0_proof : t0_before ⊑ t0_after := by
   unfold t0_before t0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t0
   all_goals (try extract_goal ; sorry)
   ---END t0
@@ -71,12 +65,6 @@ def t6_shl_after := [llvm|
 theorem t6_shl_proof : t6_shl_before ⊑ t6_shl_after := by
   unfold t6_shl_before t6_shl_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t6_shl
   all_goals (try extract_goal ; sorry)
   ---END t6_shl
@@ -106,12 +94,6 @@ def t7_ashr_after := [llvm|
 theorem t7_ashr_proof : t7_ashr_before ⊑ t7_ashr_after := by
   unfold t7_ashr_before t7_ashr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t7_ashr
   all_goals (try extract_goal ; sorry)
   ---END t7_ashr
@@ -141,12 +123,6 @@ def t8_lshr_exact_flag_preservation_after := [llvm|
 theorem t8_lshr_exact_flag_preservation_proof : t8_lshr_exact_flag_preservation_before ⊑ t8_lshr_exact_flag_preservation_after := by
   unfold t8_lshr_exact_flag_preservation_before t8_lshr_exact_flag_preservation_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t8_lshr_exact_flag_preservation
   all_goals (try extract_goal ; sorry)
   ---END t8_lshr_exact_flag_preservation
@@ -176,12 +152,6 @@ def t9_ashr_exact_flag_preservation_after := [llvm|
 theorem t9_ashr_exact_flag_preservation_proof : t9_ashr_exact_flag_preservation_before ⊑ t9_ashr_exact_flag_preservation_after := by
   unfold t9_ashr_exact_flag_preservation_before t9_ashr_exact_flag_preservation_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t9_ashr_exact_flag_preservation
   all_goals (try extract_goal ; sorry)
   ---END t9_ashr_exact_flag_preservation
@@ -211,12 +181,6 @@ def t10_shl_nuw_flag_preservation_after := [llvm|
 theorem t10_shl_nuw_flag_preservation_proof : t10_shl_nuw_flag_preservation_before ⊑ t10_shl_nuw_flag_preservation_after := by
   unfold t10_shl_nuw_flag_preservation_before t10_shl_nuw_flag_preservation_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t10_shl_nuw_flag_preservation
   all_goals (try extract_goal ; sorry)
   ---END t10_shl_nuw_flag_preservation
@@ -246,12 +210,6 @@ def t11_shl_nsw_flag_preservation_after := [llvm|
 theorem t11_shl_nsw_flag_preservation_proof : t11_shl_nsw_flag_preservation_before ⊑ t11_shl_nsw_flag_preservation_after := by
   unfold t11_shl_nsw_flag_preservation_before t11_shl_nsw_flag_preservation_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t11_shl_nsw_flag_preservation
   all_goals (try extract_goal ; sorry)
   ---END t11_shl_nsw_flag_preservation

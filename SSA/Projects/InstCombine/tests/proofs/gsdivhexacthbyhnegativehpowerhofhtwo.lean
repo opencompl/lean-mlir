@@ -34,12 +34,6 @@ def t0_after := [llvm|
 theorem t0_proof : t0_before ⊑ t0_after := by
   unfold t0_before t0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t0
   apply t0_thm
   ---END t0
@@ -71,12 +65,6 @@ def prove_exact_with_high_mask_after := [llvm|
 theorem prove_exact_with_high_mask_proof : prove_exact_with_high_mask_before ⊑ prove_exact_with_high_mask_after := by
   unfold prove_exact_with_high_mask_before prove_exact_with_high_mask_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN prove_exact_with_high_mask
   apply prove_exact_with_high_mask_thm
   ---END prove_exact_with_high_mask
@@ -105,12 +93,6 @@ def prove_exact_with_high_mask_limit_after := [llvm|
 theorem prove_exact_with_high_mask_limit_proof : prove_exact_with_high_mask_limit_before ⊑ prove_exact_with_high_mask_limit_after := by
   unfold prove_exact_with_high_mask_limit_before prove_exact_with_high_mask_limit_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN prove_exact_with_high_mask_limit
   apply prove_exact_with_high_mask_limit_thm
   ---END prove_exact_with_high_mask_limit

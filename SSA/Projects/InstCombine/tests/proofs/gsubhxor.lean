@@ -36,12 +36,6 @@ def low_mask_nsw_nuw_after := [llvm|
 theorem low_mask_nsw_nuw_proof : low_mask_nsw_nuw_before ⊑ low_mask_nsw_nuw_after := by
   unfold low_mask_nsw_nuw_before low_mask_nsw_nuw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN low_mask_nsw_nuw
   apply low_mask_nsw_nuw_thm
   ---END low_mask_nsw_nuw
@@ -71,12 +65,6 @@ def arbitrary_mask_sub_i8_after := [llvm|
 theorem arbitrary_mask_sub_i8_proof : arbitrary_mask_sub_i8_before ⊑ arbitrary_mask_sub_i8_after := by
   unfold arbitrary_mask_sub_i8_before arbitrary_mask_sub_i8_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN arbitrary_mask_sub_i8
   apply arbitrary_mask_sub_i8_thm
   ---END arbitrary_mask_sub_i8
@@ -106,12 +94,6 @@ def not_masked_sub_i8_after := [llvm|
 theorem not_masked_sub_i8_proof : not_masked_sub_i8_before ⊑ not_masked_sub_i8_after := by
   unfold not_masked_sub_i8_before not_masked_sub_i8_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_masked_sub_i8
   apply not_masked_sub_i8_thm
   ---END not_masked_sub_i8
@@ -142,12 +124,6 @@ def xor_add_after := [llvm|
 theorem xor_add_proof : xor_add_before ⊑ xor_add_after := by
   unfold xor_add_before xor_add_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN xor_add
   apply xor_add_thm
   ---END xor_add

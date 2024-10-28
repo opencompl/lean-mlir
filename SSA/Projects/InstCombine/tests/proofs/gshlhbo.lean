@@ -41,12 +41,6 @@ def lshr_add_after := [llvm|
 theorem lshr_add_proof : lshr_add_before ⊑ lshr_add_after := by
   unfold lshr_add_before lshr_add_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_add
   apply lshr_add_thm
   ---END lshr_add
@@ -80,12 +74,6 @@ def lshr_sub_after := [llvm|
 theorem lshr_sub_proof : lshr_sub_before ⊑ lshr_sub_after := by
   unfold lshr_sub_before lshr_sub_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_sub
   apply lshr_sub_thm
   ---END lshr_sub
@@ -118,12 +106,6 @@ def lshr_and_after := [llvm|
 theorem lshr_and_proof : lshr_and_before ⊑ lshr_and_after := by
   unfold lshr_and_before lshr_and_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_and
   apply lshr_and_thm
   ---END lshr_and
@@ -158,12 +140,6 @@ def lshr_or_after := [llvm|
 theorem lshr_or_proof : lshr_or_before ⊑ lshr_or_after := by
   unfold lshr_or_before lshr_or_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_or
   apply lshr_or_thm
   ---END lshr_or
@@ -198,12 +174,6 @@ def lshr_xor_after := [llvm|
 theorem lshr_xor_proof : lshr_xor_before ⊑ lshr_xor_after := by
   unfold lshr_xor_before lshr_xor_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_xor
   apply lshr_xor_thm
   ---END lshr_xor
@@ -240,12 +210,6 @@ def lshr_and_add_after := [llvm|
 theorem lshr_and_add_proof : lshr_and_add_before ⊑ lshr_and_add_after := by
   unfold lshr_and_add_before lshr_and_add_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_and_add
   apply lshr_and_add_thm
   ---END lshr_and_add
@@ -283,12 +247,6 @@ def lshr_and_sub_after := [llvm|
 theorem lshr_and_sub_proof : lshr_and_sub_before ⊑ lshr_and_sub_after := by
   unfold lshr_and_sub_before lshr_and_sub_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_and_sub
   apply lshr_and_sub_thm
   ---END lshr_and_sub
@@ -325,12 +283,6 @@ def lshr_and_and_after := [llvm|
 theorem lshr_and_and_proof : lshr_and_and_before ⊑ lshr_and_and_after := by
   unfold lshr_and_and_before lshr_and_and_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_and_and
   apply lshr_and_and_thm
   ---END lshr_and_and
@@ -367,12 +319,6 @@ def lshr_and_or_after := [llvm|
 theorem lshr_and_or_proof : lshr_and_or_before ⊑ lshr_and_or_after := by
   unfold lshr_and_or_before lshr_and_or_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_and_or
   apply lshr_and_or_thm
   ---END lshr_and_or
@@ -409,12 +355,6 @@ def lshr_and_or_disjoint_after := [llvm|
 theorem lshr_and_or_disjoint_proof : lshr_and_or_disjoint_before ⊑ lshr_and_or_disjoint_after := by
   unfold lshr_and_or_disjoint_before lshr_and_or_disjoint_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_and_or_disjoint
   apply lshr_and_or_disjoint_thm
   ---END lshr_and_or_disjoint
@@ -451,12 +391,6 @@ def ashr_and_or_disjoint_after := [llvm|
 theorem ashr_and_or_disjoint_proof : ashr_and_or_disjoint_before ⊑ ashr_and_or_disjoint_after := by
   unfold ashr_and_or_disjoint_before ashr_and_or_disjoint_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ashr_and_or_disjoint
   apply ashr_and_or_disjoint_thm
   ---END ashr_and_or_disjoint
@@ -493,12 +427,6 @@ def lshr_and_xor_after := [llvm|
 theorem lshr_and_xor_proof : lshr_and_xor_before ⊑ lshr_and_xor_after := by
   unfold lshr_and_xor_before lshr_and_xor_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_and_xor
   apply lshr_and_xor_thm
   ---END lshr_and_xor
@@ -531,12 +459,6 @@ def lshr_add_and_shl_after := [llvm|
 theorem lshr_add_and_shl_proof : lshr_add_and_shl_before ⊑ lshr_add_and_shl_after := by
   unfold lshr_add_and_shl_before lshr_add_and_shl_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_add_and_shl
   apply lshr_add_and_shl_thm
   ---END lshr_add_and_shl
@@ -569,12 +491,6 @@ def shl_add_and_lshr_after := [llvm|
 theorem shl_add_and_lshr_proof : shl_add_and_lshr_before ⊑ shl_add_and_lshr_after := by
   unfold shl_add_and_lshr_before shl_add_and_lshr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_add_and_lshr
   apply shl_add_and_lshr_thm
   ---END shl_add_and_lshr

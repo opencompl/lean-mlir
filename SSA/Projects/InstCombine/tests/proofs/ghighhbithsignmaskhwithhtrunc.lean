@@ -36,12 +36,6 @@ def t0_after := [llvm|
 theorem t0_proof : t0_before ⊑ t0_after := by
   unfold t0_before t0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t0
   apply t0_thm
   ---END t0
@@ -71,12 +65,6 @@ def t1_exact_after := [llvm|
 theorem t1_exact_proof : t1_exact_before ⊑ t1_exact_after := by
   unfold t1_exact_before t1_exact_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t1_exact
   apply t1_exact_thm
   ---END t1_exact
@@ -106,12 +94,6 @@ def t2_after := [llvm|
 theorem t2_proof : t2_before ⊑ t2_after := by
   unfold t2_before t2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t2
   apply t2_thm
   ---END t2
@@ -141,12 +123,6 @@ def t3_exact_after := [llvm|
 theorem t3_exact_proof : t3_exact_before ⊑ t3_exact_after := by
   unfold t3_exact_before t3_exact_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t3_exact
   apply t3_exact_thm
   ---END t3_exact
@@ -178,12 +154,6 @@ def n9_after := [llvm|
 theorem n9_proof : n9_before ⊑ n9_after := by
   unfold n9_before n9_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN n9
   apply n9_thm
   ---END n9
@@ -215,12 +185,6 @@ def n10_after := [llvm|
 theorem n10_proof : n10_before ⊑ n10_after := by
   unfold n10_before n10_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN n10
   apply n10_thm
   ---END n10

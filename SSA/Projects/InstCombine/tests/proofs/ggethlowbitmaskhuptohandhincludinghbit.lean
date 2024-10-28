@@ -37,12 +37,6 @@ def t0_after := [llvm|
 theorem t0_proof : t0_before ⊑ t0_after := by
   unfold t0_before t0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t0
   apply t0_thm
   ---END t0
@@ -73,12 +67,6 @@ def t1_after := [llvm|
 theorem t1_proof : t1_before ⊑ t1_after := by
   unfold t1_before t1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t1
   apply t1_thm
   ---END t1
@@ -112,12 +100,6 @@ def t9_nocse_after := [llvm|
 theorem t9_nocse_proof : t9_nocse_before ⊑ t9_nocse_after := by
   unfold t9_nocse_before t9_nocse_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t9_nocse
   apply t9_nocse_thm
   ---END t9_nocse
@@ -151,12 +133,6 @@ def t17_nocse_mismatching_x_after := [llvm|
 theorem t17_nocse_mismatching_x_proof : t17_nocse_mismatching_x_before ⊑ t17_nocse_mismatching_x_after := by
   unfold t17_nocse_mismatching_x_before t17_nocse_mismatching_x_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t17_nocse_mismatching_x
   apply t17_nocse_mismatching_x_thm
   ---END t17_nocse_mismatching_x

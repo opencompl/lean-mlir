@@ -40,12 +40,6 @@ def src_after := [llvm|
 theorem src_proof : src_before ⊑ src_after := by
   unfold src_before src_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN src
   apply src_thm
   ---END src

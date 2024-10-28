@@ -34,12 +34,6 @@ def ashr_known_pos_exact_after := [llvm|
 theorem ashr_known_pos_exact_proof : ashr_known_pos_exact_before ⊑ ashr_known_pos_exact_after := by
   unfold ashr_known_pos_exact_before ashr_known_pos_exact_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ashr_known_pos_exact
   all_goals (try extract_goal ; sorry)
   ---END ashr_known_pos_exact
@@ -68,12 +62,6 @@ def lshr_mul_times_3_div_2_after := [llvm|
 theorem lshr_mul_times_3_div_2_proof : lshr_mul_times_3_div_2_before ⊑ lshr_mul_times_3_div_2_after := by
   unfold lshr_mul_times_3_div_2_before lshr_mul_times_3_div_2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_mul_times_3_div_2
   all_goals (try extract_goal ; sorry)
   ---END lshr_mul_times_3_div_2
@@ -102,12 +90,6 @@ def lshr_mul_times_3_div_2_exact_after := [llvm|
 theorem lshr_mul_times_3_div_2_exact_proof : lshr_mul_times_3_div_2_exact_before ⊑ lshr_mul_times_3_div_2_exact_after := by
   unfold lshr_mul_times_3_div_2_exact_before lshr_mul_times_3_div_2_exact_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_mul_times_3_div_2_exact
   all_goals (try extract_goal ; sorry)
   ---END lshr_mul_times_3_div_2_exact
@@ -136,12 +118,6 @@ def lshr_mul_times_3_div_2_exact_2_after := [llvm|
 theorem lshr_mul_times_3_div_2_exact_2_proof : lshr_mul_times_3_div_2_exact_2_before ⊑ lshr_mul_times_3_div_2_exact_2_after := by
   unfold lshr_mul_times_3_div_2_exact_2_before lshr_mul_times_3_div_2_exact_2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_mul_times_3_div_2_exact_2
   all_goals (try extract_goal ; sorry)
   ---END lshr_mul_times_3_div_2_exact_2
@@ -170,12 +146,6 @@ def lshr_mul_times_5_div_4_after := [llvm|
 theorem lshr_mul_times_5_div_4_proof : lshr_mul_times_5_div_4_before ⊑ lshr_mul_times_5_div_4_after := by
   unfold lshr_mul_times_5_div_4_before lshr_mul_times_5_div_4_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_mul_times_5_div_4
   all_goals (try extract_goal ; sorry)
   ---END lshr_mul_times_5_div_4
@@ -204,12 +174,6 @@ def lshr_mul_times_5_div_4_exact_after := [llvm|
 theorem lshr_mul_times_5_div_4_exact_proof : lshr_mul_times_5_div_4_exact_before ⊑ lshr_mul_times_5_div_4_exact_after := by
   unfold lshr_mul_times_5_div_4_exact_before lshr_mul_times_5_div_4_exact_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_mul_times_5_div_4_exact
   all_goals (try extract_goal ; sorry)
   ---END lshr_mul_times_5_div_4_exact
@@ -238,12 +202,6 @@ def lshr_mul_times_5_div_4_exact_2_after := [llvm|
 theorem lshr_mul_times_5_div_4_exact_2_proof : lshr_mul_times_5_div_4_exact_2_before ⊑ lshr_mul_times_5_div_4_exact_2_after := by
   unfold lshr_mul_times_5_div_4_exact_2_before lshr_mul_times_5_div_4_exact_2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_mul_times_5_div_4_exact_2
   all_goals (try extract_goal ; sorry)
   ---END lshr_mul_times_5_div_4_exact_2
@@ -272,12 +230,6 @@ def ashr_mul_times_3_div_2_after := [llvm|
 theorem ashr_mul_times_3_div_2_proof : ashr_mul_times_3_div_2_before ⊑ ashr_mul_times_3_div_2_after := by
   unfold ashr_mul_times_3_div_2_before ashr_mul_times_3_div_2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ashr_mul_times_3_div_2
   all_goals (try extract_goal ; sorry)
   ---END ashr_mul_times_3_div_2
@@ -306,12 +258,6 @@ def ashr_mul_times_3_div_2_exact_after := [llvm|
 theorem ashr_mul_times_3_div_2_exact_proof : ashr_mul_times_3_div_2_exact_before ⊑ ashr_mul_times_3_div_2_exact_after := by
   unfold ashr_mul_times_3_div_2_exact_before ashr_mul_times_3_div_2_exact_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ashr_mul_times_3_div_2_exact
   all_goals (try extract_goal ; sorry)
   ---END ashr_mul_times_3_div_2_exact
@@ -340,12 +286,6 @@ def ashr_mul_times_3_div_2_exact_2_after := [llvm|
 theorem ashr_mul_times_3_div_2_exact_2_proof : ashr_mul_times_3_div_2_exact_2_before ⊑ ashr_mul_times_3_div_2_exact_2_after := by
   unfold ashr_mul_times_3_div_2_exact_2_before ashr_mul_times_3_div_2_exact_2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ashr_mul_times_3_div_2_exact_2
   all_goals (try extract_goal ; sorry)
   ---END ashr_mul_times_3_div_2_exact_2
@@ -374,12 +314,6 @@ def ashr_mul_times_5_div_4_after := [llvm|
 theorem ashr_mul_times_5_div_4_proof : ashr_mul_times_5_div_4_before ⊑ ashr_mul_times_5_div_4_after := by
   unfold ashr_mul_times_5_div_4_before ashr_mul_times_5_div_4_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ashr_mul_times_5_div_4
   all_goals (try extract_goal ; sorry)
   ---END ashr_mul_times_5_div_4
@@ -408,12 +342,6 @@ def ashr_mul_times_5_div_4_exact_after := [llvm|
 theorem ashr_mul_times_5_div_4_exact_proof : ashr_mul_times_5_div_4_exact_before ⊑ ashr_mul_times_5_div_4_exact_after := by
   unfold ashr_mul_times_5_div_4_exact_before ashr_mul_times_5_div_4_exact_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ashr_mul_times_5_div_4_exact
   all_goals (try extract_goal ; sorry)
   ---END ashr_mul_times_5_div_4_exact
@@ -442,12 +370,6 @@ def ashr_mul_times_5_div_4_exact_2_after := [llvm|
 theorem ashr_mul_times_5_div_4_exact_2_proof : ashr_mul_times_5_div_4_exact_2_before ⊑ ashr_mul_times_5_div_4_exact_2_after := by
   unfold ashr_mul_times_5_div_4_exact_2_before ashr_mul_times_5_div_4_exact_2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ashr_mul_times_5_div_4_exact_2
   all_goals (try extract_goal ; sorry)
   ---END ashr_mul_times_5_div_4_exact_2
@@ -481,12 +403,6 @@ def lsb_mask_sign_zext_wrong_cst2_after := [llvm|
 theorem lsb_mask_sign_zext_wrong_cst2_proof : lsb_mask_sign_zext_wrong_cst2_before ⊑ lsb_mask_sign_zext_wrong_cst2_after := by
   unfold lsb_mask_sign_zext_wrong_cst2_before lsb_mask_sign_zext_wrong_cst2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lsb_mask_sign_zext_wrong_cst2
   all_goals (try extract_goal ; sorry)
   ---END lsb_mask_sign_zext_wrong_cst2
@@ -520,12 +436,6 @@ def lsb_mask_sign_sext_wrong_cst2_after := [llvm|
 theorem lsb_mask_sign_sext_wrong_cst2_proof : lsb_mask_sign_sext_wrong_cst2_before ⊑ lsb_mask_sign_sext_wrong_cst2_after := by
   unfold lsb_mask_sign_sext_wrong_cst2_before lsb_mask_sign_sext_wrong_cst2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lsb_mask_sign_sext_wrong_cst2
   all_goals (try extract_goal ; sorry)
   ---END lsb_mask_sign_sext_wrong_cst2

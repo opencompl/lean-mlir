@@ -2,54 +2,201 @@
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
+open LLVM
 
 section gandhorhnot_proof
-theorem and_to_xor1_thm (x x_1 : BitVec 32) : (x_1 ||| x) &&& (x_1 &&& x ^^^ 4294967295#32) = x_1 ^^^ x := sorry
+theorem and_to_xor1_thm :
+  ∀ (e e_1 : IntW 32), LLVM.and (LLVM.or e_1 e) (LLVM.xor (LLVM.and e_1 e) (const? (-1))) ⊑ LLVM.xor e_1 e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem and_to_xor2_thm (x x_1 : BitVec 32) : (x_1 &&& x ^^^ 4294967295#32) &&& (x_1 ||| x) = x_1 ^^^ x := sorry
 
-theorem and_to_xor3_thm (x x_1 : BitVec 32) : (x_1 ||| x) &&& (x &&& x_1 ^^^ 4294967295#32) = x_1 ^^^ x := sorry
+theorem and_to_xor2_thm :
+  ∀ (e e_1 : IntW 32), LLVM.and (LLVM.xor (LLVM.and e_1 e) (const? (-1))) (LLVM.or e_1 e) ⊑ LLVM.xor e_1 e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem and_to_xor4_thm (x x_1 : BitVec 32) : (x_1 &&& x ^^^ 4294967295#32) &&& (x ||| x_1) = x ^^^ x_1 := sorry
 
-theorem or_to_nxor1_thm (x x_1 : BitVec 32) :
-  x_1 &&& x ||| (x_1 ||| x) ^^^ 4294967295#32 = x_1 ^^^ x ^^^ 4294967295#32 := sorry
+theorem and_to_xor3_thm :
+  ∀ (e e_1 : IntW 32), LLVM.and (LLVM.or e_1 e) (LLVM.xor (LLVM.and e e_1) (const? (-1))) ⊑ LLVM.xor e_1 e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem or_to_nxor2_thm (x x_1 : BitVec 32) :
-  x_1 &&& x ||| (x ||| x_1) ^^^ 4294967295#32 = x_1 ^^^ x ^^^ 4294967295#32 := sorry
 
-theorem or_to_nxor3_thm (x x_1 : BitVec 32) :
-  (x_1 ||| x) ^^^ 4294967295#32 ||| x_1 &&& x = x_1 ^^^ x ^^^ 4294967295#32 := sorry
+theorem and_to_xor4_thm :
+  ∀ (e e_1 : IntW 32), LLVM.and (LLVM.xor (LLVM.and e_1 e) (const? (-1))) (LLVM.or e e_1) ⊑ LLVM.xor e e_1 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem or_to_nxor4_thm (x x_1 : BitVec 32) :
-  (x_1 ||| x) ^^^ 4294967295#32 ||| x &&& x_1 = x ^^^ x_1 ^^^ 4294967295#32 := sorry
 
-theorem xor_to_xor1_thm (x x_1 : BitVec 32) : x_1 &&& x ^^^ (x_1 ||| x) = x_1 ^^^ x := sorry
+theorem or_to_nxor1_thm :
+  ∀ (e e_1 : IntW 32),
+    LLVM.or (LLVM.and e_1 e) (LLVM.xor (LLVM.or e_1 e) (const? (-1))) ⊑ LLVM.xor (LLVM.xor e_1 e) (const? (-1)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem xor_to_xor2_thm (x x_1 : BitVec 32) : x_1 &&& x ^^^ (x ||| x_1) = x_1 ^^^ x := sorry
 
-theorem xor_to_xor3_thm (x x_1 : BitVec 32) : (x_1 ||| x) ^^^ x_1 &&& x = x_1 ^^^ x := sorry
+theorem or_to_nxor2_thm :
+  ∀ (e e_1 : IntW 32),
+    LLVM.or (LLVM.and e_1 e) (LLVM.xor (LLVM.or e e_1) (const? (-1))) ⊑ LLVM.xor (LLVM.xor e_1 e) (const? (-1)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem xor_to_xor4_thm (x x_1 : BitVec 32) : (x_1 ||| x) ^^^ x &&& x_1 = x ^^^ x_1 := sorry
 
-theorem PR32830_thm (x x_1 x_2 : BitVec 64) :
-  (x_2 ^^^ 18446744073709551615#64 ||| x_1) &&& (x_1 ^^^ 18446744073709551615#64 ||| x) =
-    (x_1 ||| x_2 ^^^ 18446744073709551615#64) &&& (x ||| x_1 ^^^ 18446744073709551615#64) := sorry
+theorem or_to_nxor3_thm :
+  ∀ (e e_1 : IntW 32),
+    LLVM.or (LLVM.xor (LLVM.or e_1 e) (const? (-1))) (LLVM.and e_1 e) ⊑ LLVM.xor (LLVM.xor e_1 e) (const? (-1)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem simplify_or_common_op_commute0_thm (x x_1 x_2 : BitVec 4) : x_2 &&& x_1 &&& x ^^^ 15#4 ||| x_2 = 15#4 := sorry
 
-theorem simplify_or_common_op_commute1_thm (x x_1 x_2 : BitVec 4) : x_2 &&& x_1 &&& x ^^^ 15#4 ||| x_1 = 15#4 := sorry
+theorem or_to_nxor4_thm :
+  ∀ (e e_1 : IntW 32),
+    LLVM.or (LLVM.xor (LLVM.or e_1 e) (const? (-1))) (LLVM.and e e_1) ⊑ LLVM.xor (LLVM.xor e e_1) (const? (-1)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem simplify_or_common_op_commute2_thm (x x_1 x_2 x_3 : BitVec 4) : x_3 * x_3 &&& (x_2 &&& x_1) &&& x ^^^ 15#4 ||| x_2 = 15#4 := sorry
 
-theorem simplify_and_common_op_commute1_thm (x x_1 x_2 : BitVec 4) : ((x_2 ||| x_1 ||| x) ^^^ 15#4) &&& x_1 = 0#4 := sorry
+theorem xor_to_xor1_thm : ∀ (e e_1 : IntW 32), LLVM.xor (LLVM.and e_1 e) (LLVM.or e_1 e) ⊑ LLVM.xor e_1 e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem simplify_and_common_op_commute2_thm (x x_1 x_2 x_3 : BitVec 4) : ((x_3 * x_3 ||| (x_2 ||| x_1) ||| x) ^^^ 15#4) &&& x_2 = 0#4 := sorry
 
-theorem reduce_xor_common_op_commute0_thm (x x_1 x_2 : BitVec 4) : x_2 ^^^ x_1 ^^^ x ||| x_2 = x_1 ^^^ x ||| x_2 := sorry
+theorem xor_to_xor2_thm : ∀ (e e_1 : IntW 32), LLVM.xor (LLVM.and e_1 e) (LLVM.or e e_1) ⊑ LLVM.xor e_1 e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem reduce_xor_common_op_commute1_thm (x x_1 x_2 : BitVec 4) : x_2 ^^^ x_1 ^^^ x ||| x_1 = x_2 ^^^ x ||| x_1 := sorry
 
-theorem annihilate_xor_common_op_commute2_thm (x x_1 x_2 x_3 : BitVec 4) :
-  x_3 * x_3 ^^^ (x_2 ^^^ x_1) ^^^ x ^^^ x_2 = x_1 ^^^ x_3 * x_3 ^^^ x := sorry
+theorem xor_to_xor3_thm : ∀ (e e_1 : IntW 32), LLVM.xor (LLVM.or e_1 e) (LLVM.and e_1 e) ⊑ LLVM.xor e_1 e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem xor_to_xor4_thm : ∀ (e e_1 : IntW 32), LLVM.xor (LLVM.or e_1 e) (LLVM.and e e_1) ⊑ LLVM.xor e e_1 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem PR32830_thm :
+  ∀ (e e_1 e_2 : IntW 64),
+    LLVM.and (LLVM.or (LLVM.xor e_2 (const? (-1))) e_1) (LLVM.or (LLVM.xor e_1 (const? (-1))) e) ⊑
+      LLVM.and (LLVM.or e_1 (LLVM.xor e_2 (const? (-1)))) (LLVM.or e (LLVM.xor e_1 (const? (-1)))) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem simplify_or_common_op_commute0_thm :
+  ∀ (e e_1 e_2 : IntW 4), LLVM.or (LLVM.xor (LLVM.and (LLVM.and e_2 e_1) e) (const? (-1))) e_2 ⊑ const? (-1) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem simplify_or_common_op_commute1_thm :
+  ∀ (e e_1 e_2 : IntW 4), LLVM.or (LLVM.xor (LLVM.and (LLVM.and e_2 e_1) e) (const? (-1))) e_1 ⊑ const? (-1) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem simplify_or_common_op_commute2_thm :
+  ∀ (e e_1 e_2 e_3 : IntW 4),
+    LLVM.or (LLVM.xor (LLVM.and (LLVM.and (mul e_3 e_3) (LLVM.and e_2 e_1)) e) (const? (-1))) e_2 ⊑ const? (-1) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem simplify_and_common_op_commute1_thm :
+  ∀ (e e_1 e_2 : IntW 4), LLVM.and (LLVM.xor (LLVM.or (LLVM.or e_2 e_1) e) (const? (-1))) e_1 ⊑ const? 0 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem simplify_and_common_op_commute2_thm :
+  ∀ (e e_1 e_2 e_3 : IntW 4),
+    LLVM.and (LLVM.xor (LLVM.or (LLVM.or (mul e_3 e_3) (LLVM.or e_2 e_1)) e) (const? (-1))) e_2 ⊑ const? 0 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem reduce_xor_common_op_commute0_thm :
+  ∀ (e e_1 e_2 : IntW 4), LLVM.or (LLVM.xor (LLVM.xor e_2 e_1) e) e_2 ⊑ LLVM.or (LLVM.xor e_1 e) e_2 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem reduce_xor_common_op_commute1_thm :
+  ∀ (e e_1 e_2 : IntW 4), LLVM.or (LLVM.xor (LLVM.xor e_2 e_1) e) e_1 ⊑ LLVM.or (LLVM.xor e_2 e) e_1 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem annihilate_xor_common_op_commute2_thm :
+  ∀ (e e_1 e_2 e_3 : IntW 4),
+    LLVM.xor (LLVM.xor (LLVM.xor (mul e_3 e_3) (LLVM.xor e_2 e_1)) e) e_2 ⊑
+      LLVM.xor (LLVM.xor e_1 (mul e_3 e_3)) e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
 

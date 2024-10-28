@@ -2,13 +2,17 @@
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
+open LLVM
 
 section gavghlsb_proof
-theorem avg_lsb_thm (x x_1 : BitVec 8) :
-  ((if ((x_1 &&& 1#8) + (x &&& 1#8)).msb = true then none
-        else
-          if (x_1 &&& 1#8) + (x &&& 1#8) < x_1 &&& 1#8 ∨ (x_1 &&& 1#8) + (x &&& 1#8) < x &&& 1#8 then none
-          else some ((x_1 &&& 1#8) + (x &&& 1#8))).bind
-      fun x' => some (x' >>> 1)) ⊑
-    some (x_1 &&& (x &&& 1#8)) := sorry
+theorem avg_lsb_thm :
+  ∀ (e e_1 : IntW 8),
+    lshr (add (LLVM.and e_1 (const? 1)) (LLVM.and e (const? 1)) { «nsw» := true, «nuw» := true }) (const? 1) ⊑
+      LLVM.and e_1 (LLVM.and e (const? 1)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
 

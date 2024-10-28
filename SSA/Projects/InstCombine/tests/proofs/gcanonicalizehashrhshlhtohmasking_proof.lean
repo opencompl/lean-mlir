@@ -2,145 +2,310 @@
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
+open LLVM
 
 section gcanonicalizehashrhshlhtohmasking_proof
-theorem positive_samevar_thm (x x_1 : BitVec 8) :
-  (Option.bind (if 8#8 ≤ x then none else some (x_1.sshiftRight x.toNat)) fun a =>
-      if 8#8 ≤ x then none else some (a <<< x.toNat)) ⊑
-    (if (255#8 <<< x.toNat).sshiftRight x.toNat = 255#8 then none
-        else if 8#8 ≤ x then none else some (255#8 <<< x.toNat)).bind
-      fun a => some (a &&& x_1) := sorry
+theorem positive_samevar_thm :
+  ∀ (e e_1 : IntW 8), shl (ashr e_1 e) e ⊑ LLVM.and (shl (const? (-1)) e { «nsw» := true, «nuw» := false }) e_1 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem positive_sameconst_thm (x : BitVec 8) : x.sshiftRight 3 <<< 3 = x &&& 248#8 := sorry
 
-theorem positive_biggerashr_thm (x : BitVec 8) : x.sshiftRight 6 <<< 3 = x.sshiftRight 3 &&& 248#8 := sorry
+theorem positive_sameconst_thm : ∀ (e : IntW 8), shl (ashr e (const? 3)) (const? 3) ⊑ LLVM.and e (const? (-8)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem positive_biggershl_thm (x : BitVec 8) : x.sshiftRight 3 <<< 6 = x <<< 3 &&& 192#8 := sorry
 
-theorem positive_samevar_shlnuw_thm (x x_1 : BitVec 8) :
-  (Option.bind (if 8#8 ≤ x then none else some (x_1.sshiftRight x.toNat)) fun a =>
-      if a <<< x.toNat >>> x.toNat = a then none else if 8#8 ≤ x then none else some (a <<< x.toNat)) ⊑
-    (if (255#8 <<< x.toNat).sshiftRight x.toNat = 255#8 then none
-        else if 8#8 ≤ x then none else some (255#8 <<< x.toNat)).bind
-      fun a => some (a &&& x_1) := sorry
+theorem positive_biggerashr_thm :
+  ∀ (e : IntW 8), shl (ashr e (const? 6)) (const? 3) ⊑ LLVM.and (ashr e (const? 3)) (const? (-8)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem positive_sameconst_shlnuw_thm (x : BitVec 8) :
-  (if x.sshiftRight 3 <<< 3 >>> 3 = x.sshiftRight 3 then none else some (x.sshiftRight 3 <<< 3)) ⊑
-    some (x &&& 248#8) := sorry
 
-theorem positive_biggerashr_shlnuw_thm (x : BitVec 8) :
-  (if x.sshiftRight 6 <<< 3 >>> 3 = x.sshiftRight 6 then none else some (x.sshiftRight 6 <<< 3)) ⊑
-    some (x.sshiftRight 3 &&& 248#8) := sorry
+theorem positive_biggershl_thm :
+  ∀ (e : IntW 8), shl (ashr e (const? 3)) (const? 6) ⊑ LLVM.and (shl e (const? 3)) (const? (-64)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem positive_biggershl_shlnuw_thm (x : BitVec 8) :
-  (if x.sshiftRight 3 <<< 6 >>> 6 = x.sshiftRight 3 then none else some (x.sshiftRight 3 <<< 6)) ⊑
-    (if x <<< 3 >>> 3 = x then none else some (x <<< 3)).bind fun x' => some (x' &&& 192#8) := sorry
 
-theorem positive_samevar_shlnsw_thm (x x_1 : BitVec 8) :
-  (Option.bind (if 8#8 ≤ x then none else some (x_1.sshiftRight x.toNat)) fun a =>
-      if (a <<< x.toNat).sshiftRight x.toNat = a then none else if 8#8 ≤ x then none else some (a <<< x.toNat)) ⊑
-    (if (255#8 <<< x.toNat).sshiftRight x.toNat = 255#8 then none
-        else if 8#8 ≤ x then none else some (255#8 <<< x.toNat)).bind
-      fun a => some (a &&& x_1) := sorry
+theorem positive_samevar_shlnuw_thm :
+  ∀ (e e_1 : IntW 8),
+    shl (ashr e_1 e) e { «nsw» := false, «nuw» := true } ⊑
+      LLVM.and (shl (const? (-1)) e { «nsw» := true, «nuw» := false }) e_1 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem positive_sameconst_shlnsw_thm (x : BitVec 8) :
-  (if (x.sshiftRight 3 <<< 3).sshiftRight 3 = x.sshiftRight 3 then none else some (x.sshiftRight 3 <<< 3)) ⊑
-    some (x &&& 248#8) := sorry
 
-theorem positive_biggerashr_shlnsw_thm (x : BitVec 8) :
-  (if (x.sshiftRight 6 <<< 3).sshiftRight 3 = x.sshiftRight 6 then none else some (x.sshiftRight 6 <<< 3)) ⊑
-    some (x.sshiftRight 3 &&& 248#8) := sorry
+theorem positive_sameconst_shlnuw_thm :
+  ∀ (e : IntW 8),
+    shl (ashr e (const? 3)) (const? 3) { «nsw» := false, «nuw» := true } ⊑ LLVM.and e (const? (-8)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem positive_biggershl_shlnsw_thm (x : BitVec 8) :
-  (if (x.sshiftRight 3 <<< 6).sshiftRight 6 = x.sshiftRight 3 then none else some (x.sshiftRight 3 <<< 6)) ⊑
-    (if (x <<< 3).sshiftRight 3 = x then none else some (x <<< 3)).bind fun x' => some (x' &&& 192#8) := sorry
 
-theorem positive_samevar_shlnuwnsw_thm (x x_1 : BitVec 8) :
-  (Option.bind (if 8#8 ≤ x then none else some (x_1.sshiftRight x.toNat)) fun a =>
-      if (a <<< x.toNat).sshiftRight x.toNat = a then none
-      else if a <<< x.toNat >>> x.toNat = a then none else if 8#8 ≤ x then none else some (a <<< x.toNat)) ⊑
-    (if (255#8 <<< x.toNat).sshiftRight x.toNat = 255#8 then none
-        else if 8#8 ≤ x then none else some (255#8 <<< x.toNat)).bind
-      fun a => some (a &&& x_1) := sorry
+theorem positive_biggerashr_shlnuw_thm :
+  ∀ (e : IntW 8),
+    shl (ashr e (const? 6)) (const? 3) { «nsw» := false, «nuw» := true } ⊑
+      LLVM.and (ashr e (const? 3)) (const? (-8)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem positive_sameconst_shlnuwnsw_thm (x : BitVec 8) :
-  (if (x.sshiftRight 3 <<< 3).sshiftRight 3 = x.sshiftRight 3 then none
-    else if x.sshiftRight 3 <<< 3 >>> 3 = x.sshiftRight 3 then none else some (x.sshiftRight 3 <<< 3)) ⊑
-    some (x &&& 248#8) := sorry
 
-theorem positive_biggerashr_shlnuwnsw_thm (x : BitVec 8) :
-  (if (x.sshiftRight 6 <<< 3).sshiftRight 3 = x.sshiftRight 6 then none
-    else if x.sshiftRight 6 <<< 3 >>> 3 = x.sshiftRight 6 then none else some (x.sshiftRight 6 <<< 3)) ⊑
-    some (x.sshiftRight 3 &&& 248#8) := sorry
+theorem positive_biggershl_shlnuw_thm :
+  ∀ (e : IntW 8),
+    shl (ashr e (const? 3)) (const? 6) { «nsw» := false, «nuw» := true } ⊑
+      LLVM.and (shl e (const? 3) { «nsw» := false, «nuw» := true }) (const? (-64)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem positive_biggershl_shlnuwnsw_thm (x : BitVec 8) :
-  (if (x.sshiftRight 3 <<< 6).sshiftRight 6 = x.sshiftRight 3 then none
-    else if x.sshiftRight 3 <<< 6 >>> 6 = x.sshiftRight 3 then none else some (x.sshiftRight 3 <<< 6)) ⊑
-    (if (x <<< 3).sshiftRight 3 = x then none else if x <<< 3 >>> 3 = x then none else some (x <<< 3)).bind fun x' =>
-      some (x' &&& 64#8) := sorry
 
-theorem positive_samevar_ashrexact_thm (x x_1 : BitVec 8) :
-  (Option.bind (if 8#8 ≤ x then none else some (x_1.sshiftRight x.toNat)) fun a =>
-      if 8#8 ≤ x then none else some (a <<< x.toNat)) ⊑
-    some x_1 := sorry
+theorem positive_samevar_shlnsw_thm :
+  ∀ (e e_1 : IntW 8),
+    shl (ashr e_1 e) e { «nsw» := true, «nuw» := false } ⊑
+      LLVM.and (shl (const? (-1)) e { «nsw» := true, «nuw» := false }) e_1 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem positive_sameconst_ashrexact_thm (x : BitVec 8) : x.sshiftRight 3 <<< 3 = x := sorry
 
-theorem positive_biggerashr_ashrexact_thm (x : BitVec 8) : x.sshiftRight 6 <<< 3 = x.sshiftRight 3 := sorry
+theorem positive_sameconst_shlnsw_thm :
+  ∀ (e : IntW 8),
+    shl (ashr e (const? 3)) (const? 3) { «nsw» := true, «nuw» := false } ⊑ LLVM.and e (const? (-8)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem positive_biggershl_ashrexact_thm (x : BitVec 8) : x.sshiftRight 3 <<< 6 = x <<< 3 := sorry
 
-theorem positive_samevar_shlnsw_ashrexact_thm (x x_1 : BitVec 8) :
-  (Option.bind (if 8#8 ≤ x then none else some (x_1.sshiftRight x.toNat)) fun a =>
-      if (a <<< x.toNat).sshiftRight x.toNat = a then none else if 8#8 ≤ x then none else some (a <<< x.toNat)) ⊑
-    some x_1 := sorry
+theorem positive_biggerashr_shlnsw_thm :
+  ∀ (e : IntW 8),
+    shl (ashr e (const? 6)) (const? 3) { «nsw» := true, «nuw» := false } ⊑
+      LLVM.and (ashr e (const? 3)) (const? (-8)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem positive_sameconst_shlnsw_ashrexact_thm (x : BitVec 8) :
-  (if (x.sshiftRight 3 <<< 3).sshiftRight 3 = x.sshiftRight 3 then none else some (x.sshiftRight 3 <<< 3)) ⊑
-    some x := sorry
 
-theorem positive_biggerashr_shlnsw_ashrexact_thm (x : BitVec 8) :
-  (if (x.sshiftRight 6 <<< 3).sshiftRight 3 = x.sshiftRight 6 then none else some (x.sshiftRight 6 <<< 3)) ⊑
-    some (x.sshiftRight 3) := sorry
+theorem positive_biggershl_shlnsw_thm :
+  ∀ (e : IntW 8),
+    shl (ashr e (const? 3)) (const? 6) { «nsw» := true, «nuw» := false } ⊑
+      LLVM.and (shl e (const? 3) { «nsw» := true, «nuw» := false }) (const? (-64)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem positive_biggershl_shlnsw_ashrexact_thm (x : BitVec 8) :
-  (if (x.sshiftRight 3 <<< 6).sshiftRight 6 = x.sshiftRight 3 then none else some (x.sshiftRight 3 <<< 6)) ⊑
-    if (x <<< 3).sshiftRight 3 = x then none else some (x <<< 3) := sorry
 
-theorem positive_samevar_shlnuw_ashrexact_thm (x x_1 : BitVec 8) :
-  (Option.bind (if 8#8 ≤ x then none else some (x_1.sshiftRight x.toNat)) fun a =>
-      if a <<< x.toNat >>> x.toNat = a then none else if 8#8 ≤ x then none else some (a <<< x.toNat)) ⊑
-    some x_1 := sorry
+theorem positive_samevar_shlnuwnsw_thm :
+  ∀ (e e_1 : IntW 8),
+    shl (ashr e_1 e) e { «nsw» := true, «nuw» := true } ⊑
+      LLVM.and (shl (const? (-1)) e { «nsw» := true, «nuw» := false }) e_1 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem positive_sameconst_shlnuw_ashrexact_thm (x : BitVec 8) :
-  (if x.sshiftRight 3 <<< 3 >>> 3 = x.sshiftRight 3 then none else some (x.sshiftRight 3 <<< 3)) ⊑ some x := sorry
 
-theorem positive_biggerashr_shlnuw_ashrexact_thm (x : BitVec 8) :
-  (if x.sshiftRight 6 <<< 3 >>> 3 = x.sshiftRight 6 then none else some (x.sshiftRight 6 <<< 3)) ⊑
-    some (x.sshiftRight 3) := sorry
+theorem positive_sameconst_shlnuwnsw_thm :
+  ∀ (e : IntW 8),
+    shl (ashr e (const? 3)) (const? 3) { «nsw» := true, «nuw» := true } ⊑ LLVM.and e (const? (-8)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem positive_biggershl_shlnuw_ashrexact_thm (x : BitVec 8) :
-  (if x.sshiftRight 3 <<< 6 >>> 6 = x.sshiftRight 3 then none else some (x.sshiftRight 3 <<< 6)) ⊑
-    if x <<< 3 >>> 3 = x then none else some (x <<< 3) := sorry
 
-theorem positive_samevar_shlnuwnsw_ashrexact_thm (x x_1 : BitVec 8) :
-  (Option.bind (if 8#8 ≤ x then none else some (x_1.sshiftRight x.toNat)) fun a =>
-      if (a <<< x.toNat).sshiftRight x.toNat = a then none
-      else if a <<< x.toNat >>> x.toNat = a then none else if 8#8 ≤ x then none else some (a <<< x.toNat)) ⊑
-    some x_1 := sorry
+theorem positive_biggerashr_shlnuwnsw_thm :
+  ∀ (e : IntW 8),
+    shl (ashr e (const? 6)) (const? 3) { «nsw» := true, «nuw» := true } ⊑
+      LLVM.and (ashr e (const? 3)) (const? (-8)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem positive_sameconst_shlnuwnsw_ashrexact_thm (x : BitVec 8) :
-  (if (x.sshiftRight 3 <<< 3).sshiftRight 3 = x.sshiftRight 3 then none
-    else if x.sshiftRight 3 <<< 3 >>> 3 = x.sshiftRight 3 then none else some (x.sshiftRight 3 <<< 3)) ⊑
-    some x := sorry
 
-theorem positive_biggerashr_shlnuwnsw_ashrexact_thm (x : BitVec 8) :
-  (if (x.sshiftRight 6 <<< 3).sshiftRight 3 = x.sshiftRight 6 then none
-    else if x.sshiftRight 6 <<< 3 >>> 3 = x.sshiftRight 6 then none else some (x.sshiftRight 6 <<< 3)) ⊑
-    some (x.sshiftRight 3) := sorry
+theorem positive_biggershl_shlnuwnsw_thm :
+  ∀ (e : IntW 8),
+    shl (ashr e (const? 3)) (const? 6) { «nsw» := true, «nuw» := true } ⊑
+      LLVM.and (shl e (const? 3) { «nsw» := true, «nuw» := true }) (const? 64) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem positive_biggershl_shlnuwnsw_ashrexact_thm (x : BitVec 8) :
-  (if (x.sshiftRight 3 <<< 6).sshiftRight 6 = x.sshiftRight 3 then none
-    else if x.sshiftRight 3 <<< 6 >>> 6 = x.sshiftRight 3 then none else some (x.sshiftRight 3 <<< 6)) ⊑
-    if (x <<< 3).sshiftRight 3 = x then none else if x <<< 3 >>> 3 = x then none else some (x <<< 3) := sorry
+
+theorem positive_samevar_ashrexact_thm : ∀ (e e_1 : IntW 8), shl (ashr e_1 e) e ⊑ e_1 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem positive_sameconst_ashrexact_thm : ∀ (e : IntW 8), shl (ashr e (const? 3)) (const? 3) ⊑ e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem positive_biggerashr_ashrexact_thm : ∀ (e : IntW 8), shl (ashr e (const? 6)) (const? 3) ⊑ ashr e (const? 3) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem positive_biggershl_ashrexact_thm : ∀ (e : IntW 8), shl (ashr e (const? 3)) (const? 6) ⊑ shl e (const? 3) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem positive_samevar_shlnsw_ashrexact_thm : ∀ (e e_1 : IntW 8), shl (ashr e_1 e) e { «nsw» := true, «nuw» := false } ⊑ e_1 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem positive_sameconst_shlnsw_ashrexact_thm : ∀ (e : IntW 8), shl (ashr e (const? 3)) (const? 3) { «nsw» := true, «nuw» := false } ⊑ e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem positive_biggerashr_shlnsw_ashrexact_thm :
+  ∀ (e : IntW 8), shl (ashr e (const? 6)) (const? 3) { «nsw» := true, «nuw» := false } ⊑ ashr e (const? 3) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem positive_biggershl_shlnsw_ashrexact_thm :
+  ∀ (e : IntW 8),
+    shl (ashr e (const? 3)) (const? 6) { «nsw» := true, «nuw» := false } ⊑
+      shl e (const? 3) { «nsw» := true, «nuw» := false } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem positive_samevar_shlnuw_ashrexact_thm : ∀ (e e_1 : IntW 8), shl (ashr e_1 e) e { «nsw» := false, «nuw» := true } ⊑ e_1 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem positive_sameconst_shlnuw_ashrexact_thm : ∀ (e : IntW 8), shl (ashr e (const? 3)) (const? 3) { «nsw» := false, «nuw» := true } ⊑ e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem positive_biggerashr_shlnuw_ashrexact_thm :
+  ∀ (e : IntW 8), shl (ashr e (const? 6)) (const? 3) { «nsw» := false, «nuw» := true } ⊑ ashr e (const? 3) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem positive_biggershl_shlnuw_ashrexact_thm :
+  ∀ (e : IntW 8),
+    shl (ashr e (const? 3)) (const? 6) { «nsw» := false, «nuw» := true } ⊑
+      shl e (const? 3) { «nsw» := false, «nuw» := true } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem positive_samevar_shlnuwnsw_ashrexact_thm : ∀ (e e_1 : IntW 8), shl (ashr e_1 e) e { «nsw» := true, «nuw» := true } ⊑ e_1 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem positive_sameconst_shlnuwnsw_ashrexact_thm : ∀ (e : IntW 8), shl (ashr e (const? 3)) (const? 3) { «nsw» := true, «nuw» := true } ⊑ e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem positive_biggerashr_shlnuwnsw_ashrexact_thm :
+  ∀ (e : IntW 8), shl (ashr e (const? 6)) (const? 3) { «nsw» := true, «nuw» := true } ⊑ ashr e (const? 3) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem positive_biggershl_shlnuwnsw_ashrexact_thm :
+  ∀ (e : IntW 8),
+    shl (ashr e (const? 3)) (const? 6) { «nsw» := true, «nuw» := true } ⊑
+      shl e (const? 3) { «nsw» := true, «nuw» := true } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
 

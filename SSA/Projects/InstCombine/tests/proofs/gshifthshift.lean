@@ -33,12 +33,6 @@ def shl_shl_after := [llvm|
 theorem shl_shl_proof : shl_shl_before ⊑ shl_shl_after := by
   unfold shl_shl_before shl_shl_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_shl
   apply shl_shl_thm
   ---END shl_shl
@@ -65,12 +59,6 @@ def lshr_lshr_after := [llvm|
 theorem lshr_lshr_proof : lshr_lshr_before ⊑ lshr_lshr_after := by
   unfold lshr_lshr_before lshr_lshr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_lshr
   apply lshr_lshr_thm
   ---END lshr_lshr
@@ -102,12 +90,6 @@ def shl_trunc_bigger_lshr_after := [llvm|
 theorem shl_trunc_bigger_lshr_proof : shl_trunc_bigger_lshr_before ⊑ shl_trunc_bigger_lshr_after := by
   unfold shl_trunc_bigger_lshr_before shl_trunc_bigger_lshr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_trunc_bigger_lshr
   apply shl_trunc_bigger_lshr_thm
   ---END shl_trunc_bigger_lshr
@@ -139,12 +121,6 @@ def shl_trunc_smaller_lshr_after := [llvm|
 theorem shl_trunc_smaller_lshr_proof : shl_trunc_smaller_lshr_before ⊑ shl_trunc_smaller_lshr_after := by
   unfold shl_trunc_smaller_lshr_before shl_trunc_smaller_lshr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_trunc_smaller_lshr
   apply shl_trunc_smaller_lshr_thm
   ---END shl_trunc_smaller_lshr
@@ -176,12 +152,6 @@ def shl_trunc_bigger_ashr_after := [llvm|
 theorem shl_trunc_bigger_ashr_proof : shl_trunc_bigger_ashr_before ⊑ shl_trunc_bigger_ashr_after := by
   unfold shl_trunc_bigger_ashr_before shl_trunc_bigger_ashr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_trunc_bigger_ashr
   apply shl_trunc_bigger_ashr_thm
   ---END shl_trunc_bigger_ashr
@@ -213,12 +183,6 @@ def shl_trunc_smaller_ashr_after := [llvm|
 theorem shl_trunc_smaller_ashr_proof : shl_trunc_smaller_ashr_before ⊑ shl_trunc_smaller_ashr_after := by
   unfold shl_trunc_smaller_ashr_before shl_trunc_smaller_ashr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_trunc_smaller_ashr
   apply shl_trunc_smaller_ashr_thm
   ---END shl_trunc_smaller_ashr
@@ -248,12 +212,6 @@ def shl_trunc_bigger_shl_after := [llvm|
 theorem shl_trunc_bigger_shl_proof : shl_trunc_bigger_shl_before ⊑ shl_trunc_bigger_shl_after := by
   unfold shl_trunc_bigger_shl_before shl_trunc_bigger_shl_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_trunc_bigger_shl
   apply shl_trunc_bigger_shl_thm
   ---END shl_trunc_bigger_shl
@@ -283,12 +241,6 @@ def shl_trunc_smaller_shl_after := [llvm|
 theorem shl_trunc_smaller_shl_proof : shl_trunc_smaller_shl_before ⊑ shl_trunc_smaller_shl_after := by
   unfold shl_trunc_smaller_shl_before shl_trunc_smaller_shl_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_trunc_smaller_shl
   apply shl_trunc_smaller_shl_thm
   ---END shl_trunc_smaller_shl
@@ -318,12 +270,6 @@ def shl_shl_constants_div_after := [llvm|
 theorem shl_shl_constants_div_proof : shl_shl_constants_div_before ⊑ shl_shl_constants_div_after := by
   unfold shl_shl_constants_div_before shl_shl_constants_div_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_shl_constants_div
   apply shl_shl_constants_div_thm
   ---END shl_shl_constants_div
@@ -353,12 +299,6 @@ def ashr_shl_constants_after := [llvm|
 theorem ashr_shl_constants_proof : ashr_shl_constants_before ⊑ ashr_shl_constants_after := by
   unfold ashr_shl_constants_before ashr_shl_constants_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ashr_shl_constants
   apply ashr_shl_constants_thm
   ---END ashr_shl_constants
@@ -390,12 +330,6 @@ def shl_lshr_demand1_after := [llvm|
 theorem shl_lshr_demand1_proof : shl_lshr_demand1_before ⊑ shl_lshr_demand1_after := by
   unfold shl_lshr_demand1_before shl_lshr_demand1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_lshr_demand1
   apply shl_lshr_demand1_thm
   ---END shl_lshr_demand1
@@ -427,12 +361,6 @@ def shl_lshr_demand6_after := [llvm|
 theorem shl_lshr_demand6_proof : shl_lshr_demand6_before ⊑ shl_lshr_demand6_after := by
   unfold shl_lshr_demand6_before shl_lshr_demand6_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_lshr_demand6
   apply shl_lshr_demand6_thm
   ---END shl_lshr_demand6
@@ -464,12 +392,6 @@ def lshr_shl_demand1_after := [llvm|
 theorem lshr_shl_demand1_proof : lshr_shl_demand1_before ⊑ lshr_shl_demand1_after := by
   unfold lshr_shl_demand1_before lshr_shl_demand1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_shl_demand1
   apply lshr_shl_demand1_thm
   ---END lshr_shl_demand1
@@ -501,12 +423,6 @@ def lshr_shl_demand3_after := [llvm|
 theorem lshr_shl_demand3_proof : lshr_shl_demand3_before ⊑ lshr_shl_demand3_after := by
   unfold lshr_shl_demand3_before lshr_shl_demand3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_shl_demand3
   apply lshr_shl_demand3_thm
   ---END lshr_shl_demand3

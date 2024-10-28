@@ -141,3 +141,18 @@
 
 4: "test_and_olt_fmf_propagation_union" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+1: "test_and_olt_fmf_propagation_union_logical_rhs_poison"
+4: "test_and_olt_fmf_propagation_union_logical_rhs_poison" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test_and_olt_fmf_propagation_union_logical_rhs_poison" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_and_olt_fmf_propagation_union_logical_lhs_poison"
+4: "test_and_olt_fmf_propagation_union_logical_lhs_poison" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test_and_olt_fmf_propagation_union_logical_lhs_poison" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_and_olt_fmf_propagation_union_logical_both_poison"
+4: "test_and_olt_fmf_propagation_union_logical_both_poison" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test_and_olt_fmf_propagation_union_logical_both_poison" has unsupported operation: builtin.unregistered: llvm.fcmp
+

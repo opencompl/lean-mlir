@@ -2,13 +2,17 @@
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
+open LLVM
 
 section gsremhcanonicalize_proof
-theorem test_srem_canonicalize_op0_thm (x x_1 : BitVec 32) :
-  ((if (-signExtend 33 x_1).msb = (-signExtend 33 x_1).getMsbD 1 then some (-x_1) else none).bind fun a =>
-      Option.map (fun div => a - div * x)
-        (if x = 0#32 ∨ a = intMin 32 ∧ x = 4294967295#32 then none else some (a.sdiv x))) ⊑
-    (Option.map (fun div => x_1 - div * x)
-          (if x = 0#32 ∨ x_1 = intMin 32 ∧ x = 4294967295#32 then none else some (x_1.sdiv x))).bind
-      fun a => if (-signExtend 33 a).msb = (-signExtend 33 a).getMsbD 1 then some (-a) else none := sorry
+theorem test_srem_canonicalize_op0_thm :
+  ∀ (e e_1 : IntW 32),
+    LLVM.srem (sub (const? 0) e_1 { «nsw» := true, «nuw» := false }) e ⊑
+      sub (const? 0) (LLVM.srem e_1 e) { «nsw» := true, «nuw» := false } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
 

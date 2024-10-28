@@ -33,12 +33,6 @@ def udiv_common_divisor_after := [llvm|
 theorem udiv_common_divisor_proof : udiv_common_divisor_before ⊑ udiv_common_divisor_after := by
   unfold udiv_common_divisor_before udiv_common_divisor_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN udiv_common_divisor
   apply udiv_common_divisor_thm
   ---END udiv_common_divisor
@@ -65,12 +59,6 @@ def urem_common_divisor_after := [llvm|
 theorem urem_common_divisor_proof : urem_common_divisor_before ⊑ urem_common_divisor_after := by
   unfold urem_common_divisor_before urem_common_divisor_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN urem_common_divisor
   apply urem_common_divisor_thm
   ---END urem_common_divisor
@@ -97,12 +85,6 @@ def sdiv_common_divisor_defined_cond_after := [llvm|
 theorem sdiv_common_divisor_defined_cond_proof : sdiv_common_divisor_defined_cond_before ⊑ sdiv_common_divisor_defined_cond_after := by
   unfold sdiv_common_divisor_defined_cond_before sdiv_common_divisor_defined_cond_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sdiv_common_divisor_defined_cond
   apply sdiv_common_divisor_defined_cond_thm
   ---END sdiv_common_divisor_defined_cond
@@ -129,12 +111,6 @@ def srem_common_divisor_defined_cond_after := [llvm|
 theorem srem_common_divisor_defined_cond_proof : srem_common_divisor_defined_cond_before ⊑ srem_common_divisor_defined_cond_after := by
   unfold srem_common_divisor_defined_cond_before srem_common_divisor_defined_cond_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN srem_common_divisor_defined_cond
   apply srem_common_divisor_defined_cond_thm
   ---END srem_common_divisor_defined_cond
@@ -161,12 +137,6 @@ def udiv_common_divisor_defined_cond_after := [llvm|
 theorem udiv_common_divisor_defined_cond_proof : udiv_common_divisor_defined_cond_before ⊑ udiv_common_divisor_defined_cond_after := by
   unfold udiv_common_divisor_defined_cond_before udiv_common_divisor_defined_cond_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN udiv_common_divisor_defined_cond
   apply udiv_common_divisor_defined_cond_thm
   ---END udiv_common_divisor_defined_cond
@@ -193,12 +163,6 @@ def urem_common_divisor_defined_cond_after := [llvm|
 theorem urem_common_divisor_defined_cond_proof : urem_common_divisor_defined_cond_before ⊑ urem_common_divisor_defined_cond_after := by
   unfold urem_common_divisor_defined_cond_before urem_common_divisor_defined_cond_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN urem_common_divisor_defined_cond
   apply urem_common_divisor_defined_cond_thm
   ---END urem_common_divisor_defined_cond
@@ -225,12 +189,6 @@ def sdiv_common_dividend_defined_cond_after := [llvm|
 theorem sdiv_common_dividend_defined_cond_proof : sdiv_common_dividend_defined_cond_before ⊑ sdiv_common_dividend_defined_cond_after := by
   unfold sdiv_common_dividend_defined_cond_before sdiv_common_dividend_defined_cond_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sdiv_common_dividend_defined_cond
   apply sdiv_common_dividend_defined_cond_thm
   ---END sdiv_common_dividend_defined_cond
@@ -257,12 +215,6 @@ def srem_common_dividend_defined_cond_after := [llvm|
 theorem srem_common_dividend_defined_cond_proof : srem_common_dividend_defined_cond_before ⊑ srem_common_dividend_defined_cond_after := by
   unfold srem_common_dividend_defined_cond_before srem_common_dividend_defined_cond_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN srem_common_dividend_defined_cond
   apply srem_common_dividend_defined_cond_thm
   ---END srem_common_dividend_defined_cond
@@ -289,12 +241,6 @@ def udiv_common_dividend_defined_cond_after := [llvm|
 theorem udiv_common_dividend_defined_cond_proof : udiv_common_dividend_defined_cond_before ⊑ udiv_common_dividend_defined_cond_after := by
   unfold udiv_common_dividend_defined_cond_before udiv_common_dividend_defined_cond_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN udiv_common_dividend_defined_cond
   apply udiv_common_dividend_defined_cond_thm
   ---END udiv_common_dividend_defined_cond
@@ -321,12 +267,6 @@ def urem_common_dividend_defined_cond_after := [llvm|
 theorem urem_common_dividend_defined_cond_proof : urem_common_dividend_defined_cond_before ⊑ urem_common_dividend_defined_cond_after := by
   unfold urem_common_dividend_defined_cond_before urem_common_dividend_defined_cond_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN urem_common_dividend_defined_cond
   apply urem_common_dividend_defined_cond_thm
   ---END urem_common_dividend_defined_cond

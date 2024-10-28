@@ -2,68 +2,130 @@
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
+open LLVM
 
 section gadd4_proof
-theorem match_unsigned_thm (x : BitVec 64) : x % 299#64 + x / 299#64 % 64#64 * 299#64 = x % 19136#64 := sorry
+theorem match_unsigned_thm :
+  ∀ (e : IntW 64),
+    add (urem e (const? 299)) (mul (urem (LLVM.udiv e (const? 299)) (const? 64)) (const? 299)) ⊑
+      urem e (const? 19136) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem match_andAsRem_lshrAsDiv_shlAsMul_thm (x : BitVec 64) : (x &&& 63#64) + (x >>> 6 % 9#64) <<< 6 = x % 576#64 := sorry
 
-theorem match_signed_thm (x : BitVec 64) :
-  x - x.sdiv 299#64 * 299#64 + (x.sdiv 299#64 - (x.sdiv 299#64).sdiv 64#64 * 64#64) * 299#64 +
-      (x.sdiv 19136#64 - (x.sdiv 19136#64).sdiv 9#64 * 9#64) * 19136#64 =
-    x - x.sdiv 172224#64 * 172224#64 := sorry
+theorem match_andAsRem_lshrAsDiv_shlAsMul_thm :
+  ∀ (e : IntW 64),
+    add (LLVM.and e (const? 63)) (shl (urem (lshr e (const? 6)) (const? 9)) (const? 6)) ⊑ urem e (const? 576) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem not_match_inconsistent_signs_thm (x : BitVec 64) :
-  some (x % 299#64 + x.sdiv 299#64 % 64#64 * 299#64) ⊑
-    (if
-            signExtend 128 (x.sdiv 299#64 &&& 63#64) * 299#128 < signExtend 128 (twoPow 64 63) ∨
-              twoPow 128 63 ≤ signExtend 128 (x.sdiv 299#64 &&& 63#64) * 299#128 then
-          none
-        else
-          if twoPow 128 63 <<< 1 ≤ (setWidth 128 (x.sdiv 299#64) &&& 63#128) * 299#128 then none
-          else some ((x.sdiv 299#64 &&& 63#64) * 299#64)).bind
-      fun y' =>
-      if (x % 299#64).msb = y'.msb ∧ ¬(x % 299#64 + y').msb = (x % 299#64).msb then none
-      else if x % 299#64 + y' < x % 299#64 ∨ x % 299#64 + y' < y' then none else some (x % 299#64 + y') := sorry
 
-theorem not_match_inconsistent_values_thm (x : BitVec 64) :
-  some (x % 299#64 + x / 29#64 % 64#64 * 299#64) ⊑
-    (if
-            signExtend 128 (x / 29#64 &&& 63#64) * 299#128 < signExtend 128 (twoPow 64 63) ∨
-              twoPow 128 63 ≤ signExtend 128 (x / 29#64 &&& 63#64) * 299#128 then
-          none
-        else
-          if twoPow 128 63 <<< 1 ≤ (setWidth 128 (x / 29#64) &&& 63#128) * 299#128 then none
-          else some ((x / 29#64 &&& 63#64) * 299#64)).bind
-      fun y' =>
-      if (x % 299#64).msb = y'.msb ∧ ¬(x % 299#64 + y').msb = (x % 299#64).msb then none
-      else if x % 299#64 + y' < x % 299#64 ∨ x % 299#64 + y' < y' then none else some (x % 299#64 + y') := sorry
+theorem match_signed_thm :
+  ∀ (e : IntW 64),
+    add (add (LLVM.srem e (const? 299)) (mul (LLVM.srem (LLVM.sdiv e (const? 299)) (const? 64)) (const? 299)))
+        (mul (LLVM.srem (LLVM.sdiv e (const? 19136)) (const? 9)) (const? 19136)) ⊑
+      LLVM.srem e (const? 172224) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem fold_add_udiv_urem_thm (x : BitVec 32) :
-  some ((x / 10#32) <<< 4 + x % 10#32) ⊑
-    (if twoPow 64 31 <<< 1 ≤ setWidth 64 (x / 10#32) * 6#64 then none else some (x / 10#32 * 6#32)).bind fun a =>
-      some (a + x) := sorry
 
-theorem fold_add_sdiv_srem_thm (x : BitVec 32) :
-  some (x.sdiv 10#32 <<< 4 + (x - x.sdiv 10#32 * 10#32)) ⊑
-    (if
-            signExtend 64 (x.sdiv 10#32) * 6#64 < signExtend 64 (twoPow 32 31) ∨
-              twoPow 64 31 ≤ signExtend 64 (x.sdiv 10#32) * 6#64 then
-          none
-        else some (x.sdiv 10#32 * 6#32)).bind
-      fun a => some (a + x) := sorry
+theorem not_match_inconsistent_signs_thm :
+  ∀ (e : IntW 64),
+    add (urem e (const? 299)) (mul (urem (LLVM.sdiv e (const? 299)) (const? 64)) (const? 299)) ⊑
+      add (urem e (const? 299))
+        (mul (LLVM.and (LLVM.sdiv e (const? 299)) (const? 63)) (const? 299) { «nsw» := true, «nuw» := true })
+        { «nsw» := true, «nuw» := true } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem fold_add_udiv_urem_to_mul_thm (x : BitVec 32) : x / 7#32 * 21#32 + x % 7#32 * 3#32 = x * 3#32 := sorry
 
-theorem fold_add_udiv_urem_commuted_thm (x : BitVec 32) :
-  some (x % 10#32 + (x / 10#32) <<< 4) ⊑
-    (if twoPow 64 31 <<< 1 ≤ setWidth 64 (x / 10#32) * 6#64 then none else some (x / 10#32 * 6#32)).bind fun a =>
-      some (a + x) := sorry
+theorem not_match_inconsistent_values_thm :
+  ∀ (e : IntW 64),
+    add (urem e (const? 299)) (mul (urem (LLVM.udiv e (const? 29)) (const? 64)) (const? 299)) ⊑
+      add (urem e (const? 299))
+        (mul (LLVM.and (LLVM.udiv e (const? 29)) (const? 63)) (const? 299) { «nsw» := true, «nuw» := true })
+        { «nsw» := true, «nuw» := true } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem fold_add_udiv_urem_or_disjoint_thm (x : BitVec 32) :
-  some ((x / 10#32) <<< 4 ||| x % 10#32) ⊑
-    (if twoPow 64 31 <<< 1 ≤ setWidth 64 (x / 10#32) * 6#64 then none else some (x / 10#32 * 6#32)).bind fun a =>
-      some (a + x) := sorry
 
-theorem fold_add_udiv_urem_without_noundef_thm (x : BitVec 32) : (x / 10#32) <<< 4 + x % 10#32 = (x / 10#32) <<< 4 ||| x % 10#32 := sorry
+theorem fold_add_udiv_urem_thm :
+  ∀ (e : IntW 32),
+    add (shl (LLVM.udiv e (const? 10)) (const? 4)) (urem e (const? 10)) ⊑
+      add (mul (LLVM.udiv e (const? 10)) (const? 6) { «nsw» := false, «nuw» := true }) e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem fold_add_sdiv_srem_thm :
+  ∀ (e : IntW 32),
+    add (shl (LLVM.sdiv e (const? 10)) (const? 4)) (LLVM.srem e (const? 10)) ⊑
+      add (mul (LLVM.sdiv e (const? 10)) (const? 6) { «nsw» := true, «nuw» := false }) e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem fold_add_udiv_urem_to_mul_thm :
+  ∀ (e : IntW 32),
+    add (mul (LLVM.udiv e (const? 7)) (const? 21)) (mul (urem e (const? 7)) (const? 3)) ⊑ mul e (const? 3) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem fold_add_udiv_urem_commuted_thm :
+  ∀ (e : IntW 32),
+    add (urem e (const? 10)) (shl (LLVM.udiv e (const? 10)) (const? 4)) ⊑
+      add (mul (LLVM.udiv e (const? 10)) (const? 6) { «nsw» := false, «nuw» := true }) e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem fold_add_udiv_urem_or_disjoint_thm :
+  ∀ (e : IntW 32),
+    LLVM.or (shl (LLVM.udiv e (const? 10)) (const? 4)) (urem e (const? 10)) ⊑
+      add (mul (LLVM.udiv e (const? 10)) (const? 6) { «nsw» := false, «nuw» := true }) e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem fold_add_udiv_urem_without_noundef_thm :
+  ∀ (e : IntW 32),
+    add (shl (LLVM.udiv e (const? 10)) (const? 4)) (urem e (const? 10)) ⊑
+      LLVM.or (shl (LLVM.udiv e (const? 10)) (const? 4)) (urem e (const? 10)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
 

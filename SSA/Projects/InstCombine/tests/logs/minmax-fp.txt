@@ -48,7 +48,7 @@
 4: "t9" has unsupported operation: builtin.unregistered: llvm.fptosi
 
 1: "t11"
-4: "t11" has unsupported operation: builtin.unregistered: llvm.fcmp
+4: "t11" has unsupported operation: builtin.unregistered: llvm.intr.minnum
 
 4: "t11" has unsupported operation: builtin.unregistered: llvm.fptosi
 
@@ -93,7 +93,7 @@
 4: "fneg_fmax" has unsupported operation: builtin.unregistered: llvm.fneg
 
 1: "fsub_fmax"
-4: "fsub_fmax" has unsupported operation: builtin.unregistered: llvm.fcmp
+4: "fsub_fmax" has unsupported operation: builtin.unregistered: llvm.intr.minnum
 
 4: "fsub_fmax" has unsupported operation: builtin.unregistered: llvm.fneg
 
@@ -103,7 +103,7 @@
 4: "fsub_fmin" has unsupported operation: builtin.unregistered: llvm.fneg
 
 1: "fneg_fmin"
-4: "fneg_fmin" has unsupported operation: builtin.unregistered: llvm.fcmp
+4: "fneg_fmin" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
 
 4: "fneg_fmin" has unsupported operation: builtin.unregistered: llvm.fneg
 

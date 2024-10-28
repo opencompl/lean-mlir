@@ -37,12 +37,6 @@ def scalar0_after := [llvm|
 theorem scalar0_proof : scalar0_before ⊑ scalar0_after := by
   unfold scalar0_before scalar0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN scalar0
   all_goals (try extract_goal ; sorry)
   ---END scalar0
@@ -73,12 +67,6 @@ def scalar1_after := [llvm|
 theorem scalar1_proof : scalar1_before ⊑ scalar1_after := by
   unfold scalar1_before scalar1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN scalar1
   all_goals (try extract_goal ; sorry)
   ---END scalar1
@@ -107,12 +95,6 @@ def in_constant_varx_mone_after := [llvm|
 theorem in_constant_varx_mone_proof : in_constant_varx_mone_before ⊑ in_constant_varx_mone_after := by
   unfold in_constant_varx_mone_before in_constant_varx_mone_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN in_constant_varx_mone
   all_goals (try extract_goal ; sorry)
   ---END in_constant_varx_mone
@@ -141,12 +123,6 @@ def in_constant_varx_14_after := [llvm|
 theorem in_constant_varx_14_proof : in_constant_varx_14_before ⊑ in_constant_varx_14_after := by
   unfold in_constant_varx_14_before in_constant_varx_14_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN in_constant_varx_14
   all_goals (try extract_goal ; sorry)
   ---END in_constant_varx_14
@@ -175,12 +151,6 @@ def in_constant_mone_vary_after := [llvm|
 theorem in_constant_mone_vary_proof : in_constant_mone_vary_before ⊑ in_constant_mone_vary_after := by
   unfold in_constant_mone_vary_before in_constant_mone_vary_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN in_constant_mone_vary
   all_goals (try extract_goal ; sorry)
   ---END in_constant_mone_vary
@@ -209,12 +179,6 @@ def in_constant_14_vary_after := [llvm|
 theorem in_constant_14_vary_proof : in_constant_14_vary_before ⊑ in_constant_14_vary_after := by
   unfold in_constant_14_vary_before in_constant_14_vary_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN in_constant_14_vary
   all_goals (try extract_goal ; sorry)
   ---END in_constant_14_vary
@@ -245,12 +209,6 @@ def c_1_0_0_after := [llvm|
 theorem c_1_0_0_proof : c_1_0_0_before ⊑ c_1_0_0_after := by
   unfold c_1_0_0_before c_1_0_0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN c_1_0_0
   all_goals (try extract_goal ; sorry)
   ---END c_1_0_0
@@ -281,12 +239,6 @@ def c_0_1_0_after := [llvm|
 theorem c_0_1_0_proof : c_0_1_0_before ⊑ c_0_1_0_after := by
   unfold c_0_1_0_before c_0_1_0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN c_0_1_0
   all_goals (try extract_goal ; sorry)
   ---END c_0_1_0
@@ -317,12 +269,6 @@ def c_1_1_0_after := [llvm|
 theorem c_1_1_0_proof : c_1_1_0_before ⊑ c_1_1_0_after := by
   unfold c_1_1_0_before c_1_1_0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN c_1_1_0
   all_goals (try extract_goal ; sorry)
   ---END c_1_1_0
@@ -351,12 +297,6 @@ def commutativity_constant_14_vary_after := [llvm|
 theorem commutativity_constant_14_vary_proof : commutativity_constant_14_vary_before ⊑ commutativity_constant_14_vary_after := by
   unfold commutativity_constant_14_vary_before commutativity_constant_14_vary_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN commutativity_constant_14_vary
   all_goals (try extract_goal ; sorry)
   ---END commutativity_constant_14_vary

@@ -29,12 +29,6 @@ def sdiv_i1_is_op0_after := [llvm|
 theorem sdiv_i1_is_op0_proof : sdiv_i1_is_op0_before ⊑ sdiv_i1_is_op0_after := by
   unfold sdiv_i1_is_op0_before sdiv_i1_is_op0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sdiv_i1_is_op0
   all_goals (try extract_goal ; sorry)
   ---END sdiv_i1_is_op0
@@ -57,12 +51,6 @@ def udiv_i1_is_op0_after := [llvm|
 theorem udiv_i1_is_op0_proof : udiv_i1_is_op0_before ⊑ udiv_i1_is_op0_after := by
   unfold udiv_i1_is_op0_before udiv_i1_is_op0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN udiv_i1_is_op0
   all_goals (try extract_goal ; sorry)
   ---END udiv_i1_is_op0
@@ -86,12 +74,6 @@ def srem_i1_is_zero_after := [llvm|
 theorem srem_i1_is_zero_proof : srem_i1_is_zero_before ⊑ srem_i1_is_zero_after := by
   unfold srem_i1_is_zero_before srem_i1_is_zero_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN srem_i1_is_zero
   all_goals (try extract_goal ; sorry)
   ---END srem_i1_is_zero
@@ -115,12 +97,6 @@ def urem_i1_is_zero_after := [llvm|
 theorem urem_i1_is_zero_proof : urem_i1_is_zero_before ⊑ urem_i1_is_zero_after := by
   unfold urem_i1_is_zero_before urem_i1_is_zero_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN urem_i1_is_zero
   all_goals (try extract_goal ; sorry)
   ---END urem_i1_is_zero

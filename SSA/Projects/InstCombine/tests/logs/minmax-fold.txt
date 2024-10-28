@@ -278,9 +278,9 @@
 4: "common_factor_umax_extra_use_both" has unsupported operation: llvm.call
 
 1: "not_min_of_min"
-4: "not_min_of_min" has unsupported operation: builtin.unregistered: llvm.fcmp
+4: "not_min_of_min" has unsupported operation: builtin.unregistered: llvm.intr.minnum
 
-4: "not_min_of_min" has unsupported operation: builtin.unregistered: llvm.fcmp
+4: "not_min_of_min" has unsupported operation: builtin.unregistered: llvm.intr.minnum
 
 4: "not_min_of_min" has unsupported operation: builtin.unregistered: llvm.icmp
 

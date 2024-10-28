@@ -36,12 +36,6 @@ def a_after := [llvm|
 theorem a_proof : a_before ⊑ a_after := by
   unfold a_before a_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN a
   apply a_thm
   ---END a

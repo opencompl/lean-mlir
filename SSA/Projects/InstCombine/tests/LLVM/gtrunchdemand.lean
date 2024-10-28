@@ -38,12 +38,6 @@ def trunc_lshr_after := [llvm|
 theorem trunc_lshr_proof : trunc_lshr_before ⊑ trunc_lshr_after := by
   unfold trunc_lshr_before trunc_lshr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN trunc_lshr
   all_goals (try extract_goal ; sorry)
   ---END trunc_lshr
@@ -73,12 +67,6 @@ def trunc_lshr_exact_mask_after := [llvm|
 theorem trunc_lshr_exact_mask_proof : trunc_lshr_exact_mask_before ⊑ trunc_lshr_exact_mask_after := by
   unfold trunc_lshr_exact_mask_before trunc_lshr_exact_mask_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN trunc_lshr_exact_mask
   all_goals (try extract_goal ; sorry)
   ---END trunc_lshr_exact_mask
@@ -110,12 +98,6 @@ def or_trunc_lshr_after := [llvm|
 theorem or_trunc_lshr_proof : or_trunc_lshr_before ⊑ or_trunc_lshr_after := by
   unfold or_trunc_lshr_before or_trunc_lshr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_trunc_lshr
   all_goals (try extract_goal ; sorry)
   ---END or_trunc_lshr
@@ -147,12 +129,6 @@ def or_trunc_lshr_more_after := [llvm|
 theorem or_trunc_lshr_more_proof : or_trunc_lshr_more_before ⊑ or_trunc_lshr_more_after := by
   unfold or_trunc_lshr_more_before or_trunc_lshr_more_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_trunc_lshr_more
   all_goals (try extract_goal ; sorry)
   ---END or_trunc_lshr_more

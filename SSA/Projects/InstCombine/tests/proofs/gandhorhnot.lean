@@ -34,12 +34,6 @@ def and_to_xor1_after := [llvm|
 theorem and_to_xor1_proof : and_to_xor1_before ⊑ and_to_xor1_after := by
   unfold and_to_xor1_before and_to_xor1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_to_xor1
   apply and_to_xor1_thm
   ---END and_to_xor1
@@ -67,12 +61,6 @@ def and_to_xor2_after := [llvm|
 theorem and_to_xor2_proof : and_to_xor2_before ⊑ and_to_xor2_after := by
   unfold and_to_xor2_before and_to_xor2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_to_xor2
   apply and_to_xor2_thm
   ---END and_to_xor2
@@ -100,12 +88,6 @@ def and_to_xor3_after := [llvm|
 theorem and_to_xor3_proof : and_to_xor3_before ⊑ and_to_xor3_after := by
   unfold and_to_xor3_before and_to_xor3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_to_xor3
   apply and_to_xor3_thm
   ---END and_to_xor3
@@ -133,12 +115,6 @@ def and_to_xor4_after := [llvm|
 theorem and_to_xor4_proof : and_to_xor4_before ⊑ and_to_xor4_after := by
   unfold and_to_xor4_before and_to_xor4_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_to_xor4
   apply and_to_xor4_thm
   ---END and_to_xor4
@@ -168,12 +144,6 @@ def or_to_nxor1_after := [llvm|
 theorem or_to_nxor1_proof : or_to_nxor1_before ⊑ or_to_nxor1_after := by
   unfold or_to_nxor1_before or_to_nxor1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_to_nxor1
   apply or_to_nxor1_thm
   ---END or_to_nxor1
@@ -203,12 +173,6 @@ def or_to_nxor2_after := [llvm|
 theorem or_to_nxor2_proof : or_to_nxor2_before ⊑ or_to_nxor2_after := by
   unfold or_to_nxor2_before or_to_nxor2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_to_nxor2
   apply or_to_nxor2_thm
   ---END or_to_nxor2
@@ -238,12 +202,6 @@ def or_to_nxor3_after := [llvm|
 theorem or_to_nxor3_proof : or_to_nxor3_before ⊑ or_to_nxor3_after := by
   unfold or_to_nxor3_before or_to_nxor3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_to_nxor3
   apply or_to_nxor3_thm
   ---END or_to_nxor3
@@ -273,12 +231,6 @@ def or_to_nxor4_after := [llvm|
 theorem or_to_nxor4_proof : or_to_nxor4_before ⊑ or_to_nxor4_after := by
   unfold or_to_nxor4_before or_to_nxor4_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_to_nxor4
   apply or_to_nxor4_thm
   ---END or_to_nxor4
@@ -304,12 +256,6 @@ def xor_to_xor1_after := [llvm|
 theorem xor_to_xor1_proof : xor_to_xor1_before ⊑ xor_to_xor1_after := by
   unfold xor_to_xor1_before xor_to_xor1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN xor_to_xor1
   apply xor_to_xor1_thm
   ---END xor_to_xor1
@@ -335,12 +281,6 @@ def xor_to_xor2_after := [llvm|
 theorem xor_to_xor2_proof : xor_to_xor2_before ⊑ xor_to_xor2_after := by
   unfold xor_to_xor2_before xor_to_xor2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN xor_to_xor2
   apply xor_to_xor2_thm
   ---END xor_to_xor2
@@ -366,12 +306,6 @@ def xor_to_xor3_after := [llvm|
 theorem xor_to_xor3_proof : xor_to_xor3_before ⊑ xor_to_xor3_after := by
   unfold xor_to_xor3_before xor_to_xor3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN xor_to_xor3
   apply xor_to_xor3_thm
   ---END xor_to_xor3
@@ -397,12 +331,6 @@ def xor_to_xor4_after := [llvm|
 theorem xor_to_xor4_proof : xor_to_xor4_before ⊑ xor_to_xor4_after := by
   unfold xor_to_xor4_before xor_to_xor4_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN xor_to_xor4
   apply xor_to_xor4_thm
   ---END xor_to_xor4
@@ -436,12 +364,6 @@ def PR32830_after := [llvm|
 theorem PR32830_proof : PR32830_before ⊑ PR32830_after := by
   unfold PR32830_before PR32830_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN PR32830
   apply PR32830_thm
   ---END PR32830
@@ -469,12 +391,6 @@ def simplify_or_common_op_commute0_after := [llvm|
 theorem simplify_or_common_op_commute0_proof : simplify_or_common_op_commute0_before ⊑ simplify_or_common_op_commute0_after := by
   unfold simplify_or_common_op_commute0_before simplify_or_common_op_commute0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN simplify_or_common_op_commute0
   apply simplify_or_common_op_commute0_thm
   ---END simplify_or_common_op_commute0
@@ -502,12 +418,6 @@ def simplify_or_common_op_commute1_after := [llvm|
 theorem simplify_or_common_op_commute1_proof : simplify_or_common_op_commute1_before ⊑ simplify_or_common_op_commute1_after := by
   unfold simplify_or_common_op_commute1_before simplify_or_common_op_commute1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN simplify_or_common_op_commute1
   apply simplify_or_common_op_commute1_thm
   ---END simplify_or_common_op_commute1
@@ -537,12 +447,6 @@ def simplify_or_common_op_commute2_after := [llvm|
 theorem simplify_or_common_op_commute2_proof : simplify_or_common_op_commute2_before ⊑ simplify_or_common_op_commute2_after := by
   unfold simplify_or_common_op_commute2_before simplify_or_common_op_commute2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN simplify_or_common_op_commute2
   apply simplify_or_common_op_commute2_thm
   ---END simplify_or_common_op_commute2
@@ -570,12 +474,6 @@ def simplify_and_common_op_commute1_after := [llvm|
 theorem simplify_and_common_op_commute1_proof : simplify_and_common_op_commute1_before ⊑ simplify_and_common_op_commute1_after := by
   unfold simplify_and_common_op_commute1_before simplify_and_common_op_commute1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN simplify_and_common_op_commute1
   apply simplify_and_common_op_commute1_thm
   ---END simplify_and_common_op_commute1
@@ -605,12 +503,6 @@ def simplify_and_common_op_commute2_after := [llvm|
 theorem simplify_and_common_op_commute2_proof : simplify_and_common_op_commute2_before ⊑ simplify_and_common_op_commute2_after := by
   unfold simplify_and_common_op_commute2_before simplify_and_common_op_commute2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN simplify_and_common_op_commute2
   apply simplify_and_common_op_commute2_thm
   ---END simplify_and_common_op_commute2
@@ -637,12 +529,6 @@ def reduce_xor_common_op_commute0_after := [llvm|
 theorem reduce_xor_common_op_commute0_proof : reduce_xor_common_op_commute0_before ⊑ reduce_xor_common_op_commute0_after := by
   unfold reduce_xor_common_op_commute0_before reduce_xor_common_op_commute0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN reduce_xor_common_op_commute0
   apply reduce_xor_common_op_commute0_thm
   ---END reduce_xor_common_op_commute0
@@ -669,12 +555,6 @@ def reduce_xor_common_op_commute1_after := [llvm|
 theorem reduce_xor_common_op_commute1_proof : reduce_xor_common_op_commute1_before ⊑ reduce_xor_common_op_commute1_after := by
   unfold reduce_xor_common_op_commute1_before reduce_xor_common_op_commute1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN reduce_xor_common_op_commute1
   apply reduce_xor_common_op_commute1_thm
   ---END reduce_xor_common_op_commute1
@@ -704,12 +584,6 @@ def annihilate_xor_common_op_commute2_after := [llvm|
 theorem annihilate_xor_common_op_commute2_proof : annihilate_xor_common_op_commute2_before ⊑ annihilate_xor_common_op_commute2_after := by
   unfold annihilate_xor_common_op_commute2_before annihilate_xor_common_op_commute2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN annihilate_xor_common_op_commute2
   apply annihilate_xor_common_op_commute2_thm
   ---END annihilate_xor_common_op_commute2

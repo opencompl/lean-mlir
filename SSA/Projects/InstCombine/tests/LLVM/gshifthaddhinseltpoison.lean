@@ -36,12 +36,6 @@ def shl_C1_add_A_C2_i32_after := [llvm|
 theorem shl_C1_add_A_C2_i32_proof : shl_C1_add_A_C2_i32_before ⊑ shl_C1_add_A_C2_i32_after := by
   unfold shl_C1_add_A_C2_i32_before shl_C1_add_A_C2_i32_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_C1_add_A_C2_i32
   all_goals (try extract_goal ; sorry)
   ---END shl_C1_add_A_C2_i32
@@ -70,12 +64,6 @@ def ashr_C1_add_A_C2_i32_after := [llvm|
 theorem ashr_C1_add_A_C2_i32_proof : ashr_C1_add_A_C2_i32_before ⊑ ashr_C1_add_A_C2_i32_after := by
   unfold ashr_C1_add_A_C2_i32_before ashr_C1_add_A_C2_i32_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ashr_C1_add_A_C2_i32
   all_goals (try extract_goal ; sorry)
   ---END ashr_C1_add_A_C2_i32
@@ -107,12 +95,6 @@ def lshr_C1_add_A_C2_i32_after := [llvm|
 theorem lshr_C1_add_A_C2_i32_proof : lshr_C1_add_A_C2_i32_before ⊑ lshr_C1_add_A_C2_i32_after := by
   unfold lshr_C1_add_A_C2_i32_before lshr_C1_add_A_C2_i32_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_C1_add_A_C2_i32
   all_goals (try extract_goal ; sorry)
   ---END lshr_C1_add_A_C2_i32

@@ -33,12 +33,6 @@ def select_of_symmetric_selects_after := [llvm|
 theorem select_of_symmetric_selects_proof : select_of_symmetric_selects_before ⊑ select_of_symmetric_selects_after := by
   unfold select_of_symmetric_selects_before select_of_symmetric_selects_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN select_of_symmetric_selects
   apply select_of_symmetric_selects_thm
   ---END select_of_symmetric_selects
@@ -65,12 +59,6 @@ def select_of_symmetric_selects_negative1_after := [llvm|
 theorem select_of_symmetric_selects_negative1_proof : select_of_symmetric_selects_negative1_before ⊑ select_of_symmetric_selects_negative1_after := by
   unfold select_of_symmetric_selects_negative1_before select_of_symmetric_selects_negative1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN select_of_symmetric_selects_negative1
   apply select_of_symmetric_selects_negative1_thm
   ---END select_of_symmetric_selects_negative1
@@ -97,12 +85,6 @@ def select_of_symmetric_selects_commuted_after := [llvm|
 theorem select_of_symmetric_selects_commuted_proof : select_of_symmetric_selects_commuted_before ⊑ select_of_symmetric_selects_commuted_after := by
   unfold select_of_symmetric_selects_commuted_before select_of_symmetric_selects_commuted_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN select_of_symmetric_selects_commuted
   apply select_of_symmetric_selects_commuted_thm
   ---END select_of_symmetric_selects_commuted

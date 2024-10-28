@@ -2,9 +2,18 @@
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
+open LLVM
 
 section ginstcombinehverifyhknownhbits_proof
-theorem pr110631_thm (x : BitVec 32) (x_1 : BitVec 64) :
-  setWidth 16 (signExtend 32 (setWidth 16 x_1 &&& (setWidth 16 x ^^^ 48991#16))) ^^^ 1#16 =
-    (setWidth 16 x ^^^ 48991#16) &&& setWidth 16 x_1 ^^^ 1#16 := sorry
+theorem pr110631_thm :
+  ∀ (e : IntW 32) (e_1 : IntW 64),
+    trunc 16
+        (LLVM.xor (sext 32 (trunc 16 (trunc 32 (LLVM.and e_1 (zext 64 (LLVM.xor e (const? 48991))))))) (const? 1)) ⊑
+      LLVM.xor (trunc 16 (LLVM.and (LLVM.xor e (const? 48991)) (trunc 32 e_1))) (const? 1) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
 

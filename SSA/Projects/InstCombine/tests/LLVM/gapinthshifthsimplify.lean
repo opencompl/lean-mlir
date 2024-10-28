@@ -33,12 +33,6 @@ def test0_after := [llvm|
 theorem test0_proof : test0_before ⊑ test0_after := by
   unfold test0_before test0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test0
   all_goals (try extract_goal ; sorry)
   ---END test0
@@ -65,12 +59,6 @@ def test1_after := [llvm|
 theorem test1_proof : test1_before ⊑ test1_after := by
   unfold test1_before test1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test1
   all_goals (try extract_goal ; sorry)
   ---END test1
@@ -97,12 +85,6 @@ def test2_after := [llvm|
 theorem test2_proof : test2_before ⊑ test2_after := by
   unfold test2_before test2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test2
   all_goals (try extract_goal ; sorry)
   ---END test2

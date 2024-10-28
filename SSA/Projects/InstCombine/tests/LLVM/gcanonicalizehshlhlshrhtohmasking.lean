@@ -33,12 +33,6 @@ def positive_samevar_after := [llvm|
 theorem positive_samevar_proof : positive_samevar_before ⊑ positive_samevar_after := by
   unfold positive_samevar_before positive_samevar_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN positive_samevar
   all_goals (try extract_goal ; sorry)
   ---END positive_samevar
@@ -65,12 +59,6 @@ def positive_sameconst_after := [llvm|
 theorem positive_sameconst_proof : positive_sameconst_before ⊑ positive_sameconst_after := by
   unfold positive_sameconst_before positive_sameconst_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN positive_sameconst
   all_goals (try extract_goal ; sorry)
   ---END positive_sameconst
@@ -100,12 +88,6 @@ def positive_biggerShl_after := [llvm|
 theorem positive_biggerShl_proof : positive_biggerShl_before ⊑ positive_biggerShl_after := by
   unfold positive_biggerShl_before positive_biggerShl_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN positive_biggerShl
   all_goals (try extract_goal ; sorry)
   ---END positive_biggerShl
@@ -135,12 +117,6 @@ def positive_biggerLshr_after := [llvm|
 theorem positive_biggerLshr_proof : positive_biggerLshr_before ⊑ positive_biggerLshr_after := by
   unfold positive_biggerLshr_before positive_biggerLshr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN positive_biggerLshr
   all_goals (try extract_goal ; sorry)
   ---END positive_biggerLshr
@@ -170,12 +146,6 @@ def positive_biggerLshr_lshrexact_after := [llvm|
 theorem positive_biggerLshr_lshrexact_proof : positive_biggerLshr_lshrexact_before ⊑ positive_biggerLshr_lshrexact_after := by
   unfold positive_biggerLshr_lshrexact_before positive_biggerLshr_lshrexact_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN positive_biggerLshr_lshrexact
   all_goals (try extract_goal ; sorry)
   ---END positive_biggerLshr_lshrexact
@@ -199,12 +169,6 @@ def positive_samevar_shlnuw_after := [llvm|
 theorem positive_samevar_shlnuw_proof : positive_samevar_shlnuw_before ⊑ positive_samevar_shlnuw_after := by
   unfold positive_samevar_shlnuw_before positive_samevar_shlnuw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN positive_samevar_shlnuw
   all_goals (try extract_goal ; sorry)
   ---END positive_samevar_shlnuw
@@ -229,12 +193,6 @@ def positive_sameconst_shlnuw_after := [llvm|
 theorem positive_sameconst_shlnuw_proof : positive_sameconst_shlnuw_before ⊑ positive_sameconst_shlnuw_after := by
   unfold positive_sameconst_shlnuw_before positive_sameconst_shlnuw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN positive_sameconst_shlnuw
   all_goals (try extract_goal ; sorry)
   ---END positive_sameconst_shlnuw
@@ -262,12 +220,6 @@ def positive_biggerShl_shlnuw_after := [llvm|
 theorem positive_biggerShl_shlnuw_proof : positive_biggerShl_shlnuw_before ⊑ positive_biggerShl_shlnuw_after := by
   unfold positive_biggerShl_shlnuw_before positive_biggerShl_shlnuw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN positive_biggerShl_shlnuw
   all_goals (try extract_goal ; sorry)
   ---END positive_biggerShl_shlnuw
@@ -295,12 +247,6 @@ def positive_biggerLshr_shlnuw_after := [llvm|
 theorem positive_biggerLshr_shlnuw_proof : positive_biggerLshr_shlnuw_before ⊑ positive_biggerLshr_shlnuw_after := by
   unfold positive_biggerLshr_shlnuw_before positive_biggerLshr_shlnuw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN positive_biggerLshr_shlnuw
   all_goals (try extract_goal ; sorry)
   ---END positive_biggerLshr_shlnuw
@@ -328,12 +274,6 @@ def positive_biggerLshr_shlnuw_lshrexact_after := [llvm|
 theorem positive_biggerLshr_shlnuw_lshrexact_proof : positive_biggerLshr_shlnuw_lshrexact_before ⊑ positive_biggerLshr_shlnuw_lshrexact_after := by
   unfold positive_biggerLshr_shlnuw_lshrexact_before positive_biggerLshr_shlnuw_lshrexact_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN positive_biggerLshr_shlnuw_lshrexact
   all_goals (try extract_goal ; sorry)
   ---END positive_biggerLshr_shlnuw_lshrexact

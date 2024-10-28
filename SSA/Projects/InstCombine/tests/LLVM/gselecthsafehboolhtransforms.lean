@@ -33,12 +33,6 @@ def land_land_left1_after := [llvm|
 theorem land_land_left1_proof : land_land_left1_before ⊑ land_land_left1_after := by
   unfold land_land_left1_before land_land_left1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN land_land_left1
   all_goals (try extract_goal ; sorry)
   ---END land_land_left1
@@ -65,12 +59,6 @@ def land_land_left2_after := [llvm|
 theorem land_land_left2_proof : land_land_left2_before ⊑ land_land_left2_after := by
   unfold land_land_left2_before land_land_left2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN land_land_left2
   all_goals (try extract_goal ; sorry)
   ---END land_land_left2
@@ -97,12 +85,6 @@ def land_band_left1_after := [llvm|
 theorem land_band_left1_proof : land_band_left1_before ⊑ land_band_left1_after := by
   unfold land_band_left1_before land_band_left1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN land_band_left1
   all_goals (try extract_goal ; sorry)
   ---END land_band_left1
@@ -129,12 +111,6 @@ def land_band_left2_after := [llvm|
 theorem land_band_left2_proof : land_band_left2_before ⊑ land_band_left2_after := by
   unfold land_band_left2_before land_band_left2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN land_band_left2
   all_goals (try extract_goal ; sorry)
   ---END land_band_left2
@@ -160,12 +136,6 @@ def land_lor_left1_after := [llvm|
 theorem land_lor_left1_proof : land_lor_left1_before ⊑ land_lor_left1_after := by
   unfold land_lor_left1_before land_lor_left1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN land_lor_left1
   all_goals (try extract_goal ; sorry)
   ---END land_lor_left1
@@ -191,12 +161,6 @@ def land_lor_left2_after := [llvm|
 theorem land_lor_left2_proof : land_lor_left2_before ⊑ land_lor_left2_after := by
   unfold land_lor_left2_before land_lor_left2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN land_lor_left2
   all_goals (try extract_goal ; sorry)
   ---END land_lor_left2
@@ -221,12 +185,6 @@ def land_bor_left1_after := [llvm|
 theorem land_bor_left1_proof : land_bor_left1_before ⊑ land_bor_left1_after := by
   unfold land_bor_left1_before land_bor_left1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN land_bor_left1
   all_goals (try extract_goal ; sorry)
   ---END land_bor_left1
@@ -251,12 +209,6 @@ def land_bor_left2_after := [llvm|
 theorem land_bor_left2_proof : land_bor_left2_before ⊑ land_bor_left2_after := by
   unfold land_bor_left2_before land_bor_left2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN land_bor_left2
   all_goals (try extract_goal ; sorry)
   ---END land_bor_left2
@@ -282,12 +234,6 @@ def band_land_left1_after := [llvm|
 theorem band_land_left1_proof : band_land_left1_before ⊑ band_land_left1_after := by
   unfold band_land_left1_before band_land_left1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN band_land_left1
   all_goals (try extract_goal ; sorry)
   ---END band_land_left1
@@ -313,12 +259,6 @@ def band_land_left2_after := [llvm|
 theorem band_land_left2_proof : band_land_left2_before ⊑ band_land_left2_after := by
   unfold band_land_left2_before band_land_left2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN band_land_left2
   all_goals (try extract_goal ; sorry)
   ---END band_land_left2
@@ -343,12 +283,6 @@ def band_lor_left1_after := [llvm|
 theorem band_lor_left1_proof : band_lor_left1_before ⊑ band_lor_left1_after := by
   unfold band_lor_left1_before band_lor_left1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN band_lor_left1
   all_goals (try extract_goal ; sorry)
   ---END band_lor_left1
@@ -373,12 +307,6 @@ def band_lor_left2_after := [llvm|
 theorem band_lor_left2_proof : band_lor_left2_before ⊑ band_lor_left2_after := by
   unfold band_lor_left2_before band_lor_left2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN band_lor_left2
   all_goals (try extract_goal ; sorry)
   ---END band_lor_left2
@@ -404,12 +332,6 @@ def lor_land_left1_after := [llvm|
 theorem lor_land_left1_proof : lor_land_left1_before ⊑ lor_land_left1_after := by
   unfold lor_land_left1_before lor_land_left1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lor_land_left1
   all_goals (try extract_goal ; sorry)
   ---END lor_land_left1
@@ -435,12 +357,6 @@ def lor_land_left2_after := [llvm|
 theorem lor_land_left2_proof : lor_land_left2_before ⊑ lor_land_left2_after := by
   unfold lor_land_left2_before lor_land_left2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lor_land_left2
   all_goals (try extract_goal ; sorry)
   ---END lor_land_left2
@@ -465,12 +381,6 @@ def lor_band_left1_after := [llvm|
 theorem lor_band_left1_proof : lor_band_left1_before ⊑ lor_band_left1_after := by
   unfold lor_band_left1_before lor_band_left1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lor_band_left1
   all_goals (try extract_goal ; sorry)
   ---END lor_band_left1
@@ -495,12 +405,6 @@ def lor_band_left2_after := [llvm|
 theorem lor_band_left2_proof : lor_band_left2_before ⊑ lor_band_left2_after := by
   unfold lor_band_left2_before lor_band_left2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lor_band_left2
   all_goals (try extract_goal ; sorry)
   ---END lor_band_left2
@@ -527,12 +431,6 @@ def lor_lor_left1_after := [llvm|
 theorem lor_lor_left1_proof : lor_lor_left1_before ⊑ lor_lor_left1_after := by
   unfold lor_lor_left1_before lor_lor_left1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lor_lor_left1
   all_goals (try extract_goal ; sorry)
   ---END lor_lor_left1
@@ -559,12 +457,6 @@ def lor_lor_left2_after := [llvm|
 theorem lor_lor_left2_proof : lor_lor_left2_before ⊑ lor_lor_left2_after := by
   unfold lor_lor_left2_before lor_lor_left2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lor_lor_left2
   all_goals (try extract_goal ; sorry)
   ---END lor_lor_left2
@@ -591,12 +483,6 @@ def lor_bor_left1_after := [llvm|
 theorem lor_bor_left1_proof : lor_bor_left1_before ⊑ lor_bor_left1_after := by
   unfold lor_bor_left1_before lor_bor_left1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lor_bor_left1
   all_goals (try extract_goal ; sorry)
   ---END lor_bor_left1
@@ -623,12 +509,6 @@ def lor_bor_left2_after := [llvm|
 theorem lor_bor_left2_proof : lor_bor_left2_before ⊑ lor_bor_left2_after := by
   unfold lor_bor_left2_before lor_bor_left2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lor_bor_left2
   all_goals (try extract_goal ; sorry)
   ---END lor_bor_left2
@@ -653,12 +533,6 @@ def bor_land_left1_after := [llvm|
 theorem bor_land_left1_proof : bor_land_left1_before ⊑ bor_land_left1_after := by
   unfold bor_land_left1_before bor_land_left1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN bor_land_left1
   all_goals (try extract_goal ; sorry)
   ---END bor_land_left1
@@ -683,12 +557,6 @@ def bor_land_left2_after := [llvm|
 theorem bor_land_left2_proof : bor_land_left2_before ⊑ bor_land_left2_after := by
   unfold bor_land_left2_before bor_land_left2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN bor_land_left2
   all_goals (try extract_goal ; sorry)
   ---END bor_land_left2
@@ -714,12 +582,6 @@ def bor_lor_left1_after := [llvm|
 theorem bor_lor_left1_proof : bor_lor_left1_before ⊑ bor_lor_left1_after := by
   unfold bor_lor_left1_before bor_lor_left1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN bor_lor_left1
   all_goals (try extract_goal ; sorry)
   ---END bor_lor_left1
@@ -745,12 +607,6 @@ def bor_lor_left2_after := [llvm|
 theorem bor_lor_left2_proof : bor_lor_left2_before ⊑ bor_lor_left2_after := by
   unfold bor_lor_left2_before bor_lor_left2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN bor_lor_left2
   all_goals (try extract_goal ; sorry)
   ---END bor_lor_left2
@@ -777,12 +633,6 @@ def land_land_right1_after := [llvm|
 theorem land_land_right1_proof : land_land_right1_before ⊑ land_land_right1_after := by
   unfold land_land_right1_before land_land_right1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN land_land_right1
   all_goals (try extract_goal ; sorry)
   ---END land_land_right1
@@ -809,12 +659,6 @@ def land_land_right2_after := [llvm|
 theorem land_land_right2_proof : land_land_right2_before ⊑ land_land_right2_after := by
   unfold land_land_right2_before land_land_right2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN land_land_right2
   all_goals (try extract_goal ; sorry)
   ---END land_land_right2
@@ -841,12 +685,6 @@ def land_band_right1_after := [llvm|
 theorem land_band_right1_proof : land_band_right1_before ⊑ land_band_right1_after := by
   unfold land_band_right1_before land_band_right1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN land_band_right1
   all_goals (try extract_goal ; sorry)
   ---END land_band_right1
@@ -873,12 +711,6 @@ def land_band_right2_after := [llvm|
 theorem land_band_right2_proof : land_band_right2_before ⊑ land_band_right2_after := by
   unfold land_band_right2_before land_band_right2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN land_band_right2
   all_goals (try extract_goal ; sorry)
   ---END land_band_right2
@@ -904,12 +736,6 @@ def land_lor_right1_after := [llvm|
 theorem land_lor_right1_proof : land_lor_right1_before ⊑ land_lor_right1_after := by
   unfold land_lor_right1_before land_lor_right1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN land_lor_right1
   all_goals (try extract_goal ; sorry)
   ---END land_lor_right1
@@ -935,12 +761,6 @@ def land_lor_right2_after := [llvm|
 theorem land_lor_right2_proof : land_lor_right2_before ⊑ land_lor_right2_after := by
   unfold land_lor_right2_before land_lor_right2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN land_lor_right2
   all_goals (try extract_goal ; sorry)
   ---END land_lor_right2
@@ -965,12 +785,6 @@ def land_bor_right1_after := [llvm|
 theorem land_bor_right1_proof : land_bor_right1_before ⊑ land_bor_right1_after := by
   unfold land_bor_right1_before land_bor_right1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN land_bor_right1
   all_goals (try extract_goal ; sorry)
   ---END land_bor_right1
@@ -995,12 +809,6 @@ def land_bor_right2_after := [llvm|
 theorem land_bor_right2_proof : land_bor_right2_before ⊑ land_bor_right2_after := by
   unfold land_bor_right2_before land_bor_right2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN land_bor_right2
   all_goals (try extract_goal ; sorry)
   ---END land_bor_right2
@@ -1027,12 +835,6 @@ def band_land_right1_after := [llvm|
 theorem band_land_right1_proof : band_land_right1_before ⊑ band_land_right1_after := by
   unfold band_land_right1_before band_land_right1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN band_land_right1
   all_goals (try extract_goal ; sorry)
   ---END band_land_right1
@@ -1059,12 +861,6 @@ def band_land_right2_after := [llvm|
 theorem band_land_right2_proof : band_land_right2_before ⊑ band_land_right2_after := by
   unfold band_land_right2_before band_land_right2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN band_land_right2
   all_goals (try extract_goal ; sorry)
   ---END band_land_right2
@@ -1089,12 +885,6 @@ def band_lor_right1_after := [llvm|
 theorem band_lor_right1_proof : band_lor_right1_before ⊑ band_lor_right1_after := by
   unfold band_lor_right1_before band_lor_right1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN band_lor_right1
   all_goals (try extract_goal ; sorry)
   ---END band_lor_right1
@@ -1119,12 +909,6 @@ def band_lor_right2_after := [llvm|
 theorem band_lor_right2_proof : band_lor_right2_before ⊑ band_lor_right2_after := by
   unfold band_lor_right2_before band_lor_right2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN band_lor_right2
   all_goals (try extract_goal ; sorry)
   ---END band_lor_right2
@@ -1150,12 +934,6 @@ def lor_land_right1_after := [llvm|
 theorem lor_land_right1_proof : lor_land_right1_before ⊑ lor_land_right1_after := by
   unfold lor_land_right1_before lor_land_right1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lor_land_right1
   all_goals (try extract_goal ; sorry)
   ---END lor_land_right1
@@ -1181,12 +959,6 @@ def lor_land_right2_after := [llvm|
 theorem lor_land_right2_proof : lor_land_right2_before ⊑ lor_land_right2_after := by
   unfold lor_land_right2_before lor_land_right2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lor_land_right2
   all_goals (try extract_goal ; sorry)
   ---END lor_land_right2
@@ -1211,12 +983,6 @@ def lor_band_right1_after := [llvm|
 theorem lor_band_right1_proof : lor_band_right1_before ⊑ lor_band_right1_after := by
   unfold lor_band_right1_before lor_band_right1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lor_band_right1
   all_goals (try extract_goal ; sorry)
   ---END lor_band_right1
@@ -1241,12 +1007,6 @@ def lor_band_right2_after := [llvm|
 theorem lor_band_right2_proof : lor_band_right2_before ⊑ lor_band_right2_after := by
   unfold lor_band_right2_before lor_band_right2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lor_band_right2
   all_goals (try extract_goal ; sorry)
   ---END lor_band_right2
@@ -1273,12 +1033,6 @@ def lor_lor_right1_after := [llvm|
 theorem lor_lor_right1_proof : lor_lor_right1_before ⊑ lor_lor_right1_after := by
   unfold lor_lor_right1_before lor_lor_right1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lor_lor_right1
   all_goals (try extract_goal ; sorry)
   ---END lor_lor_right1
@@ -1305,12 +1059,6 @@ def lor_lor_right2_after := [llvm|
 theorem lor_lor_right2_proof : lor_lor_right2_before ⊑ lor_lor_right2_after := by
   unfold lor_lor_right2_before lor_lor_right2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lor_lor_right2
   all_goals (try extract_goal ; sorry)
   ---END lor_lor_right2
@@ -1337,12 +1085,6 @@ def lor_bor_right1_after := [llvm|
 theorem lor_bor_right1_proof : lor_bor_right1_before ⊑ lor_bor_right1_after := by
   unfold lor_bor_right1_before lor_bor_right1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lor_bor_right1
   all_goals (try extract_goal ; sorry)
   ---END lor_bor_right1
@@ -1369,12 +1111,6 @@ def lor_bor_right2_after := [llvm|
 theorem lor_bor_right2_proof : lor_bor_right2_before ⊑ lor_bor_right2_after := by
   unfold lor_bor_right2_before lor_bor_right2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lor_bor_right2
   all_goals (try extract_goal ; sorry)
   ---END lor_bor_right2
@@ -1399,12 +1135,6 @@ def bor_land_right1_after := [llvm|
 theorem bor_land_right1_proof : bor_land_right1_before ⊑ bor_land_right1_after := by
   unfold bor_land_right1_before bor_land_right1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN bor_land_right1
   all_goals (try extract_goal ; sorry)
   ---END bor_land_right1
@@ -1429,12 +1159,6 @@ def bor_land_right2_after := [llvm|
 theorem bor_land_right2_proof : bor_land_right2_before ⊑ bor_land_right2_after := by
   unfold bor_land_right2_before bor_land_right2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN bor_land_right2
   all_goals (try extract_goal ; sorry)
   ---END bor_land_right2
@@ -1461,12 +1185,6 @@ def bor_lor_right1_after := [llvm|
 theorem bor_lor_right1_proof : bor_lor_right1_before ⊑ bor_lor_right1_after := by
   unfold bor_lor_right1_before bor_lor_right1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN bor_lor_right1
   all_goals (try extract_goal ; sorry)
   ---END bor_lor_right1
@@ -1493,12 +1211,6 @@ def bor_lor_right2_after := [llvm|
 theorem bor_lor_right2_proof : bor_lor_right2_before ⊑ bor_lor_right2_after := by
   unfold bor_lor_right2_before bor_lor_right2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN bor_lor_right2
   all_goals (try extract_goal ; sorry)
   ---END bor_lor_right2

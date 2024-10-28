@@ -34,12 +34,6 @@ def p0_scalar_after := [llvm|
 theorem p0_scalar_proof : p0_scalar_before ⊑ p0_scalar_after := by
   unfold p0_scalar_before p0_scalar_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN p0_scalar
   apply p0_scalar_thm
   ---END p0_scalar

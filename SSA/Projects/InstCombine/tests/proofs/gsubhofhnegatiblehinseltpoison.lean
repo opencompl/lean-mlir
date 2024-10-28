@@ -32,12 +32,6 @@ def t0_after := [llvm|
 theorem t0_proof : t0_before ⊑ t0_after := by
   unfold t0_before t0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t0
   apply t0_thm
   ---END t0
@@ -65,12 +59,6 @@ def t2_after := [llvm|
 theorem t2_proof : t2_before ⊑ t2_after := by
   unfold t2_before t2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t2
   apply t2_thm
   ---END t2
@@ -100,12 +88,6 @@ def t4_after := [llvm|
 theorem t4_proof : t4_before ⊑ t4_after := by
   unfold t4_before t4_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t4
   apply t4_thm
   ---END t4
@@ -137,12 +119,6 @@ def t7_after := [llvm|
 theorem t7_proof : t7_before ⊑ t7_after := by
   unfold t7_before t7_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t7
   apply t7_thm
   ---END t7
@@ -168,14 +144,8 @@ def t9_after := [llvm|
 theorem t9_proof : t9_before ⊑ t9_after := by
   unfold t9_before t9_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t9
-  all_goals (try extract_goal ; sorry)
+  apply t9_thm
   ---END t9
 
 
@@ -201,12 +171,6 @@ def neg_of_sub_from_constant_after := [llvm|
 theorem neg_of_sub_from_constant_proof : neg_of_sub_from_constant_before ⊑ neg_of_sub_from_constant_after := by
   unfold neg_of_sub_from_constant_before neg_of_sub_from_constant_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN neg_of_sub_from_constant
   apply neg_of_sub_from_constant_thm
   ---END neg_of_sub_from_constant
@@ -234,12 +198,6 @@ def sub_from_constant_of_sub_from_constant_after := [llvm|
 theorem sub_from_constant_of_sub_from_constant_proof : sub_from_constant_of_sub_from_constant_before ⊑ sub_from_constant_of_sub_from_constant_after := by
   unfold sub_from_constant_of_sub_from_constant_before sub_from_constant_of_sub_from_constant_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sub_from_constant_of_sub_from_constant
   apply sub_from_constant_of_sub_from_constant_thm
   ---END sub_from_constant_of_sub_from_constant
@@ -267,12 +225,6 @@ def sub_from_variable_of_sub_from_constant_after := [llvm|
 theorem sub_from_variable_of_sub_from_constant_proof : sub_from_variable_of_sub_from_constant_before ⊑ sub_from_variable_of_sub_from_constant_after := by
   unfold sub_from_variable_of_sub_from_constant_before sub_from_variable_of_sub_from_constant_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sub_from_variable_of_sub_from_constant
   apply sub_from_variable_of_sub_from_constant_thm
   ---END sub_from_variable_of_sub_from_constant
@@ -300,12 +252,6 @@ def neg_of_add_with_constant_after := [llvm|
 theorem neg_of_add_with_constant_proof : neg_of_add_with_constant_before ⊑ neg_of_add_with_constant_after := by
   unfold neg_of_add_with_constant_before neg_of_add_with_constant_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN neg_of_add_with_constant
   apply neg_of_add_with_constant_thm
   ---END neg_of_add_with_constant
@@ -333,12 +279,6 @@ def sub_from_constant_of_add_with_constant_after := [llvm|
 theorem sub_from_constant_of_add_with_constant_proof : sub_from_constant_of_add_with_constant_before ⊑ sub_from_constant_of_add_with_constant_after := by
   unfold sub_from_constant_of_add_with_constant_before sub_from_constant_of_add_with_constant_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sub_from_constant_of_add_with_constant
   apply sub_from_constant_of_add_with_constant_thm
   ---END sub_from_constant_of_add_with_constant
@@ -368,12 +308,6 @@ def t20_after := [llvm|
 theorem t20_proof : t20_before ⊑ t20_after := by
   unfold t20_before t20_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t20
   apply t20_thm
   ---END t20
@@ -403,12 +337,6 @@ def negate_xor_after := [llvm|
 theorem negate_xor_proof : negate_xor_before ⊑ negate_xor_after := by
   unfold negate_xor_before negate_xor_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN negate_xor
   apply negate_xor_thm
   ---END negate_xor
@@ -440,12 +368,6 @@ def negate_shl_xor_after := [llvm|
 theorem negate_shl_xor_proof : negate_shl_xor_before ⊑ negate_shl_xor_after := by
   unfold negate_shl_xor_before negate_shl_xor_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN negate_shl_xor
   apply negate_shl_xor_thm
   ---END negate_shl_xor
@@ -473,12 +395,6 @@ def negate_sdiv_after := [llvm|
 theorem negate_sdiv_proof : negate_sdiv_before ⊑ negate_sdiv_after := by
   unfold negate_sdiv_before negate_sdiv_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN negate_sdiv
   apply negate_sdiv_thm
   ---END negate_sdiv
@@ -506,12 +422,6 @@ def negate_ashr_after := [llvm|
 theorem negate_ashr_proof : negate_ashr_before ⊑ negate_ashr_after := by
   unfold negate_ashr_before negate_ashr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN negate_ashr
   apply negate_ashr_thm
   ---END negate_ashr
@@ -539,12 +449,6 @@ def negate_lshr_after := [llvm|
 theorem negate_lshr_proof : negate_lshr_before ⊑ negate_lshr_after := by
   unfold negate_lshr_before negate_lshr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN negate_lshr
   apply negate_lshr_thm
   ---END negate_lshr
@@ -570,12 +474,6 @@ def negate_sext_after := [llvm|
 theorem negate_sext_proof : negate_sext_before ⊑ negate_sext_after := by
   unfold negate_sext_before negate_sext_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN negate_sext
   apply negate_sext_thm
   ---END negate_sext
@@ -601,12 +499,6 @@ def negate_zext_after := [llvm|
 theorem negate_zext_proof : negate_zext_before ⊑ negate_zext_after := by
   unfold negate_zext_before negate_zext_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN negate_zext
   apply negate_zext_thm
   ---END negate_zext
@@ -637,12 +529,6 @@ def negation_of_increment_via_or_with_no_common_bits_set_after := [llvm|
 theorem negation_of_increment_via_or_with_no_common_bits_set_proof : negation_of_increment_via_or_with_no_common_bits_set_before ⊑ negation_of_increment_via_or_with_no_common_bits_set_after := by
   unfold negation_of_increment_via_or_with_no_common_bits_set_before negation_of_increment_via_or_with_no_common_bits_set_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN negation_of_increment_via_or_with_no_common_bits_set
   apply negation_of_increment_via_or_with_no_common_bits_set_thm
   ---END negation_of_increment_via_or_with_no_common_bits_set
@@ -670,12 +556,6 @@ def negate_add_with_single_negatible_operand_after := [llvm|
 theorem negate_add_with_single_negatible_operand_proof : negate_add_with_single_negatible_operand_before ⊑ negate_add_with_single_negatible_operand_after := by
   unfold negate_add_with_single_negatible_operand_before negate_add_with_single_negatible_operand_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN negate_add_with_single_negatible_operand
   apply negate_add_with_single_negatible_operand_thm
   ---END negate_add_with_single_negatible_operand
@@ -705,12 +585,6 @@ def negate_add_with_single_negatible_operand_depth2_after := [llvm|
 theorem negate_add_with_single_negatible_operand_depth2_proof : negate_add_with_single_negatible_operand_depth2_before ⊑ negate_add_with_single_negatible_operand_depth2_after := by
   unfold negate_add_with_single_negatible_operand_depth2_before negate_add_with_single_negatible_operand_depth2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN negate_add_with_single_negatible_operand_depth2
   apply negate_add_with_single_negatible_operand_depth2_thm
   ---END negate_add_with_single_negatible_operand_depth2

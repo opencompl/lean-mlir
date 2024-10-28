@@ -41,12 +41,6 @@ def and_xor_common_op_after := [llvm|
 theorem and_xor_common_op_proof : and_xor_common_op_before ⊑ and_xor_common_op_after := by
   unfold and_xor_common_op_before and_xor_common_op_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_xor_common_op
   all_goals (try extract_goal ; sorry)
   ---END and_xor_common_op
@@ -81,12 +75,6 @@ def and_xor_common_op_commute1_after := [llvm|
 theorem and_xor_common_op_commute1_proof : and_xor_common_op_commute1_before ⊑ and_xor_common_op_commute1_after := by
   unfold and_xor_common_op_commute1_before and_xor_common_op_commute1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_xor_common_op_commute1
   all_goals (try extract_goal ; sorry)
   ---END and_xor_common_op_commute1
@@ -121,12 +109,6 @@ def and_xor_common_op_commute2_after := [llvm|
 theorem and_xor_common_op_commute2_proof : and_xor_common_op_commute2_before ⊑ and_xor_common_op_commute2_after := by
   unfold and_xor_common_op_commute2_before and_xor_common_op_commute2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_xor_common_op_commute2
   all_goals (try extract_goal ; sorry)
   ---END and_xor_common_op_commute2
@@ -153,12 +135,6 @@ def and_xor_not_common_op_after := [llvm|
 theorem and_xor_not_common_op_proof : and_xor_not_common_op_before ⊑ and_xor_not_common_op_after := by
   unfold and_xor_not_common_op_before and_xor_not_common_op_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_xor_not_common_op
   all_goals (try extract_goal ; sorry)
   ---END and_xor_not_common_op
@@ -185,12 +161,6 @@ def and_not_xor_common_op_after := [llvm|
 theorem and_not_xor_common_op_proof : and_not_xor_common_op_before ⊑ and_not_xor_common_op_after := by
   unfold and_not_xor_common_op_before and_not_xor_common_op_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_not_xor_common_op
   all_goals (try extract_goal ; sorry)
   ---END and_not_xor_common_op
@@ -216,12 +186,6 @@ def or_after := [llvm|
 theorem or_proof : or_before ⊑ or_after := by
   unfold or_before or_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or
   all_goals (try extract_goal ; sorry)
   ---END or
@@ -247,12 +211,6 @@ def or2_after := [llvm|
 theorem or2_proof : or2_before ⊑ or2_after := by
   unfold or2_before or2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or2
   all_goals (try extract_goal ; sorry)
   ---END or2
@@ -285,12 +243,6 @@ def and_xor_or1_after := [llvm|
 theorem and_xor_or1_proof : and_xor_or1_before ⊑ and_xor_or1_after := by
   unfold and_xor_or1_before and_xor_or1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_xor_or1
   all_goals (try extract_goal ; sorry)
   ---END and_xor_or1
@@ -323,12 +275,6 @@ def and_xor_or2_after := [llvm|
 theorem and_xor_or2_proof : and_xor_or2_before ⊑ and_xor_or2_after := by
   unfold and_xor_or2_before and_xor_or2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_xor_or2
   all_goals (try extract_goal ; sorry)
   ---END and_xor_or2
@@ -361,12 +307,6 @@ def and_xor_or3_after := [llvm|
 theorem and_xor_or3_proof : and_xor_or3_before ⊑ and_xor_or3_after := by
   unfold and_xor_or3_before and_xor_or3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_xor_or3
   all_goals (try extract_goal ; sorry)
   ---END and_xor_or3
@@ -399,12 +339,6 @@ def and_xor_or4_after := [llvm|
 theorem and_xor_or4_proof : and_xor_or4_before ⊑ and_xor_or4_after := by
   unfold and_xor_or4_before and_xor_or4_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_xor_or4
   all_goals (try extract_goal ; sorry)
   ---END and_xor_or4
@@ -437,12 +371,6 @@ def and_xor_or5_after := [llvm|
 theorem and_xor_or5_proof : and_xor_or5_before ⊑ and_xor_or5_after := by
   unfold and_xor_or5_before and_xor_or5_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_xor_or5
   all_goals (try extract_goal ; sorry)
   ---END and_xor_or5
@@ -475,12 +403,6 @@ def and_xor_or6_after := [llvm|
 theorem and_xor_or6_proof : and_xor_or6_before ⊑ and_xor_or6_after := by
   unfold and_xor_or6_before and_xor_or6_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_xor_or6
   all_goals (try extract_goal ; sorry)
   ---END and_xor_or6
@@ -513,12 +435,6 @@ def and_xor_or7_after := [llvm|
 theorem and_xor_or7_proof : and_xor_or7_before ⊑ and_xor_or7_after := by
   unfold and_xor_or7_before and_xor_or7_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_xor_or7
   all_goals (try extract_goal ; sorry)
   ---END and_xor_or7
@@ -551,12 +467,6 @@ def and_xor_or8_after := [llvm|
 theorem and_xor_or8_proof : and_xor_or8_before ⊑ and_xor_or8_after := by
   unfold and_xor_or8_before and_xor_or8_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_xor_or8
   all_goals (try extract_goal ; sorry)
   ---END and_xor_or8
@@ -585,12 +495,6 @@ def and_shl_after := [llvm|
 theorem and_shl_proof : and_shl_before ⊑ and_shl_after := by
   unfold and_shl_before and_shl_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_shl
   all_goals (try extract_goal ; sorry)
   ---END and_shl
@@ -619,12 +523,6 @@ def or_shl_after := [llvm|
 theorem or_shl_proof : or_shl_before ⊑ or_shl_after := by
   unfold or_shl_before or_shl_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_shl
   all_goals (try extract_goal ; sorry)
   ---END or_shl
@@ -653,12 +551,6 @@ def or_lshr_after := [llvm|
 theorem or_lshr_proof : or_lshr_before ⊑ or_lshr_after := by
   unfold or_lshr_before or_lshr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_lshr
   all_goals (try extract_goal ; sorry)
   ---END or_lshr
@@ -687,12 +579,6 @@ def xor_lshr_after := [llvm|
 theorem xor_lshr_proof : xor_lshr_before ⊑ xor_lshr_after := by
   unfold xor_lshr_before xor_lshr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN xor_lshr
   all_goals (try extract_goal ; sorry)
   ---END xor_lshr
@@ -725,12 +611,6 @@ def xor_lshr_multiuse_after := [llvm|
 theorem xor_lshr_multiuse_proof : xor_lshr_multiuse_before ⊑ xor_lshr_multiuse_after := by
   unfold xor_lshr_multiuse_before xor_lshr_multiuse_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN xor_lshr_multiuse
   all_goals (try extract_goal ; sorry)
   ---END xor_lshr_multiuse
@@ -765,12 +645,6 @@ def not_and_and_not_after := [llvm|
 theorem not_and_and_not_proof : not_and_and_not_before ⊑ not_and_and_not_after := by
   unfold not_and_and_not_before not_and_and_not_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_and_and_not
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_not
@@ -801,12 +675,6 @@ def not_and_and_not_commute1_after := [llvm|
 theorem not_and_and_not_commute1_proof : not_and_and_not_commute1_before ⊑ not_and_and_not_commute1_after := by
   unfold not_and_and_not_commute1_before not_and_and_not_commute1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_and_and_not_commute1
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_not_commute1
@@ -841,12 +709,6 @@ def not_or_or_not_after := [llvm|
 theorem not_or_or_not_proof : not_or_or_not_before ⊑ not_or_or_not_after := by
   unfold not_or_or_not_before not_or_or_not_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_or_or_not
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_not
@@ -877,12 +739,6 @@ def not_or_or_not_commute1_after := [llvm|
 theorem not_or_or_not_commute1_proof : not_or_or_not_commute1_before ⊑ not_or_or_not_commute1_after := by
   unfold not_or_or_not_commute1_before not_or_or_not_commute1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_or_or_not_commute1
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_not_commute1
@@ -916,12 +772,6 @@ def or_not_and_after := [llvm|
 theorem or_not_and_proof : or_not_and_before ⊑ or_not_and_after := by
   unfold or_not_and_before or_not_and_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_not_and
   all_goals (try extract_goal ; sorry)
   ---END or_not_and
@@ -959,12 +809,6 @@ def or_not_and_commute1_after := [llvm|
 theorem or_not_and_commute1_proof : or_not_and_commute1_before ⊑ or_not_and_commute1_after := by
   unfold or_not_and_commute1_before or_not_and_commute1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_not_and_commute1
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_commute1
@@ -1002,12 +846,6 @@ def or_not_and_commute2_after := [llvm|
 theorem or_not_and_commute2_proof : or_not_and_commute2_before ⊑ or_not_and_commute2_after := by
   unfold or_not_and_commute2_before or_not_and_commute2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_not_and_commute2
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_commute2
@@ -1041,12 +879,6 @@ def or_not_and_commute3_after := [llvm|
 theorem or_not_and_commute3_proof : or_not_and_commute3_before ⊑ or_not_and_commute3_after := by
   unfold or_not_and_commute3_before or_not_and_commute3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_not_and_commute3
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_commute3
@@ -1084,12 +916,6 @@ def or_not_and_commute4_after := [llvm|
 theorem or_not_and_commute4_proof : or_not_and_commute4_before ⊑ or_not_and_commute4_after := by
   unfold or_not_and_commute4_before or_not_and_commute4_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_not_and_commute4
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_commute4
@@ -1129,12 +955,6 @@ def or_not_and_commute5_after := [llvm|
 theorem or_not_and_commute5_proof : or_not_and_commute5_before ⊑ or_not_and_commute5_after := by
   unfold or_not_and_commute5_before or_not_and_commute5_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_not_and_commute5
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_commute5
@@ -1168,12 +988,6 @@ def or_not_and_commute6_after := [llvm|
 theorem or_not_and_commute6_proof : or_not_and_commute6_before ⊑ or_not_and_commute6_after := by
   unfold or_not_and_commute6_before or_not_and_commute6_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_not_and_commute6
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_commute6
@@ -1207,12 +1021,6 @@ def or_not_and_commute7_after := [llvm|
 theorem or_not_and_commute7_proof : or_not_and_commute7_before ⊑ or_not_and_commute7_after := by
   unfold or_not_and_commute7_before or_not_and_commute7_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_not_and_commute7
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_commute7
@@ -1252,12 +1060,6 @@ def or_not_and_commute8_after := [llvm|
 theorem or_not_and_commute8_proof : or_not_and_commute8_before ⊑ or_not_and_commute8_after := by
   unfold or_not_and_commute8_before or_not_and_commute8_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_not_and_commute8
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_commute8
@@ -1299,12 +1101,6 @@ def or_not_and_commute9_after := [llvm|
 theorem or_not_and_commute9_proof : or_not_and_commute9_before ⊑ or_not_and_commute9_after := by
   unfold or_not_and_commute9_before or_not_and_commute9_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_not_and_commute9
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_commute9
@@ -1342,12 +1138,6 @@ def or_not_and_wrong_c_after := [llvm|
 theorem or_not_and_wrong_c_proof : or_not_and_wrong_c_before ⊑ or_not_and_wrong_c_after := by
   unfold or_not_and_wrong_c_before or_not_and_wrong_c_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_not_and_wrong_c
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_wrong_c
@@ -1385,12 +1175,6 @@ def or_not_and_wrong_b_after := [llvm|
 theorem or_not_and_wrong_b_proof : or_not_and_wrong_b_before ⊑ or_not_and_wrong_b_after := by
   unfold or_not_and_wrong_b_before or_not_and_wrong_b_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_not_and_wrong_b
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_wrong_b
@@ -1424,12 +1208,6 @@ def and_not_or_after := [llvm|
 theorem and_not_or_proof : and_not_or_before ⊑ and_not_or_after := by
   unfold and_not_or_before and_not_or_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_not_or
   all_goals (try extract_goal ; sorry)
   ---END and_not_or
@@ -1467,12 +1245,6 @@ def and_not_or_commute1_after := [llvm|
 theorem and_not_or_commute1_proof : and_not_or_commute1_before ⊑ and_not_or_commute1_after := by
   unfold and_not_or_commute1_before and_not_or_commute1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_not_or_commute1
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_commute1
@@ -1510,12 +1282,6 @@ def and_not_or_commute2_after := [llvm|
 theorem and_not_or_commute2_proof : and_not_or_commute2_before ⊑ and_not_or_commute2_after := by
   unfold and_not_or_commute2_before and_not_or_commute2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_not_or_commute2
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_commute2
@@ -1549,12 +1315,6 @@ def and_not_or_commute3_after := [llvm|
 theorem and_not_or_commute3_proof : and_not_or_commute3_before ⊑ and_not_or_commute3_after := by
   unfold and_not_or_commute3_before and_not_or_commute3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_not_or_commute3
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_commute3
@@ -1592,12 +1352,6 @@ def and_not_or_commute4_after := [llvm|
 theorem and_not_or_commute4_proof : and_not_or_commute4_before ⊑ and_not_or_commute4_after := by
   unfold and_not_or_commute4_before and_not_or_commute4_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_not_or_commute4
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_commute4
@@ -1637,12 +1391,6 @@ def and_not_or_commute5_after := [llvm|
 theorem and_not_or_commute5_proof : and_not_or_commute5_before ⊑ and_not_or_commute5_after := by
   unfold and_not_or_commute5_before and_not_or_commute5_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_not_or_commute5
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_commute5
@@ -1676,12 +1424,6 @@ def and_not_or_commute6_after := [llvm|
 theorem and_not_or_commute6_proof : and_not_or_commute6_before ⊑ and_not_or_commute6_after := by
   unfold and_not_or_commute6_before and_not_or_commute6_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_not_or_commute6
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_commute6
@@ -1715,12 +1457,6 @@ def and_not_or_commute7_after := [llvm|
 theorem and_not_or_commute7_proof : and_not_or_commute7_before ⊑ and_not_or_commute7_after := by
   unfold and_not_or_commute7_before and_not_or_commute7_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_not_or_commute7
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_commute7
@@ -1760,12 +1496,6 @@ def and_not_or_commute8_after := [llvm|
 theorem and_not_or_commute8_proof : and_not_or_commute8_before ⊑ and_not_or_commute8_after := by
   unfold and_not_or_commute8_before and_not_or_commute8_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_not_or_commute8
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_commute8
@@ -1807,12 +1537,6 @@ def and_not_or_commute9_after := [llvm|
 theorem and_not_or_commute9_proof : and_not_or_commute9_before ⊑ and_not_or_commute9_after := by
   unfold and_not_or_commute9_before and_not_or_commute9_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_not_or_commute9
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_commute9
@@ -1850,12 +1574,6 @@ def and_not_or_wrong_c_after := [llvm|
 theorem and_not_or_wrong_c_proof : and_not_or_wrong_c_before ⊑ and_not_or_wrong_c_after := by
   unfold and_not_or_wrong_c_before and_not_or_wrong_c_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_not_or_wrong_c
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_wrong_c
@@ -1893,12 +1611,6 @@ def and_not_or_wrong_b_after := [llvm|
 theorem and_not_or_wrong_b_proof : and_not_or_wrong_b_before ⊑ and_not_or_wrong_b_after := by
   unfold and_not_or_wrong_b_before and_not_or_wrong_b_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_not_or_wrong_b
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_wrong_b
@@ -1931,12 +1643,6 @@ def or_and_not_not_after := [llvm|
 theorem or_and_not_not_proof : or_and_not_not_before ⊑ or_and_not_not_after := by
   unfold or_and_not_not_before or_and_not_not_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_and_not_not
   all_goals (try extract_goal ; sorry)
   ---END or_and_not_not
@@ -1973,12 +1679,6 @@ def or_and_not_not_commute1_after := [llvm|
 theorem or_and_not_not_commute1_proof : or_and_not_not_commute1_before ⊑ or_and_not_not_commute1_after := by
   unfold or_and_not_not_commute1_before or_and_not_not_commute1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_and_not_not_commute1
   all_goals (try extract_goal ; sorry)
   ---END or_and_not_not_commute1
@@ -2011,12 +1711,6 @@ def or_and_not_not_commute2_after := [llvm|
 theorem or_and_not_not_commute2_proof : or_and_not_not_commute2_before ⊑ or_and_not_not_commute2_after := by
   unfold or_and_not_not_commute2_before or_and_not_not_commute2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_and_not_not_commute2
   all_goals (try extract_goal ; sorry)
   ---END or_and_not_not_commute2
@@ -2049,12 +1743,6 @@ def or_and_not_not_commute3_after := [llvm|
 theorem or_and_not_not_commute3_proof : or_and_not_not_commute3_before ⊑ or_and_not_not_commute3_after := by
   unfold or_and_not_not_commute3_before or_and_not_not_commute3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_and_not_not_commute3
   all_goals (try extract_goal ; sorry)
   ---END or_and_not_not_commute3
@@ -2087,12 +1775,6 @@ def or_and_not_not_commute4_after := [llvm|
 theorem or_and_not_not_commute4_proof : or_and_not_not_commute4_before ⊑ or_and_not_not_commute4_after := by
   unfold or_and_not_not_commute4_before or_and_not_not_commute4_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_and_not_not_commute4
   all_goals (try extract_goal ; sorry)
   ---END or_and_not_not_commute4
@@ -2125,12 +1807,6 @@ def or_and_not_not_commute5_after := [llvm|
 theorem or_and_not_not_commute5_proof : or_and_not_not_commute5_before ⊑ or_and_not_not_commute5_after := by
   unfold or_and_not_not_commute5_before or_and_not_not_commute5_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_and_not_not_commute5
   all_goals (try extract_goal ; sorry)
   ---END or_and_not_not_commute5
@@ -2167,12 +1843,6 @@ def or_and_not_not_commute6_after := [llvm|
 theorem or_and_not_not_commute6_proof : or_and_not_not_commute6_before ⊑ or_and_not_not_commute6_after := by
   unfold or_and_not_not_commute6_before or_and_not_not_commute6_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_and_not_not_commute6
   all_goals (try extract_goal ; sorry)
   ---END or_and_not_not_commute6
@@ -2205,12 +1875,6 @@ def or_and_not_not_commute7_after := [llvm|
 theorem or_and_not_not_commute7_proof : or_and_not_not_commute7_before ⊑ or_and_not_not_commute7_after := by
   unfold or_and_not_not_commute7_before or_and_not_not_commute7_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_and_not_not_commute7
   all_goals (try extract_goal ; sorry)
   ---END or_and_not_not_commute7
@@ -2246,12 +1910,6 @@ def or_and_not_not_wrong_a_after := [llvm|
 theorem or_and_not_not_wrong_a_proof : or_and_not_not_wrong_a_before ⊑ or_and_not_not_wrong_a_after := by
   unfold or_and_not_not_wrong_a_before or_and_not_not_wrong_a_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_and_not_not_wrong_a
   all_goals (try extract_goal ; sorry)
   ---END or_and_not_not_wrong_a
@@ -2287,12 +1945,6 @@ def or_and_not_not_wrong_b_after := [llvm|
 theorem or_and_not_not_wrong_b_proof : or_and_not_not_wrong_b_before ⊑ or_and_not_not_wrong_b_after := by
   unfold or_and_not_not_wrong_b_before or_and_not_not_wrong_b_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_and_not_not_wrong_b
   all_goals (try extract_goal ; sorry)
   ---END or_and_not_not_wrong_b
@@ -2325,12 +1977,6 @@ def and_or_not_not_after := [llvm|
 theorem and_or_not_not_proof : and_or_not_not_before ⊑ and_or_not_not_after := by
   unfold and_or_not_not_before and_or_not_not_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_or_not_not
   all_goals (try extract_goal ; sorry)
   ---END and_or_not_not
@@ -2367,12 +2013,6 @@ def and_or_not_not_commute1_after := [llvm|
 theorem and_or_not_not_commute1_proof : and_or_not_not_commute1_before ⊑ and_or_not_not_commute1_after := by
   unfold and_or_not_not_commute1_before and_or_not_not_commute1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_or_not_not_commute1
   all_goals (try extract_goal ; sorry)
   ---END and_or_not_not_commute1
@@ -2405,12 +2045,6 @@ def and_or_not_not_commute2_after := [llvm|
 theorem and_or_not_not_commute2_proof : and_or_not_not_commute2_before ⊑ and_or_not_not_commute2_after := by
   unfold and_or_not_not_commute2_before and_or_not_not_commute2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_or_not_not_commute2
   all_goals (try extract_goal ; sorry)
   ---END and_or_not_not_commute2
@@ -2443,12 +2077,6 @@ def and_or_not_not_commute3_after := [llvm|
 theorem and_or_not_not_commute3_proof : and_or_not_not_commute3_before ⊑ and_or_not_not_commute3_after := by
   unfold and_or_not_not_commute3_before and_or_not_not_commute3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_or_not_not_commute3
   all_goals (try extract_goal ; sorry)
   ---END and_or_not_not_commute3
@@ -2481,12 +2109,6 @@ def and_or_not_not_commute4_after := [llvm|
 theorem and_or_not_not_commute4_proof : and_or_not_not_commute4_before ⊑ and_or_not_not_commute4_after := by
   unfold and_or_not_not_commute4_before and_or_not_not_commute4_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_or_not_not_commute4
   all_goals (try extract_goal ; sorry)
   ---END and_or_not_not_commute4
@@ -2519,12 +2141,6 @@ def and_or_not_not_commute5_after := [llvm|
 theorem and_or_not_not_commute5_proof : and_or_not_not_commute5_before ⊑ and_or_not_not_commute5_after := by
   unfold and_or_not_not_commute5_before and_or_not_not_commute5_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_or_not_not_commute5
   all_goals (try extract_goal ; sorry)
   ---END and_or_not_not_commute5
@@ -2561,12 +2177,6 @@ def and_or_not_not_commute6_after := [llvm|
 theorem and_or_not_not_commute6_proof : and_or_not_not_commute6_before ⊑ and_or_not_not_commute6_after := by
   unfold and_or_not_not_commute6_before and_or_not_not_commute6_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_or_not_not_commute6
   all_goals (try extract_goal ; sorry)
   ---END and_or_not_not_commute6
@@ -2599,12 +2209,6 @@ def and_or_not_not_commute7_after := [llvm|
 theorem and_or_not_not_commute7_proof : and_or_not_not_commute7_before ⊑ and_or_not_not_commute7_after := by
   unfold and_or_not_not_commute7_before and_or_not_not_commute7_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_or_not_not_commute7
   all_goals (try extract_goal ; sorry)
   ---END and_or_not_not_commute7
@@ -2639,12 +2243,6 @@ def and_or_not_not_wrong_a_after := [llvm|
 theorem and_or_not_not_wrong_a_proof : and_or_not_not_wrong_a_before ⊑ and_or_not_not_wrong_a_after := by
   unfold and_or_not_not_wrong_a_before and_or_not_not_wrong_a_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_or_not_not_wrong_a
   all_goals (try extract_goal ; sorry)
   ---END and_or_not_not_wrong_a
@@ -2680,12 +2278,6 @@ def and_or_not_not_wrong_b_after := [llvm|
 theorem and_or_not_not_wrong_b_proof : and_or_not_not_wrong_b_before ⊑ and_or_not_not_wrong_b_after := by
   unfold and_or_not_not_wrong_b_before and_or_not_not_wrong_b_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_or_not_not_wrong_b
   all_goals (try extract_goal ; sorry)
   ---END and_or_not_not_wrong_b
@@ -2721,12 +2313,6 @@ def and_not_or_or_not_or_xor_after := [llvm|
 theorem and_not_or_or_not_or_xor_proof : and_not_or_or_not_or_xor_before ⊑ and_not_or_or_not_or_xor_after := by
   unfold and_not_or_or_not_or_xor_before and_not_or_or_not_or_xor_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_not_or_or_not_or_xor
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_or_not_or_xor
@@ -2762,12 +2348,6 @@ def and_not_or_or_not_or_xor_commute1_after := [llvm|
 theorem and_not_or_or_not_or_xor_commute1_proof : and_not_or_or_not_or_xor_commute1_before ⊑ and_not_or_or_not_or_xor_commute1_after := by
   unfold and_not_or_or_not_or_xor_commute1_before and_not_or_or_not_or_xor_commute1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_not_or_or_not_or_xor_commute1
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_or_not_or_xor_commute1
@@ -2807,12 +2387,6 @@ def and_not_or_or_not_or_xor_commute2_after := [llvm|
 theorem and_not_or_or_not_or_xor_commute2_proof : and_not_or_or_not_or_xor_commute2_before ⊑ and_not_or_or_not_or_xor_commute2_after := by
   unfold and_not_or_or_not_or_xor_commute2_before and_not_or_or_not_or_xor_commute2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_not_or_or_not_or_xor_commute2
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_or_not_or_xor_commute2
@@ -2848,12 +2422,6 @@ def and_not_or_or_not_or_xor_commute3_after := [llvm|
 theorem and_not_or_or_not_or_xor_commute3_proof : and_not_or_or_not_or_xor_commute3_before ⊑ and_not_or_or_not_or_xor_commute3_after := by
   unfold and_not_or_or_not_or_xor_commute3_before and_not_or_or_not_or_xor_commute3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_not_or_or_not_or_xor_commute3
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_or_not_or_xor_commute3
@@ -2893,12 +2461,6 @@ def and_not_or_or_not_or_xor_commute4_after := [llvm|
 theorem and_not_or_or_not_or_xor_commute4_proof : and_not_or_or_not_or_xor_commute4_before ⊑ and_not_or_or_not_or_xor_commute4_after := by
   unfold and_not_or_or_not_or_xor_commute4_before and_not_or_or_not_or_xor_commute4_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_not_or_or_not_or_xor_commute4
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_or_not_or_xor_commute4
@@ -2934,12 +2496,6 @@ def and_not_or_or_not_or_xor_commute5_after := [llvm|
 theorem and_not_or_or_not_or_xor_commute5_proof : and_not_or_or_not_or_xor_commute5_before ⊑ and_not_or_or_not_or_xor_commute5_after := by
   unfold and_not_or_or_not_or_xor_commute5_before and_not_or_or_not_or_xor_commute5_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_not_or_or_not_or_xor_commute5
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_or_not_or_xor_commute5
@@ -2976,12 +2532,6 @@ def or_not_and_and_not_and_xor_after := [llvm|
 theorem or_not_and_and_not_and_xor_proof : or_not_and_and_not_and_xor_before ⊑ or_not_and_and_not_and_xor_after := by
   unfold or_not_and_and_not_and_xor_before or_not_and_and_not_and_xor_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_not_and_and_not_and_xor
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_and_not_and_xor
@@ -3018,12 +2568,6 @@ def or_not_and_and_not_and_xor_commute1_after := [llvm|
 theorem or_not_and_and_not_and_xor_commute1_proof : or_not_and_and_not_and_xor_commute1_before ⊑ or_not_and_and_not_and_xor_commute1_after := by
   unfold or_not_and_and_not_and_xor_commute1_before or_not_and_and_not_and_xor_commute1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_not_and_and_not_and_xor_commute1
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_and_not_and_xor_commute1
@@ -3064,12 +2608,6 @@ def or_not_and_and_not_and_xor_commute2_after := [llvm|
 theorem or_not_and_and_not_and_xor_commute2_proof : or_not_and_and_not_and_xor_commute2_before ⊑ or_not_and_and_not_and_xor_commute2_after := by
   unfold or_not_and_and_not_and_xor_commute2_before or_not_and_and_not_and_xor_commute2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_not_and_and_not_and_xor_commute2
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_and_not_and_xor_commute2
@@ -3106,12 +2644,6 @@ def or_not_and_and_not_and_xor_commute3_after := [llvm|
 theorem or_not_and_and_not_and_xor_commute3_proof : or_not_and_and_not_and_xor_commute3_before ⊑ or_not_and_and_not_and_xor_commute3_after := by
   unfold or_not_and_and_not_and_xor_commute3_before or_not_and_and_not_and_xor_commute3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_not_and_and_not_and_xor_commute3
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_and_not_and_xor_commute3
@@ -3152,12 +2684,6 @@ def or_not_and_and_not_and_xor_commute4_after := [llvm|
 theorem or_not_and_and_not_and_xor_commute4_proof : or_not_and_and_not_and_xor_commute4_before ⊑ or_not_and_and_not_and_xor_commute4_after := by
   unfold or_not_and_and_not_and_xor_commute4_before or_not_and_and_not_and_xor_commute4_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_not_and_and_not_and_xor_commute4
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_and_not_and_xor_commute4
@@ -3194,12 +2720,6 @@ def or_not_and_and_not_and_xor_commute5_after := [llvm|
 theorem or_not_and_and_not_and_xor_commute5_proof : or_not_and_and_not_and_xor_commute5_before ⊑ or_not_and_and_not_and_xor_commute5_after := by
   unfold or_not_and_and_not_and_xor_commute5_before or_not_and_and_not_and_xor_commute5_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_not_and_and_not_and_xor_commute5
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_and_not_and_xor_commute5
@@ -3233,12 +2753,6 @@ def not_and_and_or_not_or_or_after := [llvm|
 theorem not_and_and_or_not_or_or_proof : not_and_and_or_not_or_or_before ⊑ not_and_and_or_not_or_or_after := by
   unfold not_and_and_or_not_or_or_before not_and_and_or_not_or_or_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_and_and_or_not_or_or
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_not_or_or
@@ -3272,12 +2786,6 @@ def not_and_and_or_not_or_or_commute1_or_after := [llvm|
 theorem not_and_and_or_not_or_or_commute1_or_proof : not_and_and_or_not_or_or_commute1_or_before ⊑ not_and_and_or_not_or_or_commute1_or_after := by
   unfold not_and_and_or_not_or_or_commute1_or_before not_and_and_or_not_or_or_commute1_or_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_and_and_or_not_or_or_commute1_or
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_not_or_or_commute1_or
@@ -3311,12 +2819,6 @@ def not_and_and_or_not_or_or_commute2_or_after := [llvm|
 theorem not_and_and_or_not_or_or_commute2_or_proof : not_and_and_or_not_or_or_commute2_or_before ⊑ not_and_and_or_not_or_or_commute2_or_after := by
   unfold not_and_and_or_not_or_or_commute2_or_before not_and_and_or_not_or_or_commute2_or_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_and_and_or_not_or_or_commute2_or
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_not_or_or_commute2_or
@@ -3350,12 +2852,6 @@ def not_and_and_or_not_or_or_commute1_and_after := [llvm|
 theorem not_and_and_or_not_or_or_commute1_and_proof : not_and_and_or_not_or_or_commute1_and_before ⊑ not_and_and_or_not_or_or_commute1_and_after := by
   unfold not_and_and_or_not_or_or_commute1_and_before not_and_and_or_not_or_or_commute1_and_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_and_and_or_not_or_or_commute1_and
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_not_or_or_commute1_and
@@ -3389,12 +2885,6 @@ def not_and_and_or_not_or_or_commute2_and_after := [llvm|
 theorem not_and_and_or_not_or_or_commute2_and_proof : not_and_and_or_not_or_or_commute2_and_before ⊑ not_and_and_or_not_or_or_commute2_and_after := by
   unfold not_and_and_or_not_or_or_commute2_and_before not_and_and_or_not_or_or_commute2_and_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_and_and_or_not_or_or_commute2_and
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_not_or_or_commute2_and
@@ -3428,12 +2918,6 @@ def not_and_and_or_not_or_or_commute1_after := [llvm|
 theorem not_and_and_or_not_or_or_commute1_proof : not_and_and_or_not_or_or_commute1_before ⊑ not_and_and_or_not_or_or_commute1_after := by
   unfold not_and_and_or_not_or_or_commute1_before not_and_and_or_not_or_or_commute1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_and_and_or_not_or_or_commute1
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_not_or_or_commute1
@@ -3471,12 +2955,6 @@ def not_and_and_or_not_or_or_commute2_after := [llvm|
 theorem not_and_and_or_not_or_or_commute2_proof : not_and_and_or_not_or_or_commute2_before ⊑ not_and_and_or_not_or_or_commute2_after := by
   unfold not_and_and_or_not_or_or_commute2_before not_and_and_or_not_or_or_commute2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_and_and_or_not_or_or_commute2
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_not_or_or_commute2
@@ -3514,12 +2992,6 @@ def not_and_and_or_not_or_or_commute3_after := [llvm|
 theorem not_and_and_or_not_or_or_commute3_proof : not_and_and_or_not_or_or_commute3_before ⊑ not_and_and_or_not_or_or_commute3_after := by
   unfold not_and_and_or_not_or_or_commute3_before not_and_and_or_not_or_or_commute3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_and_and_or_not_or_or_commute3
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_not_or_or_commute3
@@ -3557,12 +3029,6 @@ def not_and_and_or_not_or_or_commute4_after := [llvm|
 theorem not_and_and_or_not_or_or_commute4_proof : not_and_and_or_not_or_or_commute4_before ⊑ not_and_and_or_not_or_or_commute4_after := by
   unfold not_and_and_or_not_or_or_commute4_before not_and_and_or_not_or_or_commute4_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_and_and_or_not_or_or_commute4
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_not_or_or_commute4
@@ -3596,12 +3062,6 @@ def not_or_or_and_not_and_and_after := [llvm|
 theorem not_or_or_and_not_and_and_proof : not_or_or_and_not_and_and_before ⊑ not_or_or_and_not_and_and_after := by
   unfold not_or_or_and_not_and_and_before not_or_or_and_not_and_and_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_or_or_and_not_and_and
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_not_and_and
@@ -3635,12 +3095,6 @@ def not_or_or_and_not_and_and_commute1_and_after := [llvm|
 theorem not_or_or_and_not_and_and_commute1_and_proof : not_or_or_and_not_and_and_commute1_and_before ⊑ not_or_or_and_not_and_and_commute1_and_after := by
   unfold not_or_or_and_not_and_and_commute1_and_before not_or_or_and_not_and_and_commute1_and_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_or_or_and_not_and_and_commute1_and
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_not_and_and_commute1_and
@@ -3674,12 +3128,6 @@ def not_or_or_and_not_and_and_commute2_and_after := [llvm|
 theorem not_or_or_and_not_and_and_commute2_and_proof : not_or_or_and_not_and_and_commute2_and_before ⊑ not_or_or_and_not_and_and_commute2_and_after := by
   unfold not_or_or_and_not_and_and_commute2_and_before not_or_or_and_not_and_and_commute2_and_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_or_or_and_not_and_and_commute2_and
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_not_and_and_commute2_and
@@ -3713,12 +3161,6 @@ def not_or_or_and_not_and_and_commute1_or_after := [llvm|
 theorem not_or_or_and_not_and_and_commute1_or_proof : not_or_or_and_not_and_and_commute1_or_before ⊑ not_or_or_and_not_and_and_commute1_or_after := by
   unfold not_or_or_and_not_and_and_commute1_or_before not_or_or_and_not_and_and_commute1_or_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_or_or_and_not_and_and_commute1_or
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_not_and_and_commute1_or
@@ -3752,12 +3194,6 @@ def not_or_or_and_not_and_and_commute2_or_after := [llvm|
 theorem not_or_or_and_not_and_and_commute2_or_proof : not_or_or_and_not_and_and_commute2_or_before ⊑ not_or_or_and_not_and_and_commute2_or_after := by
   unfold not_or_or_and_not_and_and_commute2_or_before not_or_or_and_not_and_and_commute2_or_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_or_or_and_not_and_and_commute2_or
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_not_and_and_commute2_or
@@ -3791,12 +3227,6 @@ def not_or_or_and_not_and_and_commute1_after := [llvm|
 theorem not_or_or_and_not_and_and_commute1_proof : not_or_or_and_not_and_and_commute1_before ⊑ not_or_or_and_not_and_and_commute1_after := by
   unfold not_or_or_and_not_and_and_commute1_before not_or_or_and_not_and_and_commute1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_or_or_and_not_and_and_commute1
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_not_and_and_commute1
@@ -3834,12 +3264,6 @@ def not_or_or_and_not_and_and_commute2_after := [llvm|
 theorem not_or_or_and_not_and_and_commute2_proof : not_or_or_and_not_and_and_commute2_before ⊑ not_or_or_and_not_and_and_commute2_after := by
   unfold not_or_or_and_not_and_and_commute2_before not_or_or_and_not_and_and_commute2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_or_or_and_not_and_and_commute2
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_not_and_and_commute2
@@ -3877,12 +3301,6 @@ def not_or_or_and_not_and_and_commute3_after := [llvm|
 theorem not_or_or_and_not_and_and_commute3_proof : not_or_or_and_not_and_and_commute3_before ⊑ not_or_or_and_not_and_and_commute3_after := by
   unfold not_or_or_and_not_and_and_commute3_before not_or_or_and_not_and_and_commute3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_or_or_and_not_and_and_commute3
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_not_and_and_commute3
@@ -3920,12 +3338,6 @@ def not_or_or_and_not_and_and_commute4_after := [llvm|
 theorem not_or_or_and_not_and_and_commute4_proof : not_or_or_and_not_and_and_commute4_before ⊑ not_or_or_and_not_and_and_commute4_after := by
   unfold not_or_or_and_not_and_and_commute4_before not_or_or_and_not_and_and_commute4_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_or_or_and_not_and_and_commute4
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_not_and_and_commute4
@@ -3959,12 +3371,6 @@ def not_and_and_or_no_or_after := [llvm|
 theorem not_and_and_or_no_or_proof : not_and_and_or_no_or_before ⊑ not_and_and_or_no_or_after := by
   unfold not_and_and_or_no_or_before not_and_and_or_no_or_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_and_and_or_no_or
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_no_or
@@ -3998,12 +3404,6 @@ def not_and_and_or_no_or_commute1_and_after := [llvm|
 theorem not_and_and_or_no_or_commute1_and_proof : not_and_and_or_no_or_commute1_and_before ⊑ not_and_and_or_no_or_commute1_and_after := by
   unfold not_and_and_or_no_or_commute1_and_before not_and_and_or_no_or_commute1_and_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_and_and_or_no_or_commute1_and
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_no_or_commute1_and
@@ -4037,12 +3437,6 @@ def not_and_and_or_no_or_commute2_and_after := [llvm|
 theorem not_and_and_or_no_or_commute2_and_proof : not_and_and_or_no_or_commute2_and_before ⊑ not_and_and_or_no_or_commute2_and_after := by
   unfold not_and_and_or_no_or_commute2_and_before not_and_and_or_no_or_commute2_and_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_and_and_or_no_or_commute2_and
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_no_or_commute2_and
@@ -4076,12 +3470,6 @@ def not_and_and_or_no_or_commute1_after := [llvm|
 theorem not_and_and_or_no_or_commute1_proof : not_and_and_or_no_or_commute1_before ⊑ not_and_and_or_no_or_commute1_after := by
   unfold not_and_and_or_no_or_commute1_before not_and_and_or_no_or_commute1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_and_and_or_no_or_commute1
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_no_or_commute1
@@ -4119,12 +3507,6 @@ def not_and_and_or_no_or_commute2_after := [llvm|
 theorem not_and_and_or_no_or_commute2_proof : not_and_and_or_no_or_commute2_before ⊑ not_and_and_or_no_or_commute2_after := by
   unfold not_and_and_or_no_or_commute2_before not_and_and_or_no_or_commute2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_and_and_or_no_or_commute2
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_no_or_commute2
@@ -4162,12 +3544,6 @@ def not_and_and_or_no_or_commute3_after := [llvm|
 theorem not_and_and_or_no_or_commute3_proof : not_and_and_or_no_or_commute3_before ⊑ not_and_and_or_no_or_commute3_after := by
   unfold not_and_and_or_no_or_commute3_before not_and_and_or_no_or_commute3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_and_and_or_no_or_commute3
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_no_or_commute3
@@ -4201,12 +3577,6 @@ def not_or_or_and_no_and_after := [llvm|
 theorem not_or_or_and_no_and_proof : not_or_or_and_no_and_before ⊑ not_or_or_and_no_and_after := by
   unfold not_or_or_and_no_and_before not_or_or_and_no_and_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_or_or_and_no_and
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_no_and
@@ -4240,12 +3610,6 @@ def not_or_or_and_no_and_commute1_or_after := [llvm|
 theorem not_or_or_and_no_and_commute1_or_proof : not_or_or_and_no_and_commute1_or_before ⊑ not_or_or_and_no_and_commute1_or_after := by
   unfold not_or_or_and_no_and_commute1_or_before not_or_or_and_no_and_commute1_or_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_or_or_and_no_and_commute1_or
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_no_and_commute1_or
@@ -4279,12 +3643,6 @@ def not_or_or_and_no_and_commute2_or_after := [llvm|
 theorem not_or_or_and_no_and_commute2_or_proof : not_or_or_and_no_and_commute2_or_before ⊑ not_or_or_and_no_and_commute2_or_after := by
   unfold not_or_or_and_no_and_commute2_or_before not_or_or_and_no_and_commute2_or_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_or_or_and_no_and_commute2_or
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_no_and_commute2_or
@@ -4318,12 +3676,6 @@ def not_or_or_and_no_and_commute1_after := [llvm|
 theorem not_or_or_and_no_and_commute1_proof : not_or_or_and_no_and_commute1_before ⊑ not_or_or_and_no_and_commute1_after := by
   unfold not_or_or_and_no_and_commute1_before not_or_or_and_no_and_commute1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_or_or_and_no_and_commute1
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_no_and_commute1
@@ -4361,12 +3713,6 @@ def not_or_or_and_no_and_commute2_after := [llvm|
 theorem not_or_or_and_no_and_commute2_proof : not_or_or_and_no_and_commute2_before ⊑ not_or_or_and_no_and_commute2_after := by
   unfold not_or_or_and_no_and_commute2_before not_or_or_and_no_and_commute2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_or_or_and_no_and_commute2
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_no_and_commute2
@@ -4404,12 +3750,6 @@ def not_or_or_and_no_and_commute3_after := [llvm|
 theorem not_or_or_and_no_and_commute3_proof : not_or_or_and_no_and_commute3_before ⊑ not_or_or_and_no_and_commute3_after := by
   unfold not_or_or_and_no_and_commute3_before not_or_or_and_no_and_commute3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_or_or_and_no_and_commute3
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_no_and_commute3
@@ -4439,12 +3779,6 @@ def and_orn_xor_after := [llvm|
 theorem and_orn_xor_proof : and_orn_xor_before ⊑ and_orn_xor_after := by
   unfold and_orn_xor_before and_orn_xor_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_orn_xor
   all_goals (try extract_goal ; sorry)
   ---END and_orn_xor
@@ -4478,12 +3812,6 @@ def and_orn_xor_commute8_after := [llvm|
 theorem and_orn_xor_commute8_proof : and_orn_xor_commute8_before ⊑ and_orn_xor_commute8_after := by
   unfold and_orn_xor_commute8_before and_orn_xor_commute8_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_orn_xor_commute8
   all_goals (try extract_goal ; sorry)
   ---END and_orn_xor_commute8
@@ -4511,12 +3839,6 @@ def and_zext_zext_after := [llvm|
 theorem and_zext_zext_proof : and_zext_zext_before ⊑ and_zext_zext_after := by
   unfold and_zext_zext_before and_zext_zext_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_zext_zext
   all_goals (try extract_goal ; sorry)
   ---END and_zext_zext
@@ -4544,12 +3866,6 @@ def or_zext_zext_after := [llvm|
 theorem or_zext_zext_proof : or_zext_zext_before ⊑ or_zext_zext_after := by
   unfold or_zext_zext_before or_zext_zext_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_zext_zext
   all_goals (try extract_goal ; sorry)
   ---END or_zext_zext
@@ -4577,12 +3893,6 @@ def and_sext_sext_after := [llvm|
 theorem and_sext_sext_proof : and_sext_sext_before ⊑ and_sext_sext_after := by
   unfold and_sext_sext_before and_sext_sext_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_sext_sext
   all_goals (try extract_goal ; sorry)
   ---END and_sext_sext
@@ -4610,12 +3920,6 @@ def or_sext_sext_after := [llvm|
 theorem or_sext_sext_proof : or_sext_sext_before ⊑ or_sext_sext_after := by
   unfold or_sext_sext_before or_sext_sext_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_sext_sext
   all_goals (try extract_goal ; sorry)
   ---END or_sext_sext
@@ -4643,12 +3947,6 @@ def xor_sext_sext_after := [llvm|
 theorem xor_sext_sext_proof : xor_sext_sext_before ⊑ xor_sext_sext_after := by
   unfold xor_sext_sext_before xor_sext_sext_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN xor_sext_sext
   all_goals (try extract_goal ; sorry)
   ---END xor_sext_sext
@@ -4678,12 +3976,6 @@ def canonicalize_logic_first_or0_after := [llvm|
 theorem canonicalize_logic_first_or0_proof : canonicalize_logic_first_or0_before ⊑ canonicalize_logic_first_or0_after := by
   unfold canonicalize_logic_first_or0_before canonicalize_logic_first_or0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN canonicalize_logic_first_or0
   all_goals (try extract_goal ; sorry)
   ---END canonicalize_logic_first_or0
@@ -4713,12 +4005,6 @@ def canonicalize_logic_first_or0_nsw_after := [llvm|
 theorem canonicalize_logic_first_or0_nsw_proof : canonicalize_logic_first_or0_nsw_before ⊑ canonicalize_logic_first_or0_nsw_after := by
   unfold canonicalize_logic_first_or0_nsw_before canonicalize_logic_first_or0_nsw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN canonicalize_logic_first_or0_nsw
   all_goals (try extract_goal ; sorry)
   ---END canonicalize_logic_first_or0_nsw
@@ -4748,12 +4034,6 @@ def canonicalize_logic_first_or0_nswnuw_after := [llvm|
 theorem canonicalize_logic_first_or0_nswnuw_proof : canonicalize_logic_first_or0_nswnuw_before ⊑ canonicalize_logic_first_or0_nswnuw_after := by
   unfold canonicalize_logic_first_or0_nswnuw_before canonicalize_logic_first_or0_nswnuw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN canonicalize_logic_first_or0_nswnuw
   all_goals (try extract_goal ; sorry)
   ---END canonicalize_logic_first_or0_nswnuw
@@ -4783,12 +4063,6 @@ def canonicalize_logic_first_and0_after := [llvm|
 theorem canonicalize_logic_first_and0_proof : canonicalize_logic_first_and0_before ⊑ canonicalize_logic_first_and0_after := by
   unfold canonicalize_logic_first_and0_before canonicalize_logic_first_and0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN canonicalize_logic_first_and0
   all_goals (try extract_goal ; sorry)
   ---END canonicalize_logic_first_and0
@@ -4818,12 +4092,6 @@ def canonicalize_logic_first_and0_nsw_after := [llvm|
 theorem canonicalize_logic_first_and0_nsw_proof : canonicalize_logic_first_and0_nsw_before ⊑ canonicalize_logic_first_and0_nsw_after := by
   unfold canonicalize_logic_first_and0_nsw_before canonicalize_logic_first_and0_nsw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN canonicalize_logic_first_and0_nsw
   all_goals (try extract_goal ; sorry)
   ---END canonicalize_logic_first_and0_nsw
@@ -4853,12 +4121,6 @@ def canonicalize_logic_first_and0_nswnuw_after := [llvm|
 theorem canonicalize_logic_first_and0_nswnuw_proof : canonicalize_logic_first_and0_nswnuw_before ⊑ canonicalize_logic_first_and0_nswnuw_after := by
   unfold canonicalize_logic_first_and0_nswnuw_before canonicalize_logic_first_and0_nswnuw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN canonicalize_logic_first_and0_nswnuw
   all_goals (try extract_goal ; sorry)
   ---END canonicalize_logic_first_and0_nswnuw
@@ -4888,12 +4150,6 @@ def canonicalize_logic_first_xor_0_after := [llvm|
 theorem canonicalize_logic_first_xor_0_proof : canonicalize_logic_first_xor_0_before ⊑ canonicalize_logic_first_xor_0_after := by
   unfold canonicalize_logic_first_xor_0_before canonicalize_logic_first_xor_0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN canonicalize_logic_first_xor_0
   all_goals (try extract_goal ; sorry)
   ---END canonicalize_logic_first_xor_0
@@ -4923,12 +4179,6 @@ def canonicalize_logic_first_xor_0_nsw_after := [llvm|
 theorem canonicalize_logic_first_xor_0_nsw_proof : canonicalize_logic_first_xor_0_nsw_before ⊑ canonicalize_logic_first_xor_0_nsw_after := by
   unfold canonicalize_logic_first_xor_0_nsw_before canonicalize_logic_first_xor_0_nsw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN canonicalize_logic_first_xor_0_nsw
   all_goals (try extract_goal ; sorry)
   ---END canonicalize_logic_first_xor_0_nsw
@@ -4958,12 +4208,6 @@ def canonicalize_logic_first_xor_0_nswnuw_after := [llvm|
 theorem canonicalize_logic_first_xor_0_nswnuw_proof : canonicalize_logic_first_xor_0_nswnuw_before ⊑ canonicalize_logic_first_xor_0_nswnuw_after := by
   unfold canonicalize_logic_first_xor_0_nswnuw_before canonicalize_logic_first_xor_0_nswnuw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN canonicalize_logic_first_xor_0_nswnuw
   all_goals (try extract_goal ; sorry)
   ---END canonicalize_logic_first_xor_0_nswnuw
