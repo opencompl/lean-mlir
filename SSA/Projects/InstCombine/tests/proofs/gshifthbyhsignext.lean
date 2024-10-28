@@ -32,12 +32,6 @@ def t0_shl_after := [llvm|
 theorem t0_shl_proof : t0_shl_before ⊑ t0_shl_after := by
   unfold t0_shl_before t0_shl_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t0_shl
   apply t0_shl_thm
   ---END t0_shl
@@ -63,12 +57,6 @@ def t1_lshr_after := [llvm|
 theorem t1_lshr_proof : t1_lshr_before ⊑ t1_lshr_after := by
   unfold t1_lshr_before t1_lshr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t1_lshr
   apply t1_lshr_thm
   ---END t1_lshr
@@ -94,12 +82,6 @@ def t2_ashr_after := [llvm|
 theorem t2_ashr_proof : t2_ashr_before ⊑ t2_ashr_after := by
   unfold t2_ashr_before t2_ashr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t2_ashr
   apply t2_ashr_thm
   ---END t2_ashr

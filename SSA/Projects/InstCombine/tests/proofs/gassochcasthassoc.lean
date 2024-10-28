@@ -36,12 +36,6 @@ def XorZextXor_after := [llvm|
 theorem XorZextXor_proof : XorZextXor_before ⊑ XorZextXor_after := by
   unfold XorZextXor_before XorZextXor_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN XorZextXor
   apply XorZextXor_thm
   ---END XorZextXor
@@ -71,12 +65,6 @@ def OrZextOr_after := [llvm|
 theorem OrZextOr_proof : OrZextOr_before ⊑ OrZextOr_after := by
   unfold OrZextOr_before OrZextOr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN OrZextOr
   apply OrZextOr_thm
   ---END OrZextOr
@@ -106,12 +94,6 @@ def AndZextAnd_after := [llvm|
 theorem AndZextAnd_proof : AndZextAnd_before ⊑ AndZextAnd_after := by
   unfold AndZextAnd_before AndZextAnd_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN AndZextAnd
   apply AndZextAnd_thm
   ---END AndZextAnd
@@ -141,12 +123,6 @@ def zext_nneg_after := [llvm|
 theorem zext_nneg_proof : zext_nneg_before ⊑ zext_nneg_after := by
   unfold zext_nneg_before zext_nneg_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN zext_nneg
   apply zext_nneg_thm
   ---END zext_nneg

@@ -4,6 +4,9 @@
 1: "icmp_equality_test_constant"
 4: "icmp_equality_test_constant" has unsupported operation: builtin.unregistered: llvm.icmp
 
+1: "icmp_equality_test_constant_samesign"
+4: "icmp_equality_test_constant_samesign" has unsupported operation: builtin.unregistered: llvm.icmp
+
 1: "icmp_equality_test_swift_optional_pointers"
 4: "icmp_equality_test_swift_optional_pointers" has unsupported operation: builtin.unregistered: llvm.icmp
 

@@ -36,12 +36,6 @@ def shl_C1_add_A_C2_i32_after := [llvm|
 theorem shl_C1_add_A_C2_i32_proof : shl_C1_add_A_C2_i32_before ⊑ shl_C1_add_A_C2_i32_after := by
   unfold shl_C1_add_A_C2_i32_before shl_C1_add_A_C2_i32_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_C1_add_A_C2_i32
   all_goals (try extract_goal ; sorry)
   ---END shl_C1_add_A_C2_i32
@@ -70,12 +64,6 @@ def ashr_C1_add_A_C2_i32_after := [llvm|
 theorem ashr_C1_add_A_C2_i32_proof : ashr_C1_add_A_C2_i32_before ⊑ ashr_C1_add_A_C2_i32_after := by
   unfold ashr_C1_add_A_C2_i32_before ashr_C1_add_A_C2_i32_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ashr_C1_add_A_C2_i32
   all_goals (try extract_goal ; sorry)
   ---END ashr_C1_add_A_C2_i32
@@ -107,12 +95,6 @@ def lshr_C1_add_A_C2_i32_after := [llvm|
 theorem lshr_C1_add_A_C2_i32_proof : lshr_C1_add_A_C2_i32_before ⊑ lshr_C1_add_A_C2_i32_after := by
   unfold lshr_C1_add_A_C2_i32_before lshr_C1_add_A_C2_i32_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_C1_add_A_C2_i32
   all_goals (try extract_goal ; sorry)
   ---END lshr_C1_add_A_C2_i32
@@ -140,12 +122,6 @@ def shl_add_nuw_after := [llvm|
 theorem shl_add_nuw_proof : shl_add_nuw_before ⊑ shl_add_nuw_after := by
   unfold shl_add_nuw_before shl_add_nuw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_add_nuw
   all_goals (try extract_goal ; sorry)
   ---END shl_add_nuw
@@ -172,12 +148,6 @@ def shl_nuw_add_nuw_after := [llvm|
 theorem shl_nuw_add_nuw_proof : shl_nuw_add_nuw_before ⊑ shl_nuw_add_nuw_after := by
   unfold shl_nuw_add_nuw_before shl_nuw_add_nuw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_nuw_add_nuw
   all_goals (try extract_goal ; sorry)
   ---END shl_nuw_add_nuw
@@ -205,12 +175,6 @@ def shl_nsw_add_nuw_after := [llvm|
 theorem shl_nsw_add_nuw_proof : shl_nsw_add_nuw_before ⊑ shl_nsw_add_nuw_after := by
   unfold shl_nsw_add_nuw_before shl_nsw_add_nuw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_nsw_add_nuw
   all_goals (try extract_goal ; sorry)
   ---END shl_nsw_add_nuw
@@ -238,12 +202,6 @@ def lshr_exact_add_nuw_after := [llvm|
 theorem lshr_exact_add_nuw_proof : lshr_exact_add_nuw_before ⊑ lshr_exact_add_nuw_after := by
   unfold lshr_exact_add_nuw_before lshr_exact_add_nuw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_exact_add_nuw
   all_goals (try extract_goal ; sorry)
   ---END lshr_exact_add_nuw
@@ -271,12 +229,6 @@ def ashr_exact_add_nuw_after := [llvm|
 theorem ashr_exact_add_nuw_proof : ashr_exact_add_nuw_before ⊑ ashr_exact_add_nuw_after := by
   unfold ashr_exact_add_nuw_before ashr_exact_add_nuw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ashr_exact_add_nuw
   all_goals (try extract_goal ; sorry)
   ---END ashr_exact_add_nuw
@@ -304,12 +256,6 @@ def lshr_exact_add_negative_shift_positive_after := [llvm|
 theorem lshr_exact_add_negative_shift_positive_proof : lshr_exact_add_negative_shift_positive_before ⊑ lshr_exact_add_negative_shift_positive_after := by
   unfold lshr_exact_add_negative_shift_positive_before lshr_exact_add_negative_shift_positive_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_exact_add_negative_shift_positive
   all_goals (try extract_goal ; sorry)
   ---END lshr_exact_add_negative_shift_positive
@@ -337,12 +283,6 @@ def ashr_exact_add_negative_shift_negative_after := [llvm|
 theorem ashr_exact_add_negative_shift_negative_proof : ashr_exact_add_negative_shift_negative_before ⊑ ashr_exact_add_negative_shift_negative_after := by
   unfold ashr_exact_add_negative_shift_negative_before ashr_exact_add_negative_shift_negative_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ashr_exact_add_negative_shift_negative
   all_goals (try extract_goal ; sorry)
   ---END ashr_exact_add_negative_shift_negative
@@ -370,12 +310,6 @@ def shl_nsw_add_negative_after := [llvm|
 theorem shl_nsw_add_negative_proof : shl_nsw_add_negative_before ⊑ shl_nsw_add_negative_after := by
   unfold shl_nsw_add_negative_before shl_nsw_add_negative_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_nsw_add_negative
   all_goals (try extract_goal ; sorry)
   ---END shl_nsw_add_negative
@@ -405,12 +339,6 @@ def shl_nsw_add_negative_invalid_constant3_after := [llvm|
 theorem shl_nsw_add_negative_invalid_constant3_proof : shl_nsw_add_negative_invalid_constant3_before ⊑ shl_nsw_add_negative_invalid_constant3_after := by
   unfold shl_nsw_add_negative_invalid_constant3_before shl_nsw_add_negative_invalid_constant3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_nsw_add_negative_invalid_constant3
   all_goals (try extract_goal ; sorry)
   ---END shl_nsw_add_negative_invalid_constant3
@@ -439,12 +367,6 @@ def lshr_2_add_zext_basic_after := [llvm|
 theorem lshr_2_add_zext_basic_proof : lshr_2_add_zext_basic_before ⊑ lshr_2_add_zext_basic_after := by
   unfold lshr_2_add_zext_basic_before lshr_2_add_zext_basic_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_2_add_zext_basic
   all_goals (try extract_goal ; sorry)
   ---END lshr_2_add_zext_basic
@@ -476,12 +398,6 @@ def ashr_2_add_zext_basic_after := [llvm|
 theorem ashr_2_add_zext_basic_proof : ashr_2_add_zext_basic_before ⊑ ashr_2_add_zext_basic_after := by
   unfold ashr_2_add_zext_basic_before ashr_2_add_zext_basic_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ashr_2_add_zext_basic
   all_goals (try extract_goal ; sorry)
   ---END ashr_2_add_zext_basic
@@ -515,12 +431,6 @@ def lshr_16_add_zext_basic_multiuse_after := [llvm|
 theorem lshr_16_add_zext_basic_multiuse_proof : lshr_16_add_zext_basic_multiuse_before ⊑ lshr_16_add_zext_basic_multiuse_after := by
   unfold lshr_16_add_zext_basic_multiuse_before lshr_16_add_zext_basic_multiuse_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_16_add_zext_basic_multiuse
   all_goals (try extract_goal ; sorry)
   ---END lshr_16_add_zext_basic_multiuse
@@ -554,12 +464,6 @@ def lshr_16_add_known_16_leading_zeroes_after := [llvm|
 theorem lshr_16_add_known_16_leading_zeroes_proof : lshr_16_add_known_16_leading_zeroes_before ⊑ lshr_16_add_known_16_leading_zeroes_after := by
   unfold lshr_16_add_known_16_leading_zeroes_before lshr_16_add_known_16_leading_zeroes_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_16_add_known_16_leading_zeroes
   all_goals (try extract_goal ; sorry)
   ---END lshr_16_add_known_16_leading_zeroes
@@ -595,12 +499,6 @@ def lshr_16_add_not_known_16_leading_zeroes_after := [llvm|
 theorem lshr_16_add_not_known_16_leading_zeroes_proof : lshr_16_add_not_known_16_leading_zeroes_before ⊑ lshr_16_add_not_known_16_leading_zeroes_after := by
   unfold lshr_16_add_not_known_16_leading_zeroes_before lshr_16_add_not_known_16_leading_zeroes_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_16_add_not_known_16_leading_zeroes
   all_goals (try extract_goal ; sorry)
   ---END lshr_16_add_not_known_16_leading_zeroes
@@ -634,12 +532,6 @@ def lshr_32_add_zext_basic_multiuse_after := [llvm|
 theorem lshr_32_add_zext_basic_multiuse_proof : lshr_32_add_zext_basic_multiuse_before ⊑ lshr_32_add_zext_basic_multiuse_after := by
   unfold lshr_32_add_zext_basic_multiuse_before lshr_32_add_zext_basic_multiuse_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_32_add_zext_basic_multiuse
   all_goals (try extract_goal ; sorry)
   ---END lshr_32_add_zext_basic_multiuse
@@ -671,12 +563,6 @@ def lshr_31_i32_add_zext_basic_after := [llvm|
 theorem lshr_31_i32_add_zext_basic_proof : lshr_31_i32_add_zext_basic_before ⊑ lshr_31_i32_add_zext_basic_after := by
   unfold lshr_31_i32_add_zext_basic_before lshr_31_i32_add_zext_basic_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_31_i32_add_zext_basic
   all_goals (try extract_goal ; sorry)
   ---END lshr_31_i32_add_zext_basic
@@ -704,12 +590,6 @@ def lshr_33_i32_add_zext_basic_after := [llvm|
 theorem lshr_33_i32_add_zext_basic_proof : lshr_33_i32_add_zext_basic_before ⊑ lshr_33_i32_add_zext_basic_after := by
   unfold lshr_33_i32_add_zext_basic_before lshr_33_i32_add_zext_basic_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_33_i32_add_zext_basic
   all_goals (try extract_goal ; sorry)
   ---END lshr_33_i32_add_zext_basic
@@ -743,12 +623,6 @@ def lshr_32_add_known_32_leading_zeroes_after := [llvm|
 theorem lshr_32_add_known_32_leading_zeroes_proof : lshr_32_add_known_32_leading_zeroes_before ⊑ lshr_32_add_known_32_leading_zeroes_after := by
   unfold lshr_32_add_known_32_leading_zeroes_before lshr_32_add_known_32_leading_zeroes_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_32_add_known_32_leading_zeroes
   all_goals (try extract_goal ; sorry)
   ---END lshr_32_add_known_32_leading_zeroes
@@ -784,12 +658,6 @@ def lshr_32_add_not_known_32_leading_zeroes_after := [llvm|
 theorem lshr_32_add_not_known_32_leading_zeroes_proof : lshr_32_add_not_known_32_leading_zeroes_before ⊑ lshr_32_add_not_known_32_leading_zeroes_after := by
   unfold lshr_32_add_not_known_32_leading_zeroes_before lshr_32_add_not_known_32_leading_zeroes_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_32_add_not_known_32_leading_zeroes
   all_goals (try extract_goal ; sorry)
   ---END lshr_32_add_not_known_32_leading_zeroes
@@ -817,12 +685,6 @@ def shl_fold_or_disjoint_cnt_after := [llvm|
 theorem shl_fold_or_disjoint_cnt_proof : shl_fold_or_disjoint_cnt_before ⊑ shl_fold_or_disjoint_cnt_after := by
   unfold shl_fold_or_disjoint_cnt_before shl_fold_or_disjoint_cnt_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_fold_or_disjoint_cnt
   all_goals (try extract_goal ; sorry)
   ---END shl_fold_or_disjoint_cnt

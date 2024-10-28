@@ -2,23 +2,32 @@
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
+open LLVM
 
 section gapinthdiv1_proof
-theorem test1_thm (x : BitVec 33) : x / 4096#33 = x >>> 12 := sorry
+theorem test1_thm : ∀ (e : IntW 33), LLVM.udiv e (const? 4096) ⊑ lshr e (const? 12) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem test2_thm (x : BitVec 49) : x / 536870912#49 = x >>> 29 := sorry
 
-theorem test3_thm (x : BitVec 1) (x_1 : BitVec 59) :
-  (Option.bind
-      (match some x with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some 1024#59
-      | some { toFin := ⟨0, ⋯⟩ } => some 4096#59)
-      fun y' => if y' = 0#59 then none else some (x_1 / y')) ⊑
-    Option.bind
-      (match some x with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some 10#59
-      | some { toFin := ⟨0, ⋯⟩ } => some 12#59)
-      fun y' => if 59#59 ≤ y' then none else some (x_1 >>> y'.toNat) := sorry
+theorem test2_thm : ∀ (e : IntW 49), LLVM.udiv e (shl (const? 4096) (const? 17)) ⊑ lshr e (const? 29) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test3_thm :
+  ∀ (e : IntW 1) (e_1 : IntW 59),
+    LLVM.udiv e_1 (select e (const? 1024) (const? 4096)) ⊑ lshr e_1 (select e (const? 10) (const? 12)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
 

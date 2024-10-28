@@ -30,12 +30,6 @@ def test0_after := [llvm|
 theorem test0_proof : test0_before ⊑ test0_after := by
   unfold test0_before test0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test0
   all_goals (try extract_goal ; sorry)
   ---END test0
@@ -59,12 +53,6 @@ def test1_after := [llvm|
 theorem test1_proof : test1_before ⊑ test1_after := by
   unfold test1_before test1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test1
   all_goals (try extract_goal ; sorry)
   ---END test1
@@ -88,12 +76,6 @@ def test2_after := [llvm|
 theorem test2_proof : test2_before ⊑ test2_after := by
   unfold test2_before test2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test2
   all_goals (try extract_goal ; sorry)
   ---END test2
@@ -117,12 +99,6 @@ def test3_after := [llvm|
 theorem test3_proof : test3_before ⊑ test3_after := by
   unfold test3_before test3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test3
   all_goals (try extract_goal ; sorry)
   ---END test3
@@ -148,12 +124,6 @@ def test4_after := [llvm|
 theorem test4_proof : test4_before ⊑ test4_after := by
   unfold test4_before test4_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test4
   all_goals (try extract_goal ; sorry)
   ---END test4
@@ -180,12 +150,6 @@ def test5_after := [llvm|
 theorem test5_proof : test5_before ⊑ test5_after := by
   unfold test5_before test5_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test5
   all_goals (try extract_goal ; sorry)
   ---END test5
@@ -210,12 +174,6 @@ def test6_after := [llvm|
 theorem test6_proof : test6_before ⊑ test6_after := by
   unfold test6_before test6_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test6
   all_goals (try extract_goal ; sorry)
   ---END test6
@@ -247,12 +205,6 @@ def test7_after := [llvm|
 theorem test7_proof : test7_before ⊑ test7_after := by
   unfold test7_before test7_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test7
   all_goals (try extract_goal ; sorry)
   ---END test7
@@ -282,12 +234,6 @@ def test10_after := [llvm|
 theorem test10_proof : test10_before ⊑ test10_after := by
   unfold test10_before test10_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test10
   all_goals (try extract_goal ; sorry)
   ---END test10
@@ -317,12 +263,6 @@ def test11_after := [llvm|
 theorem test11_proof : test11_before ⊑ test11_after := by
   unfold test11_before test11_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test11
   all_goals (try extract_goal ; sorry)
   ---END test11
@@ -350,12 +290,6 @@ def test18_after := [llvm|
 theorem test18_proof : test18_before ⊑ test18_after := by
   unfold test18_before test18_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test18
   all_goals (try extract_goal ; sorry)
   ---END test18
@@ -379,12 +313,6 @@ def test19_after := [llvm|
 theorem test19_proof : test19_before ⊑ test19_after := by
   unfold test19_before test19_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test19
   all_goals (try extract_goal ; sorry)
   ---END test19
@@ -412,12 +340,6 @@ def test22_after := [llvm|
 theorem test22_proof : test22_before ⊑ test22_after := by
   unfold test22_before test22_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test22
   all_goals (try extract_goal ; sorry)
   ---END test22
@@ -447,12 +369,6 @@ def fold_zext_xor_sandwich_after := [llvm|
 theorem fold_zext_xor_sandwich_proof : fold_zext_xor_sandwich_before ⊑ fold_zext_xor_sandwich_after := by
   unfold fold_zext_xor_sandwich_before fold_zext_xor_sandwich_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN fold_zext_xor_sandwich
   all_goals (try extract_goal ; sorry)
   ---END fold_zext_xor_sandwich
@@ -479,12 +395,6 @@ def test25_after := [llvm|
 theorem test25_proof : test25_before ⊑ test25_after := by
   unfold test25_before test25_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test25
   all_goals (try extract_goal ; sorry)
   ---END test25
@@ -512,12 +422,6 @@ def test28_after := [llvm|
 theorem test28_proof : test28_before ⊑ test28_after := by
   unfold test28_before test28_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test28
   all_goals (try extract_goal ; sorry)
   ---END test28
@@ -545,12 +449,6 @@ def test28_sub_after := [llvm|
 theorem test28_sub_proof : test28_sub_before ⊑ test28_sub_after := by
   unfold test28_sub_before test28_sub_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test28_sub
   all_goals (try extract_goal ; sorry)
   ---END test28_sub
@@ -580,12 +478,6 @@ def test29_after := [llvm|
 theorem test29_proof : test29_before ⊑ test29_after := by
   unfold test29_before test29_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test29
   all_goals (try extract_goal ; sorry)
   ---END test29
@@ -618,12 +510,6 @@ def or_xor_commute1_after := [llvm|
 theorem or_xor_commute1_proof : or_xor_commute1_before ⊑ or_xor_commute1_after := by
   unfold or_xor_commute1_before or_xor_commute1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_xor_commute1
   all_goals (try extract_goal ; sorry)
   ---END or_xor_commute1
@@ -656,12 +542,6 @@ def or_xor_commute2_after := [llvm|
 theorem or_xor_commute2_proof : or_xor_commute2_before ⊑ or_xor_commute2_after := by
   unfold or_xor_commute2_before or_xor_commute2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_xor_commute2
   all_goals (try extract_goal ; sorry)
   ---END or_xor_commute2
@@ -694,12 +574,6 @@ def or_xor_commute3_after := [llvm|
 theorem or_xor_commute3_proof : or_xor_commute3_before ⊑ or_xor_commute3_after := by
   unfold or_xor_commute3_before or_xor_commute3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_xor_commute3
   all_goals (try extract_goal ; sorry)
   ---END or_xor_commute3
@@ -732,12 +606,6 @@ def or_xor_commute4_after := [llvm|
 theorem or_xor_commute4_proof : or_xor_commute4_before ⊑ or_xor_commute4_after := by
   unfold or_xor_commute4_before or_xor_commute4_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_xor_commute4
   all_goals (try extract_goal ; sorry)
   ---END or_xor_commute4
@@ -770,12 +638,6 @@ def and_xor_commute1_after := [llvm|
 theorem and_xor_commute1_proof : and_xor_commute1_before ⊑ and_xor_commute1_after := by
   unfold and_xor_commute1_before and_xor_commute1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_xor_commute1
   all_goals (try extract_goal ; sorry)
   ---END and_xor_commute1
@@ -808,12 +670,6 @@ def and_xor_commute2_after := [llvm|
 theorem and_xor_commute2_proof : and_xor_commute2_before ⊑ and_xor_commute2_after := by
   unfold and_xor_commute2_before and_xor_commute2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_xor_commute2
   all_goals (try extract_goal ; sorry)
   ---END and_xor_commute2
@@ -846,12 +702,6 @@ def and_xor_commute3_after := [llvm|
 theorem and_xor_commute3_proof : and_xor_commute3_before ⊑ and_xor_commute3_after := by
   unfold and_xor_commute3_before and_xor_commute3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_xor_commute3
   all_goals (try extract_goal ; sorry)
   ---END and_xor_commute3
@@ -884,12 +734,6 @@ def and_xor_commute4_after := [llvm|
 theorem and_xor_commute4_proof : and_xor_commute4_before ⊑ and_xor_commute4_after := by
   unfold and_xor_commute4_before and_xor_commute4_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_xor_commute4
   all_goals (try extract_goal ; sorry)
   ---END and_xor_commute4
@@ -918,12 +762,6 @@ def or_or_xor_after := [llvm|
 theorem or_or_xor_proof : or_or_xor_before ⊑ or_or_xor_after := by
   unfold or_or_xor_before or_or_xor_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_or_xor
   all_goals (try extract_goal ; sorry)
   ---END or_or_xor
@@ -952,12 +790,6 @@ def or_or_xor_commute1_after := [llvm|
 theorem or_or_xor_commute1_proof : or_or_xor_commute1_before ⊑ or_or_xor_commute1_after := by
   unfold or_or_xor_commute1_before or_or_xor_commute1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_or_xor_commute1
   all_goals (try extract_goal ; sorry)
   ---END or_or_xor_commute1
@@ -986,12 +818,6 @@ def or_or_xor_commute2_after := [llvm|
 theorem or_or_xor_commute2_proof : or_or_xor_commute2_before ⊑ or_or_xor_commute2_after := by
   unfold or_or_xor_commute2_before or_or_xor_commute2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_or_xor_commute2
   all_goals (try extract_goal ; sorry)
   ---END or_or_xor_commute2
@@ -1023,12 +849,6 @@ def not_is_canonical_after := [llvm|
 theorem not_is_canonical_proof : not_is_canonical_before ⊑ not_is_canonical_after := by
   unfold not_is_canonical_before not_is_canonical_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_is_canonical
   all_goals (try extract_goal ; sorry)
   ---END not_is_canonical
@@ -1058,12 +878,6 @@ def not_shl_after := [llvm|
 theorem not_shl_proof : not_shl_before ⊑ not_shl_after := by
   unfold not_shl_before not_shl_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_shl
   all_goals (try extract_goal ; sorry)
   ---END not_shl
@@ -1093,12 +907,6 @@ def not_lshr_after := [llvm|
 theorem not_lshr_proof : not_lshr_before ⊑ not_lshr_after := by
   unfold not_lshr_before not_lshr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_lshr
   all_goals (try extract_goal ; sorry)
   ---END not_lshr
@@ -1128,12 +936,6 @@ def ashr_not_after := [llvm|
 theorem ashr_not_proof : ashr_not_before ⊑ ashr_not_after := by
   unfold ashr_not_before ashr_not_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ashr_not
   all_goals (try extract_goal ; sorry)
   ---END ashr_not
@@ -1164,12 +966,6 @@ def xor_andn_commute2_after := [llvm|
 theorem xor_andn_commute2_proof : xor_andn_commute2_before ⊑ xor_andn_commute2_after := by
   unfold xor_andn_commute2_before xor_andn_commute2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN xor_andn_commute2
   all_goals (try extract_goal ; sorry)
   ---END xor_andn_commute2
@@ -1200,12 +996,6 @@ def xor_andn_commute3_after := [llvm|
 theorem xor_andn_commute3_proof : xor_andn_commute3_before ⊑ xor_andn_commute3_after := by
   unfold xor_andn_commute3_before xor_andn_commute3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN xor_andn_commute3
   all_goals (try extract_goal ; sorry)
   ---END xor_andn_commute3
@@ -1238,12 +1028,6 @@ def xor_andn_commute4_after := [llvm|
 theorem xor_andn_commute4_proof : xor_andn_commute4_before ⊑ xor_andn_commute4_after := by
   unfold xor_andn_commute4_before xor_andn_commute4_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN xor_andn_commute4
   all_goals (try extract_goal ; sorry)
   ---END xor_andn_commute4
@@ -1276,12 +1060,6 @@ def xor_orn_commute1_after := [llvm|
 theorem xor_orn_commute1_proof : xor_orn_commute1_before ⊑ xor_orn_commute1_after := by
   unfold xor_orn_commute1_before xor_orn_commute1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN xor_orn_commute1
   all_goals (try extract_goal ; sorry)
   ---END xor_orn_commute1
@@ -1314,12 +1092,6 @@ def xor_orn_commute2_after := [llvm|
 theorem xor_orn_commute2_proof : xor_orn_commute2_before ⊑ xor_orn_commute2_after := by
   unfold xor_orn_commute2_before xor_orn_commute2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN xor_orn_commute2
   all_goals (try extract_goal ; sorry)
   ---END xor_orn_commute2
@@ -1354,12 +1126,6 @@ def xor_orn_commute3_after := [llvm|
 theorem xor_orn_commute3_proof : xor_orn_commute3_before ⊑ xor_orn_commute3_after := by
   unfold xor_orn_commute3_before xor_orn_commute3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN xor_orn_commute3
   all_goals (try extract_goal ; sorry)
   ---END xor_orn_commute3
@@ -1388,12 +1154,6 @@ def tryFactorization_xor_ashr_lshr_after := [llvm|
 theorem tryFactorization_xor_ashr_lshr_proof : tryFactorization_xor_ashr_lshr_before ⊑ tryFactorization_xor_ashr_lshr_after := by
   unfold tryFactorization_xor_ashr_lshr_before tryFactorization_xor_ashr_lshr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN tryFactorization_xor_ashr_lshr
   all_goals (try extract_goal ; sorry)
   ---END tryFactorization_xor_ashr_lshr
@@ -1422,12 +1182,6 @@ def tryFactorization_xor_lshr_ashr_after := [llvm|
 theorem tryFactorization_xor_lshr_ashr_proof : tryFactorization_xor_lshr_ashr_before ⊑ tryFactorization_xor_lshr_ashr_after := by
   unfold tryFactorization_xor_lshr_ashr_before tryFactorization_xor_lshr_ashr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN tryFactorization_xor_lshr_ashr
   all_goals (try extract_goal ; sorry)
   ---END tryFactorization_xor_lshr_ashr
@@ -1456,12 +1210,6 @@ def tryFactorization_xor_lshr_lshr_after := [llvm|
 theorem tryFactorization_xor_lshr_lshr_proof : tryFactorization_xor_lshr_lshr_before ⊑ tryFactorization_xor_lshr_lshr_after := by
   unfold tryFactorization_xor_lshr_lshr_before tryFactorization_xor_lshr_lshr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN tryFactorization_xor_lshr_lshr
   all_goals (try extract_goal ; sorry)
   ---END tryFactorization_xor_lshr_lshr
@@ -1490,12 +1238,6 @@ def tryFactorization_xor_ashr_ashr_after := [llvm|
 theorem tryFactorization_xor_ashr_ashr_proof : tryFactorization_xor_ashr_ashr_before ⊑ tryFactorization_xor_ashr_ashr_after := by
   unfold tryFactorization_xor_ashr_ashr_before tryFactorization_xor_ashr_ashr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN tryFactorization_xor_ashr_ashr
   all_goals (try extract_goal ; sorry)
   ---END tryFactorization_xor_ashr_ashr
@@ -1527,12 +1269,6 @@ def PR96857_xor_with_noundef_after := [llvm|
 theorem PR96857_xor_with_noundef_proof : PR96857_xor_with_noundef_before ⊑ PR96857_xor_with_noundef_after := by
   unfold PR96857_xor_with_noundef_before PR96857_xor_with_noundef_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN PR96857_xor_with_noundef
   all_goals (try extract_goal ; sorry)
   ---END PR96857_xor_with_noundef
@@ -1564,12 +1300,6 @@ def PR96857_xor_without_noundef_after := [llvm|
 theorem PR96857_xor_without_noundef_proof : PR96857_xor_without_noundef_before ⊑ PR96857_xor_without_noundef_after := by
   unfold PR96857_xor_without_noundef_before PR96857_xor_without_noundef_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN PR96857_xor_without_noundef
   all_goals (try extract_goal ; sorry)
   ---END PR96857_xor_without_noundef
@@ -1593,12 +1323,6 @@ def or_disjoint_with_xor_after := [llvm|
 theorem or_disjoint_with_xor_proof : or_disjoint_with_xor_before ⊑ or_disjoint_with_xor_after := by
   unfold or_disjoint_with_xor_before or_disjoint_with_xor_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_disjoint_with_xor
   all_goals (try extract_goal ; sorry)
   ---END or_disjoint_with_xor
@@ -1622,12 +1346,6 @@ def xor_with_or_disjoint_ab_after := [llvm|
 theorem xor_with_or_disjoint_ab_proof : xor_with_or_disjoint_ab_before ⊑ xor_with_or_disjoint_ab_after := by
   unfold xor_with_or_disjoint_ab_before xor_with_or_disjoint_ab_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN xor_with_or_disjoint_ab
   all_goals (try extract_goal ; sorry)
   ---END xor_with_or_disjoint_ab
@@ -1651,12 +1369,6 @@ def xor_with_or_disjoint_ba_after := [llvm|
 theorem xor_with_or_disjoint_ba_proof : xor_with_or_disjoint_ba_before ⊑ xor_with_or_disjoint_ba_after := by
   unfold xor_with_or_disjoint_ba_before xor_with_or_disjoint_ba_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN xor_with_or_disjoint_ba
   all_goals (try extract_goal ; sorry)
   ---END xor_with_or_disjoint_ba
@@ -1690,12 +1402,6 @@ def select_or_disjoint_or_after := [llvm|
 theorem select_or_disjoint_or_proof : select_or_disjoint_or_before ⊑ select_or_disjoint_or_after := by
   unfold select_or_disjoint_or_before select_or_disjoint_or_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN select_or_disjoint_or
   all_goals (try extract_goal ; sorry)
   ---END select_or_disjoint_or

@@ -34,12 +34,6 @@ def sub_not_after := [llvm|
 theorem sub_not_proof : sub_not_before ⊑ sub_not_after := by
   unfold sub_not_before sub_not_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sub_not
   apply sub_not_thm
   ---END sub_not
@@ -67,12 +61,6 @@ def dec_sub_after := [llvm|
 theorem dec_sub_proof : dec_sub_before ⊑ dec_sub_after := by
   unfold dec_sub_before dec_sub_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN dec_sub
   apply dec_sub_thm
   ---END dec_sub
@@ -100,12 +88,6 @@ def sub_inc_after := [llvm|
 theorem sub_inc_proof : sub_inc_before ⊑ sub_inc_after := by
   unfold sub_inc_before sub_inc_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sub_inc
   apply sub_inc_thm
   ---END sub_inc
@@ -133,12 +115,6 @@ def sub_dec_after := [llvm|
 theorem sub_dec_proof : sub_dec_before ⊑ sub_dec_after := by
   unfold sub_dec_before sub_dec_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sub_dec
   apply sub_dec_thm
   ---END sub_dec

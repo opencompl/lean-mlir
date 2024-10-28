@@ -34,12 +34,6 @@ def flip_add_of_shift_neg_after := [llvm|
 theorem flip_add_of_shift_neg_proof : flip_add_of_shift_neg_before ⊑ flip_add_of_shift_neg_after := by
   unfold flip_add_of_shift_neg_before flip_add_of_shift_neg_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN flip_add_of_shift_neg
   apply flip_add_of_shift_neg_thm
   ---END flip_add_of_shift_neg

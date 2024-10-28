@@ -2,22 +2,47 @@
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
+open LLVM
 
 section gapinthor_proof
-theorem test1_thm (x : BitVec 23) : x ||| 8388607#23 ^^^ x = 8388607#23 := sorry
+theorem test1_thm : ∀ (e : IntW 23), LLVM.or e (LLVM.xor (const? (-1)) e) ⊑ const? (-1) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem test2_thm (x x_1 : BitVec 39) :
-  x_1 + (x &&& 274877906944#39) &&& 274877906944#39 ||| x_1 &&& 274877906943#39 = x_1 + (x &&& 274877906944#39) := sorry
 
-theorem test4_thm (x : BitVec 1023) :
-  x |||
-      89884656743115795386465259539451236680898848947115328636715040578866337902750481566354238661203768010560056939935696678829394884407208311246423715319737062188883946712432742638151109800623047059726541476042502884419075341171231440736956555270413618581675255342293149119973622969239858152417678164812112068607#1023 ^^^
-        x =
-    89884656743115795386465259539451236680898848947115328636715040578866337902750481566354238661203768010560056939935696678829394884407208311246423715319737062188883946712432742638151109800623047059726541476042502884419075341171231440736956555270413618581675255342293149119973622969239858152417678164812112068607#1023 := sorry
+theorem test2_thm :
+  ∀ (e e_1 : IntW 39),
+    LLVM.or (LLVM.and (add e_1 (LLVM.and e (const? (-274877906944)))) (LLVM.xor (const? 274877906943) (const? (-1))))
+        (LLVM.and e_1 (const? 274877906943)) ⊑
+      add e_1 (LLVM.and e (const? (-274877906944))) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem test5_thm (x x_1 : BitVec 399) :
-  x_1 + (x &&& 18446742974197923840#399) &&&
-        1291124939043454294827959586001505937164852896414611756415329678270323811008420597314822676640068915717951585711495839744#399 |||
-      x_1 &&& 274877906943#399 =
-    x_1 + (x &&& 18446742974197923840#399) := sorry
+
+theorem test4_thm : ∀ (e : IntW 1023), LLVM.or e (LLVM.xor (const? (-1)) e) ⊑ const? (-1) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test5_thm :
+  ∀ (e e_1 : IntW 399),
+    LLVM.or
+        (LLVM.and (add e_1 (LLVM.and e (const? 18446742974197923840))) (LLVM.xor (const? 274877906943) (const? (-1))))
+        (LLVM.and e_1 (const? 274877906943)) ⊑
+      add e_1 (LLVM.and e (const? 18446742974197923840)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
 

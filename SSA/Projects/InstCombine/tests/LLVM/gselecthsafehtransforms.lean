@@ -35,12 +35,6 @@ def bools_logical_commute0_after := [llvm|
 theorem bools_logical_commute0_proof : bools_logical_commute0_before ⊑ bools_logical_commute0_after := by
   unfold bools_logical_commute0_before bools_logical_commute0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN bools_logical_commute0
   all_goals (try extract_goal ; sorry)
   ---END bools_logical_commute0
@@ -69,12 +63,6 @@ def bools_logical_commute0_and1_after := [llvm|
 theorem bools_logical_commute0_and1_proof : bools_logical_commute0_and1_before ⊑ bools_logical_commute0_and1_after := by
   unfold bools_logical_commute0_and1_before bools_logical_commute0_and1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN bools_logical_commute0_and1
   all_goals (try extract_goal ; sorry)
   ---END bools_logical_commute0_and1
@@ -103,12 +91,6 @@ def bools_logical_commute0_and2_after := [llvm|
 theorem bools_logical_commute0_and2_proof : bools_logical_commute0_and2_before ⊑ bools_logical_commute0_and2_after := by
   unfold bools_logical_commute0_and2_before bools_logical_commute0_and2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN bools_logical_commute0_and2
   all_goals (try extract_goal ; sorry)
   ---END bools_logical_commute0_and2
@@ -136,12 +118,6 @@ def bools_logical_commute0_and1_and2_after := [llvm|
 theorem bools_logical_commute0_and1_and2_proof : bools_logical_commute0_and1_and2_before ⊑ bools_logical_commute0_and1_and2_after := by
   unfold bools_logical_commute0_and1_and2_before bools_logical_commute0_and1_and2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN bools_logical_commute0_and1_and2
   all_goals (try extract_goal ; sorry)
   ---END bools_logical_commute0_and1_and2
@@ -170,12 +146,6 @@ def bools_logical_commute1_after := [llvm|
 theorem bools_logical_commute1_proof : bools_logical_commute1_before ⊑ bools_logical_commute1_after := by
   unfold bools_logical_commute1_before bools_logical_commute1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN bools_logical_commute1
   all_goals (try extract_goal ; sorry)
   ---END bools_logical_commute1
@@ -204,12 +174,6 @@ def bools_logical_commute1_and2_after := [llvm|
 theorem bools_logical_commute1_and2_proof : bools_logical_commute1_and2_before ⊑ bools_logical_commute1_and2_after := by
   unfold bools_logical_commute1_and2_before bools_logical_commute1_and2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN bools_logical_commute1_and2
   all_goals (try extract_goal ; sorry)
   ---END bools_logical_commute1_and2
@@ -238,12 +202,6 @@ def bools_logical_commute3_and2_after := [llvm|
 theorem bools_logical_commute3_and2_proof : bools_logical_commute3_and2_before ⊑ bools_logical_commute3_and2_after := by
   unfold bools_logical_commute3_and2_before bools_logical_commute3_and2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN bools_logical_commute3_and2
   all_goals (try extract_goal ; sorry)
   ---END bools_logical_commute3_and2
@@ -272,12 +230,6 @@ def bools2_logical_commute0_after := [llvm|
 theorem bools2_logical_commute0_proof : bools2_logical_commute0_before ⊑ bools2_logical_commute0_after := by
   unfold bools2_logical_commute0_before bools2_logical_commute0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN bools2_logical_commute0
   all_goals (try extract_goal ; sorry)
   ---END bools2_logical_commute0
@@ -306,12 +258,6 @@ def bools2_logical_commute0_and1_after := [llvm|
 theorem bools2_logical_commute0_and1_proof : bools2_logical_commute0_and1_before ⊑ bools2_logical_commute0_and1_after := by
   unfold bools2_logical_commute0_and1_before bools2_logical_commute0_and1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN bools2_logical_commute0_and1
   all_goals (try extract_goal ; sorry)
   ---END bools2_logical_commute0_and1
@@ -340,12 +286,6 @@ def bools2_logical_commute0_and2_after := [llvm|
 theorem bools2_logical_commute0_and2_proof : bools2_logical_commute0_and2_before ⊑ bools2_logical_commute0_and2_after := by
   unfold bools2_logical_commute0_and2_before bools2_logical_commute0_and2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN bools2_logical_commute0_and2
   all_goals (try extract_goal ; sorry)
   ---END bools2_logical_commute0_and2
@@ -373,12 +313,6 @@ def bools2_logical_commute0_and1_and2_after := [llvm|
 theorem bools2_logical_commute0_and1_and2_proof : bools2_logical_commute0_and1_and2_before ⊑ bools2_logical_commute0_and1_and2_after := by
   unfold bools2_logical_commute0_and1_and2_before bools2_logical_commute0_and1_and2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN bools2_logical_commute0_and1_and2
   all_goals (try extract_goal ; sorry)
   ---END bools2_logical_commute0_and1_and2
@@ -407,12 +341,6 @@ def bools2_logical_commute1_after := [llvm|
 theorem bools2_logical_commute1_proof : bools2_logical_commute1_before ⊑ bools2_logical_commute1_after := by
   unfold bools2_logical_commute1_before bools2_logical_commute1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN bools2_logical_commute1
   all_goals (try extract_goal ; sorry)
   ---END bools2_logical_commute1
@@ -441,12 +369,6 @@ def bools2_logical_commute1_and1_after := [llvm|
 theorem bools2_logical_commute1_and1_proof : bools2_logical_commute1_and1_before ⊑ bools2_logical_commute1_and1_after := by
   unfold bools2_logical_commute1_and1_before bools2_logical_commute1_and1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN bools2_logical_commute1_and1
   all_goals (try extract_goal ; sorry)
   ---END bools2_logical_commute1_and1
@@ -475,12 +397,6 @@ def bools2_logical_commute1_and2_after := [llvm|
 theorem bools2_logical_commute1_and2_proof : bools2_logical_commute1_and2_before ⊑ bools2_logical_commute1_and2_after := by
   unfold bools2_logical_commute1_and2_before bools2_logical_commute1_and2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN bools2_logical_commute1_and2
   all_goals (try extract_goal ; sorry)
   ---END bools2_logical_commute1_and2
@@ -508,12 +424,6 @@ def bools2_logical_commute1_and1_and2_after := [llvm|
 theorem bools2_logical_commute1_and1_and2_proof : bools2_logical_commute1_and1_and2_before ⊑ bools2_logical_commute1_and1_and2_after := by
   unfold bools2_logical_commute1_and1_and2_before bools2_logical_commute1_and1_and2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN bools2_logical_commute1_and1_and2
   all_goals (try extract_goal ; sorry)
   ---END bools2_logical_commute1_and1_and2
@@ -542,12 +452,6 @@ def bools2_logical_commute2_after := [llvm|
 theorem bools2_logical_commute2_proof : bools2_logical_commute2_before ⊑ bools2_logical_commute2_after := by
   unfold bools2_logical_commute2_before bools2_logical_commute2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN bools2_logical_commute2
   all_goals (try extract_goal ; sorry)
   ---END bools2_logical_commute2
@@ -576,12 +480,6 @@ def bools2_logical_commute2_and1_after := [llvm|
 theorem bools2_logical_commute2_and1_proof : bools2_logical_commute2_and1_before ⊑ bools2_logical_commute2_and1_after := by
   unfold bools2_logical_commute2_and1_before bools2_logical_commute2_and1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN bools2_logical_commute2_and1
   all_goals (try extract_goal ; sorry)
   ---END bools2_logical_commute2_and1
@@ -610,12 +508,6 @@ def bools2_logical_commute3_nopoison_after := [llvm|
 theorem bools2_logical_commute3_nopoison_proof : bools2_logical_commute3_nopoison_before ⊑ bools2_logical_commute3_nopoison_after := by
   unfold bools2_logical_commute3_nopoison_before bools2_logical_commute3_nopoison_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN bools2_logical_commute3_nopoison
   all_goals (try extract_goal ; sorry)
   ---END bools2_logical_commute3_nopoison
@@ -644,12 +536,6 @@ def bools2_logical_commute3_and1_after := [llvm|
 theorem bools2_logical_commute3_and1_proof : bools2_logical_commute3_and1_before ⊑ bools2_logical_commute3_and1_after := by
   unfold bools2_logical_commute3_and1_before bools2_logical_commute3_and1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN bools2_logical_commute3_and1
   all_goals (try extract_goal ; sorry)
   ---END bools2_logical_commute3_and1

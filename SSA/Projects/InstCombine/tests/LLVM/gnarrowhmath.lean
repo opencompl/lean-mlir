@@ -41,12 +41,6 @@ def sext_sext_add_after := [llvm|
 theorem sext_sext_add_proof : sext_sext_add_before ⊑ sext_sext_add_after := by
   unfold sext_sext_add_before sext_sext_add_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sext_sext_add
   all_goals (try extract_goal ; sorry)
   ---END sext_sext_add
@@ -82,12 +76,6 @@ def sext_zext_add_mismatched_exts_after := [llvm|
 theorem sext_zext_add_mismatched_exts_proof : sext_zext_add_mismatched_exts_before ⊑ sext_zext_add_mismatched_exts_after := by
   unfold sext_zext_add_mismatched_exts_before sext_zext_add_mismatched_exts_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sext_zext_add_mismatched_exts
   all_goals (try extract_goal ; sorry)
   ---END sext_zext_add_mismatched_exts
@@ -123,12 +111,6 @@ def sext_sext_add_mismatched_types_after := [llvm|
 theorem sext_sext_add_mismatched_types_proof : sext_sext_add_mismatched_types_before ⊑ sext_sext_add_mismatched_types_after := by
   unfold sext_sext_add_mismatched_types_before sext_sext_add_mismatched_types_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sext_sext_add_mismatched_types
   all_goals (try extract_goal ; sorry)
   ---END sext_sext_add_mismatched_types
@@ -160,12 +142,6 @@ def test5_after := [llvm|
 theorem test5_proof : test5_before ⊑ test5_after := by
   unfold test5_before test5_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test5
   all_goals (try extract_goal ; sorry)
   ---END test5
@@ -197,12 +173,6 @@ def test6_after := [llvm|
 theorem test6_proof : test6_before ⊑ test6_after := by
   unfold test6_before test6_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test6
   all_goals (try extract_goal ; sorry)
   ---END test6
@@ -234,12 +204,6 @@ def test7_after := [llvm|
 theorem test7_proof : test7_before ⊑ test7_after := by
   unfold test7_before test7_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test7
   all_goals (try extract_goal ; sorry)
   ---END test7
@@ -271,12 +235,6 @@ def test8_after := [llvm|
 theorem test8_proof : test8_before ⊑ test8_after := by
   unfold test8_before test8_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test8
   all_goals (try extract_goal ; sorry)
   ---END test8
@@ -308,12 +266,6 @@ def test9_after := [llvm|
 theorem test9_proof : test9_before ⊑ test9_after := by
   unfold test9_before test9_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test9
   all_goals (try extract_goal ; sorry)
   ---END test9
@@ -345,12 +297,6 @@ def test10_after := [llvm|
 theorem test10_proof : test10_before ⊑ test10_after := by
   unfold test10_before test10_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test10
   all_goals (try extract_goal ; sorry)
   ---END test10
@@ -382,12 +328,6 @@ def test15_after := [llvm|
 theorem test15_proof : test15_before ⊑ test15_after := by
   unfold test15_before test15_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test15
   all_goals (try extract_goal ; sorry)
   ---END test15
@@ -419,12 +359,6 @@ def test16_after := [llvm|
 theorem test16_proof : test16_before ⊑ test16_after := by
   unfold test16_before test16_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test16
   all_goals (try extract_goal ; sorry)
   ---END test16

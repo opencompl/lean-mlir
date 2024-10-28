@@ -38,12 +38,6 @@ def neg_mask1_lshr_after := [llvm|
 theorem neg_mask1_lshr_proof : neg_mask1_lshr_before ⊑ neg_mask1_lshr_after := by
   unfold neg_mask1_lshr_before neg_mask1_lshr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN neg_mask1_lshr
   all_goals (try extract_goal ; sorry)
   ---END neg_mask1_lshr
@@ -76,12 +70,6 @@ def sub_mask1_lshr_after := [llvm|
 theorem sub_mask1_lshr_proof : sub_mask1_lshr_before ⊑ sub_mask1_lshr_after := by
   unfold sub_mask1_lshr_before sub_mask1_lshr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sub_mask1_lshr
   all_goals (try extract_goal ; sorry)
   ---END sub_mask1_lshr
@@ -117,12 +105,6 @@ def sub_mask1_trunc_lshr_after := [llvm|
 theorem sub_mask1_trunc_lshr_proof : sub_mask1_trunc_lshr_before ⊑ sub_mask1_trunc_lshr_after := by
   unfold sub_mask1_trunc_lshr_before sub_mask1_trunc_lshr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sub_mask1_trunc_lshr
   all_goals (try extract_goal ; sorry)
   ---END sub_mask1_trunc_lshr
@@ -160,12 +142,6 @@ def sub_sext_mask1_trunc_lshr_after := [llvm|
 theorem sub_sext_mask1_trunc_lshr_proof : sub_sext_mask1_trunc_lshr_before ⊑ sub_sext_mask1_trunc_lshr_after := by
   unfold sub_sext_mask1_trunc_lshr_before sub_sext_mask1_trunc_lshr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sub_sext_mask1_trunc_lshr
   all_goals (try extract_goal ; sorry)
   ---END sub_sext_mask1_trunc_lshr
@@ -200,12 +176,6 @@ def sub_zext_trunc_lshr_after := [llvm|
 theorem sub_zext_trunc_lshr_proof : sub_zext_trunc_lshr_before ⊑ sub_zext_trunc_lshr_after := by
   unfold sub_zext_trunc_lshr_before sub_zext_trunc_lshr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sub_zext_trunc_lshr
   all_goals (try extract_goal ; sorry)
   ---END sub_zext_trunc_lshr
@@ -239,12 +209,6 @@ def neg_mask2_lshr_after := [llvm|
 theorem neg_mask2_lshr_proof : neg_mask2_lshr_before ⊑ neg_mask2_lshr_after := by
   unfold neg_mask2_lshr_before neg_mask2_lshr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN neg_mask2_lshr
   all_goals (try extract_goal ; sorry)
   ---END neg_mask2_lshr
@@ -274,12 +238,6 @@ def neg_signbit_after := [llvm|
 theorem neg_signbit_proof : neg_signbit_before ⊑ neg_signbit_after := by
   unfold neg_signbit_before neg_signbit_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN neg_signbit
   all_goals (try extract_goal ; sorry)
   ---END neg_signbit
@@ -311,12 +269,6 @@ def neg_not_signbit2_after := [llvm|
 theorem neg_not_signbit2_proof : neg_not_signbit2_before ⊑ neg_not_signbit2_after := by
   unfold neg_not_signbit2_before neg_not_signbit2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN neg_not_signbit2
   all_goals (try extract_goal ; sorry)
   ---END neg_not_signbit2
@@ -348,12 +300,6 @@ def neg_not_signbit3_after := [llvm|
 theorem neg_not_signbit3_proof : neg_not_signbit3_before ⊑ neg_not_signbit3_after := by
   unfold neg_not_signbit3_before neg_not_signbit3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN neg_not_signbit3
   all_goals (try extract_goal ; sorry)
   ---END neg_not_signbit3

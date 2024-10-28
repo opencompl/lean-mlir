@@ -51,12 +51,6 @@ def main_after := [llvm|
 theorem main_proof : main_before ⊑ main_after := by
   unfold main_before main_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN main
   all_goals (try extract_goal ; sorry)
   ---END main
@@ -115,12 +109,6 @@ def foo_after := [llvm|
 theorem foo_proof : foo_before ⊑ foo_after := by
   unfold foo_before foo_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN foo
   all_goals (try extract_goal ; sorry)
   ---END foo

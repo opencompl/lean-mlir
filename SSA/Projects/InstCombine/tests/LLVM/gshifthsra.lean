@@ -36,12 +36,6 @@ def test1_after := [llvm|
 theorem test1_proof : test1_before ⊑ test1_after := by
   unfold test1_before test1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test1
   all_goals (try extract_goal ; sorry)
   ---END test1
@@ -73,12 +67,6 @@ def test2_after := [llvm|
 theorem test2_proof : test2_before ⊑ test2_after := by
   unfold test2_before test2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test2
   all_goals (try extract_goal ; sorry)
   ---END test2
@@ -106,12 +94,6 @@ def ashr_ashr_after := [llvm|
 theorem ashr_ashr_proof : ashr_ashr_before ⊑ ashr_ashr_after := by
   unfold ashr_ashr_before ashr_ashr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ashr_ashr
   all_goals (try extract_goal ; sorry)
   ---END ashr_ashr
@@ -139,12 +121,6 @@ def ashr_overshift_after := [llvm|
 theorem ashr_overshift_proof : ashr_overshift_before ⊑ ashr_overshift_after := by
   unfold ashr_overshift_before ashr_overshift_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ashr_overshift
   all_goals (try extract_goal ; sorry)
   ---END ashr_overshift
@@ -172,12 +148,6 @@ def hoist_ashr_ahead_of_sext_1_after := [llvm|
 theorem hoist_ashr_ahead_of_sext_1_proof : hoist_ashr_ahead_of_sext_1_before ⊑ hoist_ashr_ahead_of_sext_1_after := by
   unfold hoist_ashr_ahead_of_sext_1_before hoist_ashr_ahead_of_sext_1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN hoist_ashr_ahead_of_sext_1
   all_goals (try extract_goal ; sorry)
   ---END hoist_ashr_ahead_of_sext_1
@@ -205,12 +175,6 @@ def hoist_ashr_ahead_of_sext_2_after := [llvm|
 theorem hoist_ashr_ahead_of_sext_2_proof : hoist_ashr_ahead_of_sext_2_before ⊑ hoist_ashr_ahead_of_sext_2_after := by
   unfold hoist_ashr_ahead_of_sext_2_before hoist_ashr_ahead_of_sext_2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN hoist_ashr_ahead_of_sext_2
   all_goals (try extract_goal ; sorry)
   ---END hoist_ashr_ahead_of_sext_2

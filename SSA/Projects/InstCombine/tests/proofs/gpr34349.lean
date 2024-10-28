@@ -52,12 +52,6 @@ def fast_div_201_after := [llvm|
 theorem fast_div_201_proof : fast_div_201_before ⊑ fast_div_201_after := by
   unfold fast_div_201_before fast_div_201_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN fast_div_201
   apply fast_div_201_thm
   ---END fast_div_201

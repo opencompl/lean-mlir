@@ -32,12 +32,6 @@ def add_or_sub_comb_i32_commuted1_nuw_after := [llvm|
 theorem add_or_sub_comb_i32_commuted1_nuw_proof : add_or_sub_comb_i32_commuted1_nuw_before ⊑ add_or_sub_comb_i32_commuted1_nuw_after := by
   unfold add_or_sub_comb_i32_commuted1_nuw_before add_or_sub_comb_i32_commuted1_nuw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_or_sub_comb_i32_commuted1_nuw
   apply add_or_sub_comb_i32_commuted1_nuw_thm
   ---END add_or_sub_comb_i32_commuted1_nuw
@@ -68,12 +62,6 @@ def add_or_sub_comb_i8_commuted2_nsw_after := [llvm|
 theorem add_or_sub_comb_i8_commuted2_nsw_proof : add_or_sub_comb_i8_commuted2_nsw_before ⊑ add_or_sub_comb_i8_commuted2_nsw_after := by
   unfold add_or_sub_comb_i8_commuted2_nsw_before add_or_sub_comb_i8_commuted2_nsw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_or_sub_comb_i8_commuted2_nsw
   apply add_or_sub_comb_i8_commuted2_nsw_thm
   ---END add_or_sub_comb_i8_commuted2_nsw
@@ -101,12 +89,6 @@ def add_or_sub_comb_i128_commuted3_nuw_nsw_after := [llvm|
 theorem add_or_sub_comb_i128_commuted3_nuw_nsw_proof : add_or_sub_comb_i128_commuted3_nuw_nsw_before ⊑ add_or_sub_comb_i128_commuted3_nuw_nsw_after := by
   unfold add_or_sub_comb_i128_commuted3_nuw_nsw_before add_or_sub_comb_i128_commuted3_nuw_nsw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_or_sub_comb_i128_commuted3_nuw_nsw
   apply add_or_sub_comb_i128_commuted3_nuw_nsw_thm
   ---END add_or_sub_comb_i128_commuted3_nuw_nsw
@@ -137,12 +119,6 @@ def add_or_sub_comb_i64_commuted4_after := [llvm|
 theorem add_or_sub_comb_i64_commuted4_proof : add_or_sub_comb_i64_commuted4_before ⊑ add_or_sub_comb_i64_commuted4_after := by
   unfold add_or_sub_comb_i64_commuted4_before add_or_sub_comb_i64_commuted4_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_or_sub_comb_i64_commuted4
   apply add_or_sub_comb_i64_commuted4_thm
   ---END add_or_sub_comb_i64_commuted4
@@ -172,12 +148,6 @@ def add_or_sub_comb_i8_negative_y_sub_after := [llvm|
 theorem add_or_sub_comb_i8_negative_y_sub_proof : add_or_sub_comb_i8_negative_y_sub_before ⊑ add_or_sub_comb_i8_negative_y_sub_after := by
   unfold add_or_sub_comb_i8_negative_y_sub_before add_or_sub_comb_i8_negative_y_sub_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_or_sub_comb_i8_negative_y_sub
   apply add_or_sub_comb_i8_negative_y_sub_thm
   ---END add_or_sub_comb_i8_negative_y_sub
@@ -207,12 +177,6 @@ def add_or_sub_comb_i8_negative_y_or_after := [llvm|
 theorem add_or_sub_comb_i8_negative_y_or_proof : add_or_sub_comb_i8_negative_y_or_before ⊑ add_or_sub_comb_i8_negative_y_or_after := by
   unfold add_or_sub_comb_i8_negative_y_or_before add_or_sub_comb_i8_negative_y_or_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_or_sub_comb_i8_negative_y_or
   apply add_or_sub_comb_i8_negative_y_or_thm
   ---END add_or_sub_comb_i8_negative_y_or
@@ -242,12 +206,6 @@ def add_or_sub_comb_i8_negative_y_add_after := [llvm|
 theorem add_or_sub_comb_i8_negative_y_add_proof : add_or_sub_comb_i8_negative_y_add_before ⊑ add_or_sub_comb_i8_negative_y_add_after := by
   unfold add_or_sub_comb_i8_negative_y_add_before add_or_sub_comb_i8_negative_y_add_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_or_sub_comb_i8_negative_y_add
   apply add_or_sub_comb_i8_negative_y_add_thm
   ---END add_or_sub_comb_i8_negative_y_add
@@ -277,12 +235,6 @@ def add_or_sub_comb_i8_negative_xor_instead_or_after := [llvm|
 theorem add_or_sub_comb_i8_negative_xor_instead_or_proof : add_or_sub_comb_i8_negative_xor_instead_or_before ⊑ add_or_sub_comb_i8_negative_xor_instead_or_after := by
   unfold add_or_sub_comb_i8_negative_xor_instead_or_before add_or_sub_comb_i8_negative_xor_instead_or_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_or_sub_comb_i8_negative_xor_instead_or
   apply add_or_sub_comb_i8_negative_xor_instead_or_thm
   ---END add_or_sub_comb_i8_negative_xor_instead_or

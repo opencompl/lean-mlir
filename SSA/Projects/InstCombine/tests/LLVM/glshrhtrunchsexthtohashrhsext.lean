@@ -35,12 +35,6 @@ def t0_after := [llvm|
 theorem t0_proof : t0_before ⊑ t0_after := by
   unfold t0_before t0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t0
   all_goals (try extract_goal ; sorry)
   ---END t0
@@ -69,12 +63,6 @@ def t1_after := [llvm|
 theorem t1_proof : t1_before ⊑ t1_after := by
   unfold t1_before t1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t1
   all_goals (try extract_goal ; sorry)
   ---END t1
@@ -103,12 +91,6 @@ def t2_after := [llvm|
 theorem t2_proof : t2_before ⊑ t2_after := by
   unfold t2_before t2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t2
   all_goals (try extract_goal ; sorry)
   ---END t2
@@ -136,12 +118,6 @@ def same_source_shifted_signbit_after := [llvm|
 theorem same_source_shifted_signbit_proof : same_source_shifted_signbit_before ⊑ same_source_shifted_signbit_after := by
   unfold same_source_shifted_signbit_before same_source_shifted_signbit_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN same_source_shifted_signbit
   all_goals (try extract_goal ; sorry)
   ---END same_source_shifted_signbit

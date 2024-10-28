@@ -33,12 +33,6 @@ def udiv_i8_after := [llvm|
 theorem udiv_i8_proof : udiv_i8_before ⊑ udiv_i8_after := by
   unfold udiv_i8_before udiv_i8_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN udiv_i8
   apply udiv_i8_thm
   ---END udiv_i8
@@ -65,12 +59,6 @@ def urem_i8_after := [llvm|
 theorem urem_i8_proof : urem_i8_before ⊑ urem_i8_after := by
   unfold urem_i8_before urem_i8_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN urem_i8
   apply urem_i8_thm
   ---END urem_i8
@@ -97,12 +85,6 @@ def udiv_i32_after := [llvm|
 theorem udiv_i32_proof : udiv_i32_before ⊑ udiv_i32_after := by
   unfold udiv_i32_before udiv_i32_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN udiv_i32
   apply udiv_i32_thm
   ---END udiv_i32
@@ -134,12 +116,6 @@ def udiv_i32_multiuse_after := [llvm|
 theorem udiv_i32_multiuse_proof : udiv_i32_multiuse_before ⊑ udiv_i32_multiuse_after := by
   unfold udiv_i32_multiuse_before udiv_i32_multiuse_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN udiv_i32_multiuse
   apply udiv_i32_multiuse_thm
   ---END udiv_i32_multiuse
@@ -166,12 +142,6 @@ def udiv_illegal_type_after := [llvm|
 theorem udiv_illegal_type_proof : udiv_illegal_type_before ⊑ udiv_illegal_type_after := by
   unfold udiv_illegal_type_before udiv_illegal_type_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN udiv_illegal_type
   apply udiv_illegal_type_thm
   ---END udiv_illegal_type
@@ -198,12 +168,6 @@ def urem_i32_after := [llvm|
 theorem urem_i32_proof : urem_i32_before ⊑ urem_i32_after := by
   unfold urem_i32_before urem_i32_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN urem_i32
   apply urem_i32_thm
   ---END urem_i32
@@ -235,12 +199,6 @@ def urem_i32_multiuse_after := [llvm|
 theorem urem_i32_multiuse_proof : urem_i32_multiuse_before ⊑ urem_i32_multiuse_after := by
   unfold urem_i32_multiuse_before urem_i32_multiuse_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN urem_i32_multiuse
   apply urem_i32_multiuse_thm
   ---END urem_i32_multiuse
@@ -267,12 +225,6 @@ def urem_illegal_type_after := [llvm|
 theorem urem_illegal_type_proof : urem_illegal_type_before ⊑ urem_illegal_type_after := by
   unfold urem_illegal_type_before urem_illegal_type_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN urem_illegal_type
   apply urem_illegal_type_thm
   ---END urem_illegal_type
@@ -300,12 +252,6 @@ def udiv_i32_c_after := [llvm|
 theorem udiv_i32_c_proof : udiv_i32_c_before ⊑ udiv_i32_c_after := by
   unfold udiv_i32_c_before udiv_i32_c_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN udiv_i32_c
   apply udiv_i32_c_thm
   ---END udiv_i32_c
@@ -335,12 +281,6 @@ def udiv_i32_c_multiuse_after := [llvm|
 theorem udiv_i32_c_multiuse_proof : udiv_i32_c_multiuse_before ⊑ udiv_i32_c_multiuse_after := by
   unfold udiv_i32_c_multiuse_before udiv_i32_c_multiuse_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN udiv_i32_c_multiuse
   apply udiv_i32_c_multiuse_thm
   ---END udiv_i32_c_multiuse
@@ -368,12 +308,6 @@ def udiv_illegal_type_c_after := [llvm|
 theorem udiv_illegal_type_c_proof : udiv_illegal_type_c_before ⊑ udiv_illegal_type_c_after := by
   unfold udiv_illegal_type_c_before udiv_illegal_type_c_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN udiv_illegal_type_c
   apply udiv_illegal_type_c_thm
   ---END udiv_illegal_type_c
@@ -401,12 +335,6 @@ def urem_i32_c_after := [llvm|
 theorem urem_i32_c_proof : urem_i32_c_before ⊑ urem_i32_c_after := by
   unfold urem_i32_c_before urem_i32_c_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN urem_i32_c
   apply urem_i32_c_thm
   ---END urem_i32_c
@@ -436,12 +364,6 @@ def urem_i32_c_multiuse_after := [llvm|
 theorem urem_i32_c_multiuse_proof : urem_i32_c_multiuse_before ⊑ urem_i32_c_multiuse_after := by
   unfold urem_i32_c_multiuse_before urem_i32_c_multiuse_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN urem_i32_c_multiuse
   apply urem_i32_c_multiuse_thm
   ---END urem_i32_c_multiuse
@@ -469,12 +391,6 @@ def urem_illegal_type_c_after := [llvm|
 theorem urem_illegal_type_c_proof : urem_illegal_type_c_before ⊑ urem_illegal_type_c_after := by
   unfold urem_illegal_type_c_before urem_illegal_type_c_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN urem_illegal_type_c
   apply urem_illegal_type_c_thm
   ---END urem_illegal_type_c
@@ -502,12 +418,6 @@ def udiv_c_i32_after := [llvm|
 theorem udiv_c_i32_proof : udiv_c_i32_before ⊑ udiv_c_i32_after := by
   unfold udiv_c_i32_before udiv_c_i32_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN udiv_c_i32
   apply udiv_c_i32_thm
   ---END udiv_c_i32
@@ -535,12 +445,6 @@ def urem_c_i32_after := [llvm|
 theorem urem_c_i32_proof : urem_c_i32_before ⊑ urem_c_i32_after := by
   unfold urem_c_i32_before urem_c_i32_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN urem_c_i32
   apply urem_c_i32_thm
   ---END urem_c_i32

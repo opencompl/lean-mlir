@@ -2,111 +2,148 @@
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
+open LLVM
 
 section gudivremhchangehwidth_proof
-theorem udiv_i8_thm (x x_1 : BitVec 8) :
-  (Option.bind (if setWidth 32 x = 0#32 then none else some (setWidth 32 x_1 / setWidth 32 x)) fun x' =>
-      some (setWidth 8 x')) ⊑
-    if x = 0#8 then none else some (x_1 / x) := sorry
+theorem udiv_i8_thm : ∀ (e e_1 : IntW 8), trunc 8 (LLVM.udiv (zext 32 e_1) (zext 32 e)) ⊑ LLVM.udiv e_1 e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem urem_i8_thm (x x_1 : BitVec 8) :
-  (Option.bind (if setWidth 32 x = 0#32 then none else some (setWidth 32 x_1 % setWidth 32 x)) fun x' =>
-      some (setWidth 8 x')) ⊑
-    if x = 0#8 then none else some (x_1 % x) := sorry
 
-theorem udiv_i32_thm (x x_1 : BitVec 8) :
-  (if setWidth 32 x = 0#32 then none else some (setWidth 32 x_1 / setWidth 32 x)) ⊑
-    Option.bind (if x = 0#8 then none else some (x_1 / x)) fun x' => some (setWidth 32 x') := sorry
+theorem urem_i8_thm : ∀ (e e_1 : IntW 8), trunc 8 (urem (zext 32 e_1) (zext 32 e)) ⊑ urem e_1 e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem udiv_i32_multiuse_thm (x x_1 : BitVec 8) :
-  (Option.bind (if setWidth 32 x = 0#32 then none else some (setWidth 32 x_1 / setWidth 32 x)) fun a =>
-      some (a * (setWidth 32 x_1 + setWidth 32 x))) ⊑
-    Option.bind (if setWidth 32 x = 0#32 then none else some (setWidth 32 x_1 / setWidth 32 x)) fun a =>
-      (if
-              (setWidth 32 x_1).msb = (setWidth 32 x).msb ∧
-                ¬(setWidth 32 x_1 + setWidth 32 x).msb = (setWidth 32 x_1).msb then
-            none
-          else
-            if setWidth 32 x_1 + setWidth 32 x < setWidth 32 x_1 ∨ setWidth 32 x_1 + setWidth 32 x < setWidth 32 x then
-              none
-            else some (setWidth 32 x_1 + setWidth 32 x)).bind
-        fun y' =>
-        if
-            signExtend 64 a * signExtend 64 y' < signExtend 64 (twoPow 32 31) ∨
-              twoPow 64 31 ≤ signExtend 64 a * signExtend 64 y' then
-          none
-        else if twoPow 64 31 <<< 1 ≤ setWidth 64 a * setWidth 64 y' then none else some (a * y') := sorry
 
-theorem udiv_illegal_type_thm (x x_1 : BitVec 9) :
-  (if setWidth 32 x = 0#32 then none else some (setWidth 32 x_1 / setWidth 32 x)) ⊑
-    Option.bind (if x = 0#9 then none else some (x_1 / x)) fun x' => some (setWidth 32 x') := sorry
+theorem udiv_i32_thm : ∀ (e e_1 : IntW 8), LLVM.udiv (zext 32 e_1) (zext 32 e) ⊑ zext 32 (LLVM.udiv e_1 e) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem urem_i32_thm (x x_1 : BitVec 8) :
-  (if setWidth 32 x = 0#32 then none else some (setWidth 32 x_1 % setWidth 32 x)) ⊑
-    Option.bind (if x = 0#8 then none else some (x_1 % x)) fun x' => some (setWidth 32 x') := sorry
 
-theorem urem_i32_multiuse_thm (x x_1 : BitVec 8) :
-  (Option.bind (if setWidth 32 x = 0#32 then none else some (setWidth 32 x_1 % setWidth 32 x)) fun a =>
-      some (a * (setWidth 32 x_1 + setWidth 32 x))) ⊑
-    Option.bind (if setWidth 32 x = 0#32 then none else some (setWidth 32 x_1 % setWidth 32 x)) fun a =>
-      (if
-              (setWidth 32 x_1).msb = (setWidth 32 x).msb ∧
-                ¬(setWidth 32 x_1 + setWidth 32 x).msb = (setWidth 32 x_1).msb then
-            none
-          else
-            if setWidth 32 x_1 + setWidth 32 x < setWidth 32 x_1 ∨ setWidth 32 x_1 + setWidth 32 x < setWidth 32 x then
-              none
-            else some (setWidth 32 x_1 + setWidth 32 x)).bind
-        fun y' =>
-        if
-            signExtend 64 a * signExtend 64 y' < signExtend 64 (twoPow 32 31) ∨
-              twoPow 64 31 ≤ signExtend 64 a * signExtend 64 y' then
-          none
-        else if twoPow 64 31 <<< 1 ≤ setWidth 64 a * setWidth 64 y' then none else some (a * y') := sorry
+theorem udiv_i32_multiuse_thm :
+  ∀ (e e_1 : IntW 8),
+    mul (LLVM.udiv (zext 32 e_1) (zext 32 e)) (add (zext 32 e_1) (zext 32 e)) ⊑
+      mul (LLVM.udiv (zext 32 e_1) (zext 32 e)) (add (zext 32 e_1) (zext 32 e) { «nsw» := true, «nuw» := true })
+        { «nsw» := true, «nuw» := true } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem urem_illegal_type_thm (x x_1 : BitVec 9) :
-  (if setWidth 32 x = 0#32 then none else some (setWidth 32 x_1 % setWidth 32 x)) ⊑
-    Option.bind (if x = 0#9 then none else some (x_1 % x)) fun x' => some (setWidth 32 x') := sorry
 
-theorem udiv_i32_c_thm (x : BitVec 8) : setWidth 32 x / 10#32 = setWidth 32 (x / 10#8) := sorry
+theorem udiv_illegal_type_thm : ∀ (e e_1 : IntW 9), LLVM.udiv (zext 32 e_1) (zext 32 e) ⊑ zext 32 (LLVM.udiv e_1 e) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem udiv_i32_c_multiuse_thm (x : BitVec 8) :
-  some (setWidth 32 x + setWidth 32 x / 10#32) ⊑
-    if
-        (setWidth 32 x / 10#32).msb = (setWidth 32 x).msb ∧
-          ¬(setWidth 32 x / 10#32 + setWidth 32 x).msb = (setWidth 32 x / 10#32).msb then
-      none
-    else
-      if
-          setWidth 32 x / 10#32 + setWidth 32 x < setWidth 32 x / 10#32 ∨
-            setWidth 32 x / 10#32 + setWidth 32 x < setWidth 32 x then
-        none
-      else some (setWidth 32 x / 10#32 + setWidth 32 x) := sorry
 
-theorem udiv_illegal_type_c_thm (x : BitVec 9) : setWidth 32 x / 10#32 = setWidth 32 (x / 10#9) := sorry
+theorem urem_i32_thm : ∀ (e e_1 : IntW 8), urem (zext 32 e_1) (zext 32 e) ⊑ zext 32 (urem e_1 e) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem urem_i32_c_thm (x : BitVec 8) : setWidth 32 x % 10#32 = setWidth 32 (x % 10#8) := sorry
 
-theorem urem_i32_c_multiuse_thm (x : BitVec 8) :
-  some (setWidth 32 x + setWidth 32 x % 10#32) ⊑
-    if
-        (setWidth 32 x % 10#32).msb = (setWidth 32 x).msb ∧
-          ¬(setWidth 32 x % 10#32 + setWidth 32 x).msb = (setWidth 32 x % 10#32).msb then
-      none
-    else
-      if
-          setWidth 32 x % 10#32 + setWidth 32 x < setWidth 32 x % 10#32 ∨
-            setWidth 32 x % 10#32 + setWidth 32 x < setWidth 32 x then
-        none
-      else some (setWidth 32 x % 10#32 + setWidth 32 x) := sorry
+theorem urem_i32_multiuse_thm :
+  ∀ (e e_1 : IntW 8),
+    mul (urem (zext 32 e_1) (zext 32 e)) (add (zext 32 e_1) (zext 32 e)) ⊑
+      mul (urem (zext 32 e_1) (zext 32 e)) (add (zext 32 e_1) (zext 32 e) { «nsw» := true, «nuw» := true })
+        { «nsw» := true, «nuw» := true } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem urem_illegal_type_c_thm (x : BitVec 9) : setWidth 32 x % 10#32 = setWidth 32 (x % 10#9) := sorry
 
-theorem udiv_c_i32_thm (x : BitVec 8) :
-  (if setWidth 32 x = 0#32 then none else some (10#32 / setWidth 32 x)) ⊑
-    Option.bind (if x = 0#8 then none else some (10#8 / x)) fun x' => some (setWidth 32 x') := sorry
+theorem urem_illegal_type_thm : ∀ (e e_1 : IntW 9), urem (zext 32 e_1) (zext 32 e) ⊑ zext 32 (urem e_1 e) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem urem_c_i32_thm (x : BitVec 8) :
-  (if setWidth 32 x = 0#32 then none else some (10#32 % setWidth 32 x)) ⊑
-    Option.bind (if x = 0#8 then none else some (10#8 % x)) fun x' => some (setWidth 32 x') := sorry
+
+theorem udiv_i32_c_thm : ∀ (e : IntW 8), LLVM.udiv (zext 32 e) (const? 10) ⊑ zext 32 (LLVM.udiv e (const? 10)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem udiv_i32_c_multiuse_thm :
+  ∀ (e : IntW 8),
+    add (zext 32 e) (LLVM.udiv (zext 32 e) (const? 10)) ⊑
+      add (LLVM.udiv (zext 32 e) (const? 10)) (zext 32 e) { «nsw» := true, «nuw» := true } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem udiv_illegal_type_c_thm : ∀ (e : IntW 9), LLVM.udiv (zext 32 e) (const? 10) ⊑ zext 32 (LLVM.udiv e (const? 10)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem urem_i32_c_thm : ∀ (e : IntW 8), urem (zext 32 e) (const? 10) ⊑ zext 32 (urem e (const? 10)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem urem_i32_c_multiuse_thm :
+  ∀ (e : IntW 8),
+    add (zext 32 e) (urem (zext 32 e) (const? 10)) ⊑
+      add (urem (zext 32 e) (const? 10)) (zext 32 e) { «nsw» := true, «nuw» := true } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem urem_illegal_type_c_thm : ∀ (e : IntW 9), urem (zext 32 e) (const? 10) ⊑ zext 32 (urem e (const? 10)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem udiv_c_i32_thm : ∀ (e : IntW 8), LLVM.udiv (const? 10) (zext 32 e) ⊑ zext 32 (LLVM.udiv (const? 10) e) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem urem_c_i32_thm : ∀ (e : IntW 8), urem (const? 10) (zext 32 e) ⊑ zext 32 (urem (const? 10) e) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
 

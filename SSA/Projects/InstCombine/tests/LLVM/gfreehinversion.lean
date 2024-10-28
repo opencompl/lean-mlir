@@ -39,12 +39,6 @@ def xor_1_after := [llvm|
 theorem xor_1_proof : xor_1_before ⊑ xor_1_after := by
   unfold xor_1_before xor_1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN xor_1
   all_goals (try extract_goal ; sorry)
   ---END xor_1
@@ -77,12 +71,6 @@ def xor_2_after := [llvm|
 theorem xor_2_proof : xor_2_before ⊑ xor_2_after := by
   unfold xor_2_before xor_2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN xor_2
   all_goals (try extract_goal ; sorry)
   ---END xor_2
@@ -115,12 +103,6 @@ def add_1_after := [llvm|
 theorem add_1_proof : add_1_before ⊑ add_1_after := by
   unfold add_1_before add_1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_1
   all_goals (try extract_goal ; sorry)
   ---END add_1
@@ -153,12 +135,6 @@ def add_2_after := [llvm|
 theorem add_2_proof : add_2_before ⊑ add_2_after := by
   unfold add_2_before add_2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_2
   all_goals (try extract_goal ; sorry)
   ---END add_2
@@ -191,12 +167,6 @@ def sub_1_after := [llvm|
 theorem sub_1_proof : sub_1_before ⊑ sub_1_after := by
   unfold sub_1_before sub_1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sub_1
   all_goals (try extract_goal ; sorry)
   ---END sub_1
@@ -231,12 +201,6 @@ def sub_2_after := [llvm|
 theorem sub_2_proof : sub_2_before ⊑ sub_2_after := by
   unfold sub_2_before sub_2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sub_2
   all_goals (try extract_goal ; sorry)
   ---END sub_2
@@ -271,12 +235,6 @@ def sub_3_after := [llvm|
 theorem sub_3_proof : sub_3_before ⊑ sub_3_after := by
   unfold sub_3_before sub_3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sub_3
   all_goals (try extract_goal ; sorry)
   ---END sub_3
@@ -309,12 +267,6 @@ def ashr_1_after := [llvm|
 theorem ashr_1_proof : ashr_1_before ⊑ ashr_1_after := by
   unfold ashr_1_before ashr_1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ashr_1
   all_goals (try extract_goal ; sorry)
   ---END ashr_1
@@ -353,12 +305,6 @@ def select_1_after := [llvm|
 theorem select_1_proof : select_1_before ⊑ select_1_after := by
   unfold select_1_before select_1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN select_1
   all_goals (try extract_goal ; sorry)
   ---END select_1
@@ -395,12 +341,6 @@ def select_2_after := [llvm|
 theorem select_2_proof : select_2_before ⊑ select_2_after := by
   unfold select_2_before select_2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN select_2
   all_goals (try extract_goal ; sorry)
   ---END select_2
@@ -431,12 +371,6 @@ def lshr_not_nneg2_after := [llvm|
 theorem lshr_not_nneg2_proof : lshr_not_nneg2_before ⊑ lshr_not_nneg2_after := by
   unfold lshr_not_nneg2_before lshr_not_nneg2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_not_nneg2
   all_goals (try extract_goal ; sorry)
   ---END lshr_not_nneg2

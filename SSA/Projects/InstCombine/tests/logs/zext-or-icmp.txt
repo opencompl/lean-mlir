@@ -1,0 +1,64 @@
+1: "zext_or_icmp_icmp"
+4: "zext_or_icmp_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "zext_or_icmp_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "zext_or_icmp_icmp_logical"
+4: "zext_or_icmp_icmp_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "zext_or_icmp_icmp_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "dont_widen_undef"
+4: "dont_widen_undef" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "dont_widen_undef_logical"
+4: "dont_widen_undef_logical" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "knownbits_out_of_range_shift"
+4: "knownbits_out_of_range_shift" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "zext_or_eq_ult_add"
+4: "zext_or_eq_ult_add" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "select_zext_or_eq_ult_add"
+4: "select_zext_or_eq_ult_add" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "PR49475"
+4: "PR49475" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "PR49475" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "PR49475_infloop"
+4: "PR49475_infloop" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "PR49475_infloop" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "PR49475_infloop" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "PR51762"
+4: "PR51762" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "PR51762" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "PR51762" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "PR51762" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "PR51762" has unsupported operation: llvm.load
+
+4: "PR51762" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "PR51762" has unsupported operation: llvm.load
+
+4: "PR51762" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "PR51762" has unsupported operation: llvm.load
+
+4: "PR51762" has unsupported operation: llvm.store
+
+4: "PR51762" has unsupported operation: llvm.store
+
+4: "PR51762" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "PR51762" has unsupported operation: builtin.unregistered: llvm.intr.assume
+

@@ -2,23 +2,41 @@
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
+open LLVM
 
 section gshouldhchangehtype_proof
-theorem test1_thm (x x_1 : BitVec 8) : setWidth 8 (setWidth 64 x_1 + setWidth 64 x) = x_1 + x := sorry
+theorem test1_thm : ∀ (e e_1 : IntW 8), trunc 8 (add (zext 64 e_1) (zext 64 e)) ⊑ add e_1 e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem test2_thm (x x_1 : BitVec 16) : setWidth 16 (setWidth 64 x_1 + setWidth 64 x) = x_1 + x := sorry
 
-theorem test3_thm (x x_1 : BitVec 32) : setWidth 32 (setWidth 64 x_1 + setWidth 64 x) = x_1 + x := sorry
+theorem test2_thm : ∀ (e e_1 : IntW 16), trunc 16 (add (zext 64 e_1) (zext 64 e)) ⊑ add e_1 e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem test4_thm (x x_1 : BitVec 9) :
-  some (setWidth 9 (setWidth 64 x_1 + setWidth 64 x)) ⊑
-    (if
-            (setWidth 64 x_1).msb = (setWidth 64 x).msb ∧
-              ¬(setWidth 64 x_1 + setWidth 64 x).msb = (setWidth 64 x_1).msb then
-          none
-        else
-          if setWidth 64 x_1 + setWidth 64 x < setWidth 64 x_1 ∨ setWidth 64 x_1 + setWidth 64 x < setWidth 64 x then
-            none
-          else some (setWidth 64 x_1 + setWidth 64 x)).bind
-      fun x' => some (setWidth 9 x') := sorry
+
+theorem test3_thm : ∀ (e e_1 : IntW 32), trunc 32 (add (zext 64 e_1) (zext 64 e)) ⊑ add e_1 e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test4_thm :
+  ∀ (e e_1 : IntW 9),
+    trunc 9 (add (zext 64 e_1) (zext 64 e)) ⊑
+      trunc 9 (add (zext 64 e_1) (zext 64 e) { «nsw» := true, «nuw» := true }) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
 

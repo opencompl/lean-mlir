@@ -2,25 +2,20 @@
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
+open LLVM
 
 section gredundanthlefthshifthinputhmaskinghpr49778_proof
-theorem src_thm (x : BitVec 1) :
-  (Option.bind (if 32#32 ≤ setWidth 32 x then none else some (4294967295#32 <<< (x.toNat % 4294967296))) fun a =>
-      if 32#32 ≤ setWidth 32 x then none
-      else some (((a ^^^ 4294967295#32) &&& setWidth 32 x) <<< (x.toNat % 4294967296))) ⊑
-    (if (4294967295#32 <<< (x.toNat % 4294967296)).sshiftRight (x.toNat % 4294967296) = 4294967295#32 then none
-        else if 32#32 ≤ setWidth 32 x then none else some (4294967295#32 <<< (x.toNat % 4294967296))).bind
-      fun a =>
-      if
-          (((a ^^^ 4294967295#32) &&& setWidth 32 x) <<< (x.toNat % 4294967296)).sshiftRight (x.toNat % 4294967296) =
-            (a ^^^ 4294967295#32) &&& setWidth 32 x then
-        none
-      else
-        if
-            ((a ^^^ 4294967295#32) &&& setWidth 32 x) <<< (x.toNat % 4294967296) >>> (x.toNat % 4294967296) =
-              (a ^^^ 4294967295#32) &&& setWidth 32 x then
-          none
-        else
-          if 32#32 ≤ setWidth 32 x then none
-          else some (((a ^^^ 4294967295#32) &&& setWidth 32 x) <<< (x.toNat % 4294967296)) := sorry
+theorem src_thm :
+  ∀ (e : IntW 1),
+    shl (LLVM.and (LLVM.xor (shl (const? (-1)) (zext 32 e)) (const? (-1))) (zext 32 e)) (zext 32 e) ⊑
+      shl
+        (LLVM.and (LLVM.xor (shl (const? (-1)) (zext 32 e) { «nsw» := true, «nuw» := false }) (const? (-1)))
+          (zext 32 e))
+        (zext 32 e) { «nsw» := true, «nuw» := true } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
 

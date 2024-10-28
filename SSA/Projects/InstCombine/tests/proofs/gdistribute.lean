@@ -33,12 +33,6 @@ def factorize_after := [llvm|
 theorem factorize_proof : factorize_before ⊑ factorize_after := by
   unfold factorize_before factorize_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN factorize
   apply factorize_thm
   ---END factorize
@@ -65,12 +59,6 @@ def factorize2_after := [llvm|
 theorem factorize2_proof : factorize2_before ⊑ factorize2_after := by
   unfold factorize2_before factorize2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN factorize2
   apply factorize2_thm
   ---END factorize2
@@ -97,12 +85,6 @@ def factorize3_after := [llvm|
 theorem factorize3_proof : factorize3_before ⊑ factorize3_after := by
   unfold factorize3_before factorize3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN factorize3
   apply factorize3_thm
   ---END factorize3
@@ -130,12 +112,6 @@ def factorize4_after := [llvm|
 theorem factorize4_proof : factorize4_before ⊑ factorize4_after := by
   unfold factorize4_before factorize4_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN factorize4
   apply factorize4_thm
   ---END factorize4
@@ -163,12 +139,6 @@ def factorize5_after := [llvm|
 theorem factorize5_proof : factorize5_before ⊑ factorize5_after := by
   unfold factorize5_before factorize5_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN factorize5
   apply factorize5_thm
   ---END factorize5
@@ -197,12 +167,6 @@ def expand_after := [llvm|
 theorem expand_proof : expand_before ⊑ expand_after := by
   unfold expand_before expand_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN expand
   apply expand_thm
   ---END expand

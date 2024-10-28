@@ -37,12 +37,6 @@ def add_mask_ashr28_i32_after := [llvm|
 theorem add_mask_ashr28_i32_proof : add_mask_ashr28_i32_before ⊑ add_mask_ashr28_i32_after := by
   unfold add_mask_ashr28_i32_before add_mask_ashr28_i32_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_mask_ashr28_i32
   all_goals (try extract_goal ; sorry)
   ---END add_mask_ashr28_i32
@@ -74,12 +68,6 @@ def add_mask_ashr28_non_pow2_i32_after := [llvm|
 theorem add_mask_ashr28_non_pow2_i32_proof : add_mask_ashr28_non_pow2_i32_before ⊑ add_mask_ashr28_non_pow2_i32_after := by
   unfold add_mask_ashr28_non_pow2_i32_before add_mask_ashr28_non_pow2_i32_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_mask_ashr28_non_pow2_i32
   all_goals (try extract_goal ; sorry)
   ---END add_mask_ashr28_non_pow2_i32
@@ -111,12 +99,6 @@ def add_mask_ashr27_i32_after := [llvm|
 theorem add_mask_ashr27_i32_proof : add_mask_ashr27_i32_before ⊑ add_mask_ashr27_i32_after := by
   unfold add_mask_ashr27_i32_before add_mask_ashr27_i32_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_mask_ashr27_i32
   all_goals (try extract_goal ; sorry)
   ---END add_mask_ashr27_i32

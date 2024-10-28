@@ -36,12 +36,6 @@ def ashr_exact_poison_constant_fold_after := [llvm|
 theorem ashr_exact_poison_constant_fold_proof : ashr_exact_poison_constant_fold_before ⊑ ashr_exact_poison_constant_fold_after := by
   unfold ashr_exact_poison_constant_fold_before ashr_exact_poison_constant_fold_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ashr_exact_poison_constant_fold
   all_goals (try extract_goal ; sorry)
   ---END ashr_exact_poison_constant_fold
@@ -71,12 +65,6 @@ def ashr_exact_after := [llvm|
 theorem ashr_exact_proof : ashr_exact_before ⊑ ashr_exact_after := by
   unfold ashr_exact_before ashr_exact_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ashr_exact
   all_goals (try extract_goal ; sorry)
   ---END ashr_exact
@@ -106,12 +94,6 @@ def shl_nsw_nuw_poison_constant_fold_after := [llvm|
 theorem shl_nsw_nuw_poison_constant_fold_proof : shl_nsw_nuw_poison_constant_fold_before ⊑ shl_nsw_nuw_poison_constant_fold_after := by
   unfold shl_nsw_nuw_poison_constant_fold_before shl_nsw_nuw_poison_constant_fold_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_nsw_nuw_poison_constant_fold
   all_goals (try extract_goal ; sorry)
   ---END shl_nsw_nuw_poison_constant_fold
@@ -141,12 +123,6 @@ def shl_nsw_nuw_after := [llvm|
 theorem shl_nsw_nuw_proof : shl_nsw_nuw_before ⊑ shl_nsw_nuw_after := by
   unfold shl_nsw_nuw_before shl_nsw_nuw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_nsw_nuw
   all_goals (try extract_goal ; sorry)
   ---END shl_nsw_nuw
@@ -176,12 +152,6 @@ def add_nsw_poison_constant_fold_after := [llvm|
 theorem add_nsw_poison_constant_fold_proof : add_nsw_poison_constant_fold_before ⊑ add_nsw_poison_constant_fold_after := by
   unfold add_nsw_poison_constant_fold_before add_nsw_poison_constant_fold_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_nsw_poison_constant_fold
   all_goals (try extract_goal ; sorry)
   ---END add_nsw_poison_constant_fold
@@ -211,12 +181,6 @@ def add_nsw_after := [llvm|
 theorem add_nsw_proof : add_nsw_before ⊑ add_nsw_after := by
   unfold add_nsw_before add_nsw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_nsw
   all_goals (try extract_goal ; sorry)
   ---END add_nsw

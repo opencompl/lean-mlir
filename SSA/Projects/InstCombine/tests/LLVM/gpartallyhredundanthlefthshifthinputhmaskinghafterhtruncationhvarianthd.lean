@@ -41,12 +41,6 @@ def PR51351_after := [llvm|
 theorem PR51351_proof : PR51351_before ⊑ PR51351_after := by
   unfold PR51351_before PR51351_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN PR51351
   all_goals (try extract_goal ; sorry)
   ---END PR51351

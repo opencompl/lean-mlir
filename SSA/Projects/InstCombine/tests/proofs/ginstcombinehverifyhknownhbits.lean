@@ -45,12 +45,6 @@ def pr110631_after := [llvm|
 theorem pr110631_proof : pr110631_before ⊑ pr110631_after := by
   unfold pr110631_before pr110631_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN pr110631
   apply pr110631_thm
   ---END pr110631

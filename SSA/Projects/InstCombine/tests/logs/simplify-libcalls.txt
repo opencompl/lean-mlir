@@ -144,6 +144,14 @@
 
 4: "emit_stpncpy" has unsupported operation: llvm.call
 
+1: "simplify_memset_chk_pr112633"
+4: "simplify_memset_chk_pr112633" has unsupported operation: llvm.call
+
+4: "simplify_memset_chk_pr112633" has unsupported operation: llvm.return
+
+1: "__memset_chk"
+5: "__memset_chk" is empty
+
 1: "strcpy"
 5: "strcpy" is empty
 

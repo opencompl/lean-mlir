@@ -2,11 +2,17 @@
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
+open LLVM
 
 section g2007h03h19hBadTruncChangePR1261_proof
-theorem test_thm (x : BitVec 31) :
-  some (setWidth 16 ((signExtend 32 x + 16384#32) >>> 15)) ⊑
-    (if setWidth 32 x + 16384#32 < setWidth 32 x ∨ setWidth 32 x + 16384#32 < 16384#32 then none
-        else some (setWidth 32 x + 16384#32)).bind
-      fun x => some (setWidth 16 (x >>> 15)) := sorry
+theorem test_thm :
+  ∀ (e : IntW 31),
+    trunc 16 (lshr (add (sext 32 e) (const? 16384)) (const? 15)) ⊑
+      trunc 16 (lshr (add (zext 32 e) (const? 16384) { «nsw» := false, «nuw» := true }) (const? 15)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
 

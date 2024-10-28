@@ -250,3 +250,21 @@
 
 4: "ne_optimized_highbits_cmp_todo_overlapping" has unsupported operation: builtin.unregistered: llvm.icmp
 
+1: "and_trunc_i1"
+4: "and_trunc_i1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "and_trunc_i1_wrong_const"
+4: "and_trunc_i1_wrong_const" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "and_trunc_i1_wrong_operands"
+4: "and_trunc_i1_wrong_operands" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "or_trunc_i1"
+4: "or_trunc_i1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "or_trunc_i1_wrong_const"
+4: "or_trunc_i1_wrong_const" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "or_trunc_i1_wrong_operands"
+4: "or_trunc_i1_wrong_operands" has unsupported operation: builtin.unregistered: llvm.icmp
+

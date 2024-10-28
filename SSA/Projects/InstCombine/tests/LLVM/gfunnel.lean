@@ -48,12 +48,6 @@ def unmasked_shlop_insufficient_mask_shift_amount_after := [llvm|
 theorem unmasked_shlop_insufficient_mask_shift_amount_proof : unmasked_shlop_insufficient_mask_shift_amount_before ⊑ unmasked_shlop_insufficient_mask_shift_amount_after := by
   unfold unmasked_shlop_insufficient_mask_shift_amount_before unmasked_shlop_insufficient_mask_shift_amount_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN unmasked_shlop_insufficient_mask_shift_amount
   all_goals (try extract_goal ; sorry)
   ---END unmasked_shlop_insufficient_mask_shift_amount

@@ -1,0 +1,100 @@
+1: "log1pf_const"
+4: "log1pf_const" has unsupported operation: llvm.call
+
+1: "log1p_const"
+4: "log1p_const" has unsupported operation: llvm.call
+
+1: "log1pf_minus_one"
+4: "log1pf_minus_one" has unsupported operation: llvm.call
+
+1: "log1p_minus_one"
+4: "log1p_minus_one" has unsupported operation: llvm.call
+
+1: "log1pf_minus_one_memory_none"
+4: "log1pf_minus_one_memory_none" has unsupported operation: llvm.call
+
+1: "log1p_minus_one_memory_none"
+4: "log1p_minus_one_memory_none" has unsupported operation: llvm.call
+
+1: "log1pf_zero"
+4: "log1pf_zero" has unsupported operation: llvm.call
+
+1: "log1p_zero"
+4: "log1p_zero" has unsupported operation: llvm.call
+
+1: "log1pf_neg_zero"
+4: "log1pf_neg_zero" has unsupported operation: llvm.call
+
+1: "log1p_neg_zero"
+4: "log1p_neg_zero" has unsupported operation: llvm.call
+
+1: "log1pf_neg1"
+4: "log1pf_neg1" has unsupported operation: llvm.call
+
+1: "log1p_neg1"
+4: "log1p_neg1" has unsupported operation: llvm.call
+
+1: "log1pf_neg1_memory_none"
+4: "log1pf_neg1_memory_none" has unsupported operation: llvm.call
+
+1: "log1p_neg1_memory_none"
+4: "log1p_neg1_memory_none" has unsupported operation: llvm.call
+
+1: "log1pf_neg2"
+4: "log1pf_neg2" has unsupported operation: llvm.call
+
+1: "log1p_neg2"
+4: "log1p_neg2" has unsupported operation: llvm.call
+
+1: "log1pf_inf"
+4: "log1pf_inf" has unsupported operation: llvm.call
+
+1: "log1p_inf"
+4: "log1p_inf" has unsupported operation: llvm.call
+
+1: "log1pf_inf_memory_none"
+4: "log1pf_inf_memory_none" has unsupported operation: llvm.call
+
+1: "log1p_inf_memory_none"
+4: "log1p_inf_memory_none" has unsupported operation: llvm.call
+
+1: "log1pf_neg_inf"
+4: "log1pf_neg_inf" has unsupported operation: llvm.call
+
+1: "log1p_neg_inf"
+4: "log1p_neg_inf" has unsupported operation: llvm.call
+
+1: "log1pf_neg_inf_memory_none"
+4: "log1pf_neg_inf_memory_none" has unsupported operation: llvm.call
+
+1: "log1p_neg_inf_memory_none"
+4: "log1p_neg_inf_memory_none" has unsupported operation: llvm.call
+
+1: "log1pf_nan"
+4: "log1pf_nan" has unsupported operation: llvm.call
+
+1: "log1p_nan"
+4: "log1p_nan" has unsupported operation: llvm.call
+
+1: "log1pf_nan_memory_none"
+4: "log1pf_nan_memory_none" has unsupported operation: llvm.call
+
+1: "log1p_nan_memory_none"
+4: "log1p_nan_memory_none" has unsupported operation: llvm.call
+
+1: "log1pf_poison"
+4: "log1pf_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "log1pf_poison" has unsupported operation: llvm.call
+
+1: "log1p_poison"
+4: "log1p_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "log1p_poison" has unsupported operation: llvm.call
+
+1: "log1pf"
+5: "log1pf" is empty
+
+1: "log1p"
+5: "log1p" is empty
+

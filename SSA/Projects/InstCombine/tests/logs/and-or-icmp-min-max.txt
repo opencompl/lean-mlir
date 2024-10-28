@@ -317,6 +317,9 @@
 1: "sge_and_max_logical"
 4: "sge_and_max_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
+1: "sge_and_max_logical_samesign"
+4: "sge_and_max_logical_samesign" has unsupported operation: builtin.unregistered: llvm.icmp
+
 1: "sge_and_max_commute"
 4: "sge_and_max_commute" has unsupported operation: builtin.unregistered: llvm.icmp
 

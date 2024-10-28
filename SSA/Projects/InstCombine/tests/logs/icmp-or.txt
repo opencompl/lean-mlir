@@ -1,0 +1,290 @@
+1: "use"
+5: "use" is empty
+
+1: "set_low_bit_mask_eq"
+4: "set_low_bit_mask_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "set_low_bit_mask_ne"
+4: "set_low_bit_mask_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "set_low_bit_mask_ugt"
+4: "set_low_bit_mask_ugt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "set_low_bit_mask_ult"
+4: "set_low_bit_mask_ult" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "set_low_bit_mask_uge"
+4: "set_low_bit_mask_uge" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "set_low_bit_mask_ule"
+4: "set_low_bit_mask_ule" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "set_low_bit_mask_sgt"
+4: "set_low_bit_mask_sgt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "set_low_bit_mask_slt"
+4: "set_low_bit_mask_slt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "set_low_bit_mask_sge"
+4: "set_low_bit_mask_sge" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "set_low_bit_mask_sle"
+4: "set_low_bit_mask_sle" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "eq_const_mask"
+4: "eq_const_mask" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "ne_const_mask"
+4: "ne_const_mask" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "eq_const_mask_not_equality"
+4: "eq_const_mask_not_equality" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "eq_const_mask_not_same"
+4: "eq_const_mask_not_same" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "eq_const_mask_wrong_opcode"
+4: "eq_const_mask_wrong_opcode" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "eq_const_mask_use1"
+4: "eq_const_mask_use1" has unsupported operation: llvm.call
+
+4: "eq_const_mask_use1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "eq_const_mask_use2"
+4: "eq_const_mask_use2" has unsupported operation: llvm.call
+
+4: "eq_const_mask_use2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "decrement_slt_0"
+4: "decrement_slt_0" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "decrement_slt_0_commute_use1"
+4: "decrement_slt_0_commute_use1" has unsupported operation: llvm.call
+
+4: "decrement_slt_0_commute_use1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "decrement_slt_0_use2"
+4: "decrement_slt_0_use2" has unsupported operation: llvm.call
+
+4: "decrement_slt_0_use2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "decrement_slt_n1"
+4: "decrement_slt_n1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "not_decrement_slt_0"
+4: "not_decrement_slt_0" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "decrement_sgt_n1"
+4: "decrement_sgt_n1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "decrement_sgt_n1_commute_use1"
+4: "decrement_sgt_n1_commute_use1" has unsupported operation: llvm.call
+
+4: "decrement_sgt_n1_commute_use1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "decrement_sgt_n1_use2"
+4: "decrement_sgt_n1_use2" has unsupported operation: llvm.call
+
+4: "decrement_sgt_n1_use2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "decrement_sgt_0"
+4: "decrement_sgt_0" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "not_decrement_sgt_n1"
+4: "not_decrement_sgt_n1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_xor_2_eq"
+4: "icmp_or_xor_2_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_xor_2_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_xor_2_ne"
+4: "icmp_or_xor_2_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_xor_2_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_xor_2_eq_fail"
+4: "icmp_or_xor_2_eq_fail" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_xor_2_ne_fail"
+4: "icmp_or_xor_2_ne_fail" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_xor_2_3_fail"
+4: "icmp_or_xor_2_3_fail" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_xor_2_3_fail" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_xor_2_4_fail"
+4: "icmp_or_xor_2_4_fail" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_xor_2_4_fail" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_xor_3_1"
+4: "icmp_or_xor_3_1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_xor_3_1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_xor_3_1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_xor_3_2_fail"
+4: "icmp_or_xor_3_2_fail" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_xor_3_3"
+4: "icmp_or_xor_3_3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_xor_3_3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_xor_3_3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_xor_3_4_fail"
+4: "icmp_or_xor_3_4_fail" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_xor_4_1"
+4: "icmp_or_xor_4_1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_xor_4_1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_xor_4_1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_xor_4_1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_xor_4_2"
+4: "icmp_or_xor_4_2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_xor_4_2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_xor_4_2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_xor_4_2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_sub_2_eq"
+4: "icmp_or_sub_2_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_sub_2_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_sub_2_ne"
+4: "icmp_or_sub_2_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_sub_2_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_sub_2_eq_fail"
+4: "icmp_or_sub_2_eq_fail" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_sub_2_ne_fail"
+4: "icmp_or_sub_2_ne_fail" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_sub_2_3_fail"
+4: "icmp_or_sub_2_3_fail" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_sub_2_3_fail" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_sub_2_4_fail"
+4: "icmp_or_sub_2_4_fail" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_sub_2_4_fail" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_sub_3_1"
+4: "icmp_or_sub_3_1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_sub_3_1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_sub_3_1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_sub_3_2_fail"
+4: "icmp_or_sub_3_2_fail" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_sub_3_3"
+4: "icmp_or_sub_3_3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_sub_3_3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_sub_3_3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_sub_3_4_fail"
+4: "icmp_or_sub_3_4_fail" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_sub_4_1"
+4: "icmp_or_sub_4_1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_sub_4_1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_sub_4_1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_sub_4_1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_sub_4_2"
+4: "icmp_or_sub_4_2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_sub_4_2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_sub_4_2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_sub_4_2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_xor_with_sub_2_eq"
+4: "icmp_or_xor_with_sub_2_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_xor_with_sub_2_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_xor_with_sub_2_ne"
+4: "icmp_or_xor_with_sub_2_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_xor_with_sub_2_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_xor_with_sub_3_1"
+4: "icmp_or_xor_with_sub_3_1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_xor_with_sub_3_1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_xor_with_sub_3_1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_xor_with_sub_3_2"
+4: "icmp_or_xor_with_sub_3_2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_xor_with_sub_3_2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_xor_with_sub_3_2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_xor_with_sub_3_3"
+4: "icmp_or_xor_with_sub_3_3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_xor_with_sub_3_3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_xor_with_sub_3_3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_xor_with_sub_3_4"
+4: "icmp_or_xor_with_sub_3_4" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_xor_with_sub_3_4" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_xor_with_sub_3_4" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_xor_with_sub_3_5"
+4: "icmp_or_xor_with_sub_3_5" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_xor_with_sub_3_5" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_xor_with_sub_3_5" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "icmp_or_xor_with_sub_3_6"
+4: "icmp_or_xor_with_sub_3_6" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_xor_with_sub_3_6" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_or_xor_with_sub_3_6" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "or_disjoint_with_constants"
+4: "or_disjoint_with_constants" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "or_disjoint_with_constants2"
+4: "or_disjoint_with_constants2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "or_disjoint_with_constants2" has unsupported operation: llvm.call
+
+1: "or_disjoint_with_constants_fail_missing_const1"
+4: "or_disjoint_with_constants_fail_missing_const1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "or_disjoint_with_constants_fail_missing_const2"
+4: "or_disjoint_with_constants_fail_missing_const2" has unsupported operation: builtin.unregistered: llvm.icmp
+

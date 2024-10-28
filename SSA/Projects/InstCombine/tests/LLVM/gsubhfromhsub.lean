@@ -32,12 +32,6 @@ def t0_after := [llvm|
 theorem t0_proof : t0_before ⊑ t0_after := by
   unfold t0_before t0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t0
   all_goals (try extract_goal ; sorry)
   ---END t0
@@ -63,12 +57,6 @@ def t1_flags_after := [llvm|
 theorem t1_flags_proof : t1_flags_before ⊑ t1_flags_after := by
   unfold t1_flags_before t1_flags_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t1_flags
   all_goals (try extract_goal ; sorry)
   ---END t1_flags
@@ -94,12 +82,6 @@ def t1_flags_nuw_only_after := [llvm|
 theorem t1_flags_nuw_only_proof : t1_flags_nuw_only_before ⊑ t1_flags_nuw_only_after := by
   unfold t1_flags_nuw_only_before t1_flags_nuw_only_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t1_flags_nuw_only
   all_goals (try extract_goal ; sorry)
   ---END t1_flags_nuw_only
@@ -125,12 +107,6 @@ def t1_flags_sub_nsw_sub_after := [llvm|
 theorem t1_flags_sub_nsw_sub_proof : t1_flags_sub_nsw_sub_before ⊑ t1_flags_sub_nsw_sub_after := by
   unfold t1_flags_sub_nsw_sub_before t1_flags_sub_nsw_sub_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t1_flags_sub_nsw_sub
   all_goals (try extract_goal ; sorry)
   ---END t1_flags_sub_nsw_sub
@@ -156,12 +132,6 @@ def t1_flags_nuw_first_after := [llvm|
 theorem t1_flags_nuw_first_proof : t1_flags_nuw_first_before ⊑ t1_flags_nuw_first_after := by
   unfold t1_flags_nuw_first_before t1_flags_nuw_first_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t1_flags_nuw_first
   all_goals (try extract_goal ; sorry)
   ---END t1_flags_nuw_first
@@ -187,12 +157,6 @@ def t1_flags_nuw_second_after := [llvm|
 theorem t1_flags_nuw_second_proof : t1_flags_nuw_second_before ⊑ t1_flags_nuw_second_after := by
   unfold t1_flags_nuw_second_before t1_flags_nuw_second_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t1_flags_nuw_second
   all_goals (try extract_goal ; sorry)
   ---END t1_flags_nuw_second
@@ -218,12 +182,6 @@ def t1_flags_nuw_nsw_first_after := [llvm|
 theorem t1_flags_nuw_nsw_first_proof : t1_flags_nuw_nsw_first_before ⊑ t1_flags_nuw_nsw_first_after := by
   unfold t1_flags_nuw_nsw_first_before t1_flags_nuw_nsw_first_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t1_flags_nuw_nsw_first
   all_goals (try extract_goal ; sorry)
   ---END t1_flags_nuw_nsw_first
@@ -249,12 +207,6 @@ def t1_flags_nuw_nsw_second_after := [llvm|
 theorem t1_flags_nuw_nsw_second_proof : t1_flags_nuw_nsw_second_before ⊑ t1_flags_nuw_nsw_second_after := by
   unfold t1_flags_nuw_nsw_second_before t1_flags_nuw_nsw_second_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t1_flags_nuw_nsw_second
   all_goals (try extract_goal ; sorry)
   ---END t1_flags_nuw_nsw_second
@@ -282,12 +234,6 @@ def t3_c0_after := [llvm|
 theorem t3_c0_proof : t3_c0_before ⊑ t3_c0_after := by
   unfold t3_c0_before t3_c0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t3_c0
   all_goals (try extract_goal ; sorry)
   ---END t3_c0
@@ -315,12 +261,6 @@ def t4_c1_after := [llvm|
 theorem t4_c1_proof : t4_c1_before ⊑ t4_c1_after := by
   unfold t4_c1_before t4_c1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t4_c1
   all_goals (try extract_goal ; sorry)
   ---END t4_c1
@@ -348,12 +288,6 @@ def t5_c2_after := [llvm|
 theorem t5_c2_proof : t5_c2_before ⊑ t5_c2_after := by
   unfold t5_c2_before t5_c2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t5_c2
   all_goals (try extract_goal ; sorry)
   ---END t5_c2
@@ -381,12 +315,6 @@ def t9_c0_c2_after := [llvm|
 theorem t9_c0_c2_proof : t9_c0_c2_before ⊑ t9_c0_c2_after := by
   unfold t9_c0_c2_before t9_c0_c2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t9_c0_c2
   all_goals (try extract_goal ; sorry)
   ---END t9_c0_c2
@@ -414,12 +342,6 @@ def t10_c1_c2_after := [llvm|
 theorem t10_c1_c2_proof : t10_c1_c2_before ⊑ t10_c1_c2_after := by
   unfold t10_c1_c2_before t10_c1_c2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t10_c1_c2
   all_goals (try extract_goal ; sorry)
   ---END t10_c1_c2

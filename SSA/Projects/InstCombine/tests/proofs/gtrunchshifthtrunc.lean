@@ -35,12 +35,6 @@ def trunc_lshr_trunc_after := [llvm|
 theorem trunc_lshr_trunc_proof : trunc_lshr_trunc_before ⊑ trunc_lshr_trunc_after := by
   unfold trunc_lshr_trunc_before trunc_lshr_trunc_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN trunc_lshr_trunc
   apply trunc_lshr_trunc_thm
   ---END trunc_lshr_trunc
@@ -69,12 +63,6 @@ def trunc_ashr_trunc_after := [llvm|
 theorem trunc_ashr_trunc_proof : trunc_ashr_trunc_before ⊑ trunc_ashr_trunc_after := by
   unfold trunc_ashr_trunc_before trunc_ashr_trunc_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN trunc_ashr_trunc
   apply trunc_ashr_trunc_thm
   ---END trunc_ashr_trunc
@@ -103,12 +91,6 @@ def trunc_ashr_trunc_exact_after := [llvm|
 theorem trunc_ashr_trunc_exact_proof : trunc_ashr_trunc_exact_before ⊑ trunc_ashr_trunc_exact_after := by
   unfold trunc_ashr_trunc_exact_before trunc_ashr_trunc_exact_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN trunc_ashr_trunc_exact
   apply trunc_ashr_trunc_exact_thm
   ---END trunc_ashr_trunc_exact

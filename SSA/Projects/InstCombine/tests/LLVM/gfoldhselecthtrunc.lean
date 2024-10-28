@@ -33,12 +33,6 @@ def fold_select_trunc_nuw_true_after := [llvm|
 theorem fold_select_trunc_nuw_true_proof : fold_select_trunc_nuw_true_before ⊑ fold_select_trunc_nuw_true_after := by
   unfold fold_select_trunc_nuw_true_before fold_select_trunc_nuw_true_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN fold_select_trunc_nuw_true
   all_goals (try extract_goal ; sorry)
   ---END fold_select_trunc_nuw_true
@@ -65,12 +59,6 @@ def fold_select_trunc_nuw_false_after := [llvm|
 theorem fold_select_trunc_nuw_false_proof : fold_select_trunc_nuw_false_before ⊑ fold_select_trunc_nuw_false_after := by
   unfold fold_select_trunc_nuw_false_before fold_select_trunc_nuw_false_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN fold_select_trunc_nuw_false
   all_goals (try extract_goal ; sorry)
   ---END fold_select_trunc_nuw_false
@@ -97,12 +85,6 @@ def fold_select_trunc_nsw_true_after := [llvm|
 theorem fold_select_trunc_nsw_true_proof : fold_select_trunc_nsw_true_before ⊑ fold_select_trunc_nsw_true_after := by
   unfold fold_select_trunc_nsw_true_before fold_select_trunc_nsw_true_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN fold_select_trunc_nsw_true
   all_goals (try extract_goal ; sorry)
   ---END fold_select_trunc_nsw_true
@@ -129,12 +111,6 @@ def fold_select_trunc_nsw_false_after := [llvm|
 theorem fold_select_trunc_nsw_false_proof : fold_select_trunc_nsw_false_before ⊑ fold_select_trunc_nsw_false_after := by
   unfold fold_select_trunc_nsw_false_before fold_select_trunc_nsw_false_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN fold_select_trunc_nsw_false
   all_goals (try extract_goal ; sorry)
   ---END fold_select_trunc_nsw_false

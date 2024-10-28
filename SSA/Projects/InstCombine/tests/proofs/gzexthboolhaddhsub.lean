@@ -40,12 +40,6 @@ def a_after := [llvm|
 theorem a_proof : a_before ⊑ a_after := by
   unfold a_before a_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN a
   apply a_thm
   ---END a
@@ -80,12 +74,6 @@ def PR30273_three_bools_after := [llvm|
 theorem PR30273_three_bools_proof : PR30273_three_bools_before ⊑ PR30273_three_bools_after := by
   unfold PR30273_three_bools_before PR30273_three_bools_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN PR30273_three_bools
   apply PR30273_three_bools_thm
   ---END PR30273_three_bools
@@ -113,12 +101,6 @@ def zext_add_scalar_after := [llvm|
 theorem zext_add_scalar_proof : zext_add_scalar_before ⊑ zext_add_scalar_after := by
   unfold zext_add_scalar_before zext_add_scalar_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN zext_add_scalar
   apply zext_add_scalar_thm
   ---END zext_add_scalar
@@ -144,12 +126,6 @@ def zext_negate_after := [llvm|
 theorem zext_negate_proof : zext_negate_before ⊑ zext_negate_after := by
   unfold zext_negate_before zext_negate_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN zext_negate
   apply zext_negate_thm
   ---END zext_negate
@@ -177,12 +153,6 @@ def zext_sub_const_after := [llvm|
 theorem zext_sub_const_proof : zext_sub_const_before ⊑ zext_sub_const_after := by
   unfold zext_sub_const_before zext_sub_const_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN zext_sub_const
   apply zext_sub_const_thm
   ---END zext_sub_const
@@ -208,12 +178,6 @@ def sext_negate_after := [llvm|
 theorem sext_negate_proof : sext_negate_before ⊑ sext_negate_after := by
   unfold sext_negate_before sext_negate_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sext_negate
   apply sext_negate_thm
   ---END sext_negate
@@ -241,12 +205,6 @@ def sext_sub_const_after := [llvm|
 theorem sext_sub_const_proof : sext_sub_const_before ⊑ sext_sub_const_after := by
   unfold sext_sub_const_before sext_sub_const_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sext_sub_const
   apply sext_sub_const_thm
   ---END sext_sub_const
@@ -272,12 +230,6 @@ def sext_sub_after := [llvm|
 theorem sext_sub_proof : sext_sub_before ⊑ sext_sub_after := by
   unfold sext_sub_before sext_sub_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sext_sub
   apply sext_sub_thm
   ---END sext_sub
@@ -303,12 +255,6 @@ def sext_sub_nuw_after := [llvm|
 theorem sext_sub_nuw_proof : sext_sub_nuw_before ⊑ sext_sub_nuw_after := by
   unfold sext_sub_nuw_before sext_sub_nuw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sext_sub_nuw
   apply sext_sub_nuw_thm
   ---END sext_sub_nuw
@@ -334,12 +280,6 @@ def sextbool_add_after := [llvm|
 theorem sextbool_add_proof : sextbool_add_before ⊑ sextbool_add_after := by
   unfold sextbool_add_before sextbool_add_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sextbool_add
   apply sextbool_add_thm
   ---END sextbool_add
@@ -369,12 +309,6 @@ def sextbool_add_commute_after := [llvm|
 theorem sextbool_add_commute_proof : sextbool_add_commute_before ⊑ sextbool_add_commute_after := by
   unfold sextbool_add_commute_before sextbool_add_commute_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sextbool_add_commute
   apply sextbool_add_commute_thm
   ---END sextbool_add_commute

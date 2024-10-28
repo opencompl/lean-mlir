@@ -2,130 +2,291 @@
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
+open LLVM
 
 section gtrunc_proof
-theorem test5_thm (x : BitVec 32) : setWidth 32 (setWidth 128 x >>> 16) = x >>> 16 := sorry
+theorem test5_thm : ∀ (e : IntW 32), trunc 32 (lshr (zext 128 e) (const? 16)) ⊑ lshr e (const? 16) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem test6_thm (x : BitVec 64) : setWidth 32 (setWidth 128 x >>> 32) = setWidth 32 (x >>> 32) := sorry
 
-theorem ashr_mul_sign_bits_thm (x x_1 : BitVec 8) :
-  some (setWidth 16 ((signExtend 32 x_1 * signExtend 32 x).sshiftRight 3)) ⊑
-    (if
-            signExtend 32 (signExtend 16 x_1) * signExtend 32 (signExtend 16 x) < signExtend 32 (twoPow 16 15) ∨
-              twoPow 32 15 ≤ signExtend 32 (signExtend 16 x_1) * signExtend 32 (signExtend 16 x) then
-          none
-        else some (signExtend 16 x_1 * signExtend 16 x)).bind
-      fun x' => some (x'.sshiftRight 3) := sorry
+theorem test6_thm : ∀ (e : IntW 64), trunc 32 (lshr (zext 128 e) (const? 32)) ⊑ trunc 32 (lshr e (const? 32)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem ashr_mul_thm (x x_1 : BitVec 8) :
-  some (setWidth 16 ((signExtend 20 x_1 * signExtend 20 x).sshiftRight 8)) ⊑
-    (if
-            signExtend 32 (signExtend 16 x_1) * signExtend 32 (signExtend 16 x) < signExtend 32 (twoPow 16 15) ∨
-              twoPow 32 15 ≤ signExtend 32 (signExtend 16 x_1) * signExtend 32 (signExtend 16 x) then
-          none
-        else some (signExtend 16 x_1 * signExtend 16 x)).bind
-      fun x' => some (x'.sshiftRight 8) := sorry
 
-theorem trunc_ashr_thm (x : BitVec 32) :
-  setWidth 32 ((setWidth 36 x ||| 66571993088#36).sshiftRight 8) = x >>> 8 ||| 4286578688#32 := sorry
+theorem ashr_mul_sign_bits_thm :
+  ∀ (e e_1 : IntW 8),
+    trunc 16 (ashr (mul (sext 32 e_1) (sext 32 e)) (const? 3)) ⊑
+      ashr (mul (sext 16 e_1) (sext 16 e) { «nsw» := true, «nuw» := false }) (const? 3) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem test7_thm (x : BitVec 64) : setWidth 92 (setWidth 128 x >>> 32) = setWidth 92 (x >>> 32) := sorry
 
-theorem test8_thm (x x_1 : BitVec 32) :
-  some (setWidth 64 (setWidth 128 x_1 <<< 32) ||| setWidth 64 x) ⊑
-    (if setWidth 64 x_1 <<< 32 >>> 32 = setWidth 64 x_1 then none else some (setWidth 64 x_1 <<< 32)).bind fun a =>
-      some (a ||| setWidth 64 x) := sorry
+theorem ashr_mul_thm :
+  ∀ (e e_1 : IntW 8),
+    trunc 16 (ashr (mul (sext 20 e_1) (sext 20 e)) (const? 8)) ⊑
+      ashr (mul (sext 16 e_1) (sext 16 e) { «nsw» := true, «nuw» := false }) (const? 8) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem test11_thm (x x_1 : BitVec 32) :
-  (Option.bind
-      (if 128#128 ≤ setWidth 128 x &&& 31#128 then none
-      else some (setWidth 128 x_1 <<< (x.toNat % 340282366920938463463374607431768211456 &&& 31)))
-      fun x' => some (setWidth 64 x')) ⊑
-    if
-        (setWidth 64 x_1 <<< ((x.toNat &&& 31) % 18446744073709551616)).sshiftRight
-            ((x.toNat &&& 31) % 18446744073709551616) =
-          setWidth 64 x_1 then
-      none
-    else
-      if
-          setWidth 64 x_1 <<< ((x.toNat &&& 31) % 18446744073709551616) >>> ((x.toNat &&& 31) % 18446744073709551616) =
-            setWidth 64 x_1 then
-        none
-      else
-        if 64#64 ≤ setWidth 64 x &&& 31#64 then none
-        else some (setWidth 64 x_1 <<< ((x.toNat &&& 31) % 18446744073709551616)) := sorry
 
-theorem test12_thm (x x_1 : BitVec 32) :
-  (Option.bind
-      (if 128#128 ≤ setWidth 128 x &&& 31#128 then none
-      else some (setWidth 128 x_1 >>> (x.toNat % 340282366920938463463374607431768211456 &&& 31)))
-      fun x' => some (setWidth 64 x')) ⊑
-    if 64#64 ≤ setWidth 64 x &&& 31#64 then none
-    else some (setWidth 64 x_1 >>> ((x.toNat &&& 31) % 18446744073709551616)) := sorry
+theorem trunc_ashr_thm :
+  ∀ (e : IntW 32),
+    trunc 32 (ashr (LLVM.or (zext 36 e) (const? (-2147483648))) (const? 8)) ⊑
+      LLVM.or (lshr e (const? 8)) (const? (-8388608)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem test13_thm (x x_1 : BitVec 32) :
-  (Option.bind
-      (if 128#128 ≤ setWidth 128 x &&& 31#128 then none
-      else some ((signExtend 128 x_1).sshiftRight (x.toNat % 340282366920938463463374607431768211456 &&& 31)))
-      fun x' => some (setWidth 64 x')) ⊑
-    if 64#64 ≤ setWidth 64 x &&& 31#64 then none
-    else some ((signExtend 64 x_1).sshiftRight ((x.toNat &&& 31) % 18446744073709551616)) := sorry
 
-theorem trunc_shl_31_i32_i64_thm (x : BitVec 64) : setWidth 32 (x <<< 31) = setWidth 32 x <<< 31 := sorry
+theorem test7_thm : ∀ (e : IntW 64), trunc 92 (lshr (zext 128 e) (const? 32)) ⊑ zext 92 (lshr e (const? 32)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem trunc_shl_nsw_31_i32_i64_thm (x : BitVec 64) :
-  ((if (x <<< 31).sshiftRight 31 = x then none else some (x <<< 31)).bind fun x' => some (setWidth 32 x')) ⊑
-    some (setWidth 32 x <<< 31) := sorry
 
-theorem trunc_shl_nuw_31_i32_i64_thm (x : BitVec 64) :
-  ((if x <<< 31 >>> 31 = x then none else some (x <<< 31)).bind fun x' => some (setWidth 32 x')) ⊑
-    some (setWidth 32 x <<< 31) := sorry
+theorem test8_thm :
+  ∀ (e e_1 : IntW 32),
+    trunc 64 (LLVM.or (shl (zext 128 e_1) (const? 32)) (zext 128 e)) ⊑
+      LLVM.or (shl (zext 64 e_1) (const? 32) { «nsw» := false, «nuw» := true }) (zext 64 e) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem trunc_shl_nsw_nuw_31_i32_i64_thm (x : BitVec 64) :
-  ((if (x <<< 31).sshiftRight 31 = x then none else if x <<< 31 >>> 31 = x then none else some (x <<< 31)).bind
-      fun x' => some (setWidth 32 x')) ⊑
-    some (setWidth 32 x <<< 31) := sorry
 
-theorem trunc_shl_15_i16_i64_thm (x : BitVec 64) : setWidth 16 (x <<< 15) = setWidth 16 x <<< 15 := sorry
+theorem test9_thm : ∀ (e : IntW 32), trunc 8 (LLVM.and e (const? 42)) ⊑ LLVM.and (trunc 8 e) (const? 42) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem trunc_shl_15_i16_i32_thm (x : BitVec 32) : setWidth 16 (x <<< 15) = setWidth 16 x <<< 15 := sorry
 
-theorem trunc_shl_7_i8_i64_thm (x : BitVec 64) : setWidth 8 (x <<< 7) = setWidth 8 x <<< 7 := sorry
+theorem test11_thm :
+  ∀ (e e_1 : IntW 32),
+    trunc 64 (shl (zext 128 e_1) (LLVM.and (zext 128 e) (const? 31))) ⊑
+      shl (zext 64 e_1) (zext 64 (LLVM.and e (const? 31))) { «nsw» := true, «nuw» := true } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem trunc_shl_1_i32_i64_thm (x : BitVec 64) : setWidth 32 (x <<< 1) = setWidth 32 x <<< 1 := sorry
 
-theorem trunc_shl_16_i32_i64_thm (x : BitVec 64) : setWidth 32 (x <<< 16) = setWidth 32 x <<< 16 := sorry
+theorem test12_thm :
+  ∀ (e e_1 : IntW 32),
+    trunc 64 (lshr (zext 128 e_1) (LLVM.and (zext 128 e) (const? 31))) ⊑
+      lshr (zext 64 e_1) (zext 64 (LLVM.and e (const? 31))) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem trunc_shl_33_i32_i64_thm (x : BitVec 64) : setWidth 32 (x <<< 33) = 0#32 := sorry
 
-theorem trunc_shl_32_i32_i64_thm (x : BitVec 64) : setWidth 32 (x <<< 32) = 0#32 := sorry
+theorem test13_thm :
+  ∀ (e e_1 : IntW 32),
+    trunc 64 (ashr (sext 128 e_1) (LLVM.and (zext 128 e) (const? 31))) ⊑
+      ashr (sext 64 e_1) (zext 64 (LLVM.and e (const? 31))) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem trunc_shl_lshr_infloop_thm (x : BitVec 64) : setWidth 32 (x >>> 1 <<< 2) = setWidth 32 x <<< 1 &&& 4294967292#32 := sorry
 
-theorem trunc_shl_ashr_infloop_thm (x : BitVec 64) :
-  setWidth 32 (x.sshiftRight 3 <<< 2) = setWidth 32 (x >>> 1) &&& 4294967292#32 := sorry
+theorem trunc_shl_31_i32_i64_thm : ∀ (e : IntW 64), trunc 32 (shl e (const? 31)) ⊑ shl (trunc 32 e) (const? 31) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem trunc_shl_shl_infloop_thm (x : BitVec 64) : setWidth 32 (x <<< 3) = setWidth 32 x <<< 3 := sorry
 
-theorem trunc_shl_lshr_var_thm (x x_1 : BitVec 64) :
-  (Option.bind (if 64#64 ≤ x then none else some (x_1 >>> x.toNat)) fun x => some (setWidth 32 (x <<< 2))) ⊑
-    Option.bind (if 64#64 ≤ x then none else some (x_1 >>> x.toNat)) fun x => some (setWidth 32 x <<< 2) := sorry
+theorem trunc_shl_nsw_31_i32_i64_thm :
+  ∀ (e : IntW 64),
+    trunc 32 (shl e (const? 31) { «nsw» := true, «nuw» := false }) ⊑ shl (trunc 32 e) (const? 31) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem trunc_shl_ashr_var_thm (x x_1 : BitVec 64) :
-  (Option.bind (if 64#64 ≤ x then none else some (x_1.sshiftRight x.toNat)) fun x => some (setWidth 32 (x <<< 2))) ⊑
-    Option.bind (if 64#64 ≤ x then none else some (x_1.sshiftRight x.toNat)) fun x =>
-      some (setWidth 32 x <<< 2) := sorry
 
-theorem trunc_shl_shl_var_thm (x x_1 : BitVec 64) :
-  (Option.bind (if 64#64 ≤ x then none else some (x_1 <<< x.toNat)) fun x => some (setWidth 32 (x <<< 2))) ⊑
-    Option.bind (if 64#64 ≤ x then none else some (x_1 <<< x.toNat)) fun x => some (setWidth 32 x <<< 2) := sorry
+theorem trunc_shl_nuw_31_i32_i64_thm :
+  ∀ (e : IntW 64),
+    trunc 32 (shl e (const? 31) { «nsw» := false, «nuw» := true }) ⊑ shl (trunc 32 e) (const? 31) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem drop_nsw_trunc_thm (x x_1 : BitVec 16) :
-  setWidth 8 x_1 &&& 255#8 &&& setWidth 8 x = setWidth 8 x_1 &&& setWidth 8 x := sorry
 
-theorem drop_nuw_trunc_thm (x x_1 : BitVec 16) :
-  setWidth 8 x_1 &&& 255#8 &&& setWidth 8 x = setWidth 8 x_1 &&& setWidth 8 x := sorry
+theorem trunc_shl_nsw_nuw_31_i32_i64_thm :
+  ∀ (e : IntW 64), trunc 32 (shl e (const? 31) { «nsw» := true, «nuw» := true }) ⊑ shl (trunc 32 e) (const? 31) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem drop_both_trunc_thm (x x_1 : BitVec 16) :
-  setWidth 8 x_1 &&& 255#8 &&& setWidth 8 x = setWidth 8 x_1 &&& setWidth 8 x := sorry
+
+theorem trunc_shl_15_i16_i64_thm : ∀ (e : IntW 64), trunc 16 (shl e (const? 15)) ⊑ shl (trunc 16 e) (const? 15) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem trunc_shl_15_i16_i32_thm : ∀ (e : IntW 32), trunc 16 (shl e (const? 15)) ⊑ shl (trunc 16 e) (const? 15) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem trunc_shl_7_i8_i64_thm : ∀ (e : IntW 64), trunc 8 (shl e (const? 7)) ⊑ shl (trunc 8 e) (const? 7) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem trunc_shl_1_i32_i64_thm : ∀ (e : IntW 64), trunc 32 (shl e (const? 1)) ⊑ shl (trunc 32 e) (const? 1) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem trunc_shl_16_i32_i64_thm : ∀ (e : IntW 64), trunc 32 (shl e (const? 16)) ⊑ shl (trunc 32 e) (const? 16) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem trunc_shl_33_i32_i64_thm : ∀ (e : IntW 64), trunc 32 (shl e (const? 33)) ⊑ const? 0 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem trunc_shl_32_i32_i64_thm : ∀ (e : IntW 64), trunc 32 (shl e (const? 32)) ⊑ const? 0 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem trunc_shl_lshr_infloop_thm :
+  ∀ (e : IntW 64),
+    trunc 32 (shl (lshr e (const? 1)) (const? 2)) ⊑ LLVM.and (shl (trunc 32 e) (const? 1)) (const? (-4)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem trunc_shl_ashr_infloop_thm :
+  ∀ (e : IntW 64),
+    trunc 32 (shl (ashr e (const? 3)) (const? 2)) ⊑ LLVM.and (trunc 32 (lshr e (const? 1))) (const? (-4)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem trunc_shl_shl_infloop_thm :
+  ∀ (e : IntW 64), trunc 32 (shl (shl e (const? 1)) (const? 2)) ⊑ shl (trunc 32 e) (const? 3) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem trunc_shl_lshr_var_thm :
+  ∀ (e e_1 : IntW 64), trunc 32 (shl (lshr e_1 e) (const? 2)) ⊑ shl (trunc 32 (lshr e_1 e)) (const? 2) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem trunc_shl_ashr_var_thm :
+  ∀ (e e_1 : IntW 64), trunc 32 (shl (ashr e_1 e) (const? 2)) ⊑ shl (trunc 32 (ashr e_1 e)) (const? 2) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem trunc_shl_shl_var_thm :
+  ∀ (e e_1 : IntW 64), trunc 32 (shl (shl e_1 e) (const? 2)) ⊑ shl (trunc 32 (shl e_1 e)) (const? 2) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem drop_nsw_trunc_thm :
+  ∀ (e e_1 : IntW 16), trunc 8 (LLVM.and (LLVM.and e_1 (const? 255)) e) ⊑ trunc 8 (LLVM.and e_1 e) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem drop_nuw_trunc_thm :
+  ∀ (e e_1 : IntW 16), trunc 8 (LLVM.and (LLVM.and e_1 (const? 255)) e) ⊑ trunc 8 (LLVM.and e_1 e) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem drop_both_trunc_thm :
+  ∀ (e e_1 : IntW 16), trunc 8 (LLVM.and (LLVM.and e_1 (const? 255)) e) ⊑ trunc 8 (LLVM.and e_1 e) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
 

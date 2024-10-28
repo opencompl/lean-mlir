@@ -31,12 +31,6 @@ def test_sext_zext_after := [llvm|
 theorem test_sext_zext_proof : test_sext_zext_before ⊑ test_sext_zext_after := by
   unfold test_sext_zext_before test_sext_zext_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test_sext_zext
   apply test_sext_zext_thm
   ---END test_sext_zext
@@ -65,12 +59,6 @@ def test_cast_select_after := [llvm|
 theorem test_cast_select_proof : test_cast_select_before ⊑ test_cast_select_after := by
   unfold test_cast_select_before test_cast_select_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test_cast_select
   apply test_cast_select_thm
   ---END test_cast_select

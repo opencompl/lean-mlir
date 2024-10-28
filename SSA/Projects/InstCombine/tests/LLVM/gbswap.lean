@@ -40,12 +40,6 @@ def PR39793_bswap_u64_as_u16_trunc_after := [llvm|
 theorem PR39793_bswap_u64_as_u16_trunc_proof : PR39793_bswap_u64_as_u16_trunc_before ⊑ PR39793_bswap_u64_as_u16_trunc_after := by
   unfold PR39793_bswap_u64_as_u16_trunc_before PR39793_bswap_u64_as_u16_trunc_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN PR39793_bswap_u64_as_u16_trunc
   all_goals (try extract_goal ; sorry)
   ---END PR39793_bswap_u64_as_u16_trunc
@@ -79,12 +73,6 @@ def PR39793_bswap_u32_as_u16_trunc_after := [llvm|
 theorem PR39793_bswap_u32_as_u16_trunc_proof : PR39793_bswap_u32_as_u16_trunc_before ⊑ PR39793_bswap_u32_as_u16_trunc_after := by
   unfold PR39793_bswap_u32_as_u16_trunc_before PR39793_bswap_u32_as_u16_trunc_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN PR39793_bswap_u32_as_u16_trunc
   all_goals (try extract_goal ; sorry)
   ---END PR39793_bswap_u32_as_u16_trunc

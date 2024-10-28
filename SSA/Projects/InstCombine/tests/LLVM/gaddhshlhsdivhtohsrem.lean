@@ -35,12 +35,6 @@ def addhshlhsdivhscalar0_after := [llvm|
 theorem addhshlhsdivhscalar0_proof : addhshlhsdivhscalar0_before ⊑ addhshlhsdivhscalar0_after := by
   unfold addhshlhsdivhscalar0_before addhshlhsdivhscalar0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN addhshlhsdivhscalar0
   all_goals (try extract_goal ; sorry)
   ---END addhshlhsdivhscalar0
@@ -69,12 +63,6 @@ def addhshlhsdivhscalar1_after := [llvm|
 theorem addhshlhsdivhscalar1_proof : addhshlhsdivhscalar1_before ⊑ addhshlhsdivhscalar1_after := by
   unfold addhshlhsdivhscalar1_before addhshlhsdivhscalar1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN addhshlhsdivhscalar1
   all_goals (try extract_goal ; sorry)
   ---END addhshlhsdivhscalar1
@@ -103,12 +91,6 @@ def addhshlhsdivhscalar2_after := [llvm|
 theorem addhshlhsdivhscalar2_proof : addhshlhsdivhscalar2_before ⊑ addhshlhsdivhscalar2_after := by
   unfold addhshlhsdivhscalar2_before addhshlhsdivhscalar2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN addhshlhsdivhscalar2
   all_goals (try extract_goal ; sorry)
   ---END addhshlhsdivhscalar2
@@ -140,12 +122,6 @@ def addhshlhsdivhnegative0_after := [llvm|
 theorem addhshlhsdivhnegative0_proof : addhshlhsdivhnegative0_before ⊑ addhshlhsdivhnegative0_after := by
   unfold addhshlhsdivhnegative0_before addhshlhsdivhnegative0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN addhshlhsdivhnegative0
   all_goals (try extract_goal ; sorry)
   ---END addhshlhsdivhnegative0
@@ -174,12 +150,6 @@ def addhshlhsdivhnegative1_after := [llvm|
 theorem addhshlhsdivhnegative1_proof : addhshlhsdivhnegative1_before ⊑ addhshlhsdivhnegative1_after := by
   unfold addhshlhsdivhnegative1_before addhshlhsdivhnegative1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN addhshlhsdivhnegative1
   all_goals (try extract_goal ; sorry)
   ---END addhshlhsdivhnegative1

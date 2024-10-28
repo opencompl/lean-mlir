@@ -2,13 +2,16 @@
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
+open LLVM
 
 section gaddhshift_proof
-theorem flip_add_of_shift_neg_thm (x x_1 x_2 : BitVec 8) :
-  ((if ((-x_2) <<< x_1.toNat).sshiftRight x_1.toNat = -x_2 then none
-        else
-          if (-x_2) <<< x_1.toNat >>> x_1.toNat = -x_2 then none
-          else if 8#8 ≤ x_1 then none else some ((-x_2) <<< x_1.toNat)).bind
-      fun a => some (a + x)) ⊑
-    Option.bind (if 8#8 ≤ x_1 then none else some (x_2 <<< x_1.toNat)) fun y' => some (x - y') := sorry
+theorem flip_add_of_shift_neg_thm :
+  ∀ (e e_1 e_2 : IntW 8),
+    add (shl (sub (const? 0) e_2) e_1 { «nsw» := true, «nuw» := true }) e ⊑ sub e (shl e_2 e_1) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
 

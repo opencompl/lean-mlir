@@ -36,12 +36,6 @@ def scalar_after := [llvm|
 theorem scalar_proof : scalar_before ⊑ scalar_after := by
   unfold scalar_before scalar_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN scalar
   apply scalar_thm
   ---END scalar
@@ -69,12 +63,6 @@ def in_constant_varx_mone_invmask_after := [llvm|
 theorem in_constant_varx_mone_invmask_proof : in_constant_varx_mone_invmask_before ⊑ in_constant_varx_mone_invmask_after := by
   unfold in_constant_varx_mone_invmask_before in_constant_varx_mone_invmask_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN in_constant_varx_mone_invmask
   apply in_constant_varx_mone_invmask_thm
   ---END in_constant_varx_mone_invmask
@@ -106,12 +94,6 @@ def in_constant_varx_6_invmask_after := [llvm|
 theorem in_constant_varx_6_invmask_proof : in_constant_varx_6_invmask_before ⊑ in_constant_varx_6_invmask_after := by
   unfold in_constant_varx_6_invmask_before in_constant_varx_6_invmask_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN in_constant_varx_6_invmask
   apply in_constant_varx_6_invmask_thm
   ---END in_constant_varx_6_invmask
@@ -141,12 +123,6 @@ def in_constant_mone_vary_invmask_after := [llvm|
 theorem in_constant_mone_vary_invmask_proof : in_constant_mone_vary_invmask_before ⊑ in_constant_mone_vary_invmask_after := by
   unfold in_constant_mone_vary_invmask_before in_constant_mone_vary_invmask_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN in_constant_mone_vary_invmask
   apply in_constant_mone_vary_invmask_thm
   ---END in_constant_mone_vary_invmask
@@ -178,12 +154,6 @@ def in_constant_6_vary_invmask_after := [llvm|
 theorem in_constant_6_vary_invmask_proof : in_constant_6_vary_invmask_before ⊑ in_constant_6_vary_invmask_after := by
   unfold in_constant_6_vary_invmask_before in_constant_6_vary_invmask_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN in_constant_6_vary_invmask
   apply in_constant_6_vary_invmask_thm
   ---END in_constant_6_vary_invmask
@@ -213,12 +183,6 @@ def c_1_0_0_after := [llvm|
 theorem c_1_0_0_proof : c_1_0_0_before ⊑ c_1_0_0_after := by
   unfold c_1_0_0_before c_1_0_0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN c_1_0_0
   apply c_1_0_0_thm
   ---END c_1_0_0
@@ -248,12 +212,6 @@ def c_0_1_0_after := [llvm|
 theorem c_0_1_0_proof : c_0_1_0_before ⊑ c_0_1_0_after := by
   unfold c_0_1_0_before c_0_1_0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN c_0_1_0
   apply c_0_1_0_thm
   ---END c_0_1_0
@@ -283,12 +241,6 @@ def c_1_1_0_after := [llvm|
 theorem c_1_1_0_proof : c_1_1_0_before ⊑ c_1_1_0_after := by
   unfold c_1_1_0_before c_1_1_0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN c_1_1_0
   apply c_1_1_0_thm
   ---END c_1_1_0
@@ -320,12 +272,6 @@ def commutativity_constant_varx_6_invmask_after := [llvm|
 theorem commutativity_constant_varx_6_invmask_proof : commutativity_constant_varx_6_invmask_before ⊑ commutativity_constant_varx_6_invmask_after := by
   unfold commutativity_constant_varx_6_invmask_before commutativity_constant_varx_6_invmask_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN commutativity_constant_varx_6_invmask
   apply commutativity_constant_varx_6_invmask_thm
   ---END commutativity_constant_varx_6_invmask
@@ -357,12 +303,6 @@ def commutativity_constant_6_vary_invmask_after := [llvm|
 theorem commutativity_constant_6_vary_invmask_proof : commutativity_constant_6_vary_invmask_before ⊑ commutativity_constant_6_vary_invmask_after := by
   unfold commutativity_constant_6_vary_invmask_before commutativity_constant_6_vary_invmask_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN commutativity_constant_6_vary_invmask
   apply commutativity_constant_6_vary_invmask_thm
   ---END commutativity_constant_6_vary_invmask

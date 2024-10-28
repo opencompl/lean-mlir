@@ -36,12 +36,6 @@ def test1_after := [llvm|
 theorem test1_proof : test1_before ⊑ test1_after := by
   unfold test1_before test1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test1
   all_goals (try extract_goal ; sorry)
   ---END test1
@@ -70,12 +64,6 @@ def test2_after := [llvm|
 theorem test2_proof : test2_before ⊑ test2_after := by
   unfold test2_before test2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test2
   all_goals (try extract_goal ; sorry)
   ---END test2
@@ -107,12 +95,6 @@ def test3_after := [llvm|
 theorem test3_proof : test3_before ⊑ test3_after := by
   unfold test3_before test3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test3
   all_goals (try extract_goal ; sorry)
   ---END test3
@@ -137,12 +119,6 @@ def test4_after := [llvm|
 theorem test4_proof : test4_before ⊑ test4_after := by
   unfold test4_before test4_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test4
   all_goals (try extract_goal ; sorry)
   ---END test4
@@ -171,12 +147,6 @@ def test9_after := [llvm|
 theorem test9_proof : test9_before ⊑ test9_after := by
   unfold test9_before test9_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test9
   all_goals (try extract_goal ; sorry)
   ---END test9
@@ -212,12 +182,6 @@ def test10_after := [llvm|
 theorem test10_proof : test10_before ⊑ test10_after := by
   unfold test10_before test10_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test10
   all_goals (try extract_goal ; sorry)
   ---END test10
@@ -249,12 +213,6 @@ def test11_after := [llvm|
 theorem test11_proof : test11_before ⊑ test11_after := by
   unfold test11_before test11_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test11
   all_goals (try extract_goal ; sorry)
   ---END test11
@@ -286,12 +244,6 @@ def test12_after := [llvm|
 theorem test12_proof : test12_before ⊑ test12_after := by
   unfold test12_before test12_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test12
   all_goals (try extract_goal ; sorry)
   ---END test12
@@ -323,12 +275,6 @@ def test13_after := [llvm|
 theorem test13_proof : test13_before ⊑ test13_after := by
   unfold test13_before test13_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test13
   all_goals (try extract_goal ; sorry)
   ---END test13
@@ -360,12 +306,6 @@ def test14_after := [llvm|
 theorem test14_proof : test14_before ⊑ test14_after := by
   unfold test14_before test14_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test14
   all_goals (try extract_goal ; sorry)
   ---END test14
@@ -396,12 +336,6 @@ def test15_after := [llvm|
 theorem test15_proof : test15_before ⊑ test15_after := by
   unfold test15_before test15_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test15
   all_goals (try extract_goal ; sorry)
   ---END test15
@@ -432,12 +366,6 @@ def test16_after := [llvm|
 theorem test16_proof : test16_before ⊑ test16_after := by
   unfold test16_before test16_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test16
   all_goals (try extract_goal ; sorry)
   ---END test16
@@ -467,12 +395,6 @@ def test17_after := [llvm|
 theorem test17_proof : test17_before ⊑ test17_after := by
   unfold test17_before test17_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test17
   all_goals (try extract_goal ; sorry)
   ---END test17
@@ -503,12 +425,6 @@ def test18_after := [llvm|
 theorem test18_proof : test18_before ⊑ test18_after := by
   unfold test18_before test18_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test18
   all_goals (try extract_goal ; sorry)
   ---END test18
@@ -534,12 +450,6 @@ def add_nsw_mul_nsw_after := [llvm|
 theorem add_nsw_mul_nsw_proof : add_nsw_mul_nsw_before ⊑ add_nsw_mul_nsw_after := by
   unfold add_nsw_mul_nsw_before add_nsw_mul_nsw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_nsw_mul_nsw
   all_goals (try extract_goal ; sorry)
   ---END add_nsw_mul_nsw
@@ -566,12 +476,6 @@ def mul_add_to_mul_1_after := [llvm|
 theorem mul_add_to_mul_1_proof : mul_add_to_mul_1_before ⊑ mul_add_to_mul_1_after := by
   unfold mul_add_to_mul_1_before mul_add_to_mul_1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN mul_add_to_mul_1
   all_goals (try extract_goal ; sorry)
   ---END mul_add_to_mul_1
@@ -598,12 +502,6 @@ def mul_add_to_mul_2_after := [llvm|
 theorem mul_add_to_mul_2_proof : mul_add_to_mul_2_before ⊑ mul_add_to_mul_2_after := by
   unfold mul_add_to_mul_2_before mul_add_to_mul_2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN mul_add_to_mul_2
   all_goals (try extract_goal ; sorry)
   ---END mul_add_to_mul_2
@@ -632,12 +530,6 @@ def mul_add_to_mul_3_after := [llvm|
 theorem mul_add_to_mul_3_proof : mul_add_to_mul_3_before ⊑ mul_add_to_mul_3_after := by
   unfold mul_add_to_mul_3_before mul_add_to_mul_3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN mul_add_to_mul_3
   all_goals (try extract_goal ; sorry)
   ---END mul_add_to_mul_3
@@ -666,12 +558,6 @@ def mul_add_to_mul_4_after := [llvm|
 theorem mul_add_to_mul_4_proof : mul_add_to_mul_4_before ⊑ mul_add_to_mul_4_after := by
   unfold mul_add_to_mul_4_before mul_add_to_mul_4_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN mul_add_to_mul_4
   all_goals (try extract_goal ; sorry)
   ---END mul_add_to_mul_4
@@ -700,12 +586,6 @@ def mul_add_to_mul_5_after := [llvm|
 theorem mul_add_to_mul_5_proof : mul_add_to_mul_5_before ⊑ mul_add_to_mul_5_after := by
   unfold mul_add_to_mul_5_before mul_add_to_mul_5_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN mul_add_to_mul_5
   all_goals (try extract_goal ; sorry)
   ---END mul_add_to_mul_5
@@ -734,12 +614,6 @@ def mul_add_to_mul_6_after := [llvm|
 theorem mul_add_to_mul_6_proof : mul_add_to_mul_6_before ⊑ mul_add_to_mul_6_after := by
   unfold mul_add_to_mul_6_before mul_add_to_mul_6_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN mul_add_to_mul_6
   all_goals (try extract_goal ; sorry)
   ---END mul_add_to_mul_6
@@ -766,12 +640,6 @@ def mul_add_to_mul_7_after := [llvm|
 theorem mul_add_to_mul_7_proof : mul_add_to_mul_7_before ⊑ mul_add_to_mul_7_after := by
   unfold mul_add_to_mul_7_before mul_add_to_mul_7_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN mul_add_to_mul_7
   all_goals (try extract_goal ; sorry)
   ---END mul_add_to_mul_7
@@ -800,12 +668,6 @@ def mul_add_to_mul_8_after := [llvm|
 theorem mul_add_to_mul_8_proof : mul_add_to_mul_8_before ⊑ mul_add_to_mul_8_after := by
   unfold mul_add_to_mul_8_before mul_add_to_mul_8_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN mul_add_to_mul_8
   all_goals (try extract_goal ; sorry)
   ---END mul_add_to_mul_8
@@ -833,12 +695,6 @@ def mul_add_to_mul_9_after := [llvm|
 theorem mul_add_to_mul_9_proof : mul_add_to_mul_9_before ⊑ mul_add_to_mul_9_after := by
   unfold mul_add_to_mul_9_before mul_add_to_mul_9_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN mul_add_to_mul_9
   all_goals (try extract_goal ; sorry)
   ---END mul_add_to_mul_9
@@ -864,12 +720,6 @@ def add_or_and_after := [llvm|
 theorem add_or_and_proof : add_or_and_before ⊑ add_or_and_after := by
   unfold add_or_and_before add_or_and_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_or_and
   all_goals (try extract_goal ; sorry)
   ---END add_or_and
@@ -895,12 +745,6 @@ def add_or_and_commutative_after := [llvm|
 theorem add_or_and_commutative_proof : add_or_and_commutative_before ⊑ add_or_and_commutative_after := by
   unfold add_or_and_commutative_before add_or_and_commutative_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_or_and_commutative
   all_goals (try extract_goal ; sorry)
   ---END add_or_and_commutative
@@ -926,12 +770,6 @@ def add_and_or_after := [llvm|
 theorem add_and_or_proof : add_and_or_before ⊑ add_and_or_after := by
   unfold add_and_or_before add_and_or_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_and_or
   all_goals (try extract_goal ; sorry)
   ---END add_and_or
@@ -957,12 +795,6 @@ def add_and_or_commutative_after := [llvm|
 theorem add_and_or_commutative_proof : add_and_or_commutative_before ⊑ add_and_or_commutative_after := by
   unfold add_and_or_commutative_before add_and_or_commutative_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_and_or_commutative
   all_goals (try extract_goal ; sorry)
   ---END add_and_or_commutative
@@ -988,12 +820,6 @@ def add_nsw_or_and_after := [llvm|
 theorem add_nsw_or_and_proof : add_nsw_or_and_before ⊑ add_nsw_or_and_after := by
   unfold add_nsw_or_and_before add_nsw_or_and_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_nsw_or_and
   all_goals (try extract_goal ; sorry)
   ---END add_nsw_or_and
@@ -1019,12 +845,6 @@ def add_nuw_or_and_after := [llvm|
 theorem add_nuw_or_and_proof : add_nuw_or_and_before ⊑ add_nuw_or_and_after := by
   unfold add_nuw_or_and_before add_nuw_or_and_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_nuw_or_and
   all_goals (try extract_goal ; sorry)
   ---END add_nuw_or_and
@@ -1050,12 +870,6 @@ def add_nuw_nsw_or_and_after := [llvm|
 theorem add_nuw_nsw_or_and_proof : add_nuw_nsw_or_and_before ⊑ add_nuw_nsw_or_and_after := by
   unfold add_nuw_nsw_or_and_before add_nuw_nsw_or_and_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_nuw_nsw_or_and
   all_goals (try extract_goal ; sorry)
   ---END add_nuw_nsw_or_and
@@ -1082,12 +896,6 @@ def add_of_mul_after := [llvm|
 theorem add_of_mul_proof : add_of_mul_before ⊑ add_of_mul_after := by
   unfold add_of_mul_before add_of_mul_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_of_mul
   all_goals (try extract_goal ; sorry)
   ---END add_of_mul
@@ -1117,12 +925,6 @@ def add_of_selects_after := [llvm|
 theorem add_of_selects_proof : add_of_selects_before ⊑ add_of_selects_after := by
   unfold add_of_selects_before add_of_selects_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_of_selects
   all_goals (try extract_goal ; sorry)
   ---END add_of_selects
@@ -1154,12 +956,6 @@ def add_undemanded_low_bits_after := [llvm|
 theorem add_undemanded_low_bits_proof : add_undemanded_low_bits_before ⊑ add_undemanded_low_bits_after := by
   unfold add_undemanded_low_bits_before add_undemanded_low_bits_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_undemanded_low_bits
   all_goals (try extract_goal ; sorry)
   ---END add_undemanded_low_bits
@@ -1191,12 +987,6 @@ def sub_undemanded_low_bits_after := [llvm|
 theorem sub_undemanded_low_bits_proof : sub_undemanded_low_bits_before ⊑ sub_undemanded_low_bits_after := by
   unfold sub_undemanded_low_bits_before sub_undemanded_low_bits_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sub_undemanded_low_bits
   all_goals (try extract_goal ; sorry)
   ---END sub_undemanded_low_bits

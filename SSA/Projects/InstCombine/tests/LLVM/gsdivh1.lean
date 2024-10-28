@@ -34,12 +34,6 @@ def c_after := [llvm|
 theorem c_proof : c_before ⊑ c_after := by
   unfold c_before c_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN c
   all_goals (try extract_goal ; sorry)
   ---END c

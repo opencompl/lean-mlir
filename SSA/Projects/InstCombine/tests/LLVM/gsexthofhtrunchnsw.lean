@@ -39,12 +39,6 @@ def narrow_source_matching_signbits_after := [llvm|
 theorem narrow_source_matching_signbits_proof : narrow_source_matching_signbits_before ⊑ narrow_source_matching_signbits_after := by
   unfold narrow_source_matching_signbits_before narrow_source_matching_signbits_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN narrow_source_matching_signbits
   all_goals (try extract_goal ; sorry)
   ---END narrow_source_matching_signbits
@@ -77,12 +71,6 @@ def wide_source_matching_signbits_after := [llvm|
 theorem wide_source_matching_signbits_proof : wide_source_matching_signbits_before ⊑ wide_source_matching_signbits_after := by
   unfold wide_source_matching_signbits_before wide_source_matching_signbits_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN wide_source_matching_signbits
   all_goals (try extract_goal ; sorry)
   ---END wide_source_matching_signbits
@@ -114,12 +102,6 @@ def same_source_matching_signbits_after := [llvm|
 theorem same_source_matching_signbits_proof : same_source_matching_signbits_before ⊑ same_source_matching_signbits_after := by
   unfold same_source_matching_signbits_before same_source_matching_signbits_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN same_source_matching_signbits
   all_goals (try extract_goal ; sorry)
   ---END same_source_matching_signbits
@@ -153,12 +135,6 @@ def same_source_not_matching_signbits_after := [llvm|
 theorem same_source_not_matching_signbits_proof : same_source_not_matching_signbits_before ⊑ same_source_not_matching_signbits_after := by
   unfold same_source_not_matching_signbits_before same_source_not_matching_signbits_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN same_source_not_matching_signbits
   all_goals (try extract_goal ; sorry)
   ---END same_source_not_matching_signbits

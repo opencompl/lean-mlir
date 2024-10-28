@@ -31,12 +31,6 @@ def test_sext_zext_after := [llvm|
 theorem test_sext_zext_proof : test_sext_zext_before ⊑ test_sext_zext_after := by
   unfold test_sext_zext_before test_sext_zext_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test_sext_zext
   all_goals (try extract_goal ; sorry)
   ---END test_sext_zext
@@ -65,12 +59,6 @@ def fold_xor_zext_sandwich_after := [llvm|
 theorem fold_xor_zext_sandwich_proof : fold_xor_zext_sandwich_before ⊑ fold_xor_zext_sandwich_after := by
   unfold fold_xor_zext_sandwich_before fold_xor_zext_sandwich_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN fold_xor_zext_sandwich
   all_goals (try extract_goal ; sorry)
   ---END fold_xor_zext_sandwich
@@ -95,12 +83,6 @@ def sext_zext_apint1_after := [llvm|
 theorem sext_zext_apint1_proof : sext_zext_apint1_before ⊑ sext_zext_apint1_after := by
   unfold sext_zext_apint1_before sext_zext_apint1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sext_zext_apint1
   all_goals (try extract_goal ; sorry)
   ---END sext_zext_apint1
@@ -125,12 +107,6 @@ def sext_zext_apint2_after := [llvm|
 theorem sext_zext_apint2_proof : sext_zext_apint2_before ⊑ sext_zext_apint2_after := by
   unfold sext_zext_apint2_before sext_zext_apint2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sext_zext_apint2
   all_goals (try extract_goal ; sorry)
   ---END sext_zext_apint2
@@ -162,12 +138,6 @@ def zext_nneg_flag_drop_after := [llvm|
 theorem zext_nneg_flag_drop_proof : zext_nneg_flag_drop_before ⊑ zext_nneg_flag_drop_after := by
   unfold zext_nneg_flag_drop_before zext_nneg_flag_drop_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN zext_nneg_flag_drop
   all_goals (try extract_goal ; sorry)
   ---END zext_nneg_flag_drop
@@ -193,12 +163,6 @@ def zext_nneg_redundant_and_after := [llvm|
 theorem zext_nneg_redundant_and_proof : zext_nneg_redundant_and_before ⊑ zext_nneg_redundant_and_after := by
   unfold zext_nneg_redundant_and_before zext_nneg_redundant_and_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN zext_nneg_redundant_and
   all_goals (try extract_goal ; sorry)
   ---END zext_nneg_redundant_and
@@ -224,12 +188,6 @@ def zext_nneg_signbit_extract_after := [llvm|
 theorem zext_nneg_signbit_extract_proof : zext_nneg_signbit_extract_before ⊑ zext_nneg_signbit_extract_after := by
   unfold zext_nneg_signbit_extract_before zext_nneg_signbit_extract_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN zext_nneg_signbit_extract
   all_goals (try extract_goal ; sorry)
   ---END zext_nneg_signbit_extract
@@ -253,12 +211,6 @@ def zext_nneg_i1_after := [llvm|
 theorem zext_nneg_i1_proof : zext_nneg_i1_before ⊑ zext_nneg_i1_after := by
   unfold zext_nneg_i1_before zext_nneg_i1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN zext_nneg_i1
   all_goals (try extract_goal ; sorry)
   ---END zext_nneg_i1
