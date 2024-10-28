@@ -37,12 +37,6 @@ def dec_mask_neg_i32_after := [llvm|
 theorem dec_mask_neg_i32_proof : dec_mask_neg_i32_before ⊑ dec_mask_neg_i32_after := by
   unfold dec_mask_neg_i32_before dec_mask_neg_i32_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN dec_mask_neg_i32
   all_goals (try extract_goal ; sorry)
   ---END dec_mask_neg_i32
@@ -77,12 +71,6 @@ def dec_mask_commute_neg_i32_after := [llvm|
 theorem dec_mask_commute_neg_i32_proof : dec_mask_commute_neg_i32_before ⊑ dec_mask_commute_neg_i32_after := by
   unfold dec_mask_commute_neg_i32_before dec_mask_commute_neg_i32_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN dec_mask_commute_neg_i32
   all_goals (try extract_goal ; sorry)
   ---END dec_mask_commute_neg_i32
@@ -113,12 +101,6 @@ def dec_commute_mask_neg_i32_after := [llvm|
 theorem dec_commute_mask_neg_i32_proof : dec_commute_mask_neg_i32_before ⊑ dec_commute_mask_neg_i32_after := by
   unfold dec_commute_mask_neg_i32_before dec_commute_mask_neg_i32_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN dec_commute_mask_neg_i32
   all_goals (try extract_goal ; sorry)
   ---END dec_commute_mask_neg_i32

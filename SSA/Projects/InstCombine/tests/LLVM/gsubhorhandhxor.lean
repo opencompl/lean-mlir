@@ -32,12 +32,6 @@ def sub_to_xor_after := [llvm|
 theorem sub_to_xor_proof : sub_to_xor_before ⊑ sub_to_xor_after := by
   unfold sub_to_xor_before sub_to_xor_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sub_to_xor
   all_goals (try extract_goal ; sorry)
   ---END sub_to_xor
@@ -63,12 +57,6 @@ def sub_to_xor_or_commuted_after := [llvm|
 theorem sub_to_xor_or_commuted_proof : sub_to_xor_or_commuted_before ⊑ sub_to_xor_or_commuted_after := by
   unfold sub_to_xor_or_commuted_before sub_to_xor_or_commuted_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sub_to_xor_or_commuted
   all_goals (try extract_goal ; sorry)
   ---END sub_to_xor_or_commuted
@@ -94,12 +82,6 @@ def sub_to_xor_and_commuted_after := [llvm|
 theorem sub_to_xor_and_commuted_proof : sub_to_xor_and_commuted_before ⊑ sub_to_xor_and_commuted_after := by
   unfold sub_to_xor_and_commuted_before sub_to_xor_and_commuted_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sub_to_xor_and_commuted
   all_goals (try extract_goal ; sorry)
   ---END sub_to_xor_and_commuted

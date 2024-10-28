@@ -32,14 +32,8 @@ def do_not_add_annotation_to_existing_instr_after := [llvm|
 theorem do_not_add_annotation_to_existing_instr_proof : do_not_add_annotation_to_existing_instr_before ⊑ do_not_add_annotation_to_existing_instr_after := by
   unfold do_not_add_annotation_to_existing_instr_before do_not_add_annotation_to_existing_instr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN do_not_add_annotation_to_existing_instr
-  all_goals (try extract_goal ; sorry)
+  apply do_not_add_annotation_to_existing_instr_thm
   ---END do_not_add_annotation_to_existing_instr
 
 

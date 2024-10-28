@@ -2,485 +2,226 @@
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
+open LLVM
 
 section gpullhconditionalhbinophthroughhshift_proof
-theorem and_signbit_select_shl_thm (x : BitVec 1) :
-  (Option.bind
-      (match some x with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => none
-      | some { toFin := ⟨0, ⋯⟩ } => none)
-      fun x' => some (x' <<< 8)) ⊑
-    match some x with
-    | none => none
-    | some { toFin := ⟨1, ⋯⟩ } => none
-    | some { toFin := ⟨0, ⋯⟩ } => none := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gpullhconditionalhbinophthroughhshift.lean:48:17: theorem and_signbit_select_shl_thm :
-  ∀ (x : BitVec 32) (x_1 : BitVec 1),
-    (Option.bind
-        (match some x_1 with
-        | none => none
-        | some { toFin := ⟨1, ⋯⟩ } => some (x &&& 4294901760#32)
-        | some { toFin := ⟨0, ⋯⟩ } => some x)
-        fun x' => some (x' <<< 8)) ⊑
-      match some x_1 with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some (x <<< 8 &&& 4278190080#32)
-      | some { toFin := ⟨0, ⋯⟩ } => some (x <<< 8) := sorry
+theorem and_signbit_select_shl_thm :
+  ∀ (e : IntW 32) (e_1 : IntW 1),
+    shl (select e_1 (LLVM.and e (const? (-65536))) e) (const? 8) ⊑
+      select e_1 (LLVM.and (shl e (const? 8)) (const? (-16777216))) (shl e (const? 8)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem and_nosignbit_select_shl_thm (x : BitVec 1) :
-  (Option.bind
-      (match some x with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => none
-      | some { toFin := ⟨0, ⋯⟩ } => none)
-      fun x' => some (x' <<< 8)) ⊑
-    match some x with
-    | none => none
-    | some { toFin := ⟨1, ⋯⟩ } => none
-    | some { toFin := ⟨0, ⋯⟩ } => none := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gpullhconditionalhbinophthroughhshift.lean:85:17: theorem and_nosignbit_select_shl_thm :
-  ∀ (x : BitVec 32) (x_1 : BitVec 1),
-    (Option.bind
-        (match some x_1 with
-        | none => none
-        | some { toFin := ⟨1, ⋯⟩ } => some (x &&& 2147418112#32)
-        | some { toFin := ⟨0, ⋯⟩ } => some x)
-        fun x' => some (x' <<< 8)) ⊑
-      match some x_1 with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some (x <<< 8 &&& 4278190080#32)
-      | some { toFin := ⟨0, ⋯⟩ } => some (x <<< 8) := sorry
 
-theorem or_signbit_select_shl_thm (x : BitVec 1) :
-  (Option.bind
-      (match some x with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => none
-      | some { toFin := ⟨0, ⋯⟩ } => none)
-      fun x' => some (x' <<< 8)) ⊑
-    match some x with
-    | none => none
-    | some { toFin := ⟨1, ⋯⟩ } => none
-    | some { toFin := ⟨0, ⋯⟩ } => none := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gpullhconditionalhbinophthroughhshift.lean:122:17: theorem or_signbit_select_shl_thm :
-  ∀ (x : BitVec 32) (x_1 : BitVec 1),
-    (Option.bind
-        (match some x_1 with
-        | none => none
-        | some { toFin := ⟨1, ⋯⟩ } => some (x ||| 4294901760#32)
-        | some { toFin := ⟨0, ⋯⟩ } => some x)
-        fun x' => some (x' <<< 8)) ⊑
-      match some x_1 with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some (x <<< 8 ||| 4278190080#32)
-      | some { toFin := ⟨0, ⋯⟩ } => some (x <<< 8) := sorry
+theorem and_nosignbit_select_shl_thm :
+  ∀ (e : IntW 32) (e_1 : IntW 1),
+    shl (select e_1 (LLVM.and e (const? 2147418112)) e) (const? 8) ⊑
+      select e_1 (LLVM.and (shl e (const? 8)) (const? (-16777216))) (shl e (const? 8)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem or_nosignbit_select_shl_thm (x : BitVec 1) :
-  (Option.bind
-      (match some x with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => none
-      | some { toFin := ⟨0, ⋯⟩ } => none)
-      fun x' => some (x' <<< 8)) ⊑
-    match some x with
-    | none => none
-    | some { toFin := ⟨1, ⋯⟩ } => none
-    | some { toFin := ⟨0, ⋯⟩ } => none := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gpullhconditionalhbinophthroughhshift.lean:159:17: theorem or_nosignbit_select_shl_thm :
-  ∀ (x : BitVec 32) (x_1 : BitVec 1),
-    (Option.bind
-        (match some x_1 with
-        | none => none
-        | some { toFin := ⟨1, ⋯⟩ } => some (x ||| 2147418112#32)
-        | some { toFin := ⟨0, ⋯⟩ } => some x)
-        fun x' => some (x' <<< 8)) ⊑
-      match some x_1 with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some (x <<< 8 ||| 4278190080#32)
-      | some { toFin := ⟨0, ⋯⟩ } => some (x <<< 8) := sorry
 
-theorem xor_signbit_select_shl_thm (x : BitVec 1) :
-  (Option.bind
-      (match some x with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => none
-      | some { toFin := ⟨0, ⋯⟩ } => none)
-      fun x' => some (x' <<< 8)) ⊑
-    match some x with
-    | none => none
-    | some { toFin := ⟨1, ⋯⟩ } => none
-    | some { toFin := ⟨0, ⋯⟩ } => none := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gpullhconditionalhbinophthroughhshift.lean:196:17: theorem xor_signbit_select_shl_thm :
-  ∀ (x : BitVec 32) (x_1 : BitVec 1),
-    (Option.bind
-        (match some x_1 with
-        | none => none
-        | some { toFin := ⟨1, ⋯⟩ } => some (x ^^^ 4294901760#32)
-        | some { toFin := ⟨0, ⋯⟩ } => some x)
-        fun x' => some (x' <<< 8)) ⊑
-      match some x_1 with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some (x <<< 8 ^^^ 4278190080#32)
-      | some { toFin := ⟨0, ⋯⟩ } => some (x <<< 8) := sorry
+theorem or_signbit_select_shl_thm :
+  ∀ (e : IntW 32) (e_1 : IntW 1),
+    shl (select e_1 (LLVM.or e (const? (-65536))) e) (const? 8) ⊑
+      select e_1 (LLVM.or (shl e (const? 8)) (const? (-16777216))) (shl e (const? 8)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem xor_nosignbit_select_shl_thm (x : BitVec 1) :
-  (Option.bind
-      (match some x with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => none
-      | some { toFin := ⟨0, ⋯⟩ } => none)
-      fun x' => some (x' <<< 8)) ⊑
-    match some x with
-    | none => none
-    | some { toFin := ⟨1, ⋯⟩ } => none
-    | some { toFin := ⟨0, ⋯⟩ } => none := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gpullhconditionalhbinophthroughhshift.lean:233:17: theorem xor_nosignbit_select_shl_thm :
-  ∀ (x : BitVec 32) (x_1 : BitVec 1),
-    (Option.bind
-        (match some x_1 with
-        | none => none
-        | some { toFin := ⟨1, ⋯⟩ } => some (x ^^^ 2147418112#32)
-        | some { toFin := ⟨0, ⋯⟩ } => some x)
-        fun x' => some (x' <<< 8)) ⊑
-      match some x_1 with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some (x <<< 8 ^^^ 4278190080#32)
-      | some { toFin := ⟨0, ⋯⟩ } => some (x <<< 8) := sorry
 
-theorem add_signbit_select_shl_thm (x : BitVec 1) :
-  (Option.bind
-      (match some x with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => none
-      | some { toFin := ⟨0, ⋯⟩ } => none)
-      fun x' => some (x' <<< 8)) ⊑
-    match some x with
-    | none => none
-    | some { toFin := ⟨1, ⋯⟩ } => none
-    | some { toFin := ⟨0, ⋯⟩ } => none := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gpullhconditionalhbinophthroughhshift.lean:270:17: theorem add_signbit_select_shl_thm :
-  ∀ (x : BitVec 32) (x_1 : BitVec 1),
-    (Option.bind
-        (match some x_1 with
-        | none => none
-        | some { toFin := ⟨1, ⋯⟩ } => some (x + 4294901760#32)
-        | some { toFin := ⟨0, ⋯⟩ } => some x)
-        fun x' => some (x' <<< 8)) ⊑
-      match some x_1 with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some (x <<< 8 + 4278190080#32)
-      | some { toFin := ⟨0, ⋯⟩ } => some (x <<< 8) := sorry
+theorem or_nosignbit_select_shl_thm :
+  ∀ (e : IntW 32) (e_1 : IntW 1),
+    shl (select e_1 (LLVM.or e (const? 2147418112)) e) (const? 8) ⊑
+      select e_1 (LLVM.or (shl e (const? 8)) (const? (-16777216))) (shl e (const? 8)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem add_nosignbit_select_shl_thm (x : BitVec 1) :
-  (Option.bind
-      (match some x with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => none
-      | some { toFin := ⟨0, ⋯⟩ } => none)
-      fun x' => some (x' <<< 8)) ⊑
-    match some x with
-    | none => none
-    | some { toFin := ⟨1, ⋯⟩ } => none
-    | some { toFin := ⟨0, ⋯⟩ } => none := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gpullhconditionalhbinophthroughhshift.lean:307:17: theorem add_nosignbit_select_shl_thm :
-  ∀ (x : BitVec 32) (x_1 : BitVec 1),
-    (Option.bind
-        (match some x_1 with
-        | none => none
-        | some { toFin := ⟨1, ⋯⟩ } => some (x + 2147418112#32)
-        | some { toFin := ⟨0, ⋯⟩ } => some x)
-        fun x' => some (x' <<< 8)) ⊑
-      match some x_1 with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some (x <<< 8 + 4278190080#32)
-      | some { toFin := ⟨0, ⋯⟩ } => some (x <<< 8) := sorry
 
-theorem and_signbit_select_lshr_thm (x : BitVec 1) :
-  (Option.bind
-      (match some x with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => none
-      | some { toFin := ⟨0, ⋯⟩ } => none)
-      fun x' => some (x' >>> 8)) ⊑
-    match some x with
-    | none => none
-    | some { toFin := ⟨1, ⋯⟩ } => none
-    | some { toFin := ⟨0, ⋯⟩ } => none := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gpullhconditionalhbinophthroughhshift.lean:344:17: theorem and_signbit_select_lshr_thm :
-  ∀ (x : BitVec 32) (x_1 : BitVec 1),
-    (Option.bind
-        (match some x_1 with
-        | none => none
-        | some { toFin := ⟨1, ⋯⟩ } => some (x &&& 4294901760#32)
-        | some { toFin := ⟨0, ⋯⟩ } => some x)
-        fun x' => some (x' >>> 8)) ⊑
-      match some x_1 with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some (x >>> 8 &&& 16776960#32)
-      | some { toFin := ⟨0, ⋯⟩ } => some (x >>> 8) := sorry
+theorem xor_signbit_select_shl_thm :
+  ∀ (e : IntW 32) (e_1 : IntW 1),
+    shl (select e_1 (LLVM.xor e (const? (-65536))) e) (const? 8) ⊑
+      select e_1 (LLVM.xor (shl e (const? 8)) (const? (-16777216))) (shl e (const? 8)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem and_nosignbit_select_lshr_thm (x : BitVec 1) :
-  (Option.bind
-      (match some x with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => none
-      | some { toFin := ⟨0, ⋯⟩ } => none)
-      fun x' => some (x' >>> 8)) ⊑
-    match some x with
-    | none => none
-    | some { toFin := ⟨1, ⋯⟩ } => none
-    | some { toFin := ⟨0, ⋯⟩ } => none := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gpullhconditionalhbinophthroughhshift.lean:381:17: theorem and_nosignbit_select_lshr_thm :
-  ∀ (x : BitVec 32) (x_1 : BitVec 1),
-    (Option.bind
-        (match some x_1 with
-        | none => none
-        | some { toFin := ⟨1, ⋯⟩ } => some (x &&& 2147418112#32)
-        | some { toFin := ⟨0, ⋯⟩ } => some x)
-        fun x' => some (x' >>> 8)) ⊑
-      match some x_1 with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some (x >>> 8 &&& 8388352#32)
-      | some { toFin := ⟨0, ⋯⟩ } => some (x >>> 8) := sorry
 
-theorem or_signbit_select_lshr_thm (x : BitVec 1) :
-  (Option.bind
-      (match some x with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => none
-      | some { toFin := ⟨0, ⋯⟩ } => none)
-      fun x' => some (x' >>> 8)) ⊑
-    match some x with
-    | none => none
-    | some { toFin := ⟨1, ⋯⟩ } => none
-    | some { toFin := ⟨0, ⋯⟩ } => none := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gpullhconditionalhbinophthroughhshift.lean:418:17: theorem or_signbit_select_lshr_thm :
-  ∀ (x : BitVec 32) (x_1 : BitVec 1),
-    (Option.bind
-        (match some x_1 with
-        | none => none
-        | some { toFin := ⟨1, ⋯⟩ } => some (x ||| 4294901760#32)
-        | some { toFin := ⟨0, ⋯⟩ } => some x)
-        fun x' => some (x' >>> 8)) ⊑
-      match some x_1 with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some (x >>> 8 ||| 16776960#32)
-      | some { toFin := ⟨0, ⋯⟩ } => some (x >>> 8) := sorry
+theorem xor_nosignbit_select_shl_thm :
+  ∀ (e : IntW 32) (e_1 : IntW 1),
+    shl (select e_1 (LLVM.xor e (const? 2147418112)) e) (const? 8) ⊑
+      select e_1 (LLVM.xor (shl e (const? 8)) (const? (-16777216))) (shl e (const? 8)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem or_nosignbit_select_lshr_thm (x : BitVec 1) :
-  (Option.bind
-      (match some x with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => none
-      | some { toFin := ⟨0, ⋯⟩ } => none)
-      fun x' => some (x' >>> 8)) ⊑
-    match some x with
-    | none => none
-    | some { toFin := ⟨1, ⋯⟩ } => none
-    | some { toFin := ⟨0, ⋯⟩ } => none := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gpullhconditionalhbinophthroughhshift.lean:455:17: theorem or_nosignbit_select_lshr_thm :
-  ∀ (x : BitVec 32) (x_1 : BitVec 1),
-    (Option.bind
-        (match some x_1 with
-        | none => none
-        | some { toFin := ⟨1, ⋯⟩ } => some (x ||| 2147418112#32)
-        | some { toFin := ⟨0, ⋯⟩ } => some x)
-        fun x' => some (x' >>> 8)) ⊑
-      match some x_1 with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some (x >>> 8 ||| 8388352#32)
-      | some { toFin := ⟨0, ⋯⟩ } => some (x >>> 8) := sorry
 
-theorem xor_signbit_select_lshr_thm (x : BitVec 1) :
-  (Option.bind
-      (match some x with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => none
-      | some { toFin := ⟨0, ⋯⟩ } => none)
-      fun x' => some (x' >>> 8)) ⊑
-    match some x with
-    | none => none
-    | some { toFin := ⟨1, ⋯⟩ } => none
-    | some { toFin := ⟨0, ⋯⟩ } => none := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gpullhconditionalhbinophthroughhshift.lean:492:17: theorem xor_signbit_select_lshr_thm :
-  ∀ (x : BitVec 32) (x_1 : BitVec 1),
-    (Option.bind
-        (match some x_1 with
-        | none => none
-        | some { toFin := ⟨1, ⋯⟩ } => some (x ^^^ 4294901760#32)
-        | some { toFin := ⟨0, ⋯⟩ } => some x)
-        fun x' => some (x' >>> 8)) ⊑
-      match some x_1 with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some (x >>> 8 ^^^ 16776960#32)
-      | some { toFin := ⟨0, ⋯⟩ } => some (x >>> 8) := sorry
+theorem add_signbit_select_shl_thm :
+  ∀ (e : IntW 32) (e_1 : IntW 1),
+    shl (select e_1 (add e (const? (-65536))) e) (const? 8) ⊑
+      select e_1 (add (shl e (const? 8)) (const? (-16777216))) (shl e (const? 8)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem xor_nosignbit_select_lshr_thm (x : BitVec 1) :
-  (Option.bind
-      (match some x with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => none
-      | some { toFin := ⟨0, ⋯⟩ } => none)
-      fun x' => some (x' >>> 8)) ⊑
-    match some x with
-    | none => none
-    | some { toFin := ⟨1, ⋯⟩ } => none
-    | some { toFin := ⟨0, ⋯⟩ } => none := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gpullhconditionalhbinophthroughhshift.lean:529:17: theorem xor_nosignbit_select_lshr_thm :
-  ∀ (x : BitVec 32) (x_1 : BitVec 1),
-    (Option.bind
-        (match some x_1 with
-        | none => none
-        | some { toFin := ⟨1, ⋯⟩ } => some (x ^^^ 2147418112#32)
-        | some { toFin := ⟨0, ⋯⟩ } => some x)
-        fun x' => some (x' >>> 8)) ⊑
-      match some x_1 with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some (x >>> 8 ^^^ 8388352#32)
-      | some { toFin := ⟨0, ⋯⟩ } => some (x >>> 8) := sorry
 
-theorem and_signbit_select_ashr_thm (x : BitVec 1) :
-  (Option.bind
-      (match some x with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => none
-      | some { toFin := ⟨0, ⋯⟩ } => none)
-      fun x' => some (x'.sshiftRight 8)) ⊑
-    match some x with
-    | none => none
-    | some { toFin := ⟨1, ⋯⟩ } => none
-    | some { toFin := ⟨0, ⋯⟩ } => none := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gpullhconditionalhbinophthroughhshift.lean:566:17: theorem and_signbit_select_ashr_thm :
-  ∀ (x : BitVec 32) (x_1 : BitVec 1),
-    (Option.bind
-        (match some x_1 with
-        | none => none
-        | some { toFin := ⟨1, ⋯⟩ } => some (x &&& 4294901760#32)
-        | some { toFin := ⟨0, ⋯⟩ } => some x)
-        fun x' => some (x'.sshiftRight 8)) ⊑
-      match some x_1 with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some (x.sshiftRight 8 &&& 4294967040#32)
-      | some { toFin := ⟨0, ⋯⟩ } => some (x.sshiftRight 8) := sorry
+theorem add_nosignbit_select_shl_thm :
+  ∀ (e : IntW 32) (e_1 : IntW 1),
+    shl (select e_1 (add e (const? 2147418112)) e) (const? 8) ⊑
+      select e_1 (add (shl e (const? 8)) (const? (-16777216))) (shl e (const? 8)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem and_nosignbit_select_ashr_thm (x : BitVec 1) :
-  (Option.bind
-      (match some x with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => none
-      | some { toFin := ⟨0, ⋯⟩ } => none)
-      fun x' => some (x'.sshiftRight 8)) ⊑
-    match some x with
-    | none => none
-    | some { toFin := ⟨1, ⋯⟩ } => none
-    | some { toFin := ⟨0, ⋯⟩ } => none := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gpullhconditionalhbinophthroughhshift.lean:603:17: theorem and_nosignbit_select_ashr_thm :
-  ∀ (x : BitVec 32) (x_1 : BitVec 1),
-    (Option.bind
-        (match some x_1 with
-        | none => none
-        | some { toFin := ⟨1, ⋯⟩ } => some (x &&& 2147418112#32)
-        | some { toFin := ⟨0, ⋯⟩ } => some x)
-        fun x' => some (x'.sshiftRight 8)) ⊑
-      match some x_1 with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some (x.sshiftRight 8 &&& 8388352#32)
-      | some { toFin := ⟨0, ⋯⟩ } => some (x.sshiftRight 8) := sorry
 
-theorem or_signbit_select_ashr_thm (x : BitVec 1) :
-  (Option.bind
-      (match some x with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => none
-      | some { toFin := ⟨0, ⋯⟩ } => none)
-      fun x' => some (x'.sshiftRight 8)) ⊑
-    match some x with
-    | none => none
-    | some { toFin := ⟨1, ⋯⟩ } => none
-    | some { toFin := ⟨0, ⋯⟩ } => none := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gpullhconditionalhbinophthroughhshift.lean:640:17: theorem or_signbit_select_ashr_thm :
-  ∀ (x : BitVec 32) (x_1 : BitVec 1),
-    (Option.bind
-        (match some x_1 with
-        | none => none
-        | some { toFin := ⟨1, ⋯⟩ } => some (x ||| 4294901760#32)
-        | some { toFin := ⟨0, ⋯⟩ } => some x)
-        fun x' => some (x'.sshiftRight 8)) ⊑
-      match some x_1 with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some (x.sshiftRight 8 ||| 4294967040#32)
-      | some { toFin := ⟨0, ⋯⟩ } => some (x.sshiftRight 8) := sorry
+theorem and_signbit_select_lshr_thm :
+  ∀ (e : IntW 32) (e_1 : IntW 1),
+    lshr (select e_1 (LLVM.and e (const? (-65536))) e) (const? 8) ⊑
+      select e_1 (LLVM.and (lshr e (const? 8)) (const? 16776960)) (lshr e (const? 8)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem or_nosignbit_select_ashr_thm (x : BitVec 1) :
-  (Option.bind
-      (match some x with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => none
-      | some { toFin := ⟨0, ⋯⟩ } => none)
-      fun x' => some (x'.sshiftRight 8)) ⊑
-    match some x with
-    | none => none
-    | some { toFin := ⟨1, ⋯⟩ } => none
-    | some { toFin := ⟨0, ⋯⟩ } => none := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gpullhconditionalhbinophthroughhshift.lean:677:17: theorem or_nosignbit_select_ashr_thm :
-  ∀ (x : BitVec 32) (x_1 : BitVec 1),
-    (Option.bind
-        (match some x_1 with
-        | none => none
-        | some { toFin := ⟨1, ⋯⟩ } => some (x ||| 2147418112#32)
-        | some { toFin := ⟨0, ⋯⟩ } => some x)
-        fun x' => some (x'.sshiftRight 8)) ⊑
-      match some x_1 with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some (x.sshiftRight 8 ||| 8388352#32)
-      | some { toFin := ⟨0, ⋯⟩ } => some (x.sshiftRight 8) := sorry
 
-theorem xor_signbit_select_ashr_thm (x : BitVec 1) :
-  (Option.bind
-      (match some x with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => none
-      | some { toFin := ⟨0, ⋯⟩ } => none)
-      fun x' => some (x'.sshiftRight 8)) ⊑
-    match some x with
-    | none => none
-    | some { toFin := ⟨1, ⋯⟩ } => none
-    | some { toFin := ⟨0, ⋯⟩ } => none := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gpullhconditionalhbinophthroughhshift.lean:714:17: theorem xor_signbit_select_ashr_thm :
-  ∀ (x : BitVec 32) (x_1 : BitVec 1),
-    (Option.bind
-        (match some x_1 with
-        | none => none
-        | some { toFin := ⟨1, ⋯⟩ } => some (x ^^^ 4294901760#32)
-        | some { toFin := ⟨0, ⋯⟩ } => some x)
-        fun x' => some (x'.sshiftRight 8)) ⊑
-      match some x_1 with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some (x.sshiftRight 8 ^^^ 4294967040#32)
-      | some { toFin := ⟨0, ⋯⟩ } => some (x.sshiftRight 8) := sorry
+theorem and_nosignbit_select_lshr_thm :
+  ∀ (e : IntW 32) (e_1 : IntW 1),
+    lshr (select e_1 (LLVM.and e (const? 2147418112)) e) (const? 8) ⊑
+      select e_1 (LLVM.and (lshr e (const? 8)) (const? 8388352)) (lshr e (const? 8)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem xor_nosignbit_select_ashr_thm (x : BitVec 1) :
-  (Option.bind
-      (match some x with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => none
-      | some { toFin := ⟨0, ⋯⟩ } => none)
-      fun x' => some (x'.sshiftRight 8)) ⊑
-    match some x with
-    | none => none
-    | some { toFin := ⟨1, ⋯⟩ } => none
-    | some { toFin := ⟨0, ⋯⟩ } => none := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gpullhconditionalhbinophthroughhshift.lean:751:17: theorem xor_nosignbit_select_ashr_thm :
-  ∀ (x : BitVec 32) (x_1 : BitVec 1),
-    (Option.bind
-        (match some x_1 with
-        | none => none
-        | some { toFin := ⟨1, ⋯⟩ } => some (x ^^^ 2147418112#32)
-        | some { toFin := ⟨0, ⋯⟩ } => some x)
-        fun x' => some (x'.sshiftRight 8)) ⊑
-      match some x_1 with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some (x.sshiftRight 8 ^^^ 8388352#32)
-      | some { toFin := ⟨0, ⋯⟩ } => some (x.sshiftRight 8) := sorry
+
+theorem or_signbit_select_lshr_thm :
+  ∀ (e : IntW 32) (e_1 : IntW 1),
+    lshr (select e_1 (LLVM.or e (const? (-65536))) e) (const? 8) ⊑
+      select e_1 (LLVM.or (lshr e (const? 8)) (const? 16776960)) (lshr e (const? 8)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem or_nosignbit_select_lshr_thm :
+  ∀ (e : IntW 32) (e_1 : IntW 1),
+    lshr (select e_1 (LLVM.or e (const? 2147418112)) e) (const? 8) ⊑
+      select e_1 (LLVM.or (lshr e (const? 8)) (const? 8388352)) (lshr e (const? 8)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem xor_signbit_select_lshr_thm :
+  ∀ (e : IntW 32) (e_1 : IntW 1),
+    lshr (select e_1 (LLVM.xor e (const? (-65536))) e) (const? 8) ⊑
+      select e_1 (LLVM.xor (lshr e (const? 8)) (const? 16776960)) (lshr e (const? 8)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem xor_nosignbit_select_lshr_thm :
+  ∀ (e : IntW 32) (e_1 : IntW 1),
+    lshr (select e_1 (LLVM.xor e (const? 2147418112)) e) (const? 8) ⊑
+      select e_1 (LLVM.xor (lshr e (const? 8)) (const? 8388352)) (lshr e (const? 8)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem and_signbit_select_ashr_thm :
+  ∀ (e : IntW 32) (e_1 : IntW 1),
+    ashr (select e_1 (LLVM.and e (const? (-65536))) e) (const? 8) ⊑
+      select e_1 (LLVM.and (ashr e (const? 8)) (const? (-256))) (ashr e (const? 8)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem and_nosignbit_select_ashr_thm :
+  ∀ (e : IntW 32) (e_1 : IntW 1),
+    ashr (select e_1 (LLVM.and e (const? 2147418112)) e) (const? 8) ⊑
+      select e_1 (LLVM.and (ashr e (const? 8)) (const? 8388352)) (ashr e (const? 8)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem or_signbit_select_ashr_thm :
+  ∀ (e : IntW 32) (e_1 : IntW 1),
+    ashr (select e_1 (LLVM.or e (const? (-65536))) e) (const? 8) ⊑
+      select e_1 (LLVM.or (ashr e (const? 8)) (const? (-256))) (ashr e (const? 8)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem or_nosignbit_select_ashr_thm :
+  ∀ (e : IntW 32) (e_1 : IntW 1),
+    ashr (select e_1 (LLVM.or e (const? 2147418112)) e) (const? 8) ⊑
+      select e_1 (LLVM.or (ashr e (const? 8)) (const? 8388352)) (ashr e (const? 8)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem xor_signbit_select_ashr_thm :
+  ∀ (e : IntW 32) (e_1 : IntW 1),
+    ashr (select e_1 (LLVM.xor e (const? (-65536))) e) (const? 8) ⊑
+      select e_1 (LLVM.xor (ashr e (const? 8)) (const? (-256))) (ashr e (const? 8)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem xor_nosignbit_select_ashr_thm :
+  ∀ (e : IntW 32) (e_1 : IntW 1),
+    ashr (select e_1 (LLVM.xor e (const? 2147418112)) e) (const? 8) ⊑
+      select e_1 (LLVM.xor (ashr e (const? 8)) (const? 8388352)) (ashr e (const? 8)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
 

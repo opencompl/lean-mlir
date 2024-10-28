@@ -35,12 +35,6 @@ def t0_after := [llvm|
 theorem t0_proof : t0_before ⊑ t0_after := by
   unfold t0_before t0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t0
   all_goals (try extract_goal ; sorry)
   ---END t0
@@ -67,12 +61,6 @@ def n5_after := [llvm|
 theorem n5_proof : n5_before ⊑ n5_after := by
   unfold n5_before n5_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN n5
   all_goals (try extract_goal ; sorry)
   ---END n5

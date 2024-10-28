@@ -36,12 +36,6 @@ def mul_of_pow2s_after := [llvm|
 theorem mul_of_pow2s_proof : mul_of_pow2s_before ⊑ mul_of_pow2s_after := by
   unfold mul_of_pow2s_before mul_of_pow2s_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN mul_of_pow2s
   all_goals (try extract_goal ; sorry)
   ---END mul_of_pow2s

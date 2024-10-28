@@ -34,12 +34,6 @@ def test4_after := [llvm|
 theorem test4_proof : test4_before ⊑ test4_after := by
   unfold test4_before test4_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test4
   all_goals (try extract_goal ; sorry)
   ---END test4
@@ -67,12 +61,6 @@ def test5_after := [llvm|
 theorem test5_proof : test5_before ⊑ test5_after := by
   unfold test5_before test5_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test5
   all_goals (try extract_goal ; sorry)
   ---END test5
@@ -102,12 +90,6 @@ def test6_after := [llvm|
 theorem test6_proof : test6_before ⊑ test6_after := by
   unfold test6_before test6_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test6
   all_goals (try extract_goal ; sorry)
   ---END test6
@@ -139,12 +121,6 @@ def test7_after := [llvm|
 theorem test7_proof : test7_before ⊑ test7_after := by
   unfold test7_before test7_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test7
   all_goals (try extract_goal ; sorry)
   ---END test7
@@ -176,12 +152,6 @@ def test8_after := [llvm|
 theorem test8_proof : test8_before ⊑ test8_after := by
   unfold test8_before test8_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test8
   all_goals (try extract_goal ; sorry)
   ---END test8
@@ -211,12 +181,6 @@ def test10_after := [llvm|
 theorem test10_proof : test10_before ⊑ test10_after := by
   unfold test10_before test10_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test10
   all_goals (try extract_goal ; sorry)
   ---END test10
@@ -242,12 +206,6 @@ def test17_after := [llvm|
 theorem test17_proof : test17_before ⊑ test17_after := by
   unfold test17_before test17_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test17
   all_goals (try extract_goal ; sorry)
   ---END test17
@@ -280,12 +238,6 @@ def test19_after := [llvm|
 theorem test19_proof : test19_before ⊑ test19_after := by
   unfold test19_before test19_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test19
   all_goals (try extract_goal ; sorry)
   ---END test19
@@ -315,12 +267,6 @@ def smear_set_bit_after := [llvm|
 theorem smear_set_bit_proof : smear_set_bit_before ⊑ smear_set_bit_after := by
   unfold smear_set_bit_before smear_set_bit_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN smear_set_bit
   all_goals (try extract_goal ; sorry)
   ---END smear_set_bit
@@ -351,12 +297,6 @@ def smear_set_bit_different_dest_type_after := [llvm|
 theorem smear_set_bit_different_dest_type_proof : smear_set_bit_different_dest_type_before ⊑ smear_set_bit_different_dest_type_after := by
   unfold smear_set_bit_different_dest_type_before smear_set_bit_different_dest_type_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN smear_set_bit_different_dest_type
   all_goals (try extract_goal ; sorry)
   ---END smear_set_bit_different_dest_type
@@ -387,12 +327,6 @@ def smear_set_bit_different_dest_type_wider_dst_after := [llvm|
 theorem smear_set_bit_different_dest_type_wider_dst_proof : smear_set_bit_different_dest_type_wider_dst_before ⊑ smear_set_bit_different_dest_type_wider_dst_after := by
   unfold smear_set_bit_different_dest_type_wider_dst_before smear_set_bit_different_dest_type_wider_dst_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN smear_set_bit_different_dest_type_wider_dst
   all_goals (try extract_goal ; sorry)
   ---END smear_set_bit_different_dest_type_wider_dst

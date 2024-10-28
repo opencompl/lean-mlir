@@ -39,12 +39,6 @@ def set_bits_after := [llvm|
 theorem set_bits_proof : set_bits_before ⊑ set_bits_after := by
   unfold set_bits_before set_bits_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN set_bits
   apply set_bits_thm
   ---END set_bits

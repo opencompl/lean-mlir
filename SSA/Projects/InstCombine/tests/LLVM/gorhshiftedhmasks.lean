@@ -46,12 +46,6 @@ def or_and_shifts1_after := [llvm|
 theorem or_and_shifts1_proof : or_and_shifts1_before ⊑ or_and_shifts1_after := by
   unfold or_and_shifts1_before or_and_shifts1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_and_shifts1
   all_goals (try extract_goal ; sorry)
   ---END or_and_shifts1
@@ -91,12 +85,6 @@ def or_and_shift_shift_and_after := [llvm|
 theorem or_and_shift_shift_and_proof : or_and_shift_shift_and_before ⊑ or_and_shift_shift_and_after := by
   unfold or_and_shift_shift_and_before or_and_shift_shift_and_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN or_and_shift_shift_and
   all_goals (try extract_goal ; sorry)
   ---END or_and_shift_shift_and
@@ -143,12 +131,6 @@ def multiuse1_after := [llvm|
 theorem multiuse1_proof : multiuse1_before ⊑ multiuse1_after := by
   unfold multiuse1_before multiuse1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN multiuse1
   all_goals (try extract_goal ; sorry)
   ---END multiuse1
@@ -206,12 +188,6 @@ def multiuse2_after := [llvm|
 theorem multiuse2_proof : multiuse2_before ⊑ multiuse2_after := by
   unfold multiuse2_before multiuse2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN multiuse2
   all_goals (try extract_goal ; sorry)
   ---END multiuse2
@@ -261,12 +237,6 @@ def multiuse3_after := [llvm|
 theorem multiuse3_proof : multiuse3_before ⊑ multiuse3_after := by
   unfold multiuse3_before multiuse3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN multiuse3
   all_goals (try extract_goal ; sorry)
   ---END multiuse3
@@ -298,12 +268,6 @@ def shl_mask_after := [llvm|
 theorem shl_mask_proof : shl_mask_before ⊑ shl_mask_after := by
   unfold shl_mask_before shl_mask_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_mask
   all_goals (try extract_goal ; sorry)
   ---END shl_mask
@@ -335,12 +299,6 @@ def shl_mask_wrong_shl_const_after := [llvm|
 theorem shl_mask_wrong_shl_const_proof : shl_mask_wrong_shl_const_before ⊑ shl_mask_wrong_shl_const_after := by
   unfold shl_mask_wrong_shl_const_before shl_mask_wrong_shl_const_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_mask_wrong_shl_const
   all_goals (try extract_goal ; sorry)
   ---END shl_mask_wrong_shl_const
@@ -372,12 +330,6 @@ def shl_mask_weird_type_after := [llvm|
 theorem shl_mask_weird_type_proof : shl_mask_weird_type_before ⊑ shl_mask_weird_type_after := by
   unfold shl_mask_weird_type_before shl_mask_weird_type_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_mask_weird_type
   all_goals (try extract_goal ; sorry)
   ---END shl_mask_weird_type
@@ -413,12 +365,6 @@ def shl_mul_mask_after := [llvm|
 theorem shl_mul_mask_proof : shl_mul_mask_before ⊑ shl_mul_mask_after := by
   unfold shl_mul_mask_before shl_mul_mask_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_mul_mask
   all_goals (try extract_goal ; sorry)
   ---END shl_mul_mask
@@ -454,12 +400,6 @@ def shl_mul_mask_wrong_mul_const_after := [llvm|
 theorem shl_mul_mask_wrong_mul_const_proof : shl_mul_mask_wrong_mul_const_before ⊑ shl_mul_mask_wrong_mul_const_after := by
   unfold shl_mul_mask_wrong_mul_const_before shl_mul_mask_wrong_mul_const_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_mul_mask_wrong_mul_const
   all_goals (try extract_goal ; sorry)
   ---END shl_mul_mask_wrong_mul_const

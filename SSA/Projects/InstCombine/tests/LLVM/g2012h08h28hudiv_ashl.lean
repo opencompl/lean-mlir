@@ -34,12 +34,6 @@ def udiv400_after := [llvm|
 theorem udiv400_proof : udiv400_before ⊑ udiv400_after := by
   unfold udiv400_before udiv400_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN udiv400
   all_goals (try extract_goal ; sorry)
   ---END udiv400
@@ -67,12 +61,6 @@ def sdiv400_yes_after := [llvm|
 theorem sdiv400_yes_proof : sdiv400_yes_before ⊑ sdiv400_yes_after := by
   unfold sdiv400_yes_before sdiv400_yes_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sdiv400_yes
   all_goals (try extract_goal ; sorry)
   ---END sdiv400_yes
@@ -100,12 +88,6 @@ def udiv_i80_after := [llvm|
 theorem udiv_i80_proof : udiv_i80_before ⊑ udiv_i80_after := by
   unfold udiv_i80_before udiv_i80_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN udiv_i80
   all_goals (try extract_goal ; sorry)
   ---END udiv_i80

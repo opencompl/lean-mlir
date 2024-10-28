@@ -2,17 +2,56 @@
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
+open LLVM
 
 section gdistribute_proof
-theorem factorize_thm (x : BitVec 32) : (x ||| 1#32) &&& (x ||| 2#32) = x := sorry
+theorem factorize_thm : ∀ (e : IntW 32), LLVM.and (LLVM.or e (const? 1)) (LLVM.or e (const? 2)) ⊑ e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem factorize2_thm (x : BitVec 32) : 3#32 * x - 2#32 * x = x := sorry
 
-theorem factorize3_thm (x x_1 x_2 : BitVec 32) : (x_2 ||| (x_1 ||| x)) &&& (x_2 ||| x) = x_2 ||| x := sorry
+theorem factorize2_thm : ∀ (e : IntW 32), sub (mul (const? 3) e) (mul (const? 2) e) ⊑ e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem factorize4_thm (x x_1 : BitVec 32) : x_1 <<< 1 * x - x * x_1 = x_1 * x := sorry
 
-theorem factorize5_thm (x x_1 : BitVec 32) : x_1 * 2#32 * x - x * x_1 = x_1 * x := sorry
+theorem factorize3_thm :
+  ∀ (e e_1 e_2 : IntW 32), LLVM.and (LLVM.or e_2 (LLVM.or e_1 e)) (LLVM.or e_2 e) ⊑ LLVM.or e_2 e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem expand_thm (x : BitVec 32) : (x &&& 1#32 ||| 2#32) &&& 1#32 = x &&& 1#32 := sorry
+
+theorem factorize4_thm : ∀ (e e_1 : IntW 32), sub (mul (shl e_1 (const? 1)) e) (mul e e_1) ⊑ mul e_1 e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem factorize5_thm : ∀ (e e_1 : IntW 32), sub (mul (mul e_1 (const? 2)) e) (mul e e_1) ⊑ mul e_1 e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem expand_thm :
+  ∀ (e : IntW 32), LLVM.and (LLVM.or (LLVM.and e (const? 1)) (const? 2)) (const? 1) ⊑ LLVM.and e (const? 1) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
 

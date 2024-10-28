@@ -36,12 +36,6 @@ def t1_after := [llvm|
 theorem t1_proof : t1_before ⊑ t1_after := by
   unfold t1_before t1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t1
   all_goals (try extract_goal ; sorry)
   ---END t1
@@ -69,12 +63,6 @@ def t2_after := [llvm|
 theorem t2_proof : t2_before ⊑ t2_after := by
   unfold t2_before t2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t2
   all_goals (try extract_goal ; sorry)
   ---END t2
@@ -104,12 +92,6 @@ def t3_after := [llvm|
 theorem t3_proof : t3_before ⊑ t3_after := by
   unfold t3_before t3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t3
   all_goals (try extract_goal ; sorry)
   ---END t3
@@ -143,12 +125,6 @@ def t5_after := [llvm|
 theorem t5_proof : t5_before ⊑ t5_after := by
   unfold t5_before t5_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t5
   all_goals (try extract_goal ; sorry)
   ---END t5
@@ -174,12 +150,6 @@ def t7_after := [llvm|
 theorem t7_proof : t7_before ⊑ t7_after := by
   unfold t7_before t7_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t7
   all_goals (try extract_goal ; sorry)
   ---END t7
@@ -205,12 +175,6 @@ def t10_after := [llvm|
 theorem t10_proof : t10_before ⊑ t10_after := by
   unfold t10_before t10_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t10
   all_goals (try extract_goal ; sorry)
   ---END t10
@@ -236,12 +200,6 @@ def t12_after := [llvm|
 theorem t12_proof : t12_before ⊑ t12_after := by
   unfold t12_before t12_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t12
   all_goals (try extract_goal ; sorry)
   ---END t12
@@ -267,12 +225,6 @@ def t15_after := [llvm|
 theorem t15_proof : t15_before ⊑ t15_after := by
   unfold t15_before t15_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t15
   all_goals (try extract_goal ; sorry)
   ---END t15
@@ -300,12 +252,6 @@ def sdiv_mul_shl_nsw_after := [llvm|
 theorem sdiv_mul_shl_nsw_proof : sdiv_mul_shl_nsw_before ⊑ sdiv_mul_shl_nsw_after := by
   unfold sdiv_mul_shl_nsw_before sdiv_mul_shl_nsw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sdiv_mul_shl_nsw
   all_goals (try extract_goal ; sorry)
   ---END sdiv_mul_shl_nsw
@@ -333,12 +279,6 @@ def sdiv_mul_shl_nsw_exact_commute1_after := [llvm|
 theorem sdiv_mul_shl_nsw_exact_commute1_proof : sdiv_mul_shl_nsw_exact_commute1_before ⊑ sdiv_mul_shl_nsw_exact_commute1_after := by
   unfold sdiv_mul_shl_nsw_exact_commute1_before sdiv_mul_shl_nsw_exact_commute1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sdiv_mul_shl_nsw_exact_commute1
   all_goals (try extract_goal ; sorry)
   ---END sdiv_mul_shl_nsw_exact_commute1
@@ -364,12 +304,6 @@ def udiv_mul_shl_nuw_after := [llvm|
 theorem udiv_mul_shl_nuw_proof : udiv_mul_shl_nuw_before ⊑ udiv_mul_shl_nuw_after := by
   unfold udiv_mul_shl_nuw_before udiv_mul_shl_nuw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN udiv_mul_shl_nuw
   all_goals (try extract_goal ; sorry)
   ---END udiv_mul_shl_nuw
@@ -395,12 +329,6 @@ def udiv_mul_shl_nuw_exact_commute1_after := [llvm|
 theorem udiv_mul_shl_nuw_exact_commute1_proof : udiv_mul_shl_nuw_exact_commute1_before ⊑ udiv_mul_shl_nuw_exact_commute1_after := by
   unfold udiv_mul_shl_nuw_exact_commute1_before udiv_mul_shl_nuw_exact_commute1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN udiv_mul_shl_nuw_exact_commute1
   all_goals (try extract_goal ; sorry)
   ---END udiv_mul_shl_nuw_exact_commute1
@@ -428,12 +356,6 @@ def udiv_shl_mul_nuw_after := [llvm|
 theorem udiv_shl_mul_nuw_proof : udiv_shl_mul_nuw_before ⊑ udiv_shl_mul_nuw_after := by
   unfold udiv_shl_mul_nuw_before udiv_shl_mul_nuw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN udiv_shl_mul_nuw
   all_goals (try extract_goal ; sorry)
   ---END udiv_shl_mul_nuw
@@ -461,12 +383,6 @@ def udiv_shl_mul_nuw_swap_after := [llvm|
 theorem udiv_shl_mul_nuw_swap_proof : udiv_shl_mul_nuw_swap_before ⊑ udiv_shl_mul_nuw_swap_after := by
   unfold udiv_shl_mul_nuw_swap_before udiv_shl_mul_nuw_swap_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN udiv_shl_mul_nuw_swap
   all_goals (try extract_goal ; sorry)
   ---END udiv_shl_mul_nuw_swap
@@ -494,12 +410,6 @@ def udiv_shl_mul_nuw_exact_after := [llvm|
 theorem udiv_shl_mul_nuw_exact_proof : udiv_shl_mul_nuw_exact_before ⊑ udiv_shl_mul_nuw_exact_after := by
   unfold udiv_shl_mul_nuw_exact_before udiv_shl_mul_nuw_exact_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN udiv_shl_mul_nuw_exact
   all_goals (try extract_goal ; sorry)
   ---END udiv_shl_mul_nuw_exact
@@ -525,12 +435,6 @@ def udiv_lshr_mul_nuw_after := [llvm|
 theorem udiv_lshr_mul_nuw_proof : udiv_lshr_mul_nuw_before ⊑ udiv_lshr_mul_nuw_after := by
   unfold udiv_lshr_mul_nuw_before udiv_lshr_mul_nuw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN udiv_lshr_mul_nuw
   all_goals (try extract_goal ; sorry)
   ---END udiv_lshr_mul_nuw
@@ -556,12 +460,6 @@ def sdiv_shl_shl_nsw2_nuw_after := [llvm|
 theorem sdiv_shl_shl_nsw2_nuw_proof : sdiv_shl_shl_nsw2_nuw_before ⊑ sdiv_shl_shl_nsw2_nuw_after := by
   unfold sdiv_shl_shl_nsw2_nuw_before sdiv_shl_shl_nsw2_nuw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sdiv_shl_shl_nsw2_nuw
   all_goals (try extract_goal ; sorry)
   ---END sdiv_shl_shl_nsw2_nuw
@@ -587,12 +485,6 @@ def udiv_shl_shl_nuw_nsw2_after := [llvm|
 theorem udiv_shl_shl_nuw_nsw2_proof : udiv_shl_shl_nuw_nsw2_before ⊑ udiv_shl_shl_nuw_nsw2_after := by
   unfold udiv_shl_shl_nuw_nsw2_before udiv_shl_shl_nuw_nsw2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN udiv_shl_shl_nuw_nsw2
   all_goals (try extract_goal ; sorry)
   ---END udiv_shl_shl_nuw_nsw2
@@ -620,12 +512,6 @@ def sdiv_shl_pair_const_after := [llvm|
 theorem sdiv_shl_pair_const_proof : sdiv_shl_pair_const_before ⊑ sdiv_shl_pair_const_after := by
   unfold sdiv_shl_pair_const_before sdiv_shl_pair_const_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sdiv_shl_pair_const
   all_goals (try extract_goal ; sorry)
   ---END sdiv_shl_pair_const
@@ -653,12 +539,6 @@ def udiv_shl_pair_const_after := [llvm|
 theorem udiv_shl_pair_const_proof : udiv_shl_pair_const_before ⊑ udiv_shl_pair_const_after := by
   unfold udiv_shl_pair_const_before udiv_shl_pair_const_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN udiv_shl_pair_const
   all_goals (try extract_goal ; sorry)
   ---END udiv_shl_pair_const
@@ -686,12 +566,6 @@ def sdiv_shl_pair1_after := [llvm|
 theorem sdiv_shl_pair1_proof : sdiv_shl_pair1_before ⊑ sdiv_shl_pair1_after := by
   unfold sdiv_shl_pair1_before sdiv_shl_pair1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sdiv_shl_pair1
   all_goals (try extract_goal ; sorry)
   ---END sdiv_shl_pair1
@@ -719,12 +593,6 @@ def sdiv_shl_pair2_after := [llvm|
 theorem sdiv_shl_pair2_proof : sdiv_shl_pair2_before ⊑ sdiv_shl_pair2_after := by
   unfold sdiv_shl_pair2_before sdiv_shl_pair2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sdiv_shl_pair2
   all_goals (try extract_goal ; sorry)
   ---END sdiv_shl_pair2
@@ -752,12 +620,6 @@ def sdiv_shl_pair3_after := [llvm|
 theorem sdiv_shl_pair3_proof : sdiv_shl_pair3_before ⊑ sdiv_shl_pair3_after := by
   unfold sdiv_shl_pair3_before sdiv_shl_pair3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sdiv_shl_pair3
   all_goals (try extract_goal ; sorry)
   ---END sdiv_shl_pair3
@@ -785,12 +647,6 @@ def udiv_shl_pair1_after := [llvm|
 theorem udiv_shl_pair1_proof : udiv_shl_pair1_before ⊑ udiv_shl_pair1_after := by
   unfold udiv_shl_pair1_before udiv_shl_pair1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN udiv_shl_pair1
   all_goals (try extract_goal ; sorry)
   ---END udiv_shl_pair1
@@ -818,12 +674,6 @@ def udiv_shl_pair2_after := [llvm|
 theorem udiv_shl_pair2_proof : udiv_shl_pair2_before ⊑ udiv_shl_pair2_after := by
   unfold udiv_shl_pair2_before udiv_shl_pair2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN udiv_shl_pair2
   all_goals (try extract_goal ; sorry)
   ---END udiv_shl_pair2
@@ -851,12 +701,6 @@ def udiv_shl_pair3_after := [llvm|
 theorem udiv_shl_pair3_proof : udiv_shl_pair3_before ⊑ udiv_shl_pair3_after := by
   unfold udiv_shl_pair3_before udiv_shl_pair3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN udiv_shl_pair3
   all_goals (try extract_goal ; sorry)
   ---END udiv_shl_pair3

@@ -38,12 +38,6 @@ def neg_after := [llvm|
 theorem neg_proof : neg_before ⊑ neg_after := by
   unfold neg_before neg_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN neg
   all_goals (try extract_goal ; sorry)
   ---END neg
@@ -75,12 +69,6 @@ def not_after := [llvm|
 theorem not_proof : not_before ⊑ not_after := by
   unfold not_before not_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not
   all_goals (try extract_goal ; sorry)
   ---END not

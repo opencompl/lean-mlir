@@ -36,12 +36,6 @@ def srem2_ashr_mask_after := [llvm|
 theorem srem2_ashr_mask_proof : srem2_ashr_mask_before ⊑ srem2_ashr_mask_after := by
   unfold srem2_ashr_mask_before srem2_ashr_mask_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN srem2_ashr_mask
   all_goals (try extract_goal ; sorry)
   ---END srem2_ashr_mask
@@ -69,12 +63,6 @@ def ashr_can_be_lshr_after := [llvm|
 theorem ashr_can_be_lshr_proof : ashr_can_be_lshr_before ⊑ ashr_can_be_lshr_after := by
   unfold ashr_can_be_lshr_before ashr_can_be_lshr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ashr_can_be_lshr
   all_goals (try extract_goal ; sorry)
   ---END ashr_can_be_lshr
@@ -108,12 +96,6 @@ def ashr_can_be_lshr_2_after := [llvm|
 theorem ashr_can_be_lshr_2_proof : ashr_can_be_lshr_2_before ⊑ ashr_can_be_lshr_2_after := by
   unfold ashr_can_be_lshr_2_before ashr_can_be_lshr_2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ashr_can_be_lshr_2
   all_goals (try extract_goal ; sorry)
   ---END ashr_can_be_lshr_2

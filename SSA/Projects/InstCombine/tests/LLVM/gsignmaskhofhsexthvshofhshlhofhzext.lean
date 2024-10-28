@@ -36,12 +36,6 @@ def t0_after := [llvm|
 theorem t0_proof : t0_before ⊑ t0_after := by
   unfold t0_before t0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t0
   all_goals (try extract_goal ; sorry)
   ---END t0
@@ -71,12 +65,6 @@ def t1_after := [llvm|
 theorem t1_proof : t1_before ⊑ t1_after := by
   unfold t1_before t1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t1
   all_goals (try extract_goal ; sorry)
   ---END t1
@@ -104,12 +92,6 @@ def n2_after := [llvm|
 theorem n2_proof : n2_before ⊑ n2_after := by
   unfold n2_before n2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN n2
   all_goals (try extract_goal ; sorry)
   ---END n2
@@ -141,12 +123,6 @@ def n4_after := [llvm|
 theorem n4_proof : n4_before ⊑ n4_after := by
   unfold n4_before n4_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN n4
   all_goals (try extract_goal ; sorry)
   ---END n4

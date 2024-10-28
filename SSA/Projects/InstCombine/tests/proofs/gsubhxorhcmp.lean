@@ -34,12 +34,6 @@ def sext_xor_sub_after := [llvm|
 theorem sext_xor_sub_proof : sext_xor_sub_before ⊑ sext_xor_sub_after := by
   unfold sext_xor_sub_before sext_xor_sub_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sext_xor_sub
   apply sext_xor_sub_thm
   ---END sext_xor_sub
@@ -67,12 +61,6 @@ def sext_xor_sub_1_after := [llvm|
 theorem sext_xor_sub_1_proof : sext_xor_sub_1_before ⊑ sext_xor_sub_1_after := by
   unfold sext_xor_sub_1_before sext_xor_sub_1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sext_xor_sub_1
   apply sext_xor_sub_1_thm
   ---END sext_xor_sub_1
@@ -100,12 +88,6 @@ def sext_xor_sub_2_after := [llvm|
 theorem sext_xor_sub_2_proof : sext_xor_sub_2_before ⊑ sext_xor_sub_2_after := by
   unfold sext_xor_sub_2_before sext_xor_sub_2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sext_xor_sub_2
   apply sext_xor_sub_2_thm
   ---END sext_xor_sub_2
@@ -133,12 +115,6 @@ def sext_xor_sub_3_after := [llvm|
 theorem sext_xor_sub_3_proof : sext_xor_sub_3_before ⊑ sext_xor_sub_3_after := by
   unfold sext_xor_sub_3_before sext_xor_sub_3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sext_xor_sub_3
   apply sext_xor_sub_3_thm
   ---END sext_xor_sub_3
@@ -166,12 +142,6 @@ def sext_non_bool_xor_sub_1_after := [llvm|
 theorem sext_non_bool_xor_sub_1_proof : sext_non_bool_xor_sub_1_before ⊑ sext_non_bool_xor_sub_1_after := by
   unfold sext_non_bool_xor_sub_1_before sext_non_bool_xor_sub_1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sext_non_bool_xor_sub_1
   apply sext_non_bool_xor_sub_1_thm
   ---END sext_non_bool_xor_sub_1
@@ -200,12 +170,6 @@ def sext_diff_i1_xor_sub_after := [llvm|
 theorem sext_diff_i1_xor_sub_proof : sext_diff_i1_xor_sub_before ⊑ sext_diff_i1_xor_sub_after := by
   unfold sext_diff_i1_xor_sub_before sext_diff_i1_xor_sub_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sext_diff_i1_xor_sub
   apply sext_diff_i1_xor_sub_thm
   ---END sext_diff_i1_xor_sub
@@ -234,12 +198,6 @@ def sext_diff_i1_xor_sub_1_after := [llvm|
 theorem sext_diff_i1_xor_sub_1_proof : sext_diff_i1_xor_sub_1_before ⊑ sext_diff_i1_xor_sub_1_after := by
   unfold sext_diff_i1_xor_sub_1_before sext_diff_i1_xor_sub_1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sext_diff_i1_xor_sub_1
   apply sext_diff_i1_xor_sub_1_thm
   ---END sext_diff_i1_xor_sub_1
@@ -270,12 +228,6 @@ def sext_multi_uses_after := [llvm|
 theorem sext_multi_uses_proof : sext_multi_uses_before ⊑ sext_multi_uses_after := by
   unfold sext_multi_uses_before sext_multi_uses_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sext_multi_uses
   apply sext_multi_uses_thm
   ---END sext_multi_uses

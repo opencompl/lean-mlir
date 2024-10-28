@@ -36,12 +36,6 @@ def zext_add_after := [llvm|
 theorem zext_add_proof : zext_add_before ⊑ zext_add_after := by
   unfold zext_add_before zext_add_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN zext_add
   apply zext_add_thm
   ---END zext_add
@@ -71,12 +65,6 @@ def zext_sub_after := [llvm|
 theorem zext_sub_proof : zext_sub_before ⊑ zext_sub_after := by
   unfold zext_sub_before zext_sub_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN zext_sub
   apply zext_sub_thm
   ---END zext_sub
@@ -106,12 +94,6 @@ def zext_mul_after := [llvm|
 theorem zext_mul_proof : zext_mul_before ⊑ zext_mul_after := by
   unfold zext_mul_before zext_mul_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN zext_mul
   apply zext_mul_thm
   ---END zext_mul
@@ -141,12 +123,6 @@ def zext_lshr_after := [llvm|
 theorem zext_lshr_proof : zext_lshr_before ⊑ zext_lshr_after := by
   unfold zext_lshr_before zext_lshr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN zext_lshr
   apply zext_lshr_thm
   ---END zext_lshr
@@ -176,12 +152,6 @@ def zext_ashr_after := [llvm|
 theorem zext_ashr_proof : zext_ashr_before ⊑ zext_ashr_after := by
   unfold zext_ashr_before zext_ashr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN zext_ashr
   apply zext_ashr_thm
   ---END zext_ashr
@@ -211,12 +181,6 @@ def zext_shl_after := [llvm|
 theorem zext_shl_proof : zext_shl_before ⊑ zext_shl_after := by
   unfold zext_shl_before zext_shl_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN zext_shl
   apply zext_shl_thm
   ---END zext_shl

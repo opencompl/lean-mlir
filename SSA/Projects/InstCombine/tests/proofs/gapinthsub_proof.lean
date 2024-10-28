@@ -2,21 +2,119 @@
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
+open LLVM
 
 section gapinthsub_proof
-theorem test5_thm (x x_1 x_2 : BitVec 19) : x_2 - (x_1 - x) = x - x_1 + x_2 := sorry
+theorem test1_thm : ∀ (e : IntW 23), sub e e ⊑ const? 0 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem test6_thm (x x_1 : BitVec 57) : x_1 - (x_1 &&& x) = x_1 &&& (x ^^^ 144115188075855871#57) := sorry
 
-theorem test7_thm (x : BitVec 77) : 151115727451828646838271#77 - x = x ^^^ 151115727451828646838271#77 := sorry
+theorem test2_thm : ∀ (e : IntW 47), sub e (const? 0) ⊑ e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem test8_thm (x : BitVec 27) : 9#27 * x - x = x <<< 3 := sorry
 
-theorem test9_thm (x : BitVec 42) : x - 3#42 * x = x * 4398046511102#42 := sorry
+theorem test3_thm : ∀ (e : IntW 97), sub (const? 0) (sub (const? 0) e) ⊑ e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem test12_thm (x : BitVec 43) : -x.sshiftRight 42 = x >>> 42 := sorry
 
-theorem test13_thm (x : BitVec 79) : -x >>> 78 = x.sshiftRight 78 := sorry
+theorem test4_thm : ∀ (e e_1 : IntW 108), sub e_1 (sub (const? 0) e) ⊑ add e_1 e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem test16_thm (x : BitVec 51) : -x.sdiv 1123#51 = x.sdiv 2251799813684125#51 := sorry
+
+theorem test5_thm : ∀ (e e_1 e_2 : IntW 19), sub e_2 (sub e_1 e) ⊑ add (sub e e_1) e_2 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test6_thm : ∀ (e e_1 : IntW 57), sub e_1 (LLVM.and e_1 e) ⊑ LLVM.and e_1 (LLVM.xor e (const? (-1))) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test7_thm : ∀ (e : IntW 77), sub (const? (-1)) e ⊑ LLVM.xor e (const? (-1)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test8_thm : ∀ (e : IntW 27), sub (mul (const? 9) e) e ⊑ shl e (const? 3) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test9_thm : ∀ (e : IntW 42), sub e (mul (const? 3) e) ⊑ mul e (const? (-2)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test12_thm : ∀ (e : IntW 43), sub (const? 0) (ashr e (const? 42)) ⊑ lshr e (const? 42) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test13_thm : ∀ (e : IntW 79), sub (const? 0) (lshr e (const? 78)) ⊑ ashr e (const? 78) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test16_thm :
+  ∀ (e : IntW 51), sub (const? 0) (LLVM.sdiv e (const? 1123)) ⊑ LLVM.sdiv e (const? (-1123)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test18_thm : ∀ (e : IntW 128), sub (shl e (const? 2)) (shl e (const? 2)) ⊑ const? 0 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test19_thm : ∀ (e e_1 : IntW 39), add (sub e_1 e) e ⊑ e_1 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
 

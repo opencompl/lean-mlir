@@ -32,12 +32,6 @@ def test_after := [llvm|
 theorem test_proof : test_before ⊑ test_after := by
   unfold test_before test_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test
   apply test_thm
   ---END test

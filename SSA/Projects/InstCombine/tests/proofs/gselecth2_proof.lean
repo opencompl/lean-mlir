@@ -2,166 +2,70 @@
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
+open LLVM
 
 section gselecth2_proof
-theorem ashr_exact_poison_constant_fold_thm (x : BitVec 1) :
-  (Option.bind
-      (match some x with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => none
-      | some { toFin := ⟨0, ⋯⟩ } => some 42#8)
-      fun x' => some (x'.sshiftRight 3)) ⊑
-    match some x with
-    | none => none
-    | some { toFin := ⟨1, ⋯⟩ } => none
-    | some { toFin := ⟨0, ⋯⟩ } => some 5#8 := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gselecth2.lean:46:17: theorem ashr_exact_poison_constant_fold_thm :
-  ∀ (x : BitVec 8) (x_1 : BitVec 1),
-    (Option.bind
-        (match some x_1 with
-        | none => none
-        | some { toFin := ⟨1, ⋯⟩ } => some x
-        | some { toFin := ⟨0, ⋯⟩ } => some 42#8)
-        fun x' => some (x'.sshiftRight 3)) ⊑
-      match some x_1 with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some (x.sshiftRight 3)
-      | some { toFin := ⟨0, ⋯⟩ } => some 5#8 := sorry
+theorem ashr_exact_poison_constant_fold_thm :
+  ∀ (e : IntW 8) (e_1 : IntW 1),
+    ashr (select e_1 e (const? 42)) (const? 3) ⊑ select e_1 (ashr e (const? 3)) (const? 5) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem ashr_exact_thm (x : BitVec 1) :
-  (Option.bind
-      (match some x with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => none
-      | some { toFin := ⟨0, ⋯⟩ } => some 16#8)
-      fun x' => some (x'.sshiftRight 3)) ⊑
-    match some x with
-    | none => none
-    | some { toFin := ⟨1, ⋯⟩ } => none
-    | some { toFin := ⟨0, ⋯⟩ } => some 2#8 := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gselecth2.lean:81:17: theorem ashr_exact_thm :
-  ∀ (x : BitVec 8) (x_1 : BitVec 1),
-    (Option.bind
-        (match some x_1 with
-        | none => none
-        | some { toFin := ⟨1, ⋯⟩ } => some x
-        | some { toFin := ⟨0, ⋯⟩ } => some 16#8)
-        fun x' => some (x'.sshiftRight 3)) ⊑
-      match some x_1 with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some (x.sshiftRight 3)
-      | some { toFin := ⟨0, ⋯⟩ } => some 2#8 := sorry
 
-theorem shl_nsw_nuw_poison_constant_fold_thm (x : BitVec 1) :
-  (Option.bind
-      (match some x with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some 3#8
-      | some { toFin := ⟨0, ⋯⟩ } => none)
-      fun y' =>
-      if (16#8 <<< y'.toNat).sshiftRight y'.toNat = 16#8 then none
-      else
-        if 16#8 <<< y'.toNat >>> y'.toNat = 16#8 then none else if 8#8 ≤ y' then none else some (16#8 <<< y'.toNat)) ⊑
-    match some x with
-    | none => none
-    | some { toFin := ⟨1, ⋯⟩ } => some 128#8
-    | some { toFin := ⟨0, ⋯⟩ } => none := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gselecth2.lean:116:17: theorem shl_nsw_nuw_poison_constant_fold_thm :
-  ∀ (x : BitVec 8) (x_1 : BitVec 1),
-    (Option.bind
-        (match some x_1 with
-        | none => none
-        | some { toFin := ⟨1, ⋯⟩ } => some 3#8
-        | some { toFin := ⟨0, ⋯⟩ } => some x)
-        fun y' =>
-        if (16#8 <<< y'.toNat).sshiftRight y'.toNat = 16#8 then none
-        else
-          if 16#8 <<< y'.toNat >>> y'.toNat = 16#8 then none else if 8#8 ≤ y' then none else some (16#8 <<< y'.toNat)) ⊑
-      match some x_1 with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some 128#8
-      | some { toFin := ⟨0, ⋯⟩ } =>
-        if (16#8 <<< x.toNat).sshiftRight x.toNat = 16#8 then none
-        else
-          if 16#8 <<< x.toNat >>> x.toNat = 16#8 then none
-          else if 8#8 ≤ x then none else some (16#8 <<< x.toNat) := sorry
+theorem ashr_exact_thm :
+  ∀ (e : IntW 8) (e_1 : IntW 1),
+    ashr (select e_1 e (const? 16)) (const? 3) ⊑ select e_1 (ashr e (const? 3)) (const? 2) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem shl_nsw_nuw_thm (x : BitVec 1) :
-  (Option.bind
-      (match some x with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some 3#8
-      | some { toFin := ⟨0, ⋯⟩ } => none)
-      fun y' =>
-      if (7#8 <<< y'.toNat).sshiftRight y'.toNat = 7#8 then none
-      else if 7#8 <<< y'.toNat >>> y'.toNat = 7#8 then none else if 8#8 ≤ y' then none else some (7#8 <<< y'.toNat)) ⊑
-    match some x with
-    | none => none
-    | some { toFin := ⟨1, ⋯⟩ } => some 56#8
-    | some { toFin := ⟨0, ⋯⟩ } => none := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gselecth2.lean:151:17: theorem shl_nsw_nuw_thm :
-  ∀ (x : BitVec 8) (x_1 : BitVec 1),
-    (Option.bind
-        (match some x_1 with
-        | none => none
-        | some { toFin := ⟨1, ⋯⟩ } => some 3#8
-        | some { toFin := ⟨0, ⋯⟩ } => some x)
-        fun y' =>
-        if (7#8 <<< y'.toNat).sshiftRight y'.toNat = 7#8 then none
-        else if 7#8 <<< y'.toNat >>> y'.toNat = 7#8 then none else if 8#8 ≤ y' then none else some (7#8 <<< y'.toNat)) ⊑
-      match some x_1 with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some 56#8
-      | some { toFin := ⟨0, ⋯⟩ } =>
-        if (7#8 <<< x.toNat).sshiftRight x.toNat = 7#8 then none
-        else
-          if 7#8 <<< x.toNat >>> x.toNat = 7#8 then none else if 8#8 ≤ x then none else some (7#8 <<< x.toNat) := sorry
 
-theorem add_nsw_poison_constant_fold_thm (x : BitVec 1) :
-  (Option.bind
-      (match some x with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => none
-      | some { toFin := ⟨0, ⋯⟩ } => some 65#8)
-      fun x' => if x'.msb = (64#8).msb ∧ ¬(x' + 64#8).msb = x'.msb then none else some (x' + 64#8)) ⊑
-    match some x with
-    | none => none
-    | some { toFin := ⟨1, ⋯⟩ } => none
-    | some { toFin := ⟨0, ⋯⟩ } => some 129#8 := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gselecth2.lean:186:17: theorem add_nsw_poison_constant_fold_thm :
-  ∀ (x : BitVec 8) (x_1 : BitVec 1),
-    (Option.bind
-        (match some x_1 with
-        | none => none
-        | some { toFin := ⟨1, ⋯⟩ } => some x
-        | some { toFin := ⟨0, ⋯⟩ } => some 65#8)
-        fun x' => if x'.msb = (64#8).msb ∧ ¬(x' + 64#8).msb = x'.msb then none else some (x' + 64#8)) ⊑
-      match some x_1 with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => if x.msb = (64#8).msb ∧ ¬(x + 64#8).msb = x.msb then none else some (x + 64#8)
-      | some { toFin := ⟨0, ⋯⟩ } => some 129#8 := sorry
+theorem shl_nsw_nuw_poison_constant_fold_thm :
+  ∀ (e : IntW 8) (e_1 : IntW 1),
+    shl (const? 16) (select e_1 (const? 3) e) { «nsw» := true, «nuw» := true } ⊑
+      select e_1 (const? (-128)) (shl (const? 16) e { «nsw» := true, «nuw» := true }) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem add_nsw_thm (x : BitVec 1) :
-  (Option.bind
-      (match some x with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => none
-      | some { toFin := ⟨0, ⋯⟩ } => some 7#8)
-      fun x' => if x'.msb = (64#8).msb ∧ ¬(x' + 64#8).msb = x'.msb then none else some (x' + 64#8)) ⊑
-    match some x with
-    | none => none
-    | some { toFin := ⟨1, ⋯⟩ } => none
-    | some { toFin := ⟨0, ⋯⟩ } => some 71#8 := sorry
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gselecth2.lean:221:17: theorem add_nsw_thm :
-  ∀ (x : BitVec 8) (x_1 : BitVec 1),
-    (Option.bind
-        (match some x_1 with
-        | none => none
-        | some { toFin := ⟨1, ⋯⟩ } => some x
-        | some { toFin := ⟨0, ⋯⟩ } => some 7#8)
-        fun x' => if x'.msb = (64#8).msb ∧ ¬(x' + 64#8).msb = x'.msb then none else some (x' + 64#8)) ⊑
-      match some x_1 with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => if x.msb = (64#8).msb ∧ ¬(x + 64#8).msb = x.msb then none else some (x + 64#8)
-      | some { toFin := ⟨0, ⋯⟩ } => some 71#8 := sorry
+
+theorem shl_nsw_nuw_thm :
+  ∀ (e : IntW 8) (e_1 : IntW 1),
+    shl (const? 7) (select e_1 (const? 3) e) { «nsw» := true, «nuw» := true } ⊑
+      select e_1 (const? 56) (shl (const? 7) e { «nsw» := true, «nuw» := true }) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem add_nsw_poison_constant_fold_thm :
+  ∀ (e : IntW 8) (e_1 : IntW 1),
+    add (select e_1 e (const? 65)) (const? 64) { «nsw» := true, «nuw» := false } ⊑
+      select e_1 (add e (const? 64) { «nsw» := true, «nuw» := false }) (const? (-127)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem add_nsw_thm :
+  ∀ (e : IntW 8) (e_1 : IntW 1),
+    add (select e_1 e (const? 7)) (const? 64) { «nsw» := true, «nuw» := false } ⊑
+      select e_1 (add e (const? 64) { «nsw» := true, «nuw» := false }) (const? 71) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
 

@@ -33,12 +33,6 @@ def t0_sub_from_trueval_after := [llvm|
 theorem t0_sub_from_trueval_proof : t0_sub_from_trueval_before ⊑ t0_sub_from_trueval_after := by
   unfold t0_sub_from_trueval_before t0_sub_from_trueval_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t0_sub_from_trueval
   apply t0_sub_from_trueval_thm
   ---END t0_sub_from_trueval
@@ -65,12 +59,6 @@ def t1_sub_from_falseval_after := [llvm|
 theorem t1_sub_from_falseval_proof : t1_sub_from_falseval_before ⊑ t1_sub_from_falseval_after := by
   unfold t1_sub_from_falseval_before t1_sub_from_falseval_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN t1_sub_from_falseval
   apply t1_sub_from_falseval_thm
   ---END t1_sub_from_falseval

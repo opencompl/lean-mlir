@@ -33,12 +33,6 @@ def add_shl_same_amount_after := [llvm|
 theorem add_shl_same_amount_proof : add_shl_same_amount_before ⊑ add_shl_same_amount_after := by
   unfold add_shl_same_amount_before add_shl_same_amount_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_shl_same_amount
   apply add_shl_same_amount_thm
   ---END add_shl_same_amount
@@ -65,12 +59,6 @@ def add_shl_same_amount_nuw_after := [llvm|
 theorem add_shl_same_amount_nuw_proof : add_shl_same_amount_nuw_before ⊑ add_shl_same_amount_nuw_after := by
   unfold add_shl_same_amount_nuw_before add_shl_same_amount_nuw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_shl_same_amount_nuw
   apply add_shl_same_amount_nuw_thm
   ---END add_shl_same_amount_nuw
@@ -97,12 +85,6 @@ def add_shl_same_amount_partial_nsw1_after := [llvm|
 theorem add_shl_same_amount_partial_nsw1_proof : add_shl_same_amount_partial_nsw1_before ⊑ add_shl_same_amount_partial_nsw1_after := by
   unfold add_shl_same_amount_partial_nsw1_before add_shl_same_amount_partial_nsw1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_shl_same_amount_partial_nsw1
   apply add_shl_same_amount_partial_nsw1_thm
   ---END add_shl_same_amount_partial_nsw1
@@ -129,12 +111,6 @@ def add_shl_same_amount_partial_nsw2_after := [llvm|
 theorem add_shl_same_amount_partial_nsw2_proof : add_shl_same_amount_partial_nsw2_before ⊑ add_shl_same_amount_partial_nsw2_after := by
   unfold add_shl_same_amount_partial_nsw2_before add_shl_same_amount_partial_nsw2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_shl_same_amount_partial_nsw2
   apply add_shl_same_amount_partial_nsw2_thm
   ---END add_shl_same_amount_partial_nsw2
@@ -161,12 +137,6 @@ def add_shl_same_amount_partial_nuw1_after := [llvm|
 theorem add_shl_same_amount_partial_nuw1_proof : add_shl_same_amount_partial_nuw1_before ⊑ add_shl_same_amount_partial_nuw1_after := by
   unfold add_shl_same_amount_partial_nuw1_before add_shl_same_amount_partial_nuw1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_shl_same_amount_partial_nuw1
   apply add_shl_same_amount_partial_nuw1_thm
   ---END add_shl_same_amount_partial_nuw1
@@ -193,12 +163,6 @@ def add_shl_same_amount_partial_nuw2_after := [llvm|
 theorem add_shl_same_amount_partial_nuw2_proof : add_shl_same_amount_partial_nuw2_before ⊑ add_shl_same_amount_partial_nuw2_after := by
   unfold add_shl_same_amount_partial_nuw2_before add_shl_same_amount_partial_nuw2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_shl_same_amount_partial_nuw2
   apply add_shl_same_amount_partial_nuw2_thm
   ---END add_shl_same_amount_partial_nuw2
@@ -225,12 +189,6 @@ def sub_shl_same_amount_after := [llvm|
 theorem sub_shl_same_amount_proof : sub_shl_same_amount_before ⊑ sub_shl_same_amount_after := by
   unfold sub_shl_same_amount_before sub_shl_same_amount_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sub_shl_same_amount
   apply sub_shl_same_amount_thm
   ---END sub_shl_same_amount
@@ -257,12 +215,6 @@ def sub_shl_same_amount_nuw_after := [llvm|
 theorem sub_shl_same_amount_nuw_proof : sub_shl_same_amount_nuw_before ⊑ sub_shl_same_amount_nuw_after := by
   unfold sub_shl_same_amount_nuw_before sub_shl_same_amount_nuw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sub_shl_same_amount_nuw
   apply sub_shl_same_amount_nuw_thm
   ---END sub_shl_same_amount_nuw
@@ -289,12 +241,6 @@ def sub_shl_same_amount_partial_nsw1_after := [llvm|
 theorem sub_shl_same_amount_partial_nsw1_proof : sub_shl_same_amount_partial_nsw1_before ⊑ sub_shl_same_amount_partial_nsw1_after := by
   unfold sub_shl_same_amount_partial_nsw1_before sub_shl_same_amount_partial_nsw1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sub_shl_same_amount_partial_nsw1
   apply sub_shl_same_amount_partial_nsw1_thm
   ---END sub_shl_same_amount_partial_nsw1
@@ -321,12 +267,6 @@ def sub_shl_same_amount_partial_nsw2_after := [llvm|
 theorem sub_shl_same_amount_partial_nsw2_proof : sub_shl_same_amount_partial_nsw2_before ⊑ sub_shl_same_amount_partial_nsw2_after := by
   unfold sub_shl_same_amount_partial_nsw2_before sub_shl_same_amount_partial_nsw2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sub_shl_same_amount_partial_nsw2
   apply sub_shl_same_amount_partial_nsw2_thm
   ---END sub_shl_same_amount_partial_nsw2
@@ -353,12 +293,6 @@ def sub_shl_same_amount_partial_nuw1_after := [llvm|
 theorem sub_shl_same_amount_partial_nuw1_proof : sub_shl_same_amount_partial_nuw1_before ⊑ sub_shl_same_amount_partial_nuw1_after := by
   unfold sub_shl_same_amount_partial_nuw1_before sub_shl_same_amount_partial_nuw1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sub_shl_same_amount_partial_nuw1
   apply sub_shl_same_amount_partial_nuw1_thm
   ---END sub_shl_same_amount_partial_nuw1
@@ -385,12 +319,6 @@ def sub_shl_same_amount_partial_nuw2_after := [llvm|
 theorem sub_shl_same_amount_partial_nuw2_proof : sub_shl_same_amount_partial_nuw2_before ⊑ sub_shl_same_amount_partial_nuw2_after := by
   unfold sub_shl_same_amount_partial_nuw2_before sub_shl_same_amount_partial_nuw2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sub_shl_same_amount_partial_nuw2
   apply sub_shl_same_amount_partial_nuw2_thm
   ---END sub_shl_same_amount_partial_nuw2
@@ -419,12 +347,6 @@ def add_shl_same_amount_constants_after := [llvm|
 theorem add_shl_same_amount_constants_proof : add_shl_same_amount_constants_before ⊑ add_shl_same_amount_constants_after := by
   unfold add_shl_same_amount_constants_before add_shl_same_amount_constants_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_shl_same_amount_constants
   apply add_shl_same_amount_constants_thm
   ---END add_shl_same_amount_constants

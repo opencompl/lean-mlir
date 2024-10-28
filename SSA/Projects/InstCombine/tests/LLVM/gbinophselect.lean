@@ -34,12 +34,6 @@ def and_sel_op0_after := [llvm|
 theorem and_sel_op0_proof : and_sel_op0_before ⊑ and_sel_op0_after := by
   unfold and_sel_op0_before and_sel_op0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_sel_op0
   all_goals (try extract_goal ; sorry)
   ---END and_sel_op0
@@ -69,12 +63,6 @@ def mul_sel_op0_after := [llvm|
 theorem mul_sel_op0_proof : mul_sel_op0_before ⊑ mul_sel_op0_after := by
   unfold mul_sel_op0_before mul_sel_op0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN mul_sel_op0
   all_goals (try extract_goal ; sorry)
   ---END mul_sel_op0
@@ -103,12 +91,6 @@ def sub_sel_op1_after := [llvm|
 theorem sub_sel_op1_proof : sub_sel_op1_before ⊑ sub_sel_op1_after := by
   unfold sub_sel_op1_before sub_sel_op1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sub_sel_op1
   all_goals (try extract_goal ; sorry)
   ---END sub_sel_op1
@@ -138,12 +120,6 @@ def ashr_sel_op1_after := [llvm|
 theorem ashr_sel_op1_proof : ashr_sel_op1_before ⊑ ashr_sel_op1_after := by
   unfold ashr_sel_op1_before ashr_sel_op1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ashr_sel_op1
   all_goals (try extract_goal ; sorry)
   ---END ashr_sel_op1

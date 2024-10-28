@@ -33,12 +33,6 @@ def test_with_even_after := [llvm|
 theorem test_with_even_proof : test_with_even_before ⊑ test_with_even_after := by
   unfold test_with_even_before test_with_even_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test_with_even
   all_goals (try extract_goal ; sorry)
   ---END test_with_even
@@ -65,12 +59,6 @@ def test_with_neg_even_after := [llvm|
 theorem test_with_neg_even_proof : test_with_neg_even_before ⊑ test_with_neg_even_after := by
   unfold test_with_neg_even_before test_with_neg_even_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test_with_neg_even
   all_goals (try extract_goal ; sorry)
   ---END test_with_neg_even
@@ -95,12 +83,6 @@ def test1_after := [llvm|
 theorem test1_proof : test1_before ⊑ test1_after := by
   unfold test1_before test1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test1
   all_goals (try extract_goal ; sorry)
   ---END test1
@@ -124,12 +106,6 @@ def test2_after := [llvm|
 theorem test2_proof : test2_before ⊑ test2_after := by
   unfold test2_before test2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test2
   all_goals (try extract_goal ; sorry)
   ---END test2
@@ -154,12 +130,6 @@ def test3_after := [llvm|
 theorem test3_proof : test3_before ⊑ test3_after := by
   unfold test3_before test3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test3
   all_goals (try extract_goal ; sorry)
   ---END test3
@@ -184,12 +154,6 @@ def test3_logical_after := [llvm|
 theorem test3_logical_proof : test3_logical_before ⊑ test3_logical_after := by
   unfold test3_logical_before test3_logical_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test3_logical
   all_goals (try extract_goal ; sorry)
   ---END test3_logical
@@ -213,12 +177,6 @@ def test4_after := [llvm|
 theorem test4_proof : test4_before ⊑ test4_after := by
   unfold test4_before test4_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test4
   all_goals (try extract_goal ; sorry)
   ---END test4
@@ -243,12 +201,6 @@ def test4_logical_after := [llvm|
 theorem test4_logical_proof : test4_logical_before ⊑ test4_logical_after := by
   unfold test4_logical_before test4_logical_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test4_logical
   all_goals (try extract_goal ; sorry)
   ---END test4_logical
@@ -271,12 +223,6 @@ def test5_after := [llvm|
 theorem test5_proof : test5_before ⊑ test5_after := by
   unfold test5_before test5_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test5
   all_goals (try extract_goal ; sorry)
   ---END test5
@@ -299,12 +245,6 @@ def test6_after := [llvm|
 theorem test6_proof : test6_before ⊑ test6_after := by
   unfold test6_before test6_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test6
   all_goals (try extract_goal ; sorry)
   ---END test6
@@ -328,12 +268,6 @@ def test6_logical_after := [llvm|
 theorem test6_logical_proof : test6_logical_before ⊑ test6_logical_after := by
   unfold test6_logical_before test6_logical_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test6_logical
   all_goals (try extract_goal ; sorry)
   ---END test6_logical
@@ -359,12 +293,6 @@ def test7_after := [llvm|
 theorem test7_proof : test7_before ⊑ test7_after := by
   unfold test7_before test7_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test7
   all_goals (try extract_goal ; sorry)
   ---END test7
@@ -391,12 +319,6 @@ def test8_after := [llvm|
 theorem test8_proof : test8_before ⊑ test8_after := by
   unfold test8_before test8_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test8
   all_goals (try extract_goal ; sorry)
   ---END test8
@@ -425,12 +347,6 @@ def test10_after := [llvm|
 theorem test10_proof : test10_before ⊑ test10_after := by
   unfold test10_before test10_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test10
   all_goals (try extract_goal ; sorry)
   ---END test10
@@ -457,12 +373,6 @@ def test15_after := [llvm|
 theorem test15_proof : test15_before ⊑ test15_after := by
   unfold test15_before test15_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test15
   all_goals (try extract_goal ; sorry)
   ---END test15
@@ -489,12 +399,6 @@ def test16_after := [llvm|
 theorem test16_proof : test16_before ⊑ test16_after := by
   unfold test16_before test16_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test16
   all_goals (try extract_goal ; sorry)
   ---END test16
@@ -522,12 +426,6 @@ def test19_after := [llvm|
 theorem test19_proof : test19_before ⊑ test19_after := by
   unfold test19_before test19_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test19
   all_goals (try extract_goal ; sorry)
   ---END test19
@@ -555,12 +453,6 @@ def test20_after := [llvm|
 theorem test20_proof : test20_before ⊑ test20_after := by
   unfold test20_before test20_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test20
   all_goals (try extract_goal ; sorry)
   ---END test20
@@ -590,12 +482,6 @@ def test27_after := [llvm|
 theorem test27_proof : test27_before ⊑ test27_after := by
   unfold test27_before test27_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test27
   all_goals (try extract_goal ; sorry)
   ---END test27
@@ -623,12 +509,6 @@ def ashr_lowmask_after := [llvm|
 theorem ashr_lowmask_proof : ashr_lowmask_before ⊑ ashr_lowmask_after := by
   unfold ashr_lowmask_before ashr_lowmask_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ashr_lowmask
   all_goals (try extract_goal ; sorry)
   ---END ashr_lowmask
@@ -654,12 +534,6 @@ def test29_after := [llvm|
 theorem test29_proof : test29_before ⊑ test29_after := by
   unfold test29_before test29_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test29
   all_goals (try extract_goal ; sorry)
   ---END test29
@@ -685,12 +559,6 @@ def test30_after := [llvm|
 theorem test30_proof : test30_before ⊑ test30_after := by
   unfold test30_before test30_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test30
   all_goals (try extract_goal ; sorry)
   ---END test30
@@ -720,12 +588,6 @@ def test31_after := [llvm|
 theorem test31_proof : test31_before ⊑ test31_after := by
   unfold test31_before test31_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test31
   all_goals (try extract_goal ; sorry)
   ---END test31
@@ -756,12 +618,6 @@ def and_zext_demanded_after := [llvm|
 theorem and_zext_demanded_proof : and_zext_demanded_before ⊑ and_zext_demanded_after := by
   unfold and_zext_demanded_before and_zext_demanded_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_zext_demanded
   all_goals (try extract_goal ; sorry)
   ---END and_zext_demanded
@@ -790,12 +646,6 @@ def test32_after := [llvm|
 theorem test32_proof : test32_before ⊑ test32_after := by
   unfold test32_before test32_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test32
   all_goals (try extract_goal ; sorry)
   ---END test32
@@ -825,12 +675,6 @@ def test33_after := [llvm|
 theorem test33_proof : test33_before ⊑ test33_after := by
   unfold test33_before test33_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test33
   all_goals (try extract_goal ; sorry)
   ---END test33
@@ -860,12 +704,6 @@ def test33b_after := [llvm|
 theorem test33b_proof : test33b_before ⊑ test33b_after := by
   unfold test33b_before test33b_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test33b
   all_goals (try extract_goal ; sorry)
   ---END test33b
@@ -889,12 +727,6 @@ def test34_after := [llvm|
 theorem test34_proof : test34_before ⊑ test34_after := by
   unfold test34_before test34_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test34
   all_goals (try extract_goal ; sorry)
   ---END test34
@@ -926,12 +758,6 @@ def test35_after := [llvm|
 theorem test35_proof : test35_before ⊑ test35_after := by
   unfold test35_before test35_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test35
   all_goals (try extract_goal ; sorry)
   ---END test35
@@ -963,12 +789,6 @@ def test36_after := [llvm|
 theorem test36_proof : test36_before ⊑ test36_after := by
   unfold test36_before test36_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test36
   all_goals (try extract_goal ; sorry)
   ---END test36
@@ -1000,12 +820,6 @@ def test37_after := [llvm|
 theorem test37_proof : test37_before ⊑ test37_after := by
   unfold test37_before test37_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test37
   all_goals (try extract_goal ; sorry)
   ---END test37
@@ -1035,12 +849,6 @@ def test38_after := [llvm|
 theorem test38_proof : test38_before ⊑ test38_after := by
   unfold test38_before test38_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test38
   all_goals (try extract_goal ; sorry)
   ---END test38
@@ -1070,12 +878,6 @@ def test39_after := [llvm|
 theorem test39_proof : test39_before ⊑ test39_after := by
   unfold test39_before test39_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test39
   all_goals (try extract_goal ; sorry)
   ---END test39
@@ -1104,12 +906,6 @@ def lowmask_add_zext_after := [llvm|
 theorem lowmask_add_zext_proof : lowmask_add_zext_before ⊑ lowmask_add_zext_after := by
   unfold lowmask_add_zext_before lowmask_add_zext_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lowmask_add_zext
   all_goals (try extract_goal ; sorry)
   ---END lowmask_add_zext
@@ -1140,12 +936,6 @@ def lowmask_add_zext_commute_after := [llvm|
 theorem lowmask_add_zext_commute_proof : lowmask_add_zext_commute_before ⊑ lowmask_add_zext_commute_after := by
   unfold lowmask_add_zext_commute_before lowmask_add_zext_commute_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lowmask_add_zext_commute
   all_goals (try extract_goal ; sorry)
   ---END lowmask_add_zext_commute
@@ -1175,12 +965,6 @@ def lowmask_add_zext_wrong_mask_after := [llvm|
 theorem lowmask_add_zext_wrong_mask_proof : lowmask_add_zext_wrong_mask_before ⊑ lowmask_add_zext_wrong_mask_after := by
   unfold lowmask_add_zext_wrong_mask_before lowmask_add_zext_wrong_mask_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lowmask_add_zext_wrong_mask
   all_goals (try extract_goal ; sorry)
   ---END lowmask_add_zext_wrong_mask
@@ -1209,12 +993,6 @@ def lowmask_sub_zext_commute_after := [llvm|
 theorem lowmask_sub_zext_commute_proof : lowmask_sub_zext_commute_before ⊑ lowmask_sub_zext_commute_after := by
   unfold lowmask_sub_zext_commute_before lowmask_sub_zext_commute_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lowmask_sub_zext_commute
   all_goals (try extract_goal ; sorry)
   ---END lowmask_sub_zext_commute
@@ -1243,12 +1021,6 @@ def lowmask_mul_zext_after := [llvm|
 theorem lowmask_mul_zext_proof : lowmask_mul_zext_before ⊑ lowmask_mul_zext_after := by
   unfold lowmask_mul_zext_before lowmask_mul_zext_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lowmask_mul_zext
   all_goals (try extract_goal ; sorry)
   ---END lowmask_mul_zext
@@ -1279,12 +1051,6 @@ def lowmask_xor_zext_commute_after := [llvm|
 theorem lowmask_xor_zext_commute_proof : lowmask_xor_zext_commute_before ⊑ lowmask_xor_zext_commute_after := by
   unfold lowmask_xor_zext_commute_before lowmask_xor_zext_commute_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lowmask_xor_zext_commute
   all_goals (try extract_goal ; sorry)
   ---END lowmask_xor_zext_commute
@@ -1313,12 +1079,6 @@ def lowmask_or_zext_commute_after := [llvm|
 theorem lowmask_or_zext_commute_proof : lowmask_or_zext_commute_before ⊑ lowmask_or_zext_commute_after := by
   unfold lowmask_or_zext_commute_before lowmask_or_zext_commute_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lowmask_or_zext_commute
   all_goals (try extract_goal ; sorry)
   ---END lowmask_or_zext_commute
@@ -1348,12 +1108,6 @@ def test40_after := [llvm|
 theorem test40_proof : test40_before ⊑ test40_after := by
   unfold test40_before test40_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test40
   all_goals (try extract_goal ; sorry)
   ---END test40
@@ -1383,12 +1137,6 @@ def test42_after := [llvm|
 theorem test42_proof : test42_before ⊑ test42_after := by
   unfold test42_before test42_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test42
   all_goals (try extract_goal ; sorry)
   ---END test42
@@ -1418,12 +1166,6 @@ def test43_after := [llvm|
 theorem test43_proof : test43_before ⊑ test43_after := by
   unfold test43_before test43_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test43
   all_goals (try extract_goal ; sorry)
   ---END test43
@@ -1450,12 +1192,6 @@ def test44_after := [llvm|
 theorem test44_proof : test44_before ⊑ test44_after := by
   unfold test44_before test44_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test44
   all_goals (try extract_goal ; sorry)
   ---END test44
@@ -1482,12 +1218,6 @@ def test45_after := [llvm|
 theorem test45_proof : test45_before ⊑ test45_after := by
   unfold test45_before test45_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test45
   all_goals (try extract_goal ; sorry)
   ---END test45
@@ -1514,12 +1244,6 @@ def test46_after := [llvm|
 theorem test46_proof : test46_before ⊑ test46_after := by
   unfold test46_before test46_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test46
   all_goals (try extract_goal ; sorry)
   ---END test46
@@ -1546,12 +1270,6 @@ def test47_after := [llvm|
 theorem test47_proof : test47_before ⊑ test47_after := by
   unfold test47_before test47_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test47
   all_goals (try extract_goal ; sorry)
   ---END test47
@@ -1581,12 +1299,6 @@ def lowbitmask_casted_shift_after := [llvm|
 theorem lowbitmask_casted_shift_proof : lowbitmask_casted_shift_before ⊑ lowbitmask_casted_shift_after := by
   unfold lowbitmask_casted_shift_before lowbitmask_casted_shift_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lowbitmask_casted_shift
   all_goals (try extract_goal ; sorry)
   ---END lowbitmask_casted_shift
@@ -1614,12 +1326,6 @@ def lowmask_add_2_after := [llvm|
 theorem lowmask_add_2_proof : lowmask_add_2_before ⊑ lowmask_add_2_after := by
   unfold lowmask_add_2_before lowmask_add_2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lowmask_add_2
   all_goals (try extract_goal ; sorry)
   ---END lowmask_add_2
@@ -1647,12 +1353,6 @@ def flip_masked_bit_after := [llvm|
 theorem flip_masked_bit_proof : flip_masked_bit_before ⊑ flip_masked_bit_after := by
   unfold flip_masked_bit_before flip_masked_bit_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN flip_masked_bit
   all_goals (try extract_goal ; sorry)
   ---END flip_masked_bit
@@ -1682,12 +1382,6 @@ def not_signbit_splat_mask1_after := [llvm|
 theorem not_signbit_splat_mask1_proof : not_signbit_splat_mask1_before ⊑ not_signbit_splat_mask1_after := by
   unfold not_signbit_splat_mask1_before not_signbit_splat_mask1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_signbit_splat_mask1
   all_goals (try extract_goal ; sorry)
   ---END not_signbit_splat_mask1
@@ -1717,12 +1411,6 @@ def not_signbit_splat_mask2_after := [llvm|
 theorem not_signbit_splat_mask2_proof : not_signbit_splat_mask2_before ⊑ not_signbit_splat_mask2_after := by
   unfold not_signbit_splat_mask2_before not_signbit_splat_mask2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_signbit_splat_mask2
   all_goals (try extract_goal ; sorry)
   ---END not_signbit_splat_mask2
@@ -1754,12 +1442,6 @@ def not_ashr_not_bitwidth_mask_after := [llvm|
 theorem not_ashr_not_bitwidth_mask_proof : not_ashr_not_bitwidth_mask_before ⊑ not_ashr_not_bitwidth_mask_after := by
   unfold not_ashr_not_bitwidth_mask_before not_ashr_not_bitwidth_mask_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_ashr_not_bitwidth_mask
   all_goals (try extract_goal ; sorry)
   ---END not_ashr_not_bitwidth_mask
@@ -1791,12 +1473,6 @@ def not_lshr_bitwidth_mask_after := [llvm|
 theorem not_lshr_bitwidth_mask_proof : not_lshr_bitwidth_mask_before ⊑ not_lshr_bitwidth_mask_after := by
   unfold not_lshr_bitwidth_mask_before not_lshr_bitwidth_mask_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_lshr_bitwidth_mask
   all_goals (try extract_goal ; sorry)
   ---END not_lshr_bitwidth_mask
@@ -1830,12 +1506,6 @@ def not_invert_signbit_splat_mask2_after := [llvm|
 theorem not_invert_signbit_splat_mask2_proof : not_invert_signbit_splat_mask2_before ⊑ not_invert_signbit_splat_mask2_after := by
   unfold not_invert_signbit_splat_mask2_before not_invert_signbit_splat_mask2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN not_invert_signbit_splat_mask2
   all_goals (try extract_goal ; sorry)
   ---END not_invert_signbit_splat_mask2
@@ -1864,12 +1534,6 @@ def shl_lshr_pow2_const_negative_overflow1_after := [llvm|
 theorem shl_lshr_pow2_const_negative_overflow1_proof : shl_lshr_pow2_const_negative_overflow1_before ⊑ shl_lshr_pow2_const_negative_overflow1_after := by
   unfold shl_lshr_pow2_const_negative_overflow1_before shl_lshr_pow2_const_negative_overflow1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_lshr_pow2_const_negative_overflow1
   all_goals (try extract_goal ; sorry)
   ---END shl_lshr_pow2_const_negative_overflow1
@@ -1898,12 +1562,6 @@ def shl_lshr_pow2_const_negative_overflow2_after := [llvm|
 theorem shl_lshr_pow2_const_negative_overflow2_proof : shl_lshr_pow2_const_negative_overflow2_before ⊑ shl_lshr_pow2_const_negative_overflow2_after := by
   unfold shl_lshr_pow2_const_negative_overflow2_before shl_lshr_pow2_const_negative_overflow2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_lshr_pow2_const_negative_overflow2
   all_goals (try extract_goal ; sorry)
   ---END shl_lshr_pow2_const_negative_overflow2
@@ -1935,12 +1593,6 @@ def lshr_lshr_pow2_const_negative_nopow2_1_after := [llvm|
 theorem lshr_lshr_pow2_const_negative_nopow2_1_proof : lshr_lshr_pow2_const_negative_nopow2_1_before ⊑ lshr_lshr_pow2_const_negative_nopow2_1_after := by
   unfold lshr_lshr_pow2_const_negative_nopow2_1_before lshr_lshr_pow2_const_negative_nopow2_1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_lshr_pow2_const_negative_nopow2_1
   all_goals (try extract_goal ; sorry)
   ---END lshr_lshr_pow2_const_negative_nopow2_1
@@ -1972,12 +1624,6 @@ def lshr_lshr_pow2_const_negative_nopow2_2_after := [llvm|
 theorem lshr_lshr_pow2_const_negative_nopow2_2_proof : lshr_lshr_pow2_const_negative_nopow2_2_before ⊑ lshr_lshr_pow2_const_negative_nopow2_2_after := by
   unfold lshr_lshr_pow2_const_negative_nopow2_2_before lshr_lshr_pow2_const_negative_nopow2_2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_lshr_pow2_const_negative_nopow2_2
   all_goals (try extract_goal ; sorry)
   ---END lshr_lshr_pow2_const_negative_nopow2_2
@@ -2006,12 +1652,6 @@ def lshr_lshr_pow2_const_negative_overflow_after := [llvm|
 theorem lshr_lshr_pow2_const_negative_overflow_proof : lshr_lshr_pow2_const_negative_overflow_before ⊑ lshr_lshr_pow2_const_negative_overflow_after := by
   unfold lshr_lshr_pow2_const_negative_overflow_before lshr_lshr_pow2_const_negative_overflow_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_lshr_pow2_const_negative_overflow
   all_goals (try extract_goal ; sorry)
   ---END lshr_lshr_pow2_const_negative_overflow
@@ -2040,12 +1680,6 @@ def lshr_shl_pow2_const_overflow_after := [llvm|
 theorem lshr_shl_pow2_const_overflow_proof : lshr_shl_pow2_const_overflow_before ⊑ lshr_shl_pow2_const_overflow_after := by
   unfold lshr_shl_pow2_const_overflow_before lshr_shl_pow2_const_overflow_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN lshr_shl_pow2_const_overflow
   all_goals (try extract_goal ; sorry)
   ---END lshr_shl_pow2_const_overflow
@@ -2073,12 +1707,6 @@ def and_zext_after := [llvm|
 theorem and_zext_proof : and_zext_before ⊑ and_zext_after := by
   unfold and_zext_before and_zext_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_zext
   all_goals (try extract_goal ; sorry)
   ---END and_zext
@@ -2106,12 +1734,6 @@ def and_zext_commuted_after := [llvm|
 theorem and_zext_commuted_proof : and_zext_commuted_before ⊑ and_zext_commuted_after := by
   unfold and_zext_commuted_before and_zext_commuted_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN and_zext_commuted
   all_goals (try extract_goal ; sorry)
   ---END and_zext_commuted
@@ -2141,12 +1763,6 @@ def add_constant_equal_with_the_top_bit_of_demandedbits_pass_after := [llvm|
 theorem add_constant_equal_with_the_top_bit_of_demandedbits_pass_proof : add_constant_equal_with_the_top_bit_of_demandedbits_pass_before ⊑ add_constant_equal_with_the_top_bit_of_demandedbits_pass_after := by
   unfold add_constant_equal_with_the_top_bit_of_demandedbits_pass_before add_constant_equal_with_the_top_bit_of_demandedbits_pass_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_constant_equal_with_the_top_bit_of_demandedbits_pass
   all_goals (try extract_goal ; sorry)
   ---END add_constant_equal_with_the_top_bit_of_demandedbits_pass
@@ -2178,12 +1794,6 @@ def add_constant_equal_with_the_top_bit_of_demandedbits_insertpt_after := [llvm|
 theorem add_constant_equal_with_the_top_bit_of_demandedbits_insertpt_proof : add_constant_equal_with_the_top_bit_of_demandedbits_insertpt_before ⊑ add_constant_equal_with_the_top_bit_of_demandedbits_insertpt_after := by
   unfold add_constant_equal_with_the_top_bit_of_demandedbits_insertpt_before add_constant_equal_with_the_top_bit_of_demandedbits_insertpt_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_constant_equal_with_the_top_bit_of_demandedbits_insertpt
   all_goals (try extract_goal ; sorry)
   ---END add_constant_equal_with_the_top_bit_of_demandedbits_insertpt

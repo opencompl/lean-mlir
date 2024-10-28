@@ -34,12 +34,6 @@ def test_srem_canonicalize_op0_after := [llvm|
 theorem test_srem_canonicalize_op0_proof : test_srem_canonicalize_op0_before ⊑ test_srem_canonicalize_op0_after := by
   unfold test_srem_canonicalize_op0_before test_srem_canonicalize_op0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test_srem_canonicalize_op0
   all_goals (try extract_goal ; sorry)
   ---END test_srem_canonicalize_op0

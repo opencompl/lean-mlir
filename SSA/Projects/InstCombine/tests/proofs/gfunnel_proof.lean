@@ -2,19 +2,21 @@
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
+open LLVM
 
 section gfunnel_proof
-theorem unmasked_shlop_insufficient_mask_shift_amount_thm (x x_1 x_2 : BitVec 16) :
-  (Option.bind
-      (if 16#16 ≤ 8#16 - (x_1 &&& 15#16) then none else some (x_2 <<< ((65536 - (x_1.toNat &&& 15) + 8) % 65536)))
-      fun a =>
-      Option.bind (if 16#16 ≤ x_1 &&& 15#16 then none else some ((x &&& 255#16) >>> (x_1.toNat &&& 15))) fun x =>
-        some (setWidth 8 a ||| setWidth 8 x)) ⊑
-    (if (8#17 - signExtend 17 (x_1 &&& 15#16)).msb = (8#17 - signExtend 17 (x_1 &&& 15#16)).getMsbD 1 then
-          some (8#16 - (x_1 &&& 15#16))
-        else none).bind
-      fun a =>
-      Option.bind (if 16#16 ≤ a then none else some (x_2 <<< a.toNat)) fun a =>
-        Option.bind (if 16#16 ≤ x_1 &&& 15#16 then none else some ((x &&& 255#16) >>> (x_1.toNat &&& 15))) fun x =>
-          some (setWidth 8 a ||| setWidth 8 x) := sorry
+theorem unmasked_shlop_insufficient_mask_shift_amount_thm :
+  ∀ (e e_1 e_2 : IntW 16),
+    trunc 8
+        (LLVM.or (shl e_2 (sub (const? 8) (LLVM.and e_1 (const? 15))))
+          (lshr (LLVM.and e (const? 255)) (LLVM.and e_1 (const? 15)))) ⊑
+      trunc 8
+        (LLVM.or (shl e_2 (sub (const? 8) (LLVM.and e_1 (const? 15)) { «nsw» := true, «nuw» := false }))
+          (lshr (LLVM.and e (const? 255)) (LLVM.and e_1 (const? 15)))) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
 

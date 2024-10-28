@@ -48,12 +48,6 @@ def rotateleft_9_neg_mask_wide_amount_commute_after := [llvm|
 theorem rotateleft_9_neg_mask_wide_amount_commute_proof : rotateleft_9_neg_mask_wide_amount_commute_before ⊑ rotateleft_9_neg_mask_wide_amount_commute_after := by
   unfold rotateleft_9_neg_mask_wide_amount_commute_before rotateleft_9_neg_mask_wide_amount_commute_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN rotateleft_9_neg_mask_wide_amount_commute
   apply rotateleft_9_neg_mask_wide_amount_commute_thm
   ---END rotateleft_9_neg_mask_wide_amount_commute

@@ -41,12 +41,6 @@ def mul8_low_A0_B0_after := [llvm|
 theorem mul8_low_A0_B0_proof : mul8_low_A0_B0_before ⊑ mul8_low_A0_B0_after := by
   unfold mul8_low_A0_B0_before mul8_low_A0_B0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN mul8_low_A0_B0
   all_goals (try extract_goal ; sorry)
   ---END mul8_low_A0_B0
@@ -81,12 +75,6 @@ def mul8_low_after := [llvm|
 theorem mul8_low_proof : mul8_low_before ⊑ mul8_low_after := by
   unfold mul8_low_before mul8_low_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN mul8_low
   all_goals (try extract_goal ; sorry)
   ---END mul8_low
@@ -121,12 +109,6 @@ def mul16_low_after := [llvm|
 theorem mul16_low_proof : mul16_low_before ⊑ mul16_low_after := by
   unfold mul16_low_before mul16_low_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN mul16_low
   all_goals (try extract_goal ; sorry)
   ---END mul16_low
@@ -161,12 +143,6 @@ def mul32_low_after := [llvm|
 theorem mul32_low_proof : mul32_low_before ⊑ mul32_low_after := by
   unfold mul32_low_before mul32_low_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN mul32_low
   all_goals (try extract_goal ; sorry)
   ---END mul32_low
@@ -201,12 +177,6 @@ def mul64_low_after := [llvm|
 theorem mul64_low_proof : mul64_low_before ⊑ mul64_low_after := by
   unfold mul64_low_before mul64_low_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN mul64_low
   all_goals (try extract_goal ; sorry)
   ---END mul64_low
@@ -241,12 +211,6 @@ def mul128_low_after := [llvm|
 theorem mul128_low_proof : mul128_low_before ⊑ mul128_low_after := by
   unfold mul128_low_before mul128_low_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN mul128_low
   all_goals (try extract_goal ; sorry)
   ---END mul128_low
@@ -281,12 +245,6 @@ def mul130_low_after := [llvm|
 theorem mul130_low_proof : mul130_low_before ⊑ mul130_low_after := by
   unfold mul130_low_before mul130_low_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN mul130_low
   all_goals (try extract_goal ; sorry)
   ---END mul130_low
@@ -332,12 +290,6 @@ def mul9_low_after := [llvm|
 theorem mul9_low_proof : mul9_low_before ⊑ mul9_low_after := by
   unfold mul9_low_before mul9_low_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN mul9_low
   all_goals (try extract_goal ; sorry)
   ---END mul9_low
@@ -383,12 +335,6 @@ def mul16_low_miss_shift_amount_after := [llvm|
 theorem mul16_low_miss_shift_amount_proof : mul16_low_miss_shift_amount_before ⊑ mul16_low_miss_shift_amount_after := by
   unfold mul16_low_miss_shift_amount_before mul16_low_miss_shift_amount_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN mul16_low_miss_shift_amount
   all_goals (try extract_goal ; sorry)
   ---END mul16_low_miss_shift_amount
@@ -434,12 +380,6 @@ def mul8_low_miss_half_width_after := [llvm|
 theorem mul8_low_miss_half_width_proof : mul8_low_miss_half_width_before ⊑ mul8_low_miss_half_width_after := by
   unfold mul8_low_miss_half_width_before mul8_low_miss_half_width_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN mul8_low_miss_half_width
   all_goals (try extract_goal ; sorry)
   ---END mul8_low_miss_half_width

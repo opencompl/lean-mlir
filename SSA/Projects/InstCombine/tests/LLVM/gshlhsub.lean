@@ -34,12 +34,6 @@ def shl_sub_i32_after := [llvm|
 theorem shl_sub_i32_proof : shl_sub_i32_before ⊑ shl_sub_i32_after := by
   unfold shl_sub_i32_before shl_sub_i32_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_sub_i32
   all_goals (try extract_goal ; sorry)
   ---END shl_sub_i32
@@ -67,12 +61,6 @@ def shl_sub_i8_after := [llvm|
 theorem shl_sub_i8_proof : shl_sub_i8_before ⊑ shl_sub_i8_after := by
   unfold shl_sub_i8_before shl_sub_i8_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_sub_i8
   all_goals (try extract_goal ; sorry)
   ---END shl_sub_i8
@@ -100,12 +88,6 @@ def shl_sub_i64_after := [llvm|
 theorem shl_sub_i64_proof : shl_sub_i64_before ⊑ shl_sub_i64_after := by
   unfold shl_sub_i64_before shl_sub_i64_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_sub_i64
   all_goals (try extract_goal ; sorry)
   ---END shl_sub_i64
@@ -135,12 +117,6 @@ def shl_bad_sub_i32_after := [llvm|
 theorem shl_bad_sub_i32_proof : shl_bad_sub_i32_before ⊑ shl_bad_sub_i32_after := by
   unfold shl_bad_sub_i32_before shl_bad_sub_i32_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_bad_sub_i32
   all_goals (try extract_goal ; sorry)
   ---END shl_bad_sub_i32
@@ -170,12 +146,6 @@ def shl_bad_sub2_i32_after := [llvm|
 theorem shl_bad_sub2_i32_proof : shl_bad_sub2_i32_before ⊑ shl_bad_sub2_i32_after := by
   unfold shl_bad_sub2_i32_before shl_bad_sub2_i32_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_bad_sub2_i32
   all_goals (try extract_goal ; sorry)
   ---END shl_bad_sub2_i32
@@ -205,12 +175,6 @@ def bad_shl2_sub_i32_after := [llvm|
 theorem bad_shl2_sub_i32_proof : bad_shl2_sub_i32_before ⊑ bad_shl2_sub_i32_after := by
   unfold bad_shl2_sub_i32_before bad_shl2_sub_i32_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN bad_shl2_sub_i32
   all_goals (try extract_goal ; sorry)
   ---END bad_shl2_sub_i32
@@ -240,12 +204,6 @@ def shl_bad_sub_i8_after := [llvm|
 theorem shl_bad_sub_i8_proof : shl_bad_sub_i8_before ⊑ shl_bad_sub_i8_after := by
   unfold shl_bad_sub_i8_before shl_bad_sub_i8_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_bad_sub_i8
   all_goals (try extract_goal ; sorry)
   ---END shl_bad_sub_i8
@@ -275,12 +233,6 @@ def shl_bad_sub_i64_after := [llvm|
 theorem shl_bad_sub_i64_proof : shl_bad_sub_i64_before ⊑ shl_bad_sub_i64_after := by
   unfold shl_bad_sub_i64_before shl_bad_sub_i64_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_bad_sub_i64
   all_goals (try extract_goal ; sorry)
   ---END shl_bad_sub_i64
@@ -310,12 +262,6 @@ def shl_const_op1_sub_const_op0_after := [llvm|
 theorem shl_const_op1_sub_const_op0_proof : shl_const_op1_sub_const_op0_before ⊑ shl_const_op1_sub_const_op0_after := by
   unfold shl_const_op1_sub_const_op0_before shl_const_op1_sub_const_op0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN shl_const_op1_sub_const_op0
   all_goals (try extract_goal ; sorry)
   ---END shl_const_op1_sub_const_op0

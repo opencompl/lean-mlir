@@ -155,8 +155,8 @@
 1: "select_xor_icmp_bad_6"
 4: "select_xor_icmp_bad_6" has unsupported operation: builtin.unregistered: llvm.icmp
 
-1: "select_xor_icmp_vec_bad"
-4: "select_xor_icmp_vec_bad" has unsupported operation: builtin.unregistered: llvm.icmp
+1: "select_xor_icmp_vec_equivalence"
+4: "select_xor_icmp_vec_equivalence" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "vec_select_no_equivalence"
 4: "vec_select_no_equivalence" has unsupported operation: builtin.unregistered: llvm.mlir.poison

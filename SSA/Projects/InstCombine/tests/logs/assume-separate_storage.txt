@@ -7,6 +7,8 @@
 4: "folds_removed_operands" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "handles_globals"
+4: "handles_globals" has unsupported operation: llvm.mlir.addressof
+
 4: "handles_globals" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 4: "handles_globals" has unsupported operation: llvm.return

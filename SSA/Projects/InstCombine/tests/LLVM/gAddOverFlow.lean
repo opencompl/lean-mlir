@@ -38,12 +38,6 @@ def oppositesign_after := [llvm|
 theorem oppositesign_proof : oppositesign_before ⊑ oppositesign_after := by
   unfold oppositesign_before oppositesign_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN oppositesign
   all_goals (try extract_goal ; sorry)
   ---END oppositesign
@@ -73,12 +67,6 @@ def zero_sign_bit_after := [llvm|
 theorem zero_sign_bit_proof : zero_sign_bit_before ⊑ zero_sign_bit_after := by
   unfold zero_sign_bit_before zero_sign_bit_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN zero_sign_bit
   all_goals (try extract_goal ; sorry)
   ---END zero_sign_bit
@@ -108,12 +96,6 @@ def zero_sign_bit2_after := [llvm|
 theorem zero_sign_bit2_proof : zero_sign_bit2_before ⊑ zero_sign_bit2_after := by
   unfold zero_sign_bit2_before zero_sign_bit2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN zero_sign_bit2
   all_goals (try extract_goal ; sorry)
   ---END zero_sign_bit2
@@ -145,12 +127,6 @@ def ripple_nsw1_after := [llvm|
 theorem ripple_nsw1_proof : ripple_nsw1_before ⊑ ripple_nsw1_after := by
   unfold ripple_nsw1_before ripple_nsw1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ripple_nsw1
   all_goals (try extract_goal ; sorry)
   ---END ripple_nsw1
@@ -182,12 +158,6 @@ def ripple_nsw2_after := [llvm|
 theorem ripple_nsw2_proof : ripple_nsw2_before ⊑ ripple_nsw2_after := by
   unfold ripple_nsw2_before ripple_nsw2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ripple_nsw2
   all_goals (try extract_goal ; sorry)
   ---END ripple_nsw2
@@ -219,12 +189,6 @@ def ripple_nsw3_after := [llvm|
 theorem ripple_nsw3_proof : ripple_nsw3_before ⊑ ripple_nsw3_after := by
   unfold ripple_nsw3_before ripple_nsw3_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ripple_nsw3
   all_goals (try extract_goal ; sorry)
   ---END ripple_nsw3
@@ -256,12 +220,6 @@ def ripple_nsw4_after := [llvm|
 theorem ripple_nsw4_proof : ripple_nsw4_before ⊑ ripple_nsw4_after := by
   unfold ripple_nsw4_before ripple_nsw4_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ripple_nsw4
   all_goals (try extract_goal ; sorry)
   ---END ripple_nsw4
@@ -293,12 +251,6 @@ def ripple_nsw5_after := [llvm|
 theorem ripple_nsw5_proof : ripple_nsw5_before ⊑ ripple_nsw5_after := by
   unfold ripple_nsw5_before ripple_nsw5_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ripple_nsw5
   all_goals (try extract_goal ; sorry)
   ---END ripple_nsw5
@@ -330,12 +282,6 @@ def ripple_nsw6_after := [llvm|
 theorem ripple_nsw6_proof : ripple_nsw6_before ⊑ ripple_nsw6_after := by
   unfold ripple_nsw6_before ripple_nsw6_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ripple_nsw6
   all_goals (try extract_goal ; sorry)
   ---END ripple_nsw6
@@ -367,12 +313,6 @@ def ripple_no_nsw2_after := [llvm|
 theorem ripple_no_nsw2_proof : ripple_no_nsw2_before ⊑ ripple_no_nsw2_after := by
   unfold ripple_no_nsw2_before ripple_no_nsw2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ripple_no_nsw2
   all_goals (try extract_goal ; sorry)
   ---END ripple_no_nsw2
@@ -402,12 +342,6 @@ def PR38021_after := [llvm|
 theorem PR38021_proof : PR38021_before ⊑ PR38021_after := by
   unfold PR38021_before PR38021_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN PR38021
   all_goals (try extract_goal ; sorry)
   ---END PR38021

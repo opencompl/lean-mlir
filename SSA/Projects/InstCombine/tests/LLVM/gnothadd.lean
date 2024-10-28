@@ -33,12 +33,6 @@ def basic_after := [llvm|
 theorem basic_proof : basic_before ⊑ basic_after := by
   unfold basic_before basic_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN basic
   all_goals (try extract_goal ; sorry)
   ---END basic
@@ -65,12 +59,6 @@ def basic_com_add_after := [llvm|
 theorem basic_com_add_proof : basic_com_add_before ⊑ basic_com_add_after := by
   unfold basic_com_add_before basic_com_add_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN basic_com_add
   all_goals (try extract_goal ; sorry)
   ---END basic_com_add
@@ -97,12 +85,6 @@ def basic_preserve_nsw_after := [llvm|
 theorem basic_preserve_nsw_proof : basic_preserve_nsw_before ⊑ basic_preserve_nsw_after := by
   unfold basic_preserve_nsw_before basic_preserve_nsw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN basic_preserve_nsw
   all_goals (try extract_goal ; sorry)
   ---END basic_preserve_nsw
@@ -129,12 +111,6 @@ def basic_preserve_nuw_after := [llvm|
 theorem basic_preserve_nuw_proof : basic_preserve_nuw_before ⊑ basic_preserve_nuw_after := by
   unfold basic_preserve_nuw_before basic_preserve_nuw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN basic_preserve_nuw
   all_goals (try extract_goal ; sorry)
   ---END basic_preserve_nuw
@@ -161,12 +137,6 @@ def basic_preserve_nuw_nsw_after := [llvm|
 theorem basic_preserve_nuw_nsw_proof : basic_preserve_nuw_nsw_before ⊑ basic_preserve_nuw_nsw_after := by
   unfold basic_preserve_nuw_nsw_before basic_preserve_nuw_nsw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN basic_preserve_nuw_nsw
   all_goals (try extract_goal ; sorry)
   ---END basic_preserve_nuw_nsw

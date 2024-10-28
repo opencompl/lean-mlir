@@ -34,12 +34,6 @@ def test5_after := [llvm|
 theorem test5_proof : test5_before ⊑ test5_after := by
   unfold test5_before test5_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test5
   apply test5_thm
   ---END test5
@@ -68,12 +62,6 @@ def test6_after := [llvm|
 theorem test6_proof : test6_before ⊑ test6_after := by
   unfold test6_before test6_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test6
   apply test6_thm
   ---END test6
@@ -106,12 +94,6 @@ def ashr_mul_sign_bits_after := [llvm|
 theorem ashr_mul_sign_bits_proof : ashr_mul_sign_bits_before ⊑ ashr_mul_sign_bits_after := by
   unfold ashr_mul_sign_bits_before ashr_mul_sign_bits_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ashr_mul_sign_bits
   apply ashr_mul_sign_bits_thm
   ---END ashr_mul_sign_bits
@@ -144,12 +126,6 @@ def ashr_mul_after := [llvm|
 theorem ashr_mul_proof : ashr_mul_before ⊑ ashr_mul_after := by
   unfold ashr_mul_before ashr_mul_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ashr_mul
   apply ashr_mul_thm
   ---END ashr_mul
@@ -181,12 +157,6 @@ def trunc_ashr_after := [llvm|
 theorem trunc_ashr_proof : trunc_ashr_before ⊑ trunc_ashr_after := by
   unfold trunc_ashr_before trunc_ashr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN trunc_ashr
   apply trunc_ashr_thm
   ---END trunc_ashr
@@ -215,12 +185,6 @@ def test7_after := [llvm|
 theorem test7_proof : test7_before ⊑ test7_after := by
   unfold test7_before test7_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test7
   apply test7_thm
   ---END test7
@@ -253,12 +217,6 @@ def test8_after := [llvm|
 theorem test8_proof : test8_before ⊑ test8_after := by
   unfold test8_before test8_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test8
   apply test8_thm
   ---END test8
@@ -286,14 +244,8 @@ def test9_after := [llvm|
 theorem test9_proof : test9_before ⊑ test9_after := by
   unfold test9_before test9_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test9
-  all_goals (try extract_goal ; sorry)
+  apply test9_thm
   ---END test9
 
 
@@ -324,12 +276,6 @@ def test11_after := [llvm|
 theorem test11_proof : test11_before ⊑ test11_after := by
   unfold test11_before test11_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test11
   apply test11_thm
   ---END test11
@@ -362,12 +308,6 @@ def test12_after := [llvm|
 theorem test12_proof : test12_before ⊑ test12_after := by
   unfold test12_before test12_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test12
   apply test12_thm
   ---END test12
@@ -400,12 +340,6 @@ def test13_after := [llvm|
 theorem test13_proof : test13_before ⊑ test13_after := by
   unfold test13_before test13_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test13
   apply test13_thm
   ---END test13
@@ -433,12 +367,6 @@ def trunc_shl_31_i32_i64_after := [llvm|
 theorem trunc_shl_31_i32_i64_proof : trunc_shl_31_i32_i64_before ⊑ trunc_shl_31_i32_i64_after := by
   unfold trunc_shl_31_i32_i64_before trunc_shl_31_i32_i64_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN trunc_shl_31_i32_i64
   apply trunc_shl_31_i32_i64_thm
   ---END trunc_shl_31_i32_i64
@@ -466,12 +394,6 @@ def trunc_shl_nsw_31_i32_i64_after := [llvm|
 theorem trunc_shl_nsw_31_i32_i64_proof : trunc_shl_nsw_31_i32_i64_before ⊑ trunc_shl_nsw_31_i32_i64_after := by
   unfold trunc_shl_nsw_31_i32_i64_before trunc_shl_nsw_31_i32_i64_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN trunc_shl_nsw_31_i32_i64
   apply trunc_shl_nsw_31_i32_i64_thm
   ---END trunc_shl_nsw_31_i32_i64
@@ -499,12 +421,6 @@ def trunc_shl_nuw_31_i32_i64_after := [llvm|
 theorem trunc_shl_nuw_31_i32_i64_proof : trunc_shl_nuw_31_i32_i64_before ⊑ trunc_shl_nuw_31_i32_i64_after := by
   unfold trunc_shl_nuw_31_i32_i64_before trunc_shl_nuw_31_i32_i64_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN trunc_shl_nuw_31_i32_i64
   apply trunc_shl_nuw_31_i32_i64_thm
   ---END trunc_shl_nuw_31_i32_i64
@@ -532,12 +448,6 @@ def trunc_shl_nsw_nuw_31_i32_i64_after := [llvm|
 theorem trunc_shl_nsw_nuw_31_i32_i64_proof : trunc_shl_nsw_nuw_31_i32_i64_before ⊑ trunc_shl_nsw_nuw_31_i32_i64_after := by
   unfold trunc_shl_nsw_nuw_31_i32_i64_before trunc_shl_nsw_nuw_31_i32_i64_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN trunc_shl_nsw_nuw_31_i32_i64
   apply trunc_shl_nsw_nuw_31_i32_i64_thm
   ---END trunc_shl_nsw_nuw_31_i32_i64
@@ -565,12 +475,6 @@ def trunc_shl_15_i16_i64_after := [llvm|
 theorem trunc_shl_15_i16_i64_proof : trunc_shl_15_i16_i64_before ⊑ trunc_shl_15_i16_i64_after := by
   unfold trunc_shl_15_i16_i64_before trunc_shl_15_i16_i64_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN trunc_shl_15_i16_i64
   apply trunc_shl_15_i16_i64_thm
   ---END trunc_shl_15_i16_i64
@@ -598,12 +502,6 @@ def trunc_shl_15_i16_i32_after := [llvm|
 theorem trunc_shl_15_i16_i32_proof : trunc_shl_15_i16_i32_before ⊑ trunc_shl_15_i16_i32_after := by
   unfold trunc_shl_15_i16_i32_before trunc_shl_15_i16_i32_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN trunc_shl_15_i16_i32
   apply trunc_shl_15_i16_i32_thm
   ---END trunc_shl_15_i16_i32
@@ -631,12 +529,6 @@ def trunc_shl_7_i8_i64_after := [llvm|
 theorem trunc_shl_7_i8_i64_proof : trunc_shl_7_i8_i64_before ⊑ trunc_shl_7_i8_i64_after := by
   unfold trunc_shl_7_i8_i64_before trunc_shl_7_i8_i64_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN trunc_shl_7_i8_i64
   apply trunc_shl_7_i8_i64_thm
   ---END trunc_shl_7_i8_i64
@@ -664,12 +556,6 @@ def trunc_shl_1_i32_i64_after := [llvm|
 theorem trunc_shl_1_i32_i64_proof : trunc_shl_1_i32_i64_before ⊑ trunc_shl_1_i32_i64_after := by
   unfold trunc_shl_1_i32_i64_before trunc_shl_1_i32_i64_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN trunc_shl_1_i32_i64
   apply trunc_shl_1_i32_i64_thm
   ---END trunc_shl_1_i32_i64
@@ -697,12 +583,6 @@ def trunc_shl_16_i32_i64_after := [llvm|
 theorem trunc_shl_16_i32_i64_proof : trunc_shl_16_i32_i64_before ⊑ trunc_shl_16_i32_i64_after := by
   unfold trunc_shl_16_i32_i64_before trunc_shl_16_i32_i64_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN trunc_shl_16_i32_i64
   apply trunc_shl_16_i32_i64_thm
   ---END trunc_shl_16_i32_i64
@@ -728,12 +608,6 @@ def trunc_shl_33_i32_i64_after := [llvm|
 theorem trunc_shl_33_i32_i64_proof : trunc_shl_33_i32_i64_before ⊑ trunc_shl_33_i32_i64_after := by
   unfold trunc_shl_33_i32_i64_before trunc_shl_33_i32_i64_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN trunc_shl_33_i32_i64
   apply trunc_shl_33_i32_i64_thm
   ---END trunc_shl_33_i32_i64
@@ -759,12 +633,6 @@ def trunc_shl_32_i32_i64_after := [llvm|
 theorem trunc_shl_32_i32_i64_proof : trunc_shl_32_i32_i64_before ⊑ trunc_shl_32_i32_i64_after := by
   unfold trunc_shl_32_i32_i64_before trunc_shl_32_i32_i64_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN trunc_shl_32_i32_i64
   apply trunc_shl_32_i32_i64_thm
   ---END trunc_shl_32_i32_i64
@@ -796,12 +664,6 @@ def trunc_shl_lshr_infloop_after := [llvm|
 theorem trunc_shl_lshr_infloop_proof : trunc_shl_lshr_infloop_before ⊑ trunc_shl_lshr_infloop_after := by
   unfold trunc_shl_lshr_infloop_before trunc_shl_lshr_infloop_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN trunc_shl_lshr_infloop
   apply trunc_shl_lshr_infloop_thm
   ---END trunc_shl_lshr_infloop
@@ -833,12 +695,6 @@ def trunc_shl_ashr_infloop_after := [llvm|
 theorem trunc_shl_ashr_infloop_proof : trunc_shl_ashr_infloop_before ⊑ trunc_shl_ashr_infloop_after := by
   unfold trunc_shl_ashr_infloop_before trunc_shl_ashr_infloop_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN trunc_shl_ashr_infloop
   apply trunc_shl_ashr_infloop_thm
   ---END trunc_shl_ashr_infloop
@@ -868,12 +724,6 @@ def trunc_shl_shl_infloop_after := [llvm|
 theorem trunc_shl_shl_infloop_proof : trunc_shl_shl_infloop_before ⊑ trunc_shl_shl_infloop_after := by
   unfold trunc_shl_shl_infloop_before trunc_shl_shl_infloop_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN trunc_shl_shl_infloop
   apply trunc_shl_shl_infloop_thm
   ---END trunc_shl_shl_infloop
@@ -903,12 +753,6 @@ def trunc_shl_lshr_var_after := [llvm|
 theorem trunc_shl_lshr_var_proof : trunc_shl_lshr_var_before ⊑ trunc_shl_lshr_var_after := by
   unfold trunc_shl_lshr_var_before trunc_shl_lshr_var_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN trunc_shl_lshr_var
   apply trunc_shl_lshr_var_thm
   ---END trunc_shl_lshr_var
@@ -938,12 +782,6 @@ def trunc_shl_ashr_var_after := [llvm|
 theorem trunc_shl_ashr_var_proof : trunc_shl_ashr_var_before ⊑ trunc_shl_ashr_var_after := by
   unfold trunc_shl_ashr_var_before trunc_shl_ashr_var_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN trunc_shl_ashr_var
   apply trunc_shl_ashr_var_thm
   ---END trunc_shl_ashr_var
@@ -973,12 +811,6 @@ def trunc_shl_shl_var_after := [llvm|
 theorem trunc_shl_shl_var_proof : trunc_shl_shl_var_before ⊑ trunc_shl_shl_var_after := by
   unfold trunc_shl_shl_var_before trunc_shl_shl_var_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN trunc_shl_shl_var
   apply trunc_shl_shl_var_thm
   ---END trunc_shl_shl_var

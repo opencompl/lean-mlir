@@ -34,12 +34,6 @@ def add_const_add_const_after := [llvm|
 theorem add_const_add_const_proof : add_const_add_const_before ⊑ add_const_add_const_after := by
   unfold add_const_add_const_before add_const_add_const_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_const_add_const
   apply add_const_add_const_thm
   ---END add_const_add_const
@@ -67,12 +61,6 @@ def add_const_sub_const_after := [llvm|
 theorem add_const_sub_const_proof : add_const_sub_const_before ⊑ add_const_sub_const_after := by
   unfold add_const_sub_const_before add_const_sub_const_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_const_sub_const
   apply add_const_sub_const_thm
   ---END add_const_sub_const
@@ -100,12 +88,6 @@ def add_const_const_sub_after := [llvm|
 theorem add_const_const_sub_proof : add_const_const_sub_before ⊑ add_const_const_sub_after := by
   unfold add_const_const_sub_before add_const_const_sub_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_const_const_sub
   apply add_const_const_sub_thm
   ---END add_const_const_sub
@@ -133,12 +115,6 @@ def add_nsw_const_const_sub_nsw_after := [llvm|
 theorem add_nsw_const_const_sub_nsw_proof : add_nsw_const_const_sub_nsw_before ⊑ add_nsw_const_const_sub_nsw_after := by
   unfold add_nsw_const_const_sub_nsw_before add_nsw_const_const_sub_nsw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_nsw_const_const_sub_nsw
   apply add_nsw_const_const_sub_nsw_thm
   ---END add_nsw_const_const_sub_nsw
@@ -166,12 +142,6 @@ def add_nsw_const_const_sub_after := [llvm|
 theorem add_nsw_const_const_sub_proof : add_nsw_const_const_sub_before ⊑ add_nsw_const_const_sub_after := by
   unfold add_nsw_const_const_sub_before add_nsw_const_const_sub_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_nsw_const_const_sub
   apply add_nsw_const_const_sub_thm
   ---END add_nsw_const_const_sub
@@ -199,12 +169,6 @@ def add_const_const_sub_nsw_after := [llvm|
 theorem add_const_const_sub_nsw_proof : add_const_const_sub_nsw_before ⊑ add_const_const_sub_nsw_after := by
   unfold add_const_const_sub_nsw_before add_const_const_sub_nsw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_const_const_sub_nsw
   apply add_const_const_sub_nsw_thm
   ---END add_const_const_sub_nsw
@@ -232,12 +196,6 @@ def add_nsw_const_const_sub_nsw_ov_after := [llvm|
 theorem add_nsw_const_const_sub_nsw_ov_proof : add_nsw_const_const_sub_nsw_ov_before ⊑ add_nsw_const_const_sub_nsw_ov_after := by
   unfold add_nsw_const_const_sub_nsw_ov_before add_nsw_const_const_sub_nsw_ov_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_nsw_const_const_sub_nsw_ov
   apply add_nsw_const_const_sub_nsw_ov_thm
   ---END add_nsw_const_const_sub_nsw_ov
@@ -265,12 +223,6 @@ def add_nuw_const_const_sub_nuw_after := [llvm|
 theorem add_nuw_const_const_sub_nuw_proof : add_nuw_const_const_sub_nuw_before ⊑ add_nuw_const_const_sub_nuw_after := by
   unfold add_nuw_const_const_sub_nuw_before add_nuw_const_const_sub_nuw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_nuw_const_const_sub_nuw
   apply add_nuw_const_const_sub_nuw_thm
   ---END add_nuw_const_const_sub_nuw
@@ -298,12 +250,6 @@ def add_nuw_const_const_sub_after := [llvm|
 theorem add_nuw_const_const_sub_proof : add_nuw_const_const_sub_before ⊑ add_nuw_const_const_sub_after := by
   unfold add_nuw_const_const_sub_before add_nuw_const_const_sub_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_nuw_const_const_sub
   apply add_nuw_const_const_sub_thm
   ---END add_nuw_const_const_sub
@@ -331,12 +277,6 @@ def add_const_const_sub_nuw_after := [llvm|
 theorem add_const_const_sub_nuw_proof : add_const_const_sub_nuw_before ⊑ add_const_const_sub_nuw_after := by
   unfold add_const_const_sub_nuw_before add_const_const_sub_nuw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN add_const_const_sub_nuw
   apply add_const_const_sub_nuw_thm
   ---END add_const_const_sub_nuw
@@ -364,12 +304,6 @@ def sub_const_add_const_after := [llvm|
 theorem sub_const_add_const_proof : sub_const_add_const_before ⊑ sub_const_add_const_after := by
   unfold sub_const_add_const_before sub_const_add_const_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sub_const_add_const
   apply sub_const_add_const_thm
   ---END sub_const_add_const
@@ -397,12 +331,6 @@ def sub_const_sub_const_after := [llvm|
 theorem sub_const_sub_const_proof : sub_const_sub_const_before ⊑ sub_const_sub_const_after := by
   unfold sub_const_sub_const_before sub_const_sub_const_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sub_const_sub_const
   apply sub_const_sub_const_thm
   ---END sub_const_sub_const
@@ -430,12 +358,6 @@ def sub_const_const_sub_after := [llvm|
 theorem sub_const_const_sub_proof : sub_const_const_sub_before ⊑ sub_const_const_sub_after := by
   unfold sub_const_const_sub_before sub_const_const_sub_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sub_const_const_sub
   apply sub_const_const_sub_thm
   ---END sub_const_const_sub
@@ -463,12 +385,6 @@ def const_sub_add_const_after := [llvm|
 theorem const_sub_add_const_proof : const_sub_add_const_before ⊑ const_sub_add_const_after := by
   unfold const_sub_add_const_before const_sub_add_const_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN const_sub_add_const
   apply const_sub_add_const_thm
   ---END const_sub_add_const
@@ -496,12 +412,6 @@ def const_sub_sub_const_after := [llvm|
 theorem const_sub_sub_const_proof : const_sub_sub_const_before ⊑ const_sub_sub_const_after := by
   unfold const_sub_sub_const_before const_sub_sub_const_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN const_sub_sub_const
   apply const_sub_sub_const_thm
   ---END const_sub_sub_const
@@ -529,12 +439,6 @@ def const_sub_const_sub_after := [llvm|
 theorem const_sub_const_sub_proof : const_sub_const_sub_before ⊑ const_sub_const_sub_after := by
   unfold const_sub_const_sub_before const_sub_const_sub_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN const_sub_const_sub
   apply const_sub_const_sub_thm
   ---END const_sub_const_sub
@@ -564,12 +468,6 @@ def addsub_combine_constants_after := [llvm|
 theorem addsub_combine_constants_proof : addsub_combine_constants_before ⊑ addsub_combine_constants_after := by
   unfold addsub_combine_constants_before addsub_combine_constants_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN addsub_combine_constants
   apply addsub_combine_constants_thm
   ---END addsub_combine_constants
@@ -597,12 +495,6 @@ def sub_from_constant_after := [llvm|
 theorem sub_from_constant_proof : sub_from_constant_before ⊑ sub_from_constant_after := by
   unfold sub_from_constant_before sub_from_constant_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sub_from_constant
   apply sub_from_constant_thm
   ---END sub_from_constant
@@ -632,12 +524,6 @@ def sub_from_constant_commute_after := [llvm|
 theorem sub_from_constant_commute_proof : sub_from_constant_commute_before ⊑ sub_from_constant_commute_after := by
   unfold sub_from_constant_commute_before sub_from_constant_commute_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sub_from_constant_commute
   apply sub_from_constant_commute_thm
   ---END sub_from_constant_commute

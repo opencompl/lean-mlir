@@ -36,12 +36,6 @@ def avg_lsb_after := [llvm|
 theorem avg_lsb_proof : avg_lsb_before ⊑ avg_lsb_after := by
   unfold avg_lsb_before avg_lsb_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN avg_lsb
   apply avg_lsb_thm
   ---END avg_lsb

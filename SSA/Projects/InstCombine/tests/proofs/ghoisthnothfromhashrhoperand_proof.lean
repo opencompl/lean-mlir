@@ -2,13 +2,24 @@
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
+open LLVM
 
 section ghoisthnothfromhashrhoperand_proof
-theorem t0_thm (x x_1 : BitVec 8) :
-  (if 8#8 ≤ x then none else some ((x_1 ^^^ 255#8).sshiftRight x.toNat)) ⊑
-    Option.bind (if 8#8 ≤ x then none else some (x_1.sshiftRight x.toNat)) fun x' => some (x' ^^^ 255#8) := sorry
+theorem t0_thm :
+  ∀ (e e_1 : IntW 8), ashr (LLVM.xor e_1 (const? (-1))) e ⊑ LLVM.xor (ashr e_1 e) (const? (-1)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
 
-theorem t1_thm (x x_1 : BitVec 8) :
-  (if 8#8 ≤ x then none else some ((x_1 ^^^ 255#8).sshiftRight x.toNat)) ⊑
-    Option.bind (if 8#8 ≤ x then none else some (x_1.sshiftRight x.toNat)) fun x' => some (x' ^^^ 255#8) := sorry
+
+theorem t1_thm :
+  ∀ (e e_1 : IntW 8), ashr (LLVM.xor e_1 (const? (-1))) e ⊑ LLVM.xor (ashr e_1 e) (const? (-1)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
 

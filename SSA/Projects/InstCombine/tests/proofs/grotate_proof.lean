@@ -2,19 +2,21 @@
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
+open LLVM
 
 section grotate_proof
-theorem rotateleft_9_neg_mask_wide_amount_commute_thm (x : BitVec 33) (x_1 : BitVec 9) :
-  (Option.bind (if 33#33 ≤ x &&& 8#33 then none else some (setWidth 33 x_1 <<< (x.toNat &&& 8))) fun a =>
-      Option.bind
-        (if 33#33 ≤ -x &&& 8#33 then none else some (setWidth 33 x_1 >>> ((8589934592 - x.toNat) % 8589934592 &&& 8)))
-        fun x => some (setWidth 9 a ||| setWidth 9 x)) ⊑
-    (if (setWidth 33 x_1 <<< (x.toNat &&& 8)).sshiftRight (x.toNat &&& 8) = setWidth 33 x_1 then none
-        else
-          if setWidth 33 x_1 <<< (x.toNat &&& 8) >>> (x.toNat &&& 8) = setWidth 33 x_1 then none
-          else if 33#33 ≤ x &&& 8#33 then none else some (setWidth 33 x_1 <<< (x.toNat &&& 8))).bind
-      fun a =>
-      Option.bind
-        (if 33#33 ≤ -x &&& 8#33 then none else some (setWidth 33 x_1 >>> ((8589934592 - x.toNat) % 8589934592 &&& 8)))
-        fun x => some (setWidth 9 a ||| setWidth 9 x) := sorry
+theorem rotateleft_9_neg_mask_wide_amount_commute_thm :
+  ∀ (e : IntW 33) (e_1 : IntW 9),
+    trunc 9
+        (LLVM.or (shl (zext 33 e_1) (LLVM.and e (const? 8)))
+          (lshr (zext 33 e_1) (LLVM.and (sub (const? 0) e) (const? 8)))) ⊑
+      trunc 9
+        (LLVM.or (shl (zext 33 e_1) (LLVM.and e (const? 8)) { «nsw» := true, «nuw» := true })
+          (lshr (zext 33 e_1) (LLVM.and (sub (const? 0) e) (const? 8)))) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
 

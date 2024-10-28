@@ -34,12 +34,6 @@ def test5_after := [llvm|
 theorem test5_proof : test5_before ⊑ test5_after := by
   unfold test5_before test5_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test5
   all_goals (try extract_goal ; sorry)
   ---END test5

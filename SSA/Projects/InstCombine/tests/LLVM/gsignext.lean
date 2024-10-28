@@ -37,12 +37,6 @@ def sextinreg_after := [llvm|
 theorem sextinreg_proof : sextinreg_before ⊑ sextinreg_after := by
   unfold sextinreg_before sextinreg_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sextinreg
   all_goals (try extract_goal ; sorry)
   ---END sextinreg
@@ -73,12 +67,6 @@ def sextinreg_alt_after := [llvm|
 theorem sextinreg_alt_proof : sextinreg_alt_before ⊑ sextinreg_alt_after := by
   unfold sextinreg_alt_before sextinreg_alt_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sextinreg_alt
   all_goals (try extract_goal ; sorry)
   ---END sextinreg_alt
@@ -106,12 +94,6 @@ def sext_after := [llvm|
 theorem sext_proof : sext_before ⊑ sext_after := by
   unfold sext_before sext_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sext
   all_goals (try extract_goal ; sorry)
   ---END sext
@@ -142,12 +124,6 @@ def sextinreg2_after := [llvm|
 theorem sextinreg2_proof : sextinreg2_before ⊑ sextinreg2_after := by
   unfold sextinreg2_before sextinreg2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN sextinreg2
   all_goals (try extract_goal ; sorry)
   ---END sextinreg2
@@ -174,12 +150,6 @@ def test6_after := [llvm|
 theorem test6_proof : test6_before ⊑ test6_after := by
   unfold test6_before test6_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN test6
   all_goals (try extract_goal ; sorry)
   ---END test6
@@ -209,12 +179,6 @@ def ashr_after := [llvm|
 theorem ashr_proof : ashr_before ⊑ ashr_after := by
   unfold ashr_before ashr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN ashr
   all_goals (try extract_goal ; sorry)
   ---END ashr

@@ -35,12 +35,6 @@ def mul_after := [llvm|
 theorem mul_proof : mul_before ⊑ mul_after := by
   unfold mul_before mul_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN mul
   all_goals (try extract_goal ; sorry)
   ---END mul
@@ -72,12 +66,6 @@ def select1_after := [llvm|
 theorem select1_proof : select1_before ⊑ select1_after := by
   unfold select1_before select1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN select1
   all_goals (try extract_goal ; sorry)
   ---END select1
@@ -107,12 +95,6 @@ def select2_after := [llvm|
 theorem select2_proof : select2_before ⊑ select2_after := by
   unfold select2_before select2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN select2
   all_goals (try extract_goal ; sorry)
   ---END select2
@@ -135,12 +117,6 @@ def foo_after := [llvm|
 theorem foo_proof : foo_before ⊑ foo_after := by
   unfold foo_before foo_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN foo
   all_goals (try extract_goal ; sorry)
   ---END foo
