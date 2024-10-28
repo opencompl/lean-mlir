@@ -14,12 +14,21 @@ def get_lines(msg):
     # Replace this with your actual implementation
     return lines_thm
 
+def gen_proof(thm):
+    return thm.replace("sorry\n", """by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry\n
+""")
 
 def gen_intro(stem):
     return f"""
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
+open LLVM
 
 section {stem}_proof
 """
@@ -75,6 +84,7 @@ def process_file(file_path):
             print(f"m = {m}")
             print(f"n = {n}")
             thm = m.replace("extracted_1", n + "_thm")
+            thm = gen_proof(thm)
             print(thm)
             file.write(thm + "\n")
 

@@ -82,12 +82,6 @@ def {name}_after := [llvm|
 theorem {name}_proof : {name}_before ⊑ {name}_after := by
   unfold {name}_before {name}_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  try simp
-  simp_alive_case_bash
-  try intros
-  try simp
   ---BEGIN {name}
   all_goals (try extract_goal ; sorry)
   ---END {name}\n\n\n"""
