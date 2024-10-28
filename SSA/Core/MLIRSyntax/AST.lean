@@ -37,12 +37,12 @@ inductive BBName
 
 /-- An ssa value is a variable name -/
 inductive SSAVal : Type where
-  | SSAVal : String -> SSAVal
+  | name : String -> SSAVal
 deriving DecidableEq, Repr
 
 def SSAValToString (s: SSAVal): String :=
   match s with
-  | SSAVal.SSAVal str => str
+  | SSAVal.name str => str
 
 instance : ToString SSAVal where
   toString := SSAValToString
@@ -181,7 +181,7 @@ def Op.attrs {φ} : Op φ -> (AttrDict φ)
 | Op.mk _ _ _ _ attrs => attrs
 
 instance : Coe String SSAVal where
-  coe (s: String) := SSAVal.SSAVal s
+  coe (s: String) := SSAVal.name s
 
 instance : Coe String (AttrValue φ) where
   coe (s: String) := AttrValue.str s
@@ -265,7 +265,7 @@ instance : Repr (AttrDefn φ) where
 
 instance : Repr SSAVal where
   reprPrec x _ := match x with
-    | SSAVal.SSAVal name => f!"%{name}"
+    | SSAVal.name name => f!"%{name}"
 
 instance : ToFormat SSAVal where
   format := repr

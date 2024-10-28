@@ -31,8 +31,8 @@ variable {A : Type} [BEq A] [Hashable A] [DecidableEq A] [FinEnum A]
 
 private structure product.State where
   m : NFA A
-  map : Std.HashMap (State × State) State := ∅
-  worklist : Array (State × State) := ∅
+  map : Std.HashMap (_root_.State × _root_.State) _root_.State := ∅
+  worklist : Array (_root_.State × _root_.State) := ∅
 
 private def product.State.measure (st : product.State (A := A)) (m1 m2 : NFA A) :=
   ((Multiset.range m1.stateMax).product (Multiset.range m2.stateMax)).sub
@@ -152,8 +152,8 @@ section equality
 variable {A : Type} [BEq A] [Hashable A] [DecidableEq A] [FinEnum A]
 
 private structure isIncluded.State where
-  visited : List (State × Std.HashSet State) := ∅ -- TODO: slow
-  worklist : List (State × Std.HashSet State) := ∅
+  visited : List (_root_.State × Std.HashSet _root_.State) := ∅ -- TODO: slow
+  worklist : List (_root_.State × Std.HashSet _root_.State) := ∅
 
 -- TODO: this function is not correct yet...
 /-- Returns true when `L(m1) ⊆ L(m2)` -/
@@ -187,8 +187,8 @@ section universality
 variable {A : Type} [BEq A] [Hashable A] [DecidableEq A] [FinEnum A]
 
 private structure isUniversal.State where
-  visited : Std.HashSet (Std.HashSet State) := ∅
-  worklist : Array (Std.HashSet State) := ∅
+  visited : Std.HashSet (Std.HashSet _root_.State) := ∅
+  worklist : Array (Std.HashSet _root_.State) := ∅
 
 /-- Returns true when `L(m) = A*` -/
 def NFA.isUniversal (m : NFA A) : Bool :=

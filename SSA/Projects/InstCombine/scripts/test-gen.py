@@ -134,7 +134,7 @@ def process_file(file):
             run_process1,
             shell=True,
             capture_output=True,
-            encoding="utf-8"
+            encoding="ISO-8859-1"
     )
     
     module1 = parse_module(
@@ -145,7 +145,7 @@ def process_file(file):
             f"mlir-translate -import-llvm {full_name} | mlir-opt --mlir-print-op-generic",
             shell=True,
             capture_output=True,
-            encoding="utf-8"
+            encoding="ISO-8859-1"
     )
     
     module2 = parse_module(

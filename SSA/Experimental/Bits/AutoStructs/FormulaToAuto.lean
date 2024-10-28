@@ -23,7 +23,7 @@ variable {arity : Type} [FinEnum arity]
 
 private structure fsm.State (carryLen : Nat) where
   m : NFA $ Alphabet (arity := arity) -- TODO: ugly all over...
-  map : Std.HashMap (BitVec carryLen) State := ∅
+  map : Std.HashMap (BitVec carryLen) _root_.State := ∅
   worklist : Array (BitVec carryLen) := ∅
 
 def finFunToBitVec (c : carry → Bool) [FinEnum carry] : BitVec (FinEnum.card carry) :=
