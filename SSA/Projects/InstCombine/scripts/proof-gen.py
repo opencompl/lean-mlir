@@ -18,8 +18,9 @@ def gen_proof(thm):
     return thm.replace("sorry\n", """by 
     simp_alive_undef
     simp_alive_ops
+    try simp
     simp_alive_case_bash
-    try alive_auto
+    try simp
     all_goals sorry\n
 """)
 
