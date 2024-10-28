@@ -525,7 +525,7 @@ theorem getMsbD_concat{i w: Nat}{b : Bool}{x : BitVec w} :
     omega
 
 @[simp]
-theorem msb_concat{i w: Nat}{b : Bool}{x : BitVec w} :
+theorem msb_concat{w: Nat}{b : Bool}{x : BitVec w} :
     (x.concat b).msb = if 0 < w then x.msb else b := by
   simp only [BitVec.msb, getMsbD_eq_getLsbD, lt_add_iff_pos_left, add_pos_iff, zero_lt_one, or_true,
     decide_True, add_tsub_cancel_right, tsub_zero, Bool.true_and]
