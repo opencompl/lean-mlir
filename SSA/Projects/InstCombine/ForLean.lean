@@ -510,7 +510,7 @@ theorem msb_twoPow {i w: Nat} :
   omega
 
 @[simp]
-theorem getMsbD_concat{i w: Nat}{b : Bool}{x : BitVec w} :
+theorem getMsbD_concat {i w : Nat} {b : Bool} {x : BitVec w} :
     (x.concat b).getMsbD i = if i < w then x.getMsbD i else decide (i = w) && b := by
   simp only [getMsbD_eq_getLsbD, add_tsub_cancel_right, getLsbD_concat]
   by_cases h₀ : i < w <;> by_cases h₁ : i = w
