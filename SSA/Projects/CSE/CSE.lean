@@ -130,8 +130,8 @@ def arglistRemapVar [DecidableEq d.Ty] [DecidableEq d.Op]
     ((lets.denote Vstart).comap hom) vnew)
   {ts : List d.Ty} (as' : HVector (Ctxt.Var Γ') <| ts) :
     { as : HVector (Ctxt.Var Γ) <| ts //
-      ∀ (Vstart : Γstart.Valuation), as.map (fun t v => (lets.denote Vstart) v) =
-        as'.map (fun t v' => ((lets.denote Vstart).comap hom) v') } :=
+      ∀ (Vstart : Γstart.Valuation), as.map (fun _ v => (lets.denote Vstart) v) =
+        as'.map (fun _ v' => ((lets.denote Vstart).comap hom) v') } :=
   match as' with
   | .nil => ⟨.nil, by simp [HVector.map]⟩
   | .cons a' as' =>
