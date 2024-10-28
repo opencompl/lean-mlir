@@ -509,6 +509,33 @@ theorem msb_twoPow {i w: Nat} :
   intros
   omega
 
+@[simp]
+theorem getMsbD_concat{i w: Nat}{b : Bool}{x : BitVec w} :
+    (x.concat b).getMsbD i = if i < w then x.getMsbD i else decide (i = w) && b := by
+  simp only [getMsbD_eq_getLsbD, add_tsub_cancel_right, getLsbD_concat]
+  by_cases h₀ : i < w <;> by_cases h₁ : i = w
+  · simp [h₀, h₁, show i < w + 1 by omega, getLsbD_concat]
+  · simp [h₀, h₁, show i < w + 1 by omega, getLsbD_concat, show ¬ w - i = 0 by omega,
+    Nat.sub_sub, Nat.add_comm]
+  · simp [h₀, h₁, show i < w + 1 by omega, getLsbD_concat]
+  · simp only [h₀, ↓reduceIte, h₁, decide_False, Bool.false_and, Bool.and_eq_false_imp,
+      decide_eq_true_eq, Bool.ite_eq_false_distrib]
+    intro h₂
+    simp [show ¬ w - i = 0 by omega]
+    omega
+
+@[simp]
+theorem msb_concat{i w: Nat}{b : Bool}{x : BitVec w} :
+    (x.concat b).msb = if 0 < w then x.msb else b := by
+  simp only [BitVec.msb, getMsbD_eq_getLsbD, lt_add_iff_pos_left, add_pos_iff, zero_lt_one, or_true,
+    decide_True, add_tsub_cancel_right, tsub_zero, Bool.true_and]
+  by_cases h₀ : 0 < w
+  · simp only [lt_add_iff_pos_right, zero_lt_one, getLsbD_eq_getElem, getElem_concat,
+      tsub_lt_self_iff, h₀, _root_.and_self, ↓reduceIte, decide_True, Bool.true_and, ite_eq_right_iff]
+    intro
+    omega
+  · simp [h₀, show w = 0 by omega]
+
 end BitVec
 
 namespace Bool
