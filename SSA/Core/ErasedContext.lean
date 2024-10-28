@@ -322,7 +322,7 @@ theorem Valuation.eq_nil (V : Valuation (empty : Ctxt Ty)) : V = Valuation.nil :
 
 @[simp]
 theorem Valuation.snoc_toSnoc_last {Γ : Ctxt Ty} {t : Ty} (V : Valuation (Γ.snoc t)) :
-    snoc (fun t v' => V v'.toSnoc) (V <|.last ..) = V := by
+    snoc (fun _ v' => V v'.toSnoc) (V <|.last ..) = V := by
   funext _ v
   cases v using Var.casesOn <;> rfl
 

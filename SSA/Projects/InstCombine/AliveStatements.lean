@@ -709,7 +709,7 @@ theorem bv_820' :
   all_goals sorry
 
 theorem bv_1030 :
-    ∀ (e : LLVM.IntW w), LLVM.sdiv e (LLVM.const? (-1)) ⊑ LLVM.sub (LLVM.const? 0) e := by
+    ∀ (e : LLVM.IntW 16), LLVM.sdiv e (LLVM.const? (-1)) ⊑ LLVM.sub (LLVM.const? 0) e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
