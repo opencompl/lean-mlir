@@ -312,6 +312,10 @@ macro_rules
         if xstr == "index"
         then
           `(MLIRType.index)
+        else if xstr == "false"
+        then `(MLIRType.int .Signless 1)
+        else if xstr == "true"
+        then `(MLIRType.int .Signless 1)
         else if xstr.front == 'i' || xstr.front == 'f'
         then do
           let xstr' := (xstr.drop 1).toString
