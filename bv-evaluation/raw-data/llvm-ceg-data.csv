@@ -1,0 +1,14 @@
+,locations,bitwuzla,leanSAT,leanSAT-rw,leanSAT-sat
+0,gexact_proof.lean:7,73.0,223.0,0.0,125.375875
+1,gexact_proof.lean:9,73.0,225.0,0.0,123.414167
+2,gexact_proof.lean:11,71.0,240.0,0.0,124.728292
+3,gexact_proof.lean:21,71.0,72.0,0.0,61.24375
+4,gexact_proof.lean:32,74.0,80.0,0.0,62.889292
+5,gsdivhexacthbyhpowerhofhtwo_proof.lean:7,73.0,70.0,0.0,59.381208
+6,gsubhofhnegatible_proof.lean:106,80.0,76.0,13.29625,61.832708
+7,gcanonicalizehashrhshlhtohmasking_proof.lean:87,70.0,69.0,0.0,61.659333
+8,gcanonicalizehashrhshlhtohmasking_proof.lean:89,69.0,67.0,0.0,59.955375
+9,gcanonicalizehashrhshlhtohmasking_proof.lean:91,74.0,70.0,0.0,61.645542
+10,gcanonicalizehlshrhshlhtohmasking_proof.lean:82,67.0,64.0,0.0,57.455375
+11,gcanonicalizehlshrhshlhtohmasking_proof.lean:84,75.0,67.0,0.0,57.663208
+12,gcanonicalizehlshrhshlhtohmasking_proof.lean:86,71.0,71.0,0.0,61.32075
