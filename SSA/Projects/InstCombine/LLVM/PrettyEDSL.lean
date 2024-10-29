@@ -84,8 +84,8 @@ macro_rules
       let x ← `(MLIR.AST.AttrValue.int $x [mlir_type| $t])
       `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = $$($x) } : () -> ($t) )
 
-syntax mlir_op_operand " = " "llvm.mlir.constant (true)" (" : " mlir_type)? : mlir_op
-syntax mlir_op_operand " = " "llvm.mlir.constant (false)" (" : " mlir_type)? : mlir_op
+syntax mlir_op_operand " = " "llvm.mlir.constant" "(true)" (" : " mlir_type)? : mlir_op
+syntax mlir_op_operand " = " "llvm.mlir.constant" "(false)" (" : " mlir_type)? : mlir_op
 syntax mlir_op_operand " = " "llvm.mlir.constant" neg_num (" : " mlir_type)? : mlir_op
 syntax mlir_op_operand " = " "llvm.mlir.constant" ("$" noWs "{" term "}")
   (" : " mlir_type)? : mlir_op
@@ -164,6 +164,7 @@ private def pretty_bool :=
       %5 = llvm.mlir.constant (false) : i1
       %10 = llvm.add %0, %1 : i1
       %11 = llvm.add %2, %3 : i1
+      %12 = llvm.add %4, %5 : i1
       llvm.return %2 : i1
   }]
 
