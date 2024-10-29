@@ -201,7 +201,29 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
             HVector.nil,
             HVector.nil
           ⟩⟩
-      | _ => throw <| .generic "invalid constant attribute"
+      | .bool _ =>  throw <| .generic "that's a bool"
+      | .symbol _ =>  throw <| .generic "that's a symbol"
+      | .str _ =>  throw <| .generic "that's a strnig"
+      | .nat _ =>  throw <| .generic "that's a nat"
+      | .float _ _ =>  throw <| .generic "that's a float"
+      | .type  _ =>  throw <| .generic "that's a type"
+      | .affine  _ =>  throw <| .generic "that's a affine"
+      | .permutation _ =>  throw <| .generic "that's a permutation"
+      | .list _ =>  throw <| .generic "that's a list"
+      | .nestedsymbol _ _ =>  throw <| .generic "that's a nested"
+      | .alias _ =>  throw <| .generic "that's a alias"
+      | .dict _ =>  throw <| .generic "that's a dict"
+      | .opaque_ _ _ =>  throw <| .generic "that's a opaque"
+      | .opaqueElements _ _ _ =>  throw <| .generic "that's a opaqueelements"
+      | .unit =>  throw <| .generic "that's a unit"
+      -- return ⟨.pure, .bitvec (ConcreteOrMVar.concrete 1), ⟨
+      --       MOp.const (ConcreteOrMVar.concrete 1) (if b then 1 else 0),
+      --       by simp [DialectSignature.outTy, signature, *],
+      --       by constructor,
+      --       HVector.nil,
+      --       HVector.nil
+      --     ⟩⟩5tgb
+      -- | _ => throw <| .generic s!"invalid constant attribute"
     else
       throw <| .generic s!"invalid (0-ary) expression {opStx.name}"
   | _ => throw <| .generic s!"unsupported expression (with unsupported arity) {opStx.name}"
