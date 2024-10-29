@@ -90,7 +90,7 @@ syntax mlir_op_operand " = " "llvm.mlir.constant" neg_num (" : " mlir_type)? : m
 syntax mlir_op_operand " = " "llvm.mlir.constant" ("$" noWs "{" term "}")
   (" : " mlir_type)? : mlir_op
 macro_rules
-  | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant (true) $[: t]?) =>
+  | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant (true) $[: $t]?) =>
       `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant (1 : i1) : i1)
   | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant (false) $[: $t]?) =>
       `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant (0 : i1) : i1)
