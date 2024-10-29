@@ -517,6 +517,35 @@ theorem msb_concat {w : Nat} {b : Bool} {x : BitVec w} :
     omega
   · simp [h₀, show w = 0 by omega]
 
+@[simp]
+theorem getMsbD_rotateLeft {m n w : Nat} {x : BitVec w} :
+    (x.rotateLeft m).getMsbD n = (decide (n < w) && x.getMsbD ((n + m) % w)) := by
+  simp only [getMsbD_eq_getLsbD, getLsbD_rotateLeft]
+  by_cases h₀₀ : m < w
+  · by_cases h₀ : n < w <;> by_cases h₁ : (w - 1 - n < m % w) <;> by_cases h₂ : (w - 1 - n < w)
+    · have h₄ : 0 < w := by omega
+      have h₃ : ((n + m) % w < w) := by
+        simp [Nat.mod_lt, h₄]
+      have h₅ : m % w = m := by
+        simp [Nat.mod_eq_of_lt, h₀₀, h₄]
+      simp_all [Nat.mod_lt, h₀, h₁, h₂, h₃, h₀₀, h₅]
+      -- w - m + w - 1 - n = 2w - 1 - n =?= w -1 - (n + m) % w
+      by_cases h₆ : (n + m) < w
+      · simp [Nat.mod_lt (x := n + m), h₆]
+        sorry
+      · sorry
+    · simp_all [h₀, h₁, h₂]
+      sorry
+    · simp_all [h₀, h₁, h₂]
+      sorry
+    · simp_all [h₀, h₁, h₂]
+      sorry
+    · simp [h₀, h₁, h₂]
+    · simp [h₀, h₁, h₂]
+    · simp [h₀, h₁, h₂]
+    · simp [h₀, h₁, h₂]
+  · sorry
+
 end BitVec
 
 namespace Bool
