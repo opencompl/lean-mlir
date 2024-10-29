@@ -165,6 +165,16 @@ private def pretty_test_trunc :=
     llvm.return %1 : i64
   }]
 
+private def test_bool := [llvm|
+{
+^0():
+  %0 = "llvm.mlir.constant"() <{value = false}> : () -> i1
+  %1 = "llvm.mlir.constant"() <{value = true}> : () -> i1
+  %2 = llvm.and %0, %1 : i1
+  "llvm.return"(%2) : (i1) -> ()
+}
+]
+
 example : pretty_test = prettier_test_generic 32 := by
   unfold pretty_test prettier_test_generic
   simp_alive_meta
