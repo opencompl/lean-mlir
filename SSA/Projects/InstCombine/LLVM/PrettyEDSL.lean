@@ -84,10 +84,16 @@ macro_rules
       let x ← `(MLIR.AST.AttrValue.int $x [mlir_type| $t])
       `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = $$($x) } : () -> ($t) )
 
+syntax mlir_op_operand " = " "llvm.mlir.constant" "(true)" (" : " mlir_type)? : mlir_op
+syntax mlir_op_operand " = " "llvm.mlir.constant" "(false)" (" : " mlir_type)? : mlir_op
 syntax mlir_op_operand " = " "llvm.mlir.constant" neg_num (" : " mlir_type)? : mlir_op
 syntax mlir_op_operand " = " "llvm.mlir.constant" ("$" noWs "{" term "}")
   (" : " mlir_type)? : mlir_op
 macro_rules
+  | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant (true) $[: $t]?) =>
+      `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant (1 : i1) : i1)
+  | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant (false) $[: $t]?) =>
+      `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant (0 : i1) : i1)
   | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant $x $[: $t]?) =>
       `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant($x $[: $t]?) $[: $t]?)
   | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant ${ $x:term } $[: $t]?) =>
@@ -145,6 +151,21 @@ private def pretty_select (w : Nat) :=
     ^bb0(%arg0: i1, %arg1 : _):
       %0 = llvm.select %arg0, %arg1, %arg1
       llvm.return %0
+  }]
+
+private def pretty_bool :=
+  [llvm ()| {
+    ^bb0():
+      %0 = llvm.mlir.constant (1 : i1) : i1
+      %1 = llvm.mlir.constant (0 : i1) : i1
+      %2 = llvm.mlir.constant (true)
+      %3 = llvm.mlir.constant (false)
+      %4 = llvm.mlir.constant (true) : i1
+      %5 = llvm.mlir.constant (false) : i1
+      %10 = llvm.add %0, %1 : i1
+      %11 = llvm.add %2, %3 : i1
+      %12 = llvm.add %4, %5 : i1
+      llvm.return %2 : i1
   }]
 
 private def pretty_test_overflow :=
