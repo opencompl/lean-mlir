@@ -15,8 +15,8 @@ https://eprint.iacr.org/2012/144
 Authors: Andrés Goens<andres@goens.org>, Siddharth Bhat<siddu.druid@gmail.com>
 -/
 import Mathlib.RingTheory.Polynomial.Quotient
-import Mathlib.RingTheory.Ideal.Quotient
-import Mathlib.RingTheory.Ideal.QuotientOperations
+import Mathlib.RingTheory.Ideal.Defs
+import Mathlib.RingTheory.Ideal.Basic
 import Mathlib.Data.ZMod.Defs
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Algebra.MonoidAlgebra.Basic
