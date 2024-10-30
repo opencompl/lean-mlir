@@ -195,9 +195,8 @@ private def pretty_test_trunc :=
 
 private def pretty_test_icmp :=
   [llvm ()|{
-  ^bb0(%arg0: i64):
-    %0 = llvm.trunc %arg0 : i64 to i32
-    %5 = llvm.icmp "eq" %arg0, %3 : i1
+  ^bb0(%arg0: i1):
+    %1 = llvm.icmp "eq" %arg0, %arg0 : i1
     llvm.return %1 : i64
   }]
 
