@@ -99,7 +99,14 @@ macro_rules
   | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant ${ $x:term } $[: $t]?) =>
       `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant($$($x) $[: $t]?) $[: $t]?)
 
+declare_syntax_cat icmp_predicate
+syntax r#"\""# "eq" r#"\""#  : icmp_predicate
 
+syntax mlir_op_operand " = " "llvm.icmp" icmp_predicate mlir_op_operand ", " mlir_op_operand (" : " mlir_type)? : mlir_op
+macro_rules
+  | `(mlir_op| $res:mlir_op_operand = llvm.icmp $p:icmp_predicate $x, $y $[: $t]?) => do
+    let t ← t.getDM `(mlir_type| _)
+    `(mlir_op| $res:mlir_op_operand = "llvm.icmp.eq" ($x, $y) : ($t, $t) -> (i1))
 
 syntax mlir_op_operand " = " "llvm.select" mlir_op_operand ", " mlir_op_operand ", " mlir_op_operand
     (" : " mlir_type)? : mlir_op
@@ -183,6 +190,14 @@ private def pretty_test_trunc :=
   ^bb0(%arg0: i64):
     %0 = llvm.trunc %arg0 : i64 to i32
     %1 = llvm.zext %0 : i32 to i64
+    llvm.return %1 : i64
+  }]
+
+private def pretty_test_icmp :=
+  [llvm ()|{
+  ^bb0(%arg0: i64):
+    %0 = llvm.trunc %arg0 : i64 to i32
+    %5 = llvm.icmp "eq" %arg0, %3 : i1
     llvm.return %1 : i64
   }]
 

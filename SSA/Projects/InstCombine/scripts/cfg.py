@@ -8,7 +8,7 @@ import os
 from enum import Enum, auto
 
 # The path from lean-mlir to llvm-project
-llvm_path = "../llvm-project-main"
+llvm_path = "../llvm-project"
 
 if len(llvm_path) == 0:
     raise ValueError("You need to give the path to llvm in config.py")
@@ -17,6 +17,11 @@ test_path = "SSA/Projects/InstCombine/tests/LLVM"
 proof_path = "SSA/Projects/InstCombine/tests/proofs"
 log_path = "SSA/Projects/InstCombine/tests/logs"
 llvm_test_path = llvm_path + "/llvm/test/Transforms/InstCombine"
+
+test_path = "SSA/Projects/InstCombine/scripts/files/LLVM"
+proof_path = "SSA/Projects/InstCombine/scripts/files/proofs"
+log_path = "SSA/Projects/InstCombine/scripts/files/logs"
+llvm_test_path = "SSA/Projects/InstCombine/scripts/files"
 expensive_files = [
     "pr96012.ll",
 ]
@@ -48,10 +53,12 @@ allowed_names = {
     "llvm.zext",
     "llvm.sext",
     "llvm.trunc",
+    "llvm.icmp"
 }
 
 allowed_unregistered = {
     "llvm.select",
+    "llvm.icmp"
 }
 
 class Msg(Enum):
