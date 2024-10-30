@@ -35,12 +35,7 @@
 8: "shl_sub_i64_vec_poison" contains vectors which are unsupported
 
 1: "shl_bad_sub_i32"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.sub
-2: llvm.shl
-2: llvm.return
+7: "shl_bad_sub_i32" is unchanged by InstCombine
 
 1: "bad_shl_sub_i32"
 7: "bad_shl_sub_i32" is unchanged by InstCombine
@@ -62,23 +57,13 @@
 2: llvm.return
 
 1: "shl_bad_sub_i8"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.sub
-2: llvm.shl
-2: llvm.return
+7: "shl_bad_sub_i8" is unchanged by InstCombine
 
 1: "shl_bad_sub_i64"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.sub
-2: llvm.shl
-2: llvm.return
+7: "shl_bad_sub_i64" is unchanged by InstCombine
 
 1: "shl_bad_sub_i64_vec"
-8: "shl_bad_sub_i64_vec" contains vectors which are unsupported
+7: "shl_bad_sub_i64_vec" is unchanged by InstCombine
 
 1: "bad_shl_sub_i64_vec"
 7: "bad_shl_sub_i64_vec" is unchanged by InstCombine

@@ -12,18 +12,6 @@
 4: "select_icmp_shufflevector_identity" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "select_icmp_shufflevector_select"
-4: "select_icmp_shufflevector_select" has unsupported operation: builtin.unregistered: llvm.mlir.poison
-
-4: "select_icmp_shufflevector_select" has unsupported operation: llvm.mlir.undef
-
-4: "select_icmp_shufflevector_select" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "select_icmp_shufflevector_select" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "select_icmp_shufflevector_select" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "select_icmp_shufflevector_select" has unsupported operation: builtin.unregistered: llvm.insertelement
-
 4: "select_icmp_shufflevector_select" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "select_icmp_shufflevector_select" has unsupported operation: builtin.unregistered: llvm.shufflevector

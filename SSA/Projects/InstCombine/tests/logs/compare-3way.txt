@@ -1,0 +1,270 @@
+1: "use"
+5: "use" is empty
+
+1: "test_low_sgt"
+4: "test_low_sgt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_low_sgt" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_low_sgt" has unsupported operation: llvm.return
+
+4: "test_low_sgt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_low_sgt" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "test_low_sgt" has unsupported operation: llvm.call
+
+4: "test_low_sgt" has unsupported operation: llvm.return
+
+1: "test_low_slt"
+4: "test_low_slt" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_low_slt" has unsupported operation: llvm.return
+
+4: "test_low_slt" has unsupported operation: llvm.return
+
+1: "test_low_sge"
+4: "test_low_sge" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_low_sge" has unsupported operation: llvm.return
+
+4: "test_low_sge" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_low_sge" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_low_sge" has unsupported operation: llvm.call
+
+4: "test_low_sge" has unsupported operation: llvm.return
+
+1: "test_low_sle"
+4: "test_low_sle" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_low_sle" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_low_sle" has unsupported operation: llvm.return
+
+4: "test_low_sle" has unsupported operation: llvm.call
+
+4: "test_low_sle" has unsupported operation: llvm.return
+
+1: "test_low_ne"
+4: "test_low_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_low_ne" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_low_ne" has unsupported operation: llvm.return
+
+4: "test_low_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_low_ne" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "test_low_ne" has unsupported operation: llvm.call
+
+4: "test_low_ne" has unsupported operation: llvm.return
+
+1: "test_low_eq"
+4: "test_low_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_low_eq" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_low_eq" has unsupported operation: llvm.return
+
+4: "test_low_eq" has unsupported operation: llvm.call
+
+4: "test_low_eq" has unsupported operation: llvm.return
+
+1: "test_mid_sgt"
+4: "test_mid_sgt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_mid_sgt" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_mid_sgt" has unsupported operation: llvm.return
+
+4: "test_mid_sgt" has unsupported operation: llvm.call
+
+4: "test_mid_sgt" has unsupported operation: llvm.return
+
+1: "test_mid_slt"
+4: "test_mid_slt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_mid_slt" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_mid_slt" has unsupported operation: llvm.return
+
+4: "test_mid_slt" has unsupported operation: llvm.call
+
+4: "test_mid_slt" has unsupported operation: llvm.return
+
+1: "test_mid_sge"
+4: "test_mid_sge" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_mid_sge" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_mid_sge" has unsupported operation: llvm.return
+
+4: "test_mid_sge" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_mid_sge" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "test_mid_sge" has unsupported operation: llvm.call
+
+4: "test_mid_sge" has unsupported operation: llvm.return
+
+1: "test_mid_sle"
+4: "test_mid_sle" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_mid_sle" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_mid_sle" has unsupported operation: llvm.return
+
+4: "test_mid_sle" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_mid_sle" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_mid_sle" has unsupported operation: llvm.call
+
+4: "test_mid_sle" has unsupported operation: llvm.return
+
+1: "test_mid_ne"
+4: "test_mid_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_mid_ne" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_mid_ne" has unsupported operation: llvm.return
+
+4: "test_mid_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_mid_ne" has unsupported operation: llvm.call
+
+4: "test_mid_ne" has unsupported operation: llvm.return
+
+1: "test_mid_eq"
+4: "test_mid_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_mid_eq" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_mid_eq" has unsupported operation: llvm.return
+
+4: "test_mid_eq" has unsupported operation: llvm.call
+
+4: "test_mid_eq" has unsupported operation: llvm.return
+
+1: "test_high_sgt"
+4: "test_high_sgt" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_high_sgt" has unsupported operation: llvm.return
+
+4: "test_high_sgt" has unsupported operation: llvm.return
+
+1: "test_high_slt"
+4: "test_high_slt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_high_slt" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_high_slt" has unsupported operation: llvm.return
+
+4: "test_high_slt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_high_slt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_high_slt" has unsupported operation: llvm.call
+
+4: "test_high_slt" has unsupported operation: llvm.return
+
+1: "test_high_sge"
+4: "test_high_sge" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_high_sge" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_high_sge" has unsupported operation: llvm.return
+
+4: "test_high_sge" has unsupported operation: llvm.call
+
+4: "test_high_sge" has unsupported operation: llvm.return
+
+1: "test_high_sle"
+4: "test_high_sle" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_high_sle" has unsupported operation: llvm.return
+
+4: "test_high_sle" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_high_sle" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_high_sle" has unsupported operation: llvm.call
+
+4: "test_high_sle" has unsupported operation: llvm.return
+
+1: "test_high_ne"
+4: "test_high_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_high_ne" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_high_ne" has unsupported operation: llvm.return
+
+4: "test_high_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_high_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_high_ne" has unsupported operation: llvm.call
+
+4: "test_high_ne" has unsupported operation: llvm.return
+
+1: "test_high_eq"
+4: "test_high_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_high_eq" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_high_eq" has unsupported operation: llvm.return
+
+4: "test_high_eq" has unsupported operation: llvm.call
+
+4: "test_high_eq" has unsupported operation: llvm.return
+
+1: "non_standard_low"
+4: "non_standard_low" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "non_standard_low" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "non_standard_low" has unsupported operation: llvm.return
+
+4: "non_standard_low" has unsupported operation: llvm.call
+
+4: "non_standard_low" has unsupported operation: llvm.return
+
+1: "non_standard_mid"
+4: "non_standard_mid" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "non_standard_mid" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "non_standard_mid" has unsupported operation: llvm.return
+
+4: "non_standard_mid" has unsupported operation: llvm.call
+
+4: "non_standard_mid" has unsupported operation: llvm.return
+
+1: "non_standard_high"
+4: "non_standard_high" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "non_standard_high" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "non_standard_high" has unsupported operation: llvm.return
+
+4: "non_standard_high" has unsupported operation: llvm.call
+
+4: "non_standard_high" has unsupported operation: llvm.return
+
+1: "non_standard_bound1"
+4: "non_standard_bound1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "non_standard_bound1" has unsupported operation: llvm.return
+
+4: "non_standard_bound1" has unsupported operation: llvm.return
+
+1: "non_standard_bound2"
+4: "non_standard_bound2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "non_standard_bound2" has unsupported operation: llvm.return
+
+4: "non_standard_bound2" has unsupported operation: llvm.return
+

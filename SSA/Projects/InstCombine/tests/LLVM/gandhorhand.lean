@@ -42,33 +42,6 @@ theorem test1_proof : test1_before ⊑ test1_after := by
 
 
 
-def test2_before := [llvm|
-{
-^0(%arg8 : i32, %arg9 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 65536 : i32}> : () -> i32
-  %1 = llvm.zext %arg9 : i8 to i32
-  %2 = llvm.or %arg8, %1 : i32
-  %3 = llvm.and %2, %0 : i32
-  "llvm.return"(%3) : (i32) -> ()
-}
-]
-def test2_after := [llvm|
-{
-^0(%arg8 : i32, %arg9 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 65536 : i32}> : () -> i32
-  %1 = llvm.and %arg8, %0 : i32
-  "llvm.return"(%1) : (i32) -> ()
-}
-]
-theorem test2_proof : test2_before ⊑ test2_after := by
-  unfold test2_before test2_after
-  simp_alive_peephole
-  ---BEGIN test2
-  all_goals (try extract_goal ; sorry)
-  ---END test2
-
-
-
 def test3_before := [llvm|
 {
 ^0(%arg6 : i32, %arg7 : i32):

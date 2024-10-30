@@ -3,15 +3,21 @@
 
 4: "reduce_add_self" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
+4: "reduce_add_self" has unsupported operation: builtin.unregistered: llvm.icmp
+
 1: "reduce_add_sext"
 4: "reduce_add_sext" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 4: "reduce_add_sext" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
+4: "reduce_add_sext" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "reduce_add_zext"
 4: "reduce_add_zext" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 4: "reduce_add_zext" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "reduce_add_zext" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "reduce_add_sext_same"
 4: "reduce_add_sext_same" has unsupported operation: builtin.unregistered: llvm.bitcast
@@ -23,6 +29,8 @@
 
 4: "reduce_add_zext_long" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
+4: "reduce_add_zext_long" has unsupported operation: builtin.unregistered: llvm.trunc
+
 1: "reduce_add_zext_long_external_use"
 4: "reduce_add_zext_long_external_use" has unsupported operation: llvm.mlir.addressof
 
@@ -30,7 +38,11 @@
 
 4: "reduce_add_zext_long_external_use" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
+4: "reduce_add_zext_long_external_use" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "reduce_add_zext_long_external_use" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "reduce_add_zext_long_external_use" has unsupported operation: builtin.unregistered: llvm.sext
 
 4: "reduce_add_zext_long_external_use" has unsupported operation: llvm.store
 
@@ -41,7 +53,11 @@
 
 4: "reduce_add_zext_external_use" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
+4: "reduce_add_zext_external_use" has unsupported operation: builtin.unregistered: llvm.zext
+
 4: "reduce_add_zext_external_use" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "reduce_add_zext_external_use" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "reduce_add_zext_external_use" has unsupported operation: llvm.store
 

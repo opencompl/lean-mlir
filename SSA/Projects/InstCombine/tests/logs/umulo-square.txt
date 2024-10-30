@@ -1,8 +1,12 @@
 1: "umulov_square_i32"
-4: "umulov_square_i32" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "umulov_square_i32" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "umulov_square_i32" has unsupported operation: llvm.extractvalue
 
 1: "umulov_square_i16"
-4: "umulov_square_i16" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "umulov_square_i16" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "umulov_square_i16" has unsupported operation: llvm.extractvalue
 
 1: "umulov_square_i13"
 4: "umulov_square_i13" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow

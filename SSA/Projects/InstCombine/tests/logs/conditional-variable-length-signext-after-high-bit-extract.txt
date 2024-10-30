@@ -50,6 +50,10 @@
 4: "t1_notrunc_sub" has unsupported operation: llvm.call
 
 1: "t2_trunc_add"
+4: "t2_trunc_add" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "t2_trunc_add" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "t2_trunc_add" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "t2_trunc_add" has unsupported operation: llvm.call
@@ -64,7 +68,13 @@
 
 4: "t2_trunc_add" has unsupported operation: llvm.call
 
+4: "t2_trunc_add" has unsupported operation: builtin.unregistered: llvm.trunc
+
 1: "t2_trunc_or"
+4: "t2_trunc_or" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "t2_trunc_or" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "t2_trunc_or" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "t2_trunc_or" has unsupported operation: llvm.call
@@ -79,7 +89,13 @@
 
 4: "t2_trunc_or" has unsupported operation: llvm.call
 
+4: "t2_trunc_or" has unsupported operation: builtin.unregistered: llvm.trunc
+
 1: "t3_trunc_sub"
+4: "t3_trunc_sub" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "t3_trunc_sub" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "t3_trunc_sub" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "t3_trunc_sub" has unsupported operation: llvm.call
@@ -93,6 +109,8 @@
 4: "t3_trunc_sub" has unsupported operation: llvm.call
 
 4: "t3_trunc_sub" has unsupported operation: llvm.call
+
+4: "t3_trunc_sub" has unsupported operation: builtin.unregistered: llvm.trunc
 
 1: "t4_commutativity0"
 4: "t4_commutativity0" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -134,6 +152,10 @@
 4: "t6_commutativity2" has unsupported operation: llvm.call
 
 1: "t7_trunc_extrause0"
+4: "t7_trunc_extrause0" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "t7_trunc_extrause0" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "t7_trunc_extrause0" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "t7_trunc_extrause0" has unsupported operation: llvm.call
@@ -148,7 +170,11 @@
 
 4: "t7_trunc_extrause0" has unsupported operation: llvm.call
 
+4: "t7_trunc_extrause0" has unsupported operation: builtin.unregistered: llvm.trunc
+
 1: "t8_trunc_extrause1"
+4: "t8_trunc_extrause1" has unsupported operation: builtin.unregistered: llvm.zext
+
 4: "t8_trunc_extrause1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "t8_trunc_extrause1" has unsupported operation: llvm.call
@@ -163,7 +189,13 @@
 
 4: "t8_trunc_extrause1" has unsupported operation: llvm.call
 
+4: "t8_trunc_extrause1" has unsupported operation: builtin.unregistered: llvm.trunc
+
 1: "n9_trunc_extrause2"
+4: "n9_trunc_extrause2" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "n9_trunc_extrause2" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "n9_trunc_extrause2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "n9_trunc_extrause2" has unsupported operation: llvm.call
@@ -194,7 +226,13 @@
 4: "t10_preserve_exact" has unsupported operation: llvm.call
 
 1: "t11_different_zext_of_shamt"
+4: "t11_different_zext_of_shamt" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "t11_different_zext_of_shamt" has unsupported operation: builtin.unregistered: llvm.zext
+
 4: "t11_different_zext_of_shamt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "t11_different_zext_of_shamt" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "t11_different_zext_of_shamt" has unsupported operation: llvm.call
 
@@ -213,7 +251,13 @@
 4: "t11_different_zext_of_shamt" has unsupported operation: llvm.call
 
 1: "t12_add_sext_of_magic"
+4: "t12_add_sext_of_magic" has unsupported operation: builtin.unregistered: llvm.zext
+
 4: "t12_add_sext_of_magic" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "t12_add_sext_of_magic" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "t12_add_sext_of_magic" has unsupported operation: builtin.unregistered: llvm.sext
 
 4: "t12_add_sext_of_magic" has unsupported operation: llvm.call
 
@@ -232,7 +276,13 @@
 4: "t12_add_sext_of_magic" has unsupported operation: llvm.call
 
 1: "t13_sub_zext_of_magic"
+4: "t13_sub_zext_of_magic" has unsupported operation: builtin.unregistered: llvm.zext
+
 4: "t13_sub_zext_of_magic" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "t13_sub_zext_of_magic" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "t13_sub_zext_of_magic" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "t13_sub_zext_of_magic" has unsupported operation: llvm.call
 
@@ -251,7 +301,13 @@
 4: "t13_sub_zext_of_magic" has unsupported operation: llvm.call
 
 1: "t14_add_sext_of_shl"
+4: "t14_add_sext_of_shl" has unsupported operation: builtin.unregistered: llvm.zext
+
 4: "t14_add_sext_of_shl" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "t14_add_sext_of_shl" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "t14_add_sext_of_shl" has unsupported operation: builtin.unregistered: llvm.sext
 
 4: "t14_add_sext_of_shl" has unsupported operation: llvm.call
 
@@ -270,7 +326,13 @@
 4: "t14_add_sext_of_shl" has unsupported operation: llvm.call
 
 1: "t15_sub_zext_of_shl"
+4: "t15_sub_zext_of_shl" has unsupported operation: builtin.unregistered: llvm.zext
+
 4: "t15_sub_zext_of_shl" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "t15_sub_zext_of_shl" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "t15_sub_zext_of_shl" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "t15_sub_zext_of_shl" has unsupported operation: llvm.call
 
@@ -367,6 +429,10 @@
 4: "n21" has unsupported operation: llvm.call
 
 1: "n22"
+4: "n22" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "n22" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "n22" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "n22" has unsupported operation: llvm.call
@@ -436,7 +502,13 @@
 4: "n26" has unsupported operation: llvm.call
 
 1: "n27_add_zext_of_magic"
+4: "n27_add_zext_of_magic" has unsupported operation: builtin.unregistered: llvm.zext
+
 4: "n27_add_zext_of_magic" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "n27_add_zext_of_magic" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "n27_add_zext_of_magic" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "n27_add_zext_of_magic" has unsupported operation: llvm.call
 
@@ -455,7 +527,13 @@
 4: "n27_add_zext_of_magic" has unsupported operation: llvm.call
 
 1: "n28_sub_sext_of_magic"
+4: "n28_sub_sext_of_magic" has unsupported operation: builtin.unregistered: llvm.zext
+
 4: "n28_sub_sext_of_magic" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "n28_sub_sext_of_magic" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "n28_sub_sext_of_magic" has unsupported operation: builtin.unregistered: llvm.sext
 
 4: "n28_sub_sext_of_magic" has unsupported operation: llvm.call
 

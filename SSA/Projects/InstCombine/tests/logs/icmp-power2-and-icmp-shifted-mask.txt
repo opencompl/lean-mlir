@@ -123,29 +123,9 @@
 4: "icmp_power2_and_icmp_shifted_mask_vector_swapped_splat_poison_2147483648_1610612736_2147483647" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "icmp_power2_and_icmp_shifted_mask_vector_splat_undef_2147483648_1610612736_2147483647"
-4: "icmp_power2_and_icmp_shifted_mask_vector_splat_undef_2147483648_1610612736_2147483647" has unsupported operation: llvm.mlir.undef
-
-4: "icmp_power2_and_icmp_shifted_mask_vector_splat_undef_2147483648_1610612736_2147483647" has unsupported operation: llvm.mlir.undef
-
-4: "icmp_power2_and_icmp_shifted_mask_vector_splat_undef_2147483648_1610612736_2147483647" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "icmp_power2_and_icmp_shifted_mask_vector_splat_undef_2147483648_1610612736_2147483647" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "icmp_power2_and_icmp_shifted_mask_vector_splat_undef_2147483648_1610612736_2147483647" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "icmp_power2_and_icmp_shifted_mask_vector_splat_undef_2147483648_1610612736_2147483647" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "icmp_power2_and_icmp_shifted_mask_vector_swapped_splat_undef_2147483648_1610612736_2147483647"
-4: "icmp_power2_and_icmp_shifted_mask_vector_swapped_splat_undef_2147483648_1610612736_2147483647" has unsupported operation: llvm.mlir.undef
-
-4: "icmp_power2_and_icmp_shifted_mask_vector_swapped_splat_undef_2147483648_1610612736_2147483647" has unsupported operation: llvm.mlir.undef
-
-4: "icmp_power2_and_icmp_shifted_mask_vector_swapped_splat_undef_2147483648_1610612736_2147483647" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "icmp_power2_and_icmp_shifted_mask_vector_swapped_splat_undef_2147483648_1610612736_2147483647" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "icmp_power2_and_icmp_shifted_mask_vector_swapped_splat_undef_2147483648_1610612736_2147483647" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "icmp_power2_and_icmp_shifted_mask_vector_swapped_splat_undef_2147483648_1610612736_2147483647" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "icmp_power2_and_icmp_shifted_mask_vector_128_others"

@@ -3,3 +3,5 @@
 
 4: "pr98139" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "pr98139" has unsupported operation: builtin.unregistered: llvm.trunc
+

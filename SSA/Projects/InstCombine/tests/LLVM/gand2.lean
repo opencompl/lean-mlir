@@ -92,7 +92,7 @@ def test9_before := [llvm|
 ^0(%arg18 : i64):
   %0 = "llvm.mlir.constant"() <{value = 0 : i64}> : () -> i64
   %1 = "llvm.mlir.constant"() <{value = 1 : i64}> : () -> i64
-  %2 = llvm.sub %0, %arg18 overflow<nsw> : i64
+  %2 = llvm.sub %0, %arg18 : i64
   %3 = llvm.and %2, %1 : i64
   "llvm.return"(%3) : (i64) -> ()
 }
@@ -119,7 +119,7 @@ def test10_before := [llvm|
 ^0(%arg16 : i64):
   %0 = "llvm.mlir.constant"() <{value = 0 : i64}> : () -> i64
   %1 = "llvm.mlir.constant"() <{value = 1 : i64}> : () -> i64
-  %2 = llvm.sub %0, %arg16 overflow<nsw> : i64
+  %2 = llvm.sub %0, %arg16 : i64
   %3 = llvm.and %2, %1 : i64
   %4 = llvm.add %2, %3 : i64
   "llvm.return"(%4) : (i64) -> ()
@@ -141,35 +141,6 @@ theorem test10_proof : test10_before ⊑ test10_after := by
   ---BEGIN test10
   all_goals (try extract_goal ; sorry)
   ---END test10
-
-
-
-def and1_shl1_is_cmp_eq_0_multiuse_before := [llvm|
-{
-^0(%arg14 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
-  %1 = llvm.shl %0, %arg14 : i8
-  %2 = llvm.and %1, %0 : i8
-  %3 = llvm.add %1, %2 : i8
-  "llvm.return"(%3) : (i8) -> ()
-}
-]
-def and1_shl1_is_cmp_eq_0_multiuse_after := [llvm|
-{
-^0(%arg14 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
-  %1 = llvm.shl %0, %arg14 overflow<nuw> : i8
-  %2 = llvm.and %1, %0 : i8
-  %3 = llvm.add %1, %2 overflow<nuw> : i8
-  "llvm.return"(%3) : (i8) -> ()
-}
-]
-theorem and1_shl1_is_cmp_eq_0_multiuse_proof : and1_shl1_is_cmp_eq_0_multiuse_before ⊑ and1_shl1_is_cmp_eq_0_multiuse_after := by
-  unfold and1_shl1_is_cmp_eq_0_multiuse_before and1_shl1_is_cmp_eq_0_multiuse_after
-  simp_alive_peephole
-  ---BEGIN and1_shl1_is_cmp_eq_0_multiuse
-  all_goals (try extract_goal ; sorry)
-  ---END and1_shl1_is_cmp_eq_0_multiuse
 
 
 
@@ -214,7 +185,7 @@ def and1_lshr1_is_cmp_eq_0_multiuse_after := [llvm|
 ^0(%arg10 : i8):
   %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
   %1 = llvm.lshr %0, %arg10 : i8
-  %2 = llvm.shl %1, %0 overflow<nsw,nuw> : i8
+  %2 = llvm.shl %1, %0 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]

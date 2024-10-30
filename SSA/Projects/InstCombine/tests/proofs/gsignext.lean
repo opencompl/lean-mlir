@@ -73,33 +73,6 @@ theorem sextinreg_alt_proof : sextinreg_alt_before ⊑ sextinreg_alt_after := by
 
 
 
-def sext_before := [llvm|
-{
-^0(%arg9 : i16):
-  %0 = "llvm.mlir.constant"() <{value = 32768 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -32768 : i32}> : () -> i32
-  %2 = llvm.zext %arg9 : i16 to i32
-  %3 = llvm.xor %2, %0 : i32
-  %4 = llvm.add %3, %1 : i32
-  "llvm.return"(%4) : (i32) -> ()
-}
-]
-def sext_after := [llvm|
-{
-^0(%arg9 : i16):
-  %0 = llvm.sext %arg9 : i16 to i32
-  "llvm.return"(%0) : (i32) -> ()
-}
-]
-theorem sext_proof : sext_before ⊑ sext_after := by
-  unfold sext_before sext_after
-  simp_alive_peephole
-  ---BEGIN sext
-  apply sext_thm
-  ---END sext
-
-
-
 def sextinreg2_before := [llvm|
 {
 ^0(%arg6 : i32):
@@ -127,32 +100,6 @@ theorem sextinreg2_proof : sextinreg2_before ⊑ sextinreg2_after := by
   ---BEGIN sextinreg2
   apply sextinreg2_thm
   ---END sextinreg2
-
-
-
-def test6_before := [llvm|
-{
-^0(%arg3 : i16):
-  %0 = "llvm.mlir.constant"() <{value = 16 : i32}> : () -> i32
-  %1 = llvm.zext %arg3 : i16 to i32
-  %2 = llvm.shl %1, %0 : i32
-  %3 = llvm.ashr %2, %0 : i32
-  "llvm.return"(%3) : (i32) -> ()
-}
-]
-def test6_after := [llvm|
-{
-^0(%arg3 : i16):
-  %0 = llvm.sext %arg3 : i16 to i32
-  "llvm.return"(%0) : (i32) -> ()
-}
-]
-theorem test6_proof : test6_before ⊑ test6_after := by
-  unfold test6_before test6_after
-  simp_alive_peephole
-  ---BEGIN test6
-  apply test6_thm
-  ---END test6
 
 
 

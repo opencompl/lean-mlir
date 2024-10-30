@@ -3,63 +3,63 @@
 
 4: "test_logf_pos" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "test_logf_pos" has unsupported operation: builtin.unregistered: llvm.intr.log
+4: "test_logf_pos" has unsupported operation: llvm.call
 
 1: "test_log_pos"
 4: "test_log_pos" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "test_log_pos" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "test_log_pos" has unsupported operation: builtin.unregistered: llvm.intr.log
+4: "test_log_pos" has unsupported operation: llvm.call
 
 1: "test_logl_pos"
 4: "test_logl_pos" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "test_logl_pos" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "test_logl_pos" has unsupported operation: builtin.unregistered: llvm.intr.log
+4: "test_logl_pos" has unsupported operation: llvm.call
 
 1: "test_log10f_pos"
 4: "test_log10f_pos" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "test_log10f_pos" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "test_log10f_pos" has unsupported operation: builtin.unregistered: llvm.intr.log10
+4: "test_log10f_pos" has unsupported operation: llvm.call
 
 1: "test_log10_pos"
 4: "test_log10_pos" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "test_log10_pos" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "test_log10_pos" has unsupported operation: builtin.unregistered: llvm.intr.log10
+4: "test_log10_pos" has unsupported operation: llvm.call
 
 1: "test_log10l_pos"
 4: "test_log10l_pos" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "test_log10l_pos" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "test_log10l_pos" has unsupported operation: builtin.unregistered: llvm.intr.log10
+4: "test_log10l_pos" has unsupported operation: llvm.call
 
 1: "test_log2f_pos"
 4: "test_log2f_pos" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "test_log2f_pos" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "test_log2f_pos" has unsupported operation: builtin.unregistered: llvm.intr.log2
+4: "test_log2f_pos" has unsupported operation: llvm.call
 
 1: "test_log2_pos"
 4: "test_log2_pos" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "test_log2_pos" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "test_log2_pos" has unsupported operation: builtin.unregistered: llvm.intr.log2
+4: "test_log2_pos" has unsupported operation: llvm.call
 
 1: "test_log2l_pos"
 4: "test_log2l_pos" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "test_log2l_pos" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "test_log2l_pos" has unsupported operation: builtin.unregistered: llvm.intr.log2
+4: "test_log2l_pos" has unsupported operation: llvm.call
 
 1: "test_logb_pos"
 4: "test_logb_pos" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -80,7 +80,7 @@
 
 4: "metadata" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "metadata" has unsupported operation: builtin.unregistered: llvm.intr.log
+4: "metadata" has unsupported operation: llvm.call
 
 1: "test_logf_pos_denormalpreserve"
 4: "test_logf_pos_denormalpreserve" has unsupported operation: builtin.unregistered: llvm.fcmp

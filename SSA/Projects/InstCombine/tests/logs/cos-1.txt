@@ -49,21 +49,33 @@
 4: "cosf_unary_negated_arg_FMF" has unsupported operation: llvm.call
 
 1: "cos_unary_fabs_arg"
+4: "cos_unary_fabs_arg" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
 4: "cos_unary_fabs_arg" has unsupported operation: llvm.call
 
 1: "cosf_unary_fabs_arg"
+4: "cosf_unary_fabs_arg" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
 4: "cosf_unary_fabs_arg" has unsupported operation: llvm.call
 
 1: "cosf_unary_fabs_arg_FMF"
+4: "cosf_unary_fabs_arg_FMF" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
 4: "cosf_unary_fabs_arg_FMF" has unsupported operation: llvm.call
 
 1: "cos_copysign_arg"
+4: "cos_copysign_arg" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
 4: "cos_copysign_arg" has unsupported operation: llvm.call
 
 1: "cosf_unary_copysign_arg"
+4: "cosf_unary_copysign_arg" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
 4: "cosf_unary_copysign_arg" has unsupported operation: llvm.call
 
 1: "cosf_copysign_arg_FMF"
+4: "cosf_copysign_arg_FMF" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
 4: "cosf_copysign_arg_FMF" has unsupported operation: llvm.call
 
 1: "sin_negated_arg"

@@ -48,7 +48,7 @@ def mul_selectp2_x_propegate_nuw_before := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 2 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 4 : i8}> : () -> i8
   %2 = "llvm.select"(%arg21, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
-  %3 = llvm.mul %2, %arg20 overflow<nsw,nuw> : i8
+  %3 = llvm.mul %2, %arg20 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -58,7 +58,7 @@ def mul_selectp2_x_propegate_nuw_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 2 : i8}> : () -> i8
   %2 = "llvm.select"(%arg21, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
-  %3 = llvm.shl %arg20, %2 overflow<nuw> : i8
+  %3 = llvm.shl %arg20, %2 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -131,11 +131,38 @@ theorem mul_x_selectp2_proof : mul_x_selectp2_before ⊑ mul_x_selectp2_after :=
 
 
 
+def shl_add_log_may_cause_poison_pr62175_fail_before := [llvm|
+{
+^0(%arg4 : i8, %arg5 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 4 : i8}> : () -> i8
+  %1 = llvm.shl %0, %arg4 : i8
+  %2 = llvm.mul %arg5, %1 : i8
+  "llvm.return"(%2) : (i8) -> ()
+}
+]
+def shl_add_log_may_cause_poison_pr62175_fail_after := [llvm|
+{
+^0(%arg4 : i8, %arg5 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 4 : i8}> : () -> i8
+  %1 = llvm.shl %0, %arg4 : i8
+  %2 = llvm.mul %1, %arg5 : i8
+  "llvm.return"(%2) : (i8) -> ()
+}
+]
+theorem shl_add_log_may_cause_poison_pr62175_fail_proof : shl_add_log_may_cause_poison_pr62175_fail_before ⊑ shl_add_log_may_cause_poison_pr62175_fail_after := by
+  unfold shl_add_log_may_cause_poison_pr62175_fail_before shl_add_log_may_cause_poison_pr62175_fail_after
+  simp_alive_peephole
+  ---BEGIN shl_add_log_may_cause_poison_pr62175_fail
+  all_goals (try extract_goal ; sorry)
+  ---END shl_add_log_may_cause_poison_pr62175_fail
+
+
+
 def shl_add_log_may_cause_poison_pr62175_with_nuw_before := [llvm|
 {
 ^0(%arg2 : i8, %arg3 : i8):
   %0 = "llvm.mlir.constant"() <{value = 4 : i8}> : () -> i8
-  %1 = llvm.shl %0, %arg2 overflow<nuw> : i8
+  %1 = llvm.shl %0, %arg2 : i8
   %2 = llvm.mul %arg3, %1 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
@@ -162,7 +189,7 @@ def shl_add_log_may_cause_poison_pr62175_with_nsw_before := [llvm|
 {
 ^0(%arg0 : i8, %arg1 : i8):
   %0 = "llvm.mlir.constant"() <{value = 4 : i8}> : () -> i8
-  %1 = llvm.shl %0, %arg0 overflow<nsw> : i8
+  %1 = llvm.shl %0, %arg0 : i8
   %2 = llvm.mul %arg1, %1 : i8
   "llvm.return"(%2) : (i8) -> ()
 }

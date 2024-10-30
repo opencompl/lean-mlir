@@ -72,13 +72,13 @@
 4: "sint_to_fptrunc" has unsupported operation: builtin.unregistered: llvm.fptrunc
 
 1: "masked_sint_to_fptrunc1"
-4: "masked_sint_to_fptrunc1" has unsupported operation: builtin.unregistered: llvm.uitofp
+4: "masked_sint_to_fptrunc1" has unsupported operation: builtin.unregistered: llvm.sitofp
 
 1: "masked_sint_to_fptrunc2"
-4: "masked_sint_to_fptrunc2" has unsupported operation: builtin.unregistered: llvm.uitofp
+4: "masked_sint_to_fptrunc2" has unsupported operation: builtin.unregistered: llvm.sitofp
 
 1: "masked_sint_to_fptrunc3"
-4: "masked_sint_to_fptrunc3" has unsupported operation: builtin.unregistered: llvm.uitofp
+4: "masked_sint_to_fptrunc3" has unsupported operation: builtin.unregistered: llvm.sitofp
 
 4: "masked_sint_to_fptrunc3" has unsupported operation: builtin.unregistered: llvm.fptrunc
 
@@ -88,13 +88,13 @@
 4: "sint_to_fpext" has unsupported operation: builtin.unregistered: llvm.fpext
 
 1: "masked_sint_to_fpext1"
-4: "masked_sint_to_fpext1" has unsupported operation: builtin.unregistered: llvm.uitofp
+4: "masked_sint_to_fpext1" has unsupported operation: builtin.unregistered: llvm.sitofp
 
 1: "masked_sint_to_fpext2"
-4: "masked_sint_to_fpext2" has unsupported operation: builtin.unregistered: llvm.uitofp
+4: "masked_sint_to_fpext2" has unsupported operation: builtin.unregistered: llvm.sitofp
 
 1: "masked_sint_to_fpext3"
-4: "masked_sint_to_fpext3" has unsupported operation: builtin.unregistered: llvm.uitofp
+4: "masked_sint_to_fpext3" has unsupported operation: builtin.unregistered: llvm.sitofp
 
 4: "masked_sint_to_fpext3" has unsupported operation: builtin.unregistered: llvm.fpext
 
@@ -131,10 +131,10 @@
 4: "masked_uint_to_fpext3" has unsupported operation: builtin.unregistered: llvm.fpext
 
 1: "fptosi_nonnorm"
-4: "fptosi_nonnorm" has unsupported operation after optimization: builtin.unregistered: llvm.fptosi
+4: "fptosi_nonnorm" has unsupported operation: builtin.unregistered: llvm.fptosi
 
 1: "fptoui_nonnorm"
-4: "fptoui_nonnorm" has unsupported operation after optimization: builtin.unregistered: llvm.fptoui
+4: "fptoui_nonnorm" has unsupported operation: builtin.unregistered: llvm.fptoui
 
 1: "fptosi_nonnnorm"
 4: "fptosi_nonnnorm" has unsupported operation: builtin.unregistered: llvm.fptosi
@@ -143,12 +143,14 @@
 4: "fptoui_nonnnorm" has unsupported operation: builtin.unregistered: llvm.fptoui
 
 1: "fptosi_nonnorm_copysign"
-4: "fptosi_nonnorm_copysign" has unsupported operation after optimization: builtin.unregistered: llvm.intr.copysign
+4: "fptosi_nonnorm_copysign" has unsupported operation: builtin.unregistered: llvm.intr.copysign
 
-4: "fptosi_nonnorm_copysign" has unsupported operation after optimization: builtin.unregistered: llvm.fptosi
+4: "fptosi_nonnorm_copysign" has unsupported operation: builtin.unregistered: llvm.fptosi
 
 1: "fptosi_nonnorm_copysign_vec"
-8: "fptosi_nonnorm_copysign_vec" contains vectors which are unsupported
+4: "fptosi_nonnorm_copysign_vec" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+4: "fptosi_nonnorm_copysign_vec" has unsupported operation: builtin.unregistered: llvm.fptosi
 
 1: "fptosi_nonnorm_fmul"
 4: "fptosi_nonnorm_fmul" has unsupported operation: builtin.unregistered: llvm.fmul
@@ -159,9 +161,9 @@
 4: "fptosi_select" has unsupported operation after optimization: builtin.unregistered: llvm.fptosi
 
 1: "mul_pos_zero_convert"
-4: "mul_pos_zero_convert" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+4: "mul_pos_zero_convert" has unsupported operation: builtin.unregistered: llvm.sitofp
 
-4: "mul_pos_zero_convert" has unsupported operation after optimization: builtin.unregistered: llvm.fmul
+4: "mul_pos_zero_convert" has unsupported operation: builtin.unregistered: llvm.fmul
 
-4: "mul_pos_zero_convert" has unsupported operation after optimization: builtin.unregistered: llvm.fptosi
+4: "mul_pos_zero_convert" has unsupported operation: builtin.unregistered: llvm.fptosi
 

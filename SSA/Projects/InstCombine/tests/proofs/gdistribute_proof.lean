@@ -22,7 +22,7 @@ theorem factorize2_thm : ∀ (e : IntW 32), sub (mul (const? 3) e) (mul (const? 
 
 
 theorem factorize3_thm :
-  ∀ (e e_1 e_2 : IntW 32), LLVM.and (LLVM.or e_2 (LLVM.or e_1 e)) (LLVM.or e_2 e) ⊑ LLVM.or e_2 e := by 
+  ∀ (e e_1 e_2 : IntW 32), LLVM.and (LLVM.or e_2 (LLVM.or e_1 e)) (LLVM.or e_2 e) ⊑ LLVM.or e e_2 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

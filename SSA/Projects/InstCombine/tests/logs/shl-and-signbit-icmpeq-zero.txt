@@ -17,12 +17,58 @@
 4: "vec_4xi32_shl_and_signbit_eq" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "vec_4xi32_shl_and_signbit_eq_poison1"
+4: "vec_4xi32_shl_and_signbit_eq_poison1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "vec_4xi32_shl_and_signbit_eq_poison1" has unsupported operation: llvm.mlir.undef
+
+4: "vec_4xi32_shl_and_signbit_eq_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vec_4xi32_shl_and_signbit_eq_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vec_4xi32_shl_and_signbit_eq_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vec_4xi32_shl_and_signbit_eq_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
 4: "vec_4xi32_shl_and_signbit_eq_poison1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "vec_4xi32_shl_and_signbit_eq_poison2"
+4: "vec_4xi32_shl_and_signbit_eq_poison2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "vec_4xi32_shl_and_signbit_eq_poison2" has unsupported operation: llvm.mlir.undef
+
+4: "vec_4xi32_shl_and_signbit_eq_poison2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vec_4xi32_shl_and_signbit_eq_poison2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vec_4xi32_shl_and_signbit_eq_poison2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vec_4xi32_shl_and_signbit_eq_poison2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
 4: "vec_4xi32_shl_and_signbit_eq_poison2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "vec_4xi32_shl_and_signbit_eq_poison3"
+4: "vec_4xi32_shl_and_signbit_eq_poison3" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "vec_4xi32_shl_and_signbit_eq_poison3" has unsupported operation: llvm.mlir.undef
+
+4: "vec_4xi32_shl_and_signbit_eq_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vec_4xi32_shl_and_signbit_eq_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vec_4xi32_shl_and_signbit_eq_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vec_4xi32_shl_and_signbit_eq_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vec_4xi32_shl_and_signbit_eq_poison3" has unsupported operation: llvm.mlir.undef
+
+4: "vec_4xi32_shl_and_signbit_eq_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vec_4xi32_shl_and_signbit_eq_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vec_4xi32_shl_and_signbit_eq_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vec_4xi32_shl_and_signbit_eq_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
 4: "vec_4xi32_shl_and_signbit_eq_poison3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "scalar_shl_and_signbit_eq_extra_use_shl"

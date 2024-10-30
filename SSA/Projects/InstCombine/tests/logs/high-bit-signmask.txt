@@ -66,13 +66,10 @@
 4: "n8" has unsupported operation: llvm.call
 
 1: "n9"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.lshr
-2: llvm.sub
-2: llvm.return
+7: "n9" is unchanged by InstCombine
 
 1: "n10"
 4: "n10" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "n10" has unsupported operation: builtin.unregistered: llvm.zext
 

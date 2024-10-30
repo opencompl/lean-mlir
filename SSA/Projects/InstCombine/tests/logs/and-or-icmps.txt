@@ -99,9 +99,15 @@
 
 4: "simplify_before_foldAndOfICmps" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "simplify_before_foldAndOfICmps" has unsupported operation: builtin.unregistered: llvm.zext
+
 4: "simplify_before_foldAndOfICmps" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "simplify_before_foldAndOfICmps" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "simplify_before_foldAndOfICmps" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "simplify_before_foldAndOfICmps" has unsupported operation: builtin.unregistered: llvm.sext
 
 4: "simplify_before_foldAndOfICmps" has unsupported operation: llvm.getelementptr
 
@@ -792,47 +798,77 @@
 1: "icmp_slt_0_or_icmp_sgt_0_i32"
 4: "icmp_slt_0_or_icmp_sgt_0_i32" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "icmp_slt_0_or_icmp_sgt_0_i32" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "icmp_slt_0_or_icmp_sgt_0_i64"
 4: "icmp_slt_0_or_icmp_sgt_0_i64" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_slt_0_or_icmp_sgt_0_i64" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "icmp_slt_0_or_icmp_sgt_0_i64_fail0"
 4: "icmp_slt_0_or_icmp_sgt_0_i64_fail0" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+4: "icmp_slt_0_or_icmp_sgt_0_i64_fail0" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+
 1: "icmp_slt_0_or_icmp_sgt_0_i64_fail1"
 4: "icmp_slt_0_or_icmp_sgt_0_i64_fail1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_slt_0_or_icmp_sgt_0_i64_fail1" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "icmp_slt_0_or_icmp_sgt_0_i64_fail2"
 4: "icmp_slt_0_or_icmp_sgt_0_i64_fail2" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "icmp_slt_0_or_icmp_sgt_0_i64_fail2" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "icmp_slt_0_or_icmp_sgt_0_i64_fail3"
 4: "icmp_slt_0_or_icmp_sgt_0_i64_fail3" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "icmp_slt_0_or_icmp_sgt_0_i64_fail3" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 
 1: "icmp_slt_0_or_icmp_sgt_0_i64x2"
 4: "icmp_slt_0_or_icmp_sgt_0_i64x2" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "icmp_slt_0_or_icmp_sgt_0_i64x2" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "icmp_slt_0_or_icmp_sgt_0_i64x2_fail"
 4: "icmp_slt_0_or_icmp_sgt_0_i64x2_fail" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_slt_0_or_icmp_sgt_0_i64x2_fail" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "icmp_slt_0_and_icmp_sge_neg1_i32"
 4: "icmp_slt_0_and_icmp_sge_neg1_i32" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+4: "icmp_slt_0_and_icmp_sge_neg1_i32" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+
 1: "icmp_slt_0_or_icmp_sge_neg1_i32"
 4: "icmp_slt_0_or_icmp_sge_neg1_i32" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "icmp_slt_0_or_icmp_sge_neg1_i32" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 
 1: "icmp_slt_0_or_icmp_sge_100_i32"
 4: "icmp_slt_0_or_icmp_sge_100_i32" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "icmp_slt_0_or_icmp_sge_100_i32" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "icmp_slt_0_and_icmp_sge_neg1_i64"
 4: "icmp_slt_0_and_icmp_sge_neg1_i64" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_slt_0_and_icmp_sge_neg1_i64" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "icmp_slt_0_and_icmp_sge_neg2_i64"
 4: "icmp_slt_0_and_icmp_sge_neg2_i64" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "icmp_slt_0_and_icmp_sge_neg2_i64" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "ashr_and_icmp_sge_neg1_i64"
 4: "ashr_and_icmp_sge_neg1_i64" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "ashr_and_icmp_sge_neg1_i64" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "icmp_slt_0_and_icmp_sgt_neg1_i64"
 4: "icmp_slt_0_and_icmp_sgt_neg1_i64" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "icmp_slt_0_and_icmp_sgt_neg1_i64" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 
 1: "icmp_slt_0_and_icmp_sge_neg1_i64_fail"
 4: "icmp_slt_0_and_icmp_sge_neg1_i64_fail" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -840,24 +876,36 @@
 1: "icmp_slt_0_and_icmp_sge_neg1_i32x2"
 4: "icmp_slt_0_and_icmp_sge_neg1_i32x2" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "icmp_slt_0_and_icmp_sge_neg1_i32x2" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "icmp_slt_0_and_icmp_sge_neg2_i32x2"
 4: "icmp_slt_0_and_icmp_sge_neg2_i32x2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_slt_0_and_icmp_sge_neg2_i32x2" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "icmp_x_slt_0_xor_icmp_y_sgt_neg1_i32"
 4: "icmp_x_slt_0_xor_icmp_y_sgt_neg1_i32" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "icmp_x_slt_0_xor_icmp_y_sgt_neg1_i32" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "icmp_slt_0_xor_icmp_sgt_neg2_i32"
 4: "icmp_slt_0_xor_icmp_sgt_neg2_i32" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_slt_0_xor_icmp_sgt_neg2_i32" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "icmp_slt_0_and_icmp_sge_neg1_i32_multiuse0"
 4: "icmp_slt_0_and_icmp_sge_neg1_i32_multiuse0" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "icmp_slt_0_and_icmp_sge_neg1_i32_multiuse0" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "icmp_slt_0_and_icmp_sge_neg1_i32_multiuse0" has unsupported operation: builtin.unregistered: llvm.zext
+
 4: "icmp_slt_0_and_icmp_sge_neg1_i32_multiuse0" has unsupported operation: llvm.call
 
 1: "icmp_slt_0_and_icmp_sge_neg2_i32_multiuse1"
 4: "icmp_slt_0_and_icmp_sge_neg2_i32_multiuse1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_slt_0_and_icmp_sge_neg2_i32_multiuse1" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "icmp_slt_0_and_icmp_sge_neg2_i32_multiuse1" has unsupported operation: llvm.call
 
@@ -869,12 +917,16 @@
 1: "icmp_slt_0_and_icmp_sge_neg2_i32_multiuse_fail0"
 4: "icmp_slt_0_and_icmp_sge_neg2_i32_multiuse_fail0" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "icmp_slt_0_and_icmp_sge_neg2_i32_multiuse_fail0" has unsupported operation: builtin.unregistered: llvm.zext
+
 4: "icmp_slt_0_and_icmp_sge_neg2_i32_multiuse_fail0" has unsupported operation: llvm.call
 
 4: "icmp_slt_0_and_icmp_sge_neg2_i32_multiuse_fail0" has unsupported operation: llvm.call
 
 1: "icmp_slt_0_or_icmp_eq_100_i32_multiuse_fail1"
 4: "icmp_slt_0_or_icmp_eq_100_i32_multiuse_fail1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_slt_0_or_icmp_eq_100_i32_multiuse_fail1" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "icmp_slt_0_or_icmp_eq_100_i32_multiuse_fail1" has unsupported operation: llvm.call
 
@@ -886,6 +938,8 @@
 1: "icmp_slt_0_or_icmp_eq_100_i32_multiuse_fail3"
 4: "icmp_slt_0_or_icmp_eq_100_i32_multiuse_fail3" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "icmp_slt_0_or_icmp_eq_100_i32_multiuse_fail3" has unsupported operation: builtin.unregistered: llvm.zext
+
 4: "icmp_slt_0_or_icmp_eq_100_i32_multiuse_fail3" has unsupported operation: llvm.call
 
 1: "icmp_slt_0_or_icmp_eq_100_i32_fail"
@@ -893,38 +947,54 @@
 
 4: "icmp_slt_0_or_icmp_eq_100_i32_fail" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "icmp_slt_0_or_icmp_eq_100_i32_fail" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "icmp_slt_0_and_icmp_ne_neg2_i32_fail"
 4: "icmp_slt_0_and_icmp_ne_neg2_i32_fail" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "icmp_slt_0_and_icmp_ne_neg2_i32_fail" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_slt_0_and_icmp_ne_neg2_i32_fail" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "icmp_x_slt_0_and_icmp_y_ne_neg2_i32_fail"
 4: "icmp_x_slt_0_and_icmp_y_ne_neg2_i32_fail" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "icmp_x_slt_0_and_icmp_y_ne_neg2_i32_fail" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "icmp_x_slt_0_and_icmp_y_ne_neg2_i32_fail" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "icmp_x_slt_0_and_icmp_y_sgt_neg1_i32_fail"
 4: "icmp_x_slt_0_and_icmp_y_sgt_neg1_i32_fail" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "icmp_x_slt_0_and_icmp_y_sgt_neg1_i32_fail" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "icmp_x_slt_0_and_icmp_y_sgt_neg1_i32_fail" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "icmp_slt_0_xor_icmp_sge_neg2_i32_fail"
 4: "icmp_slt_0_xor_icmp_sge_neg2_i32_fail" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_slt_0_xor_icmp_sge_neg2_i32_fail" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "icmp_slt_0_or_icmp_add_1_sge_100_i32_fail"
 4: "icmp_slt_0_or_icmp_add_1_sge_100_i32_fail" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "icmp_slt_0_or_icmp_add_1_sge_100_i32_fail" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "icmp_slt_0_or_icmp_add_1_sge_100_i32_fail" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "logical_and_icmps1"
 4: "logical_and_icmps1" has unsupported operation: builtin.unregistered: llvm.icmp
 
-1: "logical_and_icmps2"
-4: "logical_and_icmps2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+4: "logical_and_icmps1" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "logical_and_icmps2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+1: "logical_and_icmps2"
+4: "logical_and_icmps2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "logical_and_icmps2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "logical_and_icmps_vec1"
+4: "logical_and_icmps_vec1" has unsupported operation: builtin.unregistered: llvm.icmp
+
 4: "logical_and_icmps_vec1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "logical_and_icmps_fail1"
@@ -935,7 +1005,11 @@
 1: "icmp_eq_or_z_or_pow2orz"
 4: "icmp_eq_or_z_or_pow2orz" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "icmp_eq_or_z_or_pow2orz" has unsupported operation: builtin.unregistered: llvm.icmp
+
 1: "icmp_eq_or_z_or_pow2orz_logical"
+4: "icmp_eq_or_z_or_pow2orz_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
 4: "icmp_eq_or_z_or_pow2orz_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "icmp_eq_or_z_or_pow2orz_fail_multiuse"
@@ -951,6 +1025,8 @@
 4: "icmp_eq_or_z_or_pow2orz_fail_logic_or" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "icmp_ne_and_z_and_pow2orz"
+4: "icmp_ne_and_z_and_pow2orz" has unsupported operation: builtin.unregistered: llvm.icmp
+
 4: "icmp_ne_and_z_and_pow2orz" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "icmp_ne_and_z_and_onefail"
@@ -989,6 +1065,8 @@
 1: "and_slt_to_mask"
 4: "and_slt_to_mask" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "and_slt_to_mask" has unsupported operation: builtin.unregistered: llvm.icmp
+
 1: "and_slt_to_mask_off_by_one"
 4: "and_slt_to_mask_off_by_one" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -997,12 +1075,16 @@
 1: "and_sgt_to_mask"
 4: "and_sgt_to_mask" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "and_sgt_to_mask" has unsupported operation: builtin.unregistered: llvm.icmp
+
 1: "and_sgt_to_mask_off_by_one"
 4: "and_sgt_to_mask_off_by_one" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "and_sgt_to_mask_off_by_one" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "and_ugt_to_mask"
+4: "and_ugt_to_mask" has unsupported operation: builtin.unregistered: llvm.icmp
+
 4: "and_ugt_to_mask" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "and_ugt_to_mask_off_by_one"

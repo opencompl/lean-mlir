@@ -85,7 +85,7 @@ def bools_multi_uses1_after := [llvm|
 ^0(%arg45 : i1, %arg46 : i1, %arg47 : i1):
   %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
   %1 = llvm.xor %arg47, %0 : i1
-  %2 = llvm.and %arg45, %1 : i1
+  %2 = llvm.and %1, %arg45 : i1
   %3 = "llvm.select"(%arg47, %arg46, %arg45) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
   %4 = llvm.xor %3, %2 : i1
   "llvm.return"(%4) : (i1) -> ()

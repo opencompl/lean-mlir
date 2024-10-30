@@ -42,17 +42,17 @@ theorem add_shl_same_amount_proof : add_shl_same_amount_before ⊑ add_shl_same_
 def add_shl_same_amount_nuw_before := [llvm|
 {
 ^0(%arg53 : i64, %arg54 : i64, %arg55 : i64):
-  %0 = llvm.shl %arg53, %arg55 overflow<nuw> : i64
-  %1 = llvm.shl %arg54, %arg55 overflow<nuw> : i64
-  %2 = llvm.add %0, %1 overflow<nuw> : i64
+  %0 = llvm.shl %arg53, %arg55 : i64
+  %1 = llvm.shl %arg54, %arg55 : i64
+  %2 = llvm.add %0, %1 : i64
   "llvm.return"(%2) : (i64) -> ()
 }
 ]
 def add_shl_same_amount_nuw_after := [llvm|
 {
 ^0(%arg53 : i64, %arg54 : i64, %arg55 : i64):
-  %0 = llvm.add %arg53, %arg54 overflow<nuw> : i64
-  %1 = llvm.shl %0, %arg55 overflow<nuw> : i64
+  %0 = llvm.add %arg53, %arg54 : i64
+  %1 = llvm.shl %0, %arg55 : i64
   "llvm.return"(%1) : (i64) -> ()
 }
 ]
@@ -68,8 +68,8 @@ theorem add_shl_same_amount_nuw_proof : add_shl_same_amount_nuw_before ⊑ add_s
 def add_shl_same_amount_partial_nsw1_before := [llvm|
 {
 ^0(%arg41 : i6, %arg42 : i6, %arg43 : i6):
-  %0 = llvm.shl %arg41, %arg43 overflow<nsw> : i6
-  %1 = llvm.shl %arg42, %arg43 overflow<nsw> : i6
+  %0 = llvm.shl %arg41, %arg43 : i6
+  %1 = llvm.shl %arg42, %arg43 : i6
   %2 = llvm.add %0, %1 : i6
   "llvm.return"(%2) : (i6) -> ()
 }
@@ -95,8 +95,8 @@ def add_shl_same_amount_partial_nsw2_before := [llvm|
 {
 ^0(%arg38 : i6, %arg39 : i6, %arg40 : i6):
   %0 = llvm.shl %arg38, %arg40 : i6
-  %1 = llvm.shl %arg39, %arg40 overflow<nsw> : i6
-  %2 = llvm.add %0, %1 overflow<nsw> : i6
+  %1 = llvm.shl %arg39, %arg40 : i6
+  %2 = llvm.add %0, %1 : i6
   "llvm.return"(%2) : (i6) -> ()
 }
 ]
@@ -120,8 +120,8 @@ theorem add_shl_same_amount_partial_nsw2_proof : add_shl_same_amount_partial_nsw
 def add_shl_same_amount_partial_nuw1_before := [llvm|
 {
 ^0(%arg35 : i6, %arg36 : i6, %arg37 : i6):
-  %0 = llvm.shl %arg35, %arg37 overflow<nuw> : i6
-  %1 = llvm.shl %arg36, %arg37 overflow<nuw> : i6
+  %0 = llvm.shl %arg35, %arg37 : i6
+  %1 = llvm.shl %arg36, %arg37 : i6
   %2 = llvm.add %0, %1 : i6
   "llvm.return"(%2) : (i6) -> ()
 }
@@ -146,9 +146,9 @@ theorem add_shl_same_amount_partial_nuw1_proof : add_shl_same_amount_partial_nuw
 def add_shl_same_amount_partial_nuw2_before := [llvm|
 {
 ^0(%arg32 : i6, %arg33 : i6, %arg34 : i6):
-  %0 = llvm.shl %arg32, %arg34 overflow<nuw> : i6
+  %0 = llvm.shl %arg32, %arg34 : i6
   %1 = llvm.shl %arg33, %arg34 : i6
-  %2 = llvm.add %0, %1 overflow<nuw> : i6
+  %2 = llvm.add %0, %1 : i6
   "llvm.return"(%2) : (i6) -> ()
 }
 ]
@@ -198,17 +198,17 @@ theorem sub_shl_same_amount_proof : sub_shl_same_amount_before ⊑ sub_shl_same_
 def sub_shl_same_amount_nuw_before := [llvm|
 {
 ^0(%arg23 : i64, %arg24 : i64, %arg25 : i64):
-  %0 = llvm.shl %arg23, %arg25 overflow<nuw> : i64
-  %1 = llvm.shl %arg24, %arg25 overflow<nuw> : i64
-  %2 = llvm.sub %0, %1 overflow<nuw> : i64
+  %0 = llvm.shl %arg23, %arg25 : i64
+  %1 = llvm.shl %arg24, %arg25 : i64
+  %2 = llvm.sub %0, %1 : i64
   "llvm.return"(%2) : (i64) -> ()
 }
 ]
 def sub_shl_same_amount_nuw_after := [llvm|
 {
 ^0(%arg23 : i64, %arg24 : i64, %arg25 : i64):
-  %0 = llvm.sub %arg23, %arg24 overflow<nuw> : i64
-  %1 = llvm.shl %0, %arg25 overflow<nuw> : i64
+  %0 = llvm.sub %arg23, %arg24 : i64
+  %1 = llvm.shl %0, %arg25 : i64
   "llvm.return"(%1) : (i64) -> ()
 }
 ]
@@ -224,8 +224,8 @@ theorem sub_shl_same_amount_nuw_proof : sub_shl_same_amount_nuw_before ⊑ sub_s
 def sub_shl_same_amount_partial_nsw1_before := [llvm|
 {
 ^0(%arg11 : i6, %arg12 : i6, %arg13 : i6):
-  %0 = llvm.shl %arg11, %arg13 overflow<nsw> : i6
-  %1 = llvm.shl %arg12, %arg13 overflow<nsw> : i6
+  %0 = llvm.shl %arg11, %arg13 : i6
+  %1 = llvm.shl %arg12, %arg13 : i6
   %2 = llvm.sub %0, %1 : i6
   "llvm.return"(%2) : (i6) -> ()
 }
@@ -251,8 +251,8 @@ def sub_shl_same_amount_partial_nsw2_before := [llvm|
 {
 ^0(%arg8 : i6, %arg9 : i6, %arg10 : i6):
   %0 = llvm.shl %arg8, %arg10 : i6
-  %1 = llvm.shl %arg9, %arg10 overflow<nsw> : i6
-  %2 = llvm.sub %0, %1 overflow<nsw> : i6
+  %1 = llvm.shl %arg9, %arg10 : i6
+  %2 = llvm.sub %0, %1 : i6
   "llvm.return"(%2) : (i6) -> ()
 }
 ]
@@ -276,8 +276,8 @@ theorem sub_shl_same_amount_partial_nsw2_proof : sub_shl_same_amount_partial_nsw
 def sub_shl_same_amount_partial_nuw1_before := [llvm|
 {
 ^0(%arg5 : i6, %arg6 : i6, %arg7 : i6):
-  %0 = llvm.shl %arg5, %arg7 overflow<nuw> : i6
-  %1 = llvm.shl %arg6, %arg7 overflow<nuw> : i6
+  %0 = llvm.shl %arg5, %arg7 : i6
+  %1 = llvm.shl %arg6, %arg7 : i6
   %2 = llvm.sub %0, %1 : i6
   "llvm.return"(%2) : (i6) -> ()
 }
@@ -302,9 +302,9 @@ theorem sub_shl_same_amount_partial_nuw1_proof : sub_shl_same_amount_partial_nuw
 def sub_shl_same_amount_partial_nuw2_before := [llvm|
 {
 ^0(%arg2 : i6, %arg3 : i6, %arg4 : i6):
-  %0 = llvm.shl %arg2, %arg4 overflow<nuw> : i6
+  %0 = llvm.shl %arg2, %arg4 : i6
   %1 = llvm.shl %arg3, %arg4 : i6
-  %2 = llvm.sub %0, %1 overflow<nuw> : i6
+  %2 = llvm.sub %0, %1 : i6
   "llvm.return"(%2) : (i6) -> ()
 }
 ]

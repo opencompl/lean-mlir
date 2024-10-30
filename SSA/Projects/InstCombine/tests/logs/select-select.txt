@@ -1,0 +1,253 @@
+1: "foo1"
+4: "foo1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "foo1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "foo2"
+4: "foo2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "foo2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "foo3"
+7: "foo3" is unchanged by InstCombine
+
+1: "sel_shuf_commute0"
+4: "sel_shuf_commute0" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "sel_shuf_commute1"
+4: "sel_shuf_commute1" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "sel_shuf_commute2"
+4: "sel_shuf_commute2" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "sel_shuf_commute3"
+4: "sel_shuf_commute3" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "use"
+5: "use" is empty
+
+1: "sel_shuf_use"
+4: "sel_shuf_use" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "sel_shuf_use" has unsupported operation: llvm.call
+
+1: "sel_shuf_undef"
+4: "sel_shuf_undef" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "sel_shuf_not"
+4: "sel_shuf_not" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "sel_shuf_no_common_operand"
+4: "sel_shuf_no_common_operand" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "sel_shuf_narrowing_commute1"
+4: "sel_shuf_narrowing_commute1" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "sel_shuf_narrowing_commute2"
+4: "sel_shuf_narrowing_commute2" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "strong_order_cmp_slt_eq"
+4: "strong_order_cmp_slt_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strong_order_cmp_slt_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "strong_order_cmp_ult_eq"
+4: "strong_order_cmp_ult_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strong_order_cmp_ult_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "strong_order_cmp_slt_eq_wrong_const"
+4: "strong_order_cmp_slt_eq_wrong_const" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strong_order_cmp_slt_eq_wrong_const" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "strong_order_cmp_ult_eq_wrong_const"
+4: "strong_order_cmp_ult_eq_wrong_const" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strong_order_cmp_ult_eq_wrong_const" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "strong_order_cmp_slt_ult_wrong_pred"
+4: "strong_order_cmp_slt_ult_wrong_pred" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strong_order_cmp_slt_ult_wrong_pred" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "strong_order_cmp_sgt_eq"
+4: "strong_order_cmp_sgt_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strong_order_cmp_sgt_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "strong_order_cmp_ugt_eq"
+4: "strong_order_cmp_ugt_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strong_order_cmp_ugt_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "strong_order_cmp_eq_slt"
+4: "strong_order_cmp_eq_slt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strong_order_cmp_eq_slt" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "strong_order_cmp_eq_slt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "strong_order_cmp_eq_sgt"
+4: "strong_order_cmp_eq_sgt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strong_order_cmp_eq_sgt" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "strong_order_cmp_eq_sgt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "strong_order_cmp_eq_ult"
+4: "strong_order_cmp_eq_ult" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strong_order_cmp_eq_ult" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "strong_order_cmp_eq_ult" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "strong_order_cmp_eq_ugt"
+4: "strong_order_cmp_eq_ugt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strong_order_cmp_eq_ugt" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "strong_order_cmp_eq_ugt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "strong_order_cmp_slt_sgt"
+4: "strong_order_cmp_slt_sgt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strong_order_cmp_slt_sgt" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "strong_order_cmp_slt_sgt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "strong_order_cmp_ult_ugt"
+4: "strong_order_cmp_ult_ugt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strong_order_cmp_ult_ugt" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "strong_order_cmp_ult_ugt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "strong_order_cmp_sgt_slt"
+4: "strong_order_cmp_sgt_slt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strong_order_cmp_sgt_slt" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "strong_order_cmp_sgt_slt" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "strong_order_cmp_ugt_ult"
+4: "strong_order_cmp_ugt_ult" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strong_order_cmp_ugt_ult" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "strong_order_cmp_ugt_ult" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "strong_order_cmp_ne_ugt_ne_not_one_use"
+4: "strong_order_cmp_ne_ugt_ne_not_one_use" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strong_order_cmp_ne_ugt_ne_not_one_use" has unsupported operation: llvm.call
+
+4: "strong_order_cmp_ne_ugt_ne_not_one_use" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "strong_order_cmp_ne_ugt_ne_not_one_use" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "strong_order_cmp_slt_eq_slt_not_oneuse"
+4: "strong_order_cmp_slt_eq_slt_not_oneuse" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strong_order_cmp_slt_eq_slt_not_oneuse" has unsupported operation: llvm.call
+
+4: "strong_order_cmp_slt_eq_slt_not_oneuse" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "strong_order_cmp_sgt_eq_eq_not_oneuse"
+4: "strong_order_cmp_sgt_eq_eq_not_oneuse" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strong_order_cmp_sgt_eq_eq_not_oneuse" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strong_order_cmp_sgt_eq_eq_not_oneuse" has unsupported operation: llvm.call
+
+1: "strong_order_cmp_eq_ugt_eq_not_oneuse"
+4: "strong_order_cmp_eq_ugt_eq_not_oneuse" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strong_order_cmp_eq_ugt_eq_not_oneuse" has unsupported operation: llvm.call
+
+4: "strong_order_cmp_eq_ugt_eq_not_oneuse" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "strong_order_cmp_eq_ugt_eq_not_oneuse" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "strong_order_cmp_ugt_ult_zext_not_oneuse"
+4: "strong_order_cmp_ugt_ult_zext_not_oneuse" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strong_order_cmp_ugt_ult_zext_not_oneuse" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "strong_order_cmp_ugt_ult_zext_not_oneuse" has unsupported operation: llvm.call
+
+4: "strong_order_cmp_ugt_ult_zext_not_oneuse" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "strong_order_cmp_slt_sgt_sext_not_oneuse"
+4: "strong_order_cmp_slt_sgt_sext_not_oneuse" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strong_order_cmp_slt_sgt_sext_not_oneuse" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "strong_order_cmp_slt_sgt_sext_not_oneuse" has unsupported operation: llvm.call
+
+4: "strong_order_cmp_slt_sgt_sext_not_oneuse" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "strong_order_cmp_ugt_ult_vector"
+4: "strong_order_cmp_ugt_ult_vector" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strong_order_cmp_ugt_ult_vector" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "strong_order_cmp_ugt_ult_vector" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "strong_order_cmp_ugt_ult_vector_poison"
+4: "strong_order_cmp_ugt_ult_vector_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "strong_order_cmp_ugt_ult_vector_poison" has unsupported operation: llvm.mlir.undef
+
+4: "strong_order_cmp_ugt_ult_vector_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "strong_order_cmp_ugt_ult_vector_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "strong_order_cmp_ugt_ult_vector_poison" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strong_order_cmp_ugt_ult_vector_poison" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "strong_order_cmp_ugt_ult_vector_poison" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "strong_order_cmp_eq_ugt_vector"
+4: "strong_order_cmp_eq_ugt_vector" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strong_order_cmp_eq_ugt_vector" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "strong_order_cmp_eq_ugt_vector" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "strong_order_cmp_eq_ugt_vector_poison1"
+4: "strong_order_cmp_eq_ugt_vector_poison1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strong_order_cmp_eq_ugt_vector_poison1" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "strong_order_cmp_eq_ugt_vector_poison1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "strong_order_cmp_eq_ugt_vector_poison2"
+4: "strong_order_cmp_eq_ugt_vector_poison2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strong_order_cmp_eq_ugt_vector_poison2" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "strong_order_cmp_eq_ugt_vector_poison2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "strong_order_cmp_eq_ugt_vector_poison3"
+4: "strong_order_cmp_eq_ugt_vector_poison3" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "strong_order_cmp_eq_ugt_vector_poison3" has unsupported operation: llvm.mlir.undef
+
+4: "strong_order_cmp_eq_ugt_vector_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "strong_order_cmp_eq_ugt_vector_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "strong_order_cmp_eq_ugt_vector_poison3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strong_order_cmp_eq_ugt_vector_poison3" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "strong_order_cmp_eq_ugt_vector_poison3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "use1"
+5: "use1" is empty
+
+1: "use8"
+5: "use8" is empty
+

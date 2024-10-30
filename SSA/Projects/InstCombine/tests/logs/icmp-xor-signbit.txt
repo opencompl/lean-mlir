@@ -60,6 +60,8 @@
 4: "slt_zero_eq_i1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "slt_zero_eq_i1_fail"
+4: "slt_zero_eq_i1_fail" has unsupported operation: builtin.unregistered: llvm.zext
+
 4: "slt_zero_eq_i1_fail" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "slt_zero_eq_ne_0"
@@ -79,10 +81,14 @@
 1: "slt_zero_eq_ne_0_fail1"
 4: "slt_zero_eq_ne_0_fail1" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "slt_zero_eq_ne_0_fail1" has unsupported operation: builtin.unregistered: llvm.zext
+
 4: "slt_zero_eq_ne_0_fail1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "slt_zero_eq_ne_0_fail2"
 4: "slt_zero_eq_ne_0_fail2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "slt_zero_eq_ne_0_fail2" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "slt_zero_eq_ne_0_fail2" has unsupported operation: builtin.unregistered: llvm.icmp
 

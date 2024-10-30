@@ -37,7 +37,7 @@
 1: "log_powi_not_fast"
 4: "log_powi_not_fast" has unsupported operation: builtin.unregistered: llvm.intr.powi
 
-4: "log_powi_not_fast" has unsupported operation: builtin.unregistered: llvm.intr.log
+4: "log_powi_not_fast" has unsupported operation: llvm.call
 
 1: "log10f_powf"
 4: "log10f_powf" has unsupported operation: builtin.unregistered: llvm.intr.log10
@@ -52,7 +52,7 @@
 1: "log_pow_not_fast"
 4: "log_pow_not_fast" has unsupported operation: llvm.call
 
-4: "log_pow_not_fast" has unsupported operation: builtin.unregistered: llvm.intr.log
+4: "log_pow_not_fast" has unsupported operation: llvm.call
 
 1: "function_pointer"
 4: "function_pointer" has unsupported operation: llvm.call
@@ -71,7 +71,7 @@
 1: "log_exp2_not_fast"
 4: "log_exp2_not_fast" has unsupported operation: llvm.call
 
-4: "log_exp2_not_fast" has unsupported operation: builtin.unregistered: llvm.intr.log
+4: "log_exp2_not_fast" has unsupported operation: llvm.call
 
 1: "pr43617"
 4: "pr43617" has unsupported operation: builtin.unregistered: llvm.fneg

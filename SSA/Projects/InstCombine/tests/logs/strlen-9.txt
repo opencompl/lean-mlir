@@ -16,6 +16,8 @@
 
 4: "fold_strlen_no_nul" has unsupported operation: llvm.store
 
+4: "fold_strlen_no_nul" has unsupported operation: builtin.unregistered: llvm.sext
+
 4: "fold_strlen_no_nul" has unsupported operation: llvm.getelementptr
 
 4: "fold_strlen_no_nul" has unsupported operation: llvm.call
@@ -27,6 +29,8 @@
 4: "fold_strlen_no_nul" has unsupported operation: llvm.getelementptr
 
 4: "fold_strlen_no_nul" has unsupported operation: llvm.store
+
+4: "fold_strlen_no_nul" has unsupported operation: builtin.unregistered: llvm.sext
 
 4: "fold_strlen_no_nul" has unsupported operation: llvm.getelementptr
 

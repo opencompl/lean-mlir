@@ -25,7 +25,7 @@ def positive_samevar_after := [llvm|
 {
 ^0(%arg62 : i8, %arg63 : i8):
   %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
-  %1 = llvm.shl %0, %arg63 overflow<nsw> : i8
+  %1 = llvm.shl %0, %arg63 : i8
   %2 = llvm.and %1, %arg62 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
@@ -127,7 +127,7 @@ def positive_samevar_shlnuw_before := [llvm|
 {
 ^0(%arg57 : i8, %arg58 : i8):
   %0 = llvm.ashr %arg57, %arg58 : i8
-  %1 = llvm.shl %0, %arg58 overflow<nuw> : i8
+  %1 = llvm.shl %0, %arg58 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
@@ -135,7 +135,7 @@ def positive_samevar_shlnuw_after := [llvm|
 {
 ^0(%arg57 : i8, %arg58 : i8):
   %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
-  %1 = llvm.shl %0, %arg58 overflow<nsw> : i8
+  %1 = llvm.shl %0, %arg58 : i8
   %2 = llvm.and %1, %arg57 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
@@ -154,7 +154,7 @@ def positive_sameconst_shlnuw_before := [llvm|
 ^0(%arg56 : i8):
   %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
   %1 = llvm.ashr %arg56, %0 : i8
-  %2 = llvm.shl %1, %0 overflow<nuw> : i8
+  %2 = llvm.shl %1, %0 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
@@ -181,7 +181,7 @@ def positive_biggerashr_shlnuw_before := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
   %2 = llvm.ashr %arg55, %0 : i8
-  %3 = llvm.shl %2, %1 overflow<nuw> : i8
+  %3 = llvm.shl %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -210,7 +210,7 @@ def positive_biggershl_shlnuw_before := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
   %2 = llvm.ashr %arg54, %0 : i8
-  %3 = llvm.shl %2, %1 overflow<nuw> : i8
+  %3 = llvm.shl %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -219,7 +219,7 @@ def positive_biggershl_shlnuw_after := [llvm|
 ^0(%arg54 : i8):
   %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = -64 : i8}> : () -> i8
-  %2 = llvm.shl %arg54, %0 overflow<nuw> : i8
+  %2 = llvm.shl %arg54, %0 : i8
   %3 = llvm.and %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
@@ -237,7 +237,7 @@ def positive_samevar_shlnsw_before := [llvm|
 {
 ^0(%arg52 : i8, %arg53 : i8):
   %0 = llvm.ashr %arg52, %arg53 : i8
-  %1 = llvm.shl %0, %arg53 overflow<nsw> : i8
+  %1 = llvm.shl %0, %arg53 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
@@ -245,7 +245,7 @@ def positive_samevar_shlnsw_after := [llvm|
 {
 ^0(%arg52 : i8, %arg53 : i8):
   %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
-  %1 = llvm.shl %0, %arg53 overflow<nsw> : i8
+  %1 = llvm.shl %0, %arg53 : i8
   %2 = llvm.and %1, %arg52 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
@@ -264,7 +264,7 @@ def positive_sameconst_shlnsw_before := [llvm|
 ^0(%arg51 : i8):
   %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
   %1 = llvm.ashr %arg51, %0 : i8
-  %2 = llvm.shl %1, %0 overflow<nsw> : i8
+  %2 = llvm.shl %1, %0 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
@@ -291,7 +291,7 @@ def positive_biggerashr_shlnsw_before := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
   %2 = llvm.ashr %arg50, %0 : i8
-  %3 = llvm.shl %2, %1 overflow<nsw> : i8
+  %3 = llvm.shl %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -320,7 +320,7 @@ def positive_biggershl_shlnsw_before := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
   %2 = llvm.ashr %arg49, %0 : i8
-  %3 = llvm.shl %2, %1 overflow<nsw> : i8
+  %3 = llvm.shl %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -329,7 +329,7 @@ def positive_biggershl_shlnsw_after := [llvm|
 ^0(%arg49 : i8):
   %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = -64 : i8}> : () -> i8
-  %2 = llvm.shl %arg49, %0 overflow<nsw> : i8
+  %2 = llvm.shl %arg49, %0 : i8
   %3 = llvm.and %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
@@ -347,7 +347,7 @@ def positive_samevar_shlnuwnsw_before := [llvm|
 {
 ^0(%arg47 : i8, %arg48 : i8):
   %0 = llvm.ashr %arg47, %arg48 : i8
-  %1 = llvm.shl %0, %arg48 overflow<nsw,nuw> : i8
+  %1 = llvm.shl %0, %arg48 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
@@ -355,7 +355,7 @@ def positive_samevar_shlnuwnsw_after := [llvm|
 {
 ^0(%arg47 : i8, %arg48 : i8):
   %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
-  %1 = llvm.shl %0, %arg48 overflow<nsw> : i8
+  %1 = llvm.shl %0, %arg48 : i8
   %2 = llvm.and %1, %arg47 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
@@ -374,7 +374,7 @@ def positive_sameconst_shlnuwnsw_before := [llvm|
 ^0(%arg46 : i8):
   %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
   %1 = llvm.ashr %arg46, %0 : i8
-  %2 = llvm.shl %1, %0 overflow<nsw,nuw> : i8
+  %2 = llvm.shl %1, %0 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
@@ -401,7 +401,7 @@ def positive_biggerashr_shlnuwnsw_before := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
   %2 = llvm.ashr %arg45, %0 : i8
-  %3 = llvm.shl %2, %1 overflow<nsw,nuw> : i8
+  %3 = llvm.shl %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -430,7 +430,7 @@ def positive_biggershl_shlnuwnsw_before := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
   %2 = llvm.ashr %arg44, %0 : i8
-  %3 = llvm.shl %2, %1 overflow<nsw,nuw> : i8
+  %3 = llvm.shl %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -439,7 +439,7 @@ def positive_biggershl_shlnuwnsw_after := [llvm|
 ^0(%arg44 : i8):
   %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 64 : i8}> : () -> i8
-  %2 = llvm.shl %arg44, %0 overflow<nsw,nuw> : i8
+  %2 = llvm.shl %arg44, %0 : i8
   %3 = llvm.and %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
@@ -558,7 +558,7 @@ def positive_samevar_shlnsw_ashrexact_before := [llvm|
 {
 ^0(%arg37 : i8, %arg38 : i8):
   %0 = llvm.ashr %arg37, %arg38 : i8
-  %1 = llvm.shl %0, %arg38 overflow<nsw> : i8
+  %1 = llvm.shl %0, %arg38 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
@@ -582,7 +582,7 @@ def positive_sameconst_shlnsw_ashrexact_before := [llvm|
 ^0(%arg36 : i8):
   %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
   %1 = llvm.ashr %arg36, %0 : i8
-  %2 = llvm.shl %1, %0 overflow<nsw> : i8
+  %2 = llvm.shl %1, %0 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
@@ -607,7 +607,7 @@ def positive_biggerashr_shlnsw_ashrexact_before := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
   %2 = llvm.ashr %arg35, %0 : i8
-  %3 = llvm.shl %2, %1 overflow<nsw> : i8
+  %3 = llvm.shl %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -634,7 +634,7 @@ def positive_biggershl_shlnsw_ashrexact_before := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
   %2 = llvm.ashr %arg34, %0 : i8
-  %3 = llvm.shl %2, %1 overflow<nsw> : i8
+  %3 = llvm.shl %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -642,7 +642,7 @@ def positive_biggershl_shlnsw_ashrexact_after := [llvm|
 {
 ^0(%arg34 : i8):
   %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = llvm.shl %arg34, %0 overflow<nsw> : i8
+  %1 = llvm.shl %arg34, %0 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
@@ -659,7 +659,7 @@ def positive_samevar_shlnuw_ashrexact_before := [llvm|
 {
 ^0(%arg32 : i8, %arg33 : i8):
   %0 = llvm.ashr %arg32, %arg33 : i8
-  %1 = llvm.shl %0, %arg33 overflow<nuw> : i8
+  %1 = llvm.shl %0, %arg33 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
@@ -683,7 +683,7 @@ def positive_sameconst_shlnuw_ashrexact_before := [llvm|
 ^0(%arg31 : i8):
   %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
   %1 = llvm.ashr %arg31, %0 : i8
-  %2 = llvm.shl %1, %0 overflow<nuw> : i8
+  %2 = llvm.shl %1, %0 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
@@ -708,7 +708,7 @@ def positive_biggerashr_shlnuw_ashrexact_before := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
   %2 = llvm.ashr %arg30, %0 : i8
-  %3 = llvm.shl %2, %1 overflow<nuw> : i8
+  %3 = llvm.shl %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -735,7 +735,7 @@ def positive_biggershl_shlnuw_ashrexact_before := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
   %2 = llvm.ashr %arg29, %0 : i8
-  %3 = llvm.shl %2, %1 overflow<nuw> : i8
+  %3 = llvm.shl %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -743,7 +743,7 @@ def positive_biggershl_shlnuw_ashrexact_after := [llvm|
 {
 ^0(%arg29 : i8):
   %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = llvm.shl %arg29, %0 overflow<nuw> : i8
+  %1 = llvm.shl %arg29, %0 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
@@ -760,7 +760,7 @@ def positive_samevar_shlnuwnsw_ashrexact_before := [llvm|
 {
 ^0(%arg27 : i8, %arg28 : i8):
   %0 = llvm.ashr %arg27, %arg28 : i8
-  %1 = llvm.shl %0, %arg28 overflow<nsw,nuw> : i8
+  %1 = llvm.shl %0, %arg28 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
@@ -784,7 +784,7 @@ def positive_sameconst_shlnuwnsw_ashrexact_before := [llvm|
 ^0(%arg26 : i8):
   %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
   %1 = llvm.ashr %arg26, %0 : i8
-  %2 = llvm.shl %1, %0 overflow<nsw,nuw> : i8
+  %2 = llvm.shl %1, %0 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
@@ -809,7 +809,7 @@ def positive_biggerashr_shlnuwnsw_ashrexact_before := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
   %2 = llvm.ashr %arg25, %0 : i8
-  %3 = llvm.shl %2, %1 overflow<nsw,nuw> : i8
+  %3 = llvm.shl %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -836,7 +836,7 @@ def positive_biggershl_shlnuwnsw_ashrexact_before := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
   %2 = llvm.ashr %arg24, %0 : i8
-  %3 = llvm.shl %2, %1 overflow<nsw,nuw> : i8
+  %3 = llvm.shl %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -844,7 +844,7 @@ def positive_biggershl_shlnuwnsw_ashrexact_after := [llvm|
 {
 ^0(%arg24 : i8):
   %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = llvm.shl %arg24, %0 overflow<nsw,nuw> : i8
+  %1 = llvm.shl %arg24, %0 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]

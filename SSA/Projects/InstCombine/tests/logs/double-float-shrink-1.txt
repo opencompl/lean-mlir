@@ -83,20 +83,20 @@
 4: "exp10_test2" has unsupported operation: llvm.call
 
 1: "log_test1"
-4: "log_test1" has unsupported operation: builtin.unregistered: llvm.intr.log
+4: "log_test1" has unsupported operation: llvm.call
 
 1: "log_test2"
 4: "log_test2" has unsupported operation: builtin.unregistered: llvm.fpext
 
-4: "log_test2" has unsupported operation: builtin.unregistered: llvm.intr.log
+4: "log_test2" has unsupported operation: llvm.call
 
 1: "log10_test1"
-4: "log10_test1" has unsupported operation: builtin.unregistered: llvm.intr.log10
+4: "log10_test1" has unsupported operation: llvm.call
 
 1: "log10_test2"
 4: "log10_test2" has unsupported operation: builtin.unregistered: llvm.fpext
 
-4: "log10_test2" has unsupported operation: builtin.unregistered: llvm.intr.log10
+4: "log10_test2" has unsupported operation: llvm.call
 
 1: "log1p_test1"
 4: "log1p_test1" has unsupported operation: llvm.call
@@ -107,12 +107,12 @@
 4: "log1p_test2" has unsupported operation: llvm.call
 
 1: "log2_test1"
-4: "log2_test1" has unsupported operation: builtin.unregistered: llvm.intr.log2
+4: "log2_test1" has unsupported operation: llvm.call
 
 1: "log2_test2"
 4: "log2_test2" has unsupported operation: builtin.unregistered: llvm.fpext
 
-4: "log2_test2" has unsupported operation: builtin.unregistered: llvm.intr.log2
+4: "log2_test2" has unsupported operation: llvm.call
 
 1: "logb_test1"
 4: "logb_test1" has unsupported operation: llvm.call

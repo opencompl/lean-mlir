@@ -236,9 +236,3 @@
 
 4: "compare_against_arbitrary_value_commutativity3" has unsupported operation: builtin.unregistered: llvm.br
 
-1: "llvm.scmp.i32.i32"
-5: "llvm.scmp.i32.i32" is empty
-
-1: "llvm.scmp.i32.i64"
-5: "llvm.scmp.i32.i64" is empty
-

@@ -235,11 +235,11 @@
 1: "sqrt_intrinsic_three_args6"
 4: "sqrt_intrinsic_three_args6" has unsupported operation: llvm.load
 
-4: "sqrt_intrinsic_three_args6" has unsupported operation: builtin.unregistered: llvm.intr.fabs
-
-4: "sqrt_intrinsic_three_args6" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+4: "sqrt_intrinsic_three_args6" has unsupported operation: builtin.unregistered: llvm.fmul
 
 4: "sqrt_intrinsic_three_args6" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "sqrt_intrinsic_three_args6" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
 
 1: "sqrt_intrinsic_not_so_fast"
 4: "sqrt_intrinsic_not_so_fast" has unsupported operation: builtin.unregistered: llvm.fmul

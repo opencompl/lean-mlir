@@ -1,4 +1,6 @@
 1: "test_ult_rhsc"
+4: "test_ult_rhsc" has unsupported operation: builtin.unregistered: llvm.icmp
+
 4: "test_ult_rhsc" has unsupported operation: builtin.unregistered: llvm.switch
 
 4: "test_ult_rhsc" has unsupported operation: llvm.call
@@ -14,6 +16,8 @@
 4: "test_ult_rhsc" has unsupported operation: builtin.unregistered: llvm.unreachable
 
 1: "test_eq_lhsc"
+4: "test_eq_lhsc" has unsupported operation: builtin.unregistered: llvm.icmp
+
 4: "test_eq_lhsc" has unsupported operation: builtin.unregistered: llvm.switch
 
 4: "test_eq_lhsc" has unsupported operation: llvm.call

@@ -237,55 +237,26 @@
 4: "mul130_low_one_extra_user" has unsupported operation: llvm.call
 
 1: "mul9_low"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.and
-2: llvm.lshr
-2: llvm.and
-2: llvm.lshr
-2: llvm.mul
-2: llvm.mul
-2: llvm.mul
-2: llvm.add
-2: llvm.shl
-2: llvm.add
-2: llvm.return
+7: "mul9_low" is unchanged by InstCombine
 
 1: "mul64_low_no_and"
-7: "mul64_low_no_and" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.lshr
+2: llvm.mul
+2: llvm.mul
+2: llvm.mul
+2: llvm.add
+2: llvm.shl
+2: llvm.add
+2: llvm.return
 
 1: "mul16_low_miss_shift_amount"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.and
-2: llvm.lshr
-2: llvm.and
-2: llvm.lshr
-2: llvm.mul
-2: llvm.mul
-2: llvm.mul
-2: llvm.add
-2: llvm.shl
-2: llvm.add
-2: llvm.return
+7: "mul16_low_miss_shift_amount" is unchanged by InstCombine
 
 1: "mul8_low_miss_half_width"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.and
-2: llvm.lshr
-2: llvm.and
-2: llvm.lshr
-2: llvm.mul
-2: llvm.mul
-2: llvm.mul
-2: llvm.add
-2: llvm.shl
-2: llvm.add
-2: llvm.return
+7: "mul8_low_miss_half_width" is unchanged by InstCombine
 
 1: "mul32_low_extra_shl_use"
 4: "mul32_low_extra_shl_use" has unsupported operation: llvm.mlir.addressof

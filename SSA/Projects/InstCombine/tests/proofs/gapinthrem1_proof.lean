@@ -24,7 +24,7 @@ theorem test2_thm : ∀ (e : IntW 49), urem e (shl (const? 4096) (const? 11)) �
 theorem test3_thm :
   ∀ (e : IntW 1) (e_1 : IntW 59),
     urem e_1 (select e (const? 70368744177664) (const? 4096)) ⊑
-      LLVM.and e_1 (select e (const? 70368744177663) (const? 4095)) := by 
+      LLVM.and (select e (const? 70368744177663) (const? 4095)) e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

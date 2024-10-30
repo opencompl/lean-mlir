@@ -28,7 +28,7 @@ def t0_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
   %2 = llvm.and %arg12, %0 : i8
-  %3 = llvm.sub %1, %2 overflow<nsw> : i8
+  %3 = llvm.sub %1, %2 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -56,7 +56,7 @@ def t1_otherbitwidth_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 1 : i16}> : () -> i16
   %1 = "llvm.mlir.constant"() <{value = 0 : i16}> : () -> i16
   %2 = llvm.and %arg11, %0 : i16
-  %3 = llvm.sub %1, %2 overflow<nsw> : i16
+  %3 = llvm.sub %1, %2 : i16
   "llvm.return"(%3) : (i16) -> ()
 }
 ]

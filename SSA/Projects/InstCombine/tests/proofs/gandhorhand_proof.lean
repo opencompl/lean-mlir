@@ -15,16 +15,6 @@ theorem test1_thm :
     all_goals sorry
 
 
-theorem test2_thm :
-  ∀ (e : IntW 8) (e_1 : IntW 32),
-    LLVM.and (LLVM.or e_1 (zext 32 e)) (const? 65536) ⊑ LLVM.and e_1 (const? 65536) := by 
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
-
-
 theorem test3_thm :
   ∀ (e e_1 : IntW 32), LLVM.and (LLVM.or e_1 (shl e (const? 1))) (const? 1) ⊑ LLVM.and e_1 (const? 1) := by 
     simp_alive_undef

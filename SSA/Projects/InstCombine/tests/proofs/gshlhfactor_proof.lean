@@ -13,11 +13,7 @@ theorem add_shl_same_amount_thm : ∀ (e e_1 e_2 : IntW 6), add (shl e_2 e_1) (s
     all_goals sorry
 
 
-theorem add_shl_same_amount_nuw_thm :
-  ∀ (e e_1 e_2 : IntW 64),
-    add (shl e_2 e_1 { «nsw» := false, «nuw» := true }) (shl e e_1 { «nsw» := false, «nuw» := true })
-        { «nsw» := false, «nuw» := true } ⊑
-      shl (add e_2 e { «nsw» := false, «nuw» := true }) e_1 { «nsw» := false, «nuw» := true } := by 
+theorem add_shl_same_amount_nuw_thm : ∀ (e e_1 e_2 : IntW 64), add (shl e_2 e_1) (shl e e_1) ⊑ shl (add e_2 e) e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -25,10 +21,7 @@ theorem add_shl_same_amount_nuw_thm :
     all_goals sorry
 
 
-theorem add_shl_same_amount_partial_nsw1_thm :
-  ∀ (e e_1 e_2 : IntW 6),
-    add (shl e_2 e_1 { «nsw» := true, «nuw» := false }) (shl e e_1 { «nsw» := true, «nuw» := false }) ⊑
-      shl (add e_2 e) e_1 := by 
+theorem add_shl_same_amount_partial_nsw1_thm : ∀ (e e_1 e_2 : IntW 6), add (shl e_2 e_1) (shl e e_1) ⊑ shl (add e_2 e) e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -36,10 +29,7 @@ theorem add_shl_same_amount_partial_nsw1_thm :
     all_goals sorry
 
 
-theorem add_shl_same_amount_partial_nsw2_thm :
-  ∀ (e e_1 e_2 : IntW 6),
-    add (shl e_2 e_1) (shl e e_1 { «nsw» := true, «nuw» := false }) { «nsw» := true, «nuw» := false } ⊑
-      shl (add e_2 e) e_1 := by 
+theorem add_shl_same_amount_partial_nsw2_thm : ∀ (e e_1 e_2 : IntW 6), add (shl e_2 e_1) (shl e e_1) ⊑ shl (add e_2 e) e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -47,10 +37,7 @@ theorem add_shl_same_amount_partial_nsw2_thm :
     all_goals sorry
 
 
-theorem add_shl_same_amount_partial_nuw1_thm :
-  ∀ (e e_1 e_2 : IntW 6),
-    add (shl e_2 e_1 { «nsw» := false, «nuw» := true }) (shl e e_1 { «nsw» := false, «nuw» := true }) ⊑
-      shl (add e_2 e) e_1 := by 
+theorem add_shl_same_amount_partial_nuw1_thm : ∀ (e e_1 e_2 : IntW 6), add (shl e_2 e_1) (shl e e_1) ⊑ shl (add e_2 e) e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -58,10 +45,7 @@ theorem add_shl_same_amount_partial_nuw1_thm :
     all_goals sorry
 
 
-theorem add_shl_same_amount_partial_nuw2_thm :
-  ∀ (e e_1 e_2 : IntW 6),
-    add (shl e_2 e_1 { «nsw» := false, «nuw» := true }) (shl e e_1) { «nsw» := false, «nuw» := true } ⊑
-      shl (add e_2 e) e_1 := by 
+theorem add_shl_same_amount_partial_nuw2_thm : ∀ (e e_1 e_2 : IntW 6), add (shl e_2 e_1) (shl e e_1) ⊑ shl (add e_2 e) e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -77,11 +61,7 @@ theorem sub_shl_same_amount_thm : ∀ (e e_1 e_2 : IntW 6), sub (shl e_2 e_1) (s
     all_goals sorry
 
 
-theorem sub_shl_same_amount_nuw_thm :
-  ∀ (e e_1 e_2 : IntW 64),
-    sub (shl e_2 e_1 { «nsw» := false, «nuw» := true }) (shl e e_1 { «nsw» := false, «nuw» := true })
-        { «nsw» := false, «nuw» := true } ⊑
-      shl (sub e_2 e { «nsw» := false, «nuw» := true }) e_1 { «nsw» := false, «nuw» := true } := by 
+theorem sub_shl_same_amount_nuw_thm : ∀ (e e_1 e_2 : IntW 64), sub (shl e_2 e_1) (shl e e_1) ⊑ shl (sub e_2 e) e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -89,10 +69,7 @@ theorem sub_shl_same_amount_nuw_thm :
     all_goals sorry
 
 
-theorem sub_shl_same_amount_partial_nsw1_thm :
-  ∀ (e e_1 e_2 : IntW 6),
-    sub (shl e_2 e_1 { «nsw» := true, «nuw» := false }) (shl e e_1 { «nsw» := true, «nuw» := false }) ⊑
-      shl (sub e_2 e) e_1 := by 
+theorem sub_shl_same_amount_partial_nsw1_thm : ∀ (e e_1 e_2 : IntW 6), sub (shl e_2 e_1) (shl e e_1) ⊑ shl (sub e_2 e) e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -100,10 +77,7 @@ theorem sub_shl_same_amount_partial_nsw1_thm :
     all_goals sorry
 
 
-theorem sub_shl_same_amount_partial_nsw2_thm :
-  ∀ (e e_1 e_2 : IntW 6),
-    sub (shl e_2 e_1) (shl e e_1 { «nsw» := true, «nuw» := false }) { «nsw» := true, «nuw» := false } ⊑
-      shl (sub e_2 e) e_1 := by 
+theorem sub_shl_same_amount_partial_nsw2_thm : ∀ (e e_1 e_2 : IntW 6), sub (shl e_2 e_1) (shl e e_1) ⊑ shl (sub e_2 e) e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -111,10 +85,7 @@ theorem sub_shl_same_amount_partial_nsw2_thm :
     all_goals sorry
 
 
-theorem sub_shl_same_amount_partial_nuw1_thm :
-  ∀ (e e_1 e_2 : IntW 6),
-    sub (shl e_2 e_1 { «nsw» := false, «nuw» := true }) (shl e e_1 { «nsw» := false, «nuw» := true }) ⊑
-      shl (sub e_2 e) e_1 := by 
+theorem sub_shl_same_amount_partial_nuw1_thm : ∀ (e e_1 e_2 : IntW 6), sub (shl e_2 e_1) (shl e e_1) ⊑ shl (sub e_2 e) e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -122,10 +93,7 @@ theorem sub_shl_same_amount_partial_nuw1_thm :
     all_goals sorry
 
 
-theorem sub_shl_same_amount_partial_nuw2_thm :
-  ∀ (e e_1 e_2 : IntW 6),
-    sub (shl e_2 e_1 { «nsw» := false, «nuw» := true }) (shl e e_1) { «nsw» := false, «nuw» := true } ⊑
-      shl (sub e_2 e) e_1 := by 
+theorem sub_shl_same_amount_partial_nuw2_thm : ∀ (e e_1 e_2 : IntW 6), sub (shl e_2 e_1) (shl e e_1) ⊑ shl (sub e_2 e) e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

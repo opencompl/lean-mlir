@@ -132,8 +132,6 @@
 
 4: "pow_libcall_half_fromdomcondition" has unsupported operation: llvm.call
 
-4: "pow_libcall_half_fromdomcondition" has unsupported operation: builtin.unregistered: llvm.intr.fabs
-
 1: "pow_libcall_half_no_FMF_noerrno"
 4: "pow_libcall_half_no_FMF_noerrno" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
 
@@ -267,7 +265,4 @@
 
 1: "sqrtf"
 5: "sqrtf" is empty
-
-1: "sqrt"
-5: "sqrt" is empty
 

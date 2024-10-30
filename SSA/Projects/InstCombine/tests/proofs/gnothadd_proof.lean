@@ -24,9 +24,7 @@ theorem basic_com_add_thm :
 
 
 theorem basic_preserve_nsw_thm :
-  ∀ (e e_1 : IntW 8),
-    LLVM.xor (add (LLVM.xor e_1 (const? (-1))) e { «nsw» := true, «nuw» := false }) (const? (-1)) ⊑
-      sub e_1 e { «nsw» := true, «nuw» := false } := by 
+  ∀ (e e_1 : IntW 8), LLVM.xor (add (LLVM.xor e_1 (const? (-1))) e) (const? (-1)) ⊑ sub e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -35,9 +33,7 @@ theorem basic_preserve_nsw_thm :
 
 
 theorem basic_preserve_nuw_thm :
-  ∀ (e e_1 : IntW 8),
-    LLVM.xor (add (LLVM.xor e_1 (const? (-1))) e { «nsw» := false, «nuw» := true }) (const? (-1)) ⊑
-      sub e_1 e { «nsw» := false, «nuw» := true } := by 
+  ∀ (e e_1 : IntW 8), LLVM.xor (add (LLVM.xor e_1 (const? (-1))) e) (const? (-1)) ⊑ sub e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -46,9 +42,7 @@ theorem basic_preserve_nuw_thm :
 
 
 theorem basic_preserve_nuw_nsw_thm :
-  ∀ (e e_1 : IntW 8),
-    LLVM.xor (add (LLVM.xor e_1 (const? (-1))) e { «nsw» := true, «nuw» := true }) (const? (-1)) ⊑
-      sub e_1 e { «nsw» := true, «nuw» := true } := by 
+  ∀ (e e_1 : IntW 8), LLVM.xor (add (LLVM.xor e_1 (const? (-1))) e) (const? (-1)) ⊑ sub e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

@@ -101,7 +101,7 @@ def PR52261_before := [llvm|
   %1 = "llvm.mlir.constant"() <{value = -2 : i32}> : () -> i32
   %2 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
   %3 = "llvm.select"(%arg198, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
-  %4 = llvm.sub %2, %3 overflow<nsw> : i32
+  %4 = llvm.sub %2, %3 : i32
   %5 = llvm.and %3, %4 : i32
   "llvm.return"(%5) : (i32) -> ()
 }
@@ -138,7 +138,7 @@ def t7_after := [llvm|
 ^0(%arg187 : i8, %arg188 : i1, %arg189 : i8):
   %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
-  %2 = llvm.shl %0, %arg189 overflow<nsw> : i8
+  %2 = llvm.shl %0, %arg189 : i8
   %3 = "llvm.select"(%arg188, %1, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
   %4 = llvm.add %3, %arg187 : i8
   "llvm.return"(%4) : (i8) -> ()
@@ -313,35 +313,6 @@ theorem sub_from_constant_of_add_with_constant_proof : sub_from_constant_of_add_
 
 
 
-def t20_before := [llvm|
-{
-^0(%arg135 : i8, %arg136 : i16):
-  %0 = "llvm.mlir.constant"() <{value = -42 : i16}> : () -> i16
-  %1 = llvm.shl %0, %arg136 : i16
-  %2 = llvm.trunc %1 : i16 to i8
-  %3 = llvm.sub %arg135, %2 : i8
-  "llvm.return"(%3) : (i8) -> ()
-}
-]
-def t20_after := [llvm|
-{
-^0(%arg135 : i8, %arg136 : i16):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i16}> : () -> i16
-  %1 = llvm.shl %0, %arg136 : i16
-  %2 = llvm.trunc %1 : i16 to i8
-  %3 = llvm.add %arg135, %2 : i8
-  "llvm.return"(%3) : (i8) -> ()
-}
-]
-theorem t20_proof : t20_before ⊑ t20_after := by
-  unfold t20_before t20_after
-  simp_alive_peephole
-  ---BEGIN t20
-  apply t20_thm
-  ---END t20
-
-
-
 def negate_xor_before := [llvm|
 {
 ^0(%arg132 : i4):
@@ -483,56 +454,6 @@ theorem negate_lshr_proof : negate_lshr_before ⊑ negate_lshr_after := by
 
 
 
-def negate_sext_before := [llvm|
-{
-^0(%arg104 : i8, %arg105 : i1):
-  %0 = llvm.sext %arg105 : i1 to i8
-  %1 = llvm.sub %arg104, %0 : i8
-  "llvm.return"(%1) : (i8) -> ()
-}
-]
-def negate_sext_after := [llvm|
-{
-^0(%arg104 : i8, %arg105 : i1):
-  %0 = llvm.zext %arg105 : i1 to i8
-  %1 = llvm.add %arg104, %0 : i8
-  "llvm.return"(%1) : (i8) -> ()
-}
-]
-theorem negate_sext_proof : negate_sext_before ⊑ negate_sext_after := by
-  unfold negate_sext_before negate_sext_after
-  simp_alive_peephole
-  ---BEGIN negate_sext
-  apply negate_sext_thm
-  ---END negate_sext
-
-
-
-def negate_zext_before := [llvm|
-{
-^0(%arg102 : i8, %arg103 : i1):
-  %0 = llvm.zext %arg103 : i1 to i8
-  %1 = llvm.sub %arg102, %0 : i8
-  "llvm.return"(%1) : (i8) -> ()
-}
-]
-def negate_zext_after := [llvm|
-{
-^0(%arg102 : i8, %arg103 : i1):
-  %0 = llvm.sext %arg103 : i1 to i8
-  %1 = llvm.add %arg102, %0 : i8
-  "llvm.return"(%1) : (i8) -> ()
-}
-]
-theorem negate_zext_proof : negate_zext_before ⊑ negate_zext_after := by
-  unfold negate_zext_before negate_zext_after
-  simp_alive_peephole
-  ---BEGIN negate_zext
-  apply negate_zext_thm
-  ---END negate_zext
-
-
-
 def negation_of_increment_via_or_with_no_common_bits_set_before := [llvm|
 {
 ^0(%arg77 : i8, %arg78 : i8):
@@ -550,7 +471,7 @@ def negation_of_increment_via_or_with_no_common_bits_set_after := [llvm|
   %1 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
   %2 = llvm.shl %arg78, %0 : i8
   %3 = llvm.xor %2, %1 : i8
-  %4 = llvm.add %arg77, %3 : i8
+  %4 = llvm.add %3, %arg77 : i8
   "llvm.return"(%4) : (i8) -> ()
 }
 ]
@@ -577,7 +498,7 @@ def negation_of_increment_via_or_disjoint_after := [llvm|
 ^0(%arg71 : i8, %arg72 : i8):
   %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
   %1 = llvm.xor %arg72, %0 : i8
-  %2 = llvm.add %arg71, %1 : i8
+  %2 = llvm.add %1, %arg71 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]

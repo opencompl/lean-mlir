@@ -89,6 +89,8 @@
 1: "pr85536"
 4: "pr85536" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "pr85536" has unsupported operation: builtin.unregistered: llvm.zext
+
 4: "pr85536" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
 4: "pr85536" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -96,13 +98,19 @@
 1: "test_fabs_select1"
 4: "test_fabs_select1" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+4: "test_fabs_select1" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
 1: "test_fabs_select1_vec"
 4: "test_fabs_select1_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test_fabs_select1_vec" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
 1: "test_fabs_select2"
 4: "test_fabs_select2" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
 4: "test_fabs_select2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test_fabs_select2" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
 1: "test_fabs_select_fmf1"
 4: "test_fabs_select_fmf1" has unsupported operation: builtin.unregistered: llvm.intr.fabs

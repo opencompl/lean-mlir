@@ -40,7 +40,7 @@ theorem in_constant_varx_6_invmask_thm :
 theorem in_constant_mone_vary_invmask_thm :
   ∀ (e e_1 : IntW 4),
     LLVM.xor (LLVM.and (LLVM.xor (const? (-1)) e_1) (LLVM.xor e (const? (-1)))) e_1 ⊑
-      LLVM.or e_1 (LLVM.xor e (const? (-1))) := by 
+      LLVM.or (LLVM.xor e (const? (-1))) e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

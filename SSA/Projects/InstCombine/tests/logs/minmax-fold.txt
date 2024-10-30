@@ -1,17 +1,27 @@
 1: "t1"
 4: "t1" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
+4: "t1" has unsupported operation: builtin.unregistered: llvm.sext
+
 1: "t2"
 4: "t2" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "t2" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "t3"
 4: "t3" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
+4: "t3" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "t4"
 4: "t4" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
+4: "t4" has unsupported operation: builtin.unregistered: llvm.trunc
+
 1: "t5"
 4: "t5" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "t5" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "t6"
 4: "t6" has unsupported operation: builtin.unregistered: llvm.intr.smin
@@ -21,25 +31,33 @@
 1: "t7"
 4: "t7" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
+4: "t7" has unsupported operation: builtin.unregistered: llvm.trunc
+
 1: "t8"
 4: "t8" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
+4: "t8" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "t8" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "t8" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "t8" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "t9"
 4: "t9" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "t9" has unsupported operation: builtin.unregistered: llvm.sext
+
 1: "t10"
 4: "t10" has unsupported operation: builtin.unregistered: llvm.intr.smax
 
-4: "t10" has unsupported operation: builtin.unregistered: llvm.uitofp
+4: "t10" has unsupported operation: builtin.unregistered: llvm.sitofp
 
 1: "t11"
 4: "t11" has unsupported operation: builtin.unregistered: llvm.intr.smax
 
-4: "t11" has unsupported operation: builtin.unregistered: llvm.uitofp
+4: "t11" has unsupported operation: builtin.unregistered: llvm.sitofp
 
 1: "bitcasts_fcmp_1"
 4: "bitcasts_fcmp_1" has unsupported operation: builtin.unregistered: llvm.bitcast
@@ -94,6 +112,8 @@
 
 1: "test74"
 4: "test74" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "test74" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
 1: "test75"
 4: "test75" has unsupported operation: builtin.unregistered: llvm.intr.umax
@@ -158,17 +178,17 @@
 1: "PR31751_umin1"
 4: "PR31751_umin1" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
-4: "PR31751_umin1" has unsupported operation: builtin.unregistered: llvm.uitofp
+4: "PR31751_umin1" has unsupported operation: builtin.unregistered: llvm.sitofp
 
 1: "PR31751_umin2"
 4: "PR31751_umin2" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
-4: "PR31751_umin2" has unsupported operation: builtin.unregistered: llvm.uitofp
+4: "PR31751_umin2" has unsupported operation: builtin.unregistered: llvm.sitofp
 
 1: "PR31751_umin3"
 4: "PR31751_umin3" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
-4: "PR31751_umin3" has unsupported operation: builtin.unregistered: llvm.uitofp
+4: "PR31751_umin3" has unsupported operation: builtin.unregistered: llvm.sitofp
 
 1: "PR31751_umax1"
 4: "PR31751_umax1" has unsupported operation: builtin.unregistered: llvm.intr.umax
@@ -220,14 +240,22 @@
 1: "look_through_cast1"
 4: "look_through_cast1" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
+4: "look_through_cast1" has unsupported operation: builtin.unregistered: llvm.trunc
+
 1: "look_through_cast2"
 4: "look_through_cast2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "look_through_cast2" has unsupported operation: builtin.unregistered: llvm.trunc
 
 1: "min_through_cast_vec1"
 4: "min_through_cast_vec1" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
+4: "min_through_cast_vec1" has unsupported operation: builtin.unregistered: llvm.trunc
+
 1: "min_through_cast_vec2"
 4: "min_through_cast_vec2" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "min_through_cast_vec2" has unsupported operation: builtin.unregistered: llvm.trunc
 
 1: "common_factor_smin"
 4: "common_factor_smin" has unsupported operation: builtin.unregistered: llvm.intr.smin
@@ -278,9 +306,9 @@
 4: "common_factor_umax_extra_use_both" has unsupported operation: llvm.call
 
 1: "not_min_of_min"
-4: "not_min_of_min" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+4: "not_min_of_min" has unsupported operation: builtin.unregistered: llvm.fcmp
 
-4: "not_min_of_min" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+4: "not_min_of_min" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "not_min_of_min" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -435,11 +463,15 @@
 1: "test_umax_smax1"
 4: "test_umax_smax1" has unsupported operation: builtin.unregistered: llvm.intr.smax
 
+4: "test_umax_smax1" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
 1: "test_umax_smax2"
 4: "test_umax_smax2" has unsupported operation: builtin.unregistered: llvm.intr.smax
 
 1: "test_umax_smax_vec"
 4: "test_umax_smax_vec" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "test_umax_smax_vec" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
 1: "test_smin_umin1"
 4: "test_smin_umin1" has unsupported operation: builtin.unregistered: llvm.intr.umin
@@ -447,8 +479,12 @@
 1: "test_smin_umin2"
 4: "test_smin_umin2" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
+4: "test_smin_umin2" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
 1: "test_smin_umin_vec"
 4: "test_smin_umin_vec" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+4: "test_smin_umin_vec" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
 1: "test_umax_smax3"
 4: "test_umax_smax3" has unsupported operation after optimization: builtin.unregistered: llvm.intr.smax

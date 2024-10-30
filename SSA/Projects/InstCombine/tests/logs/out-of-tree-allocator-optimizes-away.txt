@@ -2,6 +2,16 @@
 4: "alloc_elides_test" has unsupported operation: llvm.return
 
 1: "alloc_elides_test_virtual"
+4: "alloc_elides_test_virtual" has unsupported operation: llvm.call
+
+4: "alloc_elides_test_virtual" has unsupported operation: llvm.store
+
+4: "alloc_elides_test_virtual" has unsupported operation: llvm.call
+
+4: "alloc_elides_test_virtual" has unsupported operation: llvm.store
+
+4: "alloc_elides_test_virtual" has unsupported operation: llvm.call
+
 4: "alloc_elides_test_virtual" has unsupported operation: llvm.return
 
 1: "__rust_alloc"

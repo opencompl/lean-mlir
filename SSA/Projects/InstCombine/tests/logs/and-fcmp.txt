@@ -10,22 +10,6 @@
 4: "PR1738_logical_noundef" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "PR1738_vec_undef"
-4: "PR1738_vec_undef" has unsupported operation: llvm.mlir.undef
-
-4: "PR1738_vec_undef" has unsupported operation: llvm.mlir.undef
-
-4: "PR1738_vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "PR1738_vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "PR1738_vec_undef" has unsupported operation: llvm.mlir.undef
-
-4: "PR1738_vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "PR1738_vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "PR1738_vec_undef" has unsupported operation: builtin.unregistered: llvm.fcmp
-
 4: "PR1738_vec_undef" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "PR1738_vec_poison"
@@ -48,31 +32,11 @@
 4: "PR41069_commute_logical" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "PR41069_vec"
-4: "PR41069_vec" has unsupported operation: llvm.mlir.undef
-
-4: "PR41069_vec" has unsupported operation: llvm.mlir.undef
-
-4: "PR41069_vec" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "PR41069_vec" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "PR41069_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
-
 4: "PR41069_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "PR41069_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "PR41069_vec_commute"
-4: "PR41069_vec_commute" has unsupported operation: llvm.mlir.undef
-
-4: "PR41069_vec_commute" has unsupported operation: llvm.mlir.undef
-
-4: "PR41069_vec_commute" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "PR41069_vec_commute" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "PR41069_vec_commute" has unsupported operation: builtin.unregistered: llvm.fcmp
-
 4: "PR41069_vec_commute" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "PR41069_vec_commute" has unsupported operation: builtin.unregistered: llvm.fcmp

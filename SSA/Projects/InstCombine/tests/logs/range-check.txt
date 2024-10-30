@@ -95,12 +95,12 @@
 4: "negative4_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "negative5"
-4: "negative5" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+4: "negative5" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "negative5" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+4: "negative5" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "negative5_logical"
-4: "negative5_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+4: "negative5_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
-4: "negative5_logical" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+4: "negative5_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 

@@ -100,9 +100,9 @@ def multiuse1_before := [llvm|
   %3 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
   %4 = llvm.and %arg11, %0 : i32
   %5 = llvm.and %arg11, %1 : i32
-  %6 = llvm.shl %4, %2 overflow<nsw,nuw> : i32
+  %6 = llvm.shl %4, %2 : i32
   %7 = llvm.lshr %4, %3 : i32
-  %8 = llvm.shl %5, %2 overflow<nsw,nuw> : i32
+  %8 = llvm.shl %5, %2 : i32
   %9 = llvm.lshr %5, %3 : i32
   %10 = llvm.or %6, %8 : i32
   %11 = llvm.or %7, %9 : i32
@@ -146,14 +146,14 @@ def multiuse2_before := [llvm|
   %3 = "llvm.mlir.constant"() <{value = 24 : i32}> : () -> i32
   %4 = "llvm.mlir.constant"() <{value = 96 : i32}> : () -> i32
   %5 = llvm.and %arg10, %0 : i32
-  %6 = llvm.shl %5, %1 overflow<nsw,nuw> : i32
-  %7 = llvm.shl %5, %2 overflow<nsw,nuw> : i32
+  %6 = llvm.shl %5, %1 : i32
+  %7 = llvm.shl %5, %2 : i32
   %8 = llvm.and %arg10, %3 : i32
-  %9 = llvm.shl %8, %1 overflow<nsw,nuw> : i32
-  %10 = llvm.shl %8, %2 overflow<nsw,nuw> : i32
+  %9 = llvm.shl %8, %1 : i32
+  %10 = llvm.shl %8, %2 : i32
   %11 = llvm.and %arg10, %4 : i32
-  %12 = llvm.shl %11, %1 overflow<nsw,nuw> : i32
-  %13 = llvm.shl %11, %2 overflow<nsw,nuw> : i32
+  %12 = llvm.shl %11, %1 : i32
+  %13 = llvm.shl %11, %2 : i32
   %14 = llvm.or %6, %9 : i32
   %15 = llvm.or %12, %14 : i32
   %16 = llvm.or %13, %10 : i32
@@ -203,7 +203,7 @@ def multiuse3_before := [llvm|
   %3 = "llvm.mlir.constant"() <{value = 1920 : i32}> : () -> i32
   %4 = "llvm.mlir.constant"() <{value = 15 : i32}> : () -> i32
   %5 = llvm.and %arg9, %0 : i32
-  %6 = llvm.shl %5, %1 overflow<nsw,nuw> : i32
+  %6 = llvm.shl %5, %1 : i32
   %7 = llvm.lshr %5, %2 : i32
   %8 = llvm.shl %arg9, %1 : i32
   %9 = llvm.and %8, %3 : i32
@@ -240,168 +240,5 @@ theorem multiuse3_proof : multiuse3_before ⊑ multiuse3_after := by
   ---BEGIN multiuse3
   all_goals (try extract_goal ; sorry)
   ---END multiuse3
-
-
-
-def shl_mask_before := [llvm|
-{
-^0(%arg6 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 255 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
-  %2 = llvm.and %arg6, %0 : i32
-  %3 = llvm.shl %2, %1 : i32
-  %4 = llvm.or %2, %3 : i32
-  "llvm.return"(%4) : (i32) -> ()
-}
-]
-def shl_mask_after := [llvm|
-{
-^0(%arg6 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 255 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
-  %2 = llvm.and %arg6, %0 : i32
-  %3 = llvm.shl %2, %1 overflow<nsw,nuw> : i32
-  %4 = llvm.or %2, %3 : i32
-  "llvm.return"(%4) : (i32) -> ()
-}
-]
-theorem shl_mask_proof : shl_mask_before ⊑ shl_mask_after := by
-  unfold shl_mask_before shl_mask_after
-  simp_alive_peephole
-  ---BEGIN shl_mask
-  all_goals (try extract_goal ; sorry)
-  ---END shl_mask
-
-
-
-def shl_mask_wrong_shl_const_before := [llvm|
-{
-^0(%arg5 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 255 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 7 : i32}> : () -> i32
-  %2 = llvm.and %arg5, %0 : i32
-  %3 = llvm.shl %2, %1 : i32
-  %4 = llvm.or %2, %3 : i32
-  "llvm.return"(%4) : (i32) -> ()
-}
-]
-def shl_mask_wrong_shl_const_after := [llvm|
-{
-^0(%arg5 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 255 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 7 : i32}> : () -> i32
-  %2 = llvm.and %arg5, %0 : i32
-  %3 = llvm.shl %2, %1 overflow<nsw,nuw> : i32
-  %4 = llvm.or %2, %3 : i32
-  "llvm.return"(%4) : (i32) -> ()
-}
-]
-theorem shl_mask_wrong_shl_const_proof : shl_mask_wrong_shl_const_before ⊑ shl_mask_wrong_shl_const_after := by
-  unfold shl_mask_wrong_shl_const_before shl_mask_wrong_shl_const_after
-  simp_alive_peephole
-  ---BEGIN shl_mask_wrong_shl_const
-  all_goals (try extract_goal ; sorry)
-  ---END shl_mask_wrong_shl_const
-
-
-
-def shl_mask_weird_type_before := [llvm|
-{
-^0(%arg4 : i37):
-  %0 = "llvm.mlir.constant"() <{value = 255 : i37}> : () -> i37
-  %1 = "llvm.mlir.constant"() <{value = 8 : i37}> : () -> i37
-  %2 = llvm.and %arg4, %0 : i37
-  %3 = llvm.shl %2, %1 : i37
-  %4 = llvm.or %2, %3 : i37
-  "llvm.return"(%4) : (i37) -> ()
-}
-]
-def shl_mask_weird_type_after := [llvm|
-{
-^0(%arg4 : i37):
-  %0 = "llvm.mlir.constant"() <{value = 255 : i37}> : () -> i37
-  %1 = "llvm.mlir.constant"() <{value = 8 : i37}> : () -> i37
-  %2 = llvm.and %arg4, %0 : i37
-  %3 = llvm.shl %2, %1 overflow<nsw,nuw> : i37
-  %4 = llvm.or %2, %3 : i37
-  "llvm.return"(%4) : (i37) -> ()
-}
-]
-theorem shl_mask_weird_type_proof : shl_mask_weird_type_before ⊑ shl_mask_weird_type_after := by
-  unfold shl_mask_weird_type_before shl_mask_weird_type_after
-  simp_alive_peephole
-  ---BEGIN shl_mask_weird_type
-  all_goals (try extract_goal ; sorry)
-  ---END shl_mask_weird_type
-
-
-
-def shl_mul_mask_before := [llvm|
-{
-^0(%arg1 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 255 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 65537 : i32}> : () -> i32
-  %2 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
-  %3 = llvm.and %arg1, %0 : i32
-  %4 = llvm.mul %3, %1 : i32
-  %5 = llvm.shl %3, %2 : i32
-  %6 = llvm.or %4, %5 : i32
-  "llvm.return"(%6) : (i32) -> ()
-}
-]
-def shl_mul_mask_after := [llvm|
-{
-^0(%arg1 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 255 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 65537 : i32}> : () -> i32
-  %2 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
-  %3 = llvm.and %arg1, %0 : i32
-  %4 = llvm.mul %3, %1 overflow<nsw,nuw> : i32
-  %5 = llvm.shl %3, %2 overflow<nsw,nuw> : i32
-  %6 = llvm.or %4, %5 : i32
-  "llvm.return"(%6) : (i32) -> ()
-}
-]
-theorem shl_mul_mask_proof : shl_mul_mask_before ⊑ shl_mul_mask_after := by
-  unfold shl_mul_mask_before shl_mul_mask_after
-  simp_alive_peephole
-  ---BEGIN shl_mul_mask
-  all_goals (try extract_goal ; sorry)
-  ---END shl_mul_mask
-
-
-
-def shl_mul_mask_wrong_mul_const_before := [llvm|
-{
-^0(%arg0 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 255 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 65535 : i32}> : () -> i32
-  %2 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
-  %3 = llvm.and %arg0, %0 : i32
-  %4 = llvm.mul %3, %1 : i32
-  %5 = llvm.shl %3, %2 : i32
-  %6 = llvm.or %4, %5 : i32
-  "llvm.return"(%6) : (i32) -> ()
-}
-]
-def shl_mul_mask_wrong_mul_const_after := [llvm|
-{
-^0(%arg0 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 255 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 65535 : i32}> : () -> i32
-  %2 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
-  %3 = llvm.and %arg0, %0 : i32
-  %4 = llvm.mul %3, %1 overflow<nsw,nuw> : i32
-  %5 = llvm.shl %3, %2 overflow<nsw,nuw> : i32
-  %6 = llvm.or %4, %5 : i32
-  "llvm.return"(%6) : (i32) -> ()
-}
-]
-theorem shl_mul_mask_wrong_mul_const_proof : shl_mul_mask_wrong_mul_const_before ⊑ shl_mul_mask_wrong_mul_const_after := by
-  unfold shl_mul_mask_wrong_mul_const_before shl_mul_mask_wrong_mul_const_after
-  simp_alive_peephole
-  ---BEGIN shl_mul_mask_wrong_mul_const
-  all_goals (try extract_goal ; sorry)
-  ---END shl_mul_mask_wrong_mul_const
 
 

@@ -12,8 +12,6 @@
 
 4: "x1y" has unsupported operation: llvm.getelementptr
 
-4: "x1y" has unsupported operation: llvm.getelementptr
-
 1: "xzy"
 4: "xzy" has unsupported operation: llvm.mlir.addressof
 

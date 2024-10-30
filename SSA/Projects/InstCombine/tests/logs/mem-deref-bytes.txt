@@ -50,6 +50,8 @@
 4: "memmove_const_size_set_deref" has unsupported operation: builtin.unregistered: llvm.intr.memmove
 
 1: "memset_const_size_set_deref"
+4: "memset_const_size_set_deref" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "memset_const_size_set_deref" has unsupported operation: builtin.unregistered: llvm.intr.memset
 
 1: "memchr_const_size_set_deref"

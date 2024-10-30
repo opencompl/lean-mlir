@@ -13,10 +13,7 @@ theorem t0_thm : ∀ (e e_1 e_2 : IntW 8), sub (sub e_2 e_1) e ⊑ sub e_2 (add 
     all_goals sorry
 
 
-theorem t1_flags_thm :
-  ∀ (e e_1 e_2 : IntW 8),
-    sub (sub e_2 e_1 { «nsw» := true, «nuw» := true }) e { «nsw» := true, «nuw» := true } ⊑
-      sub e_2 (add e_1 e { «nsw» := true, «nuw» := true }) { «nsw» := true, «nuw» := true } := by 
+theorem t1_flags_thm : ∀ (e e_1 e_2 : IntW 8), sub (sub e_2 e_1) e ⊑ sub e_2 (add e_1 e) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -24,10 +21,7 @@ theorem t1_flags_thm :
     all_goals sorry
 
 
-theorem t1_flags_nuw_only_thm :
-  ∀ (e e_1 e_2 : IntW 8),
-    sub (sub e_2 e_1 { «nsw» := false, «nuw» := true }) e { «nsw» := false, «nuw» := true } ⊑
-      sub e_2 (add e_1 e { «nsw» := false, «nuw» := true }) { «nsw» := false, «nuw» := true } := by 
+theorem t1_flags_nuw_only_thm : ∀ (e e_1 e_2 : IntW 8), sub (sub e_2 e_1) e ⊑ sub e_2 (add e_1 e) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -35,8 +29,7 @@ theorem t1_flags_nuw_only_thm :
     all_goals sorry
 
 
-theorem t1_flags_sub_nsw_sub_thm :
-  ∀ (e e_1 e_2 : IntW 8), sub (sub e_2 e_1 { «nsw» := true, «nuw» := false }) e ⊑ sub e_2 (add e_1 e) := by 
+theorem t1_flags_sub_nsw_sub_thm : ∀ (e e_1 e_2 : IntW 8), sub (sub e_2 e_1) e ⊑ sub e_2 (add e_1 e) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -44,8 +37,7 @@ theorem t1_flags_sub_nsw_sub_thm :
     all_goals sorry
 
 
-theorem t1_flags_nuw_first_thm :
-  ∀ (e e_1 e_2 : IntW 8), sub (sub e_2 e_1 { «nsw» := false, «nuw» := true }) e ⊑ sub e_2 (add e_1 e) := by 
+theorem t1_flags_nuw_first_thm : ∀ (e e_1 e_2 : IntW 8), sub (sub e_2 e_1) e ⊑ sub e_2 (add e_1 e) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -53,8 +45,7 @@ theorem t1_flags_nuw_first_thm :
     all_goals sorry
 
 
-theorem t1_flags_nuw_second_thm :
-  ∀ (e e_1 e_2 : IntW 8), sub (sub e_2 e_1) e { «nsw» := false, «nuw» := true } ⊑ sub e_2 (add e_1 e) := by 
+theorem t1_flags_nuw_second_thm : ∀ (e e_1 e_2 : IntW 8), sub (sub e_2 e_1) e ⊑ sub e_2 (add e_1 e) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -62,8 +53,7 @@ theorem t1_flags_nuw_second_thm :
     all_goals sorry
 
 
-theorem t1_flags_nuw_nsw_first_thm :
-  ∀ (e e_1 e_2 : IntW 8), sub (sub e_2 e_1 { «nsw» := true, «nuw» := true }) e ⊑ sub e_2 (add e_1 e) := by 
+theorem t1_flags_nuw_nsw_first_thm : ∀ (e e_1 e_2 : IntW 8), sub (sub e_2 e_1) e ⊑ sub e_2 (add e_1 e) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -71,8 +61,7 @@ theorem t1_flags_nuw_nsw_first_thm :
     all_goals sorry
 
 
-theorem t1_flags_nuw_nsw_second_thm :
-  ∀ (e e_1 e_2 : IntW 8), sub (sub e_2 e_1) e { «nsw» := true, «nuw» := true } ⊑ sub e_2 (add e_1 e) := by 
+theorem t1_flags_nuw_nsw_second_thm : ∀ (e e_1 e_2 : IntW 8), sub (sub e_2 e_1) e ⊑ sub e_2 (add e_1 e) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

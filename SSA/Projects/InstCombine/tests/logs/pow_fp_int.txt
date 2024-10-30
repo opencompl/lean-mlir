@@ -1,0 +1,251 @@
+1: "pow_sitofp_const_base_fast"
+4: "pow_sitofp_const_base_fast" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "pow_sitofp_const_base_fast" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "pow_uitofp_const_base_fast"
+4: "pow_uitofp_const_base_fast" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "pow_uitofp_const_base_fast" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "pow_uitofp_const_base_fast" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "pow_sitofp_double_const_base_fast"
+4: "pow_sitofp_double_const_base_fast" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+1: "pow_uitofp_double_const_base_fast"
+4: "pow_uitofp_double_const_base_fast" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "pow_uitofp_double_const_base_fast" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+1: "pow_sitofp_double_const_base_2_fast"
+4: "pow_sitofp_double_const_base_2_fast" has unsupported operation: llvm.call
+
+4: "pow_sitofp_double_const_base_2_fast" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "pow_sitofp_double_const_base_power_of_2_fast"
+4: "pow_sitofp_double_const_base_power_of_2_fast" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "pow_sitofp_double_const_base_power_of_2_fast" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "pow_sitofp_double_const_base_power_of_2_fast" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+4: "pow_sitofp_double_const_base_power_of_2_fast" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "pow_uitofp_const_base_2_fast"
+4: "pow_uitofp_const_base_2_fast" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "pow_uitofp_const_base_2_fast" has unsupported operation: llvm.call
+
+4: "pow_uitofp_const_base_2_fast" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "pow_uitofp_const_base_power_of_2_fast"
+4: "pow_uitofp_const_base_power_of_2_fast" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "pow_uitofp_const_base_power_of_2_fast" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "pow_uitofp_const_base_power_of_2_fast" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+4: "pow_uitofp_const_base_power_of_2_fast" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "pow_sitofp_float_base_fast"
+4: "pow_sitofp_float_base_fast" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "pow_sitofp_float_base_fast" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "pow_uitofp_float_base_fast"
+4: "pow_uitofp_float_base_fast" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "pow_uitofp_float_base_fast" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "pow_uitofp_float_base_fast" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "pow_sitofp_double_base_fast"
+4: "pow_sitofp_double_base_fast" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+1: "pow_uitofp_double_base_fast"
+4: "pow_uitofp_double_base_fast" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "pow_uitofp_double_base_fast" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+1: "pow_sitofp_const_base_fast_i8"
+4: "pow_sitofp_const_base_fast_i8" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "pow_sitofp_const_base_fast_i8" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "pow_sitofp_const_base_fast_i8" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "pow_sitofp_const_base_fast_i16"
+4: "pow_sitofp_const_base_fast_i16" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "pow_sitofp_const_base_fast_i16" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "pow_sitofp_const_base_fast_i16" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "pow_uitofp_const_base_fast_i8"
+4: "pow_uitofp_const_base_fast_i8" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "pow_uitofp_const_base_fast_i8" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "pow_uitofp_const_base_fast_i8" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "pow_uitofp_const_base_fast_i16"
+4: "pow_uitofp_const_base_fast_i16" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "pow_uitofp_const_base_fast_i16" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "pow_uitofp_const_base_fast_i16" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "powf_exp_const_int_fast"
+4: "powf_exp_const_int_fast" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+1: "powf_exp_const2_int_fast"
+4: "powf_exp_const2_int_fast" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+1: "pow_uitofp_const_base_fast_i32"
+4: "pow_uitofp_const_base_fast_i32" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "pow_uitofp_const_base_fast_i32" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "pow_uitofp_const_base_fast_i32" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+4: "pow_uitofp_const_base_fast_i32" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "pow_uitofp_const_base_2_fast_i32"
+4: "pow_uitofp_const_base_2_fast_i32" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "pow_uitofp_const_base_2_fast_i32" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+4: "pow_uitofp_const_base_2_fast_i32" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "pow_uitofp_const_base_power_of_2_fast_i32"
+4: "pow_uitofp_const_base_power_of_2_fast_i32" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "pow_uitofp_const_base_power_of_2_fast_i32" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "pow_uitofp_const_base_power_of_2_fast_i32" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+4: "pow_uitofp_const_base_power_of_2_fast_i32" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "pow_uitofp_float_base_fast_i32"
+4: "pow_uitofp_float_base_fast_i32" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "pow_uitofp_float_base_fast_i32" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+4: "pow_uitofp_float_base_fast_i32" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "pow_uitofp_double_base_fast_i32"
+4: "pow_uitofp_double_base_fast_i32" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "pow_uitofp_double_base_fast_i32" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "pow_sitofp_const_base_fast_i64"
+4: "pow_sitofp_const_base_fast_i64" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "pow_sitofp_const_base_fast_i64" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "pow_sitofp_const_base_fast_i64" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+4: "pow_sitofp_const_base_fast_i64" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "pow_uitofp_const_base_fast_i64"
+4: "pow_uitofp_const_base_fast_i64" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "pow_uitofp_const_base_fast_i64" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "pow_uitofp_const_base_fast_i64" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+4: "pow_uitofp_const_base_fast_i64" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "pow_sitofp_const_base_no_fast"
+4: "pow_sitofp_const_base_no_fast" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "pow_sitofp_const_base_no_fast" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+4: "pow_sitofp_const_base_no_fast" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "pow_uitofp_const_base_no_fast"
+4: "pow_uitofp_const_base_no_fast" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "pow_uitofp_const_base_no_fast" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+4: "pow_uitofp_const_base_no_fast" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "pow_sitofp_const_base_2_no_fast"
+4: "pow_sitofp_const_base_2_no_fast" has unsupported operation: llvm.call
+
+4: "pow_sitofp_const_base_2_no_fast" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "pow_sitofp_const_base_power_of_2_no_fast"
+4: "pow_sitofp_const_base_power_of_2_no_fast" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "pow_sitofp_const_base_power_of_2_no_fast" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "pow_sitofp_const_base_power_of_2_no_fast" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+4: "pow_sitofp_const_base_power_of_2_no_fast" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "pow_uitofp_const_base_2_no_fast"
+4: "pow_uitofp_const_base_2_no_fast" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "pow_uitofp_const_base_2_no_fast" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+4: "pow_uitofp_const_base_2_no_fast" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "pow_uitofp_const_base_power_of_2_no_fast"
+4: "pow_uitofp_const_base_power_of_2_no_fast" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "pow_uitofp_const_base_power_of_2_no_fast" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "pow_uitofp_const_base_power_of_2_no_fast" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+4: "pow_uitofp_const_base_power_of_2_no_fast" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "pow_sitofp_float_base_no_fast"
+4: "pow_sitofp_float_base_no_fast" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "pow_sitofp_float_base_no_fast" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+4: "pow_sitofp_float_base_no_fast" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "pow_uitofp_float_base_no_fast"
+4: "pow_uitofp_float_base_no_fast" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "pow_uitofp_float_base_no_fast" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+4: "pow_uitofp_float_base_no_fast" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "pow_sitofp_double_base_no_fast"
+4: "pow_sitofp_double_base_no_fast" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "pow_sitofp_double_base_no_fast" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "pow_uitofp_double_base_no_fast"
+4: "pow_uitofp_double_base_no_fast" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "pow_uitofp_double_base_no_fast" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "powf_exp_const_int_no_fast"
+4: "powf_exp_const_int_no_fast" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "powf_exp_const_not_int_fast"
+4: "powf_exp_const_not_int_fast" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "powf_exp_const_not_int_fast" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "powf_exp_const_not_int_fast" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "powf_exp_const_not_int_no_fast"
+4: "powf_exp_const_not_int_no_fast" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "powf_exp_const2_int_no_fast"
+4: "powf_exp_const2_int_no_fast" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "pow_sitofp_const_base_2_no_fast_vector"
+4: "pow_sitofp_const_base_2_no_fast_vector" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "pow_sitofp_const_base_2_no_fast_vector" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+1: "ldexpf"
+5: "ldexpf" is empty
+

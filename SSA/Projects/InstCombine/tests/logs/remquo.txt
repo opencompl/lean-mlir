@@ -1,14 +1,14 @@
 1: "remquo_f32"
-4: "remquo_f32" has unsupported operation: llvm.store
+4: "remquo_f32" has unsupported operation: llvm.call
 
 1: "remquo_f32_quo_sign"
-4: "remquo_f32_quo_sign" has unsupported operation: llvm.store
+4: "remquo_f32_quo_sign" has unsupported operation: llvm.call
 
 1: "remquo_f32_round"
-4: "remquo_f32_round" has unsupported operation: llvm.store
+4: "remquo_f32_round" has unsupported operation: llvm.call
 
 1: "remquo_f64"
-4: "remquo_f64" has unsupported operation: llvm.store
+4: "remquo_f64" has unsupported operation: llvm.call
 
 1: "remquo_f32_inf_x"
 4: "remquo_f32_inf_x" has unsupported operation: llvm.call

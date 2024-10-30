@@ -20,12 +20,16 @@
 
 4: "baz" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "baz" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "test_fewer_params_than_num_register_parameters"
 4: "test_fewer_params_than_num_register_parameters" has unsupported operation: llvm.call
 
 4: "test_fewer_params_than_num_register_parameters" has unsupported operation: llvm.return
 
 1: "test_non_int_params"
+4: "test_non_int_params" has unsupported operation: builtin.unregistered: llvm.sext
+
 4: "test_non_int_params" has unsupported operation: llvm.call
 
 1: "test_variadic"

@@ -156,7 +156,7 @@ def test7_after := [llvm|
 ^0(%arg115 : i32, %arg116 : i32):
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg116, %0 : i32
-  %2 = llvm.or %arg115, %1 : i32
+  %2 = llvm.or %1, %arg115 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -184,7 +184,7 @@ def test8_after := [llvm|
 ^0(%arg113 : i32, %arg114 : i32):
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg114, %0 : i32
-  %2 = llvm.or %arg113, %1 : i32
+  %2 = llvm.or %1, %arg113 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -439,7 +439,7 @@ def test11e_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.mul %arg95, %arg96 : i32
   %2 = llvm.xor %1, %arg94 : i32
-  %3 = llvm.xor %arg94, %1 : i32
+  %3 = llvm.xor %1, %arg94 : i32
   %4 = llvm.xor %3, %0 : i32
   %5 = llvm.and %2, %4 : i32
   "llvm.return"(%5) : (i32) -> ()
@@ -472,7 +472,7 @@ def test11f_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.mul %arg92, %arg93 : i32
   %2 = llvm.xor %1, %arg91 : i32
-  %3 = llvm.xor %arg91, %1 : i32
+  %3 = llvm.xor %1, %arg91 : i32
   %4 = llvm.xor %3, %0 : i32
   %5 = llvm.and %2, %4 : i32
   "llvm.return"(%5) : (i32) -> ()
@@ -617,7 +617,7 @@ def xor_or_xor_common_op_commute1_after := [llvm|
 ^0(%arg80 : i32, %arg81 : i32, %arg82 : i32):
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg80, %0 : i32
-  %2 = llvm.and %arg81, %1 : i32
+  %2 = llvm.and %1, %arg81 : i32
   %3 = llvm.xor %2, %arg82 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
@@ -645,7 +645,7 @@ def xor_or_xor_common_op_commute2_after := [llvm|
 ^0(%arg77 : i32, %arg78 : i32, %arg79 : i32):
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg77, %0 : i32
-  %2 = llvm.and %arg78, %1 : i32
+  %2 = llvm.and %1, %arg78 : i32
   %3 = llvm.xor %2, %arg79 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
@@ -673,7 +673,7 @@ def xor_or_xor_common_op_commute3_after := [llvm|
 ^0(%arg74 : i32, %arg75 : i32, %arg76 : i32):
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg74, %0 : i32
-  %2 = llvm.and %arg75, %1 : i32
+  %2 = llvm.and %1, %arg75 : i32
   %3 = llvm.xor %2, %arg76 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
@@ -701,7 +701,7 @@ def xor_or_xor_common_op_commute4_after := [llvm|
 ^0(%arg71 : i32, %arg72 : i32, %arg73 : i32):
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg71, %0 : i32
-  %2 = llvm.and %arg72, %1 : i32
+  %2 = llvm.and %1, %arg72 : i32
   %3 = llvm.xor %2, %arg73 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
@@ -729,7 +729,7 @@ def xor_or_xor_common_op_commute5_after := [llvm|
 ^0(%arg68 : i32, %arg69 : i32, %arg70 : i32):
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg68, %0 : i32
-  %2 = llvm.and %arg69, %1 : i32
+  %2 = llvm.and %1, %arg69 : i32
   %3 = llvm.xor %2, %arg70 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
@@ -757,7 +757,7 @@ def xor_or_xor_common_op_commute6_after := [llvm|
 ^0(%arg65 : i32, %arg66 : i32, %arg67 : i32):
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg65, %0 : i32
-  %2 = llvm.and %arg66, %1 : i32
+  %2 = llvm.and %1, %arg66 : i32
   %3 = llvm.xor %2, %arg67 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
@@ -785,7 +785,7 @@ def xor_or_xor_common_op_commute7_after := [llvm|
 ^0(%arg62 : i32, %arg63 : i32, %arg64 : i32):
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg62, %0 : i32
-  %2 = llvm.and %arg63, %1 : i32
+  %2 = llvm.and %1, %arg63 : i32
   %3 = llvm.xor %2, %arg64 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
@@ -813,7 +813,7 @@ def xor_or_xor_common_op_commute8_after := [llvm|
 ^0(%arg59 : i32, %arg60 : i32, %arg61 : i32):
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg59, %0 : i32
-  %2 = llvm.and %arg60, %1 : i32
+  %2 = llvm.and %1, %arg60 : i32
   %3 = llvm.xor %2, %arg61 : i32
   "llvm.return"(%3) : (i32) -> ()
 }

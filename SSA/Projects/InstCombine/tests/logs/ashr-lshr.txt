@@ -14,7 +14,7 @@
 4: "ashr_lshr2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "ashr_lshr2_i128"
-4: "ashr_lshr2_i128" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+4: "ashr_lshr2_i128" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "ashr_lshr_splat_vec"
 8: "ashr_lshr_splat_vec" contains vectors which are unsupported
@@ -103,6 +103,8 @@
 1: "lshr_sub_nsw"
 4: "lshr_sub_nsw" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "lshr_sub_nsw" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "lshr_sub_wrong_amount"
 7: "lshr_sub_wrong_amount" is unchanged by InstCombine
 
@@ -114,6 +116,8 @@
 
 1: "lshr_sub_nsw_splat"
 4: "lshr_sub_nsw_splat" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "lshr_sub_nsw_splat" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "lshr_sub_nsw_splat_poison"
 4: "lshr_sub_nsw_splat_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -129,6 +133,8 @@
 1: "ashr_sub_nsw"
 4: "ashr_sub_nsw" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "ashr_sub_nsw" has unsupported operation: builtin.unregistered: llvm.sext
+
 1: "ashr_sub_wrong_amount"
 7: "ashr_sub_wrong_amount" is unchanged by InstCombine
 
@@ -140,6 +146,8 @@
 
 1: "ashr_sub_nsw_splat"
 4: "ashr_sub_nsw_splat" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "ashr_sub_nsw_splat" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "ashr_sub_nsw_splat_poison"
 4: "ashr_sub_nsw_splat_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -163,20 +171,10 @@
 8: "ashr_known_pos_exact_vec" contains vectors which are unsupported
 
 1: "lshr_mul_times_3_div_2"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.mul
-2: llvm.lshr
-2: llvm.return
+7: "lshr_mul_times_3_div_2" is unchanged by InstCombine
 
 1: "lshr_mul_times_3_div_2_exact"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.mul
-2: llvm.lshr
-2: llvm.return
+7: "lshr_mul_times_3_div_2_exact" is unchanged by InstCombine
 
 1: "lshr_mul_times_3_div_2_no_flags"
 7: "lshr_mul_times_3_div_2_no_flags" is unchanged by InstCombine
@@ -185,28 +183,13 @@
 4: "mul_times_3_div_2_multiuse_lshr" has unsupported operation: llvm.call
 
 1: "lshr_mul_times_3_div_2_exact_2"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.mul
-2: llvm.lshr
-2: llvm.return
+7: "lshr_mul_times_3_div_2_exact_2" is unchanged by InstCombine
 
 1: "lshr_mul_times_5_div_4"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.mul
-2: llvm.lshr
-2: llvm.return
+7: "lshr_mul_times_5_div_4" is unchanged by InstCombine
 
 1: "lshr_mul_times_5_div_4_exact"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.mul
-2: llvm.lshr
-2: llvm.return
+7: "lshr_mul_times_5_div_4_exact" is unchanged by InstCombine
 
 1: "lshr_mul_times_5_div_4_no_flags"
 7: "lshr_mul_times_5_div_4_no_flags" is unchanged by InstCombine
@@ -215,28 +198,13 @@
 4: "mul_times_5_div_4_multiuse_lshr" has unsupported operation: llvm.call
 
 1: "lshr_mul_times_5_div_4_exact_2"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.mul
-2: llvm.lshr
-2: llvm.return
+7: "lshr_mul_times_5_div_4_exact_2" is unchanged by InstCombine
 
 1: "ashr_mul_times_3_div_2"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.mul
-2: llvm.ashr
-2: llvm.return
+7: "ashr_mul_times_3_div_2" is unchanged by InstCombine
 
 1: "ashr_mul_times_3_div_2_exact"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.mul
-2: llvm.ashr
-2: llvm.return
+7: "ashr_mul_times_3_div_2_exact" is unchanged by InstCombine
 
 1: "ashr_mul_times_3_div_2_no_flags"
 7: "ashr_mul_times_3_div_2_no_flags" is unchanged by InstCombine
@@ -248,28 +216,13 @@
 4: "mul_times_3_div_2_multiuse_ashr" has unsupported operation: llvm.call
 
 1: "ashr_mul_times_3_div_2_exact_2"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.mul
-2: llvm.ashr
-2: llvm.return
+7: "ashr_mul_times_3_div_2_exact_2" is unchanged by InstCombine
 
 1: "ashr_mul_times_5_div_4"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.mul
-2: llvm.ashr
-2: llvm.return
+7: "ashr_mul_times_5_div_4" is unchanged by InstCombine
 
 1: "ashr_mul_times_5_div_4_exact"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.mul
-2: llvm.ashr
-2: llvm.return
+7: "ashr_mul_times_5_div_4_exact" is unchanged by InstCombine
 
 1: "ashr_mul_times_5_div_4_no_flags"
 7: "ashr_mul_times_5_div_4_no_flags" is unchanged by InstCombine
@@ -278,18 +231,20 @@
 4: "mul_times_5_div_4_multiuse_ashr" has unsupported operation: llvm.call
 
 1: "ashr_mul_times_5_div_4_exact_2"
+7: "ashr_mul_times_5_div_4_exact_2" is unchanged by InstCombine
+
+1: "lsb_mask_sign_zext"
+7: "lsb_mask_sign_zext" is unchanged by InstCombine
+
+1: "lsb_mask_sign_zext_commuted"
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.mlir.constant
-2: llvm.mul
-2: llvm.ashr
+2: llvm.add
+2: llvm.xor
+2: llvm.and
+2: llvm.lshr
 2: llvm.return
-
-1: "lsb_mask_sign_zext"
-4: "lsb_mask_sign_zext" has unsupported operation: builtin.unregistered: llvm.icmp
-
-1: "lsb_mask_sign_zext_commuted"
-4: "lsb_mask_sign_zext_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "lsb_mask_sign_zext_wrong_cst1"
 7: "lsb_mask_sign_zext_wrong_cst1" is unchanged by InstCombine
@@ -312,10 +267,17 @@
 4: "lsb_mask_sign_zext_multiuse" has unsupported operation: llvm.call
 
 1: "lsb_mask_sign_sext"
-4: "lsb_mask_sign_sext" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "lsb_mask_sign_sext" is unchanged by InstCombine
 
 1: "lsb_mask_sign_sext_commuted"
-4: "lsb_mask_sign_sext_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.xor
+2: llvm.and
+2: llvm.ashr
+2: llvm.return
 
 1: "lsb_mask_sign_sext_wrong_cst1"
 7: "lsb_mask_sign_sext_wrong_cst1" is unchanged by InstCombine

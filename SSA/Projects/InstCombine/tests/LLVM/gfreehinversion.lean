@@ -64,7 +64,7 @@ def xor_2_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -124 : i8}> : () -> i8
   %1 = llvm.xor %arg136, %0 : i8
   %2 = "llvm.select"(%arg134, %arg135, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
-  %3 = llvm.xor %arg133, %2 : i8
+  %3 = llvm.xor %2, %arg133 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -74,6 +74,37 @@ theorem xor_2_proof : xor_2_before ⊑ xor_2_after := by
   ---BEGIN xor_2
   all_goals (try extract_goal ; sorry)
   ---END xor_2
+
+
+
+def xor_fail_before := [llvm|
+{
+^0(%arg129 : i8, %arg130 : i1, %arg131 : i8, %arg132 : i8):
+  %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
+  %1 = llvm.xor %arg131, %0 : i8
+  %2 = "llvm.select"(%arg130, %1, %arg132) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  %3 = llvm.xor %arg129, %2 : i8
+  %4 = llvm.xor %3, %0 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+def xor_fail_after := [llvm|
+{
+^0(%arg129 : i8, %arg130 : i1, %arg131 : i8, %arg132 : i8):
+  %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
+  %1 = llvm.xor %arg131, %0 : i8
+  %2 = "llvm.select"(%arg130, %1, %arg132) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  %3 = llvm.xor %2, %arg129 : i8
+  %4 = llvm.xor %3, %0 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+theorem xor_fail_proof : xor_fail_before ⊑ xor_fail_after := by
+  unfold xor_fail_before xor_fail_after
+  simp_alive_peephole
+  ---BEGIN xor_fail
+  all_goals (try extract_goal ; sorry)
+  ---END xor_fail
 
 
 
@@ -138,6 +169,41 @@ theorem add_2_proof : add_2_before ⊑ add_2_after := by
   ---BEGIN add_2
   all_goals (try extract_goal ; sorry)
   ---END add_2
+
+
+
+def add_fail_before := [llvm|
+{
+^0(%arg117 : i8, %arg118 : i1, %arg119 : i8, %arg120 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 123 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
+  %2 = llvm.xor %arg119, %arg117 : i8
+  %3 = llvm.xor %arg120, %0 : i8
+  %4 = "llvm.select"(%arg118, %2, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  %5 = llvm.add %arg117, %4 : i8
+  %6 = llvm.xor %5, %1 : i8
+  "llvm.return"(%6) : (i8) -> ()
+}
+]
+def add_fail_after := [llvm|
+{
+^0(%arg117 : i8, %arg118 : i1, %arg119 : i8, %arg120 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 123 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
+  %2 = llvm.xor %arg119, %arg117 : i8
+  %3 = llvm.xor %arg120, %0 : i8
+  %4 = "llvm.select"(%arg118, %2, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  %5 = llvm.add %4, %arg117 : i8
+  %6 = llvm.xor %5, %1 : i8
+  "llvm.return"(%6) : (i8) -> ()
+}
+]
+theorem add_fail_proof : add_fail_before ⊑ add_fail_after := by
+  unfold add_fail_before add_fail_after
+  simp_alive_peephole
+  ---BEGIN add_fail
+  all_goals (try extract_goal ; sorry)
+  ---END add_fail
 
 
 

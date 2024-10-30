@@ -52,36 +52,16 @@
 4: "add_or_sub_comb_i12_multiuse_only_sub" has unsupported operation: llvm.call
 
 1: "add_or_sub_comb_i8_negative_y_sub"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.sub
-2: llvm.or
-2: llvm.add
-2: llvm.return
+7: "add_or_sub_comb_i8_negative_y_sub" is unchanged by InstCombine
 
 1: "add_or_sub_comb_i8_negative_y_or"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.sub
-2: llvm.or
-2: llvm.add
-2: llvm.return
+7: "add_or_sub_comb_i8_negative_y_or" is unchanged by InstCombine
 
 1: "add_or_sub_comb_i8_negative_y_add"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.sub
-2: llvm.or
-2: llvm.add
-2: llvm.return
+7: "add_or_sub_comb_i8_negative_y_add" is unchanged by InstCombine
 
 1: "add_or_sub_comb_i8_negative_xor_instead_or"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.sub
-2: llvm.xor
-2: llvm.add
-2: llvm.return
+7: "add_or_sub_comb_i8_negative_xor_instead_or" is unchanged by InstCombine
 
 1: "add_or_sub_comb_i16_negative_sub_no_negate"
 7: "add_or_sub_comb_i16_negative_sub_no_negate" is unchanged by InstCombine

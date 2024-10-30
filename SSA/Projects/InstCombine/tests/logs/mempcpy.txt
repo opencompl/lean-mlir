@@ -26,11 +26,15 @@
 4: "memcpy_big_const_n" has unsupported operation: llvm.getelementptr
 
 1: "PR48810"
-4: "PR48810" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+4: "PR48810" has unsupported operation: llvm.mlir.undef
+
+4: "PR48810" has unsupported operation: llvm.mlir.zero
 
 4: "PR48810" has unsupported operation: llvm.mlir.undef
 
-4: "PR48810" has unsupported operation: llvm.store
+4: "PR48810" has unsupported operation: llvm.mlir.undef
+
+4: "PR48810" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
 
 1: "memcpy_no_simplify1"
 4: "memcpy_no_simplify1" has unsupported operation: llvm.call

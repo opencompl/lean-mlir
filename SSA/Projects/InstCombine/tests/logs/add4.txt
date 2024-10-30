@@ -84,26 +84,10 @@
 2: llvm.return
 
 1: "fold_add_sdiv_srem"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.sdiv
-2: llvm.shl
-2: llvm.srem
-2: llvm.add
-2: llvm.return
+7: "fold_add_sdiv_srem" is unchanged by InstCombine
 
 1: "fold_add_udiv_urem_to_mul"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.udiv
-2: llvm.mul
-2: llvm.urem
-2: llvm.mul
-2: llvm.add
-2: llvm.return
+7: "fold_add_udiv_urem_to_mul" is unchanged by InstCombine
 
 1: "fold_add_udiv_urem_to_mul_multiuse"
 4: "fold_add_udiv_urem_to_mul_multiuse" has unsupported operation: llvm.call
@@ -119,14 +103,7 @@
 2: llvm.return
 
 1: "fold_add_udiv_urem_or_disjoint"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.udiv
-2: llvm.shl
-2: llvm.urem
-2: llvm.or
-2: llvm.return
+7: "fold_add_udiv_urem_or_disjoint" is unchanged by InstCombine
 
 1: "fold_add_udiv_urem_without_noundef"
 2: llvm.func

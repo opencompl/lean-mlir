@@ -51,7 +51,11 @@
 1: "n10_ugt_slt"
 4: "n10_ugt_slt" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "n10_ugt_slt" has unsupported operation: builtin.unregistered: llvm.icmp
+
 1: "n11_uge_slt"
+4: "n11_uge_slt" has unsupported operation: builtin.unregistered: llvm.icmp
+
 4: "n11_uge_slt" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "n12_ule_slt"

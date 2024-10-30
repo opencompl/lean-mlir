@@ -5,8 +5,12 @@
 
 4: "single_entry_phi" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
+4: "single_entry_phi" has unsupported operation: builtin.unregistered: llvm.trunc
+
 1: "two_entry_phi_with_constant"
 4: "two_entry_phi_with_constant" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "two_entry_phi_with_constant" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "two_entry_phi_with_constant" has unsupported operation: builtin.unregistered: llvm.cond_br
 
@@ -15,14 +19,20 @@
 1: "two_entry_phi_non_constant"
 4: "two_entry_phi_non_constant" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
+4: "two_entry_phi_non_constant" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "two_entry_phi_non_constant" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "two_entry_phi_non_constant" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "two_entry_phi_non_constant" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "two_entry_phi_non_constant" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "neg_many_branches"
 4: "neg_many_branches" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "neg_many_branches" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "neg_many_branches" has unsupported operation: builtin.unregistered: llvm.switch
 

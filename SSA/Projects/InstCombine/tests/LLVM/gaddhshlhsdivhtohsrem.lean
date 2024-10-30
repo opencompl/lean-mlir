@@ -97,37 +97,6 @@ theorem addhshlhsdivhscalar2_proof : addhshlhsdivhscalar2_before ⊑ addhshlhsdi
 
 
 
-def addhshlhsdivhnegative0_before := [llvm|
-{
-^0(%arg8 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 4 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 2 : i8}> : () -> i8
-  %2 = llvm.sdiv %arg8, %0 : i8
-  %3 = llvm.shl %2, %1 : i8
-  %4 = llvm.add %3, %arg8 : i8
-  "llvm.return"(%4) : (i8) -> ()
-}
-]
-def addhshlhsdivhnegative0_after := [llvm|
-{
-^0(%arg8 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 4 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 2 : i8}> : () -> i8
-  %2 = llvm.sdiv %arg8, %0 : i8
-  %3 = llvm.shl %2, %1 overflow<nsw> : i8
-  %4 = llvm.add %3, %arg8 : i8
-  "llvm.return"(%4) : (i8) -> ()
-}
-]
-theorem addhshlhsdivhnegative0_proof : addhshlhsdivhnegative0_before ⊑ addhshlhsdivhnegative0_after := by
-  unfold addhshlhsdivhnegative0_before addhshlhsdivhnegative0_after
-  simp_alive_peephole
-  ---BEGIN addhshlhsdivhnegative0
-  all_goals (try extract_goal ; sorry)
-  ---END addhshlhsdivhnegative0
-
-
-
 def addhshlhsdivhnegative1_before := [llvm|
 {
 ^0(%arg7 : i32):

@@ -5,7 +5,7 @@
 5: "use64" is empty
 
 1: "t0_basic"
-4: "t0_basic" has unsupported operation: llvm.call
+4: "t0_basic" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "t0_basic" has unsupported operation: llvm.call
 
@@ -14,6 +14,10 @@
 4: "t0_basic" has unsupported operation: llvm.call
 
 4: "t0_basic" has unsupported operation: llvm.call
+
+4: "t0_basic" has unsupported operation: llvm.call
+
+4: "t0_basic" has unsupported operation: builtin.unregistered: llvm.trunc
 
 1: "use8xi32"
 5: "use8xi32" is empty
@@ -22,7 +26,7 @@
 5: "use8xi64" is empty
 
 1: "t1_vec_splat"
-4: "t1_vec_splat" has unsupported operation: llvm.call
+4: "t1_vec_splat" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "t1_vec_splat" has unsupported operation: llvm.call
 
@@ -31,6 +35,10 @@
 4: "t1_vec_splat" has unsupported operation: llvm.call
 
 4: "t1_vec_splat" has unsupported operation: llvm.call
+
+4: "t1_vec_splat" has unsupported operation: llvm.call
+
+4: "t1_vec_splat" has unsupported operation: builtin.unregistered: llvm.trunc
 
 1: "t2_vec_splat_poison"
 4: "t2_vec_splat_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -127,7 +135,7 @@
 
 4: "t2_vec_splat_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
 
-4: "t2_vec_splat_poison" has unsupported operation: llvm.call
+4: "t2_vec_splat_poison" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "t2_vec_splat_poison" has unsupported operation: llvm.call
 
@@ -136,6 +144,10 @@
 4: "t2_vec_splat_poison" has unsupported operation: llvm.call
 
 4: "t2_vec_splat_poison" has unsupported operation: llvm.call
+
+4: "t2_vec_splat_poison" has unsupported operation: llvm.call
+
+4: "t2_vec_splat_poison" has unsupported operation: builtin.unregistered: llvm.trunc
 
 1: "t3_vec_nonsplat"
 4: "t3_vec_nonsplat" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -158,7 +170,7 @@
 
 4: "t3_vec_nonsplat" has unsupported operation: builtin.unregistered: llvm.insertelement
 
-4: "t3_vec_nonsplat" has unsupported operation: llvm.call
+4: "t3_vec_nonsplat" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "t3_vec_nonsplat" has unsupported operation: llvm.call
 
@@ -167,9 +179,13 @@
 4: "t3_vec_nonsplat" has unsupported operation: llvm.call
 
 4: "t3_vec_nonsplat" has unsupported operation: llvm.call
+
+4: "t3_vec_nonsplat" has unsupported operation: llvm.call
+
+4: "t3_vec_nonsplat" has unsupported operation: builtin.unregistered: llvm.trunc
 
 1: "n4_extrause0"
-4: "n4_extrause0" has unsupported operation: llvm.call
+4: "n4_extrause0" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "n4_extrause0" has unsupported operation: llvm.call
 
@@ -180,9 +196,13 @@
 4: "n4_extrause0" has unsupported operation: llvm.call
 
 4: "n4_extrause0" has unsupported operation: llvm.call
+
+4: "n4_extrause0" has unsupported operation: llvm.call
+
+4: "n4_extrause0" has unsupported operation: builtin.unregistered: llvm.trunc
 
 1: "n5_extrause1"
-4: "n5_extrause1" has unsupported operation: llvm.call
+4: "n5_extrause1" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "n5_extrause1" has unsupported operation: llvm.call
 
@@ -191,11 +211,15 @@
 4: "n5_extrause1" has unsupported operation: llvm.call
 
 4: "n5_extrause1" has unsupported operation: llvm.call
+
+4: "n5_extrause1" has unsupported operation: llvm.call
+
+4: "n5_extrause1" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "n5_extrause1" has unsupported operation: llvm.call
 
 1: "n6_extrause2"
-4: "n6_extrause2" has unsupported operation: llvm.call
+4: "n6_extrause2" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "n6_extrause2" has unsupported operation: llvm.call
 
@@ -206,6 +230,10 @@
 4: "n6_extrause2" has unsupported operation: llvm.call
 
 4: "n6_extrause2" has unsupported operation: llvm.call
+
+4: "n6_extrause2" has unsupported operation: llvm.call
+
+4: "n6_extrause2" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "n6_extrause2" has unsupported operation: llvm.call
 

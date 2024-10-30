@@ -20,20 +20,8 @@
 2: llvm.return
 
 1: "add_mask_ashr28_non_pow2_i32"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.ashr
-2: llvm.and
-2: llvm.add
-2: llvm.return
+7: "add_mask_ashr28_non_pow2_i32" is unchanged by InstCombine
 
 1: "add_mask_ashr27_i32"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.ashr
-2: llvm.and
-2: llvm.add
-2: llvm.return
+7: "add_mask_ashr27_i32" is unchanged by InstCombine
 

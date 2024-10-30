@@ -45,7 +45,7 @@ theorem test5_thm : ∀ (e e_1 e_2 : IntW 19), sub e_2 (sub e_1 e) ⊑ add (sub 
     all_goals sorry
 
 
-theorem test6_thm : ∀ (e e_1 : IntW 57), sub e_1 (LLVM.and e_1 e) ⊑ LLVM.and e_1 (LLVM.xor e (const? (-1))) := by 
+theorem test6_thm : ∀ (e e_1 : IntW 57), sub e_1 (LLVM.and e_1 e) ⊑ LLVM.and (LLVM.xor e (const? (-1))) e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

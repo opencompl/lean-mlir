@@ -106,6 +106,8 @@
 4: "test10" has unsupported operation: llvm.return
 
 1: "test11"
+4: "test11" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "test11" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "test11" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -120,6 +122,8 @@
 4: "test12" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test13"
+4: "test13" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "test13" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "test13" has unsupported operation: builtin.unregistered: llvm.icmp

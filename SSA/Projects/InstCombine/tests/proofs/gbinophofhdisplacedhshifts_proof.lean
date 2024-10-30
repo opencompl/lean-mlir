@@ -98,17 +98,6 @@ theorem shl_add_thm :
     all_goals sorry
 
 
-theorem lshr_add_fail_thm :
-  ∀ (e : IntW 8),
-    add (lshr (const? 16) e) (lshr (const? 7) (add e (const? 1))) ⊑
-      add (lshr (const? 16) e) (lshr (const? 7) (add e (const? 1))) { «nsw» := true, «nuw» := true } := by 
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
-
-
 theorem shl_or_commuted_thm :
   ∀ (e : IntW 8), LLVM.or (shl (const? 3) (add e (const? 1))) (shl (const? 16) e) ⊑ shl (const? 22) e := by 
     simp_alive_undef

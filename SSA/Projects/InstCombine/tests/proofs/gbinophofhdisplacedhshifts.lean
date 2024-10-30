@@ -313,41 +313,6 @@ theorem shl_add_proof : shl_add_before ⊑ shl_add_after := by
 
 
 
-def lshr_add_fail_before := [llvm|
-{
-^0(%arg15 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 16 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
-  %2 = "llvm.mlir.constant"() <{value = 7 : i8}> : () -> i8
-  %3 = llvm.lshr %0, %arg15 : i8
-  %4 = llvm.add %arg15, %1 : i8
-  %5 = llvm.lshr %2, %4 : i8
-  %6 = llvm.add %3, %5 : i8
-  "llvm.return"(%6) : (i8) -> ()
-}
-]
-def lshr_add_fail_after := [llvm|
-{
-^0(%arg15 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 16 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
-  %2 = "llvm.mlir.constant"() <{value = 7 : i8}> : () -> i8
-  %3 = llvm.lshr %0, %arg15 : i8
-  %4 = llvm.add %arg15, %1 : i8
-  %5 = llvm.lshr %2, %4 : i8
-  %6 = llvm.add %3, %5 overflow<nsw,nuw> : i8
-  "llvm.return"(%6) : (i8) -> ()
-}
-]
-theorem lshr_add_fail_proof : lshr_add_fail_before ⊑ lshr_add_fail_after := by
-  unfold lshr_add_fail_before lshr_add_fail_after
-  simp_alive_peephole
-  ---BEGIN lshr_add_fail
-  apply lshr_add_fail_thm
-  ---END lshr_add_fail
-
-
-
 def shl_or_commuted_before := [llvm|
 {
 ^0(%arg13 : i8):

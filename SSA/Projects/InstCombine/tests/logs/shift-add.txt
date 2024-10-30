@@ -2,13 +2,7 @@
 5: "use" is empty
 
 1: "shl_C1_add_A_C2_i32"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.zext
-2: llvm.add
-2: llvm.shl
-2: llvm.return
+4: "shl_C1_add_A_C2_i32" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "ashr_C1_add_A_C2_i32"
 2: llvm.func
@@ -42,6 +36,8 @@
 4: "shl_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 4: "shl_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "ashr_C1_add_A_C2_v4i32"
 4: "ashr_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -84,6 +80,8 @@
 
 4: "shl_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
 
+4: "shl_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.zext
+
 4: "shl_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 4: "shl_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.shufflevector
@@ -103,6 +101,8 @@
 
 4: "ashr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
 
+4: "ashr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.zext
+
 4: "ashr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 4: "ashr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.shufflevector
@@ -121,6 +121,8 @@
 4: "lshr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 4: "lshr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "lshr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
 
@@ -258,123 +260,79 @@
 2: llvm.return
 
 1: "lshr_2_add_zext_basic"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.zext
-2: llvm.zext
-2: llvm.add
-2: llvm.lshr
-2: llvm.return
+4: "lshr_2_add_zext_basic" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "ashr_2_add_zext_basic"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.zext
-2: llvm.zext
-2: llvm.add
-2: llvm.ashr
-2: llvm.return
+4: "ashr_2_add_zext_basic" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "ashr_2_add_zext_basic" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "lshr_16_add_zext_basic"
 4: "lshr_16_add_zext_basic" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "lshr_16_add_zext_basic" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "lshr_16_add_zext_basic_multiuse"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.zext
-2: llvm.zext
-2: llvm.add
-2: llvm.lshr
-2: llvm.or
-2: llvm.return
+4: "lshr_16_add_zext_basic_multiuse" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "lshr_16_add_zext_basic_multiuse" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "lshr_16_add_known_16_leading_zeroes"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.and
-2: llvm.and
-2: llvm.add
-2: llvm.lshr
-2: llvm.return
+7: "lshr_16_add_known_16_leading_zeroes" is unchanged by InstCombine
 
 1: "lshr_16_add_not_known_16_leading_zeroes"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.and
-2: llvm.and
-2: llvm.add
-2: llvm.lshr
-2: llvm.return
+7: "lshr_16_add_not_known_16_leading_zeroes" is unchanged by InstCombine
 
 1: "lshr_32_add_zext_basic"
 4: "lshr_32_add_zext_basic" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "lshr_32_add_zext_basic" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "lshr_32_add_zext_basic_multiuse"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.zext
-2: llvm.zext
-2: llvm.add
-2: llvm.lshr
-2: llvm.or
-2: llvm.return
+4: "lshr_32_add_zext_basic_multiuse" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "lshr_32_add_zext_basic_multiuse" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "lshr_31_i32_add_zext_basic"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.zext
-2: llvm.zext
-2: llvm.add
-2: llvm.lshr
-2: llvm.return
+4: "lshr_31_i32_add_zext_basic" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "lshr_31_i32_add_zext_basic" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "lshr_33_i32_add_zext_basic"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.zext
-2: llvm.zext
-2: llvm.add
-2: llvm.lshr
-2: llvm.return
+4: "lshr_33_i32_add_zext_basic" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+
+4: "lshr_33_i32_add_zext_basic" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 
 1: "lshr_16_to_64_add_zext_basic"
 4: "lshr_16_to_64_add_zext_basic" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "lshr_16_to_64_add_zext_basic" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "lshr_32_add_known_32_leading_zeroes"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.and
-2: llvm.and
-2: llvm.add
-2: llvm.lshr
-2: llvm.return
+7: "lshr_32_add_known_32_leading_zeroes" is unchanged by InstCombine
 
 1: "lshr_32_add_not_known_32_leading_zeroes"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.and
-2: llvm.and
-2: llvm.add
-2: llvm.lshr
-2: llvm.return
+7: "lshr_32_add_not_known_32_leading_zeroes" is unchanged by InstCombine
 
 1: "ashr_16_add_zext_basic"
 4: "ashr_16_add_zext_basic" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "ashr_16_add_zext_basic" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "ashr_32_add_zext_basic"
 4: "ashr_32_add_zext_basic" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "ashr_32_add_zext_basic" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "ashr_16_to_64_add_zext_basic"
 4: "ashr_16_to_64_add_zext_basic" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "ashr_16_to_64_add_zext_basic" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "lshr_32_add_zext_trunc"
 4: "lshr_32_add_zext_trunc" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "lshr_32_add_zext_trunc" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "add3_i96"
 4: "add3_i96" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -387,29 +345,34 @@
 
 4: "add3_i96" has unsupported operation: builtin.unregistered: llvm.extractelement
 
+4: "add3_i96" has unsupported operation: builtin.unregistered: llvm.zext
+
 4: "add3_i96" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "add3_i96" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "add3_i96" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "add3_i96" has unsupported operation: builtin.unregistered: llvm.extractelement
 
 4: "add3_i96" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "add3_i96" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "add3_i96" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "add3_i96" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "add3_i96" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 4: "add3_i96" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 1: "shl_fold_or_disjoint_cnt"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.or
-2: llvm.shl
-2: llvm.return
+7: "shl_fold_or_disjoint_cnt" is unchanged by InstCombine
 
 1: "ashr_fold_or_disjoint_cnt"
 8: "ashr_fold_or_disjoint_cnt" contains vectors which are unsupported
 
 1: "lshr_fold_or_disjoint_cnt_out_of_bounds"
-8: "lshr_fold_or_disjoint_cnt_out_of_bounds" contains vectors which are unsupported
+7: "lshr_fold_or_disjoint_cnt_out_of_bounds" is unchanged by InstCombine
 

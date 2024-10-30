@@ -17,7 +17,7 @@
 4: "insert_unknown_idx" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 1: "insert_known_any_idx"
-8: "insert_known_any_idx" contains vectors which are unsupported
+4: "insert_known_any_idx" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 1: "insert_known_any_idx_fail1"
 4: "insert_known_any_idx_fail1" has unsupported operation: builtin.unregistered: llvm.insertelement

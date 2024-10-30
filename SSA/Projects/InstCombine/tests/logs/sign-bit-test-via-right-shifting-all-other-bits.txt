@@ -16,6 +16,10 @@
 4: "highest_bit_test_via_lshr" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "highest_bit_test_via_lshr_with_truncation"
+4: "highest_bit_test_via_lshr_with_truncation" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "highest_bit_test_via_lshr_with_truncation" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "highest_bit_test_via_lshr_with_truncation" has unsupported operation: llvm.call
 
 4: "highest_bit_test_via_lshr_with_truncation" has unsupported operation: llvm.call
@@ -42,6 +46,10 @@
 4: "highest_bit_test_via_ashr" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "highest_bit_test_via_ashr_with_truncation"
+4: "highest_bit_test_via_ashr_with_truncation" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "highest_bit_test_via_ashr_with_truncation" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "highest_bit_test_via_ashr_with_truncation" has unsupported operation: llvm.call
 
 4: "highest_bit_test_via_ashr_with_truncation" has unsupported operation: llvm.call
@@ -68,6 +76,10 @@
 4: "highest_bit_test_via_lshr_ashr" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "highest_bit_test_via_lshr_ashe_with_truncation"
+4: "highest_bit_test_via_lshr_ashe_with_truncation" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "highest_bit_test_via_lshr_ashe_with_truncation" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "highest_bit_test_via_lshr_ashe_with_truncation" has unsupported operation: llvm.call
 
 4: "highest_bit_test_via_lshr_ashe_with_truncation" has unsupported operation: llvm.call
@@ -94,6 +106,10 @@
 4: "highest_bit_test_via_ashr_lshr" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "highest_bit_test_via_ashr_lshr_with_truncation"
+4: "highest_bit_test_via_ashr_lshr_with_truncation" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "highest_bit_test_via_ashr_lshr_with_truncation" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "highest_bit_test_via_ashr_lshr_with_truncation" has unsupported operation: llvm.call
 
 4: "highest_bit_test_via_ashr_lshr_with_truncation" has unsupported operation: llvm.call
@@ -135,6 +151,8 @@
 1: "unsigned_sign_bit_extract_with_trunc_extrause"
 4: "unsigned_sign_bit_extract_with_trunc_extrause" has unsupported operation: llvm.call
 
+4: "unsigned_sign_bit_extract_with_trunc_extrause" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "unsigned_sign_bit_extract_with_trunc_extrause" has unsupported operation: llvm.call
 
 4: "unsigned_sign_bit_extract_with_trunc_extrause" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -144,6 +162,8 @@
 
 1: "signed_sign_bit_extract_trunc_extrause"
 4: "signed_sign_bit_extract_trunc_extrause" has unsupported operation: llvm.call
+
+4: "signed_sign_bit_extract_trunc_extrause" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "signed_sign_bit_extract_trunc_extrause" has unsupported operation: llvm.call
 

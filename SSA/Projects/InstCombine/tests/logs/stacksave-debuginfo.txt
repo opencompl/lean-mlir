@@ -3,6 +3,8 @@
 
 4: "test1" has unsupported operation: builtin.unregistered: llvm.intr.dbg.value
 
+4: "test1" has unsupported operation: builtin.unregistered: llvm.zext
+
 4: "test1" has unsupported operation: llvm.alloca
 
 4: "test1" has unsupported operation: builtin.unregistered: llvm.intr.dbg.value

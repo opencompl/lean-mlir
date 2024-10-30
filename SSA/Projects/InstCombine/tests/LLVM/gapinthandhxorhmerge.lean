@@ -26,7 +26,7 @@ def test1_after := [llvm|
 {
 ^0(%arg3 : i57, %arg4 : i57, %arg5 : i57):
   %0 = llvm.xor %arg3, %arg4 : i57
-  %1 = llvm.and %arg5, %0 : i57
+  %1 = llvm.and %0, %arg5 : i57
   "llvm.return"(%1) : (i57) -> ()
 }
 ]

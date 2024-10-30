@@ -16,8 +16,7 @@ theorem pr40493_neg3_thm :
 
 theorem pr51551_demand3bits_thm :
   ∀ (e e_1 : IntW 32),
-    LLVM.and (mul (LLVM.or (LLVM.and e_1 (const? (-7))) (const? 1)) e { «nsw» := true, «nuw» := false }) (const? 7) ⊑
-      LLVM.and e (const? 7) := by 
+    LLVM.and (mul (LLVM.or (LLVM.and e_1 (const? (-7))) (const? 1)) e) (const? 7) ⊑ LLVM.and e (const? 7) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

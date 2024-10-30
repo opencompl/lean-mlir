@@ -36,8 +36,6 @@
 
 4: "select_max_ugt_2_use_cmp" has unsupported operation: llvm.call
 
-4: "select_max_ugt_2_use_cmp" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
-
 1: "select_min_uge_2_use_cmp"
 4: "select_min_uge_2_use_cmp" has unsupported operation: builtin.unregistered: llvm.fcmp
 

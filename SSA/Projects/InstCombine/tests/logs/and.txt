@@ -10,14 +10,16 @@
 1: "test_with_1"
 4: "test_with_1" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "test_with_1" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "test_with_3"
-4: "test_with_3" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "test_with_3" is unchanged by InstCombine
 
 1: "test_with_5"
-4: "test_with_5" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "test_with_5" is unchanged by InstCombine
 
 1: "test_with_neg_5"
-4: "test_with_neg_5" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "test_with_neg_5" is unchanged by InstCombine
 
 1: "test_with_even"
 2: llvm.func
@@ -28,7 +30,7 @@
 2: llvm.return
 
 1: "test_vec"
-4: "test_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "test_vec" is unchanged by InstCombine
 
 1: "test_with_neg_even"
 2: llvm.func
@@ -250,40 +252,19 @@
 4: "ashr_not_lowmask3_use" has unsupported operation: llvm.call
 
 1: "test29"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.zext
-2: llvm.and
-2: llvm.return
+4: "test29" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "test30"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.zext
-2: llvm.and
-2: llvm.return
+4: "test30" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "test31"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.zext
-2: llvm.shl
-2: llvm.and
-2: llvm.return
+4: "test31" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 
 1: "and_demanded_bits_splat_vec"
 8: "and_demanded_bits_splat_vec" contains vectors which are unsupported
 
 1: "and_zext_demanded"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.lshr
-2: llvm.zext
-2: llvm.or
-2: llvm.and
-2: llvm.return
+4: "and_zext_demanded" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "test32"
 2: llvm.func
@@ -331,28 +312,16 @@
 8: "PR24942" contains vectors which are unsupported
 
 1: "test35"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.zext
-2: llvm.sub
-2: llvm.and
-2: llvm.return
+4: "test35" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "test35_uniform"
-8: "test35_uniform" contains vectors which are unsupported
+4: "test35_uniform" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "test36"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.zext
-2: llvm.add
-2: llvm.and
-2: llvm.return
+4: "test36" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "test36_uniform"
-8: "test36_uniform" contains vectors which are unsupported
+4: "test36_uniform" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "test36_poison"
 4: "test36_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -369,105 +338,70 @@
 
 4: "test36_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
 
+4: "test36_poison" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "test37"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.zext
-2: llvm.mul
-2: llvm.and
-2: llvm.return
+4: "test37" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "test37_uniform"
-8: "test37_uniform" contains vectors which are unsupported
+4: "test37_uniform" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "test37_nonuniform"
-8: "test37_nonuniform" contains vectors which are unsupported
+4: "test37_nonuniform" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "test38"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.zext
-2: llvm.xor
-2: llvm.and
-2: llvm.return
+4: "test38" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "test39"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.zext
-2: llvm.or
-2: llvm.and
-2: llvm.return
+4: "test39" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "lowmask_add_zext"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.zext
-2: llvm.add
-2: llvm.and
-2: llvm.return
+4: "lowmask_add_zext" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "lowmask_add_zext" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "lowmask_add_zext_commute"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mul
-2: llvm.zext
-2: llvm.add
-2: llvm.and
-2: llvm.return
+4: "lowmask_add_zext_commute" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "lowmask_add_zext_commute" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "lowmask_add_zext_wrong_mask"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.zext
-2: llvm.add
-2: llvm.and
-2: llvm.return
+4: "lowmask_add_zext_wrong_mask" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "lowmask_add_zext_use1"
+4: "lowmask_add_zext_use1" has unsupported operation: builtin.unregistered: llvm.zext
+
 4: "lowmask_add_zext_use1" has unsupported operation: llvm.call
 
 1: "lowmask_add_zext_use2"
+4: "lowmask_add_zext_use2" has unsupported operation: builtin.unregistered: llvm.zext
+
 4: "lowmask_add_zext_use2" has unsupported operation: llvm.call
 
 1: "lowmask_sub_zext"
-8: "lowmask_sub_zext" contains vectors which are unsupported
+4: "lowmask_sub_zext" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "lowmask_sub_zext" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "lowmask_sub_zext_commute"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.zext
-2: llvm.sub
-2: llvm.and
-2: llvm.return
+4: "lowmask_sub_zext_commute" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "lowmask_sub_zext_commute" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "lowmask_mul_zext"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.zext
-2: llvm.mul
-2: llvm.and
-2: llvm.return
+4: "lowmask_mul_zext" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "lowmask_mul_zext" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "lowmask_xor_zext_commute"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mul
-2: llvm.zext
-2: llvm.xor
-2: llvm.and
-2: llvm.return
+4: "lowmask_xor_zext_commute" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "lowmask_xor_zext_commute" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "lowmask_or_zext_commute"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.zext
-2: llvm.or
-2: llvm.and
-2: llvm.return
+4: "lowmask_or_zext_commute" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "lowmask_or_zext_commute" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "test40"
 2: llvm.func
@@ -617,28 +551,26 @@
 4: "andn_or_cmp_4_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "lowbitmask_casted_shift"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.ashr
-2: llvm.sext
-2: llvm.and
-2: llvm.return
+4: "lowbitmask_casted_shift" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "lowbitmask_casted_shift_wrong_mask1"
-7: "lowbitmask_casted_shift_wrong_mask1" is unchanged by InstCombine
+4: "lowbitmask_casted_shift_wrong_mask1" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "lowbitmask_casted_shift_wrong_mask2"
-7: "lowbitmask_casted_shift_wrong_mask2" is unchanged by InstCombine
+4: "lowbitmask_casted_shift_wrong_mask2" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "lowbitmask_casted_shift_use1"
 4: "lowbitmask_casted_shift_use1" has unsupported operation: llvm.call
 
+4: "lowbitmask_casted_shift_use1" has unsupported operation: builtin.unregistered: llvm.sext
+
 1: "lowbitmask_casted_shift_use2"
+4: "lowbitmask_casted_shift_use2" has unsupported operation: builtin.unregistered: llvm.sext
+
 4: "lowbitmask_casted_shift_use2" has unsupported operation: llvm.call
 
 1: "lowbitmask_casted_shift_vec_splat"
-8: "lowbitmask_casted_shift_vec_splat" contains vectors which are unsupported
+4: "lowbitmask_casted_shift_vec_splat" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "lowmask_sext_in_reg"
 4: "lowmask_sext_in_reg" has unsupported operation: llvm.call
@@ -750,23 +682,15 @@
 4: "signbit_splat_mask_use1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "signbit_splat_mask_use2"
+4: "signbit_splat_mask_use2" has unsupported operation: builtin.unregistered: llvm.sext
+
 4: "signbit_splat_mask_use2" has unsupported operation: llvm.call
 
 1: "not_signbit_splat_mask1"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.ashr
-2: llvm.zext
-2: llvm.and
-2: llvm.return
+4: "not_signbit_splat_mask1" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "not_signbit_splat_mask2"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.ashr
-2: llvm.sext
-2: llvm.and
-2: llvm.return
+4: "not_signbit_splat_mask2" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "not_ashr_bitwidth_mask"
 4: "not_ashr_bitwidth_mask" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -782,25 +706,15 @@
 1: "not_ashr_bitwidth_mask_use2"
 4: "not_ashr_bitwidth_mask_use2" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "not_ashr_bitwidth_mask_use2" has unsupported operation: builtin.unregistered: llvm.sext
+
 4: "not_ashr_bitwidth_mask_use2" has unsupported operation: llvm.call
 
 1: "not_ashr_not_bitwidth_mask"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.ashr
-2: llvm.xor
-2: llvm.and
-2: llvm.return
+7: "not_ashr_not_bitwidth_mask" is unchanged by InstCombine
 
 1: "not_lshr_bitwidth_mask"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.lshr
-2: llvm.xor
-2: llvm.and
-2: llvm.return
+7: "not_lshr_bitwidth_mask" is unchanged by InstCombine
 
 1: "invert_signbit_splat_mask"
 4: "invert_signbit_splat_mask" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -816,25 +730,26 @@
 1: "invert_signbit_splat_mask_use2"
 4: "invert_signbit_splat_mask_use2" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "invert_signbit_splat_mask_use2" has unsupported operation: builtin.unregistered: llvm.sext
+
 4: "invert_signbit_splat_mask_use2" has unsupported operation: llvm.call
 
 1: "invert_signbit_splat_mask_use3"
 4: "invert_signbit_splat_mask_use3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "invert_signbit_splat_mask_use3" has unsupported operation: builtin.unregistered: llvm.sext
 
 4: "invert_signbit_splat_mask_use3" has unsupported operation: llvm.call
 
 1: "not_invert_signbit_splat_mask1"
 4: "not_invert_signbit_splat_mask1" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "not_invert_signbit_splat_mask1" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "not_invert_signbit_splat_mask1" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "not_invert_signbit_splat_mask2"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.ashr
-2: llvm.xor
-2: llvm.sext
-2: llvm.and
-2: llvm.return
+4: "not_invert_signbit_splat_mask2" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "shl_lshr_pow2_const_case1"
 4: "shl_lshr_pow2_const_case1" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -1039,18 +954,14 @@
 4: "test_and_or_constexpr_infloop" has unsupported operation: builtin.unregistered: llvm.ptrtoint
 
 1: "and_zext"
-2: llvm.func
-2: llvm.zext
-2: llvm.and
-2: llvm.return
+4: "and_zext" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 
 1: "and_zext_commuted"
-2: llvm.func
-2: llvm.zext
-2: llvm.and
-2: llvm.return
+4: "and_zext_commuted" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 
 1: "and_zext_multiuse"
+4: "and_zext_multiuse" has unsupported operation: builtin.unregistered: llvm.zext
+
 4: "and_zext_multiuse" has unsupported operation: llvm.call
 
 1: "and_zext_vec"
@@ -1059,17 +970,27 @@
 1: "and_zext_eq_even"
 4: "and_zext_eq_even" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+4: "and_zext_eq_even" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+
 1: "and_zext_eq_even_commuted"
 4: "and_zext_eq_even_commuted" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+
+4: "and_zext_eq_even_commuted" has unsupported operation after optimization: builtin.unregistered: llvm.zext
 
 1: "and_zext_eq_odd"
 4: "and_zext_eq_odd" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "and_zext_eq_odd" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "and_zext_eq_odd_commuted"
 4: "and_zext_eq_odd_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "and_zext_eq_odd_commuted" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "and_zext_eq_zero"
 4: "and_zext_eq_zero" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "and_zext_eq_zero" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "canonicalize_and_add_power2_or_zero"
 4: "canonicalize_and_add_power2_or_zero" has unsupported operation: llvm.call
@@ -1130,4 +1051,6 @@
 
 1: "and_sext_multiuse"
 4: "and_sext_multiuse" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "and_sext_multiuse" has unsupported operation: builtin.unregistered: llvm.sext
 

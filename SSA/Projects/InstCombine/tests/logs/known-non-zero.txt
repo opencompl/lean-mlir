@@ -5,6 +5,8 @@
 
 4: "test0" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
+4: "test0" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "test0" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "test1"
@@ -13,6 +15,8 @@
 4: "test1" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test1" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+4: "test1" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "test1" has unsupported operation: builtin.unregistered: llvm.br
 
@@ -35,6 +39,8 @@
 4: "D60846_miscompile" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "D60846_miscompile" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "D60846_miscompile" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "D60846_miscompile" has unsupported operation: llvm.store
 

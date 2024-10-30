@@ -34,7 +34,7 @@ def test_after := [llvm|
   %1 = "llvm.mlir.constant"() <{value = 3 : i64}> : () -> i64
   %2 = llvm.lshr %arg2, %0 : i64
   %3 = llvm.lshr %arg2, %1 : i64
-  %4 = llvm.add %2, %3 overflow<nsw,nuw> : i64
+  %4 = llvm.add %2, %3 : i64
   "llvm.return"(%4) : (i64) -> ()
 }
 ]

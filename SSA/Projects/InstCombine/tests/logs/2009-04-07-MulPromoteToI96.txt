@@ -1,3 +1,7 @@
 1: "test"
-7: "test" is unchanged by InstCombine
+4: "test" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.zext
 

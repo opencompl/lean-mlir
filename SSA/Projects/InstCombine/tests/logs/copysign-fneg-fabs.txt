@@ -20,6 +20,8 @@
 
 4: "copysign_fneg_fabs_y" has unsupported operation: builtin.unregistered: llvm.fneg
 
+4: "copysign_fneg_fabs_y" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
 1: "fneg_copysign"
 4: "fneg_copysign" has unsupported operation: builtin.unregistered: llvm.fneg
 

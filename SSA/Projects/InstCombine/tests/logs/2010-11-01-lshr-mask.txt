@@ -1,21 +1,7 @@
 1: "main"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.trunc
-2: llvm.or
-2: llvm.and
-2: llvm.xor
-2: llvm.shl
-2: llvm.xor
-2: llvm.xor
-2: llvm.lshr
-2: llvm.mul
-2: llvm.zext
-2: llvm.return
+4: "main" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "main" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "foo"
 2: llvm.func

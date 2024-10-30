@@ -33,7 +33,7 @@ def lshr_add_after := [llvm|
   %2 = "llvm.mlir.constant"() <{value = -32 : i8}> : () -> i8
   %3 = llvm.srem %arg81, %0 : i8
   %4 = llvm.shl %3, %1 : i8
-  %5 = llvm.add %arg82, %4 : i8
+  %5 = llvm.add %4, %arg82 : i8
   %6 = llvm.and %5, %2 : i8
   "llvm.return"(%6) : (i8) -> ()
 }
@@ -44,39 +44,6 @@ theorem lshr_add_proof : lshr_add_before ⊑ lshr_add_after := by
   ---BEGIN lshr_add
   all_goals (try extract_goal ; sorry)
   ---END lshr_add
-
-
-
-def lshr_sub_before := [llvm|
-{
-^0(%arg77 : i8, %arg78 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %2 = llvm.srem %arg77, %0 : i8
-  %3 = llvm.lshr %arg78, %1 : i8
-  %4 = llvm.sub %2, %3 : i8
-  %5 = llvm.shl %4, %1 : i8
-  "llvm.return"(%5) : (i8) -> ()
-}
-]
-def lshr_sub_after := [llvm|
-{
-^0(%arg77 : i8, %arg78 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %2 = llvm.srem %arg77, %0 : i8
-  %3 = llvm.lshr %arg78, %1 : i8
-  %4 = llvm.sub %2, %3 overflow<nsw> : i8
-  %5 = llvm.shl %4, %1 : i8
-  "llvm.return"(%5) : (i8) -> ()
-}
-]
-theorem lshr_sub_proof : lshr_sub_before ⊑ lshr_sub_after := by
-  unfold lshr_sub_before lshr_sub_after
-  simp_alive_peephole
-  ---BEGIN lshr_sub
-  all_goals (try extract_goal ; sorry)
-  ---END lshr_sub
 
 
 
@@ -99,7 +66,7 @@ def lshr_and_after := [llvm|
   %1 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
   %2 = llvm.srem %arg73, %0 : i8
   %3 = llvm.shl %2, %1 : i8
-  %4 = llvm.and %arg74, %3 : i8
+  %4 = llvm.and %3, %arg74 : i8
   "llvm.return"(%4) : (i8) -> ()
 }
 ]
@@ -133,7 +100,7 @@ def lshr_or_after := [llvm|
   %3 = llvm.srem %arg69, %0 : i8
   %4 = llvm.shl %3, %1 : i8
   %5 = llvm.and %arg70, %2 : i8
-  %6 = llvm.or %5, %4 : i8
+  %6 = llvm.or %4, %5 : i8
   "llvm.return"(%6) : (i8) -> ()
 }
 ]
@@ -167,7 +134,7 @@ def lshr_xor_after := [llvm|
   %3 = llvm.srem %arg65, %0 : i8
   %4 = llvm.shl %3, %1 : i8
   %5 = llvm.and %arg66, %2 : i8
-  %6 = llvm.xor %5, %4 : i8
+  %6 = llvm.xor %4, %5 : i8
   "llvm.return"(%6) : (i8) -> ()
 }
 ]
@@ -213,43 +180,6 @@ theorem lshr_and_add_proof : lshr_and_add_before ⊑ lshr_and_add_after := by
   ---BEGIN lshr_and_add
   all_goals (try extract_goal ; sorry)
   ---END lshr_and_add
-
-
-
-def lshr_and_sub_before := [llvm|
-{
-^0(%arg53 : i8, %arg54 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 2 : i8}> : () -> i8
-  %2 = "llvm.mlir.constant"() <{value = 13 : i8}> : () -> i8
-  %3 = llvm.srem %arg53, %0 : i8
-  %4 = llvm.lshr %arg54, %1 : i8
-  %5 = llvm.and %4, %2 : i8
-  %6 = llvm.sub %3, %5 : i8
-  %7 = llvm.shl %6, %1 : i8
-  "llvm.return"(%7) : (i8) -> ()
-}
-]
-def lshr_and_sub_after := [llvm|
-{
-^0(%arg53 : i8, %arg54 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 2 : i8}> : () -> i8
-  %2 = "llvm.mlir.constant"() <{value = 13 : i8}> : () -> i8
-  %3 = llvm.srem %arg53, %0 : i8
-  %4 = llvm.lshr %arg54, %1 : i8
-  %5 = llvm.and %4, %2 : i8
-  %6 = llvm.sub %3, %5 overflow<nsw> : i8
-  %7 = llvm.shl %6, %1 : i8
-  "llvm.return"(%7) : (i8) -> ()
-}
-]
-theorem lshr_and_sub_proof : lshr_and_sub_before ⊑ lshr_and_sub_after := by
-  unfold lshr_and_sub_before lshr_and_sub_after
-  simp_alive_peephole
-  ---BEGIN lshr_and_sub
-  all_goals (try extract_goal ; sorry)
-  ---END lshr_and_sub
 
 
 

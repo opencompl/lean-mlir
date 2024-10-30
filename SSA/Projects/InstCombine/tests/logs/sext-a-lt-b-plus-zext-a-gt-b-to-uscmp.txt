@@ -1,0 +1,99 @@
+1: "signed_add"
+4: "signed_add" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "signed_add" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "signed_add" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "signed_add" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "unsigned_add"
+4: "unsigned_add" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "unsigned_add" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "unsigned_add" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "unsigned_add" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "signed_add_commuted1"
+4: "signed_add_commuted1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "signed_add_commuted1" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "signed_add_commuted1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "signed_add_commuted1" has unsupported operation: builtin.unregistered: llvm.sext
+
+1: "signed_add_commuted2"
+4: "signed_add_commuted2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "signed_add_commuted2" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "signed_add_commuted2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "signed_add_commuted2" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "signed_sub"
+4: "signed_sub" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "signed_sub" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "signed_sub" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "signed_sub" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "unsigned_sub"
+4: "unsigned_sub" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "unsigned_sub" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "unsigned_sub" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "unsigned_sub" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "signed_add_neg1"
+4: "signed_add_neg1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "signed_add_neg1" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "signed_add_neg1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "signed_add_neg1" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "signed_add_neg2"
+4: "signed_add_neg2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "signed_add_neg2" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "signed_add_neg2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "signed_add_neg2" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "signed_add_neg3"
+4: "signed_add_neg3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "signed_add_neg3" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "signed_add_neg3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "signed_add_neg3" has unsupported operation: builtin.unregistered: llvm.zext
+
+1: "signed_add_neg4"
+4: "signed_add_neg4" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "signed_add_neg4" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "signed_add_neg4" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "signed_add_neg4" has unsupported operation: builtin.unregistered: llvm.sext
+
+1: "signed_add_neg5"
+4: "signed_add_neg5" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "signed_add_neg5" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "signed_add_neg5" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "signed_add_neg5" has unsupported operation: builtin.unregistered: llvm.zext
+

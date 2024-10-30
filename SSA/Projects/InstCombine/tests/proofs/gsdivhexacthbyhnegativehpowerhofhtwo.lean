@@ -27,7 +27,7 @@ def t0_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 5 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
   %2 = llvm.ashr %arg15, %0 : i8
-  %3 = llvm.sub %1, %2 overflow<nsw> : i8
+  %3 = llvm.sub %1, %2 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -58,7 +58,7 @@ def prove_exact_with_high_mask_after := [llvm|
   %2 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
   %3 = llvm.ashr %arg8, %0 : i8
   %4 = llvm.and %3, %1 : i8
-  %5 = llvm.sub %2, %4 overflow<nsw> : i8
+  %5 = llvm.sub %2, %4 : i8
   "llvm.return"(%5) : (i8) -> ()
 }
 ]
@@ -86,7 +86,7 @@ def prove_exact_with_high_mask_limit_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 5 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
   %2 = llvm.ashr %arg6, %0 : i8
-  %3 = llvm.sub %1, %2 overflow<nsw> : i8
+  %3 = llvm.sub %1, %2 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]

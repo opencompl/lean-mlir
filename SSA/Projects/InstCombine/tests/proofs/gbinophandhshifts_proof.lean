@@ -38,22 +38,10 @@ theorem shl_add_add_thm :
     all_goals sorry
 
 
-theorem shl_add_add_fail_thm :
-  ∀ (e e_1 : IntW 8),
-    add (lshr e_1 (const? 2)) (add (lshr e (const? 2)) (const? 48)) ⊑
-      add (lshr e_1 (const? 2)) (add (lshr e (const? 2)) (const? 48) { «nsw» := true, «nuw» := true })
-        { «nsw» := false, «nuw» := true } := by 
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
-
-
 theorem shl_and_xor_thm :
   ∀ (e e_1 : IntW 8),
     LLVM.xor (shl e_1 (const? 1)) (LLVM.and (shl e (const? 1)) (const? 20)) ⊑
-      shl (LLVM.xor e_1 (LLVM.and e (const? 10))) (const? 1) := by 
+      shl (LLVM.xor (LLVM.and e (const? 10)) e_1) (const? 1) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -64,7 +52,7 @@ theorem shl_and_xor_thm :
 theorem shl_and_add_thm :
   ∀ (e e_1 : IntW 8),
     add (shl e_1 (const? 1)) (LLVM.and (shl e (const? 1)) (const? 119)) ⊑
-      shl (add e_1 (LLVM.and e (const? 59))) (const? 1) := by 
+      shl (add (LLVM.and e (const? 59)) e_1) (const? 1) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -75,7 +63,7 @@ theorem shl_and_add_thm :
 theorem lshr_or_and_thm :
   ∀ (e e_1 : IntW 8),
     LLVM.and (LLVM.or (lshr e_1 (const? 5)) (const? (-58))) (lshr e (const? 5)) ⊑
-      lshr (LLVM.and e (LLVM.or e_1 (const? (-64)))) (const? 5) := by 
+      lshr (LLVM.and (LLVM.or e_1 (const? (-64))) e) (const? 5) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -159,51 +147,7 @@ theorem shl_xor_xor_bad_mask_distribute_thm :
 theorem shl_add_and_thm :
   ∀ (e e_1 : IntW 8),
     LLVM.and (shl e_1 (const? 1)) (add (shl e (const? 1)) (const? 123)) ⊑
-      shl (LLVM.and e_1 (add e (const? 61))) (const? 1) := by 
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
-
-
-theorem lshr_and_add_fail_thm :
-  ∀ (e e_1 : IntW 8),
-    add (lshr e_1 (const? 1)) (LLVM.and (lshr e (const? 1)) (const? 123)) ⊑
-      add (lshr e_1 (const? 1)) (LLVM.and (lshr e (const? 1)) (const? 123)) { «nsw» := false, «nuw» := true } := by 
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
-
-
-theorem lshr_add_or_fail_thm :
-  ∀ (e e_1 : IntW 8),
-    LLVM.or (lshr e_1 (const? 1)) (add (lshr e (const? 1)) (const? 123)) ⊑
-      LLVM.or (lshr e_1 (const? 1)) (add (lshr e (const? 1)) (const? 123) { «nsw» := false, «nuw» := true }) := by 
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
-
-
-theorem lshr_add_xor_fail_thm :
-  ∀ (e e_1 : IntW 8),
-    LLVM.xor (lshr e_1 (const? 1)) (add (lshr e (const? 1)) (const? 123)) ⊑
-      LLVM.xor (lshr e_1 (const? 1)) (add (lshr e (const? 1)) (const? 123) { «nsw» := false, «nuw» := true }) := by 
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
-
-
-theorem shl_add_and_fail_mismatch_shift_thm :
-  ∀ (e e_1 : IntW 8),
-    LLVM.and (shl e_1 (const? 1)) (add (lshr e (const? 1)) (const? 123)) ⊑
-      LLVM.and (shl e_1 (const? 1)) (add (lshr e (const? 1)) (const? 123) { «nsw» := false, «nuw» := true }) := by 
+      shl (LLVM.and (add e (const? 61)) e_1) (const? 1) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -214,7 +158,7 @@ theorem shl_add_and_fail_mismatch_shift_thm :
 theorem and_ashr_not_thm :
   ∀ (e e_1 e_2 : IntW 8),
     LLVM.and (ashr e_2 e_1) (LLVM.xor (ashr e e_1) (const? (-1))) ⊑
-      ashr (LLVM.and e_2 (LLVM.xor e (const? (-1)))) e_1 := by 
+      ashr (LLVM.and (LLVM.xor e (const? (-1))) e_2) e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -225,7 +169,7 @@ theorem and_ashr_not_thm :
 theorem and_ashr_not_commuted_thm :
   ∀ (e e_1 e_2 : IntW 8),
     LLVM.and (LLVM.xor (ashr e_2 e_1) (const? (-1))) (ashr e e_1) ⊑
-      ashr (LLVM.and e (LLVM.xor e_2 (const? (-1)))) e_1 := by 
+      ashr (LLVM.and (LLVM.xor e_2 (const? (-1))) e) e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -236,7 +180,7 @@ theorem and_ashr_not_commuted_thm :
 theorem or_ashr_not_thm :
   ∀ (e e_1 e_2 : IntW 8),
     LLVM.or (ashr e_2 e_1) (LLVM.xor (ashr e e_1) (const? (-1))) ⊑
-      ashr (LLVM.or e_2 (LLVM.xor e (const? (-1)))) e_1 := by 
+      ashr (LLVM.or (LLVM.xor e (const? (-1))) e_2) e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -247,7 +191,7 @@ theorem or_ashr_not_thm :
 theorem or_ashr_not_commuted_thm :
   ∀ (e e_1 e_2 : IntW 8),
     LLVM.or (LLVM.xor (ashr e_2 e_1) (const? (-1))) (ashr e e_1) ⊑
-      ashr (LLVM.or e (LLVM.xor e_2 (const? (-1)))) e_1 := by 
+      ashr (LLVM.or (LLVM.xor e_2 (const? (-1))) e) e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

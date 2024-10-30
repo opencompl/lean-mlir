@@ -13,33 +13,6 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gselect_meta_statements
 
-def shrink_select_before := [llvm|
-{
-^0(%arg52 : i1, %arg53 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = "llvm.select"(%arg52, %arg53, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
-  %2 = llvm.trunc %1 : i32 to i8
-  "llvm.return"(%2) : (i8) -> ()
-}
-]
-def shrink_select_after := [llvm|
-{
-^0(%arg52 : i1, %arg53 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i8}> : () -> i8
-  %1 = llvm.trunc %arg53 : i32 to i8
-  %2 = "llvm.select"(%arg52, %1, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
-  "llvm.return"(%2) : (i8) -> ()
-}
-]
-theorem shrink_select_proof : shrink_select_before ⊑ shrink_select_after := by
-  unfold shrink_select_before shrink_select_after
-  simp_alive_peephole
-  ---BEGIN shrink_select
-  all_goals (try extract_goal ; sorry)
-  ---END shrink_select
-
-
-
 def not_cond_before := [llvm|
 {
 ^0(%arg24 : i1, %arg25 : i32, %arg26 : i32):
@@ -78,7 +51,7 @@ def select_add_after := [llvm|
 ^0(%arg15 : i1, %arg16 : i64, %arg17 : i64):
   %0 = "llvm.mlir.constant"() <{value = 0 : i64}> : () -> i64
   %1 = "llvm.select"(%arg15, %arg17, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
-  %2 = llvm.add %arg16, %1 : i64
+  %2 = llvm.add %1, %arg16 : i64
   "llvm.return"(%2) : (i64) -> ()
 }
 ]

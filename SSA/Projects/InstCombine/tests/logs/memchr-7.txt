@@ -10,6 +10,8 @@
 4: "strchr_to_memchr_n_equals_len" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "memchr_n_equals_len"
+4: "memchr_n_equals_len" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "memchr_n_equals_len" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "memchr_n_equals_len" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -34,6 +36,8 @@
 
 4: "memchr_no_zero_cmp2" has unsupported operation: llvm.mlir.zero
 
+4: "memchr_no_zero_cmp2" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "memchr_no_zero_cmp2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "memchr_no_zero_cmp2" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -48,6 +52,8 @@
 4: "memchr_n_equals_len_minsize" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "memchr_n_equals_len2_minsize"
+4: "memchr_n_equals_len2_minsize" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "memchr_n_equals_len2_minsize" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "memchr_n_equals_len2_minsize" has unsupported operation: builtin.unregistered: llvm.icmp

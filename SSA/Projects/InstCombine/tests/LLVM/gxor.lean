@@ -319,62 +319,6 @@ theorem test19_proof : test19_before ⊑ test19_after := by
 
 
 
-def test22_before := [llvm|
-{
-^0(%arg189 : i1):
-  %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
-  %1 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %2 = llvm.xor %arg189, %0 : i1
-  %3 = llvm.zext %2 : i1 to i32
-  %4 = llvm.xor %3, %1 : i32
-  "llvm.return"(%4) : (i32) -> ()
-}
-]
-def test22_after := [llvm|
-{
-^0(%arg189 : i1):
-  %0 = llvm.zext %arg189 : i1 to i32
-  "llvm.return"(%0) : (i32) -> ()
-}
-]
-theorem test22_proof : test22_before ⊑ test22_after := by
-  unfold test22_before test22_after
-  simp_alive_peephole
-  ---BEGIN test22
-  all_goals (try extract_goal ; sorry)
-  ---END test22
-
-
-
-def fold_zext_xor_sandwich_before := [llvm|
-{
-^0(%arg188 : i1):
-  %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
-  %1 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
-  %2 = llvm.xor %arg188, %0 : i1
-  %3 = llvm.zext %2 : i1 to i32
-  %4 = llvm.xor %3, %1 : i32
-  "llvm.return"(%4) : (i32) -> ()
-}
-]
-def fold_zext_xor_sandwich_after := [llvm|
-{
-^0(%arg188 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i32}> : () -> i32
-  %1 = llvm.zext %arg188 : i1 to i32
-  %2 = llvm.xor %1, %0 : i32
-  "llvm.return"(%2) : (i32) -> ()
-}
-]
-theorem fold_zext_xor_sandwich_proof : fold_zext_xor_sandwich_before ⊑ fold_zext_xor_sandwich_after := by
-  unfold fold_zext_xor_sandwich_before fold_zext_xor_sandwich_after
-  simp_alive_peephole
-  ---BEGIN fold_zext_xor_sandwich
-  all_goals (try extract_goal ; sorry)
-  ---END fold_zext_xor_sandwich
-
-
-
 def test25_before := [llvm|
 {
 ^0(%arg181 : i32, %arg182 : i32):
@@ -388,7 +332,7 @@ def test25_before := [llvm|
 def test25_after := [llvm|
 {
 ^0(%arg181 : i32, %arg182 : i32):
-  %0 = llvm.and %arg181, %arg182 : i32
+  %0 = llvm.and %arg182, %arg181 : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
@@ -841,7 +785,7 @@ def not_is_canonical_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
   %2 = llvm.xor %arg87, %0 : i32
-  %3 = llvm.add %arg88, %2 : i32
+  %3 = llvm.add %2, %arg88 : i32
   %4 = llvm.shl %3, %1 : i32
   "llvm.return"(%4) : (i32) -> ()
 }
@@ -959,7 +903,7 @@ def xor_andn_commute2_after := [llvm|
 ^0(%arg70 : i33, %arg71 : i33):
   %0 = "llvm.mlir.constant"() <{value = 42 : i33}> : () -> i33
   %1 = llvm.udiv %0, %arg71 : i33
-  %2 = llvm.or %arg70, %1 : i33
+  %2 = llvm.or %1, %arg70 : i33
   "llvm.return"(%2) : (i33) -> ()
 }
 ]
@@ -1084,7 +1028,7 @@ def xor_orn_commute2_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %2 = llvm.udiv %0, %arg60 : i32
-  %3 = llvm.and %arg59, %2 : i32
+  %3 = llvm.and %2, %arg59 : i32
   %4 = llvm.xor %3, %1 : i32
   "llvm.return"(%4) : (i32) -> ()
 }
@@ -1261,7 +1205,7 @@ def PR96857_xor_with_noundef_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -1 : i4}> : () -> i4
   %1 = llvm.and %arg35, %arg33 : i4
   %2 = llvm.xor %arg35, %0 : i4
-  %3 = llvm.and %arg34, %2 : i4
+  %3 = llvm.and %2, %arg34 : i4
   %4 = llvm.or %1, %3 : i4
   "llvm.return"(%4) : (i4) -> ()
 }
@@ -1292,7 +1236,7 @@ def PR96857_xor_without_noundef_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -1 : i4}> : () -> i4
   %1 = llvm.and %arg32, %arg30 : i4
   %2 = llvm.xor %arg32, %0 : i4
-  %3 = llvm.and %arg31, %2 : i4
+  %3 = llvm.and %2, %arg31 : i4
   %4 = llvm.or %1, %3 : i4
   "llvm.return"(%4) : (i4) -> ()
 }
@@ -1317,7 +1261,10 @@ def or_disjoint_with_xor_before := [llvm|
 def or_disjoint_with_xor_after := [llvm|
 {
 ^0(%arg28 : i32, %arg29 : i32):
-  "llvm.return"(%arg29) : (i32) -> ()
+  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %1 = llvm.xor %arg28, %0 : i32
+  %2 = llvm.and %1, %arg29 : i32
+  "llvm.return"(%2) : (i32) -> ()
 }
 ]
 theorem or_disjoint_with_xor_proof : or_disjoint_with_xor_before ⊑ or_disjoint_with_xor_after := by
@@ -1340,7 +1287,10 @@ def xor_with_or_disjoint_ab_before := [llvm|
 def xor_with_or_disjoint_ab_after := [llvm|
 {
 ^0(%arg26 : i32, %arg27 : i32):
-  "llvm.return"(%arg27) : (i32) -> ()
+  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %1 = llvm.xor %arg26, %0 : i32
+  %2 = llvm.and %1, %arg27 : i32
+  "llvm.return"(%2) : (i32) -> ()
 }
 ]
 theorem xor_with_or_disjoint_ab_proof : xor_with_or_disjoint_ab_before ⊑ xor_with_or_disjoint_ab_after := by
@@ -1363,7 +1313,10 @@ def xor_with_or_disjoint_ba_before := [llvm|
 def xor_with_or_disjoint_ba_after := [llvm|
 {
 ^0(%arg24 : i32, %arg25 : i32):
-  "llvm.return"(%arg24) : (i32) -> ()
+  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %1 = llvm.xor %arg25, %0 : i32
+  %2 = llvm.and %1, %arg24 : i32
+  "llvm.return"(%2) : (i32) -> ()
 }
 ]
 theorem xor_with_or_disjoint_ba_proof : xor_with_or_disjoint_ba_before ⊑ xor_with_or_disjoint_ba_after := by
@@ -1372,38 +1325,5 @@ theorem xor_with_or_disjoint_ba_proof : xor_with_or_disjoint_ba_before ⊑ xor_w
   ---BEGIN xor_with_or_disjoint_ba
   all_goals (try extract_goal ; sorry)
   ---END xor_with_or_disjoint_ba
-
-
-
-def select_or_disjoint_or_before := [llvm|
-{
-^0(%arg14 : i32, %arg15 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 4 : i32}> : () -> i32
-  %2 = "llvm.select"(%arg15, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
-  %3 = llvm.shl %arg14, %1 : i32
-  %4 = llvm.or %2, %3 : i32
-  %5 = llvm.add %4, %1 : i32
-  "llvm.return"(%5) : (i32) -> ()
-}
-]
-def select_or_disjoint_or_after := [llvm|
-{
-^0(%arg14 : i32, %arg15 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 4 : i32}> : () -> i32
-  %2 = "llvm.select"(%arg15, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
-  %3 = llvm.shl %arg14, %1 : i32
-  %4 = llvm.or %2, %3 : i32
-  %5 = llvm.add %4, %1 overflow<nsw,nuw> : i32
-  "llvm.return"(%5) : (i32) -> ()
-}
-]
-theorem select_or_disjoint_or_proof : select_or_disjoint_or_before ⊑ select_or_disjoint_or_after := by
-  unfold select_or_disjoint_or_before select_or_disjoint_or_after
-  simp_alive_peephole
-  ---BEGIN select_or_disjoint_or
-  all_goals (try extract_goal ; sorry)
-  ---END select_or_disjoint_or
 
 

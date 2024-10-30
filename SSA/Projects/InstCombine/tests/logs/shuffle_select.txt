@@ -142,21 +142,7 @@
 4: "srem" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 1: "fadd_maybe_nan"
-4: "fadd_maybe_nan" has unsupported operation: builtin.unregistered: llvm.mlir.poison
-
-4: "fadd_maybe_nan" has unsupported operation: llvm.mlir.undef
-
-4: "fadd_maybe_nan" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "fadd_maybe_nan" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "fadd_maybe_nan" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "fadd_maybe_nan" has unsupported operation: builtin.unregistered: llvm.insertelement
-
 4: "fadd_maybe_nan" has unsupported operation: builtin.unregistered: llvm.fadd
-
-4: "fadd_maybe_nan" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 1: "fadd"
 4: "fadd" has unsupported operation: builtin.unregistered: llvm.fadd
@@ -751,7 +737,29 @@
 8: "add_or" contains vectors which are unsupported
 
 1: "add_or_disjoint"
-8: "add_or_disjoint" contains vectors which are unsupported
+4: "add_or_disjoint" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "add_or_disjoint" has unsupported operation: llvm.mlir.undef
+
+4: "add_or_disjoint" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "add_or_disjoint" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "add_or_disjoint" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "add_or_disjoint" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "add_or_disjoint" has unsupported operation: llvm.mlir.undef
+
+4: "add_or_disjoint" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "add_or_disjoint" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "add_or_disjoint" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "add_or_disjoint" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "add_or_disjoint" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 1: "or_add"
 8: "or_add" contains vectors which are unsupported

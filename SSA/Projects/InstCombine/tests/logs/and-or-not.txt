@@ -185,14 +185,7 @@
 4: "xor_to_xor12" has unsupported operation: builtin.unregistered: llvm.fptosi
 
 1: "PR32830"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.xor
-2: llvm.xor
-2: llvm.or
-2: llvm.or
-2: llvm.and
-2: llvm.return
+7: "PR32830" is unchanged by InstCombine
 
 1: "and_to_nxor_multiuse"
 4: "and_to_nxor_multiuse" has unsupported operation: builtin.unregistered: llvm.fptosi

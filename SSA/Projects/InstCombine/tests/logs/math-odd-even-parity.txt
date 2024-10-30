@@ -11,9 +11,15 @@
 5: "use" is empty
 
 1: "test_erf"
+4: "test_erf" has unsupported operation: builtin.unregistered: llvm.fneg
+
 4: "test_erf" has unsupported operation: llvm.call
 
+4: "test_erf" has unsupported operation: builtin.unregistered: llvm.fneg
+
 1: "test_cos_fabs"
+4: "test_cos_fabs" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
 4: "test_cos_fabs" has unsupported operation: llvm.call
 
 1: "test_erf_multi_use"

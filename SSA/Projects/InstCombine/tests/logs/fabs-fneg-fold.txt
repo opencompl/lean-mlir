@@ -1,16 +1,26 @@
 1: "fabs_fneg_basic"
+4: "fabs_fneg_basic" has unsupported operation: builtin.unregistered: llvm.fneg
+
 4: "fabs_fneg_basic" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
 1: "fabs_fneg_v2f32"
+4: "fabs_fneg_v2f32" has unsupported operation: builtin.unregistered: llvm.fneg
+
 4: "fabs_fneg_v2f32" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
 1: "fabs_fneg_f64"
+4: "fabs_fneg_f64" has unsupported operation: builtin.unregistered: llvm.fneg
+
 4: "fabs_fneg_f64" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
 1: "fabs_fneg_v4f64"
+4: "fabs_fneg_v4f64" has unsupported operation: builtin.unregistered: llvm.fneg
+
 4: "fabs_fneg_v4f64" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
 1: "fabs_fneg_f16"
+4: "fabs_fneg_f16" has unsupported operation: builtin.unregistered: llvm.fneg
+
 4: "fabs_fneg_f16" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
 1: "fabs_copysign_nnan"

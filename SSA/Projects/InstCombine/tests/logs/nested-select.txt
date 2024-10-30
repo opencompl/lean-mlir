@@ -172,13 +172,21 @@
 1: "test_implied_true"
 4: "test_implied_true" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "test_implied_true" has unsupported operation: builtin.unregistered: llvm.icmp
+
 1: "test_implied_true_vec"
+4: "test_implied_true_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
 4: "test_implied_true_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test_implied_true_falseval"
 4: "test_implied_true_falseval" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "test_implied_true_falseval" has unsupported operation: builtin.unregistered: llvm.icmp
+
 1: "test_implied_false"
+4: "test_implied_false" has unsupported operation: builtin.unregistered: llvm.icmp
+
 4: "test_implied_false" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test_imply_fail"

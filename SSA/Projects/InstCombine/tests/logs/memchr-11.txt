@@ -2,9 +2,13 @@
 5: "memchr" is empty
 
 1: "fold_memchr_a_c_5_eq_a"
+4: "fold_memchr_a_c_5_eq_a" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "fold_memchr_a_c_5_eq_a" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "fold_memchr_a_c_n_eq_a"
+4: "fold_memchr_a_c_n_eq_a" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "fold_memchr_a_c_n_eq_a" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "fold_memchr_a_c_n_eq_a" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -21,15 +25,21 @@
 1: "fold_memchr_s_c_15_eq_s"
 4: "fold_memchr_s_c_15_eq_s" has unsupported operation: llvm.load
 
+4: "fold_memchr_s_c_15_eq_s" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "fold_memchr_s_c_15_eq_s" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "fold_memchr_s_c_17_neq_s"
 4: "fold_memchr_s_c_17_neq_s" has unsupported operation: llvm.load
 
+4: "fold_memchr_s_c_17_neq_s" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "fold_memchr_s_c_17_neq_s" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "fold_memchr_s_c_nz_eq_s"
 4: "fold_memchr_s_c_nz_eq_s" has unsupported operation: llvm.load
+
+4: "fold_memchr_s_c_nz_eq_s" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "fold_memchr_s_c_nz_eq_s" has unsupported operation: builtin.unregistered: llvm.icmp
 

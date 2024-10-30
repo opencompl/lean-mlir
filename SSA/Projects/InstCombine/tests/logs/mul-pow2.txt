@@ -48,7 +48,11 @@
 8: "mul_x_selectp2_vec" contains vectors which are unsupported
 
 1: "shl_add_log_may_cause_poison_pr62175_fail"
-7: "shl_add_log_may_cause_poison_pr62175_fail" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.mul
+2: llvm.return
 
 1: "shl_add_log_may_cause_poison_pr62175_with_nuw"
 2: llvm.func

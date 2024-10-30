@@ -3,3 +3,5 @@
 
 4: "sink_i1_casts" has unsupported operation: builtin.unregistered: llvm.br
 
+4: "sink_i1_casts" has unsupported operation: builtin.unregistered: llvm.zext
+

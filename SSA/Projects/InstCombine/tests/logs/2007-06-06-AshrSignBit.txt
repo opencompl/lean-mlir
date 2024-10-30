@@ -5,6 +5,8 @@
 
 4: "av_cmp_q_cond_true" has unsupported operation: llvm.load
 
+4: "av_cmp_q_cond_true" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "av_cmp_q_cond_true" has unsupported operation: llvm.store
 
 4: "av_cmp_q_cond_true" has unsupported operation: llvm.store

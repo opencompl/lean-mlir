@@ -99,8 +99,8 @@ def add_nsw_const_const_sub_nsw_before := [llvm|
 ^0(%arg60 : i8):
   %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = -127 : i8}> : () -> i8
-  %2 = llvm.add %arg60, %0 overflow<nsw> : i8
-  %3 = llvm.sub %1, %2 overflow<nsw> : i8
+  %2 = llvm.add %arg60, %0 : i8
+  %3 = llvm.sub %1, %2 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -108,7 +108,7 @@ def add_nsw_const_const_sub_nsw_after := [llvm|
 {
 ^0(%arg60 : i8):
   %0 = "llvm.mlir.constant"() <{value = -128 : i8}> : () -> i8
-  %1 = llvm.sub %0, %arg60 overflow<nsw> : i8
+  %1 = llvm.sub %0, %arg60 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
@@ -126,7 +126,7 @@ def add_nsw_const_const_sub_before := [llvm|
 ^0(%arg59 : i8):
   %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = -127 : i8}> : () -> i8
-  %2 = llvm.add %arg59, %0 overflow<nsw> : i8
+  %2 = llvm.add %arg59, %0 : i8
   %3 = llvm.sub %1, %2 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
@@ -154,7 +154,7 @@ def add_const_const_sub_nsw_before := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = -127 : i8}> : () -> i8
   %2 = llvm.add %arg58, %0 : i8
-  %3 = llvm.sub %1, %2 overflow<nsw> : i8
+  %3 = llvm.sub %1, %2 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -180,8 +180,8 @@ def add_nsw_const_const_sub_nsw_ov_before := [llvm|
 ^0(%arg57 : i8):
   %0 = "llvm.mlir.constant"() <{value = 2 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = -127 : i8}> : () -> i8
-  %2 = llvm.add %arg57, %0 overflow<nsw> : i8
-  %3 = llvm.sub %1, %2 overflow<nsw> : i8
+  %2 = llvm.add %arg57, %0 : i8
+  %3 = llvm.sub %1, %2 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -207,8 +207,8 @@ def add_nuw_const_const_sub_nuw_before := [llvm|
 ^0(%arg56 : i8):
   %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = -127 : i8}> : () -> i8
-  %2 = llvm.add %arg56, %0 overflow<nuw> : i8
-  %3 = llvm.sub %1, %2 overflow<nuw> : i8
+  %2 = llvm.add %arg56, %0 : i8
+  %3 = llvm.sub %1, %2 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -216,7 +216,7 @@ def add_nuw_const_const_sub_nuw_after := [llvm|
 {
 ^0(%arg56 : i8):
   %0 = "llvm.mlir.constant"() <{value = -128 : i8}> : () -> i8
-  %1 = llvm.sub %0, %arg56 overflow<nuw> : i8
+  %1 = llvm.sub %0, %arg56 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
@@ -234,7 +234,7 @@ def add_nuw_const_const_sub_before := [llvm|
 ^0(%arg55 : i8):
   %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = -127 : i8}> : () -> i8
-  %2 = llvm.add %arg55, %0 overflow<nuw> : i8
+  %2 = llvm.add %arg55, %0 : i8
   %3 = llvm.sub %1, %2 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
@@ -262,7 +262,7 @@ def add_const_const_sub_nuw_before := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = -127 : i8}> : () -> i8
   %2 = llvm.add %arg54, %0 : i8
-  %3 = llvm.sub %1, %2 overflow<nuw> : i8
+  %3 = llvm.sub %1, %2 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -452,7 +452,7 @@ def addsub_combine_constants_before := [llvm|
   %1 = "llvm.mlir.constant"() <{value = 10 : i7}> : () -> i7
   %2 = llvm.add %arg14, %0 : i7
   %3 = llvm.sub %1, %arg15 : i7
-  %4 = llvm.add %2, %3 overflow<nsw> : i7
+  %4 = llvm.add %2, %3 : i7
   "llvm.return"(%4) : (i7) -> ()
 }
 ]
@@ -506,8 +506,8 @@ def sub_from_constant_commute_before := [llvm|
 ^0(%arg4 : i5, %arg5 : i5):
   %0 = "llvm.mlir.constant"() <{value = 10 : i5}> : () -> i5
   %1 = llvm.mul %arg5, %arg5 : i5
-  %2 = llvm.sub %0, %arg4 overflow<nsw> : i5
-  %3 = llvm.add %1, %2 overflow<nsw> : i5
+  %2 = llvm.sub %0, %arg4 : i5
+  %3 = llvm.add %1, %2 : i5
   "llvm.return"(%3) : (i5) -> ()
 }
 ]

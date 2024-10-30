@@ -110,25 +110,13 @@
 4: "test20" has unsupported operation: llvm.return
 
 1: "test22"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.xor
-2: llvm.zext
-2: llvm.xor
-2: llvm.return
+4: "test22" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "fold_zext_xor_sandwich"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.xor
-2: llvm.zext
-2: llvm.xor
-2: llvm.return
+4: "fold_zext_xor_sandwich" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "fold_zext_xor_sandwich_vec"
-8: "fold_zext_xor_sandwich_vec" contains vectors which are unsupported
+4: "fold_zext_xor_sandwich_vec" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "test23"
 4: "test23" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -146,6 +134,8 @@
 
 1: "test27"
 4: "test27" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test27" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "test28"
 2: llvm.func
@@ -407,6 +397,8 @@
 1: "not_lshr_vec"
 4: "not_lshr_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "not_lshr_vec" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "not_lshr_extra_use"
 4: "not_lshr_extra_use" has unsupported operation: llvm.call
 
@@ -426,6 +418,8 @@
 
 1: "not_ashr_vec"
 4: "not_ashr_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "not_ashr_vec" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "not_ashr_extra_use"
 4: "not_ashr_extra_use" has unsupported operation: llvm.call
@@ -612,17 +606,10 @@
 7: "select_or_disjoint_xor_vec" is unchanged by InstCombine
 
 1: "select_or_disjoint_or"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: builtin.unregistered: llvm.select
-2: llvm.shl
-2: llvm.or
-2: llvm.add
-2: llvm.return
+7: "select_or_disjoint_or" is unchanged by InstCombine
 
 1: "select_or_disjoint_or_vec"
-8: "select_or_disjoint_or_vec" contains vectors which are unsupported
+7: "select_or_disjoint_or_vec" is unchanged by InstCombine
 
 1: "or_multi_use_disjoint_with_xor"
 7: "or_multi_use_disjoint_with_xor" is unchanged by InstCombine

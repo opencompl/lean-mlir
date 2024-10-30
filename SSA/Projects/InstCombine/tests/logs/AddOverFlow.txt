@@ -1,27 +1,11 @@
 1: "oppositesign"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.or
-2: llvm.and
-2: llvm.add
-2: llvm.return
+7: "oppositesign" is unchanged by InstCombine
 
 1: "zero_sign_bit"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.and
-2: llvm.add
-2: llvm.return
+7: "zero_sign_bit" is unchanged by InstCombine
 
 1: "zero_sign_bit2"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.and
-2: llvm.and
-2: llvm.add
-2: llvm.return
+7: "zero_sign_bit2" is unchanged by InstCombine
 
 1: "bounded"
 5: "bounded" is empty
@@ -48,70 +32,28 @@
 4: "add_bounded_values_2" has unsupported operation: builtin.unregistered: llvm.landingpad
 
 1: "ripple_nsw1"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.and
-2: llvm.and
-2: llvm.add
-2: llvm.return
+7: "ripple_nsw1" is unchanged by InstCombine
 
 1: "ripple_nsw2"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.and
-2: llvm.and
-2: llvm.add
-2: llvm.return
+7: "ripple_nsw2" is unchanged by InstCombine
 
 1: "ripple_nsw3"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.and
-2: llvm.and
-2: llvm.add
-2: llvm.return
+7: "ripple_nsw3" is unchanged by InstCombine
 
 1: "ripple_nsw4"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.and
-2: llvm.and
-2: llvm.add
-2: llvm.return
+7: "ripple_nsw4" is unchanged by InstCombine
 
 1: "ripple_nsw5"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.or
-2: llvm.or
-2: llvm.add
-2: llvm.return
+7: "ripple_nsw5" is unchanged by InstCombine
 
 1: "ripple_nsw6"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.or
-2: llvm.or
-2: llvm.add
-2: llvm.return
+7: "ripple_nsw6" is unchanged by InstCombine
 
 1: "ripple_no_nsw1"
 7: "ripple_no_nsw1" is unchanged by InstCombine
 
 1: "ripple_no_nsw2"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.and
-2: llvm.and
-2: llvm.add
-2: llvm.return
+7: "ripple_no_nsw2" is unchanged by InstCombine
 
 1: "ripple_no_nsw3"
 7: "ripple_no_nsw3" is unchanged by InstCombine
@@ -126,10 +68,5 @@
 7: "ripple_no_nsw6" is unchanged by InstCombine
 
 1: "PR38021"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.lshr
-2: llvm.add
-2: llvm.return
+7: "PR38021" is unchanged by InstCombine
 

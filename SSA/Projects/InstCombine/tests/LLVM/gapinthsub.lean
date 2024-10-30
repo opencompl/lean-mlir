@@ -146,7 +146,7 @@ def test6_after := [llvm|
 ^0(%arg17 : i57, %arg18 : i57):
   %0 = "llvm.mlir.constant"() <{value = -1 : i57}> : () -> i57
   %1 = llvm.xor %arg18, %0 : i57
-  %2 = llvm.and %arg17, %1 : i57
+  %2 = llvm.and %1, %arg17 : i57
   "llvm.return"(%2) : (i57) -> ()
 }
 ]

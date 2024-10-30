@@ -6,7 +6,7 @@ open LLVM
 
 section gapinthandhxorhmerge_proof
 theorem test1_thm :
-  ∀ (e e_1 e_2 : IntW 57), LLVM.xor (LLVM.and e_2 e_1) (LLVM.and e_2 e) ⊑ LLVM.and e_2 (LLVM.xor e_1 e) := by 
+  ∀ (e e_1 e_2 : IntW 57), LLVM.xor (LLVM.and e_2 e_1) (LLVM.and e_2 e) ⊑ LLVM.and (LLVM.xor e_1 e) e_2 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

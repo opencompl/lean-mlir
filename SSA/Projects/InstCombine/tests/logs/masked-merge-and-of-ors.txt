@@ -1,14 +1,8 @@
 1: "p"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.xor
-2: llvm.or
-2: llvm.or
-2: llvm.and
-2: llvm.return
+7: "p" is unchanged by InstCombine
 
 1: "p_splatvec"
-8: "p_splatvec" contains vectors which are unsupported
+7: "p_splatvec" is unchanged by InstCombine
 
 1: "p_vec_undef"
 4: "p_vec_undef" has unsupported operation: llvm.mlir.undef
@@ -53,12 +47,6 @@
 5: "gen32" is empty
 
 1: "p_commutative0"
-7: "p_commutative0" is unchanged by InstCombine
-
-1: "p_commutative1"
-4: "p_commutative1" has unsupported operation: llvm.call
-
-1: "p_commutative2"
 2: llvm.func
 2: llvm.mlir.constant
 2: llvm.xor
@@ -67,11 +55,23 @@
 2: llvm.and
 2: llvm.return
 
+1: "p_commutative1"
+4: "p_commutative1" has unsupported operation: llvm.call
+
+1: "p_commutative2"
+7: "p_commutative2" is unchanged by InstCombine
+
 1: "p_commutative3"
 4: "p_commutative3" has unsupported operation: llvm.call
 
 1: "p_commutative4"
-7: "p_commutative4" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.or
+2: llvm.or
+2: llvm.and
+2: llvm.return
 
 1: "p_commutative5"
 4: "p_commutative5" has unsupported operation: llvm.call
@@ -131,13 +131,7 @@
 7: "n1_badxor" is unchanged by InstCombine
 
 1: "n2_badmask"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.xor
-2: llvm.or
-2: llvm.or
-2: llvm.and
-2: llvm.return
+7: "n2_badmask" is unchanged by InstCombine
 
 1: "n3_constmask_badmask_set"
 7: "n3_constmask_badmask_set" is unchanged by InstCombine

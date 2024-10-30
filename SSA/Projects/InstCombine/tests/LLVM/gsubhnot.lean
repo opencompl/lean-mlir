@@ -27,7 +27,7 @@ def sub_not_after := [llvm|
 ^0(%arg22 : i8, %arg23 : i8):
   %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
   %1 = llvm.xor %arg22, %0 : i8
-  %2 = llvm.add %arg23, %1 : i8
+  %2 = llvm.add %1, %arg23 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
@@ -54,7 +54,7 @@ def dec_sub_after := [llvm|
 ^0(%arg16 : i8, %arg17 : i8):
   %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
   %1 = llvm.xor %arg17, %0 : i8
-  %2 = llvm.add %arg16, %1 : i8
+  %2 = llvm.add %1, %arg16 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
@@ -81,7 +81,7 @@ def sub_inc_after := [llvm|
 ^0(%arg10 : i8, %arg11 : i8):
   %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
   %1 = llvm.xor %arg10, %0 : i8
-  %2 = llvm.add %arg11, %1 : i8
+  %2 = llvm.add %1, %arg11 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
@@ -108,7 +108,7 @@ def sub_dec_after := [llvm|
 ^0(%arg4 : i8, %arg5 : i8):
   %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
   %1 = llvm.xor %arg5, %0 : i8
-  %2 = llvm.add %arg4, %1 : i8
+  %2 = llvm.add %1, %arg4 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]

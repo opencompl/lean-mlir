@@ -1,75 +1,49 @@
 1: "sext_xor_sub"
-2: llvm.func
-2: llvm.sext
-2: llvm.xor
-2: llvm.sub
-2: llvm.return
+4: "sext_xor_sub" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "sext_xor_sub_1"
-2: llvm.func
-2: llvm.sext
-2: llvm.xor
-2: llvm.sub
-2: llvm.return
+4: "sext_xor_sub_1" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "sext_xor_sub_2"
-2: llvm.func
-2: llvm.sext
-2: llvm.xor
-2: llvm.sub
-2: llvm.return
+4: "sext_xor_sub_2" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "sext_xor_sub_3"
-2: llvm.func
-2: llvm.sext
-2: llvm.xor
-2: llvm.sub
-2: llvm.return
+4: "sext_xor_sub_3" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "sext_non_bool_xor_sub"
-7: "sext_non_bool_xor_sub" is unchanged by InstCombine
+4: "sext_non_bool_xor_sub" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "sext_non_bool_xor_sub_1"
-2: llvm.func
-2: llvm.sext
-2: llvm.xor
-2: llvm.sub
-2: llvm.return
+4: "sext_non_bool_xor_sub_1" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "sext_diff_i1_xor_sub"
-2: llvm.func
-2: llvm.sext
-2: llvm.sext
-2: llvm.xor
-2: llvm.sub
-2: llvm.return
+4: "sext_diff_i1_xor_sub" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "sext_diff_i1_xor_sub" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "sext_diff_i1_xor_sub_1"
-2: llvm.func
-2: llvm.sext
-2: llvm.sext
-2: llvm.xor
-2: llvm.sub
-2: llvm.return
+4: "sext_diff_i1_xor_sub_1" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "sext_diff_i1_xor_sub_1" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "sext_multi_uses"
-2: llvm.func
-2: llvm.sext
-2: llvm.xor
-2: llvm.sub
-2: llvm.mul
-2: llvm.add
-2: llvm.return
+4: "sext_multi_uses" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "xor_multi_uses"
-7: "xor_multi_uses" is unchanged by InstCombine
+4: "xor_multi_uses" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "absdiff"
 4: "absdiff" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "absdiff" has unsupported operation: builtin.unregistered: llvm.sext
+
 1: "absdiff1"
 4: "absdiff1" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "absdiff1" has unsupported operation: builtin.unregistered: llvm.sext
+
 1: "absdiff2"
 4: "absdiff2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "absdiff2" has unsupported operation: builtin.unregistered: llvm.sext
 

@@ -16,7 +16,7 @@
 
 4: "bar" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "bar" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+4: "bar" has unsupported operation: builtin.unregistered: llvm.sext
 
 4: "bar" has unsupported operation: llvm.getelementptr
 

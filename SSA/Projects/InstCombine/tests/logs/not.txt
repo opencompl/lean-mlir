@@ -237,23 +237,35 @@
 4: "not_logicalOr_not_op0_use2" has unsupported operation: llvm.call
 
 1: "bitcast_to_wide_elts_sext_bool"
+4: "bitcast_to_wide_elts_sext_bool" has unsupported operation: builtin.unregistered: llvm.sext
+
 4: "bitcast_to_wide_elts_sext_bool" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 1: "bitcast_to_narrow_elts_sext_bool"
+4: "bitcast_to_narrow_elts_sext_bool" has unsupported operation: builtin.unregistered: llvm.sext
+
 4: "bitcast_to_narrow_elts_sext_bool" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 1: "bitcast_to_vec_sext_bool"
+4: "bitcast_to_vec_sext_bool" has unsupported operation: builtin.unregistered: llvm.sext
+
 4: "bitcast_to_vec_sext_bool" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 1: "bitcast_to_scalar_sext_bool"
+4: "bitcast_to_scalar_sext_bool" has unsupported operation: builtin.unregistered: llvm.sext
+
 4: "bitcast_to_scalar_sext_bool" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 1: "bitcast_to_vec_sext_bool_use1"
+4: "bitcast_to_vec_sext_bool_use1" has unsupported operation: builtin.unregistered: llvm.sext
+
 4: "bitcast_to_vec_sext_bool_use1" has unsupported operation: llvm.call
 
 4: "bitcast_to_vec_sext_bool_use1" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 1: "bitcast_to_scalar_sext_bool_use2"
+4: "bitcast_to_scalar_sext_bool_use2" has unsupported operation: builtin.unregistered: llvm.sext
+
 4: "bitcast_to_scalar_sext_bool_use2" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 4: "bitcast_to_scalar_sext_bool_use2" has unsupported operation: llvm.call
@@ -270,28 +282,30 @@
 1: "test_sext"
 4: "test_sext" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "test_sext" has unsupported operation: builtin.unregistered: llvm.sext
+
 1: "test_sext_vec"
 4: "test_sext_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "test_sext_vec" has unsupported operation: builtin.unregistered: llvm.sext
+
 1: "test_zext_nneg"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.xor
-2: llvm.zext
-2: llvm.add
-2: llvm.add
-2: llvm.sub
-2: llvm.return
+4: "test_zext_nneg" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "test_trunc"
-4: "test_trunc" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "test_trunc" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "test_trunc" has unsupported operation: builtin.unregistered: llvm.trunc
 
 1: "test_trunc_vec"
-4: "test_trunc_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "test_trunc_vec" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "test_trunc_vec" has unsupported operation: builtin.unregistered: llvm.trunc
 
 1: "test_zext"
 4: "test_zext" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_zext" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "test_invert_demorgan_or"
 4: "test_invert_demorgan_or" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -347,13 +361,7 @@
 4: "test_invert_demorgan_and" has unsupported operation: builtin.unregistered: llvm.unreachable
 
 1: "test_invert_demorgan_and2"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.add
-2: llvm.and
-2: llvm.xor
-2: llvm.return
+7: "test_invert_demorgan_and2" is unchanged by InstCombine
 
 1: "test_invert_demorgan_and3"
 4: "test_invert_demorgan_and3" has unsupported operation: builtin.unregistered: llvm.icmp

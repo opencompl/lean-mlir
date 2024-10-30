@@ -41,16 +41,16 @@ theorem t0_proof : t0_before ⊑ t0_after := by
 def t1_flags_before := [llvm|
 {
 ^0(%arg48 : i8, %arg49 : i8, %arg50 : i8):
-  %0 = llvm.sub %arg48, %arg49 overflow<nsw,nuw> : i8
-  %1 = llvm.sub %0, %arg50 overflow<nsw,nuw> : i8
+  %0 = llvm.sub %arg48, %arg49 : i8
+  %1 = llvm.sub %0, %arg50 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
 def t1_flags_after := [llvm|
 {
 ^0(%arg48 : i8, %arg49 : i8, %arg50 : i8):
-  %0 = llvm.add %arg49, %arg50 overflow<nsw,nuw> : i8
-  %1 = llvm.sub %arg48, %0 overflow<nsw,nuw> : i8
+  %0 = llvm.add %arg49, %arg50 : i8
+  %1 = llvm.sub %arg48, %0 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
@@ -66,16 +66,16 @@ theorem t1_flags_proof : t1_flags_before ⊑ t1_flags_after := by
 def t1_flags_nuw_only_before := [llvm|
 {
 ^0(%arg45 : i8, %arg46 : i8, %arg47 : i8):
-  %0 = llvm.sub %arg45, %arg46 overflow<nuw> : i8
-  %1 = llvm.sub %0, %arg47 overflow<nuw> : i8
+  %0 = llvm.sub %arg45, %arg46 : i8
+  %1 = llvm.sub %0, %arg47 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
 def t1_flags_nuw_only_after := [llvm|
 {
 ^0(%arg45 : i8, %arg46 : i8, %arg47 : i8):
-  %0 = llvm.add %arg46, %arg47 overflow<nuw> : i8
-  %1 = llvm.sub %arg45, %0 overflow<nuw> : i8
+  %0 = llvm.add %arg46, %arg47 : i8
+  %1 = llvm.sub %arg45, %0 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
@@ -91,7 +91,7 @@ theorem t1_flags_nuw_only_proof : t1_flags_nuw_only_before ⊑ t1_flags_nuw_only
 def t1_flags_sub_nsw_sub_before := [llvm|
 {
 ^0(%arg42 : i8, %arg43 : i8, %arg44 : i8):
-  %0 = llvm.sub %arg42, %arg43 overflow<nsw> : i8
+  %0 = llvm.sub %arg42, %arg43 : i8
   %1 = llvm.sub %0, %arg44 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
@@ -116,7 +116,7 @@ theorem t1_flags_sub_nsw_sub_proof : t1_flags_sub_nsw_sub_before ⊑ t1_flags_su
 def t1_flags_nuw_first_before := [llvm|
 {
 ^0(%arg39 : i8, %arg40 : i8, %arg41 : i8):
-  %0 = llvm.sub %arg39, %arg40 overflow<nuw> : i8
+  %0 = llvm.sub %arg39, %arg40 : i8
   %1 = llvm.sub %0, %arg41 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
@@ -142,7 +142,7 @@ def t1_flags_nuw_second_before := [llvm|
 {
 ^0(%arg36 : i8, %arg37 : i8, %arg38 : i8):
   %0 = llvm.sub %arg36, %arg37 : i8
-  %1 = llvm.sub %0, %arg38 overflow<nuw> : i8
+  %1 = llvm.sub %0, %arg38 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
@@ -166,7 +166,7 @@ theorem t1_flags_nuw_second_proof : t1_flags_nuw_second_before ⊑ t1_flags_nuw_
 def t1_flags_nuw_nsw_first_before := [llvm|
 {
 ^0(%arg33 : i8, %arg34 : i8, %arg35 : i8):
-  %0 = llvm.sub %arg33, %arg34 overflow<nsw,nuw> : i8
+  %0 = llvm.sub %arg33, %arg34 : i8
   %1 = llvm.sub %0, %arg35 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
@@ -192,7 +192,7 @@ def t1_flags_nuw_nsw_second_before := [llvm|
 {
 ^0(%arg30 : i8, %arg31 : i8, %arg32 : i8):
   %0 = llvm.sub %arg30, %arg31 : i8
-  %1 = llvm.sub %0, %arg32 overflow<nsw,nuw> : i8
+  %1 = llvm.sub %0, %arg32 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]

@@ -195,12 +195,12 @@
 
 4: "negated_op_extra_use" has unsupported operation: llvm.call
 
-4: "negated_op_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+4: "negated_op_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
 
 1: "negated_op_extra_use_comm"
 4: "negated_op_extra_use_comm" has unsupported operation: builtin.unregistered: llvm.fneg
 
 4: "negated_op_extra_use_comm" has unsupported operation: llvm.call
 
-4: "negated_op_extra_use_comm" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+4: "negated_op_extra_use_comm" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
 

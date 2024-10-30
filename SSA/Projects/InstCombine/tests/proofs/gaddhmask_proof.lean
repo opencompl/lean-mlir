@@ -16,25 +16,3 @@ theorem add_mask_ashr28_i32_thm :
     all_goals sorry
 
 
-theorem add_mask_ashr28_non_pow2_i32_thm :
-  ∀ (e : IntW 32),
-    add (LLVM.and (ashr e (const? 28)) (const? 9)) (ashr e (const? 28)) ⊑
-      add (LLVM.and (ashr e (const? 28)) (const? 9)) (ashr e (const? 28)) { «nsw» := true, «nuw» := false } := by 
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
-
-
-theorem add_mask_ashr27_i32_thm :
-  ∀ (e : IntW 32),
-    add (LLVM.and (ashr e (const? 27)) (const? 8)) (ashr e (const? 27)) ⊑
-      add (LLVM.and (ashr e (const? 27)) (const? 8)) (ashr e (const? 27)) { «nsw» := true, «nuw» := false } := by 
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
-
-

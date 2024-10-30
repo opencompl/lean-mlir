@@ -109,15 +109,7 @@
 2: llvm.return
 
 1: "lshr_add_fail"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.lshr
-2: llvm.add
-2: llvm.lshr
-2: llvm.add
-2: llvm.return
+7: "lshr_add_fail" is unchanged by InstCombine
 
 1: "ashr_add_fail"
 7: "ashr_add_fail" is unchanged by InstCombine

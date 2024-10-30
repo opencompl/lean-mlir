@@ -31,28 +31,17 @@
 2: llvm.return
 
 1: "sext"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.xor
-2: llvm.zext
-2: llvm.add
-2: llvm.return
+4: "sext" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "sext_vec"
-8: "sext_vec" contains vectors which are unsupported
+4: "sext_vec" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "sext_multiuse"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.xor
-2: llvm.zext
-2: llvm.add
-2: llvm.sdiv
-2: llvm.trunc
-2: llvm.sdiv
-2: llvm.return
+4: "sext_multiuse" has unsupported operation: builtin.unregistered: llvm.zext
+
+4: "sext_multiuse" has unsupported operation: builtin.unregistered: llvm.sext
+
+4: "sext_multiuse" has unsupported operation: builtin.unregistered: llvm.trunc
 
 1: "test5"
 2: llvm.func

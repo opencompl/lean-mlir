@@ -40,21 +40,133 @@
 4: "positive_vec_poison0" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "positive_vec_poison1"
+4: "positive_vec_poison1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "positive_vec_poison1" has unsupported operation: llvm.mlir.undef
+
+4: "positive_vec_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison1" has unsupported operation: builtin.unregistered: llvm.icmp
+
 4: "positive_vec_poison1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "positive_vec_poison2"
+4: "positive_vec_poison2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "positive_vec_poison2" has unsupported operation: llvm.mlir.undef
+
+4: "positive_vec_poison2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison2" has unsupported operation: builtin.unregistered: llvm.icmp
+
 4: "positive_vec_poison2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "positive_vec_poison3"
+4: "positive_vec_poison3" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "positive_vec_poison3" has unsupported operation: llvm.mlir.undef
+
+4: "positive_vec_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison3" has unsupported operation: llvm.mlir.undef
+
+4: "positive_vec_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison3" has unsupported operation: builtin.unregistered: llvm.icmp
+
 4: "positive_vec_poison3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "positive_vec_poison4"
+4: "positive_vec_poison4" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "positive_vec_poison4" has unsupported operation: llvm.mlir.undef
+
+4: "positive_vec_poison4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison4" has unsupported operation: llvm.mlir.undef
+
+4: "positive_vec_poison4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison4" has unsupported operation: builtin.unregistered: llvm.icmp
+
 4: "positive_vec_poison4" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "positive_vec_poison5"
+4: "positive_vec_poison5" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "positive_vec_poison5" has unsupported operation: llvm.mlir.undef
+
+4: "positive_vec_poison5" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison5" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison5" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison5" has unsupported operation: llvm.mlir.undef
+
+4: "positive_vec_poison5" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison5" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison5" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison5" has unsupported operation: builtin.unregistered: llvm.icmp
+
 4: "positive_vec_poison5" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "positive_vec_poison6"
+4: "positive_vec_poison6" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "positive_vec_poison6" has unsupported operation: llvm.mlir.undef
+
+4: "positive_vec_poison6" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison6" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison6" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison6" has unsupported operation: llvm.mlir.undef
+
+4: "positive_vec_poison6" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison6" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison6" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison6" has unsupported operation: llvm.mlir.undef
+
+4: "positive_vec_poison6" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison6" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison6" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_vec_poison6" has unsupported operation: builtin.unregistered: llvm.icmp
+
 4: "positive_vec_poison6" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "gen32"
@@ -95,10 +207,14 @@
 1: "positive_different_trunc_both"
 4: "positive_different_trunc_both" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "positive_different_trunc_both" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "positive_different_trunc_both" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "positive_different_trunc_both_logical"
 4: "positive_different_trunc_both_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "positive_different_trunc_both_logical" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "positive_different_trunc_both_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -168,6 +284,8 @@
 4: "oneuse_with_mask_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "oneuse_shl_ashr"
+4: "oneuse_shl_ashr" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "oneuse_shl_ashr" has unsupported operation: llvm.call
 
 4: "oneuse_shl_ashr" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -183,6 +301,8 @@
 4: "oneuse_shl_ashr" has unsupported operation: llvm.call
 
 1: "oneuse_shl_ashr_logical"
+4: "oneuse_shl_ashr_logical" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "oneuse_shl_ashr_logical" has unsupported operation: llvm.call
 
 4: "oneuse_shl_ashr_logical" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -198,13 +318,19 @@
 4: "oneuse_shl_ashr_logical" has unsupported operation: llvm.call
 
 1: "oneuse_trunc_sext"
+4: "oneuse_trunc_sext" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "oneuse_trunc_sext" has unsupported operation: llvm.call
 
 4: "oneuse_trunc_sext" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "oneuse_trunc_sext" has unsupported operation: llvm.call
 
+4: "oneuse_trunc_sext" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "oneuse_trunc_sext" has unsupported operation: llvm.call
+
+4: "oneuse_trunc_sext" has unsupported operation: builtin.unregistered: llvm.sext
 
 4: "oneuse_trunc_sext" has unsupported operation: llvm.call
 
@@ -213,13 +339,19 @@
 4: "oneuse_trunc_sext" has unsupported operation: llvm.call
 
 1: "oneuse_trunc_sext_logical"
+4: "oneuse_trunc_sext_logical" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "oneuse_trunc_sext_logical" has unsupported operation: llvm.call
 
 4: "oneuse_trunc_sext_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "oneuse_trunc_sext_logical" has unsupported operation: llvm.call
 
+4: "oneuse_trunc_sext_logical" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "oneuse_trunc_sext_logical" has unsupported operation: llvm.call
+
+4: "oneuse_trunc_sext_logical" has unsupported operation: builtin.unregistered: llvm.sext
 
 4: "oneuse_trunc_sext_logical" has unsupported operation: llvm.call
 
@@ -318,10 +450,14 @@
 1: "bad_trunc_stc"
 4: "bad_trunc_stc" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "bad_trunc_stc" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "bad_trunc_stc" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "bad_trunc_stc_logical"
 4: "bad_trunc_stc_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "bad_trunc_stc_logical" has unsupported operation: builtin.unregistered: llvm.trunc
 
 4: "bad_trunc_stc_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 

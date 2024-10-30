@@ -44,17 +44,7 @@
 8: "test_v4i32_not_ashr_negative_const" contains vectors which are unsupported
 
 1: "test_v4i32_not_ashr_negative_const_poison"
-4: "test_v4i32_not_ashr_negative_const_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
-
-4: "test_v4i32_not_ashr_negative_const_poison" has unsupported operation: llvm.mlir.undef
-
-4: "test_v4i32_not_ashr_negative_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "test_v4i32_not_ashr_negative_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "test_v4i32_not_ashr_negative_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "test_v4i32_not_ashr_negative_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+8: "test_v4i32_not_ashr_negative_const_poison" contains vectors which are unsupported
 
 1: "test_v4i32_not_lshr_nonnegative_splatconst"
 8: "test_v4i32_not_lshr_nonnegative_splatconst" contains vectors which are unsupported
@@ -63,17 +53,7 @@
 8: "test_v4i32_not_lshr_nonnegative_const" contains vectors which are unsupported
 
 1: "test_v4i32_not_lshr_nonnegative_const_poison"
-4: "test_v4i32_not_lshr_nonnegative_const_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
-
-4: "test_v4i32_not_lshr_nonnegative_const_poison" has unsupported operation: llvm.mlir.undef
-
-4: "test_v4i32_not_lshr_nonnegative_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "test_v4i32_not_lshr_nonnegative_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "test_v4i32_not_lshr_nonnegative_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "test_v4i32_not_lshr_nonnegative_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+8: "test_v4i32_not_lshr_nonnegative_const_poison" contains vectors which are unsupported
 
 1: "test_v4i32_not_sub_splatconst"
 8: "test_v4i32_not_sub_splatconst" contains vectors which are unsupported

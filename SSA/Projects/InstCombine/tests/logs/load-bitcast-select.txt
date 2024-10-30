@@ -11,6 +11,8 @@
 
 4: "_Z3foov" has unsupported operation: llvm.return
 
+4: "_Z3foov" has unsupported operation: builtin.unregistered: llvm.zext
+
 4: "_Z3foov" has unsupported operation: llvm.getelementptr
 
 4: "_Z3foov" has unsupported operation: llvm.getelementptr

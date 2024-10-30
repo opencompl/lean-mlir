@@ -13,3 +13,5 @@
 1: "PR34856"
 4: "PR34856" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "PR34856" has unsupported operation: builtin.unregistered: llvm.zext
+

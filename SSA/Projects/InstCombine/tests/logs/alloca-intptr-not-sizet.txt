@@ -1,4 +1,6 @@
 1: "test_array_alloca_intptr_not_sizet"
+4: "test_array_alloca_intptr_not_sizet" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "test_array_alloca_intptr_not_sizet" has unsupported operation: llvm.alloca
 
 4: "test_array_alloca_intptr_not_sizet" has unsupported operation: llvm.store

@@ -170,22 +170,11 @@
 7: "n1_badxor" is unchanged by InstCombine
 
 1: "n2_badmask"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.and
-2: llvm.xor
-2: llvm.and
-2: llvm.add
-2: llvm.return
+7: "n2_badmask" is unchanged by InstCombine
 
 1: "n3_constmask_badmask"
 7: "n3_constmask_badmask" is unchanged by InstCombine
 
 1: "n3_constmask_samemask"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.and
-2: llvm.and
-2: llvm.add
-2: llvm.return
+7: "n3_constmask_samemask" is unchanged by InstCombine
 

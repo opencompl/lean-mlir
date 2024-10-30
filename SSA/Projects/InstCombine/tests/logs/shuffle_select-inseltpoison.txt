@@ -142,21 +142,7 @@
 4: "srem" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 1: "fadd_maybe_nan"
-4: "fadd_maybe_nan" has unsupported operation: builtin.unregistered: llvm.mlir.poison
-
-4: "fadd_maybe_nan" has unsupported operation: llvm.mlir.undef
-
-4: "fadd_maybe_nan" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "fadd_maybe_nan" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "fadd_maybe_nan" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "fadd_maybe_nan" has unsupported operation: builtin.unregistered: llvm.insertelement
-
 4: "fadd_maybe_nan" has unsupported operation: builtin.unregistered: llvm.fadd
-
-4: "fadd_maybe_nan" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 1: "fadd"
 4: "fadd" has unsupported operation: builtin.unregistered: llvm.fadd

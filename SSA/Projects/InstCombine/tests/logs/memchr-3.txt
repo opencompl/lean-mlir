@@ -23,5 +23,7 @@
 
 4: "fold_memchr_ax_c_1" has unsupported operation: llvm.load
 
+4: "fold_memchr_ax_c_1" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "fold_memchr_ax_c_1" has unsupported operation: builtin.unregistered: llvm.icmp
 

@@ -173,6 +173,8 @@
 1: "test_simplify_decrement_invalid_ne"
 4: "test_simplify_decrement_invalid_ne" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "test_simplify_decrement_invalid_ne" has unsupported operation: builtin.unregistered: llvm.sext
+
 1: "test_invalid_simplify_sub2"
 4: "test_invalid_simplify_sub2" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -328,6 +330,8 @@
 
 4: "test_vector_usub_add_nuw_no_ov_nonsplat1_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
 
+4: "test_vector_usub_add_nuw_no_ov_nonsplat1_poison" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
 1: "test_vector_usub_add_nuw_no_ov_nonsplat2"
 4: "test_vector_usub_add_nuw_no_ov_nonsplat2" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
 
@@ -419,10 +423,10 @@
 4: "uadd_sat" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
 
 1: "uadd_sat_flipped"
-4: "uadd_sat_flipped" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+4: "uadd_sat_flipped" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "uadd_sat_flipped2"
-4: "uadd_sat_flipped2" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+4: "uadd_sat_flipped2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "uadd_sat_flipped3"
 4: "uadd_sat_flipped3" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -431,16 +435,38 @@
 4: "uadd_sat_flipped3_neg_no_nuw" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "uadd_sat_negative_one"
-4: "uadd_sat_negative_one" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+4: "uadd_sat_negative_one" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "uadd_sat_flipped4_vector"
 4: "uadd_sat_flipped4_vector" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
 
 1: "uadd_sat_flipped4_poison_vector"
-4: "uadd_sat_flipped4_poison_vector" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+4: "uadd_sat_flipped4_poison_vector" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "uadd_sat_flipped4_poison_vector" has unsupported operation: llvm.mlir.undef
+
+4: "uadd_sat_flipped4_poison_vector" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "uadd_sat_flipped4_poison_vector" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "uadd_sat_flipped4_poison_vector" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "uadd_sat_flipped4_poison_vector_compare"
-4: "uadd_sat_flipped4_poison_vector_compare" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+4: "uadd_sat_flipped4_poison_vector_compare" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "uadd_sat_flipped4_poison_vector_compare" has unsupported operation: llvm.mlir.undef
+
+4: "uadd_sat_flipped4_poison_vector_compare" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "uadd_sat_flipped4_poison_vector_compare" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "uadd_sat_flipped4_poison_vector_compare" has unsupported operation: llvm.mlir.undef
+
+4: "uadd_sat_flipped4_poison_vector_compare" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "uadd_sat_flipped4_poison_vector_compare" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "uadd_sat_flipped4_poison_vector_compare" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "uadd_sat_flipped4_poison_vector_compare2"
 8: "uadd_sat_flipped4_poison_vector_compare2" contains vectors which are unsupported
@@ -545,7 +571,7 @@
 4: "uadd_sat_not_commute_select_uge_commute_add" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
 
 1: "uadd_sat_constant"
-4: "uadd_sat_constant" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+4: "uadd_sat_constant" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "uadd_sat_constant_commute"
 4: "uadd_sat_constant_commute" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
@@ -563,13 +589,45 @@
 4: "uadd_sat_canon_y_nuw" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "uadd_sat_constant_vec"
-4: "uadd_sat_constant_vec" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+4: "uadd_sat_constant_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "uadd_sat_constant_vec_commute"
 4: "uadd_sat_constant_vec_commute" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
 
 1: "uadd_sat_constant_vec_commute_undefs"
-4: "uadd_sat_constant_vec_commute_undefs" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+4: "uadd_sat_constant_vec_commute_undefs" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "uadd_sat_constant_vec_commute_undefs" has unsupported operation: llvm.mlir.undef
+
+4: "uadd_sat_constant_vec_commute_undefs" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "uadd_sat_constant_vec_commute_undefs" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "uadd_sat_constant_vec_commute_undefs" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "uadd_sat_constant_vec_commute_undefs" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "uadd_sat_constant_vec_commute_undefs" has unsupported operation: llvm.mlir.undef
+
+4: "uadd_sat_constant_vec_commute_undefs" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "uadd_sat_constant_vec_commute_undefs" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "uadd_sat_constant_vec_commute_undefs" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "uadd_sat_constant_vec_commute_undefs" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "uadd_sat_constant_vec_commute_undefs" has unsupported operation: llvm.mlir.undef
+
+4: "uadd_sat_constant_vec_commute_undefs" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "uadd_sat_constant_vec_commute_undefs" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "uadd_sat_constant_vec_commute_undefs" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "uadd_sat_constant_vec_commute_undefs" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "uadd_sat_constant_vec_commute_undefs" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "get_i32"
 5: "get_i32" is empty

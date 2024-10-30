@@ -585,88 +585,25 @@
 2: llvm.return
 
 1: "or_xor_tree_0001"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mul
-2: llvm.mul
-2: llvm.mul
-2: llvm.xor
-2: llvm.xor
-2: llvm.xor
-2: llvm.or
-2: llvm.return
+7: "or_xor_tree_0001" is unchanged by InstCombine
 
 1: "or_xor_tree_0010"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mul
-2: llvm.mul
-2: llvm.mul
-2: llvm.xor
-2: llvm.xor
-2: llvm.xor
-2: llvm.or
-2: llvm.return
+7: "or_xor_tree_0010" is unchanged by InstCombine
 
 1: "or_xor_tree_0011"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mul
-2: llvm.mul
-2: llvm.mul
-2: llvm.xor
-2: llvm.xor
-2: llvm.xor
-2: llvm.or
-2: llvm.return
+7: "or_xor_tree_0011" is unchanged by InstCombine
 
 1: "or_xor_tree_0100"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mul
-2: llvm.mul
-2: llvm.mul
-2: llvm.xor
-2: llvm.xor
-2: llvm.xor
-2: llvm.or
-2: llvm.return
+7: "or_xor_tree_0100" is unchanged by InstCombine
 
 1: "or_xor_tree_0101"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mul
-2: llvm.mul
-2: llvm.mul
-2: llvm.xor
-2: llvm.xor
-2: llvm.xor
-2: llvm.or
-2: llvm.return
+7: "or_xor_tree_0101" is unchanged by InstCombine
 
 1: "or_xor_tree_0110"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mul
-2: llvm.mul
-2: llvm.mul
-2: llvm.xor
-2: llvm.xor
-2: llvm.xor
-2: llvm.or
-2: llvm.return
+7: "or_xor_tree_0110" is unchanged by InstCombine
 
 1: "or_xor_tree_0111"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mul
-2: llvm.mul
-2: llvm.mul
-2: llvm.xor
-2: llvm.xor
-2: llvm.xor
-2: llvm.or
-2: llvm.return
+7: "or_xor_tree_0111" is unchanged by InstCombine
 
 1: "or_xor_tree_1000"
 2: llvm.func
@@ -681,86 +618,23 @@
 2: llvm.return
 
 1: "or_xor_tree_1001"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mul
-2: llvm.mul
-2: llvm.mul
-2: llvm.xor
-2: llvm.xor
-2: llvm.xor
-2: llvm.or
-2: llvm.return
+7: "or_xor_tree_1001" is unchanged by InstCombine
 
 1: "or_xor_tree_1010"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mul
-2: llvm.mul
-2: llvm.mul
-2: llvm.xor
-2: llvm.xor
-2: llvm.xor
-2: llvm.or
-2: llvm.return
+7: "or_xor_tree_1010" is unchanged by InstCombine
 
 1: "or_xor_tree_1011"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mul
-2: llvm.mul
-2: llvm.mul
-2: llvm.xor
-2: llvm.xor
-2: llvm.xor
-2: llvm.or
-2: llvm.return
+7: "or_xor_tree_1011" is unchanged by InstCombine
 
 1: "or_xor_tree_1100"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mul
-2: llvm.mul
-2: llvm.mul
-2: llvm.xor
-2: llvm.xor
-2: llvm.xor
-2: llvm.or
-2: llvm.return
+7: "or_xor_tree_1100" is unchanged by InstCombine
 
 1: "or_xor_tree_1101"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mul
-2: llvm.mul
-2: llvm.mul
-2: llvm.xor
-2: llvm.xor
-2: llvm.xor
-2: llvm.or
-2: llvm.return
+7: "or_xor_tree_1101" is unchanged by InstCombine
 
 1: "or_xor_tree_1110"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mul
-2: llvm.mul
-2: llvm.mul
-2: llvm.xor
-2: llvm.xor
-2: llvm.xor
-2: llvm.or
-2: llvm.return
+7: "or_xor_tree_1110" is unchanged by InstCombine
 
 1: "or_xor_tree_1111"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mul
-2: llvm.mul
-2: llvm.mul
-2: llvm.xor
-2: llvm.xor
-2: llvm.xor
-2: llvm.or
-2: llvm.return
+7: "or_xor_tree_1111" is unchanged by InstCombine
 

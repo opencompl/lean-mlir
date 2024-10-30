@@ -350,20 +350,32 @@
 4: "select_fneg_vec" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
 1: "test_select_neg_negx_x"
-4: "test_select_neg_negx_x" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+4: "test_select_neg_negx_x" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "test_select_neg_negx_x" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_select_neg_negx_x" has unsupported operation: builtin.unregistered: llvm.fneg
 
 1: "test_select_nneg_negx_x"
-4: "test_select_nneg_negx_x" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+4: "test_select_nneg_negx_x" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 4: "test_select_nneg_negx_x" has unsupported operation: builtin.unregistered: llvm.fneg
 
+4: "test_select_nneg_negx_x" has unsupported operation: builtin.unregistered: llvm.icmp
+
 1: "test_select_neg_x_negx"
-4: "test_select_neg_x_negx" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+4: "test_select_neg_x_negx" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "test_select_neg_x_negx" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "test_select_neg_x_negx" has unsupported operation: builtin.unregistered: llvm.fneg
 
 1: "test_select_nneg_x_negx"
-4: "test_select_nneg_x_negx" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+4: "test_select_nneg_x_negx" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "test_select_nneg_x_negx" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "test_select_nneg_x_negx" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test_select_neg_negx_x_multiuse1"
 4: "test_select_neg_negx_x_multiuse1" has unsupported operation: builtin.unregistered: llvm.bitcast
@@ -372,14 +384,16 @@
 
 4: "test_select_neg_negx_x_multiuse1" has unsupported operation: llvm.call
 
-4: "test_select_neg_negx_x_multiuse1" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+4: "test_select_neg_negx_x_multiuse1" has unsupported operation: builtin.unregistered: llvm.fneg
 
 1: "test_select_neg_negx_x_multiuse2"
+4: "test_select_neg_negx_x_multiuse2" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "test_select_neg_negx_x_multiuse2" has unsupported operation: builtin.unregistered: llvm.icmp
+
 4: "test_select_neg_negx_x_multiuse2" has unsupported operation: builtin.unregistered: llvm.fneg
 
 4: "test_select_neg_negx_x_multiuse2" has unsupported operation: llvm.call
-
-4: "test_select_neg_negx_x_multiuse2" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
 1: "test_select_neg_negx_x_multiuse3"
 4: "test_select_neg_negx_x_multiuse3" has unsupported operation: builtin.unregistered: llvm.bitcast
@@ -392,15 +406,19 @@
 
 4: "test_select_neg_negx_x_multiuse3" has unsupported operation: llvm.call
 
-4: "test_select_neg_negx_x_multiuse3" has unsupported operation: builtin.unregistered: llvm.intr.fabs
-
 1: "test_select_neg_negx_x_fmf"
-4: "test_select_neg_negx_x_fmf" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+4: "test_select_neg_negx_x_fmf" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "test_select_neg_negx_x_fmf" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_select_neg_negx_x_fmf" has unsupported operation: builtin.unregistered: llvm.fneg
 
 1: "test_select_nneg_negx_x_fmf"
-4: "test_select_nneg_negx_x_fmf" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+4: "test_select_nneg_negx_x_fmf" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 4: "test_select_nneg_negx_x_fmf" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "test_select_nneg_negx_x_fmf" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test_select_nneg_negx_x_multiuse4"
 4: "test_select_nneg_negx_x_multiuse4" has unsupported operation: builtin.unregistered: llvm.bitcast

@@ -5,26 +5,26 @@
 
 4: "test_inf_const" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "test_inf_const" has unsupported operation: builtin.unregistered: llvm.frem
+4: "test_inf_const" has unsupported operation: llvm.call
 
 1: "test_const_zero"
 4: "test_const_zero" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "test_const_zero" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "test_const_zero" has unsupported operation: builtin.unregistered: llvm.frem
+4: "test_const_zero" has unsupported operation: llvm.call
 
 1: "test_unknown_const"
 4: "test_unknown_const" has unsupported operation: llvm.call
 
 1: "test_noinf_nozero"
-4: "test_noinf_nozero" has unsupported operation: builtin.unregistered: llvm.frem
+4: "test_noinf_nozero" has unsupported operation: llvm.call
 
 1: "test_double"
-4: "test_double" has unsupported operation: builtin.unregistered: llvm.frem
+4: "test_double" has unsupported operation: llvm.call
 
 1: "test_fp128"
-4: "test_fp128" has unsupported operation: builtin.unregistered: llvm.frem
+4: "test_fp128" has unsupported operation: llvm.call
 
 1: "test_noinf_nozero_dazpreservesign"
 4: "test_noinf_nozero_dazpreservesign" has unsupported operation: llvm.call
@@ -33,7 +33,7 @@
 4: "test_noinf_nozero_dazdynamic" has unsupported operation: llvm.call
 
 1: "test_nnan"
-4: "test_nnan" has unsupported operation: builtin.unregistered: llvm.frem
+4: "test_nnan" has unsupported operation: llvm.call
 
 1: "fmodf"
 5: "fmodf" is empty

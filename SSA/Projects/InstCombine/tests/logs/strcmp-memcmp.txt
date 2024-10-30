@@ -8,6 +8,8 @@
 
 4: "strcmp_memcmp" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "strcmp_memcmp" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "strcmp"
 5: "strcmp" is empty
 
@@ -18,12 +20,16 @@
 
 4: "strcmp_memcmp2" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "strcmp_memcmp2" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "strcmp_memcmp3"
 4: "strcmp_memcmp3" has unsupported operation: llvm.mlir.addressof
 
 4: "strcmp_memcmp3" has unsupported operation: llvm.call
 
 4: "strcmp_memcmp3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strcmp_memcmp3" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "strcmp_memcmp4"
 4: "strcmp_memcmp4" has unsupported operation: llvm.mlir.addressof
@@ -32,6 +38,8 @@
 
 4: "strcmp_memcmp4" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "strcmp_memcmp4" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "strcmp_memcmp5"
 4: "strcmp_memcmp5" has unsupported operation: llvm.mlir.addressof
 
@@ -39,12 +47,16 @@
 
 4: "strcmp_memcmp5" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "strcmp_memcmp5" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "strcmp_memcmp6"
 4: "strcmp_memcmp6" has unsupported operation: llvm.mlir.addressof
 
 4: "strcmp_memcmp6" has unsupported operation: llvm.call
 
 4: "strcmp_memcmp6" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strcmp_memcmp6" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "strcmp_memcmp7"
 4: "strcmp_memcmp7" has unsupported operation: llvm.mlir.addressof
@@ -58,6 +70,8 @@
 
 4: "strcmp_memcmp8" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "strcmp_memcmp8" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "strcmp_memcmp9"
 4: "strcmp_memcmp9" has unsupported operation: llvm.mlir.addressof
 
@@ -65,12 +79,16 @@
 
 4: "strcmp_memcmp9" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "strcmp_memcmp9" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "strncmp_memcmp"
 4: "strncmp_memcmp" has unsupported operation: llvm.mlir.addressof
 
 4: "strncmp_memcmp" has unsupported operation: llvm.call
 
 4: "strncmp_memcmp" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strncmp_memcmp" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "strncmp"
 5: "strncmp" is empty
@@ -82,12 +100,16 @@
 
 4: "strncmp_memcmp2" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "strncmp_memcmp2" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "strncmp_memcmp3"
 4: "strncmp_memcmp3" has unsupported operation: llvm.mlir.addressof
 
 4: "strncmp_memcmp3" has unsupported operation: llvm.call
 
 4: "strncmp_memcmp3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strncmp_memcmp3" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "strncmp_memcmp4"
 4: "strncmp_memcmp4" has unsupported operation: llvm.mlir.addressof
@@ -96,12 +118,16 @@
 
 4: "strncmp_memcmp4" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "strncmp_memcmp4" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "strncmp_memcmp5"
 4: "strncmp_memcmp5" has unsupported operation: llvm.mlir.addressof
 
 4: "strncmp_memcmp5" has unsupported operation: llvm.call
 
 4: "strncmp_memcmp5" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strncmp_memcmp5" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "strncmp_memcmp6"
 4: "strncmp_memcmp6" has unsupported operation: llvm.mlir.addressof
@@ -110,12 +136,16 @@
 
 4: "strncmp_memcmp6" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "strncmp_memcmp6" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "strncmp_memcmp7"
 4: "strncmp_memcmp7" has unsupported operation: llvm.mlir.addressof
 
 4: "strncmp_memcmp7" has unsupported operation: llvm.call
 
 4: "strncmp_memcmp7" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strncmp_memcmp7" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "strncmp_memcmp8"
 4: "strncmp_memcmp8" has unsupported operation: llvm.mlir.addressof
@@ -124,12 +154,16 @@
 
 4: "strncmp_memcmp8" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "strncmp_memcmp8" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "strncmp_memcmp9"
 4: "strncmp_memcmp9" has unsupported operation: llvm.mlir.addressof
 
 4: "strncmp_memcmp9" has unsupported operation: llvm.call
 
 4: "strncmp_memcmp9" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strncmp_memcmp9" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "strncmp_memcmp10"
 4: "strncmp_memcmp10" has unsupported operation: llvm.mlir.addressof
@@ -143,12 +177,16 @@
 
 4: "strncmp_memcmp11" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "strncmp_memcmp11" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "strncmp_memcmp12"
 4: "strncmp_memcmp12" has unsupported operation: llvm.mlir.addressof
 
 4: "strncmp_memcmp12" has unsupported operation: llvm.call
 
 4: "strncmp_memcmp12" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strncmp_memcmp12" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "strncmp_memcmp13"
 4: "strncmp_memcmp13" has unsupported operation: llvm.mlir.addressof
@@ -157,12 +195,16 @@
 
 4: "strncmp_memcmp13" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "strncmp_memcmp13" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "strncmp_memcmp14"
 4: "strncmp_memcmp14" has unsupported operation: llvm.mlir.addressof
 
 4: "strncmp_memcmp14" has unsupported operation: llvm.call
 
 4: "strncmp_memcmp14" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strncmp_memcmp14" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "strcmp_memcmp_bad"
 4: "strcmp_memcmp_bad" has unsupported operation: llvm.mlir.addressof
@@ -171,12 +213,16 @@
 
 4: "strcmp_memcmp_bad" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "strcmp_memcmp_bad" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "strcmp_memcmp_bad2"
 4: "strcmp_memcmp_bad2" has unsupported operation: llvm.mlir.addressof
 
 4: "strcmp_memcmp_bad2" has unsupported operation: llvm.call
 
 4: "strcmp_memcmp_bad2" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strcmp_memcmp_bad2" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "strcmp_memcmp_bad3"
 4: "strcmp_memcmp_bad3" has unsupported operation: llvm.mlir.addressof
@@ -190,6 +236,8 @@
 
 4: "strcmp_memcmp_bad4" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "strcmp_memcmp_bad4" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "strcmp_memcmp_bad5"
 4: "strcmp_memcmp_bad5" has unsupported operation: llvm.mlir.addressof
 
@@ -197,10 +245,14 @@
 
 4: "strcmp_memcmp_bad5" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "strcmp_memcmp_bad5" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "strcmp_memcmp_bad6"
 4: "strcmp_memcmp_bad6" has unsupported operation: llvm.call
 
 4: "strcmp_memcmp_bad6" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strcmp_memcmp_bad6" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "strcmp_memcmp_bad7"
 4: "strcmp_memcmp_bad7" has unsupported operation: llvm.mlir.addressof
@@ -208,6 +260,8 @@
 4: "strcmp_memcmp_bad7" has unsupported operation: llvm.call
 
 4: "strcmp_memcmp_bad7" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strcmp_memcmp_bad7" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "strcmp_memcmp_bad8"
 4: "strcmp_memcmp_bad8" has unsupported operation: llvm.mlir.addressof
@@ -223,12 +277,16 @@
 
 4: "strncmp_memcmp_bad" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "strncmp_memcmp_bad" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "strncmp_memcmp_bad1"
 4: "strncmp_memcmp_bad1" has unsupported operation: llvm.mlir.addressof
 
 4: "strncmp_memcmp_bad1" has unsupported operation: llvm.call
 
 4: "strncmp_memcmp_bad1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strncmp_memcmp_bad1" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "strncmp_memcmp_bad2"
 4: "strncmp_memcmp_bad2" has unsupported operation: llvm.mlir.addressof
@@ -237,12 +295,16 @@
 
 4: "strncmp_memcmp_bad2" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "strncmp_memcmp_bad2" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "strncmp_memcmp_bad3"
 4: "strncmp_memcmp_bad3" has unsupported operation: llvm.mlir.addressof
 
 4: "strncmp_memcmp_bad3" has unsupported operation: llvm.call
 
 4: "strncmp_memcmp_bad3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strncmp_memcmp_bad3" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "strncmp_memcmp_bad4"
 4: "strncmp_memcmp_bad4" has unsupported operation: llvm.mlir.addressof
@@ -257,6 +319,8 @@
 4: "strcmp_memcmp_msan" has unsupported operation: llvm.call
 
 4: "strcmp_memcmp_msan" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "strcmp_memcmp_msan" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "memcmp"
 5: "memcmp" is empty

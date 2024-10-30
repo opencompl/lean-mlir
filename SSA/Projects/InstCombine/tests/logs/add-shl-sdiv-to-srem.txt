@@ -58,13 +58,7 @@
 4: "add-shl-sdiv-use4" has unsupported operation: llvm.call
 
 1: "add-shl-sdiv-negative0"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.sdiv
-2: llvm.shl
-2: llvm.add
-2: llvm.return
+7: "add-shl-sdiv-negative0" is unchanged by InstCombine
 
 1: "add-shl-sdiv-negative1"
 2: llvm.func

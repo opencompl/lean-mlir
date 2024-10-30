@@ -81,7 +81,9 @@
 4: "fmuladd_unary_fneg_x_unary_fneg_y" has unsupported operation: builtin.unregistered: llvm.intr.fmuladd
 
 1: "fmuladd_fneg_x_fneg_y_fast"
-4: "fmuladd_fneg_x_fneg_y_fast" has unsupported operation: builtin.unregistered: llvm.intr.fmuladd
+4: "fmuladd_fneg_x_fneg_y_fast" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fmuladd_fneg_x_fneg_y_fast" has unsupported operation: builtin.unregistered: llvm.fadd
 
 1: "fmuladd_unfold"
 4: "fmuladd_unfold" has unsupported operation: builtin.unregistered: llvm.intr.fmuladd
@@ -90,7 +92,9 @@
 4: "fmuladd_unfold_vec" has unsupported operation: builtin.unregistered: llvm.intr.fmuladd
 
 1: "fmuladd_unary_fneg_x_unary_fneg_y_fast"
-4: "fmuladd_unary_fneg_x_unary_fneg_y_fast" has unsupported operation: builtin.unregistered: llvm.intr.fmuladd
+4: "fmuladd_unary_fneg_x_unary_fneg_y_fast" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fmuladd_unary_fneg_x_unary_fneg_y_fast" has unsupported operation: builtin.unregistered: llvm.fadd
 
 1: "fmuladd_fneg_const_fneg_y"
 4: "fmuladd_fneg_const_fneg_y" has unsupported operation: llvm.mlir.addressof
@@ -139,7 +143,9 @@
 4: "fmuladd_fabs_x_fabs_x" has unsupported operation: builtin.unregistered: llvm.intr.fmuladd
 
 1: "fmuladd_fabs_x_fabs_x_fast"
-4: "fmuladd_fabs_x_fabs_x_fast" has unsupported operation: builtin.unregistered: llvm.intr.fmuladd
+4: "fmuladd_fabs_x_fabs_x_fast" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fmuladd_fabs_x_fabs_x_fast" has unsupported operation: builtin.unregistered: llvm.fadd
 
 1: "fma_k_y_z"
 4: "fma_k_y_z" has unsupported operation: builtin.unregistered: llvm.intr.fma
@@ -148,7 +154,9 @@
 4: "fma_k_y_z_fast" has unsupported operation: builtin.unregistered: llvm.intr.fma
 
 1: "fmuladd_k_y_z_fast"
-4: "fmuladd_k_y_z_fast" has unsupported operation: builtin.unregistered: llvm.intr.fmuladd
+4: "fmuladd_k_y_z_fast" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fmuladd_k_y_z_fast" has unsupported operation: builtin.unregistered: llvm.fadd
 
 1: "fma_1_y_z"
 4: "fma_1_y_z" has unsupported operation: builtin.unregistered: llvm.fadd
@@ -388,19 +396,19 @@
 4: "fma_unary_shuffle_ops_uses" has unsupported operation: builtin.unregistered: llvm.intr.fma
 
 1: "fma_negone"
-4: "fma_negone" has unsupported operation: builtin.unregistered: llvm.fsub
+4: "fma_negone" has unsupported operation: builtin.unregistered: llvm.intr.fma
 
 1: "fmuladd_negone"
-4: "fmuladd_negone" has unsupported operation: builtin.unregistered: llvm.fsub
+4: "fmuladd_negone" has unsupported operation: builtin.unregistered: llvm.intr.fmuladd
 
 1: "fma_negone_fmf"
-4: "fma_negone_fmf" has unsupported operation: builtin.unregistered: llvm.fsub
+4: "fma_negone_fmf" has unsupported operation: builtin.unregistered: llvm.intr.fma
 
 1: "fmuladd_negone_fmf"
-4: "fmuladd_negone_fmf" has unsupported operation: builtin.unregistered: llvm.fsub
+4: "fmuladd_negone_fmf" has unsupported operation: builtin.unregistered: llvm.intr.fmuladd
 
 1: "fma_negone_vec"
-4: "fma_negone_vec" has unsupported operation: builtin.unregistered: llvm.fsub
+4: "fma_negone_vec" has unsupported operation: builtin.unregistered: llvm.intr.fma
 
 1: "fma_negone_vec_partial_undef"
 4: "fma_negone_vec_partial_undef" has unsupported operation: llvm.mlir.undef

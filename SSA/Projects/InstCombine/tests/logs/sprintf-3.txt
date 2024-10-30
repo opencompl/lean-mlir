@@ -8,6 +8,8 @@
 
 4: "PR51200" has unsupported operation: builtin.unregistered: llvm.ptrtoint
 
+4: "PR51200" has unsupported operation: builtin.unregistered: llvm.trunc
+
 1: "stpcpy"
 5: "stpcpy" is empty
 

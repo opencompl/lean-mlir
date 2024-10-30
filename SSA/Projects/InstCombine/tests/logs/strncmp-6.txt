@@ -21,9 +21,13 @@
 1: "fold_strncmp_cst_var"
 4: "fold_strncmp_cst_var" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "fold_strncmp_cst_var" has unsupported operation: builtin.unregistered: llvm.sext
+
 4: "fold_strncmp_cst_var" has unsupported operation: llvm.store
 
 4: "fold_strncmp_cst_var" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "fold_strncmp_cst_var" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "fold_strncmp_cst_var" has unsupported operation: llvm.getelementptr
 
@@ -31,11 +35,15 @@
 
 4: "fold_strncmp_cst_var" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "fold_strncmp_cst_var" has unsupported operation: builtin.unregistered: llvm.sext
+
 4: "fold_strncmp_cst_var" has unsupported operation: llvm.getelementptr
 
 4: "fold_strncmp_cst_var" has unsupported operation: llvm.store
 
 4: "fold_strncmp_cst_var" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "fold_strncmp_cst_var" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "fold_strncmp_cst_var" has unsupported operation: llvm.getelementptr
 

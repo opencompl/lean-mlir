@@ -56,6 +56,8 @@
 1: "test_fcmp_select_const_const"
 4: "test_fcmp_select_const_const" has unsupported operation: builtin.unregistered: llvm.fcmp
 
+4: "test_fcmp_select_const_const" has unsupported operation: builtin.unregistered: llvm.fcmp
+
 1: "test_fcmp_select_var_const"
 4: "test_fcmp_select_var_const" has unsupported operation: builtin.unregistered: llvm.fcmp
 
@@ -67,6 +69,8 @@
 4: "test_fcmp_select_var_const_fmf" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "test_fcmp_select_const_const_vec"
+4: "test_fcmp_select_const_const_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
 4: "test_fcmp_select_const_const_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "test_fcmp_select_clamp"
@@ -87,6 +91,8 @@
 4: "test_fcmp_select_const_const_multiuse" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "test_fcmp_select_const_const_unordered"
+4: "test_fcmp_select_const_const_unordered" has unsupported operation: builtin.unregistered: llvm.fcmp
+
 4: "test_fcmp_select_const_const_unordered" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "test_fcmp_select_var_const_unordered"

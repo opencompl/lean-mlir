@@ -1,2 +1,0 @@
-3: icmp-add.ll: parsing has failed
-

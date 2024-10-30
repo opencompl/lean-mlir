@@ -130,8 +130,6 @@
 
 4: "t18_replacement_0b0001" has unsupported operation: builtin.unregistered: llvm.insertelement
 
-4: "t18_replacement_0b0001" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "t18_replacement_0b0001" has unsupported operation: llvm.call
 
 1: "t18_replacement_0b0010"
@@ -142,8 +140,6 @@
 4: "t18_replacement_0b0010" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 4: "t18_replacement_0b0010" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "t18_replacement_0b0010" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "t18_replacement_0b0010" has unsupported operation: llvm.call
 

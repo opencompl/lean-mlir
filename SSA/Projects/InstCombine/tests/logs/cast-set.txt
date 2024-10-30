@@ -10,17 +10,18 @@
 4: "test4" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
 
 1: "test5"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.sext
-2: llvm.and
-2: llvm.trunc
-2: llvm.return
+4: "test5" has unsupported operation after optimization: builtin.unregistered: llvm.sext
+
+4: "test5" has unsupported operation after optimization: builtin.unregistered: llvm.trunc
 
 1: "test6"
+4: "test6" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+
 4: "test6" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "test6a"
+4: "test6a" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+
 4: "test6a" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "test7"

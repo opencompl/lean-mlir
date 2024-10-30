@@ -1,42 +1,44 @@
 1: "test1"
 4: "test1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+4: "test1" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+
 4: "test1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
+4: "test1" has unsupported operation after optimization: builtin.unregistered: llvm.zext
+
+4: "test1" has unsupported operation after optimization: builtin.unregistered: llvm.trunc
+
 1: "shrink_xor"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.xor
-2: llvm.trunc
-2: llvm.return
+4: "shrink_xor" has unsupported operation: builtin.unregistered: llvm.trunc
 
 1: "shrink_xor_vec"
-8: "shrink_xor_vec" contains vectors which are unsupported
+4: "shrink_xor_vec" has unsupported operation: builtin.unregistered: llvm.trunc
 
 1: "shrink_or"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.or
-2: llvm.trunc
-2: llvm.return
+4: "shrink_or" has unsupported operation: builtin.unregistered: llvm.trunc
 
 1: "shrink_or_vec"
-8: "shrink_or_vec" contains vectors which are unsupported
+4: "shrink_or_vec" has unsupported operation: builtin.unregistered: llvm.trunc
 
 1: "shrink_and"
-7: "shrink_and" is unchanged by InstCombine
+4: "shrink_and" has unsupported operation: builtin.unregistered: llvm.trunc
 
 1: "shrink_and_vec"
-8: "shrink_and_vec" contains vectors which are unsupported
+4: "shrink_and_vec" has unsupported operation: builtin.unregistered: llvm.trunc
 
 1: "searchArray1"
 4: "searchArray1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "searchArray1" has unsupported operation: builtin.unregistered: llvm.sext
 
 4: "searchArray1" has unsupported operation: llvm.getelementptr
 
 4: "searchArray1" has unsupported operation: llvm.load
 
 4: "searchArray1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "searchArray1" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "searchArray1" has unsupported operation: builtin.unregistered: llvm.icmp
 
@@ -64,8 +66,12 @@
 
 4: "shrinkLogicAndPhi1" has unsupported operation: builtin.unregistered: llvm.br
 
+4: "shrinkLogicAndPhi1" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "shrinkLogicAndPhi2"
 4: "shrinkLogicAndPhi2" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "shrinkLogicAndPhi2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "shrinkLogicAndPhi2" has unsupported operation: builtin.unregistered: llvm.zext
 

@@ -1,18 +1,18 @@
 1: "sel_false_val_is_a_masked_shl_of_true_val1"
-4: "sel_false_val_is_a_masked_shl_of_true_val1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+4: "sel_false_val_is_a_masked_shl_of_true_val1" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "sel_false_val_is_a_masked_shl_of_true_val2"
-4: "sel_false_val_is_a_masked_shl_of_true_val2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+4: "sel_false_val_is_a_masked_shl_of_true_val2" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "sel_false_val_is_a_masked_lshr_of_true_val1"
-4: "sel_false_val_is_a_masked_lshr_of_true_val1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+4: "sel_false_val_is_a_masked_lshr_of_true_val1" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "sel_false_val_is_a_masked_lshr_of_true_val2"
-4: "sel_false_val_is_a_masked_lshr_of_true_val2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+4: "sel_false_val_is_a_masked_lshr_of_true_val2" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "sel_false_val_is_a_masked_ashr_of_true_val1"
-4: "sel_false_val_is_a_masked_ashr_of_true_val1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+4: "sel_false_val_is_a_masked_ashr_of_true_val1" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "sel_false_val_is_a_masked_ashr_of_true_val2"
-4: "sel_false_val_is_a_masked_ashr_of_true_val2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+4: "sel_false_val_is_a_masked_ashr_of_true_val2" has unsupported operation: builtin.unregistered: llvm.zext
 

@@ -48,7 +48,7 @@ theorem positive_biggerLshr_lshrexact_thm :
     all_goals sorry
 
 
-theorem positive_samevar_shlnuw_thm : ∀ (e e_1 : IntW 32), lshr (shl e_1 e { «nsw» := false, «nuw» := true }) e ⊑ e_1 := by 
+theorem positive_samevar_shlnuw_thm : ∀ (e e_1 : IntW 32), lshr (shl e_1 e) e ⊑ e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -56,7 +56,7 @@ theorem positive_samevar_shlnuw_thm : ∀ (e e_1 : IntW 32), lshr (shl e_1 e { �
     all_goals sorry
 
 
-theorem positive_sameconst_shlnuw_thm : ∀ (e : IntW 32), lshr (shl e (const? 5) { «nsw» := false, «nuw» := true }) (const? 5) ⊑ e := by 
+theorem positive_sameconst_shlnuw_thm : ∀ (e : IntW 32), lshr (shl e (const? 5)) (const? 5) ⊑ e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -64,10 +64,7 @@ theorem positive_sameconst_shlnuw_thm : ∀ (e : IntW 32), lshr (shl e (const? 5
     all_goals sorry
 
 
-theorem positive_biggerShl_shlnuw_thm :
-  ∀ (e : IntW 32),
-    lshr (shl e (const? 10) { «nsw» := false, «nuw» := true }) (const? 5) ⊑
-      shl e (const? 5) { «nsw» := true, «nuw» := true } := by 
+theorem positive_biggerShl_shlnuw_thm : ∀ (e : IntW 32), lshr (shl e (const? 10)) (const? 5) ⊑ shl e (const? 5) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -75,8 +72,7 @@ theorem positive_biggerShl_shlnuw_thm :
     all_goals sorry
 
 
-theorem positive_biggerLshr_shlnuw_thm :
-  ∀ (e : IntW 32), lshr (shl e (const? 5) { «nsw» := false, «nuw» := true }) (const? 10) ⊑ lshr e (const? 5) := by 
+theorem positive_biggerLshr_shlnuw_thm : ∀ (e : IntW 32), lshr (shl e (const? 5)) (const? 10) ⊑ lshr e (const? 5) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -84,8 +80,7 @@ theorem positive_biggerLshr_shlnuw_thm :
     all_goals sorry
 
 
-theorem positive_biggerLshr_shlnuw_lshrexact_thm :
-  ∀ (e : IntW 32), lshr (shl e (const? 5) { «nsw» := false, «nuw» := true }) (const? 10) ⊑ lshr e (const? 5) := by 
+theorem positive_biggerLshr_shlnuw_lshrexact_thm : ∀ (e : IntW 32), lshr (shl e (const? 5)) (const? 10) ⊑ lshr e (const? 5) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

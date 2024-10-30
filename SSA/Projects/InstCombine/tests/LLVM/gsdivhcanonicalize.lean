@@ -17,7 +17,7 @@ def test_sdiv_canonicalize_op0_before := [llvm|
 {
 ^0(%arg15 : i32, %arg16 : i32):
   %0 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
-  %1 = llvm.sub %0, %arg15 overflow<nsw> : i32
+  %1 = llvm.sub %0, %arg15 : i32
   %2 = llvm.sdiv %1, %arg16 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
@@ -27,7 +27,7 @@ def test_sdiv_canonicalize_op0_after := [llvm|
 ^0(%arg15 : i32, %arg16 : i32):
   %0 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
   %1 = llvm.sdiv %arg15, %arg16 : i32
-  %2 = llvm.sub %0, %1 overflow<nsw> : i32
+  %2 = llvm.sub %0, %1 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -44,7 +44,7 @@ def test_sdiv_canonicalize_op0_exact_before := [llvm|
 {
 ^0(%arg13 : i32, %arg14 : i32):
   %0 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
-  %1 = llvm.sub %0, %arg13 overflow<nsw> : i32
+  %1 = llvm.sub %0, %arg13 : i32
   %2 = llvm.sdiv %1, %arg14 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
@@ -54,7 +54,7 @@ def test_sdiv_canonicalize_op0_exact_after := [llvm|
 ^0(%arg13 : i32, %arg14 : i32):
   %0 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
   %1 = llvm.sdiv %arg13, %arg14 : i32
-  %2 = llvm.sub %0, %1 overflow<nsw> : i32
+  %2 = llvm.sub %0, %1 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]

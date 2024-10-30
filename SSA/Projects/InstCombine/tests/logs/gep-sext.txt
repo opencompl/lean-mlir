@@ -2,6 +2,8 @@
 5: "use" is empty
 
 1: "test"
+4: "test" has unsupported operation: builtin.unregistered: llvm.sext
+
 4: "test" has unsupported operation: llvm.getelementptr
 
 4: "test" has unsupported operation: llvm.load
@@ -11,6 +13,8 @@
 4: "test" has unsupported operation: llvm.return
 
 1: "test2"
+4: "test2" has unsupported operation: builtin.unregistered: llvm.zext
+
 4: "test2" has unsupported operation: llvm.getelementptr
 
 4: "test2" has unsupported operation: llvm.load
@@ -26,6 +30,8 @@
 
 4: "test3" has unsupported operation: llvm.load
 
+4: "test3" has unsupported operation: builtin.unregistered: llvm.zext
+
 4: "test3" has unsupported operation: llvm.getelementptr
 
 4: "test3" has unsupported operation: llvm.load
@@ -40,6 +46,8 @@
 4: "test4" has unsupported operation: llvm.getelementptr
 
 4: "test4" has unsupported operation: llvm.load
+
+4: "test4" has unsupported operation: builtin.unregistered: llvm.zext
 
 4: "test4" has unsupported operation: llvm.getelementptr
 

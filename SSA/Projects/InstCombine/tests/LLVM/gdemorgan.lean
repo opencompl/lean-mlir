@@ -389,7 +389,7 @@ def demorgan_nand_after := [llvm|
 ^0(%arg38 : i8, %arg39 : i8):
   %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
   %1 = llvm.xor %arg39, %0 : i8
-  %2 = llvm.or %arg38, %1 : i8
+  %2 = llvm.or %1, %arg38 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
@@ -417,7 +417,7 @@ def demorgan_nand_apint1_after := [llvm|
 ^0(%arg36 : i7, %arg37 : i7):
   %0 = "llvm.mlir.constant"() <{value = -1 : i7}> : () -> i7
   %1 = llvm.xor %arg37, %0 : i7
-  %2 = llvm.or %arg36, %1 : i7
+  %2 = llvm.or %1, %arg36 : i7
   "llvm.return"(%2) : (i7) -> ()
 }
 ]
@@ -445,7 +445,7 @@ def demorgan_nand_apint2_after := [llvm|
 ^0(%arg34 : i117, %arg35 : i117):
   %0 = "llvm.mlir.constant"() <{value = -1 : i117}> : () -> i117
   %1 = llvm.xor %arg35, %0 : i117
-  %2 = llvm.or %arg34, %1 : i117
+  %2 = llvm.or %1, %arg34 : i117
   "llvm.return"(%2) : (i117) -> ()
 }
 ]
@@ -473,7 +473,7 @@ def demorgan_nor_after := [llvm|
 ^0(%arg32 : i8, %arg33 : i8):
   %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
   %1 = llvm.xor %arg33, %0 : i8
-  %2 = llvm.and %arg32, %1 : i8
+  %2 = llvm.and %1, %arg32 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
@@ -507,7 +507,7 @@ def demorgan_nor_use2a_after := [llvm|
   %2 = llvm.xor %arg30, %0 : i8
   %3 = llvm.mul %2, %1 : i8
   %4 = llvm.xor %arg31, %0 : i8
-  %5 = llvm.and %arg30, %4 : i8
+  %5 = llvm.and %4, %arg30 : i8
   %6 = llvm.sdiv %5, %3 : i8
   "llvm.return"(%6) : (i8) -> ()
 }
@@ -541,7 +541,7 @@ def demorgan_nor_use2b_after := [llvm|
   %1 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
   %2 = llvm.mul %arg29, %0 : i8
   %3 = llvm.xor %arg29, %1 : i8
-  %4 = llvm.and %arg28, %3 : i8
+  %4 = llvm.and %3, %arg28 : i8
   %5 = llvm.sdiv %4, %2 : i8
   "llvm.return"(%5) : (i8) -> ()
 }
@@ -552,41 +552,6 @@ theorem demorgan_nor_use2b_proof : demorgan_nor_use2b_before ⊑ demorgan_nor_us
   ---BEGIN demorgan_nor_use2b
   all_goals (try extract_goal ; sorry)
   ---END demorgan_nor_use2b
-
-
-
-def demorgan_nor_use2c_before := [llvm|
-{
-^0(%arg26 : i8, %arg27 : i8):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 23 : i8}> : () -> i8
-  %2 = llvm.xor %arg26, %0 : i8
-  %3 = llvm.or %2, %arg27 : i8
-  %4 = llvm.mul %3, %1 : i8
-  %5 = llvm.xor %3, %0 : i8
-  %6 = llvm.sdiv %5, %4 : i8
-  "llvm.return"(%6) : (i8) -> ()
-}
-]
-def demorgan_nor_use2c_after := [llvm|
-{
-^0(%arg26 : i8, %arg27 : i8):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 23 : i8}> : () -> i8
-  %2 = llvm.xor %arg26, %0 : i8
-  %3 = llvm.or %arg27, %2 : i8
-  %4 = llvm.mul %3, %1 : i8
-  %5 = llvm.xor %3, %0 : i8
-  %6 = llvm.sdiv %5, %4 : i8
-  "llvm.return"(%6) : (i8) -> ()
-}
-]
-theorem demorgan_nor_use2c_proof : demorgan_nor_use2c_before ⊑ demorgan_nor_use2c_after := by
-  unfold demorgan_nor_use2c_before demorgan_nor_use2c_after
-  simp_alive_peephole
-  ---BEGIN demorgan_nor_use2c
-  all_goals (try extract_goal ; sorry)
-  ---END demorgan_nor_use2c
 
 
 
@@ -616,7 +581,7 @@ def demorgan_nor_use2ab_after := [llvm|
   %4 = llvm.xor %arg24, %1 : i8
   %5 = llvm.mul %4, %2 : i8
   %6 = llvm.xor %arg25, %1 : i8
-  %7 = llvm.and %arg24, %6 : i8
+  %7 = llvm.and %6, %arg24 : i8
   %8 = llvm.sdiv %7, %3 : i8
   %9 = llvm.sdiv %8, %5 : i8
   "llvm.return"(%9) : (i8) -> ()
@@ -628,86 +593,6 @@ theorem demorgan_nor_use2ab_proof : demorgan_nor_use2ab_before ⊑ demorgan_nor_
   ---BEGIN demorgan_nor_use2ab
   all_goals (try extract_goal ; sorry)
   ---END demorgan_nor_use2ab
-
-
-
-def demorgan_nor_use2ac_before := [llvm|
-{
-^0(%arg22 : i8, %arg23 : i8):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 17 : i8}> : () -> i8
-  %2 = "llvm.mlir.constant"() <{value = 23 : i8}> : () -> i8
-  %3 = llvm.xor %arg22, %0 : i8
-  %4 = llvm.mul %3, %1 : i8
-  %5 = llvm.or %3, %arg23 : i8
-  %6 = llvm.mul %5, %2 : i8
-  %7 = llvm.xor %5, %0 : i8
-  %8 = llvm.sdiv %7, %6 : i8
-  %9 = llvm.sdiv %8, %4 : i8
-  "llvm.return"(%9) : (i8) -> ()
-}
-]
-def demorgan_nor_use2ac_after := [llvm|
-{
-^0(%arg22 : i8, %arg23 : i8):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 17 : i8}> : () -> i8
-  %2 = "llvm.mlir.constant"() <{value = 23 : i8}> : () -> i8
-  %3 = llvm.xor %arg22, %0 : i8
-  %4 = llvm.mul %3, %1 : i8
-  %5 = llvm.or %arg23, %3 : i8
-  %6 = llvm.mul %5, %2 : i8
-  %7 = llvm.xor %5, %0 : i8
-  %8 = llvm.sdiv %7, %6 : i8
-  %9 = llvm.sdiv %8, %4 : i8
-  "llvm.return"(%9) : (i8) -> ()
-}
-]
-theorem demorgan_nor_use2ac_proof : demorgan_nor_use2ac_before ⊑ demorgan_nor_use2ac_after := by
-  unfold demorgan_nor_use2ac_before demorgan_nor_use2ac_after
-  simp_alive_peephole
-  ---BEGIN demorgan_nor_use2ac
-  all_goals (try extract_goal ; sorry)
-  ---END demorgan_nor_use2ac
-
-
-
-def demorgan_nor_use2bc_before := [llvm|
-{
-^0(%arg20 : i8, %arg21 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 23 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
-  %2 = llvm.mul %arg21, %0 : i8
-  %3 = llvm.xor %arg20, %1 : i8
-  %4 = llvm.or %3, %arg21 : i8
-  %5 = llvm.mul %4, %0 : i8
-  %6 = llvm.xor %4, %1 : i8
-  %7 = llvm.sdiv %6, %5 : i8
-  %8 = llvm.sdiv %7, %2 : i8
-  "llvm.return"(%8) : (i8) -> ()
-}
-]
-def demorgan_nor_use2bc_after := [llvm|
-{
-^0(%arg20 : i8, %arg21 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 23 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
-  %2 = llvm.mul %arg21, %0 : i8
-  %3 = llvm.xor %arg20, %1 : i8
-  %4 = llvm.or %arg21, %3 : i8
-  %5 = llvm.mul %4, %0 : i8
-  %6 = llvm.xor %4, %1 : i8
-  %7 = llvm.sdiv %6, %5 : i8
-  %8 = llvm.sdiv %7, %2 : i8
-  "llvm.return"(%8) : (i8) -> ()
-}
-]
-theorem demorgan_nor_use2bc_proof : demorgan_nor_use2bc_before ⊑ demorgan_nor_use2bc_after := by
-  unfold demorgan_nor_use2bc_before demorgan_nor_use2bc_after
-  simp_alive_peephole
-  ---BEGIN demorgan_nor_use2bc
-  all_goals (try extract_goal ; sorry)
-  ---END demorgan_nor_use2bc
 
 
 
@@ -736,68 +621,6 @@ theorem demorganize_constant2_proof : demorganize_constant2_before ⊑ demorgani
   ---BEGIN demorganize_constant2
   all_goals (try extract_goal ; sorry)
   ---END demorganize_constant2
-
-
-
-def demorgan_or_zext_before := [llvm|
-{
-^0(%arg16 : i1, %arg17 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %1 = llvm.zext %arg16 : i1 to i32
-  %2 = llvm.zext %arg17 : i1 to i32
-  %3 = llvm.xor %1, %0 : i32
-  %4 = llvm.xor %2, %0 : i32
-  %5 = llvm.or %3, %4 : i32
-  "llvm.return"(%5) : (i32) -> ()
-}
-]
-def demorgan_or_zext_after := [llvm|
-{
-^0(%arg16 : i1, %arg17 : i1):
-  %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
-  %1 = llvm.and %arg16, %arg17 : i1
-  %2 = llvm.xor %1, %0 : i1
-  %3 = llvm.zext %2 : i1 to i32
-  "llvm.return"(%3) : (i32) -> ()
-}
-]
-theorem demorgan_or_zext_proof : demorgan_or_zext_before ⊑ demorgan_or_zext_after := by
-  unfold demorgan_or_zext_before demorgan_or_zext_after
-  simp_alive_peephole
-  ---BEGIN demorgan_or_zext
-  all_goals (try extract_goal ; sorry)
-  ---END demorgan_or_zext
-
-
-
-def demorgan_and_zext_before := [llvm|
-{
-^0(%arg14 : i1, %arg15 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %1 = llvm.zext %arg14 : i1 to i32
-  %2 = llvm.zext %arg15 : i1 to i32
-  %3 = llvm.xor %1, %0 : i32
-  %4 = llvm.xor %2, %0 : i32
-  %5 = llvm.and %3, %4 : i32
-  "llvm.return"(%5) : (i32) -> ()
-}
-]
-def demorgan_and_zext_after := [llvm|
-{
-^0(%arg14 : i1, %arg15 : i1):
-  %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
-  %1 = llvm.or %arg14, %arg15 : i1
-  %2 = llvm.xor %1, %0 : i1
-  %3 = llvm.zext %2 : i1 to i32
-  "llvm.return"(%3) : (i32) -> ()
-}
-]
-theorem demorgan_and_zext_proof : demorgan_and_zext_before ⊑ demorgan_and_zext_after := by
-  unfold demorgan_and_zext_before demorgan_and_zext_after
-  simp_alive_peephole
-  ---BEGIN demorgan_and_zext
-  all_goals (try extract_goal ; sorry)
-  ---END demorgan_and_zext
 
 
 

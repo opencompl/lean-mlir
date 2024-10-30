@@ -57,3 +57,21 @@
 
 4: "test_ne_cp2_other_okay2" has unsupported operation: builtin.unregistered: llvm.icmp
 
+1: "test_eq_0_and_15_add_1"
+4: "test_eq_0_and_15_add_1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test_ne_0_and_15_add_1"
+4: "test_ne_0_and_15_add_1" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test_eq_0_and_15_add_3"
+4: "test_eq_0_and_15_add_3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test_ne_0_and_15_add_3"
+4: "test_ne_0_and_15_add_3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test_eq_11_and_15_add_10"
+4: "test_eq_11_and_15_add_10" has unsupported operation: builtin.unregistered: llvm.icmp
+
+1: "test_ne_11_and_15_add_10"
+4: "test_ne_11_and_15_add_10" has unsupported operation: builtin.unregistered: llvm.icmp
+

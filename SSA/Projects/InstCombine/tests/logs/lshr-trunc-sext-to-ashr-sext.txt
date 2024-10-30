@@ -14,40 +14,31 @@
 5: "usevec4" is empty
 
 1: "t0"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.lshr
-2: llvm.trunc
-2: llvm.sext
-2: llvm.return
+4: "t0" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "t1"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.lshr
-2: llvm.trunc
-2: llvm.sext
-2: llvm.return
+4: "t1" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "t2"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.lshr
-2: llvm.trunc
-2: llvm.sext
-2: llvm.return
+4: "t2" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "n3"
-7: "n3" is unchanged by InstCombine
+4: "n3" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "n3" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "t4_vec_splat"
-8: "t4_vec_splat" contains vectors which are unsupported
+4: "t4_vec_splat" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "t5_vec_poison"
-8: "t5_vec_poison" contains vectors which are unsupported
+4: "t5_vec_poison" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "t6_extrause0"
+4: "t6_extrause0" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "t6_extrause0" has unsupported operation: llvm.call
+
+4: "t6_extrause0" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "t7_extrause0_vec_poison"
 4: "t7_extrause0_vec_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -58,10 +49,16 @@
 
 4: "t7_extrause0_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
 
+4: "t7_extrause0_vec_poison" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "t7_extrause0_vec_poison" has unsupported operation: llvm.call
+
+4: "t7_extrause0_vec_poison" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "t8_extrause1"
 4: "t8_extrause1" has unsupported operation: llvm.call
+
+4: "t8_extrause1" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "t9_extrause1_vec_poison"
 4: "t9_extrause1_vec_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -74,10 +71,16 @@
 
 4: "t9_extrause1_vec_poison" has unsupported operation: llvm.call
 
+4: "t9_extrause1_vec_poison" has unsupported operation: builtin.unregistered: llvm.sext
+
 1: "t10_extrause2"
 4: "t10_extrause2" has unsupported operation: llvm.call
 
+4: "t10_extrause2" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "t10_extrause2" has unsupported operation: llvm.call
+
+4: "t10_extrause2" has unsupported operation: builtin.unregistered: llvm.sext
 
 1: "t11_extrause2_vec_poison"
 4: "t11_extrause2_vec_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -90,28 +93,39 @@
 
 4: "t11_extrause2_vec_poison" has unsupported operation: llvm.call
 
+4: "t11_extrause2_vec_poison" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "t11_extrause2_vec_poison" has unsupported operation: llvm.call
 
+4: "t11_extrause2_vec_poison" has unsupported operation: builtin.unregistered: llvm.sext
+
 1: "wide_source_shifted_signbit"
-8: "wide_source_shifted_signbit" contains vectors which are unsupported
+4: "wide_source_shifted_signbit" has unsupported operation: builtin.unregistered: llvm.trunc
 
 1: "wide_source_shifted_signbit_use1"
 4: "wide_source_shifted_signbit_use1" has unsupported operation: llvm.call
 
+4: "wide_source_shifted_signbit_use1" has unsupported operation: builtin.unregistered: llvm.trunc
+
 1: "wide_source_shifted_signbit_use2"
+4: "wide_source_shifted_signbit_use2" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "wide_source_shifted_signbit_use2" has unsupported operation: llvm.call
 
+4: "wide_source_shifted_signbit_use2" has unsupported operation: builtin.unregistered: llvm.sext
+
 1: "same_source_shifted_signbit"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.lshr
-2: llvm.trunc
-2: llvm.sext
-2: llvm.return
+4: "same_source_shifted_signbit" has unsupported operation after optimization: builtin.unregistered: llvm.trunc
+
+4: "same_source_shifted_signbit" has unsupported operation after optimization: builtin.unregistered: llvm.sext
 
 1: "same_source_shifted_signbit_use1"
 4: "same_source_shifted_signbit_use1" has unsupported operation: llvm.call
 
 1: "same_source_shifted_signbit_use2"
+4: "same_source_shifted_signbit_use2" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "same_source_shifted_signbit_use2" has unsupported operation: llvm.call
+
+4: "same_source_shifted_signbit_use2" has unsupported operation: builtin.unregistered: llvm.sext
 

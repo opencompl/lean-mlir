@@ -21,14 +21,6 @@ theorem test6a_thm : ∀ (e : IntW 55), shl (mul e (const? 3)) (const? 1) ⊑ mu
     all_goals sorry
 
 
-theorem test7_thm : ∀ (e : IntW 8), ashr (const? (-1)) (zext 29 e) ⊑ const? (-1) := by 
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
-
-
 theorem test8_thm : ∀ (e : IntW 7), shl (shl e (const? 4)) (const? 3) ⊑ const? 0 := by 
     simp_alive_undef
     simp_alive_ops
@@ -130,24 +122,6 @@ theorem test15_thm :
     all_goals sorry
 
 
-theorem test15a_thm :
-  ∀ (e : IntW 1),
-    shl (const? 64) (zext 53 (select e (const? 3) (const? 1))) ⊑ select e (const? 512) (const? 128) := by 
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
-
-
-theorem test23_thm : ∀ (e : IntW 44), trunc 11 (ashr (shl e (const? 33)) (const? 33)) ⊑ trunc 11 e := by 
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
-
-
 theorem shl_lshr_eq_amt_multi_use_thm :
   ∀ (e : IntW 44),
     add (shl e (const? 33)) (lshr (shl e (const? 33)) (const? 33)) ⊑
@@ -173,7 +147,7 @@ theorem lshr_shl_eq_amt_multi_use_thm :
 theorem test25_thm :
   ∀ (e e_1 : IntW 37),
     shl (add (lshr e_1 (const? 17)) (lshr e (const? 17))) (const? 17) ⊑
-      LLVM.and (add e (LLVM.and e_1 (const? (-131072)))) (const? (-131072)) := by 
+      LLVM.and (add (LLVM.and e_1 (const? (-131072))) e) (const? (-131072)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

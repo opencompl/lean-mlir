@@ -2,21 +2,63 @@
 5: "use_ptr" is empty
 
 1: "inttoptr"
+4: "inttoptr" has unsupported operation: llvm.inttoptr
+
+4: "inttoptr" has unsupported operation: llvm.inttoptr
+
 4: "inttoptr" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "inttoptr_constant"
+4: "inttoptr_constant" has unsupported operation: llvm.inttoptr
+
+4: "inttoptr_constant" has unsupported operation: llvm.inttoptr
+
 4: "inttoptr_constant" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "inttoptr_vector"
+4: "inttoptr_vector" has unsupported operation: llvm.inttoptr
+
+4: "inttoptr_vector" has unsupported operation: llvm.inttoptr
+
 4: "inttoptr_vector" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "inttoptr_vector_constant"
+4: "inttoptr_vector_constant" has unsupported operation: llvm.inttoptr
+
+4: "inttoptr_vector_constant" has unsupported operation: llvm.inttoptr
+
+4: "inttoptr_vector_constant" has unsupported operation: llvm.mlir.undef
+
+4: "inttoptr_vector_constant" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "inttoptr_vector_constant" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "inttoptr_vector_constant" has unsupported operation: llvm.inttoptr
+
 4: "inttoptr_vector_constant" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "inttoptr_size_mismatch"
+4: "inttoptr_size_mismatch" has unsupported operation: builtin.unregistered: llvm.trunc
+
+4: "inttoptr_size_mismatch" has unsupported operation: llvm.inttoptr
+
+4: "inttoptr_size_mismatch" has unsupported operation: llvm.inttoptr
+
 4: "inttoptr_size_mismatch" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "inttoptr_vector_constant_size_mismatch"
+4: "inttoptr_vector_constant_size_mismatch" has unsupported operation: llvm.inttoptr
+
+4: "inttoptr_vector_constant_size_mismatch" has unsupported operation: llvm.inttoptr
+
+4: "inttoptr_vector_constant_size_mismatch" has unsupported operation: llvm.mlir.undef
+
+4: "inttoptr_vector_constant_size_mismatch" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "inttoptr_vector_constant_size_mismatch" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "inttoptr_vector_constant_size_mismatch" has unsupported operation: llvm.inttoptr
+
 4: "inttoptr_vector_constant_size_mismatch" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "inttoptr_oneside"

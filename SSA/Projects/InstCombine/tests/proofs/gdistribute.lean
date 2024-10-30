@@ -78,7 +78,7 @@ def factorize3_before := [llvm|
 def factorize3_after := [llvm|
 {
 ^0(%arg5 : i32, %arg6 : i32, %arg7 : i32):
-  %0 = llvm.or %arg5, %arg7 : i32
+  %0 = llvm.or %arg7, %arg5 : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]

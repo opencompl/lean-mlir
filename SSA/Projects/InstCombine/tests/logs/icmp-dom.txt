@@ -145,10 +145,14 @@
 
 4: "and_mask1_eq" has unsupported operation: builtin.unregistered: llvm.cond_br
 
+4: "and_mask1_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+
 1: "and_mask1_ne"
 4: "and_mask1_ne" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "and_mask1_ne" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "and_mask1_ne" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "and_mask2"
 4: "and_mask2" has unsupported operation: builtin.unregistered: llvm.icmp
@@ -168,4 +172,6 @@
 4: "and_mask4" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "and_mask4" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "and_mask4" has unsupported operation: builtin.unregistered: llvm.icmp
 

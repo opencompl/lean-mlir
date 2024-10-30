@@ -337,39 +337,6 @@ theorem xor_to_xor4_proof : xor_to_xor4_before ⊑ xor_to_xor4_after := by
 
 
 
-def PR32830_before := [llvm|
-{
-^0(%arg60 : i64, %arg61 : i64, %arg62 : i64):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i64}> : () -> i64
-  %1 = llvm.xor %arg60, %0 : i64
-  %2 = llvm.xor %arg61, %0 : i64
-  %3 = llvm.or %2, %arg60 : i64
-  %4 = llvm.or %1, %arg62 : i64
-  %5 = llvm.and %3, %4 : i64
-  "llvm.return"(%5) : (i64) -> ()
-}
-]
-def PR32830_after := [llvm|
-{
-^0(%arg60 : i64, %arg61 : i64, %arg62 : i64):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i64}> : () -> i64
-  %1 = llvm.xor %arg60, %0 : i64
-  %2 = llvm.xor %arg61, %0 : i64
-  %3 = llvm.or %arg60, %2 : i64
-  %4 = llvm.or %arg62, %1 : i64
-  %5 = llvm.and %3, %4 : i64
-  "llvm.return"(%5) : (i64) -> ()
-}
-]
-theorem PR32830_proof : PR32830_before ⊑ PR32830_after := by
-  unfold PR32830_before PR32830_after
-  simp_alive_peephole
-  ---BEGIN PR32830
-  all_goals (try extract_goal ; sorry)
-  ---END PR32830
-
-
-
 def simplify_or_common_op_commute0_before := [llvm|
 {
 ^0(%arg45 : i4, %arg46 : i4, %arg47 : i4):
@@ -576,7 +543,7 @@ def annihilate_xor_common_op_commute2_after := [llvm|
 {
 ^0(%arg3 : i4, %arg4 : i4, %arg5 : i4, %arg6 : i4):
   %0 = llvm.mul %arg5, %arg5 : i4
-  %1 = llvm.xor %arg4, %0 : i4
+  %1 = llvm.xor %0, %arg4 : i4
   %2 = llvm.xor %1, %arg6 : i4
   "llvm.return"(%2) : (i4) -> ()
 }

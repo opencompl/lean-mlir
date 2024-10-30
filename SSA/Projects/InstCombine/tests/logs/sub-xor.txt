@@ -13,12 +13,7 @@
 8: "low_mask_nsw_nuw_vec" contains vectors which are unsupported
 
 1: "arbitrary_mask_sub_i8"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.and
-2: llvm.sub
-2: llvm.return
+7: "arbitrary_mask_sub_i8" is unchanged by InstCombine
 
 1: "arbitrary_mask_sub_high_bit_dont_care_i8"
 7: "arbitrary_mask_sub_high_bit_dont_care_i8" is unchanged by InstCombine
@@ -30,15 +25,10 @@
 7: "arbitrary_mask_sub_nuw_high_bit_dont_care_i8" is unchanged by InstCombine
 
 1: "arbitrary_mask_sub_v2i5"
-8: "arbitrary_mask_sub_v2i5" contains vectors which are unsupported
+7: "arbitrary_mask_sub_v2i5" is unchanged by InstCombine
 
 1: "not_masked_sub_i8"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.and
-2: llvm.sub
-2: llvm.return
+7: "not_masked_sub_i8" is unchanged by InstCombine
 
 1: "range_masked_sub"
 4: "range_masked_sub" has unsupported operation: builtin.unregistered: llvm.intr.ctlz

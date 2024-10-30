@@ -28,7 +28,7 @@ def test1_after := [llvm|
 ^0(%arg232 : i32, %arg233 : i32):
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg233, %0 : i32
-  %2 = llvm.or %arg232, %1 : i32
+  %2 = llvm.or %1, %arg232 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -56,7 +56,7 @@ def test2_after := [llvm|
 ^0(%arg230 : i32, %arg231 : i32):
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg230, %0 : i32
-  %2 = llvm.or %arg231, %1 : i32
+  %2 = llvm.or %1, %arg231 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -84,7 +84,7 @@ def test3_after := [llvm|
 ^0(%arg228 : i32, %arg229 : i32):
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg229, %0 : i32
-  %2 = llvm.or %arg228, %1 : i32
+  %2 = llvm.or %1, %arg228 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -112,7 +112,7 @@ def test4_after := [llvm|
 ^0(%arg226 : i32, %arg227 : i32):
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg226, %0 : i32
-  %2 = llvm.or %arg227, %1 : i32
+  %2 = llvm.or %1, %arg227 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -192,7 +192,7 @@ def xor_common_op_commute0_before := [llvm|
 def xor_common_op_commute0_after := [llvm|
 {
 ^0(%arg208 : i8, %arg209 : i8):
-  %0 = llvm.or %arg209, %arg208 : i8
+  %0 = llvm.or %arg208, %arg209 : i8
   "llvm.return"(%0) : (i8) -> ()
 }
 ]
@@ -278,7 +278,7 @@ def test8_after := [llvm|
 ^0(%arg200 : i32, %arg201 : i32):
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg200, %0 : i32
-  %2 = llvm.or %arg201, %1 : i32
+  %2 = llvm.or %1, %arg201 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -306,7 +306,7 @@ def test9_after := [llvm|
 ^0(%arg198 : i32, %arg199 : i32):
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg199, %0 : i32
-  %2 = llvm.or %arg198, %1 : i32
+  %2 = llvm.or %1, %arg198 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -395,7 +395,7 @@ def test11_before := [llvm|
 def test11_after := [llvm|
 {
 ^0(%arg184 : i32, %arg185 : i32):
-  %0 = llvm.and %arg185, %arg184 : i32
+  %0 = llvm.and %arg184, %arg185 : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
@@ -422,7 +422,7 @@ def test12_before := [llvm|
 def test12_after := [llvm|
 {
 ^0(%arg182 : i32, %arg183 : i32):
-  %0 = llvm.and %arg183, %arg182 : i32
+  %0 = llvm.and %arg182, %arg183 : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
@@ -449,7 +449,7 @@ def test12_commuted_before := [llvm|
 def test12_commuted_after := [llvm|
 {
 ^0(%arg180 : i32, %arg181 : i32):
-  %0 = llvm.and %arg181, %arg180 : i32
+  %0 = llvm.and %arg180, %arg181 : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
@@ -474,7 +474,7 @@ def test13_before := [llvm|
 def test13_after := [llvm|
 {
 ^0(%arg178 : i32, %arg179 : i32):
-  %0 = llvm.and %arg178, %arg179 : i32
+  %0 = llvm.and %arg179, %arg178 : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
@@ -1204,7 +1204,7 @@ def or_not_xor_common_op_commute0_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -1 : i4}> : () -> i4
   %1 = llvm.and %arg107, %arg108 : i4
   %2 = llvm.xor %1, %0 : i4
-  %3 = llvm.or %arg109, %2 : i4
+  %3 = llvm.or %2, %arg109 : i4
   "llvm.return"(%3) : (i4) -> ()
 }
 ]
@@ -1302,7 +1302,7 @@ def or_not_xor_common_op_commute5_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
   %1 = llvm.and %arg93, %arg92 : i8
   %2 = llvm.xor %1, %0 : i8
-  %3 = llvm.or %arg94, %2 : i8
+  %3 = llvm.or %2, %arg94 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -1455,7 +1455,7 @@ def or_xor_not_after := [llvm|
 ^0(%arg56 : i32, %arg57 : i32):
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg56, %0 : i32
-  %2 = llvm.or %arg57, %1 : i32
+  %2 = llvm.or %1, %arg57 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -1565,251 +1565,6 @@ theorem or_xor_tree_0000_proof : or_xor_tree_0000_before ⊑ or_xor_tree_0000_af
 
 
 
-def or_xor_tree_0001_before := [llvm|
-{
-^0(%arg42 : i32, %arg43 : i32, %arg44 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = llvm.mul %arg42, %0 : i32
-  %2 = llvm.mul %arg43, %0 : i32
-  %3 = llvm.mul %arg44, %0 : i32
-  %4 = llvm.xor %2, %1 : i32
-  %5 = llvm.xor %2, %3 : i32
-  %6 = llvm.xor %5, %1 : i32
-  %7 = llvm.or %4, %6 : i32
-  "llvm.return"(%7) : (i32) -> ()
-}
-]
-def or_xor_tree_0001_after := [llvm|
-{
-^0(%arg42 : i32, %arg43 : i32, %arg44 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = llvm.mul %arg42, %0 : i32
-  %2 = llvm.mul %arg43, %0 : i32
-  %3 = llvm.mul %arg44, %0 : i32
-  %4 = llvm.xor %2, %1 : i32
-  %5 = llvm.or %4, %3 : i32
-  "llvm.return"(%5) : (i32) -> ()
-}
-]
-theorem or_xor_tree_0001_proof : or_xor_tree_0001_before ⊑ or_xor_tree_0001_after := by
-  unfold or_xor_tree_0001_before or_xor_tree_0001_after
-  simp_alive_peephole
-  ---BEGIN or_xor_tree_0001
-  apply or_xor_tree_0001_thm
-  ---END or_xor_tree_0001
-
-
-
-def or_xor_tree_0010_before := [llvm|
-{
-^0(%arg39 : i32, %arg40 : i32, %arg41 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = llvm.mul %arg39, %0 : i32
-  %2 = llvm.mul %arg40, %0 : i32
-  %3 = llvm.mul %arg41, %0 : i32
-  %4 = llvm.xor %1, %2 : i32
-  %5 = llvm.xor %3, %2 : i32
-  %6 = llvm.xor %5, %1 : i32
-  %7 = llvm.or %4, %6 : i32
-  "llvm.return"(%7) : (i32) -> ()
-}
-]
-def or_xor_tree_0010_after := [llvm|
-{
-^0(%arg39 : i32, %arg40 : i32, %arg41 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = llvm.mul %arg39, %0 : i32
-  %2 = llvm.mul %arg40, %0 : i32
-  %3 = llvm.mul %arg41, %0 : i32
-  %4 = llvm.xor %1, %2 : i32
-  %5 = llvm.or %4, %3 : i32
-  "llvm.return"(%5) : (i32) -> ()
-}
-]
-theorem or_xor_tree_0010_proof : or_xor_tree_0010_before ⊑ or_xor_tree_0010_after := by
-  unfold or_xor_tree_0010_before or_xor_tree_0010_after
-  simp_alive_peephole
-  ---BEGIN or_xor_tree_0010
-  apply or_xor_tree_0010_thm
-  ---END or_xor_tree_0010
-
-
-
-def or_xor_tree_0011_before := [llvm|
-{
-^0(%arg36 : i32, %arg37 : i32, %arg38 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = llvm.mul %arg36, %0 : i32
-  %2 = llvm.mul %arg37, %0 : i32
-  %3 = llvm.mul %arg38, %0 : i32
-  %4 = llvm.xor %2, %1 : i32
-  %5 = llvm.xor %3, %2 : i32
-  %6 = llvm.xor %5, %1 : i32
-  %7 = llvm.or %4, %6 : i32
-  "llvm.return"(%7) : (i32) -> ()
-}
-]
-def or_xor_tree_0011_after := [llvm|
-{
-^0(%arg36 : i32, %arg37 : i32, %arg38 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = llvm.mul %arg36, %0 : i32
-  %2 = llvm.mul %arg37, %0 : i32
-  %3 = llvm.mul %arg38, %0 : i32
-  %4 = llvm.xor %2, %1 : i32
-  %5 = llvm.or %4, %3 : i32
-  "llvm.return"(%5) : (i32) -> ()
-}
-]
-theorem or_xor_tree_0011_proof : or_xor_tree_0011_before ⊑ or_xor_tree_0011_after := by
-  unfold or_xor_tree_0011_before or_xor_tree_0011_after
-  simp_alive_peephole
-  ---BEGIN or_xor_tree_0011
-  apply or_xor_tree_0011_thm
-  ---END or_xor_tree_0011
-
-
-
-def or_xor_tree_0100_before := [llvm|
-{
-^0(%arg33 : i32, %arg34 : i32, %arg35 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = llvm.mul %arg33, %0 : i32
-  %2 = llvm.mul %arg34, %0 : i32
-  %3 = llvm.mul %arg35, %0 : i32
-  %4 = llvm.xor %1, %2 : i32
-  %5 = llvm.xor %2, %3 : i32
-  %6 = llvm.xor %1, %5 : i32
-  %7 = llvm.or %4, %6 : i32
-  "llvm.return"(%7) : (i32) -> ()
-}
-]
-def or_xor_tree_0100_after := [llvm|
-{
-^0(%arg33 : i32, %arg34 : i32, %arg35 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = llvm.mul %arg33, %0 : i32
-  %2 = llvm.mul %arg34, %0 : i32
-  %3 = llvm.mul %arg35, %0 : i32
-  %4 = llvm.xor %1, %2 : i32
-  %5 = llvm.or %4, %3 : i32
-  "llvm.return"(%5) : (i32) -> ()
-}
-]
-theorem or_xor_tree_0100_proof : or_xor_tree_0100_before ⊑ or_xor_tree_0100_after := by
-  unfold or_xor_tree_0100_before or_xor_tree_0100_after
-  simp_alive_peephole
-  ---BEGIN or_xor_tree_0100
-  apply or_xor_tree_0100_thm
-  ---END or_xor_tree_0100
-
-
-
-def or_xor_tree_0101_before := [llvm|
-{
-^0(%arg30 : i32, %arg31 : i32, %arg32 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = llvm.mul %arg30, %0 : i32
-  %2 = llvm.mul %arg31, %0 : i32
-  %3 = llvm.mul %arg32, %0 : i32
-  %4 = llvm.xor %2, %1 : i32
-  %5 = llvm.xor %2, %3 : i32
-  %6 = llvm.xor %1, %5 : i32
-  %7 = llvm.or %4, %6 : i32
-  "llvm.return"(%7) : (i32) -> ()
-}
-]
-def or_xor_tree_0101_after := [llvm|
-{
-^0(%arg30 : i32, %arg31 : i32, %arg32 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = llvm.mul %arg30, %0 : i32
-  %2 = llvm.mul %arg31, %0 : i32
-  %3 = llvm.mul %arg32, %0 : i32
-  %4 = llvm.xor %2, %1 : i32
-  %5 = llvm.or %4, %3 : i32
-  "llvm.return"(%5) : (i32) -> ()
-}
-]
-theorem or_xor_tree_0101_proof : or_xor_tree_0101_before ⊑ or_xor_tree_0101_after := by
-  unfold or_xor_tree_0101_before or_xor_tree_0101_after
-  simp_alive_peephole
-  ---BEGIN or_xor_tree_0101
-  apply or_xor_tree_0101_thm
-  ---END or_xor_tree_0101
-
-
-
-def or_xor_tree_0110_before := [llvm|
-{
-^0(%arg27 : i32, %arg28 : i32, %arg29 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = llvm.mul %arg27, %0 : i32
-  %2 = llvm.mul %arg28, %0 : i32
-  %3 = llvm.mul %arg29, %0 : i32
-  %4 = llvm.xor %1, %2 : i32
-  %5 = llvm.xor %3, %2 : i32
-  %6 = llvm.xor %1, %5 : i32
-  %7 = llvm.or %4, %6 : i32
-  "llvm.return"(%7) : (i32) -> ()
-}
-]
-def or_xor_tree_0110_after := [llvm|
-{
-^0(%arg27 : i32, %arg28 : i32, %arg29 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = llvm.mul %arg27, %0 : i32
-  %2 = llvm.mul %arg28, %0 : i32
-  %3 = llvm.mul %arg29, %0 : i32
-  %4 = llvm.xor %1, %2 : i32
-  %5 = llvm.or %4, %3 : i32
-  "llvm.return"(%5) : (i32) -> ()
-}
-]
-theorem or_xor_tree_0110_proof : or_xor_tree_0110_before ⊑ or_xor_tree_0110_after := by
-  unfold or_xor_tree_0110_before or_xor_tree_0110_after
-  simp_alive_peephole
-  ---BEGIN or_xor_tree_0110
-  apply or_xor_tree_0110_thm
-  ---END or_xor_tree_0110
-
-
-
-def or_xor_tree_0111_before := [llvm|
-{
-^0(%arg24 : i32, %arg25 : i32, %arg26 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = llvm.mul %arg24, %0 : i32
-  %2 = llvm.mul %arg25, %0 : i32
-  %3 = llvm.mul %arg26, %0 : i32
-  %4 = llvm.xor %2, %1 : i32
-  %5 = llvm.xor %3, %2 : i32
-  %6 = llvm.xor %1, %5 : i32
-  %7 = llvm.or %4, %6 : i32
-  "llvm.return"(%7) : (i32) -> ()
-}
-]
-def or_xor_tree_0111_after := [llvm|
-{
-^0(%arg24 : i32, %arg25 : i32, %arg26 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = llvm.mul %arg24, %0 : i32
-  %2 = llvm.mul %arg25, %0 : i32
-  %3 = llvm.mul %arg26, %0 : i32
-  %4 = llvm.xor %2, %1 : i32
-  %5 = llvm.or %4, %3 : i32
-  "llvm.return"(%5) : (i32) -> ()
-}
-]
-theorem or_xor_tree_0111_proof : or_xor_tree_0111_before ⊑ or_xor_tree_0111_after := by
-  unfold or_xor_tree_0111_before or_xor_tree_0111_after
-  simp_alive_peephole
-  ---BEGIN or_xor_tree_0111
-  apply or_xor_tree_0111_thm
-  ---END or_xor_tree_0111
-
-
-
 def or_xor_tree_1000_before := [llvm|
 {
 ^0(%arg21 : i32, %arg22 : i32, %arg23 : i32):
@@ -1842,250 +1597,5 @@ theorem or_xor_tree_1000_proof : or_xor_tree_1000_before ⊑ or_xor_tree_1000_af
   ---BEGIN or_xor_tree_1000
   apply or_xor_tree_1000_thm
   ---END or_xor_tree_1000
-
-
-
-def or_xor_tree_1001_before := [llvm|
-{
-^0(%arg18 : i32, %arg19 : i32, %arg20 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = llvm.mul %arg18, %0 : i32
-  %2 = llvm.mul %arg19, %0 : i32
-  %3 = llvm.mul %arg20, %0 : i32
-  %4 = llvm.xor %2, %1 : i32
-  %5 = llvm.xor %2, %3 : i32
-  %6 = llvm.xor %5, %1 : i32
-  %7 = llvm.or %6, %4 : i32
-  "llvm.return"(%7) : (i32) -> ()
-}
-]
-def or_xor_tree_1001_after := [llvm|
-{
-^0(%arg18 : i32, %arg19 : i32, %arg20 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = llvm.mul %arg18, %0 : i32
-  %2 = llvm.mul %arg19, %0 : i32
-  %3 = llvm.mul %arg20, %0 : i32
-  %4 = llvm.xor %2, %1 : i32
-  %5 = llvm.or %4, %3 : i32
-  "llvm.return"(%5) : (i32) -> ()
-}
-]
-theorem or_xor_tree_1001_proof : or_xor_tree_1001_before ⊑ or_xor_tree_1001_after := by
-  unfold or_xor_tree_1001_before or_xor_tree_1001_after
-  simp_alive_peephole
-  ---BEGIN or_xor_tree_1001
-  apply or_xor_tree_1001_thm
-  ---END or_xor_tree_1001
-
-
-
-def or_xor_tree_1010_before := [llvm|
-{
-^0(%arg15 : i32, %arg16 : i32, %arg17 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = llvm.mul %arg15, %0 : i32
-  %2 = llvm.mul %arg16, %0 : i32
-  %3 = llvm.mul %arg17, %0 : i32
-  %4 = llvm.xor %1, %2 : i32
-  %5 = llvm.xor %3, %2 : i32
-  %6 = llvm.xor %5, %1 : i32
-  %7 = llvm.or %6, %4 : i32
-  "llvm.return"(%7) : (i32) -> ()
-}
-]
-def or_xor_tree_1010_after := [llvm|
-{
-^0(%arg15 : i32, %arg16 : i32, %arg17 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = llvm.mul %arg15, %0 : i32
-  %2 = llvm.mul %arg16, %0 : i32
-  %3 = llvm.mul %arg17, %0 : i32
-  %4 = llvm.xor %1, %2 : i32
-  %5 = llvm.or %4, %3 : i32
-  "llvm.return"(%5) : (i32) -> ()
-}
-]
-theorem or_xor_tree_1010_proof : or_xor_tree_1010_before ⊑ or_xor_tree_1010_after := by
-  unfold or_xor_tree_1010_before or_xor_tree_1010_after
-  simp_alive_peephole
-  ---BEGIN or_xor_tree_1010
-  apply or_xor_tree_1010_thm
-  ---END or_xor_tree_1010
-
-
-
-def or_xor_tree_1011_before := [llvm|
-{
-^0(%arg12 : i32, %arg13 : i32, %arg14 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = llvm.mul %arg12, %0 : i32
-  %2 = llvm.mul %arg13, %0 : i32
-  %3 = llvm.mul %arg14, %0 : i32
-  %4 = llvm.xor %2, %1 : i32
-  %5 = llvm.xor %3, %2 : i32
-  %6 = llvm.xor %5, %1 : i32
-  %7 = llvm.or %6, %4 : i32
-  "llvm.return"(%7) : (i32) -> ()
-}
-]
-def or_xor_tree_1011_after := [llvm|
-{
-^0(%arg12 : i32, %arg13 : i32, %arg14 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = llvm.mul %arg12, %0 : i32
-  %2 = llvm.mul %arg13, %0 : i32
-  %3 = llvm.mul %arg14, %0 : i32
-  %4 = llvm.xor %2, %1 : i32
-  %5 = llvm.or %4, %3 : i32
-  "llvm.return"(%5) : (i32) -> ()
-}
-]
-theorem or_xor_tree_1011_proof : or_xor_tree_1011_before ⊑ or_xor_tree_1011_after := by
-  unfold or_xor_tree_1011_before or_xor_tree_1011_after
-  simp_alive_peephole
-  ---BEGIN or_xor_tree_1011
-  apply or_xor_tree_1011_thm
-  ---END or_xor_tree_1011
-
-
-
-def or_xor_tree_1100_before := [llvm|
-{
-^0(%arg9 : i32, %arg10 : i32, %arg11 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = llvm.mul %arg9, %0 : i32
-  %2 = llvm.mul %arg10, %0 : i32
-  %3 = llvm.mul %arg11, %0 : i32
-  %4 = llvm.xor %1, %2 : i32
-  %5 = llvm.xor %2, %3 : i32
-  %6 = llvm.xor %1, %5 : i32
-  %7 = llvm.or %6, %4 : i32
-  "llvm.return"(%7) : (i32) -> ()
-}
-]
-def or_xor_tree_1100_after := [llvm|
-{
-^0(%arg9 : i32, %arg10 : i32, %arg11 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = llvm.mul %arg9, %0 : i32
-  %2 = llvm.mul %arg10, %0 : i32
-  %3 = llvm.mul %arg11, %0 : i32
-  %4 = llvm.xor %1, %2 : i32
-  %5 = llvm.or %4, %3 : i32
-  "llvm.return"(%5) : (i32) -> ()
-}
-]
-theorem or_xor_tree_1100_proof : or_xor_tree_1100_before ⊑ or_xor_tree_1100_after := by
-  unfold or_xor_tree_1100_before or_xor_tree_1100_after
-  simp_alive_peephole
-  ---BEGIN or_xor_tree_1100
-  apply or_xor_tree_1100_thm
-  ---END or_xor_tree_1100
-
-
-
-def or_xor_tree_1101_before := [llvm|
-{
-^0(%arg6 : i32, %arg7 : i32, %arg8 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = llvm.mul %arg6, %0 : i32
-  %2 = llvm.mul %arg7, %0 : i32
-  %3 = llvm.mul %arg8, %0 : i32
-  %4 = llvm.xor %2, %1 : i32
-  %5 = llvm.xor %2, %3 : i32
-  %6 = llvm.xor %1, %5 : i32
-  %7 = llvm.or %6, %4 : i32
-  "llvm.return"(%7) : (i32) -> ()
-}
-]
-def or_xor_tree_1101_after := [llvm|
-{
-^0(%arg6 : i32, %arg7 : i32, %arg8 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = llvm.mul %arg6, %0 : i32
-  %2 = llvm.mul %arg7, %0 : i32
-  %3 = llvm.mul %arg8, %0 : i32
-  %4 = llvm.xor %2, %1 : i32
-  %5 = llvm.or %4, %3 : i32
-  "llvm.return"(%5) : (i32) -> ()
-}
-]
-theorem or_xor_tree_1101_proof : or_xor_tree_1101_before ⊑ or_xor_tree_1101_after := by
-  unfold or_xor_tree_1101_before or_xor_tree_1101_after
-  simp_alive_peephole
-  ---BEGIN or_xor_tree_1101
-  apply or_xor_tree_1101_thm
-  ---END or_xor_tree_1101
-
-
-
-def or_xor_tree_1110_before := [llvm|
-{
-^0(%arg3 : i32, %arg4 : i32, %arg5 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = llvm.mul %arg3, %0 : i32
-  %2 = llvm.mul %arg4, %0 : i32
-  %3 = llvm.mul %arg5, %0 : i32
-  %4 = llvm.xor %1, %2 : i32
-  %5 = llvm.xor %3, %2 : i32
-  %6 = llvm.xor %1, %5 : i32
-  %7 = llvm.or %6, %4 : i32
-  "llvm.return"(%7) : (i32) -> ()
-}
-]
-def or_xor_tree_1110_after := [llvm|
-{
-^0(%arg3 : i32, %arg4 : i32, %arg5 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = llvm.mul %arg3, %0 : i32
-  %2 = llvm.mul %arg4, %0 : i32
-  %3 = llvm.mul %arg5, %0 : i32
-  %4 = llvm.xor %1, %2 : i32
-  %5 = llvm.or %4, %3 : i32
-  "llvm.return"(%5) : (i32) -> ()
-}
-]
-theorem or_xor_tree_1110_proof : or_xor_tree_1110_before ⊑ or_xor_tree_1110_after := by
-  unfold or_xor_tree_1110_before or_xor_tree_1110_after
-  simp_alive_peephole
-  ---BEGIN or_xor_tree_1110
-  apply or_xor_tree_1110_thm
-  ---END or_xor_tree_1110
-
-
-
-def or_xor_tree_1111_before := [llvm|
-{
-^0(%arg0 : i32, %arg1 : i32, %arg2 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = llvm.mul %arg0, %0 : i32
-  %2 = llvm.mul %arg1, %0 : i32
-  %3 = llvm.mul %arg2, %0 : i32
-  %4 = llvm.xor %2, %1 : i32
-  %5 = llvm.xor %3, %2 : i32
-  %6 = llvm.xor %1, %5 : i32
-  %7 = llvm.or %6, %4 : i32
-  "llvm.return"(%7) : (i32) -> ()
-}
-]
-def or_xor_tree_1111_after := [llvm|
-{
-^0(%arg0 : i32, %arg1 : i32, %arg2 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = llvm.mul %arg0, %0 : i32
-  %2 = llvm.mul %arg1, %0 : i32
-  %3 = llvm.mul %arg2, %0 : i32
-  %4 = llvm.xor %2, %1 : i32
-  %5 = llvm.or %4, %3 : i32
-  "llvm.return"(%5) : (i32) -> ()
-}
-]
-theorem or_xor_tree_1111_proof : or_xor_tree_1111_before ⊑ or_xor_tree_1111_after := by
-  unfold or_xor_tree_1111_before or_xor_tree_1111_after
-  simp_alive_peephole
-  ---BEGIN or_xor_tree_1111
-  apply or_xor_tree_1111_thm
-  ---END or_xor_tree_1111
 
 

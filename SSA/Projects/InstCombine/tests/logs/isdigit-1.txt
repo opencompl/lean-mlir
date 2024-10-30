@@ -16,3 +16,5 @@
 1: "test_simplify5"
 4: "test_simplify5" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "test_simplify5" has unsupported operation: builtin.unregistered: llvm.zext
+

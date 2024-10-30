@@ -29,7 +29,7 @@ def t0_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
   %2 = llvm.add %arg19, %0 : i8
-  %3 = llvm.and %arg18, %2 : i8
+  %3 = llvm.and %2, %arg18 : i8
   %4 = llvm.sub %1, %3 : i8
   "llvm.return"(%4) : (i8) -> ()
 }
@@ -58,7 +58,7 @@ def n7_after := [llvm|
 ^0(%arg5 : i8, %arg6 : i8):
   %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
   %1 = llvm.add %arg6, %0 : i8
-  %2 = llvm.and %arg5, %1 : i8
+  %2 = llvm.and %1, %arg5 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
@@ -68,5 +68,34 @@ theorem n7_proof : n7_before ⊑ n7_after := by
   ---BEGIN n7
   all_goals (try extract_goal ; sorry)
   ---END n7
+
+
+
+def n9_before := [llvm|
+{
+^0(%arg0 : i8, %arg1 : i8, %arg2 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
+  %1 = llvm.sub %0, %arg2 : i8
+  %2 = llvm.and %arg1, %1 : i8
+  %3 = llvm.sub %2, %arg0 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+def n9_after := [llvm|
+{
+^0(%arg0 : i8, %arg1 : i8, %arg2 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
+  %1 = llvm.sub %0, %arg2 : i8
+  %2 = llvm.and %1, %arg1 : i8
+  %3 = llvm.sub %2, %arg0 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+theorem n9_proof : n9_before ⊑ n9_after := by
+  unfold n9_before n9_after
+  simp_alive_peephole
+  ---BEGIN n9
+  all_goals (try extract_goal ; sorry)
+  ---END n9
 
 

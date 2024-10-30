@@ -30,14 +30,7 @@
 2: llvm.return
 
 1: "shl_add_add_fail"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.lshr
-2: llvm.lshr
-2: llvm.add
-2: llvm.add
-2: llvm.return
+7: "shl_add_add_fail" is unchanged by InstCombine
 
 1: "shl_and_and_fail2"
 7: "shl_and_and_fail2" is unchanged by InstCombine
@@ -231,34 +224,13 @@
 2: llvm.return
 
 1: "lshr_and_add_fail"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.lshr
-2: llvm.lshr
-2: llvm.and
-2: llvm.add
-2: llvm.return
+7: "lshr_and_add_fail" is unchanged by InstCombine
 
 1: "lshr_add_or_fail"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.lshr
-2: llvm.lshr
-2: llvm.add
-2: llvm.or
-2: llvm.return
+7: "lshr_add_or_fail" is unchanged by InstCombine
 
 1: "lshr_add_xor_fail"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.lshr
-2: llvm.lshr
-2: llvm.add
-2: llvm.xor
-2: llvm.return
+7: "lshr_add_xor_fail" is unchanged by InstCombine
 
 1: "lshr_and_add"
 8: "lshr_and_add" contains vectors which are unsupported
@@ -267,14 +239,7 @@
 7: "lshr_or_add_fail" is unchanged by InstCombine
 
 1: "shl_add_and_fail_mismatch_shift"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.shl
-2: llvm.lshr
-2: llvm.add
-2: llvm.and
-2: llvm.return
+7: "shl_add_and_fail_mismatch_shift" is unchanged by InstCombine
 
 1: "and_ashr_not"
 2: llvm.func

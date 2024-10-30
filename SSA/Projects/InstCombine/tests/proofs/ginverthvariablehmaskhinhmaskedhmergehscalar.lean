@@ -116,7 +116,7 @@ def in_constant_mone_vary_invmask_after := [llvm|
 ^0(%arg37 : i4, %arg38 : i4):
   %0 = "llvm.mlir.constant"() <{value = -1 : i4}> : () -> i4
   %1 = llvm.xor %arg38, %0 : i4
-  %2 = llvm.or %arg37, %1 : i4
+  %2 = llvm.or %1, %arg37 : i4
   "llvm.return"(%2) : (i4) -> ()
 }
 ]

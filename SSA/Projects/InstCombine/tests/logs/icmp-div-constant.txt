@@ -34,6 +34,8 @@
 
 4: "icmp_div" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "icmp_div" has unsupported operation: builtin.unregistered: llvm.sext
+
 4: "icmp_div" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "icmp_div2"
@@ -49,6 +51,8 @@
 4: "icmp_div3" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "icmp_div3" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "icmp_div3" has unsupported operation: builtin.unregistered: llvm.sext
 
 4: "icmp_div3" has unsupported operation: builtin.unregistered: llvm.br
 

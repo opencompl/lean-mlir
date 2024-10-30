@@ -1,4 +1,8 @@
 1: "fabs_sqrt_src_maybe_nan"
+4: "fabs_sqrt_src_maybe_nan" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "fabs_sqrt_src_maybe_nan" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
 4: "fabs_sqrt_src_maybe_nan" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "select_maybe_nan_lhs"

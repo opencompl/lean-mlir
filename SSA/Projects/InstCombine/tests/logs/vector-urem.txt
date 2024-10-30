@@ -10,8 +10,12 @@
 1: "test_v4i32_one"
 4: "test_v4i32_one" has unsupported operation: builtin.unregistered: llvm.icmp
 
+4: "test_v4i32_one" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "test_v4i32_one_poison"
 4: "test_v4i32_one_poison" has unsupported operation: builtin.unregistered: llvm.icmp
+
+4: "test_v4i32_one_poison" has unsupported operation: builtin.unregistered: llvm.zext
 
 1: "test_v4i32_negconstsplat"
 4: "test_v4i32_negconstsplat" has unsupported operation: builtin.unregistered: llvm.freeze

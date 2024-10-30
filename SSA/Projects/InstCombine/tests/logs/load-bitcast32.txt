@@ -1,6 +1,8 @@
 1: "test1"
 4: "test1" has unsupported operation: llvm.load
 
+4: "test1" has unsupported operation: builtin.unregistered: llvm.trunc
+
 4: "test1" has unsupported operation: llvm.inttoptr
 
 1: "test2"
@@ -18,6 +20,8 @@
 
 4: "test4" has unsupported operation: builtin.unregistered: llvm.ptrtoint
 
+4: "test4" has unsupported operation: builtin.unregistered: llvm.zext
+
 1: "test5"
 4: "test5" has unsupported operation: llvm.load
 
@@ -27,4 +31,6 @@
 4: "test6" has unsupported operation: llvm.load
 
 4: "test6" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "test6" has unsupported operation: builtin.unregistered: llvm.zext
 

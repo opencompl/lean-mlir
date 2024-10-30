@@ -33,8 +33,7 @@ theorem t4_thm :
 
 theorem PR52261_thm :
   ∀ (e : IntW 1),
-    LLVM.and (select e (const? 2) (const? (-2)))
-        (sub (const? 0) (select e (const? 2) (const? (-2))) { «nsw» := true, «nuw» := false }) ⊑
+    LLVM.and (select e (const? 2) (const? (-2))) (sub (const? 0) (select e (const? 2) (const? (-2)))) ⊑
       const? 2 := by 
     simp_alive_undef
     simp_alive_ops
@@ -45,8 +44,7 @@ theorem PR52261_thm :
 
 theorem t7_thm :
   ∀ (e : IntW 8) (e_1 : IntW 1) (e_2 : IntW 8),
-    sub e_2 (select e_1 (const? 0) (shl (const? 1) e)) ⊑
-      add (select e_1 (const? 0) (shl (const? (-1)) e { «nsw» := true, «nuw» := false })) e_2 := by 
+    sub e_2 (select e_1 (const? 0) (shl (const? 1) e)) ⊑ add (select e_1 (const? 0) (shl (const? (-1)) e)) e_2 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -102,16 +100,6 @@ theorem sub_from_constant_of_add_with_constant_thm : ∀ (e : IntW 8), sub (cons
     all_goals sorry
 
 
-theorem t20_thm :
-  ∀ (e : IntW 16) (e_1 : IntW 8),
-    sub e_1 (trunc 8 (shl (const? (-42)) e)) ⊑ add e_1 (trunc 8 (shl (const? 42) e)) := by 
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
-
-
 theorem negate_xor_thm :
   ∀ (e : IntW 4), sub (const? 0) (LLVM.xor e (const? 5)) ⊑ add (LLVM.xor e (const? (-6))) (const? 1) := by 
     simp_alive_undef
@@ -156,25 +144,9 @@ theorem negate_lshr_thm : ∀ (e e_1 : IntW 8), sub e_1 (lshr e (const? 7)) ⊑ 
     all_goals sorry
 
 
-theorem negate_sext_thm : ∀ (e : IntW 1) (e_1 : IntW 8), sub e_1 (sext 8 e) ⊑ add e_1 (zext 8 e) := by 
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
-
-
-theorem negate_zext_thm : ∀ (e : IntW 1) (e_1 : IntW 8), sub e_1 (zext 8 e) ⊑ add e_1 (sext 8 e) := by 
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
-
-
 theorem negation_of_increment_via_or_with_no_common_bits_set_thm :
   ∀ (e e_1 : IntW 8),
-    sub e_1 (LLVM.or (shl e (const? 1)) (const? 1)) ⊑ add e_1 (LLVM.xor (shl e (const? 1)) (const? (-1))) := by 
+    sub e_1 (LLVM.or (shl e (const? 1)) (const? 1)) ⊑ add (LLVM.xor (shl e (const? 1)) (const? (-1))) e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -182,7 +154,7 @@ theorem negation_of_increment_via_or_with_no_common_bits_set_thm :
     all_goals sorry
 
 
-theorem negation_of_increment_via_or_disjoint_thm : ∀ (e e_1 : IntW 8), sub e_1 (LLVM.or e (const? 1)) ⊑ add e_1 (LLVM.xor e (const? (-1))) := by 
+theorem negation_of_increment_via_or_disjoint_thm : ∀ (e e_1 : IntW 8), sub e_1 (LLVM.or e (const? 1)) ⊑ add (LLVM.xor e (const? (-1))) e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

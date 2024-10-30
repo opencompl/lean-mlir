@@ -17,7 +17,7 @@ theorem test2_thm :
   ∀ (e e_1 : IntW 39),
     LLVM.or (LLVM.and (add e_1 (LLVM.and e (const? (-274877906944)))) (LLVM.xor (const? 274877906943) (const? (-1))))
         (LLVM.and e_1 (const? 274877906943)) ⊑
-      add e_1 (LLVM.and e (const? (-274877906944))) := by 
+      add (LLVM.and e (const? (-274877906944))) e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -38,7 +38,7 @@ theorem test5_thm :
     LLVM.or
         (LLVM.and (add e_1 (LLVM.and e (const? 18446742974197923840))) (LLVM.xor (const? 274877906943) (const? (-1))))
         (LLVM.and e_1 (const? 274877906943)) ⊑
-      add e_1 (LLVM.and e (const? 18446742974197923840)) := by 
+      add (LLVM.and e (const? 18446742974197923840)) e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

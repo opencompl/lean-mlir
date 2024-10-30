@@ -81,7 +81,7 @@ def test3_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 70368744177663 : i59}> : () -> i59
   %1 = "llvm.mlir.constant"() <{value = 4095 : i59}> : () -> i59
   %2 = "llvm.select"(%arg1, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i59, i59) -> i59
-  %3 = llvm.and %arg0, %2 : i59
+  %3 = llvm.and %2, %arg0 : i59
   "llvm.return"(%3) : (i59) -> ()
 }
 ]

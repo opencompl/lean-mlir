@@ -4,13 +4,21 @@
 1: "atanhTanhInverseFast"
 4: "atanhTanhInverseFast" has unsupported operation: llvm.call
 
+4: "atanhTanhInverseFast" has unsupported operation: llvm.call
+
 1: "sinhAsinhInverseFast"
+4: "sinhAsinhInverseFast" has unsupported operation: llvm.call
+
 4: "sinhAsinhInverseFast" has unsupported operation: llvm.call
 
 1: "asinhSinhInverseFast"
 4: "asinhSinhInverseFast" has unsupported operation: llvm.call
 
+4: "asinhSinhInverseFast" has unsupported operation: llvm.call
+
 1: "coshAcoshInverseFast"
+4: "coshAcoshInverseFast" has unsupported operation: llvm.call
+
 4: "coshAcoshInverseFast" has unsupported operation: llvm.call
 
 1: "indirectTanCall"

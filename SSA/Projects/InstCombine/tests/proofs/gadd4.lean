@@ -131,8 +131,8 @@ def not_match_inconsistent_signs_after := [llvm|
   %2 = llvm.urem %arg13, %0 : i64
   %3 = llvm.sdiv %arg13, %0 : i64
   %4 = llvm.and %3, %1 : i64
-  %5 = llvm.mul %4, %0 overflow<nsw,nuw> : i64
-  %6 = llvm.add %2, %5 overflow<nsw,nuw> : i64
+  %5 = llvm.mul %4, %0 : i64
+  %6 = llvm.add %2, %5 : i64
   "llvm.return"(%6) : (i64) -> ()
 }
 ]
@@ -168,8 +168,8 @@ def not_match_inconsistent_values_after := [llvm|
   %3 = llvm.urem %arg12, %0 : i64
   %4 = llvm.udiv %arg12, %1 : i64
   %5 = llvm.and %4, %2 : i64
-  %6 = llvm.mul %5, %0 overflow<nsw,nuw> : i64
-  %7 = llvm.add %3, %6 overflow<nsw,nuw> : i64
+  %6 = llvm.mul %5, %0 : i64
+  %7 = llvm.add %3, %6 : i64
   "llvm.return"(%7) : (i64) -> ()
 }
 ]
@@ -198,11 +198,12 @@ def fold_add_udiv_urem_after := [llvm|
 {
 ^0(%arg10 : i32):
   %0 = "llvm.mlir.constant"() <{value = 10 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 6 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 4 : i32}> : () -> i32
   %2 = llvm.udiv %arg10, %0 : i32
-  %3 = llvm.mul %2, %1 overflow<nuw> : i32
-  %4 = llvm.add %3, %arg10 : i32
-  "llvm.return"(%4) : (i32) -> ()
+  %3 = llvm.shl %2, %1 : i32
+  %4 = llvm.urem %arg10, %0 : i32
+  %5 = llvm.or %3, %4 : i32
+  "llvm.return"(%5) : (i32) -> ()
 }
 ]
 theorem fold_add_udiv_urem_proof : fold_add_udiv_urem_before ⊑ fold_add_udiv_urem_after := by
@@ -211,69 +212,6 @@ theorem fold_add_udiv_urem_proof : fold_add_udiv_urem_before ⊑ fold_add_udiv_u
   ---BEGIN fold_add_udiv_urem
   apply fold_add_udiv_urem_thm
   ---END fold_add_udiv_urem
-
-
-
-def fold_add_sdiv_srem_before := [llvm|
-{
-^0(%arg9 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 10 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 4 : i32}> : () -> i32
-  %2 = llvm.sdiv %arg9, %0 : i32
-  %3 = llvm.shl %2, %1 : i32
-  %4 = llvm.srem %arg9, %0 : i32
-  %5 = llvm.add %3, %4 : i32
-  "llvm.return"(%5) : (i32) -> ()
-}
-]
-def fold_add_sdiv_srem_after := [llvm|
-{
-^0(%arg9 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 10 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 6 : i32}> : () -> i32
-  %2 = llvm.sdiv %arg9, %0 : i32
-  %3 = llvm.mul %2, %1 overflow<nsw> : i32
-  %4 = llvm.add %3, %arg9 : i32
-  "llvm.return"(%4) : (i32) -> ()
-}
-]
-theorem fold_add_sdiv_srem_proof : fold_add_sdiv_srem_before ⊑ fold_add_sdiv_srem_after := by
-  unfold fold_add_sdiv_srem_before fold_add_sdiv_srem_after
-  simp_alive_peephole
-  ---BEGIN fold_add_sdiv_srem
-  apply fold_add_sdiv_srem_thm
-  ---END fold_add_sdiv_srem
-
-
-
-def fold_add_udiv_urem_to_mul_before := [llvm|
-{
-^0(%arg8 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 7 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 21 : i32}> : () -> i32
-  %2 = "llvm.mlir.constant"() <{value = 3 : i32}> : () -> i32
-  %3 = llvm.udiv %arg8, %0 : i32
-  %4 = llvm.mul %3, %1 : i32
-  %5 = llvm.urem %arg8, %0 : i32
-  %6 = llvm.mul %5, %2 : i32
-  %7 = llvm.add %4, %6 : i32
-  "llvm.return"(%7) : (i32) -> ()
-}
-]
-def fold_add_udiv_urem_to_mul_after := [llvm|
-{
-^0(%arg8 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i32}> : () -> i32
-  %1 = llvm.mul %arg8, %0 : i32
-  "llvm.return"(%1) : (i32) -> ()
-}
-]
-theorem fold_add_udiv_urem_to_mul_proof : fold_add_udiv_urem_to_mul_before ⊑ fold_add_udiv_urem_to_mul_after := by
-  unfold fold_add_udiv_urem_to_mul_before fold_add_udiv_urem_to_mul_after
-  simp_alive_peephole
-  ---BEGIN fold_add_udiv_urem_to_mul
-  apply fold_add_udiv_urem_to_mul_thm
-  ---END fold_add_udiv_urem_to_mul
 
 
 
@@ -293,11 +231,12 @@ def fold_add_udiv_urem_commuted_after := [llvm|
 {
 ^0(%arg6 : i32):
   %0 = "llvm.mlir.constant"() <{value = 10 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 6 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 4 : i32}> : () -> i32
   %2 = llvm.udiv %arg6, %0 : i32
-  %3 = llvm.mul %2, %1 overflow<nuw> : i32
-  %4 = llvm.add %3, %arg6 : i32
-  "llvm.return"(%4) : (i32) -> ()
+  %3 = llvm.shl %2, %1 : i32
+  %4 = llvm.urem %arg6, %0 : i32
+  %5 = llvm.or %4, %3 : i32
+  "llvm.return"(%5) : (i32) -> ()
 }
 ]
 theorem fold_add_udiv_urem_commuted_proof : fold_add_udiv_urem_commuted_before ⊑ fold_add_udiv_urem_commuted_after := by
@@ -306,38 +245,6 @@ theorem fold_add_udiv_urem_commuted_proof : fold_add_udiv_urem_commuted_before �
   ---BEGIN fold_add_udiv_urem_commuted
   apply fold_add_udiv_urem_commuted_thm
   ---END fold_add_udiv_urem_commuted
-
-
-
-def fold_add_udiv_urem_or_disjoint_before := [llvm|
-{
-^0(%arg5 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 10 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 4 : i32}> : () -> i32
-  %2 = llvm.udiv %arg5, %0 : i32
-  %3 = llvm.shl %2, %1 : i32
-  %4 = llvm.urem %arg5, %0 : i32
-  %5 = llvm.or %3, %4 : i32
-  "llvm.return"(%5) : (i32) -> ()
-}
-]
-def fold_add_udiv_urem_or_disjoint_after := [llvm|
-{
-^0(%arg5 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 10 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 6 : i32}> : () -> i32
-  %2 = llvm.udiv %arg5, %0 : i32
-  %3 = llvm.mul %2, %1 overflow<nuw> : i32
-  %4 = llvm.add %3, %arg5 : i32
-  "llvm.return"(%4) : (i32) -> ()
-}
-]
-theorem fold_add_udiv_urem_or_disjoint_proof : fold_add_udiv_urem_or_disjoint_before ⊑ fold_add_udiv_urem_or_disjoint_after := by
-  unfold fold_add_udiv_urem_or_disjoint_before fold_add_udiv_urem_or_disjoint_after
-  simp_alive_peephole
-  ---BEGIN fold_add_udiv_urem_or_disjoint
-  apply fold_add_udiv_urem_or_disjoint_thm
-  ---END fold_add_udiv_urem_or_disjoint
 
 
 

@@ -15,14 +15,7 @@
 8: "lshr_add_commute_splat" contains vectors which are unsupported
 
 1: "lshr_sub"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.srem
-2: llvm.lshr
-2: llvm.sub
-2: llvm.shl
-2: llvm.return
+7: "lshr_sub" is unchanged by InstCombine
 
 1: "lshr_sub_commute_splat"
 8: "lshr_sub_commute_splat" contains vectors which are unsupported
@@ -88,16 +81,7 @@
 8: "lshr_and_add_commute_splat" contains vectors which are unsupported
 
 1: "lshr_and_sub"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.srem
-2: llvm.lshr
-2: llvm.and
-2: llvm.sub
-2: llvm.shl
-2: llvm.return
+7: "lshr_and_sub" is unchanged by InstCombine
 
 1: "lshr_and_sub_commute_splat"
 8: "lshr_and_sub_commute_splat" contains vectors which are unsupported
@@ -242,7 +226,7 @@
 4: "lshr_add_and_shl_v2i32_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 1: "lshr_add_and_shl_v2i32_nonuniform"
-7: "lshr_add_and_shl_v2i32_nonuniform" is unchanged by InstCombine
+8: "lshr_add_and_shl_v2i32_nonuniform" contains vectors which are unsupported
 
 1: "shl_add_and_lshr"
 2: llvm.func

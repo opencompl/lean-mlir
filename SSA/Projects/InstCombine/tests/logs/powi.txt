@@ -52,16 +52,8 @@
 1: "powi_fmul_powi_no_reassoc2"
 4: "powi_fmul_powi_no_reassoc2" has unsupported operation: builtin.unregistered: llvm.intr.powi
 
-4: "powi_fmul_powi_no_reassoc2" has unsupported operation: builtin.unregistered: llvm.intr.powi
-
-4: "powi_fmul_powi_no_reassoc2" has unsupported operation: builtin.unregistered: llvm.fmul
-
 1: "powi_fmul_powi_no_reassoc3"
 4: "powi_fmul_powi_no_reassoc3" has unsupported operation: builtin.unregistered: llvm.intr.powi
-
-4: "powi_fmul_powi_no_reassoc3" has unsupported operation: builtin.unregistered: llvm.intr.powi
-
-4: "powi_fmul_powi_no_reassoc3" has unsupported operation: builtin.unregistered: llvm.fmul
 
 1: "powi_fmul_powi"
 4: "powi_fmul_powi" has unsupported operation: builtin.unregistered: llvm.intr.powi
@@ -130,8 +122,6 @@
 1: "fdiv_powf_powi_missing_reassoc"
 4: "fdiv_powf_powi_missing_reassoc" has unsupported operation: builtin.unregistered: llvm.intr.powi
 
-4: "fdiv_powf_powi_missing_reassoc" has unsupported operation: builtin.unregistered: llvm.fdiv
-
 1: "fdiv_powf_powi_missing_reassoc1"
 4: "fdiv_powf_powi_missing_reassoc1" has unsupported operation: builtin.unregistered: llvm.intr.powi
 
@@ -155,13 +145,23 @@
 1: "fdiv_fmul_powi"
 4: "fdiv_fmul_powi" has unsupported operation: builtin.unregistered: llvm.intr.powi
 
+4: "fdiv_fmul_powi" has unsupported operation: builtin.unregistered: llvm.fmul
+
 4: "fdiv_fmul_powi" has unsupported operation: builtin.unregistered: llvm.fdiv
 
 1: "fdiv_fmul_powi_2"
 4: "fdiv_fmul_powi_2" has unsupported operation: builtin.unregistered: llvm.intr.powi
 
+4: "fdiv_fmul_powi_2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fdiv_fmul_powi_2" has unsupported operation: builtin.unregistered: llvm.fdiv
+
 1: "fdiv_fmul_powi_vector"
 4: "fdiv_fmul_powi_vector" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "fdiv_fmul_powi_vector" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fdiv_fmul_powi_vector" has unsupported operation: builtin.unregistered: llvm.fdiv
 
 1: "fdiv_fmul_powi_missing_reassoc1"
 4: "fdiv_fmul_powi_missing_reassoc1" has unsupported operation: builtin.unregistered: llvm.intr.powi
@@ -207,6 +207,8 @@
 
 1: "powi_fmul_powi_x"
 4: "powi_fmul_powi_x" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "powi_fmul_powi_x" has unsupported operation: builtin.unregistered: llvm.fmul
 
 1: "powi_fmul_powi_x_multi_use"
 4: "powi_fmul_powi_x_multi_use" has unsupported operation: builtin.unregistered: llvm.intr.powi

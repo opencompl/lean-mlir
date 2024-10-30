@@ -45,36 +45,6 @@ theorem udiv2_thm : ∀ (e e_1 : IntW 32), LLVM.udiv e_1 (shl (const? 1) e) ⊑ 
     all_goals sorry
 
 
-theorem mul_of_udiv_thm : ∀ (e : IntW 8), mul (LLVM.udiv e (const? 12)) (const? 6) ⊑ lshr e (const? 1) := by 
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
-
-
-theorem mul_of_sdiv_thm :
-  ∀ (e : IntW 8),
-    mul (LLVM.sdiv e (const? 12)) (const? (-6)) ⊑
-      sub (const? 0) (ashr e (const? 1)) { «nsw» := true, «nuw» := false } := by 
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
-
-
-theorem mul_of_udiv_fail_bad_remainder_thm :
-  ∀ (e : IntW 8),
-    mul (LLVM.udiv e (const? 11)) (const? 6) ⊑
-      mul (LLVM.udiv e (const? 11)) (const? 6) { «nsw» := false, «nuw» := true } := by 
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
-
-
 theorem mul_of_sdiv_fail_ub_thm : ∀ (e : IntW 8), mul (LLVM.sdiv e (const? 6)) (const? (-6)) ⊑ sub (const? 0) e := by 
     simp_alive_undef
     simp_alive_ops

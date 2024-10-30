@@ -419,7 +419,7 @@ def and_logic_and_logic_or_6_after := [llvm|
 ^0(%arg123 : i1, %arg124 : i1, %arg125 : i1):
   %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
   %1 = "llvm.select"(%arg125, %0, %arg124) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
-  %2 = llvm.and %arg123, %1 : i1
+  %2 = llvm.and %1, %arg123 : i1
   "llvm.return"(%2) : (i1) -> ()
 }
 ]
@@ -478,7 +478,7 @@ def and_logic_and_logic_or_8_after := [llvm|
 ^0(%arg117 : i1, %arg118 : i1, %arg119 : i1):
   %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
   %1 = "llvm.select"(%arg119, %0, %arg118) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
-  %2 = llvm.and %arg117, %1 : i1
+  %2 = llvm.and %1, %arg117 : i1
   "llvm.return"(%2) : (i1) -> ()
 }
 ]
@@ -506,7 +506,7 @@ def and_and_logic_or_1_after := [llvm|
 ^0(%arg102 : i1, %arg103 : i1, %arg104 : i1):
   %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
   %1 = "llvm.select"(%arg103, %0, %arg104) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
-  %2 = llvm.and %arg102, %1 : i1
+  %2 = llvm.and %1, %arg102 : i1
   "llvm.return"(%2) : (i1) -> ()
 }
 ]
@@ -534,7 +534,7 @@ def and_and_logic_or_2_after := [llvm|
 ^0(%arg99 : i1, %arg100 : i1, %arg101 : i1):
   %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
   %1 = "llvm.select"(%arg101, %0, %arg100) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
-  %2 = llvm.and %arg99, %1 : i1
+  %2 = llvm.and %1, %arg99 : i1
   "llvm.return"(%2) : (i1) -> ()
 }
 ]
@@ -893,7 +893,7 @@ def or_logic_or_logic_and_4_after := [llvm|
 ^0(%arg39 : i1, %arg40 : i1, %arg41 : i1):
   %0 = "llvm.mlir.constant"() <{value = false}> : () -> i1
   %1 = "llvm.select"(%arg41, %arg40, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
-  %2 = llvm.or %arg39, %1 : i1
+  %2 = llvm.or %1, %arg39 : i1
   "llvm.return"(%2) : (i1) -> ()
 }
 ]
@@ -1012,7 +1012,7 @@ def or_logic_or_logic_and_8_after := [llvm|
 ^0(%arg27 : i1, %arg28 : i1, %arg29 : i1):
   %0 = "llvm.mlir.constant"() <{value = false}> : () -> i1
   %1 = "llvm.select"(%arg29, %arg28, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
-  %2 = llvm.or %arg27, %1 : i1
+  %2 = llvm.or %1, %arg27 : i1
   "llvm.return"(%2) : (i1) -> ()
 }
 ]
@@ -1040,7 +1040,7 @@ def or_or_logic_and_1_after := [llvm|
 ^0(%arg12 : i1, %arg13 : i1, %arg14 : i1):
   %0 = "llvm.mlir.constant"() <{value = false}> : () -> i1
   %1 = "llvm.select"(%arg13, %arg14, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
-  %2 = llvm.or %arg12, %1 : i1
+  %2 = llvm.or %1, %arg12 : i1
   "llvm.return"(%2) : (i1) -> ()
 }
 ]
@@ -1068,7 +1068,7 @@ def or_or_logic_and_2_after := [llvm|
 ^0(%arg9 : i1, %arg10 : i1, %arg11 : i1):
   %0 = "llvm.mlir.constant"() <{value = false}> : () -> i1
   %1 = "llvm.select"(%arg11, %arg10, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
-  %2 = llvm.or %arg9, %1 : i1
+  %2 = llvm.or %1, %arg9 : i1
   "llvm.return"(%2) : (i1) -> ()
 }
 ]

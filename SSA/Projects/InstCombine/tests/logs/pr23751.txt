@@ -1,6 +1,8 @@
 1: "f"
 4: "f" has unsupported operation: llvm.mlir.addressof
 
+4: "f" has unsupported operation: builtin.unregistered: llvm.zext
+
 4: "f" has unsupported operation: llvm.load
 
 4: "f" has unsupported operation: builtin.unregistered: llvm.icmp
