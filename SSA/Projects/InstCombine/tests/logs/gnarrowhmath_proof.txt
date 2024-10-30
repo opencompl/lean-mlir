@@ -1,0 +1,137 @@
+⚠ [2488/2503] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2492/2503] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [2493/2503] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [2498/2503] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [2499/2503] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [2503/2503] Building SSA.Projects.InstCombine.tests.LLVM.gnarrowhmath
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/tcg40/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.c --json
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:45:17: theorem extracted_1 :
+  ∀ (e : IntW 32),
+    add (sext 64 (ashr e (const? 7))) (sext 64 (ashr e (const? 9))) ⊑
+      sext 64 (add (ashr e (const? 7)) (ashr e (const? 9)) { «nsw» := true, «nuw» := false }) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:41:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:41:8: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:50:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:63:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:76:46: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:76:46: tactic 'rfl' failed, the left-hand side
+  ⟦?m.45821⟧
+is not definitionally equal to the right-hand side
+  Option ?m.45819
+sext_zext_add_mismatched_exts_before sext_zext_add_mismatched_exts_after :
+  Com InstCombine.LLVM ?m.45820 EffectKind.pure ?m.45821
+⊢ ⟦?m.45821⟧ = Option ?m.45819
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:77:9: tactic 'unfold' failed, local variable 'sext_zext_add_mismatched_exts_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:85:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:98:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:111:47: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:111:47: tactic 'rfl' failed, the left-hand side
+  ⟦?m.60102⟧
+is not definitionally equal to the right-hand side
+  Option ?m.60100
+sext_sext_add_mismatched_types_before sext_sext_add_mismatched_types_after :
+  Com InstCombine.LLVM ?m.60101 EffectKind.pure ?m.60102
+⊢ ⟦?m.60102⟧ = Option ?m.60100
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:112:9: tactic 'unfold' failed, local variable 'sext_sext_add_mismatched_types_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:120:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:131:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:142:22: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:142:22: tactic 'rfl' failed, the left-hand side
+  ⟦?m.70223⟧
+is not definitionally equal to the right-hand side
+  Option ?m.70221
+test5_before test5_after : Com InstCombine.LLVM ?m.70222 EffectKind.pure ?m.70223
+⊢ ⟦?m.70223⟧ = Option ?m.70221
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:143:9: tactic 'unfold' failed, local variable 'test5_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:151:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:162:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:173:22: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:173:22: tactic 'rfl' failed, the left-hand side
+  ⟦?m.80414⟧
+is not definitionally equal to the right-hand side
+  Option ?m.80412
+test6_before test6_after : Com InstCombine.LLVM ?m.80413 EffectKind.pure ?m.80414
+⊢ ⟦?m.80414⟧ = Option ?m.80412
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:174:9: tactic 'unfold' failed, local variable 'test6_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:182:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:193:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:204:22: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:204:22: tactic 'rfl' failed, the left-hand side
+  ⟦?m.90398⟧
+is not definitionally equal to the right-hand side
+  Option ?m.90396
+test7_before test7_after : Com InstCombine.LLVM ?m.90397 EffectKind.pure ?m.90398
+⊢ ⟦?m.90398⟧ = Option ?m.90396
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:205:9: tactic 'unfold' failed, local variable 'test7_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:213:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:224:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:235:22: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:235:22: tactic 'rfl' failed, the left-hand side
+  ⟦?m.100593⟧
+is not definitionally equal to the right-hand side
+  Option ?m.100591
+test8_before test8_after : Com InstCombine.LLVM ?m.100592 EffectKind.pure ?m.100593
+⊢ ⟦?m.100593⟧ = Option ?m.100591
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:236:9: tactic 'unfold' failed, local variable 'test8_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:244:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:255:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:266:22: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:266:22: tactic 'rfl' failed, the left-hand side
+  ⟦?m.110858⟧
+is not definitionally equal to the right-hand side
+  Option ?m.110856
+test9_before test9_after : Com InstCombine.LLVM ?m.110857 EffectKind.pure ?m.110858
+⊢ ⟦?m.110858⟧ = Option ?m.110856
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:267:9: tactic 'unfold' failed, local variable 'test9_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:275:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:286:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:297:23: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:297:23: tactic 'rfl' failed, the left-hand side
+  ⟦?m.120868⟧
+is not definitionally equal to the right-hand side
+  Option ?m.120866
+test10_before test10_after : Com InstCombine.LLVM ?m.120867 EffectKind.pure ?m.120868
+⊢ ⟦?m.120868⟧ = Option ?m.120866
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:298:9: tactic 'unfold' failed, local variable 'test10_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:306:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:317:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:328:23: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:328:23: tactic 'rfl' failed, the left-hand side
+  ⟦?m.131289⟧
+is not definitionally equal to the right-hand side
+  Option ?m.131287
+test15_before test15_after : Com InstCombine.LLVM ?m.131288 EffectKind.pure ?m.131289
+⊢ ⟦?m.131289⟧ = Option ?m.131287
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:329:9: tactic 'unfold' failed, local variable 'test15_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:337:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:348:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:359:23: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:359:23: tactic 'rfl' failed, the left-hand side
+  ⟦?m.141524⟧
+is not definitionally equal to the right-hand side
+  Option ?m.141522
+test16_before test16_after : Com InstCombine.LLVM ?m.141523 EffectKind.pure ?m.141524
+⊢ ⟦?m.141524⟧ = Option ?m.141522
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnarrowhmath.lean:360:9: tactic 'unfold' failed, local variable 'test16_before' has no definition
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.gnarrowhmath
+error: build failed

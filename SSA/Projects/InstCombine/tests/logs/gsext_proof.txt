@@ -144,3 +144,76 @@ error: Lean exited with code 1
 Some required builds logged failures:
 - SSA.Projects.InstCombine.tests.LLVM.gsext
 error: build failed
+⚠ [2488/2503] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2492/2503] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [2493/2503] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [2498/2503] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [2499/2503] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [2503/2503] Building SSA.Projects.InstCombine.tests.LLVM.gsext
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/tcg40/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gsext.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gsext.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gsext.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gsext.c --json
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gsext.lean:38:17: theorem extracted_1 : ∀ (e : IntW 32), sext 64 (LLVM.udiv e (const? 3)) ⊑ zext 64 (LLVM.udiv e (const? 3)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gsext.lean:34:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gsext.lean:65:17: theorem extracted_1 : ∀ (e : IntW 32), sext 64 (urem e (const? 30000)) ⊑ zext 64 (urem e (const? 30000)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gsext.lean:61:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gsext.lean:94:17: theorem extracted_1 :
+  ∀ (e : IntW 32),
+    sext 64 (mul (lshr e (const? 3)) (const? 3)) ⊑
+      zext 64 (mul (lshr e (const? 3)) (const? 3) { «nsw» := true, «nuw» := true }) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gsext.lean:90:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gsext.lean:125:17: theorem extracted_1 :
+  ∀ (e : IntW 32),
+    sext 64 (sub (const? 20000) (LLVM.and e (const? 511))) ⊑
+      zext 64 (sub (const? 20000) (LLVM.and e (const? 511)) { «nsw» := true, «nuw» := true }) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gsext.lean:121:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gsext.lean:130:20: Expected `Except.ok`, found Except.error TransformError.unsupportedType
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gsext.lean:142:19: Expected `Except.ok`, found Except.error TransformError.unsupportedType
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gsext.lean:152:22: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gsext.lean:152:22: tactic 'rfl' failed, the left-hand side
+  ⟦?m.77229⟧
+is not definitionally equal to the right-hand side
+  Option ?m.77227
+test8_before test8_after : Com InstCombine.LLVM ?m.77228 EffectKind.pure ?m.77229
+⊢ ⟦?m.77229⟧ = Option ?m.77227
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gsext.lean:153:9: tactic 'unfold' failed, local variable 'test8_before' has no definition
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gsext.lean:185:17: theorem extracted_1 :
+  ∀ (e : IntW 32),
+    sext 32 (ashr (shl (trunc 8 e) (const? 6)) (const? 6)) ⊑ ashr (shl e (const? 30)) (const? 30) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gsext.lean:181:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gsext.lean:210:17: theorem extracted_1 : ∀ (e : IntW 1), sub (const? 0) (sext 32 e) ⊑ zext 32 e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gsext.lean:206:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gsext.lean:242:17: theorem extracted_1 :
+  ∀ (e : IntW 10),
+    sext 10 (ashr (shl (trunc 3 e) (const? 2)) (const? 2)) ⊑
+      sext 10 (sub (const? 0) (LLVM.and (trunc 3 e) (const? 1)) { «nsw» := true, «nuw» := false }) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gsext.lean:238:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gsext.lean:271:17: theorem extracted_1 :
+  ∀ (e : IntW 32), sext 32 (ashr (trunc 8 e) (const? 7)) ⊑ ashr (shl e (const? 24)) (const? 31) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gsext.lean:267:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gsext.lean:301:17: theorem extracted_1 :
+  ∀ (e : IntW 32), sext 16 (ashr (trunc 8 e) (const? 7)) ⊑ trunc 16 (ashr (shl e (const? 24)) (const? 31)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gsext.lean:297:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gsext.lean:331:17: theorem extracted_1 :
+  ∀ (e : IntW 32), sext 64 (ashr (trunc 8 e) (const? 7)) ⊑ sext 64 (ashr (shl e (const? 24)) (const? 31)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gsext.lean:327:8: declaration uses 'sorry'
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.gsext
+error: build failed

@@ -59,3 +59,64 @@ error: Lean exited with code 1
 Some required builds logged failures:
 - SSA.Projects.InstCombine.tests.LLVM.gnestedhselect
 error: build failed
+⚠ [2488/2503] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2492/2503] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [2493/2503] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [2498/2503] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [2499/2503] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [2503/2503] Building SSA.Projects.InstCombine.tests.LLVM.gnestedhselect
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/tcg40/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.c --json
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:38:17: theorem extracted_1 :
+  ∀ (e e_1 e_2 : IntW 8) (e_3 e_4 : IntW 1),
+    select (select e_4 e_3 (const? 0)) e_2 (select e_4 e_1 e) ⊑ select e_4 (select e_3 e_2 e_1) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:34:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:65:17: theorem extracted_1 :
+  ∀ (e e_1 e_2 : IntW 8) (e_3 e_4 : IntW 1),
+    select (select e_4 (const? 1) e_3) (select e_4 e_2 e_1) e ⊑ select e_4 e_2 (select e_3 e_1 e) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:61:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:70:11: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:82:11: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:93:15: unexpected token '.'; expected ':'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:102:10: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:113:10: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:123:14: unexpected token '.'; expected ':'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:132:11: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:144:11: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:153:15: unexpected token '.'; expected ':'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:162:10: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:173:10: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:182:14: unexpected token '.'; expected ':'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:191:11: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:203:11: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:211:15: unexpected token '.'; expected ':'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:220:10: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:231:10: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:239:14: unexpected token '.'; expected ':'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:248:11: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:261:11: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:272:15: unexpected token '.'; expected ':'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:281:10: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:293:10: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:303:14: unexpected token '.'; expected ':'
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.gnestedhselect
+error: build failed
