@@ -1,0 +1,76 @@
+⚠ [2488/2503] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2492/2503] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [2493/2503] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [2498/2503] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [2499/2503] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [2503/2503] Building SSA.Projects.InstCombine.tests.LLVM.gnot
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/tcg40/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gnot.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gnot.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gnot.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gnot.c --json
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gnot.lean:35:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.xor (LLVM.xor e (const? (-1))) (const? (-1)) ⊑ e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gnot.lean:31:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gnot.lean:61:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32), LLVM.xor (ashr (LLVM.xor e_1 (const? (-1))) e) (const? (-1)) ⊑ ashr e_1 e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gnot.lean:57:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gnot.lean:88:17: theorem extracted_1 : ∀ (e : IntW 8), LLVM.xor (ashr (const? (-42)) e) (const? (-1)) ⊑ lshr (const? 41) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gnot.lean:84:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gnot.lean:115:17: theorem extracted_1 : ∀ (e : IntW 8), LLVM.xor (lshr (const? 42) e) (const? (-1)) ⊑ ashr (const? (-43)) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gnot.lean:111:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gnot.lean:142:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.xor (sub (const? 123) e) (const? (-1)) ⊑ add e (const? (-124)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gnot.lean:138:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gnot.lean:169:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.xor (add e (const? 123)) (const? (-1)) ⊑ sub (const? (-124)) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gnot.lean:165:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gnot.lean:199:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 8),
+    LLVM.xor (LLVM.or (sub (const? 0) e_1) e) (const? (-1)) ⊑
+      LLVM.and (add e_1 (const? (-1))) (LLVM.xor e (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gnot.lean:195:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gnot.lean:227:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 1),
+    LLVM.xor (select e_1 e (const? 1)) (const? 1) ⊑ select e_1 (LLVM.xor e (const? 1)) (const? 0) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gnot.lean:223:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gnot.lean:255:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 1),
+    LLVM.xor (select e_1 (const? 0) e) (const? 1) ⊑ select e_1 (const? 1) (LLVM.xor e (const? 1)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gnot.lean:251:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gnot.lean:284:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 1),
+    LLVM.xor (select e_1 (LLVM.xor e (const? 1)) (const? 0)) (const? 1) ⊑
+      select (LLVM.xor e_1 (const? 1)) (const? 1) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gnot.lean:280:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gnot.lean:313:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 1),
+    LLVM.xor (select e_1 (const? 1) (LLVM.xor e (const? 1))) (const? 1) ⊑
+      select (LLVM.xor e_1 (const? 1)) e (const? 0) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gnot.lean:309:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gnot.lean:346:17: theorem extracted_1 :
+  ∀ (e : IntW 64) (e_1 : IntW 32) (e_2 : IntW 64),
+    sub (add e_2 (const? (-5))) (add (zext 64 (LLVM.xor e_1 (const? (-1)))) e) ⊑
+      add (add e_2 (const? (-4))) (sub (sext 64 e_1) e) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gnot.lean:342:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gnot.lean:376:17: theorem extracted_1 :
+  ∀ (e : IntW 64),
+    LLVM.xor (LLVM.and (add e (const? 9223372036854775807)) (const? 9223372036854775807)) (const? (-1)) ⊑
+      LLVM.or (sub (const? 0) e) (const? (-9223372036854775808)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gnot.lean:372:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnot.lean:372:8: (kernel) deterministic timeout
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.gnot
+error: build failed
