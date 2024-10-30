@@ -67,7 +67,7 @@ def srem_i1_is_zero_before := [llvm|
 def srem_i1_is_zero_after := [llvm|
 {
 ^0(%arg2 : i1, %arg3 : i1):
-  %0 = "llvm.mlir.constant"() <{value = false}> : () -> i1
+  %0 = llvm.mlir.constant(false) : i1
   "llvm.return"(%0) : (i1) -> ()
 }
 ]
@@ -90,7 +90,7 @@ def urem_i1_is_zero_before := [llvm|
 def urem_i1_is_zero_after := [llvm|
 {
 ^0(%arg0 : i1, %arg1 : i1):
-  %0 = "llvm.mlir.constant"() <{value = false}> : () -> i1
+  %0 = llvm.mlir.constant(false) : i1
   "llvm.return"(%0) : (i1) -> ()
 }
 ]

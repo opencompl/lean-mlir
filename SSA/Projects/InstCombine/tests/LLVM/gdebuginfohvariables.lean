@@ -40,8 +40,8 @@ theorem test_sext_zext_proof : test_sext_zext_before ⊑ test_sext_zext_after :=
 def test_cast_select_before := [llvm|
 {
 ^0(%arg12 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i16}> : () -> i16
-  %1 = "llvm.mlir.constant"() <{value = 5 : i16}> : () -> i16
+  %0 = llvm.mlir.constant(3 : i16) : i16
+  %1 = llvm.mlir.constant(5 : i16) : i16
   %2 = "llvm.select"(%arg12, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i16, i16) -> i16
   %3 = llvm.zext %2 : i16 to i32
   "llvm.return"(%3) : (i32) -> ()
@@ -50,8 +50,8 @@ def test_cast_select_before := [llvm|
 def test_cast_select_after := [llvm|
 {
 ^0(%arg12 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 5 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(3 : i32) : i32
+  %1 = llvm.mlir.constant(5 : i32) : i32
   %2 = "llvm.select"(%arg12, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   "llvm.return"(%2) : (i32) -> ()
 }

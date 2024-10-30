@@ -16,7 +16,7 @@ section gexact_statements
 def sdiv2_before := [llvm|
 {
 ^0(%arg39 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(8 : i32) : i32
   %1 = llvm.sdiv %arg39, %0 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
@@ -24,7 +24,7 @@ def sdiv2_before := [llvm|
 def sdiv2_after := [llvm|
 {
 ^0(%arg39 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(3 : i32) : i32
   %1 = llvm.ashr %arg39, %0 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
@@ -41,7 +41,7 @@ theorem sdiv2_proof : sdiv2_before ⊑ sdiv2_after := by
 def sdiv4_before := [llvm|
 {
 ^0(%arg36 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(3 : i32) : i32
   %1 = llvm.sdiv %arg36, %0 : i32
   %2 = llvm.mul %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -65,8 +65,8 @@ theorem sdiv4_proof : sdiv4_before ⊑ sdiv4_after := by
 def sdiv6_before := [llvm|
 {
 ^0(%arg34 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -3 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(3 : i32) : i32
+  %1 = llvm.mlir.constant(-3 : i32) : i32
   %2 = llvm.sdiv %arg34, %0 : i32
   %3 = llvm.mul %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -75,7 +75,7 @@ def sdiv6_before := [llvm|
 def sdiv6_after := [llvm|
 {
 ^0(%arg34 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(0 : i32) : i32
   %1 = llvm.sub %0, %arg34 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
@@ -115,7 +115,7 @@ theorem udiv1_proof : udiv1_before ⊑ udiv1_after := by
 def udiv2_before := [llvm|
 {
 ^0(%arg30 : i32, %arg31 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
   %1 = llvm.shl %0, %arg31 : i32
   %2 = llvm.udiv %arg30, %1 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -140,8 +140,8 @@ theorem udiv2_proof : udiv2_before ⊑ udiv2_after := by
 def mul_of_udiv_before := [llvm|
 {
 ^0(%arg6 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 12 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(12 : i8) : i8
+  %1 = llvm.mlir.constant(6 : i8) : i8
   %2 = llvm.udiv %arg6, %0 : i8
   %3 = llvm.mul %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
@@ -150,7 +150,7 @@ def mul_of_udiv_before := [llvm|
 def mul_of_udiv_after := [llvm|
 {
 ^0(%arg6 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(1 : i8) : i8
   %1 = llvm.lshr %arg6, %0 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
@@ -167,8 +167,8 @@ theorem mul_of_udiv_proof : mul_of_udiv_before ⊑ mul_of_udiv_after := by
 def mul_of_sdiv_before := [llvm|
 {
 ^0(%arg5 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 12 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = -6 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(12 : i8) : i8
+  %1 = llvm.mlir.constant(-6 : i8) : i8
   %2 = llvm.sdiv %arg5, %0 : i8
   %3 = llvm.mul %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
@@ -177,8 +177,8 @@ def mul_of_sdiv_before := [llvm|
 def mul_of_sdiv_after := [llvm|
 {
 ^0(%arg5 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(1 : i8) : i8
+  %1 = llvm.mlir.constant(0 : i8) : i8
   %2 = llvm.ashr %arg5, %0 : i8
   %3 = llvm.sub %1, %2 overflow<nsw> : i8
   "llvm.return"(%3) : (i8) -> ()
@@ -196,8 +196,8 @@ theorem mul_of_sdiv_proof : mul_of_sdiv_before ⊑ mul_of_sdiv_after := by
 def mul_of_udiv_fail_bad_remainder_before := [llvm|
 {
 ^0(%arg2 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 11 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(11 : i8) : i8
+  %1 = llvm.mlir.constant(6 : i8) : i8
   %2 = llvm.udiv %arg2, %0 : i8
   %3 = llvm.mul %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
@@ -206,8 +206,8 @@ def mul_of_udiv_fail_bad_remainder_before := [llvm|
 def mul_of_udiv_fail_bad_remainder_after := [llvm|
 {
 ^0(%arg2 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 11 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(11 : i8) : i8
+  %1 = llvm.mlir.constant(6 : i8) : i8
   %2 = llvm.udiv %arg2, %0 : i8
   %3 = llvm.mul %2, %1 overflow<nuw> : i8
   "llvm.return"(%3) : (i8) -> ()
@@ -225,8 +225,8 @@ theorem mul_of_udiv_fail_bad_remainder_proof : mul_of_udiv_fail_bad_remainder_be
 def mul_of_sdiv_fail_ub_before := [llvm|
 {
 ^0(%arg1 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = -6 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(6 : i8) : i8
+  %1 = llvm.mlir.constant(-6 : i8) : i8
   %2 = llvm.sdiv %arg1, %0 : i8
   %3 = llvm.mul %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
@@ -235,7 +235,7 @@ def mul_of_sdiv_fail_ub_before := [llvm|
 def mul_of_sdiv_fail_ub_after := [llvm|
 {
 ^0(%arg1 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(0 : i8) : i8
   %1 = llvm.sub %0, %arg1 : i8
   "llvm.return"(%1) : (i8) -> ()
 }

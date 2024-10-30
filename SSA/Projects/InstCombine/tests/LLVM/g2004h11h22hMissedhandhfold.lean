@@ -16,8 +16,8 @@ section g2004h11h22hMissedhandhfold_statements
 def test21_before := [llvm|
 {
 ^0(%arg0 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 7 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(7 : i8) : i8
+  %1 = llvm.mlir.constant(1 : i8) : i8
   %2 = llvm.ashr %arg0, %0 : i8
   %3 = llvm.and %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
@@ -26,7 +26,7 @@ def test21_before := [llvm|
 def test21_after := [llvm|
 {
 ^0(%arg0 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 7 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(7 : i8) : i8
   %1 = llvm.lshr %arg0, %0 : i8
   "llvm.return"(%1) : (i8) -> ()
 }

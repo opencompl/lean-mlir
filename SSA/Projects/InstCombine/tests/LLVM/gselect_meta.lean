@@ -16,7 +16,7 @@ section gselect_meta_statements
 def shrink_select_before := [llvm|
 {
 ^0(%arg52 : i1, %arg53 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(42 : i32) : i32
   %1 = "llvm.select"(%arg52, %arg53, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   %2 = llvm.trunc %1 : i32 to i8
   "llvm.return"(%2) : (i8) -> ()
@@ -25,7 +25,7 @@ def shrink_select_before := [llvm|
 def shrink_select_after := [llvm|
 {
 ^0(%arg52 : i1, %arg53 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(42 : i8) : i8
   %1 = llvm.trunc %arg53 : i32 to i8
   %2 = "llvm.select"(%arg52, %1, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
   "llvm.return"(%2) : (i8) -> ()
@@ -43,7 +43,7 @@ theorem shrink_select_proof : shrink_select_before ⊑ shrink_select_after := by
 def not_cond_before := [llvm|
 {
 ^0(%arg24 : i1, %arg25 : i32, %arg26 : i32):
-  %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
+  %0 = llvm.mlir.constant(true) : i1
   %1 = llvm.xor %arg24, %0 : i1
   %2 = "llvm.select"(%1, %arg25, %arg26) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   "llvm.return"(%2) : (i32) -> ()
@@ -76,7 +76,7 @@ def select_add_before := [llvm|
 def select_add_after := [llvm|
 {
 ^0(%arg15 : i1, %arg16 : i64, %arg17 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(0) : i64
   %1 = "llvm.select"(%arg15, %arg17, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   %2 = llvm.add %arg16, %1 : i64
   "llvm.return"(%2) : (i64) -> ()
@@ -102,7 +102,7 @@ def select_sub_before := [llvm|
 def select_sub_after := [llvm|
 {
 ^0(%arg9 : i1, %arg10 : i17, %arg11 : i17):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i17}> : () -> i17
+  %0 = llvm.mlir.constant(0 : i17) : i17
   %1 = "llvm.select"(%arg9, %arg11, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i17, i17) -> i17
   %2 = llvm.sub %arg10, %1 : i17
   "llvm.return"(%2) : (i17) -> ()
@@ -128,7 +128,7 @@ def select_ashr_before := [llvm|
 def select_ashr_after := [llvm|
 {
 ^0(%arg6 : i1, %arg7 : i128, %arg8 : i128):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i128}> : () -> i128
+  %0 = llvm.mlir.constant(0 : i128) : i128
   %1 = "llvm.select"(%arg6, %arg8, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i128, i128) -> i128
   %2 = llvm.ashr %arg7, %1 : i128
   "llvm.return"(%2) : (i128) -> ()

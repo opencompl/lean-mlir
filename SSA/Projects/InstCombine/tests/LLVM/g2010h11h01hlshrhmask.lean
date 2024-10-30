@@ -16,11 +16,11 @@ section g2010h11h01hlshrhmask_statements
 def main_before := [llvm|
 {
 ^0(%arg2 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -17 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 122 : i8}> : () -> i8
-  %2 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
-  %3 = "llvm.mlir.constant"() <{value = 7 : i8}> : () -> i8
-  %4 = "llvm.mlir.constant"() <{value = 64 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(-17 : i8) : i8
+  %1 = llvm.mlir.constant(122 : i8) : i8
+  %2 = llvm.mlir.constant(6 : i8) : i8
+  %3 = llvm.mlir.constant(7 : i8) : i8
+  %4 = llvm.mlir.constant(64 : i8) : i8
   %5 = llvm.trunc %arg2 : i32 to i8
   %6 = llvm.or %5, %0 : i8
   %7 = llvm.and %5, %1 : i8
@@ -37,9 +37,9 @@ def main_before := [llvm|
 def main_after := [llvm|
 {
 ^0(%arg2 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 5 : i8}> : () -> i8
-  %2 = "llvm.mlir.constant"() <{value = 64 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(-1 : i8) : i8
+  %1 = llvm.mlir.constant(5 : i8) : i8
+  %2 = llvm.mlir.constant(64 : i8) : i8
   %3 = llvm.trunc %arg2 : i32 to i8
   %4 = llvm.xor %3, %0 : i8
   %5 = llvm.shl %4, %1 : i8
@@ -60,12 +60,12 @@ theorem main_proof : main_before ⊑ main_after := by
 def foo_before := [llvm|
 {
 ^0(%arg0 : i8, %arg1 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 7 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 84 : i8}> : () -> i8
-  %2 = "llvm.mlir.constant"() <{value = -118 : i8}> : () -> i8
-  %3 = "llvm.mlir.constant"() <{value = 33 : i8}> : () -> i8
-  %4 = "llvm.mlir.constant"() <{value = -88 : i8}> : () -> i8
-  %5 = "llvm.mlir.constant"() <{value = 5 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(7 : i8) : i8
+  %1 = llvm.mlir.constant(84 : i8) : i8
+  %2 = llvm.mlir.constant(-118 : i8) : i8
+  %3 = llvm.mlir.constant(33 : i8) : i8
+  %4 = llvm.mlir.constant(-88 : i8) : i8
+  %5 = llvm.mlir.constant(5 : i8) : i8
   %6 = llvm.shl %arg0, %0 : i8
   %7 = llvm.and %arg1, %1 : i8
   %8 = llvm.and %arg1, %2 : i8
@@ -84,13 +84,13 @@ def foo_before := [llvm|
 def foo_after := [llvm|
 {
 ^0(%arg0 : i8, %arg1 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 7 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 84 : i8}> : () -> i8
-  %2 = "llvm.mlir.constant"() <{value = -118 : i8}> : () -> i8
-  %3 = "llvm.mlir.constant"() <{value = 33 : i8}> : () -> i8
-  %4 = "llvm.mlir.constant"() <{value = 40 : i8}> : () -> i8
-  %5 = "llvm.mlir.constant"() <{value = 2 : i8}> : () -> i8
-  %6 = "llvm.mlir.constant"() <{value = 32 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(7 : i8) : i8
+  %1 = llvm.mlir.constant(84 : i8) : i8
+  %2 = llvm.mlir.constant(-118 : i8) : i8
+  %3 = llvm.mlir.constant(33 : i8) : i8
+  %4 = llvm.mlir.constant(40 : i8) : i8
+  %5 = llvm.mlir.constant(2 : i8) : i8
+  %6 = llvm.mlir.constant(32 : i8) : i8
   %7 = llvm.shl %arg0, %0 : i8
   %8 = llvm.and %arg1, %1 : i8
   %9 = llvm.and %arg1, %2 : i8

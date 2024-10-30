@@ -16,8 +16,8 @@ section gdistribute_statements
 def factorize_before := [llvm|
 {
 ^0(%arg9 : i32, %arg10 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(2 : i32) : i32
   %2 = llvm.or %arg9, %0 : i32
   %3 = llvm.or %arg9, %1 : i32
   %4 = llvm.and %2, %3 : i32
@@ -42,8 +42,8 @@ theorem factorize_proof : factorize_before ⊑ factorize_after := by
 def factorize2_before := [llvm|
 {
 ^0(%arg8 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(3 : i32) : i32
+  %1 = llvm.mlir.constant(2 : i32) : i32
   %2 = llvm.mul %0, %arg8 : i32
   %3 = llvm.mul %1, %arg8 : i32
   %4 = llvm.sub %2, %3 : i32
@@ -94,7 +94,7 @@ theorem factorize3_proof : factorize3_before ⊑ factorize3_after := by
 def factorize4_before := [llvm|
 {
 ^0(%arg3 : i32, %arg4 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
   %1 = llvm.shl %arg4, %0 : i32
   %2 = llvm.mul %1, %arg3 : i32
   %3 = llvm.mul %arg3, %arg4 : i32
@@ -121,7 +121,7 @@ theorem factorize4_proof : factorize4_before ⊑ factorize4_after := by
 def factorize5_before := [llvm|
 {
 ^0(%arg1 : i32, %arg2 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(2 : i32) : i32
   %1 = llvm.mul %arg2, %0 : i32
   %2 = llvm.mul %1, %arg1 : i32
   %3 = llvm.mul %arg1, %arg2 : i32
@@ -148,8 +148,8 @@ theorem factorize5_proof : factorize5_before ⊑ factorize5_after := by
 def expand_before := [llvm|
 {
 ^0(%arg0 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(2 : i32) : i32
   %2 = llvm.and %arg0, %0 : i32
   %3 = llvm.or %2, %1 : i32
   %4 = llvm.and %3, %0 : i32
@@ -159,7 +159,7 @@ def expand_before := [llvm|
 def expand_after := [llvm|
 {
 ^0(%arg0 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
   %1 = llvm.and %arg0, %0 : i32
   "llvm.return"(%1) : (i32) -> ()
 }

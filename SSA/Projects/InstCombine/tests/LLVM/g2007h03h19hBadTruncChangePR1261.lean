@@ -16,8 +16,8 @@ section g2007h03h19hBadTruncChangePR1261_statements
 def test_before := [llvm|
 {
 ^0(%arg0 : i31):
-  %0 = "llvm.mlir.constant"() <{value = 16384 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 15 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(16384 : i32) : i32
+  %1 = llvm.mlir.constant(15 : i32) : i32
   %2 = llvm.sext %arg0 : i31 to i32
   %3 = llvm.add %2, %0 : i32
   %4 = llvm.lshr %3, %1 : i32
@@ -28,8 +28,8 @@ def test_before := [llvm|
 def test_after := [llvm|
 {
 ^0(%arg0 : i31):
-  %0 = "llvm.mlir.constant"() <{value = 16384 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 15 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(16384 : i32) : i32
+  %1 = llvm.mlir.constant(15 : i32) : i32
   %2 = llvm.zext %arg0 : i31 to i32
   %3 = llvm.add %2, %0 overflow<nuw> : i32
   %4 = llvm.lshr %3, %1 : i32

@@ -40,7 +40,7 @@ theorem test_sext_zext_proof : test_sext_zext_before ⊑ test_sext_zext_after :=
 def fold_xor_zext_sandwich_before := [llvm|
 {
 ^0(%arg101 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
   %1 = llvm.zext %arg101 : i1 to i32
   %2 = llvm.xor %1, %0 : i32
   %3 = llvm.zext %2 : i32 to i64
@@ -50,7 +50,7 @@ def fold_xor_zext_sandwich_before := [llvm|
 def fold_xor_zext_sandwich_after := [llvm|
 {
 ^0(%arg101 : i1):
-  %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
+  %0 = llvm.mlir.constant(true) : i1
   %1 = llvm.xor %arg101, %0 : i1
   %2 = llvm.zext %1 : i1 to i64
   "llvm.return"(%2) : (i64) -> ()
@@ -116,8 +116,8 @@ theorem sext_zext_apint2_proof : sext_zext_apint2_before ⊑ sext_zext_apint2_af
 def zext_nneg_flag_drop_before := [llvm|
 {
 ^0(%arg7 : i8, %arg8 : i16):
-  %0 = "llvm.mlir.constant"() <{value = 127 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 128 : i16}> : () -> i16
+  %0 = llvm.mlir.constant(127 : i8) : i8
+  %1 = llvm.mlir.constant(128 : i16) : i16
   %2 = llvm.and %arg7, %0 : i8
   %3 = llvm.zext %2 : i8 to i16
   %4 = llvm.or %3, %arg8 : i16
@@ -128,7 +128,7 @@ def zext_nneg_flag_drop_before := [llvm|
 def zext_nneg_flag_drop_after := [llvm|
 {
 ^0(%arg7 : i8, %arg8 : i16):
-  %0 = "llvm.mlir.constant"() <{value = 128 : i16}> : () -> i16
+  %0 = llvm.mlir.constant(128 : i16) : i16
   %1 = llvm.zext %arg7 : i8 to i16
   %2 = llvm.or %arg8, %1 : i16
   %3 = llvm.or %2, %0 : i16
@@ -147,7 +147,7 @@ theorem zext_nneg_flag_drop_proof : zext_nneg_flag_drop_before ⊑ zext_nneg_fla
 def zext_nneg_redundant_and_before := [llvm|
 {
 ^0(%arg6 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 127 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(127 : i32) : i32
   %1 = llvm.zext %arg6 : i8 to i32
   %2 = llvm.and %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -172,7 +172,7 @@ theorem zext_nneg_redundant_and_proof : zext_nneg_redundant_and_before ⊑ zext_
 def zext_nneg_signbit_extract_before := [llvm|
 {
 ^0(%arg4 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 31 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(31) : i64
   %1 = llvm.zext %arg4 : i32 to i64
   %2 = llvm.lshr %1, %0 : i64
   "llvm.return"(%2) : (i64) -> ()
@@ -181,7 +181,7 @@ def zext_nneg_signbit_extract_before := [llvm|
 def zext_nneg_signbit_extract_after := [llvm|
 {
 ^0(%arg4 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(0) : i64
   "llvm.return"(%0) : (i64) -> ()
 }
 ]
@@ -204,7 +204,7 @@ def zext_nneg_i1_before := [llvm|
 def zext_nneg_i1_after := [llvm|
 {
 ^0(%arg2 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(0 : i32) : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]

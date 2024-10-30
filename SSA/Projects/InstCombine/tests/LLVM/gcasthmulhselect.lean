@@ -26,7 +26,7 @@ def mul_before := [llvm|
 def mul_after := [llvm|
 {
 ^0(%arg17 : i32, %arg18 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 255 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(255 : i32) : i32
   %1 = llvm.mul %arg17, %arg18 : i32
   %2 = llvm.and %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -56,7 +56,7 @@ def select1_before := [llvm|
 def select1_after := [llvm|
 {
 ^0(%arg13 : i1, %arg14 : i32, %arg15 : i32, %arg16 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 255 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(255 : i32) : i32
   %1 = llvm.add %arg14, %arg15 : i32
   %2 = "llvm.select"(%arg13, %arg16, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   %3 = llvm.and %2, %0 : i32

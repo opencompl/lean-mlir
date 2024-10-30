@@ -16,7 +16,7 @@ section g2004h02h23hShiftShiftOverflow_statements
 def test_before := [llvm|
 {
 ^0(%arg1 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 17 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(17 : i32) : i32
   %1 = llvm.ashr %arg1, %0 : i32
   %2 = llvm.ashr %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -25,7 +25,7 @@ def test_before := [llvm|
 def test_after := [llvm|
 {
 ^0(%arg1 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 31 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(31 : i32) : i32
   %1 = llvm.ashr %arg1, %0 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
@@ -42,7 +42,7 @@ theorem test_proof : test_before ⊑ test_after := by
 def test2_before := [llvm|
 {
 ^0(%arg0 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 17 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(17 : i32) : i32
   %1 = llvm.shl %arg0, %0 : i32
   %2 = llvm.shl %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -51,7 +51,7 @@ def test2_before := [llvm|
 def test2_after := [llvm|
 {
 ^0(%arg0 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(0 : i32) : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]

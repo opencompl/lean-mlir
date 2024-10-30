@@ -16,8 +16,8 @@ section gsethlowbitshmaskhcanonicalize_statements
 def shl_add_before := [llvm|
 {
 ^0(%arg26 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
   %2 = llvm.shl %0, %arg26 : i32
   %3 = llvm.add %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -26,7 +26,7 @@ def shl_add_before := [llvm|
 def shl_add_after := [llvm|
 {
 ^0(%arg26 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-1 : i32) : i32
   %1 = llvm.shl %0, %arg26 overflow<nsw> : i32
   %2 = llvm.xor %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -44,8 +44,8 @@ theorem shl_add_proof : shl_add_before ⊑ shl_add_after := by
 def shl_add_nsw_before := [llvm|
 {
 ^0(%arg25 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
   %2 = llvm.shl %0, %arg25 : i32
   %3 = llvm.add %2, %1 overflow<nsw> : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -54,7 +54,7 @@ def shl_add_nsw_before := [llvm|
 def shl_add_nsw_after := [llvm|
 {
 ^0(%arg25 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-1 : i32) : i32
   %1 = llvm.shl %0, %arg25 overflow<nsw> : i32
   %2 = llvm.xor %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -72,8 +72,8 @@ theorem shl_add_nsw_proof : shl_add_nsw_before ⊑ shl_add_nsw_after := by
 def shl_add_nuw_before := [llvm|
 {
 ^0(%arg24 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
   %2 = llvm.shl %0, %arg24 : i32
   %3 = llvm.add %2, %1 overflow<nuw> : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -82,7 +82,7 @@ def shl_add_nuw_before := [llvm|
 def shl_add_nuw_after := [llvm|
 {
 ^0(%arg24 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-1 : i32) : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
@@ -98,8 +98,8 @@ theorem shl_add_nuw_proof : shl_add_nuw_before ⊑ shl_add_nuw_after := by
 def shl_add_nsw_nuw_before := [llvm|
 {
 ^0(%arg23 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
   %2 = llvm.shl %0, %arg23 : i32
   %3 = llvm.add %2, %1 overflow<nsw,nuw> : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -108,7 +108,7 @@ def shl_add_nsw_nuw_before := [llvm|
 def shl_add_nsw_nuw_after := [llvm|
 {
 ^0(%arg23 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-1 : i32) : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
@@ -124,8 +124,8 @@ theorem shl_add_nsw_nuw_proof : shl_add_nsw_nuw_before ⊑ shl_add_nsw_nuw_after
 def shl_nsw_add_before := [llvm|
 {
 ^0(%arg22 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
   %2 = llvm.shl %0, %arg22 overflow<nsw> : i32
   %3 = llvm.add %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -134,7 +134,7 @@ def shl_nsw_add_before := [llvm|
 def shl_nsw_add_after := [llvm|
 {
 ^0(%arg22 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-1 : i32) : i32
   %1 = llvm.shl %0, %arg22 overflow<nsw> : i32
   %2 = llvm.xor %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -152,8 +152,8 @@ theorem shl_nsw_add_proof : shl_nsw_add_before ⊑ shl_nsw_add_after := by
 def shl_nsw_add_nsw_before := [llvm|
 {
 ^0(%arg21 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
   %2 = llvm.shl %0, %arg21 overflow<nsw> : i32
   %3 = llvm.add %2, %1 overflow<nsw> : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -162,7 +162,7 @@ def shl_nsw_add_nsw_before := [llvm|
 def shl_nsw_add_nsw_after := [llvm|
 {
 ^0(%arg21 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-1 : i32) : i32
   %1 = llvm.shl %0, %arg21 overflow<nsw> : i32
   %2 = llvm.xor %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -180,8 +180,8 @@ theorem shl_nsw_add_nsw_proof : shl_nsw_add_nsw_before ⊑ shl_nsw_add_nsw_after
 def shl_nsw_add_nuw_before := [llvm|
 {
 ^0(%arg20 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
   %2 = llvm.shl %0, %arg20 overflow<nsw> : i32
   %3 = llvm.add %2, %1 overflow<nuw> : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -190,7 +190,7 @@ def shl_nsw_add_nuw_before := [llvm|
 def shl_nsw_add_nuw_after := [llvm|
 {
 ^0(%arg20 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-1 : i32) : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
@@ -206,8 +206,8 @@ theorem shl_nsw_add_nuw_proof : shl_nsw_add_nuw_before ⊑ shl_nsw_add_nuw_after
 def shl_nsw_add_nsw_nuw_before := [llvm|
 {
 ^0(%arg19 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
   %2 = llvm.shl %0, %arg19 overflow<nsw> : i32
   %3 = llvm.add %2, %1 overflow<nsw,nuw> : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -216,7 +216,7 @@ def shl_nsw_add_nsw_nuw_before := [llvm|
 def shl_nsw_add_nsw_nuw_after := [llvm|
 {
 ^0(%arg19 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-1 : i32) : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
@@ -232,8 +232,8 @@ theorem shl_nsw_add_nsw_nuw_proof : shl_nsw_add_nsw_nuw_before ⊑ shl_nsw_add_n
 def shl_nuw_add_before := [llvm|
 {
 ^0(%arg18 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
   %2 = llvm.shl %0, %arg18 overflow<nuw> : i32
   %3 = llvm.add %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -242,7 +242,7 @@ def shl_nuw_add_before := [llvm|
 def shl_nuw_add_after := [llvm|
 {
 ^0(%arg18 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-1 : i32) : i32
   %1 = llvm.shl %0, %arg18 overflow<nsw> : i32
   %2 = llvm.xor %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -260,8 +260,8 @@ theorem shl_nuw_add_proof : shl_nuw_add_before ⊑ shl_nuw_add_after := by
 def shl_nuw_add_nsw_before := [llvm|
 {
 ^0(%arg17 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
   %2 = llvm.shl %0, %arg17 overflow<nuw> : i32
   %3 = llvm.add %2, %1 overflow<nsw> : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -270,7 +270,7 @@ def shl_nuw_add_nsw_before := [llvm|
 def shl_nuw_add_nsw_after := [llvm|
 {
 ^0(%arg17 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-1 : i32) : i32
   %1 = llvm.shl %0, %arg17 overflow<nsw> : i32
   %2 = llvm.xor %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -288,8 +288,8 @@ theorem shl_nuw_add_nsw_proof : shl_nuw_add_nsw_before ⊑ shl_nuw_add_nsw_after
 def shl_nuw_add_nuw_before := [llvm|
 {
 ^0(%arg16 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
   %2 = llvm.shl %0, %arg16 overflow<nuw> : i32
   %3 = llvm.add %2, %1 overflow<nuw> : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -298,7 +298,7 @@ def shl_nuw_add_nuw_before := [llvm|
 def shl_nuw_add_nuw_after := [llvm|
 {
 ^0(%arg16 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-1 : i32) : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
@@ -314,8 +314,8 @@ theorem shl_nuw_add_nuw_proof : shl_nuw_add_nuw_before ⊑ shl_nuw_add_nuw_after
 def shl_nuw_add_nsw_nuw_before := [llvm|
 {
 ^0(%arg15 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
   %2 = llvm.shl %0, %arg15 overflow<nuw> : i32
   %3 = llvm.add %2, %1 overflow<nsw,nuw> : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -324,7 +324,7 @@ def shl_nuw_add_nsw_nuw_before := [llvm|
 def shl_nuw_add_nsw_nuw_after := [llvm|
 {
 ^0(%arg15 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-1 : i32) : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
@@ -340,8 +340,8 @@ theorem shl_nuw_add_nsw_nuw_proof : shl_nuw_add_nsw_nuw_before ⊑ shl_nuw_add_n
 def shl_nsw_nuw_add_before := [llvm|
 {
 ^0(%arg14 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
   %2 = llvm.shl %0, %arg14 overflow<nsw,nuw> : i32
   %3 = llvm.add %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -350,7 +350,7 @@ def shl_nsw_nuw_add_before := [llvm|
 def shl_nsw_nuw_add_after := [llvm|
 {
 ^0(%arg14 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-1 : i32) : i32
   %1 = llvm.shl %0, %arg14 overflow<nsw> : i32
   %2 = llvm.xor %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -368,8 +368,8 @@ theorem shl_nsw_nuw_add_proof : shl_nsw_nuw_add_before ⊑ shl_nsw_nuw_add_after
 def shl_nsw_nuw_add_nsw_before := [llvm|
 {
 ^0(%arg13 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
   %2 = llvm.shl %0, %arg13 overflow<nsw,nuw> : i32
   %3 = llvm.add %2, %1 overflow<nsw> : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -378,7 +378,7 @@ def shl_nsw_nuw_add_nsw_before := [llvm|
 def shl_nsw_nuw_add_nsw_after := [llvm|
 {
 ^0(%arg13 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-1 : i32) : i32
   %1 = llvm.shl %0, %arg13 overflow<nsw> : i32
   %2 = llvm.xor %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -396,8 +396,8 @@ theorem shl_nsw_nuw_add_nsw_proof : shl_nsw_nuw_add_nsw_before ⊑ shl_nsw_nuw_a
 def shl_nsw_nuw_add_nuw_before := [llvm|
 {
 ^0(%arg12 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
   %2 = llvm.shl %0, %arg12 overflow<nsw,nuw> : i32
   %3 = llvm.add %2, %1 overflow<nuw> : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -406,7 +406,7 @@ def shl_nsw_nuw_add_nuw_before := [llvm|
 def shl_nsw_nuw_add_nuw_after := [llvm|
 {
 ^0(%arg12 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-1 : i32) : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
@@ -422,8 +422,8 @@ theorem shl_nsw_nuw_add_nuw_proof : shl_nsw_nuw_add_nuw_before ⊑ shl_nsw_nuw_a
 def shl_nsw_nuw_add_nsw_nuw_before := [llvm|
 {
 ^0(%arg11 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
   %2 = llvm.shl %0, %arg11 overflow<nsw,nuw> : i32
   %3 = llvm.add %2, %1 overflow<nsw,nuw> : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -432,7 +432,7 @@ def shl_nsw_nuw_add_nsw_nuw_before := [llvm|
 def shl_nsw_nuw_add_nsw_nuw_after := [llvm|
 {
 ^0(%arg11 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-1 : i32) : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
@@ -448,7 +448,7 @@ theorem shl_nsw_nuw_add_nsw_nuw_proof : shl_nsw_nuw_add_nsw_nuw_before ⊑ shl_n
 def bad_add0_before := [llvm|
 {
 ^0(%arg2 : i32, %arg3 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
   %1 = llvm.shl %0, %arg2 : i32
   %2 = llvm.add %1, %arg3 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -457,7 +457,7 @@ def bad_add0_before := [llvm|
 def bad_add0_after := [llvm|
 {
 ^0(%arg2 : i32, %arg3 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
   %1 = llvm.shl %0, %arg2 overflow<nuw> : i32
   %2 = llvm.add %1, %arg3 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -475,7 +475,7 @@ theorem bad_add0_proof : bad_add0_before ⊑ bad_add0_after := by
 def bad_add1_before := [llvm|
 {
 ^0(%arg1 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
   %1 = llvm.shl %0, %arg1 : i32
   %2 = llvm.add %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -484,7 +484,7 @@ def bad_add1_before := [llvm|
 def bad_add1_after := [llvm|
 {
 ^0(%arg1 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
   %1 = llvm.shl %0, %arg1 overflow<nuw> : i32
   %2 = llvm.add %1, %0 overflow<nuw> : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -502,8 +502,8 @@ theorem bad_add1_proof : bad_add1_before ⊑ bad_add1_after := by
 def bad_add2_before := [llvm|
 {
 ^0(%arg0 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -2 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(-2 : i32) : i32
   %2 = llvm.shl %0, %arg0 : i32
   %3 = llvm.add %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -512,8 +512,8 @@ def bad_add2_before := [llvm|
 def bad_add2_after := [llvm|
 {
 ^0(%arg0 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -2 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(-2 : i32) : i32
   %2 = llvm.shl %0, %arg0 overflow<nuw> : i32
   %3 = llvm.add %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()

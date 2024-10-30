@@ -16,8 +16,8 @@ section gbinophselecthcasthofhselecthcond_statements
 def add_select_zext_before := [llvm|
 {
 ^0(%arg29 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 64 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = 1 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(64) : i64
+  %1 = llvm.mlir.constant(1) : i64
   %2 = "llvm.select"(%arg29, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   %3 = llvm.zext %arg29 : i1 to i64
   %4 = llvm.add %2, %3 : i64
@@ -27,8 +27,8 @@ def add_select_zext_before := [llvm|
 def add_select_zext_after := [llvm|
 {
 ^0(%arg29 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 65 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = 1 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(65) : i64
+  %1 = llvm.mlir.constant(1) : i64
   %2 = "llvm.select"(%arg29, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   "llvm.return"(%2) : (i64) -> ()
 }
@@ -45,8 +45,8 @@ theorem add_select_zext_proof : add_select_zext_before ⊑ add_select_zext_after
 def add_select_sext_before := [llvm|
 {
 ^0(%arg28 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 64 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = 1 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(64) : i64
+  %1 = llvm.mlir.constant(1) : i64
   %2 = "llvm.select"(%arg28, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   %3 = llvm.sext %arg28 : i1 to i64
   %4 = llvm.add %2, %3 : i64
@@ -56,8 +56,8 @@ def add_select_sext_before := [llvm|
 def add_select_sext_after := [llvm|
 {
 ^0(%arg28 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 63 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = 1 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(63) : i64
+  %1 = llvm.mlir.constant(1) : i64
   %2 = "llvm.select"(%arg28, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   "llvm.return"(%2) : (i64) -> ()
 }
@@ -74,9 +74,9 @@ theorem add_select_sext_proof : add_select_sext_before ⊑ add_select_sext_after
 def add_select_not_zext_before := [llvm|
 {
 ^0(%arg27 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 64 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = 1 : i64}> : () -> i64
-  %2 = "llvm.mlir.constant"() <{value = true}> : () -> i1
+  %0 = llvm.mlir.constant(64) : i64
+  %1 = llvm.mlir.constant(1) : i64
+  %2 = llvm.mlir.constant(true) : i1
   %3 = "llvm.select"(%arg27, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   %4 = llvm.xor %arg27, %2 : i1
   %5 = llvm.zext %4 : i1 to i64
@@ -87,8 +87,8 @@ def add_select_not_zext_before := [llvm|
 def add_select_not_zext_after := [llvm|
 {
 ^0(%arg27 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 64 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = 2 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(64) : i64
+  %1 = llvm.mlir.constant(2) : i64
   %2 = "llvm.select"(%arg27, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   "llvm.return"(%2) : (i64) -> ()
 }
@@ -105,9 +105,9 @@ theorem add_select_not_zext_proof : add_select_not_zext_before ⊑ add_select_no
 def add_select_not_sext_before := [llvm|
 {
 ^0(%arg26 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 64 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = 1 : i64}> : () -> i64
-  %2 = "llvm.mlir.constant"() <{value = true}> : () -> i1
+  %0 = llvm.mlir.constant(64) : i64
+  %1 = llvm.mlir.constant(1) : i64
+  %2 = llvm.mlir.constant(true) : i1
   %3 = "llvm.select"(%arg26, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   %4 = llvm.xor %arg26, %2 : i1
   %5 = llvm.sext %4 : i1 to i64
@@ -118,8 +118,8 @@ def add_select_not_sext_before := [llvm|
 def add_select_not_sext_after := [llvm|
 {
 ^0(%arg26 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 64 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = 0 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(64) : i64
+  %1 = llvm.mlir.constant(0) : i64
   %2 = "llvm.select"(%arg26, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   "llvm.return"(%2) : (i64) -> ()
 }
@@ -136,7 +136,7 @@ theorem add_select_not_sext_proof : add_select_not_sext_before ⊑ add_select_no
 def sub_select_sext_before := [llvm|
 {
 ^0(%arg24 : i1, %arg25 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 64 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(64) : i64
   %1 = "llvm.select"(%arg24, %0, %arg25) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   %2 = llvm.sext %arg24 : i1 to i64
   %3 = llvm.sub %1, %2 : i64
@@ -146,7 +146,7 @@ def sub_select_sext_before := [llvm|
 def sub_select_sext_after := [llvm|
 {
 ^0(%arg24 : i1, %arg25 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 65 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(65) : i64
   %1 = "llvm.select"(%arg24, %0, %arg25) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   "llvm.return"(%1) : (i64) -> ()
 }
@@ -163,8 +163,8 @@ theorem sub_select_sext_proof : sub_select_sext_before ⊑ sub_select_sext_after
 def sub_select_not_zext_before := [llvm|
 {
 ^0(%arg22 : i1, %arg23 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 64 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = true}> : () -> i1
+  %0 = llvm.mlir.constant(64) : i64
+  %1 = llvm.mlir.constant(true) : i1
   %2 = "llvm.select"(%arg22, %arg23, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   %3 = llvm.xor %arg22, %1 : i1
   %4 = llvm.zext %3 : i1 to i64
@@ -175,7 +175,7 @@ def sub_select_not_zext_before := [llvm|
 def sub_select_not_zext_after := [llvm|
 {
 ^0(%arg22 : i1, %arg23 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 63 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(63) : i64
   %1 = "llvm.select"(%arg22, %arg23, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   "llvm.return"(%1) : (i64) -> ()
 }
@@ -192,8 +192,8 @@ theorem sub_select_not_zext_proof : sub_select_not_zext_before ⊑ sub_select_no
 def sub_select_not_sext_before := [llvm|
 {
 ^0(%arg20 : i1, %arg21 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 64 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = true}> : () -> i1
+  %0 = llvm.mlir.constant(64) : i64
+  %1 = llvm.mlir.constant(true) : i1
   %2 = "llvm.select"(%arg20, %arg21, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   %3 = llvm.xor %arg20, %1 : i1
   %4 = llvm.sext %3 : i1 to i64
@@ -204,7 +204,7 @@ def sub_select_not_sext_before := [llvm|
 def sub_select_not_sext_after := [llvm|
 {
 ^0(%arg20 : i1, %arg21 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 65 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(65) : i64
   %1 = "llvm.select"(%arg20, %arg21, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   "llvm.return"(%1) : (i64) -> ()
 }
@@ -221,7 +221,7 @@ theorem sub_select_not_sext_proof : sub_select_not_sext_before ⊑ sub_select_no
 def mul_select_zext_before := [llvm|
 {
 ^0(%arg18 : i1, %arg19 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(1) : i64
   %1 = "llvm.select"(%arg18, %arg19, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   %2 = llvm.zext %arg18 : i1 to i64
   %3 = llvm.mul %1, %2 : i64
@@ -231,7 +231,7 @@ def mul_select_zext_before := [llvm|
 def mul_select_zext_after := [llvm|
 {
 ^0(%arg18 : i1, %arg19 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(0) : i64
   %1 = "llvm.select"(%arg18, %arg19, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   "llvm.return"(%1) : (i64) -> ()
 }
@@ -248,8 +248,8 @@ theorem mul_select_zext_proof : mul_select_zext_before ⊑ mul_select_zext_after
 def mul_select_sext_before := [llvm|
 {
 ^0(%arg17 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 64 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = 1 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(64) : i64
+  %1 = llvm.mlir.constant(1) : i64
   %2 = "llvm.select"(%arg17, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   %3 = llvm.sext %arg17 : i1 to i64
   %4 = llvm.mul %2, %3 : i64
@@ -259,8 +259,8 @@ def mul_select_sext_before := [llvm|
 def mul_select_sext_after := [llvm|
 {
 ^0(%arg17 : i1):
-  %0 = "llvm.mlir.constant"() <{value = -64 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = 0 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(-64) : i64
+  %1 = llvm.mlir.constant(0) : i64
   %2 = "llvm.select"(%arg17, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   "llvm.return"(%2) : (i64) -> ()
 }
@@ -277,8 +277,8 @@ theorem mul_select_sext_proof : mul_select_sext_before ⊑ mul_select_sext_after
 def select_zext_different_condition_before := [llvm|
 {
 ^0(%arg15 : i1, %arg16 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 64 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = 1 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(64) : i64
+  %1 = llvm.mlir.constant(1) : i64
   %2 = "llvm.select"(%arg15, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   %3 = llvm.zext %arg16 : i1 to i64
   %4 = llvm.add %2, %3 : i64
@@ -288,8 +288,8 @@ def select_zext_different_condition_before := [llvm|
 def select_zext_different_condition_after := [llvm|
 {
 ^0(%arg15 : i1, %arg16 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 64 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = 1 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(64) : i64
+  %1 = llvm.mlir.constant(1) : i64
   %2 = "llvm.select"(%arg15, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   %3 = llvm.zext %arg16 : i1 to i64
   %4 = llvm.add %2, %3 overflow<nsw,nuw> : i64
@@ -308,8 +308,8 @@ theorem select_zext_different_condition_proof : select_zext_different_condition_
 def multiuse_add_before := [llvm|
 {
 ^0(%arg13 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 64 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = 1 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(64) : i64
+  %1 = llvm.mlir.constant(1) : i64
   %2 = "llvm.select"(%arg13, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   %3 = llvm.zext %arg13 : i1 to i64
   %4 = llvm.add %2, %3 : i64
@@ -320,8 +320,8 @@ def multiuse_add_before := [llvm|
 def multiuse_add_after := [llvm|
 {
 ^0(%arg13 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 66 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = 2 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(66) : i64
+  %1 = llvm.mlir.constant(2) : i64
   %2 = "llvm.select"(%arg13, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   "llvm.return"(%2) : (i64) -> ()
 }
@@ -338,8 +338,8 @@ theorem multiuse_add_proof : multiuse_add_before ⊑ multiuse_add_after := by
 def multiuse_select_before := [llvm|
 {
 ^0(%arg12 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 64 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = 0 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(64) : i64
+  %1 = llvm.mlir.constant(0) : i64
   %2 = "llvm.select"(%arg12, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   %3 = llvm.zext %arg12 : i1 to i64
   %4 = llvm.sub %2, %3 : i64
@@ -350,8 +350,8 @@ def multiuse_select_before := [llvm|
 def multiuse_select_after := [llvm|
 {
 ^0(%arg12 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 4032 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = 0 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(4032) : i64
+  %1 = llvm.mlir.constant(0) : i64
   %2 = "llvm.select"(%arg12, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   "llvm.return"(%2) : (i64) -> ()
 }
@@ -377,7 +377,7 @@ def select_non_const_sides_before := [llvm|
 def select_non_const_sides_after := [llvm|
 {
 ^0(%arg9 : i1, %arg10 : i64, %arg11 : i64):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(-1) : i64
   %1 = llvm.add %arg10, %0 : i64
   %2 = "llvm.select"(%arg9, %1, %arg11) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   "llvm.return"(%2) : (i64) -> ()
@@ -404,8 +404,8 @@ def sub_select_sext_op_swapped_non_const_args_before := [llvm|
 def sub_select_sext_op_swapped_non_const_args_after := [llvm|
 {
 ^0(%arg6 : i1, %arg7 : i6, %arg8 : i6):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i6}> : () -> i6
-  %1 = "llvm.mlir.constant"() <{value = 0 : i6}> : () -> i6
+  %0 = llvm.mlir.constant(-1 : i6) : i6
+  %1 = llvm.mlir.constant(0 : i6) : i6
   %2 = llvm.xor %arg7, %0 : i6
   %3 = llvm.sub %1, %arg8 : i6
   %4 = "llvm.select"(%arg6, %2, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i6, i6) -> i6
@@ -433,8 +433,8 @@ def sub_select_zext_op_swapped_non_const_args_before := [llvm|
 def sub_select_zext_op_swapped_non_const_args_after := [llvm|
 {
 ^0(%arg3 : i1, %arg4 : i6, %arg5 : i6):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i6}> : () -> i6
-  %1 = "llvm.mlir.constant"() <{value = 0 : i6}> : () -> i6
+  %0 = llvm.mlir.constant(1 : i6) : i6
+  %1 = llvm.mlir.constant(0 : i6) : i6
   %2 = llvm.sub %0, %arg4 : i6
   %3 = llvm.sub %1, %arg5 : i6
   %4 = "llvm.select"(%arg3, %2, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i6, i6) -> i6

@@ -16,7 +16,7 @@ section gzeroexthandhreduce_statements
 def test1_before := [llvm|
 {
 ^0(%arg0 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 65544 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(65544 : i32) : i32
   %1 = llvm.zext %arg0 : i8 to i32
   %2 = llvm.and %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -25,7 +25,7 @@ def test1_before := [llvm|
 def test1_after := [llvm|
 {
 ^0(%arg0 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(8 : i8) : i8
   %1 = llvm.and %arg0, %0 : i8
   %2 = llvm.zext %1 : i8 to i32
   "llvm.return"(%2) : (i32) -> ()

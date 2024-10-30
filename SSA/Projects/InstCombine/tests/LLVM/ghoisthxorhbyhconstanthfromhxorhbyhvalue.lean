@@ -16,7 +16,7 @@ section ghoisthxorhbyhconstanthfromhxorhbyhvalue_statements
 def t0_scalar_before := [llvm|
 {
 ^0(%arg10 : i8, %arg11 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(42 : i8) : i8
   %1 = llvm.xor %arg10, %0 : i8
   %2 = llvm.xor %1, %arg11 : i8
   "llvm.return"(%2) : (i8) -> ()
@@ -25,7 +25,7 @@ def t0_scalar_before := [llvm|
 def t0_scalar_after := [llvm|
 {
 ^0(%arg10 : i8, %arg11 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(42 : i8) : i8
   %1 = llvm.xor %arg10, %arg11 : i8
   %2 = llvm.xor %1, %0 : i8
   "llvm.return"(%2) : (i8) -> ()
