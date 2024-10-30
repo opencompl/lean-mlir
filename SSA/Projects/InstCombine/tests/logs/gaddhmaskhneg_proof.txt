@@ -1,0 +1,84 @@
+⚠ [2488/2503] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2492/2503] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [2493/2503] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [2498/2503] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [2499/2503] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [2503/2503] Building SSA.Projects.InstCombine.tests.LLVM.gaddhmaskhneg
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/tcg40/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gaddhmaskhneg.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gaddhmaskhneg.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gaddhmaskhneg.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gaddhmaskhneg.c --json
+error: Lean exited with code 137
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.gaddhmaskhneg
+error: build failed
+⚠ [2488/2503] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2492/2503] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [2493/2503] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [2498/2503] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [2499/2503] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [2503/2503] Building SSA.Projects.InstCombine.tests.LLVM.gaddhmaskhneg
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/tcg40/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gaddhmaskhneg.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gaddhmaskhneg.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gaddhmaskhneg.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gaddhmaskhneg.c --json
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gaddhmaskhneg.lean:41:17: theorem extracted_1 :
+  ∀ (e : IntW 32),
+    add (LLVM.and (sub (const? 0) e) e) (const? (-1)) ⊑
+      LLVM.and (add e (const? (-1))) (LLVM.xor e (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gaddhmaskhneg.lean:37:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gaddhmaskhneg.lean:37:8: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gaddhmaskhneg.lean:46:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gaddhmaskhneg.lean:59:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gaddhmaskhneg.lean:71:41: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gaddhmaskhneg.lean:71:41: tactic 'rfl' failed, the left-hand side
+  ⟦?m.37898⟧
+is not definitionally equal to the right-hand side
+  Option ?m.37896
+dec_mask_commute_neg_i32_before dec_mask_commute_neg_i32_after : Com InstCombine.LLVM ?m.37897 EffectKind.pure ?m.37898
+⊢ ⟦?m.37898⟧ = Option ?m.37896
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gaddhmaskhneg.lean:72:9: tactic 'unfold' failed, local variable 'dec_mask_commute_neg_i32_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gaddhmaskhneg.lean:80:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gaddhmaskhneg.lean:91:4: (kernel) deterministic timeout
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gaddhmaskhneg.lean:101:41: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gaddhmaskhneg.lean:101:41: tactic 'rfl' failed, the left-hand side
+  ⟦?m.47344⟧
+is not definitionally equal to the right-hand side
+  Option ?m.47342
+dec_commute_mask_neg_i32_before dec_commute_mask_neg_i32_after : Com InstCombine.LLVM ?m.47343 EffectKind.pure ?m.47344
+⊢ ⟦?m.47344⟧ = Option ?m.47342
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gaddhmaskhneg.lean:102:9: tactic 'unfold' failed, local variable 'dec_commute_mask_neg_i32_before' has no definition
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.gaddhmaskhneg
+error: build failed
