@@ -214,3 +214,219 @@ error: Lean exited with code 1
 Some required builds logged failures:
 - SSA.Projects.InstCombine.tests.LLVM.glogicalhselecthinseltpoison
 error: build failed
+⚠ [2488/2503] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2492/2503] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [2493/2503] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [2498/2503] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [2499/2503] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [2503/2503] Building SSA.Projects.InstCombine.tests.LLVM.glogicalhselecthinseltpoison
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.c --json
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:19:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:35:9: tactic 'unfold' failed, local variable 'bools_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:46:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:47:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:63:9: tactic 'unfold' failed, local variable 'bools_logical_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:74:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:86:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:94:34: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:94:34: tactic 'rfl' failed, the left-hand side
+  ⟦?m.10141⟧
+is not definitionally equal to the right-hand side
+  Option ?m.10139
+bools_multi_uses1_before bools_multi_uses1_after : Com InstCombine.LLVM ?m.10140 EffectKind.pure ?m.10141
+⊢ ⟦?m.10141⟧ = Option ?m.10139
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:95:9: tactic 'unfold' failed, local variable 'bools_multi_uses1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:106:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:107:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:119:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:120:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:128:42: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:128:42: tactic 'rfl' failed, the left-hand side
+  ⟦?m.13193⟧
+is not definitionally equal to the right-hand side
+  Option ?m.13191
+bools_multi_uses1_logical_before bools_multi_uses1_logical_after :
+  Com InstCombine.LLVM ?m.13192 EffectKind.pure ?m.13193
+⊢ ⟦?m.13193⟧ = Option ?m.13191
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:129:9: tactic 'unfold' failed, local variable 'bools_multi_uses1_logical_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:140:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:158:9: tactic 'unfold' failed, local variable 'bools_multi_uses2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:169:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:170:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:183:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:184:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:194:42: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:194:42: tactic 'rfl' failed, the left-hand side
+  ⟦?m.20123⟧
+is not definitionally equal to the right-hand side
+  Option ?m.20121
+bools_multi_uses2_logical_before bools_multi_uses2_logical_after :
+  Com InstCombine.LLVM ?m.20122 EffectKind.pure ?m.20123
+⊢ ⟦?m.20123⟧ = Option ?m.20121
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:195:9: tactic 'unfold' failed, local variable 'bools_multi_uses2_logical_before' has no definition
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.glogicalhselecthinseltpoison
+error: build failed
+⚠ [2488/2503] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2492/2503] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [2493/2503] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [2498/2503] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [2499/2503] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [2503/2503] Building SSA.Projects.InstCombine.tests.LLVM.glogicalhselecthinseltpoison
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.c --json
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:19:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:35:9: tactic 'unfold' failed, local variable 'bools_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:46:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:47:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:63:9: tactic 'unfold' failed, local variable 'bools_logical_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:74:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:86:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:94:34: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:94:34: tactic 'rfl' failed, the left-hand side
+  ⟦?m.10141⟧
+is not definitionally equal to the right-hand side
+  Option ?m.10139
+bools_multi_uses1_before bools_multi_uses1_after : Com InstCombine.LLVM ?m.10140 EffectKind.pure ?m.10141
+⊢ ⟦?m.10141⟧ = Option ?m.10139
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:95:9: tactic 'unfold' failed, local variable 'bools_multi_uses1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:106:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:107:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:119:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:120:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:128:42: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:128:42: tactic 'rfl' failed, the left-hand side
+  ⟦?m.13193⟧
+is not definitionally equal to the right-hand side
+  Option ?m.13191
+bools_multi_uses1_logical_before bools_multi_uses1_logical_after :
+  Com InstCombine.LLVM ?m.13192 EffectKind.pure ?m.13193
+⊢ ⟦?m.13193⟧ = Option ?m.13191
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:129:9: tactic 'unfold' failed, local variable 'bools_multi_uses1_logical_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:140:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:158:9: tactic 'unfold' failed, local variable 'bools_multi_uses2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:169:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:170:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:183:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:184:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:194:42: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:194:42: tactic 'rfl' failed, the left-hand side
+  ⟦?m.20123⟧
+is not definitionally equal to the right-hand side
+  Option ?m.20121
+bools_multi_uses2_logical_before bools_multi_uses2_logical_after :
+  Com InstCombine.LLVM ?m.20122 EffectKind.pure ?m.20123
+⊢ ⟦?m.20123⟧ = Option ?m.20121
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:195:9: tactic 'unfold' failed, local variable 'bools_multi_uses2_logical_before' has no definition
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.glogicalhselecthinseltpoison
+error: build failed
+⚠ [2488/2503] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2492/2503] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [2493/2503] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [2498/2503] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [2499/2503] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [2503/2503] Building SSA.Projects.InstCombine.tests.LLVM.glogicalhselecthinseltpoison
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.c --json
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:19:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:35:9: tactic 'unfold' failed, local variable 'bools_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:46:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:47:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:63:9: tactic 'unfold' failed, local variable 'bools_logical_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:74:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:86:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:94:34: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:94:34: tactic 'rfl' failed, the left-hand side
+  ⟦?m.10141⟧
+is not definitionally equal to the right-hand side
+  Option ?m.10139
+bools_multi_uses1_before bools_multi_uses1_after : Com InstCombine.LLVM ?m.10140 EffectKind.pure ?m.10141
+⊢ ⟦?m.10141⟧ = Option ?m.10139
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:95:9: tactic 'unfold' failed, local variable 'bools_multi_uses1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:106:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:107:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:119:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:120:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:128:42: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:128:42: tactic 'rfl' failed, the left-hand side
+  ⟦?m.13193⟧
+is not definitionally equal to the right-hand side
+  Option ?m.13191
+bools_multi_uses1_logical_before bools_multi_uses1_logical_after :
+  Com InstCombine.LLVM ?m.13192 EffectKind.pure ?m.13193
+⊢ ⟦?m.13193⟧ = Option ?m.13191
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:129:9: tactic 'unfold' failed, local variable 'bools_multi_uses1_logical_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:140:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:158:9: tactic 'unfold' failed, local variable 'bools_multi_uses2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:169:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:170:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:183:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:184:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:194:42: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:194:42: tactic 'rfl' failed, the left-hand side
+  ⟦?m.20123⟧
+is not definitionally equal to the right-hand side
+  Option ?m.20121
+bools_multi_uses2_logical_before bools_multi_uses2_logical_after :
+  Com InstCombine.LLVM ?m.20122 EffectKind.pure ?m.20123
+⊢ ⟦?m.20123⟧ = Option ?m.20121
+error: ././././SSA/Projects/InstCombine/tests/LLVM/glogicalhselecthinseltpoison.lean:195:9: tactic 'unfold' failed, local variable 'bools_multi_uses2_logical_before' has no definition
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.glogicalhselecthinseltpoison
+error: build failed

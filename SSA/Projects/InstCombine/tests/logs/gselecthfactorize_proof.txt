@@ -1345,3 +1345,1350 @@ error: Lean exited with code 1
 Some required builds logged failures:
 - SSA.Projects.InstCombine.tests.LLVM.gselecthfactorize
 error: build failed
+⚠ [2488/2503] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2492/2503] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [2493/2503] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [2498/2503] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [2499/2503] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [2503/2503] Building SSA.Projects.InstCombine.tests.LLVM.gselecthfactorize
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.c --json
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:19:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:20:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:30:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:31:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:37:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:37:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.2873⟧
+is not definitionally equal to the right-hand side
+  Option ?m.2871
+logic_and_logic_or_1_before logic_and_logic_or_1_after : Com InstCombine.LLVM ?m.2872 EffectKind.pure ?m.2873
+⊢ ⟦?m.2873⟧ = Option ?m.2871
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:38:9: tactic 'unfold' failed, local variable 'logic_and_logic_or_1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:49:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:50:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:60:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:61:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:67:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:67:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.5803⟧
+is not definitionally equal to the right-hand side
+  Option ?m.5801
+logic_and_logic_or_2_before logic_and_logic_or_2_after : Com InstCombine.LLVM ?m.5802 EffectKind.pure ?m.5803
+⊢ ⟦?m.5803⟧ = Option ?m.5801
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:68:9: tactic 'unfold' failed, local variable 'logic_and_logic_or_2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:79:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:80:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:90:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:91:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:97:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:97:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.8721⟧
+is not definitionally equal to the right-hand side
+  Option ?m.8719
+logic_and_logic_or_3_before logic_and_logic_or_3_after : Com InstCombine.LLVM ?m.8720 EffectKind.pure ?m.8721
+⊢ ⟦?m.8721⟧ = Option ?m.8719
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:98:9: tactic 'unfold' failed, local variable 'logic_and_logic_or_3_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:109:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:110:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:120:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:121:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:127:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:127:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.11603⟧
+is not definitionally equal to the right-hand side
+  Option ?m.11601
+logic_and_logic_or_4_before logic_and_logic_or_4_after : Com InstCombine.LLVM ?m.11602 EffectKind.pure ?m.11603
+⊢ ⟦?m.11603⟧ = Option ?m.11601
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:128:9: tactic 'unfold' failed, local variable 'logic_and_logic_or_4_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:139:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:140:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:150:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:151:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:157:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:157:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.14521⟧
+is not definitionally equal to the right-hand side
+  Option ?m.14519
+logic_and_logic_or_5_before logic_and_logic_or_5_after : Com InstCombine.LLVM ?m.14520 EffectKind.pure ?m.14521
+⊢ ⟦?m.14521⟧ = Option ?m.14519
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:158:9: tactic 'unfold' failed, local variable 'logic_and_logic_or_5_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:169:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:170:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:180:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:181:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:187:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:187:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.17451⟧
+is not definitionally equal to the right-hand side
+  Option ?m.17449
+logic_and_logic_or_6_before logic_and_logic_or_6_after : Com InstCombine.LLVM ?m.17450 EffectKind.pure ?m.17451
+⊢ ⟦?m.17451⟧ = Option ?m.17449
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:188:9: tactic 'unfold' failed, local variable 'logic_and_logic_or_6_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:199:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:200:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:210:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:211:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:217:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:217:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.20321⟧
+is not definitionally equal to the right-hand side
+  Option ?m.20319
+logic_and_logic_or_7_before logic_and_logic_or_7_after : Com InstCombine.LLVM ?m.20320 EffectKind.pure ?m.20321
+⊢ ⟦?m.20321⟧ = Option ?m.20319
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:218:9: tactic 'unfold' failed, local variable 'logic_and_logic_or_7_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:229:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:230:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:240:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:241:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:247:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:247:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.23251⟧
+is not definitionally equal to the right-hand side
+  Option ?m.23249
+logic_and_logic_or_8_before logic_and_logic_or_8_after : Com InstCombine.LLVM ?m.23250 EffectKind.pure ?m.23251
+⊢ ⟦?m.23251⟧ = Option ?m.23249
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:248:9: tactic 'unfold' failed, local variable 'logic_and_logic_or_8_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:259:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:260:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:270:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:271:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:277:41: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:277:41: tactic 'rfl' failed, the left-hand side
+  ⟦?m.26116⟧
+is not definitionally equal to the right-hand side
+  Option ?m.26114
+and_logic_and_logic_or_1_before and_logic_and_logic_or_1_after : Com InstCombine.LLVM ?m.26115 EffectKind.pure ?m.26116
+⊢ ⟦?m.26116⟧ = Option ?m.26114
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:278:9: tactic 'unfold' failed, local variable 'and_logic_and_logic_or_1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:289:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:290:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:300:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:301:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:307:41: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:307:41: tactic 'rfl' failed, the left-hand side
+  ⟦?m.29029⟧
+is not definitionally equal to the right-hand side
+  Option ?m.29027
+and_logic_and_logic_or_2_before and_logic_and_logic_or_2_after : Com InstCombine.LLVM ?m.29028 EffectKind.pure ?m.29029
+⊢ ⟦?m.29029⟧ = Option ?m.29027
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:308:9: tactic 'unfold' failed, local variable 'and_logic_and_logic_or_2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:319:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:320:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:330:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:331:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:337:41: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:337:41: tactic 'rfl' failed, the left-hand side
+  ⟦?m.31930⟧
+is not definitionally equal to the right-hand side
+  Option ?m.31928
+and_logic_and_logic_or_3_before and_logic_and_logic_or_3_after : Com InstCombine.LLVM ?m.31929 EffectKind.pure ?m.31930
+⊢ ⟦?m.31930⟧ = Option ?m.31928
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:338:9: tactic 'unfold' failed, local variable 'and_logic_and_logic_or_3_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:349:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:350:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:360:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:361:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:367:41: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:367:41: tactic 'rfl' failed, the left-hand side
+  ⟦?m.34783⟧
+is not definitionally equal to the right-hand side
+  Option ?m.34781
+and_logic_and_logic_or_4_before and_logic_and_logic_or_4_after : Com InstCombine.LLVM ?m.34782 EffectKind.pure ?m.34783
+⊢ ⟦?m.34783⟧ = Option ?m.34781
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:368:9: tactic 'unfold' failed, local variable 'and_logic_and_logic_or_4_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:379:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:380:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:390:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:391:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:397:41: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:397:41: tactic 'rfl' failed, the left-hand side
+  ⟦?m.37696⟧
+is not definitionally equal to the right-hand side
+  Option ?m.37694
+and_logic_and_logic_or_5_before and_logic_and_logic_or_5_after : Com InstCombine.LLVM ?m.37695 EffectKind.pure ?m.37696
+⊢ ⟦?m.37696⟧ = Option ?m.37694
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:398:9: tactic 'unfold' failed, local variable 'and_logic_and_logic_or_5_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:409:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:410:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:420:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:426:41: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:426:41: tactic 'rfl' failed, the left-hand side
+  ⟦?m.40560⟧
+is not definitionally equal to the right-hand side
+  Option ?m.40558
+and_logic_and_logic_or_6_before and_logic_and_logic_or_6_after : Com InstCombine.LLVM ?m.40559 EffectKind.pure ?m.40560
+⊢ ⟦?m.40560⟧ = Option ?m.40558
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:427:9: tactic 'unfold' failed, local variable 'and_logic_and_logic_or_6_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:438:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:439:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:449:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:450:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:456:41: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:456:41: tactic 'rfl' failed, the left-hand side
+  ⟦?m.43449⟧
+is not definitionally equal to the right-hand side
+  Option ?m.43447
+and_logic_and_logic_or_7_before and_logic_and_logic_or_7_after : Com InstCombine.LLVM ?m.43448 EffectKind.pure ?m.43449
+⊢ ⟦?m.43449⟧ = Option ?m.43447
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:457:9: tactic 'unfold' failed, local variable 'and_logic_and_logic_or_7_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:468:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:469:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:479:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:485:41: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:485:41: tactic 'rfl' failed, the left-hand side
+  ⟦?m.46285⟧
+is not definitionally equal to the right-hand side
+  Option ?m.46283
+and_logic_and_logic_or_8_before and_logic_and_logic_or_8_after : Com InstCombine.LLVM ?m.46284 EffectKind.pure ?m.46285
+⊢ ⟦?m.46285⟧ = Option ?m.46283
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:486:9: tactic 'unfold' failed, local variable 'and_logic_and_logic_or_8_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:497:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:507:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:513:35: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:513:35: tactic 'rfl' failed, the left-hand side
+  ⟦?m.49100⟧
+is not definitionally equal to the right-hand side
+  Option ?m.49098
+and_and_logic_or_1_before and_and_logic_or_1_after : Com InstCombine.LLVM ?m.49099 EffectKind.pure ?m.49100
+⊢ ⟦?m.49100⟧ = Option ?m.49098
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:514:9: tactic 'unfold' failed, local variable 'and_and_logic_or_1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:525:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:535:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:541:35: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:541:35: tactic 'rfl' failed, the left-hand side
+  ⟦?m.51811⟧
+is not definitionally equal to the right-hand side
+  Option ?m.51809
+and_and_logic_or_2_before and_and_logic_or_2_after : Com InstCombine.LLVM ?m.51810 EffectKind.pure ?m.51811
+⊢ ⟦?m.51811⟧ = Option ?m.51809
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:542:9: tactic 'unfold' failed, local variable 'and_and_logic_or_2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:553:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:554:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:564:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:565:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:571:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:571:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.54653⟧
+is not definitionally equal to the right-hand side
+  Option ?m.54651
+logic_or_logic_and_1_before logic_or_logic_and_1_after : Com InstCombine.LLVM ?m.54652 EffectKind.pure ?m.54653
+⊢ ⟦?m.54653⟧ = Option ?m.54651
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:572:9: tactic 'unfold' failed, local variable 'logic_or_logic_and_1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:583:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:584:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:594:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:595:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:601:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:601:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.57507⟧
+is not definitionally equal to the right-hand side
+  Option ?m.57505
+logic_or_logic_and_2_before logic_or_logic_and_2_after : Com InstCombine.LLVM ?m.57506 EffectKind.pure ?m.57507
+⊢ ⟦?m.57507⟧ = Option ?m.57505
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:602:9: tactic 'unfold' failed, local variable 'logic_or_logic_and_2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:613:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:614:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:624:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:625:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:631:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:631:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.60361⟧
+is not definitionally equal to the right-hand side
+  Option ?m.60359
+logic_or_logic_and_3_before logic_or_logic_and_3_after : Com InstCombine.LLVM ?m.60360 EffectKind.pure ?m.60361
+⊢ ⟦?m.60361⟧ = Option ?m.60359
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:632:9: tactic 'unfold' failed, local variable 'logic_or_logic_and_3_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:643:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:644:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:654:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:655:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:661:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:661:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.63155⟧
+is not definitionally equal to the right-hand side
+  Option ?m.63153
+logic_or_logic_and_4_before logic_or_logic_and_4_after : Com InstCombine.LLVM ?m.63154 EffectKind.pure ?m.63155
+⊢ ⟦?m.63155⟧ = Option ?m.63153
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:662:9: tactic 'unfold' failed, local variable 'logic_or_logic_and_4_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:673:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:674:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:684:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:685:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:691:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:691:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.65997⟧
+is not definitionally equal to the right-hand side
+  Option ?m.65995
+logic_or_logic_and_5_before logic_or_logic_and_5_after : Com InstCombine.LLVM ?m.65996 EffectKind.pure ?m.65997
+⊢ ⟦?m.65997⟧ = Option ?m.65995
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:692:9: tactic 'unfold' failed, local variable 'logic_or_logic_and_5_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:703:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:704:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:714:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:715:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:721:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:721:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.68851⟧
+is not definitionally equal to the right-hand side
+  Option ?m.68849
+logic_or_logic_and_6_before logic_or_logic_and_6_after : Com InstCombine.LLVM ?m.68850 EffectKind.pure ?m.68851
+⊢ ⟦?m.68851⟧ = Option ?m.68849
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:722:9: tactic 'unfold' failed, local variable 'logic_or_logic_and_6_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:733:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:734:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:744:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:745:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:751:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:751:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.71657⟧
+is not definitionally equal to the right-hand side
+  Option ?m.71655
+logic_or_logic_and_7_before logic_or_logic_and_7_after : Com InstCombine.LLVM ?m.71656 EffectKind.pure ?m.71657
+⊢ ⟦?m.71657⟧ = Option ?m.71655
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:752:9: tactic 'unfold' failed, local variable 'logic_or_logic_and_7_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:763:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:764:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:774:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:775:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:781:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:781:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.74499⟧
+is not definitionally equal to the right-hand side
+  Option ?m.74497
+logic_or_logic_and_8_before logic_or_logic_and_8_after : Com InstCombine.LLVM ?m.74498 EffectKind.pure ?m.74499
+⊢ ⟦?m.74499⟧ = Option ?m.74497
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:782:9: tactic 'unfold' failed, local variable 'logic_or_logic_and_8_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:793:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:794:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:804:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:805:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:811:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:811:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.77288⟧
+is not definitionally equal to the right-hand side
+  Option ?m.77286
+or_logic_or_logic_and_1_before or_logic_or_logic_and_1_after : Com InstCombine.LLVM ?m.77287 EffectKind.pure ?m.77288
+⊢ ⟦?m.77288⟧ = Option ?m.77286
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:812:9: tactic 'unfold' failed, local variable 'or_logic_or_logic_and_1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:823:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:824:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:834:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:835:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:841:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:841:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.80125⟧
+is not definitionally equal to the right-hand side
+  Option ?m.80123
+or_logic_or_logic_and_2_before or_logic_or_logic_and_2_after : Com InstCombine.LLVM ?m.80124 EffectKind.pure ?m.80125
+⊢ ⟦?m.80125⟧ = Option ?m.80123
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:842:9: tactic 'unfold' failed, local variable 'or_logic_or_logic_and_2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:853:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:854:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:864:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:865:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:871:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:871:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.82950⟧
+is not definitionally equal to the right-hand side
+  Option ?m.82948
+or_logic_or_logic_and_3_before or_logic_or_logic_and_3_after : Com InstCombine.LLVM ?m.82949 EffectKind.pure ?m.82950
+⊢ ⟦?m.82950⟧ = Option ?m.82948
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:872:9: tactic 'unfold' failed, local variable 'or_logic_or_logic_and_3_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:883:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:884:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:894:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:900:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:900:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.85690⟧
+is not definitionally equal to the right-hand side
+  Option ?m.85688
+or_logic_or_logic_and_4_before or_logic_or_logic_and_4_after : Com InstCombine.LLVM ?m.85689 EffectKind.pure ?m.85690
+⊢ ⟦?m.85690⟧ = Option ?m.85688
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:901:9: tactic 'unfold' failed, local variable 'or_logic_or_logic_and_4_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:912:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:913:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:923:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:924:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:930:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:930:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.88527⟧
+is not definitionally equal to the right-hand side
+  Option ?m.88525
+or_logic_or_logic_and_5_before or_logic_or_logic_and_5_after : Com InstCombine.LLVM ?m.88526 EffectKind.pure ?m.88527
+⊢ ⟦?m.88527⟧ = Option ?m.88525
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:931:9: tactic 'unfold' failed, local variable 'or_logic_or_logic_and_5_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:942:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:943:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:953:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:954:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:960:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:960:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.91352⟧
+is not definitionally equal to the right-hand side
+  Option ?m.91350
+or_logic_or_logic_and_6_before or_logic_or_logic_and_6_after : Com InstCombine.LLVM ?m.91351 EffectKind.pure ?m.91352
+⊢ ⟦?m.91352⟧ = Option ?m.91350
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:961:9: tactic 'unfold' failed, local variable 'or_logic_or_logic_and_6_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:972:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:973:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:983:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:984:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:990:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:990:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.94189⟧
+is not definitionally equal to the right-hand side
+  Option ?m.94187
+or_logic_or_logic_and_7_before or_logic_or_logic_and_7_after : Com InstCombine.LLVM ?m.94188 EffectKind.pure ?m.94189
+⊢ ⟦?m.94189⟧ = Option ?m.94187
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:991:9: tactic 'unfold' failed, local variable 'or_logic_or_logic_and_7_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1002:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1003:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1013:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1019:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1019:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.96977⟧
+is not definitionally equal to the right-hand side
+  Option ?m.96975
+or_logic_or_logic_and_8_before or_logic_or_logic_and_8_after : Com InstCombine.LLVM ?m.96976 EffectKind.pure ?m.96977
+⊢ ⟦?m.96977⟧ = Option ?m.96975
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1020:9: tactic 'unfold' failed, local variable 'or_logic_or_logic_and_8_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1031:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1041:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1047:34: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1047:34: tactic 'rfl' failed, the left-hand side
+  ⟦?m.99716⟧
+is not definitionally equal to the right-hand side
+  Option ?m.99714
+or_or_logic_and_1_before or_or_logic_and_1_after : Com InstCombine.LLVM ?m.99715 EffectKind.pure ?m.99716
+⊢ ⟦?m.99716⟧ = Option ?m.99714
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1048:9: tactic 'unfold' failed, local variable 'or_or_logic_and_1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1059:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1069:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1075:34: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1075:34: tactic 'rfl' failed, the left-hand side
+  ⟦?m.102395⟧
+is not definitionally equal to the right-hand side
+  Option ?m.102393
+or_or_logic_and_2_before or_or_logic_and_2_after : Com InstCombine.LLVM ?m.102394 EffectKind.pure ?m.102395
+⊢ ⟦?m.102395⟧ = Option ?m.102393
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1076:9: tactic 'unfold' failed, local variable 'or_or_logic_and_2_before' has no definition
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.gselecthfactorize
+error: build failed
+⚠ [2488/2503] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2492/2503] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [2493/2503] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [2498/2503] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [2499/2503] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [2503/2503] Building SSA.Projects.InstCombine.tests.LLVM.gselecthfactorize
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.c --json
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:19:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:20:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:30:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:31:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:37:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:37:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.2873⟧
+is not definitionally equal to the right-hand side
+  Option ?m.2871
+logic_and_logic_or_1_before logic_and_logic_or_1_after : Com InstCombine.LLVM ?m.2872 EffectKind.pure ?m.2873
+⊢ ⟦?m.2873⟧ = Option ?m.2871
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:38:9: tactic 'unfold' failed, local variable 'logic_and_logic_or_1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:49:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:50:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:60:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:61:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:67:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:67:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.5803⟧
+is not definitionally equal to the right-hand side
+  Option ?m.5801
+logic_and_logic_or_2_before logic_and_logic_or_2_after : Com InstCombine.LLVM ?m.5802 EffectKind.pure ?m.5803
+⊢ ⟦?m.5803⟧ = Option ?m.5801
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:68:9: tactic 'unfold' failed, local variable 'logic_and_logic_or_2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:79:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:80:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:90:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:91:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:97:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:97:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.8721⟧
+is not definitionally equal to the right-hand side
+  Option ?m.8719
+logic_and_logic_or_3_before logic_and_logic_or_3_after : Com InstCombine.LLVM ?m.8720 EffectKind.pure ?m.8721
+⊢ ⟦?m.8721⟧ = Option ?m.8719
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:98:9: tactic 'unfold' failed, local variable 'logic_and_logic_or_3_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:109:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:110:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:120:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:121:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:127:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:127:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.11603⟧
+is not definitionally equal to the right-hand side
+  Option ?m.11601
+logic_and_logic_or_4_before logic_and_logic_or_4_after : Com InstCombine.LLVM ?m.11602 EffectKind.pure ?m.11603
+⊢ ⟦?m.11603⟧ = Option ?m.11601
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:128:9: tactic 'unfold' failed, local variable 'logic_and_logic_or_4_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:139:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:140:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:150:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:151:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:157:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:157:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.14521⟧
+is not definitionally equal to the right-hand side
+  Option ?m.14519
+logic_and_logic_or_5_before logic_and_logic_or_5_after : Com InstCombine.LLVM ?m.14520 EffectKind.pure ?m.14521
+⊢ ⟦?m.14521⟧ = Option ?m.14519
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:158:9: tactic 'unfold' failed, local variable 'logic_and_logic_or_5_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:169:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:170:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:180:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:181:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:187:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:187:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.17451⟧
+is not definitionally equal to the right-hand side
+  Option ?m.17449
+logic_and_logic_or_6_before logic_and_logic_or_6_after : Com InstCombine.LLVM ?m.17450 EffectKind.pure ?m.17451
+⊢ ⟦?m.17451⟧ = Option ?m.17449
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:188:9: tactic 'unfold' failed, local variable 'logic_and_logic_or_6_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:199:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:200:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:210:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:211:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:217:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:217:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.20321⟧
+is not definitionally equal to the right-hand side
+  Option ?m.20319
+logic_and_logic_or_7_before logic_and_logic_or_7_after : Com InstCombine.LLVM ?m.20320 EffectKind.pure ?m.20321
+⊢ ⟦?m.20321⟧ = Option ?m.20319
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:218:9: tactic 'unfold' failed, local variable 'logic_and_logic_or_7_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:229:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:230:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:240:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:241:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:247:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:247:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.23251⟧
+is not definitionally equal to the right-hand side
+  Option ?m.23249
+logic_and_logic_or_8_before logic_and_logic_or_8_after : Com InstCombine.LLVM ?m.23250 EffectKind.pure ?m.23251
+⊢ ⟦?m.23251⟧ = Option ?m.23249
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:248:9: tactic 'unfold' failed, local variable 'logic_and_logic_or_8_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:259:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:260:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:270:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:271:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:277:41: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:277:41: tactic 'rfl' failed, the left-hand side
+  ⟦?m.26116⟧
+is not definitionally equal to the right-hand side
+  Option ?m.26114
+and_logic_and_logic_or_1_before and_logic_and_logic_or_1_after : Com InstCombine.LLVM ?m.26115 EffectKind.pure ?m.26116
+⊢ ⟦?m.26116⟧ = Option ?m.26114
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:278:9: tactic 'unfold' failed, local variable 'and_logic_and_logic_or_1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:289:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:290:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:300:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:301:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:307:41: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:307:41: tactic 'rfl' failed, the left-hand side
+  ⟦?m.29029⟧
+is not definitionally equal to the right-hand side
+  Option ?m.29027
+and_logic_and_logic_or_2_before and_logic_and_logic_or_2_after : Com InstCombine.LLVM ?m.29028 EffectKind.pure ?m.29029
+⊢ ⟦?m.29029⟧ = Option ?m.29027
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:308:9: tactic 'unfold' failed, local variable 'and_logic_and_logic_or_2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:319:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:320:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:330:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:331:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:337:41: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:337:41: tactic 'rfl' failed, the left-hand side
+  ⟦?m.31930⟧
+is not definitionally equal to the right-hand side
+  Option ?m.31928
+and_logic_and_logic_or_3_before and_logic_and_logic_or_3_after : Com InstCombine.LLVM ?m.31929 EffectKind.pure ?m.31930
+⊢ ⟦?m.31930⟧ = Option ?m.31928
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:338:9: tactic 'unfold' failed, local variable 'and_logic_and_logic_or_3_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:349:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:350:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:360:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:361:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:367:41: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:367:41: tactic 'rfl' failed, the left-hand side
+  ⟦?m.34783⟧
+is not definitionally equal to the right-hand side
+  Option ?m.34781
+and_logic_and_logic_or_4_before and_logic_and_logic_or_4_after : Com InstCombine.LLVM ?m.34782 EffectKind.pure ?m.34783
+⊢ ⟦?m.34783⟧ = Option ?m.34781
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:368:9: tactic 'unfold' failed, local variable 'and_logic_and_logic_or_4_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:379:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:380:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:390:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:391:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:397:41: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:397:41: tactic 'rfl' failed, the left-hand side
+  ⟦?m.37696⟧
+is not definitionally equal to the right-hand side
+  Option ?m.37694
+and_logic_and_logic_or_5_before and_logic_and_logic_or_5_after : Com InstCombine.LLVM ?m.37695 EffectKind.pure ?m.37696
+⊢ ⟦?m.37696⟧ = Option ?m.37694
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:398:9: tactic 'unfold' failed, local variable 'and_logic_and_logic_or_5_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:409:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:410:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:420:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:426:41: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:426:41: tactic 'rfl' failed, the left-hand side
+  ⟦?m.40560⟧
+is not definitionally equal to the right-hand side
+  Option ?m.40558
+and_logic_and_logic_or_6_before and_logic_and_logic_or_6_after : Com InstCombine.LLVM ?m.40559 EffectKind.pure ?m.40560
+⊢ ⟦?m.40560⟧ = Option ?m.40558
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:427:9: tactic 'unfold' failed, local variable 'and_logic_and_logic_or_6_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:438:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:439:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:449:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:450:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:456:41: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:456:41: tactic 'rfl' failed, the left-hand side
+  ⟦?m.43449⟧
+is not definitionally equal to the right-hand side
+  Option ?m.43447
+and_logic_and_logic_or_7_before and_logic_and_logic_or_7_after : Com InstCombine.LLVM ?m.43448 EffectKind.pure ?m.43449
+⊢ ⟦?m.43449⟧ = Option ?m.43447
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:457:9: tactic 'unfold' failed, local variable 'and_logic_and_logic_or_7_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:468:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:469:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:479:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:485:41: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:485:41: tactic 'rfl' failed, the left-hand side
+  ⟦?m.46285⟧
+is not definitionally equal to the right-hand side
+  Option ?m.46283
+and_logic_and_logic_or_8_before and_logic_and_logic_or_8_after : Com InstCombine.LLVM ?m.46284 EffectKind.pure ?m.46285
+⊢ ⟦?m.46285⟧ = Option ?m.46283
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:486:9: tactic 'unfold' failed, local variable 'and_logic_and_logic_or_8_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:497:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:507:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:513:35: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:513:35: tactic 'rfl' failed, the left-hand side
+  ⟦?m.49100⟧
+is not definitionally equal to the right-hand side
+  Option ?m.49098
+and_and_logic_or_1_before and_and_logic_or_1_after : Com InstCombine.LLVM ?m.49099 EffectKind.pure ?m.49100
+⊢ ⟦?m.49100⟧ = Option ?m.49098
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:514:9: tactic 'unfold' failed, local variable 'and_and_logic_or_1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:525:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:535:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:541:35: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:541:35: tactic 'rfl' failed, the left-hand side
+  ⟦?m.51811⟧
+is not definitionally equal to the right-hand side
+  Option ?m.51809
+and_and_logic_or_2_before and_and_logic_or_2_after : Com InstCombine.LLVM ?m.51810 EffectKind.pure ?m.51811
+⊢ ⟦?m.51811⟧ = Option ?m.51809
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:542:9: tactic 'unfold' failed, local variable 'and_and_logic_or_2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:553:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:554:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:564:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:565:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:571:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:571:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.54653⟧
+is not definitionally equal to the right-hand side
+  Option ?m.54651
+logic_or_logic_and_1_before logic_or_logic_and_1_after : Com InstCombine.LLVM ?m.54652 EffectKind.pure ?m.54653
+⊢ ⟦?m.54653⟧ = Option ?m.54651
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:572:9: tactic 'unfold' failed, local variable 'logic_or_logic_and_1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:583:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:584:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:594:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:595:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:601:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:601:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.57507⟧
+is not definitionally equal to the right-hand side
+  Option ?m.57505
+logic_or_logic_and_2_before logic_or_logic_and_2_after : Com InstCombine.LLVM ?m.57506 EffectKind.pure ?m.57507
+⊢ ⟦?m.57507⟧ = Option ?m.57505
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:602:9: tactic 'unfold' failed, local variable 'logic_or_logic_and_2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:613:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:614:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:624:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:625:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:631:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:631:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.60361⟧
+is not definitionally equal to the right-hand side
+  Option ?m.60359
+logic_or_logic_and_3_before logic_or_logic_and_3_after : Com InstCombine.LLVM ?m.60360 EffectKind.pure ?m.60361
+⊢ ⟦?m.60361⟧ = Option ?m.60359
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:632:9: tactic 'unfold' failed, local variable 'logic_or_logic_and_3_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:643:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:644:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:654:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:655:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:661:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:661:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.63155⟧
+is not definitionally equal to the right-hand side
+  Option ?m.63153
+logic_or_logic_and_4_before logic_or_logic_and_4_after : Com InstCombine.LLVM ?m.63154 EffectKind.pure ?m.63155
+⊢ ⟦?m.63155⟧ = Option ?m.63153
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:662:9: tactic 'unfold' failed, local variable 'logic_or_logic_and_4_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:673:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:674:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:684:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:685:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:691:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:691:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.65997⟧
+is not definitionally equal to the right-hand side
+  Option ?m.65995
+logic_or_logic_and_5_before logic_or_logic_and_5_after : Com InstCombine.LLVM ?m.65996 EffectKind.pure ?m.65997
+⊢ ⟦?m.65997⟧ = Option ?m.65995
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:692:9: tactic 'unfold' failed, local variable 'logic_or_logic_and_5_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:703:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:704:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:714:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:715:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:721:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:721:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.68851⟧
+is not definitionally equal to the right-hand side
+  Option ?m.68849
+logic_or_logic_and_6_before logic_or_logic_and_6_after : Com InstCombine.LLVM ?m.68850 EffectKind.pure ?m.68851
+⊢ ⟦?m.68851⟧ = Option ?m.68849
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:722:9: tactic 'unfold' failed, local variable 'logic_or_logic_and_6_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:733:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:734:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:744:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:745:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:751:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:751:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.71657⟧
+is not definitionally equal to the right-hand side
+  Option ?m.71655
+logic_or_logic_and_7_before logic_or_logic_and_7_after : Com InstCombine.LLVM ?m.71656 EffectKind.pure ?m.71657
+⊢ ⟦?m.71657⟧ = Option ?m.71655
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:752:9: tactic 'unfold' failed, local variable 'logic_or_logic_and_7_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:763:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:764:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:774:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:775:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:781:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:781:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.74499⟧
+is not definitionally equal to the right-hand side
+  Option ?m.74497
+logic_or_logic_and_8_before logic_or_logic_and_8_after : Com InstCombine.LLVM ?m.74498 EffectKind.pure ?m.74499
+⊢ ⟦?m.74499⟧ = Option ?m.74497
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:782:9: tactic 'unfold' failed, local variable 'logic_or_logic_and_8_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:793:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:794:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:804:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:805:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:811:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:811:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.77288⟧
+is not definitionally equal to the right-hand side
+  Option ?m.77286
+or_logic_or_logic_and_1_before or_logic_or_logic_and_1_after : Com InstCombine.LLVM ?m.77287 EffectKind.pure ?m.77288
+⊢ ⟦?m.77288⟧ = Option ?m.77286
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:812:9: tactic 'unfold' failed, local variable 'or_logic_or_logic_and_1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:823:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:824:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:834:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:835:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:841:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:841:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.80125⟧
+is not definitionally equal to the right-hand side
+  Option ?m.80123
+or_logic_or_logic_and_2_before or_logic_or_logic_and_2_after : Com InstCombine.LLVM ?m.80124 EffectKind.pure ?m.80125
+⊢ ⟦?m.80125⟧ = Option ?m.80123
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:842:9: tactic 'unfold' failed, local variable 'or_logic_or_logic_and_2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:853:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:854:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:864:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:865:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:871:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:871:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.82950⟧
+is not definitionally equal to the right-hand side
+  Option ?m.82948
+or_logic_or_logic_and_3_before or_logic_or_logic_and_3_after : Com InstCombine.LLVM ?m.82949 EffectKind.pure ?m.82950
+⊢ ⟦?m.82950⟧ = Option ?m.82948
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:872:9: tactic 'unfold' failed, local variable 'or_logic_or_logic_and_3_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:883:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:884:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:894:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:900:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:900:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.85690⟧
+is not definitionally equal to the right-hand side
+  Option ?m.85688
+or_logic_or_logic_and_4_before or_logic_or_logic_and_4_after : Com InstCombine.LLVM ?m.85689 EffectKind.pure ?m.85690
+⊢ ⟦?m.85690⟧ = Option ?m.85688
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:901:9: tactic 'unfold' failed, local variable 'or_logic_or_logic_and_4_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:912:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:913:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:923:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:924:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:930:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:930:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.88527⟧
+is not definitionally equal to the right-hand side
+  Option ?m.88525
+or_logic_or_logic_and_5_before or_logic_or_logic_and_5_after : Com InstCombine.LLVM ?m.88526 EffectKind.pure ?m.88527
+⊢ ⟦?m.88527⟧ = Option ?m.88525
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:931:9: tactic 'unfold' failed, local variable 'or_logic_or_logic_and_5_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:942:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:943:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:953:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:954:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:960:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:960:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.91352⟧
+is not definitionally equal to the right-hand side
+  Option ?m.91350
+or_logic_or_logic_and_6_before or_logic_or_logic_and_6_after : Com InstCombine.LLVM ?m.91351 EffectKind.pure ?m.91352
+⊢ ⟦?m.91352⟧ = Option ?m.91350
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:961:9: tactic 'unfold' failed, local variable 'or_logic_or_logic_and_6_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:972:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:973:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:983:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:984:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:990:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:990:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.94189⟧
+is not definitionally equal to the right-hand side
+  Option ?m.94187
+or_logic_or_logic_and_7_before or_logic_or_logic_and_7_after : Com InstCombine.LLVM ?m.94188 EffectKind.pure ?m.94189
+⊢ ⟦?m.94189⟧ = Option ?m.94187
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:991:9: tactic 'unfold' failed, local variable 'or_logic_or_logic_and_7_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1002:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1003:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1013:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1019:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1019:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.96977⟧
+is not definitionally equal to the right-hand side
+  Option ?m.96975
+or_logic_or_logic_and_8_before or_logic_or_logic_and_8_after : Com InstCombine.LLVM ?m.96976 EffectKind.pure ?m.96977
+⊢ ⟦?m.96977⟧ = Option ?m.96975
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1020:9: tactic 'unfold' failed, local variable 'or_logic_or_logic_and_8_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1031:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1041:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1047:34: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1047:34: tactic 'rfl' failed, the left-hand side
+  ⟦?m.99716⟧
+is not definitionally equal to the right-hand side
+  Option ?m.99714
+or_or_logic_and_1_before or_or_logic_and_1_after : Com InstCombine.LLVM ?m.99715 EffectKind.pure ?m.99716
+⊢ ⟦?m.99716⟧ = Option ?m.99714
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1048:9: tactic 'unfold' failed, local variable 'or_or_logic_and_1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1059:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1069:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1075:34: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1075:34: tactic 'rfl' failed, the left-hand side
+  ⟦?m.102395⟧
+is not definitionally equal to the right-hand side
+  Option ?m.102393
+or_or_logic_and_2_before or_or_logic_and_2_after : Com InstCombine.LLVM ?m.102394 EffectKind.pure ?m.102395
+⊢ ⟦?m.102395⟧ = Option ?m.102393
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1076:9: tactic 'unfold' failed, local variable 'or_or_logic_and_2_before' has no definition
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.gselecthfactorize
+error: build failed
+⚠ [2488/2503] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2492/2503] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [2493/2503] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [2498/2503] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [2499/2503] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [2503/2503] Building SSA.Projects.InstCombine.tests.LLVM.gselecthfactorize
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.c --json
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:19:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:20:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:30:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:31:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:37:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:37:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.2873⟧
+is not definitionally equal to the right-hand side
+  Option ?m.2871
+logic_and_logic_or_1_before logic_and_logic_or_1_after : Com InstCombine.LLVM ?m.2872 EffectKind.pure ?m.2873
+⊢ ⟦?m.2873⟧ = Option ?m.2871
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:38:9: tactic 'unfold' failed, local variable 'logic_and_logic_or_1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:49:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:50:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:60:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:61:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:67:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:67:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.5803⟧
+is not definitionally equal to the right-hand side
+  Option ?m.5801
+logic_and_logic_or_2_before logic_and_logic_or_2_after : Com InstCombine.LLVM ?m.5802 EffectKind.pure ?m.5803
+⊢ ⟦?m.5803⟧ = Option ?m.5801
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:68:9: tactic 'unfold' failed, local variable 'logic_and_logic_or_2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:79:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:80:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:90:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:91:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:97:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:97:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.8721⟧
+is not definitionally equal to the right-hand side
+  Option ?m.8719
+logic_and_logic_or_3_before logic_and_logic_or_3_after : Com InstCombine.LLVM ?m.8720 EffectKind.pure ?m.8721
+⊢ ⟦?m.8721⟧ = Option ?m.8719
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:98:9: tactic 'unfold' failed, local variable 'logic_and_logic_or_3_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:109:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:110:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:120:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:121:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:127:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:127:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.11603⟧
+is not definitionally equal to the right-hand side
+  Option ?m.11601
+logic_and_logic_or_4_before logic_and_logic_or_4_after : Com InstCombine.LLVM ?m.11602 EffectKind.pure ?m.11603
+⊢ ⟦?m.11603⟧ = Option ?m.11601
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:128:9: tactic 'unfold' failed, local variable 'logic_and_logic_or_4_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:139:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:140:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:150:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:151:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:157:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:157:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.14521⟧
+is not definitionally equal to the right-hand side
+  Option ?m.14519
+logic_and_logic_or_5_before logic_and_logic_or_5_after : Com InstCombine.LLVM ?m.14520 EffectKind.pure ?m.14521
+⊢ ⟦?m.14521⟧ = Option ?m.14519
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:158:9: tactic 'unfold' failed, local variable 'logic_and_logic_or_5_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:169:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:170:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:180:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:181:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:187:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:187:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.17451⟧
+is not definitionally equal to the right-hand side
+  Option ?m.17449
+logic_and_logic_or_6_before logic_and_logic_or_6_after : Com InstCombine.LLVM ?m.17450 EffectKind.pure ?m.17451
+⊢ ⟦?m.17451⟧ = Option ?m.17449
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:188:9: tactic 'unfold' failed, local variable 'logic_and_logic_or_6_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:199:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:200:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:210:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:211:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:217:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:217:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.20321⟧
+is not definitionally equal to the right-hand side
+  Option ?m.20319
+logic_and_logic_or_7_before logic_and_logic_or_7_after : Com InstCombine.LLVM ?m.20320 EffectKind.pure ?m.20321
+⊢ ⟦?m.20321⟧ = Option ?m.20319
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:218:9: tactic 'unfold' failed, local variable 'logic_and_logic_or_7_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:229:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:230:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:240:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:241:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:247:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:247:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.23251⟧
+is not definitionally equal to the right-hand side
+  Option ?m.23249
+logic_and_logic_or_8_before logic_and_logic_or_8_after : Com InstCombine.LLVM ?m.23250 EffectKind.pure ?m.23251
+⊢ ⟦?m.23251⟧ = Option ?m.23249
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:248:9: tactic 'unfold' failed, local variable 'logic_and_logic_or_8_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:259:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:260:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:270:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:271:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:277:41: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:277:41: tactic 'rfl' failed, the left-hand side
+  ⟦?m.26116⟧
+is not definitionally equal to the right-hand side
+  Option ?m.26114
+and_logic_and_logic_or_1_before and_logic_and_logic_or_1_after : Com InstCombine.LLVM ?m.26115 EffectKind.pure ?m.26116
+⊢ ⟦?m.26116⟧ = Option ?m.26114
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:278:9: tactic 'unfold' failed, local variable 'and_logic_and_logic_or_1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:289:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:290:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:300:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:301:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:307:41: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:307:41: tactic 'rfl' failed, the left-hand side
+  ⟦?m.29029⟧
+is not definitionally equal to the right-hand side
+  Option ?m.29027
+and_logic_and_logic_or_2_before and_logic_and_logic_or_2_after : Com InstCombine.LLVM ?m.29028 EffectKind.pure ?m.29029
+⊢ ⟦?m.29029⟧ = Option ?m.29027
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:308:9: tactic 'unfold' failed, local variable 'and_logic_and_logic_or_2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:319:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:320:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:330:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:331:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:337:41: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:337:41: tactic 'rfl' failed, the left-hand side
+  ⟦?m.31930⟧
+is not definitionally equal to the right-hand side
+  Option ?m.31928
+and_logic_and_logic_or_3_before and_logic_and_logic_or_3_after : Com InstCombine.LLVM ?m.31929 EffectKind.pure ?m.31930
+⊢ ⟦?m.31930⟧ = Option ?m.31928
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:338:9: tactic 'unfold' failed, local variable 'and_logic_and_logic_or_3_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:349:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:350:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:360:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:361:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:367:41: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:367:41: tactic 'rfl' failed, the left-hand side
+  ⟦?m.34783⟧
+is not definitionally equal to the right-hand side
+  Option ?m.34781
+and_logic_and_logic_or_4_before and_logic_and_logic_or_4_after : Com InstCombine.LLVM ?m.34782 EffectKind.pure ?m.34783
+⊢ ⟦?m.34783⟧ = Option ?m.34781
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:368:9: tactic 'unfold' failed, local variable 'and_logic_and_logic_or_4_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:379:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:380:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:390:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:391:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:397:41: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:397:41: tactic 'rfl' failed, the left-hand side
+  ⟦?m.37696⟧
+is not definitionally equal to the right-hand side
+  Option ?m.37694
+and_logic_and_logic_or_5_before and_logic_and_logic_or_5_after : Com InstCombine.LLVM ?m.37695 EffectKind.pure ?m.37696
+⊢ ⟦?m.37696⟧ = Option ?m.37694
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:398:9: tactic 'unfold' failed, local variable 'and_logic_and_logic_or_5_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:409:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:410:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:420:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:426:41: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:426:41: tactic 'rfl' failed, the left-hand side
+  ⟦?m.40560⟧
+is not definitionally equal to the right-hand side
+  Option ?m.40558
+and_logic_and_logic_or_6_before and_logic_and_logic_or_6_after : Com InstCombine.LLVM ?m.40559 EffectKind.pure ?m.40560
+⊢ ⟦?m.40560⟧ = Option ?m.40558
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:427:9: tactic 'unfold' failed, local variable 'and_logic_and_logic_or_6_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:438:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:439:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:449:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:450:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:456:41: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:456:41: tactic 'rfl' failed, the left-hand side
+  ⟦?m.43449⟧
+is not definitionally equal to the right-hand side
+  Option ?m.43447
+and_logic_and_logic_or_7_before and_logic_and_logic_or_7_after : Com InstCombine.LLVM ?m.43448 EffectKind.pure ?m.43449
+⊢ ⟦?m.43449⟧ = Option ?m.43447
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:457:9: tactic 'unfold' failed, local variable 'and_logic_and_logic_or_7_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:468:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:469:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:479:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:485:41: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:485:41: tactic 'rfl' failed, the left-hand side
+  ⟦?m.46285⟧
+is not definitionally equal to the right-hand side
+  Option ?m.46283
+and_logic_and_logic_or_8_before and_logic_and_logic_or_8_after : Com InstCombine.LLVM ?m.46284 EffectKind.pure ?m.46285
+⊢ ⟦?m.46285⟧ = Option ?m.46283
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:486:9: tactic 'unfold' failed, local variable 'and_logic_and_logic_or_8_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:497:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:507:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:513:35: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:513:35: tactic 'rfl' failed, the left-hand side
+  ⟦?m.49100⟧
+is not definitionally equal to the right-hand side
+  Option ?m.49098
+and_and_logic_or_1_before and_and_logic_or_1_after : Com InstCombine.LLVM ?m.49099 EffectKind.pure ?m.49100
+⊢ ⟦?m.49100⟧ = Option ?m.49098
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:514:9: tactic 'unfold' failed, local variable 'and_and_logic_or_1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:525:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:535:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:541:35: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:541:35: tactic 'rfl' failed, the left-hand side
+  ⟦?m.51811⟧
+is not definitionally equal to the right-hand side
+  Option ?m.51809
+and_and_logic_or_2_before and_and_logic_or_2_after : Com InstCombine.LLVM ?m.51810 EffectKind.pure ?m.51811
+⊢ ⟦?m.51811⟧ = Option ?m.51809
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:542:9: tactic 'unfold' failed, local variable 'and_and_logic_or_2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:553:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:554:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:564:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:565:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:571:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:571:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.54653⟧
+is not definitionally equal to the right-hand side
+  Option ?m.54651
+logic_or_logic_and_1_before logic_or_logic_and_1_after : Com InstCombine.LLVM ?m.54652 EffectKind.pure ?m.54653
+⊢ ⟦?m.54653⟧ = Option ?m.54651
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:572:9: tactic 'unfold' failed, local variable 'logic_or_logic_and_1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:583:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:584:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:594:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:595:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:601:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:601:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.57507⟧
+is not definitionally equal to the right-hand side
+  Option ?m.57505
+logic_or_logic_and_2_before logic_or_logic_and_2_after : Com InstCombine.LLVM ?m.57506 EffectKind.pure ?m.57507
+⊢ ⟦?m.57507⟧ = Option ?m.57505
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:602:9: tactic 'unfold' failed, local variable 'logic_or_logic_and_2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:613:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:614:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:624:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:625:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:631:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:631:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.60361⟧
+is not definitionally equal to the right-hand side
+  Option ?m.60359
+logic_or_logic_and_3_before logic_or_logic_and_3_after : Com InstCombine.LLVM ?m.60360 EffectKind.pure ?m.60361
+⊢ ⟦?m.60361⟧ = Option ?m.60359
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:632:9: tactic 'unfold' failed, local variable 'logic_or_logic_and_3_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:643:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:644:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:654:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:655:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:661:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:661:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.63155⟧
+is not definitionally equal to the right-hand side
+  Option ?m.63153
+logic_or_logic_and_4_before logic_or_logic_and_4_after : Com InstCombine.LLVM ?m.63154 EffectKind.pure ?m.63155
+⊢ ⟦?m.63155⟧ = Option ?m.63153
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:662:9: tactic 'unfold' failed, local variable 'logic_or_logic_and_4_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:673:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:674:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:684:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:685:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:691:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:691:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.65997⟧
+is not definitionally equal to the right-hand side
+  Option ?m.65995
+logic_or_logic_and_5_before logic_or_logic_and_5_after : Com InstCombine.LLVM ?m.65996 EffectKind.pure ?m.65997
+⊢ ⟦?m.65997⟧ = Option ?m.65995
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:692:9: tactic 'unfold' failed, local variable 'logic_or_logic_and_5_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:703:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:704:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:714:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:715:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:721:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:721:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.68851⟧
+is not definitionally equal to the right-hand side
+  Option ?m.68849
+logic_or_logic_and_6_before logic_or_logic_and_6_after : Com InstCombine.LLVM ?m.68850 EffectKind.pure ?m.68851
+⊢ ⟦?m.68851⟧ = Option ?m.68849
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:722:9: tactic 'unfold' failed, local variable 'logic_or_logic_and_6_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:733:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:734:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:744:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:745:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:751:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:751:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.71657⟧
+is not definitionally equal to the right-hand side
+  Option ?m.71655
+logic_or_logic_and_7_before logic_or_logic_and_7_after : Com InstCombine.LLVM ?m.71656 EffectKind.pure ?m.71657
+⊢ ⟦?m.71657⟧ = Option ?m.71655
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:752:9: tactic 'unfold' failed, local variable 'logic_or_logic_and_7_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:763:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:764:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:774:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:775:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:781:37: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:781:37: tactic 'rfl' failed, the left-hand side
+  ⟦?m.74499⟧
+is not definitionally equal to the right-hand side
+  Option ?m.74497
+logic_or_logic_and_8_before logic_or_logic_and_8_after : Com InstCombine.LLVM ?m.74498 EffectKind.pure ?m.74499
+⊢ ⟦?m.74499⟧ = Option ?m.74497
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:782:9: tactic 'unfold' failed, local variable 'logic_or_logic_and_8_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:793:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:794:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:804:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:805:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:811:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:811:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.77288⟧
+is not definitionally equal to the right-hand side
+  Option ?m.77286
+or_logic_or_logic_and_1_before or_logic_or_logic_and_1_after : Com InstCombine.LLVM ?m.77287 EffectKind.pure ?m.77288
+⊢ ⟦?m.77288⟧ = Option ?m.77286
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:812:9: tactic 'unfold' failed, local variable 'or_logic_or_logic_and_1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:823:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:824:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:834:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:835:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:841:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:841:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.80125⟧
+is not definitionally equal to the right-hand side
+  Option ?m.80123
+or_logic_or_logic_and_2_before or_logic_or_logic_and_2_after : Com InstCombine.LLVM ?m.80124 EffectKind.pure ?m.80125
+⊢ ⟦?m.80125⟧ = Option ?m.80123
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:842:9: tactic 'unfold' failed, local variable 'or_logic_or_logic_and_2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:853:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:854:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:864:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:865:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:871:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:871:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.82950⟧
+is not definitionally equal to the right-hand side
+  Option ?m.82948
+or_logic_or_logic_and_3_before or_logic_or_logic_and_3_after : Com InstCombine.LLVM ?m.82949 EffectKind.pure ?m.82950
+⊢ ⟦?m.82950⟧ = Option ?m.82948
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:872:9: tactic 'unfold' failed, local variable 'or_logic_or_logic_and_3_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:883:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:884:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:894:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:900:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:900:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.85690⟧
+is not definitionally equal to the right-hand side
+  Option ?m.85688
+or_logic_or_logic_and_4_before or_logic_or_logic_and_4_after : Com InstCombine.LLVM ?m.85689 EffectKind.pure ?m.85690
+⊢ ⟦?m.85690⟧ = Option ?m.85688
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:901:9: tactic 'unfold' failed, local variable 'or_logic_or_logic_and_4_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:912:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:913:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:923:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:924:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:930:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:930:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.88527⟧
+is not definitionally equal to the right-hand side
+  Option ?m.88525
+or_logic_or_logic_and_5_before or_logic_or_logic_and_5_after : Com InstCombine.LLVM ?m.88526 EffectKind.pure ?m.88527
+⊢ ⟦?m.88527⟧ = Option ?m.88525
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:931:9: tactic 'unfold' failed, local variable 'or_logic_or_logic_and_5_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:942:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:943:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:953:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:954:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:960:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:960:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.91352⟧
+is not definitionally equal to the right-hand side
+  Option ?m.91350
+or_logic_or_logic_and_6_before or_logic_or_logic_and_6_after : Com InstCombine.LLVM ?m.91351 EffectKind.pure ?m.91352
+⊢ ⟦?m.91352⟧ = Option ?m.91350
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:961:9: tactic 'unfold' failed, local variable 'or_logic_or_logic_and_6_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:972:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:973:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:983:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:984:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:990:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:990:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.94189⟧
+is not definitionally equal to the right-hand side
+  Option ?m.94187
+or_logic_or_logic_and_7_before or_logic_or_logic_and_7_after : Com InstCombine.LLVM ?m.94188 EffectKind.pure ?m.94189
+⊢ ⟦?m.94189⟧ = Option ?m.94187
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:991:9: tactic 'unfold' failed, local variable 'or_logic_or_logic_and_7_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1002:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1003:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1013:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1019:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1019:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.96977⟧
+is not definitionally equal to the right-hand side
+  Option ?m.96975
+or_logic_or_logic_and_8_before or_logic_or_logic_and_8_after : Com InstCombine.LLVM ?m.96976 EffectKind.pure ?m.96977
+⊢ ⟦?m.96977⟧ = Option ?m.96975
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1020:9: tactic 'unfold' failed, local variable 'or_logic_or_logic_and_8_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1031:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1041:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1047:34: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1047:34: tactic 'rfl' failed, the left-hand side
+  ⟦?m.99716⟧
+is not definitionally equal to the right-hand side
+  Option ?m.99714
+or_or_logic_and_1_before or_or_logic_and_1_after : Com InstCombine.LLVM ?m.99715 EffectKind.pure ?m.99716
+⊢ ⟦?m.99716⟧ = Option ?m.99714
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1048:9: tactic 'unfold' failed, local variable 'or_or_logic_and_1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1059:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1069:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1075:34: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1075:34: tactic 'rfl' failed, the left-hand side
+  ⟦?m.102395⟧
+is not definitionally equal to the right-hand side
+  Option ?m.102393
+or_or_logic_and_2_before or_or_logic_and_2_after : Com InstCombine.LLVM ?m.102394 EffectKind.pure ?m.102395
+⊢ ⟦?m.102395⟧ = Option ?m.102393
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthfactorize.lean:1076:9: tactic 'unfold' failed, local variable 'or_or_logic_and_2_before' has no definition
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.gselecthfactorize
+error: build failed

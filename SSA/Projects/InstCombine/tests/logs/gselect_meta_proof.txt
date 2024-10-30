@@ -118,3 +118,123 @@ error: Lean exited with code 1
 Some required builds logged failures:
 - SSA.Projects.InstCombine.tests.LLVM.gselect_meta
 error: build failed
+⚠ [2488/2503] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2492/2503] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [2493/2503] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [2498/2503] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [2499/2503] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [2503/2503] Building SSA.Projects.InstCombine.tests.LLVM.gselect_meta
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gselect_meta.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gselect_meta.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gselect_meta.c --json
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:19:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:33:9: tactic 'unfold' failed, local variable 'not_cond_before' has no definition
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:62:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 64) (e_2 : IntW 1), select e_2 (add e_1 e) e_1 ⊑ add (select e_2 e (const? 0)) e_1 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:58:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:88:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 17) (e_2 : IntW 1), select e_2 (sub e_1 e) e_1 ⊑ sub e_1 (select e_2 e (const? 0)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:84:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:114:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 128) (e_2 : IntW 1), select e_2 (ashr e_1 e) e_1 ⊑ ashr e_1 (select e_2 e (const? 0)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:110:8: declaration uses 'sorry'
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.gselect_meta
+error: build failed
+⚠ [2488/2503] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2492/2503] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [2493/2503] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [2498/2503] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [2499/2503] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [2503/2503] Building SSA.Projects.InstCombine.tests.LLVM.gselect_meta
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gselect_meta.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gselect_meta.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gselect_meta.c --json
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:19:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:33:9: tactic 'unfold' failed, local variable 'not_cond_before' has no definition
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:62:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 64) (e_2 : IntW 1), select e_2 (add e_1 e) e_1 ⊑ add (select e_2 e (const? 0)) e_1 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:58:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:88:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 17) (e_2 : IntW 1), select e_2 (sub e_1 e) e_1 ⊑ sub e_1 (select e_2 e (const? 0)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:84:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:114:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 128) (e_2 : IntW 1), select e_2 (ashr e_1 e) e_1 ⊑ ashr e_1 (select e_2 e (const? 0)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:110:8: declaration uses 'sorry'
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.gselect_meta
+error: build failed
+⚠ [2488/2503] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2492/2503] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [2493/2503] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [2498/2503] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [2499/2503] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [2503/2503] Building SSA.Projects.InstCombine.tests.LLVM.gselect_meta
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gselect_meta.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gselect_meta.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gselect_meta.c --json
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:19:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:33:9: tactic 'unfold' failed, local variable 'not_cond_before' has no definition
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:62:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 64) (e_2 : IntW 1), select e_2 (add e_1 e) e_1 ⊑ add (select e_2 e (const? 0)) e_1 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:58:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:88:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 17) (e_2 : IntW 1), select e_2 (sub e_1 e) e_1 ⊑ sub e_1 (select e_2 e (const? 0)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:84:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:114:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 128) (e_2 : IntW 1), select e_2 (ashr e_1 e) e_1 ⊑ ashr e_1 (select e_2 e (const? 0)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gselect_meta.lean:110:8: declaration uses 'sorry'
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.gselect_meta
+error: build failed

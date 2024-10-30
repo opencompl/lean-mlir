@@ -472,3 +472,477 @@ error: Lean exited with code 1
 Some required builds logged failures:
 - SSA.Projects.InstCombine.tests.LLVM.gand
 error: build failed
+⚠ [2488/2503] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2492/2503] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [2493/2503] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [2498/2503] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [2499/2503] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [2503/2503] Building SSA.Projects.InstCombine.tests.LLVM.gand
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gand.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gand.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gand.c --json
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:37:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.and (shl (const? 4) e) (const? 1) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:33:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:63:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.and (shl (const? (-4)) e) (const? 1) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:59:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:87:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.and e (const? 0) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:83:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:110:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.and e (const? (-1)) ⊑ e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:106:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:118:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:126:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:130:22: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:130:22: tactic 'rfl' failed, the left-hand side
+  ⟦?m.51419⟧
+is not definitionally equal to the right-hand side
+  Option ?m.51417
+test3_before test3_after : Com InstCombine.LLVM ?m.51418 EffectKind.pure ?m.51419
+⊢ ⟦?m.51419⟧ = Option ?m.51417
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:131:9: tactic 'unfold' failed, local variable 'test3_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:142:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:150:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:154:30: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:154:30: tactic 'rfl' failed, the left-hand side
+  ⟦?m.53204⟧
+is not definitionally equal to the right-hand side
+  Option ?m.53202
+test3_logical_before test3_logical_after : Com InstCombine.LLVM ?m.53203 EffectKind.pure ?m.53204
+⊢ ⟦?m.53204⟧ = Option ?m.53202
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:155:9: tactic 'unfold' failed, local variable 'test3_logical_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:166:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:178:9: tactic 'unfold' failed, local variable 'test4_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:189:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:190:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:202:9: tactic 'unfold' failed, local variable 'test4_logical_before' has no definition
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:227:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.and e e ⊑ e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:223:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:249:17: theorem extracted_1 : ∀ (e : IntW 1), LLVM.and e e ⊑ e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:245:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:257:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:269:9: tactic 'unfold' failed, local variable 'test6_logical_before' has no definition
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:297:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.and e (LLVM.xor e (const? (-1))) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:293:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:323:17: theorem extracted_1 : ∀ (e : IntW 8), LLVM.and (LLVM.and e (const? 3)) (const? 4) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:319:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:351:17: theorem extracted_1 :
+  ∀ (e : IntW 32), LLVM.and (LLVM.xor (LLVM.and e (const? 12)) (const? 15)) (const? 1) ⊑ const? 1 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:347:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:377:17: theorem extracted_1 : ∀ (e : IntW 8), LLVM.and (lshr e (const? 7)) (const? 2) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:373:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:403:17: theorem extracted_1 : ∀ (e : IntW 8), LLVM.and (shl e (const? 2)) (const? 3) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:399:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:430:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.and (shl e (const? 3)) (const? (-2)) ⊑ shl e (const? 3) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:426:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:457:17: theorem extracted_1 : ∀ (e : IntW 8), LLVM.and (lshr e (const? 7)) (const? 1) ⊑ lshr e (const? 7) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:453:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:486:17: theorem extracted_1 :
+  ∀ (e : IntW 8),
+    add (LLVM.and (sub (LLVM.and e (const? 4)) (const? 16)) (const? (-16))) (const? 16) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:482:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:513:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.and (ashr e (const? 24)) (const? 255) ⊑ lshr e (const? 24) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:509:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:541:17: theorem extracted_1 :
+  ∀ (e : IntW 32), LLVM.and (lshr (LLVM.and e (const? 16)) (const? 2)) (const? 1) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:537:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:570:17: theorem extracted_1 :
+  ∀ (e : IntW 32),
+    LLVM.or (LLVM.and e (const? (-2))) (LLVM.xor (LLVM.and e (const? 1)) (const? 1)) ⊑ LLVM.xor e (const? 1) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:566:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:599:17: theorem extracted_1 :
+  ∀ (e : IntW 32),
+    LLVM.or (LLVM.xor (LLVM.and e (const? 1)) (const? 1)) (LLVM.and e (const? (-2))) ⊑ LLVM.xor e (const? 1) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:595:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:622:17: theorem extracted_1 : ∀ (e e_1 : IntW 32), LLVM.and (LLVM.or e_1 e) e_1 ⊑ e_1 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:618:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:651:17: theorem extracted_1 :
+  ∀ (e : IntW 1),
+    LLVM.and (select e (const? 1000) (const? 10)) (const? 123) ⊑ select e (const? 104) (const? 10) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:647:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:680:17: theorem extracted_1 :
+  ∀ (e e_1 e_2 : IntW 32),
+    LLVM.and (LLVM.xor (LLVM.xor e_2 (const? (-1))) (mul e_1 e)) (LLVM.or e_2 (mul e_1 e)) ⊑
+      LLVM.and (mul e_1 e) e_2 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:676:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:709:17: theorem extracted_1 :
+  ∀ (e e_1 e_2 : IntW 32),
+    LLVM.and (LLVM.or e_2 (mul e_1 e)) (LLVM.xor (LLVM.xor e_2 (const? (-1))) (mul e_1 e)) ⊑
+      LLVM.and (mul e_1 e) e_2 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:705:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:735:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32), LLVM.and (LLVM.or (LLVM.xor e_1 (const? (-1))) e) e_1 ⊑ LLVM.and e e_1 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:731:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:761:17: theorem extracted_1 : ∀ (e e_1 : IntW 32), LLVM.and (LLVM.or e_1 (LLVM.xor e (const? (-1)))) e ⊑ LLVM.and e_1 e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:757:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:787:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32), LLVM.and e_1 (LLVM.or (LLVM.xor e_1 (const? (-1))) e) ⊑ LLVM.and e e_1 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:783:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:813:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32), LLVM.and e_1 (LLVM.or e (LLVM.xor e_1 (const? (-1)))) ⊑ LLVM.and e e_1 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:809:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:840:17: theorem extracted_1 : ∀ (e : IntW 8), LLVM.and (add e (const? (-64))) (const? 63) ⊑ LLVM.and e (const? 63) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:836:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:867:17: theorem extracted_1 :
+  ∀ (e : IntW 8), LLVM.and (add e (const? 16)) (const? 16) ⊑ LLVM.xor (LLVM.and e (const? 16)) (const? 16) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:863:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:895:17: theorem extracted_1 : ∀ (e : IntW 16), LLVM.and (lshr (shl (const? 4096) e) (const? 6)) (const? 8) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:891:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:923:17: theorem extracted_1 :
+  ∀ (e : IntW 16), LLVM.and (lshr (shl (const? 8) e) (const? 6)) (const? (-32768)) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:919:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:954:17: theorem extracted_1 :
+  ∀ (e : IntW 16),
+    LLVM.and (lshr (lshr (const? 2047) e) (const? 6)) (const? 4) ⊑ LLVM.and (lshr (const? 31) e) (const? 4) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:950:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:985:17: theorem extracted_1 :
+  ∀ (e : IntW 16),
+    LLVM.and (lshr (lshr (const? 8192) e) (const? 6)) (const? 3) ⊑ LLVM.and (lshr (const? 128) e) (const? 3) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:981:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1013:17: theorem extracted_1 :
+  ∀ (e : IntW 16), LLVM.and (lshr (lshr (const? (-32768)) e) (const? 15)) (const? 4) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1009:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1041:17: theorem extracted_1 : ∀ (e : IntW 16), LLVM.and (shl (lshr (const? 8192) e) (const? 6)) (const? 32) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1037:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1070:17: theorem extracted_1 :
+  ∀ (e : IntW 32), LLVM.and (add e (const? 16)) (const? 24) ⊑ LLVM.xor (LLVM.and e (const? 24)) (const? 16) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1066:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1101:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.and (LLVM.or (add e_1 (const? 16)) e) (const? 24) ⊑
+      LLVM.and (LLVM.or (LLVM.xor e_1 (const? 16)) e) (const? 24) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1097:8: declaration uses 'sorry'
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.gand
+error: build failed
+⚠ [2488/2503] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2492/2503] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [2493/2503] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [2498/2503] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [2499/2503] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [2503/2503] Building SSA.Projects.InstCombine.tests.LLVM.gand
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gand.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gand.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gand.c --json
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:37:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.and (shl (const? 4) e) (const? 1) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:33:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:63:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.and (shl (const? (-4)) e) (const? 1) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:59:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:87:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.and e (const? 0) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:83:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:110:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.and e (const? (-1)) ⊑ e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:106:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:118:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:126:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:130:22: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:130:22: tactic 'rfl' failed, the left-hand side
+  ⟦?m.51419⟧
+is not definitionally equal to the right-hand side
+  Option ?m.51417
+test3_before test3_after : Com InstCombine.LLVM ?m.51418 EffectKind.pure ?m.51419
+⊢ ⟦?m.51419⟧ = Option ?m.51417
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:131:9: tactic 'unfold' failed, local variable 'test3_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:142:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:150:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:154:30: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:154:30: tactic 'rfl' failed, the left-hand side
+  ⟦?m.53204⟧
+is not definitionally equal to the right-hand side
+  Option ?m.53202
+test3_logical_before test3_logical_after : Com InstCombine.LLVM ?m.53203 EffectKind.pure ?m.53204
+⊢ ⟦?m.53204⟧ = Option ?m.53202
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:155:9: tactic 'unfold' failed, local variable 'test3_logical_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:166:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:178:9: tactic 'unfold' failed, local variable 'test4_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:189:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:190:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:202:9: tactic 'unfold' failed, local variable 'test4_logical_before' has no definition
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:227:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.and e e ⊑ e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:223:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:249:17: theorem extracted_1 : ∀ (e : IntW 1), LLVM.and e e ⊑ e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:245:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:257:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:269:9: tactic 'unfold' failed, local variable 'test6_logical_before' has no definition
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:297:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.and e (LLVM.xor e (const? (-1))) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:293:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:323:17: theorem extracted_1 : ∀ (e : IntW 8), LLVM.and (LLVM.and e (const? 3)) (const? 4) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:319:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:351:17: theorem extracted_1 :
+  ∀ (e : IntW 32), LLVM.and (LLVM.xor (LLVM.and e (const? 12)) (const? 15)) (const? 1) ⊑ const? 1 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:347:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:377:17: theorem extracted_1 : ∀ (e : IntW 8), LLVM.and (lshr e (const? 7)) (const? 2) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:373:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:403:17: theorem extracted_1 : ∀ (e : IntW 8), LLVM.and (shl e (const? 2)) (const? 3) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:399:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:430:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.and (shl e (const? 3)) (const? (-2)) ⊑ shl e (const? 3) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:426:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:457:17: theorem extracted_1 : ∀ (e : IntW 8), LLVM.and (lshr e (const? 7)) (const? 1) ⊑ lshr e (const? 7) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:453:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:486:17: theorem extracted_1 :
+  ∀ (e : IntW 8),
+    add (LLVM.and (sub (LLVM.and e (const? 4)) (const? 16)) (const? (-16))) (const? 16) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:482:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:513:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.and (ashr e (const? 24)) (const? 255) ⊑ lshr e (const? 24) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:509:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:541:17: theorem extracted_1 :
+  ∀ (e : IntW 32), LLVM.and (lshr (LLVM.and e (const? 16)) (const? 2)) (const? 1) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:537:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:570:17: theorem extracted_1 :
+  ∀ (e : IntW 32),
+    LLVM.or (LLVM.and e (const? (-2))) (LLVM.xor (LLVM.and e (const? 1)) (const? 1)) ⊑ LLVM.xor e (const? 1) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:566:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:599:17: theorem extracted_1 :
+  ∀ (e : IntW 32),
+    LLVM.or (LLVM.xor (LLVM.and e (const? 1)) (const? 1)) (LLVM.and e (const? (-2))) ⊑ LLVM.xor e (const? 1) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:595:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:622:17: theorem extracted_1 : ∀ (e e_1 : IntW 32), LLVM.and (LLVM.or e_1 e) e_1 ⊑ e_1 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:618:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:651:17: theorem extracted_1 :
+  ∀ (e : IntW 1),
+    LLVM.and (select e (const? 1000) (const? 10)) (const? 123) ⊑ select e (const? 104) (const? 10) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:647:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:680:17: theorem extracted_1 :
+  ∀ (e e_1 e_2 : IntW 32),
+    LLVM.and (LLVM.xor (LLVM.xor e_2 (const? (-1))) (mul e_1 e)) (LLVM.or e_2 (mul e_1 e)) ⊑
+      LLVM.and (mul e_1 e) e_2 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:676:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:709:17: theorem extracted_1 :
+  ∀ (e e_1 e_2 : IntW 32),
+    LLVM.and (LLVM.or e_2 (mul e_1 e)) (LLVM.xor (LLVM.xor e_2 (const? (-1))) (mul e_1 e)) ⊑
+      LLVM.and (mul e_1 e) e_2 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:705:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:735:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32), LLVM.and (LLVM.or (LLVM.xor e_1 (const? (-1))) e) e_1 ⊑ LLVM.and e e_1 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:731:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:761:17: theorem extracted_1 : ∀ (e e_1 : IntW 32), LLVM.and (LLVM.or e_1 (LLVM.xor e (const? (-1)))) e ⊑ LLVM.and e_1 e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:757:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:787:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32), LLVM.and e_1 (LLVM.or (LLVM.xor e_1 (const? (-1))) e) ⊑ LLVM.and e e_1 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:783:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:813:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32), LLVM.and e_1 (LLVM.or e (LLVM.xor e_1 (const? (-1)))) ⊑ LLVM.and e e_1 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:809:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:840:17: theorem extracted_1 : ∀ (e : IntW 8), LLVM.and (add e (const? (-64))) (const? 63) ⊑ LLVM.and e (const? 63) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:836:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:867:17: theorem extracted_1 :
+  ∀ (e : IntW 8), LLVM.and (add e (const? 16)) (const? 16) ⊑ LLVM.xor (LLVM.and e (const? 16)) (const? 16) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:863:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:895:17: theorem extracted_1 : ∀ (e : IntW 16), LLVM.and (lshr (shl (const? 4096) e) (const? 6)) (const? 8) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:891:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:923:17: theorem extracted_1 :
+  ∀ (e : IntW 16), LLVM.and (lshr (shl (const? 8) e) (const? 6)) (const? (-32768)) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:919:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:954:17: theorem extracted_1 :
+  ∀ (e : IntW 16),
+    LLVM.and (lshr (lshr (const? 2047) e) (const? 6)) (const? 4) ⊑ LLVM.and (lshr (const? 31) e) (const? 4) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:950:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:985:17: theorem extracted_1 :
+  ∀ (e : IntW 16),
+    LLVM.and (lshr (lshr (const? 8192) e) (const? 6)) (const? 3) ⊑ LLVM.and (lshr (const? 128) e) (const? 3) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:981:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1013:17: theorem extracted_1 :
+  ∀ (e : IntW 16), LLVM.and (lshr (lshr (const? (-32768)) e) (const? 15)) (const? 4) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1009:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1041:17: theorem extracted_1 : ∀ (e : IntW 16), LLVM.and (shl (lshr (const? 8192) e) (const? 6)) (const? 32) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1037:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1070:17: theorem extracted_1 :
+  ∀ (e : IntW 32), LLVM.and (add e (const? 16)) (const? 24) ⊑ LLVM.xor (LLVM.and e (const? 24)) (const? 16) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1066:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1101:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.and (LLVM.or (add e_1 (const? 16)) e) (const? 24) ⊑
+      LLVM.and (LLVM.or (LLVM.xor e_1 (const? 16)) e) (const? 24) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1097:8: declaration uses 'sorry'
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.gand
+error: build failed
+⚠ [2488/2503] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2492/2503] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [2493/2503] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [2498/2503] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [2499/2503] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [2503/2503] Building SSA.Projects.InstCombine.tests.LLVM.gand
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gand.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gand.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gand.c --json
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:37:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.and (shl (const? 4) e) (const? 1) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:33:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:63:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.and (shl (const? (-4)) e) (const? 1) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:59:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:87:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.and e (const? 0) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:83:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:110:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.and e (const? (-1)) ⊑ e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:106:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:118:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:126:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:130:22: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:130:22: tactic 'rfl' failed, the left-hand side
+  ⟦?m.51419⟧
+is not definitionally equal to the right-hand side
+  Option ?m.51417
+test3_before test3_after : Com InstCombine.LLVM ?m.51418 EffectKind.pure ?m.51419
+⊢ ⟦?m.51419⟧ = Option ?m.51417
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:131:9: tactic 'unfold' failed, local variable 'test3_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:142:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:150:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:154:30: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:154:30: tactic 'rfl' failed, the left-hand side
+  ⟦?m.53204⟧
+is not definitionally equal to the right-hand side
+  Option ?m.53202
+test3_logical_before test3_logical_after : Com InstCombine.LLVM ?m.53203 EffectKind.pure ?m.53204
+⊢ ⟦?m.53204⟧ = Option ?m.53202
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:155:9: tactic 'unfold' failed, local variable 'test3_logical_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:166:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:178:9: tactic 'unfold' failed, local variable 'test4_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:189:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:190:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:202:9: tactic 'unfold' failed, local variable 'test4_logical_before' has no definition
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:227:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.and e e ⊑ e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:223:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:249:17: theorem extracted_1 : ∀ (e : IntW 1), LLVM.and e e ⊑ e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:245:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:257:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:269:9: tactic 'unfold' failed, local variable 'test6_logical_before' has no definition
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:297:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.and e (LLVM.xor e (const? (-1))) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:293:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:323:17: theorem extracted_1 : ∀ (e : IntW 8), LLVM.and (LLVM.and e (const? 3)) (const? 4) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:319:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:351:17: theorem extracted_1 :
+  ∀ (e : IntW 32), LLVM.and (LLVM.xor (LLVM.and e (const? 12)) (const? 15)) (const? 1) ⊑ const? 1 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:347:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:377:17: theorem extracted_1 : ∀ (e : IntW 8), LLVM.and (lshr e (const? 7)) (const? 2) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:373:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:403:17: theorem extracted_1 : ∀ (e : IntW 8), LLVM.and (shl e (const? 2)) (const? 3) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:399:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:430:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.and (shl e (const? 3)) (const? (-2)) ⊑ shl e (const? 3) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:426:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:457:17: theorem extracted_1 : ∀ (e : IntW 8), LLVM.and (lshr e (const? 7)) (const? 1) ⊑ lshr e (const? 7) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:453:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:486:17: theorem extracted_1 :
+  ∀ (e : IntW 8),
+    add (LLVM.and (sub (LLVM.and e (const? 4)) (const? 16)) (const? (-16))) (const? 16) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:482:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:513:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.and (ashr e (const? 24)) (const? 255) ⊑ lshr e (const? 24) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:509:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:541:17: theorem extracted_1 :
+  ∀ (e : IntW 32), LLVM.and (lshr (LLVM.and e (const? 16)) (const? 2)) (const? 1) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:537:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:570:17: theorem extracted_1 :
+  ∀ (e : IntW 32),
+    LLVM.or (LLVM.and e (const? (-2))) (LLVM.xor (LLVM.and e (const? 1)) (const? 1)) ⊑ LLVM.xor e (const? 1) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:566:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:599:17: theorem extracted_1 :
+  ∀ (e : IntW 32),
+    LLVM.or (LLVM.xor (LLVM.and e (const? 1)) (const? 1)) (LLVM.and e (const? (-2))) ⊑ LLVM.xor e (const? 1) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:595:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:622:17: theorem extracted_1 : ∀ (e e_1 : IntW 32), LLVM.and (LLVM.or e_1 e) e_1 ⊑ e_1 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:618:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:651:17: theorem extracted_1 :
+  ∀ (e : IntW 1),
+    LLVM.and (select e (const? 1000) (const? 10)) (const? 123) ⊑ select e (const? 104) (const? 10) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:647:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:680:17: theorem extracted_1 :
+  ∀ (e e_1 e_2 : IntW 32),
+    LLVM.and (LLVM.xor (LLVM.xor e_2 (const? (-1))) (mul e_1 e)) (LLVM.or e_2 (mul e_1 e)) ⊑
+      LLVM.and (mul e_1 e) e_2 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:676:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:709:17: theorem extracted_1 :
+  ∀ (e e_1 e_2 : IntW 32),
+    LLVM.and (LLVM.or e_2 (mul e_1 e)) (LLVM.xor (LLVM.xor e_2 (const? (-1))) (mul e_1 e)) ⊑
+      LLVM.and (mul e_1 e) e_2 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:705:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:735:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32), LLVM.and (LLVM.or (LLVM.xor e_1 (const? (-1))) e) e_1 ⊑ LLVM.and e e_1 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:731:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:761:17: theorem extracted_1 : ∀ (e e_1 : IntW 32), LLVM.and (LLVM.or e_1 (LLVM.xor e (const? (-1)))) e ⊑ LLVM.and e_1 e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:757:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:787:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32), LLVM.and e_1 (LLVM.or (LLVM.xor e_1 (const? (-1))) e) ⊑ LLVM.and e e_1 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:783:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:813:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32), LLVM.and e_1 (LLVM.or e (LLVM.xor e_1 (const? (-1)))) ⊑ LLVM.and e e_1 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:809:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:840:17: theorem extracted_1 : ∀ (e : IntW 8), LLVM.and (add e (const? (-64))) (const? 63) ⊑ LLVM.and e (const? 63) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:836:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:867:17: theorem extracted_1 :
+  ∀ (e : IntW 8), LLVM.and (add e (const? 16)) (const? 16) ⊑ LLVM.xor (LLVM.and e (const? 16)) (const? 16) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:863:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:895:17: theorem extracted_1 : ∀ (e : IntW 16), LLVM.and (lshr (shl (const? 4096) e) (const? 6)) (const? 8) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:891:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:923:17: theorem extracted_1 :
+  ∀ (e : IntW 16), LLVM.and (lshr (shl (const? 8) e) (const? 6)) (const? (-32768)) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:919:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:954:17: theorem extracted_1 :
+  ∀ (e : IntW 16),
+    LLVM.and (lshr (lshr (const? 2047) e) (const? 6)) (const? 4) ⊑ LLVM.and (lshr (const? 31) e) (const? 4) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:950:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:985:17: theorem extracted_1 :
+  ∀ (e : IntW 16),
+    LLVM.and (lshr (lshr (const? 8192) e) (const? 6)) (const? 3) ⊑ LLVM.and (lshr (const? 128) e) (const? 3) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:981:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1013:17: theorem extracted_1 :
+  ∀ (e : IntW 16), LLVM.and (lshr (lshr (const? (-32768)) e) (const? 15)) (const? 4) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1009:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1041:17: theorem extracted_1 : ∀ (e : IntW 16), LLVM.and (shl (lshr (const? 8192) e) (const? 6)) (const? 32) ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1037:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1070:17: theorem extracted_1 :
+  ∀ (e : IntW 32), LLVM.and (add e (const? 16)) (const? 24) ⊑ LLVM.xor (LLVM.and e (const? 24)) (const? 16) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1066:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1101:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.and (LLVM.or (add e_1 (const? 16)) e) (const? 24) ⊑
+      LLVM.and (LLVM.or (LLVM.xor e_1 (const? 16)) e) (const? 24) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gand.lean:1097:8: declaration uses 'sorry'
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.gand
+error: build failed

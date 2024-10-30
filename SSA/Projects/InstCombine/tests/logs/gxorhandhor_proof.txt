@@ -310,3 +310,315 @@ error: Lean exited with code 1
 Some required builds logged failures:
 - SSA.Projects.InstCombine.tests.LLVM.gxorhandhor
 error: build failed
+⚠ [2488/2503] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2492/2503] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [2493/2503] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [2498/2503] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [2499/2503] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [2503/2503] Building SSA.Projects.InstCombine.tests.LLVM.gxorhandhor
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.c --json
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:19:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:20:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:30:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:36:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:36:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.2731⟧
+is not definitionally equal to the right-hand side
+  Option ?m.2729
+xor_logic_and_logic_or1_before xor_logic_and_logic_or1_after : Com InstCombine.LLVM ?m.2730 EffectKind.pure ?m.2731
+⊢ ⟦?m.2731⟧ = Option ?m.2729
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:37:9: tactic 'unfold' failed, local variable 'xor_logic_and_logic_or1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:48:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:49:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:59:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:65:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:65:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.5519⟧
+is not definitionally equal to the right-hand side
+  Option ?m.5517
+xor_logic_and_logic_or2_before xor_logic_and_logic_or2_after : Com InstCombine.LLVM ?m.5518 EffectKind.pure ?m.5519
+⊢ ⟦?m.5519⟧ = Option ?m.5517
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:66:9: tactic 'unfold' failed, local variable 'xor_logic_and_logic_or2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:77:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:78:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:88:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:94:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:94:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.8307⟧
+is not definitionally equal to the right-hand side
+  Option ?m.8305
+xor_logic_and_logic_or4_before xor_logic_and_logic_or4_after : Com InstCombine.LLVM ?m.8306 EffectKind.pure ?m.8307
+⊢ ⟦?m.8307⟧ = Option ?m.8305
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:95:9: tactic 'unfold' failed, local variable 'xor_logic_and_logic_or4_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:106:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:116:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:122:34: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:122:34: tactic 'rfl' failed, the left-hand side
+  ⟦?m.11046⟧
+is not definitionally equal to the right-hand side
+  Option ?m.11044
+xor_and_logic_or1_before xor_and_logic_or1_after : Com InstCombine.LLVM ?m.11045 EffectKind.pure ?m.11046
+⊢ ⟦?m.11046⟧ = Option ?m.11044
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:123:9: tactic 'unfold' failed, local variable 'xor_and_logic_or1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:134:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:144:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:150:34: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:150:34: tactic 'rfl' failed, the left-hand side
+  ⟦?m.13785⟧
+is not definitionally equal to the right-hand side
+  Option ?m.13783
+xor_and_logic_or2_before xor_and_logic_or2_after : Com InstCombine.LLVM ?m.13784 EffectKind.pure ?m.13785
+⊢ ⟦?m.13785⟧ = Option ?m.13783
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:151:9: tactic 'unfold' failed, local variable 'xor_and_logic_or2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:162:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:172:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:178:34: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:178:34: tactic 'rfl' failed, the left-hand side
+  ⟦?m.16476⟧
+is not definitionally equal to the right-hand side
+  Option ?m.16474
+xor_logic_and_or1_before xor_logic_and_or1_after : Com InstCombine.LLVM ?m.16475 EffectKind.pure ?m.16476
+⊢ ⟦?m.16476⟧ = Option ?m.16474
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:179:9: tactic 'unfold' failed, local variable 'xor_logic_and_or1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:190:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:200:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:206:34: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:206:34: tactic 'rfl' failed, the left-hand side
+  ⟦?m.19215⟧
+is not definitionally equal to the right-hand side
+  Option ?m.19213
+xor_logic_and_or2_before xor_logic_and_or2_after : Com InstCombine.LLVM ?m.19214 EffectKind.pure ?m.19215
+⊢ ⟦?m.19215⟧ = Option ?m.19213
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:207:9: tactic 'unfold' failed, local variable 'xor_logic_and_or2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:227:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:234:27: tactic 'unfold' failed, local variable 'xor_and_or_after' has no definition
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.gxorhandhor
+error: build failed
+⚠ [2488/2503] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2492/2503] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [2493/2503] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [2498/2503] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [2499/2503] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [2503/2503] Building SSA.Projects.InstCombine.tests.LLVM.gxorhandhor
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.c --json
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:19:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:20:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:30:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:36:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:36:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.2731⟧
+is not definitionally equal to the right-hand side
+  Option ?m.2729
+xor_logic_and_logic_or1_before xor_logic_and_logic_or1_after : Com InstCombine.LLVM ?m.2730 EffectKind.pure ?m.2731
+⊢ ⟦?m.2731⟧ = Option ?m.2729
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:37:9: tactic 'unfold' failed, local variable 'xor_logic_and_logic_or1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:48:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:49:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:59:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:65:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:65:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.5519⟧
+is not definitionally equal to the right-hand side
+  Option ?m.5517
+xor_logic_and_logic_or2_before xor_logic_and_logic_or2_after : Com InstCombine.LLVM ?m.5518 EffectKind.pure ?m.5519
+⊢ ⟦?m.5519⟧ = Option ?m.5517
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:66:9: tactic 'unfold' failed, local variable 'xor_logic_and_logic_or2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:77:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:78:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:88:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:94:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:94:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.8307⟧
+is not definitionally equal to the right-hand side
+  Option ?m.8305
+xor_logic_and_logic_or4_before xor_logic_and_logic_or4_after : Com InstCombine.LLVM ?m.8306 EffectKind.pure ?m.8307
+⊢ ⟦?m.8307⟧ = Option ?m.8305
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:95:9: tactic 'unfold' failed, local variable 'xor_logic_and_logic_or4_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:106:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:116:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:122:34: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:122:34: tactic 'rfl' failed, the left-hand side
+  ⟦?m.11046⟧
+is not definitionally equal to the right-hand side
+  Option ?m.11044
+xor_and_logic_or1_before xor_and_logic_or1_after : Com InstCombine.LLVM ?m.11045 EffectKind.pure ?m.11046
+⊢ ⟦?m.11046⟧ = Option ?m.11044
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:123:9: tactic 'unfold' failed, local variable 'xor_and_logic_or1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:134:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:144:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:150:34: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:150:34: tactic 'rfl' failed, the left-hand side
+  ⟦?m.13785⟧
+is not definitionally equal to the right-hand side
+  Option ?m.13783
+xor_and_logic_or2_before xor_and_logic_or2_after : Com InstCombine.LLVM ?m.13784 EffectKind.pure ?m.13785
+⊢ ⟦?m.13785⟧ = Option ?m.13783
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:151:9: tactic 'unfold' failed, local variable 'xor_and_logic_or2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:162:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:172:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:178:34: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:178:34: tactic 'rfl' failed, the left-hand side
+  ⟦?m.16476⟧
+is not definitionally equal to the right-hand side
+  Option ?m.16474
+xor_logic_and_or1_before xor_logic_and_or1_after : Com InstCombine.LLVM ?m.16475 EffectKind.pure ?m.16476
+⊢ ⟦?m.16476⟧ = Option ?m.16474
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:179:9: tactic 'unfold' failed, local variable 'xor_logic_and_or1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:190:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:200:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:206:34: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:206:34: tactic 'rfl' failed, the left-hand side
+  ⟦?m.19215⟧
+is not definitionally equal to the right-hand side
+  Option ?m.19213
+xor_logic_and_or2_before xor_logic_and_or2_after : Com InstCombine.LLVM ?m.19214 EffectKind.pure ?m.19215
+⊢ ⟦?m.19215⟧ = Option ?m.19213
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:207:9: tactic 'unfold' failed, local variable 'xor_logic_and_or2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:227:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:234:27: tactic 'unfold' failed, local variable 'xor_and_or_after' has no definition
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.gxorhandhor
+error: build failed
+⚠ [2488/2503] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2492/2503] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [2493/2503] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [2498/2503] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [2499/2503] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [2503/2503] Building SSA.Projects.InstCombine.tests.LLVM.gxorhandhor
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.c --json
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:19:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:20:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:30:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:36:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:36:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.2731⟧
+is not definitionally equal to the right-hand side
+  Option ?m.2729
+xor_logic_and_logic_or1_before xor_logic_and_logic_or1_after : Com InstCombine.LLVM ?m.2730 EffectKind.pure ?m.2731
+⊢ ⟦?m.2731⟧ = Option ?m.2729
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:37:9: tactic 'unfold' failed, local variable 'xor_logic_and_logic_or1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:48:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:49:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:59:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:65:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:65:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.5519⟧
+is not definitionally equal to the right-hand side
+  Option ?m.5517
+xor_logic_and_logic_or2_before xor_logic_and_logic_or2_after : Com InstCombine.LLVM ?m.5518 EffectKind.pure ?m.5519
+⊢ ⟦?m.5519⟧ = Option ?m.5517
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:66:9: tactic 'unfold' failed, local variable 'xor_logic_and_logic_or2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:77:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:78:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:88:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:94:40: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:94:40: tactic 'rfl' failed, the left-hand side
+  ⟦?m.8307⟧
+is not definitionally equal to the right-hand side
+  Option ?m.8305
+xor_logic_and_logic_or4_before xor_logic_and_logic_or4_after : Com InstCombine.LLVM ?m.8306 EffectKind.pure ?m.8307
+⊢ ⟦?m.8307⟧ = Option ?m.8305
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:95:9: tactic 'unfold' failed, local variable 'xor_logic_and_logic_or4_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:106:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:116:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:122:34: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:122:34: tactic 'rfl' failed, the left-hand side
+  ⟦?m.11046⟧
+is not definitionally equal to the right-hand side
+  Option ?m.11044
+xor_and_logic_or1_before xor_and_logic_or1_after : Com InstCombine.LLVM ?m.11045 EffectKind.pure ?m.11046
+⊢ ⟦?m.11046⟧ = Option ?m.11044
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:123:9: tactic 'unfold' failed, local variable 'xor_and_logic_or1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:134:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:144:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:150:34: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:150:34: tactic 'rfl' failed, the left-hand side
+  ⟦?m.13785⟧
+is not definitionally equal to the right-hand side
+  Option ?m.13783
+xor_and_logic_or2_before xor_and_logic_or2_after : Com InstCombine.LLVM ?m.13784 EffectKind.pure ?m.13785
+⊢ ⟦?m.13785⟧ = Option ?m.13783
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:151:9: tactic 'unfold' failed, local variable 'xor_and_logic_or2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:162:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:172:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:178:34: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:178:34: tactic 'rfl' failed, the left-hand side
+  ⟦?m.16476⟧
+is not definitionally equal to the right-hand side
+  Option ?m.16474
+xor_logic_and_or1_before xor_logic_and_or1_after : Com InstCombine.LLVM ?m.16475 EffectKind.pure ?m.16476
+⊢ ⟦?m.16476⟧ = Option ?m.16474
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:179:9: tactic 'unfold' failed, local variable 'xor_logic_and_or1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:190:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:200:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:206:34: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:206:34: tactic 'rfl' failed, the left-hand side
+  ⟦?m.19215⟧
+is not definitionally equal to the right-hand side
+  Option ?m.19213
+xor_logic_and_or2_before xor_logic_and_or2_after : Com InstCombine.LLVM ?m.19214 EffectKind.pure ?m.19215
+⊢ ⟦?m.19215⟧ = Option ?m.19213
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:207:9: tactic 'unfold' failed, local variable 'xor_logic_and_or2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:227:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxorhandhor.lean:234:27: tactic 'unfold' failed, local variable 'xor_and_or_after' has no definition
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.gxorhandhor
+error: build failed

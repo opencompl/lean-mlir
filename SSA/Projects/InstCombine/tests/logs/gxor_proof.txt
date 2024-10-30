@@ -637,3 +637,642 @@ error: Lean exited with code 1
 Some required builds logged failures:
 - SSA.Projects.InstCombine.tests.LLVM.gxor
 error: build failed
+⚠ [2488/2503] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2492/2503] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [2493/2503] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [2498/2503] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [2499/2503] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [2503/2503] Building SSA.Projects.InstCombine.tests.LLVM.gxor
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gxor.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gxor.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gxor.c --json
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:19:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:31:9: tactic 'unfold' failed, local variable 'test0_before' has no definition
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:57:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.xor e (const? 0) ⊑ e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:53:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:72:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:77:22: tactic 'unfold' failed, local variable 'test2_after' has no definition
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:103:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.xor e e ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:99:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:128:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.xor e (LLVM.xor (const? (-1)) e) ⊑ const? (-1) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:124:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:154:17: theorem extracted_1 :
+  ∀ (e : IntW 32), LLVM.xor (LLVM.or e (const? 123)) (const? 123) ⊑ LLVM.and e (const? (-124)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:150:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:178:17: theorem extracted_1 : ∀ (e : IntW 8), LLVM.xor (LLVM.xor e (const? 17)) (const? 17) ⊑ e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:174:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:209:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.and e_1 (const? 7)) (LLVM.and e (const? 128)) ⊑
+      LLVM.or (LLVM.and e_1 (const? 7)) (LLVM.and e (const? 128)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:205:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:238:17: theorem extracted_1 :
+  ∀ (e : IntW 8), LLVM.xor (LLVM.and e (const? 3)) (const? 4) ⊑ LLVM.or (LLVM.and e (const? 3)) (const? 4) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:234:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:267:17: theorem extracted_1 :
+  ∀ (e : IntW 8), LLVM.xor (LLVM.or e (const? 12)) (const? 4) ⊑ LLVM.or (LLVM.and e (const? (-13))) (const? 8) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:263:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:294:17: theorem extracted_1 : ∀ (e : IntW 32), sub (const? 123) (LLVM.xor e (const? (-1))) ⊑ add e (const? 124) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:290:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:317:17: theorem extracted_1 : ∀ (e e_1 : IntW 32), LLVM.xor (LLVM.xor e_1 e) e_1 ⊑ e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:313:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:343:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32), LLVM.xor (LLVM.and (LLVM.xor e_1 (const? (-1))) e) e ⊑ LLVM.and e_1 e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:339:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:370:17: theorem extracted_1 :
+  ∀ (e : IntW 32), LLVM.xor (add e (const? (-2147483647))) (const? (-2147483648)) ⊑ add e (const? 1) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:366:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:397:17: theorem extracted_1 :
+  ∀ (e : IntW 32), LLVM.xor (sub (const? (-2147483647)) e) (const? (-2147483648)) ⊑ sub (const? 1) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:393:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:426:17: theorem extracted_1 :
+  ∀ (e : IntW 1),
+    LLVM.xor (select e (const? 1000) (const? 10)) (const? 123) ⊑ select e (const? 915) (const? 113) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:422:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:458:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.udiv (const? 42) e_1) (LLVM.or (LLVM.udiv (const? 42) e_1) (LLVM.udiv (const? 42) e)) ⊑
+      LLVM.and (LLVM.udiv (const? 42) e) (LLVM.xor (LLVM.udiv (const? 42) e_1) (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:454:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:490:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.or (LLVM.udiv (const? 42) e_1) (LLVM.udiv (const? 42) e)) (LLVM.udiv (const? 42) e) ⊑
+      LLVM.and (LLVM.udiv (const? 42) e_1) (LLVM.xor (LLVM.udiv (const? 42) e) (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:486:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:522:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.or (LLVM.udiv (const? 42) e_1) (LLVM.udiv (const? 42) e)) (LLVM.udiv (const? 42) e_1) ⊑
+      LLVM.and (LLVM.udiv (const? 42) e) (LLVM.xor (LLVM.udiv (const? 42) e_1) (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:518:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:554:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.udiv (const? 42) e_1) (LLVM.or (LLVM.udiv (const? 42) e) (LLVM.udiv (const? 42) e_1)) ⊑
+      LLVM.and (LLVM.udiv (const? 42) e) (LLVM.xor (LLVM.udiv (const? 42) e_1) (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:550:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:586:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.udiv (const? 42) e_1) (LLVM.and (LLVM.udiv (const? 42) e_1) (LLVM.udiv (const? 42) e)) ⊑
+      LLVM.and (LLVM.udiv (const? 42) e_1) (LLVM.xor (LLVM.udiv (const? 42) e) (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:582:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:618:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.and (LLVM.udiv (const? 42) e_1) (LLVM.udiv (const? 42) e)) (LLVM.udiv (const? 42) e) ⊑
+      LLVM.and (LLVM.udiv (const? 42) e) (LLVM.xor (LLVM.udiv (const? 42) e_1) (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:614:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:650:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.and (LLVM.udiv (const? 42) e_1) (LLVM.udiv (const? 42) e)) (LLVM.udiv (const? 42) e_1) ⊑
+      LLVM.and (LLVM.udiv (const? 42) e_1) (LLVM.xor (LLVM.udiv (const? 42) e) (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:646:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:682:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.udiv (const? 42) e_1) (LLVM.and (LLVM.udiv (const? 42) e) (LLVM.udiv (const? 42) e_1)) ⊑
+      LLVM.and (LLVM.udiv (const? 42) e_1) (LLVM.xor (LLVM.udiv (const? 42) e) (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:678:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:710:17: theorem extracted_1 :
+  ∀ (e e_1 e_2 : IntW 4),
+    LLVM.xor (LLVM.or e_2 e_1) (LLVM.or e_2 e) ⊑ LLVM.and (LLVM.xor e_1 e) (LLVM.xor e_2 (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:706:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:738:17: theorem extracted_1 :
+  ∀ (e e_1 e_2 : IntW 4),
+    LLVM.xor (LLVM.or e_2 e_1) (LLVM.or e_1 e) ⊑ LLVM.and (LLVM.xor e_2 e) (LLVM.xor e_1 (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:734:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:766:17: theorem extracted_1 :
+  ∀ (e e_1 e_2 : IntW 4),
+    LLVM.xor (LLVM.or e_2 e_1) (LLVM.or e e_2) ⊑ LLVM.and (LLVM.xor e_1 e) (LLVM.xor e_2 (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:762:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:797:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    shl (add (LLVM.xor e_1 (const? 1073741823)) e) (const? 2) ⊑
+      shl (add (LLVM.xor e_1 (const? (-1))) e) (const? 2) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:793:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:826:17: theorem extracted_1 :
+  ∀ (e : IntW 8), LLVM.xor (shl e (const? 7)) (const? (-128)) ⊑ shl (LLVM.xor e (const? (-1))) (const? 7) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:822:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:855:17: theorem extracted_1 :
+  ∀ (e : IntW 8), LLVM.xor (lshr e (const? 5)) (const? 7) ⊑ lshr (LLVM.xor e (const? (-1))) (const? 5) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:851:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:884:17: theorem extracted_1 :
+  ∀ (e : IntW 8), ashr (LLVM.xor e (const? (-1))) (const? 5) ⊑ LLVM.xor (ashr e (const? 5)) (const? (-1)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:880:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:914:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 33),
+    LLVM.xor (LLVM.and (LLVM.udiv (const? 42) e_1) (LLVM.xor e (const? (-1)))) e ⊑
+      LLVM.or (LLVM.udiv (const? 42) e_1) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:910:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:944:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.udiv (const? 42) e_1) (LLVM.and (LLVM.xor (LLVM.udiv (const? 42) e_1) (const? (-1))) e) ⊑
+      LLVM.or (LLVM.udiv (const? 42) e_1) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:940:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:976:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.udiv (const? 42) e_1)
+        (LLVM.and (LLVM.udiv (const? 42) e) (LLVM.xor (LLVM.udiv (const? 42) e_1) (const? (-1)))) ⊑
+      LLVM.or (LLVM.udiv (const? 42) e_1) (LLVM.udiv (const? 42) e) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:972:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1008:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 8),
+    LLVM.xor (LLVM.udiv (const? 42) e_1) (LLVM.or (LLVM.xor (LLVM.udiv (const? 42) e_1) (const? (-1))) e) ⊑
+      LLVM.xor (LLVM.and (LLVM.udiv (const? 42) e_1) e) (const? (-1)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1004:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1013:31: Expected `Except.ok`, found Except.error TransformError.unsupportedType
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1025:30: Expected `Except.ok`, found Except.error TransformError.unsupportedType
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1036:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1036:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.652141⟧
+is not definitionally equal to the right-hand side
+  Option ?m.652139
+xor_orn_commute2_before xor_orn_commute2_after : Com InstCombine.LLVM ?m.652140 EffectKind.pure ?m.652141
+⊢ ⟦?m.652141⟧ = Option ?m.652139
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1037:9: tactic 'unfold' failed, local variable 'xor_orn_commute2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1045:31: Expected `Except.ok`, found Except.error TransformError.unsupportedType
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1058:30: Expected `Except.ok`, found Except.error TransformError.unsupportedType
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1070:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1070:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.653947⟧
+is not definitionally equal to the right-hand side
+  Option ?m.653945
+xor_orn_commute3_before xor_orn_commute3_after : Com InstCombine.LLVM ?m.653946 EffectKind.pure ?m.653947
+⊢ ⟦?m.653947⟧ = Option ?m.653945
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1071:9: tactic 'unfold' failed, local variable 'xor_orn_commute3_before' has no definition
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1102:17: theorem extracted_1 :
+  ∀ (e : IntW 32), LLVM.xor (ashr (const? (-3)) e) (lshr (const? 5) e) ⊑ ashr (const? (-8)) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1098:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1098:8: (kernel) deep recursion detected
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1130:17: theorem extracted_1 :
+  ∀ (e : IntW 32), LLVM.xor (lshr (const? 5) e) (ashr (const? (-3)) e) ⊑ ashr (const? (-8)) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1126:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1126:8: (kernel) deep recursion detected
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1158:17: theorem extracted_1 :
+  ∀ (e : IntW 32), LLVM.xor (lshr (const? (-3)) e) (lshr (const? 5) e) ⊑ lshr (const? (-8)) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1154:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1186:17: theorem extracted_1 :
+  ∀ (e : IntW 32), LLVM.xor (ashr (const? (-3)) e) (ashr (const? (-5)) e) ⊑ lshr (const? 6) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1182:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1182:8: (kernel) deep recursion detected
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1217:17: theorem extracted_1 :
+  ∀ (e e_1 e_2 : IntW 4),
+    LLVM.xor (LLVM.and e_2 e_1) (LLVM.and (LLVM.xor e_2 (const? (-1))) e) ⊑
+      LLVM.or (LLVM.and e_2 e_1) (LLVM.and (LLVM.xor e_2 (const? (-1))) e) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1213:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1248:17: theorem extracted_1 :
+  ∀ (e e_1 e_2 : IntW 4),
+    LLVM.xor (LLVM.and e_2 e_1) (LLVM.and (LLVM.xor e_2 (const? (-1))) e) ⊑
+      LLVM.or (LLVM.and e_2 e_1) (LLVM.and (LLVM.xor e_2 (const? (-1))) e) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1244:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1274:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32), LLVM.xor (LLVM.or e_1 e) e_1 ⊑ LLVM.and (LLVM.xor e_1 (const? (-1))) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1270:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1300:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32), LLVM.xor e_1 (LLVM.or e_1 e) ⊑ LLVM.and (LLVM.xor e_1 (const? (-1))) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1296:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1326:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32), LLVM.xor e_1 (LLVM.or e_1 e) ⊑ LLVM.and (LLVM.xor e_1 (const? (-1))) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1322:8: declaration uses 'sorry'
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.gxor
+error: build failed
+⚠ [2488/2503] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2492/2503] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [2493/2503] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [2498/2503] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [2499/2503] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [2503/2503] Building SSA.Projects.InstCombine.tests.LLVM.gxor
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gxor.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gxor.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gxor.c --json
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:19:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:31:9: tactic 'unfold' failed, local variable 'test0_before' has no definition
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:57:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.xor e (const? 0) ⊑ e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:53:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:72:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:77:22: tactic 'unfold' failed, local variable 'test2_after' has no definition
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:103:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.xor e e ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:99:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:128:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.xor e (LLVM.xor (const? (-1)) e) ⊑ const? (-1) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:124:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:154:17: theorem extracted_1 :
+  ∀ (e : IntW 32), LLVM.xor (LLVM.or e (const? 123)) (const? 123) ⊑ LLVM.and e (const? (-124)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:150:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:178:17: theorem extracted_1 : ∀ (e : IntW 8), LLVM.xor (LLVM.xor e (const? 17)) (const? 17) ⊑ e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:174:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:209:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.and e_1 (const? 7)) (LLVM.and e (const? 128)) ⊑
+      LLVM.or (LLVM.and e_1 (const? 7)) (LLVM.and e (const? 128)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:205:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:238:17: theorem extracted_1 :
+  ∀ (e : IntW 8), LLVM.xor (LLVM.and e (const? 3)) (const? 4) ⊑ LLVM.or (LLVM.and e (const? 3)) (const? 4) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:234:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:267:17: theorem extracted_1 :
+  ∀ (e : IntW 8), LLVM.xor (LLVM.or e (const? 12)) (const? 4) ⊑ LLVM.or (LLVM.and e (const? (-13))) (const? 8) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:263:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:294:17: theorem extracted_1 : ∀ (e : IntW 32), sub (const? 123) (LLVM.xor e (const? (-1))) ⊑ add e (const? 124) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:290:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:317:17: theorem extracted_1 : ∀ (e e_1 : IntW 32), LLVM.xor (LLVM.xor e_1 e) e_1 ⊑ e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:313:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:343:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32), LLVM.xor (LLVM.and (LLVM.xor e_1 (const? (-1))) e) e ⊑ LLVM.and e_1 e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:339:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:370:17: theorem extracted_1 :
+  ∀ (e : IntW 32), LLVM.xor (add e (const? (-2147483647))) (const? (-2147483648)) ⊑ add e (const? 1) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:366:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:397:17: theorem extracted_1 :
+  ∀ (e : IntW 32), LLVM.xor (sub (const? (-2147483647)) e) (const? (-2147483648)) ⊑ sub (const? 1) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:393:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:426:17: theorem extracted_1 :
+  ∀ (e : IntW 1),
+    LLVM.xor (select e (const? 1000) (const? 10)) (const? 123) ⊑ select e (const? 915) (const? 113) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:422:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:458:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.udiv (const? 42) e_1) (LLVM.or (LLVM.udiv (const? 42) e_1) (LLVM.udiv (const? 42) e)) ⊑
+      LLVM.and (LLVM.udiv (const? 42) e) (LLVM.xor (LLVM.udiv (const? 42) e_1) (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:454:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:490:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.or (LLVM.udiv (const? 42) e_1) (LLVM.udiv (const? 42) e)) (LLVM.udiv (const? 42) e) ⊑
+      LLVM.and (LLVM.udiv (const? 42) e_1) (LLVM.xor (LLVM.udiv (const? 42) e) (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:486:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:522:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.or (LLVM.udiv (const? 42) e_1) (LLVM.udiv (const? 42) e)) (LLVM.udiv (const? 42) e_1) ⊑
+      LLVM.and (LLVM.udiv (const? 42) e) (LLVM.xor (LLVM.udiv (const? 42) e_1) (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:518:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:554:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.udiv (const? 42) e_1) (LLVM.or (LLVM.udiv (const? 42) e) (LLVM.udiv (const? 42) e_1)) ⊑
+      LLVM.and (LLVM.udiv (const? 42) e) (LLVM.xor (LLVM.udiv (const? 42) e_1) (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:550:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:586:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.udiv (const? 42) e_1) (LLVM.and (LLVM.udiv (const? 42) e_1) (LLVM.udiv (const? 42) e)) ⊑
+      LLVM.and (LLVM.udiv (const? 42) e_1) (LLVM.xor (LLVM.udiv (const? 42) e) (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:582:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:618:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.and (LLVM.udiv (const? 42) e_1) (LLVM.udiv (const? 42) e)) (LLVM.udiv (const? 42) e) ⊑
+      LLVM.and (LLVM.udiv (const? 42) e) (LLVM.xor (LLVM.udiv (const? 42) e_1) (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:614:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:650:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.and (LLVM.udiv (const? 42) e_1) (LLVM.udiv (const? 42) e)) (LLVM.udiv (const? 42) e_1) ⊑
+      LLVM.and (LLVM.udiv (const? 42) e_1) (LLVM.xor (LLVM.udiv (const? 42) e) (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:646:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:682:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.udiv (const? 42) e_1) (LLVM.and (LLVM.udiv (const? 42) e) (LLVM.udiv (const? 42) e_1)) ⊑
+      LLVM.and (LLVM.udiv (const? 42) e_1) (LLVM.xor (LLVM.udiv (const? 42) e) (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:678:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:710:17: theorem extracted_1 :
+  ∀ (e e_1 e_2 : IntW 4),
+    LLVM.xor (LLVM.or e_2 e_1) (LLVM.or e_2 e) ⊑ LLVM.and (LLVM.xor e_1 e) (LLVM.xor e_2 (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:706:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:738:17: theorem extracted_1 :
+  ∀ (e e_1 e_2 : IntW 4),
+    LLVM.xor (LLVM.or e_2 e_1) (LLVM.or e_1 e) ⊑ LLVM.and (LLVM.xor e_2 e) (LLVM.xor e_1 (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:734:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:766:17: theorem extracted_1 :
+  ∀ (e e_1 e_2 : IntW 4),
+    LLVM.xor (LLVM.or e_2 e_1) (LLVM.or e e_2) ⊑ LLVM.and (LLVM.xor e_1 e) (LLVM.xor e_2 (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:762:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:797:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    shl (add (LLVM.xor e_1 (const? 1073741823)) e) (const? 2) ⊑
+      shl (add (LLVM.xor e_1 (const? (-1))) e) (const? 2) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:793:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:826:17: theorem extracted_1 :
+  ∀ (e : IntW 8), LLVM.xor (shl e (const? 7)) (const? (-128)) ⊑ shl (LLVM.xor e (const? (-1))) (const? 7) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:822:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:855:17: theorem extracted_1 :
+  ∀ (e : IntW 8), LLVM.xor (lshr e (const? 5)) (const? 7) ⊑ lshr (LLVM.xor e (const? (-1))) (const? 5) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:851:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:884:17: theorem extracted_1 :
+  ∀ (e : IntW 8), ashr (LLVM.xor e (const? (-1))) (const? 5) ⊑ LLVM.xor (ashr e (const? 5)) (const? (-1)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:880:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:914:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 33),
+    LLVM.xor (LLVM.and (LLVM.udiv (const? 42) e_1) (LLVM.xor e (const? (-1)))) e ⊑
+      LLVM.or (LLVM.udiv (const? 42) e_1) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:910:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:944:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.udiv (const? 42) e_1) (LLVM.and (LLVM.xor (LLVM.udiv (const? 42) e_1) (const? (-1))) e) ⊑
+      LLVM.or (LLVM.udiv (const? 42) e_1) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:940:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:976:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.udiv (const? 42) e_1)
+        (LLVM.and (LLVM.udiv (const? 42) e) (LLVM.xor (LLVM.udiv (const? 42) e_1) (const? (-1)))) ⊑
+      LLVM.or (LLVM.udiv (const? 42) e_1) (LLVM.udiv (const? 42) e) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:972:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1008:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 8),
+    LLVM.xor (LLVM.udiv (const? 42) e_1) (LLVM.or (LLVM.xor (LLVM.udiv (const? 42) e_1) (const? (-1))) e) ⊑
+      LLVM.xor (LLVM.and (LLVM.udiv (const? 42) e_1) e) (const? (-1)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1004:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1013:31: Expected `Except.ok`, found Except.error TransformError.unsupportedType
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1025:30: Expected `Except.ok`, found Except.error TransformError.unsupportedType
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1036:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1036:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.652141⟧
+is not definitionally equal to the right-hand side
+  Option ?m.652139
+xor_orn_commute2_before xor_orn_commute2_after : Com InstCombine.LLVM ?m.652140 EffectKind.pure ?m.652141
+⊢ ⟦?m.652141⟧ = Option ?m.652139
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1037:9: tactic 'unfold' failed, local variable 'xor_orn_commute2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1045:31: Expected `Except.ok`, found Except.error TransformError.unsupportedType
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1058:30: Expected `Except.ok`, found Except.error TransformError.unsupportedType
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1070:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1070:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.653947⟧
+is not definitionally equal to the right-hand side
+  Option ?m.653945
+xor_orn_commute3_before xor_orn_commute3_after : Com InstCombine.LLVM ?m.653946 EffectKind.pure ?m.653947
+⊢ ⟦?m.653947⟧ = Option ?m.653945
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1071:9: tactic 'unfold' failed, local variable 'xor_orn_commute3_before' has no definition
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1102:17: theorem extracted_1 :
+  ∀ (e : IntW 32), LLVM.xor (ashr (const? (-3)) e) (lshr (const? 5) e) ⊑ ashr (const? (-8)) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1098:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1098:8: (kernel) deep recursion detected
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1130:17: theorem extracted_1 :
+  ∀ (e : IntW 32), LLVM.xor (lshr (const? 5) e) (ashr (const? (-3)) e) ⊑ ashr (const? (-8)) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1126:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1126:8: (kernel) deep recursion detected
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1158:17: theorem extracted_1 :
+  ∀ (e : IntW 32), LLVM.xor (lshr (const? (-3)) e) (lshr (const? 5) e) ⊑ lshr (const? (-8)) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1154:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1186:17: theorem extracted_1 :
+  ∀ (e : IntW 32), LLVM.xor (ashr (const? (-3)) e) (ashr (const? (-5)) e) ⊑ lshr (const? 6) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1182:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1182:8: (kernel) deep recursion detected
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1217:17: theorem extracted_1 :
+  ∀ (e e_1 e_2 : IntW 4),
+    LLVM.xor (LLVM.and e_2 e_1) (LLVM.and (LLVM.xor e_2 (const? (-1))) e) ⊑
+      LLVM.or (LLVM.and e_2 e_1) (LLVM.and (LLVM.xor e_2 (const? (-1))) e) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1213:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1248:17: theorem extracted_1 :
+  ∀ (e e_1 e_2 : IntW 4),
+    LLVM.xor (LLVM.and e_2 e_1) (LLVM.and (LLVM.xor e_2 (const? (-1))) e) ⊑
+      LLVM.or (LLVM.and e_2 e_1) (LLVM.and (LLVM.xor e_2 (const? (-1))) e) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1244:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1274:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32), LLVM.xor (LLVM.or e_1 e) e_1 ⊑ LLVM.and (LLVM.xor e_1 (const? (-1))) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1270:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1300:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32), LLVM.xor e_1 (LLVM.or e_1 e) ⊑ LLVM.and (LLVM.xor e_1 (const? (-1))) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1296:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1326:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32), LLVM.xor e_1 (LLVM.or e_1 e) ⊑ LLVM.and (LLVM.xor e_1 (const? (-1))) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1322:8: declaration uses 'sorry'
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.gxor
+error: build failed
+⚠ [2488/2503] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2492/2503] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [2493/2503] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [2498/2503] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [2499/2503] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [2503/2503] Building SSA.Projects.InstCombine.tests.LLVM.gxor
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gxor.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gxor.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gxor.c --json
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:19:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:31:9: tactic 'unfold' failed, local variable 'test0_before' has no definition
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:57:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.xor e (const? 0) ⊑ e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:53:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:72:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:77:22: tactic 'unfold' failed, local variable 'test2_after' has no definition
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:103:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.xor e e ⊑ const? 0 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:99:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:128:17: theorem extracted_1 : ∀ (e : IntW 32), LLVM.xor e (LLVM.xor (const? (-1)) e) ⊑ const? (-1) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:124:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:154:17: theorem extracted_1 :
+  ∀ (e : IntW 32), LLVM.xor (LLVM.or e (const? 123)) (const? 123) ⊑ LLVM.and e (const? (-124)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:150:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:178:17: theorem extracted_1 : ∀ (e : IntW 8), LLVM.xor (LLVM.xor e (const? 17)) (const? 17) ⊑ e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:174:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:209:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.and e_1 (const? 7)) (LLVM.and e (const? 128)) ⊑
+      LLVM.or (LLVM.and e_1 (const? 7)) (LLVM.and e (const? 128)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:205:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:238:17: theorem extracted_1 :
+  ∀ (e : IntW 8), LLVM.xor (LLVM.and e (const? 3)) (const? 4) ⊑ LLVM.or (LLVM.and e (const? 3)) (const? 4) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:234:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:267:17: theorem extracted_1 :
+  ∀ (e : IntW 8), LLVM.xor (LLVM.or e (const? 12)) (const? 4) ⊑ LLVM.or (LLVM.and e (const? (-13))) (const? 8) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:263:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:294:17: theorem extracted_1 : ∀ (e : IntW 32), sub (const? 123) (LLVM.xor e (const? (-1))) ⊑ add e (const? 124) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:290:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:317:17: theorem extracted_1 : ∀ (e e_1 : IntW 32), LLVM.xor (LLVM.xor e_1 e) e_1 ⊑ e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:313:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:343:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32), LLVM.xor (LLVM.and (LLVM.xor e_1 (const? (-1))) e) e ⊑ LLVM.and e_1 e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:339:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:370:17: theorem extracted_1 :
+  ∀ (e : IntW 32), LLVM.xor (add e (const? (-2147483647))) (const? (-2147483648)) ⊑ add e (const? 1) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:366:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:397:17: theorem extracted_1 :
+  ∀ (e : IntW 32), LLVM.xor (sub (const? (-2147483647)) e) (const? (-2147483648)) ⊑ sub (const? 1) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:393:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:426:17: theorem extracted_1 :
+  ∀ (e : IntW 1),
+    LLVM.xor (select e (const? 1000) (const? 10)) (const? 123) ⊑ select e (const? 915) (const? 113) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:422:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:458:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.udiv (const? 42) e_1) (LLVM.or (LLVM.udiv (const? 42) e_1) (LLVM.udiv (const? 42) e)) ⊑
+      LLVM.and (LLVM.udiv (const? 42) e) (LLVM.xor (LLVM.udiv (const? 42) e_1) (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:454:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:490:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.or (LLVM.udiv (const? 42) e_1) (LLVM.udiv (const? 42) e)) (LLVM.udiv (const? 42) e) ⊑
+      LLVM.and (LLVM.udiv (const? 42) e_1) (LLVM.xor (LLVM.udiv (const? 42) e) (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:486:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:522:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.or (LLVM.udiv (const? 42) e_1) (LLVM.udiv (const? 42) e)) (LLVM.udiv (const? 42) e_1) ⊑
+      LLVM.and (LLVM.udiv (const? 42) e) (LLVM.xor (LLVM.udiv (const? 42) e_1) (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:518:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:554:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.udiv (const? 42) e_1) (LLVM.or (LLVM.udiv (const? 42) e) (LLVM.udiv (const? 42) e_1)) ⊑
+      LLVM.and (LLVM.udiv (const? 42) e) (LLVM.xor (LLVM.udiv (const? 42) e_1) (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:550:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:586:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.udiv (const? 42) e_1) (LLVM.and (LLVM.udiv (const? 42) e_1) (LLVM.udiv (const? 42) e)) ⊑
+      LLVM.and (LLVM.udiv (const? 42) e_1) (LLVM.xor (LLVM.udiv (const? 42) e) (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:582:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:618:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.and (LLVM.udiv (const? 42) e_1) (LLVM.udiv (const? 42) e)) (LLVM.udiv (const? 42) e) ⊑
+      LLVM.and (LLVM.udiv (const? 42) e) (LLVM.xor (LLVM.udiv (const? 42) e_1) (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:614:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:650:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.and (LLVM.udiv (const? 42) e_1) (LLVM.udiv (const? 42) e)) (LLVM.udiv (const? 42) e_1) ⊑
+      LLVM.and (LLVM.udiv (const? 42) e_1) (LLVM.xor (LLVM.udiv (const? 42) e) (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:646:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:682:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.udiv (const? 42) e_1) (LLVM.and (LLVM.udiv (const? 42) e) (LLVM.udiv (const? 42) e_1)) ⊑
+      LLVM.and (LLVM.udiv (const? 42) e_1) (LLVM.xor (LLVM.udiv (const? 42) e) (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:678:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:710:17: theorem extracted_1 :
+  ∀ (e e_1 e_2 : IntW 4),
+    LLVM.xor (LLVM.or e_2 e_1) (LLVM.or e_2 e) ⊑ LLVM.and (LLVM.xor e_1 e) (LLVM.xor e_2 (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:706:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:738:17: theorem extracted_1 :
+  ∀ (e e_1 e_2 : IntW 4),
+    LLVM.xor (LLVM.or e_2 e_1) (LLVM.or e_1 e) ⊑ LLVM.and (LLVM.xor e_2 e) (LLVM.xor e_1 (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:734:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:766:17: theorem extracted_1 :
+  ∀ (e e_1 e_2 : IntW 4),
+    LLVM.xor (LLVM.or e_2 e_1) (LLVM.or e e_2) ⊑ LLVM.and (LLVM.xor e_1 e) (LLVM.xor e_2 (const? (-1))) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:762:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:797:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    shl (add (LLVM.xor e_1 (const? 1073741823)) e) (const? 2) ⊑
+      shl (add (LLVM.xor e_1 (const? (-1))) e) (const? 2) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:793:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:826:17: theorem extracted_1 :
+  ∀ (e : IntW 8), LLVM.xor (shl e (const? 7)) (const? (-128)) ⊑ shl (LLVM.xor e (const? (-1))) (const? 7) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:822:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:855:17: theorem extracted_1 :
+  ∀ (e : IntW 8), LLVM.xor (lshr e (const? 5)) (const? 7) ⊑ lshr (LLVM.xor e (const? (-1))) (const? 5) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:851:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:884:17: theorem extracted_1 :
+  ∀ (e : IntW 8), ashr (LLVM.xor e (const? (-1))) (const? 5) ⊑ LLVM.xor (ashr e (const? 5)) (const? (-1)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:880:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:914:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 33),
+    LLVM.xor (LLVM.and (LLVM.udiv (const? 42) e_1) (LLVM.xor e (const? (-1)))) e ⊑
+      LLVM.or (LLVM.udiv (const? 42) e_1) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:910:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:944:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.udiv (const? 42) e_1) (LLVM.and (LLVM.xor (LLVM.udiv (const? 42) e_1) (const? (-1))) e) ⊑
+      LLVM.or (LLVM.udiv (const? 42) e_1) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:940:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:976:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32),
+    LLVM.xor (LLVM.udiv (const? 42) e_1)
+        (LLVM.and (LLVM.udiv (const? 42) e) (LLVM.xor (LLVM.udiv (const? 42) e_1) (const? (-1)))) ⊑
+      LLVM.or (LLVM.udiv (const? 42) e_1) (LLVM.udiv (const? 42) e) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:972:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1008:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 8),
+    LLVM.xor (LLVM.udiv (const? 42) e_1) (LLVM.or (LLVM.xor (LLVM.udiv (const? 42) e_1) (const? (-1))) e) ⊑
+      LLVM.xor (LLVM.and (LLVM.udiv (const? 42) e_1) e) (const? (-1)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1004:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1013:31: Expected `Except.ok`, found Except.error TransformError.unsupportedType
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1025:30: Expected `Except.ok`, found Except.error TransformError.unsupportedType
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1036:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1036:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.652141⟧
+is not definitionally equal to the right-hand side
+  Option ?m.652139
+xor_orn_commute2_before xor_orn_commute2_after : Com InstCombine.LLVM ?m.652140 EffectKind.pure ?m.652141
+⊢ ⟦?m.652141⟧ = Option ?m.652139
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1037:9: tactic 'unfold' failed, local variable 'xor_orn_commute2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1045:31: Expected `Except.ok`, found Except.error TransformError.unsupportedType
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1058:30: Expected `Except.ok`, found Except.error TransformError.unsupportedType
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1070:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1070:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.653947⟧
+is not definitionally equal to the right-hand side
+  Option ?m.653945
+xor_orn_commute3_before xor_orn_commute3_after : Com InstCombine.LLVM ?m.653946 EffectKind.pure ?m.653947
+⊢ ⟦?m.653947⟧ = Option ?m.653945
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1071:9: tactic 'unfold' failed, local variable 'xor_orn_commute3_before' has no definition
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1102:17: theorem extracted_1 :
+  ∀ (e : IntW 32), LLVM.xor (ashr (const? (-3)) e) (lshr (const? 5) e) ⊑ ashr (const? (-8)) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1098:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1098:8: (kernel) deep recursion detected
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1130:17: theorem extracted_1 :
+  ∀ (e : IntW 32), LLVM.xor (lshr (const? 5) e) (ashr (const? (-3)) e) ⊑ ashr (const? (-8)) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1126:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1126:8: (kernel) deep recursion detected
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1158:17: theorem extracted_1 :
+  ∀ (e : IntW 32), LLVM.xor (lshr (const? (-3)) e) (lshr (const? 5) e) ⊑ lshr (const? (-8)) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1154:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1186:17: theorem extracted_1 :
+  ∀ (e : IntW 32), LLVM.xor (ashr (const? (-3)) e) (ashr (const? (-5)) e) ⊑ lshr (const? 6) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1182:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1182:8: (kernel) deep recursion detected
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1217:17: theorem extracted_1 :
+  ∀ (e e_1 e_2 : IntW 4),
+    LLVM.xor (LLVM.and e_2 e_1) (LLVM.and (LLVM.xor e_2 (const? (-1))) e) ⊑
+      LLVM.or (LLVM.and e_2 e_1) (LLVM.and (LLVM.xor e_2 (const? (-1))) e) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1213:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1248:17: theorem extracted_1 :
+  ∀ (e e_1 e_2 : IntW 4),
+    LLVM.xor (LLVM.and e_2 e_1) (LLVM.and (LLVM.xor e_2 (const? (-1))) e) ⊑
+      LLVM.or (LLVM.and e_2 e_1) (LLVM.and (LLVM.xor e_2 (const? (-1))) e) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1244:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1274:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32), LLVM.xor (LLVM.or e_1 e) e_1 ⊑ LLVM.and (LLVM.xor e_1 (const? (-1))) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1270:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1300:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32), LLVM.xor e_1 (LLVM.or e_1 e) ⊑ LLVM.and (LLVM.xor e_1 (const? (-1))) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1296:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1326:17: theorem extracted_1 :
+  ∀ (e e_1 : IntW 32), LLVM.xor e_1 (LLVM.or e_1 e) ⊑ LLVM.and (LLVM.xor e_1 (const? (-1))) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gxor.lean:1322:8: declaration uses 'sorry'
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.gxor
+error: build failed

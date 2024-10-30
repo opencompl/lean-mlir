@@ -877,3 +877,882 @@ error: Lean exited with code 1
 Some required builds logged failures:
 - SSA.Projects.InstCombine.tests.LLVM.gselecthsafehboolhtransforms
 error: build failed
+⚠ [2488/2503] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2492/2503] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [2493/2503] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [2498/2503] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [2499/2503] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [2503/2503] Building SSA.Projects.InstCombine.tests.LLVM.gselecthsafehboolhtransforms
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.c --json
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:19:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:28:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:33:32: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:33:32: tactic 'rfl' failed, the left-hand side
+  ⟦?m.2265⟧
+is not definitionally equal to the right-hand side
+  Option ?m.2263
+land_land_left1_before land_land_left1_after : Com InstCombine.LLVM ?m.2264 EffectKind.pure ?m.2265
+⊢ ⟦?m.2265⟧ = Option ?m.2263
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:34:9: tactic 'unfold' failed, local variable 'land_land_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:45:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:54:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:59:32: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:59:32: tactic 'rfl' failed, the left-hand side
+  ⟦?m.4551⟧
+is not definitionally equal to the right-hand side
+  Option ?m.4549
+land_land_left2_before land_land_left2_after : Com InstCombine.LLVM ?m.4550 EffectKind.pure ?m.4551
+⊢ ⟦?m.4551⟧ = Option ?m.4549
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:60:9: tactic 'unfold' failed, local variable 'land_land_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:71:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:80:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:85:32: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:85:32: tactic 'rfl' failed, the left-hand side
+  ⟦?m.6788⟧
+is not definitionally equal to the right-hand side
+  Option ?m.6786
+land_band_left1_before land_band_left1_after : Com InstCombine.LLVM ?m.6787 EffectKind.pure ?m.6788
+⊢ ⟦?m.6788⟧ = Option ?m.6786
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:86:9: tactic 'unfold' failed, local variable 'land_band_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:97:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:106:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:111:32: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:111:32: tactic 'rfl' failed, the left-hand side
+  ⟦?m.9037⟧
+is not definitionally equal to the right-hand side
+  Option ?m.9035
+land_band_left2_before land_band_left2_after : Com InstCombine.LLVM ?m.9036 EffectKind.pure ?m.9037
+⊢ ⟦?m.9037⟧ = Option ?m.9035
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:112:9: tactic 'unfold' failed, local variable 'land_band_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:123:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:124:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:137:9: tactic 'unfold' failed, local variable 'land_lor_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:148:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:149:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:162:9: tactic 'unfold' failed, local variable 'land_lor_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:173:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:186:9: tactic 'unfold' failed, local variable 'land_bor_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:197:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:210:9: tactic 'unfold' failed, local variable 'land_bor_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:221:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:235:9: tactic 'unfold' failed, local variable 'band_land_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:246:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:260:9: tactic 'unfold' failed, local variable 'band_land_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:271:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:284:9: tactic 'unfold' failed, local variable 'band_lor_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:295:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:308:9: tactic 'unfold' failed, local variable 'band_lor_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:319:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:320:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:333:9: tactic 'unfold' failed, local variable 'lor_land_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:344:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:345:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:358:9: tactic 'unfold' failed, local variable 'lor_land_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:369:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:382:9: tactic 'unfold' failed, local variable 'lor_band_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:393:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:406:9: tactic 'unfold' failed, local variable 'lor_band_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:417:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:426:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:431:30: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:431:30: tactic 'rfl' failed, the left-hand side
+  ⟦?m.39185⟧
+is not definitionally equal to the right-hand side
+  Option ?m.39183
+lor_lor_left1_before lor_lor_left1_after : Com InstCombine.LLVM ?m.39184 EffectKind.pure ?m.39185
+⊢ ⟦?m.39185⟧ = Option ?m.39183
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:432:9: tactic 'unfold' failed, local variable 'lor_lor_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:443:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:452:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:457:30: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:457:30: tactic 'rfl' failed, the left-hand side
+  ⟦?m.41451⟧
+is not definitionally equal to the right-hand side
+  Option ?m.41449
+lor_lor_left2_before lor_lor_left2_after : Com InstCombine.LLVM ?m.41450 EffectKind.pure ?m.41451
+⊢ ⟦?m.41451⟧ = Option ?m.41449
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:458:9: tactic 'unfold' failed, local variable 'lor_lor_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:469:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:478:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:483:30: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:483:30: tactic 'rfl' failed, the left-hand side
+  ⟦?m.43688⟧
+is not definitionally equal to the right-hand side
+  Option ?m.43686
+lor_bor_left1_before lor_bor_left1_after : Com InstCombine.LLVM ?m.43687 EffectKind.pure ?m.43688
+⊢ ⟦?m.43688⟧ = Option ?m.43686
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:484:9: tactic 'unfold' failed, local variable 'lor_bor_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:495:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:504:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:509:30: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:509:30: tactic 'rfl' failed, the left-hand side
+  ⟦?m.45937⟧
+is not definitionally equal to the right-hand side
+  Option ?m.45935
+lor_bor_left2_before lor_bor_left2_after : Com InstCombine.LLVM ?m.45936 EffectKind.pure ?m.45937
+⊢ ⟦?m.45937⟧ = Option ?m.45935
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:510:9: tactic 'unfold' failed, local variable 'lor_bor_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:521:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:534:9: tactic 'unfold' failed, local variable 'bor_land_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:545:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:558:9: tactic 'unfold' failed, local variable 'bor_land_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:569:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:583:9: tactic 'unfold' failed, local variable 'bor_lor_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:594:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:608:9: tactic 'unfold' failed, local variable 'bor_lor_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:619:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:628:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:633:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:633:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.58405⟧
+is not definitionally equal to the right-hand side
+  Option ?m.58403
+land_land_right1_before land_land_right1_after : Com InstCombine.LLVM ?m.58404 EffectKind.pure ?m.58405
+⊢ ⟦?m.58405⟧ = Option ?m.58403
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:634:9: tactic 'unfold' failed, local variable 'land_land_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:645:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:654:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:659:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:659:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.60671⟧
+is not definitionally equal to the right-hand side
+  Option ?m.60669
+land_land_right2_before land_land_right2_after : Com InstCombine.LLVM ?m.60670 EffectKind.pure ?m.60671
+⊢ ⟦?m.60671⟧ = Option ?m.60669
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:660:9: tactic 'unfold' failed, local variable 'land_land_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:671:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:680:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:685:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:685:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.62920⟧
+is not definitionally equal to the right-hand side
+  Option ?m.62918
+land_band_right1_before land_band_right1_after : Com InstCombine.LLVM ?m.62919 EffectKind.pure ?m.62920
+⊢ ⟦?m.62920⟧ = Option ?m.62918
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:686:9: tactic 'unfold' failed, local variable 'land_band_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:697:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:706:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:711:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:711:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.65169⟧
+is not definitionally equal to the right-hand side
+  Option ?m.65167
+land_band_right2_before land_band_right2_after : Com InstCombine.LLVM ?m.65168 EffectKind.pure ?m.65169
+⊢ ⟦?m.65169⟧ = Option ?m.65167
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:712:9: tactic 'unfold' failed, local variable 'land_band_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:723:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:724:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:737:9: tactic 'unfold' failed, local variable 'land_lor_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:748:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:749:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:762:9: tactic 'unfold' failed, local variable 'land_lor_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:773:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:786:9: tactic 'unfold' failed, local variable 'land_bor_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:797:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:810:9: tactic 'unfold' failed, local variable 'land_bor_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:821:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:830:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:835:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:835:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.76296⟧
+is not definitionally equal to the right-hand side
+  Option ?m.76294
+band_land_right1_before band_land_right1_after : Com InstCombine.LLVM ?m.76295 EffectKind.pure ?m.76296
+⊢ ⟦?m.76296⟧ = Option ?m.76294
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:836:9: tactic 'unfold' failed, local variable 'band_land_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:847:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:856:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:861:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:861:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.78533⟧
+is not definitionally equal to the right-hand side
+  Option ?m.78531
+band_land_right2_before band_land_right2_after : Com InstCombine.LLVM ?m.78532 EffectKind.pure ?m.78533
+⊢ ⟦?m.78533⟧ = Option ?m.78531
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:862:9: tactic 'unfold' failed, local variable 'band_land_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:873:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:886:9: tactic 'unfold' failed, local variable 'band_lor_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:897:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:910:9: tactic 'unfold' failed, local variable 'band_lor_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:921:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:922:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:935:9: tactic 'unfold' failed, local variable 'lor_land_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:946:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:947:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:960:9: tactic 'unfold' failed, local variable 'lor_land_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:971:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:984:9: tactic 'unfold' failed, local variable 'lor_band_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:995:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1008:9: tactic 'unfold' failed, local variable 'lor_band_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1019:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1028:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1033:31: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1033:31: tactic 'rfl' failed, the left-hand side
+  ⟦?m.94077⟧
+is not definitionally equal to the right-hand side
+  Option ?m.94075
+lor_lor_right1_before lor_lor_right1_after : Com InstCombine.LLVM ?m.94076 EffectKind.pure ?m.94077
+⊢ ⟦?m.94077⟧ = Option ?m.94075
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1034:9: tactic 'unfold' failed, local variable 'lor_lor_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1045:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1054:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1059:31: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1059:31: tactic 'rfl' failed, the left-hand side
+  ⟦?m.96343⟧
+is not definitionally equal to the right-hand side
+  Option ?m.96341
+lor_lor_right2_before lor_lor_right2_after : Com InstCombine.LLVM ?m.96342 EffectKind.pure ?m.96343
+⊢ ⟦?m.96343⟧ = Option ?m.96341
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1060:9: tactic 'unfold' failed, local variable 'lor_lor_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1071:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1080:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1085:31: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1085:31: tactic 'rfl' failed, the left-hand side
+  ⟦?m.98592⟧
+is not definitionally equal to the right-hand side
+  Option ?m.98590
+lor_bor_right1_before lor_bor_right1_after : Com InstCombine.LLVM ?m.98591 EffectKind.pure ?m.98592
+⊢ ⟦?m.98592⟧ = Option ?m.98590
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1086:9: tactic 'unfold' failed, local variable 'lor_bor_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1097:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1106:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1111:31: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1111:31: tactic 'rfl' failed, the left-hand side
+  ⟦?m.100841⟧
+is not definitionally equal to the right-hand side
+  Option ?m.100839
+lor_bor_right2_before lor_bor_right2_after : Com InstCombine.LLVM ?m.100840 EffectKind.pure ?m.100841
+⊢ ⟦?m.100841⟧ = Option ?m.100839
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1112:9: tactic 'unfold' failed, local variable 'lor_bor_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1123:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1136:9: tactic 'unfold' failed, local variable 'bor_land_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1147:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1160:9: tactic 'unfold' failed, local variable 'bor_land_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1171:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1180:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1185:31: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1185:31: tactic 'rfl' failed, the left-hand side
+  ⟦?m.107374⟧
+is not definitionally equal to the right-hand side
+  Option ?m.107372
+bor_lor_right1_before bor_lor_right1_after : Com InstCombine.LLVM ?m.107373 EffectKind.pure ?m.107374
+⊢ ⟦?m.107374⟧ = Option ?m.107372
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1186:9: tactic 'unfold' failed, local variable 'bor_lor_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1197:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1206:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1211:31: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1211:31: tactic 'rfl' failed, the left-hand side
+  ⟦?m.109579⟧
+is not definitionally equal to the right-hand side
+  Option ?m.109577
+bor_lor_right2_before bor_lor_right2_after : Com InstCombine.LLVM ?m.109578 EffectKind.pure ?m.109579
+⊢ ⟦?m.109579⟧ = Option ?m.109577
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1212:9: tactic 'unfold' failed, local variable 'bor_lor_right2_before' has no definition
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.gselecthsafehboolhtransforms
+error: build failed
+⚠ [2488/2503] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2492/2503] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [2493/2503] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [2498/2503] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [2499/2503] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [2503/2503] Building SSA.Projects.InstCombine.tests.LLVM.gselecthsafehboolhtransforms
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.c --json
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:19:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:28:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:33:32: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:33:32: tactic 'rfl' failed, the left-hand side
+  ⟦?m.2265⟧
+is not definitionally equal to the right-hand side
+  Option ?m.2263
+land_land_left1_before land_land_left1_after : Com InstCombine.LLVM ?m.2264 EffectKind.pure ?m.2265
+⊢ ⟦?m.2265⟧ = Option ?m.2263
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:34:9: tactic 'unfold' failed, local variable 'land_land_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:45:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:54:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:59:32: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:59:32: tactic 'rfl' failed, the left-hand side
+  ⟦?m.4551⟧
+is not definitionally equal to the right-hand side
+  Option ?m.4549
+land_land_left2_before land_land_left2_after : Com InstCombine.LLVM ?m.4550 EffectKind.pure ?m.4551
+⊢ ⟦?m.4551⟧ = Option ?m.4549
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:60:9: tactic 'unfold' failed, local variable 'land_land_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:71:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:80:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:85:32: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:85:32: tactic 'rfl' failed, the left-hand side
+  ⟦?m.6788⟧
+is not definitionally equal to the right-hand side
+  Option ?m.6786
+land_band_left1_before land_band_left1_after : Com InstCombine.LLVM ?m.6787 EffectKind.pure ?m.6788
+⊢ ⟦?m.6788⟧ = Option ?m.6786
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:86:9: tactic 'unfold' failed, local variable 'land_band_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:97:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:106:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:111:32: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:111:32: tactic 'rfl' failed, the left-hand side
+  ⟦?m.9037⟧
+is not definitionally equal to the right-hand side
+  Option ?m.9035
+land_band_left2_before land_band_left2_after : Com InstCombine.LLVM ?m.9036 EffectKind.pure ?m.9037
+⊢ ⟦?m.9037⟧ = Option ?m.9035
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:112:9: tactic 'unfold' failed, local variable 'land_band_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:123:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:124:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:137:9: tactic 'unfold' failed, local variable 'land_lor_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:148:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:149:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:162:9: tactic 'unfold' failed, local variable 'land_lor_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:173:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:186:9: tactic 'unfold' failed, local variable 'land_bor_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:197:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:210:9: tactic 'unfold' failed, local variable 'land_bor_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:221:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:235:9: tactic 'unfold' failed, local variable 'band_land_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:246:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:260:9: tactic 'unfold' failed, local variable 'band_land_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:271:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:284:9: tactic 'unfold' failed, local variable 'band_lor_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:295:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:308:9: tactic 'unfold' failed, local variable 'band_lor_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:319:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:320:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:333:9: tactic 'unfold' failed, local variable 'lor_land_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:344:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:345:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:358:9: tactic 'unfold' failed, local variable 'lor_land_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:369:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:382:9: tactic 'unfold' failed, local variable 'lor_band_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:393:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:406:9: tactic 'unfold' failed, local variable 'lor_band_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:417:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:426:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:431:30: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:431:30: tactic 'rfl' failed, the left-hand side
+  ⟦?m.39185⟧
+is not definitionally equal to the right-hand side
+  Option ?m.39183
+lor_lor_left1_before lor_lor_left1_after : Com InstCombine.LLVM ?m.39184 EffectKind.pure ?m.39185
+⊢ ⟦?m.39185⟧ = Option ?m.39183
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:432:9: tactic 'unfold' failed, local variable 'lor_lor_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:443:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:452:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:457:30: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:457:30: tactic 'rfl' failed, the left-hand side
+  ⟦?m.41451⟧
+is not definitionally equal to the right-hand side
+  Option ?m.41449
+lor_lor_left2_before lor_lor_left2_after : Com InstCombine.LLVM ?m.41450 EffectKind.pure ?m.41451
+⊢ ⟦?m.41451⟧ = Option ?m.41449
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:458:9: tactic 'unfold' failed, local variable 'lor_lor_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:469:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:478:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:483:30: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:483:30: tactic 'rfl' failed, the left-hand side
+  ⟦?m.43688⟧
+is not definitionally equal to the right-hand side
+  Option ?m.43686
+lor_bor_left1_before lor_bor_left1_after : Com InstCombine.LLVM ?m.43687 EffectKind.pure ?m.43688
+⊢ ⟦?m.43688⟧ = Option ?m.43686
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:484:9: tactic 'unfold' failed, local variable 'lor_bor_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:495:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:504:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:509:30: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:509:30: tactic 'rfl' failed, the left-hand side
+  ⟦?m.45937⟧
+is not definitionally equal to the right-hand side
+  Option ?m.45935
+lor_bor_left2_before lor_bor_left2_after : Com InstCombine.LLVM ?m.45936 EffectKind.pure ?m.45937
+⊢ ⟦?m.45937⟧ = Option ?m.45935
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:510:9: tactic 'unfold' failed, local variable 'lor_bor_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:521:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:534:9: tactic 'unfold' failed, local variable 'bor_land_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:545:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:558:9: tactic 'unfold' failed, local variable 'bor_land_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:569:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:583:9: tactic 'unfold' failed, local variable 'bor_lor_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:594:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:608:9: tactic 'unfold' failed, local variable 'bor_lor_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:619:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:628:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:633:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:633:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.58405⟧
+is not definitionally equal to the right-hand side
+  Option ?m.58403
+land_land_right1_before land_land_right1_after : Com InstCombine.LLVM ?m.58404 EffectKind.pure ?m.58405
+⊢ ⟦?m.58405⟧ = Option ?m.58403
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:634:9: tactic 'unfold' failed, local variable 'land_land_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:645:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:654:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:659:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:659:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.60671⟧
+is not definitionally equal to the right-hand side
+  Option ?m.60669
+land_land_right2_before land_land_right2_after : Com InstCombine.LLVM ?m.60670 EffectKind.pure ?m.60671
+⊢ ⟦?m.60671⟧ = Option ?m.60669
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:660:9: tactic 'unfold' failed, local variable 'land_land_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:671:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:680:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:685:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:685:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.62920⟧
+is not definitionally equal to the right-hand side
+  Option ?m.62918
+land_band_right1_before land_band_right1_after : Com InstCombine.LLVM ?m.62919 EffectKind.pure ?m.62920
+⊢ ⟦?m.62920⟧ = Option ?m.62918
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:686:9: tactic 'unfold' failed, local variable 'land_band_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:697:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:706:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:711:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:711:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.65169⟧
+is not definitionally equal to the right-hand side
+  Option ?m.65167
+land_band_right2_before land_band_right2_after : Com InstCombine.LLVM ?m.65168 EffectKind.pure ?m.65169
+⊢ ⟦?m.65169⟧ = Option ?m.65167
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:712:9: tactic 'unfold' failed, local variable 'land_band_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:723:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:724:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:737:9: tactic 'unfold' failed, local variable 'land_lor_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:748:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:749:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:762:9: tactic 'unfold' failed, local variable 'land_lor_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:773:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:786:9: tactic 'unfold' failed, local variable 'land_bor_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:797:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:810:9: tactic 'unfold' failed, local variable 'land_bor_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:821:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:830:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:835:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:835:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.76296⟧
+is not definitionally equal to the right-hand side
+  Option ?m.76294
+band_land_right1_before band_land_right1_after : Com InstCombine.LLVM ?m.76295 EffectKind.pure ?m.76296
+⊢ ⟦?m.76296⟧ = Option ?m.76294
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:836:9: tactic 'unfold' failed, local variable 'band_land_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:847:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:856:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:861:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:861:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.78533⟧
+is not definitionally equal to the right-hand side
+  Option ?m.78531
+band_land_right2_before band_land_right2_after : Com InstCombine.LLVM ?m.78532 EffectKind.pure ?m.78533
+⊢ ⟦?m.78533⟧ = Option ?m.78531
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:862:9: tactic 'unfold' failed, local variable 'band_land_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:873:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:886:9: tactic 'unfold' failed, local variable 'band_lor_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:897:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:910:9: tactic 'unfold' failed, local variable 'band_lor_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:921:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:922:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:935:9: tactic 'unfold' failed, local variable 'lor_land_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:946:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:947:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:960:9: tactic 'unfold' failed, local variable 'lor_land_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:971:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:984:9: tactic 'unfold' failed, local variable 'lor_band_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:995:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1008:9: tactic 'unfold' failed, local variable 'lor_band_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1019:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1028:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1033:31: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1033:31: tactic 'rfl' failed, the left-hand side
+  ⟦?m.94077⟧
+is not definitionally equal to the right-hand side
+  Option ?m.94075
+lor_lor_right1_before lor_lor_right1_after : Com InstCombine.LLVM ?m.94076 EffectKind.pure ?m.94077
+⊢ ⟦?m.94077⟧ = Option ?m.94075
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1034:9: tactic 'unfold' failed, local variable 'lor_lor_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1045:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1054:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1059:31: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1059:31: tactic 'rfl' failed, the left-hand side
+  ⟦?m.96343⟧
+is not definitionally equal to the right-hand side
+  Option ?m.96341
+lor_lor_right2_before lor_lor_right2_after : Com InstCombine.LLVM ?m.96342 EffectKind.pure ?m.96343
+⊢ ⟦?m.96343⟧ = Option ?m.96341
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1060:9: tactic 'unfold' failed, local variable 'lor_lor_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1071:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1080:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1085:31: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1085:31: tactic 'rfl' failed, the left-hand side
+  ⟦?m.98592⟧
+is not definitionally equal to the right-hand side
+  Option ?m.98590
+lor_bor_right1_before lor_bor_right1_after : Com InstCombine.LLVM ?m.98591 EffectKind.pure ?m.98592
+⊢ ⟦?m.98592⟧ = Option ?m.98590
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1086:9: tactic 'unfold' failed, local variable 'lor_bor_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1097:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1106:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1111:31: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1111:31: tactic 'rfl' failed, the left-hand side
+  ⟦?m.100841⟧
+is not definitionally equal to the right-hand side
+  Option ?m.100839
+lor_bor_right2_before lor_bor_right2_after : Com InstCombine.LLVM ?m.100840 EffectKind.pure ?m.100841
+⊢ ⟦?m.100841⟧ = Option ?m.100839
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1112:9: tactic 'unfold' failed, local variable 'lor_bor_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1123:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1136:9: tactic 'unfold' failed, local variable 'bor_land_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1147:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1160:9: tactic 'unfold' failed, local variable 'bor_land_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1171:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1180:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1185:31: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1185:31: tactic 'rfl' failed, the left-hand side
+  ⟦?m.107374⟧
+is not definitionally equal to the right-hand side
+  Option ?m.107372
+bor_lor_right1_before bor_lor_right1_after : Com InstCombine.LLVM ?m.107373 EffectKind.pure ?m.107374
+⊢ ⟦?m.107374⟧ = Option ?m.107372
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1186:9: tactic 'unfold' failed, local variable 'bor_lor_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1197:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1206:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1211:31: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1211:31: tactic 'rfl' failed, the left-hand side
+  ⟦?m.109579⟧
+is not definitionally equal to the right-hand side
+  Option ?m.109577
+bor_lor_right2_before bor_lor_right2_after : Com InstCombine.LLVM ?m.109578 EffectKind.pure ?m.109579
+⊢ ⟦?m.109579⟧ = Option ?m.109577
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1212:9: tactic 'unfold' failed, local variable 'bor_lor_right2_before' has no definition
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.gselecthsafehboolhtransforms
+error: build failed
+⚠ [2488/2503] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2492/2503] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [2493/2503] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [2498/2503] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [2499/2503] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [2503/2503] Building SSA.Projects.InstCombine.tests.LLVM.gselecthsafehboolhtransforms
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.c --json
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:19:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:28:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:33:32: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:33:32: tactic 'rfl' failed, the left-hand side
+  ⟦?m.2265⟧
+is not definitionally equal to the right-hand side
+  Option ?m.2263
+land_land_left1_before land_land_left1_after : Com InstCombine.LLVM ?m.2264 EffectKind.pure ?m.2265
+⊢ ⟦?m.2265⟧ = Option ?m.2263
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:34:9: tactic 'unfold' failed, local variable 'land_land_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:45:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:54:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:59:32: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:59:32: tactic 'rfl' failed, the left-hand side
+  ⟦?m.4551⟧
+is not definitionally equal to the right-hand side
+  Option ?m.4549
+land_land_left2_before land_land_left2_after : Com InstCombine.LLVM ?m.4550 EffectKind.pure ?m.4551
+⊢ ⟦?m.4551⟧ = Option ?m.4549
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:60:9: tactic 'unfold' failed, local variable 'land_land_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:71:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:80:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:85:32: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:85:32: tactic 'rfl' failed, the left-hand side
+  ⟦?m.6788⟧
+is not definitionally equal to the right-hand side
+  Option ?m.6786
+land_band_left1_before land_band_left1_after : Com InstCombine.LLVM ?m.6787 EffectKind.pure ?m.6788
+⊢ ⟦?m.6788⟧ = Option ?m.6786
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:86:9: tactic 'unfold' failed, local variable 'land_band_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:97:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:106:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:111:32: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:111:32: tactic 'rfl' failed, the left-hand side
+  ⟦?m.9037⟧
+is not definitionally equal to the right-hand side
+  Option ?m.9035
+land_band_left2_before land_band_left2_after : Com InstCombine.LLVM ?m.9036 EffectKind.pure ?m.9037
+⊢ ⟦?m.9037⟧ = Option ?m.9035
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:112:9: tactic 'unfold' failed, local variable 'land_band_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:123:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:124:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:137:9: tactic 'unfold' failed, local variable 'land_lor_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:148:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:149:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:162:9: tactic 'unfold' failed, local variable 'land_lor_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:173:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:186:9: tactic 'unfold' failed, local variable 'land_bor_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:197:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:210:9: tactic 'unfold' failed, local variable 'land_bor_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:221:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:235:9: tactic 'unfold' failed, local variable 'band_land_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:246:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:260:9: tactic 'unfold' failed, local variable 'band_land_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:271:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:284:9: tactic 'unfold' failed, local variable 'band_lor_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:295:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:308:9: tactic 'unfold' failed, local variable 'band_lor_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:319:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:320:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:333:9: tactic 'unfold' failed, local variable 'lor_land_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:344:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:345:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:358:9: tactic 'unfold' failed, local variable 'lor_land_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:369:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:382:9: tactic 'unfold' failed, local variable 'lor_band_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:393:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:406:9: tactic 'unfold' failed, local variable 'lor_band_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:417:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:426:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:431:30: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:431:30: tactic 'rfl' failed, the left-hand side
+  ⟦?m.39185⟧
+is not definitionally equal to the right-hand side
+  Option ?m.39183
+lor_lor_left1_before lor_lor_left1_after : Com InstCombine.LLVM ?m.39184 EffectKind.pure ?m.39185
+⊢ ⟦?m.39185⟧ = Option ?m.39183
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:432:9: tactic 'unfold' failed, local variable 'lor_lor_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:443:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:452:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:457:30: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:457:30: tactic 'rfl' failed, the left-hand side
+  ⟦?m.41451⟧
+is not definitionally equal to the right-hand side
+  Option ?m.41449
+lor_lor_left2_before lor_lor_left2_after : Com InstCombine.LLVM ?m.41450 EffectKind.pure ?m.41451
+⊢ ⟦?m.41451⟧ = Option ?m.41449
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:458:9: tactic 'unfold' failed, local variable 'lor_lor_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:469:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:478:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:483:30: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:483:30: tactic 'rfl' failed, the left-hand side
+  ⟦?m.43688⟧
+is not definitionally equal to the right-hand side
+  Option ?m.43686
+lor_bor_left1_before lor_bor_left1_after : Com InstCombine.LLVM ?m.43687 EffectKind.pure ?m.43688
+⊢ ⟦?m.43688⟧ = Option ?m.43686
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:484:9: tactic 'unfold' failed, local variable 'lor_bor_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:495:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:504:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:509:30: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:509:30: tactic 'rfl' failed, the left-hand side
+  ⟦?m.45937⟧
+is not definitionally equal to the right-hand side
+  Option ?m.45935
+lor_bor_left2_before lor_bor_left2_after : Com InstCombine.LLVM ?m.45936 EffectKind.pure ?m.45937
+⊢ ⟦?m.45937⟧ = Option ?m.45935
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:510:9: tactic 'unfold' failed, local variable 'lor_bor_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:521:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:534:9: tactic 'unfold' failed, local variable 'bor_land_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:545:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:558:9: tactic 'unfold' failed, local variable 'bor_land_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:569:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:583:9: tactic 'unfold' failed, local variable 'bor_lor_left1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:594:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:608:9: tactic 'unfold' failed, local variable 'bor_lor_left2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:619:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:628:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:633:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:633:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.58405⟧
+is not definitionally equal to the right-hand side
+  Option ?m.58403
+land_land_right1_before land_land_right1_after : Com InstCombine.LLVM ?m.58404 EffectKind.pure ?m.58405
+⊢ ⟦?m.58405⟧ = Option ?m.58403
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:634:9: tactic 'unfold' failed, local variable 'land_land_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:645:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:654:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:659:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:659:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.60671⟧
+is not definitionally equal to the right-hand side
+  Option ?m.60669
+land_land_right2_before land_land_right2_after : Com InstCombine.LLVM ?m.60670 EffectKind.pure ?m.60671
+⊢ ⟦?m.60671⟧ = Option ?m.60669
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:660:9: tactic 'unfold' failed, local variable 'land_land_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:671:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:680:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:685:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:685:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.62920⟧
+is not definitionally equal to the right-hand side
+  Option ?m.62918
+land_band_right1_before land_band_right1_after : Com InstCombine.LLVM ?m.62919 EffectKind.pure ?m.62920
+⊢ ⟦?m.62920⟧ = Option ?m.62918
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:686:9: tactic 'unfold' failed, local variable 'land_band_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:697:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:706:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:711:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:711:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.65169⟧
+is not definitionally equal to the right-hand side
+  Option ?m.65167
+land_band_right2_before land_band_right2_after : Com InstCombine.LLVM ?m.65168 EffectKind.pure ?m.65169
+⊢ ⟦?m.65169⟧ = Option ?m.65167
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:712:9: tactic 'unfold' failed, local variable 'land_band_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:723:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:724:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:737:9: tactic 'unfold' failed, local variable 'land_lor_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:748:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:749:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:762:9: tactic 'unfold' failed, local variable 'land_lor_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:773:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:786:9: tactic 'unfold' failed, local variable 'land_bor_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:797:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:810:9: tactic 'unfold' failed, local variable 'land_bor_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:821:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:830:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:835:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:835:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.76296⟧
+is not definitionally equal to the right-hand side
+  Option ?m.76294
+band_land_right1_before band_land_right1_after : Com InstCombine.LLVM ?m.76295 EffectKind.pure ?m.76296
+⊢ ⟦?m.76296⟧ = Option ?m.76294
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:836:9: tactic 'unfold' failed, local variable 'band_land_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:847:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:856:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:861:33: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:861:33: tactic 'rfl' failed, the left-hand side
+  ⟦?m.78533⟧
+is not definitionally equal to the right-hand side
+  Option ?m.78531
+band_land_right2_before band_land_right2_after : Com InstCombine.LLVM ?m.78532 EffectKind.pure ?m.78533
+⊢ ⟦?m.78533⟧ = Option ?m.78531
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:862:9: tactic 'unfold' failed, local variable 'band_land_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:873:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:886:9: tactic 'unfold' failed, local variable 'band_lor_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:897:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:910:9: tactic 'unfold' failed, local variable 'band_lor_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:921:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:922:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:935:9: tactic 'unfold' failed, local variable 'lor_land_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:946:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:947:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:960:9: tactic 'unfold' failed, local variable 'lor_land_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:971:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:984:9: tactic 'unfold' failed, local variable 'lor_band_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:995:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1008:9: tactic 'unfold' failed, local variable 'lor_band_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1019:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1028:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1033:31: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1033:31: tactic 'rfl' failed, the left-hand side
+  ⟦?m.94077⟧
+is not definitionally equal to the right-hand side
+  Option ?m.94075
+lor_lor_right1_before lor_lor_right1_after : Com InstCombine.LLVM ?m.94076 EffectKind.pure ?m.94077
+⊢ ⟦?m.94077⟧ = Option ?m.94075
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1034:9: tactic 'unfold' failed, local variable 'lor_lor_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1045:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1054:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1059:31: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1059:31: tactic 'rfl' failed, the left-hand side
+  ⟦?m.96343⟧
+is not definitionally equal to the right-hand side
+  Option ?m.96341
+lor_lor_right2_before lor_lor_right2_after : Com InstCombine.LLVM ?m.96342 EffectKind.pure ?m.96343
+⊢ ⟦?m.96343⟧ = Option ?m.96341
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1060:9: tactic 'unfold' failed, local variable 'lor_lor_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1071:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1080:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1085:31: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1085:31: tactic 'rfl' failed, the left-hand side
+  ⟦?m.98592⟧
+is not definitionally equal to the right-hand side
+  Option ?m.98590
+lor_bor_right1_before lor_bor_right1_after : Com InstCombine.LLVM ?m.98591 EffectKind.pure ?m.98592
+⊢ ⟦?m.98592⟧ = Option ?m.98590
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1086:9: tactic 'unfold' failed, local variable 'lor_bor_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1097:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1106:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1111:31: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1111:31: tactic 'rfl' failed, the left-hand side
+  ⟦?m.100841⟧
+is not definitionally equal to the right-hand side
+  Option ?m.100839
+lor_bor_right2_before lor_bor_right2_after : Com InstCombine.LLVM ?m.100840 EffectKind.pure ?m.100841
+⊢ ⟦?m.100841⟧ = Option ?m.100839
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1112:9: tactic 'unfold' failed, local variable 'lor_bor_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1123:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1136:9: tactic 'unfold' failed, local variable 'bor_land_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1147:40: cannot convert suffix of i/f to int: false
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1160:9: tactic 'unfold' failed, local variable 'bor_land_right2_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1171:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1180:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1185:31: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1185:31: tactic 'rfl' failed, the left-hand side
+  ⟦?m.107374⟧
+is not definitionally equal to the right-hand side
+  Option ?m.107372
+bor_lor_right1_before bor_lor_right1_after : Com InstCombine.LLVM ?m.107373 EffectKind.pure ?m.107374
+⊢ ⟦?m.107374⟧ = Option ?m.107372
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1186:9: tactic 'unfold' failed, local variable 'bor_lor_right1_before' has no definition
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1197:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1206:40: expected i<int> or f<int>, found: true
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1211:31: could not synthesize default value for parameter 'h' using tactics
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1211:31: tactic 'rfl' failed, the left-hand side
+  ⟦?m.109579⟧
+is not definitionally equal to the right-hand side
+  Option ?m.109577
+bor_lor_right2_before bor_lor_right2_after : Com InstCombine.LLVM ?m.109578 EffectKind.pure ?m.109579
+⊢ ⟦?m.109579⟧ = Option ?m.109577
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gselecthsafehboolhtransforms.lean:1212:9: tactic 'unfold' failed, local variable 'bor_lor_right2_before' has no definition
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.gselecthsafehboolhtransforms
+error: build failed
