@@ -85,7 +85,7 @@
    "type": "git",
    "subDir": null,
    "scope": "",
-   "rev": "8b63ada45ec924ac81777a396f765ab981927d17",
+   "rev": "4883d00d308fa7734c2bda9468de30b0cb6848fb",
    "name": "leanwuzla",
    "manifestFile": "lake-manifest.json",
    "inputRev": "main",
