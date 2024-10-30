@@ -24,7 +24,7 @@ def and_sext_to_sel_before := [llvm|
 def and_sext_to_sel_after := [llvm|
 {
 ^0(%arg41 : i32, %arg42 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(0 : i32) : i32
   %1 = "llvm.select"(%arg42, %arg41, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   "llvm.return"(%1) : (i32) -> ()
 }
@@ -49,7 +49,7 @@ def or_sext_to_sel_before := [llvm|
 def or_sext_to_sel_after := [llvm|
 {
 ^0(%arg25 : i32, %arg26 : i1):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-1 : i32) : i32
   %1 = "llvm.select"(%arg26, %0, %arg25) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   "llvm.return"(%1) : (i32) -> ()
 }
@@ -91,7 +91,7 @@ theorem xor_sext_to_sel_proof : xor_sext_to_sel_before ⊑ xor_sext_to_sel_after
 def and_add_bool_to_select_before := [llvm|
 {
 ^0(%arg5 : i1, %arg6 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-1 : i32) : i32
   %1 = llvm.zext %arg5 : i1 to i32
   %2 = llvm.add %0, %1 : i32
   %3 = llvm.and %2, %arg6 : i32
@@ -101,7 +101,7 @@ def and_add_bool_to_select_before := [llvm|
 def and_add_bool_to_select_after := [llvm|
 {
 ^0(%arg5 : i1, %arg6 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(0 : i32) : i32
   %1 = "llvm.select"(%arg5, %0, %arg6) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   "llvm.return"(%1) : (i32) -> ()
 }
@@ -118,7 +118,7 @@ theorem and_add_bool_to_select_proof : and_add_bool_to_select_before ⊑ and_add
 def and_add_bool_to_select_multi_use_before := [llvm|
 {
 ^0(%arg0 : i1, %arg1 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-1 : i32) : i32
   %1 = llvm.zext %arg0 : i1 to i32
   %2 = llvm.add %0, %1 : i32
   %3 = llvm.and %2, %arg1 : i32
@@ -129,8 +129,8 @@ def and_add_bool_to_select_multi_use_before := [llvm|
 def and_add_bool_to_select_multi_use_after := [llvm|
 {
 ^0(%arg0 : i1, %arg1 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-1 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
   %2 = llvm.add %arg1, %0 : i32
   %3 = "llvm.select"(%arg0, %1, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   "llvm.return"(%3) : (i32) -> ()

@@ -16,8 +16,8 @@ section gshifthflags_statements
 def shl_add_nuw_before := [llvm|
 {
 ^0(%arg16 : i8, %arg17 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 63 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 2 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(63 : i8) : i8
+  %1 = llvm.mlir.constant(2 : i8) : i8
   %2 = llvm.and %arg16, %0 : i8
   %3 = llvm.and %arg17, %1 : i8
   %4 = llvm.shl %2, %3 : i8
@@ -27,8 +27,8 @@ def shl_add_nuw_before := [llvm|
 def shl_add_nuw_after := [llvm|
 {
 ^0(%arg16 : i8, %arg17 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 63 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 2 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(63 : i8) : i8
+  %1 = llvm.mlir.constant(2 : i8) : i8
   %2 = llvm.and %arg16, %0 : i8
   %3 = llvm.and %arg17, %1 : i8
   %4 = llvm.shl %2, %3 overflow<nuw> : i8
@@ -47,8 +47,8 @@ theorem shl_add_nuw_proof : shl_add_nuw_before ⊑ shl_add_nuw_after := by
 def shl_add_nuw_and_nsw_before := [llvm|
 {
 ^0(%arg12 : i8, %arg13 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 31 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 2 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(31 : i8) : i8
+  %1 = llvm.mlir.constant(2 : i8) : i8
   %2 = llvm.and %arg12, %0 : i8
   %3 = llvm.and %arg13, %1 : i8
   %4 = llvm.shl %2, %3 : i8
@@ -58,8 +58,8 @@ def shl_add_nuw_and_nsw_before := [llvm|
 def shl_add_nuw_and_nsw_after := [llvm|
 {
 ^0(%arg12 : i8, %arg13 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 31 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 2 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(31 : i8) : i8
+  %1 = llvm.mlir.constant(2 : i8) : i8
   %2 = llvm.and %arg12, %0 : i8
   %3 = llvm.and %arg13, %1 : i8
   %4 = llvm.shl %2, %3 overflow<nsw,nuw> : i8
@@ -78,8 +78,8 @@ theorem shl_add_nuw_and_nsw_proof : shl_add_nuw_and_nsw_before ⊑ shl_add_nuw_a
 def shl_add_nsw_before := [llvm|
 {
 ^0(%arg10 : i8, %arg11 : i8):
-  %0 = "llvm.mlir.constant"() <{value = -32 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 2 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(-32 : i8) : i8
+  %1 = llvm.mlir.constant(2 : i8) : i8
   %2 = llvm.or %arg10, %0 : i8
   %3 = llvm.and %arg11, %1 : i8
   %4 = llvm.shl %2, %3 : i8
@@ -89,8 +89,8 @@ def shl_add_nsw_before := [llvm|
 def shl_add_nsw_after := [llvm|
 {
 ^0(%arg10 : i8, %arg11 : i8):
-  %0 = "llvm.mlir.constant"() <{value = -32 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 2 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(-32 : i8) : i8
+  %1 = llvm.mlir.constant(2 : i8) : i8
   %2 = llvm.or %arg10, %0 : i8
   %3 = llvm.and %arg11, %1 : i8
   %4 = llvm.shl %2, %3 overflow<nsw> : i8

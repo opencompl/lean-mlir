@@ -16,8 +16,8 @@ section gzexthboolhaddhsub_statements
 def a_before := [llvm|
 {
 ^0(%arg48 : i1, %arg49 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(0 : i32) : i32
+  %1 = llvm.mlir.constant(1 : i32) : i32
   %2 = llvm.zext %arg48 : i1 to i32
   %3 = llvm.zext %arg49 : i1 to i32
   %4 = llvm.sub %0, %3 : i32
@@ -29,8 +29,8 @@ def a_before := [llvm|
 def a_after := [llvm|
 {
 ^0(%arg48 : i1, %arg49 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(2 : i32) : i32
+  %1 = llvm.mlir.constant(1 : i32) : i32
   %2 = llvm.sext %arg49 : i1 to i32
   %3 = "llvm.select"(%arg48, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   %4 = llvm.add %3, %2 overflow<nsw> : i32
@@ -49,7 +49,7 @@ theorem a_proof : a_before ⊑ a_after := by
 def PR30273_three_bools_before := [llvm|
 {
 ^0(%arg41 : i1, %arg42 : i1, %arg43 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
   %1 = llvm.zext %arg41 : i1 to i32
   %2 = llvm.add %1, %0 overflow<nsw> : i32
   %3 = "llvm.select"(%arg42, %2, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
@@ -61,8 +61,8 @@ def PR30273_three_bools_before := [llvm|
 def PR30273_three_bools_after := [llvm|
 {
 ^0(%arg41 : i1, %arg42 : i1, %arg43 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(2 : i32) : i32
+  %1 = llvm.mlir.constant(1 : i32) : i32
   %2 = llvm.zext %arg41 : i1 to i32
   %3 = "llvm.select"(%arg41, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   %4 = "llvm.select"(%arg42, %3, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
@@ -83,7 +83,7 @@ theorem PR30273_three_bools_proof : PR30273_three_bools_before ⊑ PR30273_three
 def zext_add_scalar_before := [llvm|
 {
 ^0(%arg40 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(42 : i32) : i32
   %1 = llvm.zext %arg40 : i1 to i32
   %2 = llvm.add %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -92,8 +92,8 @@ def zext_add_scalar_before := [llvm|
 def zext_add_scalar_after := [llvm|
 {
 ^0(%arg40 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 43 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(43 : i32) : i32
+  %1 = llvm.mlir.constant(42 : i32) : i32
   %2 = "llvm.select"(%arg40, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   "llvm.return"(%2) : (i32) -> ()
 }
@@ -110,7 +110,7 @@ theorem zext_add_scalar_proof : zext_add_scalar_before ⊑ zext_add_scalar_after
 def zext_negate_before := [llvm|
 {
 ^0(%arg37 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(0) : i64
   %1 = llvm.zext %arg37 : i1 to i64
   %2 = llvm.sub %0, %1 : i64
   "llvm.return"(%2) : (i64) -> ()
@@ -135,7 +135,7 @@ theorem zext_negate_proof : zext_negate_before ⊑ zext_negate_after := by
 def zext_sub_const_before := [llvm|
 {
 ^0(%arg33 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(42) : i64
   %1 = llvm.zext %arg33 : i1 to i64
   %2 = llvm.sub %0, %1 : i64
   "llvm.return"(%2) : (i64) -> ()
@@ -144,8 +144,8 @@ def zext_sub_const_before := [llvm|
 def zext_sub_const_after := [llvm|
 {
 ^0(%arg33 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 41 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(41) : i64
+  %1 = llvm.mlir.constant(42) : i64
   %2 = "llvm.select"(%arg33, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   "llvm.return"(%2) : (i64) -> ()
 }
@@ -162,7 +162,7 @@ theorem zext_sub_const_proof : zext_sub_const_before ⊑ zext_sub_const_after :=
 def sext_negate_before := [llvm|
 {
 ^0(%arg29 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(0) : i64
   %1 = llvm.sext %arg29 : i1 to i64
   %2 = llvm.sub %0, %1 : i64
   "llvm.return"(%2) : (i64) -> ()
@@ -187,7 +187,7 @@ theorem sext_negate_proof : sext_negate_before ⊑ sext_negate_after := by
 def sext_sub_const_before := [llvm|
 {
 ^0(%arg25 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(42) : i64
   %1 = llvm.sext %arg25 : i1 to i64
   %2 = llvm.sub %0, %1 : i64
   "llvm.return"(%2) : (i64) -> ()
@@ -196,8 +196,8 @@ def sext_sub_const_before := [llvm|
 def sext_sub_const_after := [llvm|
 {
 ^0(%arg25 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 43 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(43) : i64
+  %1 = llvm.mlir.constant(42) : i64
   %2 = "llvm.select"(%arg25, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   "llvm.return"(%2) : (i64) -> ()
 }
@@ -289,7 +289,7 @@ theorem sextbool_add_proof : sextbool_add_before ⊑ sextbool_add_after := by
 def sextbool_add_commute_before := [llvm|
 {
 ^0(%arg10 : i1, %arg11 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(42 : i32) : i32
   %1 = llvm.urem %arg11, %0 : i32
   %2 = llvm.sext %arg10 : i1 to i32
   %3 = llvm.add %1, %2 : i32
@@ -299,7 +299,7 @@ def sextbool_add_commute_before := [llvm|
 def sextbool_add_commute_after := [llvm|
 {
 ^0(%arg10 : i1, %arg11 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(42 : i32) : i32
   %1 = llvm.urem %arg11, %0 : i32
   %2 = llvm.sext %arg10 : i1 to i32
   %3 = llvm.add %1, %2 overflow<nsw> : i32

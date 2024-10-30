@@ -16,7 +16,7 @@ section gapinthnot_statements
 def test1_before := [llvm|
 {
 ^0(%arg2 : i33):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i33}> : () -> i33
+  %0 = llvm.mlir.constant(-1 : i33) : i33
   %1 = llvm.xor %arg2, %0 : i33
   %2 = llvm.xor %1, %0 : i33
   "llvm.return"(%2) : (i33) -> ()

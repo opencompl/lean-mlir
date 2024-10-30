@@ -216,7 +216,7 @@ theorem t1_flags_nuw_nsw_second_proof : t1_flags_nuw_nsw_second_before ⊑ t1_fl
 def t3_c0_before := [llvm|
 {
 ^0(%arg25 : i8, %arg26 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(42 : i8) : i8
   %1 = llvm.sub %0, %arg25 : i8
   %2 = llvm.sub %1, %arg26 : i8
   "llvm.return"(%2) : (i8) -> ()
@@ -225,7 +225,7 @@ def t3_c0_before := [llvm|
 def t3_c0_after := [llvm|
 {
 ^0(%arg25 : i8, %arg26 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(42 : i8) : i8
   %1 = llvm.add %arg25, %arg26 : i8
   %2 = llvm.sub %0, %1 : i8
   "llvm.return"(%2) : (i8) -> ()
@@ -243,7 +243,7 @@ theorem t3_c0_proof : t3_c0_before ⊑ t3_c0_after := by
 def t4_c1_before := [llvm|
 {
 ^0(%arg23 : i8, %arg24 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(42 : i8) : i8
   %1 = llvm.sub %arg23, %0 : i8
   %2 = llvm.sub %1, %arg24 : i8
   "llvm.return"(%2) : (i8) -> ()
@@ -252,7 +252,7 @@ def t4_c1_before := [llvm|
 def t4_c1_after := [llvm|
 {
 ^0(%arg23 : i8, %arg24 : i8):
-  %0 = "llvm.mlir.constant"() <{value = -42 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(-42 : i8) : i8
   %1 = llvm.add %arg23, %0 : i8
   %2 = llvm.sub %1, %arg24 : i8
   "llvm.return"(%2) : (i8) -> ()
@@ -270,7 +270,7 @@ theorem t4_c1_proof : t4_c1_before ⊑ t4_c1_after := by
 def t5_c2_before := [llvm|
 {
 ^0(%arg21 : i8, %arg22 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(42 : i8) : i8
   %1 = llvm.sub %arg21, %arg22 : i8
   %2 = llvm.sub %1, %0 : i8
   "llvm.return"(%2) : (i8) -> ()
@@ -279,7 +279,7 @@ def t5_c2_before := [llvm|
 def t5_c2_after := [llvm|
 {
 ^0(%arg21 : i8, %arg22 : i8):
-  %0 = "llvm.mlir.constant"() <{value = -42 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(-42 : i8) : i8
   %1 = llvm.sub %arg21, %arg22 : i8
   %2 = llvm.add %1, %0 : i8
   "llvm.return"(%2) : (i8) -> ()
@@ -297,8 +297,8 @@ theorem t5_c2_proof : t5_c2_before ⊑ t5_c2_after := by
 def t9_c0_c2_before := [llvm|
 {
 ^0(%arg13 : i8, %arg14 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 24 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(42 : i8) : i8
+  %1 = llvm.mlir.constant(24 : i8) : i8
   %2 = llvm.sub %0, %arg13 : i8
   %3 = llvm.sub %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
@@ -307,7 +307,7 @@ def t9_c0_c2_before := [llvm|
 def t9_c0_c2_after := [llvm|
 {
 ^0(%arg13 : i8, %arg14 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 18 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(18 : i8) : i8
   %1 = llvm.sub %0, %arg13 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
@@ -324,8 +324,8 @@ theorem t9_c0_c2_proof : t9_c0_c2_before ⊑ t9_c0_c2_after := by
 def t10_c1_c2_before := [llvm|
 {
 ^0(%arg11 : i8, %arg12 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 24 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(42 : i8) : i8
+  %1 = llvm.mlir.constant(24 : i8) : i8
   %2 = llvm.sub %arg11, %0 : i8
   %3 = llvm.sub %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
@@ -334,7 +334,7 @@ def t10_c1_c2_before := [llvm|
 def t10_c1_c2_after := [llvm|
 {
 ^0(%arg11 : i8, %arg12 : i8):
-  %0 = "llvm.mlir.constant"() <{value = -66 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(-66 : i8) : i8
   %1 = llvm.add %arg11, %0 : i8
   "llvm.return"(%1) : (i8) -> ()
 }

@@ -16,7 +16,7 @@ section gfoldhsubhofhnothtohinchofhadd_statements
 def p0_scalar_before := [llvm|
 {
 ^0(%arg14 : i32, %arg15 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-1 : i32) : i32
   %1 = llvm.xor %arg14, %0 : i32
   %2 = llvm.sub %arg15, %1 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -25,7 +25,7 @@ def p0_scalar_before := [llvm|
 def p0_scalar_after := [llvm|
 {
 ^0(%arg14 : i32, %arg15 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
   %1 = llvm.add %arg14, %0 : i32
   %2 = llvm.add %1, %arg15 : i32
   "llvm.return"(%2) : (i32) -> ()

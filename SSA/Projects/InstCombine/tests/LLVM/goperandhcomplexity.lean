@@ -16,8 +16,8 @@ section goperandhcomplexity_statements
 def neg_before := [llvm|
 {
 ^0(%arg10 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(42 : i8) : i8
+  %1 = llvm.mlir.constant(0 : i8) : i8
   %2 = llvm.udiv %arg10, %0 : i8
   %3 = llvm.sub %1, %arg10 : i8
   %4 = llvm.xor %3, %2 : i8
@@ -27,8 +27,8 @@ def neg_before := [llvm|
 def neg_after := [llvm|
 {
 ^0(%arg10 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(42 : i8) : i8
+  %1 = llvm.mlir.constant(0 : i8) : i8
   %2 = llvm.udiv %arg10, %0 : i8
   %3 = llvm.sub %1, %arg10 : i8
   %4 = llvm.xor %2, %3 : i8
@@ -47,8 +47,8 @@ theorem neg_proof : neg_before ⊑ neg_after := by
 def not_before := [llvm|
 {
 ^0(%arg7 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(42 : i8) : i8
+  %1 = llvm.mlir.constant(-1 : i8) : i8
   %2 = llvm.udiv %arg7, %0 : i8
   %3 = llvm.xor %1, %arg7 : i8
   %4 = llvm.mul %3, %2 : i8
@@ -58,8 +58,8 @@ def not_before := [llvm|
 def not_after := [llvm|
 {
 ^0(%arg7 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(42 : i8) : i8
+  %1 = llvm.mlir.constant(-1 : i8) : i8
   %2 = llvm.udiv %arg7, %0 : i8
   %3 = llvm.xor %arg7, %1 : i8
   %4 = llvm.mul %2, %3 : i8

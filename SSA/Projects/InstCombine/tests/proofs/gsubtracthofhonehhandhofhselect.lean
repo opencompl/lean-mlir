@@ -24,7 +24,7 @@ def t0_sub_of_trueval_before := [llvm|
 def t0_sub_of_trueval_after := [llvm|
 {
 ^0(%arg13 : i1, %arg14 : i8, %arg15 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(0 : i8) : i8
   %1 = llvm.sub %arg15, %arg14 : i8
   %2 = "llvm.select"(%arg13, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
   "llvm.return"(%2) : (i8) -> ()
@@ -50,7 +50,7 @@ def t1_sub_of_falseval_before := [llvm|
 def t1_sub_of_falseval_after := [llvm|
 {
 ^0(%arg10 : i1, %arg11 : i8, %arg12 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(0 : i8) : i8
   %1 = llvm.sub %arg11, %arg12 : i8
   %2 = "llvm.select"(%arg10, %1, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
   "llvm.return"(%2) : (i8) -> ()

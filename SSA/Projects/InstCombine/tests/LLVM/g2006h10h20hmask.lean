@@ -26,7 +26,7 @@ def foo_before := [llvm|
 def foo_after := [llvm|
 {
 ^0(%arg0 : i64, %arg1 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 4294967295 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(4294967295) : i64
   %1 = llvm.and %arg0, %arg1 : i64
   %2 = llvm.and %1, %0 : i64
   "llvm.return"(%2) : (i64) -> ()

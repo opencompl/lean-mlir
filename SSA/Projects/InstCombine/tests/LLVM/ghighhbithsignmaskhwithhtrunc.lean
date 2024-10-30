@@ -16,8 +16,8 @@ section ghighhbithsignmaskhwithhtrunc_statements
 def t0_before := [llvm|
 {
 ^0(%arg10 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 63 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(63) : i64
+  %1 = llvm.mlir.constant(0 : i32) : i32
   %2 = llvm.lshr %arg10, %0 : i64
   %3 = llvm.trunc %2 : i64 to i32
   %4 = llvm.sub %1, %3 : i32
@@ -27,7 +27,7 @@ def t0_before := [llvm|
 def t0_after := [llvm|
 {
 ^0(%arg10 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 63 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(63) : i64
   %1 = llvm.ashr %arg10, %0 : i64
   %2 = llvm.trunc %1 : i64 to i32
   "llvm.return"(%2) : (i32) -> ()
@@ -45,8 +45,8 @@ theorem t0_proof : t0_before ⊑ t0_after := by
 def t1_exact_before := [llvm|
 {
 ^0(%arg9 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 63 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(63) : i64
+  %1 = llvm.mlir.constant(0 : i32) : i32
   %2 = llvm.lshr %arg9, %0 : i64
   %3 = llvm.trunc %2 : i64 to i32
   %4 = llvm.sub %1, %3 : i32
@@ -56,7 +56,7 @@ def t1_exact_before := [llvm|
 def t1_exact_after := [llvm|
 {
 ^0(%arg9 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 63 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(63) : i64
   %1 = llvm.ashr %arg9, %0 : i64
   %2 = llvm.trunc %1 : i64 to i32
   "llvm.return"(%2) : (i32) -> ()
@@ -74,8 +74,8 @@ theorem t1_exact_proof : t1_exact_before ⊑ t1_exact_after := by
 def t2_before := [llvm|
 {
 ^0(%arg8 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 63 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(63) : i64
+  %1 = llvm.mlir.constant(0 : i32) : i32
   %2 = llvm.ashr %arg8, %0 : i64
   %3 = llvm.trunc %2 : i64 to i32
   %4 = llvm.sub %1, %3 : i32
@@ -85,7 +85,7 @@ def t2_before := [llvm|
 def t2_after := [llvm|
 {
 ^0(%arg8 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 63 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(63) : i64
   %1 = llvm.lshr %arg8, %0 : i64
   %2 = llvm.trunc %1 : i64 to i32
   "llvm.return"(%2) : (i32) -> ()
@@ -103,8 +103,8 @@ theorem t2_proof : t2_before ⊑ t2_after := by
 def t3_exact_before := [llvm|
 {
 ^0(%arg7 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 63 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(63) : i64
+  %1 = llvm.mlir.constant(0 : i32) : i32
   %2 = llvm.ashr %arg7, %0 : i64
   %3 = llvm.trunc %2 : i64 to i32
   %4 = llvm.sub %1, %3 : i32
@@ -114,7 +114,7 @@ def t3_exact_before := [llvm|
 def t3_exact_after := [llvm|
 {
 ^0(%arg7 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 63 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(63) : i64
   %1 = llvm.lshr %arg7, %0 : i64
   %2 = llvm.trunc %1 : i64 to i32
   "llvm.return"(%2) : (i32) -> ()
@@ -132,8 +132,8 @@ theorem t3_exact_proof : t3_exact_before ⊑ t3_exact_after := by
 def n9_before := [llvm|
 {
 ^0(%arg1 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 62 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(62) : i64
+  %1 = llvm.mlir.constant(0 : i32) : i32
   %2 = llvm.lshr %arg1, %0 : i64
   %3 = llvm.trunc %2 : i64 to i32
   %4 = llvm.sub %1, %3 : i32
@@ -143,8 +143,8 @@ def n9_before := [llvm|
 def n9_after := [llvm|
 {
 ^0(%arg1 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 62 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(62) : i64
+  %1 = llvm.mlir.constant(0 : i32) : i32
   %2 = llvm.lshr %arg1, %0 : i64
   %3 = llvm.trunc %2 : i64 to i32
   %4 = llvm.sub %1, %3 overflow<nsw> : i32
@@ -163,8 +163,8 @@ theorem n9_proof : n9_before ⊑ n9_after := by
 def n10_before := [llvm|
 {
 ^0(%arg0 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 63 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(63) : i64
+  %1 = llvm.mlir.constant(1 : i32) : i32
   %2 = llvm.lshr %arg0, %0 : i64
   %3 = llvm.trunc %2 : i64 to i32
   %4 = llvm.sub %1, %3 : i32
@@ -174,8 +174,8 @@ def n10_before := [llvm|
 def n10_after := [llvm|
 {
 ^0(%arg0 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 63 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(63) : i64
+  %1 = llvm.mlir.constant(1 : i32) : i32
   %2 = llvm.ashr %arg0, %0 : i64
   %3 = llvm.trunc %2 : i64 to i32
   %4 = llvm.add %3, %1 overflow<nsw> : i32

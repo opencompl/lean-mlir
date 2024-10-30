@@ -328,7 +328,7 @@ theorem narrow_zext_mul_proof : narrow_zext_mul_before âŠ‘ narrow_zext_mul_after
 def narrow_zext_ashr_keep_trunc_before := [llvm|
 {
 ^0(%arg8 : i8, %arg9 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
   %1 = llvm.sext %arg8 : i8 to i32
   %2 = llvm.sext %arg9 : i8 to i32
   %3 = llvm.add %1, %2 overflow<nsw> : i32
@@ -340,7 +340,7 @@ def narrow_zext_ashr_keep_trunc_before := [llvm|
 def narrow_zext_ashr_keep_trunc_after := [llvm|
 {
 ^0(%arg8 : i8, %arg9 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i16}> : () -> i16
+  %0 = llvm.mlir.constant(1 : i16) : i16
   %1 = llvm.sext %arg8 : i8 to i16
   %2 = llvm.sext %arg9 : i8 to i16
   %3 = llvm.add %1, %2 overflow<nsw> : i16
@@ -361,7 +361,7 @@ theorem narrow_zext_ashr_keep_trunc_proof : narrow_zext_ashr_keep_trunc_before â
 def narrow_zext_ashr_keep_trunc2_before := [llvm|
 {
 ^0(%arg6 : i9, %arg7 : i9):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(1) : i64
   %1 = llvm.sext %arg6 : i9 to i64
   %2 = llvm.sext %arg7 : i9 to i64
   %3 = llvm.add %1, %2 overflow<nsw> : i64
@@ -373,7 +373,7 @@ def narrow_zext_ashr_keep_trunc2_before := [llvm|
 def narrow_zext_ashr_keep_trunc2_after := [llvm|
 {
 ^0(%arg6 : i9, %arg7 : i9):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i16}> : () -> i16
+  %0 = llvm.mlir.constant(1 : i16) : i16
   %1 = llvm.zext %arg6 : i9 to i16
   %2 = llvm.zext %arg7 : i9 to i16
   %3 = llvm.add %1, %2 overflow<nsw,nuw> : i16
@@ -394,7 +394,7 @@ theorem narrow_zext_ashr_keep_trunc2_proof : narrow_zext_ashr_keep_trunc2_before
 def narrow_zext_ashr_keep_trunc3_before := [llvm|
 {
 ^0(%arg4 : i8, %arg5 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(1) : i64
   %1 = llvm.sext %arg4 : i8 to i64
   %2 = llvm.sext %arg5 : i8 to i64
   %3 = llvm.add %1, %2 overflow<nsw> : i64
@@ -406,7 +406,7 @@ def narrow_zext_ashr_keep_trunc3_before := [llvm|
 def narrow_zext_ashr_keep_trunc3_after := [llvm|
 {
 ^0(%arg4 : i8, %arg5 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i14}> : () -> i14
+  %0 = llvm.mlir.constant(1 : i14) : i14
   %1 = llvm.zext %arg4 : i8 to i14
   %2 = llvm.zext %arg5 : i8 to i14
   %3 = llvm.add %1, %2 overflow<nsw,nuw> : i14
@@ -427,7 +427,7 @@ theorem narrow_zext_ashr_keep_trunc3_proof : narrow_zext_ashr_keep_trunc3_before
 def dont_narrow_zext_ashr_keep_trunc_before := [llvm|
 {
 ^0(%arg0 : i8, %arg1 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i16}> : () -> i16
+  %0 = llvm.mlir.constant(1 : i16) : i16
   %1 = llvm.sext %arg0 : i8 to i16
   %2 = llvm.sext %arg1 : i8 to i16
   %3 = llvm.add %1, %2 overflow<nsw> : i16
@@ -439,7 +439,7 @@ def dont_narrow_zext_ashr_keep_trunc_before := [llvm|
 def dont_narrow_zext_ashr_keep_trunc_after := [llvm|
 {
 ^0(%arg0 : i8, %arg1 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i16}> : () -> i16
+  %0 = llvm.mlir.constant(1 : i16) : i16
   %1 = llvm.sext %arg0 : i8 to i16
   %2 = llvm.sext %arg1 : i8 to i16
   %3 = llvm.add %1, %2 overflow<nsw> : i16

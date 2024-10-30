@@ -16,8 +16,8 @@ section gpullhbinophthroughhshift_statements
 def and_signbit_shl_before := [llvm|
 {
 ^0(%arg23 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -65536 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-65536 : i32) : i32
+  %1 = llvm.mlir.constant(8 : i32) : i32
   %2 = llvm.and %arg23, %0 : i32
   %3 = llvm.shl %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -26,8 +26,8 @@ def and_signbit_shl_before := [llvm|
 def and_signbit_shl_after := [llvm|
 {
 ^0(%arg23 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -16777216 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(-16777216 : i32) : i32
   %2 = llvm.shl %arg23, %0 : i32
   %3 = llvm.and %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -45,8 +45,8 @@ theorem and_signbit_shl_proof : and_signbit_shl_before ⊑ and_signbit_shl_after
 def and_nosignbit_shl_before := [llvm|
 {
 ^0(%arg22 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 2147418112 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(2147418112 : i32) : i32
+  %1 = llvm.mlir.constant(8 : i32) : i32
   %2 = llvm.and %arg22, %0 : i32
   %3 = llvm.shl %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -55,8 +55,8 @@ def and_nosignbit_shl_before := [llvm|
 def and_nosignbit_shl_after := [llvm|
 {
 ^0(%arg22 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -16777216 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(-16777216 : i32) : i32
   %2 = llvm.shl %arg22, %0 : i32
   %3 = llvm.and %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -74,8 +74,8 @@ theorem and_nosignbit_shl_proof : and_nosignbit_shl_before ⊑ and_nosignbit_shl
 def or_signbit_shl_before := [llvm|
 {
 ^0(%arg21 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -65536 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-65536 : i32) : i32
+  %1 = llvm.mlir.constant(8 : i32) : i32
   %2 = llvm.or %arg21, %0 : i32
   %3 = llvm.shl %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -84,8 +84,8 @@ def or_signbit_shl_before := [llvm|
 def or_signbit_shl_after := [llvm|
 {
 ^0(%arg21 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -16777216 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(-16777216 : i32) : i32
   %2 = llvm.shl %arg21, %0 : i32
   %3 = llvm.or %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -103,8 +103,8 @@ theorem or_signbit_shl_proof : or_signbit_shl_before ⊑ or_signbit_shl_after :=
 def or_nosignbit_shl_before := [llvm|
 {
 ^0(%arg20 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 2147418112 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(2147418112 : i32) : i32
+  %1 = llvm.mlir.constant(8 : i32) : i32
   %2 = llvm.or %arg20, %0 : i32
   %3 = llvm.shl %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -113,8 +113,8 @@ def or_nosignbit_shl_before := [llvm|
 def or_nosignbit_shl_after := [llvm|
 {
 ^0(%arg20 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -16777216 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(-16777216 : i32) : i32
   %2 = llvm.shl %arg20, %0 : i32
   %3 = llvm.or %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -132,8 +132,8 @@ theorem or_nosignbit_shl_proof : or_nosignbit_shl_before ⊑ or_nosignbit_shl_af
 def xor_signbit_shl_before := [llvm|
 {
 ^0(%arg19 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -65536 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-65536 : i32) : i32
+  %1 = llvm.mlir.constant(8 : i32) : i32
   %2 = llvm.xor %arg19, %0 : i32
   %3 = llvm.shl %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -142,8 +142,8 @@ def xor_signbit_shl_before := [llvm|
 def xor_signbit_shl_after := [llvm|
 {
 ^0(%arg19 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -16777216 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(-16777216 : i32) : i32
   %2 = llvm.shl %arg19, %0 : i32
   %3 = llvm.xor %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -161,8 +161,8 @@ theorem xor_signbit_shl_proof : xor_signbit_shl_before ⊑ xor_signbit_shl_after
 def xor_nosignbit_shl_before := [llvm|
 {
 ^0(%arg18 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 2147418112 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(2147418112 : i32) : i32
+  %1 = llvm.mlir.constant(8 : i32) : i32
   %2 = llvm.xor %arg18, %0 : i32
   %3 = llvm.shl %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -171,8 +171,8 @@ def xor_nosignbit_shl_before := [llvm|
 def xor_nosignbit_shl_after := [llvm|
 {
 ^0(%arg18 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -16777216 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(-16777216 : i32) : i32
   %2 = llvm.shl %arg18, %0 : i32
   %3 = llvm.xor %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -190,8 +190,8 @@ theorem xor_nosignbit_shl_proof : xor_nosignbit_shl_before ⊑ xor_nosignbit_shl
 def add_signbit_shl_before := [llvm|
 {
 ^0(%arg17 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -65536 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-65536 : i32) : i32
+  %1 = llvm.mlir.constant(8 : i32) : i32
   %2 = llvm.add %arg17, %0 : i32
   %3 = llvm.shl %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -200,8 +200,8 @@ def add_signbit_shl_before := [llvm|
 def add_signbit_shl_after := [llvm|
 {
 ^0(%arg17 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -16777216 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(-16777216 : i32) : i32
   %2 = llvm.shl %arg17, %0 : i32
   %3 = llvm.add %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -219,8 +219,8 @@ theorem add_signbit_shl_proof : add_signbit_shl_before ⊑ add_signbit_shl_after
 def add_nosignbit_shl_before := [llvm|
 {
 ^0(%arg16 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 2147418112 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(2147418112 : i32) : i32
+  %1 = llvm.mlir.constant(8 : i32) : i32
   %2 = llvm.add %arg16, %0 : i32
   %3 = llvm.shl %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -229,8 +229,8 @@ def add_nosignbit_shl_before := [llvm|
 def add_nosignbit_shl_after := [llvm|
 {
 ^0(%arg16 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -16777216 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(-16777216 : i32) : i32
   %2 = llvm.shl %arg16, %0 : i32
   %3 = llvm.add %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -248,8 +248,8 @@ theorem add_nosignbit_shl_proof : add_nosignbit_shl_before ⊑ add_nosignbit_shl
 def and_signbit_lshr_before := [llvm|
 {
 ^0(%arg15 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -65536 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-65536 : i32) : i32
+  %1 = llvm.mlir.constant(8 : i32) : i32
   %2 = llvm.and %arg15, %0 : i32
   %3 = llvm.lshr %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -258,8 +258,8 @@ def and_signbit_lshr_before := [llvm|
 def and_signbit_lshr_after := [llvm|
 {
 ^0(%arg15 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 16776960 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(16776960 : i32) : i32
   %2 = llvm.lshr %arg15, %0 : i32
   %3 = llvm.and %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -277,8 +277,8 @@ theorem and_signbit_lshr_proof : and_signbit_lshr_before ⊑ and_signbit_lshr_af
 def and_nosignbit_lshr_before := [llvm|
 {
 ^0(%arg14 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 2147418112 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(2147418112 : i32) : i32
+  %1 = llvm.mlir.constant(8 : i32) : i32
   %2 = llvm.and %arg14, %0 : i32
   %3 = llvm.lshr %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -287,8 +287,8 @@ def and_nosignbit_lshr_before := [llvm|
 def and_nosignbit_lshr_after := [llvm|
 {
 ^0(%arg14 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8388352 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(8388352 : i32) : i32
   %2 = llvm.lshr %arg14, %0 : i32
   %3 = llvm.and %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -306,8 +306,8 @@ theorem and_nosignbit_lshr_proof : and_nosignbit_lshr_before ⊑ and_nosignbit_l
 def or_signbit_lshr_before := [llvm|
 {
 ^0(%arg13 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -65536 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-65536 : i32) : i32
+  %1 = llvm.mlir.constant(8 : i32) : i32
   %2 = llvm.or %arg13, %0 : i32
   %3 = llvm.lshr %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -316,8 +316,8 @@ def or_signbit_lshr_before := [llvm|
 def or_signbit_lshr_after := [llvm|
 {
 ^0(%arg13 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 16776960 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(16776960 : i32) : i32
   %2 = llvm.lshr %arg13, %0 : i32
   %3 = llvm.or %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -335,8 +335,8 @@ theorem or_signbit_lshr_proof : or_signbit_lshr_before ⊑ or_signbit_lshr_after
 def or_nosignbit_lshr_before := [llvm|
 {
 ^0(%arg12 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 2147418112 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(2147418112 : i32) : i32
+  %1 = llvm.mlir.constant(8 : i32) : i32
   %2 = llvm.or %arg12, %0 : i32
   %3 = llvm.lshr %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -345,8 +345,8 @@ def or_nosignbit_lshr_before := [llvm|
 def or_nosignbit_lshr_after := [llvm|
 {
 ^0(%arg12 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8388352 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(8388352 : i32) : i32
   %2 = llvm.lshr %arg12, %0 : i32
   %3 = llvm.or %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -364,8 +364,8 @@ theorem or_nosignbit_lshr_proof : or_nosignbit_lshr_before ⊑ or_nosignbit_lshr
 def xor_signbit_lshr_before := [llvm|
 {
 ^0(%arg11 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -65536 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-65536 : i32) : i32
+  %1 = llvm.mlir.constant(8 : i32) : i32
   %2 = llvm.xor %arg11, %0 : i32
   %3 = llvm.lshr %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -374,8 +374,8 @@ def xor_signbit_lshr_before := [llvm|
 def xor_signbit_lshr_after := [llvm|
 {
 ^0(%arg11 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 16776960 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(16776960 : i32) : i32
   %2 = llvm.lshr %arg11, %0 : i32
   %3 = llvm.xor %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -393,8 +393,8 @@ theorem xor_signbit_lshr_proof : xor_signbit_lshr_before ⊑ xor_signbit_lshr_af
 def xor_nosignbit_lshr_before := [llvm|
 {
 ^0(%arg10 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 2147418112 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(2147418112 : i32) : i32
+  %1 = llvm.mlir.constant(8 : i32) : i32
   %2 = llvm.xor %arg10, %0 : i32
   %3 = llvm.lshr %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -403,8 +403,8 @@ def xor_nosignbit_lshr_before := [llvm|
 def xor_nosignbit_lshr_after := [llvm|
 {
 ^0(%arg10 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8388352 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(8388352 : i32) : i32
   %2 = llvm.lshr %arg10, %0 : i32
   %3 = llvm.xor %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -422,8 +422,8 @@ theorem xor_nosignbit_lshr_proof : xor_nosignbit_lshr_before ⊑ xor_nosignbit_l
 def and_signbit_ashr_before := [llvm|
 {
 ^0(%arg7 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -65536 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-65536 : i32) : i32
+  %1 = llvm.mlir.constant(8 : i32) : i32
   %2 = llvm.and %arg7, %0 : i32
   %3 = llvm.ashr %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -432,8 +432,8 @@ def and_signbit_ashr_before := [llvm|
 def and_signbit_ashr_after := [llvm|
 {
 ^0(%arg7 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -256 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(-256 : i32) : i32
   %2 = llvm.ashr %arg7, %0 : i32
   %3 = llvm.and %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -451,8 +451,8 @@ theorem and_signbit_ashr_proof : and_signbit_ashr_before ⊑ and_signbit_ashr_af
 def and_nosignbit_ashr_before := [llvm|
 {
 ^0(%arg6 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 2147418112 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(2147418112 : i32) : i32
+  %1 = llvm.mlir.constant(8 : i32) : i32
   %2 = llvm.and %arg6, %0 : i32
   %3 = llvm.ashr %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -461,8 +461,8 @@ def and_nosignbit_ashr_before := [llvm|
 def and_nosignbit_ashr_after := [llvm|
 {
 ^0(%arg6 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8388352 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(8388352 : i32) : i32
   %2 = llvm.lshr %arg6, %0 : i32
   %3 = llvm.and %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -480,8 +480,8 @@ theorem and_nosignbit_ashr_proof : and_nosignbit_ashr_before ⊑ and_nosignbit_a
 def or_signbit_ashr_before := [llvm|
 {
 ^0(%arg5 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -65536 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-65536 : i32) : i32
+  %1 = llvm.mlir.constant(8 : i32) : i32
   %2 = llvm.or %arg5, %0 : i32
   %3 = llvm.ashr %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -490,8 +490,8 @@ def or_signbit_ashr_before := [llvm|
 def or_signbit_ashr_after := [llvm|
 {
 ^0(%arg5 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -256 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(-256 : i32) : i32
   %2 = llvm.lshr %arg5, %0 : i32
   %3 = llvm.or %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -509,8 +509,8 @@ theorem or_signbit_ashr_proof : or_signbit_ashr_before ⊑ or_signbit_ashr_after
 def or_nosignbit_ashr_before := [llvm|
 {
 ^0(%arg4 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 2147418112 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(2147418112 : i32) : i32
+  %1 = llvm.mlir.constant(8 : i32) : i32
   %2 = llvm.or %arg4, %0 : i32
   %3 = llvm.ashr %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -519,8 +519,8 @@ def or_nosignbit_ashr_before := [llvm|
 def or_nosignbit_ashr_after := [llvm|
 {
 ^0(%arg4 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8388352 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(8388352 : i32) : i32
   %2 = llvm.ashr %arg4, %0 : i32
   %3 = llvm.or %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -538,8 +538,8 @@ theorem or_nosignbit_ashr_proof : or_nosignbit_ashr_before ⊑ or_nosignbit_ashr
 def xor_signbit_ashr_before := [llvm|
 {
 ^0(%arg3 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -65536 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-65536 : i32) : i32
+  %1 = llvm.mlir.constant(8 : i32) : i32
   %2 = llvm.xor %arg3, %0 : i32
   %3 = llvm.ashr %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -548,8 +548,8 @@ def xor_signbit_ashr_before := [llvm|
 def xor_signbit_ashr_after := [llvm|
 {
 ^0(%arg3 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -256 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(-256 : i32) : i32
   %2 = llvm.ashr %arg3, %0 : i32
   %3 = llvm.xor %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -567,8 +567,8 @@ theorem xor_signbit_ashr_proof : xor_signbit_ashr_before ⊑ xor_signbit_ashr_af
 def xor_nosignbit_ashr_before := [llvm|
 {
 ^0(%arg2 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 2147418112 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(2147418112 : i32) : i32
+  %1 = llvm.mlir.constant(8 : i32) : i32
   %2 = llvm.xor %arg2, %0 : i32
   %3 = llvm.ashr %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -577,8 +577,8 @@ def xor_nosignbit_ashr_before := [llvm|
 def xor_nosignbit_ashr_after := [llvm|
 {
 ^0(%arg2 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8388352 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(8388352 : i32) : i32
   %2 = llvm.ashr %arg2, %0 : i32
   %3 = llvm.xor %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()

@@ -16,8 +16,8 @@ section gapinthselect_statements
 def zext_before := [llvm|
 {
 ^0(%arg10 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i41}> : () -> i41
-  %1 = "llvm.mlir.constant"() <{value = 0 : i41}> : () -> i41
+  %0 = llvm.mlir.constant(1 : i41) : i41
+  %1 = llvm.mlir.constant(0 : i41) : i41
   %2 = "llvm.select"(%arg10, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i41, i41) -> i41
   "llvm.return"(%2) : (i41) -> ()
 }
@@ -41,8 +41,8 @@ theorem zext_proof : zext_before ⊑ zext_after := by
 def sext_before := [llvm|
 {
 ^0(%arg9 : i1):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i41}> : () -> i41
-  %1 = "llvm.mlir.constant"() <{value = 0 : i41}> : () -> i41
+  %0 = llvm.mlir.constant(-1 : i41) : i41
+  %1 = llvm.mlir.constant(0 : i41) : i41
   %2 = "llvm.select"(%arg9, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i41, i41) -> i41
   "llvm.return"(%2) : (i41) -> ()
 }
@@ -66,8 +66,8 @@ theorem sext_proof : sext_before ⊑ sext_after := by
 def not_zext_before := [llvm|
 {
 ^0(%arg8 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i999}> : () -> i999
-  %1 = "llvm.mlir.constant"() <{value = 1 : i999}> : () -> i999
+  %0 = llvm.mlir.constant(0 : i999) : i999
+  %1 = llvm.mlir.constant(1 : i999) : i999
   %2 = "llvm.select"(%arg8, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i999, i999) -> i999
   "llvm.return"(%2) : (i999) -> ()
 }
@@ -75,7 +75,7 @@ def not_zext_before := [llvm|
 def not_zext_after := [llvm|
 {
 ^0(%arg8 : i1):
-  %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
+  %0 = llvm.mlir.constant(true) : i1
   %1 = llvm.xor %arg8, %0 : i1
   %2 = llvm.zext %1 : i1 to i999
   "llvm.return"(%2) : (i999) -> ()
@@ -93,8 +93,8 @@ theorem not_zext_proof : not_zext_before ⊑ not_zext_after := by
 def not_sext_before := [llvm|
 {
 ^0(%arg7 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i999}> : () -> i999
-  %1 = "llvm.mlir.constant"() <{value = -1 : i999}> : () -> i999
+  %0 = llvm.mlir.constant(0 : i999) : i999
+  %1 = llvm.mlir.constant(-1 : i999) : i999
   %2 = "llvm.select"(%arg7, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i999, i999) -> i999
   "llvm.return"(%2) : (i999) -> ()
 }
@@ -102,7 +102,7 @@ def not_sext_before := [llvm|
 def not_sext_after := [llvm|
 {
 ^0(%arg7 : i1):
-  %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
+  %0 = llvm.mlir.constant(true) : i1
   %1 = llvm.xor %arg7, %0 : i1
   %2 = llvm.sext %1 : i1 to i999
   "llvm.return"(%2) : (i999) -> ()

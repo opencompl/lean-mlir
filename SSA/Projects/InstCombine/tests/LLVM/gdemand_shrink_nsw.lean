@@ -16,15 +16,15 @@ section gdemand_shrink_nsw_statements
 def foo_before := [llvm|
 {
 ^0(%arg0 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 223 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 29 : i32}> : () -> i32
-  %2 = "llvm.mlir.constant"() <{value = -784568073 : i32}> : () -> i32
-  %3 = "llvm.mlir.constant"() <{value = 1874836915 : i32}> : () -> i32
-  %4 = "llvm.mlir.constant"() <{value = 221 : i32}> : () -> i32
-  %5 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %6 = "llvm.mlir.constant"() <{value = 1533579450 : i32}> : () -> i32
-  %7 = "llvm.mlir.constant"() <{value = -2147483648 : i32}> : () -> i32
-  %8 = "llvm.mlir.constant"() <{value = 749011377 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(223 : i32) : i32
+  %1 = llvm.mlir.constant(29 : i32) : i32
+  %2 = llvm.mlir.constant(-784568073 : i32) : i32
+  %3 = llvm.mlir.constant(1874836915 : i32) : i32
+  %4 = llvm.mlir.constant(221 : i32) : i32
+  %5 = llvm.mlir.constant(1 : i32) : i32
+  %6 = llvm.mlir.constant(1533579450 : i32) : i32
+  %7 = llvm.mlir.constant(-2147483648 : i32) : i32
+  %8 = llvm.mlir.constant(749011377 : i32) : i32
   %9 = llvm.and %arg0, %0 : i32
   %10 = llvm.xor %9, %1 : i32
   %11 = llvm.add %10, %2 overflow<nuw> : i32
@@ -43,13 +43,13 @@ def foo_before := [llvm|
 def foo_after := [llvm|
 {
 ^0(%arg0 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 223 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 29 : i32}> : () -> i32
-  %2 = "llvm.mlir.constant"() <{value = 1362915575 : i32}> : () -> i32
-  %3 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %4 = "llvm.mlir.constant"() <{value = 290 : i32}> : () -> i32
-  %5 = "llvm.mlir.constant"() <{value = 1533579450 : i32}> : () -> i32
-  %6 = "llvm.mlir.constant"() <{value = 749011377 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(223 : i32) : i32
+  %1 = llvm.mlir.constant(29 : i32) : i32
+  %2 = llvm.mlir.constant(1362915575 : i32) : i32
+  %3 = llvm.mlir.constant(1 : i32) : i32
+  %4 = llvm.mlir.constant(290 : i32) : i32
+  %5 = llvm.mlir.constant(1533579450 : i32) : i32
+  %6 = llvm.mlir.constant(749011377 : i32) : i32
   %7 = llvm.and %arg0, %0 : i32
   %8 = llvm.xor %7, %1 : i32
   %9 = llvm.add %8, %2 overflow<nsw,nuw> : i32

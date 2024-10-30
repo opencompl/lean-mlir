@@ -234,7 +234,7 @@ theorem urem_illegal_type_proof : urem_illegal_type_before ⊑ urem_illegal_type
 def udiv_i32_c_before := [llvm|
 {
 ^0(%arg14 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 10 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(10 : i32) : i32
   %1 = llvm.zext %arg14 : i8 to i32
   %2 = llvm.udiv %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -243,7 +243,7 @@ def udiv_i32_c_before := [llvm|
 def udiv_i32_c_after := [llvm|
 {
 ^0(%arg14 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 10 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(10 : i8) : i8
   %1 = llvm.udiv %arg14, %0 : i8
   %2 = llvm.zext %1 : i8 to i32
   "llvm.return"(%2) : (i32) -> ()
@@ -261,7 +261,7 @@ theorem udiv_i32_c_proof : udiv_i32_c_before ⊑ udiv_i32_c_after := by
 def udiv_i32_c_multiuse_before := [llvm|
 {
 ^0(%arg12 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 10 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(10 : i32) : i32
   %1 = llvm.zext %arg12 : i8 to i32
   %2 = llvm.udiv %1, %0 : i32
   %3 = llvm.add %1, %2 : i32
@@ -271,7 +271,7 @@ def udiv_i32_c_multiuse_before := [llvm|
 def udiv_i32_c_multiuse_after := [llvm|
 {
 ^0(%arg12 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 10 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(10 : i32) : i32
   %1 = llvm.zext %arg12 : i8 to i32
   %2 = llvm.udiv %1, %0 : i32
   %3 = llvm.add %2, %1 overflow<nsw,nuw> : i32
@@ -290,7 +290,7 @@ theorem udiv_i32_c_multiuse_proof : udiv_i32_c_multiuse_before ⊑ udiv_i32_c_mu
 def udiv_illegal_type_c_before := [llvm|
 {
 ^0(%arg11 : i9):
-  %0 = "llvm.mlir.constant"() <{value = 10 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(10 : i32) : i32
   %1 = llvm.zext %arg11 : i9 to i32
   %2 = llvm.udiv %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -299,7 +299,7 @@ def udiv_illegal_type_c_before := [llvm|
 def udiv_illegal_type_c_after := [llvm|
 {
 ^0(%arg11 : i9):
-  %0 = "llvm.mlir.constant"() <{value = 10 : i9}> : () -> i9
+  %0 = llvm.mlir.constant(10 : i9) : i9
   %1 = llvm.udiv %arg11, %0 : i9
   %2 = llvm.zext %1 : i9 to i32
   "llvm.return"(%2) : (i32) -> ()
@@ -317,7 +317,7 @@ theorem udiv_illegal_type_c_proof : udiv_illegal_type_c_before ⊑ udiv_illegal_
 def urem_i32_c_before := [llvm|
 {
 ^0(%arg10 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 10 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(10 : i32) : i32
   %1 = llvm.zext %arg10 : i8 to i32
   %2 = llvm.urem %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -326,7 +326,7 @@ def urem_i32_c_before := [llvm|
 def urem_i32_c_after := [llvm|
 {
 ^0(%arg10 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 10 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(10 : i8) : i8
   %1 = llvm.urem %arg10, %0 : i8
   %2 = llvm.zext %1 : i8 to i32
   "llvm.return"(%2) : (i32) -> ()
@@ -344,7 +344,7 @@ theorem urem_i32_c_proof : urem_i32_c_before ⊑ urem_i32_c_after := by
 def urem_i32_c_multiuse_before := [llvm|
 {
 ^0(%arg8 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 10 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(10 : i32) : i32
   %1 = llvm.zext %arg8 : i8 to i32
   %2 = llvm.urem %1, %0 : i32
   %3 = llvm.add %1, %2 : i32
@@ -354,7 +354,7 @@ def urem_i32_c_multiuse_before := [llvm|
 def urem_i32_c_multiuse_after := [llvm|
 {
 ^0(%arg8 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 10 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(10 : i32) : i32
   %1 = llvm.zext %arg8 : i8 to i32
   %2 = llvm.urem %1, %0 : i32
   %3 = llvm.add %2, %1 overflow<nsw,nuw> : i32
@@ -373,7 +373,7 @@ theorem urem_i32_c_multiuse_proof : urem_i32_c_multiuse_before ⊑ urem_i32_c_mu
 def urem_illegal_type_c_before := [llvm|
 {
 ^0(%arg7 : i9):
-  %0 = "llvm.mlir.constant"() <{value = 10 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(10 : i32) : i32
   %1 = llvm.zext %arg7 : i9 to i32
   %2 = llvm.urem %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -382,7 +382,7 @@ def urem_illegal_type_c_before := [llvm|
 def urem_illegal_type_c_after := [llvm|
 {
 ^0(%arg7 : i9):
-  %0 = "llvm.mlir.constant"() <{value = 10 : i9}> : () -> i9
+  %0 = llvm.mlir.constant(10 : i9) : i9
   %1 = llvm.urem %arg7, %0 : i9
   %2 = llvm.zext %1 : i9 to i32
   "llvm.return"(%2) : (i32) -> ()
@@ -400,7 +400,7 @@ theorem urem_illegal_type_c_proof : urem_illegal_type_c_before ⊑ urem_illegal_
 def udiv_c_i32_before := [llvm|
 {
 ^0(%arg6 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 10 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(10 : i32) : i32
   %1 = llvm.zext %arg6 : i8 to i32
   %2 = llvm.udiv %0, %1 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -409,7 +409,7 @@ def udiv_c_i32_before := [llvm|
 def udiv_c_i32_after := [llvm|
 {
 ^0(%arg6 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 10 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(10 : i8) : i8
   %1 = llvm.udiv %0, %arg6 : i8
   %2 = llvm.zext %1 : i8 to i32
   "llvm.return"(%2) : (i32) -> ()
@@ -427,7 +427,7 @@ theorem udiv_c_i32_proof : udiv_c_i32_before ⊑ udiv_c_i32_after := by
 def urem_c_i32_before := [llvm|
 {
 ^0(%arg5 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 10 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(10 : i32) : i32
   %1 = llvm.zext %arg5 : i8 to i32
   %2 = llvm.urem %0, %1 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -436,7 +436,7 @@ def urem_c_i32_before := [llvm|
 def urem_c_i32_after := [llvm|
 {
 ^0(%arg5 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 10 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(10 : i8) : i8
   %1 = llvm.urem %0, %arg5 : i8
   %2 = llvm.zext %1 : i8 to i32
   "llvm.return"(%2) : (i32) -> ()

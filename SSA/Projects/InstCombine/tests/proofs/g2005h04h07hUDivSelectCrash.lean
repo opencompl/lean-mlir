@@ -16,8 +16,8 @@ section g2005h04h07hUDivSelectCrash_statements
 def test_before := [llvm|
 {
 ^0(%arg0 : i1, %arg1 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(1 : i32) : i32
   %2 = "llvm.select"(%arg0, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   %3 = llvm.udiv %arg1, %2 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -26,8 +26,8 @@ def test_before := [llvm|
 def test_after := [llvm|
 {
 ^0(%arg0 : i1, %arg1 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(3 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
   %2 = "llvm.select"(%arg0, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   %3 = llvm.lshr %arg1, %2 : i32
   "llvm.return"(%3) : (i32) -> ()

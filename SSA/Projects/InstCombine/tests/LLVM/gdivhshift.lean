@@ -16,7 +16,7 @@ section gdivhshift_statements
 def t1_before := [llvm|
 {
 ^0(%arg241 : i16, %arg242 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(2 : i32) : i32
   %1 = llvm.zext %arg241 : i16 to i32
   %2 = llvm.shl %0, %arg242 : i32
   %3 = llvm.sdiv %1, %2 : i32
@@ -26,7 +26,7 @@ def t1_before := [llvm|
 def t1_after := [llvm|
 {
 ^0(%arg241 : i16, %arg242 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
   %1 = llvm.zext %arg241 : i16 to i32
   %2 = llvm.add %arg242, %0 : i32
   %3 = llvm.lshr %1, %2 : i32
@@ -45,7 +45,7 @@ theorem t1_proof : t1_before ⊑ t1_after := by
 def t2_before := [llvm|
 {
 ^0(%arg237 : i64, %arg238 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
   %1 = llvm.shl %0, %arg238 : i32
   %2 = llvm.zext %1 : i32 to i64
   %3 = llvm.udiv %arg237, %2 : i64
@@ -72,7 +72,7 @@ theorem t2_proof : t2_before ⊑ t2_after := by
 def t3_before := [llvm|
 {
 ^0(%arg235 : i64, %arg236 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 4 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(4 : i32) : i32
   %1 = llvm.shl %0, %arg236 : i32
   %2 = llvm.zext %1 : i32 to i64
   %3 = llvm.udiv %arg235, %2 : i64
@@ -82,7 +82,7 @@ def t3_before := [llvm|
 def t3_after := [llvm|
 {
 ^0(%arg235 : i64, %arg236 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(2 : i32) : i32
   %1 = llvm.add %arg236, %0 : i32
   %2 = llvm.zext %1 : i32 to i64
   %3 = llvm.lshr %arg235, %2 : i64
@@ -101,9 +101,9 @@ theorem t3_proof : t3_before ⊑ t3_after := by
 def t5_before := [llvm|
 {
 ^0(%arg230 : i1, %arg231 : i1, %arg232 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 32 : i32}> : () -> i32
-  %2 = "llvm.mlir.constant"() <{value = 64 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(32 : i32) : i32
+  %2 = llvm.mlir.constant(64 : i32) : i32
   %3 = llvm.shl %0, %arg232 : i32
   %4 = "llvm.select"(%arg230, %1, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   %5 = "llvm.select"(%arg231, %4, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
@@ -114,8 +114,8 @@ def t5_before := [llvm|
 def t5_after := [llvm|
 {
 ^0(%arg230 : i1, %arg231 : i1, %arg232 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 5 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 6 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(5 : i32) : i32
+  %1 = llvm.mlir.constant(6 : i32) : i32
   %2 = "llvm.select"(%arg230, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   %3 = "llvm.select"(%arg231, %2, %arg232) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   %4 = llvm.lshr %arg232, %3 : i32
@@ -134,7 +134,7 @@ theorem t5_proof : t5_before ⊑ t5_after := by
 def t7_before := [llvm|
 {
 ^0(%arg209 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(2 : i32) : i32
   %1 = llvm.shl %arg209, %0 overflow<nsw> : i32
   %2 = llvm.sdiv %1, %arg209 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -143,7 +143,7 @@ def t7_before := [llvm|
 def t7_after := [llvm|
 {
 ^0(%arg209 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 4 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(4 : i32) : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
@@ -167,7 +167,7 @@ def t10_before := [llvm|
 def t10_after := [llvm|
 {
 ^0(%arg205 : i32, %arg206 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
   %1 = llvm.shl %0, %arg206 overflow<nsw,nuw> : i32
   "llvm.return"(%1) : (i32) -> ()
 }
@@ -184,7 +184,7 @@ theorem t10_proof : t10_before ⊑ t10_after := by
 def t12_before := [llvm|
 {
 ^0(%arg202 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(2 : i32) : i32
   %1 = llvm.shl %arg202, %0 overflow<nuw> : i32
   %2 = llvm.udiv %1, %arg202 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -193,7 +193,7 @@ def t12_before := [llvm|
 def t12_after := [llvm|
 {
 ^0(%arg202 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 4 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(4 : i32) : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
@@ -217,7 +217,7 @@ def t15_before := [llvm|
 def t15_after := [llvm|
 {
 ^0(%arg198 : i32, %arg199 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
   %1 = llvm.shl %0, %arg199 overflow<nuw> : i32
   "llvm.return"(%1) : (i32) -> ()
 }
@@ -243,7 +243,7 @@ def sdiv_mul_shl_nsw_before := [llvm|
 def sdiv_mul_shl_nsw_after := [llvm|
 {
 ^0(%arg193 : i5, %arg194 : i5, %arg195 : i5):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i5}> : () -> i5
+  %0 = llvm.mlir.constant(1 : i5) : i5
   %1 = llvm.shl %0, %arg195 overflow<nuw> : i5
   %2 = llvm.sdiv %arg194, %1 : i5
   "llvm.return"(%2) : (i5) -> ()
@@ -270,7 +270,7 @@ def sdiv_mul_shl_nsw_exact_commute1_before := [llvm|
 def sdiv_mul_shl_nsw_exact_commute1_after := [llvm|
 {
 ^0(%arg190 : i5, %arg191 : i5, %arg192 : i5):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i5}> : () -> i5
+  %0 = llvm.mlir.constant(1 : i5) : i5
   %1 = llvm.shl %0, %arg192 overflow<nuw> : i5
   %2 = llvm.sdiv %arg191, %1 : i5
   "llvm.return"(%2) : (i5) -> ()
@@ -347,7 +347,7 @@ def udiv_shl_mul_nuw_before := [llvm|
 def udiv_shl_mul_nuw_after := [llvm|
 {
 ^0(%arg148 : i5, %arg149 : i5, %arg150 : i5):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i5}> : () -> i5
+  %0 = llvm.mlir.constant(1 : i5) : i5
   %1 = llvm.shl %0, %arg150 overflow<nuw> : i5
   %2 = llvm.udiv %1, %arg149 : i5
   "llvm.return"(%2) : (i5) -> ()
@@ -374,7 +374,7 @@ def udiv_shl_mul_nuw_swap_before := [llvm|
 def udiv_shl_mul_nuw_swap_after := [llvm|
 {
 ^0(%arg145 : i5, %arg146 : i5, %arg147 : i5):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i5}> : () -> i5
+  %0 = llvm.mlir.constant(1 : i5) : i5
   %1 = llvm.shl %0, %arg147 overflow<nuw> : i5
   %2 = llvm.udiv %1, %arg146 : i5
   "llvm.return"(%2) : (i5) -> ()
@@ -401,7 +401,7 @@ def udiv_shl_mul_nuw_exact_before := [llvm|
 def udiv_shl_mul_nuw_exact_after := [llvm|
 {
 ^0(%arg142 : i5, %arg143 : i5, %arg144 : i5):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i5}> : () -> i5
+  %0 = llvm.mlir.constant(1 : i5) : i5
   %1 = llvm.shl %0, %arg144 overflow<nuw> : i5
   %2 = llvm.udiv %1, %arg143 : i5
   "llvm.return"(%2) : (i5) -> ()
@@ -494,8 +494,8 @@ theorem udiv_shl_shl_nuw_nsw2_proof : udiv_shl_shl_nuw_nsw2_before ⊑ udiv_shl_
 def sdiv_shl_pair_const_before := [llvm|
 {
 ^0(%arg47 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(2 : i32) : i32
+  %1 = llvm.mlir.constant(1 : i32) : i32
   %2 = llvm.shl %arg47, %0 overflow<nsw> : i32
   %3 = llvm.shl %arg47, %1 overflow<nsw> : i32
   %4 = llvm.sdiv %2, %3 : i32
@@ -505,7 +505,7 @@ def sdiv_shl_pair_const_before := [llvm|
 def sdiv_shl_pair_const_after := [llvm|
 {
 ^0(%arg47 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(2 : i32) : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
@@ -521,8 +521,8 @@ theorem sdiv_shl_pair_const_proof : sdiv_shl_pair_const_before ⊑ sdiv_shl_pair
 def udiv_shl_pair_const_before := [llvm|
 {
 ^0(%arg46 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(2 : i32) : i32
+  %1 = llvm.mlir.constant(1 : i32) : i32
   %2 = llvm.shl %arg46, %0 overflow<nuw> : i32
   %3 = llvm.shl %arg46, %1 overflow<nuw> : i32
   %4 = llvm.udiv %2, %3 : i32
@@ -532,7 +532,7 @@ def udiv_shl_pair_const_before := [llvm|
 def udiv_shl_pair_const_after := [llvm|
 {
 ^0(%arg46 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(2 : i32) : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
@@ -557,7 +557,7 @@ def sdiv_shl_pair1_before := [llvm|
 def sdiv_shl_pair1_after := [llvm|
 {
 ^0(%arg43 : i32, %arg44 : i32, %arg45 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
   %1 = llvm.shl %0, %arg44 overflow<nsw,nuw> : i32
   %2 = llvm.lshr %1, %arg45 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -584,7 +584,7 @@ def sdiv_shl_pair2_before := [llvm|
 def sdiv_shl_pair2_after := [llvm|
 {
 ^0(%arg40 : i32, %arg41 : i32, %arg42 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
   %1 = llvm.shl %0, %arg41 overflow<nsw,nuw> : i32
   %2 = llvm.lshr %1, %arg42 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -611,7 +611,7 @@ def sdiv_shl_pair3_before := [llvm|
 def sdiv_shl_pair3_after := [llvm|
 {
 ^0(%arg37 : i32, %arg38 : i32, %arg39 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
   %1 = llvm.shl %0, %arg38 overflow<nuw> : i32
   %2 = llvm.lshr %1, %arg39 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -638,7 +638,7 @@ def udiv_shl_pair1_before := [llvm|
 def udiv_shl_pair1_after := [llvm|
 {
 ^0(%arg30 : i32, %arg31 : i32, %arg32 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
   %1 = llvm.shl %0, %arg31 overflow<nuw> : i32
   %2 = llvm.lshr %1, %arg32 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -665,7 +665,7 @@ def udiv_shl_pair2_before := [llvm|
 def udiv_shl_pair2_after := [llvm|
 {
 ^0(%arg27 : i32, %arg28 : i32, %arg29 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
   %1 = llvm.shl %0, %arg28 overflow<nsw,nuw> : i32
   %2 = llvm.lshr %1, %arg29 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -692,7 +692,7 @@ def udiv_shl_pair3_before := [llvm|
 def udiv_shl_pair3_after := [llvm|
 {
 ^0(%arg24 : i32, %arg25 : i32, %arg26 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
   %1 = llvm.shl %0, %arg25 overflow<nuw> : i32
   %2 = llvm.lshr %1, %arg26 : i32
   "llvm.return"(%2) : (i32) -> ()

@@ -16,7 +16,7 @@ section gxor_statements
 def test0_before := [llvm|
 {
 ^0(%arg210 : i1):
-  %0 = "llvm.mlir.constant"() <{value = false}> : () -> i1
+  %0 = llvm.mlir.constant(false) : i1
   %1 = llvm.xor %arg210, %0 : i1
   "llvm.return"(%1) : (i1) -> ()
 }
@@ -39,7 +39,7 @@ theorem test0_proof : test0_before ⊑ test0_after := by
 def test1_before := [llvm|
 {
 ^0(%arg209 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(0 : i32) : i32
   %1 = llvm.xor %arg209, %0 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
@@ -69,7 +69,7 @@ def test2_before := [llvm|
 def test2_after := [llvm|
 {
 ^0(%arg208 : i1):
-  %0 = "llvm.mlir.constant"() <{value = false}> : () -> i1
+  %0 = llvm.mlir.constant(false) : i1
   "llvm.return"(%0) : (i1) -> ()
 }
 ]
@@ -92,7 +92,7 @@ def test3_before := [llvm|
 def test3_after := [llvm|
 {
 ^0(%arg207 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(0 : i32) : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
@@ -108,7 +108,7 @@ theorem test3_proof : test3_before ⊑ test3_after := by
 def test4_before := [llvm|
 {
 ^0(%arg206 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-1 : i32) : i32
   %1 = llvm.xor %0, %arg206 : i32
   %2 = llvm.xor %arg206, %1 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -117,7 +117,7 @@ def test4_before := [llvm|
 def test4_after := [llvm|
 {
 ^0(%arg206 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-1 : i32) : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
@@ -133,7 +133,7 @@ theorem test4_proof : test4_before ⊑ test4_after := by
 def test5_before := [llvm|
 {
 ^0(%arg205 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 123 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(123 : i32) : i32
   %1 = llvm.or %arg205, %0 : i32
   %2 = llvm.xor %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -142,7 +142,7 @@ def test5_before := [llvm|
 def test5_after := [llvm|
 {
 ^0(%arg205 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -124 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-124 : i32) : i32
   %1 = llvm.and %arg205, %0 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
@@ -159,7 +159,7 @@ theorem test5_proof : test5_before ⊑ test5_after := by
 def test6_before := [llvm|
 {
 ^0(%arg204 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 17 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(17 : i8) : i8
   %1 = llvm.xor %arg204, %0 : i8
   %2 = llvm.xor %1, %0 : i8
   "llvm.return"(%2) : (i8) -> ()
@@ -183,8 +183,8 @@ theorem test6_proof : test6_before ⊑ test6_after := by
 def test7_before := [llvm|
 {
 ^0(%arg202 : i32, %arg203 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 7 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 128 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(7 : i32) : i32
+  %1 = llvm.mlir.constant(128 : i32) : i32
   %2 = llvm.and %arg202, %0 : i32
   %3 = llvm.and %arg203, %1 : i32
   %4 = llvm.xor %2, %3 : i32
@@ -194,8 +194,8 @@ def test7_before := [llvm|
 def test7_after := [llvm|
 {
 ^0(%arg202 : i32, %arg203 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 7 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 128 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(7 : i32) : i32
+  %1 = llvm.mlir.constant(128 : i32) : i32
   %2 = llvm.and %arg202, %0 : i32
   %3 = llvm.and %arg203, %1 : i32
   %4 = llvm.or %2, %3 : i32
@@ -214,8 +214,8 @@ theorem test7_proof : test7_before ⊑ test7_after := by
 def test10_before := [llvm|
 {
 ^0(%arg198 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 4 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
+  %1 = llvm.mlir.constant(4 : i8) : i8
   %2 = llvm.and %arg198, %0 : i8
   %3 = llvm.xor %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
@@ -224,8 +224,8 @@ def test10_before := [llvm|
 def test10_after := [llvm|
 {
 ^0(%arg198 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 4 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
+  %1 = llvm.mlir.constant(4 : i8) : i8
   %2 = llvm.and %arg198, %0 : i8
   %3 = llvm.or %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
@@ -243,8 +243,8 @@ theorem test10_proof : test10_before ⊑ test10_after := by
 def test11_before := [llvm|
 {
 ^0(%arg197 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 12 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 4 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(12 : i8) : i8
+  %1 = llvm.mlir.constant(4 : i8) : i8
   %2 = llvm.or %arg197, %0 : i8
   %3 = llvm.xor %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
@@ -253,8 +253,8 @@ def test11_before := [llvm|
 def test11_after := [llvm|
 {
 ^0(%arg197 : i8):
-  %0 = "llvm.mlir.constant"() <{value = -13 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 8 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(-13 : i8) : i8
+  %1 = llvm.mlir.constant(8 : i8) : i8
   %2 = llvm.and %arg197, %0 : i8
   %3 = llvm.or %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
@@ -272,8 +272,8 @@ theorem test11_proof : test11_before ⊑ test11_after := by
 def test18_before := [llvm|
 {
 ^0(%arg194 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 123 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-1 : i32) : i32
+  %1 = llvm.mlir.constant(123 : i32) : i32
   %2 = llvm.xor %arg194, %0 : i32
   %3 = llvm.sub %1, %2 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -282,7 +282,7 @@ def test18_before := [llvm|
 def test18_after := [llvm|
 {
 ^0(%arg194 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 124 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(124 : i32) : i32
   %1 = llvm.add %arg194, %0 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
@@ -322,8 +322,8 @@ theorem test19_proof : test19_before ⊑ test19_after := by
 def test22_before := [llvm|
 {
 ^0(%arg189 : i1):
-  %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
-  %1 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(true) : i1
+  %1 = llvm.mlir.constant(1 : i32) : i32
   %2 = llvm.xor %arg189, %0 : i1
   %3 = llvm.zext %2 : i1 to i32
   %4 = llvm.xor %3, %1 : i32
@@ -349,8 +349,8 @@ theorem test22_proof : test22_before ⊑ test22_after := by
 def fold_zext_xor_sandwich_before := [llvm|
 {
 ^0(%arg188 : i1):
-  %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
-  %1 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(true) : i1
+  %1 = llvm.mlir.constant(2 : i32) : i32
   %2 = llvm.xor %arg188, %0 : i1
   %3 = llvm.zext %2 : i1 to i32
   %4 = llvm.xor %3, %1 : i32
@@ -360,7 +360,7 @@ def fold_zext_xor_sandwich_before := [llvm|
 def fold_zext_xor_sandwich_after := [llvm|
 {
 ^0(%arg188 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(3 : i32) : i32
   %1 = llvm.zext %arg188 : i1 to i32
   %2 = llvm.xor %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -378,7 +378,7 @@ theorem fold_zext_xor_sandwich_proof : fold_zext_xor_sandwich_before ⊑ fold_ze
 def test25_before := [llvm|
 {
 ^0(%arg181 : i32, %arg182 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-1 : i32) : i32
   %1 = llvm.xor %arg182, %0 : i32
   %2 = llvm.and %1, %arg181 : i32
   %3 = llvm.xor %2, %arg181 : i32
@@ -404,8 +404,8 @@ theorem test25_proof : test25_before ⊑ test25_after := by
 def test28_before := [llvm|
 {
 ^0(%arg177 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -2147483647 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -2147483648 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-2147483647 : i32) : i32
+  %1 = llvm.mlir.constant(-2147483648 : i32) : i32
   %2 = llvm.add %arg177, %0 : i32
   %3 = llvm.xor %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -414,7 +414,7 @@ def test28_before := [llvm|
 def test28_after := [llvm|
 {
 ^0(%arg177 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
   %1 = llvm.add %arg177, %0 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
@@ -431,8 +431,8 @@ theorem test28_proof : test28_before ⊑ test28_after := by
 def test28_sub_before := [llvm|
 {
 ^0(%arg175 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -2147483647 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -2147483648 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-2147483647 : i32) : i32
+  %1 = llvm.mlir.constant(-2147483648 : i32) : i32
   %2 = llvm.sub %0, %arg175 : i32
   %3 = llvm.xor %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -441,7 +441,7 @@ def test28_sub_before := [llvm|
 def test28_sub_after := [llvm|
 {
 ^0(%arg175 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
   %1 = llvm.sub %0, %arg175 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
@@ -458,9 +458,9 @@ theorem test28_sub_proof : test28_sub_before ⊑ test28_sub_after := by
 def test29_before := [llvm|
 {
 ^0(%arg173 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 1000 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 10 : i32}> : () -> i32
-  %2 = "llvm.mlir.constant"() <{value = 123 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1000 : i32) : i32
+  %1 = llvm.mlir.constant(10 : i32) : i32
+  %2 = llvm.mlir.constant(123 : i32) : i32
   %3 = "llvm.select"(%arg173, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   %4 = llvm.xor %3, %2 : i32
   "llvm.return"(%4) : (i32) -> ()
@@ -469,8 +469,8 @@ def test29_before := [llvm|
 def test29_after := [llvm|
 {
 ^0(%arg173 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 915 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 113 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(915 : i32) : i32
+  %1 = llvm.mlir.constant(113 : i32) : i32
   %2 = "llvm.select"(%arg173, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   "llvm.return"(%2) : (i32) -> ()
 }
@@ -487,7 +487,7 @@ theorem test29_proof : test29_before ⊑ test29_after := by
 def or_xor_commute1_before := [llvm|
 {
 ^0(%arg166 : i32, %arg167 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(42 : i32) : i32
   %1 = llvm.udiv %0, %arg166 : i32
   %2 = llvm.udiv %0, %arg167 : i32
   %3 = llvm.or %2, %1 : i32
@@ -498,8 +498,8 @@ def or_xor_commute1_before := [llvm|
 def or_xor_commute1_after := [llvm|
 {
 ^0(%arg166 : i32, %arg167 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(42 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
   %2 = llvm.udiv %0, %arg166 : i32
   %3 = llvm.udiv %0, %arg167 : i32
   %4 = llvm.xor %3, %1 : i32
@@ -519,7 +519,7 @@ theorem or_xor_commute1_proof : or_xor_commute1_before ⊑ or_xor_commute1_after
 def or_xor_commute2_before := [llvm|
 {
 ^0(%arg164 : i32, %arg165 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(42 : i32) : i32
   %1 = llvm.udiv %0, %arg164 : i32
   %2 = llvm.udiv %0, %arg165 : i32
   %3 = llvm.or %1, %2 : i32
@@ -530,8 +530,8 @@ def or_xor_commute2_before := [llvm|
 def or_xor_commute2_after := [llvm|
 {
 ^0(%arg164 : i32, %arg165 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(42 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
   %2 = llvm.udiv %0, %arg164 : i32
   %3 = llvm.udiv %0, %arg165 : i32
   %4 = llvm.xor %3, %1 : i32
@@ -551,7 +551,7 @@ theorem or_xor_commute2_proof : or_xor_commute2_before ⊑ or_xor_commute2_after
 def or_xor_commute3_before := [llvm|
 {
 ^0(%arg162 : i32, %arg163 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(42 : i32) : i32
   %1 = llvm.udiv %0, %arg162 : i32
   %2 = llvm.udiv %0, %arg163 : i32
   %3 = llvm.or %2, %1 : i32
@@ -562,8 +562,8 @@ def or_xor_commute3_before := [llvm|
 def or_xor_commute3_after := [llvm|
 {
 ^0(%arg162 : i32, %arg163 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(42 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
   %2 = llvm.udiv %0, %arg162 : i32
   %3 = llvm.udiv %0, %arg163 : i32
   %4 = llvm.xor %3, %1 : i32
@@ -583,7 +583,7 @@ theorem or_xor_commute3_proof : or_xor_commute3_before ⊑ or_xor_commute3_after
 def or_xor_commute4_before := [llvm|
 {
 ^0(%arg160 : i32, %arg161 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(42 : i32) : i32
   %1 = llvm.udiv %0, %arg160 : i32
   %2 = llvm.udiv %0, %arg161 : i32
   %3 = llvm.or %1, %2 : i32
@@ -594,8 +594,8 @@ def or_xor_commute4_before := [llvm|
 def or_xor_commute4_after := [llvm|
 {
 ^0(%arg160 : i32, %arg161 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(42 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
   %2 = llvm.udiv %0, %arg160 : i32
   %3 = llvm.udiv %0, %arg161 : i32
   %4 = llvm.xor %3, %1 : i32
@@ -615,7 +615,7 @@ theorem or_xor_commute4_proof : or_xor_commute4_before ⊑ or_xor_commute4_after
 def and_xor_commute1_before := [llvm|
 {
 ^0(%arg155 : i32, %arg156 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(42 : i32) : i32
   %1 = llvm.udiv %0, %arg155 : i32
   %2 = llvm.udiv %0, %arg156 : i32
   %3 = llvm.and %2, %1 : i32
@@ -626,8 +626,8 @@ def and_xor_commute1_before := [llvm|
 def and_xor_commute1_after := [llvm|
 {
 ^0(%arg155 : i32, %arg156 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(42 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
   %2 = llvm.udiv %0, %arg155 : i32
   %3 = llvm.udiv %0, %arg156 : i32
   %4 = llvm.xor %2, %1 : i32
@@ -647,7 +647,7 @@ theorem and_xor_commute1_proof : and_xor_commute1_before ⊑ and_xor_commute1_af
 def and_xor_commute2_before := [llvm|
 {
 ^0(%arg153 : i32, %arg154 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(42 : i32) : i32
   %1 = llvm.udiv %0, %arg153 : i32
   %2 = llvm.udiv %0, %arg154 : i32
   %3 = llvm.and %1, %2 : i32
@@ -658,8 +658,8 @@ def and_xor_commute2_before := [llvm|
 def and_xor_commute2_after := [llvm|
 {
 ^0(%arg153 : i32, %arg154 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(42 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
   %2 = llvm.udiv %0, %arg153 : i32
   %3 = llvm.udiv %0, %arg154 : i32
   %4 = llvm.xor %2, %1 : i32
@@ -679,7 +679,7 @@ theorem and_xor_commute2_proof : and_xor_commute2_before ⊑ and_xor_commute2_af
 def and_xor_commute3_before := [llvm|
 {
 ^0(%arg151 : i32, %arg152 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(42 : i32) : i32
   %1 = llvm.udiv %0, %arg151 : i32
   %2 = llvm.udiv %0, %arg152 : i32
   %3 = llvm.and %2, %1 : i32
@@ -690,8 +690,8 @@ def and_xor_commute3_before := [llvm|
 def and_xor_commute3_after := [llvm|
 {
 ^0(%arg151 : i32, %arg152 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(42 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
   %2 = llvm.udiv %0, %arg151 : i32
   %3 = llvm.udiv %0, %arg152 : i32
   %4 = llvm.xor %2, %1 : i32
@@ -711,7 +711,7 @@ theorem and_xor_commute3_proof : and_xor_commute3_before ⊑ and_xor_commute3_af
 def and_xor_commute4_before := [llvm|
 {
 ^0(%arg149 : i32, %arg150 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(42 : i32) : i32
   %1 = llvm.udiv %0, %arg149 : i32
   %2 = llvm.udiv %0, %arg150 : i32
   %3 = llvm.and %1, %2 : i32
@@ -722,8 +722,8 @@ def and_xor_commute4_before := [llvm|
 def and_xor_commute4_after := [llvm|
 {
 ^0(%arg149 : i32, %arg150 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(42 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
   %2 = llvm.udiv %0, %arg149 : i32
   %3 = llvm.udiv %0, %arg150 : i32
   %4 = llvm.xor %2, %1 : i32
@@ -752,7 +752,7 @@ def or_or_xor_before := [llvm|
 def or_or_xor_after := [llvm|
 {
 ^0(%arg106 : i4, %arg107 : i4, %arg108 : i4):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i4}> : () -> i4
+  %0 = llvm.mlir.constant(-1 : i4) : i4
   %1 = llvm.xor %arg108, %0 : i4
   %2 = llvm.xor %arg106, %arg107 : i4
   %3 = llvm.and %2, %1 : i4
@@ -780,7 +780,7 @@ def or_or_xor_commute1_before := [llvm|
 def or_or_xor_commute1_after := [llvm|
 {
 ^0(%arg103 : i4, %arg104 : i4, %arg105 : i4):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i4}> : () -> i4
+  %0 = llvm.mlir.constant(-1 : i4) : i4
   %1 = llvm.xor %arg105, %0 : i4
   %2 = llvm.xor %arg103, %arg104 : i4
   %3 = llvm.and %2, %1 : i4
@@ -808,7 +808,7 @@ def or_or_xor_commute2_before := [llvm|
 def or_or_xor_commute2_after := [llvm|
 {
 ^0(%arg100 : i4, %arg101 : i4, %arg102 : i4):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i4}> : () -> i4
+  %0 = llvm.mlir.constant(-1 : i4) : i4
   %1 = llvm.xor %arg102, %0 : i4
   %2 = llvm.xor %arg100, %arg101 : i4
   %3 = llvm.and %2, %1 : i4
@@ -827,8 +827,8 @@ theorem or_or_xor_commute2_proof : or_or_xor_commute2_before ⊑ or_or_xor_commu
 def not_is_canonical_before := [llvm|
 {
 ^0(%arg87 : i32, %arg88 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1073741823 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1073741823 : i32) : i32
+  %1 = llvm.mlir.constant(2 : i32) : i32
   %2 = llvm.xor %arg87, %0 : i32
   %3 = llvm.add %2, %arg88 : i32
   %4 = llvm.shl %3, %1 : i32
@@ -838,8 +838,8 @@ def not_is_canonical_before := [llvm|
 def not_is_canonical_after := [llvm|
 {
 ^0(%arg87 : i32, %arg88 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-1 : i32) : i32
+  %1 = llvm.mlir.constant(2 : i32) : i32
   %2 = llvm.xor %arg87, %0 : i32
   %3 = llvm.add %arg88, %2 : i32
   %4 = llvm.shl %3, %1 : i32
@@ -858,8 +858,8 @@ theorem not_is_canonical_proof : not_is_canonical_before ⊑ not_is_canonical_af
 def not_shl_before := [llvm|
 {
 ^0(%arg86 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 7 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = -128 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(7 : i8) : i8
+  %1 = llvm.mlir.constant(-128 : i8) : i8
   %2 = llvm.shl %arg86, %0 : i8
   %3 = llvm.xor %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
@@ -868,8 +868,8 @@ def not_shl_before := [llvm|
 def not_shl_after := [llvm|
 {
 ^0(%arg86 : i8):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 7 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(-1 : i8) : i8
+  %1 = llvm.mlir.constant(7 : i8) : i8
   %2 = llvm.xor %arg86, %0 : i8
   %3 = llvm.shl %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
@@ -887,8 +887,8 @@ theorem not_shl_proof : not_shl_before ⊑ not_shl_after := by
 def not_lshr_before := [llvm|
 {
 ^0(%arg82 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 5 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 7 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(5 : i8) : i8
+  %1 = llvm.mlir.constant(7 : i8) : i8
   %2 = llvm.lshr %arg82, %0 : i8
   %3 = llvm.xor %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
@@ -897,8 +897,8 @@ def not_lshr_before := [llvm|
 def not_lshr_after := [llvm|
 {
 ^0(%arg82 : i8):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 5 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(-1 : i8) : i8
+  %1 = llvm.mlir.constant(5 : i8) : i8
   %2 = llvm.xor %arg82, %0 : i8
   %3 = llvm.lshr %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
@@ -916,8 +916,8 @@ theorem not_lshr_proof : not_lshr_before ⊑ not_lshr_after := by
 def ashr_not_before := [llvm|
 {
 ^0(%arg78 : i8):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 5 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(-1 : i8) : i8
+  %1 = llvm.mlir.constant(5 : i8) : i8
   %2 = llvm.xor %arg78, %0 : i8
   %3 = llvm.ashr %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
@@ -926,8 +926,8 @@ def ashr_not_before := [llvm|
 def ashr_not_after := [llvm|
 {
 ^0(%arg78 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 5 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(5 : i8) : i8
+  %1 = llvm.mlir.constant(-1 : i8) : i8
   %2 = llvm.ashr %arg78, %0 : i8
   %3 = llvm.xor %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
@@ -945,8 +945,8 @@ theorem ashr_not_proof : ashr_not_before ⊑ ashr_not_after := by
 def xor_andn_commute2_before := [llvm|
 {
 ^0(%arg70 : i33, %arg71 : i33):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i33}> : () -> i33
-  %1 = "llvm.mlir.constant"() <{value = -1 : i33}> : () -> i33
+  %0 = llvm.mlir.constant(42 : i33) : i33
+  %1 = llvm.mlir.constant(-1 : i33) : i33
   %2 = llvm.udiv %0, %arg71 : i33
   %3 = llvm.xor %arg70, %1 : i33
   %4 = llvm.and %2, %3 : i33
@@ -957,7 +957,7 @@ def xor_andn_commute2_before := [llvm|
 def xor_andn_commute2_after := [llvm|
 {
 ^0(%arg70 : i33, %arg71 : i33):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i33}> : () -> i33
+  %0 = llvm.mlir.constant(42 : i33) : i33
   %1 = llvm.udiv %0, %arg71 : i33
   %2 = llvm.or %arg70, %1 : i33
   "llvm.return"(%2) : (i33) -> ()
@@ -975,8 +975,8 @@ theorem xor_andn_commute2_proof : xor_andn_commute2_before ⊑ xor_andn_commute2
 def xor_andn_commute3_before := [llvm|
 {
 ^0(%arg68 : i32, %arg69 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(42 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
   %2 = llvm.udiv %0, %arg68 : i32
   %3 = llvm.xor %2, %1 : i32
   %4 = llvm.and %3, %arg69 : i32
@@ -987,7 +987,7 @@ def xor_andn_commute3_before := [llvm|
 def xor_andn_commute3_after := [llvm|
 {
 ^0(%arg68 : i32, %arg69 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(42 : i32) : i32
   %1 = llvm.udiv %0, %arg68 : i32
   %2 = llvm.or %1, %arg69 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -1005,8 +1005,8 @@ theorem xor_andn_commute3_proof : xor_andn_commute3_before ⊑ xor_andn_commute3
 def xor_andn_commute4_before := [llvm|
 {
 ^0(%arg66 : i32, %arg67 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(42 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
   %2 = llvm.udiv %0, %arg66 : i32
   %3 = llvm.udiv %0, %arg67 : i32
   %4 = llvm.xor %2, %1 : i32
@@ -1018,7 +1018,7 @@ def xor_andn_commute4_before := [llvm|
 def xor_andn_commute4_after := [llvm|
 {
 ^0(%arg66 : i32, %arg67 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(42 : i32) : i32
   %1 = llvm.udiv %0, %arg66 : i32
   %2 = llvm.udiv %0, %arg67 : i32
   %3 = llvm.or %1, %2 : i32
@@ -1037,8 +1037,8 @@ theorem xor_andn_commute4_proof : xor_andn_commute4_before ⊑ xor_andn_commute4
 def xor_orn_commute1_before := [llvm|
 {
 ^0(%arg62 : i8, %arg63 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(42 : i8) : i8
+  %1 = llvm.mlir.constant(-1 : i8) : i8
   %2 = llvm.udiv %0, %arg62 : i8
   %3 = llvm.xor %2, %1 : i8
   %4 = llvm.or %3, %arg63 : i8
@@ -1049,8 +1049,8 @@ def xor_orn_commute1_before := [llvm|
 def xor_orn_commute1_after := [llvm|
 {
 ^0(%arg62 : i8, %arg63 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(42 : i8) : i8
+  %1 = llvm.mlir.constant(-1 : i8) : i8
   %2 = llvm.udiv %0, %arg62 : i8
   %3 = llvm.and %2, %arg63 : i8
   %4 = llvm.xor %3, %1 : i8
@@ -1069,8 +1069,8 @@ theorem xor_orn_commute1_proof : xor_orn_commute1_before ⊑ xor_orn_commute1_af
 def xor_orn_commute2_before := [llvm|
 {
 ^0(%arg59 : i32, %arg60 : i32, %arg61 : !llvm.ptr):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(42 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
   %2 = llvm.udiv %0, %arg60 : i32
   %3 = llvm.xor %arg59, %1 : i32
   %4 = llvm.or %2, %3 : i32
@@ -1081,8 +1081,8 @@ def xor_orn_commute2_before := [llvm|
 def xor_orn_commute2_after := [llvm|
 {
 ^0(%arg59 : i32, %arg60 : i32, %arg61 : !llvm.ptr):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(42 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
   %2 = llvm.udiv %0, %arg60 : i32
   %3 = llvm.and %arg59, %2 : i32
   %4 = llvm.xor %3, %1 : i32
@@ -1101,8 +1101,8 @@ theorem xor_orn_commute2_proof : xor_orn_commute2_before ⊑ xor_orn_commute2_af
 def xor_orn_commute3_before := [llvm|
 {
 ^0(%arg53 : i67, %arg54 : i67, %arg55 : !llvm.ptr):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i67}> : () -> i67
-  %1 = "llvm.mlir.constant"() <{value = -1 : i67}> : () -> i67
+  %0 = llvm.mlir.constant(42 : i67) : i67
+  %1 = llvm.mlir.constant(-1 : i67) : i67
   %2 = llvm.udiv %0, %arg53 : i67
   %3 = llvm.udiv %0, %arg54 : i67
   %4 = llvm.xor %2, %1 : i67
@@ -1114,8 +1114,8 @@ def xor_orn_commute3_before := [llvm|
 def xor_orn_commute3_after := [llvm|
 {
 ^0(%arg53 : i67, %arg54 : i67, %arg55 : !llvm.ptr):
-  %0 = "llvm.mlir.constant"() <{value = 42 : i67}> : () -> i67
-  %1 = "llvm.mlir.constant"() <{value = -1 : i67}> : () -> i67
+  %0 = llvm.mlir.constant(42 : i67) : i67
+  %1 = llvm.mlir.constant(-1 : i67) : i67
   %2 = llvm.udiv %0, %arg53 : i67
   %3 = llvm.udiv %0, %arg54 : i67
   %4 = llvm.and %2, %3 : i67
@@ -1135,8 +1135,8 @@ theorem xor_orn_commute3_proof : xor_orn_commute3_before ⊑ xor_orn_commute3_af
 def tryFactorization_xor_ashr_lshr_before := [llvm|
 {
 ^0(%arg40 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -3 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 5 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-3 : i32) : i32
+  %1 = llvm.mlir.constant(5 : i32) : i32
   %2 = llvm.ashr %0, %arg40 : i32
   %3 = llvm.lshr %1, %arg40 : i32
   %4 = llvm.xor %2, %3 : i32
@@ -1146,7 +1146,7 @@ def tryFactorization_xor_ashr_lshr_before := [llvm|
 def tryFactorization_xor_ashr_lshr_after := [llvm|
 {
 ^0(%arg40 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-8 : i32) : i32
   %1 = llvm.ashr %0, %arg40 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
@@ -1163,8 +1163,8 @@ theorem tryFactorization_xor_ashr_lshr_proof : tryFactorization_xor_ashr_lshr_be
 def tryFactorization_xor_lshr_ashr_before := [llvm|
 {
 ^0(%arg39 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -3 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 5 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-3 : i32) : i32
+  %1 = llvm.mlir.constant(5 : i32) : i32
   %2 = llvm.ashr %0, %arg39 : i32
   %3 = llvm.lshr %1, %arg39 : i32
   %4 = llvm.xor %3, %2 : i32
@@ -1174,7 +1174,7 @@ def tryFactorization_xor_lshr_ashr_before := [llvm|
 def tryFactorization_xor_lshr_ashr_after := [llvm|
 {
 ^0(%arg39 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-8 : i32) : i32
   %1 = llvm.ashr %0, %arg39 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
@@ -1191,8 +1191,8 @@ theorem tryFactorization_xor_lshr_ashr_proof : tryFactorization_xor_lshr_ashr_be
 def tryFactorization_xor_lshr_lshr_before := [llvm|
 {
 ^0(%arg37 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -3 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 5 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-3 : i32) : i32
+  %1 = llvm.mlir.constant(5 : i32) : i32
   %2 = llvm.lshr %0, %arg37 : i32
   %3 = llvm.lshr %1, %arg37 : i32
   %4 = llvm.xor %2, %3 : i32
@@ -1202,7 +1202,7 @@ def tryFactorization_xor_lshr_lshr_before := [llvm|
 def tryFactorization_xor_lshr_lshr_after := [llvm|
 {
 ^0(%arg37 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-8 : i32) : i32
   %1 = llvm.lshr %0, %arg37 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
@@ -1219,8 +1219,8 @@ theorem tryFactorization_xor_lshr_lshr_proof : tryFactorization_xor_lshr_lshr_be
 def tryFactorization_xor_ashr_ashr_before := [llvm|
 {
 ^0(%arg36 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -3 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -5 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-3 : i32) : i32
+  %1 = llvm.mlir.constant(-5 : i32) : i32
   %2 = llvm.ashr %0, %arg36 : i32
   %3 = llvm.ashr %1, %arg36 : i32
   %4 = llvm.xor %2, %3 : i32
@@ -1230,7 +1230,7 @@ def tryFactorization_xor_ashr_ashr_before := [llvm|
 def tryFactorization_xor_ashr_ashr_after := [llvm|
 {
 ^0(%arg36 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 6 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(6 : i32) : i32
   %1 = llvm.lshr %0, %arg36 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
@@ -1247,7 +1247,7 @@ theorem tryFactorization_xor_ashr_ashr_proof : tryFactorization_xor_ashr_ashr_be
 def PR96857_xor_with_noundef_before := [llvm|
 {
 ^0(%arg33 : i4, %arg34 : i4, %arg35 : i4):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i4}> : () -> i4
+  %0 = llvm.mlir.constant(-1 : i4) : i4
   %1 = llvm.and %arg35, %arg33 : i4
   %2 = llvm.xor %arg35, %0 : i4
   %3 = llvm.and %2, %arg34 : i4
@@ -1258,7 +1258,7 @@ def PR96857_xor_with_noundef_before := [llvm|
 def PR96857_xor_with_noundef_after := [llvm|
 {
 ^0(%arg33 : i4, %arg34 : i4, %arg35 : i4):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i4}> : () -> i4
+  %0 = llvm.mlir.constant(-1 : i4) : i4
   %1 = llvm.and %arg35, %arg33 : i4
   %2 = llvm.xor %arg35, %0 : i4
   %3 = llvm.and %arg34, %2 : i4
@@ -1278,7 +1278,7 @@ theorem PR96857_xor_with_noundef_proof : PR96857_xor_with_noundef_before ⊑ PR9
 def PR96857_xor_without_noundef_before := [llvm|
 {
 ^0(%arg30 : i4, %arg31 : i4, %arg32 : i4):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i4}> : () -> i4
+  %0 = llvm.mlir.constant(-1 : i4) : i4
   %1 = llvm.and %arg32, %arg30 : i4
   %2 = llvm.xor %arg32, %0 : i4
   %3 = llvm.and %2, %arg31 : i4
@@ -1289,7 +1289,7 @@ def PR96857_xor_without_noundef_before := [llvm|
 def PR96857_xor_without_noundef_after := [llvm|
 {
 ^0(%arg30 : i4, %arg31 : i4, %arg32 : i4):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i4}> : () -> i4
+  %0 = llvm.mlir.constant(-1 : i4) : i4
   %1 = llvm.and %arg32, %arg30 : i4
   %2 = llvm.xor %arg32, %0 : i4
   %3 = llvm.and %arg31, %2 : i4
@@ -1378,8 +1378,8 @@ theorem xor_with_or_disjoint_ba_proof : xor_with_or_disjoint_ba_before ⊑ xor_w
 def select_or_disjoint_or_before := [llvm|
 {
 ^0(%arg14 : i32, %arg15 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 4 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(0 : i32) : i32
+  %1 = llvm.mlir.constant(4 : i32) : i32
   %2 = "llvm.select"(%arg15, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   %3 = llvm.shl %arg14, %1 : i32
   %4 = llvm.or %2, %3 : i32
@@ -1390,8 +1390,8 @@ def select_or_disjoint_or_before := [llvm|
 def select_or_disjoint_or_after := [llvm|
 {
 ^0(%arg14 : i32, %arg15 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 4 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(0 : i32) : i32
+  %1 = llvm.mlir.constant(4 : i32) : i32
   %2 = "llvm.select"(%arg15, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   %3 = llvm.shl %arg14, %1 : i32
   %4 = llvm.or %2, %3 : i32

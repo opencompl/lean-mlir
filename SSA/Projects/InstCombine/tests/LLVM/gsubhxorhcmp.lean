@@ -25,7 +25,7 @@ def sext_xor_sub_before := [llvm|
 def sext_xor_sub_after := [llvm|
 {
 ^0(%arg28 : i64, %arg29 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(0) : i64
   %1 = llvm.sub %0, %arg28 : i64
   %2 = "llvm.select"(%arg29, %1, %arg28) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   "llvm.return"(%2) : (i64) -> ()
@@ -52,7 +52,7 @@ def sext_xor_sub_1_before := [llvm|
 def sext_xor_sub_1_after := [llvm|
 {
 ^0(%arg26 : i64, %arg27 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(0) : i64
   %1 = llvm.sub %0, %arg26 : i64
   %2 = "llvm.select"(%arg27, %1, %arg26) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   "llvm.return"(%2) : (i64) -> ()
@@ -79,7 +79,7 @@ def sext_xor_sub_2_before := [llvm|
 def sext_xor_sub_2_after := [llvm|
 {
 ^0(%arg24 : i64, %arg25 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(0) : i64
   %1 = llvm.sub %0, %arg24 : i64
   %2 = "llvm.select"(%arg25, %arg24, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   "llvm.return"(%2) : (i64) -> ()
@@ -106,7 +106,7 @@ def sext_xor_sub_3_before := [llvm|
 def sext_xor_sub_3_after := [llvm|
 {
 ^0(%arg22 : i64, %arg23 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(0) : i64
   %1 = llvm.sub %0, %arg22 : i64
   %2 = "llvm.select"(%arg23, %arg22, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   "llvm.return"(%2) : (i64) -> ()
@@ -218,7 +218,7 @@ def sext_multi_uses_before := [llvm|
 def sext_multi_uses_after := [llvm|
 {
 ^0(%arg9 : i64, %arg10 : i1, %arg11 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(0) : i64
   %1 = llvm.add %arg11, %arg9 : i64
   %2 = llvm.sub %0, %1 : i64
   %3 = "llvm.select"(%arg10, %2, %arg9) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64

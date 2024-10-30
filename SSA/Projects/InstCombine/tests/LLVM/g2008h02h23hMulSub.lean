@@ -16,8 +16,8 @@ section g2008h02h23hMulSub_statements
 def test_before := [llvm|
 {
 ^0(%arg0 : i26):
-  %0 = "llvm.mlir.constant"() <{value = 2885 : i26}> : () -> i26
-  %1 = "llvm.mlir.constant"() <{value = 2884 : i26}> : () -> i26
+  %0 = llvm.mlir.constant(2885 : i26) : i26
+  %1 = llvm.mlir.constant(2884 : i26) : i26
   %2 = llvm.mul %arg0, %0 : i26
   %3 = llvm.mul %arg0, %1 : i26
   %4 = llvm.sub %2, %3 : i26

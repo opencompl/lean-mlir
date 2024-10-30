@@ -16,9 +16,9 @@ section gicmphmul_statements
 def mul_of_pow2s_before := [llvm|
 {
 ^0(%arg79 : i32, %arg80 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 16 : i32}> : () -> i32
-  %2 = "llvm.mlir.constant"() <{value = 128 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(16 : i32) : i32
+  %2 = llvm.mlir.constant(128 : i32) : i32
   %3 = llvm.and %arg79, %0 : i32
   %4 = llvm.and %arg80, %1 : i32
   %5 = llvm.mul %3, %4 : i32
@@ -29,7 +29,7 @@ def mul_of_pow2s_before := [llvm|
 def mul_of_pow2s_after := [llvm|
 {
 ^0(%arg79 : i32, %arg80 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 128 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(128 : i32) : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]

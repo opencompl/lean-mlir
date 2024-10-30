@@ -16,8 +16,8 @@ section gaddhmask_statements
 def add_mask_ashr28_i32_before := [llvm|
 {
 ^0(%arg2 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 28 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(28 : i32) : i32
+  %1 = llvm.mlir.constant(8 : i32) : i32
   %2 = llvm.ashr %arg2, %0 : i32
   %3 = llvm.and %2, %1 : i32
   %4 = llvm.add %3, %2 : i32
@@ -27,8 +27,8 @@ def add_mask_ashr28_i32_before := [llvm|
 def add_mask_ashr28_i32_after := [llvm|
 {
 ^0(%arg2 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 28 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 7 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(28 : i32) : i32
+  %1 = llvm.mlir.constant(7 : i32) : i32
   %2 = llvm.lshr %arg2, %0 : i32
   %3 = llvm.and %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -46,8 +46,8 @@ theorem add_mask_ashr28_i32_proof : add_mask_ashr28_i32_before ⊑ add_mask_ashr
 def add_mask_ashr28_non_pow2_i32_before := [llvm|
 {
 ^0(%arg1 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 28 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 9 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(28 : i32) : i32
+  %1 = llvm.mlir.constant(9 : i32) : i32
   %2 = llvm.ashr %arg1, %0 : i32
   %3 = llvm.and %2, %1 : i32
   %4 = llvm.add %3, %2 : i32
@@ -57,8 +57,8 @@ def add_mask_ashr28_non_pow2_i32_before := [llvm|
 def add_mask_ashr28_non_pow2_i32_after := [llvm|
 {
 ^0(%arg1 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 28 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 9 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(28 : i32) : i32
+  %1 = llvm.mlir.constant(9 : i32) : i32
   %2 = llvm.ashr %arg1, %0 : i32
   %3 = llvm.and %2, %1 : i32
   %4 = llvm.add %3, %2 overflow<nsw> : i32
@@ -77,8 +77,8 @@ theorem add_mask_ashr28_non_pow2_i32_proof : add_mask_ashr28_non_pow2_i32_before
 def add_mask_ashr27_i32_before := [llvm|
 {
 ^0(%arg0 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 27 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(27 : i32) : i32
+  %1 = llvm.mlir.constant(8 : i32) : i32
   %2 = llvm.ashr %arg0, %0 : i32
   %3 = llvm.and %2, %1 : i32
   %4 = llvm.add %3, %2 : i32
@@ -88,8 +88,8 @@ def add_mask_ashr27_i32_before := [llvm|
 def add_mask_ashr27_i32_after := [llvm|
 {
 ^0(%arg0 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 27 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(27 : i32) : i32
+  %1 = llvm.mlir.constant(8 : i32) : i32
   %2 = llvm.ashr %arg0, %0 : i32
   %3 = llvm.and %2, %1 : i32
   %4 = llvm.add %3, %2 overflow<nsw> : i32

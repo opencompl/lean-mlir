@@ -16,9 +16,9 @@ section gfunnel_statements
 def unmasked_shlop_insufficient_mask_shift_amount_before := [llvm|
 {
 ^0(%arg14 : i16, %arg15 : i16, %arg16 : i16):
-  %0 = "llvm.mlir.constant"() <{value = 15 : i16}> : () -> i16
-  %1 = "llvm.mlir.constant"() <{value = 255 : i16}> : () -> i16
-  %2 = "llvm.mlir.constant"() <{value = 8 : i16}> : () -> i16
+  %0 = llvm.mlir.constant(15 : i16) : i16
+  %1 = llvm.mlir.constant(255 : i16) : i16
+  %2 = llvm.mlir.constant(8 : i16) : i16
   %3 = llvm.and %arg16, %0 : i16
   %4 = llvm.and %arg14, %1 : i16
   %5 = llvm.sub %2, %3 : i16
@@ -32,9 +32,9 @@ def unmasked_shlop_insufficient_mask_shift_amount_before := [llvm|
 def unmasked_shlop_insufficient_mask_shift_amount_after := [llvm|
 {
 ^0(%arg14 : i16, %arg15 : i16, %arg16 : i16):
-  %0 = "llvm.mlir.constant"() <{value = 15 : i16}> : () -> i16
-  %1 = "llvm.mlir.constant"() <{value = 255 : i16}> : () -> i16
-  %2 = "llvm.mlir.constant"() <{value = 8 : i16}> : () -> i16
+  %0 = llvm.mlir.constant(15 : i16) : i16
+  %1 = llvm.mlir.constant(255 : i16) : i16
+  %2 = llvm.mlir.constant(8 : i16) : i16
   %3 = llvm.and %arg16, %0 : i16
   %4 = llvm.and %arg14, %1 : i16
   %5 = llvm.sub %2, %3 overflow<nsw> : i16

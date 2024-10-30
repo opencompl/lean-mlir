@@ -16,7 +16,7 @@ section gaddnegneg_statements
 def l_before := [llvm|
 {
 ^0(%arg0 : i32, %arg1 : i32, %arg2 : i32, %arg3 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(0 : i32) : i32
   %1 = llvm.sub %0, %arg1 : i32
   %2 = llvm.sub %0, %arg2 : i32
   %3 = llvm.add %2, %1 : i32

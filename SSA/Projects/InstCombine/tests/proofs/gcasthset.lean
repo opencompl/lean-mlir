@@ -16,7 +16,7 @@ section gcasthset_statements
 def test5_before := [llvm|
 {
 ^0(%arg3 : i16):
-  %0 = "llvm.mlir.constant"() <{value = 15 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(15 : i32) : i32
   %1 = llvm.sext %arg3 : i16 to i32
   %2 = llvm.and %1, %0 : i32
   %3 = llvm.trunc %2 : i32 to i16
@@ -26,7 +26,7 @@ def test5_before := [llvm|
 def test5_after := [llvm|
 {
 ^0(%arg3 : i16):
-  %0 = "llvm.mlir.constant"() <{value = 15 : i16}> : () -> i16
+  %0 = llvm.mlir.constant(15 : i16) : i16
   %1 = llvm.and %arg3, %0 : i16
   "llvm.return"(%1) : (i16) -> ()
 }

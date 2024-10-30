@@ -16,7 +16,7 @@ section gaddhshift_statements
 def flip_add_of_shift_neg_before := [llvm|
 {
 ^0(%arg12 : i8, %arg13 : i8, %arg14 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(0 : i8) : i8
   %1 = llvm.sub %0, %arg12 : i8
   %2 = llvm.shl %1, %arg13 overflow<nsw,nuw> : i8
   %3 = llvm.add %2, %arg14 : i8

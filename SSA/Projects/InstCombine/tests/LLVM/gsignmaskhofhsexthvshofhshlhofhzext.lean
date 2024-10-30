@@ -16,8 +16,8 @@ section gsignmaskhofhsexthvshofhshlhofhzext_statements
 def t0_before := [llvm|
 {
 ^0(%arg12 : i16):
-  %0 = "llvm.mlir.constant"() <{value = 16 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -2147483648 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(16 : i32) : i32
+  %1 = llvm.mlir.constant(-2147483648 : i32) : i32
   %2 = llvm.zext %arg12 : i16 to i32
   %3 = llvm.shl %2, %0 : i32
   %4 = llvm.and %3, %1 : i32
@@ -27,7 +27,7 @@ def t0_before := [llvm|
 def t0_after := [llvm|
 {
 ^0(%arg12 : i16):
-  %0 = "llvm.mlir.constant"() <{value = -2147483648 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-2147483648 : i32) : i32
   %1 = llvm.sext %arg12 : i16 to i32
   %2 = llvm.and %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -45,8 +45,8 @@ theorem t0_proof : t0_before ⊑ t0_after := by
 def t1_before := [llvm|
 {
 ^0(%arg11 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 24 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -2147483648 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(24 : i32) : i32
+  %1 = llvm.mlir.constant(-2147483648 : i32) : i32
   %2 = llvm.zext %arg11 : i8 to i32
   %3 = llvm.shl %2, %0 : i32
   %4 = llvm.and %3, %1 : i32
@@ -56,7 +56,7 @@ def t1_before := [llvm|
 def t1_after := [llvm|
 {
 ^0(%arg11 : i8):
-  %0 = "llvm.mlir.constant"() <{value = -2147483648 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-2147483648 : i32) : i32
   %1 = llvm.sext %arg11 : i8 to i32
   %2 = llvm.and %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -74,8 +74,8 @@ theorem t1_proof : t1_before ⊑ t1_after := by
 def n2_before := [llvm|
 {
 ^0(%arg10 : i16):
-  %0 = "llvm.mlir.constant"() <{value = 15 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -2147483648 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(15 : i32) : i32
+  %1 = llvm.mlir.constant(-2147483648 : i32) : i32
   %2 = llvm.zext %arg10 : i16 to i32
   %3 = llvm.shl %2, %0 : i32
   %4 = llvm.and %3, %1 : i32
@@ -85,7 +85,7 @@ def n2_before := [llvm|
 def n2_after := [llvm|
 {
 ^0(%arg10 : i16):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(0 : i32) : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
@@ -101,8 +101,8 @@ theorem n2_proof : n2_before ⊑ n2_after := by
 def n4_before := [llvm|
 {
 ^0(%arg8 : i16):
-  %0 = "llvm.mlir.constant"() <{value = 16 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -1073741824 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(16 : i32) : i32
+  %1 = llvm.mlir.constant(-1073741824 : i32) : i32
   %2 = llvm.zext %arg8 : i16 to i32
   %3 = llvm.shl %2, %0 : i32
   %4 = llvm.and %3, %1 : i32
@@ -112,8 +112,8 @@ def n4_before := [llvm|
 def n4_after := [llvm|
 {
 ^0(%arg8 : i16):
-  %0 = "llvm.mlir.constant"() <{value = 16 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = -1073741824 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(16 : i32) : i32
+  %1 = llvm.mlir.constant(-1073741824 : i32) : i32
   %2 = llvm.zext %arg8 : i16 to i32
   %3 = llvm.shl %2, %0 overflow<nuw> : i32
   %4 = llvm.and %3, %1 : i32

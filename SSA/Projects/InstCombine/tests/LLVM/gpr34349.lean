@@ -16,10 +16,10 @@ section gpr34349_statements
 def fast_div_201_before := [llvm|
 {
 ^0(%arg0 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 71 : i16}> : () -> i16
-  %1 = "llvm.mlir.constant"() <{value = 8 : i16}> : () -> i16
-  %2 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
-  %3 = "llvm.mlir.constant"() <{value = 7 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(71 : i16) : i16
+  %1 = llvm.mlir.constant(8 : i16) : i16
+  %2 = llvm.mlir.constant(1 : i8) : i8
+  %3 = llvm.mlir.constant(7 : i8) : i8
   %4 = llvm.zext %arg0 : i8 to i16
   %5 = llvm.mul %4, %0 : i16
   %6 = llvm.lshr %5, %1 : i16
@@ -34,10 +34,10 @@ def fast_div_201_before := [llvm|
 def fast_div_201_after := [llvm|
 {
 ^0(%arg0 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 71 : i16}> : () -> i16
-  %1 = "llvm.mlir.constant"() <{value = 8 : i16}> : () -> i16
-  %2 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
-  %3 = "llvm.mlir.constant"() <{value = 7 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(71 : i16) : i16
+  %1 = llvm.mlir.constant(8 : i16) : i16
+  %2 = llvm.mlir.constant(1 : i8) : i8
+  %3 = llvm.mlir.constant(7 : i8) : i8
   %4 = llvm.zext %arg0 : i8 to i16
   %5 = llvm.mul %4, %0 overflow<nsw,nuw> : i16
   %6 = llvm.lshr %5, %1 : i16

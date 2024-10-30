@@ -328,8 +328,8 @@ theorem sub_shl_same_amount_partial_nuw2_proof : sub_shl_same_amount_partial_nuw
 def add_shl_same_amount_constants_before := [llvm|
 {
 ^0(%arg1 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 4 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(4 : i8) : i8
+  %1 = llvm.mlir.constant(3 : i8) : i8
   %2 = llvm.shl %0, %arg1 : i8
   %3 = llvm.shl %1, %arg1 : i8
   %4 = llvm.add %2, %3 : i8
@@ -339,7 +339,7 @@ def add_shl_same_amount_constants_before := [llvm|
 def add_shl_same_amount_constants_after := [llvm|
 {
 ^0(%arg1 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 7 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(7 : i8) : i8
   %1 = llvm.shl %0, %arg1 : i8
   "llvm.return"(%1) : (i8) -> ()
 }

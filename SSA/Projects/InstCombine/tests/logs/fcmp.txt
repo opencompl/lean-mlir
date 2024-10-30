@@ -86,10 +86,14 @@
 4: "test8" has unsupported operation: builtin.unregistered: llvm.uitofp
 
 1: "fabs_uge"
-6: Cannot find function after optimization with sym name: "fabs_uge"
+4: "fabs_uge" has unsupported operation after optimization: builtin.unregistered: llvm.intr.fabs
+
+4: "fabs_uge" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 1: "fabs_olt"
-6: Cannot find function after optimization with sym name: "fabs_olt"
+4: "fabs_olt" has unsupported operation after optimization: builtin.unregistered: llvm.intr.fabs
+
+4: "fabs_olt" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 1: "fabs_ole"
 4: "fabs_ole" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -110,7 +114,7 @@
 4: "fabs_ult" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "fabs_ult_nnan"
-6: Cannot find function after optimization with sym name: "fabs_ult_nnan"
+8: "fabs_ult_nnan" contains vectors which are unsupported
 
 1: "fabs_une"
 4: "fabs_une" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -136,16 +140,24 @@
 4: "test17" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "test18_undef_unordered"
-6: Cannot find function after optimization with sym name: "test18_undef_unordered"
+4: "test18_undef_unordered" has unsupported operation after optimization: llvm.mlir.undef
+
+4: "test18_undef_unordered" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 1: "test18_undef_ordered"
-6: Cannot find function after optimization with sym name: "test18_undef_ordered"
+4: "test18_undef_ordered" has unsupported operation after optimization: llvm.mlir.undef
+
+4: "test18_undef_ordered" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 1: "test19_undef_unordered"
-6: Cannot find function after optimization with sym name: "test19_undef_unordered"
+4: "test19_undef_unordered" has unsupported operation after optimization: llvm.mlir.undef
+
+4: "test19_undef_unordered" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 1: "test19_undef_ordered"
-6: Cannot find function after optimization with sym name: "test19_undef_ordered"
+4: "test19_undef_ordered" has unsupported operation after optimization: llvm.mlir.undef
+
+4: "test19_undef_ordered" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 1: "test20_recipX_olt_0"
 4: "test20_recipX_olt_0" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -235,13 +247,17 @@
 4: "is_signbit_clear_nonzero" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "is_signbit_set_simplify_zero"
-6: Cannot find function after optimization with sym name: "is_signbit_set_simplify_zero"
+4: "is_signbit_set_simplify_zero" has unsupported operation after optimization: builtin.unregistered: llvm.intr.copysign
+
+4: "is_signbit_set_simplify_zero" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 1: "is_signbit_set_simplify_nan"
-6: Cannot find function after optimization with sym name: "is_signbit_set_simplify_nan"
+4: "is_signbit_set_simplify_nan" has unsupported operation after optimization: builtin.unregistered: llvm.intr.copysign
+
+4: "is_signbit_set_simplify_nan" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 1: "lossy_oeq"
-6: Cannot find function after optimization with sym name: "lossy_oeq"
+8: "lossy_oeq" contains vectors which are unsupported
 
 1: "lossy_one"
 4: "lossy_one" has unsupported operation: builtin.unregistered: llvm.fpext
@@ -254,7 +270,9 @@
 4: "lossy_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "lossy_une"
-6: Cannot find function after optimization with sym name: "lossy_une"
+4: "lossy_une" has unsupported operation after optimization: builtin.unregistered: llvm.fpext
+
+4: "lossy_une" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 1: "lossy_ogt"
 4: "lossy_ogt" has unsupported operation: builtin.unregistered: llvm.fpext
@@ -723,7 +741,9 @@
 4: "fcmp_ogt_fsub_const_vec_denormal_preserve-sign" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "fcmp_sqrt_zero_olt"
-6: Cannot find function after optimization with sym name: "fcmp_sqrt_zero_olt"
+4: "fcmp_sqrt_zero_olt" has unsupported operation after optimization: builtin.unregistered: llvm.intr.sqrt
+
+4: "fcmp_sqrt_zero_olt" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 1: "fcmp_sqrt_zero_ult"
 4: "fcmp_sqrt_zero_ult" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -759,7 +779,9 @@
 4: "fcmp_sqrt_zero_oge" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "fcmp_sqrt_zero_uge"
-6: Cannot find function after optimization with sym name: "fcmp_sqrt_zero_uge"
+4: "fcmp_sqrt_zero_uge" has unsupported operation after optimization: builtin.unregistered: llvm.intr.sqrt
+
+4: "fcmp_sqrt_zero_uge" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 1: "fcmp_sqrt_zero_oeq"
 4: "fcmp_sqrt_zero_oeq" has unsupported operation: builtin.unregistered: llvm.fcmp

@@ -16,8 +16,8 @@ section grotate_statements
 def rotateleft_9_neg_mask_wide_amount_commute_before := [llvm|
 {
 ^0(%arg29 : i9, %arg30 : i33):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i33}> : () -> i33
-  %1 = "llvm.mlir.constant"() <{value = 8 : i33}> : () -> i33
+  %0 = llvm.mlir.constant(0 : i33) : i33
+  %1 = llvm.mlir.constant(8 : i33) : i33
   %2 = llvm.sub %0, %arg30 : i33
   %3 = llvm.and %arg30, %1 : i33
   %4 = llvm.and %2, %1 : i33
@@ -32,8 +32,8 @@ def rotateleft_9_neg_mask_wide_amount_commute_before := [llvm|
 def rotateleft_9_neg_mask_wide_amount_commute_after := [llvm|
 {
 ^0(%arg29 : i9, %arg30 : i33):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i33}> : () -> i33
-  %1 = "llvm.mlir.constant"() <{value = 8 : i33}> : () -> i33
+  %0 = llvm.mlir.constant(0 : i33) : i33
+  %1 = llvm.mlir.constant(8 : i33) : i33
   %2 = llvm.sub %0, %arg30 : i33
   %3 = llvm.and %arg30, %1 : i33
   %4 = llvm.and %2, %1 : i33

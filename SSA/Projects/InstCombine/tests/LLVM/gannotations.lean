@@ -16,7 +16,7 @@ section gannotations_statements
 def do_not_add_annotation_to_existing_instr_before := [llvm|
 {
 ^0(%arg15 : i32, %arg16 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(0 : i32) : i32
   %1 = llvm.add %arg15, %arg16 : i32
   %2 = llvm.add %0, %1 : i32
   "llvm.return"(%2) : (i32) -> ()

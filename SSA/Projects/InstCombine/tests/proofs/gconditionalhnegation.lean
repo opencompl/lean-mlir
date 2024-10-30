@@ -25,7 +25,7 @@ def t0_before := [llvm|
 def t0_after := [llvm|
 {
 ^0(%arg32 : i8, %arg33 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(0 : i8) : i8
   %1 = llvm.sub %0, %arg32 : i8
   %2 = "llvm.select"(%arg33, %1, %arg32) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
   "llvm.return"(%2) : (i8) -> ()
@@ -53,7 +53,7 @@ def t1_before := [llvm|
 def t1_after := [llvm|
 {
 ^0(%arg28 : i8, %arg29 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(0 : i8) : i8
   %1 = llvm.sub %0, %arg28 : i8
   %2 = "llvm.select"(%arg29, %1, %arg28) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
   "llvm.return"(%2) : (i8) -> ()

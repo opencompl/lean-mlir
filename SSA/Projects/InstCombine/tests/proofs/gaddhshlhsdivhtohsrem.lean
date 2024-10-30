@@ -16,8 +16,8 @@ section gaddhshlhsdivhtohsrem_statements
 def addhshlhsdivhscalar0_before := [llvm|
 {
 ^0(%arg19 : i8):
-  %0 = "llvm.mlir.constant"() <{value = -4 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 2 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(-4 : i8) : i8
+  %1 = llvm.mlir.constant(2 : i8) : i8
   %2 = llvm.sdiv %arg19, %0 : i8
   %3 = llvm.shl %2, %1 : i8
   %4 = llvm.add %3, %arg19 : i8
@@ -27,7 +27,7 @@ def addhshlhsdivhscalar0_before := [llvm|
 def addhshlhsdivhscalar0_after := [llvm|
 {
 ^0(%arg19 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 4 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(4 : i8) : i8
   %1 = llvm.srem %arg19, %0 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
@@ -44,8 +44,8 @@ theorem addhshlhsdivhscalar0_proof : addhshlhsdivhscalar0_before ⊑ addhshlhsdi
 def addhshlhsdivhscalar1_before := [llvm|
 {
 ^0(%arg18 : i8):
-  %0 = "llvm.mlir.constant"() <{value = -64 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(-64 : i8) : i8
+  %1 = llvm.mlir.constant(6 : i8) : i8
   %2 = llvm.sdiv %arg18, %0 : i8
   %3 = llvm.shl %2, %1 : i8
   %4 = llvm.add %3, %arg18 : i8
@@ -55,7 +55,7 @@ def addhshlhsdivhscalar1_before := [llvm|
 def addhshlhsdivhscalar1_after := [llvm|
 {
 ^0(%arg18 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 64 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(64 : i8) : i8
   %1 = llvm.srem %arg18, %0 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
@@ -72,8 +72,8 @@ theorem addhshlhsdivhscalar1_proof : addhshlhsdivhscalar1_before ⊑ addhshlhsdi
 def addhshlhsdivhscalar2_before := [llvm|
 {
 ^0(%arg17 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -1073741824 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 30 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-1073741824 : i32) : i32
+  %1 = llvm.mlir.constant(30 : i32) : i32
   %2 = llvm.sdiv %arg17, %0 : i32
   %3 = llvm.shl %2, %1 : i32
   %4 = llvm.add %3, %arg17 : i32
@@ -83,7 +83,7 @@ def addhshlhsdivhscalar2_before := [llvm|
 def addhshlhsdivhscalar2_after := [llvm|
 {
 ^0(%arg17 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1073741824 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1073741824 : i32) : i32
   %1 = llvm.srem %arg17, %0 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
@@ -100,8 +100,8 @@ theorem addhshlhsdivhscalar2_proof : addhshlhsdivhscalar2_before ⊑ addhshlhsdi
 def addhshlhsdivhnegative0_before := [llvm|
 {
 ^0(%arg8 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 4 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 2 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(4 : i8) : i8
+  %1 = llvm.mlir.constant(2 : i8) : i8
   %2 = llvm.sdiv %arg8, %0 : i8
   %3 = llvm.shl %2, %1 : i8
   %4 = llvm.add %3, %arg8 : i8
@@ -111,8 +111,8 @@ def addhshlhsdivhnegative0_before := [llvm|
 def addhshlhsdivhnegative0_after := [llvm|
 {
 ^0(%arg8 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 4 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 2 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(4 : i8) : i8
+  %1 = llvm.mlir.constant(2 : i8) : i8
   %2 = llvm.sdiv %arg8, %0 : i8
   %3 = llvm.shl %2, %1 overflow<nsw> : i8
   %4 = llvm.add %3, %arg8 : i8
@@ -131,8 +131,8 @@ theorem addhshlhsdivhnegative0_proof : addhshlhsdivhnegative0_before ⊑ addhshl
 def addhshlhsdivhnegative1_before := [llvm|
 {
 ^0(%arg7 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-1 : i32) : i32
+  %1 = llvm.mlir.constant(1 : i32) : i32
   %2 = llvm.sdiv %arg7, %0 : i32
   %3 = llvm.shl %2, %1 : i32
   %4 = llvm.add %3, %arg7 : i32
@@ -142,7 +142,7 @@ def addhshlhsdivhnegative1_before := [llvm|
 def addhshlhsdivhnegative1_after := [llvm|
 {
 ^0(%arg7 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(0 : i32) : i32
   %1 = llvm.sub %0, %arg7 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
