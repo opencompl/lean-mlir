@@ -532,11 +532,11 @@ the value `(2^w + (i mod 2^w)) mod 2^w`.
 TODO: double-check that truncating works the same as MLIR (signedness, overflow, etc)
 -/
 @[simp_llvm]
-def const? (i : Int): IntW w :=
+def const? (w : Nat) (i : Int): IntW w :=
   pure <| BitVec.ofInt w i
 
 @[simp_llvm_option]
-theorem const?_eq : LLVM.const? i = .some (BitVec.ofInt w i) := rfl
+theorem const?_eq : LLVM.const? w i = .some (BitVec.ofInt w i) := rfl
 
 @[simp_llvm]
 def not? {w : Nat} (x : BitVec w) : IntW w := do

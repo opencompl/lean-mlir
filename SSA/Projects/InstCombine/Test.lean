@@ -490,10 +490,10 @@ def constant_macro (w : Nat) :=
 
 def constant_stmt :
     @BitVec.Refinement (BitVec w)
-      (LLVM.add (LLVM.add (LLVM.add (LLVM.add (LLVM.const? 2) (LLVM.const? 1))
-        (LLVM.const? 0)) (LLVM.const? (-1))) (LLVM.const? (-2)))
-      (LLVM.add (LLVM.add (LLVM.add (LLVM.add (LLVM.const? 2) (LLVM.const? 1))
-        (LLVM.const? 0)) (LLVM.const? (-1))) (LLVM.const? (-2))) := by
+      (LLVM.add (LLVM.add (LLVM.add (LLVM.add (LLVM.const? _  2) (LLVM.const? _  1))
+        (LLVM.const? _  0)) (LLVM.const? _  (-1))) (LLVM.const? _  (-2)))
+      (LLVM.add (LLVM.add (LLVM.add (LLVM.add (LLVM.const? _  2) (LLVM.const? _  1))
+        (LLVM.const? _  0)) (LLVM.const? _  (-1))) (LLVM.const? _  (-2))) := by
   simp
 
 def constant_macro_proof (w : Nat) :
