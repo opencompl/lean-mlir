@@ -151,16 +151,17 @@ macro "bv_auto": tactic =>
             simp only [← BitVec.negOne_eq_allOnes]
             ring_nf
           | of_bool_tactic
+          -- Disabled as `x &&& 4294967295#32 = x` leads to a stack overflow.
+          -- | (
+          --   simp (config := {failIfUnchanged := false}) only [(BitVec.two_mul), ←BitVec.negOne_eq_allOnes]
+          --    bv_automata
+          --  )
           | (
-              simp (config := {failIfUnchanged := false}) only [(BitVec.two_mul), ←BitVec.negOne_eq_allOnes]
-              bv_automata
-            )
-          | (
-              simp (config := {failIfUnchanged := false}) only [BitVec.two_mul, ←BitVec.negOne_eq_allOnes, ofBool_0_iff_false, ofBool_1_iff_true]
-              try rw [Bool.eq_iff_iff]
-              simp (config := {failIfUnchanged := false}) [Bool.or_eq_true_iff, Bool.and_eq_true_iff,  beq_iff_eq]
-              bv_automata'
-            )
+             simp (config := {failIfUnchanged := false}) only [BitVec.two_mul, ←BitVec.negOne_eq_allOnes, ofBool_0_iff_false, ofBool_1_iff_true]
+             try rw [Bool.eq_iff_iff]
+             simp (config := {failIfUnchanged := false}) [Bool.or_eq_true_iff, Bool.and_eq_true_iff,  beq_iff_eq]
+             bv_automata'
+           )
           |
             try split
             all_goals bv_decide
@@ -184,7 +185,7 @@ macro "alive_auto": tactic =>
 macro "bv_compare'": tactic =>
   `(tactic|
       (
-        -- bv_compare "/usr/local/bin/bitwuzla"
+        -- bv_compare -- for evaluating performance
         bv_decide -- replace this with bv_compare to evaluate performance
       )
    )
