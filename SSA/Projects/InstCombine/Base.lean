@@ -370,7 +370,7 @@ instance : DialectSignature LLVM where
 def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (DialectSignature.sig o)) :
     (TyDenote.toType <| DialectSignature.outTy o) :=
   match o with
-  | Op.const _ val => const? val
+  | Op.const _ val => const? _ val
   | Op.copy _      =>              (op.getN 0)
   | Op.not _       => LLVM.not     (op.getN 0)
   | Op.neg _       => LLVM.neg     (op.getN 0)
