@@ -24,4 +24,4 @@ set_option pp.proofs true in
 theorem dec_mask_neg_i32_proof : lhs ⊑ aaaaa := by
   unfold lhs aaaaa
   simp only [simp_llvm_wrap]
-  simp_alive_ssa
+  simp_alive_ssa -- This hangs
