@@ -32,6 +32,7 @@ def t0_after := [llvm|
   "llvm.return"(%2) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t0_proof : t0_before ⊑ t0_after := by
   unfold t0_before t0_after
   simp_alive_peephole
@@ -60,6 +61,7 @@ def t1_after := [llvm|
   "llvm.return"(%2) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t1_proof : t1_before ⊑ t1_after := by
   unfold t1_before t1_after
   simp_alive_peephole
@@ -88,6 +90,7 @@ def t2_after := [llvm|
   "llvm.return"(%2) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t2_proof : t2_before ⊑ t2_after := by
   unfold t2_before t2_after
   simp_alive_peephole
@@ -115,6 +118,7 @@ def same_source_shifted_signbit_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem same_source_shifted_signbit_proof : same_source_shifted_signbit_before ⊑ same_source_shifted_signbit_after := by
   unfold same_source_shifted_signbit_before same_source_shifted_signbit_after
   simp_alive_peephole

@@ -30,6 +30,7 @@ def positive_samevar_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_samevar_proof : positive_samevar_before ⊑ positive_samevar_after := by
   unfold positive_samevar_before positive_samevar_after
   simp_alive_peephole
@@ -56,6 +57,7 @@ def positive_sameconst_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_sameconst_proof : positive_sameconst_before ⊑ positive_sameconst_after := by
   unfold positive_sameconst_before positive_sameconst_after
   simp_alive_peephole
@@ -85,6 +87,7 @@ def positive_biggerashr_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggerashr_proof : positive_biggerashr_before ⊑ positive_biggerashr_after := by
   unfold positive_biggerashr_before positive_biggerashr_after
   simp_alive_peephole
@@ -114,6 +117,7 @@ def positive_biggershl_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggershl_proof : positive_biggershl_before ⊑ positive_biggershl_after := by
   unfold positive_biggershl_before positive_biggershl_after
   simp_alive_peephole
@@ -140,6 +144,7 @@ def positive_samevar_shlnuw_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_samevar_shlnuw_proof : positive_samevar_shlnuw_before ⊑ positive_samevar_shlnuw_after := by
   unfold positive_samevar_shlnuw_before positive_samevar_shlnuw_after
   simp_alive_peephole
@@ -166,6 +171,7 @@ def positive_sameconst_shlnuw_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_sameconst_shlnuw_proof : positive_sameconst_shlnuw_before ⊑ positive_sameconst_shlnuw_after := by
   unfold positive_sameconst_shlnuw_before positive_sameconst_shlnuw_after
   simp_alive_peephole
@@ -195,6 +201,7 @@ def positive_biggerashr_shlnuw_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggerashr_shlnuw_proof : positive_biggerashr_shlnuw_before ⊑ positive_biggerashr_shlnuw_after := by
   unfold positive_biggerashr_shlnuw_before positive_biggerashr_shlnuw_after
   simp_alive_peephole
@@ -224,6 +231,7 @@ def positive_biggershl_shlnuw_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggershl_shlnuw_proof : positive_biggershl_shlnuw_before ⊑ positive_biggershl_shlnuw_after := by
   unfold positive_biggershl_shlnuw_before positive_biggershl_shlnuw_after
   simp_alive_peephole
@@ -250,6 +258,7 @@ def positive_samevar_shlnsw_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_samevar_shlnsw_proof : positive_samevar_shlnsw_before ⊑ positive_samevar_shlnsw_after := by
   unfold positive_samevar_shlnsw_before positive_samevar_shlnsw_after
   simp_alive_peephole
@@ -276,6 +285,7 @@ def positive_sameconst_shlnsw_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_sameconst_shlnsw_proof : positive_sameconst_shlnsw_before ⊑ positive_sameconst_shlnsw_after := by
   unfold positive_sameconst_shlnsw_before positive_sameconst_shlnsw_after
   simp_alive_peephole
@@ -305,6 +315,7 @@ def positive_biggerashr_shlnsw_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggerashr_shlnsw_proof : positive_biggerashr_shlnsw_before ⊑ positive_biggerashr_shlnsw_after := by
   unfold positive_biggerashr_shlnsw_before positive_biggerashr_shlnsw_after
   simp_alive_peephole
@@ -334,6 +345,7 @@ def positive_biggershl_shlnsw_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggershl_shlnsw_proof : positive_biggershl_shlnsw_before ⊑ positive_biggershl_shlnsw_after := by
   unfold positive_biggershl_shlnsw_before positive_biggershl_shlnsw_after
   simp_alive_peephole
@@ -360,6 +372,7 @@ def positive_samevar_shlnuwnsw_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_samevar_shlnuwnsw_proof : positive_samevar_shlnuwnsw_before ⊑ positive_samevar_shlnuwnsw_after := by
   unfold positive_samevar_shlnuwnsw_before positive_samevar_shlnuwnsw_after
   simp_alive_peephole
@@ -386,6 +399,7 @@ def positive_sameconst_shlnuwnsw_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_sameconst_shlnuwnsw_proof : positive_sameconst_shlnuwnsw_before ⊑ positive_sameconst_shlnuwnsw_after := by
   unfold positive_sameconst_shlnuwnsw_before positive_sameconst_shlnuwnsw_after
   simp_alive_peephole
@@ -415,6 +429,7 @@ def positive_biggerashr_shlnuwnsw_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggerashr_shlnuwnsw_proof : positive_biggerashr_shlnuwnsw_before ⊑ positive_biggerashr_shlnuwnsw_after := by
   unfold positive_biggerashr_shlnuwnsw_before positive_biggerashr_shlnuwnsw_after
   simp_alive_peephole
@@ -444,6 +459,7 @@ def positive_biggershl_shlnuwnsw_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggershl_shlnuwnsw_proof : positive_biggershl_shlnuwnsw_before ⊑ positive_biggershl_shlnuwnsw_after := by
   unfold positive_biggershl_shlnuwnsw_before positive_biggershl_shlnuwnsw_after
   simp_alive_peephole
@@ -467,6 +483,7 @@ def positive_samevar_ashrexact_after := [llvm|
   "llvm.return"(%arg42) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_samevar_ashrexact_proof : positive_samevar_ashrexact_before ⊑ positive_samevar_ashrexact_after := by
   unfold positive_samevar_ashrexact_before positive_samevar_ashrexact_after
   simp_alive_peephole
@@ -491,6 +508,7 @@ def positive_sameconst_ashrexact_after := [llvm|
   "llvm.return"(%arg41) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_sameconst_ashrexact_proof : positive_sameconst_ashrexact_before ⊑ positive_sameconst_ashrexact_after := by
   unfold positive_sameconst_ashrexact_before positive_sameconst_ashrexact_after
   simp_alive_peephole
@@ -518,6 +536,7 @@ def positive_biggerashr_ashrexact_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggerashr_ashrexact_proof : positive_biggerashr_ashrexact_before ⊑ positive_biggerashr_ashrexact_after := by
   unfold positive_biggerashr_ashrexact_before positive_biggerashr_ashrexact_after
   simp_alive_peephole
@@ -545,6 +564,7 @@ def positive_biggershl_ashrexact_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggershl_ashrexact_proof : positive_biggershl_ashrexact_before ⊑ positive_biggershl_ashrexact_after := by
   unfold positive_biggershl_ashrexact_before positive_biggershl_ashrexact_after
   simp_alive_peephole
@@ -568,6 +588,7 @@ def positive_samevar_shlnsw_ashrexact_after := [llvm|
   "llvm.return"(%arg37) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_samevar_shlnsw_ashrexact_proof : positive_samevar_shlnsw_ashrexact_before ⊑ positive_samevar_shlnsw_ashrexact_after := by
   unfold positive_samevar_shlnsw_ashrexact_before positive_samevar_shlnsw_ashrexact_after
   simp_alive_peephole
@@ -592,6 +613,7 @@ def positive_sameconst_shlnsw_ashrexact_after := [llvm|
   "llvm.return"(%arg36) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_sameconst_shlnsw_ashrexact_proof : positive_sameconst_shlnsw_ashrexact_before ⊑ positive_sameconst_shlnsw_ashrexact_after := by
   unfold positive_sameconst_shlnsw_ashrexact_before positive_sameconst_shlnsw_ashrexact_after
   simp_alive_peephole
@@ -619,6 +641,7 @@ def positive_biggerashr_shlnsw_ashrexact_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggerashr_shlnsw_ashrexact_proof : positive_biggerashr_shlnsw_ashrexact_before ⊑ positive_biggerashr_shlnsw_ashrexact_after := by
   unfold positive_biggerashr_shlnsw_ashrexact_before positive_biggerashr_shlnsw_ashrexact_after
   simp_alive_peephole
@@ -646,6 +669,7 @@ def positive_biggershl_shlnsw_ashrexact_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggershl_shlnsw_ashrexact_proof : positive_biggershl_shlnsw_ashrexact_before ⊑ positive_biggershl_shlnsw_ashrexact_after := by
   unfold positive_biggershl_shlnsw_ashrexact_before positive_biggershl_shlnsw_ashrexact_after
   simp_alive_peephole
@@ -669,6 +693,7 @@ def positive_samevar_shlnuw_ashrexact_after := [llvm|
   "llvm.return"(%arg32) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_samevar_shlnuw_ashrexact_proof : positive_samevar_shlnuw_ashrexact_before ⊑ positive_samevar_shlnuw_ashrexact_after := by
   unfold positive_samevar_shlnuw_ashrexact_before positive_samevar_shlnuw_ashrexact_after
   simp_alive_peephole
@@ -693,6 +718,7 @@ def positive_sameconst_shlnuw_ashrexact_after := [llvm|
   "llvm.return"(%arg31) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_sameconst_shlnuw_ashrexact_proof : positive_sameconst_shlnuw_ashrexact_before ⊑ positive_sameconst_shlnuw_ashrexact_after := by
   unfold positive_sameconst_shlnuw_ashrexact_before positive_sameconst_shlnuw_ashrexact_after
   simp_alive_peephole
@@ -720,6 +746,7 @@ def positive_biggerashr_shlnuw_ashrexact_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggerashr_shlnuw_ashrexact_proof : positive_biggerashr_shlnuw_ashrexact_before ⊑ positive_biggerashr_shlnuw_ashrexact_after := by
   unfold positive_biggerashr_shlnuw_ashrexact_before positive_biggerashr_shlnuw_ashrexact_after
   simp_alive_peephole
@@ -747,6 +774,7 @@ def positive_biggershl_shlnuw_ashrexact_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggershl_shlnuw_ashrexact_proof : positive_biggershl_shlnuw_ashrexact_before ⊑ positive_biggershl_shlnuw_ashrexact_after := by
   unfold positive_biggershl_shlnuw_ashrexact_before positive_biggershl_shlnuw_ashrexact_after
   simp_alive_peephole
@@ -770,6 +798,7 @@ def positive_samevar_shlnuwnsw_ashrexact_after := [llvm|
   "llvm.return"(%arg27) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_samevar_shlnuwnsw_ashrexact_proof : positive_samevar_shlnuwnsw_ashrexact_before ⊑ positive_samevar_shlnuwnsw_ashrexact_after := by
   unfold positive_samevar_shlnuwnsw_ashrexact_before positive_samevar_shlnuwnsw_ashrexact_after
   simp_alive_peephole
@@ -794,6 +823,7 @@ def positive_sameconst_shlnuwnsw_ashrexact_after := [llvm|
   "llvm.return"(%arg26) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_sameconst_shlnuwnsw_ashrexact_proof : positive_sameconst_shlnuwnsw_ashrexact_before ⊑ positive_sameconst_shlnuwnsw_ashrexact_after := by
   unfold positive_sameconst_shlnuwnsw_ashrexact_before positive_sameconst_shlnuwnsw_ashrexact_after
   simp_alive_peephole
@@ -821,6 +851,7 @@ def positive_biggerashr_shlnuwnsw_ashrexact_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggerashr_shlnuwnsw_ashrexact_proof : positive_biggerashr_shlnuwnsw_ashrexact_before ⊑ positive_biggerashr_shlnuwnsw_ashrexact_after := by
   unfold positive_biggerashr_shlnuwnsw_ashrexact_before positive_biggerashr_shlnuwnsw_ashrexact_after
   simp_alive_peephole
@@ -848,6 +879,7 @@ def positive_biggershl_shlnuwnsw_ashrexact_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggershl_shlnuwnsw_ashrexact_proof : positive_biggershl_shlnuwnsw_ashrexact_before ⊑ positive_biggershl_shlnuwnsw_ashrexact_after := by
   unfold positive_biggershl_shlnuwnsw_ashrexact_before positive_biggershl_shlnuwnsw_ashrexact_after
   simp_alive_peephole

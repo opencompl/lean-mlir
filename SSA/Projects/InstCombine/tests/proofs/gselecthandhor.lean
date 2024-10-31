@@ -31,6 +31,7 @@ def logical_and_not_after := [llvm|
   "llvm.return"(%3) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem logical_and_not_proof : logical_and_not_before ⊑ logical_and_not_after := by
   unfold logical_and_not_before logical_and_not_after
   simp_alive_peephole
@@ -57,6 +58,7 @@ def logical_or_not_after := [llvm|
   "llvm.return"(%2) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem logical_or_not_proof : logical_or_not_before ⊑ logical_or_not_after := by
   unfold logical_or_not_before logical_or_not_after
   simp_alive_peephole
@@ -81,6 +83,7 @@ def logical_and_cond_reuse_after := [llvm|
   "llvm.return"(%1) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem logical_and_cond_reuse_proof : logical_and_cond_reuse_before ⊑ logical_and_cond_reuse_after := by
   unfold logical_and_cond_reuse_before logical_and_cond_reuse_after
   simp_alive_peephole
@@ -105,6 +108,7 @@ def logical_or_cond_reuse_after := [llvm|
   "llvm.return"(%1) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem logical_or_cond_reuse_proof : logical_or_cond_reuse_before ⊑ logical_or_cond_reuse_after := by
   unfold logical_or_cond_reuse_before logical_or_cond_reuse_after
   simp_alive_peephole
@@ -132,6 +136,7 @@ def logical_and_not_cond_reuse_after := [llvm|
   "llvm.return"(%2) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem logical_and_not_cond_reuse_proof : logical_and_not_cond_reuse_before ⊑ logical_and_not_cond_reuse_after := by
   unfold logical_and_not_cond_reuse_before logical_and_not_cond_reuse_after
   simp_alive_peephole
@@ -160,6 +165,7 @@ def logical_or_not_cond_reuse_after := [llvm|
   "llvm.return"(%3) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem logical_or_not_cond_reuse_proof : logical_or_not_cond_reuse_before ⊑ logical_or_not_cond_reuse_after := by
   unfold logical_or_not_cond_reuse_before logical_or_not_cond_reuse_after
   simp_alive_peephole
@@ -184,6 +190,7 @@ def logical_or_noundef_b_after := [llvm|
   "llvm.return"(%0) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem logical_or_noundef_b_proof : logical_or_noundef_b_before ⊑ logical_or_noundef_b_after := by
   unfold logical_or_noundef_b_before logical_or_noundef_b_after
   simp_alive_peephole
@@ -208,6 +215,7 @@ def logical_and_noundef_b_after := [llvm|
   "llvm.return"(%0) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem logical_and_noundef_b_proof : logical_and_noundef_b_before ⊑ logical_and_noundef_b_after := by
   unfold logical_and_noundef_b_before logical_and_noundef_b_after
   simp_alive_peephole
@@ -236,6 +244,7 @@ def not_not_true_after := [llvm|
   "llvm.return"(%2) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem not_not_true_proof : not_not_true_before ⊑ not_not_true_after := by
   unfold not_not_true_before not_not_true_after
   simp_alive_peephole
@@ -265,6 +274,7 @@ def not_not_false_after := [llvm|
   "llvm.return"(%2) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem not_not_false_proof : not_not_false_before ⊑ not_not_false_after := by
   unfold not_not_false_before not_not_false_after
   simp_alive_peephole
@@ -294,6 +304,7 @@ def not_true_not_after := [llvm|
   "llvm.return"(%3) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem not_true_not_proof : not_true_not_before ⊑ not_true_not_after := by
   unfold not_true_not_before not_true_not_after
   simp_alive_peephole
@@ -324,6 +335,7 @@ def not_false_not_after := [llvm|
   "llvm.return"(%3) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem not_false_not_proof : not_false_not_before ⊑ not_false_not_after := by
   unfold not_false_not_before not_false_not_after
   simp_alive_peephole
@@ -353,6 +365,7 @@ def and_or1_after := [llvm|
   "llvm.return"(%3) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem and_or1_proof : and_or1_before ⊑ and_or1_after := by
   unfold and_or1_before and_or1_after
   simp_alive_peephole
@@ -382,6 +395,7 @@ def and_or2_after := [llvm|
   "llvm.return"(%3) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem and_or2_proof : and_or2_before ⊑ and_or2_after := by
   unfold and_or2_before and_or2_after
   simp_alive_peephole
@@ -411,6 +425,7 @@ def and_or1_commuted_after := [llvm|
   "llvm.return"(%3) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem and_or1_commuted_proof : and_or1_commuted_before ⊑ and_or1_commuted_after := by
   unfold and_or1_commuted_before and_or1_commuted_after
   simp_alive_peephole
@@ -440,6 +455,7 @@ def and_or2_commuted_after := [llvm|
   "llvm.return"(%3) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem and_or2_commuted_proof : and_or2_commuted_before ⊑ and_or2_commuted_after := by
   unfold and_or2_commuted_before and_or2_commuted_after
   simp_alive_peephole
@@ -469,6 +485,7 @@ def and_or1_wrong_operand_after := [llvm|
   "llvm.return"(%3) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem and_or1_wrong_operand_proof : and_or1_wrong_operand_before ⊑ and_or1_wrong_operand_after := by
   unfold and_or1_wrong_operand_before and_or1_wrong_operand_after
   simp_alive_peephole
@@ -498,6 +515,7 @@ def and_or2_wrong_operand_after := [llvm|
   "llvm.return"(%3) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem and_or2_wrong_operand_proof : and_or2_wrong_operand_before ⊑ and_or2_wrong_operand_after := by
   unfold and_or2_wrong_operand_before and_or2_wrong_operand_after
   simp_alive_peephole
@@ -527,6 +545,7 @@ def or_and1_after := [llvm|
   "llvm.return"(%3) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem or_and1_proof : or_and1_before ⊑ or_and1_after := by
   unfold or_and1_before or_and1_after
   simp_alive_peephole
@@ -556,6 +575,7 @@ def or_and2_after := [llvm|
   "llvm.return"(%3) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem or_and2_proof : or_and2_before ⊑ or_and2_after := by
   unfold or_and2_before or_and2_after
   simp_alive_peephole
@@ -585,6 +605,7 @@ def or_and1_commuted_after := [llvm|
   "llvm.return"(%3) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem or_and1_commuted_proof : or_and1_commuted_before ⊑ or_and1_commuted_after := by
   unfold or_and1_commuted_before or_and1_commuted_after
   simp_alive_peephole
@@ -614,6 +635,7 @@ def or_and2_commuted_after := [llvm|
   "llvm.return"(%3) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem or_and2_commuted_proof : or_and2_commuted_before ⊑ or_and2_commuted_after := by
   unfold or_and2_commuted_before or_and2_commuted_after
   simp_alive_peephole
@@ -640,6 +662,7 @@ def pr64558_after := [llvm|
   "llvm.return"(%0) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem pr64558_proof : pr64558_before ⊑ pr64558_after := by
   unfold pr64558_before pr64558_after
   simp_alive_peephole

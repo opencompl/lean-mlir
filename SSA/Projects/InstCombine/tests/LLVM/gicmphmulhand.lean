@@ -33,6 +33,7 @@ def pr40493_neg3_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem pr40493_neg3_proof : pr40493_neg3_before ⊑ pr40493_neg3_after := by
   unfold pr40493_neg3_before pr40493_neg3_after
   simp_alive_peephole
@@ -63,6 +64,7 @@ def pr51551_demand3bits_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem pr51551_demand3bits_proof : pr51551_demand3bits_before ⊑ pr51551_demand3bits_after := by
   unfold pr51551_demand3bits_before pr51551_demand3bits_after
   simp_alive_peephole

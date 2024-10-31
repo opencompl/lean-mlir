@@ -5,8 +5,8 @@ open BitVec
 open LLVM
 
 section gnothadd_proof
-theorem basic_thm :
-  ∀ (e e_1 : IntW 8), LLVM.xor (add (LLVM.xor e_1 (const? (-1))) e) (const? (-1)) ⊑ sub e_1 e := by 
+theorem basic_thm (e✝ e✝¹ : IntW 8) :
+  LLVM.xor (add (LLVM.xor e✝¹ (const? (-1))) e✝) (const? (-1)) ⊑ sub e✝¹ e✝ := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -14,8 +14,8 @@ theorem basic_thm :
     all_goals sorry
 
 
-theorem basic_com_add_thm :
-  ∀ (e e_1 : IntW 8), LLVM.xor (add e_1 (LLVM.xor e (const? (-1)))) (const? (-1)) ⊑ sub e e_1 := by 
+theorem basic_com_add_thm (e✝ e✝¹ : IntW 8) :
+  LLVM.xor (add e✝¹ (LLVM.xor e✝ (const? (-1)))) (const? (-1)) ⊑ sub e✝ e✝¹ := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -23,10 +23,9 @@ theorem basic_com_add_thm :
     all_goals sorry
 
 
-theorem basic_preserve_nsw_thm :
-  ∀ (e e_1 : IntW 8),
-    LLVM.xor (add (LLVM.xor e_1 (const? (-1))) e { «nsw» := true, «nuw» := false }) (const? (-1)) ⊑
-      sub e_1 e { «nsw» := true, «nuw» := false } := by 
+theorem basic_preserve_nsw_thm (e✝ e✝¹ : IntW 8) :
+  LLVM.xor (add (LLVM.xor e✝¹ (const? (-1))) e✝ { «nsw» := true, «nuw» := false }) (const? (-1)) ⊑
+    sub e✝¹ e✝ { «nsw» := true, «nuw» := false } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -34,10 +33,9 @@ theorem basic_preserve_nsw_thm :
     all_goals sorry
 
 
-theorem basic_preserve_nuw_thm :
-  ∀ (e e_1 : IntW 8),
-    LLVM.xor (add (LLVM.xor e_1 (const? (-1))) e { «nsw» := false, «nuw» := true }) (const? (-1)) ⊑
-      sub e_1 e { «nsw» := false, «nuw» := true } := by 
+theorem basic_preserve_nuw_thm (e✝ e✝¹ : IntW 8) :
+  LLVM.xor (add (LLVM.xor e✝¹ (const? (-1))) e✝ { «nsw» := false, «nuw» := true }) (const? (-1)) ⊑
+    sub e✝¹ e✝ { «nsw» := false, «nuw» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -45,10 +43,9 @@ theorem basic_preserve_nuw_thm :
     all_goals sorry
 
 
-theorem basic_preserve_nuw_nsw_thm :
-  ∀ (e e_1 : IntW 8),
-    LLVM.xor (add (LLVM.xor e_1 (const? (-1))) e { «nsw» := true, «nuw» := true }) (const? (-1)) ⊑
-      sub e_1 e { «nsw» := true, «nuw» := true } := by 
+theorem basic_preserve_nuw_nsw_thm (e✝ e✝¹ : IntW 8) :
+  LLVM.xor (add (LLVM.xor e✝¹ (const? (-1))) e✝ { «nsw» := true, «nuw» := true }) (const? (-1)) ⊑
+    sub e✝¹ e✝ { «nsw» := true, «nuw» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

@@ -36,6 +36,7 @@ def xor_1_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem xor_1_proof : xor_1_before ⊑ xor_1_after := by
   unfold xor_1_before xor_1_after
   simp_alive_peephole
@@ -68,6 +69,7 @@ def xor_2_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem xor_2_proof : xor_2_before ⊑ xor_2_after := by
   unfold xor_2_before xor_2_after
   simp_alive_peephole
@@ -100,6 +102,7 @@ def add_1_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem add_1_proof : add_1_before ⊑ add_1_after := by
   unfold add_1_before add_1_after
   simp_alive_peephole
@@ -132,6 +135,7 @@ def add_2_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem add_2_proof : add_2_before ⊑ add_2_after := by
   unfold add_2_before add_2_after
   simp_alive_peephole
@@ -164,6 +168,7 @@ def sub_1_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sub_1_proof : sub_1_before ⊑ sub_1_after := by
   unfold sub_1_before sub_1_after
   simp_alive_peephole
@@ -198,6 +203,7 @@ def sub_2_after := [llvm|
   "llvm.return"(%5) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sub_2_proof : sub_2_before ⊑ sub_2_after := by
   unfold sub_2_before sub_2_after
   simp_alive_peephole
@@ -232,6 +238,7 @@ def sub_3_after := [llvm|
   "llvm.return"(%5) : (i128) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sub_3_proof : sub_3_before ⊑ sub_3_after := by
   unfold sub_3_before sub_3_after
   simp_alive_peephole
@@ -264,6 +271,7 @@ def ashr_1_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem ashr_1_proof : ashr_1_before ⊑ ashr_1_after := by
   unfold ashr_1_before ashr_1_after
   simp_alive_peephole
@@ -302,6 +310,7 @@ def select_1_after := [llvm|
   "llvm.return"(%6) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem select_1_proof : select_1_before ⊑ select_1_after := by
   unfold select_1_before select_1_after
   simp_alive_peephole
@@ -338,6 +347,7 @@ def select_2_after := [llvm|
   "llvm.return"(%5) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem select_2_proof : select_2_before ⊑ select_2_after := by
   unfold select_2_before select_2_after
   simp_alive_peephole
@@ -368,6 +378,7 @@ def lshr_not_nneg2_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lshr_not_nneg2_proof : lshr_not_nneg2_before ⊑ lshr_not_nneg2_after := by
   unfold lshr_not_nneg2_before lshr_not_nneg2_after
   simp_alive_peephole

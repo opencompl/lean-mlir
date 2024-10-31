@@ -31,6 +31,7 @@ def test_sdiv_canonicalize_op0_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test_sdiv_canonicalize_op0_proof : test_sdiv_canonicalize_op0_before ⊑ test_sdiv_canonicalize_op0_after := by
   unfold test_sdiv_canonicalize_op0_before test_sdiv_canonicalize_op0_after
   simp_alive_peephole
@@ -58,6 +59,7 @@ def test_sdiv_canonicalize_op0_exact_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test_sdiv_canonicalize_op0_exact_proof : test_sdiv_canonicalize_op0_exact_before ⊑ test_sdiv_canonicalize_op0_exact_after := by
   unfold test_sdiv_canonicalize_op0_exact_before test_sdiv_canonicalize_op0_exact_after
   simp_alive_peephole

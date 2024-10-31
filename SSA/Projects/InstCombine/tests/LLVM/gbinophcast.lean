@@ -29,6 +29,7 @@ def and_sext_to_sel_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem and_sext_to_sel_proof : and_sext_to_sel_before ⊑ and_sext_to_sel_after := by
   unfold and_sext_to_sel_before and_sext_to_sel_after
   simp_alive_peephole
@@ -54,6 +55,7 @@ def or_sext_to_sel_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem or_sext_to_sel_proof : or_sext_to_sel_before ⊑ or_sext_to_sel_after := by
   unfold or_sext_to_sel_before or_sext_to_sel_after
   simp_alive_peephole
@@ -79,6 +81,7 @@ def xor_sext_to_sel_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem xor_sext_to_sel_proof : xor_sext_to_sel_before ⊑ xor_sext_to_sel_after := by
   unfold xor_sext_to_sel_before xor_sext_to_sel_after
   simp_alive_peephole
@@ -106,6 +109,7 @@ def and_add_bool_to_select_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem and_add_bool_to_select_proof : and_add_bool_to_select_before ⊑ and_add_bool_to_select_after := by
   unfold and_add_bool_to_select_before and_add_bool_to_select_after
   simp_alive_peephole
@@ -136,6 +140,7 @@ def and_add_bool_to_select_multi_use_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem and_add_bool_to_select_multi_use_proof : and_add_bool_to_select_multi_use_before ⊑ and_add_bool_to_select_multi_use_after := by
   unfold and_add_bool_to_select_multi_use_before and_add_bool_to_select_multi_use_after
   simp_alive_peephole

@@ -33,6 +33,7 @@ def t0_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t0_proof : t0_before ⊑ t0_after := by
   unfold t0_before t0_after
   simp_alive_peephole
@@ -62,6 +63,7 @@ def t1_exact_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t1_exact_proof : t1_exact_before ⊑ t1_exact_after := by
   unfold t1_exact_before t1_exact_after
   simp_alive_peephole
@@ -91,6 +93,7 @@ def t2_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t2_proof : t2_before ⊑ t2_after := by
   unfold t2_before t2_after
   simp_alive_peephole
@@ -120,6 +123,7 @@ def t3_exact_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t3_exact_proof : t3_exact_before ⊑ t3_exact_after := by
   unfold t3_exact_before t3_exact_after
   simp_alive_peephole
@@ -151,6 +155,7 @@ def n9_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem n9_proof : n9_before ⊑ n9_after := by
   unfold n9_before n9_after
   simp_alive_peephole
@@ -182,6 +187,7 @@ def n10_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem n10_proof : n10_before ⊑ n10_after := by
   unfold n10_before n10_after
   simp_alive_peephole

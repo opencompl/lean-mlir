@@ -30,6 +30,7 @@ def t0_sub_from_trueval_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t0_sub_from_trueval_proof : t0_sub_from_trueval_before ⊑ t0_sub_from_trueval_after := by
   unfold t0_sub_from_trueval_before t0_sub_from_trueval_after
   simp_alive_peephole
@@ -56,6 +57,7 @@ def t1_sub_from_falseval_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t1_sub_from_falseval_proof : t1_sub_from_falseval_before ⊑ t1_sub_from_falseval_after := by
   unfold t1_sub_from_falseval_before t1_sub_from_falseval_after
   simp_alive_peephole

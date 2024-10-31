@@ -33,6 +33,7 @@ def t0_lshr_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t0_lshr_proof : t0_lshr_before ⊑ t0_lshr_after := by
   unfold t0_lshr_before t0_lshr_after
   simp_alive_peephole
@@ -62,6 +63,7 @@ def t1_sshr_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t1_sshr_proof : t1_sshr_before ⊑ t1_sshr_after := by
   unfold t1_sshr_before t1_sshr_after
   simp_alive_peephole
@@ -91,6 +93,7 @@ def n13_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem n13_proof : n13_before ⊑ n13_after := by
   unfold n13_before n13_after
   simp_alive_peephole

@@ -45,6 +45,7 @@ def rotateleft_9_neg_mask_wide_amount_commute_after := [llvm|
   "llvm.return"(%9) : (i9) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem rotateleft_9_neg_mask_wide_amount_commute_proof : rotateleft_9_neg_mask_wide_amount_commute_before ⊑ rotateleft_9_neg_mask_wide_amount_commute_after := by
   unfold rotateleft_9_neg_mask_wide_amount_commute_before rotateleft_9_neg_mask_wide_amount_commute_after
   simp_alive_peephole

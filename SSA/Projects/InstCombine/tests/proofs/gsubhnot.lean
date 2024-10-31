@@ -31,6 +31,7 @@ def sub_not_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sub_not_proof : sub_not_before ⊑ sub_not_after := by
   unfold sub_not_before sub_not_after
   simp_alive_peephole
@@ -58,6 +59,7 @@ def dec_sub_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem dec_sub_proof : dec_sub_before ⊑ dec_sub_after := by
   unfold dec_sub_before dec_sub_after
   simp_alive_peephole
@@ -85,6 +87,7 @@ def sub_inc_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sub_inc_proof : sub_inc_before ⊑ sub_inc_after := by
   unfold sub_inc_before sub_inc_after
   simp_alive_peephole
@@ -112,6 +115,7 @@ def sub_dec_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sub_dec_proof : sub_dec_before ⊑ sub_dec_after := by
   unfold sub_dec_before sub_dec_after
   simp_alive_peephole

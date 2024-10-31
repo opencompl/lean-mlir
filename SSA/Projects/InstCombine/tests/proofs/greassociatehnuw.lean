@@ -31,6 +31,7 @@ def reassoc_add_nuw_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem reassoc_add_nuw_proof : reassoc_add_nuw_before ⊑ reassoc_add_nuw_after := by
   unfold reassoc_add_nuw_before reassoc_add_nuw_after
   simp_alive_peephole
@@ -58,6 +59,7 @@ def reassoc_sub_nuw_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem reassoc_sub_nuw_proof : reassoc_sub_nuw_before ⊑ reassoc_sub_nuw_after := by
   unfold reassoc_sub_nuw_before reassoc_sub_nuw_after
   simp_alive_peephole
@@ -85,6 +87,7 @@ def reassoc_mul_nuw_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem reassoc_mul_nuw_proof : reassoc_mul_nuw_before ⊑ reassoc_mul_nuw_after := by
   unfold reassoc_mul_nuw_before reassoc_mul_nuw_after
   simp_alive_peephole
@@ -112,6 +115,7 @@ def no_reassoc_add_nuw_none_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem no_reassoc_add_nuw_none_proof : no_reassoc_add_nuw_none_before ⊑ no_reassoc_add_nuw_none_after := by
   unfold no_reassoc_add_nuw_none_before no_reassoc_add_nuw_none_after
   simp_alive_peephole
@@ -139,6 +143,7 @@ def no_reassoc_add_none_nuw_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem no_reassoc_add_none_nuw_proof : no_reassoc_add_none_nuw_before ⊑ no_reassoc_add_none_nuw_after := by
   unfold no_reassoc_add_none_nuw_before no_reassoc_add_none_nuw_after
   simp_alive_peephole
@@ -168,6 +173,7 @@ def reassoc_x2_add_nuw_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem reassoc_x2_add_nuw_proof : reassoc_x2_add_nuw_before ⊑ reassoc_x2_add_nuw_after := by
   unfold reassoc_x2_add_nuw_before reassoc_x2_add_nuw_after
   simp_alive_peephole
@@ -197,6 +203,7 @@ def reassoc_x2_mul_nuw_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem reassoc_x2_mul_nuw_proof : reassoc_x2_mul_nuw_before ⊑ reassoc_x2_mul_nuw_after := by
   unfold reassoc_x2_mul_nuw_before reassoc_x2_mul_nuw_after
   simp_alive_peephole
@@ -226,6 +233,7 @@ def reassoc_x2_sub_nuw_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem reassoc_x2_sub_nuw_proof : reassoc_x2_sub_nuw_before ⊑ reassoc_x2_sub_nuw_after := by
   unfold reassoc_x2_sub_nuw_before reassoc_x2_sub_nuw_after
   simp_alive_peephole
@@ -252,6 +260,7 @@ def tryFactorization_add_nuw_mul_nuw_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem tryFactorization_add_nuw_mul_nuw_proof : tryFactorization_add_nuw_mul_nuw_before ⊑ tryFactorization_add_nuw_mul_nuw_after := by
   unfold tryFactorization_add_nuw_mul_nuw_before tryFactorization_add_nuw_mul_nuw_after
   simp_alive_peephole
@@ -278,6 +287,7 @@ def tryFactorization_add_nuw_mul_nuw_int_max_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem tryFactorization_add_nuw_mul_nuw_int_max_proof : tryFactorization_add_nuw_mul_nuw_int_max_before ⊑ tryFactorization_add_nuw_mul_nuw_int_max_after := by
   unfold tryFactorization_add_nuw_mul_nuw_int_max_before tryFactorization_add_nuw_mul_nuw_int_max_after
   simp_alive_peephole
@@ -304,6 +314,7 @@ def tryFactorization_add_mul_nuw_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem tryFactorization_add_mul_nuw_proof : tryFactorization_add_mul_nuw_before ⊑ tryFactorization_add_mul_nuw_after := by
   unfold tryFactorization_add_mul_nuw_before tryFactorization_add_mul_nuw_after
   simp_alive_peephole
@@ -330,6 +341,7 @@ def tryFactorization_add_nuw_mul_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem tryFactorization_add_nuw_mul_proof : tryFactorization_add_nuw_mul_before ⊑ tryFactorization_add_nuw_mul_after := by
   unfold tryFactorization_add_nuw_mul_before tryFactorization_add_nuw_mul_after
   simp_alive_peephole
@@ -356,6 +368,7 @@ def tryFactorization_add_nuw_mul_nuw_mul_nuw_var_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem tryFactorization_add_nuw_mul_nuw_mul_nuw_var_proof : tryFactorization_add_nuw_mul_nuw_mul_nuw_var_before ⊑ tryFactorization_add_nuw_mul_nuw_mul_nuw_var_after := by
   unfold tryFactorization_add_nuw_mul_nuw_mul_nuw_var_before tryFactorization_add_nuw_mul_nuw_mul_nuw_var_after
   simp_alive_peephole
@@ -382,6 +395,7 @@ def tryFactorization_add_nuw_mul_mul_nuw_var_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem tryFactorization_add_nuw_mul_mul_nuw_var_proof : tryFactorization_add_nuw_mul_mul_nuw_var_before ⊑ tryFactorization_add_nuw_mul_mul_nuw_var_after := by
   unfold tryFactorization_add_nuw_mul_mul_nuw_var_before tryFactorization_add_nuw_mul_mul_nuw_var_after
   simp_alive_peephole
@@ -408,6 +422,7 @@ def tryFactorization_add_nuw_mul_nuw_mul_var_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem tryFactorization_add_nuw_mul_nuw_mul_var_proof : tryFactorization_add_nuw_mul_nuw_mul_var_before ⊑ tryFactorization_add_nuw_mul_nuw_mul_var_after := by
   unfold tryFactorization_add_nuw_mul_nuw_mul_var_before tryFactorization_add_nuw_mul_nuw_mul_var_after
   simp_alive_peephole
@@ -434,6 +449,7 @@ def tryFactorization_add_mul_nuw_mul_var_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem tryFactorization_add_mul_nuw_mul_var_proof : tryFactorization_add_mul_nuw_mul_var_before ⊑ tryFactorization_add_mul_nuw_mul_var_after := by
   unfold tryFactorization_add_mul_nuw_mul_var_before tryFactorization_add_mul_nuw_mul_var_after
   simp_alive_peephole

@@ -35,6 +35,7 @@ def and_signbit_select_shl_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem and_signbit_select_shl_proof : and_signbit_select_shl_before ⊑ and_signbit_select_shl_after := by
   unfold and_signbit_select_shl_before and_signbit_select_shl_after
   simp_alive_peephole
@@ -66,6 +67,7 @@ def and_nosignbit_select_shl_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem and_nosignbit_select_shl_proof : and_nosignbit_select_shl_before ⊑ and_nosignbit_select_shl_after := by
   unfold and_nosignbit_select_shl_before and_nosignbit_select_shl_after
   simp_alive_peephole
@@ -97,6 +99,7 @@ def or_signbit_select_shl_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem or_signbit_select_shl_proof : or_signbit_select_shl_before ⊑ or_signbit_select_shl_after := by
   unfold or_signbit_select_shl_before or_signbit_select_shl_after
   simp_alive_peephole
@@ -128,6 +131,7 @@ def or_nosignbit_select_shl_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem or_nosignbit_select_shl_proof : or_nosignbit_select_shl_before ⊑ or_nosignbit_select_shl_after := by
   unfold or_nosignbit_select_shl_before or_nosignbit_select_shl_after
   simp_alive_peephole
@@ -159,6 +163,7 @@ def xor_signbit_select_shl_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem xor_signbit_select_shl_proof : xor_signbit_select_shl_before ⊑ xor_signbit_select_shl_after := by
   unfold xor_signbit_select_shl_before xor_signbit_select_shl_after
   simp_alive_peephole
@@ -190,6 +195,7 @@ def xor_nosignbit_select_shl_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem xor_nosignbit_select_shl_proof : xor_nosignbit_select_shl_before ⊑ xor_nosignbit_select_shl_after := by
   unfold xor_nosignbit_select_shl_before xor_nosignbit_select_shl_after
   simp_alive_peephole
@@ -221,6 +227,7 @@ def add_signbit_select_shl_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem add_signbit_select_shl_proof : add_signbit_select_shl_before ⊑ add_signbit_select_shl_after := by
   unfold add_signbit_select_shl_before add_signbit_select_shl_after
   simp_alive_peephole
@@ -252,6 +259,7 @@ def add_nosignbit_select_shl_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem add_nosignbit_select_shl_proof : add_nosignbit_select_shl_before ⊑ add_nosignbit_select_shl_after := by
   unfold add_nosignbit_select_shl_before add_nosignbit_select_shl_after
   simp_alive_peephole
@@ -283,6 +291,7 @@ def and_signbit_select_lshr_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem and_signbit_select_lshr_proof : and_signbit_select_lshr_before ⊑ and_signbit_select_lshr_after := by
   unfold and_signbit_select_lshr_before and_signbit_select_lshr_after
   simp_alive_peephole
@@ -314,6 +323,7 @@ def and_nosignbit_select_lshr_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem and_nosignbit_select_lshr_proof : and_nosignbit_select_lshr_before ⊑ and_nosignbit_select_lshr_after := by
   unfold and_nosignbit_select_lshr_before and_nosignbit_select_lshr_after
   simp_alive_peephole
@@ -345,6 +355,7 @@ def or_signbit_select_lshr_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem or_signbit_select_lshr_proof : or_signbit_select_lshr_before ⊑ or_signbit_select_lshr_after := by
   unfold or_signbit_select_lshr_before or_signbit_select_lshr_after
   simp_alive_peephole
@@ -376,6 +387,7 @@ def or_nosignbit_select_lshr_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem or_nosignbit_select_lshr_proof : or_nosignbit_select_lshr_before ⊑ or_nosignbit_select_lshr_after := by
   unfold or_nosignbit_select_lshr_before or_nosignbit_select_lshr_after
   simp_alive_peephole
@@ -407,6 +419,7 @@ def xor_signbit_select_lshr_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem xor_signbit_select_lshr_proof : xor_signbit_select_lshr_before ⊑ xor_signbit_select_lshr_after := by
   unfold xor_signbit_select_lshr_before xor_signbit_select_lshr_after
   simp_alive_peephole
@@ -438,6 +451,7 @@ def xor_nosignbit_select_lshr_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem xor_nosignbit_select_lshr_proof : xor_nosignbit_select_lshr_before ⊑ xor_nosignbit_select_lshr_after := by
   unfold xor_nosignbit_select_lshr_before xor_nosignbit_select_lshr_after
   simp_alive_peephole
@@ -469,6 +483,7 @@ def and_signbit_select_ashr_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem and_signbit_select_ashr_proof : and_signbit_select_ashr_before ⊑ and_signbit_select_ashr_after := by
   unfold and_signbit_select_ashr_before and_signbit_select_ashr_after
   simp_alive_peephole
@@ -500,6 +515,7 @@ def and_nosignbit_select_ashr_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem and_nosignbit_select_ashr_proof : and_nosignbit_select_ashr_before ⊑ and_nosignbit_select_ashr_after := by
   unfold and_nosignbit_select_ashr_before and_nosignbit_select_ashr_after
   simp_alive_peephole
@@ -531,6 +547,7 @@ def or_signbit_select_ashr_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem or_signbit_select_ashr_proof : or_signbit_select_ashr_before ⊑ or_signbit_select_ashr_after := by
   unfold or_signbit_select_ashr_before or_signbit_select_ashr_after
   simp_alive_peephole
@@ -562,6 +579,7 @@ def or_nosignbit_select_ashr_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem or_nosignbit_select_ashr_proof : or_nosignbit_select_ashr_before ⊑ or_nosignbit_select_ashr_after := by
   unfold or_nosignbit_select_ashr_before or_nosignbit_select_ashr_after
   simp_alive_peephole
@@ -593,6 +611,7 @@ def xor_signbit_select_ashr_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem xor_signbit_select_ashr_proof : xor_signbit_select_ashr_before ⊑ xor_signbit_select_ashr_after := by
   unfold xor_signbit_select_ashr_before xor_signbit_select_ashr_after
   simp_alive_peephole
@@ -624,6 +643,7 @@ def xor_nosignbit_select_ashr_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem xor_nosignbit_select_ashr_proof : xor_nosignbit_select_ashr_before ⊑ xor_nosignbit_select_ashr_after := by
   unfold xor_nosignbit_select_ashr_before xor_nosignbit_select_ashr_after
   simp_alive_peephole

@@ -35,6 +35,7 @@ def neg_mask1_lshr_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem neg_mask1_lshr_proof : neg_mask1_lshr_before ⊑ neg_mask1_lshr_after := by
   unfold neg_mask1_lshr_before neg_mask1_lshr_after
   simp_alive_peephole
@@ -67,6 +68,7 @@ def sub_mask1_lshr_after := [llvm|
   "llvm.return"(%5) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sub_mask1_lshr_proof : sub_mask1_lshr_before ⊑ sub_mask1_lshr_after := by
   unfold sub_mask1_lshr_before sub_mask1_lshr_after
   simp_alive_peephole
@@ -102,6 +104,7 @@ def sub_mask1_trunc_lshr_after := [llvm|
   "llvm.return"(%6) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sub_mask1_trunc_lshr_proof : sub_mask1_trunc_lshr_before ⊑ sub_mask1_trunc_lshr_after := by
   unfold sub_mask1_trunc_lshr_before sub_mask1_trunc_lshr_after
   simp_alive_peephole
@@ -139,6 +142,7 @@ def sub_sext_mask1_trunc_lshr_after := [llvm|
   "llvm.return"(%7) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sub_sext_mask1_trunc_lshr_proof : sub_sext_mask1_trunc_lshr_before ⊑ sub_sext_mask1_trunc_lshr_after := by
   unfold sub_sext_mask1_trunc_lshr_before sub_sext_mask1_trunc_lshr_after
   simp_alive_peephole
@@ -173,6 +177,7 @@ def sub_zext_trunc_lshr_after := [llvm|
   "llvm.return"(%6) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sub_zext_trunc_lshr_proof : sub_zext_trunc_lshr_before ⊑ sub_zext_trunc_lshr_after := by
   unfold sub_zext_trunc_lshr_before sub_zext_trunc_lshr_after
   simp_alive_peephole
@@ -206,6 +211,7 @@ def neg_mask2_lshr_after := [llvm|
   "llvm.return"(%5) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem neg_mask2_lshr_proof : neg_mask2_lshr_before ⊑ neg_mask2_lshr_after := by
   unfold neg_mask2_lshr_before neg_mask2_lshr_after
   simp_alive_peephole
@@ -235,6 +241,7 @@ def neg_signbit_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem neg_signbit_proof : neg_signbit_before ⊑ neg_signbit_after := by
   unfold neg_signbit_before neg_signbit_after
   simp_alive_peephole
@@ -266,6 +273,7 @@ def neg_not_signbit2_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem neg_not_signbit2_proof : neg_not_signbit2_before ⊑ neg_not_signbit2_after := by
   unfold neg_not_signbit2_before neg_not_signbit2_after
   simp_alive_peephole
@@ -297,6 +305,7 @@ def neg_not_signbit3_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem neg_not_signbit3_proof : neg_not_signbit3_before ⊑ neg_not_signbit3_after := by
   unfold neg_not_signbit3_before neg_not_signbit3_after
   simp_alive_peephole

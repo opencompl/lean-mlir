@@ -5,9 +5,8 @@ open BitVec
 open LLVM
 
 section gselecthofhsymmetrichselects_proof
-theorem select_of_symmetric_selects_thm :
-  ∀ (e e_1 : IntW 32) (e_2 e_3 : IntW 1),
-    select e_3 (select e_2 e_1 e) (select e_2 e e_1) ⊑ select (LLVM.xor e_2 e_3) e e_1 := by 
+theorem select_of_symmetric_selects_thm (e✝ e✝¹ : IntW 32) (e✝² e✝³ : IntW 1) :
+  select e✝³ (select e✝² e✝¹ e✝) (select e✝² e✝ e✝¹) ⊑ select (LLVM.xor e✝² e✝³) e✝ e✝¹ := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -15,9 +14,8 @@ theorem select_of_symmetric_selects_thm :
     all_goals sorry
 
 
-theorem select_of_symmetric_selects_negative1_thm :
-  ∀ (e e_1 : IntW 32) (e_2 e_3 : IntW 1),
-    select e_3 (select e_2 e_1 e) (select e_3 e e_1) ⊑ select e_3 (select e_2 e_1 e) e_1 := by 
+theorem select_of_symmetric_selects_negative1_thm (e✝ e✝¹ : IntW 32) (e✝² e✝³ : IntW 1) :
+  select e✝³ (select e✝² e✝¹ e✝) (select e✝³ e✝ e✝¹) ⊑ select e✝³ (select e✝² e✝¹ e✝) e✝¹ := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -25,9 +23,8 @@ theorem select_of_symmetric_selects_negative1_thm :
     all_goals sorry
 
 
-theorem select_of_symmetric_selects_commuted_thm :
-  ∀ (e e_1 : IntW 32) (e_2 e_3 : IntW 1),
-    select e_3 (select e_2 e_1 e) (select e_2 e e_1) ⊑ select (LLVM.xor e_2 e_3) e e_1 := by 
+theorem select_of_symmetric_selects_commuted_thm (e✝ e✝¹ : IntW 32) (e✝² e✝³ : IntW 1) :
+  select e✝³ (select e✝² e✝¹ e✝) (select e✝² e✝ e✝¹) ⊑ select (LLVM.xor e✝² e✝³) e✝ e✝¹ := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

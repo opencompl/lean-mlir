@@ -5,7 +5,7 @@ open BitVec
 open LLVM
 
 section gshifthbyhsignext_proof
-theorem t0_shl_thm : ∀ (e : IntW 8) (e_1 : IntW 32), shl e_1 (sext 32 e) ⊑ shl e_1 (zext 32 e) := by 
+theorem t0_shl_thm (e✝ : IntW 8) (e✝¹ : IntW 32) : shl e✝¹ (sext 32 e✝) ⊑ shl e✝¹ (zext 32 e✝) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -13,7 +13,7 @@ theorem t0_shl_thm : ∀ (e : IntW 8) (e_1 : IntW 32), shl e_1 (sext 32 e) ⊑ s
     all_goals sorry
 
 
-theorem t1_lshr_thm : ∀ (e : IntW 8) (e_1 : IntW 32), lshr e_1 (sext 32 e) ⊑ lshr e_1 (zext 32 e) := by 
+theorem t1_lshr_thm (e✝ : IntW 8) (e✝¹ : IntW 32) : lshr e✝¹ (sext 32 e✝) ⊑ lshr e✝¹ (zext 32 e✝) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -21,7 +21,7 @@ theorem t1_lshr_thm : ∀ (e : IntW 8) (e_1 : IntW 32), lshr e_1 (sext 32 e) ⊑
     all_goals sorry
 
 
-theorem t2_ashr_thm : ∀ (e : IntW 8) (e_1 : IntW 32), ashr e_1 (sext 32 e) ⊑ ashr e_1 (zext 32 e) := by 
+theorem t2_ashr_thm (e✝ : IntW 8) (e✝¹ : IntW 32) : ashr e✝¹ (sext 32 e✝) ⊑ ashr e✝¹ (zext 32 e✝) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

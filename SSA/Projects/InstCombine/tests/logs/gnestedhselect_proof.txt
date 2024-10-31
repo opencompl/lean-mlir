@@ -1,9 +1,374 @@
-⚠ [2488/2503] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+⚠ [46/2519] Replayed Mathlib.Logic.Basic
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:155:8: `dec_em'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:159:8: `em'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:304:8: `or_congr_left'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:307:8: `or_congr_right'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:320:8: `imp_or'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:359:8: `xor_iff_not_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:418:8: `eqRec_heq'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:515:8: `forall_true_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:536:8: `exists_apply_eq_apply'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:543:6: `exists_apply_eq_apply2'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:552:6: `exists_apply_eq_apply3'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:579:8: `forall_apply_eq_imp_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:582:8: `forall_eq_apply_imp_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:642:8: `forall_prop_congr'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:715:6: `Classical.choose_eq'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:851:8: `dite_eq_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:855:8: `ite_eq_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [62/2519] Replayed Mathlib.Algebra.NeZero
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/NeZero.lean:44:6: `zero_ne_one'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/NeZero.lean:46:6: `one_ne_zero'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/NeZero.lean:48:6: `two_ne_zero'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/NeZero.lean:50:6: `three_ne_zero'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/NeZero.lean:52:6: `four_ne_zero'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [65/2519] Replayed Mathlib.Logic.ExistsUnique
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/ExistsUnique.lean:109:16: `exists_unique_eq'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [70/2519] Replayed Mathlib.Logic.Function.Basic
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:83:8: `Function.Injective.eq_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:92:8: `Function.Injective.ne_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:122:8: `Function.Injective.of_comp_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:168:8: `Function.Surjective.of_comp_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:242:8: `Function.Bijective.of_comp_iff'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:546:8: `Function.update_comp_eq_of_forall_ne'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:557:8: `Function.update_comp_eq_of_injective'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:654:8: `Function.extend_apply'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:686:8: `Function.Injective.surjective_comp_right'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [88/2519] Replayed Mathlib.Data.Nat.Defs
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:89:6: `Nat.succ_pos'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:280:16: `Nat.sub_eq_of_eq_add'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:282:16: `Nat.eq_sub_of_add_eq'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:285:16: `Nat.lt_sub_iff_add_lt'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:287:16: `Nat.sub_lt_iff_lt_add'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:370:6: `Nat.mul_lt_mul''` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:415:6: `Nat.le_div_iff_mul_le'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:417:6: `Nat.div_lt_iff_lt_mul'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:451:16: `Nat.mul_div_cancel_left'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:503:16: `Nat.div_le_of_le_mul'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:517:16: `Nat.div_le_self'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:628:6: `Nat.one_le_pow'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:634:6: `Nat.one_lt_pow'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:643:6: `Nat.one_lt_two_pow'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:726:6: `Nat.leRec_succ'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:770:6: `Nat.leRecOn_succ'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:877:6: `Nat.decreasingInduction_succ'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:1066:6: `Nat.mod_add_div'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:1068:6: `Nat.div_add_mod'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:1158:6: `Nat.mul_add_mod'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:1175:6: `Nat.dvd_sub'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [90/2519] Replayed Mathlib.Control.Combinators
+warning: ././.lake/packages/mathlib/././Mathlib/Control/Combinators.lean:35:4: `Monad.mapM'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Control/Combinators.lean:57:4: `Monad.sequence'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [92/2519] Replayed Mathlib.Logic.IsEmpty
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/IsEmpty.lean:36:9: `Fin.isEmpty'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [226/2519] Replayed Mathlib.Data.Prod.PProd
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Prod/PProd.lean:35:8: `PProd.forall'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Prod/PProd.lean:38:8: `PProd.exists'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [227/2519] Replayed Mathlib.Data.Bool.Basic
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Bool/Basic.lean:156:8: `Bool.eq_true_of_not_eq_false'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Bool/Basic.lean:159:8: `Bool.eq_false_of_not_eq_true'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [229/2519] Replayed Mathlib.Logic.Function.Iterate
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Iterate.lean:160:8: `Function.iterate_succ'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Iterate.lean:163:8: `Function.iterate_succ_apply'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [231/2519] Replayed Mathlib.Data.Prod.Basic
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Prod/Basic.lean:31:8: `Prod.forall'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Prod/Basic.lean:34:8: `Prod.exists'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Prod/Basic.lean:51:8: `Prod.map_apply'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Prod/Basic.lean:54:8: `Prod.map_fst'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Prod/Basic.lean:57:8: `Prod.map_snd'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [232/2519] Replayed Mathlib.Data.Sigma.Basic
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Sigma/Basic.lean:90:6: `Sigma.exists'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Sigma/Basic.lean:93:6: `Sigma.forall'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [240/2519] Replayed Mathlib.Data.FunLike.Basic
+warning: ././.lake/packages/mathlib/././Mathlib/Data/FunLike/Basic.lean:187:8: `DFunLike.ext'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [245/2519] Replayed Mathlib.Logic.Relation
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Relation.lean:351:8: `Relation.TransGen.head'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Relation.lean:354:8: `Relation.TransGen.tail'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Relation.lean:444:8: `Relation.TransGen.lift'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Relation.lean:453:6: `Relation.TransGen.closed'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Relation.lean:523:8: `Relation.ReflTransGen.lift'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [246/2519] Replayed Mathlib.Logic.Unique
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Unique.lean:131:18: `Unique.subsingleton_unique'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Logic/Unique.lean:259:9: `Unique.subtypeEq'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [253/2519] Replayed Mathlib.Data.Quot
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:563:18: `Quotient.liftOn'_mk''` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:567:14: `Quotient.surjective_liftOn'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:578:18: `Quotient.liftOn₂'_mk''` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:644:8: `Quotient.hrecOn'_mk''` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:657:8: `Quotient.hrecOn₂'_mk''` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:669:8: `Quotient.map'_mk''` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:679:8: `Quotient.map₂'_mk''` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:684:8: `Quotient.exact'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:688:8: `Quotient.sound'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:692:18: `Quotient.eq'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:696:18: `Quotient.eq''` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:705:8: `Quotient.out_eq'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:708:8: `Quotient.mk_out'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [257/2519] Replayed Mathlib.Tactic.Lift
+warning: ././.lake/packages/mathlib/././Mathlib/Tactic/Lift.lean:49:9: `PiSubtype.canLift'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [413/2519] Replayed Mathlib.Algebra.Group.Defs
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Defs.lean:802:33: `pow_succ'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Defs.lean:807:6: `pow_mul_comm'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Defs.lean:816:6: `pow_three'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Defs.lean:839:6: `pow_mul'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [447/2519] Replayed Mathlib.Data.List.Defs
+warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Defs.lean:241:9: `List.decidableChain'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [478/2519] Replayed Mathlib.Control.Applicative
+warning: ././.lake/packages/mathlib/././Mathlib/Control/Applicative.lean:34:8: `Applicative.pure_seq_eq_map'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [479/2519] Replayed Mathlib.Control.Traversable.Basic
+warning: ././.lake/packages/mathlib/././Mathlib/Control/Traversable/Basic.lean:139:8: `ApplicativeTransformation.preserves_map'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [626/2519] Replayed Mathlib.Algebra.GroupWithZero.Defs
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/GroupWithZero/Defs.lean:110:8: `mul_left_inj'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/GroupWithZero/Defs.lean:113:8: `mul_right_inj'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [627/2519] Replayed Mathlib.Algebra.Ring.Defs
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Ring/Defs.lean:233:6: `add_sq'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [632/2519] Replayed Mathlib.Algebra.Group.Invertible.Defs
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Invertible/Defs.lean:97:8: `invOf_mul_self'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Invertible/Defs.lean:103:8: `mul_invOf_self'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Invertible/Defs.lean:109:8: `invOf_mul_cancel_left'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Invertible/Defs.lean:120:8: `mul_invOf_cancel_left'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Invertible/Defs.lean:131:8: `invOf_mul_cancel_right'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Invertible/Defs.lean:142:8: `mul_invOf_cancel_right'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Invertible/Defs.lean:198:8: `invOf_one'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [1207/2519] Replayed Mathlib.Control.Traversable.Lemmas
+warning: ././.lake/packages/mathlib/././Mathlib/Control/Traversable/Lemmas.lean:87:8: `Traversable.naturality'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Control/Traversable/Lemmas.lean:102:8: `Traversable.traverse_eq_map_id'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Control/Traversable/Lemmas.lean:108:8: `Traversable.traverse_map'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Control/Traversable/Lemmas.lean:113:8: `Traversable.map_traverse'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [2464/2519] Replayed Mathlib.Data.List.EditDistance.Defs
+warning: ././.lake/packages/mathlib/././Mathlib/Data/List/EditDistance/Defs.lean:214:8: `suffixLevenshtein_nil'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [2504/2519] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
-⚠ [2492/2503] Replayed SSA.Experimental.Bits.Fast.Tactic
+⚠ [2508/2519] Replayed SSA.Experimental.Bits.Fast.Tactic
 warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
-⚠ [2493/2503] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+⚠ [2509/2519] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
@@ -14,108 +379,45 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaratio
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
-⚠ [2498/2503] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+⚠ [2514/2519] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
-⚠ [2499/2503] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+⚠ [2515/2519] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-✖ [2503/2503] Building SSA.Projects.InstCombine.tests.LLVM.gnestedhselect
-trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/tcg40/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.c --json
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:38:17: theorem extracted_1 :
-  ∀ (e e_1 e_2 : IntW 8) (e_3 e_4 : IntW 1),
-    select (select e_4 e_3 (const? 0)) e_2 (select e_4 e_1 e) ⊑ select e_4 (select e_3 e_2 e_1) e := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:34:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:65:17: theorem extracted_1 :
-  ∀ (e e_1 e_2 : IntW 8) (e_3 e_4 : IntW 1),
-    select (select e_4 (const? 1) e_3) (select e_4 e_2 e_1) e ⊑ select e_4 e_2 (select e_3 e_1 e) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:61:8: declaration uses 'sorry'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:70:11: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:82:11: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:93:15: unexpected token '.'; expected ':'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:102:10: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:113:10: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:123:14: unexpected token '.'; expected ':'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:132:11: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:144:11: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:153:15: unexpected token '.'; expected ':'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:162:10: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:173:10: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:182:14: unexpected token '.'; expected ':'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:191:11: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:203:11: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:211:15: unexpected token '.'; expected ':'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:220:10: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:231:10: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:239:14: unexpected token '.'; expected ':'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:248:11: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:261:11: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:272:15: unexpected token '.'; expected ':'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:281:10: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:293:10: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:303:14: unexpected token '.'; expected ':'
-error: Lean exited with code 1
-Some required builds logged failures:
-- SSA.Projects.InstCombine.tests.LLVM.gnestedhselect
-error: build failed
-⚠ [2488/2503] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
-⚠ [2492/2503] Replayed SSA.Experimental.Bits.Fast.Tactic
-warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
-⚠ [2493/2503] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
-⚠ [2498/2503] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
-warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
-⚠ [2499/2503] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
-warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-✖ [2503/2503] Building SSA.Projects.InstCombine.tests.LLVM.gnestedhselect
-trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/tcg40/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.c --json
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:38:17: theorem extracted_1 :
-  ∀ (e e_1 e_2 : IntW 8) (e_3 e_4 : IntW 1),
-    select (select e_4 e_3 (const? 0)) e_2 (select e_4 e_1 e) ⊑ select e_4 (select e_3 e_2 e_1) e := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:34:8: declaration uses 'sorry'
-info: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:65:17: theorem extracted_1 :
-  ∀ (e e_1 e_2 : IntW 8) (e_3 e_4 : IntW 1),
-    select (select e_4 (const? 1) e_3) (select e_4 e_2 e_1) e ⊑ select e_4 e_2 (select e_3 e_1 e) := sorry
-warning: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:61:8: declaration uses 'sorry'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:70:11: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:82:11: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:93:15: unexpected token '.'; expected ':'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:102:10: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:113:10: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:123:14: unexpected token '.'; expected ':'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:132:11: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:144:11: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:153:15: unexpected token '.'; expected ':'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:162:10: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:173:10: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:182:14: unexpected token '.'; expected ':'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:191:11: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:203:11: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:211:15: unexpected token '.'; expected ':'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:220:10: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:231:10: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:239:14: unexpected token '.'; expected ':'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:248:11: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:261:11: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:272:15: unexpected token '.'; expected ':'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:281:10: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:293:10: unexpected token '.'; expected ':=', 'where' or '|'
-error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:303:14: unexpected token '.'; expected ':'
+✖ [2519/2519] Building SSA.Projects.InstCombine.tests.LLVM.gnestedhselect
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/tcg40/.elan/toolchains/leanprover--lean4---nightly-2024-10-30/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.c --json
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:39:17: theorem extracted_1 (e✝ e✝¹ e✝² : IntW 8) (e✝³ e✝⁴ : IntW 1) :
+  select (select e✝⁴ e✝³ (const? 0)) e✝² (select e✝⁴ e✝¹ e✝) ⊑ select e✝⁴ (select e✝³ e✝² e✝¹) e✝ := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:35:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:67:17: theorem extracted_1 (e✝ e✝¹ e✝² : IntW 8) (e✝³ e✝⁴ : IntW 1) :
+  select (select e✝⁴ (const? 1) e✝³) (select e✝⁴ e✝² e✝¹) e✝ ⊑ select e✝⁴ e✝² (select e✝³ e✝¹ e✝) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:63:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:72:11: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:84:11: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:96:15: unexpected token '.'; expected ':'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:105:10: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:116:10: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:127:14: unexpected token '.'; expected ':'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:136:11: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:148:11: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:158:15: unexpected token '.'; expected ':'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:167:10: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:178:10: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:188:14: unexpected token '.'; expected ':'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:197:11: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:209:11: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:218:15: unexpected token '.'; expected ':'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:227:10: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:238:10: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:247:14: unexpected token '.'; expected ':'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:256:11: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:269:11: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:281:15: unexpected token '.'; expected ':'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:290:10: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:302:10: unexpected token '.'; expected ':=', 'where' or '|'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:313:14: unexpected token '.'; expected ':'
 error: Lean exited with code 1
 Some required builds logged failures:
 - SSA.Projects.InstCombine.tests.LLVM.gnestedhselect

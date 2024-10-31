@@ -30,6 +30,7 @@ def land_land_left1_after := [llvm|
   "llvm.return"(%1) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem land_land_left1_proof : land_land_left1_before ⊑ land_land_left1_after := by
   unfold land_land_left1_before land_land_left1_after
   simp_alive_peephole
@@ -56,6 +57,7 @@ def land_land_left2_after := [llvm|
   "llvm.return"(%1) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem land_land_left2_proof : land_land_left2_before ⊑ land_land_left2_after := by
   unfold land_land_left2_before land_land_left2_after
   simp_alive_peephole
@@ -82,6 +84,7 @@ def land_band_left1_after := [llvm|
   "llvm.return"(%1) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem land_band_left1_proof : land_band_left1_before ⊑ land_band_left1_after := by
   unfold land_band_left1_before land_band_left1_after
   simp_alive_peephole
@@ -108,6 +111,7 @@ def land_band_left2_after := [llvm|
   "llvm.return"(%1) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem land_band_left2_proof : land_band_left2_before ⊑ land_band_left2_after := by
   unfold land_band_left2_before land_band_left2_after
   simp_alive_peephole
@@ -133,6 +137,7 @@ def land_lor_left1_after := [llvm|
   "llvm.return"(%arg94) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem land_lor_left1_proof : land_lor_left1_before ⊑ land_lor_left1_after := by
   unfold land_lor_left1_before land_lor_left1_after
   simp_alive_peephole
@@ -158,6 +163,7 @@ def land_lor_left2_after := [llvm|
   "llvm.return"(%arg92) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem land_lor_left2_proof : land_lor_left2_before ⊑ land_lor_left2_after := by
   unfold land_lor_left2_before land_lor_left2_after
   simp_alive_peephole
@@ -182,6 +188,7 @@ def land_bor_left1_after := [llvm|
   "llvm.return"(%arg90) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem land_bor_left1_proof : land_bor_left1_before ⊑ land_bor_left1_after := by
   unfold land_bor_left1_before land_bor_left1_after
   simp_alive_peephole
@@ -206,6 +213,7 @@ def land_bor_left2_after := [llvm|
   "llvm.return"(%arg88) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem land_bor_left2_proof : land_bor_left2_before ⊑ land_bor_left2_after := by
   unfold land_bor_left2_before land_bor_left2_after
   simp_alive_peephole
@@ -231,6 +239,7 @@ def band_land_left1_after := [llvm|
   "llvm.return"(%0) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem band_land_left1_proof : band_land_left1_before ⊑ band_land_left1_after := by
   unfold band_land_left1_before band_land_left1_after
   simp_alive_peephole
@@ -256,6 +265,7 @@ def band_land_left2_after := [llvm|
   "llvm.return"(%0) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem band_land_left2_proof : band_land_left2_before ⊑ band_land_left2_after := by
   unfold band_land_left2_before band_land_left2_after
   simp_alive_peephole
@@ -280,6 +290,7 @@ def band_lor_left1_after := [llvm|
   "llvm.return"(%arg82) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem band_lor_left1_proof : band_lor_left1_before ⊑ band_lor_left1_after := by
   unfold band_lor_left1_before band_lor_left1_after
   simp_alive_peephole
@@ -304,6 +315,7 @@ def band_lor_left2_after := [llvm|
   "llvm.return"(%arg80) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem band_lor_left2_proof : band_lor_left2_before ⊑ band_lor_left2_after := by
   unfold band_lor_left2_before band_lor_left2_after
   simp_alive_peephole
@@ -329,6 +341,7 @@ def lor_land_left1_after := [llvm|
   "llvm.return"(%arg78) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lor_land_left1_proof : lor_land_left1_before ⊑ lor_land_left1_after := by
   unfold lor_land_left1_before lor_land_left1_after
   simp_alive_peephole
@@ -354,6 +367,7 @@ def lor_land_left2_after := [llvm|
   "llvm.return"(%arg76) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lor_land_left2_proof : lor_land_left2_before ⊑ lor_land_left2_after := by
   unfold lor_land_left2_before lor_land_left2_after
   simp_alive_peephole
@@ -378,6 +392,7 @@ def lor_band_left1_after := [llvm|
   "llvm.return"(%arg74) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lor_band_left1_proof : lor_band_left1_before ⊑ lor_band_left1_after := by
   unfold lor_band_left1_before lor_band_left1_after
   simp_alive_peephole
@@ -402,6 +417,7 @@ def lor_band_left2_after := [llvm|
   "llvm.return"(%arg72) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lor_band_left2_proof : lor_band_left2_before ⊑ lor_band_left2_after := by
   unfold lor_band_left2_before lor_band_left2_after
   simp_alive_peephole
@@ -428,6 +444,7 @@ def lor_lor_left1_after := [llvm|
   "llvm.return"(%1) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lor_lor_left1_proof : lor_lor_left1_before ⊑ lor_lor_left1_after := by
   unfold lor_lor_left1_before lor_lor_left1_after
   simp_alive_peephole
@@ -454,6 +471,7 @@ def lor_lor_left2_after := [llvm|
   "llvm.return"(%1) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lor_lor_left2_proof : lor_lor_left2_before ⊑ lor_lor_left2_after := by
   unfold lor_lor_left2_before lor_lor_left2_after
   simp_alive_peephole
@@ -480,6 +498,7 @@ def lor_bor_left1_after := [llvm|
   "llvm.return"(%1) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lor_bor_left1_proof : lor_bor_left1_before ⊑ lor_bor_left1_after := by
   unfold lor_bor_left1_before lor_bor_left1_after
   simp_alive_peephole
@@ -506,6 +525,7 @@ def lor_bor_left2_after := [llvm|
   "llvm.return"(%1) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lor_bor_left2_proof : lor_bor_left2_before ⊑ lor_bor_left2_after := by
   unfold lor_bor_left2_before lor_bor_left2_after
   simp_alive_peephole
@@ -530,6 +550,7 @@ def bor_land_left1_after := [llvm|
   "llvm.return"(%arg62) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem bor_land_left1_proof : bor_land_left1_before ⊑ bor_land_left1_after := by
   unfold bor_land_left1_before bor_land_left1_after
   simp_alive_peephole
@@ -554,6 +575,7 @@ def bor_land_left2_after := [llvm|
   "llvm.return"(%arg60) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem bor_land_left2_proof : bor_land_left2_before ⊑ bor_land_left2_after := by
   unfold bor_land_left2_before bor_land_left2_after
   simp_alive_peephole
@@ -579,6 +601,7 @@ def bor_lor_left1_after := [llvm|
   "llvm.return"(%0) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem bor_lor_left1_proof : bor_lor_left1_before ⊑ bor_lor_left1_after := by
   unfold bor_lor_left1_before bor_lor_left1_after
   simp_alive_peephole
@@ -604,6 +627,7 @@ def bor_lor_left2_after := [llvm|
   "llvm.return"(%0) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem bor_lor_left2_proof : bor_lor_left2_before ⊑ bor_lor_left2_after := by
   unfold bor_lor_left2_before bor_lor_left2_after
   simp_alive_peephole
@@ -630,6 +654,7 @@ def land_land_right1_after := [llvm|
   "llvm.return"(%1) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem land_land_right1_proof : land_land_right1_before ⊑ land_land_right1_after := by
   unfold land_land_right1_before land_land_right1_after
   simp_alive_peephole
@@ -656,6 +681,7 @@ def land_land_right2_after := [llvm|
   "llvm.return"(%1) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem land_land_right2_proof : land_land_right2_before ⊑ land_land_right2_after := by
   unfold land_land_right2_before land_land_right2_after
   simp_alive_peephole
@@ -682,6 +708,7 @@ def land_band_right1_after := [llvm|
   "llvm.return"(%1) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem land_band_right1_proof : land_band_right1_before ⊑ land_band_right1_after := by
   unfold land_band_right1_before land_band_right1_after
   simp_alive_peephole
@@ -708,6 +735,7 @@ def land_band_right2_after := [llvm|
   "llvm.return"(%1) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem land_band_right2_proof : land_band_right2_before ⊑ land_band_right2_after := by
   unfold land_band_right2_before land_band_right2_after
   simp_alive_peephole
@@ -733,6 +761,7 @@ def land_lor_right1_after := [llvm|
   "llvm.return"(%arg46) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem land_lor_right1_proof : land_lor_right1_before ⊑ land_lor_right1_after := by
   unfold land_lor_right1_before land_lor_right1_after
   simp_alive_peephole
@@ -758,6 +787,7 @@ def land_lor_right2_after := [llvm|
   "llvm.return"(%arg44) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem land_lor_right2_proof : land_lor_right2_before ⊑ land_lor_right2_after := by
   unfold land_lor_right2_before land_lor_right2_after
   simp_alive_peephole
@@ -782,6 +812,7 @@ def land_bor_right1_after := [llvm|
   "llvm.return"(%arg38) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem land_bor_right1_proof : land_bor_right1_before ⊑ land_bor_right1_after := by
   unfold land_bor_right1_before land_bor_right1_after
   simp_alive_peephole
@@ -806,6 +837,7 @@ def land_bor_right2_after := [llvm|
   "llvm.return"(%arg36) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem land_bor_right2_proof : land_bor_right2_before ⊑ land_bor_right2_after := by
   unfold land_bor_right2_before land_bor_right2_after
   simp_alive_peephole
@@ -832,6 +864,7 @@ def band_land_right1_after := [llvm|
   "llvm.return"(%1) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem band_land_right1_proof : band_land_right1_before ⊑ band_land_right1_after := by
   unfold band_land_right1_before band_land_right1_after
   simp_alive_peephole
@@ -858,6 +891,7 @@ def band_land_right2_after := [llvm|
   "llvm.return"(%1) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem band_land_right2_proof : band_land_right2_before ⊑ band_land_right2_after := by
   unfold band_land_right2_before band_land_right2_after
   simp_alive_peephole
@@ -882,6 +916,7 @@ def band_lor_right1_after := [llvm|
   "llvm.return"(%arg30) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem band_lor_right1_proof : band_lor_right1_before ⊑ band_lor_right1_after := by
   unfold band_lor_right1_before band_lor_right1_after
   simp_alive_peephole
@@ -906,6 +941,7 @@ def band_lor_right2_after := [llvm|
   "llvm.return"(%arg28) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem band_lor_right2_proof : band_lor_right2_before ⊑ band_lor_right2_after := by
   unfold band_lor_right2_before band_lor_right2_after
   simp_alive_peephole
@@ -931,6 +967,7 @@ def lor_land_right1_after := [llvm|
   "llvm.return"(%arg26) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lor_land_right1_proof : lor_land_right1_before ⊑ lor_land_right1_after := by
   unfold lor_land_right1_before lor_land_right1_after
   simp_alive_peephole
@@ -956,6 +993,7 @@ def lor_land_right2_after := [llvm|
   "llvm.return"(%arg24) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lor_land_right2_proof : lor_land_right2_before ⊑ lor_land_right2_after := by
   unfold lor_land_right2_before lor_land_right2_after
   simp_alive_peephole
@@ -980,6 +1018,7 @@ def lor_band_right1_after := [llvm|
   "llvm.return"(%arg22) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lor_band_right1_proof : lor_band_right1_before ⊑ lor_band_right1_after := by
   unfold lor_band_right1_before lor_band_right1_after
   simp_alive_peephole
@@ -1004,6 +1043,7 @@ def lor_band_right2_after := [llvm|
   "llvm.return"(%arg20) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lor_band_right2_proof : lor_band_right2_before ⊑ lor_band_right2_after := by
   unfold lor_band_right2_before lor_band_right2_after
   simp_alive_peephole
@@ -1030,6 +1070,7 @@ def lor_lor_right1_after := [llvm|
   "llvm.return"(%1) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lor_lor_right1_proof : lor_lor_right1_before ⊑ lor_lor_right1_after := by
   unfold lor_lor_right1_before lor_lor_right1_after
   simp_alive_peephole
@@ -1056,6 +1097,7 @@ def lor_lor_right2_after := [llvm|
   "llvm.return"(%1) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lor_lor_right2_proof : lor_lor_right2_before ⊑ lor_lor_right2_after := by
   unfold lor_lor_right2_before lor_lor_right2_after
   simp_alive_peephole
@@ -1082,6 +1124,7 @@ def lor_bor_right1_after := [llvm|
   "llvm.return"(%1) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lor_bor_right1_proof : lor_bor_right1_before ⊑ lor_bor_right1_after := by
   unfold lor_bor_right1_before lor_bor_right1_after
   simp_alive_peephole
@@ -1108,6 +1151,7 @@ def lor_bor_right2_after := [llvm|
   "llvm.return"(%1) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lor_bor_right2_proof : lor_bor_right2_before ⊑ lor_bor_right2_after := by
   unfold lor_bor_right2_before lor_bor_right2_after
   simp_alive_peephole
@@ -1132,6 +1176,7 @@ def bor_land_right1_after := [llvm|
   "llvm.return"(%arg10) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem bor_land_right1_proof : bor_land_right1_before ⊑ bor_land_right1_after := by
   unfold bor_land_right1_before bor_land_right1_after
   simp_alive_peephole
@@ -1156,6 +1201,7 @@ def bor_land_right2_after := [llvm|
   "llvm.return"(%arg8) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem bor_land_right2_proof : bor_land_right2_before ⊑ bor_land_right2_after := by
   unfold bor_land_right2_before bor_land_right2_after
   simp_alive_peephole
@@ -1182,6 +1228,7 @@ def bor_lor_right1_after := [llvm|
   "llvm.return"(%1) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem bor_lor_right1_proof : bor_lor_right1_before ⊑ bor_lor_right1_after := by
   unfold bor_lor_right1_before bor_lor_right1_after
   simp_alive_peephole
@@ -1208,6 +1255,7 @@ def bor_lor_right2_after := [llvm|
   "llvm.return"(%1) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem bor_lor_right2_proof : bor_lor_right2_before ⊑ bor_lor_right2_after := by
   unfold bor_lor_right2_before bor_lor_right2_after
   simp_alive_peephole

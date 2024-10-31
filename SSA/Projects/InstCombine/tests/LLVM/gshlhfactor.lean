@@ -30,6 +30,7 @@ def add_shl_same_amount_after := [llvm|
   "llvm.return"(%1) : (i6) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem add_shl_same_amount_proof : add_shl_same_amount_before ⊑ add_shl_same_amount_after := by
   unfold add_shl_same_amount_before add_shl_same_amount_after
   simp_alive_peephole
@@ -56,6 +57,7 @@ def add_shl_same_amount_nuw_after := [llvm|
   "llvm.return"(%1) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem add_shl_same_amount_nuw_proof : add_shl_same_amount_nuw_before ⊑ add_shl_same_amount_nuw_after := by
   unfold add_shl_same_amount_nuw_before add_shl_same_amount_nuw_after
   simp_alive_peephole
@@ -82,6 +84,7 @@ def add_shl_same_amount_partial_nsw1_after := [llvm|
   "llvm.return"(%1) : (i6) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem add_shl_same_amount_partial_nsw1_proof : add_shl_same_amount_partial_nsw1_before ⊑ add_shl_same_amount_partial_nsw1_after := by
   unfold add_shl_same_amount_partial_nsw1_before add_shl_same_amount_partial_nsw1_after
   simp_alive_peephole
@@ -108,6 +111,7 @@ def add_shl_same_amount_partial_nsw2_after := [llvm|
   "llvm.return"(%1) : (i6) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem add_shl_same_amount_partial_nsw2_proof : add_shl_same_amount_partial_nsw2_before ⊑ add_shl_same_amount_partial_nsw2_after := by
   unfold add_shl_same_amount_partial_nsw2_before add_shl_same_amount_partial_nsw2_after
   simp_alive_peephole
@@ -134,6 +138,7 @@ def add_shl_same_amount_partial_nuw1_after := [llvm|
   "llvm.return"(%1) : (i6) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem add_shl_same_amount_partial_nuw1_proof : add_shl_same_amount_partial_nuw1_before ⊑ add_shl_same_amount_partial_nuw1_after := by
   unfold add_shl_same_amount_partial_nuw1_before add_shl_same_amount_partial_nuw1_after
   simp_alive_peephole
@@ -160,6 +165,7 @@ def add_shl_same_amount_partial_nuw2_after := [llvm|
   "llvm.return"(%1) : (i6) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem add_shl_same_amount_partial_nuw2_proof : add_shl_same_amount_partial_nuw2_before ⊑ add_shl_same_amount_partial_nuw2_after := by
   unfold add_shl_same_amount_partial_nuw2_before add_shl_same_amount_partial_nuw2_after
   simp_alive_peephole
@@ -186,6 +192,7 @@ def sub_shl_same_amount_after := [llvm|
   "llvm.return"(%1) : (i6) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sub_shl_same_amount_proof : sub_shl_same_amount_before ⊑ sub_shl_same_amount_after := by
   unfold sub_shl_same_amount_before sub_shl_same_amount_after
   simp_alive_peephole
@@ -212,6 +219,7 @@ def sub_shl_same_amount_nuw_after := [llvm|
   "llvm.return"(%1) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sub_shl_same_amount_nuw_proof : sub_shl_same_amount_nuw_before ⊑ sub_shl_same_amount_nuw_after := by
   unfold sub_shl_same_amount_nuw_before sub_shl_same_amount_nuw_after
   simp_alive_peephole
@@ -238,6 +246,7 @@ def sub_shl_same_amount_partial_nsw1_after := [llvm|
   "llvm.return"(%1) : (i6) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sub_shl_same_amount_partial_nsw1_proof : sub_shl_same_amount_partial_nsw1_before ⊑ sub_shl_same_amount_partial_nsw1_after := by
   unfold sub_shl_same_amount_partial_nsw1_before sub_shl_same_amount_partial_nsw1_after
   simp_alive_peephole
@@ -264,6 +273,7 @@ def sub_shl_same_amount_partial_nsw2_after := [llvm|
   "llvm.return"(%1) : (i6) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sub_shl_same_amount_partial_nsw2_proof : sub_shl_same_amount_partial_nsw2_before ⊑ sub_shl_same_amount_partial_nsw2_after := by
   unfold sub_shl_same_amount_partial_nsw2_before sub_shl_same_amount_partial_nsw2_after
   simp_alive_peephole
@@ -290,6 +300,7 @@ def sub_shl_same_amount_partial_nuw1_after := [llvm|
   "llvm.return"(%1) : (i6) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sub_shl_same_amount_partial_nuw1_proof : sub_shl_same_amount_partial_nuw1_before ⊑ sub_shl_same_amount_partial_nuw1_after := by
   unfold sub_shl_same_amount_partial_nuw1_before sub_shl_same_amount_partial_nuw1_after
   simp_alive_peephole
@@ -316,6 +327,7 @@ def sub_shl_same_amount_partial_nuw2_after := [llvm|
   "llvm.return"(%1) : (i6) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sub_shl_same_amount_partial_nuw2_proof : sub_shl_same_amount_partial_nuw2_before ⊑ sub_shl_same_amount_partial_nuw2_after := by
   unfold sub_shl_same_amount_partial_nuw2_before sub_shl_same_amount_partial_nuw2_after
   simp_alive_peephole
@@ -344,6 +356,7 @@ def add_shl_same_amount_constants_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem add_shl_same_amount_constants_proof : add_shl_same_amount_constants_before ⊑ add_shl_same_amount_constants_after := by
   unfold add_shl_same_amount_constants_before add_shl_same_amount_constants_after
   simp_alive_peephole

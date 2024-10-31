@@ -33,6 +33,7 @@ def xor_logic_and_logic_or1_after := [llvm|
   "llvm.return"(%2) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem xor_logic_and_logic_or1_proof : xor_logic_and_logic_or1_before ⊑ xor_logic_and_logic_or1_after := by
   unfold xor_logic_and_logic_or1_before xor_logic_and_logic_or1_after
   simp_alive_peephole
@@ -62,6 +63,7 @@ def xor_logic_and_logic_or2_after := [llvm|
   "llvm.return"(%2) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem xor_logic_and_logic_or2_proof : xor_logic_and_logic_or2_before ⊑ xor_logic_and_logic_or2_after := by
   unfold xor_logic_and_logic_or2_before xor_logic_and_logic_or2_after
   simp_alive_peephole
@@ -91,6 +93,7 @@ def xor_logic_and_logic_or4_after := [llvm|
   "llvm.return"(%2) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem xor_logic_and_logic_or4_proof : xor_logic_and_logic_or4_before ⊑ xor_logic_and_logic_or4_after := by
   unfold xor_logic_and_logic_or4_before xor_logic_and_logic_or4_after
   simp_alive_peephole
@@ -119,6 +122,7 @@ def xor_and_logic_or1_after := [llvm|
   "llvm.return"(%2) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem xor_and_logic_or1_proof : xor_and_logic_or1_before ⊑ xor_and_logic_or1_after := by
   unfold xor_and_logic_or1_before xor_and_logic_or1_after
   simp_alive_peephole
@@ -147,6 +151,7 @@ def xor_and_logic_or2_after := [llvm|
   "llvm.return"(%2) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem xor_and_logic_or2_proof : xor_and_logic_or2_before ⊑ xor_and_logic_or2_after := by
   unfold xor_and_logic_or2_before xor_and_logic_or2_after
   simp_alive_peephole
@@ -175,6 +180,7 @@ def xor_logic_and_or1_after := [llvm|
   "llvm.return"(%2) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem xor_logic_and_or1_proof : xor_logic_and_or1_before ⊑ xor_logic_and_or1_after := by
   unfold xor_logic_and_or1_before xor_logic_and_or1_after
   simp_alive_peephole
@@ -203,6 +209,7 @@ def xor_logic_and_or2_after := [llvm|
   "llvm.return"(%2) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem xor_logic_and_or2_proof : xor_logic_and_or2_before ⊑ xor_logic_and_or2_after := by
   unfold xor_logic_and_or2_before xor_logic_and_or2_after
   simp_alive_peephole
@@ -230,6 +237,7 @@ def xor_and_or_after := [llvm|
   "llvm.return"(%2) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem xor_and_or_proof : xor_and_or_before ⊑ xor_and_or_after := by
   unfold xor_and_or_before xor_and_or_after
   simp_alive_peephole

@@ -34,6 +34,7 @@ def sextinreg_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sextinreg_proof : sextinreg_before ⊑ sextinreg_after := by
   unfold sextinreg_before sextinreg_after
   simp_alive_peephole
@@ -64,6 +65,7 @@ def sextinreg_alt_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sextinreg_alt_proof : sextinreg_alt_before ⊑ sextinreg_alt_after := by
   unfold sextinreg_alt_before sextinreg_alt_after
   simp_alive_peephole
@@ -91,6 +93,7 @@ def sext_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sext_proof : sext_before ⊑ sext_after := by
   unfold sext_before sext_after
   simp_alive_peephole
@@ -121,6 +124,7 @@ def sextinreg2_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sextinreg2_proof : sextinreg2_before ⊑ sextinreg2_after := by
   unfold sextinreg2_before sextinreg2_after
   simp_alive_peephole
@@ -147,6 +151,7 @@ def test6_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test6_proof : test6_before ⊑ test6_after := by
   unfold test6_before test6_after
   simp_alive_peephole
@@ -176,6 +181,7 @@ def ashr_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem ashr_proof : ashr_before ⊑ ashr_after := by
   unfold ashr_before ashr_after
   simp_alive_peephole

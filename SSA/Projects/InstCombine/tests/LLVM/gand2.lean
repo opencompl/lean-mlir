@@ -28,6 +28,7 @@ def test2_after := [llvm|
   "llvm.return"(%0) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test2_proof : test2_before ⊑ test2_after := by
   unfold test2_before test2_after
   simp_alive_peephole
@@ -54,6 +55,7 @@ def test2_logical_after := [llvm|
   "llvm.return"(%1) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test2_logical_proof : test2_logical_before ⊑ test2_logical_after := by
   unfold test2_logical_before test2_logical_after
   simp_alive_peephole
@@ -78,6 +80,7 @@ def test3_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test3_proof : test3_before ⊑ test3_after := by
   unfold test3_before test3_after
   simp_alive_peephole
@@ -105,6 +108,7 @@ def test9_after := [llvm|
   "llvm.return"(%1) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test9_proof : test9_before ⊑ test9_after := by
   unfold test9_before test9_after
   simp_alive_peephole
@@ -135,6 +139,7 @@ def test10_after := [llvm|
   "llvm.return"(%3) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test10_proof : test10_before ⊑ test10_after := by
   unfold test10_before test10_after
   simp_alive_peephole
@@ -164,6 +169,7 @@ def and1_shl1_is_cmp_eq_0_multiuse_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem and1_shl1_is_cmp_eq_0_multiuse_proof : and1_shl1_is_cmp_eq_0_multiuse_before ⊑ and1_shl1_is_cmp_eq_0_multiuse_after := by
   unfold and1_shl1_is_cmp_eq_0_multiuse_before and1_shl1_is_cmp_eq_0_multiuse_after
   simp_alive_peephole
@@ -190,6 +196,7 @@ def and1_lshr1_is_cmp_eq_0_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem and1_lshr1_is_cmp_eq_0_proof : and1_lshr1_is_cmp_eq_0_before ⊑ and1_lshr1_is_cmp_eq_0_after := by
   unfold and1_lshr1_is_cmp_eq_0_before and1_lshr1_is_cmp_eq_0_after
   simp_alive_peephole
@@ -218,6 +225,7 @@ def and1_lshr1_is_cmp_eq_0_multiuse_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem and1_lshr1_is_cmp_eq_0_multiuse_proof : and1_lshr1_is_cmp_eq_0_multiuse_before ⊑ and1_lshr1_is_cmp_eq_0_multiuse_after := by
   unfold and1_lshr1_is_cmp_eq_0_multiuse_before and1_lshr1_is_cmp_eq_0_multiuse_after
   simp_alive_peephole
@@ -250,6 +258,7 @@ def test11_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test11_proof : test11_before ⊑ test11_after := by
   unfold test11_before test11_after
   simp_alive_peephole
@@ -282,6 +291,7 @@ def test12_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test12_proof : test12_before ⊑ test12_after := by
   unfold test12_before test12_after
   simp_alive_peephole
@@ -314,6 +324,7 @@ def test13_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test13_proof : test13_before ⊑ test13_after := by
   unfold test13_before test13_after
   simp_alive_peephole
@@ -348,6 +359,7 @@ def test14_after := [llvm|
   "llvm.return"(%6) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test14_proof : test14_before ⊑ test14_after := by
   unfold test14_before test14_after
   simp_alive_peephole

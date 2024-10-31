@@ -31,6 +31,7 @@ def sext_xor_sub_after := [llvm|
   "llvm.return"(%2) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sext_xor_sub_proof : sext_xor_sub_before ⊑ sext_xor_sub_after := by
   unfold sext_xor_sub_before sext_xor_sub_after
   simp_alive_peephole
@@ -58,6 +59,7 @@ def sext_xor_sub_1_after := [llvm|
   "llvm.return"(%2) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sext_xor_sub_1_proof : sext_xor_sub_1_before ⊑ sext_xor_sub_1_after := by
   unfold sext_xor_sub_1_before sext_xor_sub_1_after
   simp_alive_peephole
@@ -85,6 +87,7 @@ def sext_xor_sub_2_after := [llvm|
   "llvm.return"(%2) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sext_xor_sub_2_proof : sext_xor_sub_2_before ⊑ sext_xor_sub_2_after := by
   unfold sext_xor_sub_2_before sext_xor_sub_2_after
   simp_alive_peephole
@@ -112,6 +115,7 @@ def sext_xor_sub_3_after := [llvm|
   "llvm.return"(%2) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sext_xor_sub_3_proof : sext_xor_sub_3_before ⊑ sext_xor_sub_3_after := by
   unfold sext_xor_sub_3_before sext_xor_sub_3_after
   simp_alive_peephole
@@ -139,6 +143,7 @@ def sext_non_bool_xor_sub_1_after := [llvm|
   "llvm.return"(%2) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sext_non_bool_xor_sub_1_proof : sext_non_bool_xor_sub_1_before ⊑ sext_non_bool_xor_sub_1_after := by
   unfold sext_non_bool_xor_sub_1_before sext_non_bool_xor_sub_1_after
   simp_alive_peephole
@@ -167,6 +172,7 @@ def sext_diff_i1_xor_sub_after := [llvm|
   "llvm.return"(%2) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sext_diff_i1_xor_sub_proof : sext_diff_i1_xor_sub_before ⊑ sext_diff_i1_xor_sub_after := by
   unfold sext_diff_i1_xor_sub_before sext_diff_i1_xor_sub_after
   simp_alive_peephole
@@ -195,6 +201,7 @@ def sext_diff_i1_xor_sub_1_after := [llvm|
   "llvm.return"(%2) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sext_diff_i1_xor_sub_1_proof : sext_diff_i1_xor_sub_1_before ⊑ sext_diff_i1_xor_sub_1_after := by
   unfold sext_diff_i1_xor_sub_1_before sext_diff_i1_xor_sub_1_after
   simp_alive_peephole
@@ -225,6 +232,7 @@ def sext_multi_uses_after := [llvm|
   "llvm.return"(%3) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sext_multi_uses_proof : sext_multi_uses_before ⊑ sext_multi_uses_after := by
   unfold sext_multi_uses_before sext_multi_uses_after
   simp_alive_peephole

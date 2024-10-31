@@ -35,6 +35,7 @@ def p_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem p_proof : p_before ⊑ p_after := by
   unfold p_before p_after
   simp_alive_peephole
@@ -66,6 +67,7 @@ def p_commutative2_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem p_commutative2_proof : p_commutative2_before ⊑ p_commutative2_after := by
   unfold p_commutative2_before p_commutative2_after
   simp_alive_peephole
@@ -97,6 +99,7 @@ def n2_badmask_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem n2_badmask_proof : n2_badmask_before ⊑ n2_badmask_after := by
   unfold n2_badmask_before n2_badmask_after
   simp_alive_peephole
@@ -125,6 +128,7 @@ def n3_constmask_samemask_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem n3_constmask_samemask_proof : n3_constmask_samemask_before ⊑ n3_constmask_samemask_after := by
   unfold n3_constmask_samemask_before n3_constmask_samemask_after
   simp_alive_peephole

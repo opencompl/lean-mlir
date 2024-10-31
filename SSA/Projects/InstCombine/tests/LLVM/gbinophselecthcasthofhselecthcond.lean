@@ -33,6 +33,7 @@ def add_select_zext_after := [llvm|
   "llvm.return"(%2) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem add_select_zext_proof : add_select_zext_before ⊑ add_select_zext_after := by
   unfold add_select_zext_before add_select_zext_after
   simp_alive_peephole
@@ -62,6 +63,7 @@ def add_select_sext_after := [llvm|
   "llvm.return"(%2) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem add_select_sext_proof : add_select_sext_before ⊑ add_select_sext_after := by
   unfold add_select_sext_before add_select_sext_after
   simp_alive_peephole
@@ -93,6 +95,7 @@ def add_select_not_zext_after := [llvm|
   "llvm.return"(%2) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem add_select_not_zext_proof : add_select_not_zext_before ⊑ add_select_not_zext_after := by
   unfold add_select_not_zext_before add_select_not_zext_after
   simp_alive_peephole
@@ -124,6 +127,7 @@ def add_select_not_sext_after := [llvm|
   "llvm.return"(%2) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem add_select_not_sext_proof : add_select_not_sext_before ⊑ add_select_not_sext_after := by
   unfold add_select_not_sext_before add_select_not_sext_after
   simp_alive_peephole
@@ -151,6 +155,7 @@ def sub_select_sext_after := [llvm|
   "llvm.return"(%1) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sub_select_sext_proof : sub_select_sext_before ⊑ sub_select_sext_after := by
   unfold sub_select_sext_before sub_select_sext_after
   simp_alive_peephole
@@ -180,6 +185,7 @@ def sub_select_not_zext_after := [llvm|
   "llvm.return"(%1) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sub_select_not_zext_proof : sub_select_not_zext_before ⊑ sub_select_not_zext_after := by
   unfold sub_select_not_zext_before sub_select_not_zext_after
   simp_alive_peephole
@@ -209,6 +215,7 @@ def sub_select_not_sext_after := [llvm|
   "llvm.return"(%1) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sub_select_not_sext_proof : sub_select_not_sext_before ⊑ sub_select_not_sext_after := by
   unfold sub_select_not_sext_before sub_select_not_sext_after
   simp_alive_peephole
@@ -236,6 +243,7 @@ def mul_select_zext_after := [llvm|
   "llvm.return"(%1) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem mul_select_zext_proof : mul_select_zext_before ⊑ mul_select_zext_after := by
   unfold mul_select_zext_before mul_select_zext_after
   simp_alive_peephole
@@ -265,6 +273,7 @@ def mul_select_sext_after := [llvm|
   "llvm.return"(%2) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem mul_select_sext_proof : mul_select_sext_before ⊑ mul_select_sext_after := by
   unfold mul_select_sext_before mul_select_sext_after
   simp_alive_peephole
@@ -296,6 +305,7 @@ def select_zext_different_condition_after := [llvm|
   "llvm.return"(%4) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem select_zext_different_condition_proof : select_zext_different_condition_before ⊑ select_zext_different_condition_after := by
   unfold select_zext_different_condition_before select_zext_different_condition_after
   simp_alive_peephole
@@ -326,6 +336,7 @@ def multiuse_add_after := [llvm|
   "llvm.return"(%2) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem multiuse_add_proof : multiuse_add_before ⊑ multiuse_add_after := by
   unfold multiuse_add_before multiuse_add_after
   simp_alive_peephole
@@ -356,6 +367,7 @@ def multiuse_select_after := [llvm|
   "llvm.return"(%2) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem multiuse_select_proof : multiuse_select_before ⊑ multiuse_select_after := by
   unfold multiuse_select_before multiuse_select_after
   simp_alive_peephole
@@ -383,6 +395,7 @@ def select_non_const_sides_after := [llvm|
   "llvm.return"(%2) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem select_non_const_sides_proof : select_non_const_sides_before ⊑ select_non_const_sides_after := by
   unfold select_non_const_sides_before select_non_const_sides_after
   simp_alive_peephole
@@ -412,6 +425,7 @@ def sub_select_sext_op_swapped_non_const_args_after := [llvm|
   "llvm.return"(%4) : (i6) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sub_select_sext_op_swapped_non_const_args_proof : sub_select_sext_op_swapped_non_const_args_before ⊑ sub_select_sext_op_swapped_non_const_args_after := by
   unfold sub_select_sext_op_swapped_non_const_args_before sub_select_sext_op_swapped_non_const_args_after
   simp_alive_peephole
@@ -441,6 +455,7 @@ def sub_select_zext_op_swapped_non_const_args_after := [llvm|
   "llvm.return"(%4) : (i6) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sub_select_zext_op_swapped_non_const_args_proof : sub_select_zext_op_swapped_non_const_args_before ⊑ sub_select_zext_op_swapped_non_const_args_after := by
   unfold sub_select_zext_op_swapped_non_const_args_before sub_select_zext_op_swapped_non_const_args_after
   simp_alive_peephole

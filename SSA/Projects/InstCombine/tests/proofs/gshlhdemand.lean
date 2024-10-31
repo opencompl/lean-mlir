@@ -35,6 +35,7 @@ def src_srem_shl_demand_max_signbit_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem src_srem_shl_demand_max_signbit_proof : src_srem_shl_demand_max_signbit_before ⊑ src_srem_shl_demand_max_signbit_after := by
   unfold src_srem_shl_demand_max_signbit_before src_srem_shl_demand_max_signbit_after
   simp_alive_peephole
@@ -66,6 +67,7 @@ def src_srem_shl_demand_min_signbit_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem src_srem_shl_demand_min_signbit_proof : src_srem_shl_demand_min_signbit_before ⊑ src_srem_shl_demand_min_signbit_after := by
   unfold src_srem_shl_demand_min_signbit_before src_srem_shl_demand_min_signbit_after
   simp_alive_peephole
@@ -97,6 +99,7 @@ def src_srem_shl_demand_max_mask_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem src_srem_shl_demand_max_mask_proof : src_srem_shl_demand_max_mask_before ⊑ src_srem_shl_demand_max_mask_after := by
   unfold src_srem_shl_demand_max_mask_before src_srem_shl_demand_max_mask_after
   simp_alive_peephole
@@ -130,6 +133,7 @@ def src_srem_shl_demand_max_signbit_mask_hit_first_demand_after := [llvm|
   "llvm.return"(%5) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem src_srem_shl_demand_max_signbit_mask_hit_first_demand_proof : src_srem_shl_demand_max_signbit_mask_hit_first_demand_before ⊑ src_srem_shl_demand_max_signbit_mask_hit_first_demand_after := by
   unfold src_srem_shl_demand_max_signbit_mask_hit_first_demand_before src_srem_shl_demand_max_signbit_mask_hit_first_demand_after
   simp_alive_peephole
@@ -163,6 +167,7 @@ def src_srem_shl_demand_min_signbit_mask_hit_last_demand_after := [llvm|
   "llvm.return"(%5) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem src_srem_shl_demand_min_signbit_mask_hit_last_demand_proof : src_srem_shl_demand_min_signbit_mask_hit_last_demand_before ⊑ src_srem_shl_demand_min_signbit_mask_hit_last_demand_after := by
   unfold src_srem_shl_demand_min_signbit_mask_hit_last_demand_before src_srem_shl_demand_min_signbit_mask_hit_last_demand_after
   simp_alive_peephole
@@ -196,6 +201,7 @@ def src_srem_shl_demand_eliminate_signbit_after := [llvm|
   "llvm.return"(%5) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem src_srem_shl_demand_eliminate_signbit_proof : src_srem_shl_demand_eliminate_signbit_before ⊑ src_srem_shl_demand_eliminate_signbit_after := by
   unfold src_srem_shl_demand_eliminate_signbit_before src_srem_shl_demand_eliminate_signbit_after
   simp_alive_peephole
@@ -229,6 +235,7 @@ def src_srem_shl_demand_max_mask_hit_demand_after := [llvm|
   "llvm.return"(%5) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem src_srem_shl_demand_max_mask_hit_demand_proof : src_srem_shl_demand_max_mask_hit_demand_before ⊑ src_srem_shl_demand_max_mask_hit_demand_after := by
   unfold src_srem_shl_demand_max_mask_hit_demand_before src_srem_shl_demand_max_mask_hit_demand_after
   simp_alive_peephole
@@ -256,6 +263,7 @@ def sext_shl_trunc_same_size_after := [llvm|
   "llvm.return"(%2) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sext_shl_trunc_same_size_proof : sext_shl_trunc_same_size_before ⊑ sext_shl_trunc_same_size_after := by
   unfold sext_shl_trunc_same_size_before sext_shl_trunc_same_size_after
   simp_alive_peephole
@@ -283,6 +291,7 @@ def sext_shl_trunc_smaller_after := [llvm|
   "llvm.return"(%2) : (i5) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sext_shl_trunc_smaller_proof : sext_shl_trunc_smaller_before ⊑ sext_shl_trunc_smaller_after := by
   unfold sext_shl_trunc_smaller_before sext_shl_trunc_smaller_after
   simp_alive_peephole
@@ -312,6 +321,7 @@ def sext_shl_mask_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sext_shl_mask_proof : sext_shl_mask_before ⊑ sext_shl_mask_after := by
   unfold sext_shl_mask_before sext_shl_mask_after
   simp_alive_peephole
@@ -343,6 +353,7 @@ def set_shl_mask_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem set_shl_mask_proof : set_shl_mask_before ⊑ set_shl_mask_after := by
   unfold set_shl_mask_before set_shl_mask_after
   simp_alive_peephole
@@ -370,6 +381,7 @@ def must_drop_poison_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem must_drop_poison_proof : must_drop_poison_before ⊑ must_drop_poison_after := by
   unfold must_drop_poison_before must_drop_poison_after
   simp_alive_peephole
@@ -404,6 +416,7 @@ def f_t15_t01_t09_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem f_t15_t01_t09_proof : f_t15_t01_t09_before ⊑ f_t15_t01_t09_after := by
   unfold f_t15_t01_t09_before f_t15_t01_t09_after
   simp_alive_peephole

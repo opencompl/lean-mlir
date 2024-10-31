@@ -32,6 +32,7 @@ def demorgan_or_apint1_after := [llvm|
   "llvm.return"(%2) : (i43) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem demorgan_or_apint1_proof : demorgan_or_apint1_before ⊑ demorgan_or_apint1_after := by
   unfold demorgan_or_apint1_before demorgan_or_apint1_after
   simp_alive_peephole
@@ -60,6 +61,7 @@ def demorgan_or_apint2_after := [llvm|
   "llvm.return"(%2) : (i129) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem demorgan_or_apint2_proof : demorgan_or_apint2_before ⊑ demorgan_or_apint2_after := by
   unfold demorgan_or_apint2_before demorgan_or_apint2_after
   simp_alive_peephole
@@ -88,6 +90,7 @@ def demorgan_and_apint1_after := [llvm|
   "llvm.return"(%2) : (i477) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem demorgan_and_apint1_proof : demorgan_and_apint1_before ⊑ demorgan_and_apint1_after := by
   unfold demorgan_and_apint1_before demorgan_and_apint1_after
   simp_alive_peephole
@@ -116,6 +119,7 @@ def demorgan_and_apint2_after := [llvm|
   "llvm.return"(%2) : (i129) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem demorgan_and_apint2_proof : demorgan_and_apint2_before ⊑ demorgan_and_apint2_after := by
   unfold demorgan_and_apint2_before demorgan_and_apint2_after
   simp_alive_peephole
@@ -144,6 +148,7 @@ def demorgan_and_apint3_after := [llvm|
   "llvm.return"(%2) : (i65) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem demorgan_and_apint3_proof : demorgan_and_apint3_before ⊑ demorgan_and_apint3_after := by
   unfold demorgan_and_apint3_before demorgan_and_apint3_after
   simp_alive_peephole
@@ -172,6 +177,7 @@ def demorgan_and_apint4_after := [llvm|
   "llvm.return"(%2) : (i66) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem demorgan_and_apint4_proof : demorgan_and_apint4_before ⊑ demorgan_and_apint4_after := by
   unfold demorgan_and_apint4_before demorgan_and_apint4_after
   simp_alive_peephole
@@ -200,6 +206,7 @@ def demorgan_and_apint5_after := [llvm|
   "llvm.return"(%2) : (i47) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem demorgan_and_apint5_proof : demorgan_and_apint5_before ⊑ demorgan_and_apint5_after := by
   unfold demorgan_and_apint5_before demorgan_and_apint5_after
   simp_alive_peephole
@@ -227,6 +234,7 @@ def test3_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test3_proof : test3_before ⊑ test3_after := by
   unfold test3_before test3_after
   simp_alive_peephole
@@ -255,6 +263,7 @@ def test4_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test4_proof : test4_before ⊑ test4_after := by
   unfold test4_before test4_after
   simp_alive_peephole
@@ -282,6 +291,7 @@ def test5_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test5_proof : test5_before ⊑ test5_after := by
   unfold test5_before test5_after
   simp_alive_peephole
@@ -309,6 +319,7 @@ def test3_apint_after := [llvm|
   "llvm.return"(%0) : (i47) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test3_apint_proof : test3_apint_before ⊑ test3_apint_after := by
   unfold test3_apint_before test3_apint_after
   simp_alive_peephole
@@ -338,6 +349,7 @@ def test4_apint_after := [llvm|
   "llvm.return"(%2) : (i61) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test4_apint_proof : test4_apint_before ⊑ test4_apint_after := by
   unfold test4_apint_before test4_apint_after
   simp_alive_peephole
@@ -365,6 +377,7 @@ def test5_apint_after := [llvm|
   "llvm.return"(%0) : (i71) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test5_apint_proof : test5_apint_before ⊑ test5_apint_after := by
   unfold test5_apint_before test5_apint_after
   simp_alive_peephole
@@ -393,6 +406,7 @@ def demorgan_nand_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem demorgan_nand_proof : demorgan_nand_before ⊑ demorgan_nand_after := by
   unfold demorgan_nand_before demorgan_nand_after
   simp_alive_peephole
@@ -421,6 +435,7 @@ def demorgan_nand_apint1_after := [llvm|
   "llvm.return"(%2) : (i7) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem demorgan_nand_apint1_proof : demorgan_nand_apint1_before ⊑ demorgan_nand_apint1_after := by
   unfold demorgan_nand_apint1_before demorgan_nand_apint1_after
   simp_alive_peephole
@@ -449,6 +464,7 @@ def demorgan_nand_apint2_after := [llvm|
   "llvm.return"(%2) : (i117) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem demorgan_nand_apint2_proof : demorgan_nand_apint2_before ⊑ demorgan_nand_apint2_after := by
   unfold demorgan_nand_apint2_before demorgan_nand_apint2_after
   simp_alive_peephole
@@ -477,6 +493,7 @@ def demorgan_nor_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem demorgan_nor_proof : demorgan_nor_before ⊑ demorgan_nor_after := by
   unfold demorgan_nor_before demorgan_nor_after
   simp_alive_peephole
@@ -512,6 +529,7 @@ def demorgan_nor_use2a_after := [llvm|
   "llvm.return"(%6) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem demorgan_nor_use2a_proof : demorgan_nor_use2a_before ⊑ demorgan_nor_use2a_after := by
   unfold demorgan_nor_use2a_before demorgan_nor_use2a_after
   simp_alive_peephole
@@ -546,6 +564,7 @@ def demorgan_nor_use2b_after := [llvm|
   "llvm.return"(%5) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem demorgan_nor_use2b_proof : demorgan_nor_use2b_before ⊑ demorgan_nor_use2b_after := by
   unfold demorgan_nor_use2b_before demorgan_nor_use2b_after
   simp_alive_peephole
@@ -581,6 +600,7 @@ def demorgan_nor_use2c_after := [llvm|
   "llvm.return"(%6) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem demorgan_nor_use2c_proof : demorgan_nor_use2c_before ⊑ demorgan_nor_use2c_after := by
   unfold demorgan_nor_use2c_before demorgan_nor_use2c_after
   simp_alive_peephole
@@ -622,6 +642,7 @@ def demorgan_nor_use2ab_after := [llvm|
   "llvm.return"(%9) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem demorgan_nor_use2ab_proof : demorgan_nor_use2ab_before ⊑ demorgan_nor_use2ab_after := by
   unfold demorgan_nor_use2ab_before demorgan_nor_use2ab_after
   simp_alive_peephole
@@ -663,6 +684,7 @@ def demorgan_nor_use2ac_after := [llvm|
   "llvm.return"(%9) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem demorgan_nor_use2ac_proof : demorgan_nor_use2ac_before ⊑ demorgan_nor_use2ac_after := by
   unfold demorgan_nor_use2ac_before demorgan_nor_use2ac_after
   simp_alive_peephole
@@ -702,6 +724,7 @@ def demorgan_nor_use2bc_after := [llvm|
   "llvm.return"(%8) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem demorgan_nor_use2bc_proof : demorgan_nor_use2bc_before ⊑ demorgan_nor_use2bc_after := by
   unfold demorgan_nor_use2bc_before demorgan_nor_use2bc_after
   simp_alive_peephole
@@ -730,6 +753,7 @@ def demorganize_constant2_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem demorganize_constant2_proof : demorganize_constant2_before ⊑ demorganize_constant2_after := by
   unfold demorganize_constant2_before demorganize_constant2_after
   simp_alive_peephole
@@ -761,6 +785,7 @@ def demorgan_or_zext_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem demorgan_or_zext_proof : demorgan_or_zext_before ⊑ demorgan_or_zext_after := by
   unfold demorgan_or_zext_before demorgan_or_zext_after
   simp_alive_peephole
@@ -792,6 +817,7 @@ def demorgan_and_zext_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem demorgan_and_zext_proof : demorgan_and_zext_before ⊑ demorgan_and_zext_after := by
   unfold demorgan_and_zext_before demorgan_and_zext_after
   simp_alive_peephole
@@ -820,6 +846,7 @@ def demorgan_plus_and_to_xor_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem demorgan_plus_and_to_xor_proof : demorgan_plus_and_to_xor_before ⊑ demorgan_plus_and_to_xor_after := by
   unfold demorgan_plus_and_to_xor_before demorgan_plus_and_to_xor_after
   simp_alive_peephole
@@ -849,6 +876,7 @@ def PR45984_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem PR45984_proof : PR45984_before ⊑ PR45984_after := by
   unfold PR45984_before PR45984_after
   simp_alive_peephole

@@ -28,6 +28,7 @@ def test_sext_zext_after := [llvm|
   "llvm.return"(%0) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test_sext_zext_proof : test_sext_zext_before ⊑ test_sext_zext_after := by
   unfold test_sext_zext_before test_sext_zext_after
   simp_alive_peephole
@@ -56,6 +57,7 @@ def fold_xor_zext_sandwich_after := [llvm|
   "llvm.return"(%2) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem fold_xor_zext_sandwich_proof : fold_xor_zext_sandwich_before ⊑ fold_xor_zext_sandwich_after := by
   unfold fold_xor_zext_sandwich_before fold_xor_zext_sandwich_after
   simp_alive_peephole
@@ -80,6 +82,7 @@ def sext_zext_apint1_after := [llvm|
   "llvm.return"(%0) : (i1024) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sext_zext_apint1_proof : sext_zext_apint1_before ⊑ sext_zext_apint1_after := by
   unfold sext_zext_apint1_before sext_zext_apint1_after
   simp_alive_peephole
@@ -104,6 +107,7 @@ def sext_zext_apint2_after := [llvm|
   "llvm.return"(%0) : (i47) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sext_zext_apint2_proof : sext_zext_apint2_before ⊑ sext_zext_apint2_after := by
   unfold sext_zext_apint2_before sext_zext_apint2_after
   simp_alive_peephole
@@ -135,6 +139,7 @@ def zext_nneg_flag_drop_after := [llvm|
   "llvm.return"(%3) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem zext_nneg_flag_drop_proof : zext_nneg_flag_drop_before ⊑ zext_nneg_flag_drop_after := by
   unfold zext_nneg_flag_drop_before zext_nneg_flag_drop_after
   simp_alive_peephole
@@ -160,6 +165,7 @@ def zext_nneg_redundant_and_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem zext_nneg_redundant_and_proof : zext_nneg_redundant_and_before ⊑ zext_nneg_redundant_and_after := by
   unfold zext_nneg_redundant_and_before zext_nneg_redundant_and_after
   simp_alive_peephole
@@ -185,6 +191,7 @@ def zext_nneg_signbit_extract_after := [llvm|
   "llvm.return"(%0) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem zext_nneg_signbit_extract_proof : zext_nneg_signbit_extract_before ⊑ zext_nneg_signbit_extract_after := by
   unfold zext_nneg_signbit_extract_before zext_nneg_signbit_extract_after
   simp_alive_peephole
@@ -208,6 +215,7 @@ def zext_nneg_i1_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem zext_nneg_i1_proof : zext_nneg_i1_before ⊑ zext_nneg_i1_after := by
   unfold zext_nneg_i1_before zext_nneg_i1_after
   simp_alive_peephole

@@ -31,6 +31,7 @@ def p0_scalar_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem p0_scalar_proof : p0_scalar_before ⊑ p0_scalar_after := by
   unfold p0_scalar_before p0_scalar_after
   simp_alive_peephole

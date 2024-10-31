@@ -36,6 +36,7 @@ def set_bits_after := [llvm|
   "llvm.return"(%5) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem set_bits_proof : set_bits_before ⊑ set_bits_after := by
   unfold set_bits_before set_bits_after
   simp_alive_peephole

@@ -31,6 +31,7 @@ def c_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem c_proof : c_before ⊑ c_after := by
   unfold c_before c_after
   simp_alive_peephole

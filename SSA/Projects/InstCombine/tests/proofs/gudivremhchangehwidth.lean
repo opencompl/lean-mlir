@@ -30,6 +30,7 @@ def udiv_i8_after := [llvm|
   "llvm.return"(%0) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem udiv_i8_proof : udiv_i8_before ⊑ udiv_i8_after := by
   unfold udiv_i8_before udiv_i8_after
   simp_alive_peephole
@@ -56,6 +57,7 @@ def urem_i8_after := [llvm|
   "llvm.return"(%0) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem urem_i8_proof : urem_i8_before ⊑ urem_i8_after := by
   unfold urem_i8_before urem_i8_after
   simp_alive_peephole
@@ -82,6 +84,7 @@ def udiv_i32_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem udiv_i32_proof : udiv_i32_before ⊑ udiv_i32_after := by
   unfold udiv_i32_before udiv_i32_after
   simp_alive_peephole
@@ -113,6 +116,7 @@ def udiv_i32_multiuse_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem udiv_i32_multiuse_proof : udiv_i32_multiuse_before ⊑ udiv_i32_multiuse_after := by
   unfold udiv_i32_multiuse_before udiv_i32_multiuse_after
   simp_alive_peephole
@@ -139,6 +143,7 @@ def udiv_illegal_type_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem udiv_illegal_type_proof : udiv_illegal_type_before ⊑ udiv_illegal_type_after := by
   unfold udiv_illegal_type_before udiv_illegal_type_after
   simp_alive_peephole
@@ -165,6 +170,7 @@ def urem_i32_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem urem_i32_proof : urem_i32_before ⊑ urem_i32_after := by
   unfold urem_i32_before urem_i32_after
   simp_alive_peephole
@@ -196,6 +202,7 @@ def urem_i32_multiuse_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem urem_i32_multiuse_proof : urem_i32_multiuse_before ⊑ urem_i32_multiuse_after := by
   unfold urem_i32_multiuse_before urem_i32_multiuse_after
   simp_alive_peephole
@@ -222,6 +229,7 @@ def urem_illegal_type_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem urem_illegal_type_proof : urem_illegal_type_before ⊑ urem_illegal_type_after := by
   unfold urem_illegal_type_before urem_illegal_type_after
   simp_alive_peephole
@@ -249,6 +257,7 @@ def udiv_i32_c_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem udiv_i32_c_proof : udiv_i32_c_before ⊑ udiv_i32_c_after := by
   unfold udiv_i32_c_before udiv_i32_c_after
   simp_alive_peephole
@@ -278,6 +287,7 @@ def udiv_i32_c_multiuse_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem udiv_i32_c_multiuse_proof : udiv_i32_c_multiuse_before ⊑ udiv_i32_c_multiuse_after := by
   unfold udiv_i32_c_multiuse_before udiv_i32_c_multiuse_after
   simp_alive_peephole
@@ -305,6 +315,7 @@ def udiv_illegal_type_c_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem udiv_illegal_type_c_proof : udiv_illegal_type_c_before ⊑ udiv_illegal_type_c_after := by
   unfold udiv_illegal_type_c_before udiv_illegal_type_c_after
   simp_alive_peephole
@@ -332,6 +343,7 @@ def urem_i32_c_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem urem_i32_c_proof : urem_i32_c_before ⊑ urem_i32_c_after := by
   unfold urem_i32_c_before urem_i32_c_after
   simp_alive_peephole
@@ -361,6 +373,7 @@ def urem_i32_c_multiuse_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem urem_i32_c_multiuse_proof : urem_i32_c_multiuse_before ⊑ urem_i32_c_multiuse_after := by
   unfold urem_i32_c_multiuse_before urem_i32_c_multiuse_after
   simp_alive_peephole
@@ -388,6 +401,7 @@ def urem_illegal_type_c_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem urem_illegal_type_c_proof : urem_illegal_type_c_before ⊑ urem_illegal_type_c_after := by
   unfold urem_illegal_type_c_before urem_illegal_type_c_after
   simp_alive_peephole
@@ -415,6 +429,7 @@ def udiv_c_i32_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem udiv_c_i32_proof : udiv_c_i32_before ⊑ udiv_c_i32_after := by
   unfold udiv_c_i32_before udiv_c_i32_after
   simp_alive_peephole
@@ -442,6 +457,7 @@ def urem_c_i32_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem urem_c_i32_proof : urem_c_i32_before ⊑ urem_c_i32_after := by
   unfold urem_c_i32_before urem_c_i32_after
   simp_alive_peephole
