@@ -99,14 +99,23 @@ macro_rules
   | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant ${ $x:term } $[: $t]?) =>
       `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant($$($x) $[: $t]?) $[: $t]?)
 
-declare_syntax_cat icmp_predicate
-syntax r#"\""# "eq" r#"\""#  : icmp_predicate
 
-syntax mlir_op_operand " = " "llvm.icmp" icmp_predicate mlir_op_operand ", " mlir_op_operand (" : " mlir_type)? : mlir_op
+syntax mlir_op_operand " = " "llvm.icmp" str mlir_op_operand ", " mlir_op_operand (" : " mlir_type)? : mlir_op
 macro_rules
-  | `(mlir_op| $res:mlir_op_operand = llvm.icmp $p:icmp_predicate $x, $y $[: $t]?) => do
+  | `(mlir_op| $res:mlir_op_operand = llvm.icmp $p $x, $y $[: $t]?) => do
     let t ← t.getDM `(mlir_type| _)
-    `(mlir_op| $res:mlir_op_operand = "llvm.icmp.eq" ($x, $y) : ($t, $t) -> (i1))
+    match p.getString with
+      | "eq" => `(mlir_op| $res:mlir_op_operand = "llvm.icmp.eq" ($x, $y) : ($t, $t) -> (i1))
+      | "ne" => `(mlir_op| $res:mlir_op_operand = "llvm.icmp.ne" ($x, $y) : ($t, $t) -> (i1))
+      | "slt" => `(mlir_op| $res:mlir_op_operand = "llvm.icmp.slt" ($x, $y) : ($t, $t) -> (i1))
+      | "sle" => `(mlir_op| $res:mlir_op_operand = "llvm.icmp.sle" ($x, $y) : ($t, $t) -> (i1))
+      | "sgt" => `(mlir_op| $res:mlir_op_operand = "llvm.icmp.sgt" ($x, $y) : ($t, $t) -> (i1))
+      | "sge" => `(mlir_op| $res:mlir_op_operand = "llvm.icmp.sge" ($x, $y) : ($t, $t) -> (i1))
+      | "ult" => `(mlir_op| $res:mlir_op_operand = "llvm.icmp.ult" ($x, $y) : ($t, $t) -> (i1))
+      | "ule" => `(mlir_op| $res:mlir_op_operand = "llvm.icmp.ule" ($x, $y) : ($t, $t) -> (i1))
+      | "ugt" => `(mlir_op| $res:mlir_op_operand = "llvm.icmp.ugt" ($x, $y) : ($t, $t) -> (i1))
+      | "uge" => `(mlir_op| $res:mlir_op_operand = "llvm.icmp.uge" ($x, $y) : ($t, $t) -> (i1))
+      | _ => Macro.throwErrorAt p s!"unexpected predicate {p.getString}"
 
 syntax mlir_op_operand " = " "llvm.select" mlir_op_operand ", " mlir_op_operand ", " mlir_op_operand
     (" : " mlir_type)? : mlir_op
@@ -197,7 +206,7 @@ private def pretty_test_icmp :=
   [llvm ()|{
   ^bb0(%arg0: i1):
     %1 = llvm.icmp "eq" %arg0, %arg0 : i1
-    llvm.return %1 : i64
+    llvm.return %1 : i1
   }]
 
 example : pretty_test = prettier_test_generic 32 := by
