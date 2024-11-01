@@ -13,7 +13,8 @@ theorem test_sext_zext_thm (e : IntW 16) : sext 64 (zext 32 e) ⊑ zext 64 e := 
     all_goals sorry
 
 
-theorem fold_xor_zext_sandwich_thm (e : IntW 1) : zext 64 (LLVM.xor (zext 32 e) (const? 1)) ⊑ zext 64 (LLVM.xor e (const? 1)) := by 
+theorem fold_xor_zext_sandwich_thm (e : IntW 1) :
+  zext 64 (LLVM.xor (zext 32 e) (const? 32 1)) ⊑ zext 64 (LLVM.xor e (const? 1 1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -81,8 +82,8 @@ theorem sext_zext_apint2_thm (e : IntW 11) : sext 47 (zext 39 e) ⊑ zext 47 e :
 
 
 theorem masked_bit_set_thm (e e_1 : IntW 32) :
-  zext 32 (icmp IntPredicate.ne (LLVM.and (shl (const? 1) e_1) e) (const? 0)) ⊑
-    LLVM.and (lshr e e_1) (const? 1) := by 
+  zext 32 (icmp IntPredicate.ne (LLVM.and (shl (const? 32 1) e_1) e) (const? 32 0)) ⊑
+    LLVM.and (lshr e e_1) (const? 32 1) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -91,8 +92,8 @@ theorem masked_bit_set_thm (e e_1 : IntW 32) :
 
 
 theorem masked_bit_clear_commute_thm (e e_1 : IntW 32) :
-  zext 32 (icmp IntPredicate.eq (LLVM.and (LLVM.srem (const? 42) e_1) (shl (const? 1) e)) (const? 0)) ⊑
-    LLVM.and (lshr (LLVM.xor (LLVM.srem (const? 42) e_1) (const? (-1))) e) (const? 1) := by 
+  zext 32 (icmp IntPredicate.eq (LLVM.and (LLVM.srem (const? 32 42) e_1) (shl (const? 32 1) e)) (const? 32 0)) ⊑
+    LLVM.and (lshr (LLVM.xor (LLVM.srem (const? 32 42) e_1) (const? 32 (-1))) e) (const? 32 1) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -101,9 +102,10 @@ theorem masked_bit_clear_commute_thm (e e_1 : IntW 32) :
 
 
 theorem div_bit_set_thm (e e_1 : IntW 32) :
-  zext 32 (icmp IntPredicate.ne (LLVM.sdiv (shl (const? 1) e_1) e) (const? 0)) ⊑
+  zext 32 (icmp IntPredicate.ne (LLVM.sdiv (shl (const? 32 1) e_1) e) (const? 32 0)) ⊑
     zext 32
-      (icmp IntPredicate.ne (LLVM.sdiv (shl (const? 1) e_1 { «nsw» := false, «nuw» := true }) e) (const? 0)) := by 
+      (icmp IntPredicate.ne (LLVM.sdiv (shl (const? 32 1) e_1 { «nsw» := false, «nuw» := true }) e)
+        (const? 32 0)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -112,9 +114,10 @@ theorem div_bit_set_thm (e e_1 : IntW 32) :
 
 
 theorem masked_bit_set_nonzero_cmp_thm (e e_1 : IntW 32) :
-  zext 32 (icmp IntPredicate.ne (LLVM.and (shl (const? 1) e_1) e) (const? 1)) ⊑
+  zext 32 (icmp IntPredicate.ne (LLVM.and (shl (const? 32 1) e_1) e) (const? 32 1)) ⊑
     zext 32
-      (icmp IntPredicate.ne (LLVM.and (shl (const? 1) e_1 { «nsw» := false, «nuw» := true }) e) (const? 1)) := by 
+      (icmp IntPredicate.ne (LLVM.and (shl (const? 32 1) e_1 { «nsw» := false, «nuw» := true }) e)
+        (const? 32 1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -123,9 +126,10 @@ theorem masked_bit_set_nonzero_cmp_thm (e e_1 : IntW 32) :
 
 
 theorem masked_bit_wrong_pred_thm (e e_1 : IntW 32) :
-  zext 32 (icmp IntPredicate.sgt (LLVM.and (shl (const? 1) e_1) e) (const? 0)) ⊑
+  zext 32 (icmp IntPredicate.sgt (LLVM.and (shl (const? 32 1) e_1) e) (const? 32 0)) ⊑
     zext 32
-      (icmp IntPredicate.sgt (LLVM.and (shl (const? 1) e_1 { «nsw» := false, «nuw» := true }) e) (const? 0)) := by 
+      (icmp IntPredicate.sgt (LLVM.and (shl (const? 32 1) e_1 { «nsw» := false, «nuw» := true }) e)
+        (const? 32 0)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -134,9 +138,12 @@ theorem masked_bit_wrong_pred_thm (e e_1 : IntW 32) :
 
 
 theorem zext_or_masked_bit_test_thm (e e_1 e_2 : IntW 32) :
-  zext 32 (LLVM.or (icmp IntPredicate.ne (LLVM.and (shl (const? 1) e_2) e_1) (const? 0)) (icmp IntPredicate.eq e e_2)) ⊑
+  zext 32
+      (LLVM.or (icmp IntPredicate.ne (LLVM.and (shl (const? 32 1) e_2) e_1) (const? 32 0))
+        (icmp IntPredicate.eq e e_2)) ⊑
     zext 32
-      (LLVM.or (icmp IntPredicate.ne (LLVM.and (shl (const? 1) e_2 { «nsw» := false, «nuw» := true }) e_1) (const? 0))
+      (LLVM.or
+        (icmp IntPredicate.ne (LLVM.and (shl (const? 32 1) e_2 { «nsw» := false, «nuw» := true }) e_1) (const? 32 0))
         (icmp IntPredicate.eq e e_2)) := by 
     simp_alive_undef
     simp_alive_ops
@@ -146,8 +153,8 @@ theorem zext_or_masked_bit_test_thm (e e_1 e_2 : IntW 32) :
 
 
 theorem zext_masked_bit_zero_to_smaller_bitwidth_thm (e e_1 : IntW 32) :
-  zext 16 (icmp IntPredicate.eq (LLVM.and (shl (const? 1) e_1) e) (const? 0)) ⊑
-    LLVM.and (trunc 16 (lshr (LLVM.xor e (const? (-1))) e_1)) (const? 1) := by 
+  zext 16 (icmp IntPredicate.eq (LLVM.and (shl (const? 32 1) e_1) e) (const? 32 0)) ⊑
+    LLVM.and (trunc 16 (lshr (LLVM.xor e (const? 32 (-1))) e_1)) (const? 16 1) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -156,8 +163,8 @@ theorem zext_masked_bit_zero_to_smaller_bitwidth_thm (e e_1 : IntW 32) :
 
 
 theorem zext_masked_bit_nonzero_to_smaller_bitwidth_thm (e e_1 : IntW 32) :
-  zext 16 (icmp IntPredicate.ne (LLVM.and (shl (const? 1) e_1) e) (const? 0)) ⊑
-    LLVM.and (trunc 16 (lshr e e_1)) (const? 1) := by 
+  zext 16 (icmp IntPredicate.ne (LLVM.and (shl (const? 32 1) e_1) e) (const? 32 0)) ⊑
+    LLVM.and (trunc 16 (lshr e e_1)) (const? 16 1) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -166,8 +173,8 @@ theorem zext_masked_bit_nonzero_to_smaller_bitwidth_thm (e e_1 : IntW 32) :
 
 
 theorem zext_masked_bit_zero_to_larger_bitwidth_thm (e e_1 : IntW 32) :
-  zext 64 (icmp IntPredicate.eq (LLVM.and (shl (const? 1) e_1) e) (const? 0)) ⊑
-    zext 64 (LLVM.and (lshr (LLVM.xor e (const? (-1))) e_1) (const? 1)) := by 
+  zext 64 (icmp IntPredicate.eq (LLVM.and (shl (const? 32 1) e_1) e) (const? 32 0)) ⊑
+    zext 64 (LLVM.and (lshr (LLVM.xor e (const? 32 (-1))) e_1) (const? 32 1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -176,8 +183,8 @@ theorem zext_masked_bit_zero_to_larger_bitwidth_thm (e e_1 : IntW 32) :
 
 
 theorem zext_nneg_flag_drop_thm (e : IntW 16) (e_1 : IntW 8) :
-  LLVM.or (LLVM.or (zext 16 (LLVM.and e_1 (const? 127))) e) (const? 128) ⊑
-    LLVM.or (LLVM.or e (zext 16 e_1)) (const? 128) := by 
+  LLVM.or (LLVM.or (zext 16 (LLVM.and e_1 (const? 8 127))) e) (const? 16 128) ⊑
+    LLVM.or (LLVM.or e (zext 16 e_1)) (const? 16 128) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -185,7 +192,7 @@ theorem zext_nneg_flag_drop_thm (e : IntW 16) (e_1 : IntW 8) :
     all_goals sorry
 
 
-theorem zext_nneg_redundant_and_thm (e : IntW 8) : LLVM.and (zext 32 e) (const? 127) ⊑ zext 32 e := by 
+theorem zext_nneg_redundant_and_thm (e : IntW 8) : LLVM.and (zext 32 e) (const? 32 127) ⊑ zext 32 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -193,7 +200,7 @@ theorem zext_nneg_redundant_and_thm (e : IntW 8) : LLVM.and (zext 32 e) (const? 
     all_goals sorry
 
 
-theorem zext_nneg_signbit_extract_thm (e : IntW 32) : lshr (zext 64 e) (const? 31) ⊑ const? 0 := by 
+theorem zext_nneg_signbit_extract_thm (e : IntW 32) : lshr (zext 64 e) (const? 64 31) ⊑ const? 64 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -201,7 +208,7 @@ theorem zext_nneg_signbit_extract_thm (e : IntW 32) : lshr (zext 64 e) (const? 3
     all_goals sorry
 
 
-theorem zext_nneg_i1_thm (e : IntW 1) : zext 32 e ⊑ const? 0 := by 
+theorem zext_nneg_i1_thm (e : IntW 1) : zext 32 e ⊑ const? 32 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

@@ -6,7 +6,7 @@ open LLVM
 
 section gcasthmulhselect_proof
 theorem mul_thm (e e_1 : IntW 32) :
-  zext 32 (mul (trunc 8 e_1) (trunc 8 e)) ⊑ LLVM.and (mul e_1 e) (const? 255) := by 
+  zext 32 (mul (trunc 8 e_1) (trunc 8 e)) ⊑ LLVM.and (mul e_1 e) (const? 32 255) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -16,7 +16,7 @@ theorem mul_thm (e e_1 : IntW 32) :
 
 theorem select1_thm (e e_1 e_2 : IntW 32) (e_3 : IntW 1) :
   zext 32 (select e_3 (trunc 8 e_2) (add (trunc 8 e_1) (trunc 8 e))) ⊑
-    LLVM.and (select e_3 e_2 (add e_1 e)) (const? 255) := by 
+    LLVM.and (select e_3 e_2 (add e_1 e)) (const? 32 255) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

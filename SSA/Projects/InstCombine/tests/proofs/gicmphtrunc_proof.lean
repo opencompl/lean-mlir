@@ -6,7 +6,8 @@ open LLVM
 
 section gicmphtrunc_proof
 theorem ult_2_thm (e : IntW 32) :
-  icmp IntPredicate.ult (trunc 8 e) (const? 2) ⊑ icmp IntPredicate.eq (LLVM.and e (const? 254)) (const? 0) := by 
+  icmp IntPredicate.ult (trunc 8 e) (const? 8 2) ⊑
+    icmp IntPredicate.eq (LLVM.and e (const? 32 254)) (const? 32 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -15,8 +16,8 @@ theorem ult_2_thm (e : IntW 32) :
 
 
 theorem ult_192_thm (e : IntW 32) :
-  icmp IntPredicate.ult (trunc 8 e) (const? (-64)) ⊑
-    icmp IntPredicate.ne (LLVM.and e (const? 192)) (const? 192) := by 
+  icmp IntPredicate.ult (trunc 8 e) (const? 8 (-64)) ⊑
+    icmp IntPredicate.ne (LLVM.and e (const? 32 192)) (const? 32 192) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -25,7 +26,8 @@ theorem ult_192_thm (e : IntW 32) :
 
 
 theorem ugt_3_thm (e : IntW 32) :
-  icmp IntPredicate.ugt (trunc 8 e) (const? 3) ⊑ icmp IntPredicate.ne (LLVM.and e (const? 252)) (const? 0) := by 
+  icmp IntPredicate.ugt (trunc 8 e) (const? 8 3) ⊑
+    icmp IntPredicate.ne (LLVM.and e (const? 32 252)) (const? 32 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -34,7 +36,8 @@ theorem ugt_3_thm (e : IntW 32) :
 
 
 theorem ugt_253_thm (e : IntW 32) :
-  icmp IntPredicate.ugt (trunc 8 e) (const? (-3)) ⊑ icmp IntPredicate.eq (LLVM.and e (const? 254)) (const? 254) := by 
+  icmp IntPredicate.ugt (trunc 8 e) (const? 8 (-3)) ⊑
+    icmp IntPredicate.eq (LLVM.and e (const? 32 254)) (const? 32 254) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -43,7 +46,8 @@ theorem ugt_253_thm (e : IntW 32) :
 
 
 theorem slt_0_thm (e : IntW 32) :
-  icmp IntPredicate.slt (trunc 8 e) (const? 0) ⊑ icmp IntPredicate.ne (LLVM.and e (const? 128)) (const? 0) := by 
+  icmp IntPredicate.slt (trunc 8 e) (const? 8 0) ⊑
+    icmp IntPredicate.ne (LLVM.and e (const? 32 128)) (const? 32 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -52,7 +56,8 @@ theorem slt_0_thm (e : IntW 32) :
 
 
 theorem sgt_n1_thm (e : IntW 32) :
-  icmp IntPredicate.sgt (trunc 8 e) (const? (-1)) ⊑ icmp IntPredicate.eq (LLVM.and e (const? 128)) (const? 0) := by 
+  icmp IntPredicate.sgt (trunc 8 e) (const? 8 (-1)) ⊑
+    icmp IntPredicate.eq (LLVM.and e (const? 32 128)) (const? 32 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -61,7 +66,7 @@ theorem sgt_n1_thm (e : IntW 32) :
 
 
 theorem shl1_trunc_eq0_thm (e : IntW 32) :
-  icmp IntPredicate.eq (trunc 16 (shl (const? 1) e)) (const? 0) ⊑ icmp IntPredicate.ugt e (const? 15) := by 
+  icmp IntPredicate.eq (trunc 16 (shl (const? 32 1) e)) (const? 16 0) ⊑ icmp IntPredicate.ugt e (const? 32 15) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -70,8 +75,8 @@ theorem shl1_trunc_eq0_thm (e : IntW 32) :
 
 
 theorem shl1_trunc_sgt0_thm (e : IntW 9) :
-  icmp IntPredicate.sgt (trunc 6 (shl (const? 1) e)) (const? 0) ⊑
-    icmp IntPredicate.sgt (trunc 6 (shl (const? 1) e { «nsw» := false, «nuw» := true })) (const? 0) := by 
+  icmp IntPredicate.sgt (trunc 6 (shl (const? 9 1) e)) (const? 6 0) ⊑
+    icmp IntPredicate.sgt (trunc 6 (shl (const? 9 1) e { «nsw» := false, «nuw» := true })) (const? 6 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -80,8 +85,8 @@ theorem shl1_trunc_sgt0_thm (e : IntW 9) :
 
 
 theorem shl1_trunc_sgt4_thm (e : IntW 32) :
-  icmp IntPredicate.sgt (trunc 16 (shl (const? 1) e)) (const? 4) ⊑
-    icmp IntPredicate.sgt (trunc 16 (shl (const? 1) e { «nsw» := false, «nuw» := true })) (const? 4) := by 
+  icmp IntPredicate.sgt (trunc 16 (shl (const? 32 1) e)) (const? 16 4) ⊑
+    icmp IntPredicate.sgt (trunc 16 (shl (const? 32 1) e { «nsw» := false, «nuw» := true })) (const? 16 4) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

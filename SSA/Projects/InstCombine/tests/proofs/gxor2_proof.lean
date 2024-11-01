@@ -6,7 +6,8 @@ open LLVM
 
 section gxor2_proof
 theorem test0_thm (e : IntW 32) :
-  icmp IntPredicate.sgt (LLVM.xor e (const? (-2147483648))) (const? (-1)) ⊑ icmp IntPredicate.slt e (const? 0) := by 
+  icmp IntPredicate.sgt (LLVM.xor e (const? 32 (-2147483648))) (const? 32 (-1)) ⊑
+    icmp IntPredicate.slt e (const? 32 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -15,7 +16,7 @@ theorem test0_thm (e : IntW 32) :
 
 
 theorem test1_thm (e : IntW 32) :
-  icmp IntPredicate.slt (LLVM.xor e (const? 12345)) (const? 0) ⊑ icmp IntPredicate.slt e (const? 0) := by 
+  icmp IntPredicate.slt (LLVM.xor e (const? 32 12345)) (const? 32 0) ⊑ icmp IntPredicate.slt e (const? 32 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -24,8 +25,8 @@ theorem test1_thm (e : IntW 32) :
 
 
 theorem test2_thm (e : IntW 32) :
-  LLVM.xor (add (LLVM.and e (const? 32)) (const? 145)) (const? 153) ⊑
-    LLVM.or (LLVM.and e (const? 32)) (const? 8) := by 
+  LLVM.xor (add (LLVM.and e (const? 32 32)) (const? 32 145)) (const? 32 153) ⊑
+    LLVM.or (LLVM.and e (const? 32 32)) (const? 32 8) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -34,8 +35,8 @@ theorem test2_thm (e : IntW 32) :
 
 
 theorem test3_thm (e : IntW 32) :
-  LLVM.xor (LLVM.and (LLVM.or e (const? 145)) (const? 177)) (const? 153) ⊑
-    LLVM.or (LLVM.and e (const? 32)) (const? 8) := by 
+  LLVM.xor (LLVM.and (LLVM.or e (const? 32 145)) (const? 32 177)) (const? 32 153) ⊑
+    LLVM.or (LLVM.and e (const? 32 32)) (const? 32 8) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -44,8 +45,8 @@ theorem test3_thm (e : IntW 32) :
 
 
 theorem test5_thm (e : IntW 32) :
-  add (LLVM.xor (lshr (LLVM.xor e (const? 1234)) (const? 8)) (const? 1)) (LLVM.xor e (const? 1234)) ⊑
-    add (LLVM.xor (lshr e (const? 8)) (const? 5)) (LLVM.xor e (const? 1234)) := by 
+  add (LLVM.xor (lshr (LLVM.xor e (const? 32 1234)) (const? 32 8)) (const? 32 1)) (LLVM.xor e (const? 32 1234)) ⊑
+    add (LLVM.xor (lshr e (const? 32 8)) (const? 32 5)) (LLVM.xor e (const? 32 1234)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -54,8 +55,8 @@ theorem test5_thm (e : IntW 32) :
 
 
 theorem test6_thm (e : IntW 32) :
-  add (lshr (LLVM.xor e (const? 1234)) (const? 16)) (LLVM.xor e (const? 1234)) ⊑
-    add (lshr e (const? 16)) (LLVM.xor e (const? 1234)) := by 
+  add (lshr (LLVM.xor e (const? 32 1234)) (const? 32 16)) (LLVM.xor e (const? 32 1234)) ⊑
+    add (lshr e (const? 32 16)) (LLVM.xor e (const? 32 1234)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -64,7 +65,7 @@ theorem test6_thm (e : IntW 32) :
 
 
 theorem test7_thm (e e_1 : IntW 32) :
-  LLVM.xor (LLVM.or e_1 e) (LLVM.xor e_1 (const? (-1))) ⊑ LLVM.or e_1 (LLVM.xor e (const? (-1))) := by 
+  LLVM.xor (LLVM.or e_1 e) (LLVM.xor e_1 (const? 32 (-1))) ⊑ LLVM.or e_1 (LLVM.xor e (const? 32 (-1))) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -73,7 +74,7 @@ theorem test7_thm (e e_1 : IntW 32) :
 
 
 theorem test8_thm (e e_1 : IntW 32) :
-  LLVM.xor (LLVM.xor e_1 (const? (-1))) (LLVM.or e_1 e) ⊑ LLVM.or e_1 (LLVM.xor e (const? (-1))) := by 
+  LLVM.xor (LLVM.xor e_1 (const? 32 (-1))) (LLVM.or e_1 e) ⊑ LLVM.or e_1 (LLVM.xor e (const? 32 (-1))) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -114,8 +115,8 @@ theorem test10b_thm (e e_1 : IntW 32) : LLVM.xor (LLVM.xor e_1 e) (LLVM.and e e_
 
 
 theorem test11_thm (e e_1 : IntW 32) :
-  LLVM.and (LLVM.xor e_1 e) (LLVM.xor (LLVM.xor e (const? (-1))) e_1) ⊑
-    LLVM.and (LLVM.xor e_1 e) (LLVM.xor (LLVM.xor e e_1) (const? (-1))) := by 
+  LLVM.and (LLVM.xor e_1 e) (LLVM.xor (LLVM.xor e (const? 32 (-1))) e_1) ⊑
+    LLVM.and (LLVM.xor e_1 e) (LLVM.xor (LLVM.xor e e_1) (const? 32 (-1))) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -124,8 +125,8 @@ theorem test11_thm (e e_1 : IntW 32) :
 
 
 theorem test11b_thm (e e_1 : IntW 32) :
-  LLVM.and (LLVM.xor (LLVM.xor e_1 (const? (-1))) e) (LLVM.xor e e_1) ⊑
-    LLVM.and (LLVM.xor e e_1) (LLVM.xor (LLVM.xor e_1 e) (const? (-1))) := by 
+  LLVM.and (LLVM.xor (LLVM.xor e_1 (const? 32 (-1))) e) (LLVM.xor e e_1) ⊑
+    LLVM.and (LLVM.xor e e_1) (LLVM.xor (LLVM.xor e_1 e) (const? 32 (-1))) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -134,8 +135,8 @@ theorem test11b_thm (e e_1 : IntW 32) :
 
 
 theorem test11c_thm (e e_1 : IntW 32) :
-  LLVM.and (LLVM.xor e_1 e) (LLVM.xor (LLVM.xor e_1 (const? (-1))) e) ⊑
-    LLVM.and (LLVM.xor e_1 e) (LLVM.xor (LLVM.xor e_1 e) (const? (-1))) := by 
+  LLVM.and (LLVM.xor e_1 e) (LLVM.xor (LLVM.xor e_1 (const? 32 (-1))) e) ⊑
+    LLVM.and (LLVM.xor e_1 e) (LLVM.xor (LLVM.xor e_1 e) (const? 32 (-1))) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -144,8 +145,8 @@ theorem test11c_thm (e e_1 : IntW 32) :
 
 
 theorem test11d_thm (e e_1 : IntW 32) :
-  LLVM.and (LLVM.xor (LLVM.xor e_1 (const? (-1))) e) (LLVM.xor e_1 e) ⊑
-    LLVM.and (LLVM.xor e_1 e) (LLVM.xor (LLVM.xor e_1 e) (const? (-1))) := by 
+  LLVM.and (LLVM.xor (LLVM.xor e_1 (const? 32 (-1))) e) (LLVM.xor e_1 e) ⊑
+    LLVM.and (LLVM.xor e_1 e) (LLVM.xor (LLVM.xor e_1 e) (const? 32 (-1))) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -154,8 +155,8 @@ theorem test11d_thm (e e_1 : IntW 32) :
 
 
 theorem test11e_thm (e e_1 e_2 : IntW 32) :
-  LLVM.and (LLVM.xor (mul e_2 e_1) e) (LLVM.xor (mul e_2 e_1) (LLVM.xor e (const? (-1)))) ⊑
-    LLVM.and (LLVM.xor (mul e_2 e_1) e) (LLVM.xor (LLVM.xor e (mul e_2 e_1)) (const? (-1))) := by 
+  LLVM.and (LLVM.xor (mul e_2 e_1) e) (LLVM.xor (mul e_2 e_1) (LLVM.xor e (const? 32 (-1)))) ⊑
+    LLVM.and (LLVM.xor (mul e_2 e_1) e) (LLVM.xor (LLVM.xor e (mul e_2 e_1)) (const? 32 (-1))) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -164,8 +165,8 @@ theorem test11e_thm (e e_1 e_2 : IntW 32) :
 
 
 theorem test11f_thm (e e_1 e_2 : IntW 32) :
-  LLVM.and (LLVM.xor (mul e_2 e_1) (LLVM.xor e (const? (-1)))) (LLVM.xor (mul e_2 e_1) e) ⊑
-    LLVM.and (LLVM.xor (mul e_2 e_1) e) (LLVM.xor (LLVM.xor e (mul e_2 e_1)) (const? (-1))) := by 
+  LLVM.and (LLVM.xor (mul e_2 e_1) (LLVM.xor e (const? 32 (-1)))) (LLVM.xor (mul e_2 e_1) e) ⊑
+    LLVM.and (LLVM.xor (mul e_2 e_1) e) (LLVM.xor (LLVM.xor e (mul e_2 e_1)) (const? 32 (-1))) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -174,8 +175,8 @@ theorem test11f_thm (e e_1 e_2 : IntW 32) :
 
 
 theorem test12_thm (e e_1 : IntW 32) :
-  LLVM.xor (LLVM.and e_1 (LLVM.xor e (const? (-1)))) (LLVM.xor e_1 (const? (-1))) ⊑
-    LLVM.xor (LLVM.and e_1 e) (const? (-1)) := by 
+  LLVM.xor (LLVM.and e_1 (LLVM.xor e (const? 32 (-1)))) (LLVM.xor e_1 (const? 32 (-1))) ⊑
+    LLVM.xor (LLVM.and e_1 e) (const? 32 (-1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -184,8 +185,8 @@ theorem test12_thm (e e_1 : IntW 32) :
 
 
 theorem test12commuted_thm (e e_1 : IntW 32) :
-  LLVM.xor (LLVM.and (LLVM.xor e_1 (const? (-1))) e) (LLVM.xor e (const? (-1))) ⊑
-    LLVM.xor (LLVM.and e e_1) (const? (-1)) := by 
+  LLVM.xor (LLVM.and (LLVM.xor e_1 (const? 32 (-1))) e) (LLVM.xor e (const? 32 (-1))) ⊑
+    LLVM.xor (LLVM.and e e_1) (const? 32 (-1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -194,8 +195,8 @@ theorem test12commuted_thm (e e_1 : IntW 32) :
 
 
 theorem test13_thm (e e_1 : IntW 32) :
-  LLVM.xor (LLVM.xor e_1 (const? (-1))) (LLVM.and e_1 (LLVM.xor e (const? (-1)))) ⊑
-    LLVM.xor (LLVM.and e_1 e) (const? (-1)) := by 
+  LLVM.xor (LLVM.xor e_1 (const? 32 (-1))) (LLVM.and e_1 (LLVM.xor e (const? 32 (-1)))) ⊑
+    LLVM.xor (LLVM.and e_1 e) (const? 32 (-1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -204,8 +205,8 @@ theorem test13_thm (e e_1 : IntW 32) :
 
 
 theorem test13commuted_thm (e e_1 : IntW 32) :
-  LLVM.xor (LLVM.xor e_1 (const? (-1))) (LLVM.and (LLVM.xor e (const? (-1))) e_1) ⊑
-    LLVM.xor (LLVM.and e_1 e) (const? (-1)) := by 
+  LLVM.xor (LLVM.xor e_1 (const? 32 (-1))) (LLVM.and (LLVM.xor e (const? 32 (-1))) e_1) ⊑
+    LLVM.xor (LLVM.and e_1 e) (const? 32 (-1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -214,7 +215,7 @@ theorem test13commuted_thm (e e_1 : IntW 32) :
 
 
 theorem xor_or_xor_common_op_commute1_thm (e e_1 e_2 : IntW 32) :
-  LLVM.xor (LLVM.xor e_2 e_1) (LLVM.or e_2 e) ⊑ LLVM.xor (LLVM.and e (LLVM.xor e_2 (const? (-1)))) e_1 := by 
+  LLVM.xor (LLVM.xor e_2 e_1) (LLVM.or e_2 e) ⊑ LLVM.xor (LLVM.and e (LLVM.xor e_2 (const? 32 (-1)))) e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -223,7 +224,7 @@ theorem xor_or_xor_common_op_commute1_thm (e e_1 e_2 : IntW 32) :
 
 
 theorem xor_or_xor_common_op_commute2_thm (e e_1 e_2 : IntW 32) :
-  LLVM.xor (LLVM.xor e_2 e_1) (LLVM.or e_1 e) ⊑ LLVM.xor (LLVM.and e (LLVM.xor e_1 (const? (-1)))) e_2 := by 
+  LLVM.xor (LLVM.xor e_2 e_1) (LLVM.or e_1 e) ⊑ LLVM.xor (LLVM.and e (LLVM.xor e_1 (const? 32 (-1)))) e_2 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -232,7 +233,7 @@ theorem xor_or_xor_common_op_commute2_thm (e e_1 e_2 : IntW 32) :
 
 
 theorem xor_or_xor_common_op_commute3_thm (e e_1 e_2 : IntW 32) :
-  LLVM.xor (LLVM.xor e_2 e_1) (LLVM.or e e_2) ⊑ LLVM.xor (LLVM.and e (LLVM.xor e_2 (const? (-1)))) e_1 := by 
+  LLVM.xor (LLVM.xor e_2 e_1) (LLVM.or e e_2) ⊑ LLVM.xor (LLVM.and e (LLVM.xor e_2 (const? 32 (-1)))) e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -241,7 +242,7 @@ theorem xor_or_xor_common_op_commute3_thm (e e_1 e_2 : IntW 32) :
 
 
 theorem xor_or_xor_common_op_commute4_thm (e e_1 e_2 : IntW 32) :
-  LLVM.xor (LLVM.xor e_2 e_1) (LLVM.or e e_1) ⊑ LLVM.xor (LLVM.and e (LLVM.xor e_1 (const? (-1)))) e_2 := by 
+  LLVM.xor (LLVM.xor e_2 e_1) (LLVM.or e e_1) ⊑ LLVM.xor (LLVM.and e (LLVM.xor e_1 (const? 32 (-1)))) e_2 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -250,7 +251,7 @@ theorem xor_or_xor_common_op_commute4_thm (e e_1 e_2 : IntW 32) :
 
 
 theorem xor_or_xor_common_op_commute5_thm (e e_1 e_2 : IntW 32) :
-  LLVM.xor (LLVM.or e_2 e_1) (LLVM.xor e_2 e) ⊑ LLVM.xor (LLVM.and e_1 (LLVM.xor e_2 (const? (-1)))) e := by 
+  LLVM.xor (LLVM.or e_2 e_1) (LLVM.xor e_2 e) ⊑ LLVM.xor (LLVM.and e_1 (LLVM.xor e_2 (const? 32 (-1)))) e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -259,7 +260,7 @@ theorem xor_or_xor_common_op_commute5_thm (e e_1 e_2 : IntW 32) :
 
 
 theorem xor_or_xor_common_op_commute6_thm (e e_1 e_2 : IntW 32) :
-  LLVM.xor (LLVM.or e_2 e_1) (LLVM.xor e e_2) ⊑ LLVM.xor (LLVM.and e_1 (LLVM.xor e_2 (const? (-1)))) e := by 
+  LLVM.xor (LLVM.or e_2 e_1) (LLVM.xor e e_2) ⊑ LLVM.xor (LLVM.and e_1 (LLVM.xor e_2 (const? 32 (-1)))) e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -268,7 +269,7 @@ theorem xor_or_xor_common_op_commute6_thm (e e_1 e_2 : IntW 32) :
 
 
 theorem xor_or_xor_common_op_commute7_thm (e e_1 e_2 : IntW 32) :
-  LLVM.xor (LLVM.or e_2 e_1) (LLVM.xor e_1 e) ⊑ LLVM.xor (LLVM.and e_2 (LLVM.xor e_1 (const? (-1)))) e := by 
+  LLVM.xor (LLVM.or e_2 e_1) (LLVM.xor e_1 e) ⊑ LLVM.xor (LLVM.and e_2 (LLVM.xor e_1 (const? 32 (-1)))) e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -277,7 +278,7 @@ theorem xor_or_xor_common_op_commute7_thm (e e_1 e_2 : IntW 32) :
 
 
 theorem xor_or_xor_common_op_commute8_thm (e e_1 e_2 : IntW 32) :
-  LLVM.xor (LLVM.or e_2 e_1) (LLVM.xor e e_1) ⊑ LLVM.xor (LLVM.and e_2 (LLVM.xor e_1 (const? (-1)))) e := by 
+  LLVM.xor (LLVM.or e_2 e_1) (LLVM.xor e e_1) ⊑ LLVM.xor (LLVM.and e_2 (LLVM.xor e_1 (const? 32 (-1)))) e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -286,9 +287,9 @@ theorem xor_or_xor_common_op_commute8_thm (e e_1 e_2 : IntW 32) :
 
 
 theorem test15_thm (e e_1 : IntW 8) :
-  mul (LLVM.and (LLVM.xor e_1 e) (LLVM.xor (LLVM.xor e (const? 33)) e_1)) (LLVM.xor (LLVM.xor e (const? 33)) e_1) ⊑
-    mul (LLVM.and (LLVM.xor e_1 e) (LLVM.xor (LLVM.xor e e_1) (const? 33)))
-      (LLVM.xor (LLVM.xor e e_1) (const? 33)) := by 
+  mul (LLVM.and (LLVM.xor e_1 e) (LLVM.xor (LLVM.xor e (const? 8 33)) e_1)) (LLVM.xor (LLVM.xor e (const? 8 33)) e_1) ⊑
+    mul (LLVM.and (LLVM.xor e_1 e) (LLVM.xor (LLVM.xor e e_1) (const? 8 33)))
+      (LLVM.xor (LLVM.xor e e_1) (const? 8 33)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -297,9 +298,9 @@ theorem test15_thm (e e_1 : IntW 8) :
 
 
 theorem test16_thm (e e_1 : IntW 8) :
-  mul (LLVM.and (LLVM.xor (LLVM.xor e_1 (const? 33)) e) (LLVM.xor e e_1)) (LLVM.xor (LLVM.xor e_1 (const? 33)) e) ⊑
-    mul (LLVM.and (LLVM.xor (LLVM.xor e_1 e) (const? 33)) (LLVM.xor e e_1))
-      (LLVM.xor (LLVM.xor e_1 e) (const? 33)) := by 
+  mul (LLVM.and (LLVM.xor (LLVM.xor e_1 (const? 8 33)) e) (LLVM.xor e e_1)) (LLVM.xor (LLVM.xor e_1 (const? 8 33)) e) ⊑
+    mul (LLVM.and (LLVM.xor (LLVM.xor e_1 e) (const? 8 33)) (LLVM.xor e e_1))
+      (LLVM.xor (LLVM.xor e_1 e) (const? 8 33)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -308,8 +309,8 @@ theorem test16_thm (e e_1 : IntW 8) :
 
 
 theorem not_xor_to_or_not1_thm (e e_1 e_2 : IntW 3) :
-  LLVM.xor (LLVM.xor (LLVM.and e_2 e_1) (LLVM.or e e_1)) (const? (-1)) ⊑
-    LLVM.or (LLVM.and e_2 e_1) (LLVM.xor (LLVM.or e e_1) (const? (-1))) := by 
+  LLVM.xor (LLVM.xor (LLVM.and e_2 e_1) (LLVM.or e e_1)) (const? 3 (-1)) ⊑
+    LLVM.or (LLVM.and e_2 e_1) (LLVM.xor (LLVM.or e e_1) (const? 3 (-1))) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -318,8 +319,8 @@ theorem not_xor_to_or_not1_thm (e e_1 e_2 : IntW 3) :
 
 
 theorem not_xor_to_or_not2_thm (e e_1 e_2 : IntW 3) :
-  LLVM.xor (LLVM.xor (LLVM.and e_2 e_1) (LLVM.or e_1 e)) (const? (-1)) ⊑
-    LLVM.or (LLVM.and e_2 e_1) (LLVM.xor (LLVM.or e_1 e) (const? (-1))) := by 
+  LLVM.xor (LLVM.xor (LLVM.and e_2 e_1) (LLVM.or e_1 e)) (const? 3 (-1)) ⊑
+    LLVM.or (LLVM.and e_2 e_1) (LLVM.xor (LLVM.or e_1 e) (const? 3 (-1))) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -328,8 +329,8 @@ theorem not_xor_to_or_not2_thm (e e_1 e_2 : IntW 3) :
 
 
 theorem not_xor_to_or_not3_thm (e e_1 e_2 : IntW 3) :
-  LLVM.xor (LLVM.xor (LLVM.and e_2 e_1) (LLVM.or e_2 e)) (const? (-1)) ⊑
-    LLVM.or (LLVM.and e_2 e_1) (LLVM.xor (LLVM.or e_2 e) (const? (-1))) := by 
+  LLVM.xor (LLVM.xor (LLVM.and e_2 e_1) (LLVM.or e_2 e)) (const? 3 (-1)) ⊑
+    LLVM.or (LLVM.and e_2 e_1) (LLVM.xor (LLVM.or e_2 e) (const? 3 (-1))) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -338,8 +339,8 @@ theorem not_xor_to_or_not3_thm (e e_1 e_2 : IntW 3) :
 
 
 theorem not_xor_to_or_not4_thm (e e_1 e_2 : IntW 3) :
-  LLVM.xor (LLVM.xor (LLVM.and e_2 e_1) (LLVM.or e e_2)) (const? (-1)) ⊑
-    LLVM.or (LLVM.and e_2 e_1) (LLVM.xor (LLVM.or e e_2) (const? (-1))) := by 
+  LLVM.xor (LLVM.xor (LLVM.and e_2 e_1) (LLVM.or e e_2)) (const? 3 (-1)) ⊑
+    LLVM.or (LLVM.and e_2 e_1) (LLVM.xor (LLVM.or e e_2) (const? 3 (-1))) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -348,8 +349,8 @@ theorem not_xor_to_or_not4_thm (e e_1 e_2 : IntW 3) :
 
 
 theorem xor_notand_to_or_not1_thm (e e_1 e_2 : IntW 3) :
-  LLVM.xor (LLVM.xor (LLVM.and e_2 e_1) (const? (-1))) (LLVM.or e e_1) ⊑
-    LLVM.or (LLVM.and e_2 e_1) (LLVM.xor (LLVM.or e e_1) (const? (-1))) := by 
+  LLVM.xor (LLVM.xor (LLVM.and e_2 e_1) (const? 3 (-1))) (LLVM.or e e_1) ⊑
+    LLVM.or (LLVM.and e_2 e_1) (LLVM.xor (LLVM.or e e_1) (const? 3 (-1))) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -358,8 +359,8 @@ theorem xor_notand_to_or_not1_thm (e e_1 e_2 : IntW 3) :
 
 
 theorem xor_notand_to_or_not2_thm (e e_1 e_2 : IntW 3) :
-  LLVM.xor (LLVM.xor (LLVM.and e_2 e_1) (const? (-1))) (LLVM.or e_1 e) ⊑
-    LLVM.or (LLVM.and e_2 e_1) (LLVM.xor (LLVM.or e_1 e) (const? (-1))) := by 
+  LLVM.xor (LLVM.xor (LLVM.and e_2 e_1) (const? 3 (-1))) (LLVM.or e_1 e) ⊑
+    LLVM.or (LLVM.and e_2 e_1) (LLVM.xor (LLVM.or e_1 e) (const? 3 (-1))) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -368,8 +369,8 @@ theorem xor_notand_to_or_not2_thm (e e_1 e_2 : IntW 3) :
 
 
 theorem xor_notand_to_or_not3_thm (e e_1 e_2 : IntW 3) :
-  LLVM.xor (LLVM.xor (LLVM.and e_2 e_1) (const? (-1))) (LLVM.or e_2 e) ⊑
-    LLVM.or (LLVM.and e_2 e_1) (LLVM.xor (LLVM.or e_2 e) (const? (-1))) := by 
+  LLVM.xor (LLVM.xor (LLVM.and e_2 e_1) (const? 3 (-1))) (LLVM.or e_2 e) ⊑
+    LLVM.or (LLVM.and e_2 e_1) (LLVM.xor (LLVM.or e_2 e) (const? 3 (-1))) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -378,8 +379,8 @@ theorem xor_notand_to_or_not3_thm (e e_1 e_2 : IntW 3) :
 
 
 theorem xor_notand_to_or_not4_thm (e e_1 e_2 : IntW 3) :
-  LLVM.xor (LLVM.xor (LLVM.and e_2 e_1) (const? (-1))) (LLVM.or e e_2) ⊑
-    LLVM.or (LLVM.and e_2 e_1) (LLVM.xor (LLVM.or e e_2) (const? (-1))) := by 
+  LLVM.xor (LLVM.xor (LLVM.and e_2 e_1) (const? 3 (-1))) (LLVM.or e e_2) ⊑
+    LLVM.or (LLVM.and e_2 e_1) (LLVM.xor (LLVM.or e e_2) (const? 3 (-1))) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

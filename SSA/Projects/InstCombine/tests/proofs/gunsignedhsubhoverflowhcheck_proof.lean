@@ -21,7 +21,8 @@ theorem t2_commutative_thm (e e_1 : IntW 8) : icmp IntPredicate.ult e_1 (sub e_1
     all_goals sorry
 
 
-theorem n7_wrong_pred2_thm (e e_1 : IntW 8) : icmp IntPredicate.eq (sub e_1 e) e_1 ⊑ icmp IntPredicate.eq e (const? 0) := by 
+theorem n7_wrong_pred2_thm (e e_1 : IntW 8) :
+  icmp IntPredicate.eq (sub e_1 e) e_1 ⊑ icmp IntPredicate.eq e (const? 8 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -29,7 +30,8 @@ theorem n7_wrong_pred2_thm (e e_1 : IntW 8) : icmp IntPredicate.eq (sub e_1 e) e
     all_goals sorry
 
 
-theorem n8_wrong_pred3_thm (e e_1 : IntW 8) : icmp IntPredicate.ne (sub e_1 e) e_1 ⊑ icmp IntPredicate.ne e (const? 0) := by 
+theorem n8_wrong_pred3_thm (e e_1 : IntW 8) :
+  icmp IntPredicate.ne (sub e_1 e) e_1 ⊑ icmp IntPredicate.ne e (const? 8 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

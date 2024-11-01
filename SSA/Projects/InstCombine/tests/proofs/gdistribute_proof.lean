@@ -5,7 +5,7 @@ open BitVec
 open LLVM
 
 section gdistribute_proof
-theorem factorize_thm (e : IntW 32) : LLVM.and (LLVM.or e (const? 1)) (LLVM.or e (const? 2)) ⊑ e := by 
+theorem factorize_thm (e : IntW 32) : LLVM.and (LLVM.or e (const? 32 1)) (LLVM.or e (const? 32 2)) ⊑ e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -13,7 +13,7 @@ theorem factorize_thm (e : IntW 32) : LLVM.and (LLVM.or e (const? 1)) (LLVM.or e
     all_goals sorry
 
 
-theorem factorize2_thm (e : IntW 32) : sub (mul (const? 3) e) (mul (const? 2) e) ⊑ e := by 
+theorem factorize2_thm (e : IntW 32) : sub (mul (const? 32 3) e) (mul (const? 32 2) e) ⊑ e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -30,7 +30,7 @@ theorem factorize3_thm (e e_1 e_2 : IntW 32) :
     all_goals sorry
 
 
-theorem factorize4_thm (e e_1 : IntW 32) : sub (mul (shl e_1 (const? 1)) e) (mul e e_1) ⊑ mul e_1 e := by 
+theorem factorize4_thm (e e_1 : IntW 32) : sub (mul (shl e_1 (const? 32 1)) e) (mul e e_1) ⊑ mul e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -38,7 +38,7 @@ theorem factorize4_thm (e e_1 : IntW 32) : sub (mul (shl e_1 (const? 1)) e) (mul
     all_goals sorry
 
 
-theorem factorize5_thm (e e_1 : IntW 32) : sub (mul (mul e_1 (const? 2)) e) (mul e e_1) ⊑ mul e_1 e := by 
+theorem factorize5_thm (e e_1 : IntW 32) : sub (mul (mul e_1 (const? 32 2)) e) (mul e e_1) ⊑ mul e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -47,7 +47,7 @@ theorem factorize5_thm (e e_1 : IntW 32) : sub (mul (mul e_1 (const? 2)) e) (mul
 
 
 theorem expand_thm (e : IntW 32) :
-  LLVM.and (LLVM.or (LLVM.and e (const? 1)) (const? 2)) (const? 1) ⊑ LLVM.and e (const? 1) := by 
+  LLVM.and (LLVM.or (LLVM.and e (const? 32 1)) (const? 32 2)) (const? 32 1) ⊑ LLVM.and e (const? 32 1) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

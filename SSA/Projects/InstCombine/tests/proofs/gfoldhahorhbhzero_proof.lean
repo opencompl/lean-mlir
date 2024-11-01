@@ -6,9 +6,9 @@ open LLVM
 
 section gfoldhahorhbhzero_proof
 theorem a_or_b_thm (e e_1 : IntW 32) :
-  LLVM.or (LLVM.and (icmp IntPredicate.eq e_1 (const? 0)) (icmp IntPredicate.ne e (const? 0)))
-      (LLVM.and (icmp IntPredicate.ne e_1 (const? 0)) (icmp IntPredicate.eq e (const? 0))) ⊑
-    LLVM.xor (icmp IntPredicate.eq e_1 (const? 0)) (icmp IntPredicate.eq e (const? 0)) := by 
+  LLVM.or (LLVM.and (icmp IntPredicate.eq e_1 (const? 32 0)) (icmp IntPredicate.ne e (const? 32 0)))
+      (LLVM.and (icmp IntPredicate.ne e_1 (const? 32 0)) (icmp IntPredicate.eq e (const? 32 0))) ⊑
+    LLVM.xor (icmp IntPredicate.eq e_1 (const? 32 0)) (icmp IntPredicate.eq e (const? 32 0)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

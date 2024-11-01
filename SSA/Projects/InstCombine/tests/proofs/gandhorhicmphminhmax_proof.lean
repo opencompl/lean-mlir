@@ -6,7 +6,7 @@ open LLVM
 
 section gandhorhicmphminhmax_proof
 theorem slt_and_max_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.slt e_1 e) (icmp IntPredicate.eq e_1 (const? 127)) ⊑ const? 0 := by 
+  LLVM.and (icmp IntPredicate.slt e_1 e) (icmp IntPredicate.eq e_1 (const? 8 127)) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -15,7 +15,7 @@ theorem slt_and_max_thm (e e_1 : IntW 8) :
 
 
 theorem slt_and_max_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.slt e_1 e) (icmp IntPredicate.eq e_1 (const? 127)) (const? 0) ⊑ const? 0 := by 
+  select (icmp IntPredicate.slt e_1 e) (icmp IntPredicate.eq e_1 (const? 8 127)) (const? 1 0) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -24,7 +24,7 @@ theorem slt_and_max_logical_thm (e e_1 : IntW 8) :
 
 
 theorem slt_swap_and_max_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.sgt e_1 e) (icmp IntPredicate.eq e (const? 127)) ⊑ const? 0 := by 
+  LLVM.and (icmp IntPredicate.sgt e_1 e) (icmp IntPredicate.eq e (const? 8 127)) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -33,7 +33,7 @@ theorem slt_swap_and_max_thm (e e_1 : IntW 8) :
 
 
 theorem slt_swap_and_max_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.sgt e_1 e) (icmp IntPredicate.eq e (const? 127)) (const? 0) ⊑ const? 0 := by 
+  select (icmp IntPredicate.sgt e_1 e) (icmp IntPredicate.eq e (const? 8 127)) (const? 1 0) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -42,7 +42,7 @@ theorem slt_swap_and_max_logical_thm (e e_1 : IntW 8) :
 
 
 theorem slt_swap_and_max_commute_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.eq e_1 (const? 127)) (icmp IntPredicate.sgt e e_1) ⊑ const? 0 := by 
+  LLVM.and (icmp IntPredicate.eq e_1 (const? 8 127)) (icmp IntPredicate.sgt e e_1) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -51,7 +51,7 @@ theorem slt_swap_and_max_commute_thm (e e_1 : IntW 8) :
 
 
 theorem slt_swap_and_max_commute_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.eq e_1 (const? 127)) (icmp IntPredicate.sgt e e_1) (const? 0) ⊑ const? 0 := by 
+  select (icmp IntPredicate.eq e_1 (const? 8 127)) (icmp IntPredicate.sgt e e_1) (const? 1 0) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -60,7 +60,7 @@ theorem slt_swap_and_max_commute_logical_thm (e e_1 : IntW 8) :
 
 
 theorem ult_and_max_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.ult e_1 e) (icmp IntPredicate.eq e_1 (const? (-1))) ⊑ const? 0 := by 
+  LLVM.and (icmp IntPredicate.ult e_1 e) (icmp IntPredicate.eq e_1 (const? 8 (-1))) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -69,7 +69,7 @@ theorem ult_and_max_thm (e e_1 : IntW 8) :
 
 
 theorem ult_and_max_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ult e_1 e) (icmp IntPredicate.eq e_1 (const? (-1))) (const? 0) ⊑ const? 0 := by 
+  select (icmp IntPredicate.ult e_1 e) (icmp IntPredicate.eq e_1 (const? 8 (-1))) (const? 1 0) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -78,7 +78,7 @@ theorem ult_and_max_logical_thm (e e_1 : IntW 8) :
 
 
 theorem ult_and_max_commute_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.eq e_1 (const? (-1))) (icmp IntPredicate.ult e_1 e) ⊑ const? 0 := by 
+  LLVM.and (icmp IntPredicate.eq e_1 (const? 8 (-1))) (icmp IntPredicate.ult e_1 e) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -87,7 +87,7 @@ theorem ult_and_max_commute_thm (e e_1 : IntW 8) :
 
 
 theorem ult_and_max_commute_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.eq e_1 (const? (-1))) (icmp IntPredicate.ult e_1 e) (const? 0) ⊑ const? 0 := by 
+  select (icmp IntPredicate.eq e_1 (const? 8 (-1))) (icmp IntPredicate.ult e_1 e) (const? 1 0) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -96,7 +96,7 @@ theorem ult_and_max_commute_logical_thm (e e_1 : IntW 8) :
 
 
 theorem ult_swap_and_max_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.ugt e_1 e) (icmp IntPredicate.eq e (const? (-1))) ⊑ const? 0 := by 
+  LLVM.and (icmp IntPredicate.ugt e_1 e) (icmp IntPredicate.eq e (const? 8 (-1))) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -105,7 +105,7 @@ theorem ult_swap_and_max_thm (e e_1 : IntW 8) :
 
 
 theorem ult_swap_and_max_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ugt e_1 e) (icmp IntPredicate.eq e (const? (-1))) (const? 0) ⊑ const? 0 := by 
+  select (icmp IntPredicate.ugt e_1 e) (icmp IntPredicate.eq e (const? 8 (-1))) (const? 1 0) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -114,7 +114,7 @@ theorem ult_swap_and_max_logical_thm (e e_1 : IntW 8) :
 
 
 theorem ult_swap_and_max_commute_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.eq e_1 (const? (-1))) (icmp IntPredicate.ugt e e_1) ⊑ const? 0 := by 
+  LLVM.and (icmp IntPredicate.eq e_1 (const? 8 (-1))) (icmp IntPredicate.ugt e e_1) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -123,7 +123,7 @@ theorem ult_swap_and_max_commute_thm (e e_1 : IntW 8) :
 
 
 theorem ult_swap_and_max_commute_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.eq e_1 (const? (-1))) (icmp IntPredicate.ugt e e_1) (const? 0) ⊑ const? 0 := by 
+  select (icmp IntPredicate.eq e_1 (const? 8 (-1))) (icmp IntPredicate.ugt e e_1) (const? 1 0) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -132,7 +132,7 @@ theorem ult_swap_and_max_commute_logical_thm (e e_1 : IntW 8) :
 
 
 theorem sgt_and_min_thm (e e_1 : IntW 9) :
-  LLVM.and (icmp IntPredicate.sgt e_1 e) (icmp IntPredicate.eq e_1 (const? (-256))) ⊑ const? 0 := by 
+  LLVM.and (icmp IntPredicate.sgt e_1 e) (icmp IntPredicate.eq e_1 (const? 9 (-256))) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -141,7 +141,7 @@ theorem sgt_and_min_thm (e e_1 : IntW 9) :
 
 
 theorem sgt_and_min_logical_thm (e e_1 : IntW 9) :
-  select (icmp IntPredicate.sgt e_1 e) (icmp IntPredicate.eq e_1 (const? (-256))) (const? 0) ⊑ const? 0 := by 
+  select (icmp IntPredicate.sgt e_1 e) (icmp IntPredicate.eq e_1 (const? 9 (-256))) (const? 1 0) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -150,7 +150,7 @@ theorem sgt_and_min_logical_thm (e e_1 : IntW 9) :
 
 
 theorem sgt_and_min_commute_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.eq e_1 (const? (-128))) (icmp IntPredicate.sgt e_1 e) ⊑ const? 0 := by 
+  LLVM.and (icmp IntPredicate.eq e_1 (const? 8 (-128))) (icmp IntPredicate.sgt e_1 e) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -159,7 +159,7 @@ theorem sgt_and_min_commute_thm (e e_1 : IntW 8) :
 
 
 theorem sgt_and_min_commute_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.eq e_1 (const? (-128))) (icmp IntPredicate.sgt e_1 e) (const? 0) ⊑ const? 0 := by 
+  select (icmp IntPredicate.eq e_1 (const? 8 (-128))) (icmp IntPredicate.sgt e_1 e) (const? 1 0) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -168,7 +168,7 @@ theorem sgt_and_min_commute_logical_thm (e e_1 : IntW 8) :
 
 
 theorem sgt_swap_and_min_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.slt e_1 e) (icmp IntPredicate.eq e (const? (-128))) ⊑ const? 0 := by 
+  LLVM.and (icmp IntPredicate.slt e_1 e) (icmp IntPredicate.eq e (const? 8 (-128))) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -177,7 +177,7 @@ theorem sgt_swap_and_min_thm (e e_1 : IntW 8) :
 
 
 theorem sgt_swap_and_min_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.slt e_1 e) (icmp IntPredicate.eq e (const? (-128))) (const? 0) ⊑ const? 0 := by 
+  select (icmp IntPredicate.slt e_1 e) (icmp IntPredicate.eq e (const? 8 (-128))) (const? 1 0) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -186,7 +186,7 @@ theorem sgt_swap_and_min_logical_thm (e e_1 : IntW 8) :
 
 
 theorem sgt_swap_and_min_commute_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.eq e_1 (const? (-128))) (icmp IntPredicate.slt e e_1) ⊑ const? 0 := by 
+  LLVM.and (icmp IntPredicate.eq e_1 (const? 8 (-128))) (icmp IntPredicate.slt e e_1) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -195,7 +195,7 @@ theorem sgt_swap_and_min_commute_thm (e e_1 : IntW 8) :
 
 
 theorem sgt_swap_and_min_commute_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.eq e_1 (const? (-128))) (icmp IntPredicate.slt e e_1) (const? 0) ⊑ const? 0 := by 
+  select (icmp IntPredicate.eq e_1 (const? 8 (-128))) (icmp IntPredicate.slt e e_1) (const? 1 0) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -204,7 +204,7 @@ theorem sgt_swap_and_min_commute_logical_thm (e e_1 : IntW 8) :
 
 
 theorem ugt_and_min_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.ugt e_1 e) (icmp IntPredicate.eq e_1 (const? 0)) ⊑ const? 0 := by 
+  LLVM.and (icmp IntPredicate.ugt e_1 e) (icmp IntPredicate.eq e_1 (const? 8 0)) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -213,7 +213,7 @@ theorem ugt_and_min_thm (e e_1 : IntW 8) :
 
 
 theorem ugt_and_min_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ugt e_1 e) (icmp IntPredicate.eq e_1 (const? 0)) (const? 0) ⊑ const? 0 := by 
+  select (icmp IntPredicate.ugt e_1 e) (icmp IntPredicate.eq e_1 (const? 8 0)) (const? 1 0) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -222,7 +222,7 @@ theorem ugt_and_min_logical_thm (e e_1 : IntW 8) :
 
 
 theorem ugt_and_min_commute_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.eq e_1 (const? 0)) (icmp IntPredicate.ugt e_1 e) ⊑ const? 0 := by 
+  LLVM.and (icmp IntPredicate.eq e_1 (const? 8 0)) (icmp IntPredicate.ugt e_1 e) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -231,7 +231,7 @@ theorem ugt_and_min_commute_thm (e e_1 : IntW 8) :
 
 
 theorem ugt_and_min_commute_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.eq e_1 (const? 0)) (icmp IntPredicate.ugt e_1 e) (const? 0) ⊑ const? 0 := by 
+  select (icmp IntPredicate.eq e_1 (const? 8 0)) (icmp IntPredicate.ugt e_1 e) (const? 1 0) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -240,7 +240,7 @@ theorem ugt_and_min_commute_logical_thm (e e_1 : IntW 8) :
 
 
 theorem ugt_swap_and_min_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.ult e_1 e) (icmp IntPredicate.eq e (const? 0)) ⊑ const? 0 := by 
+  LLVM.and (icmp IntPredicate.ult e_1 e) (icmp IntPredicate.eq e (const? 8 0)) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -249,7 +249,7 @@ theorem ugt_swap_and_min_thm (e e_1 : IntW 8) :
 
 
 theorem ugt_swap_and_min_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ult e_1 e) (icmp IntPredicate.eq e (const? 0)) (const? 0) ⊑ const? 0 := by 
+  select (icmp IntPredicate.ult e_1 e) (icmp IntPredicate.eq e (const? 8 0)) (const? 1 0) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -258,7 +258,7 @@ theorem ugt_swap_and_min_logical_thm (e e_1 : IntW 8) :
 
 
 theorem ugt_swap_and_min_commute_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.eq e_1 (const? 0)) (icmp IntPredicate.ult e e_1) ⊑ const? 0 := by 
+  LLVM.and (icmp IntPredicate.eq e_1 (const? 8 0)) (icmp IntPredicate.ult e e_1) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -267,7 +267,7 @@ theorem ugt_swap_and_min_commute_thm (e e_1 : IntW 8) :
 
 
 theorem ugt_swap_and_min_commute_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.eq e_1 (const? 0)) (icmp IntPredicate.ult e e_1) (const? 0) ⊑ const? 0 := by 
+  select (icmp IntPredicate.eq e_1 (const? 8 0)) (icmp IntPredicate.ult e e_1) (const? 1 0) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -276,7 +276,7 @@ theorem ugt_swap_and_min_commute_logical_thm (e e_1 : IntW 8) :
 
 
 theorem sge_or_not_max_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.sge e_1 e) (icmp IntPredicate.ne e_1 (const? 127)) ⊑ const? 1 := by 
+  LLVM.or (icmp IntPredicate.sge e_1 e) (icmp IntPredicate.ne e_1 (const? 8 127)) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -285,7 +285,7 @@ theorem sge_or_not_max_thm (e e_1 : IntW 8) :
 
 
 theorem sge_or_not_max_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.sge e_1 e) (const? 1) (icmp IntPredicate.ne e_1 (const? 127)) ⊑ const? 1 := by 
+  select (icmp IntPredicate.sge e_1 e) (const? 1 1) (icmp IntPredicate.ne e_1 (const? 8 127)) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -294,7 +294,7 @@ theorem sge_or_not_max_logical_thm (e e_1 : IntW 8) :
 
 
 theorem sge_or_not_max_commute_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.ne e_1 (const? 127)) (icmp IntPredicate.sge e_1 e) ⊑ const? 1 := by 
+  LLVM.or (icmp IntPredicate.ne e_1 (const? 8 127)) (icmp IntPredicate.sge e_1 e) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -303,7 +303,7 @@ theorem sge_or_not_max_commute_thm (e e_1 : IntW 8) :
 
 
 theorem sge_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ne e_1 (const? 127)) (const? 1) (icmp IntPredicate.sge e_1 e) ⊑ const? 1 := by 
+  select (icmp IntPredicate.ne e_1 (const? 8 127)) (const? 1 1) (icmp IntPredicate.sge e_1 e) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -312,7 +312,7 @@ theorem sge_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
 
 
 theorem sge_swap_or_not_max_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.sle e_1 e) (icmp IntPredicate.ne e (const? 127)) ⊑ const? 1 := by 
+  LLVM.or (icmp IntPredicate.sle e_1 e) (icmp IntPredicate.ne e (const? 8 127)) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -321,7 +321,7 @@ theorem sge_swap_or_not_max_thm (e e_1 : IntW 8) :
 
 
 theorem sge_swap_or_not_max_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.sle e_1 e) (const? 1) (icmp IntPredicate.ne e (const? 127)) ⊑ const? 1 := by 
+  select (icmp IntPredicate.sle e_1 e) (const? 1 1) (icmp IntPredicate.ne e (const? 8 127)) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -330,7 +330,7 @@ theorem sge_swap_or_not_max_logical_thm (e e_1 : IntW 8) :
 
 
 theorem sge_swap_or_not_max_commute_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.ne e_1 (const? 127)) (icmp IntPredicate.sle e e_1) ⊑ const? 1 := by 
+  LLVM.or (icmp IntPredicate.ne e_1 (const? 8 127)) (icmp IntPredicate.sle e e_1) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -339,7 +339,7 @@ theorem sge_swap_or_not_max_commute_thm (e e_1 : IntW 8) :
 
 
 theorem sge_swap_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ne e_1 (const? 127)) (const? 1) (icmp IntPredicate.sle e e_1) ⊑ const? 1 := by 
+  select (icmp IntPredicate.ne e_1 (const? 8 127)) (const? 1 1) (icmp IntPredicate.sle e e_1) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -348,7 +348,7 @@ theorem sge_swap_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
 
 
 theorem uge_or_not_max_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.uge e_1 e) (icmp IntPredicate.ne e_1 (const? (-1))) ⊑ const? 1 := by 
+  LLVM.or (icmp IntPredicate.uge e_1 e) (icmp IntPredicate.ne e_1 (const? 8 (-1))) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -357,7 +357,7 @@ theorem uge_or_not_max_thm (e e_1 : IntW 8) :
 
 
 theorem uge_or_not_max_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.uge e_1 e) (const? 1) (icmp IntPredicate.ne e_1 (const? (-1))) ⊑ const? 1 := by 
+  select (icmp IntPredicate.uge e_1 e) (const? 1 1) (icmp IntPredicate.ne e_1 (const? 8 (-1))) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -366,7 +366,7 @@ theorem uge_or_not_max_logical_thm (e e_1 : IntW 8) :
 
 
 theorem uge_or_not_max_commute_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.ne e_1 (const? (-1))) (icmp IntPredicate.uge e_1 e) ⊑ const? 1 := by 
+  LLVM.or (icmp IntPredicate.ne e_1 (const? 8 (-1))) (icmp IntPredicate.uge e_1 e) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -375,7 +375,7 @@ theorem uge_or_not_max_commute_thm (e e_1 : IntW 8) :
 
 
 theorem uge_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ne e_1 (const? (-1))) (const? 1) (icmp IntPredicate.uge e_1 e) ⊑ const? 1 := by 
+  select (icmp IntPredicate.ne e_1 (const? 8 (-1))) (const? 1 1) (icmp IntPredicate.uge e_1 e) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -384,7 +384,7 @@ theorem uge_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
 
 
 theorem uge_swap_or_not_max_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.ule e_1 e) (icmp IntPredicate.ne e (const? (-1))) ⊑ const? 1 := by 
+  LLVM.or (icmp IntPredicate.ule e_1 e) (icmp IntPredicate.ne e (const? 8 (-1))) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -393,7 +393,7 @@ theorem uge_swap_or_not_max_thm (e e_1 : IntW 8) :
 
 
 theorem uge_swap_or_not_max_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ule e_1 e) (const? 1) (icmp IntPredicate.ne e (const? (-1))) ⊑ const? 1 := by 
+  select (icmp IntPredicate.ule e_1 e) (const? 1 1) (icmp IntPredicate.ne e (const? 8 (-1))) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -402,7 +402,7 @@ theorem uge_swap_or_not_max_logical_thm (e e_1 : IntW 8) :
 
 
 theorem uge_swap_or_not_max_commute_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.ne e_1 (const? (-1))) (icmp IntPredicate.ule e e_1) ⊑ const? 1 := by 
+  LLVM.or (icmp IntPredicate.ne e_1 (const? 8 (-1))) (icmp IntPredicate.ule e e_1) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -411,7 +411,7 @@ theorem uge_swap_or_not_max_commute_thm (e e_1 : IntW 8) :
 
 
 theorem uge_swap_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ne e_1 (const? (-1))) (const? 1) (icmp IntPredicate.ule e e_1) ⊑ const? 1 := by 
+  select (icmp IntPredicate.ne e_1 (const? 8 (-1))) (const? 1 1) (icmp IntPredicate.ule e e_1) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -420,7 +420,7 @@ theorem uge_swap_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
 
 
 theorem sle_or_not_min_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.sle e_1 e) (icmp IntPredicate.ne e_1 (const? (-128))) ⊑ const? 1 := by 
+  LLVM.or (icmp IntPredicate.sle e_1 e) (icmp IntPredicate.ne e_1 (const? 8 (-128))) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -429,7 +429,7 @@ theorem sle_or_not_min_thm (e e_1 : IntW 8) :
 
 
 theorem sle_or_not_min_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.sle e_1 e) (const? 1) (icmp IntPredicate.ne e_1 (const? (-128))) ⊑ const? 1 := by 
+  select (icmp IntPredicate.sle e_1 e) (const? 1 1) (icmp IntPredicate.ne e_1 (const? 8 (-128))) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -438,7 +438,7 @@ theorem sle_or_not_min_logical_thm (e e_1 : IntW 8) :
 
 
 theorem sle_or_not_min_commute_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.ne e_1 (const? (-128))) (icmp IntPredicate.sle e_1 e) ⊑ const? 1 := by 
+  LLVM.or (icmp IntPredicate.ne e_1 (const? 8 (-128))) (icmp IntPredicate.sle e_1 e) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -447,7 +447,7 @@ theorem sle_or_not_min_commute_thm (e e_1 : IntW 8) :
 
 
 theorem sle_or_not_min_commute_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ne e_1 (const? (-128))) (const? 1) (icmp IntPredicate.sle e_1 e) ⊑ const? 1 := by 
+  select (icmp IntPredicate.ne e_1 (const? 8 (-128))) (const? 1 1) (icmp IntPredicate.sle e_1 e) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -456,7 +456,7 @@ theorem sle_or_not_min_commute_logical_thm (e e_1 : IntW 8) :
 
 
 theorem sle_swap_or_not_min_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.sge e_1 e) (icmp IntPredicate.ne e (const? (-128))) ⊑ const? 1 := by 
+  LLVM.or (icmp IntPredicate.sge e_1 e) (icmp IntPredicate.ne e (const? 8 (-128))) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -465,7 +465,7 @@ theorem sle_swap_or_not_min_thm (e e_1 : IntW 8) :
 
 
 theorem sle_swap_or_not_min_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.sge e_1 e) (const? 1) (icmp IntPredicate.ne e (const? (-128))) ⊑ const? 1 := by 
+  select (icmp IntPredicate.sge e_1 e) (const? 1 1) (icmp IntPredicate.ne e (const? 8 (-128))) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -474,7 +474,7 @@ theorem sle_swap_or_not_min_logical_thm (e e_1 : IntW 8) :
 
 
 theorem sle_swap_or_not_min_commute_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.ne e_1 (const? (-128))) (icmp IntPredicate.sge e e_1) ⊑ const? 1 := by 
+  LLVM.or (icmp IntPredicate.ne e_1 (const? 8 (-128))) (icmp IntPredicate.sge e e_1) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -483,7 +483,7 @@ theorem sle_swap_or_not_min_commute_thm (e e_1 : IntW 8) :
 
 
 theorem sle_swap_or_not_min_commute_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ne e_1 (const? (-128))) (const? 1) (icmp IntPredicate.sge e e_1) ⊑ const? 1 := by 
+  select (icmp IntPredicate.ne e_1 (const? 8 (-128))) (const? 1 1) (icmp IntPredicate.sge e e_1) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -492,7 +492,7 @@ theorem sle_swap_or_not_min_commute_logical_thm (e e_1 : IntW 8) :
 
 
 theorem ule_or_not_min_thm (e e_1 : IntW 427) :
-  LLVM.or (icmp IntPredicate.ule e_1 e) (icmp IntPredicate.ne e_1 (const? 0)) ⊑ const? 1 := by 
+  LLVM.or (icmp IntPredicate.ule e_1 e) (icmp IntPredicate.ne e_1 (const? 427 0)) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -501,7 +501,7 @@ theorem ule_or_not_min_thm (e e_1 : IntW 427) :
 
 
 theorem ule_or_not_min_logical_thm (e e_1 : IntW 427) :
-  select (icmp IntPredicate.ule e_1 e) (const? 1) (icmp IntPredicate.ne e_1 (const? 0)) ⊑ const? 1 := by 
+  select (icmp IntPredicate.ule e_1 e) (const? 1 1) (icmp IntPredicate.ne e_1 (const? 427 0)) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -510,7 +510,7 @@ theorem ule_or_not_min_logical_thm (e e_1 : IntW 427) :
 
 
 theorem ule_or_not_min_commute_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.ne e_1 (const? 0)) (icmp IntPredicate.ule e_1 e) ⊑ const? 1 := by 
+  LLVM.or (icmp IntPredicate.ne e_1 (const? 8 0)) (icmp IntPredicate.ule e_1 e) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -519,7 +519,7 @@ theorem ule_or_not_min_commute_thm (e e_1 : IntW 8) :
 
 
 theorem ule_or_not_min_commute_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ne e_1 (const? 0)) (const? 1) (icmp IntPredicate.ule e_1 e) ⊑ const? 1 := by 
+  select (icmp IntPredicate.ne e_1 (const? 8 0)) (const? 1 1) (icmp IntPredicate.ule e_1 e) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -528,7 +528,7 @@ theorem ule_or_not_min_commute_logical_thm (e e_1 : IntW 8) :
 
 
 theorem ule_swap_or_not_min_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.uge e_1 e) (icmp IntPredicate.ne e (const? 0)) ⊑ const? 1 := by 
+  LLVM.or (icmp IntPredicate.uge e_1 e) (icmp IntPredicate.ne e (const? 8 0)) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -537,7 +537,7 @@ theorem ule_swap_or_not_min_thm (e e_1 : IntW 8) :
 
 
 theorem ule_swap_or_not_min_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.uge e_1 e) (const? 1) (icmp IntPredicate.ne e (const? 0)) ⊑ const? 1 := by 
+  select (icmp IntPredicate.uge e_1 e) (const? 1 1) (icmp IntPredicate.ne e (const? 8 0)) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -546,7 +546,7 @@ theorem ule_swap_or_not_min_logical_thm (e e_1 : IntW 8) :
 
 
 theorem ule_swap_or_not_min_commute_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.ne e_1 (const? 0)) (icmp IntPredicate.uge e e_1) ⊑ const? 1 := by 
+  LLVM.or (icmp IntPredicate.ne e_1 (const? 8 0)) (icmp IntPredicate.uge e e_1) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -555,7 +555,7 @@ theorem ule_swap_or_not_min_commute_thm (e e_1 : IntW 8) :
 
 
 theorem ule_swap_or_not_min_commute_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ne e_1 (const? 0)) (const? 1) (icmp IntPredicate.uge e e_1) ⊑ const? 1 := by 
+  select (icmp IntPredicate.ne e_1 (const? 8 0)) (const? 1 1) (icmp IntPredicate.uge e e_1) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -564,8 +564,8 @@ theorem ule_swap_or_not_min_commute_logical_thm (e e_1 : IntW 8) :
 
 
 theorem sge_and_max_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.sge e_1 e) (icmp IntPredicate.eq e_1 (const? 127)) ⊑
-    icmp IntPredicate.eq e_1 (const? 127) := by 
+  LLVM.and (icmp IntPredicate.sge e_1 e) (icmp IntPredicate.eq e_1 (const? 8 127)) ⊑
+    icmp IntPredicate.eq e_1 (const? 8 127) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -574,8 +574,8 @@ theorem sge_and_max_thm (e e_1 : IntW 8) :
 
 
 theorem sge_and_max_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.sge e_1 e) (icmp IntPredicate.eq e_1 (const? 127)) (const? 0) ⊑
-    icmp IntPredicate.eq e_1 (const? 127) := by 
+  select (icmp IntPredicate.sge e_1 e) (icmp IntPredicate.eq e_1 (const? 8 127)) (const? 1 0) ⊑
+    icmp IntPredicate.eq e_1 (const? 8 127) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -584,8 +584,8 @@ theorem sge_and_max_logical_thm (e e_1 : IntW 8) :
 
 
 theorem sge_and_max_logical_samesign_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.sge e_1 e) (icmp IntPredicate.eq e_1 (const? 127)) (const? 0) ⊑
-    icmp IntPredicate.eq e_1 (const? 127) := by 
+  select (icmp IntPredicate.sge e_1 e) (icmp IntPredicate.eq e_1 (const? 8 127)) (const? 1 0) ⊑
+    icmp IntPredicate.eq e_1 (const? 8 127) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -594,8 +594,8 @@ theorem sge_and_max_logical_samesign_thm (e e_1 : IntW 8) :
 
 
 theorem sge_and_max_commute_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.eq e_1 (const? 127)) (icmp IntPredicate.sge e_1 e) ⊑
-    icmp IntPredicate.eq e_1 (const? 127) := by 
+  LLVM.and (icmp IntPredicate.eq e_1 (const? 8 127)) (icmp IntPredicate.sge e_1 e) ⊑
+    icmp IntPredicate.eq e_1 (const? 8 127) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -604,8 +604,8 @@ theorem sge_and_max_commute_thm (e e_1 : IntW 8) :
 
 
 theorem sge_and_max_commute_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.eq e_1 (const? 127)) (icmp IntPredicate.sge e_1 e) (const? 0) ⊑
-    icmp IntPredicate.eq e_1 (const? 127) := by 
+  select (icmp IntPredicate.eq e_1 (const? 8 127)) (icmp IntPredicate.sge e_1 e) (const? 1 0) ⊑
+    icmp IntPredicate.eq e_1 (const? 8 127) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -614,8 +614,8 @@ theorem sge_and_max_commute_logical_thm (e e_1 : IntW 8) :
 
 
 theorem sge_swap_and_max_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.sle e_1 e) (icmp IntPredicate.eq e (const? 127)) ⊑
-    icmp IntPredicate.eq e (const? 127) := by 
+  LLVM.and (icmp IntPredicate.sle e_1 e) (icmp IntPredicate.eq e (const? 8 127)) ⊑
+    icmp IntPredicate.eq e (const? 8 127) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -624,8 +624,8 @@ theorem sge_swap_and_max_thm (e e_1 : IntW 8) :
 
 
 theorem sge_swap_and_max_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.sle e_1 e) (icmp IntPredicate.eq e (const? 127)) (const? 0) ⊑
-    icmp IntPredicate.eq e (const? 127) := by 
+  select (icmp IntPredicate.sle e_1 e) (icmp IntPredicate.eq e (const? 8 127)) (const? 1 0) ⊑
+    icmp IntPredicate.eq e (const? 8 127) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -634,8 +634,8 @@ theorem sge_swap_and_max_logical_thm (e e_1 : IntW 8) :
 
 
 theorem sge_swap_and_max_commute_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.eq e_1 (const? 127)) (icmp IntPredicate.sle e e_1) ⊑
-    icmp IntPredicate.eq e_1 (const? 127) := by 
+  LLVM.and (icmp IntPredicate.eq e_1 (const? 8 127)) (icmp IntPredicate.sle e e_1) ⊑
+    icmp IntPredicate.eq e_1 (const? 8 127) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -644,8 +644,8 @@ theorem sge_swap_and_max_commute_thm (e e_1 : IntW 8) :
 
 
 theorem sge_swap_and_max_commute_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.eq e_1 (const? 127)) (icmp IntPredicate.sle e e_1) (const? 0) ⊑
-    icmp IntPredicate.eq e_1 (const? 127) := by 
+  select (icmp IntPredicate.eq e_1 (const? 8 127)) (icmp IntPredicate.sle e e_1) (const? 1 0) ⊑
+    icmp IntPredicate.eq e_1 (const? 8 127) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -654,8 +654,8 @@ theorem sge_swap_and_max_commute_logical_thm (e e_1 : IntW 8) :
 
 
 theorem uge_and_max_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.uge e_1 e) (icmp IntPredicate.eq e_1 (const? (-1))) ⊑
-    icmp IntPredicate.eq e_1 (const? (-1)) := by 
+  LLVM.and (icmp IntPredicate.uge e_1 e) (icmp IntPredicate.eq e_1 (const? 8 (-1))) ⊑
+    icmp IntPredicate.eq e_1 (const? 8 (-1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -664,8 +664,8 @@ theorem uge_and_max_thm (e e_1 : IntW 8) :
 
 
 theorem uge_and_max_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.uge e_1 e) (icmp IntPredicate.eq e_1 (const? (-1))) (const? 0) ⊑
-    icmp IntPredicate.eq e_1 (const? (-1)) := by 
+  select (icmp IntPredicate.uge e_1 e) (icmp IntPredicate.eq e_1 (const? 8 (-1))) (const? 1 0) ⊑
+    icmp IntPredicate.eq e_1 (const? 8 (-1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -674,8 +674,8 @@ theorem uge_and_max_logical_thm (e e_1 : IntW 8) :
 
 
 theorem uge_and_max_commute_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.eq e_1 (const? (-1))) (icmp IntPredicate.uge e_1 e) ⊑
-    icmp IntPredicate.eq e_1 (const? (-1)) := by 
+  LLVM.and (icmp IntPredicate.eq e_1 (const? 8 (-1))) (icmp IntPredicate.uge e_1 e) ⊑
+    icmp IntPredicate.eq e_1 (const? 8 (-1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -684,8 +684,8 @@ theorem uge_and_max_commute_thm (e e_1 : IntW 8) :
 
 
 theorem uge_and_max_commute_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.eq e_1 (const? (-1))) (icmp IntPredicate.uge e_1 e) (const? 0) ⊑
-    icmp IntPredicate.eq e_1 (const? (-1)) := by 
+  select (icmp IntPredicate.eq e_1 (const? 8 (-1))) (icmp IntPredicate.uge e_1 e) (const? 1 0) ⊑
+    icmp IntPredicate.eq e_1 (const? 8 (-1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -694,8 +694,8 @@ theorem uge_and_max_commute_logical_thm (e e_1 : IntW 8) :
 
 
 theorem uge_swap_and_max_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.ule e_1 e) (icmp IntPredicate.eq e (const? (-1))) ⊑
-    icmp IntPredicate.eq e (const? (-1)) := by 
+  LLVM.and (icmp IntPredicate.ule e_1 e) (icmp IntPredicate.eq e (const? 8 (-1))) ⊑
+    icmp IntPredicate.eq e (const? 8 (-1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -704,8 +704,8 @@ theorem uge_swap_and_max_thm (e e_1 : IntW 8) :
 
 
 theorem uge_swap_and_max_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ule e_1 e) (icmp IntPredicate.eq e (const? (-1))) (const? 0) ⊑
-    icmp IntPredicate.eq e (const? (-1)) := by 
+  select (icmp IntPredicate.ule e_1 e) (icmp IntPredicate.eq e (const? 8 (-1))) (const? 1 0) ⊑
+    icmp IntPredicate.eq e (const? 8 (-1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -714,8 +714,8 @@ theorem uge_swap_and_max_logical_thm (e e_1 : IntW 8) :
 
 
 theorem uge_swap_and_max_commute_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.eq e_1 (const? (-1))) (icmp IntPredicate.ule e e_1) ⊑
-    icmp IntPredicate.eq e_1 (const? (-1)) := by 
+  LLVM.and (icmp IntPredicate.eq e_1 (const? 8 (-1))) (icmp IntPredicate.ule e e_1) ⊑
+    icmp IntPredicate.eq e_1 (const? 8 (-1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -724,8 +724,8 @@ theorem uge_swap_and_max_commute_thm (e e_1 : IntW 8) :
 
 
 theorem uge_swap_and_max_commute_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.eq e_1 (const? (-1))) (icmp IntPredicate.ule e e_1) (const? 0) ⊑
-    icmp IntPredicate.eq e_1 (const? (-1)) := by 
+  select (icmp IntPredicate.eq e_1 (const? 8 (-1))) (icmp IntPredicate.ule e e_1) (const? 1 0) ⊑
+    icmp IntPredicate.eq e_1 (const? 8 (-1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -734,8 +734,8 @@ theorem uge_swap_and_max_commute_logical_thm (e e_1 : IntW 8) :
 
 
 theorem sle_and_min_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.sle e_1 e) (icmp IntPredicate.eq e_1 (const? (-128))) ⊑
-    icmp IntPredicate.eq e_1 (const? (-128)) := by 
+  LLVM.and (icmp IntPredicate.sle e_1 e) (icmp IntPredicate.eq e_1 (const? 8 (-128))) ⊑
+    icmp IntPredicate.eq e_1 (const? 8 (-128)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -744,8 +744,8 @@ theorem sle_and_min_thm (e e_1 : IntW 8) :
 
 
 theorem sle_and_min_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.sle e_1 e) (icmp IntPredicate.eq e_1 (const? (-128))) (const? 0) ⊑
-    icmp IntPredicate.eq e_1 (const? (-128)) := by 
+  select (icmp IntPredicate.sle e_1 e) (icmp IntPredicate.eq e_1 (const? 8 (-128))) (const? 1 0) ⊑
+    icmp IntPredicate.eq e_1 (const? 8 (-128)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -754,8 +754,8 @@ theorem sle_and_min_logical_thm (e e_1 : IntW 8) :
 
 
 theorem sle_and_min_commute_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.eq e_1 (const? (-128))) (icmp IntPredicate.sle e_1 e) ⊑
-    icmp IntPredicate.eq e_1 (const? (-128)) := by 
+  LLVM.and (icmp IntPredicate.eq e_1 (const? 8 (-128))) (icmp IntPredicate.sle e_1 e) ⊑
+    icmp IntPredicate.eq e_1 (const? 8 (-128)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -764,8 +764,8 @@ theorem sle_and_min_commute_thm (e e_1 : IntW 8) :
 
 
 theorem sle_and_min_commute_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.eq e_1 (const? (-128))) (icmp IntPredicate.sle e_1 e) (const? 0) ⊑
-    icmp IntPredicate.eq e_1 (const? (-128)) := by 
+  select (icmp IntPredicate.eq e_1 (const? 8 (-128))) (icmp IntPredicate.sle e_1 e) (const? 1 0) ⊑
+    icmp IntPredicate.eq e_1 (const? 8 (-128)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -774,8 +774,8 @@ theorem sle_and_min_commute_logical_thm (e e_1 : IntW 8) :
 
 
 theorem sle_swap_and_min_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.sge e_1 e) (icmp IntPredicate.eq e (const? (-128))) ⊑
-    icmp IntPredicate.eq e (const? (-128)) := by 
+  LLVM.and (icmp IntPredicate.sge e_1 e) (icmp IntPredicate.eq e (const? 8 (-128))) ⊑
+    icmp IntPredicate.eq e (const? 8 (-128)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -784,8 +784,8 @@ theorem sle_swap_and_min_thm (e e_1 : IntW 8) :
 
 
 theorem sle_swap_and_min_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.sge e_1 e) (icmp IntPredicate.eq e (const? (-128))) (const? 0) ⊑
-    icmp IntPredicate.eq e (const? (-128)) := by 
+  select (icmp IntPredicate.sge e_1 e) (icmp IntPredicate.eq e (const? 8 (-128))) (const? 1 0) ⊑
+    icmp IntPredicate.eq e (const? 8 (-128)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -794,8 +794,8 @@ theorem sle_swap_and_min_logical_thm (e e_1 : IntW 8) :
 
 
 theorem sle_swap_and_min_commute_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.eq e_1 (const? (-128))) (icmp IntPredicate.sge e e_1) ⊑
-    icmp IntPredicate.eq e_1 (const? (-128)) := by 
+  LLVM.and (icmp IntPredicate.eq e_1 (const? 8 (-128))) (icmp IntPredicate.sge e e_1) ⊑
+    icmp IntPredicate.eq e_1 (const? 8 (-128)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -804,8 +804,8 @@ theorem sle_swap_and_min_commute_thm (e e_1 : IntW 8) :
 
 
 theorem sle_swap_and_min_commute_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.eq e_1 (const? (-128))) (icmp IntPredicate.sge e e_1) (const? 0) ⊑
-    icmp IntPredicate.eq e_1 (const? (-128)) := by 
+  select (icmp IntPredicate.eq e_1 (const? 8 (-128))) (icmp IntPredicate.sge e e_1) (const? 1 0) ⊑
+    icmp IntPredicate.eq e_1 (const? 8 (-128)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -814,8 +814,8 @@ theorem sle_swap_and_min_commute_logical_thm (e e_1 : IntW 8) :
 
 
 theorem ule_and_min_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.ule e_1 e) (icmp IntPredicate.eq e_1 (const? 0)) ⊑
-    icmp IntPredicate.eq e_1 (const? 0) := by 
+  LLVM.and (icmp IntPredicate.ule e_1 e) (icmp IntPredicate.eq e_1 (const? 8 0)) ⊑
+    icmp IntPredicate.eq e_1 (const? 8 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -824,8 +824,8 @@ theorem ule_and_min_thm (e e_1 : IntW 8) :
 
 
 theorem ule_and_min_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ule e_1 e) (icmp IntPredicate.eq e_1 (const? 0)) (const? 0) ⊑
-    icmp IntPredicate.eq e_1 (const? 0) := by 
+  select (icmp IntPredicate.ule e_1 e) (icmp IntPredicate.eq e_1 (const? 8 0)) (const? 1 0) ⊑
+    icmp IntPredicate.eq e_1 (const? 8 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -834,8 +834,8 @@ theorem ule_and_min_logical_thm (e e_1 : IntW 8) :
 
 
 theorem ule_and_min_commute_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.eq e_1 (const? 0)) (icmp IntPredicate.ule e_1 e) ⊑
-    icmp IntPredicate.eq e_1 (const? 0) := by 
+  LLVM.and (icmp IntPredicate.eq e_1 (const? 8 0)) (icmp IntPredicate.ule e_1 e) ⊑
+    icmp IntPredicate.eq e_1 (const? 8 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -844,8 +844,8 @@ theorem ule_and_min_commute_thm (e e_1 : IntW 8) :
 
 
 theorem ule_and_min_commute_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.eq e_1 (const? 0)) (icmp IntPredicate.ule e_1 e) (const? 0) ⊑
-    icmp IntPredicate.eq e_1 (const? 0) := by 
+  select (icmp IntPredicate.eq e_1 (const? 8 0)) (icmp IntPredicate.ule e_1 e) (const? 1 0) ⊑
+    icmp IntPredicate.eq e_1 (const? 8 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -854,8 +854,8 @@ theorem ule_and_min_commute_logical_thm (e e_1 : IntW 8) :
 
 
 theorem ule_swap_and_min_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.uge e_1 e) (icmp IntPredicate.eq e (const? 0)) ⊑
-    icmp IntPredicate.eq e (const? 0) := by 
+  LLVM.and (icmp IntPredicate.uge e_1 e) (icmp IntPredicate.eq e (const? 8 0)) ⊑
+    icmp IntPredicate.eq e (const? 8 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -864,8 +864,8 @@ theorem ule_swap_and_min_thm (e e_1 : IntW 8) :
 
 
 theorem ule_swap_and_min_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.uge e_1 e) (icmp IntPredicate.eq e (const? 0)) (const? 0) ⊑
-    icmp IntPredicate.eq e (const? 0) := by 
+  select (icmp IntPredicate.uge e_1 e) (icmp IntPredicate.eq e (const? 8 0)) (const? 1 0) ⊑
+    icmp IntPredicate.eq e (const? 8 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -874,8 +874,8 @@ theorem ule_swap_and_min_logical_thm (e e_1 : IntW 8) :
 
 
 theorem ule_swap_and_min_commute_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.eq e_1 (const? 0)) (icmp IntPredicate.uge e e_1) ⊑
-    icmp IntPredicate.eq e_1 (const? 0) := by 
+  LLVM.and (icmp IntPredicate.eq e_1 (const? 8 0)) (icmp IntPredicate.uge e e_1) ⊑
+    icmp IntPredicate.eq e_1 (const? 8 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -884,8 +884,8 @@ theorem ule_swap_and_min_commute_thm (e e_1 : IntW 8) :
 
 
 theorem ule_swap_and_min_commute_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.eq e_1 (const? 0)) (icmp IntPredicate.uge e e_1) (const? 0) ⊑
-    icmp IntPredicate.eq e_1 (const? 0) := by 
+  select (icmp IntPredicate.eq e_1 (const? 8 0)) (icmp IntPredicate.uge e e_1) (const? 1 0) ⊑
+    icmp IntPredicate.eq e_1 (const? 8 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -894,7 +894,7 @@ theorem ule_swap_and_min_commute_logical_thm (e e_1 : IntW 8) :
 
 
 theorem sge_or_max_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.sge e_1 e) (icmp IntPredicate.eq e_1 (const? 127)) ⊑ icmp IntPredicate.sge e_1 e := by 
+  LLVM.or (icmp IntPredicate.sge e_1 e) (icmp IntPredicate.eq e_1 (const? 8 127)) ⊑ icmp IntPredicate.sge e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -903,7 +903,7 @@ theorem sge_or_max_thm (e e_1 : IntW 8) :
 
 
 theorem sge_or_max_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.sge e_1 e) (const? 1) (icmp IntPredicate.eq e_1 (const? 127)) ⊑
+  select (icmp IntPredicate.sge e_1 e) (const? 1 1) (icmp IntPredicate.eq e_1 (const? 8 127)) ⊑
     icmp IntPredicate.sge e_1 e := by 
     simp_alive_undef
     simp_alive_ops
@@ -913,7 +913,7 @@ theorem sge_or_max_logical_thm (e e_1 : IntW 8) :
 
 
 theorem sge_or_max_commute_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.eq e_1 (const? 127)) (icmp IntPredicate.sge e_1 e) ⊑ icmp IntPredicate.sge e_1 e := by 
+  LLVM.or (icmp IntPredicate.eq e_1 (const? 8 127)) (icmp IntPredicate.sge e_1 e) ⊑ icmp IntPredicate.sge e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -922,7 +922,7 @@ theorem sge_or_max_commute_thm (e e_1 : IntW 8) :
 
 
 theorem sge_swap_or_max_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.sle e_1 e) (icmp IntPredicate.eq e (const? 127)) ⊑ icmp IntPredicate.sle e_1 e := by 
+  LLVM.or (icmp IntPredicate.sle e_1 e) (icmp IntPredicate.eq e (const? 8 127)) ⊑ icmp IntPredicate.sle e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -931,7 +931,7 @@ theorem sge_swap_or_max_thm (e e_1 : IntW 8) :
 
 
 theorem sge_swap_or_max_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.sle e_1 e) (const? 1) (icmp IntPredicate.eq e (const? 127)) ⊑
+  select (icmp IntPredicate.sle e_1 e) (const? 1 1) (icmp IntPredicate.eq e (const? 8 127)) ⊑
     icmp IntPredicate.sle e_1 e := by 
     simp_alive_undef
     simp_alive_ops
@@ -941,7 +941,7 @@ theorem sge_swap_or_max_logical_thm (e e_1 : IntW 8) :
 
 
 theorem sge_swap_or_max_commute_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.eq e_1 (const? 127)) (icmp IntPredicate.sle e e_1) ⊑ icmp IntPredicate.sle e e_1 := by 
+  LLVM.or (icmp IntPredicate.eq e_1 (const? 8 127)) (icmp IntPredicate.sle e e_1) ⊑ icmp IntPredicate.sle e e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -950,7 +950,8 @@ theorem sge_swap_or_max_commute_thm (e e_1 : IntW 8) :
 
 
 theorem uge_or_max_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.uge e_1 e) (icmp IntPredicate.eq e_1 (const? (-1))) ⊑ icmp IntPredicate.uge e_1 e := by 
+  LLVM.or (icmp IntPredicate.uge e_1 e) (icmp IntPredicate.eq e_1 (const? 8 (-1))) ⊑
+    icmp IntPredicate.uge e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -959,7 +960,7 @@ theorem uge_or_max_thm (e e_1 : IntW 8) :
 
 
 theorem uge_or_max_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.uge e_1 e) (const? 1) (icmp IntPredicate.eq e_1 (const? (-1))) ⊑
+  select (icmp IntPredicate.uge e_1 e) (const? 1 1) (icmp IntPredicate.eq e_1 (const? 8 (-1))) ⊑
     icmp IntPredicate.uge e_1 e := by 
     simp_alive_undef
     simp_alive_ops
@@ -969,7 +970,8 @@ theorem uge_or_max_logical_thm (e e_1 : IntW 8) :
 
 
 theorem uge_or_max_commute_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.eq e_1 (const? (-1))) (icmp IntPredicate.uge e_1 e) ⊑ icmp IntPredicate.uge e_1 e := by 
+  LLVM.or (icmp IntPredicate.eq e_1 (const? 8 (-1))) (icmp IntPredicate.uge e_1 e) ⊑
+    icmp IntPredicate.uge e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -978,7 +980,7 @@ theorem uge_or_max_commute_thm (e e_1 : IntW 8) :
 
 
 theorem uge_swap_or_max_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.ule e_1 e) (icmp IntPredicate.eq e (const? (-1))) ⊑ icmp IntPredicate.ule e_1 e := by 
+  LLVM.or (icmp IntPredicate.ule e_1 e) (icmp IntPredicate.eq e (const? 8 (-1))) ⊑ icmp IntPredicate.ule e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -987,7 +989,7 @@ theorem uge_swap_or_max_thm (e e_1 : IntW 8) :
 
 
 theorem uge_swap_or_max_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ule e_1 e) (const? 1) (icmp IntPredicate.eq e (const? (-1))) ⊑
+  select (icmp IntPredicate.ule e_1 e) (const? 1 1) (icmp IntPredicate.eq e (const? 8 (-1))) ⊑
     icmp IntPredicate.ule e_1 e := by 
     simp_alive_undef
     simp_alive_ops
@@ -997,7 +999,8 @@ theorem uge_swap_or_max_logical_thm (e e_1 : IntW 8) :
 
 
 theorem uge_swap_or_max_commute_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.eq e_1 (const? (-1))) (icmp IntPredicate.ule e e_1) ⊑ icmp IntPredicate.ule e e_1 := by 
+  LLVM.or (icmp IntPredicate.eq e_1 (const? 8 (-1))) (icmp IntPredicate.ule e e_1) ⊑
+    icmp IntPredicate.ule e e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1006,7 +1009,7 @@ theorem uge_swap_or_max_commute_thm (e e_1 : IntW 8) :
 
 
 theorem sle_or_min_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.sle e_1 e) (icmp IntPredicate.eq e_1 (const? (-128))) ⊑
+  LLVM.or (icmp IntPredicate.sle e_1 e) (icmp IntPredicate.eq e_1 (const? 8 (-128))) ⊑
     icmp IntPredicate.sle e_1 e := by 
     simp_alive_undef
     simp_alive_ops
@@ -1016,7 +1019,7 @@ theorem sle_or_min_thm (e e_1 : IntW 8) :
 
 
 theorem sle_or_min_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.sle e_1 e) (const? 1) (icmp IntPredicate.eq e_1 (const? (-128))) ⊑
+  select (icmp IntPredicate.sle e_1 e) (const? 1 1) (icmp IntPredicate.eq e_1 (const? 8 (-128))) ⊑
     icmp IntPredicate.sle e_1 e := by 
     simp_alive_undef
     simp_alive_ops
@@ -1026,7 +1029,7 @@ theorem sle_or_min_logical_thm (e e_1 : IntW 8) :
 
 
 theorem sle_or_min_commute_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.eq e_1 (const? (-128))) (icmp IntPredicate.sle e_1 e) ⊑
+  LLVM.or (icmp IntPredicate.eq e_1 (const? 8 (-128))) (icmp IntPredicate.sle e_1 e) ⊑
     icmp IntPredicate.sle e_1 e := by 
     simp_alive_undef
     simp_alive_ops
@@ -1036,7 +1039,8 @@ theorem sle_or_min_commute_thm (e e_1 : IntW 8) :
 
 
 theorem sle_swap_or_min_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.sge e_1 e) (icmp IntPredicate.eq e (const? (-128))) ⊑ icmp IntPredicate.sge e_1 e := by 
+  LLVM.or (icmp IntPredicate.sge e_1 e) (icmp IntPredicate.eq e (const? 8 (-128))) ⊑
+    icmp IntPredicate.sge e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1045,7 +1049,7 @@ theorem sle_swap_or_min_thm (e e_1 : IntW 8) :
 
 
 theorem sle_swap_or_min_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.sge e_1 e) (const? 1) (icmp IntPredicate.eq e (const? (-128))) ⊑
+  select (icmp IntPredicate.sge e_1 e) (const? 1 1) (icmp IntPredicate.eq e (const? 8 (-128))) ⊑
     icmp IntPredicate.sge e_1 e := by 
     simp_alive_undef
     simp_alive_ops
@@ -1055,7 +1059,7 @@ theorem sle_swap_or_min_logical_thm (e e_1 : IntW 8) :
 
 
 theorem sle_swap_or_min_commute_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.eq e_1 (const? (-128))) (icmp IntPredicate.sge e e_1) ⊑
+  LLVM.or (icmp IntPredicate.eq e_1 (const? 8 (-128))) (icmp IntPredicate.sge e e_1) ⊑
     icmp IntPredicate.sge e e_1 := by 
     simp_alive_undef
     simp_alive_ops
@@ -1065,7 +1069,7 @@ theorem sle_swap_or_min_commute_thm (e e_1 : IntW 8) :
 
 
 theorem ule_or_min_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.ule e_1 e) (icmp IntPredicate.eq e_1 (const? 0)) ⊑ icmp IntPredicate.ule e_1 e := by 
+  LLVM.or (icmp IntPredicate.ule e_1 e) (icmp IntPredicate.eq e_1 (const? 8 0)) ⊑ icmp IntPredicate.ule e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1074,7 +1078,7 @@ theorem ule_or_min_thm (e e_1 : IntW 8) :
 
 
 theorem ule_or_min_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ule e_1 e) (const? 1) (icmp IntPredicate.eq e_1 (const? 0)) ⊑
+  select (icmp IntPredicate.ule e_1 e) (const? 1 1) (icmp IntPredicate.eq e_1 (const? 8 0)) ⊑
     icmp IntPredicate.ule e_1 e := by 
     simp_alive_undef
     simp_alive_ops
@@ -1084,7 +1088,7 @@ theorem ule_or_min_logical_thm (e e_1 : IntW 8) :
 
 
 theorem ule_or_min_commute_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.eq e_1 (const? 0)) (icmp IntPredicate.ule e_1 e) ⊑ icmp IntPredicate.ule e_1 e := by 
+  LLVM.or (icmp IntPredicate.eq e_1 (const? 8 0)) (icmp IntPredicate.ule e_1 e) ⊑ icmp IntPredicate.ule e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1093,7 +1097,7 @@ theorem ule_or_min_commute_thm (e e_1 : IntW 8) :
 
 
 theorem ule_swap_or_min_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.uge e_1 e) (icmp IntPredicate.eq e (const? 0)) ⊑ icmp IntPredicate.uge e_1 e := by 
+  LLVM.or (icmp IntPredicate.uge e_1 e) (icmp IntPredicate.eq e (const? 8 0)) ⊑ icmp IntPredicate.uge e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1102,7 +1106,7 @@ theorem ule_swap_or_min_thm (e e_1 : IntW 8) :
 
 
 theorem ule_swap_or_min_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.uge e_1 e) (const? 1) (icmp IntPredicate.eq e (const? 0)) ⊑
+  select (icmp IntPredicate.uge e_1 e) (const? 1 1) (icmp IntPredicate.eq e (const? 8 0)) ⊑
     icmp IntPredicate.uge e_1 e := by 
     simp_alive_undef
     simp_alive_ops
@@ -1112,7 +1116,7 @@ theorem ule_swap_or_min_logical_thm (e e_1 : IntW 8) :
 
 
 theorem ule_swap_or_min_commute_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.eq e_1 (const? 0)) (icmp IntPredicate.uge e e_1) ⊑ icmp IntPredicate.uge e e_1 := by 
+  LLVM.or (icmp IntPredicate.eq e_1 (const? 8 0)) (icmp IntPredicate.uge e e_1) ⊑ icmp IntPredicate.uge e e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1121,7 +1125,8 @@ theorem ule_swap_or_min_commute_thm (e e_1 : IntW 8) :
 
 
 theorem slt_and_not_max_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.slt e_1 e) (icmp IntPredicate.ne e_1 (const? 127)) ⊑ icmp IntPredicate.slt e_1 e := by 
+  LLVM.and (icmp IntPredicate.slt e_1 e) (icmp IntPredicate.ne e_1 (const? 8 127)) ⊑
+    icmp IntPredicate.slt e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1130,7 +1135,7 @@ theorem slt_and_not_max_thm (e e_1 : IntW 8) :
 
 
 theorem slt_and_not_max_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.slt e_1 e) (icmp IntPredicate.ne e_1 (const? 127)) (const? 0) ⊑
+  select (icmp IntPredicate.slt e_1 e) (icmp IntPredicate.ne e_1 (const? 8 127)) (const? 1 0) ⊑
     icmp IntPredicate.slt e_1 e := by 
     simp_alive_undef
     simp_alive_ops
@@ -1140,7 +1145,8 @@ theorem slt_and_not_max_logical_thm (e e_1 : IntW 8) :
 
 
 theorem slt_and_not_max_commute_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.ne e_1 (const? 127)) (icmp IntPredicate.slt e_1 e) ⊑ icmp IntPredicate.slt e_1 e := by 
+  LLVM.and (icmp IntPredicate.ne e_1 (const? 8 127)) (icmp IntPredicate.slt e_1 e) ⊑
+    icmp IntPredicate.slt e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1149,7 +1155,7 @@ theorem slt_and_not_max_commute_thm (e e_1 : IntW 8) :
 
 
 theorem slt_swap_and_not_max_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.sgt e_1 e) (icmp IntPredicate.ne e (const? 127)) ⊑ icmp IntPredicate.sgt e_1 e := by 
+  LLVM.and (icmp IntPredicate.sgt e_1 e) (icmp IntPredicate.ne e (const? 8 127)) ⊑ icmp IntPredicate.sgt e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1158,7 +1164,7 @@ theorem slt_swap_and_not_max_thm (e e_1 : IntW 8) :
 
 
 theorem slt_swap_and_not_max_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.sgt e_1 e) (icmp IntPredicate.ne e (const? 127)) (const? 0) ⊑
+  select (icmp IntPredicate.sgt e_1 e) (icmp IntPredicate.ne e (const? 8 127)) (const? 1 0) ⊑
     icmp IntPredicate.sgt e_1 e := by 
     simp_alive_undef
     simp_alive_ops
@@ -1168,7 +1174,8 @@ theorem slt_swap_and_not_max_logical_thm (e e_1 : IntW 8) :
 
 
 theorem slt_swap_and_not_max_commute_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.ne e_1 (const? 127)) (icmp IntPredicate.sgt e e_1) ⊑ icmp IntPredicate.sgt e e_1 := by 
+  LLVM.and (icmp IntPredicate.ne e_1 (const? 8 127)) (icmp IntPredicate.sgt e e_1) ⊑
+    icmp IntPredicate.sgt e e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1177,7 +1184,8 @@ theorem slt_swap_and_not_max_commute_thm (e e_1 : IntW 8) :
 
 
 theorem ult_and_not_max_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.ult e_1 e) (icmp IntPredicate.ne e_1 (const? (-1))) ⊑ icmp IntPredicate.ult e_1 e := by 
+  LLVM.and (icmp IntPredicate.ult e_1 e) (icmp IntPredicate.ne e_1 (const? 8 (-1))) ⊑
+    icmp IntPredicate.ult e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1186,7 +1194,7 @@ theorem ult_and_not_max_thm (e e_1 : IntW 8) :
 
 
 theorem ult_and_not_max_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ult e_1 e) (icmp IntPredicate.ne e_1 (const? (-1))) (const? 0) ⊑
+  select (icmp IntPredicate.ult e_1 e) (icmp IntPredicate.ne e_1 (const? 8 (-1))) (const? 1 0) ⊑
     icmp IntPredicate.ult e_1 e := by 
     simp_alive_undef
     simp_alive_ops
@@ -1196,7 +1204,8 @@ theorem ult_and_not_max_logical_thm (e e_1 : IntW 8) :
 
 
 theorem ult_and_not_max_commute_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.ne e_1 (const? (-1))) (icmp IntPredicate.ult e_1 e) ⊑ icmp IntPredicate.ult e_1 e := by 
+  LLVM.and (icmp IntPredicate.ne e_1 (const? 8 (-1))) (icmp IntPredicate.ult e_1 e) ⊑
+    icmp IntPredicate.ult e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1205,7 +1214,7 @@ theorem ult_and_not_max_commute_thm (e e_1 : IntW 8) :
 
 
 theorem ult_swap_and_not_max_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.ugt e_1 e) (icmp IntPredicate.ne e (const? (-1))) ⊑ icmp IntPredicate.ugt e_1 e := by 
+  LLVM.and (icmp IntPredicate.ugt e_1 e) (icmp IntPredicate.ne e (const? 8 (-1))) ⊑ icmp IntPredicate.ugt e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1214,7 +1223,7 @@ theorem ult_swap_and_not_max_thm (e e_1 : IntW 8) :
 
 
 theorem ult_swap_and_not_max_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ugt e_1 e) (icmp IntPredicate.ne e (const? (-1))) (const? 0) ⊑
+  select (icmp IntPredicate.ugt e_1 e) (icmp IntPredicate.ne e (const? 8 (-1))) (const? 1 0) ⊑
     icmp IntPredicate.ugt e_1 e := by 
     simp_alive_undef
     simp_alive_ops
@@ -1224,7 +1233,8 @@ theorem ult_swap_and_not_max_logical_thm (e e_1 : IntW 8) :
 
 
 theorem ult_swap_and_not_max_commute_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.ne e_1 (const? (-1))) (icmp IntPredicate.ugt e e_1) ⊑ icmp IntPredicate.ugt e e_1 := by 
+  LLVM.and (icmp IntPredicate.ne e_1 (const? 8 (-1))) (icmp IntPredicate.ugt e e_1) ⊑
+    icmp IntPredicate.ugt e e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1233,7 +1243,7 @@ theorem ult_swap_and_not_max_commute_thm (e e_1 : IntW 8) :
 
 
 theorem sgt_and_not_min_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.sgt e_1 e) (icmp IntPredicate.ne e_1 (const? (-128))) ⊑
+  LLVM.and (icmp IntPredicate.sgt e_1 e) (icmp IntPredicate.ne e_1 (const? 8 (-128))) ⊑
     icmp IntPredicate.sgt e_1 e := by 
     simp_alive_undef
     simp_alive_ops
@@ -1243,7 +1253,7 @@ theorem sgt_and_not_min_thm (e e_1 : IntW 8) :
 
 
 theorem sgt_and_not_min_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.sgt e_1 e) (icmp IntPredicate.ne e_1 (const? (-128))) (const? 0) ⊑
+  select (icmp IntPredicate.sgt e_1 e) (icmp IntPredicate.ne e_1 (const? 8 (-128))) (const? 1 0) ⊑
     icmp IntPredicate.sgt e_1 e := by 
     simp_alive_undef
     simp_alive_ops
@@ -1253,7 +1263,7 @@ theorem sgt_and_not_min_logical_thm (e e_1 : IntW 8) :
 
 
 theorem sgt_and_not_min_commute_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.ne e_1 (const? (-128))) (icmp IntPredicate.sgt e_1 e) ⊑
+  LLVM.and (icmp IntPredicate.ne e_1 (const? 8 (-128))) (icmp IntPredicate.sgt e_1 e) ⊑
     icmp IntPredicate.sgt e_1 e := by 
     simp_alive_undef
     simp_alive_ops
@@ -1263,7 +1273,8 @@ theorem sgt_and_not_min_commute_thm (e e_1 : IntW 8) :
 
 
 theorem sgt_swap_and_not_min_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.slt e_1 e) (icmp IntPredicate.ne e (const? (-128))) ⊑ icmp IntPredicate.slt e_1 e := by 
+  LLVM.and (icmp IntPredicate.slt e_1 e) (icmp IntPredicate.ne e (const? 8 (-128))) ⊑
+    icmp IntPredicate.slt e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1272,7 +1283,7 @@ theorem sgt_swap_and_not_min_thm (e e_1 : IntW 8) :
 
 
 theorem sgt_swap_and_not_min_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.slt e_1 e) (icmp IntPredicate.ne e (const? (-128))) (const? 0) ⊑
+  select (icmp IntPredicate.slt e_1 e) (icmp IntPredicate.ne e (const? 8 (-128))) (const? 1 0) ⊑
     icmp IntPredicate.slt e_1 e := by 
     simp_alive_undef
     simp_alive_ops
@@ -1282,7 +1293,7 @@ theorem sgt_swap_and_not_min_logical_thm (e e_1 : IntW 8) :
 
 
 theorem sgt_swap_and_not_min_commute_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.ne e_1 (const? (-128))) (icmp IntPredicate.slt e e_1) ⊑
+  LLVM.and (icmp IntPredicate.ne e_1 (const? 8 (-128))) (icmp IntPredicate.slt e e_1) ⊑
     icmp IntPredicate.slt e e_1 := by 
     simp_alive_undef
     simp_alive_ops
@@ -1292,7 +1303,7 @@ theorem sgt_swap_and_not_min_commute_thm (e e_1 : IntW 8) :
 
 
 theorem ugt_and_not_min_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.ugt e_1 e) (icmp IntPredicate.ne e_1 (const? 0)) ⊑ icmp IntPredicate.ugt e_1 e := by 
+  LLVM.and (icmp IntPredicate.ugt e_1 e) (icmp IntPredicate.ne e_1 (const? 8 0)) ⊑ icmp IntPredicate.ugt e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1301,7 +1312,7 @@ theorem ugt_and_not_min_thm (e e_1 : IntW 8) :
 
 
 theorem ugt_and_not_min_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ugt e_1 e) (icmp IntPredicate.ne e_1 (const? 0)) (const? 0) ⊑
+  select (icmp IntPredicate.ugt e_1 e) (icmp IntPredicate.ne e_1 (const? 8 0)) (const? 1 0) ⊑
     icmp IntPredicate.ugt e_1 e := by 
     simp_alive_undef
     simp_alive_ops
@@ -1311,7 +1322,7 @@ theorem ugt_and_not_min_logical_thm (e e_1 : IntW 8) :
 
 
 theorem ugt_and_not_min_commute_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.ne e_1 (const? 0)) (icmp IntPredicate.ugt e_1 e) ⊑ icmp IntPredicate.ugt e_1 e := by 
+  LLVM.and (icmp IntPredicate.ne e_1 (const? 8 0)) (icmp IntPredicate.ugt e_1 e) ⊑ icmp IntPredicate.ugt e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1320,7 +1331,7 @@ theorem ugt_and_not_min_commute_thm (e e_1 : IntW 8) :
 
 
 theorem ugt_swap_and_not_min_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.ult e_1 e) (icmp IntPredicate.ne e (const? 0)) ⊑ icmp IntPredicate.ult e_1 e := by 
+  LLVM.and (icmp IntPredicate.ult e_1 e) (icmp IntPredicate.ne e (const? 8 0)) ⊑ icmp IntPredicate.ult e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1329,7 +1340,7 @@ theorem ugt_swap_and_not_min_thm (e e_1 : IntW 8) :
 
 
 theorem ugt_swap_and_not_min_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ult e_1 e) (icmp IntPredicate.ne e (const? 0)) (const? 0) ⊑
+  select (icmp IntPredicate.ult e_1 e) (icmp IntPredicate.ne e (const? 8 0)) (const? 1 0) ⊑
     icmp IntPredicate.ult e_1 e := by 
     simp_alive_undef
     simp_alive_ops
@@ -1339,7 +1350,7 @@ theorem ugt_swap_and_not_min_logical_thm (e e_1 : IntW 8) :
 
 
 theorem ugt_swap_and_not_min_commute_thm (e e_1 : IntW 8) :
-  LLVM.and (icmp IntPredicate.ne e_1 (const? 0)) (icmp IntPredicate.ult e e_1) ⊑ icmp IntPredicate.ult e e_1 := by 
+  LLVM.and (icmp IntPredicate.ne e_1 (const? 8 0)) (icmp IntPredicate.ult e e_1) ⊑ icmp IntPredicate.ult e e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1348,8 +1359,8 @@ theorem ugt_swap_and_not_min_commute_thm (e e_1 : IntW 8) :
 
 
 theorem slt_or_not_max_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.slt e_1 e) (icmp IntPredicate.ne e_1 (const? 127)) ⊑
-    icmp IntPredicate.ne e_1 (const? 127) := by 
+  LLVM.or (icmp IntPredicate.slt e_1 e) (icmp IntPredicate.ne e_1 (const? 8 127)) ⊑
+    icmp IntPredicate.ne e_1 (const? 8 127) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1358,8 +1369,8 @@ theorem slt_or_not_max_thm (e e_1 : IntW 8) :
 
 
 theorem slt_or_not_max_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.slt e_1 e) (const? 1) (icmp IntPredicate.ne e_1 (const? 127)) ⊑
-    icmp IntPredicate.ne e_1 (const? 127) := by 
+  select (icmp IntPredicate.slt e_1 e) (const? 1 1) (icmp IntPredicate.ne e_1 (const? 8 127)) ⊑
+    icmp IntPredicate.ne e_1 (const? 8 127) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1368,8 +1379,8 @@ theorem slt_or_not_max_logical_thm (e e_1 : IntW 8) :
 
 
 theorem slt_or_not_max_commute_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.ne e_1 (const? 127)) (icmp IntPredicate.slt e_1 e) ⊑
-    icmp IntPredicate.ne e_1 (const? 127) := by 
+  LLVM.or (icmp IntPredicate.ne e_1 (const? 8 127)) (icmp IntPredicate.slt e_1 e) ⊑
+    icmp IntPredicate.ne e_1 (const? 8 127) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1378,8 +1389,8 @@ theorem slt_or_not_max_commute_thm (e e_1 : IntW 8) :
 
 
 theorem slt_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ne e_1 (const? 127)) (const? 1) (icmp IntPredicate.slt e_1 e) ⊑
-    icmp IntPredicate.ne e_1 (const? 127) := by 
+  select (icmp IntPredicate.ne e_1 (const? 8 127)) (const? 1 1) (icmp IntPredicate.slt e_1 e) ⊑
+    icmp IntPredicate.ne e_1 (const? 8 127) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1388,8 +1399,8 @@ theorem slt_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
 
 
 theorem slt_swap_or_not_max_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.sgt e_1 e) (icmp IntPredicate.ne e (const? 127)) ⊑
-    icmp IntPredicate.ne e (const? 127) := by 
+  LLVM.or (icmp IntPredicate.sgt e_1 e) (icmp IntPredicate.ne e (const? 8 127)) ⊑
+    icmp IntPredicate.ne e (const? 8 127) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1398,8 +1409,8 @@ theorem slt_swap_or_not_max_thm (e e_1 : IntW 8) :
 
 
 theorem slt_swap_or_not_max_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.sgt e_1 e) (const? 1) (icmp IntPredicate.ne e (const? 127)) ⊑
-    icmp IntPredicate.ne e (const? 127) := by 
+  select (icmp IntPredicate.sgt e_1 e) (const? 1 1) (icmp IntPredicate.ne e (const? 8 127)) ⊑
+    icmp IntPredicate.ne e (const? 8 127) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1408,8 +1419,8 @@ theorem slt_swap_or_not_max_logical_thm (e e_1 : IntW 8) :
 
 
 theorem slt_swap_or_not_max_commute_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.ne e_1 (const? 127)) (icmp IntPredicate.sgt e e_1) ⊑
-    icmp IntPredicate.ne e_1 (const? 127) := by 
+  LLVM.or (icmp IntPredicate.ne e_1 (const? 8 127)) (icmp IntPredicate.sgt e e_1) ⊑
+    icmp IntPredicate.ne e_1 (const? 8 127) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1418,8 +1429,8 @@ theorem slt_swap_or_not_max_commute_thm (e e_1 : IntW 8) :
 
 
 theorem slt_swap_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ne e_1 (const? 127)) (const? 1) (icmp IntPredicate.sgt e e_1) ⊑
-    icmp IntPredicate.ne e_1 (const? 127) := by 
+  select (icmp IntPredicate.ne e_1 (const? 8 127)) (const? 1 1) (icmp IntPredicate.sgt e e_1) ⊑
+    icmp IntPredicate.ne e_1 (const? 8 127) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1428,8 +1439,8 @@ theorem slt_swap_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
 
 
 theorem ult_or_not_max_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.ult e_1 e) (icmp IntPredicate.ne e_1 (const? (-1))) ⊑
-    icmp IntPredicate.ne e_1 (const? (-1)) := by 
+  LLVM.or (icmp IntPredicate.ult e_1 e) (icmp IntPredicate.ne e_1 (const? 8 (-1))) ⊑
+    icmp IntPredicate.ne e_1 (const? 8 (-1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1438,8 +1449,8 @@ theorem ult_or_not_max_thm (e e_1 : IntW 8) :
 
 
 theorem ult_or_not_max_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ult e_1 e) (const? 1) (icmp IntPredicate.ne e_1 (const? (-1))) ⊑
-    icmp IntPredicate.ne e_1 (const? (-1)) := by 
+  select (icmp IntPredicate.ult e_1 e) (const? 1 1) (icmp IntPredicate.ne e_1 (const? 8 (-1))) ⊑
+    icmp IntPredicate.ne e_1 (const? 8 (-1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1448,8 +1459,8 @@ theorem ult_or_not_max_logical_thm (e e_1 : IntW 8) :
 
 
 theorem ult_or_not_max_commute_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.ne e_1 (const? (-1))) (icmp IntPredicate.ult e_1 e) ⊑
-    icmp IntPredicate.ne e_1 (const? (-1)) := by 
+  LLVM.or (icmp IntPredicate.ne e_1 (const? 8 (-1))) (icmp IntPredicate.ult e_1 e) ⊑
+    icmp IntPredicate.ne e_1 (const? 8 (-1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1458,8 +1469,8 @@ theorem ult_or_not_max_commute_thm (e e_1 : IntW 8) :
 
 
 theorem ult_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ne e_1 (const? (-1))) (const? 1) (icmp IntPredicate.ult e_1 e) ⊑
-    icmp IntPredicate.ne e_1 (const? (-1)) := by 
+  select (icmp IntPredicate.ne e_1 (const? 8 (-1))) (const? 1 1) (icmp IntPredicate.ult e_1 e) ⊑
+    icmp IntPredicate.ne e_1 (const? 8 (-1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1468,8 +1479,8 @@ theorem ult_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
 
 
 theorem ult_swap_or_not_max_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.ugt e_1 e) (icmp IntPredicate.ne e (const? (-1))) ⊑
-    icmp IntPredicate.ne e (const? (-1)) := by 
+  LLVM.or (icmp IntPredicate.ugt e_1 e) (icmp IntPredicate.ne e (const? 8 (-1))) ⊑
+    icmp IntPredicate.ne e (const? 8 (-1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1478,8 +1489,8 @@ theorem ult_swap_or_not_max_thm (e e_1 : IntW 8) :
 
 
 theorem ult_swap_or_not_max_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ugt e_1 e) (const? 1) (icmp IntPredicate.ne e (const? (-1))) ⊑
-    icmp IntPredicate.ne e (const? (-1)) := by 
+  select (icmp IntPredicate.ugt e_1 e) (const? 1 1) (icmp IntPredicate.ne e (const? 8 (-1))) ⊑
+    icmp IntPredicate.ne e (const? 8 (-1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1488,8 +1499,8 @@ theorem ult_swap_or_not_max_logical_thm (e e_1 : IntW 8) :
 
 
 theorem ult_swap_or_not_max_commute_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.ne e_1 (const? (-1))) (icmp IntPredicate.ugt e e_1) ⊑
-    icmp IntPredicate.ne e_1 (const? (-1)) := by 
+  LLVM.or (icmp IntPredicate.ne e_1 (const? 8 (-1))) (icmp IntPredicate.ugt e e_1) ⊑
+    icmp IntPredicate.ne e_1 (const? 8 (-1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1498,8 +1509,8 @@ theorem ult_swap_or_not_max_commute_thm (e e_1 : IntW 8) :
 
 
 theorem ult_swap_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ne e_1 (const? (-1))) (const? 1) (icmp IntPredicate.ugt e e_1) ⊑
-    icmp IntPredicate.ne e_1 (const? (-1)) := by 
+  select (icmp IntPredicate.ne e_1 (const? 8 (-1))) (const? 1 1) (icmp IntPredicate.ugt e e_1) ⊑
+    icmp IntPredicate.ne e_1 (const? 8 (-1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1508,8 +1519,8 @@ theorem ult_swap_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
 
 
 theorem sgt_or_not_min_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.sgt e_1 e) (icmp IntPredicate.ne e_1 (const? (-128))) ⊑
-    icmp IntPredicate.ne e_1 (const? (-128)) := by 
+  LLVM.or (icmp IntPredicate.sgt e_1 e) (icmp IntPredicate.ne e_1 (const? 8 (-128))) ⊑
+    icmp IntPredicate.ne e_1 (const? 8 (-128)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1518,8 +1529,8 @@ theorem sgt_or_not_min_thm (e e_1 : IntW 8) :
 
 
 theorem sgt_or_not_min_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.sgt e_1 e) (const? 1) (icmp IntPredicate.ne e_1 (const? (-128))) ⊑
-    icmp IntPredicate.ne e_1 (const? (-128)) := by 
+  select (icmp IntPredicate.sgt e_1 e) (const? 1 1) (icmp IntPredicate.ne e_1 (const? 8 (-128))) ⊑
+    icmp IntPredicate.ne e_1 (const? 8 (-128)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1528,8 +1539,8 @@ theorem sgt_or_not_min_logical_thm (e e_1 : IntW 8) :
 
 
 theorem sgt_or_not_min_commute_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.ne e_1 (const? (-128))) (icmp IntPredicate.sgt e_1 e) ⊑
-    icmp IntPredicate.ne e_1 (const? (-128)) := by 
+  LLVM.or (icmp IntPredicate.ne e_1 (const? 8 (-128))) (icmp IntPredicate.sgt e_1 e) ⊑
+    icmp IntPredicate.ne e_1 (const? 8 (-128)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1538,8 +1549,8 @@ theorem sgt_or_not_min_commute_thm (e e_1 : IntW 8) :
 
 
 theorem sgt_or_not_min_commute_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ne e_1 (const? (-128))) (const? 1) (icmp IntPredicate.sgt e_1 e) ⊑
-    icmp IntPredicate.ne e_1 (const? (-128)) := by 
+  select (icmp IntPredicate.ne e_1 (const? 8 (-128))) (const? 1 1) (icmp IntPredicate.sgt e_1 e) ⊑
+    icmp IntPredicate.ne e_1 (const? 8 (-128)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1548,8 +1559,8 @@ theorem sgt_or_not_min_commute_logical_thm (e e_1 : IntW 8) :
 
 
 theorem sgt_swap_or_not_min_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.slt e_1 e) (icmp IntPredicate.ne e (const? (-128))) ⊑
-    icmp IntPredicate.ne e (const? (-128)) := by 
+  LLVM.or (icmp IntPredicate.slt e_1 e) (icmp IntPredicate.ne e (const? 8 (-128))) ⊑
+    icmp IntPredicate.ne e (const? 8 (-128)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1558,8 +1569,8 @@ theorem sgt_swap_or_not_min_thm (e e_1 : IntW 8) :
 
 
 theorem sgt_swap_or_not_min_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.slt e_1 e) (const? 1) (icmp IntPredicate.ne e (const? (-128))) ⊑
-    icmp IntPredicate.ne e (const? (-128)) := by 
+  select (icmp IntPredicate.slt e_1 e) (const? 1 1) (icmp IntPredicate.ne e (const? 8 (-128))) ⊑
+    icmp IntPredicate.ne e (const? 8 (-128)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1568,8 +1579,8 @@ theorem sgt_swap_or_not_min_logical_thm (e e_1 : IntW 8) :
 
 
 theorem sgt_swap_or_not_min_commute_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.ne e_1 (const? (-128))) (icmp IntPredicate.slt e e_1) ⊑
-    icmp IntPredicate.ne e_1 (const? (-128)) := by 
+  LLVM.or (icmp IntPredicate.ne e_1 (const? 8 (-128))) (icmp IntPredicate.slt e e_1) ⊑
+    icmp IntPredicate.ne e_1 (const? 8 (-128)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1578,8 +1589,8 @@ theorem sgt_swap_or_not_min_commute_thm (e e_1 : IntW 8) :
 
 
 theorem sgt_swap_or_not_min_commute_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ne e_1 (const? (-128))) (const? 1) (icmp IntPredicate.slt e e_1) ⊑
-    icmp IntPredicate.ne e_1 (const? (-128)) := by 
+  select (icmp IntPredicate.ne e_1 (const? 8 (-128))) (const? 1 1) (icmp IntPredicate.slt e e_1) ⊑
+    icmp IntPredicate.ne e_1 (const? 8 (-128)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1588,8 +1599,8 @@ theorem sgt_swap_or_not_min_commute_logical_thm (e e_1 : IntW 8) :
 
 
 theorem ugt_or_not_min_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.ugt e_1 e) (icmp IntPredicate.ne e_1 (const? 0)) ⊑
-    icmp IntPredicate.ne e_1 (const? 0) := by 
+  LLVM.or (icmp IntPredicate.ugt e_1 e) (icmp IntPredicate.ne e_1 (const? 8 0)) ⊑
+    icmp IntPredicate.ne e_1 (const? 8 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1598,8 +1609,8 @@ theorem ugt_or_not_min_thm (e e_1 : IntW 8) :
 
 
 theorem ugt_or_not_min_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ugt e_1 e) (const? 1) (icmp IntPredicate.ne e_1 (const? 0)) ⊑
-    icmp IntPredicate.ne e_1 (const? 0) := by 
+  select (icmp IntPredicate.ugt e_1 e) (const? 1 1) (icmp IntPredicate.ne e_1 (const? 8 0)) ⊑
+    icmp IntPredicate.ne e_1 (const? 8 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1608,8 +1619,8 @@ theorem ugt_or_not_min_logical_thm (e e_1 : IntW 8) :
 
 
 theorem ugt_or_not_min_commute_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.ne e_1 (const? 0)) (icmp IntPredicate.ugt e_1 e) ⊑
-    icmp IntPredicate.ne e_1 (const? 0) := by 
+  LLVM.or (icmp IntPredicate.ne e_1 (const? 8 0)) (icmp IntPredicate.ugt e_1 e) ⊑
+    icmp IntPredicate.ne e_1 (const? 8 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1618,8 +1629,8 @@ theorem ugt_or_not_min_commute_thm (e e_1 : IntW 8) :
 
 
 theorem ugt_or_not_min_commute_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ne e_1 (const? 0)) (const? 1) (icmp IntPredicate.ugt e_1 e) ⊑
-    icmp IntPredicate.ne e_1 (const? 0) := by 
+  select (icmp IntPredicate.ne e_1 (const? 8 0)) (const? 1 1) (icmp IntPredicate.ugt e_1 e) ⊑
+    icmp IntPredicate.ne e_1 (const? 8 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1628,7 +1639,8 @@ theorem ugt_or_not_min_commute_logical_thm (e e_1 : IntW 8) :
 
 
 theorem ugt_swap_or_not_min_thm (e e_1 : IntW 8) :
-  LLVM.or (icmp IntPredicate.ult e_1 e) (icmp IntPredicate.ne e (const? 0)) ⊑ icmp IntPredicate.ne e (const? 0) := by 
+  LLVM.or (icmp IntPredicate.ult e_1 e) (icmp IntPredicate.ne e (const? 8 0)) ⊑
+    icmp IntPredicate.ne e (const? 8 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1637,8 +1649,8 @@ theorem ugt_swap_or_not_min_thm (e e_1 : IntW 8) :
 
 
 theorem ugt_swap_or_not_min_logical_thm (e e_1 : IntW 8) :
-  select (icmp IntPredicate.ult e_1 e) (const? 1) (icmp IntPredicate.ne e (const? 0)) ⊑
-    icmp IntPredicate.ne e (const? 0) := by 
+  select (icmp IntPredicate.ult e_1 e) (const? 1 1) (icmp IntPredicate.ne e (const? 8 0)) ⊑
+    icmp IntPredicate.ne e (const? 8 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1647,8 +1659,8 @@ theorem ugt_swap_or_not_min_logical_thm (e e_1 : IntW 8) :
 
 
 theorem ugt_swap_or_not_min_commute_thm (e e_1 : IntW 823) :
-  LLVM.or (icmp IntPredicate.ne e_1 (const? 0)) (icmp IntPredicate.ult e e_1) ⊑
-    icmp IntPredicate.ne e_1 (const? 0) := by 
+  LLVM.or (icmp IntPredicate.ne e_1 (const? 823 0)) (icmp IntPredicate.ult e e_1) ⊑
+    icmp IntPredicate.ne e_1 (const? 823 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -1657,8 +1669,8 @@ theorem ugt_swap_or_not_min_commute_thm (e e_1 : IntW 823) :
 
 
 theorem ugt_swap_or_not_min_commute_logical_thm (e e_1 : IntW 823) :
-  select (icmp IntPredicate.ne e_1 (const? 0)) (const? 1) (icmp IntPredicate.ult e e_1) ⊑
-    icmp IntPredicate.ne e_1 (const? 0) := by 
+  select (icmp IntPredicate.ne e_1 (const? 823 0)) (const? 1 1) (icmp IntPredicate.ult e e_1) ⊑
+    icmp IntPredicate.ne e_1 (const? 823 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

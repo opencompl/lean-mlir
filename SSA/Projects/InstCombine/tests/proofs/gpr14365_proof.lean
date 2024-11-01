@@ -6,9 +6,11 @@ open LLVM
 
 section gpr14365_proof
 theorem test0_thm (e : IntW 32) :
-  add e (add (LLVM.xor (LLVM.and e (const? 1431655765)) (const? (-1))) (const? 1) { «nsw» := true, «nuw» := false })
+  add e
+      (add (LLVM.xor (LLVM.and e (const? 32 1431655765)) (const? 32 (-1))) (const? 32 1)
+        { «nsw» := true, «nuw» := false })
       { «nsw» := true, «nuw» := false } ⊑
-    LLVM.and e (const? (-1431655766)) := by 
+    LLVM.and e (const? 32 (-1431655766)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -18,10 +20,10 @@ theorem test0_thm (e : IntW 32) :
 
 theorem test1_thm (e : IntW 32) :
   add e
-      (add (LLVM.xor (LLVM.and (ashr e (const? 1)) (const? 1431655765)) (const? (-1))) (const? 1)
+      (add (LLVM.xor (LLVM.and (ashr e (const? 32 1)) (const? 32 1431655765)) (const? 32 (-1))) (const? 32 1)
         { «nsw» := true, «nuw» := false })
       { «nsw» := true, «nuw» := false } ⊑
-    sub e (LLVM.and (lshr e (const? 1)) (const? 1431655765)) { «nsw» := true, «nuw» := false } := by 
+    sub e (LLVM.and (lshr e (const? 32 1)) (const? 32 1431655765)) { «nsw» := true, «nuw» := false } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

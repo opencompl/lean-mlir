@@ -24,9 +24,9 @@ theorem eq_umax2_thm (e e_1 : IntW 32) :
 
 
 theorem eq_umax3_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.eq (add e_1 (const? 3))
-      (select (icmp IntPredicate.ugt (add e_1 (const? 3)) e) (add e_1 (const? 3)) e) ⊑
-    icmp IntPredicate.uge (add e_1 (const? 3)) e := by 
+  icmp IntPredicate.eq (add e_1 (const? 32 3))
+      (select (icmp IntPredicate.ugt (add e_1 (const? 32 3)) e) (add e_1 (const? 32 3)) e) ⊑
+    icmp IntPredicate.uge (add e_1 (const? 32 3)) e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -35,9 +35,9 @@ theorem eq_umax3_thm (e e_1 : IntW 32) :
 
 
 theorem eq_umax4_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.eq (add e_1 (const? 3))
-      (select (icmp IntPredicate.ugt e (add e_1 (const? 3))) e (add e_1 (const? 3))) ⊑
-    icmp IntPredicate.uge (add e_1 (const? 3)) e := by 
+  icmp IntPredicate.eq (add e_1 (const? 32 3))
+      (select (icmp IntPredicate.ugt e (add e_1 (const? 32 3))) e (add e_1 (const? 32 3))) ⊑
+    icmp IntPredicate.uge (add e_1 (const? 32 3)) e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -64,9 +64,9 @@ theorem ule_umax2_thm (e e_1 : IntW 32) :
 
 
 theorem ule_umax3_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.uge (add e_1 (const? 3))
-      (select (icmp IntPredicate.ugt (add e_1 (const? 3)) e) (add e_1 (const? 3)) e) ⊑
-    icmp IntPredicate.ule e (add e_1 (const? 3)) := by 
+  icmp IntPredicate.uge (add e_1 (const? 32 3))
+      (select (icmp IntPredicate.ugt (add e_1 (const? 32 3)) e) (add e_1 (const? 32 3)) e) ⊑
+    icmp IntPredicate.ule e (add e_1 (const? 32 3)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -75,9 +75,9 @@ theorem ule_umax3_thm (e e_1 : IntW 32) :
 
 
 theorem ule_umax4_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.uge (add e_1 (const? 3))
-      (select (icmp IntPredicate.ugt e (add e_1 (const? 3))) e (add e_1 (const? 3))) ⊑
-    icmp IntPredicate.ule e (add e_1 (const? 3)) := by 
+  icmp IntPredicate.uge (add e_1 (const? 32 3))
+      (select (icmp IntPredicate.ugt e (add e_1 (const? 32 3))) e (add e_1 (const? 32 3))) ⊑
+    icmp IntPredicate.ule e (add e_1 (const? 32 3)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -104,9 +104,9 @@ theorem ne_umax2_thm (e e_1 : IntW 32) :
 
 
 theorem ne_umax3_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.ne (add e_1 (const? 3))
-      (select (icmp IntPredicate.ugt (add e_1 (const? 3)) e) (add e_1 (const? 3)) e) ⊑
-    icmp IntPredicate.ult (add e_1 (const? 3)) e := by 
+  icmp IntPredicate.ne (add e_1 (const? 32 3))
+      (select (icmp IntPredicate.ugt (add e_1 (const? 32 3)) e) (add e_1 (const? 32 3)) e) ⊑
+    icmp IntPredicate.ult (add e_1 (const? 32 3)) e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -115,9 +115,9 @@ theorem ne_umax3_thm (e e_1 : IntW 32) :
 
 
 theorem ne_umax4_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.ne (add e_1 (const? 3))
-      (select (icmp IntPredicate.ugt e (add e_1 (const? 3))) e (add e_1 (const? 3))) ⊑
-    icmp IntPredicate.ult (add e_1 (const? 3)) e := by 
+  icmp IntPredicate.ne (add e_1 (const? 32 3))
+      (select (icmp IntPredicate.ugt e (add e_1 (const? 32 3))) e (add e_1 (const? 32 3))) ⊑
+    icmp IntPredicate.ult (add e_1 (const? 32 3)) e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -144,9 +144,9 @@ theorem ugt_umax2_thm (e e_1 : IntW 32) :
 
 
 theorem ugt_umax3_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.ult (add e_1 (const? 3))
-      (select (icmp IntPredicate.ugt (add e_1 (const? 3)) e) (add e_1 (const? 3)) e) ⊑
-    icmp IntPredicate.ugt e (add e_1 (const? 3)) := by 
+  icmp IntPredicate.ult (add e_1 (const? 32 3))
+      (select (icmp IntPredicate.ugt (add e_1 (const? 32 3)) e) (add e_1 (const? 32 3)) e) ⊑
+    icmp IntPredicate.ugt e (add e_1 (const? 32 3)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -155,9 +155,9 @@ theorem ugt_umax3_thm (e e_1 : IntW 32) :
 
 
 theorem ugt_umax4_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.ult (add e_1 (const? 3))
-      (select (icmp IntPredicate.ugt e (add e_1 (const? 3))) e (add e_1 (const? 3))) ⊑
-    icmp IntPredicate.ugt e (add e_1 (const? 3)) := by 
+  icmp IntPredicate.ult (add e_1 (const? 32 3))
+      (select (icmp IntPredicate.ugt e (add e_1 (const? 32 3))) e (add e_1 (const? 32 3))) ⊑
+    icmp IntPredicate.ugt e (add e_1 (const? 32 3)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

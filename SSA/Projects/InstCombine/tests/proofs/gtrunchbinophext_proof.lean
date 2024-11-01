@@ -108,8 +108,8 @@ theorem narrow_zext_mul_thm (e : IntW 32) (e_1 : IntW 16) : trunc 16 (mul (zext 
 
 
 theorem narrow_zext_ashr_keep_trunc_thm (e e_1 : IntW 8) :
-  trunc 8 (ashr (add (sext 32 e_1) (sext 32 e) { «nsw» := true, «nuw» := false }) (const? 1)) ⊑
-    trunc 8 (lshr (add (sext 16 e_1) (sext 16 e) { «nsw» := true, «nuw» := false }) (const? 1)) := by 
+  trunc 8 (ashr (add (sext 32 e_1) (sext 32 e) { «nsw» := true, «nuw» := false }) (const? 32 1)) ⊑
+    trunc 8 (lshr (add (sext 16 e_1) (sext 16 e) { «nsw» := true, «nuw» := false }) (const? 16 1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -118,8 +118,8 @@ theorem narrow_zext_ashr_keep_trunc_thm (e e_1 : IntW 8) :
 
 
 theorem narrow_zext_ashr_keep_trunc2_thm (e e_1 : IntW 9) :
-  trunc 8 (ashr (add (sext 64 e_1) (sext 64 e) { «nsw» := true, «nuw» := false }) (const? 1)) ⊑
-    trunc 8 (lshr (add (zext 16 e_1) (zext 16 e) { «nsw» := true, «nuw» := true }) (const? 1)) := by 
+  trunc 8 (ashr (add (sext 64 e_1) (sext 64 e) { «nsw» := true, «nuw» := false }) (const? 64 1)) ⊑
+    trunc 8 (lshr (add (zext 16 e_1) (zext 16 e) { «nsw» := true, «nuw» := true }) (const? 16 1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -128,8 +128,8 @@ theorem narrow_zext_ashr_keep_trunc2_thm (e e_1 : IntW 9) :
 
 
 theorem narrow_zext_ashr_keep_trunc3_thm (e e_1 : IntW 8) :
-  trunc 7 (ashr (add (sext 64 e_1) (sext 64 e) { «nsw» := true, «nuw» := false }) (const? 1)) ⊑
-    trunc 7 (lshr (add (zext 14 e_1) (zext 14 e) { «nsw» := true, «nuw» := true }) (const? 1)) := by 
+  trunc 7 (ashr (add (sext 64 e_1) (sext 64 e) { «nsw» := true, «nuw» := false }) (const? 64 1)) ⊑
+    trunc 7 (lshr (add (zext 14 e_1) (zext 14 e) { «nsw» := true, «nuw» := true }) (const? 14 1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -138,8 +138,8 @@ theorem narrow_zext_ashr_keep_trunc3_thm (e e_1 : IntW 8) :
 
 
 theorem dont_narrow_zext_ashr_keep_trunc_thm (e e_1 : IntW 8) :
-  trunc 8 (ashr (add (sext 16 e_1) (sext 16 e) { «nsw» := true, «nuw» := false }) (const? 1)) ⊑
-    trunc 8 (lshr (add (sext 16 e_1) (sext 16 e) { «nsw» := true, «nuw» := false }) (const? 1)) := by 
+  trunc 8 (ashr (add (sext 16 e_1) (sext 16 e) { «nsw» := true, «nuw» := false }) (const? 16 1)) ⊑
+    trunc 8 (lshr (add (sext 16 e_1) (sext 16 e) { «nsw» := true, «nuw» := false }) (const? 16 1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

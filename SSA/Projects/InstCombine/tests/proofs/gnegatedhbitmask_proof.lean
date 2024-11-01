@@ -6,7 +6,7 @@ open LLVM
 
 section gnegatedhbitmask_proof
 theorem neg_mask1_lshr_thm (e : IntW 8) :
-  sub (const? 0) (LLVM.and (lshr e (const? 3)) (const? 1)) ⊑ ashr (shl e (const? 4)) (const? 7) := by 
+  sub (const? 8 0) (LLVM.and (lshr e (const? 8 3)) (const? 8 1)) ⊑ ashr (shl e (const? 8 4)) (const? 8 7) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -15,8 +15,8 @@ theorem neg_mask1_lshr_thm (e : IntW 8) :
 
 
 theorem sub_mask1_lshr_thm (e : IntW 8) :
-  sub (const? 10) (LLVM.and (lshr e (const? 1)) (const? 1)) ⊑
-    add (ashr (shl e (const? 6)) (const? 7)) (const? 10) { «nsw» := true, «nuw» := false } := by 
+  sub (const? 8 10) (LLVM.and (lshr e (const? 8 1)) (const? 8 1)) ⊑
+    add (ashr (shl e (const? 8 6)) (const? 8 7)) (const? 8 10) { «nsw» := true, «nuw» := false } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -25,8 +25,8 @@ theorem sub_mask1_lshr_thm (e : IntW 8) :
 
 
 theorem sub_mask1_trunc_lshr_thm (e : IntW 64) :
-  sub (const? 10) (LLVM.and (trunc 8 (lshr e (const? 15))) (const? 1)) ⊑
-    add (trunc 8 (ashr (shl e (const? 48)) (const? 63))) (const? 10) { «nsw» := true, «nuw» := false } := by 
+  sub (const? 8 10) (LLVM.and (trunc 8 (lshr e (const? 64 15))) (const? 8 1)) ⊑
+    add (trunc 8 (ashr (shl e (const? 64 48)) (const? 64 63))) (const? 8 10) { «nsw» := true, «nuw» := false } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -35,9 +35,10 @@ theorem sub_mask1_trunc_lshr_thm (e : IntW 64) :
 
 
 theorem sub_sext_mask1_trunc_lshr_thm (e : IntW 64) :
-  sub (const? 10) (sext 32 (LLVM.and (trunc 8 (lshr e (const? 15))) (const? 1))) ⊑
+  sub (const? 32 10) (sext 32 (LLVM.and (trunc 8 (lshr e (const? 64 15))) (const? 8 1))) ⊑
     zext 32
-      (add (trunc 8 (ashr (shl e (const? 48)) (const? 63))) (const? 10) { «nsw» := true, «nuw» := false }) := by 
+      (add (trunc 8 (ashr (shl e (const? 64 48)) (const? 64 63))) (const? 8 10)
+        { «nsw» := true, «nuw» := false }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -46,8 +47,9 @@ theorem sub_sext_mask1_trunc_lshr_thm (e : IntW 64) :
 
 
 theorem sub_zext_trunc_lshr_thm (e : IntW 64) :
-  sub (const? 10) (zext 32 (trunc 1 (lshr e (const? 15)))) ⊑
-    add (ashr (shl (trunc 32 e) (const? 16)) (const? 31)) (const? 10) { «nsw» := true, «nuw» := false } := by 
+  sub (const? 32 10) (zext 32 (trunc 1 (lshr e (const? 64 15)))) ⊑
+    add (ashr (shl (trunc 32 e) (const? 32 16)) (const? 32 31)) (const? 32 10)
+      { «nsw» := true, «nuw» := false } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -56,8 +58,8 @@ theorem sub_zext_trunc_lshr_thm (e : IntW 64) :
 
 
 theorem neg_mask2_lshr_thm (e : IntW 8) :
-  sub (const? 0) (LLVM.and (lshr e (const? 3)) (const? 2)) ⊑
-    sub (const? 0) (LLVM.and (lshr e (const? 3)) (const? 2)) { «nsw» := true, «nuw» := false } := by 
+  sub (const? 8 0) (LLVM.and (lshr e (const? 8 3)) (const? 8 2)) ⊑
+    sub (const? 8 0) (LLVM.and (lshr e (const? 8 3)) (const? 8 2)) { «nsw» := true, «nuw» := false } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -65,7 +67,8 @@ theorem neg_mask2_lshr_thm (e : IntW 8) :
     all_goals sorry
 
 
-theorem neg_signbit_thm (e : IntW 8) : sub (const? 0) (zext 32 (lshr e (const? 7))) ⊑ sext 32 (ashr e (const? 7)) := by 
+theorem neg_signbit_thm (e : IntW 8) :
+  sub (const? 32 0) (zext 32 (lshr e (const? 8 7))) ⊑ sext 32 (ashr e (const? 8 7)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -74,7 +77,7 @@ theorem neg_signbit_thm (e : IntW 8) : sub (const? 0) (zext 32 (lshr e (const? 7
 
 
 theorem neg_not_signbit1_thm (e : IntW 8) :
-  sub (const? 1) (zext 32 (lshr e (const? 7))) ⊑ zext 32 (icmp IntPredicate.sgt e (const? (-1))) := by 
+  sub (const? 32 1) (zext 32 (lshr e (const? 8 7))) ⊑ zext 32 (icmp IntPredicate.sgt e (const? 8 (-1))) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -83,8 +86,8 @@ theorem neg_not_signbit1_thm (e : IntW 8) :
 
 
 theorem neg_not_signbit2_thm (e : IntW 8) :
-  sub (const? 0) (zext 32 (lshr e (const? 6))) ⊑
-    sub (const? 0) (zext 32 (lshr e (const? 6))) { «nsw» := true, «nuw» := false } := by 
+  sub (const? 32 0) (zext 32 (lshr e (const? 8 6))) ⊑
+    sub (const? 32 0) (zext 32 (lshr e (const? 8 6))) { «nsw» := true, «nuw» := false } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -93,8 +96,8 @@ theorem neg_not_signbit2_thm (e : IntW 8) :
 
 
 theorem neg_not_signbit3_thm (e : IntW 8) :
-  sub (const? 0) (zext 32 (ashr e (const? 7))) ⊑
-    sub (const? 0) (zext 32 (ashr e (const? 7))) { «nsw» := true, «nuw» := false } := by 
+  sub (const? 32 0) (zext 32 (ashr e (const? 8 7))) ⊑
+    sub (const? 32 0) (zext 32 (ashr e (const? 8 7))) { «nsw» := true, «nuw» := false } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -104,9 +107,9 @@ theorem neg_not_signbit3_thm (e : IntW 8) :
 
 theorem neg_mask_thm (e : IntW 16) (e_1 : IntW 32) :
   LLVM.and (sub e_1 (sext 32 e) { «nsw» := true, «nuw» := false })
-      (sub (const? 0) (zext 32 (lshr e (const? 15))) { «nsw» := true, «nuw» := false }) ⊑
-    select (icmp IntPredicate.slt e (const? 0)) (sub e_1 (sext 32 e) { «nsw» := true, «nuw» := false })
-      (const? 0) := by 
+      (sub (const? 32 0) (zext 32 (lshr e (const? 16 15))) { «nsw» := true, «nuw» := false }) ⊑
+    select (icmp IntPredicate.slt e (const? 16 0)) (sub e_1 (sext 32 e) { «nsw» := true, «nuw» := false })
+      (const? 32 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -115,10 +118,10 @@ theorem neg_mask_thm (e : IntW 16) (e_1 : IntW 32) :
 
 
 theorem neg_mask_const_thm (e : IntW 16) :
-  LLVM.and (sub (const? 1000) (sext 32 e) { «nsw» := true, «nuw» := false })
-      (sub (const? 0) (zext 32 (lshr e (const? 15))) { «nsw» := true, «nuw» := false }) ⊑
-    select (icmp IntPredicate.slt e (const? 0)) (sub (const? 1000) (sext 32 e) { «nsw» := true, «nuw» := false })
-      (const? 0) := by 
+  LLVM.and (sub (const? 32 1000) (sext 32 e) { «nsw» := true, «nuw» := false })
+      (sub (const? 32 0) (zext 32 (lshr e (const? 16 15))) { «nsw» := true, «nuw» := false }) ⊑
+    select (icmp IntPredicate.slt e (const? 16 0)) (sub (const? 32 1000) (sext 32 e) { «nsw» := true, «nuw» := false })
+      (const? 32 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

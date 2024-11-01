@@ -78,7 +78,7 @@ theorem t1_flags_nuw_nsw_second_thm (e e_1 e_2 : IntW 8) :
     all_goals sorry
 
 
-theorem t3_c0_thm (e e_1 : IntW 8) : sub (sub (const? 42) e_1) e ⊑ sub (const? 42) (add e_1 e) := by 
+theorem t3_c0_thm (e e_1 : IntW 8) : sub (sub (const? 8 42) e_1) e ⊑ sub (const? 8 42) (add e_1 e) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -86,7 +86,7 @@ theorem t3_c0_thm (e e_1 : IntW 8) : sub (sub (const? 42) e_1) e ⊑ sub (const?
     all_goals sorry
 
 
-theorem t4_c1_thm (e e_1 : IntW 8) : sub (sub e_1 (const? 42)) e ⊑ sub (add e_1 (const? (-42))) e := by 
+theorem t4_c1_thm (e e_1 : IntW 8) : sub (sub e_1 (const? 8 42)) e ⊑ sub (add e_1 (const? 8 (-42))) e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -94,7 +94,7 @@ theorem t4_c1_thm (e e_1 : IntW 8) : sub (sub e_1 (const? 42)) e ⊑ sub (add e_
     all_goals sorry
 
 
-theorem t5_c2_thm (e e_1 : IntW 8) : sub (sub e_1 e) (const? 42) ⊑ add (sub e_1 e) (const? (-42)) := by 
+theorem t5_c2_thm (e e_1 : IntW 8) : sub (sub e_1 e) (const? 8 42) ⊑ add (sub e_1 e) (const? 8 (-42)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -102,7 +102,7 @@ theorem t5_c2_thm (e e_1 : IntW 8) : sub (sub e_1 e) (const? 42) ⊑ add (sub e_
     all_goals sorry
 
 
-theorem t9_c0_c2_thm (e : IntW 8) : sub (sub (const? 42) e) (const? 24) ⊑ sub (const? 18) e := by 
+theorem t9_c0_c2_thm (e : IntW 8) : sub (sub (const? 8 42) e) (const? 8 24) ⊑ sub (const? 8 18) e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -110,7 +110,7 @@ theorem t9_c0_c2_thm (e : IntW 8) : sub (sub (const? 42) e) (const? 24) ⊑ sub 
     all_goals sorry
 
 
-theorem t10_c1_c2_thm (e : IntW 8) : sub (sub e (const? 42)) (const? 24) ⊑ add e (const? (-66)) := by 
+theorem t10_c1_c2_thm (e : IntW 8) : sub (sub e (const? 8 42)) (const? 8 24) ⊑ add e (const? 8 (-66)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

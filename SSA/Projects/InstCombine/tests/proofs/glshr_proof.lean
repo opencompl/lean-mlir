@@ -6,7 +6,7 @@ open LLVM
 
 section glshr_proof
 theorem lshr_exact_thm (e : IntW 8) :
-  lshr (add (shl e (const? 2)) (const? 4)) (const? 2) ⊑ LLVM.and (add e (const? 1)) (const? 63) := by 
+  lshr (add (shl e (const? 8 2)) (const? 8 4)) (const? 8 2) ⊑ LLVM.and (add e (const? 8 1)) (const? 8 63) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -15,7 +15,7 @@ theorem lshr_exact_thm (e : IntW 8) :
 
 
 theorem shl_add_thm (e e_1 : IntW 8) :
-  lshr (add (shl e_1 (const? 2)) e) (const? 2) ⊑ LLVM.and (add (lshr e (const? 2)) e_1) (const? 63) := by 
+  lshr (add (shl e_1 (const? 8 2)) e) (const? 8 2) ⊑ LLVM.and (add (lshr e (const? 8 2)) e_1) (const? 8 63) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -23,7 +23,7 @@ theorem shl_add_thm (e e_1 : IntW 8) :
     all_goals sorry
 
 
-theorem bool_zext_thm (e : IntW 1) : lshr (sext 16 e) (const? 15) ⊑ zext 16 e := by 
+theorem bool_zext_thm (e : IntW 1) : lshr (sext 16 e) (const? 16 15) ⊑ zext 16 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -31,7 +31,7 @@ theorem bool_zext_thm (e : IntW 1) : lshr (sext 16 e) (const? 15) ⊑ zext 16 e 
     all_goals sorry
 
 
-theorem smear_sign_and_widen_thm (e : IntW 8) : lshr (sext 32 e) (const? 24) ⊑ zext 32 (ashr e (const? 7)) := by 
+theorem smear_sign_and_widen_thm (e : IntW 8) : lshr (sext 32 e) (const? 32 24) ⊑ zext 32 (ashr e (const? 8 7)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -39,7 +39,7 @@ theorem smear_sign_and_widen_thm (e : IntW 8) : lshr (sext 32 e) (const? 24) ⊑
     all_goals sorry
 
 
-theorem fake_sext_thm (e : IntW 3) : lshr (sext 18 e) (const? 17) ⊑ zext 18 (lshr e (const? 2)) := by 
+theorem fake_sext_thm (e : IntW 3) : lshr (sext 18 e) (const? 18 17) ⊑ zext 18 (lshr e (const? 3 2)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -48,7 +48,7 @@ theorem fake_sext_thm (e : IntW 3) : lshr (sext 18 e) (const? 17) ⊑ zext 18 (l
 
 
 theorem mul_splat_fold_thm (e : IntW 32) :
-  lshr (mul e (const? 65537) { «nsw» := false, «nuw» := true }) (const? 16) ⊑ e := by 
+  lshr (mul e (const? 32 65537) { «nsw» := false, «nuw» := true }) (const? 32 16) ⊑ e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -208,8 +208,8 @@ theorem shl_lshr_and_exact_thm (e e_1 e_2 : IntW 32) :
 
 
 theorem mul_splat_fold_no_nuw_thm (e : IntW 32) :
-  lshr (mul e (const? 65537) { «nsw» := true, «nuw» := false }) (const? 16) ⊑
-    add e (lshr e (const? 16)) { «nsw» := true, «nuw» := false } := by 
+  lshr (mul e (const? 32 65537) { «nsw» := true, «nuw» := false }) (const? 32 16) ⊑
+    add e (lshr e (const? 32 16)) { «nsw» := true, «nuw» := false } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -217,7 +217,8 @@ theorem mul_splat_fold_no_nuw_thm (e : IntW 32) :
     all_goals sorry
 
 
-theorem mul_splat_fold_too_narrow_thm (e : IntW 2) : lshr (mul e (const? (-2)) { «nsw» := false, «nuw» := true }) (const? 1) ⊑ e := by 
+theorem mul_splat_fold_too_narrow_thm (e : IntW 2) :
+  lshr (mul e (const? 2 (-2)) { «nsw» := false, «nuw» := true }) (const? 2 1) ⊑ e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -225,7 +226,8 @@ theorem mul_splat_fold_too_narrow_thm (e : IntW 2) : lshr (mul e (const? (-2)) {
     all_goals sorry
 
 
-theorem negative_and_odd_thm (e : IntW 32) : lshr (LLVM.srem e (const? 2)) (const? 31) ⊑ LLVM.and (lshr e (const? 31)) e := by 
+theorem negative_and_odd_thm (e : IntW 32) :
+  lshr (LLVM.srem e (const? 32 2)) (const? 32 31) ⊑ LLVM.and (lshr e (const? 32 31)) e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -234,7 +236,7 @@ theorem negative_and_odd_thm (e : IntW 32) : lshr (LLVM.srem e (const? 2)) (cons
 
 
 theorem trunc_sandwich_thm (e : IntW 32) :
-  lshr (trunc 12 (lshr e (const? 28))) (const? 2) ⊑ trunc 12 (lshr e (const? 30)) := by 
+  lshr (trunc 12 (lshr e (const? 32 28))) (const? 12 2) ⊑ trunc 12 (lshr e (const? 32 30)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -243,7 +245,7 @@ theorem trunc_sandwich_thm (e : IntW 32) :
 
 
 theorem trunc_sandwich_min_shift1_thm (e : IntW 32) :
-  lshr (trunc 12 (lshr e (const? 20))) (const? 1) ⊑ trunc 12 (lshr e (const? 21)) := by 
+  lshr (trunc 12 (lshr e (const? 32 20))) (const? 12 1) ⊑ trunc 12 (lshr e (const? 32 21)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -252,7 +254,8 @@ theorem trunc_sandwich_min_shift1_thm (e : IntW 32) :
 
 
 theorem trunc_sandwich_small_shift1_thm (e : IntW 32) :
-  lshr (trunc 12 (lshr e (const? 19))) (const? 1) ⊑ LLVM.and (trunc 12 (lshr e (const? 20))) (const? 2047) := by 
+  lshr (trunc 12 (lshr e (const? 32 19))) (const? 12 1) ⊑
+    LLVM.and (trunc 12 (lshr e (const? 32 20))) (const? 12 2047) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -261,7 +264,7 @@ theorem trunc_sandwich_small_shift1_thm (e : IntW 32) :
 
 
 theorem trunc_sandwich_max_sum_shift_thm (e : IntW 32) :
-  lshr (trunc 12 (lshr e (const? 20))) (const? 11) ⊑ trunc 12 (lshr e (const? 31)) := by 
+  lshr (trunc 12 (lshr e (const? 32 20))) (const? 12 11) ⊑ trunc 12 (lshr e (const? 32 31)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -270,7 +273,7 @@ theorem trunc_sandwich_max_sum_shift_thm (e : IntW 32) :
 
 
 theorem trunc_sandwich_max_sum_shift2_thm (e : IntW 32) :
-  lshr (trunc 12 (lshr e (const? 30))) (const? 1) ⊑ trunc 12 (lshr e (const? 31)) := by 
+  lshr (trunc 12 (lshr e (const? 32 30))) (const? 12 1) ⊑ trunc 12 (lshr e (const? 32 31)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -278,7 +281,7 @@ theorem trunc_sandwich_max_sum_shift2_thm (e : IntW 32) :
     all_goals sorry
 
 
-theorem trunc_sandwich_big_sum_shift1_thm (e : IntW 32) : lshr (trunc 12 (lshr e (const? 21))) (const? 11) ⊑ const? 0 := by 
+theorem trunc_sandwich_big_sum_shift1_thm (e : IntW 32) : lshr (trunc 12 (lshr e (const? 32 21))) (const? 12 11) ⊑ const? 12 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -286,7 +289,7 @@ theorem trunc_sandwich_big_sum_shift1_thm (e : IntW 32) : lshr (trunc 12 (lshr e
     all_goals sorry
 
 
-theorem trunc_sandwich_big_sum_shift2_thm (e : IntW 32) : lshr (trunc 12 (lshr e (const? 31))) (const? 1) ⊑ const? 0 := by 
+theorem trunc_sandwich_big_sum_shift2_thm (e : IntW 32) : lshr (trunc 12 (lshr e (const? 32 31))) (const? 12 1) ⊑ const? 12 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -294,7 +297,7 @@ theorem trunc_sandwich_big_sum_shift2_thm (e : IntW 32) : lshr (trunc 12 (lshr e
     all_goals sorry
 
 
-theorem lshr_sext_i1_to_i16_thm (e : IntW 1) : lshr (sext 16 e) (const? 4) ⊑ select e (const? 4095) (const? 0) := by 
+theorem lshr_sext_i1_to_i16_thm (e : IntW 1) : lshr (sext 16 e) (const? 16 4) ⊑ select e (const? 16 4095) (const? 16 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -303,7 +306,7 @@ theorem lshr_sext_i1_to_i16_thm (e : IntW 1) : lshr (sext 16 e) (const? 4) ⊑ s
 
 
 theorem lshr_sext_i1_to_i128_thm (e : IntW 1) :
-  lshr (sext 128 e) (const? 42) ⊑ select e (const? 77371252455336267181195263) (const? 0) := by 
+  lshr (sext 128 e) (const? 128 42) ⊑ select e (const? 128 77371252455336267181195263) (const? 128 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -311,7 +314,7 @@ theorem lshr_sext_i1_to_i128_thm (e : IntW 1) :
     all_goals sorry
 
 
-theorem icmp_ule_thm (e e_1 : IntW 32) : icmp IntPredicate.ule (lshr e_1 e) e_1 ⊑ const? 1 := by 
+theorem icmp_ule_thm (e e_1 : IntW 32) : icmp IntPredicate.ule (lshr e_1 e) e_1 ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -319,7 +322,7 @@ theorem icmp_ule_thm (e e_1 : IntW 32) : icmp IntPredicate.ule (lshr e_1 e) e_1 
     all_goals sorry
 
 
-theorem icmp_ugt_thm (e e_1 : IntW 32) : icmp IntPredicate.ugt (lshr e_1 e) e_1 ⊑ const? 0 := by 
+theorem icmp_ugt_thm (e e_1 : IntW 32) : icmp IntPredicate.ugt (lshr e_1 e) e_1 ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -328,7 +331,7 @@ theorem icmp_ugt_thm (e e_1 : IntW 32) : icmp IntPredicate.ugt (lshr e_1 e) e_1 
 
 
 theorem not_signbit_thm (e : IntW 8) :
-  lshr (LLVM.xor e (const? (-1))) (const? 7) ⊑ zext 8 (icmp IntPredicate.sgt e (const? (-1))) := by 
+  lshr (LLVM.xor e (const? 8 (-1))) (const? 8 7) ⊑ zext 8 (icmp IntPredicate.sgt e (const? 8 (-1))) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -337,7 +340,7 @@ theorem not_signbit_thm (e : IntW 8) :
 
 
 theorem not_signbit_alt_xor_thm (e : IntW 8) :
-  lshr (LLVM.xor e (const? (-2))) (const? 7) ⊑ zext 8 (icmp IntPredicate.sgt e (const? (-1))) := by 
+  lshr (LLVM.xor e (const? 8 (-2))) (const? 8 7) ⊑ zext 8 (icmp IntPredicate.sgt e (const? 8 (-1))) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -346,7 +349,8 @@ theorem not_signbit_alt_xor_thm (e : IntW 8) :
 
 
 theorem not_signbit_zext_thm (e : IntW 16) :
-  zext 32 (lshr (LLVM.xor e (const? (-1))) (const? 15)) ⊑ zext 32 (icmp IntPredicate.sgt e (const? (-1))) := by 
+  zext 32 (lshr (LLVM.xor e (const? 16 (-1))) (const? 16 15)) ⊑
+    zext 32 (icmp IntPredicate.sgt e (const? 16 (-1))) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -355,7 +359,8 @@ theorem not_signbit_zext_thm (e : IntW 16) :
 
 
 theorem not_signbit_trunc_thm (e : IntW 16) :
-  trunc 8 (lshr (LLVM.xor e (const? (-1))) (const? 15)) ⊑ zext 8 (icmp IntPredicate.sgt e (const? (-1))) := by 
+  trunc 8 (lshr (LLVM.xor e (const? 16 (-1))) (const? 16 15)) ⊑
+    zext 8 (icmp IntPredicate.sgt e (const? 16 (-1))) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -363,7 +368,8 @@ theorem not_signbit_trunc_thm (e : IntW 16) :
     all_goals sorry
 
 
-theorem bool_add_lshr_thm (e e_1 : IntW 1) : lshr (add (zext 2 e_1) (zext 2 e)) (const? 1) ⊑ zext 2 (LLVM.and e_1 e) := by 
+theorem bool_add_lshr_thm (e e_1 : IntW 1) :
+  lshr (add (zext 2 e_1) (zext 2 e)) (const? 2 1) ⊑ zext 2 (LLVM.and e_1 e) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -372,7 +378,8 @@ theorem bool_add_lshr_thm (e e_1 : IntW 1) : lshr (add (zext 2 e_1) (zext 2 e)) 
 
 
 theorem not_bool_add_lshr_thm (e e_1 : IntW 2) :
-  lshr (add (zext 4 e_1) (zext 4 e)) (const? 2) ⊑ zext 4 (icmp IntPredicate.ugt e (LLVM.xor e_1 (const? (-1)))) := by 
+  lshr (add (zext 4 e_1) (zext 4 e)) (const? 4 2) ⊑
+    zext 4 (icmp IntPredicate.ugt e (LLVM.xor e_1 (const? 2 (-1)))) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -381,8 +388,8 @@ theorem not_bool_add_lshr_thm (e e_1 : IntW 2) :
 
 
 theorem bool_add_ashr_thm (e e_1 : IntW 1) :
-  ashr (add (zext 2 e_1) (zext 2 e)) (const? 1) ⊑
-    ashr (add (zext 2 e_1) (zext 2 e) { «nsw» := false, «nuw» := true }) (const? 1) := by 
+  ashr (add (zext 2 e_1) (zext 2 e)) (const? 2 1) ⊑
+    ashr (add (zext 2 e_1) (zext 2 e) { «nsw» := false, «nuw» := true }) (const? 2 1) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

@@ -6,7 +6,7 @@ open LLVM
 
 section g2004h11h27hSetCCForCastLargerAndConstant_proof
 theorem lt_signed_to_large_unsigned_thm (e : IntW 8) :
-  icmp IntPredicate.ult (sext 32 e) (const? 1024) ⊑ icmp IntPredicate.sgt e (const? (-1)) := by 
+  icmp IntPredicate.ult (sext 32 e) (const? 32 1024) ⊑ icmp IntPredicate.sgt e (const? 8 (-1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -14,7 +14,7 @@ theorem lt_signed_to_large_unsigned_thm (e : IntW 8) :
     all_goals sorry
 
 
-theorem lt_signed_to_large_signed_thm (e : IntW 8) : icmp IntPredicate.slt (sext 32 e) (const? 1024) ⊑ const? 1 := by 
+theorem lt_signed_to_large_signed_thm (e : IntW 8) : icmp IntPredicate.slt (sext 32 e) (const? 32 1024) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -22,7 +22,7 @@ theorem lt_signed_to_large_signed_thm (e : IntW 8) : icmp IntPredicate.slt (sext
     all_goals sorry
 
 
-theorem lt_signed_to_large_negative_thm (e : IntW 8) : icmp IntPredicate.slt (sext 32 e) (const? (-1024)) ⊑ const? 0 := by 
+theorem lt_signed_to_large_negative_thm (e : IntW 8) : icmp IntPredicate.slt (sext 32 e) (const? 32 (-1024)) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -31,7 +31,7 @@ theorem lt_signed_to_large_negative_thm (e : IntW 8) : icmp IntPredicate.slt (se
 
 
 theorem lt_signed_to_small_unsigned_thm (e : IntW 8) :
-  icmp IntPredicate.ult (sext 32 e) (const? 17) ⊑ icmp IntPredicate.ult e (const? 17) := by 
+  icmp IntPredicate.ult (sext 32 e) (const? 32 17) ⊑ icmp IntPredicate.ult e (const? 8 17) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -40,7 +40,7 @@ theorem lt_signed_to_small_unsigned_thm (e : IntW 8) :
 
 
 theorem lt_signed_to_small_signed_thm (e : IntW 8) :
-  icmp IntPredicate.slt (sext 32 e) (const? 17) ⊑ icmp IntPredicate.slt e (const? 17) := by 
+  icmp IntPredicate.slt (sext 32 e) (const? 32 17) ⊑ icmp IntPredicate.slt e (const? 8 17) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -49,7 +49,7 @@ theorem lt_signed_to_small_signed_thm (e : IntW 8) :
 
 
 theorem lt_signed_to_small_negative_thm (e : IntW 8) :
-  icmp IntPredicate.slt (sext 32 e) (const? (-17)) ⊑ icmp IntPredicate.slt e (const? (-17)) := by 
+  icmp IntPredicate.slt (sext 32 e) (const? 32 (-17)) ⊑ icmp IntPredicate.slt e (const? 8 (-17)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -57,7 +57,7 @@ theorem lt_signed_to_small_negative_thm (e : IntW 8) :
     all_goals sorry
 
 
-theorem lt_unsigned_to_large_unsigned_thm (e : IntW 8) : icmp IntPredicate.ult (zext 32 e) (const? 1024) ⊑ const? 1 := by 
+theorem lt_unsigned_to_large_unsigned_thm (e : IntW 8) : icmp IntPredicate.ult (zext 32 e) (const? 32 1024) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -65,7 +65,7 @@ theorem lt_unsigned_to_large_unsigned_thm (e : IntW 8) : icmp IntPredicate.ult (
     all_goals sorry
 
 
-theorem lt_unsigned_to_large_signed_thm (e : IntW 8) : icmp IntPredicate.slt (zext 32 e) (const? 1024) ⊑ const? 1 := by 
+theorem lt_unsigned_to_large_signed_thm (e : IntW 8) : icmp IntPredicate.slt (zext 32 e) (const? 32 1024) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -73,7 +73,7 @@ theorem lt_unsigned_to_large_signed_thm (e : IntW 8) : icmp IntPredicate.slt (ze
     all_goals sorry
 
 
-theorem lt_unsigned_to_large_negative_thm (e : IntW 8) : icmp IntPredicate.slt (zext 32 e) (const? (-1024)) ⊑ const? 0 := by 
+theorem lt_unsigned_to_large_negative_thm (e : IntW 8) : icmp IntPredicate.slt (zext 32 e) (const? 32 (-1024)) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -82,7 +82,7 @@ theorem lt_unsigned_to_large_negative_thm (e : IntW 8) : icmp IntPredicate.slt (
 
 
 theorem lt_unsigned_to_small_unsigned_thm (e : IntW 8) :
-  icmp IntPredicate.ult (zext 32 e) (const? 17) ⊑ icmp IntPredicate.ult e (const? 17) := by 
+  icmp IntPredicate.ult (zext 32 e) (const? 32 17) ⊑ icmp IntPredicate.ult e (const? 8 17) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -91,7 +91,7 @@ theorem lt_unsigned_to_small_unsigned_thm (e : IntW 8) :
 
 
 theorem lt_unsigned_to_small_signed_thm (e : IntW 8) :
-  icmp IntPredicate.slt (zext 32 e) (const? 17) ⊑ icmp IntPredicate.ult e (const? 17) := by 
+  icmp IntPredicate.slt (zext 32 e) (const? 32 17) ⊑ icmp IntPredicate.ult e (const? 8 17) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -99,7 +99,7 @@ theorem lt_unsigned_to_small_signed_thm (e : IntW 8) :
     all_goals sorry
 
 
-theorem lt_unsigned_to_small_negative_thm (e : IntW 8) : icmp IntPredicate.slt (zext 32 e) (const? (-17)) ⊑ const? 0 := by 
+theorem lt_unsigned_to_small_negative_thm (e : IntW 8) : icmp IntPredicate.slt (zext 32 e) (const? 32 (-17)) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -108,7 +108,7 @@ theorem lt_unsigned_to_small_negative_thm (e : IntW 8) : icmp IntPredicate.slt (
 
 
 theorem gt_signed_to_large_unsigned_thm (e : IntW 8) :
-  icmp IntPredicate.ugt (sext 32 e) (const? 1024) ⊑ icmp IntPredicate.slt e (const? 0) := by 
+  icmp IntPredicate.ugt (sext 32 e) (const? 32 1024) ⊑ icmp IntPredicate.slt e (const? 8 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -116,7 +116,7 @@ theorem gt_signed_to_large_unsigned_thm (e : IntW 8) :
     all_goals sorry
 
 
-theorem gt_signed_to_large_signed_thm (e : IntW 8) : icmp IntPredicate.sgt (sext 32 e) (const? 1024) ⊑ const? 0 := by 
+theorem gt_signed_to_large_signed_thm (e : IntW 8) : icmp IntPredicate.sgt (sext 32 e) (const? 32 1024) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -124,7 +124,7 @@ theorem gt_signed_to_large_signed_thm (e : IntW 8) : icmp IntPredicate.sgt (sext
     all_goals sorry
 
 
-theorem gt_signed_to_large_negative_thm (e : IntW 8) : icmp IntPredicate.sgt (sext 32 e) (const? (-1024)) ⊑ const? 1 := by 
+theorem gt_signed_to_large_negative_thm (e : IntW 8) : icmp IntPredicate.sgt (sext 32 e) (const? 32 (-1024)) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -133,7 +133,7 @@ theorem gt_signed_to_large_negative_thm (e : IntW 8) : icmp IntPredicate.sgt (se
 
 
 theorem gt_signed_to_small_unsigned_thm (e : IntW 8) :
-  icmp IntPredicate.ugt (sext 32 e) (const? 17) ⊑ icmp IntPredicate.ugt e (const? 17) := by 
+  icmp IntPredicate.ugt (sext 32 e) (const? 32 17) ⊑ icmp IntPredicate.ugt e (const? 8 17) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -142,7 +142,7 @@ theorem gt_signed_to_small_unsigned_thm (e : IntW 8) :
 
 
 theorem gt_signed_to_small_signed_thm (e : IntW 8) :
-  icmp IntPredicate.sgt (sext 32 e) (const? 17) ⊑ icmp IntPredicate.sgt e (const? 17) := by 
+  icmp IntPredicate.sgt (sext 32 e) (const? 32 17) ⊑ icmp IntPredicate.sgt e (const? 8 17) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -151,7 +151,7 @@ theorem gt_signed_to_small_signed_thm (e : IntW 8) :
 
 
 theorem gt_signed_to_small_negative_thm (e : IntW 8) :
-  icmp IntPredicate.sgt (sext 32 e) (const? (-17)) ⊑ icmp IntPredicate.sgt e (const? (-17)) := by 
+  icmp IntPredicate.sgt (sext 32 e) (const? 32 (-17)) ⊑ icmp IntPredicate.sgt e (const? 8 (-17)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -159,7 +159,7 @@ theorem gt_signed_to_small_negative_thm (e : IntW 8) :
     all_goals sorry
 
 
-theorem gt_unsigned_to_large_unsigned_thm (e : IntW 8) : icmp IntPredicate.ugt (zext 32 e) (const? 1024) ⊑ const? 0 := by 
+theorem gt_unsigned_to_large_unsigned_thm (e : IntW 8) : icmp IntPredicate.ugt (zext 32 e) (const? 32 1024) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -167,7 +167,7 @@ theorem gt_unsigned_to_large_unsigned_thm (e : IntW 8) : icmp IntPredicate.ugt (
     all_goals sorry
 
 
-theorem gt_unsigned_to_large_signed_thm (e : IntW 8) : icmp IntPredicate.sgt (zext 32 e) (const? 1024) ⊑ const? 0 := by 
+theorem gt_unsigned_to_large_signed_thm (e : IntW 8) : icmp IntPredicate.sgt (zext 32 e) (const? 32 1024) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -175,7 +175,7 @@ theorem gt_unsigned_to_large_signed_thm (e : IntW 8) : icmp IntPredicate.sgt (ze
     all_goals sorry
 
 
-theorem gt_unsigned_to_large_negative_thm (e : IntW 8) : icmp IntPredicate.sgt (zext 32 e) (const? (-1024)) ⊑ const? 1 := by 
+theorem gt_unsigned_to_large_negative_thm (e : IntW 8) : icmp IntPredicate.sgt (zext 32 e) (const? 32 (-1024)) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -184,7 +184,7 @@ theorem gt_unsigned_to_large_negative_thm (e : IntW 8) : icmp IntPredicate.sgt (
 
 
 theorem gt_unsigned_to_small_unsigned_thm (e : IntW 8) :
-  icmp IntPredicate.ugt (zext 32 e) (const? 17) ⊑ icmp IntPredicate.ugt e (const? 17) := by 
+  icmp IntPredicate.ugt (zext 32 e) (const? 32 17) ⊑ icmp IntPredicate.ugt e (const? 8 17) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -193,7 +193,7 @@ theorem gt_unsigned_to_small_unsigned_thm (e : IntW 8) :
 
 
 theorem gt_unsigned_to_small_signed_thm (e : IntW 8) :
-  icmp IntPredicate.sgt (zext 32 e) (const? 17) ⊑ icmp IntPredicate.ugt e (const? 17) := by 
+  icmp IntPredicate.sgt (zext 32 e) (const? 32 17) ⊑ icmp IntPredicate.ugt e (const? 8 17) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -201,7 +201,7 @@ theorem gt_unsigned_to_small_signed_thm (e : IntW 8) :
     all_goals sorry
 
 
-theorem gt_unsigned_to_small_negative_thm (e : IntW 8) : icmp IntPredicate.sgt (zext 32 e) (const? (-17)) ⊑ const? 1 := by 
+theorem gt_unsigned_to_small_negative_thm (e : IntW 8) : icmp IntPredicate.sgt (zext 32 e) (const? 32 (-17)) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

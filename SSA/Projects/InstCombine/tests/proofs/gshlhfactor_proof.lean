@@ -123,7 +123,7 @@ theorem sub_shl_same_amount_partial_nuw2_thm (e e_1 e_2 : IntW 6) :
     all_goals sorry
 
 
-theorem add_shl_same_amount_constants_thm (e : IntW 8) : add (shl (const? 4) e) (shl (const? 3) e) ⊑ shl (const? 7) e := by 
+theorem add_shl_same_amount_constants_thm (e : IntW 8) : add (shl (const? 8 4) e) (shl (const? 8 3) e) ⊑ shl (const? 8 7) e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

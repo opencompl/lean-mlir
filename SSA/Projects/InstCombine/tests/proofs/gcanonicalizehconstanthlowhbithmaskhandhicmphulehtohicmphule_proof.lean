@@ -5,7 +5,7 @@ open BitVec
 open LLVM
 
 section gcanonicalizehconstanthlowhbithmaskhandhicmphulehtohicmphule_proof
-theorem c0_thm (e : IntW 8) : icmp IntPredicate.ule (LLVM.and e (const? 3)) e ⊑ const? 1 := by 
+theorem c0_thm (e : IntW 8) : icmp IntPredicate.ule (LLVM.and e (const? 8 3)) e ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -13,7 +13,8 @@ theorem c0_thm (e : IntW 8) : icmp IntPredicate.ule (LLVM.and e (const? 3)) e �
     all_goals sorry
 
 
-theorem cv2_thm (e e_1 : IntW 8) : icmp IntPredicate.ule (LLVM.and (lshr (const? (-1)) e_1) e) e ⊑ const? 1 := by 
+theorem cv2_thm (e e_1 : IntW 8) :
+  icmp IntPredicate.ule (LLVM.and (lshr (const? 8 (-1)) e_1) e) e ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
