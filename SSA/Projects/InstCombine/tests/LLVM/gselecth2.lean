@@ -33,6 +33,7 @@ def ashr_exact_poison_constant_fold_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem ashr_exact_poison_constant_fold_proof : ashr_exact_poison_constant_fold_before ⊑ ashr_exact_poison_constant_fold_after := by
   unfold ashr_exact_poison_constant_fold_before ashr_exact_poison_constant_fold_after
   simp_alive_peephole
@@ -62,6 +63,7 @@ def ashr_exact_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem ashr_exact_proof : ashr_exact_before ⊑ ashr_exact_after := by
   unfold ashr_exact_before ashr_exact_after
   simp_alive_peephole
@@ -91,6 +93,7 @@ def shl_nsw_nuw_poison_constant_fold_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_nsw_nuw_poison_constant_fold_proof : shl_nsw_nuw_poison_constant_fold_before ⊑ shl_nsw_nuw_poison_constant_fold_after := by
   unfold shl_nsw_nuw_poison_constant_fold_before shl_nsw_nuw_poison_constant_fold_after
   simp_alive_peephole
@@ -120,6 +123,7 @@ def shl_nsw_nuw_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_nsw_nuw_proof : shl_nsw_nuw_before ⊑ shl_nsw_nuw_after := by
   unfold shl_nsw_nuw_before shl_nsw_nuw_after
   simp_alive_peephole
@@ -149,6 +153,7 @@ def add_nsw_poison_constant_fold_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem add_nsw_poison_constant_fold_proof : add_nsw_poison_constant_fold_before ⊑ add_nsw_poison_constant_fold_after := by
   unfold add_nsw_poison_constant_fold_before add_nsw_poison_constant_fold_after
   simp_alive_peephole
@@ -178,6 +183,7 @@ def add_nsw_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem add_nsw_proof : add_nsw_before ⊑ add_nsw_after := by
   unfold add_nsw_before add_nsw_after
   simp_alive_peephole

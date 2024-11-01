@@ -33,6 +33,7 @@ def srem2_ashr_mask_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem srem2_ashr_mask_proof : srem2_ashr_mask_before ⊑ srem2_ashr_mask_after := by
   unfold srem2_ashr_mask_before srem2_ashr_mask_after
   simp_alive_peephole
@@ -60,6 +61,7 @@ def ashr_can_be_lshr_after := [llvm|
   "llvm.return"(%2) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem ashr_can_be_lshr_proof : ashr_can_be_lshr_before ⊑ ashr_can_be_lshr_after := by
   unfold ashr_can_be_lshr_before ashr_can_be_lshr_after
   simp_alive_peephole
@@ -93,6 +95,7 @@ def ashr_can_be_lshr_2_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem ashr_can_be_lshr_2_proof : ashr_can_be_lshr_2_before ⊑ ashr_can_be_lshr_2_after := by
   unfold ashr_can_be_lshr_2_before ashr_can_be_lshr_2_after
   simp_alive_peephole

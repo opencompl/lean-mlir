@@ -31,6 +31,7 @@ def shl_sub_i32_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_sub_i32_proof : shl_sub_i32_before ⊑ shl_sub_i32_after := by
   unfold shl_sub_i32_before shl_sub_i32_after
   simp_alive_peephole
@@ -58,6 +59,7 @@ def shl_sub_i8_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_sub_i8_proof : shl_sub_i8_before ⊑ shl_sub_i8_after := by
   unfold shl_sub_i8_before shl_sub_i8_after
   simp_alive_peephole
@@ -85,6 +87,7 @@ def shl_sub_i64_after := [llvm|
   "llvm.return"(%1) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_sub_i64_proof : shl_sub_i64_before ⊑ shl_sub_i64_after := by
   unfold shl_sub_i64_before shl_sub_i64_after
   simp_alive_peephole
@@ -114,6 +117,7 @@ def shl_bad_sub_i32_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_bad_sub_i32_proof : shl_bad_sub_i32_before ⊑ shl_bad_sub_i32_after := by
   unfold shl_bad_sub_i32_before shl_bad_sub_i32_after
   simp_alive_peephole
@@ -143,6 +147,7 @@ def shl_bad_sub2_i32_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_bad_sub2_i32_proof : shl_bad_sub2_i32_before ⊑ shl_bad_sub2_i32_after := by
   unfold shl_bad_sub2_i32_before shl_bad_sub2_i32_after
   simp_alive_peephole
@@ -172,6 +177,7 @@ def bad_shl2_sub_i32_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem bad_shl2_sub_i32_proof : bad_shl2_sub_i32_before ⊑ bad_shl2_sub_i32_after := by
   unfold bad_shl2_sub_i32_before bad_shl2_sub_i32_after
   simp_alive_peephole
@@ -201,6 +207,7 @@ def shl_bad_sub_i8_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_bad_sub_i8_proof : shl_bad_sub_i8_before ⊑ shl_bad_sub_i8_after := by
   unfold shl_bad_sub_i8_before shl_bad_sub_i8_after
   simp_alive_peephole
@@ -230,6 +237,7 @@ def shl_bad_sub_i64_after := [llvm|
   "llvm.return"(%3) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_bad_sub_i64_proof : shl_bad_sub_i64_before ⊑ shl_bad_sub_i64_after := by
   unfold shl_bad_sub_i64_before shl_bad_sub_i64_after
   simp_alive_peephole
@@ -259,6 +267,7 @@ def shl_const_op1_sub_const_op0_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_const_op1_sub_const_op0_proof : shl_const_op1_sub_const_op0_before ⊑ shl_const_op1_sub_const_op0_after := by
   unfold shl_const_op1_sub_const_op0_before shl_const_op1_sub_const_op0_after
   simp_alive_peephole

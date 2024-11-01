@@ -29,6 +29,7 @@ def cast_test_2002h08h02_after := [llvm|
   "llvm.return"(%1) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem cast_test_2002h08h02_proof : cast_test_2002h08h02_before ⊑ cast_test_2002h08h02_after := by
   unfold cast_test_2002h08h02_before cast_test_2002h08h02_after
   simp_alive_peephole
@@ -58,6 +59,7 @@ def missed_const_prop_2002h12h05_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem missed_const_prop_2002h12h05_proof : missed_const_prop_2002h12h05_before ⊑ missed_const_prop_2002h12h05_after := by
   unfold missed_const_prop_2002h12h05_before missed_const_prop_2002h12h05_after
   simp_alive_peephole

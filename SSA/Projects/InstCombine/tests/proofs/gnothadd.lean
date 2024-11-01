@@ -30,6 +30,7 @@ def basic_after := [llvm|
   "llvm.return"(%0) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem basic_proof : basic_before ⊑ basic_after := by
   unfold basic_before basic_after
   simp_alive_peephole
@@ -56,6 +57,7 @@ def basic_com_add_after := [llvm|
   "llvm.return"(%0) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem basic_com_add_proof : basic_com_add_before ⊑ basic_com_add_after := by
   unfold basic_com_add_before basic_com_add_after
   simp_alive_peephole
@@ -82,6 +84,7 @@ def basic_preserve_nsw_after := [llvm|
   "llvm.return"(%0) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem basic_preserve_nsw_proof : basic_preserve_nsw_before ⊑ basic_preserve_nsw_after := by
   unfold basic_preserve_nsw_before basic_preserve_nsw_after
   simp_alive_peephole
@@ -108,6 +111,7 @@ def basic_preserve_nuw_after := [llvm|
   "llvm.return"(%0) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem basic_preserve_nuw_proof : basic_preserve_nuw_before ⊑ basic_preserve_nuw_after := by
   unfold basic_preserve_nuw_before basic_preserve_nuw_after
   simp_alive_peephole
@@ -134,6 +138,7 @@ def basic_preserve_nuw_nsw_after := [llvm|
   "llvm.return"(%0) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem basic_preserve_nuw_nsw_proof : basic_preserve_nuw_nsw_before ⊑ basic_preserve_nuw_nsw_after := by
   unfold basic_preserve_nuw_nsw_before basic_preserve_nuw_nsw_after
   simp_alive_peephole

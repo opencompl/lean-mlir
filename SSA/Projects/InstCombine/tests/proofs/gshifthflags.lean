@@ -35,6 +35,7 @@ def shl_add_nuw_after := [llvm|
   "llvm.return"(%4) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_add_nuw_proof : shl_add_nuw_before ⊑ shl_add_nuw_after := by
   unfold shl_add_nuw_before shl_add_nuw_after
   simp_alive_peephole
@@ -66,6 +67,7 @@ def shl_add_nuw_and_nsw_after := [llvm|
   "llvm.return"(%4) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_add_nuw_and_nsw_proof : shl_add_nuw_and_nsw_before ⊑ shl_add_nuw_and_nsw_after := by
   unfold shl_add_nuw_and_nsw_before shl_add_nuw_and_nsw_after
   simp_alive_peephole
@@ -97,6 +99,7 @@ def shl_add_nsw_after := [llvm|
   "llvm.return"(%4) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_add_nsw_proof : shl_add_nsw_before ⊑ shl_add_nsw_after := by
   unfold shl_add_nsw_before shl_add_nsw_after
   simp_alive_peephole

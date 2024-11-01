@@ -29,6 +29,7 @@ def add_or_sub_comb_i32_commuted1_nuw_after := [llvm|
   "llvm.return"(%arg16) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem add_or_sub_comb_i32_commuted1_nuw_proof : add_or_sub_comb_i32_commuted1_nuw_before ⊑ add_or_sub_comb_i32_commuted1_nuw_after := by
   unfold add_or_sub_comb_i32_commuted1_nuw_before add_or_sub_comb_i32_commuted1_nuw_after
   simp_alive_peephole
@@ -59,6 +60,7 @@ def add_or_sub_comb_i8_commuted2_nsw_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem add_or_sub_comb_i8_commuted2_nsw_proof : add_or_sub_comb_i8_commuted2_nsw_before ⊑ add_or_sub_comb_i8_commuted2_nsw_after := by
   unfold add_or_sub_comb_i8_commuted2_nsw_before add_or_sub_comb_i8_commuted2_nsw_after
   simp_alive_peephole
@@ -86,6 +88,7 @@ def add_or_sub_comb_i128_commuted3_nuw_nsw_after := [llvm|
   "llvm.return"(%0) : (i128) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem add_or_sub_comb_i128_commuted3_nuw_nsw_proof : add_or_sub_comb_i128_commuted3_nuw_nsw_before ⊑ add_or_sub_comb_i128_commuted3_nuw_nsw_after := by
   unfold add_or_sub_comb_i128_commuted3_nuw_nsw_before add_or_sub_comb_i128_commuted3_nuw_nsw_after
   simp_alive_peephole
@@ -116,6 +119,7 @@ def add_or_sub_comb_i64_commuted4_after := [llvm|
   "llvm.return"(%3) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem add_or_sub_comb_i64_commuted4_proof : add_or_sub_comb_i64_commuted4_before ⊑ add_or_sub_comb_i64_commuted4_after := by
   unfold add_or_sub_comb_i64_commuted4_before add_or_sub_comb_i64_commuted4_after
   simp_alive_peephole
@@ -145,6 +149,7 @@ def add_or_sub_comb_i8_negative_y_sub_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem add_or_sub_comb_i8_negative_y_sub_proof : add_or_sub_comb_i8_negative_y_sub_before ⊑ add_or_sub_comb_i8_negative_y_sub_after := by
   unfold add_or_sub_comb_i8_negative_y_sub_before add_or_sub_comb_i8_negative_y_sub_after
   simp_alive_peephole
@@ -174,6 +179,7 @@ def add_or_sub_comb_i8_negative_y_or_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem add_or_sub_comb_i8_negative_y_or_proof : add_or_sub_comb_i8_negative_y_or_before ⊑ add_or_sub_comb_i8_negative_y_or_after := by
   unfold add_or_sub_comb_i8_negative_y_or_before add_or_sub_comb_i8_negative_y_or_after
   simp_alive_peephole
@@ -203,6 +209,7 @@ def add_or_sub_comb_i8_negative_y_add_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem add_or_sub_comb_i8_negative_y_add_proof : add_or_sub_comb_i8_negative_y_add_before ⊑ add_or_sub_comb_i8_negative_y_add_after := by
   unfold add_or_sub_comb_i8_negative_y_add_before add_or_sub_comb_i8_negative_y_add_after
   simp_alive_peephole
@@ -232,6 +239,7 @@ def add_or_sub_comb_i8_negative_xor_instead_or_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem add_or_sub_comb_i8_negative_xor_instead_or_proof : add_or_sub_comb_i8_negative_xor_instead_or_before ⊑ add_or_sub_comb_i8_negative_xor_instead_or_after := by
   unfold add_or_sub_comb_i8_negative_xor_instead_or_before add_or_sub_comb_i8_negative_xor_instead_or_after
   simp_alive_peephole

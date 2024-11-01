@@ -1,0 +1,562 @@
+⚠ [874/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [878/892] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [879/892] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [885/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [886/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✔ [891/892] Built SSA.Projects.InstCombine.TacticAuto
+✖ [892/892] Building SSA.Projects.InstCombine.tests.proofs.glogicalhselecthinseltpoison_proof
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/tcg40/.elan/toolchains/leanprover--lean4---nightly-2024-10-29/bin/lean ././././SSA/Projects/InstCombine/tests/proofs/glogicalhselecthinseltpoison_proof.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/glogicalhselecthinseltpoison_proof.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/proofs/glogicalhselecthinseltpoison_proof.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/proofs/glogicalhselecthinseltpoison_proof.c --json
+error: ././././SSA/Projects/InstCombine/tests/proofs/glogicalhselecthinseltpoison_proof.lean:14:13: unexpected token 'by'; expected '{' or tactic
+error: ././././SSA/Projects/InstCombine/tests/proofs/glogicalhselecthinseltpoison_proof.lean:9:114: unsolved goals
+case some.some.some.h_2
+x✝² x✝¹ x✝ : BitVec 1
+c?✝ : IntW 1
+heq✝ : some x✝ = some { toFin := ⟨1, ⋯⟩ }
+⊢ (x✝ ^^^ 1#1) &&& x✝¹ ||| x✝ &&& x✝² = x✝²
+
+case some.some.some.h_3
+x✝² x✝¹ x✝ : BitVec 1
+c?✝ : IntW 1
+heq✝ : some x✝ = some { toFin := ⟨0, ⋯⟩ }
+⊢ (x✝ ^^^ 1#1) &&& x✝¹ ||| x✝ &&& x✝² = x✝¹
+error: ././././SSA/Projects/InstCombine/tests/proofs/glogicalhselecthinseltpoison_proof.lean:25:13: unexpected token 'by'; expected '{' or tactic
+error: ././././SSA/Projects/InstCombine/tests/proofs/glogicalhselecthinseltpoison_proof.lean:20:26: unsolved goals
+case none.none.some.h_2.h_2
+x✝ : BitVec 1
+c?✝¹ : IntW 1
+heq✝¹ :
+  (match some (x✝ ^^^ 1#1) with
+    | none => none
+    | some { toFin := ⟨1, ⋯⟩ } => none
+    | some { toFin := ⟨0, ⋯⟩ } => some 0#1) =
+    some { toFin := ⟨1, ⋯⟩ }
+c?✝ : IntW 1
+heq✝ : some x✝ = some { toFin := ⟨1, ⋯⟩ }
+⊢ some 1#1 ⊑ none
+
+case none.none.some.h_2.h_3
+x✝ : BitVec 1
+c?✝¹ : IntW 1
+heq✝¹ :
+  (match some (x✝ ^^^ 1#1) with
+    | none => none
+    | some { toFin := ⟨1, ⋯⟩ } => none
+    | some { toFin := ⟨0, ⋯⟩ } => some 0#1) =
+    some { toFin := ⟨1, ⋯⟩ }
+c?✝ : IntW 1
+heq✝ : some x✝ = some { toFin := ⟨0, ⋯⟩ }
+⊢ some 1#1 ⊑ none
+
+case none.none.some.h_3
+x✝ : BitVec 1
+c?✝ : IntW 1
+heq✝ :
+  (match some (x✝ ^^^ 1#1) with
+    | none => none
+    | some { toFin := ⟨1, ⋯⟩ } => none
+    | some { toFin := ⟨0, ⋯⟩ } => some 0#1) =
+    some { toFin := ⟨0, ⋯⟩ }
+⊢ (match some x✝ with
+    | none => none
+    | some { toFin := ⟨1, ⋯⟩ } => none
+    | some { toFin := ⟨0, ⋯⟩ } => some 0#1) ⊑
+    match some x✝ with
+    | none => none
+    | some { toFin := ⟨1, ⋯⟩ } => none
+    | some { toFin := ⟨0, ⋯⟩ } => none
+
+case none.some.some
+⊢ ∀ (x x_1 : BitVec 1),
+    (match
+        match some (x_1.xor 1#1) with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some x
+        | some { toFin := ⟨0, ⋯⟩ } => some 0#1 with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 1#1
+      | some { toFin := ⟨0, ⋯⟩ } =>
+        match some x_1 with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => none
+        | some { toFin := ⟨0, ⋯⟩ } => some 0#1) ⊑
+      match some x_1 with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => none
+      | some { toFin := ⟨0, ⋯⟩ } => some x
+
+case some.none.some
+⊢ ∀ (x x_1 : BitVec 1),
+    (match
+        match some (x_1.xor 1#1) with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => none
+        | some { toFin := ⟨0, ⋯⟩ } => some 0#1 with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 1#1
+      | some { toFin := ⟨0, ⋯⟩ } =>
+        match some x_1 with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some x
+        | some { toFin := ⟨0, ⋯⟩ } => some 0#1) ⊑
+      match some x_1 with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some x
+      | some { toFin := ⟨0, ⋯⟩ } => none
+
+case some.some.some
+⊢ ∀ (x x_1 x_2 : BitVec 1),
+    (match
+        match some (x_2.xor 1#1) with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some x_1
+        | some { toFin := ⟨0, ⋯⟩ } => some 0#1 with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 1#1
+      | some { toFin := ⟨0, ⋯⟩ } =>
+        match some x_2 with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some x
+        | some { toFin := ⟨0, ⋯⟩ } => some 0#1) ⊑
+      match some x_2 with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some x
+      | some { toFin := ⟨0, ⋯⟩ } => some x_1
+error: ././././SSA/Projects/InstCombine/tests/proofs/glogicalhselecthinseltpoison_proof.lean:37:13: unexpected token 'by'; expected '{' or tactic
+error: ././././SSA/Projects/InstCombine/tests/proofs/glogicalhselecthinseltpoison_proof.lean:32:78: unsolved goals
+case some.some.some.h_2
+x✝² x✝¹ x✝ : BitVec 1
+c?✝ : IntW 1
+heq✝ : some x✝ = some { toFin := ⟨1, ⋯⟩ }
+⊢ ((x✝ ^^^ 1#1) &&& x✝¹ ||| x✝ &&& x✝²) ^^^ (x✝ ^^^ 1#1) &&& x✝¹ = x✝² ^^^ x✝¹ &&& (x✝ ^^^ 1#1)
+
+case some.some.some.h_3
+x✝² x✝¹ x✝ : BitVec 1
+c?✝ : IntW 1
+heq✝ : some x✝ = some { toFin := ⟨0, ⋯⟩ }
+⊢ ((x✝ ^^^ 1#1) &&& x✝¹ ||| x✝ &&& x✝²) ^^^ (x✝ ^^^ 1#1) &&& x✝¹ = x✝¹ ^^^ x✝¹ &&& (x✝ ^^^ 1#1)
+error: ././././SSA/Projects/InstCombine/tests/proofs/glogicalhselecthinseltpoison_proof.lean:49:13: unexpected token 'by'; expected '{' or tactic
+error: ././././SSA/Projects/InstCombine/tests/proofs/glogicalhselecthinseltpoison_proof.lean:44:87: unsolved goals
+case none.none.some.h_2.h_3.h_2
+x✝ : BitVec 1
+c?✝² : IntW 1
+heq✝² :
+  (match some (x✝ ^^^ 1#1) with
+    | none => none
+    | some { toFin := ⟨1, ⋯⟩ } => none
+    | some { toFin := ⟨0, ⋯⟩ } => some 0#1) =
+    some { toFin := ⟨1, ⋯⟩ }
+c?✝¹ : IntW 1
+heq✝¹ : some (x✝ ^^^ 1#1) = some { toFin := ⟨0, ⋯⟩ }
+c?✝ : IntW 1
+heq✝ : some x✝ = some { toFin := ⟨1, ⋯⟩ }
+⊢ some 1#1 ⊑ none
+
+case none.none.some.h_2.h_3.h_3
+x✝ : BitVec 1
+c?✝² : IntW 1
+heq✝² :
+  (match some (x✝ ^^^ 1#1) with
+    | none => none
+    | some { toFin := ⟨1, ⋯⟩ } => none
+    | some { toFin := ⟨0, ⋯⟩ } => some 0#1) =
+    some { toFin := ⟨1, ⋯⟩ }
+c?✝¹ : IntW 1
+heq✝¹ : some (x✝ ^^^ 1#1) = some { toFin := ⟨0, ⋯⟩ }
+c?✝ : IntW 1
+heq✝ : some x✝ = some { toFin := ⟨0, ⋯⟩ }
+⊢ some 1#1 ⊑ none
+
+case none.none.some.h_3
+x✝ : BitVec 1
+c?✝ : IntW 1
+heq✝ :
+  (match some (x✝ ^^^ 1#1) with
+    | none => none
+    | some { toFin := ⟨1, ⋯⟩ } => none
+    | some { toFin := ⟨0, ⋯⟩ } => some 0#1) =
+    some { toFin := ⟨0, ⋯⟩ }
+⊢ (Option.bind
+      (match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => none
+      | some { toFin := ⟨0, ⋯⟩ } => some 0#1)
+      fun a =>
+      Option.bind
+        (match some (x✝ ^^^ 1#1) with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => none
+        | some { toFin := ⟨0, ⋯⟩ } => some 0#1)
+        fun a_1 => some (a ^^^ a_1)) ⊑
+    Option.bind
+      (match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => none
+      | some { toFin := ⟨0, ⋯⟩ } => none)
+      fun a =>
+      Option.bind
+        (match some (x✝ ^^^ 1#1) with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => none
+        | some { toFin := ⟨0, ⋯⟩ } => some 0#1)
+        fun a_1 => some (a ^^^ a_1)
+
+case none.some.some
+⊢ ∀ (x x_1 : BitVec 1),
+    (Option.bind
+        (match
+          match some (x_1.xor 1#1) with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => some x
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#1 with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some 1#1
+        | some { toFin := ⟨0, ⋯⟩ } =>
+          match some x_1 with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => none
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#1)
+        fun a =>
+        Option.bind
+          (match some (x_1.xor 1#1) with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => some x
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#1)
+          fun y' => some (a.xor y')) ⊑
+      Option.bind
+        (match some x_1 with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => none
+        | some { toFin := ⟨0, ⋯⟩ } => some x)
+        fun a =>
+        Option.bind
+          (match some (x_1.xor 1#1) with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => some x
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#1)
+          fun y' => some (a.xor y')
+
+case some.none.some
+⊢ ∀ (x x_1 : BitVec 1),
+    (Option.bind
+        (match
+          match some (x_1.xor 1#1) with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => none
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#1 with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some 1#1
+        | some { toFin := ⟨0, ⋯⟩ } =>
+          match some x_1 with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => some x
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#1)
+        fun a =>
+        Option.bind
+          (match some (x_1.xor 1#1) with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => none
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#1)
+          fun y' => some (a.xor y')) ⊑
+      Option.bind
+        (match some x_1 with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some x
+        | some { toFin := ⟨0, ⋯⟩ } => none)
+        fun a =>
+        Option.bind
+          (match some (x_1.xor 1#1) with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => none
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#1)
+          fun y' => some (a.xor y')
+
+case some.some.some
+⊢ ∀ (x x_1 x_2 : BitVec 1),
+    (Option.bind
+        (match
+          match some (x_2.xor 1#1) with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => some x_1
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#1 with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some 1#1
+        | some { toFin := ⟨0, ⋯⟩ } =>
+          match some x_2 with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => some x
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#1)
+        fun a =>
+        Option.bind
+          (match some (x_2.xor 1#1) with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => some x_1
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#1)
+          fun y' => some (a.xor y')) ⊑
+      Option.bind
+        (match some x_2 with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some x
+        | some { toFin := ⟨0, ⋯⟩ } => some x_1)
+        fun a =>
+        Option.bind
+          (match some (x_2.xor 1#1) with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => some x_1
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#1)
+          fun y' => some (a.xor y')
+error: ././././SSA/Projects/InstCombine/tests/proofs/glogicalhselecthinseltpoison_proof.lean:61:13: unexpected token 'by'; expected '{' or tactic
+error: ././././SSA/Projects/InstCombine/tests/proofs/glogicalhselecthinseltpoison_proof.lean:56:26: unsolved goals
+case some.some.some.h_2
+x✝² x✝¹ x✝ : BitVec 1
+c?✝ : IntW 1
+heq✝ : some x✝ = some { toFin := ⟨1, ⋯⟩ }
+⊢ ((x✝ ^^^ 1#1) &&& x✝¹ ||| x✝ &&& x✝²) &&& ((x✝ ^^^ 1#1) &&& x✝¹) + (x✝ &&& x✝²) = x✝²
+
+case some.some.some.h_3
+x✝² x✝¹ x✝ : BitVec 1
+c?✝ : IntW 1
+heq✝ : some x✝ = some { toFin := ⟨0, ⋯⟩ }
+⊢ ((x✝ ^^^ 1#1) &&& x✝¹ ||| x✝ &&& x✝²) &&& ((x✝ ^^^ 1#1) &&& x✝¹) + (x✝ &&& x✝²) = x✝¹
+error: ././././SSA/Projects/InstCombine/tests/proofs/glogicalhselecthinseltpoison_proof.lean:74:13: unexpected token 'by'; expected '{' or tactic
+error: ././././SSA/Projects/InstCombine/tests/proofs/glogicalhselecthinseltpoison_proof.lean:69:22: unsolved goals
+case none.none.some.h_2.h_3.h_3
+x✝ : BitVec 1
+c?✝² : IntW 1
+heq✝² :
+  (match
+      match some (x✝ ^^^ 1#1) with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => none
+      | some { toFin := ⟨0, ⋯⟩ } => some 0#1 with
+    | none => none
+    | some { toFin := ⟨1, ⋯⟩ } => some 1#1
+    | some { toFin := ⟨0, ⋯⟩ } =>
+      match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => none
+      | some { toFin := ⟨0, ⋯⟩ } => some 0#1) =
+    some { toFin := ⟨1, ⋯⟩ }
+c?✝¹ : IntW 1
+heq✝¹ : some (x✝ ^^^ 1#1) = some { toFin := ⟨0, ⋯⟩ }
+c?✝ : IntW 1
+heq✝ : some x✝ = some { toFin := ⟨0, ⋯⟩ }
+⊢ some 0#1 ⊑ none
+
+case none.none.some.h_3
+x✝ : BitVec 1
+c?✝ : IntW 1
+heq✝ :
+  (match
+      match some (x✝ ^^^ 1#1) with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => none
+      | some { toFin := ⟨0, ⋯⟩ } => some 0#1 with
+    | none => none
+    | some { toFin := ⟨1, ⋯⟩ } => some 1#1
+    | some { toFin := ⟨0, ⋯⟩ } =>
+      match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => none
+      | some { toFin := ⟨0, ⋯⟩ } => some 0#1) =
+    some { toFin := ⟨0, ⋯⟩ }
+⊢ some 0#1 ⊑
+    match
+      match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => none
+      | some { toFin := ⟨0, ⋯⟩ } => none with
+    | none => none
+    | some { toFin := ⟨1, ⋯⟩ } =>
+      Option.bind
+        (match some (x✝ ^^^ 1#1) with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => none
+        | some { toFin := ⟨0, ⋯⟩ } => some 0#1)
+        fun a =>
+        Option.bind
+          (match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => none
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#1)
+          fun a_1 => some (a ^^^ a_1)
+    | some { toFin := ⟨0, ⋯⟩ } => some 0#1
+
+case none.some.some
+⊢ ∀ (x x_1 : BitVec 1),
+    (match
+        match
+          match some (x_1.xor 1#1) with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => some x
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#1 with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some 1#1
+        | some { toFin := ⟨0, ⋯⟩ } =>
+          match some x_1 with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => none
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#1 with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } =>
+        Option.bind
+          (match some (x_1.xor 1#1) with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => some x
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#1)
+          fun x' =>
+          Option.bind
+            (match some x_1 with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => none
+            | some { toFin := ⟨0, ⋯⟩ } => some 0#1)
+            fun y' =>
+            if false = true ∧ x'.msb = y'.msb ∧ (x' + y').msb ≠ x'.msb then none
+            else if false = true ∧ (x' + y' < x' ∨ x' + y' < y') then none else some (x'.add y')
+      | some { toFin := ⟨0, ⋯⟩ } => some 0#1) ⊑
+      match
+        match some x_1 with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => none
+        | some { toFin := ⟨0, ⋯⟩ } => some x with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } =>
+        Option.bind
+          (match some (x_1.xor 1#1) with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => some x
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#1)
+          fun x' =>
+          Option.bind
+            (match some x_1 with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => none
+            | some { toFin := ⟨0, ⋯⟩ } => some 0#1)
+            fun y' => some (x'.xor y')
+      | some { toFin := ⟨0, ⋯⟩ } => some 0#1
+
+case some.none.some
+⊢ ∀ (x x_1 : BitVec 1),
+    (match
+        match
+          match some (x_1.xor 1#1) with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => none
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#1 with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some 1#1
+        | some { toFin := ⟨0, ⋯⟩ } =>
+          match some x_1 with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => some x
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#1 with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } =>
+        Option.bind
+          (match some (x_1.xor 1#1) with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => none
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#1)
+          fun x' =>
+          Option.bind
+            (match some x_1 with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some x
+            | some { toFin := ⟨0, ⋯⟩ } => some 0#1)
+            fun y' =>
+            if false = true ∧ x'.msb = y'.msb ∧ (x' + y').msb ≠ x'.msb then none
+            else if false = true ∧ (x' + y' < x' ∨ x' + y' < y') then none else some (x'.add y')
+      | some { toFin := ⟨0, ⋯⟩ } => some 0#1) ⊑
+      match
+        match some x_1 with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some x
+        | some { toFin := ⟨0, ⋯⟩ } => none with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } =>
+        Option.bind
+          (match some (x_1.xor 1#1) with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => none
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#1)
+          fun x' =>
+          Option.bind
+            (match some x_1 with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some x
+            | some { toFin := ⟨0, ⋯⟩ } => some 0#1)
+            fun y' => some (x'.xor y')
+      | some { toFin := ⟨0, ⋯⟩ } => some 0#1
+
+case some.some.some
+⊢ ∀ (x x_1 x_2 : BitVec 1),
+    (match
+        match
+          match some (x_2.xor 1#1) with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => some x_1
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#1 with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some 1#1
+        | some { toFin := ⟨0, ⋯⟩ } =>
+          match some x_2 with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => some x
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#1 with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } =>
+        Option.bind
+          (match some (x_2.xor 1#1) with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => some x_1
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#1)
+          fun x' =>
+          Option.bind
+            (match some x_2 with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some x
+            | some { toFin := ⟨0, ⋯⟩ } => some 0#1)
+            fun y' =>
+            if false = true ∧ x'.msb = y'.msb ∧ (x' + y').msb ≠ x'.msb then none
+            else if false = true ∧ (x' + y' < x' ∨ x' + y' < y') then none else some (x'.add y')
+      | some { toFin := ⟨0, ⋯⟩ } => some 0#1) ⊑
+      match
+        match some x_2 with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some x
+        | some { toFin := ⟨0, ⋯⟩ } => some x_1 with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } =>
+        Option.bind
+          (match some (x_2.xor 1#1) with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => some x_1
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#1)
+          fun x' =>
+          Option.bind
+            (match some x_2 with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some x
+            | some { toFin := ⟨0, ⋯⟩ } => some 0#1)
+            fun y' => some (x'.xor y')
+      | some { toFin := ⟨0, ⋯⟩ } => some 0#1
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.proofs.glogicalhselecthinseltpoison_proof

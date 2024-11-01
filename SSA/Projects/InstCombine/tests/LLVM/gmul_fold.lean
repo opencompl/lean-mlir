@@ -38,6 +38,7 @@ def mul8_low_A0_B0_after := [llvm|
   "llvm.return"(%0) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem mul8_low_A0_B0_proof : mul8_low_A0_B0_before ⊑ mul8_low_A0_B0_after := by
   unfold mul8_low_A0_B0_before mul8_low_A0_B0_after
   simp_alive_peephole
@@ -72,6 +73,7 @@ def mul8_low_after := [llvm|
   "llvm.return"(%0) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem mul8_low_proof : mul8_low_before ⊑ mul8_low_after := by
   unfold mul8_low_before mul8_low_after
   simp_alive_peephole
@@ -106,6 +108,7 @@ def mul16_low_after := [llvm|
   "llvm.return"(%0) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem mul16_low_proof : mul16_low_before ⊑ mul16_low_after := by
   unfold mul16_low_before mul16_low_after
   simp_alive_peephole
@@ -140,6 +143,7 @@ def mul32_low_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem mul32_low_proof : mul32_low_before ⊑ mul32_low_after := by
   unfold mul32_low_before mul32_low_after
   simp_alive_peephole
@@ -174,6 +178,7 @@ def mul64_low_after := [llvm|
   "llvm.return"(%0) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem mul64_low_proof : mul64_low_before ⊑ mul64_low_after := by
   unfold mul64_low_before mul64_low_after
   simp_alive_peephole
@@ -208,6 +213,7 @@ def mul128_low_after := [llvm|
   "llvm.return"(%0) : (i128) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem mul128_low_proof : mul128_low_before ⊑ mul128_low_after := by
   unfold mul128_low_before mul128_low_after
   simp_alive_peephole
@@ -242,6 +248,7 @@ def mul130_low_after := [llvm|
   "llvm.return"(%0) : (i130) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem mul130_low_proof : mul130_low_before ⊑ mul130_low_after := by
   unfold mul130_low_before mul130_low_after
   simp_alive_peephole
@@ -287,6 +294,7 @@ def mul9_low_after := [llvm|
   "llvm.return"(%11) : (i9) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem mul9_low_proof : mul9_low_before ⊑ mul9_low_after := by
   unfold mul9_low_before mul9_low_after
   simp_alive_peephole
@@ -332,6 +340,7 @@ def mul16_low_miss_shift_amount_after := [llvm|
   "llvm.return"(%11) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem mul16_low_miss_shift_amount_proof : mul16_low_miss_shift_amount_before ⊑ mul16_low_miss_shift_amount_after := by
   unfold mul16_low_miss_shift_amount_before mul16_low_miss_shift_amount_after
   simp_alive_peephole
@@ -377,6 +386,7 @@ def mul8_low_miss_half_width_after := [llvm|
   "llvm.return"(%11) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem mul8_low_miss_half_width_proof : mul8_low_miss_half_width_before ⊑ mul8_low_miss_half_width_after := by
   unfold mul8_low_miss_half_width_before mul8_low_miss_half_width_after
   simp_alive_peephole

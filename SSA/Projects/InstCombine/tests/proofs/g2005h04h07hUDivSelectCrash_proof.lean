@@ -5,9 +5,8 @@ open BitVec
 open LLVM
 
 section g2005h04h07hUDivSelectCrash_proof
-theorem test_thm :
-  ∀ (e : IntW 1) (e_1 : IntW 32),
-    LLVM.udiv e_1 (select e (const? 8) (const? 1)) ⊑ lshr e_1 (select e (const? 3) (const? 0)) := by 
+theorem test_thm (e✝ : IntW 1) (e✝¹ : IntW 32) :
+  LLVM.udiv e✝¹ (select e✝ (const? 8) (const? 1)) ⊑ lshr e✝¹ (select e✝ (const? 3) (const? 0)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

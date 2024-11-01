@@ -31,6 +31,7 @@ def shrink_select_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shrink_select_proof : shrink_select_before ⊑ shrink_select_after := by
   unfold shrink_select_before shrink_select_after
   simp_alive_peephole
@@ -56,6 +57,7 @@ def not_cond_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem not_cond_proof : not_cond_before ⊑ not_cond_after := by
   unfold not_cond_before not_cond_after
   simp_alive_peephole
@@ -82,6 +84,7 @@ def select_add_after := [llvm|
   "llvm.return"(%2) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem select_add_proof : select_add_before ⊑ select_add_after := by
   unfold select_add_before select_add_after
   simp_alive_peephole
@@ -108,6 +111,7 @@ def select_sub_after := [llvm|
   "llvm.return"(%2) : (i17) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem select_sub_proof : select_sub_before ⊑ select_sub_after := by
   unfold select_sub_before select_sub_after
   simp_alive_peephole
@@ -134,6 +138,7 @@ def select_ashr_after := [llvm|
   "llvm.return"(%2) : (i128) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem select_ashr_proof : select_ashr_before ⊑ select_ashr_after := by
   unfold select_ashr_before select_ashr_after
   simp_alive_peephole

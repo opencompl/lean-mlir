@@ -32,6 +32,7 @@ def addhshlhsdivhscalar0_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem addhshlhsdivhscalar0_proof : addhshlhsdivhscalar0_before ⊑ addhshlhsdivhscalar0_after := by
   unfold addhshlhsdivhscalar0_before addhshlhsdivhscalar0_after
   simp_alive_peephole
@@ -60,6 +61,7 @@ def addhshlhsdivhscalar1_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem addhshlhsdivhscalar1_proof : addhshlhsdivhscalar1_before ⊑ addhshlhsdivhscalar1_after := by
   unfold addhshlhsdivhscalar1_before addhshlhsdivhscalar1_after
   simp_alive_peephole
@@ -88,6 +90,7 @@ def addhshlhsdivhscalar2_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem addhshlhsdivhscalar2_proof : addhshlhsdivhscalar2_before ⊑ addhshlhsdivhscalar2_after := by
   unfold addhshlhsdivhscalar2_before addhshlhsdivhscalar2_after
   simp_alive_peephole
@@ -119,6 +122,7 @@ def addhshlhsdivhnegative0_after := [llvm|
   "llvm.return"(%4) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem addhshlhsdivhnegative0_proof : addhshlhsdivhnegative0_before ⊑ addhshlhsdivhnegative0_after := by
   unfold addhshlhsdivhnegative0_before addhshlhsdivhnegative0_after
   simp_alive_peephole
@@ -147,6 +151,7 @@ def addhshlhsdivhnegative1_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem addhshlhsdivhnegative1_proof : addhshlhsdivhnegative1_before ⊑ addhshlhsdivhnegative1_after := by
   unfold addhshlhsdivhnegative1_before addhshlhsdivhnegative1_after
   simp_alive_peephole

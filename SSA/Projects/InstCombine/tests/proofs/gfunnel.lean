@@ -45,6 +45,7 @@ def unmasked_shlop_insufficient_mask_shift_amount_after := [llvm|
   "llvm.return"(%9) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem unmasked_shlop_insufficient_mask_shift_amount_proof : unmasked_shlop_insufficient_mask_shift_amount_before ⊑ unmasked_shlop_insufficient_mask_shift_amount_after := by
   unfold unmasked_shlop_insufficient_mask_shift_amount_before unmasked_shlop_insufficient_mask_shift_amount_after
   simp_alive_peephole

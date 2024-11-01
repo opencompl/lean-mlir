@@ -5,10 +5,9 @@ open BitVec
 open LLVM
 
 section gavghlsb_proof
-theorem avg_lsb_thm :
-  ∀ (e e_1 : IntW 8),
-    lshr (add (LLVM.and e_1 (const? 1)) (LLVM.and e (const? 1)) { «nsw» := true, «nuw» := true }) (const? 1) ⊑
-      LLVM.and e_1 (LLVM.and e (const? 1)) := by 
+theorem avg_lsb_thm (e✝ e✝¹ : IntW 8) :
+  lshr (add (LLVM.and e✝¹ (const? 1)) (LLVM.and e✝ (const? 1)) { «nsw» := true, «nuw» := true }) (const? 1) ⊑
+    LLVM.and e✝¹ (LLVM.and e✝ (const? 1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

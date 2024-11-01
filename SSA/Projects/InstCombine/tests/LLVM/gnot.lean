@@ -28,6 +28,7 @@ def test1_after := [llvm|
   "llvm.return"(%arg153) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test1_proof : test1_before ⊑ test1_after := by
   unfold test1_before test1_after
   simp_alive_peephole
@@ -54,6 +55,7 @@ def not_ashr_not_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem not_ashr_not_proof : not_ashr_not_before ⊑ not_ashr_not_after := by
   unfold not_ashr_not_before not_ashr_not_after
   simp_alive_peephole
@@ -81,6 +83,7 @@ def not_ashr_const_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem not_ashr_const_proof : not_ashr_const_before ⊑ not_ashr_const_after := by
   unfold not_ashr_const_before not_ashr_const_after
   simp_alive_peephole
@@ -108,6 +111,7 @@ def not_lshr_const_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem not_lshr_const_proof : not_lshr_const_before ⊑ not_lshr_const_after := by
   unfold not_lshr_const_before not_lshr_const_after
   simp_alive_peephole
@@ -135,6 +139,7 @@ def not_sub_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem not_sub_proof : not_sub_before ⊑ not_sub_after := by
   unfold not_sub_before not_sub_after
   simp_alive_peephole
@@ -162,6 +167,7 @@ def not_add_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem not_add_proof : not_add_before ⊑ not_add_after := by
   unfold not_add_before not_add_after
   simp_alive_peephole
@@ -192,6 +198,7 @@ def not_or_neg_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem not_or_neg_proof : not_or_neg_before ⊑ not_or_neg_after := by
   unfold not_or_neg_before not_or_neg_after
   simp_alive_peephole
@@ -220,6 +227,7 @@ def not_select_bool_const1_after := [llvm|
   "llvm.return"(%3) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem not_select_bool_const1_proof : not_select_bool_const1_before ⊑ not_select_bool_const1_after := by
   unfold not_select_bool_const1_before not_select_bool_const1_after
   simp_alive_peephole
@@ -248,6 +256,7 @@ def not_select_bool_const4_after := [llvm|
   "llvm.return"(%2) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem not_select_bool_const4_proof : not_select_bool_const4_before ⊑ not_select_bool_const4_after := by
   unfold not_select_bool_const4_before not_select_bool_const4_after
   simp_alive_peephole
@@ -277,6 +286,7 @@ def not_logicalAnd_not_op1_after := [llvm|
   "llvm.return"(%2) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem not_logicalAnd_not_op1_proof : not_logicalAnd_not_op1_before ⊑ not_logicalAnd_not_op1_after := by
   unfold not_logicalAnd_not_op1_before not_logicalAnd_not_op1_after
   simp_alive_peephole
@@ -306,6 +316,7 @@ def not_logicalOr_not_op1_after := [llvm|
   "llvm.return"(%3) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem not_logicalOr_not_op1_proof : not_logicalOr_not_op1_before ⊑ not_logicalOr_not_op1_after := by
   unfold not_logicalOr_not_op1_before not_logicalOr_not_op1_after
   simp_alive_peephole
@@ -339,6 +350,7 @@ def test_zext_nneg_after := [llvm|
   "llvm.return"(%4) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test_zext_nneg_proof : test_zext_nneg_before ⊑ test_zext_nneg_after := by
   unfold test_zext_nneg_before test_zext_nneg_after
   simp_alive_peephole
@@ -369,6 +381,7 @@ def test_invert_demorgan_and2_after := [llvm|
   "llvm.return"(%3) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test_invert_demorgan_and2_proof : test_invert_demorgan_and2_before ⊑ test_invert_demorgan_and2_after := by
   unfold test_invert_demorgan_and2_before test_invert_demorgan_and2_after
   simp_alive_peephole

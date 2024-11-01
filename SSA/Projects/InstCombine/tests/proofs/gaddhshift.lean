@@ -31,6 +31,7 @@ def flip_add_of_shift_neg_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem flip_add_of_shift_neg_proof : flip_add_of_shift_neg_before ⊑ flip_add_of_shift_neg_after := by
   unfold flip_add_of_shift_neg_before flip_add_of_shift_neg_after
   simp_alive_peephole

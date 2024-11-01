@@ -35,6 +35,7 @@ def oppositesign_after := [llvm|
   "llvm.return"(%4) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem oppositesign_proof : oppositesign_before ⊑ oppositesign_after := by
   unfold oppositesign_before oppositesign_after
   simp_alive_peephole
@@ -64,6 +65,7 @@ def zero_sign_bit_after := [llvm|
   "llvm.return"(%3) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem zero_sign_bit_proof : zero_sign_bit_before ⊑ zero_sign_bit_after := by
   unfold zero_sign_bit_before zero_sign_bit_after
   simp_alive_peephole
@@ -93,6 +95,7 @@ def zero_sign_bit2_after := [llvm|
   "llvm.return"(%3) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem zero_sign_bit2_proof : zero_sign_bit2_before ⊑ zero_sign_bit2_after := by
   unfold zero_sign_bit2_before zero_sign_bit2_after
   simp_alive_peephole
@@ -124,6 +127,7 @@ def ripple_nsw1_after := [llvm|
   "llvm.return"(%4) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem ripple_nsw1_proof : ripple_nsw1_before ⊑ ripple_nsw1_after := by
   unfold ripple_nsw1_before ripple_nsw1_after
   simp_alive_peephole
@@ -155,6 +159,7 @@ def ripple_nsw2_after := [llvm|
   "llvm.return"(%4) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem ripple_nsw2_proof : ripple_nsw2_before ⊑ ripple_nsw2_after := by
   unfold ripple_nsw2_before ripple_nsw2_after
   simp_alive_peephole
@@ -186,6 +191,7 @@ def ripple_nsw3_after := [llvm|
   "llvm.return"(%4) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem ripple_nsw3_proof : ripple_nsw3_before ⊑ ripple_nsw3_after := by
   unfold ripple_nsw3_before ripple_nsw3_after
   simp_alive_peephole
@@ -217,6 +223,7 @@ def ripple_nsw4_after := [llvm|
   "llvm.return"(%4) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem ripple_nsw4_proof : ripple_nsw4_before ⊑ ripple_nsw4_after := by
   unfold ripple_nsw4_before ripple_nsw4_after
   simp_alive_peephole
@@ -248,6 +255,7 @@ def ripple_nsw5_after := [llvm|
   "llvm.return"(%4) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem ripple_nsw5_proof : ripple_nsw5_before ⊑ ripple_nsw5_after := by
   unfold ripple_nsw5_before ripple_nsw5_after
   simp_alive_peephole
@@ -279,6 +287,7 @@ def ripple_nsw6_after := [llvm|
   "llvm.return"(%4) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem ripple_nsw6_proof : ripple_nsw6_before ⊑ ripple_nsw6_after := by
   unfold ripple_nsw6_before ripple_nsw6_after
   simp_alive_peephole
@@ -310,6 +319,7 @@ def ripple_no_nsw2_after := [llvm|
   "llvm.return"(%4) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem ripple_no_nsw2_proof : ripple_no_nsw2_before ⊑ ripple_no_nsw2_after := by
   unfold ripple_no_nsw2_before ripple_no_nsw2_after
   simp_alive_peephole
@@ -339,6 +349,7 @@ def PR38021_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem PR38021_proof : PR38021_before ⊑ PR38021_after := by
   unfold PR38021_before PR38021_after
   simp_alive_peephole

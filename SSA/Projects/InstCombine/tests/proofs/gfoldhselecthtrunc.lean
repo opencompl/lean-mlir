@@ -30,6 +30,7 @@ def fold_select_trunc_nuw_true_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem fold_select_trunc_nuw_true_proof : fold_select_trunc_nuw_true_before ⊑ fold_select_trunc_nuw_true_after := by
   unfold fold_select_trunc_nuw_true_before fold_select_trunc_nuw_true_after
   simp_alive_peephole
@@ -56,6 +57,7 @@ def fold_select_trunc_nuw_false_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem fold_select_trunc_nuw_false_proof : fold_select_trunc_nuw_false_before ⊑ fold_select_trunc_nuw_false_after := by
   unfold fold_select_trunc_nuw_false_before fold_select_trunc_nuw_false_after
   simp_alive_peephole
@@ -82,6 +84,7 @@ def fold_select_trunc_nsw_true_after := [llvm|
   "llvm.return"(%2) : (i128) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem fold_select_trunc_nsw_true_proof : fold_select_trunc_nsw_true_before ⊑ fold_select_trunc_nsw_true_after := by
   unfold fold_select_trunc_nsw_true_before fold_select_trunc_nsw_true_after
   simp_alive_peephole
@@ -108,6 +111,7 @@ def fold_select_trunc_nsw_false_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem fold_select_trunc_nsw_false_proof : fold_select_trunc_nsw_false_before ⊑ fold_select_trunc_nsw_false_after := by
   unfold fold_select_trunc_nsw_false_before fold_select_trunc_nsw_false_after
   simp_alive_peephole

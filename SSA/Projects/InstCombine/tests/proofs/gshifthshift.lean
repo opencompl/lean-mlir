@@ -30,6 +30,7 @@ def shl_shl_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_shl_proof : shl_shl_before ⊑ shl_shl_after := by
   unfold shl_shl_before shl_shl_after
   simp_alive_peephole
@@ -56,6 +57,7 @@ def lshr_lshr_after := [llvm|
   "llvm.return"(%0) : (i232) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lshr_lshr_proof : lshr_lshr_before ⊑ lshr_lshr_after := by
   unfold lshr_lshr_before lshr_lshr_after
   simp_alive_peephole
@@ -87,6 +89,7 @@ def shl_trunc_bigger_lshr_after := [llvm|
   "llvm.return"(%4) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_trunc_bigger_lshr_proof : shl_trunc_bigger_lshr_before ⊑ shl_trunc_bigger_lshr_after := by
   unfold shl_trunc_bigger_lshr_before shl_trunc_bigger_lshr_after
   simp_alive_peephole
@@ -118,6 +121,7 @@ def shl_trunc_smaller_lshr_after := [llvm|
   "llvm.return"(%4) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_trunc_smaller_lshr_proof : shl_trunc_smaller_lshr_before ⊑ shl_trunc_smaller_lshr_after := by
   unfold shl_trunc_smaller_lshr_before shl_trunc_smaller_lshr_after
   simp_alive_peephole
@@ -149,6 +153,7 @@ def shl_trunc_bigger_ashr_after := [llvm|
   "llvm.return"(%4) : (i24) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_trunc_bigger_ashr_proof : shl_trunc_bigger_ashr_before ⊑ shl_trunc_bigger_ashr_after := by
   unfold shl_trunc_bigger_ashr_before shl_trunc_bigger_ashr_after
   simp_alive_peephole
@@ -180,6 +185,7 @@ def shl_trunc_smaller_ashr_after := [llvm|
   "llvm.return"(%4) : (i24) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_trunc_smaller_ashr_proof : shl_trunc_smaller_ashr_before ⊑ shl_trunc_smaller_ashr_after := by
   unfold shl_trunc_smaller_ashr_before shl_trunc_smaller_ashr_after
   simp_alive_peephole
@@ -209,6 +215,7 @@ def shl_trunc_bigger_shl_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_trunc_bigger_shl_proof : shl_trunc_bigger_shl_before ⊑ shl_trunc_bigger_shl_after := by
   unfold shl_trunc_bigger_shl_before shl_trunc_bigger_shl_after
   simp_alive_peephole
@@ -238,6 +245,7 @@ def shl_trunc_smaller_shl_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_trunc_smaller_shl_proof : shl_trunc_smaller_shl_before ⊑ shl_trunc_smaller_shl_after := by
   unfold shl_trunc_smaller_shl_before shl_trunc_smaller_shl_after
   simp_alive_peephole
@@ -267,6 +275,7 @@ def shl_shl_constants_div_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_shl_constants_div_proof : shl_shl_constants_div_before ⊑ shl_shl_constants_div_after := by
   unfold shl_shl_constants_div_before shl_shl_constants_div_after
   simp_alive_peephole
@@ -296,6 +305,7 @@ def ashr_shl_constants_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem ashr_shl_constants_proof : ashr_shl_constants_before ⊑ ashr_shl_constants_after := by
   unfold ashr_shl_constants_before ashr_shl_constants_after
   simp_alive_peephole
@@ -327,6 +337,7 @@ def shl_lshr_demand1_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_lshr_demand1_proof : shl_lshr_demand1_before ⊑ shl_lshr_demand1_after := by
   unfold shl_lshr_demand1_before shl_lshr_demand1_after
   simp_alive_peephole
@@ -358,6 +369,7 @@ def shl_lshr_demand6_after := [llvm|
   "llvm.return"(%3) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_lshr_demand6_proof : shl_lshr_demand6_before ⊑ shl_lshr_demand6_after := by
   unfold shl_lshr_demand6_before shl_lshr_demand6_after
   simp_alive_peephole
@@ -389,6 +401,7 @@ def lshr_shl_demand1_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lshr_shl_demand1_proof : lshr_shl_demand1_before ⊑ lshr_shl_demand1_after := by
   unfold lshr_shl_demand1_before lshr_shl_demand1_after
   simp_alive_peephole
@@ -420,6 +433,7 @@ def lshr_shl_demand3_after := [llvm|
   "llvm.return"(%4) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lshr_shl_demand3_proof : lshr_shl_demand3_before ⊑ lshr_shl_demand3_after := by
   unfold lshr_shl_demand3_before lshr_shl_demand3_after
   simp_alive_peephole

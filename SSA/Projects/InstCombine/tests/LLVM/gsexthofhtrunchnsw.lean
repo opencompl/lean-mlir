@@ -36,6 +36,7 @@ def narrow_source_matching_signbits_after := [llvm|
   "llvm.return"(%4) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem narrow_source_matching_signbits_proof : narrow_source_matching_signbits_before ⊑ narrow_source_matching_signbits_after := by
   unfold narrow_source_matching_signbits_before narrow_source_matching_signbits_after
   simp_alive_peephole
@@ -68,6 +69,7 @@ def wide_source_matching_signbits_after := [llvm|
   "llvm.return"(%4) : (i24) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem wide_source_matching_signbits_proof : wide_source_matching_signbits_before ⊑ wide_source_matching_signbits_after := by
   unfold wide_source_matching_signbits_before wide_source_matching_signbits_after
   simp_alive_peephole
@@ -99,6 +101,7 @@ def same_source_matching_signbits_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem same_source_matching_signbits_proof : same_source_matching_signbits_before ⊑ same_source_matching_signbits_after := by
   unfold same_source_matching_signbits_before same_source_matching_signbits_after
   simp_alive_peephole
@@ -132,6 +135,7 @@ def same_source_not_matching_signbits_after := [llvm|
   "llvm.return"(%5) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem same_source_not_matching_signbits_proof : same_source_not_matching_signbits_before ⊑ same_source_not_matching_signbits_after := by
   unfold same_source_not_matching_signbits_before same_source_not_matching_signbits_after
   simp_alive_peephole

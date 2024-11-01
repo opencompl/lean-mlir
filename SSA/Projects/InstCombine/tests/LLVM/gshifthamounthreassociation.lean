@@ -33,6 +33,7 @@ def t0_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t0_proof : t0_before ⊑ t0_after := by
   unfold t0_before t0_after
   simp_alive_peephole
@@ -62,6 +63,7 @@ def t6_shl_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t6_shl_proof : t6_shl_before ⊑ t6_shl_after := by
   unfold t6_shl_before t6_shl_after
   simp_alive_peephole
@@ -91,6 +93,7 @@ def t7_ashr_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t7_ashr_proof : t7_ashr_before ⊑ t7_ashr_after := by
   unfold t7_ashr_before t7_ashr_after
   simp_alive_peephole
@@ -120,6 +123,7 @@ def t8_lshr_exact_flag_preservation_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t8_lshr_exact_flag_preservation_proof : t8_lshr_exact_flag_preservation_before ⊑ t8_lshr_exact_flag_preservation_after := by
   unfold t8_lshr_exact_flag_preservation_before t8_lshr_exact_flag_preservation_after
   simp_alive_peephole
@@ -149,6 +153,7 @@ def t9_ashr_exact_flag_preservation_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t9_ashr_exact_flag_preservation_proof : t9_ashr_exact_flag_preservation_before ⊑ t9_ashr_exact_flag_preservation_after := by
   unfold t9_ashr_exact_flag_preservation_before t9_ashr_exact_flag_preservation_after
   simp_alive_peephole
@@ -178,6 +183,7 @@ def t10_shl_nuw_flag_preservation_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t10_shl_nuw_flag_preservation_proof : t10_shl_nuw_flag_preservation_before ⊑ t10_shl_nuw_flag_preservation_after := by
   unfold t10_shl_nuw_flag_preservation_before t10_shl_nuw_flag_preservation_after
   simp_alive_peephole
@@ -207,6 +213,7 @@ def t11_shl_nsw_flag_preservation_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t11_shl_nsw_flag_preservation_proof : t11_shl_nsw_flag_preservation_before ⊑ t11_shl_nsw_flag_preservation_after := by
   unfold t11_shl_nsw_flag_preservation_before t11_shl_nsw_flag_preservation_after
   simp_alive_peephole

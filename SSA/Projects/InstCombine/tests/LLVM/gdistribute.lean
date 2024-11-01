@@ -30,6 +30,7 @@ def factorize_after := [llvm|
   "llvm.return"(%arg9) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem factorize_proof : factorize_before ⊑ factorize_after := by
   unfold factorize_before factorize_after
   simp_alive_peephole
@@ -56,6 +57,7 @@ def factorize2_after := [llvm|
   "llvm.return"(%arg8) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem factorize2_proof : factorize2_before ⊑ factorize2_after := by
   unfold factorize2_before factorize2_after
   simp_alive_peephole
@@ -82,6 +84,7 @@ def factorize3_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem factorize3_proof : factorize3_before ⊑ factorize3_after := by
   unfold factorize3_before factorize3_after
   simp_alive_peephole
@@ -109,6 +112,7 @@ def factorize4_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem factorize4_proof : factorize4_before ⊑ factorize4_after := by
   unfold factorize4_before factorize4_after
   simp_alive_peephole
@@ -136,6 +140,7 @@ def factorize5_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem factorize5_proof : factorize5_before ⊑ factorize5_after := by
   unfold factorize5_before factorize5_after
   simp_alive_peephole
@@ -164,6 +169,7 @@ def expand_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem expand_proof : expand_before ⊑ expand_after := by
   unfold expand_before expand_after
   simp_alive_peephole

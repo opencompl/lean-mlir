@@ -33,6 +33,7 @@ def shl_C1_add_A_C2_i32_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_C1_add_A_C2_i32_proof : shl_C1_add_A_C2_i32_before ⊑ shl_C1_add_A_C2_i32_after := by
   unfold shl_C1_add_A_C2_i32_before shl_C1_add_A_C2_i32_after
   simp_alive_peephole
@@ -61,6 +62,7 @@ def ashr_C1_add_A_C2_i32_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem ashr_C1_add_A_C2_i32_proof : ashr_C1_add_A_C2_i32_before ⊑ ashr_C1_add_A_C2_i32_after := by
   unfold ashr_C1_add_A_C2_i32_before ashr_C1_add_A_C2_i32_after
   simp_alive_peephole
@@ -92,6 +94,7 @@ def lshr_C1_add_A_C2_i32_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lshr_C1_add_A_C2_i32_proof : lshr_C1_add_A_C2_i32_before ⊑ lshr_C1_add_A_C2_i32_after := by
   unfold lshr_C1_add_A_C2_i32_before lshr_C1_add_A_C2_i32_after
   simp_alive_peephole
@@ -119,6 +122,7 @@ def shl_add_nuw_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_add_nuw_proof : shl_add_nuw_before ⊑ shl_add_nuw_after := by
   unfold shl_add_nuw_before shl_add_nuw_after
   simp_alive_peephole
@@ -145,6 +149,7 @@ def shl_nuw_add_nuw_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_nuw_add_nuw_proof : shl_nuw_add_nuw_before ⊑ shl_nuw_add_nuw_after := by
   unfold shl_nuw_add_nuw_before shl_nuw_add_nuw_after
   simp_alive_peephole
@@ -172,6 +177,7 @@ def shl_nsw_add_nuw_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_nsw_add_nuw_proof : shl_nsw_add_nuw_before ⊑ shl_nsw_add_nuw_after := by
   unfold shl_nsw_add_nuw_before shl_nsw_add_nuw_after
   simp_alive_peephole
@@ -199,6 +205,7 @@ def lshr_exact_add_nuw_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lshr_exact_add_nuw_proof : lshr_exact_add_nuw_before ⊑ lshr_exact_add_nuw_after := by
   unfold lshr_exact_add_nuw_before lshr_exact_add_nuw_after
   simp_alive_peephole
@@ -226,6 +233,7 @@ def ashr_exact_add_nuw_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem ashr_exact_add_nuw_proof : ashr_exact_add_nuw_before ⊑ ashr_exact_add_nuw_after := by
   unfold ashr_exact_add_nuw_before ashr_exact_add_nuw_after
   simp_alive_peephole
@@ -253,6 +261,7 @@ def lshr_exact_add_negative_shift_positive_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lshr_exact_add_negative_shift_positive_proof : lshr_exact_add_negative_shift_positive_before ⊑ lshr_exact_add_negative_shift_positive_after := by
   unfold lshr_exact_add_negative_shift_positive_before lshr_exact_add_negative_shift_positive_after
   simp_alive_peephole
@@ -280,6 +289,7 @@ def ashr_exact_add_negative_shift_negative_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem ashr_exact_add_negative_shift_negative_proof : ashr_exact_add_negative_shift_negative_before ⊑ ashr_exact_add_negative_shift_negative_after := by
   unfold ashr_exact_add_negative_shift_negative_before ashr_exact_add_negative_shift_negative_after
   simp_alive_peephole
@@ -307,6 +317,7 @@ def shl_nsw_add_negative_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_nsw_add_negative_proof : shl_nsw_add_negative_before ⊑ shl_nsw_add_negative_after := by
   unfold shl_nsw_add_negative_before shl_nsw_add_negative_after
   simp_alive_peephole
@@ -336,6 +347,7 @@ def shl_nsw_add_negative_invalid_constant3_after := [llvm|
   "llvm.return"(%3) : (i4) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_nsw_add_negative_invalid_constant3_proof : shl_nsw_add_negative_invalid_constant3_before ⊑ shl_nsw_add_negative_invalid_constant3_after := by
   unfold shl_nsw_add_negative_invalid_constant3_before shl_nsw_add_negative_invalid_constant3_after
   simp_alive_peephole
@@ -364,6 +376,7 @@ def lshr_2_add_zext_basic_after := [llvm|
   "llvm.return"(%1) : (i2) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lshr_2_add_zext_basic_proof : lshr_2_add_zext_basic_before ⊑ lshr_2_add_zext_basic_after := by
   unfold lshr_2_add_zext_basic_before lshr_2_add_zext_basic_after
   simp_alive_peephole
@@ -395,6 +408,7 @@ def ashr_2_add_zext_basic_after := [llvm|
   "llvm.return"(%4) : (i2) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem ashr_2_add_zext_basic_proof : ashr_2_add_zext_basic_before ⊑ ashr_2_add_zext_basic_after := by
   unfold ashr_2_add_zext_basic_before ashr_2_add_zext_basic_after
   simp_alive_peephole
@@ -428,6 +442,7 @@ def lshr_16_add_zext_basic_multiuse_after := [llvm|
   "llvm.return"(%5) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lshr_16_add_zext_basic_multiuse_proof : lshr_16_add_zext_basic_multiuse_before ⊑ lshr_16_add_zext_basic_multiuse_after := by
   unfold lshr_16_add_zext_basic_multiuse_before lshr_16_add_zext_basic_multiuse_after
   simp_alive_peephole
@@ -461,6 +476,7 @@ def lshr_16_add_known_16_leading_zeroes_after := [llvm|
   "llvm.return"(%5) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lshr_16_add_known_16_leading_zeroes_proof : lshr_16_add_known_16_leading_zeroes_before ⊑ lshr_16_add_known_16_leading_zeroes_after := by
   unfold lshr_16_add_known_16_leading_zeroes_before lshr_16_add_known_16_leading_zeroes_after
   simp_alive_peephole
@@ -496,6 +512,7 @@ def lshr_16_add_not_known_16_leading_zeroes_after := [llvm|
   "llvm.return"(%6) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lshr_16_add_not_known_16_leading_zeroes_proof : lshr_16_add_not_known_16_leading_zeroes_before ⊑ lshr_16_add_not_known_16_leading_zeroes_after := by
   unfold lshr_16_add_not_known_16_leading_zeroes_before lshr_16_add_not_known_16_leading_zeroes_after
   simp_alive_peephole
@@ -529,6 +546,7 @@ def lshr_32_add_zext_basic_multiuse_after := [llvm|
   "llvm.return"(%5) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lshr_32_add_zext_basic_multiuse_proof : lshr_32_add_zext_basic_multiuse_before ⊑ lshr_32_add_zext_basic_multiuse_after := by
   unfold lshr_32_add_zext_basic_multiuse_before lshr_32_add_zext_basic_multiuse_after
   simp_alive_peephole
@@ -560,6 +578,7 @@ def lshr_31_i32_add_zext_basic_after := [llvm|
   "llvm.return"(%4) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lshr_31_i32_add_zext_basic_proof : lshr_31_i32_add_zext_basic_before ⊑ lshr_31_i32_add_zext_basic_after := by
   unfold lshr_31_i32_add_zext_basic_before lshr_31_i32_add_zext_basic_after
   simp_alive_peephole
@@ -587,6 +606,7 @@ def lshr_33_i32_add_zext_basic_after := [llvm|
   "llvm.return"(%0) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lshr_33_i32_add_zext_basic_proof : lshr_33_i32_add_zext_basic_before ⊑ lshr_33_i32_add_zext_basic_after := by
   unfold lshr_33_i32_add_zext_basic_before lshr_33_i32_add_zext_basic_after
   simp_alive_peephole
@@ -620,6 +640,7 @@ def lshr_32_add_known_32_leading_zeroes_after := [llvm|
   "llvm.return"(%5) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lshr_32_add_known_32_leading_zeroes_proof : lshr_32_add_known_32_leading_zeroes_before ⊑ lshr_32_add_known_32_leading_zeroes_after := by
   unfold lshr_32_add_known_32_leading_zeroes_before lshr_32_add_known_32_leading_zeroes_after
   simp_alive_peephole
@@ -655,6 +676,7 @@ def lshr_32_add_not_known_32_leading_zeroes_after := [llvm|
   "llvm.return"(%6) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lshr_32_add_not_known_32_leading_zeroes_proof : lshr_32_add_not_known_32_leading_zeroes_before ⊑ lshr_32_add_not_known_32_leading_zeroes_after := by
   unfold lshr_32_add_not_known_32_leading_zeroes_before lshr_32_add_not_known_32_leading_zeroes_after
   simp_alive_peephole
@@ -682,6 +704,7 @@ def shl_fold_or_disjoint_cnt_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_fold_or_disjoint_cnt_proof : shl_fold_or_disjoint_cnt_before ⊑ shl_fold_or_disjoint_cnt_after := by
   unfold shl_fold_or_disjoint_cnt_before shl_fold_or_disjoint_cnt_after
   simp_alive_peephole

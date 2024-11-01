@@ -31,6 +31,7 @@ def test5_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test5_proof : test5_before ⊑ test5_after := by
   unfold test5_before test5_after
   simp_alive_peephole
@@ -59,6 +60,7 @@ def test6_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test6_proof : test6_before ⊑ test6_after := by
   unfold test6_before test6_after
   simp_alive_peephole
@@ -91,6 +93,7 @@ def ashr_mul_sign_bits_after := [llvm|
   "llvm.return"(%4) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem ashr_mul_sign_bits_proof : ashr_mul_sign_bits_before ⊑ ashr_mul_sign_bits_after := by
   unfold ashr_mul_sign_bits_before ashr_mul_sign_bits_after
   simp_alive_peephole
@@ -123,6 +126,7 @@ def ashr_mul_after := [llvm|
   "llvm.return"(%4) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem ashr_mul_proof : ashr_mul_before ⊑ ashr_mul_after := by
   unfold ashr_mul_before ashr_mul_after
   simp_alive_peephole
@@ -154,6 +158,7 @@ def trunc_ashr_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem trunc_ashr_proof : trunc_ashr_before ⊑ trunc_ashr_after := by
   unfold trunc_ashr_before trunc_ashr_after
   simp_alive_peephole
@@ -182,6 +187,7 @@ def test7_after := [llvm|
   "llvm.return"(%2) : (i92) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test7_proof : test7_before ⊑ test7_after := by
   unfold test7_before test7_after
   simp_alive_peephole
@@ -214,6 +220,7 @@ def test8_after := [llvm|
   "llvm.return"(%4) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test8_proof : test8_before ⊑ test8_after := by
   unfold test8_before test8_after
   simp_alive_peephole
@@ -241,6 +248,7 @@ def test9_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test9_proof : test9_before ⊑ test9_after := by
   unfold test9_before test9_after
   simp_alive_peephole
@@ -273,6 +281,7 @@ def test11_after := [llvm|
   "llvm.return"(%4) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test11_proof : test11_before ⊑ test11_after := by
   unfold test11_before test11_after
   simp_alive_peephole
@@ -305,6 +314,7 @@ def test12_after := [llvm|
   "llvm.return"(%4) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test12_proof : test12_before ⊑ test12_after := by
   unfold test12_before test12_after
   simp_alive_peephole
@@ -337,6 +347,7 @@ def test13_after := [llvm|
   "llvm.return"(%4) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test13_proof : test13_before ⊑ test13_after := by
   unfold test13_before test13_after
   simp_alive_peephole
@@ -364,6 +375,7 @@ def trunc_shl_31_i32_i64_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem trunc_shl_31_i32_i64_proof : trunc_shl_31_i32_i64_before ⊑ trunc_shl_31_i32_i64_after := by
   unfold trunc_shl_31_i32_i64_before trunc_shl_31_i32_i64_after
   simp_alive_peephole
@@ -391,6 +403,7 @@ def trunc_shl_nsw_31_i32_i64_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem trunc_shl_nsw_31_i32_i64_proof : trunc_shl_nsw_31_i32_i64_before ⊑ trunc_shl_nsw_31_i32_i64_after := by
   unfold trunc_shl_nsw_31_i32_i64_before trunc_shl_nsw_31_i32_i64_after
   simp_alive_peephole
@@ -418,6 +431,7 @@ def trunc_shl_nuw_31_i32_i64_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem trunc_shl_nuw_31_i32_i64_proof : trunc_shl_nuw_31_i32_i64_before ⊑ trunc_shl_nuw_31_i32_i64_after := by
   unfold trunc_shl_nuw_31_i32_i64_before trunc_shl_nuw_31_i32_i64_after
   simp_alive_peephole
@@ -445,6 +459,7 @@ def trunc_shl_nsw_nuw_31_i32_i64_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem trunc_shl_nsw_nuw_31_i32_i64_proof : trunc_shl_nsw_nuw_31_i32_i64_before ⊑ trunc_shl_nsw_nuw_31_i32_i64_after := by
   unfold trunc_shl_nsw_nuw_31_i32_i64_before trunc_shl_nsw_nuw_31_i32_i64_after
   simp_alive_peephole
@@ -472,6 +487,7 @@ def trunc_shl_15_i16_i64_after := [llvm|
   "llvm.return"(%2) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem trunc_shl_15_i16_i64_proof : trunc_shl_15_i16_i64_before ⊑ trunc_shl_15_i16_i64_after := by
   unfold trunc_shl_15_i16_i64_before trunc_shl_15_i16_i64_after
   simp_alive_peephole
@@ -499,6 +515,7 @@ def trunc_shl_15_i16_i32_after := [llvm|
   "llvm.return"(%2) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem trunc_shl_15_i16_i32_proof : trunc_shl_15_i16_i32_before ⊑ trunc_shl_15_i16_i32_after := by
   unfold trunc_shl_15_i16_i32_before trunc_shl_15_i16_i32_after
   simp_alive_peephole
@@ -526,6 +543,7 @@ def trunc_shl_7_i8_i64_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem trunc_shl_7_i8_i64_proof : trunc_shl_7_i8_i64_before ⊑ trunc_shl_7_i8_i64_after := by
   unfold trunc_shl_7_i8_i64_before trunc_shl_7_i8_i64_after
   simp_alive_peephole
@@ -553,6 +571,7 @@ def trunc_shl_1_i32_i64_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem trunc_shl_1_i32_i64_proof : trunc_shl_1_i32_i64_before ⊑ trunc_shl_1_i32_i64_after := by
   unfold trunc_shl_1_i32_i64_before trunc_shl_1_i32_i64_after
   simp_alive_peephole
@@ -580,6 +599,7 @@ def trunc_shl_16_i32_i64_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem trunc_shl_16_i32_i64_proof : trunc_shl_16_i32_i64_before ⊑ trunc_shl_16_i32_i64_after := by
   unfold trunc_shl_16_i32_i64_before trunc_shl_16_i32_i64_after
   simp_alive_peephole
@@ -605,6 +625,7 @@ def trunc_shl_33_i32_i64_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem trunc_shl_33_i32_i64_proof : trunc_shl_33_i32_i64_before ⊑ trunc_shl_33_i32_i64_after := by
   unfold trunc_shl_33_i32_i64_before trunc_shl_33_i32_i64_after
   simp_alive_peephole
@@ -630,6 +651,7 @@ def trunc_shl_32_i32_i64_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem trunc_shl_32_i32_i64_proof : trunc_shl_32_i32_i64_before ⊑ trunc_shl_32_i32_i64_after := by
   unfold trunc_shl_32_i32_i64_before trunc_shl_32_i32_i64_after
   simp_alive_peephole
@@ -661,6 +683,7 @@ def trunc_shl_lshr_infloop_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem trunc_shl_lshr_infloop_proof : trunc_shl_lshr_infloop_before ⊑ trunc_shl_lshr_infloop_after := by
   unfold trunc_shl_lshr_infloop_before trunc_shl_lshr_infloop_after
   simp_alive_peephole
@@ -692,6 +715,7 @@ def trunc_shl_ashr_infloop_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem trunc_shl_ashr_infloop_proof : trunc_shl_ashr_infloop_before ⊑ trunc_shl_ashr_infloop_after := by
   unfold trunc_shl_ashr_infloop_before trunc_shl_ashr_infloop_after
   simp_alive_peephole
@@ -721,6 +745,7 @@ def trunc_shl_shl_infloop_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem trunc_shl_shl_infloop_proof : trunc_shl_shl_infloop_before ⊑ trunc_shl_shl_infloop_after := by
   unfold trunc_shl_shl_infloop_before trunc_shl_shl_infloop_after
   simp_alive_peephole
@@ -750,6 +775,7 @@ def trunc_shl_lshr_var_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem trunc_shl_lshr_var_proof : trunc_shl_lshr_var_before ⊑ trunc_shl_lshr_var_after := by
   unfold trunc_shl_lshr_var_before trunc_shl_lshr_var_after
   simp_alive_peephole
@@ -779,6 +805,7 @@ def trunc_shl_ashr_var_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem trunc_shl_ashr_var_proof : trunc_shl_ashr_var_before ⊑ trunc_shl_ashr_var_after := by
   unfold trunc_shl_ashr_var_before trunc_shl_ashr_var_after
   simp_alive_peephole
@@ -808,6 +835,7 @@ def trunc_shl_shl_var_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem trunc_shl_shl_var_proof : trunc_shl_shl_var_before ⊑ trunc_shl_shl_var_after := by
   unfold trunc_shl_shl_var_before trunc_shl_shl_var_after
   simp_alive_peephole

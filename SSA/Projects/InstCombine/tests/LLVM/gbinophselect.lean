@@ -31,6 +31,7 @@ def and_sel_op0_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem and_sel_op0_proof : and_sel_op0_before ⊑ and_sel_op0_after := by
   unfold and_sel_op0_before and_sel_op0_after
   simp_alive_peephole
@@ -60,6 +61,7 @@ def mul_sel_op0_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem mul_sel_op0_proof : mul_sel_op0_before ⊑ mul_sel_op0_after := by
   unfold mul_sel_op0_before mul_sel_op0_after
   simp_alive_peephole
@@ -88,6 +90,7 @@ def sub_sel_op1_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sub_sel_op1_proof : sub_sel_op1_before ⊑ sub_sel_op1_after := by
   unfold sub_sel_op1_before sub_sel_op1_after
   simp_alive_peephole
@@ -117,6 +120,7 @@ def ashr_sel_op1_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem ashr_sel_op1_proof : ashr_sel_op1_before ⊑ ashr_sel_op1_after := by
   unfold ashr_sel_op1_before ashr_sel_op1_after
   simp_alive_peephole

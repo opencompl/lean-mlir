@@ -34,6 +34,7 @@ def match_unsigned_after := [llvm|
   "llvm.return"(%1) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem match_unsigned_proof : match_unsigned_before ⊑ match_unsigned_after := by
   unfold match_unsigned_before match_unsigned_after
   simp_alive_peephole
@@ -65,6 +66,7 @@ def match_andAsRem_lshrAsDiv_shlAsMul_after := [llvm|
   "llvm.return"(%1) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem match_andAsRem_lshrAsDiv_shlAsMul_proof : match_andAsRem_lshrAsDiv_shlAsMul_before ⊑ match_andAsRem_lshrAsDiv_shlAsMul_after := by
   unfold match_andAsRem_lshrAsDiv_shlAsMul_before match_andAsRem_lshrAsDiv_shlAsMul_after
   simp_alive_peephole
@@ -101,6 +103,7 @@ def match_signed_after := [llvm|
   "llvm.return"(%1) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem match_signed_proof : match_signed_before ⊑ match_signed_after := by
   unfold match_signed_before match_signed_after
   simp_alive_peephole
@@ -136,6 +139,7 @@ def not_match_inconsistent_signs_after := [llvm|
   "llvm.return"(%6) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem not_match_inconsistent_signs_proof : not_match_inconsistent_signs_before ⊑ not_match_inconsistent_signs_after := by
   unfold not_match_inconsistent_signs_before not_match_inconsistent_signs_after
   simp_alive_peephole
@@ -173,6 +177,7 @@ def not_match_inconsistent_values_after := [llvm|
   "llvm.return"(%7) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem not_match_inconsistent_values_proof : not_match_inconsistent_values_before ⊑ not_match_inconsistent_values_after := by
   unfold not_match_inconsistent_values_before not_match_inconsistent_values_after
   simp_alive_peephole
@@ -205,6 +210,7 @@ def fold_add_udiv_urem_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem fold_add_udiv_urem_proof : fold_add_udiv_urem_before ⊑ fold_add_udiv_urem_after := by
   unfold fold_add_udiv_urem_before fold_add_udiv_urem_after
   simp_alive_peephole
@@ -237,6 +243,7 @@ def fold_add_sdiv_srem_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem fold_add_sdiv_srem_proof : fold_add_sdiv_srem_before ⊑ fold_add_sdiv_srem_after := by
   unfold fold_add_sdiv_srem_before fold_add_sdiv_srem_after
   simp_alive_peephole
@@ -268,6 +275,7 @@ def fold_add_udiv_urem_to_mul_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem fold_add_udiv_urem_to_mul_proof : fold_add_udiv_urem_to_mul_before ⊑ fold_add_udiv_urem_to_mul_after := by
   unfold fold_add_udiv_urem_to_mul_before fold_add_udiv_urem_to_mul_after
   simp_alive_peephole
@@ -300,6 +308,7 @@ def fold_add_udiv_urem_commuted_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem fold_add_udiv_urem_commuted_proof : fold_add_udiv_urem_commuted_before ⊑ fold_add_udiv_urem_commuted_after := by
   unfold fold_add_udiv_urem_commuted_before fold_add_udiv_urem_commuted_after
   simp_alive_peephole
@@ -332,6 +341,7 @@ def fold_add_udiv_urem_or_disjoint_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem fold_add_udiv_urem_or_disjoint_proof : fold_add_udiv_urem_or_disjoint_before ⊑ fold_add_udiv_urem_or_disjoint_after := by
   unfold fold_add_udiv_urem_or_disjoint_before fold_add_udiv_urem_or_disjoint_after
   simp_alive_peephole
@@ -365,6 +375,7 @@ def fold_add_udiv_urem_without_noundef_after := [llvm|
   "llvm.return"(%5) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem fold_add_udiv_urem_without_noundef_proof : fold_add_udiv_urem_without_noundef_before ⊑ fold_add_udiv_urem_without_noundef_after := by
   unfold fold_add_udiv_urem_without_noundef_before fold_add_udiv_urem_without_noundef_after
   simp_alive_peephole

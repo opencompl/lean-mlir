@@ -31,6 +31,7 @@ def and_to_xor1_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem and_to_xor1_proof : and_to_xor1_before ⊑ and_to_xor1_after := by
   unfold and_to_xor1_before and_to_xor1_after
   simp_alive_peephole
@@ -58,6 +59,7 @@ def and_to_xor2_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem and_to_xor2_proof : and_to_xor2_before ⊑ and_to_xor2_after := by
   unfold and_to_xor2_before and_to_xor2_after
   simp_alive_peephole
@@ -85,6 +87,7 @@ def and_to_xor3_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem and_to_xor3_proof : and_to_xor3_before ⊑ and_to_xor3_after := by
   unfold and_to_xor3_before and_to_xor3_after
   simp_alive_peephole
@@ -112,6 +115,7 @@ def and_to_xor4_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem and_to_xor4_proof : and_to_xor4_before ⊑ and_to_xor4_after := by
   unfold and_to_xor4_before and_to_xor4_after
   simp_alive_peephole
@@ -141,6 +145,7 @@ def or_to_nxor1_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem or_to_nxor1_proof : or_to_nxor1_before ⊑ or_to_nxor1_after := by
   unfold or_to_nxor1_before or_to_nxor1_after
   simp_alive_peephole
@@ -170,6 +175,7 @@ def or_to_nxor2_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem or_to_nxor2_proof : or_to_nxor2_before ⊑ or_to_nxor2_after := by
   unfold or_to_nxor2_before or_to_nxor2_after
   simp_alive_peephole
@@ -199,6 +205,7 @@ def or_to_nxor3_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem or_to_nxor3_proof : or_to_nxor3_before ⊑ or_to_nxor3_after := by
   unfold or_to_nxor3_before or_to_nxor3_after
   simp_alive_peephole
@@ -228,6 +235,7 @@ def or_to_nxor4_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem or_to_nxor4_proof : or_to_nxor4_before ⊑ or_to_nxor4_after := by
   unfold or_to_nxor4_before or_to_nxor4_after
   simp_alive_peephole
@@ -253,6 +261,7 @@ def xor_to_xor1_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem xor_to_xor1_proof : xor_to_xor1_before ⊑ xor_to_xor1_after := by
   unfold xor_to_xor1_before xor_to_xor1_after
   simp_alive_peephole
@@ -278,6 +287,7 @@ def xor_to_xor2_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem xor_to_xor2_proof : xor_to_xor2_before ⊑ xor_to_xor2_after := by
   unfold xor_to_xor2_before xor_to_xor2_after
   simp_alive_peephole
@@ -303,6 +313,7 @@ def xor_to_xor3_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem xor_to_xor3_proof : xor_to_xor3_before ⊑ xor_to_xor3_after := by
   unfold xor_to_xor3_before xor_to_xor3_after
   simp_alive_peephole
@@ -328,6 +339,7 @@ def xor_to_xor4_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem xor_to_xor4_proof : xor_to_xor4_before ⊑ xor_to_xor4_after := by
   unfold xor_to_xor4_before xor_to_xor4_after
   simp_alive_peephole
@@ -361,6 +373,7 @@ def PR32830_after := [llvm|
   "llvm.return"(%5) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem PR32830_proof : PR32830_before ⊑ PR32830_after := by
   unfold PR32830_before PR32830_after
   simp_alive_peephole
@@ -388,6 +401,7 @@ def simplify_or_common_op_commute0_after := [llvm|
   "llvm.return"(%0) : (i4) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem simplify_or_common_op_commute0_proof : simplify_or_common_op_commute0_before ⊑ simplify_or_common_op_commute0_after := by
   unfold simplify_or_common_op_commute0_before simplify_or_common_op_commute0_after
   simp_alive_peephole
@@ -415,6 +429,7 @@ def simplify_or_common_op_commute1_after := [llvm|
   "llvm.return"(%0) : (i4) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem simplify_or_common_op_commute1_proof : simplify_or_common_op_commute1_before ⊑ simplify_or_common_op_commute1_after := by
   unfold simplify_or_common_op_commute1_before simplify_or_common_op_commute1_after
   simp_alive_peephole
@@ -444,6 +459,7 @@ def simplify_or_common_op_commute2_after := [llvm|
   "llvm.return"(%0) : (i4) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem simplify_or_common_op_commute2_proof : simplify_or_common_op_commute2_before ⊑ simplify_or_common_op_commute2_after := by
   unfold simplify_or_common_op_commute2_before simplify_or_common_op_commute2_after
   simp_alive_peephole
@@ -471,6 +487,7 @@ def simplify_and_common_op_commute1_after := [llvm|
   "llvm.return"(%0) : (i4) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem simplify_and_common_op_commute1_proof : simplify_and_common_op_commute1_before ⊑ simplify_and_common_op_commute1_after := by
   unfold simplify_and_common_op_commute1_before simplify_and_common_op_commute1_after
   simp_alive_peephole
@@ -500,6 +517,7 @@ def simplify_and_common_op_commute2_after := [llvm|
   "llvm.return"(%0) : (i4) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem simplify_and_common_op_commute2_proof : simplify_and_common_op_commute2_before ⊑ simplify_and_common_op_commute2_after := by
   unfold simplify_and_common_op_commute2_before simplify_and_common_op_commute2_after
   simp_alive_peephole
@@ -526,6 +544,7 @@ def reduce_xor_common_op_commute0_after := [llvm|
   "llvm.return"(%1) : (i4) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem reduce_xor_common_op_commute0_proof : reduce_xor_common_op_commute0_before ⊑ reduce_xor_common_op_commute0_after := by
   unfold reduce_xor_common_op_commute0_before reduce_xor_common_op_commute0_after
   simp_alive_peephole
@@ -552,6 +571,7 @@ def reduce_xor_common_op_commute1_after := [llvm|
   "llvm.return"(%1) : (i4) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem reduce_xor_common_op_commute1_proof : reduce_xor_common_op_commute1_before ⊑ reduce_xor_common_op_commute1_after := by
   unfold reduce_xor_common_op_commute1_before reduce_xor_common_op_commute1_after
   simp_alive_peephole
@@ -581,6 +601,7 @@ def annihilate_xor_common_op_commute2_after := [llvm|
   "llvm.return"(%2) : (i4) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem annihilate_xor_common_op_commute2_proof : annihilate_xor_common_op_commute2_before ⊑ annihilate_xor_common_op_commute2_after := by
   unfold annihilate_xor_common_op_commute2_before annihilate_xor_common_op_commute2_after
   simp_alive_peephole
