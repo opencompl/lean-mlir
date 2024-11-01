@@ -48,10 +48,12 @@ allowed_names = {
     "llvm.zext",
     "llvm.sext",
     "llvm.trunc",
+    "llvm.icmp"
 }
 
 allowed_unregistered = {
     "llvm.select",
+    "llvm.icmp"
 }
 
 class Msg(Enum):
