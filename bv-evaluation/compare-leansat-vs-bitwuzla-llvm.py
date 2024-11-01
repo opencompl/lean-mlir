@@ -14,7 +14,8 @@ REPS = 1
 def run_file(file: str):
     file_path = BENCHMARK_DIR + file
     file_title = file.split('.')[0]
-    subprocess.Popen('sed -i -E \'s,sorry,bv_compare\'\\\'\',g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
+    subprocess.Popen('sed -i -E \'s,try alive_auto,bv_compare\'\\\'\',g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
+    subprocess.Popen('sed -i -E \'s,all_goals sorry,,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
 
     for r in range(REPS):
         log_file_path = RESULTS_DIR + file_title + '_' + 'r' + str(r) + '.txt'
@@ -36,7 +37,7 @@ def process(jobs: int):
     with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as executor:
         futures = {}
         for file in os.listdir(BENCHMARK_DIR):
-            if "_proof" in file and "gshifthaddhinseltpoison_proof" in file: # currently discard broken chapter
+            if "_proof" in file: # currently discard broken chapter
                 future = executor.submit(run_file, file)
                 futures[future] = file
 
