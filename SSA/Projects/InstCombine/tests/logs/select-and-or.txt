@@ -50,22 +50,43 @@
 2: llvm.return
 
 1: "logical_or_implies"
-4: "logical_or_implies" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "logical_or_implies" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "logical_or_implies_folds"
-4: "logical_or_implies_folds" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "logical_or_implies_folds" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "logical_and_implies"
-4: "logical_and_implies" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "logical_and_implies" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "logical_and_implies_folds"
-4: "logical_and_implies_folds" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "logical_or_noundef_a"
 7: "logical_or_noundef_a" is unchanged by InstCombine
@@ -170,16 +191,12 @@
 
 4: "demorgan_select_infloop1" has unsupported operation after optimization: llvm.mlir.addressof
 
-4: "demorgan_select_infloop1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
 1: "demorgan_select_infloop2"
 4: "demorgan_select_infloop2" has unsupported operation: llvm.mlir.addressof
 
 4: "demorgan_select_infloop2" has unsupported operation: llvm.getelementptr
 
 4: "demorgan_select_infloop2" has unsupported operation: llvm.mlir.addressof
-
-4: "demorgan_select_infloop2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "and_or1"
 2: llvm.func
@@ -248,27 +265,33 @@
 2: llvm.return
 
 1: "and_or3"
-4: "and_or3" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.icmp
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "and_or3_commuted"
-4: "and_or3_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.icmp
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "and_or3_not_free_to_invert"
 7: "and_or3_not_free_to_invert" is unchanged by InstCombine
 
 1: "and_or3_multiuse"
-4: "and_or3_multiuse" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "and_or3_multiuse" has unsupported operation: llvm.call
 
 1: "and_or3_vec"
-4: "and_or3_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "and_or3_vec" contains vectors which are unsupported
 
 1: "and_or3_vec_commuted"
-4: "and_or3_vec_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "and_or3_vec_commuted" contains vectors which are unsupported
 
 1: "and_or3_wrong_operand"
-4: "and_or3_wrong_operand" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "and_or3_wrong_operand" is unchanged by InstCombine
 
 1: "or_and1"
 2: llvm.func
@@ -335,27 +358,33 @@
 2: llvm.return
 
 1: "or_and3"
-4: "or_and3" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.icmp
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "or_and3_commuted"
-4: "or_and3_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.icmp
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "or_and3_not_free_to_invert"
 7: "or_and3_not_free_to_invert" is unchanged by InstCombine
 
 1: "or_and3_multiuse"
-4: "or_and3_multiuse" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "or_and3_multiuse" has unsupported operation: llvm.call
 
 1: "or_and3_vec"
-4: "or_and3_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "or_and3_vec" contains vectors which are unsupported
 
 1: "or_and3_vec_commuted"
-4: "or_and3_vec_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "or_and3_vec_commuted" contains vectors which are unsupported
 
 1: "or_and3_wrong_operand"
-4: "or_and3_wrong_operand" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "or_and3_wrong_operand" is unchanged by InstCombine
 
 1: "test_or_umax"
 4: "test_or_umax" has unsupported operation: builtin.unregistered: llvm.intr.umax
@@ -370,23 +399,15 @@
 4: "test_and_umin" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
 1: "test_or_umax_bitwise1"
-4: "test_or_umax_bitwise1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test_or_umax_bitwise1" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
 1: "test_or_umax_bitwise2"
-4: "test_or_umax_bitwise2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test_or_umax_bitwise2" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
 1: "test_and_umax_bitwise1"
-4: "test_and_umax_bitwise1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test_and_umax_bitwise1" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
 1: "test_and_umax_bitwise2"
-4: "test_and_umax_bitwise2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test_and_umax_bitwise2" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
 1: "test_or_smax"
@@ -399,34 +420,51 @@
 4: "test_or_fmaxnum" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "test_or_umax_invalid_logical"
-4: "test_or_umax_invalid_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "test_or_umax_invalid_logical" is unchanged by InstCombine
 
 1: "test_and_umax_invalid_logical"
-4: "test_and_umax_invalid_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "test_and_umax_invalid_logical" is unchanged by InstCombine
 
 1: "test_or_umax_multiuse_cond"
-4: "test_or_umax_multiuse_cond" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test_or_umax_multiuse_cond" has unsupported operation: llvm.call
 
 1: "test_or_eq_a_b"
-4: "test_or_eq_a_b" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.icmp
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "test_and_ne_a_b"
-4: "test_and_ne_a_b" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.icmp
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "test_or_eq_a_b_commuted"
-4: "test_or_eq_a_b_commuted" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.icmp
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "test_and_ne_a_b_commuted"
-4: "test_and_ne_a_b_commuted" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.icmp
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "test_or_eq_different_operands"
-4: "test_or_eq_different_operands" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "test_or_eq_a_b_multi_use"
-4: "test_or_eq_a_b_multi_use" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test_or_eq_a_b_multi_use" has unsupported operation: llvm.call
 
 4: "test_or_eq_a_b_multi_use" has unsupported operation: llvm.call
@@ -435,22 +473,34 @@
 8: "test_or_eq_a_b_vec" contains vectors which are unsupported
 
 1: "test_or_ne_a_b"
-4: "test_or_ne_a_b" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.icmp
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "test_and_ne_different_operands_fail"
-4: "test_and_ne_different_operands_fail" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "test_and_ne_different_operands_fail" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "test_and_ne_different_operands_fail" is unchanged by InstCombine
 
 1: "test_logical_or_eq_a_b"
-4: "test_logical_or_eq_a_b" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "test_logical_commuted_or_eq_a_b"
-4: "test_logical_commuted_or_eq_a_b" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "test_logical_commuted_or_eq_a_b" is unchanged by InstCombine
 
 1: "test_logical_and_ne_a_b"
-4: "test_logical_and_ne_a_b" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "test_logical_commuted_and_ne_a_b"
-4: "test_logical_commuted_and_ne_a_b" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "test_logical_commuted_and_ne_a_b" is unchanged by InstCombine
 

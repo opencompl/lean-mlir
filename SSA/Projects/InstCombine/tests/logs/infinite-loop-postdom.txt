@@ -1,8 +1,6 @@
 1: "test1"
 4: "test1" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "test1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test1" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test1" has unsupported operation: builtin.unregistered: llvm.br
@@ -11,8 +9,6 @@
 
 1: "test1-canonicalized"
 4: "test1-canonicalized" has unsupported operation: builtin.unregistered: llvm.br
-
-4: "test1-canonicalized" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "test1-canonicalized" has unsupported operation: builtin.unregistered: llvm.cond_br
 
@@ -23,8 +19,6 @@
 1: "test2"
 4: "test2" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "test2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test2" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test2" has unsupported operation: builtin.unregistered: llvm.br
@@ -33,8 +27,6 @@
 
 1: "test2-canonicalized"
 4: "test2-canonicalized" has unsupported operation: builtin.unregistered: llvm.br
-
-4: "test2-canonicalized" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "test2-canonicalized" has unsupported operation: builtin.unregistered: llvm.cond_br
 
@@ -45,8 +37,6 @@
 1: "test3"
 4: "test3" has unsupported operation: builtin.unregistered: llvm.switch
 
-4: "test3" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test3" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "test3" has unsupported operation: builtin.unregistered: llvm.cond_br
@@ -54,8 +44,6 @@
 4: "test3" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "test3" has unsupported operation: builtin.unregistered: llvm.br
-
-4: "test3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "test3" has unsupported operation: builtin.unregistered: llvm.cond_br
 
@@ -68,8 +56,6 @@
 1: "test3-canonicalized"
 4: "test3-canonicalized" has unsupported operation: builtin.unregistered: llvm.switch
 
-4: "test3-canonicalized" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test3-canonicalized" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "test3-canonicalized" has unsupported operation: builtin.unregistered: llvm.cond_br
@@ -77,8 +63,6 @@
 4: "test3-canonicalized" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "test3-canonicalized" has unsupported operation: builtin.unregistered: llvm.br
-
-4: "test3-canonicalized" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "test3-canonicalized" has unsupported operation: builtin.unregistered: llvm.cond_br
 

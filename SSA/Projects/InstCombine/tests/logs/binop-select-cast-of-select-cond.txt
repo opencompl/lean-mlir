@@ -150,5 +150,3 @@
 
 4: "pr64669" has unsupported operation: llvm.mlir.addressof
 
-4: "pr64669" has unsupported operation: builtin.unregistered: llvm.icmp
-

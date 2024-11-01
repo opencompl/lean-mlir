@@ -32,15 +32,11 @@
 4: "smin_xor_pow2_unk" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
 1: "smax_xor_pow2_neg"
-4: "smax_xor_pow2_neg" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "smax_xor_pow2_neg" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "smax_xor_pow2_neg" has unsupported operation: llvm.call
 
 1: "smin_xor_pow2_pos"
-4: "smin_xor_pow2_pos" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "smin_xor_pow2_pos" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "smin_xor_pow2_pos" has unsupported operation: llvm.call

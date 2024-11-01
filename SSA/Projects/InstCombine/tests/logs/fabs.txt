@@ -54,22 +54,18 @@
 4: "square_fabs_shrink_call2" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
 1: "fabs_select_constant_negative_positive"
-4: "fabs_select_constant_negative_positive" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "fabs_select_constant_negative_positive" has unsupported operation after optimization: builtin.unregistered: llvm.intr.fabs
 
 1: "fabs_select_constant_positive_negative"
-4: "fabs_select_constant_positive_negative" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "fabs_select_constant_positive_negative" has unsupported operation after optimization: builtin.unregistered: llvm.intr.fabs
 
 1: "fabs_select_constant_negative_negative"
-4: "fabs_select_constant_negative_negative" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "fabs_select_constant_negative_negative" has unsupported operation after optimization: builtin.unregistered: llvm.intr.fabs
 
 1: "fabs_select_constant_neg0"
-4: "fabs_select_constant_neg0" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
 4: "fabs_select_constant_neg0" has unsupported operation after optimization: builtin.unregistered: llvm.intr.fabs
 
 1: "fabs_select_var_constant_negative"
-4: "fabs_select_var_constant_negative" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "fabs_select_var_constant_negative" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
 1: "square_fma_fabs_intrinsic_f32"
@@ -368,8 +364,6 @@
 1: "test_select_neg_negx_x_multiuse1"
 4: "test_select_neg_negx_x_multiuse1" has unsupported operation: builtin.unregistered: llvm.bitcast
 
-4: "test_select_neg_negx_x_multiuse1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test_select_neg_negx_x_multiuse1" has unsupported operation: llvm.call
 
 4: "test_select_neg_negx_x_multiuse1" has unsupported operation: builtin.unregistered: llvm.intr.fabs
@@ -383,8 +377,6 @@
 
 1: "test_select_neg_negx_x_multiuse3"
 4: "test_select_neg_negx_x_multiuse3" has unsupported operation: builtin.unregistered: llvm.bitcast
-
-4: "test_select_neg_negx_x_multiuse3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "test_select_neg_negx_x_multiuse3" has unsupported operation: llvm.call
 
@@ -405,8 +397,6 @@
 1: "test_select_nneg_negx_x_multiuse4"
 4: "test_select_nneg_negx_x_multiuse4" has unsupported operation: builtin.unregistered: llvm.bitcast
 
-4: "test_select_nneg_negx_x_multiuse4" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test_select_nneg_negx_x_multiuse4" has unsupported operation: llvm.call
 
 4: "test_select_nneg_negx_x_multiuse4" has unsupported operation: builtin.unregistered: llvm.fneg
@@ -416,28 +406,20 @@
 1: "test_select_neg_negx_x_mismatched1"
 4: "test_select_neg_negx_x_mismatched1" has unsupported operation: builtin.unregistered: llvm.bitcast
 
-4: "test_select_neg_negx_x_mismatched1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test_select_neg_negx_x_mismatched1" has unsupported operation: builtin.unregistered: llvm.fneg
 
 1: "test_select_neg_negx_x_mismatched2"
 4: "test_select_neg_negx_x_mismatched2" has unsupported operation: builtin.unregistered: llvm.bitcast
-
-4: "test_select_neg_negx_x_mismatched2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "test_select_neg_negx_x_mismatched2" has unsupported operation: builtin.unregistered: llvm.fneg
 
 1: "test_select_neg_negx_x_mismatched3"
 4: "test_select_neg_negx_x_mismatched3" has unsupported operation: builtin.unregistered: llvm.bitcast
 
-4: "test_select_neg_negx_x_mismatched3" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test_select_neg_negx_x_mismatched3" has unsupported operation: builtin.unregistered: llvm.fneg
 
 1: "test_select_neg_negx_x_wrong_type"
 4: "test_select_neg_negx_x_wrong_type" has unsupported operation: builtin.unregistered: llvm.bitcast
-
-4: "test_select_neg_negx_x_wrong_type" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "test_select_neg_negx_x_wrong_type" has unsupported operation: builtin.unregistered: llvm.fneg
 

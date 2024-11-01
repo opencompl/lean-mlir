@@ -42,8 +42,6 @@
 
 4: "PR2341" has unsupported operation: llvm.call
 
-4: "PR2341" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "PR4284"
 4: "PR4284" has unsupported operation: llvm.alloca
 

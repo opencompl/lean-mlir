@@ -999,6 +999,180 @@ theorem lshr_sext_i1_to_i128_proof : lshr_sext_i1_to_i128_before ⊑ lshr_sext_i
 
 
 
+def icmp_ule_before := [llvm|
+{
+^0(%arg49 : i32, %arg50 : i32):
+  %0 = llvm.lshr %arg49, %arg50 : i32
+  %1 = llvm.icmp "ule" %0, %arg49 : i32
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+def icmp_ule_after := [llvm|
+{
+^0(%arg49 : i32, %arg50 : i32):
+  %0 = llvm.mlir.constant(true) : i1
+  "llvm.return"(%0) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem icmp_ule_proof : icmp_ule_before ⊑ icmp_ule_after := by
+  unfold icmp_ule_before icmp_ule_after
+  simp_alive_peephole
+  intros
+  ---BEGIN icmp_ule
+  apply icmp_ule_thm
+  ---END icmp_ule
+
+
+
+def icmp_ugt_before := [llvm|
+{
+^0(%arg41 : i32, %arg42 : i32):
+  %0 = llvm.lshr %arg41, %arg42 : i32
+  %1 = llvm.icmp "ugt" %0, %arg41 : i32
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+def icmp_ugt_after := [llvm|
+{
+^0(%arg41 : i32, %arg42 : i32):
+  %0 = llvm.mlir.constant(false) : i1
+  "llvm.return"(%0) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem icmp_ugt_proof : icmp_ugt_before ⊑ icmp_ugt_after := by
+  unfold icmp_ugt_before icmp_ugt_after
+  simp_alive_peephole
+  intros
+  ---BEGIN icmp_ugt
+  apply icmp_ugt_thm
+  ---END icmp_ugt
+
+
+
+def not_signbit_before := [llvm|
+{
+^0(%arg22 : i8):
+  %0 = llvm.mlir.constant(-1 : i8) : i8
+  %1 = llvm.mlir.constant(7 : i8) : i8
+  %2 = llvm.xor %arg22, %0 : i8
+  %3 = llvm.lshr %2, %1 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+def not_signbit_after := [llvm|
+{
+^0(%arg22 : i8):
+  %0 = llvm.mlir.constant(-1 : i8) : i8
+  %1 = llvm.icmp "sgt" %arg22, %0 : i8
+  %2 = llvm.zext %1 : i1 to i8
+  "llvm.return"(%2) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem not_signbit_proof : not_signbit_before ⊑ not_signbit_after := by
+  unfold not_signbit_before not_signbit_after
+  simp_alive_peephole
+  intros
+  ---BEGIN not_signbit
+  apply not_signbit_thm
+  ---END not_signbit
+
+
+
+def not_signbit_alt_xor_before := [llvm|
+{
+^0(%arg20 : i8):
+  %0 = llvm.mlir.constant(-2 : i8) : i8
+  %1 = llvm.mlir.constant(7 : i8) : i8
+  %2 = llvm.xor %arg20, %0 : i8
+  %3 = llvm.lshr %2, %1 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+def not_signbit_alt_xor_after := [llvm|
+{
+^0(%arg20 : i8):
+  %0 = llvm.mlir.constant(-1 : i8) : i8
+  %1 = llvm.icmp "sgt" %arg20, %0 : i8
+  %2 = llvm.zext %1 : i1 to i8
+  "llvm.return"(%2) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem not_signbit_alt_xor_proof : not_signbit_alt_xor_before ⊑ not_signbit_alt_xor_after := by
+  unfold not_signbit_alt_xor_before not_signbit_alt_xor_after
+  simp_alive_peephole
+  intros
+  ---BEGIN not_signbit_alt_xor
+  apply not_signbit_alt_xor_thm
+  ---END not_signbit_alt_xor
+
+
+
+def not_signbit_zext_before := [llvm|
+{
+^0(%arg17 : i16):
+  %0 = llvm.mlir.constant(-1 : i16) : i16
+  %1 = llvm.mlir.constant(15 : i16) : i16
+  %2 = llvm.xor %arg17, %0 : i16
+  %3 = llvm.lshr %2, %1 : i16
+  %4 = llvm.zext %3 : i16 to i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def not_signbit_zext_after := [llvm|
+{
+^0(%arg17 : i16):
+  %0 = llvm.mlir.constant(-1 : i16) : i16
+  %1 = llvm.icmp "sgt" %arg17, %0 : i16
+  %2 = llvm.zext %1 : i1 to i32
+  "llvm.return"(%2) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem not_signbit_zext_proof : not_signbit_zext_before ⊑ not_signbit_zext_after := by
+  unfold not_signbit_zext_before not_signbit_zext_after
+  simp_alive_peephole
+  intros
+  ---BEGIN not_signbit_zext
+  apply not_signbit_zext_thm
+  ---END not_signbit_zext
+
+
+
+def not_signbit_trunc_before := [llvm|
+{
+^0(%arg16 : i16):
+  %0 = llvm.mlir.constant(-1 : i16) : i16
+  %1 = llvm.mlir.constant(15 : i16) : i16
+  %2 = llvm.xor %arg16, %0 : i16
+  %3 = llvm.lshr %2, %1 : i16
+  %4 = llvm.trunc %3 : i16 to i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+def not_signbit_trunc_after := [llvm|
+{
+^0(%arg16 : i16):
+  %0 = llvm.mlir.constant(-1 : i16) : i16
+  %1 = llvm.icmp "sgt" %arg16, %0 : i16
+  %2 = llvm.zext %1 : i1 to i8
+  "llvm.return"(%2) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem not_signbit_trunc_proof : not_signbit_trunc_before ⊑ not_signbit_trunc_after := by
+  unfold not_signbit_trunc_before not_signbit_trunc_after
+  simp_alive_peephole
+  intros
+  ---BEGIN not_signbit_trunc
+  apply not_signbit_trunc_thm
+  ---END not_signbit_trunc
+
+
+
 def bool_add_lshr_before := [llvm|
 {
 ^0(%arg14 : i1, %arg15 : i1):
@@ -1026,6 +1200,38 @@ theorem bool_add_lshr_proof : bool_add_lshr_before ⊑ bool_add_lshr_after := by
   ---BEGIN bool_add_lshr
   apply bool_add_lshr_thm
   ---END bool_add_lshr
+
+
+
+def not_bool_add_lshr_before := [llvm|
+{
+^0(%arg12 : i2, %arg13 : i2):
+  %0 = llvm.mlir.constant(2 : i4) : i4
+  %1 = llvm.zext %arg12 : i2 to i4
+  %2 = llvm.zext %arg13 : i2 to i4
+  %3 = llvm.add %1, %2 : i4
+  %4 = llvm.lshr %3, %0 : i4
+  "llvm.return"(%4) : (i4) -> ()
+}
+]
+def not_bool_add_lshr_after := [llvm|
+{
+^0(%arg12 : i2, %arg13 : i2):
+  %0 = llvm.mlir.constant(-1 : i2) : i2
+  %1 = llvm.xor %arg12, %0 : i2
+  %2 = llvm.icmp "ugt" %arg13, %1 : i2
+  %3 = llvm.zext %2 : i1 to i4
+  "llvm.return"(%3) : (i4) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem not_bool_add_lshr_proof : not_bool_add_lshr_before ⊑ not_bool_add_lshr_after := by
+  unfold not_bool_add_lshr_before not_bool_add_lshr_after
+  simp_alive_peephole
+  intros
+  ---BEGIN not_bool_add_lshr
+  apply not_bool_add_lshr_thm
+  ---END not_bool_add_lshr
 
 
 

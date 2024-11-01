@@ -1,0 +1,59 @@
+
+import SSA.Projects.InstCombine.TacticAuto
+import SSA.Projects.InstCombine.LLVM.Semantics
+open BitVec
+open LLVM
+
+section gselecthicmphandhzerohshl_proof
+theorem test_eq_thm (e : IntW 32) :
+  select (icmp IntPredicate.eq (LLVM.and e (const? 1073741823)) (const? 0)) (const? 0) (shl e (const? 2)) ⊑
+    shl e (const? 2) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test_ne_thm (e : IntW 32) :
+  select (icmp IntPredicate.ne (LLVM.and e (const? 1073741823)) (const? 0)) (shl e (const? 2)) (const? 0) ⊑
+    shl e (const? 2) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test_nuw_dropped_thm (e : IntW 32) :
+  select (icmp IntPredicate.eq (LLVM.and e (const? 1073741823)) (const? 0)) (const? 0)
+      (shl e (const? 2) { «nsw» := false, «nuw» := true }) ⊑
+    shl e (const? 2) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test_nsw_dropped_thm (e : IntW 32) :
+  select (icmp IntPredicate.eq (LLVM.and e (const? 1073741823)) (const? 0)) (const? 0)
+      (shl e (const? 2) { «nsw» := true, «nuw» := false }) ⊑
+    shl e (const? 2) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem neg_test_icmp_non_equality_thm (e : IntW 32) :
+  select (icmp IntPredicate.slt (LLVM.and e (const? 1073741823)) (const? 0)) (const? 0) (shl e (const? 2)) ⊑
+    shl e (const? 2) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+

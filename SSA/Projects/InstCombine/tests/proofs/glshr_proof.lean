@@ -311,7 +311,68 @@ theorem lshr_sext_i1_to_i128_thm (e : IntW 1) :
     all_goals sorry
 
 
+theorem icmp_ule_thm (e e_1 : IntW 32) : icmp IntPredicate.ule (lshr e_1 e) e_1 ⊑ const? 1 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem icmp_ugt_thm (e e_1 : IntW 32) : icmp IntPredicate.ugt (lshr e_1 e) e_1 ⊑ const? 0 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem not_signbit_thm (e : IntW 8) :
+  lshr (LLVM.xor e (const? (-1))) (const? 7) ⊑ zext 8 (icmp IntPredicate.sgt e (const? (-1))) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem not_signbit_alt_xor_thm (e : IntW 8) :
+  lshr (LLVM.xor e (const? (-2))) (const? 7) ⊑ zext 8 (icmp IntPredicate.sgt e (const? (-1))) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem not_signbit_zext_thm (e : IntW 16) :
+  zext 32 (lshr (LLVM.xor e (const? (-1))) (const? 15)) ⊑ zext 32 (icmp IntPredicate.sgt e (const? (-1))) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem not_signbit_trunc_thm (e : IntW 16) :
+  trunc 8 (lshr (LLVM.xor e (const? (-1))) (const? 15)) ⊑ zext 8 (icmp IntPredicate.sgt e (const? (-1))) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
 theorem bool_add_lshr_thm (e e_1 : IntW 1) : lshr (add (zext 2 e_1) (zext 2 e)) (const? 1) ⊑ zext 2 (LLVM.and e_1 e) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem not_bool_add_lshr_thm (e e_1 : IntW 2) :
+  lshr (add (zext 4 e_1) (zext 4 e)) (const? 2) ⊑ zext 4 (icmp IntPredicate.ugt e (LLVM.xor e_1 (const? (-1)))) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

@@ -3,8 +3,6 @@
 
 4: "pr48975" has unsupported operation: llvm.load
 
-4: "pr48975" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "nonnull_ret"
 4: "nonnull_ret" has unsupported operation: llvm.mlir.zero
 

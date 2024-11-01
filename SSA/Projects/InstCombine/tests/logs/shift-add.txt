@@ -276,7 +276,13 @@
 2: llvm.return
 
 1: "lshr_16_add_zext_basic"
-4: "lshr_16_add_zext_basic" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.add
+2: llvm.lshr
+2: llvm.return
 
 1: "lshr_16_add_zext_basic_multiuse"
 2: llvm.func
@@ -310,7 +316,13 @@
 2: llvm.return
 
 1: "lshr_32_add_zext_basic"
-4: "lshr_32_add_zext_basic" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.add
+2: llvm.lshr
+2: llvm.return
 
 1: "lshr_32_add_zext_basic_multiuse"
 2: llvm.func
@@ -341,7 +353,13 @@
 2: llvm.return
 
 1: "lshr_16_to_64_add_zext_basic"
-4: "lshr_16_to_64_add_zext_basic" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.add
+2: llvm.lshr
+2: llvm.return
 
 1: "lshr_32_add_known_32_leading_zeroes"
 2: llvm.func
@@ -365,16 +383,43 @@
 2: llvm.return
 
 1: "ashr_16_add_zext_basic"
-4: "ashr_16_add_zext_basic" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.add
+2: llvm.lshr
+2: llvm.return
 
 1: "ashr_32_add_zext_basic"
-4: "ashr_32_add_zext_basic" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.add
+2: llvm.ashr
+2: llvm.return
 
 1: "ashr_16_to_64_add_zext_basic"
-4: "ashr_16_to_64_add_zext_basic" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.add
+2: llvm.ashr
+2: llvm.return
 
 1: "lshr_32_add_zext_trunc"
-4: "lshr_32_add_zext_trunc" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.add
+2: llvm.trunc
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.add
+2: llvm.return
 
 1: "add3_i96"
 4: "add3_i96" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -382,8 +427,6 @@
 4: "add3_i96" has unsupported operation: builtin.unregistered: llvm.extractelement
 
 4: "add3_i96" has unsupported operation: builtin.unregistered: llvm.extractelement
-
-4: "add3_i96" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "add3_i96" has unsupported operation: builtin.unregistered: llvm.extractelement
 

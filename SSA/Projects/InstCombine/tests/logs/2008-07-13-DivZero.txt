@@ -1,6 +1,4 @@
 1: "a"
-4: "a" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "a" has unsupported operation: llvm.call
 
 1: "b"

@@ -181,6 +181,134 @@ theorem logical_or_not_cond_reuse_proof : logical_or_not_cond_reuse_before ⊑ l
 
 
 
+def logical_or_implies_before := [llvm|
+{
+^0(%arg251 : i32):
+  %0 = llvm.mlir.constant(0 : i32) : i32
+  %1 = llvm.mlir.constant(42 : i32) : i32
+  %2 = llvm.mlir.constant(true) : i1
+  %3 = llvm.icmp "eq" %arg251, %0 : i32
+  %4 = llvm.icmp "eq" %arg251, %1 : i32
+  %5 = "llvm.select"(%3, %2, %4) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  "llvm.return"(%5) : (i1) -> ()
+}
+]
+def logical_or_implies_after := [llvm|
+{
+^0(%arg251 : i32):
+  %0 = llvm.mlir.constant(0 : i32) : i32
+  %1 = llvm.mlir.constant(42 : i32) : i32
+  %2 = llvm.icmp "eq" %arg251, %0 : i32
+  %3 = llvm.icmp "eq" %arg251, %1 : i32
+  %4 = llvm.or %2, %3 : i1
+  "llvm.return"(%4) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem logical_or_implies_proof : logical_or_implies_before ⊑ logical_or_implies_after := by
+  unfold logical_or_implies_before logical_or_implies_after
+  simp_alive_peephole
+  intros
+  ---BEGIN logical_or_implies
+  all_goals (try extract_goal ; sorry)
+  ---END logical_or_implies
+
+
+
+def logical_or_implies_folds_before := [llvm|
+{
+^0(%arg250 : i32):
+  %0 = llvm.mlir.constant(0 : i32) : i32
+  %1 = llvm.mlir.constant(true) : i1
+  %2 = llvm.icmp "slt" %arg250, %0 : i32
+  %3 = llvm.icmp "sge" %arg250, %0 : i32
+  %4 = "llvm.select"(%2, %1, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  "llvm.return"(%4) : (i1) -> ()
+}
+]
+def logical_or_implies_folds_after := [llvm|
+{
+^0(%arg250 : i32):
+  %0 = llvm.mlir.constant(true) : i1
+  "llvm.return"(%0) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem logical_or_implies_folds_proof : logical_or_implies_folds_before ⊑ logical_or_implies_folds_after := by
+  unfold logical_or_implies_folds_before logical_or_implies_folds_after
+  simp_alive_peephole
+  intros
+  ---BEGIN logical_or_implies_folds
+  all_goals (try extract_goal ; sorry)
+  ---END logical_or_implies_folds
+
+
+
+def logical_and_implies_before := [llvm|
+{
+^0(%arg249 : i32):
+  %0 = llvm.mlir.constant(0 : i32) : i32
+  %1 = llvm.mlir.constant(42 : i32) : i32
+  %2 = llvm.mlir.constant(false) : i1
+  %3 = llvm.icmp "ne" %arg249, %0 : i32
+  %4 = llvm.icmp "ne" %arg249, %1 : i32
+  %5 = "llvm.select"(%3, %4, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  "llvm.return"(%5) : (i1) -> ()
+}
+]
+def logical_and_implies_after := [llvm|
+{
+^0(%arg249 : i32):
+  %0 = llvm.mlir.constant(0 : i32) : i32
+  %1 = llvm.mlir.constant(42 : i32) : i32
+  %2 = llvm.icmp "ne" %arg249, %0 : i32
+  %3 = llvm.icmp "ne" %arg249, %1 : i32
+  %4 = llvm.and %2, %3 : i1
+  "llvm.return"(%4) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem logical_and_implies_proof : logical_and_implies_before ⊑ logical_and_implies_after := by
+  unfold logical_and_implies_before logical_and_implies_after
+  simp_alive_peephole
+  intros
+  ---BEGIN logical_and_implies
+  all_goals (try extract_goal ; sorry)
+  ---END logical_and_implies
+
+
+
+def logical_and_implies_folds_before := [llvm|
+{
+^0(%arg248 : i32):
+  %0 = llvm.mlir.constant(42 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.mlir.constant(false) : i1
+  %3 = llvm.icmp "ugt" %arg248, %0 : i32
+  %4 = llvm.icmp "ne" %arg248, %1 : i32
+  %5 = "llvm.select"(%3, %4, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  "llvm.return"(%5) : (i1) -> ()
+}
+]
+def logical_and_implies_folds_after := [llvm|
+{
+^0(%arg248 : i32):
+  %0 = llvm.mlir.constant(42 : i32) : i32
+  %1 = llvm.icmp "ugt" %arg248, %0 : i32
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem logical_and_implies_folds_proof : logical_and_implies_folds_before ⊑ logical_and_implies_folds_after := by
+  unfold logical_and_implies_folds_before logical_and_implies_folds_after
+  simp_alive_peephole
+  intros
+  ---BEGIN logical_and_implies_folds
+  all_goals (try extract_goal ; sorry)
+  ---END logical_and_implies_folds
+
+
+
 def logical_or_noundef_b_before := [llvm|
 {
 ^0(%arg244 : i1, %arg245 : i1):
@@ -543,6 +671,68 @@ theorem and_or2_wrong_operand_proof : and_or2_wrong_operand_before ⊑ and_or2_w
 
 
 
+def and_or3_before := [llvm|
+{
+^0(%arg168 : i1, %arg169 : i1, %arg170 : i32, %arg171 : i32):
+  %0 = llvm.icmp "eq" %arg170, %arg171 : i32
+  %1 = llvm.and %arg169, %0 : i1
+  %2 = "llvm.select"(%1, %arg168, %arg169) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  "llvm.return"(%2) : (i1) -> ()
+}
+]
+def and_or3_after := [llvm|
+{
+^0(%arg168 : i1, %arg169 : i1, %arg170 : i32, %arg171 : i32):
+  %0 = llvm.mlir.constant(true) : i1
+  %1 = llvm.mlir.constant(false) : i1
+  %2 = llvm.icmp "ne" %arg170, %arg171 : i32
+  %3 = "llvm.select"(%2, %0, %arg168) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  %4 = "llvm.select"(%arg169, %3, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  "llvm.return"(%4) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem and_or3_proof : and_or3_before ⊑ and_or3_after := by
+  unfold and_or3_before and_or3_after
+  simp_alive_peephole
+  intros
+  ---BEGIN and_or3
+  all_goals (try extract_goal ; sorry)
+  ---END and_or3
+
+
+
+def and_or3_commuted_before := [llvm|
+{
+^0(%arg164 : i1, %arg165 : i1, %arg166 : i32, %arg167 : i32):
+  %0 = llvm.icmp "eq" %arg166, %arg167 : i32
+  %1 = llvm.and %0, %arg165 : i1
+  %2 = "llvm.select"(%1, %arg164, %arg165) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  "llvm.return"(%2) : (i1) -> ()
+}
+]
+def and_or3_commuted_after := [llvm|
+{
+^0(%arg164 : i1, %arg165 : i1, %arg166 : i32, %arg167 : i32):
+  %0 = llvm.mlir.constant(true) : i1
+  %1 = llvm.mlir.constant(false) : i1
+  %2 = llvm.icmp "ne" %arg166, %arg167 : i32
+  %3 = "llvm.select"(%2, %0, %arg164) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  %4 = "llvm.select"(%arg165, %3, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  "llvm.return"(%4) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem and_or3_commuted_proof : and_or3_commuted_before ⊑ and_or3_commuted_after := by
+  unfold and_or3_commuted_before and_or3_commuted_after
+  simp_alive_peephole
+  intros
+  ---BEGIN and_or3_commuted
+  all_goals (try extract_goal ; sorry)
+  ---END and_or3_commuted
+
+
+
 def or_and1_before := [llvm|
 {
 ^0(%arg141 : i1, %arg142 : i1, %arg143 : i1):
@@ -692,5 +882,286 @@ theorem pr64558_proof : pr64558_before ⊑ pr64558_after := by
   ---BEGIN pr64558
   all_goals (try extract_goal ; sorry)
   ---END pr64558
+
+
+
+def or_and3_before := [llvm|
+{
+^0(%arg104 : i1, %arg105 : i1, %arg106 : i32, %arg107 : i32):
+  %0 = llvm.icmp "eq" %arg106, %arg107 : i32
+  %1 = llvm.or %arg104, %0 : i1
+  %2 = "llvm.select"(%1, %arg104, %arg105) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  "llvm.return"(%2) : (i1) -> ()
+}
+]
+def or_and3_after := [llvm|
+{
+^0(%arg104 : i1, %arg105 : i1, %arg106 : i32, %arg107 : i32):
+  %0 = llvm.mlir.constant(false) : i1
+  %1 = llvm.mlir.constant(true) : i1
+  %2 = llvm.icmp "ne" %arg106, %arg107 : i32
+  %3 = "llvm.select"(%2, %arg105, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  %4 = "llvm.select"(%arg104, %1, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  "llvm.return"(%4) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem or_and3_proof : or_and3_before ⊑ or_and3_after := by
+  unfold or_and3_before or_and3_after
+  simp_alive_peephole
+  intros
+  ---BEGIN or_and3
+  all_goals (try extract_goal ; sorry)
+  ---END or_and3
+
+
+
+def or_and3_commuted_before := [llvm|
+{
+^0(%arg100 : i1, %arg101 : i1, %arg102 : i32, %arg103 : i32):
+  %0 = llvm.icmp "eq" %arg102, %arg103 : i32
+  %1 = llvm.or %0, %arg100 : i1
+  %2 = "llvm.select"(%1, %arg100, %arg101) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  "llvm.return"(%2) : (i1) -> ()
+}
+]
+def or_and3_commuted_after := [llvm|
+{
+^0(%arg100 : i1, %arg101 : i1, %arg102 : i32, %arg103 : i32):
+  %0 = llvm.mlir.constant(false) : i1
+  %1 = llvm.mlir.constant(true) : i1
+  %2 = llvm.icmp "ne" %arg102, %arg103 : i32
+  %3 = "llvm.select"(%2, %arg101, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  %4 = "llvm.select"(%arg100, %1, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  "llvm.return"(%4) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem or_and3_commuted_proof : or_and3_commuted_before ⊑ or_and3_commuted_after := by
+  unfold or_and3_commuted_before or_and3_commuted_after
+  simp_alive_peephole
+  intros
+  ---BEGIN or_and3_commuted
+  all_goals (try extract_goal ; sorry)
+  ---END or_and3_commuted
+
+
+
+def test_or_eq_a_b_before := [llvm|
+{
+^0(%arg36 : i1, %arg37 : i8, %arg38 : i8):
+  %0 = llvm.icmp "eq" %arg37, %arg38 : i8
+  %1 = llvm.or %arg36, %0 : i1
+  %2 = "llvm.select"(%1, %arg37, %arg38) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  "llvm.return"(%2) : (i8) -> ()
+}
+]
+def test_or_eq_a_b_after := [llvm|
+{
+^0(%arg36 : i1, %arg37 : i8, %arg38 : i8):
+  %0 = "llvm.select"(%arg36, %arg37, %arg38) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  "llvm.return"(%0) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test_or_eq_a_b_proof : test_or_eq_a_b_before ⊑ test_or_eq_a_b_after := by
+  unfold test_or_eq_a_b_before test_or_eq_a_b_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test_or_eq_a_b
+  all_goals (try extract_goal ; sorry)
+  ---END test_or_eq_a_b
+
+
+
+def test_and_ne_a_b_before := [llvm|
+{
+^0(%arg33 : i1, %arg34 : i8, %arg35 : i8):
+  %0 = llvm.icmp "ne" %arg34, %arg35 : i8
+  %1 = llvm.and %arg33, %0 : i1
+  %2 = "llvm.select"(%1, %arg34, %arg35) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  "llvm.return"(%2) : (i8) -> ()
+}
+]
+def test_and_ne_a_b_after := [llvm|
+{
+^0(%arg33 : i1, %arg34 : i8, %arg35 : i8):
+  %0 = "llvm.select"(%arg33, %arg34, %arg35) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  "llvm.return"(%0) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test_and_ne_a_b_proof : test_and_ne_a_b_before ⊑ test_and_ne_a_b_after := by
+  unfold test_and_ne_a_b_before test_and_ne_a_b_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test_and_ne_a_b
+  all_goals (try extract_goal ; sorry)
+  ---END test_and_ne_a_b
+
+
+
+def test_or_eq_a_b_commuted_before := [llvm|
+{
+^0(%arg30 : i1, %arg31 : i8, %arg32 : i8):
+  %0 = llvm.icmp "eq" %arg31, %arg32 : i8
+  %1 = llvm.or %arg30, %0 : i1
+  %2 = "llvm.select"(%1, %arg32, %arg31) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  "llvm.return"(%2) : (i8) -> ()
+}
+]
+def test_or_eq_a_b_commuted_after := [llvm|
+{
+^0(%arg30 : i1, %arg31 : i8, %arg32 : i8):
+  %0 = "llvm.select"(%arg30, %arg32, %arg31) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  "llvm.return"(%0) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test_or_eq_a_b_commuted_proof : test_or_eq_a_b_commuted_before ⊑ test_or_eq_a_b_commuted_after := by
+  unfold test_or_eq_a_b_commuted_before test_or_eq_a_b_commuted_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test_or_eq_a_b_commuted
+  all_goals (try extract_goal ; sorry)
+  ---END test_or_eq_a_b_commuted
+
+
+
+def test_and_ne_a_b_commuted_before := [llvm|
+{
+^0(%arg27 : i1, %arg28 : i8, %arg29 : i8):
+  %0 = llvm.icmp "ne" %arg28, %arg29 : i8
+  %1 = llvm.and %arg27, %0 : i1
+  %2 = "llvm.select"(%1, %arg29, %arg28) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  "llvm.return"(%2) : (i8) -> ()
+}
+]
+def test_and_ne_a_b_commuted_after := [llvm|
+{
+^0(%arg27 : i1, %arg28 : i8, %arg29 : i8):
+  %0 = "llvm.select"(%arg27, %arg29, %arg28) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  "llvm.return"(%0) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test_and_ne_a_b_commuted_proof : test_and_ne_a_b_commuted_before ⊑ test_and_ne_a_b_commuted_after := by
+  unfold test_and_ne_a_b_commuted_before test_and_ne_a_b_commuted_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test_and_ne_a_b_commuted
+  all_goals (try extract_goal ; sorry)
+  ---END test_and_ne_a_b_commuted
+
+
+
+def test_or_eq_different_operands_before := [llvm|
+{
+^0(%arg24 : i8, %arg25 : i8, %arg26 : i8):
+  %0 = llvm.icmp "eq" %arg24, %arg26 : i8
+  %1 = llvm.icmp "eq" %arg25, %arg24 : i8
+  %2 = llvm.or %0, %1 : i1
+  %3 = "llvm.select"(%2, %arg24, %arg25) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+def test_or_eq_different_operands_after := [llvm|
+{
+^0(%arg24 : i8, %arg25 : i8, %arg26 : i8):
+  %0 = llvm.icmp "eq" %arg24, %arg26 : i8
+  %1 = "llvm.select"(%0, %arg24, %arg25) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  "llvm.return"(%1) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test_or_eq_different_operands_proof : test_or_eq_different_operands_before ⊑ test_or_eq_different_operands_after := by
+  unfold test_or_eq_different_operands_before test_or_eq_different_operands_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test_or_eq_different_operands
+  all_goals (try extract_goal ; sorry)
+  ---END test_or_eq_different_operands
+
+
+
+def test_or_ne_a_b_before := [llvm|
+{
+^0(%arg15 : i1, %arg16 : i8, %arg17 : i8):
+  %0 = llvm.icmp "ne" %arg16, %arg17 : i8
+  %1 = llvm.or %arg15, %0 : i1
+  %2 = "llvm.select"(%1, %arg16, %arg17) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  "llvm.return"(%2) : (i8) -> ()
+}
+]
+def test_or_ne_a_b_after := [llvm|
+{
+^0(%arg15 : i1, %arg16 : i8, %arg17 : i8):
+  "llvm.return"(%arg16) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test_or_ne_a_b_proof : test_or_ne_a_b_before ⊑ test_or_ne_a_b_after := by
+  unfold test_or_ne_a_b_before test_or_ne_a_b_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test_or_ne_a_b
+  all_goals (try extract_goal ; sorry)
+  ---END test_or_ne_a_b
+
+
+
+def test_logical_or_eq_a_b_before := [llvm|
+{
+^0(%arg9 : i1, %arg10 : i8, %arg11 : i8):
+  %0 = llvm.mlir.constant(true) : i1
+  %1 = llvm.icmp "eq" %arg10, %arg11 : i8
+  %2 = "llvm.select"(%arg9, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  %3 = "llvm.select"(%2, %arg10, %arg11) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+def test_logical_or_eq_a_b_after := [llvm|
+{
+^0(%arg9 : i1, %arg10 : i8, %arg11 : i8):
+  %0 = "llvm.select"(%arg9, %arg10, %arg11) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  "llvm.return"(%0) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test_logical_or_eq_a_b_proof : test_logical_or_eq_a_b_before ⊑ test_logical_or_eq_a_b_after := by
+  unfold test_logical_or_eq_a_b_before test_logical_or_eq_a_b_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test_logical_or_eq_a_b
+  all_goals (try extract_goal ; sorry)
+  ---END test_logical_or_eq_a_b
+
+
+
+def test_logical_and_ne_a_b_before := [llvm|
+{
+^0(%arg3 : i1, %arg4 : i8, %arg5 : i8):
+  %0 = llvm.mlir.constant(false) : i1
+  %1 = llvm.icmp "ne" %arg4, %arg5 : i8
+  %2 = "llvm.select"(%arg3, %1, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  %3 = "llvm.select"(%2, %arg4, %arg5) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+def test_logical_and_ne_a_b_after := [llvm|
+{
+^0(%arg3 : i1, %arg4 : i8, %arg5 : i8):
+  %0 = "llvm.select"(%arg3, %arg4, %arg5) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  "llvm.return"(%0) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test_logical_and_ne_a_b_proof : test_logical_and_ne_a_b_before ⊑ test_logical_and_ne_a_b_after := by
+  unfold test_logical_and_ne_a_b_before test_logical_and_ne_a_b_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test_logical_and_ne_a_b
+  all_goals (try extract_goal ; sorry)
+  ---END test_logical_and_ne_a_b
 
 

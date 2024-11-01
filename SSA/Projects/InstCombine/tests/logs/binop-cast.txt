@@ -78,8 +78,6 @@
 1: "PR63321"
 4: "PR63321" has unsupported operation: llvm.load
 
-4: "PR63321" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "and_add_non_bool"
 4: "and_add_non_bool" has unsupported operation: llvm.load
 
@@ -92,7 +90,13 @@
 2: llvm.return
 
 1: "and_add_bool_no_fold"
-4: "and_add_bool_no_fold" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.add
+2: llvm.and
+2: llvm.return
 
 1: "and_add_bool_vec_to_select"
 8: "and_add_bool_vec_to_select" contains vectors which are unsupported

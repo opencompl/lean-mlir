@@ -249,3 +249,102 @@ theorem sext_multi_uses_proof : sext_multi_uses_before ⊑ sext_multi_uses_after
   ---END sext_multi_uses
 
 
+
+def absdiff_before := [llvm|
+{
+^0(%arg4 : i64, %arg5 : i64):
+  %0 = llvm.icmp "ult" %arg4, %arg5 : i64
+  %1 = llvm.sext %0 : i1 to i64
+  %2 = llvm.sub %arg4, %arg5 : i64
+  %3 = llvm.xor %1, %2 : i64
+  %4 = llvm.sub %3, %1 : i64
+  "llvm.return"(%4) : (i64) -> ()
+}
+]
+def absdiff_after := [llvm|
+{
+^0(%arg4 : i64, %arg5 : i64):
+  %0 = llvm.mlir.constant(0) : i64
+  %1 = llvm.icmp "ult" %arg4, %arg5 : i64
+  %2 = llvm.sub %arg4, %arg5 : i64
+  %3 = llvm.sub %0, %2 : i64
+  %4 = "llvm.select"(%1, %3, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
+  "llvm.return"(%4) : (i64) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem absdiff_proof : absdiff_before ⊑ absdiff_after := by
+  unfold absdiff_before absdiff_after
+  simp_alive_peephole
+  intros
+  ---BEGIN absdiff
+  all_goals (try extract_goal ; sorry)
+  ---END absdiff
+
+
+
+def absdiff1_before := [llvm|
+{
+^0(%arg2 : i64, %arg3 : i64):
+  %0 = llvm.icmp "ult" %arg2, %arg3 : i64
+  %1 = llvm.sext %0 : i1 to i64
+  %2 = llvm.sub %arg2, %arg3 : i64
+  %3 = llvm.xor %2, %1 : i64
+  %4 = llvm.sub %3, %1 : i64
+  "llvm.return"(%4) : (i64) -> ()
+}
+]
+def absdiff1_after := [llvm|
+{
+^0(%arg2 : i64, %arg3 : i64):
+  %0 = llvm.mlir.constant(0) : i64
+  %1 = llvm.icmp "ult" %arg2, %arg3 : i64
+  %2 = llvm.sub %arg2, %arg3 : i64
+  %3 = llvm.sub %0, %2 : i64
+  %4 = "llvm.select"(%1, %3, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
+  "llvm.return"(%4) : (i64) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem absdiff1_proof : absdiff1_before ⊑ absdiff1_after := by
+  unfold absdiff1_before absdiff1_after
+  simp_alive_peephole
+  intros
+  ---BEGIN absdiff1
+  all_goals (try extract_goal ; sorry)
+  ---END absdiff1
+
+
+
+def absdiff2_before := [llvm|
+{
+^0(%arg0 : i64, %arg1 : i64):
+  %0 = llvm.icmp "ugt" %arg0, %arg1 : i64
+  %1 = llvm.sext %0 : i1 to i64
+  %2 = llvm.sub %arg1, %arg0 : i64
+  %3 = llvm.xor %2, %1 : i64
+  %4 = llvm.sub %3, %1 : i64
+  "llvm.return"(%4) : (i64) -> ()
+}
+]
+def absdiff2_after := [llvm|
+{
+^0(%arg0 : i64, %arg1 : i64):
+  %0 = llvm.mlir.constant(0) : i64
+  %1 = llvm.icmp "ugt" %arg0, %arg1 : i64
+  %2 = llvm.sub %arg1, %arg0 : i64
+  %3 = llvm.sub %0, %2 : i64
+  %4 = "llvm.select"(%1, %3, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
+  "llvm.return"(%4) : (i64) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem absdiff2_proof : absdiff2_before ⊑ absdiff2_after := by
+  unfold absdiff2_before absdiff2_after
+  simp_alive_peephole
+  intros
+  ---BEGIN absdiff2
+  all_goals (try extract_goal ; sorry)
+  ---END absdiff2
+
+

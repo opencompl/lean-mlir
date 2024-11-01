@@ -7,7 +7,5 @@
 
 4: "main" has unsupported operation: llvm.load
 
-4: "main" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "main" has unsupported operation: builtin.unregistered: llvm.cond_br
 

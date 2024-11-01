@@ -4187,6 +4187,39 @@ theorem xor_sext_sext_proof : xor_sext_sext_before ⊑ xor_sext_sext_after := by
 
 
 
+def PR56294_before := [llvm|
+{
+^0(%arg41 : i8):
+  %0 = llvm.mlir.constant(2 : i8) : i8
+  %1 = llvm.mlir.constant(1 : i8) : i8
+  %2 = llvm.mlir.constant(0 : i32) : i32
+  %3 = llvm.icmp "eq" %arg41, %0 : i8
+  %4 = llvm.and %arg41, %1 : i8
+  %5 = llvm.zext %3 : i1 to i32
+  %6 = llvm.zext %4 : i8 to i32
+  %7 = llvm.and %5, %6 : i32
+  %8 = llvm.icmp "ne" %7, %2 : i32
+  "llvm.return"(%8) : (i1) -> ()
+}
+]
+def PR56294_after := [llvm|
+{
+^0(%arg41 : i8):
+  %0 = llvm.mlir.constant(false) : i1
+  "llvm.return"(%0) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem PR56294_proof : PR56294_before ⊑ PR56294_after := by
+  unfold PR56294_before PR56294_after
+  simp_alive_peephole
+  intros
+  ---BEGIN PR56294
+  all_goals (try extract_goal ; sorry)
+  ---END PR56294
+
+
+
 def canonicalize_logic_first_or0_before := [llvm|
 {
 ^0(%arg40 : i32):
@@ -4463,5 +4496,33 @@ theorem canonicalize_logic_first_xor_0_nswnuw_proof : canonicalize_logic_first_x
   ---BEGIN canonicalize_logic_first_xor_0_nswnuw
   all_goals (try extract_goal ; sorry)
   ---END canonicalize_logic_first_xor_0_nswnuw
+
+
+
+def test_and_xor_freely_invertable_before := [llvm|
+{
+^0(%arg3 : i32, %arg4 : i32, %arg5 : i1):
+  %0 = llvm.icmp "sgt" %arg3, %arg4 : i32
+  %1 = llvm.xor %0, %arg5 : i1
+  %2 = llvm.and %1, %arg5 : i1
+  "llvm.return"(%2) : (i1) -> ()
+}
+]
+def test_and_xor_freely_invertable_after := [llvm|
+{
+^0(%arg3 : i32, %arg4 : i32, %arg5 : i1):
+  %0 = llvm.icmp "sle" %arg3, %arg4 : i32
+  %1 = llvm.and %0, %arg5 : i1
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test_and_xor_freely_invertable_proof : test_and_xor_freely_invertable_before ⊑ test_and_xor_freely_invertable_after := by
+  unfold test_and_xor_freely_invertable_before test_and_xor_freely_invertable_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test_and_xor_freely_invertable
+  all_goals (try extract_goal ; sorry)
+  ---END test_and_xor_freely_invertable
 
 

@@ -9,19 +9,13 @@
 
 4: "fn3" has unsupported operation: llvm.load
 
-4: "fn3" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "fn3" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "fn3" has unsupported operation: llvm.load
 
-4: "fn3" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "fn3" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "fn3" has unsupported operation: llvm.load
-
-4: "fn3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "fn3" has unsupported operation: llvm.store
 

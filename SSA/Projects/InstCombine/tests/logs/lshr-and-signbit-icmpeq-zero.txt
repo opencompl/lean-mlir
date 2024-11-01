@@ -1,56 +1,105 @@
 1: "scalar_i8_lshr_and_signbit_eq"
-4: "scalar_i8_lshr_and_signbit_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
 
 1: "scalar_i16_lshr_and_signbit_eq"
-4: "scalar_i16_lshr_and_signbit_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
 
 1: "scalar_i32_lshr_and_signbit_eq"
-4: "scalar_i32_lshr_and_signbit_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
 
 1: "scalar_i64_lshr_and_signbit_eq"
-4: "scalar_i64_lshr_and_signbit_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
 
 1: "scalar_i32_lshr_and_signbit_ne"
-4: "scalar_i32_lshr_and_signbit_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
 
 1: "vec_4xi32_lshr_and_signbit_eq"
-4: "vec_4xi32_lshr_and_signbit_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "vec_4xi32_lshr_and_signbit_eq" contains vectors which are unsupported
 
 1: "vec_4xi32_lshr_and_signbit_eq_poison1"
-4: "vec_4xi32_lshr_and_signbit_eq_poison1" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "vec_4xi32_lshr_and_signbit_eq_poison1" contains vectors which are unsupported
 
 1: "vec_4xi32_lshr_and_signbit_eq_poison2"
-4: "vec_4xi32_lshr_and_signbit_eq_poison2" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "vec_4xi32_lshr_and_signbit_eq_poison2" contains vectors which are unsupported
 
 1: "vec_4xi32_lshr_and_signbit_eq_poison3"
-4: "vec_4xi32_lshr_and_signbit_eq_poison3" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "vec_4xi32_lshr_and_signbit_eq_poison3" contains vectors which are unsupported
 
 1: "scalar_lshr_and_signbit_eq_extra_use_lshr"
 4: "scalar_lshr_and_signbit_eq_extra_use_lshr" has unsupported operation: llvm.store
 
-4: "scalar_lshr_and_signbit_eq_extra_use_lshr" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "scalar_lshr_and_signbit_eq_extra_use_and"
 4: "scalar_lshr_and_signbit_eq_extra_use_and" has unsupported operation: llvm.store
-
-4: "scalar_lshr_and_signbit_eq_extra_use_and" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "scalar_lshr_and_signbit_eq_extra_use_lshr_and"
 4: "scalar_lshr_and_signbit_eq_extra_use_lshr_and" has unsupported operation: llvm.store
 
 4: "scalar_lshr_and_signbit_eq_extra_use_lshr_and" has unsupported operation: llvm.store
 
-4: "scalar_lshr_and_signbit_eq_extra_use_lshr_and" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "scalar_i32_lshr_and_signbit_eq_X_is_constant1"
-4: "scalar_i32_lshr_and_signbit_eq_X_is_constant1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
 
 1: "scalar_i32_lshr_and_negC_eq_X_is_constant2"
-4: "scalar_i32_lshr_and_negC_eq_X_is_constant2" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
 
 1: "scalar_i32_lshr_and_negC_slt"
-4: "scalar_i32_lshr_and_negC_slt" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
 
 1: "scalar_i32_lshr_and_negC_eq_nonzero"
-4: "scalar_i32_lshr_and_negC_eq_nonzero" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
 

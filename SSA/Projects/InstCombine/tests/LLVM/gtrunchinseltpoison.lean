@@ -872,3 +872,39 @@ theorem trunc_shl_shl_var_proof : trunc_shl_shl_var_before ⊑ trunc_shl_shl_var
   ---END trunc_shl_shl_var
 
 
+
+def PR44545_before := [llvm|
+{
+^0(%arg0 : i32, %arg1 : i32):
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.mlir.constant(-1 : i16) : i16
+  %3 = llvm.add %arg0, %0 overflow<nsw,nuw> : i32
+  %4 = llvm.icmp "eq" %arg1, %1 : i32
+  %5 = "llvm.select"(%4, %1, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  %6 = llvm.trunc %5 : i32 to i16
+  %7 = llvm.add %6, %2 overflow<nsw> : i16
+  "llvm.return"(%7) : (i16) -> ()
+}
+]
+def PR44545_after := [llvm|
+{
+^0(%arg0 : i32, %arg1 : i32):
+  %0 = llvm.mlir.constant(0 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i16) : i16
+  %2 = llvm.icmp "eq" %arg1, %0 : i32
+  %3 = llvm.trunc %arg0 : i32 to i16
+  %4 = "llvm.select"(%2, %1, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i16, i16) -> i16
+  "llvm.return"(%4) : (i16) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem PR44545_proof : PR44545_before ⊑ PR44545_after := by
+  unfold PR44545_before PR44545_after
+  simp_alive_peephole
+  intros
+  ---BEGIN PR44545
+  all_goals (try extract_goal ; sorry)
+  ---END PR44545
+
+

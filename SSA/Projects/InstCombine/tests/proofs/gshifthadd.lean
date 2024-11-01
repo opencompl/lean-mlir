@@ -432,6 +432,38 @@ theorem ashr_2_add_zext_basic_proof : ashr_2_add_zext_basic_before ⊑ ashr_2_ad
 
 
 
+def lshr_16_add_zext_basic_before := [llvm|
+{
+^0(%arg33 : i16, %arg34 : i16):
+  %0 = llvm.mlir.constant(16 : i32) : i32
+  %1 = llvm.zext %arg33 : i16 to i32
+  %2 = llvm.zext %arg34 : i16 to i32
+  %3 = llvm.add %1, %2 : i32
+  %4 = llvm.lshr %3, %0 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def lshr_16_add_zext_basic_after := [llvm|
+{
+^0(%arg33 : i16, %arg34 : i16):
+  %0 = llvm.mlir.constant(-1 : i16) : i16
+  %1 = llvm.xor %arg33, %0 : i16
+  %2 = llvm.icmp "ugt" %arg34, %1 : i16
+  %3 = llvm.zext %2 : i1 to i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem lshr_16_add_zext_basic_proof : lshr_16_add_zext_basic_before ⊑ lshr_16_add_zext_basic_after := by
+  unfold lshr_16_add_zext_basic_before lshr_16_add_zext_basic_after
+  simp_alive_peephole
+  intros
+  ---BEGIN lshr_16_add_zext_basic
+  apply lshr_16_add_zext_basic_thm
+  ---END lshr_16_add_zext_basic
+
+
+
 def lshr_16_add_zext_basic_multiuse_before := [llvm|
 {
 ^0(%arg31 : i16, %arg32 : i16):
@@ -539,6 +571,38 @@ theorem lshr_16_add_not_known_16_leading_zeroes_proof : lshr_16_add_not_known_16
 
 
 
+def lshr_32_add_zext_basic_before := [llvm|
+{
+^0(%arg25 : i32, %arg26 : i32):
+  %0 = llvm.mlir.constant(32) : i64
+  %1 = llvm.zext %arg25 : i32 to i64
+  %2 = llvm.zext %arg26 : i32 to i64
+  %3 = llvm.add %1, %2 : i64
+  %4 = llvm.lshr %3, %0 : i64
+  "llvm.return"(%4) : (i64) -> ()
+}
+]
+def lshr_32_add_zext_basic_after := [llvm|
+{
+^0(%arg25 : i32, %arg26 : i32):
+  %0 = llvm.mlir.constant(-1 : i32) : i32
+  %1 = llvm.xor %arg25, %0 : i32
+  %2 = llvm.icmp "ugt" %arg26, %1 : i32
+  %3 = llvm.zext %2 : i1 to i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem lshr_32_add_zext_basic_proof : lshr_32_add_zext_basic_before ⊑ lshr_32_add_zext_basic_after := by
+  unfold lshr_32_add_zext_basic_before lshr_32_add_zext_basic_after
+  simp_alive_peephole
+  intros
+  ---BEGIN lshr_32_add_zext_basic
+  apply lshr_32_add_zext_basic_thm
+  ---END lshr_32_add_zext_basic
+
+
+
 def lshr_32_add_zext_basic_multiuse_before := [llvm|
 {
 ^0(%arg23 : i32, %arg24 : i32):
@@ -636,6 +700,38 @@ theorem lshr_33_i32_add_zext_basic_proof : lshr_33_i32_add_zext_basic_before ⊑
 
 
 
+def lshr_16_to_64_add_zext_basic_before := [llvm|
+{
+^0(%arg17 : i16, %arg18 : i16):
+  %0 = llvm.mlir.constant(16) : i64
+  %1 = llvm.zext %arg17 : i16 to i64
+  %2 = llvm.zext %arg18 : i16 to i64
+  %3 = llvm.add %1, %2 : i64
+  %4 = llvm.lshr %3, %0 : i64
+  "llvm.return"(%4) : (i64) -> ()
+}
+]
+def lshr_16_to_64_add_zext_basic_after := [llvm|
+{
+^0(%arg17 : i16, %arg18 : i16):
+  %0 = llvm.mlir.constant(-1 : i16) : i16
+  %1 = llvm.xor %arg17, %0 : i16
+  %2 = llvm.icmp "ugt" %arg18, %1 : i16
+  %3 = llvm.zext %2 : i1 to i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem lshr_16_to_64_add_zext_basic_proof : lshr_16_to_64_add_zext_basic_before ⊑ lshr_16_to_64_add_zext_basic_after := by
+  unfold lshr_16_to_64_add_zext_basic_before lshr_16_to_64_add_zext_basic_after
+  simp_alive_peephole
+  intros
+  ---BEGIN lshr_16_to_64_add_zext_basic
+  apply lshr_16_to_64_add_zext_basic_thm
+  ---END lshr_16_to_64_add_zext_basic
+
+
+
 def lshr_32_add_known_32_leading_zeroes_before := [llvm|
 {
 ^0(%arg15 : i64, %arg16 : i64):
@@ -705,6 +801,137 @@ theorem lshr_32_add_not_known_32_leading_zeroes_proof : lshr_32_add_not_known_32
   ---BEGIN lshr_32_add_not_known_32_leading_zeroes
   apply lshr_32_add_not_known_32_leading_zeroes_thm
   ---END lshr_32_add_not_known_32_leading_zeroes
+
+
+
+def ashr_16_add_zext_basic_before := [llvm|
+{
+^0(%arg11 : i16, %arg12 : i16):
+  %0 = llvm.mlir.constant(16 : i32) : i32
+  %1 = llvm.zext %arg11 : i16 to i32
+  %2 = llvm.zext %arg12 : i16 to i32
+  %3 = llvm.add %1, %2 : i32
+  %4 = llvm.lshr %3, %0 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def ashr_16_add_zext_basic_after := [llvm|
+{
+^0(%arg11 : i16, %arg12 : i16):
+  %0 = llvm.mlir.constant(-1 : i16) : i16
+  %1 = llvm.xor %arg11, %0 : i16
+  %2 = llvm.icmp "ugt" %arg12, %1 : i16
+  %3 = llvm.zext %2 : i1 to i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem ashr_16_add_zext_basic_proof : ashr_16_add_zext_basic_before ⊑ ashr_16_add_zext_basic_after := by
+  unfold ashr_16_add_zext_basic_before ashr_16_add_zext_basic_after
+  simp_alive_peephole
+  intros
+  ---BEGIN ashr_16_add_zext_basic
+  apply ashr_16_add_zext_basic_thm
+  ---END ashr_16_add_zext_basic
+
+
+
+def ashr_32_add_zext_basic_before := [llvm|
+{
+^0(%arg9 : i32, %arg10 : i32):
+  %0 = llvm.mlir.constant(32) : i64
+  %1 = llvm.zext %arg9 : i32 to i64
+  %2 = llvm.zext %arg10 : i32 to i64
+  %3 = llvm.add %1, %2 : i64
+  %4 = llvm.ashr %3, %0 : i64
+  "llvm.return"(%4) : (i64) -> ()
+}
+]
+def ashr_32_add_zext_basic_after := [llvm|
+{
+^0(%arg9 : i32, %arg10 : i32):
+  %0 = llvm.mlir.constant(-1 : i32) : i32
+  %1 = llvm.xor %arg9, %0 : i32
+  %2 = llvm.icmp "ugt" %arg10, %1 : i32
+  %3 = llvm.zext %2 : i1 to i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem ashr_32_add_zext_basic_proof : ashr_32_add_zext_basic_before ⊑ ashr_32_add_zext_basic_after := by
+  unfold ashr_32_add_zext_basic_before ashr_32_add_zext_basic_after
+  simp_alive_peephole
+  intros
+  ---BEGIN ashr_32_add_zext_basic
+  apply ashr_32_add_zext_basic_thm
+  ---END ashr_32_add_zext_basic
+
+
+
+def ashr_16_to_64_add_zext_basic_before := [llvm|
+{
+^0(%arg7 : i16, %arg8 : i16):
+  %0 = llvm.mlir.constant(16) : i64
+  %1 = llvm.zext %arg7 : i16 to i64
+  %2 = llvm.zext %arg8 : i16 to i64
+  %3 = llvm.add %1, %2 : i64
+  %4 = llvm.ashr %3, %0 : i64
+  "llvm.return"(%4) : (i64) -> ()
+}
+]
+def ashr_16_to_64_add_zext_basic_after := [llvm|
+{
+^0(%arg7 : i16, %arg8 : i16):
+  %0 = llvm.mlir.constant(-1 : i16) : i16
+  %1 = llvm.xor %arg7, %0 : i16
+  %2 = llvm.icmp "ugt" %arg8, %1 : i16
+  %3 = llvm.zext %2 : i1 to i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem ashr_16_to_64_add_zext_basic_proof : ashr_16_to_64_add_zext_basic_before ⊑ ashr_16_to_64_add_zext_basic_after := by
+  unfold ashr_16_to_64_add_zext_basic_before ashr_16_to_64_add_zext_basic_after
+  simp_alive_peephole
+  intros
+  ---BEGIN ashr_16_to_64_add_zext_basic
+  apply ashr_16_to_64_add_zext_basic_thm
+  ---END ashr_16_to_64_add_zext_basic
+
+
+
+def lshr_32_add_zext_trunc_before := [llvm|
+{
+^0(%arg5 : i32, %arg6 : i32):
+  %0 = llvm.mlir.constant(32) : i64
+  %1 = llvm.zext %arg5 : i32 to i64
+  %2 = llvm.zext %arg6 : i32 to i64
+  %3 = llvm.add %1, %2 : i64
+  %4 = llvm.trunc %3 : i64 to i32
+  %5 = llvm.lshr %3, %0 : i64
+  %6 = llvm.trunc %5 : i64 to i32
+  %7 = llvm.add %4, %6 : i32
+  "llvm.return"(%7) : (i32) -> ()
+}
+]
+def lshr_32_add_zext_trunc_after := [llvm|
+{
+^0(%arg5 : i32, %arg6 : i32):
+  %0 = llvm.add %arg5, %arg6 : i32
+  %1 = llvm.icmp "ult" %0, %arg5 : i32
+  %2 = llvm.zext %1 : i1 to i32
+  %3 = llvm.add %0, %2 : i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem lshr_32_add_zext_trunc_proof : lshr_32_add_zext_trunc_before ⊑ lshr_32_add_zext_trunc_after := by
+  unfold lshr_32_add_zext_trunc_before lshr_32_add_zext_trunc_after
+  simp_alive_peephole
+  intros
+  ---BEGIN lshr_32_add_zext_trunc
+  apply lshr_32_add_zext_trunc_thm
+  ---END lshr_32_add_zext_trunc
 
 
 

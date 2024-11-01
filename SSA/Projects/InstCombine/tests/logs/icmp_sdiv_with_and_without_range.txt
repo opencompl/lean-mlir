@@ -1,10 +1,6 @@
 1: "without_range"
 4: "without_range" has unsupported operation: llvm.load
 
-4: "without_range" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "with_range"
 4: "with_range" has unsupported operation: llvm.load
-
-4: "with_range" has unsupported operation: builtin.unregistered: llvm.icmp
 

@@ -1,11 +1,17 @@
 1: "t0_basic"
-4: "t0_basic" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.add
+2: llvm.icmp
+2: llvm.return
 
 1: "t1_vec"
-4: "t1_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "t1_vec" contains vectors which are unsupported
 
 1: "t2_symmetry"
-4: "t2_symmetry" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.add
+2: llvm.icmp
+2: llvm.return
 
 1: "gen8"
 5: "gen8" is empty
@@ -13,15 +19,14 @@
 1: "t3_commutative"
 4: "t3_commutative" has unsupported operation: llvm.call
 
-4: "t3_commutative" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "t4_commutative"
-4: "t4_commutative" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.add
+2: llvm.icmp
+2: llvm.return
 
 1: "t5_commutative"
 4: "t5_commutative" has unsupported operation: llvm.call
-
-4: "t5_commutative" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "use8"
 5: "use8" is empty
@@ -29,69 +34,80 @@
 1: "t6_extrause"
 4: "t6_extrause" has unsupported operation: llvm.call
 
-4: "t6_extrause" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "n7_different_y"
-4: "n7_different_y" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "n7_different_y" is unchanged by InstCombine
 
 1: "n8_wrong_pred0"
-4: "n8_wrong_pred0" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "n8_wrong_pred0" is unchanged by InstCombine
 
 1: "n9_wrong_pred1"
-4: "n9_wrong_pred1" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "n9_wrong_pred1" is unchanged by InstCombine
 
 1: "n10_wrong_pred2"
-4: "n10_wrong_pred2" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.add
+2: llvm.icmp
+2: llvm.return
 
 1: "n11_wrong_pred3"
-4: "n11_wrong_pred3" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.add
+2: llvm.icmp
+2: llvm.return
 
 1: "n12_wrong_pred4"
-4: "n12_wrong_pred4" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "n12_wrong_pred4" is unchanged by InstCombine
 
 1: "n13_wrong_pred5"
-4: "n13_wrong_pred5" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "n13_wrong_pred5" is unchanged by InstCombine
 
 1: "n14_wrong_pred6"
-4: "n14_wrong_pred6" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "n14_wrong_pred6" is unchanged by InstCombine
 
 1: "n15_wrong_pred7"
-4: "n15_wrong_pred7" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "n15_wrong_pred7" is unchanged by InstCombine
 
 1: "low_bitmask_ult"
-4: "low_bitmask_ult" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
 
 1: "low_bitmask_uge"
-4: "low_bitmask_uge" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "low_bitmask_uge" contains vectors which are unsupported
 
 1: "low_bitmask_ugt"
-4: "low_bitmask_ugt" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.add
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
 
 1: "low_bitmask_ule"
-4: "low_bitmask_ule" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "low_bitmask_ule" contains vectors which are unsupported
 
 1: "low_bitmask_ult_use"
 4: "low_bitmask_ult_use" has unsupported operation: llvm.call
 
-4: "low_bitmask_ult_use" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "low_bitmask_ugt_use"
 4: "low_bitmask_ugt_use" has unsupported operation: llvm.call
 
-4: "low_bitmask_ugt_use" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "low_bitmask_ult_wrong_mask1"
-4: "low_bitmask_ult_wrong_mask1" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "low_bitmask_ult_wrong_mask1" is unchanged by InstCombine
 
 1: "low_bitmask_uge_wrong_mask2"
-4: "low_bitmask_uge_wrong_mask2" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "low_bitmask_uge_wrong_mask2" is unchanged by InstCombine
 
 1: "low_bitmask_ugt_swapped"
-4: "low_bitmask_ugt_swapped" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "low_bitmask_ugt_swapped" is unchanged by InstCombine
 
 1: "low_bitmask_sgt"
-4: "low_bitmask_sgt" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "low_bitmask_sgt" is unchanged by InstCombine
 
 1: "low_bitmask_ult_specific_op"
-4: "low_bitmask_ult_specific_op" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "low_bitmask_ult_specific_op" is unchanged by InstCombine
 

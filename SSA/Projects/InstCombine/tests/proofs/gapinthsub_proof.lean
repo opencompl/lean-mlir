@@ -77,6 +77,14 @@ theorem test9_thm (e : IntW 42) : sub e (mul (const? 3) e) ⊑ mul e (const? (-2
     all_goals sorry
 
 
+theorem test11_thm (e e_1 : IntW 9) : icmp IntPredicate.ne (sub e_1 e) (const? 0) ⊑ icmp IntPredicate.ne e_1 e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
 theorem test12_thm (e : IntW 43) : sub (const? 0) (ashr e (const? 42)) ⊑ lshr e (const? 42) := by 
     simp_alive_undef
     simp_alive_ops
@@ -110,6 +118,24 @@ theorem test18_thm (e : IntW 128) : sub (shl e (const? 2)) (shl e (const? 2)) �
 
 
 theorem test19_thm (e e_1 : IntW 39) : add (sub e_1 e) e ⊑ e_1 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test20_thm (e e_1 : IntW 33) :
+  icmp IntPredicate.ne (sub e_1 e) e_1 ⊑ icmp IntPredicate.ne e (const? 0) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test21_thm (e e_1 : IntW 256) :
+  icmp IntPredicate.ne (sub e_1 e) e_1 ⊑ icmp IntPredicate.ne e (const? 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

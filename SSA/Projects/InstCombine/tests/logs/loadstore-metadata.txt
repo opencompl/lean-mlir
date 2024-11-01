@@ -33,8 +33,6 @@
 
 4: "test_load_cast_combine_loop" has unsupported operation: llvm.store
 
-4: "test_load_cast_combine_loop" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test_load_cast_combine_loop" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test_load_cast_combine_loop" has unsupported operation: llvm.return

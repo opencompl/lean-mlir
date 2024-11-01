@@ -19,7 +19,15 @@
 4: "pr4917_2" has unsupported operation: llvm.extractvalue
 
 1: "pr4917_3"
-4: "pr4917_3" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.mul
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "pr4917_4"
 4: "pr4917_4" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
@@ -54,7 +62,7 @@
 4: "pr4918_3" has unsupported operation: llvm.extractvalue
 
 1: "pr20113"
-4: "pr20113" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "pr20113" contains vectors which are unsupported
 
 1: "pr21445"
 4: "pr21445" has unsupported operation: llvm.mlir.addressof
@@ -66,7 +74,14 @@
 4: "pr21445" has unsupported operation: llvm.extractvalue
 
 1: "mul_may_overflow"
-4: "mul_may_overflow" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.mul
+2: llvm.icmp
+2: llvm.zext
+2: llvm.return
 
 1: "mul_known_nuw"
 4: "mul_known_nuw" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
@@ -92,7 +107,5 @@
 4: "extra_and_use_small_mask" has unsupported operation: llvm.call
 
 1: "extra_and_use_mask_too_large"
-4: "extra_and_use_mask_too_large" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "extra_and_use_mask_too_large" has unsupported operation: llvm.call
 

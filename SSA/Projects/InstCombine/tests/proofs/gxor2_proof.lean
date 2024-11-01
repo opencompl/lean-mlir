@@ -5,6 +5,24 @@ open BitVec
 open LLVM
 
 section gxor2_proof
+theorem test0_thm (e : IntW 32) :
+  icmp IntPredicate.sgt (LLVM.xor e (const? (-2147483648))) (const? (-1)) ⊑ icmp IntPredicate.slt e (const? 0) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test1_thm (e : IntW 32) :
+  icmp IntPredicate.slt (LLVM.xor e (const? 12345)) (const? 0) ⊑ icmp IntPredicate.slt e (const? 0) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
 theorem test2_thm (e : IntW 32) :
   LLVM.xor (add (LLVM.and e (const? 32)) (const? 145)) (const? 153) ⊑
     LLVM.or (LLVM.and e (const? 32)) (const? 8) := by 

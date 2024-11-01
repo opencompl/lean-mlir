@@ -1,10 +1,8 @@
 1: "vec_select"
-4: "vec_select" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "vec_select" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "vec_select" contains vectors which are unsupported
 
 1: "vec_select_alternate_sign_bit_test"
-4: "vec_select_alternate_sign_bit_test" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "vec_select_alternate_sign_bit_test" contains vectors which are unsupported
 
 1: "is_negative_poison_elt"
 8: "is_negative_poison_elt" contains vectors which are unsupported
@@ -17,6 +15,4 @@
 4: "is_positive_poison_elt" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 4: "is_positive_poison_elt" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "is_positive_poison_elt" has unsupported operation: builtin.unregistered: llvm.icmp
 

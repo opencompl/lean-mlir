@@ -1,6 +1,13 @@
 1: "PR2539_A"
-4: "PR2539_A" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
 
 1: "PR2539_B"
-4: "PR2539_B" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.return
 

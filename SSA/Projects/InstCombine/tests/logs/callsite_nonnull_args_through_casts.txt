@@ -44,8 +44,6 @@
 4: "nonnullAfterPtr2Int" has unsupported operation: llvm.return
 
 1: "maybenullAfterInt2Ptr"
-4: "maybenullAfterInt2Ptr" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "maybenullAfterInt2Ptr" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 4: "maybenullAfterInt2Ptr" has unsupported operation: llvm.inttoptr

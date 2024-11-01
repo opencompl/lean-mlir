@@ -30,6 +30,47 @@ theorem test3_thm (e e_1 : IntW 32) : LLVM.and e_1 (LLVM.and e e_1) ⊑ LLVM.and
     all_goals sorry
 
 
+theorem test7_thm (e : IntW 1) (e_1 : IntW 32) :
+  LLVM.and (LLVM.and (icmp IntPredicate.slt e_1 (const? 1)) e) (icmp IntPredicate.sgt e_1 (const? (-1))) ⊑
+    LLVM.and (icmp IntPredicate.eq e_1 (const? 0)) e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test7_logical_thm (e : IntW 1) (e_1 : IntW 32) :
+  select (select (icmp IntPredicate.slt e_1 (const? 1)) e (const? 0)) (icmp IntPredicate.sgt e_1 (const? (-1)))
+      (const? 0) ⊑
+    select (icmp IntPredicate.eq e_1 (const? 0)) e (const? 0) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test8_thm (e : IntW 32) :
+  LLVM.and (icmp IntPredicate.ne e (const? 0)) (icmp IntPredicate.ult e (const? 14)) ⊑
+    icmp IntPredicate.ult (add e (const? (-1))) (const? 13) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test8_logical_thm (e : IntW 32) :
+  select (icmp IntPredicate.ne e (const? 0)) (icmp IntPredicate.ult e (const? 14)) (const? 0) ⊑
+    icmp IntPredicate.ult (add e (const? (-1))) (const? 13) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
 theorem test9_thm (e : IntW 64) :
   LLVM.and (sub (const? 0) e { «nsw» := true, «nuw» := false }) (const? 1) ⊑ LLVM.and e (const? 1) := by 
     simp_alive_undef
@@ -43,6 +84,15 @@ theorem test10_thm (e : IntW 64) :
   add (sub (const? 0) e { «nsw» := true, «nuw» := false })
       (LLVM.and (sub (const? 0) e { «nsw» := true, «nuw» := false }) (const? 1)) ⊑
     sub (const? 0) (LLVM.and e (const? (-2))) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem and1_shl1_is_cmp_eq_0_thm (e : IntW 8) :
+  LLVM.and (shl (const? 1) e) (const? 1) ⊑ zext 8 (icmp IntPredicate.eq e (const? 0)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

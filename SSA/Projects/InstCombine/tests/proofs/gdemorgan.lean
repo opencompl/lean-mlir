@@ -853,6 +853,78 @@ theorem demorgan_and_zext_proof : demorgan_and_zext_before ⊑ demorgan_and_zext
 
 
 
+def PR28476_before := [llvm|
+{
+^0(%arg8 : i32, %arg9 : i32):
+  %0 = llvm.mlir.constant(0 : i32) : i32
+  %1 = llvm.mlir.constant(1 : i32) : i32
+  %2 = llvm.icmp "ne" %arg8, %0 : i32
+  %3 = llvm.icmp "ne" %arg9, %0 : i32
+  %4 = llvm.and %2, %3 : i1
+  %5 = llvm.zext %4 : i1 to i32
+  %6 = llvm.xor %5, %1 : i32
+  "llvm.return"(%6) : (i32) -> ()
+}
+]
+def PR28476_after := [llvm|
+{
+^0(%arg8 : i32, %arg9 : i32):
+  %0 = llvm.mlir.constant(0 : i32) : i32
+  %1 = llvm.icmp "eq" %arg8, %0 : i32
+  %2 = llvm.icmp "eq" %arg9, %0 : i32
+  %3 = llvm.or %1, %2 : i1
+  %4 = llvm.zext %3 : i1 to i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem PR28476_proof : PR28476_before ⊑ PR28476_after := by
+  unfold PR28476_before PR28476_after
+  simp_alive_peephole
+  intros
+  ---BEGIN PR28476
+  apply PR28476_thm
+  ---END PR28476
+
+
+
+def PR28476_logical_before := [llvm|
+{
+^0(%arg6 : i32, %arg7 : i32):
+  %0 = llvm.mlir.constant(0 : i32) : i32
+  %1 = llvm.mlir.constant(false) : i1
+  %2 = llvm.mlir.constant(1 : i32) : i32
+  %3 = llvm.icmp "ne" %arg6, %0 : i32
+  %4 = llvm.icmp "ne" %arg7, %0 : i32
+  %5 = "llvm.select"(%3, %4, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  %6 = llvm.zext %5 : i1 to i32
+  %7 = llvm.xor %6, %2 : i32
+  "llvm.return"(%7) : (i32) -> ()
+}
+]
+def PR28476_logical_after := [llvm|
+{
+^0(%arg6 : i32, %arg7 : i32):
+  %0 = llvm.mlir.constant(0 : i32) : i32
+  %1 = llvm.mlir.constant(true) : i1
+  %2 = llvm.icmp "eq" %arg6, %0 : i32
+  %3 = llvm.icmp "eq" %arg7, %0 : i32
+  %4 = "llvm.select"(%2, %1, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  %5 = llvm.zext %4 : i1 to i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem PR28476_logical_proof : PR28476_logical_before ⊑ PR28476_logical_after := by
+  unfold PR28476_logical_before PR28476_logical_after
+  simp_alive_peephole
+  intros
+  ---BEGIN PR28476_logical
+  apply PR28476_logical_thm
+  ---END PR28476_logical
+
+
+
 def demorgan_plus_and_to_xor_before := [llvm|
 {
 ^0(%arg4 : i32, %arg5 : i32):

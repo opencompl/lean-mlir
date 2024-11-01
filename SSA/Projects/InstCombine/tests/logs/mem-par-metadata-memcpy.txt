@@ -1,8 +1,6 @@
 1: "_Z4testPcl"
 4: "_Z4testPcl" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "_Z4testPcl" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "_Z4testPcl" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "_Z4testPcl" has unsupported operation: llvm.getelementptr

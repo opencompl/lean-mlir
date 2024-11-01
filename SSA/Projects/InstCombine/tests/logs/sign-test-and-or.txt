@@ -2,43 +2,53 @@
 5: "foo" is empty
 
 1: "test1"
-4: "test1" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
 
 1: "test1_splat"
-4: "test1_splat" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "test1_splat" contains vectors which are unsupported
 
 1: "test1_logical"
-4: "test1_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "test1_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "test1_logical" is unchanged by InstCombine
 
 1: "test2"
-4: "test2" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
 
 1: "test2_logical"
-4: "test2_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "test2_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "test2_logical" is unchanged by InstCombine
 
 1: "test3"
-4: "test3" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
 
 1: "test3_logical"
-4: "test3_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "test3_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "test3_logical" is unchanged by InstCombine
 
 1: "test4"
-4: "test4" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
 
 1: "test4_logical"
-4: "test4_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "test4_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "test4_logical" is unchanged by InstCombine
 
 1: "test5"
-4: "test5" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test5" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test5" has unsupported operation: llvm.call
@@ -48,8 +58,6 @@
 4: "test5" has unsupported operation: llvm.return
 
 1: "test5_logical"
-4: "test5_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test5_logical" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test5_logical" has unsupported operation: llvm.call
@@ -59,8 +67,6 @@
 4: "test5_logical" has unsupported operation: llvm.return
 
 1: "test6"
-4: "test6" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test6" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test6" has unsupported operation: llvm.call
@@ -70,8 +76,6 @@
 4: "test6" has unsupported operation: llvm.return
 
 1: "test6_logical"
-4: "test6_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test6_logical" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test6_logical" has unsupported operation: llvm.call
@@ -81,8 +85,6 @@
 4: "test6_logical" has unsupported operation: llvm.return
 
 1: "test7"
-4: "test7" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test7" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test7" has unsupported operation: llvm.call
@@ -92,8 +94,6 @@
 4: "test7" has unsupported operation: llvm.return
 
 1: "test7_logical"
-4: "test7_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test7_logical" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test7_logical" has unsupported operation: llvm.call
@@ -103,8 +103,6 @@
 4: "test7_logical" has unsupported operation: llvm.return
 
 1: "test8"
-4: "test8" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test8" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test8" has unsupported operation: llvm.call
@@ -114,8 +112,6 @@
 4: "test8" has unsupported operation: llvm.return
 
 1: "test8_logical"
-4: "test8_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test8_logical" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test8_logical" has unsupported operation: llvm.call
@@ -125,20 +121,71 @@
 4: "test8_logical" has unsupported operation: llvm.return
 
 1: "test9"
-4: "test9" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
 
 1: "test9_logical"
-4: "test9_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "test10"
-4: "test10" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
 
 1: "test10_logical"
-4: "test10_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "test11"
-4: "test11" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
 
 1: "test11_logical"
-4: "test11_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
 

@@ -1,12 +1,8 @@
 1: "vec_reduce_umax_non_zero"
 4: "vec_reduce_umax_non_zero" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.umax
 
-4: "vec_reduce_umax_non_zero" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "vec_reduce_umax_non_zero_fail"
 4: "vec_reduce_umax_non_zero_fail" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.umax
-
-4: "vec_reduce_umax_non_zero_fail" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "vec_reduce_umin_non_zero"
 8: "vec_reduce_umin_non_zero" contains vectors which are unsupported
@@ -14,20 +10,14 @@
 1: "vec_reduce_umin_non_zero_fail"
 4: "vec_reduce_umin_non_zero_fail" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.umin
 
-4: "vec_reduce_umin_non_zero_fail" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "vec_reduce_smax_non_zero0"
 8: "vec_reduce_smax_non_zero0" contains vectors which are unsupported
 
 1: "vec_reduce_smax_non_zero1"
 4: "vec_reduce_smax_non_zero1" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.smax
 
-4: "vec_reduce_smax_non_zero1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "vec_reduce_smax_non_zero_fail"
 4: "vec_reduce_smax_non_zero_fail" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.smax
-
-4: "vec_reduce_smax_non_zero_fail" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "vec_reduce_smin_non_zero0"
 8: "vec_reduce_smin_non_zero0" contains vectors which are unsupported
@@ -35,12 +25,8 @@
 1: "vec_reduce_smin_non_zero1"
 4: "vec_reduce_smin_non_zero1" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.smin
 
-4: "vec_reduce_smin_non_zero1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "vec_reduce_smin_non_zero_fail"
 4: "vec_reduce_smin_non_zero_fail" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.smin
-
-4: "vec_reduce_smin_non_zero_fail" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "vec_reduce_umax_known0"
 8: "vec_reduce_umax_known0" contains vectors which are unsupported

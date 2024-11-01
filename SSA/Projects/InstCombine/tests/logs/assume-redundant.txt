@@ -3,8 +3,6 @@
 
 4: "_Z3fooR1s" has unsupported operation: builtin.unregistered: llvm.ptrtoint
 
-4: "_Z3fooR1s" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "_Z3fooR1s" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "_Z3fooR1s" has unsupported operation: llvm.getelementptr
@@ -28,8 +26,6 @@
 4: "_Z3fooR1s" has unsupported operation: builtin.unregistered: llvm.fmul
 
 4: "_Z3fooR1s" has unsupported operation: llvm.store
-
-4: "_Z3fooR1s" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "_Z3fooR1s" has unsupported operation: builtin.unregistered: llvm.cond_br
 

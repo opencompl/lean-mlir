@@ -14,8 +14,6 @@
 
 4: "_Z8tempCastj" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "_Z8tempCastj" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "_Z8tempCastj" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "_Z8tempCastj" has unsupported operation: builtin.unregistered: llvm.fadd

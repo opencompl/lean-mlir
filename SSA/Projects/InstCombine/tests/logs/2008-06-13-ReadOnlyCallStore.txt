@@ -3,8 +3,6 @@
 
 4: "a" has unsupported operation: llvm.call
 
-4: "a" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "a" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "a" has unsupported operation: llvm.store

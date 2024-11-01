@@ -163,6 +163,17 @@ theorem test_zext4_thm (e e_1 : IntW 1) :
     all_goals sorry
 
 
+theorem test_op_op_thm (e e_1 e_2 : IntW 32) :
+  select (icmp IntPredicate.sgt e_2 (const? 0)) (sext 32 (icmp IntPredicate.sgt e_1 (const? 0)))
+      (sext 32 (icmp IntPredicate.sgt e (const? 0))) ⊑
+    sext 32 (icmp IntPredicate.sgt (select (icmp IntPredicate.sgt e_2 (const? 0)) e_1 e) (const? 0)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
 theorem sext_true_val_must_be_all_ones_thm (e : IntW 1) : select e (sext 32 e) (const? 42) ⊑ select e (const? (-1)) (const? 42) := by 
     simp_alive_undef
     simp_alive_ops

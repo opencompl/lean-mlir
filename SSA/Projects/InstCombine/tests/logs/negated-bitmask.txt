@@ -105,7 +105,13 @@
 4: "neg_signbit_use2" has unsupported operation: llvm.call
 
 1: "neg_not_signbit1"
-4: "neg_not_signbit1" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.zext
+2: llvm.sub
+2: llvm.return
 
 1: "neg_not_signbit2"
 2: llvm.func
@@ -126,10 +132,29 @@
 2: llvm.return
 
 1: "neg_mask"
-4: "neg_mask" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.sub
+2: llvm.lshr
+2: llvm.zext
+2: llvm.sub
+2: llvm.and
+2: llvm.return
 
 1: "neg_mask_const"
-4: "neg_mask_const" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.sub
+2: llvm.lshr
+2: llvm.zext
+2: llvm.sub
+2: llvm.and
+2: llvm.return
 
 1: "usei8"
 5: "usei8" is empty

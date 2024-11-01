@@ -25,7 +25,5 @@
 
 4: "main" has unsupported operation: llvm.store
 
-4: "main" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "main" has unsupported operation: builtin.unregistered: llvm.cond_br
 

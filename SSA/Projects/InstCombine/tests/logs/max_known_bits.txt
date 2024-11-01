@@ -1,5 +1,14 @@
 1: "foo"
-4: "foo" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.zext
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.trunc
+2: llvm.and
+2: llvm.return
 
 1: "min_max_clamp"
 4: "min_max_clamp" has unsupported operation: builtin.unregistered: llvm.intr.smax

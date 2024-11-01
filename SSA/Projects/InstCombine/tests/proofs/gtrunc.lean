@@ -873,6 +873,42 @@ theorem trunc_shl_shl_var_proof : trunc_shl_shl_var_before ⊑ trunc_shl_shl_var
 
 
 
+def PR44545_before := [llvm|
+{
+^0(%arg15 : i32, %arg16 : i32):
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.mlir.constant(-1 : i16) : i16
+  %3 = llvm.add %arg15, %0 overflow<nsw,nuw> : i32
+  %4 = llvm.icmp "eq" %arg16, %1 : i32
+  %5 = "llvm.select"(%4, %1, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  %6 = llvm.trunc %5 : i32 to i16
+  %7 = llvm.add %6, %2 overflow<nsw> : i16
+  "llvm.return"(%7) : (i16) -> ()
+}
+]
+def PR44545_after := [llvm|
+{
+^0(%arg15 : i32, %arg16 : i32):
+  %0 = llvm.mlir.constant(0 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i16) : i16
+  %2 = llvm.icmp "eq" %arg16, %0 : i32
+  %3 = llvm.trunc %arg15 : i32 to i16
+  %4 = "llvm.select"(%2, %1, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i16, i16) -> i16
+  "llvm.return"(%4) : (i16) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem PR44545_proof : PR44545_before ⊑ PR44545_after := by
+  unfold PR44545_before PR44545_after
+  simp_alive_peephole
+  intros
+  ---BEGIN PR44545
+  apply PR44545_thm
+  ---END PR44545
+
+
+
 def drop_nsw_trunc_before := [llvm|
 {
 ^0(%arg13 : i16, %arg14 : i16):
@@ -957,5 +993,57 @@ theorem drop_both_trunc_proof : drop_both_trunc_before ⊑ drop_both_trunc_after
   ---BEGIN drop_both_trunc
   apply drop_both_trunc_thm
   ---END drop_both_trunc
+
+
+
+def trunc_nuw_xor_before := [llvm|
+{
+^0(%arg5 : i8, %arg6 : i8):
+  %0 = llvm.xor %arg5, %arg6 : i8
+  %1 = llvm.trunc %0 : i8 to i1
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+def trunc_nuw_xor_after := [llvm|
+{
+^0(%arg5 : i8, %arg6 : i8):
+  %0 = llvm.icmp "ne" %arg5, %arg6 : i8
+  "llvm.return"(%0) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem trunc_nuw_xor_proof : trunc_nuw_xor_before ⊑ trunc_nuw_xor_after := by
+  unfold trunc_nuw_xor_before trunc_nuw_xor_after
+  simp_alive_peephole
+  intros
+  ---BEGIN trunc_nuw_xor
+  apply trunc_nuw_xor_thm
+  ---END trunc_nuw_xor
+
+
+
+def trunc_nsw_xor_before := [llvm|
+{
+^0(%arg3 : i8, %arg4 : i8):
+  %0 = llvm.xor %arg3, %arg4 : i8
+  %1 = llvm.trunc %0 : i8 to i1
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+def trunc_nsw_xor_after := [llvm|
+{
+^0(%arg3 : i8, %arg4 : i8):
+  %0 = llvm.icmp "ne" %arg3, %arg4 : i8
+  "llvm.return"(%0) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem trunc_nsw_xor_proof : trunc_nsw_xor_before ⊑ trunc_nsw_xor_after := by
+  unfold trunc_nsw_xor_before trunc_nsw_xor_after
+  simp_alive_peephole
+  intros
+  ---BEGIN trunc_nsw_xor
+  apply trunc_nsw_xor_thm
+  ---END trunc_nsw_xor
 
 

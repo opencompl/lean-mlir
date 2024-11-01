@@ -58,8 +58,6 @@
 
 4: "store_address" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "store_address" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "store_address" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "store_address" has unsupported operation: llvm.getelementptr

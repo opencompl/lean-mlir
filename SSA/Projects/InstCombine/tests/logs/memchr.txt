@@ -106,9 +106,11 @@
 4: "test10" has unsupported operation: llvm.return
 
 1: "test11"
-4: "test11" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "test11" has unsupported operation after optimization: llvm.mlir.addressof
 
-4: "test11" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "test11" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "test11" has unsupported operation after optimization: llvm.call
 
 1: "test12"
 4: "test12" has unsupported operation: llvm.mlir.addressof
@@ -117,15 +119,19 @@
 
 4: "test12" has unsupported operation: llvm.call
 
-4: "test12" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "test13"
-4: "test13" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "test13" has unsupported operation after optimization: llvm.mlir.addressof
 
-4: "test13" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "test13" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "test13" has unsupported operation after optimization: llvm.call
 
 1: "test14"
-4: "test14" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "test14" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test14" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "test14" has unsupported operation after optimization: llvm.call
 
 1: "test15"
 4: "test15" has unsupported operation: llvm.mlir.addressof
@@ -133,8 +139,6 @@
 4: "test15" has unsupported operation: llvm.mlir.zero
 
 4: "test15" has unsupported operation: llvm.call
-
-4: "test15" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "pr32124"
 4: "pr32124" has unsupported operation: llvm.mlir.addressof

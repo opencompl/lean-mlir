@@ -22,8 +22,6 @@
 
 4: "test_direct_implication_complex_cfg" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "test_direct_implication_complex_cfg" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test_direct_implication_complex_cfg" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test_direct_implication_complex_cfg" has unsupported operation: builtin.unregistered: llvm.br
@@ -34,8 +32,6 @@
 4: "test_inverted_implication_complex_cfg" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test_inverted_implication_complex_cfg" has unsupported operation: builtin.unregistered: llvm.br
-
-4: "test_inverted_implication_complex_cfg" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "test_inverted_implication_complex_cfg" has unsupported operation: builtin.unregistered: llvm.cond_br
 

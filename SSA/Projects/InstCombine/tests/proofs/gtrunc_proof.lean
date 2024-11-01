@@ -251,6 +251,19 @@ theorem trunc_shl_shl_var_thm (e e_1 : IntW 64) :
     all_goals sorry
 
 
+theorem PR44545_thm (e e_1 : IntW 32) :
+  add
+      (trunc 16
+        (select (icmp IntPredicate.eq e_1 (const? 0)) (const? 0) (add e (const? 1) { «nsw» := true, «nuw» := true })))
+      (const? (-1)) { «nsw» := true, «nuw» := false } ⊑
+    select (icmp IntPredicate.eq e_1 (const? 0)) (const? (-1)) (trunc 16 e) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
 theorem drop_nsw_trunc_thm (e e_1 : IntW 16) :
   trunc 8 (LLVM.and (LLVM.and e_1 (const? 255)) e) ⊑ trunc 8 (LLVM.and e_1 e) := by 
     simp_alive_undef
@@ -271,6 +284,22 @@ theorem drop_nuw_trunc_thm (e e_1 : IntW 16) :
 
 theorem drop_both_trunc_thm (e e_1 : IntW 16) :
   trunc 8 (LLVM.and (LLVM.and e_1 (const? 255)) e) ⊑ trunc 8 (LLVM.and e_1 e) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem trunc_nuw_xor_thm (e e_1 : IntW 8) : trunc 1 (LLVM.xor e_1 e) ⊑ icmp IntPredicate.ne e_1 e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem trunc_nsw_xor_thm (e e_1 : IntW 8) : trunc 1 (LLVM.xor e_1 e) ⊑ icmp IntPredicate.ne e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

@@ -258,6 +258,37 @@ theorem neg_signbit_proof : neg_signbit_before ⊑ neg_signbit_after := by
 
 
 
+def neg_not_signbit1_before := [llvm|
+{
+^0(%arg5 : i8):
+  %0 = llvm.mlir.constant(7 : i8) : i8
+  %1 = llvm.mlir.constant(1 : i32) : i32
+  %2 = llvm.lshr %arg5, %0 : i8
+  %3 = llvm.zext %2 : i8 to i32
+  %4 = llvm.sub %1, %3 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def neg_not_signbit1_after := [llvm|
+{
+^0(%arg5 : i8):
+  %0 = llvm.mlir.constant(-1 : i8) : i8
+  %1 = llvm.icmp "sgt" %arg5, %0 : i8
+  %2 = llvm.zext %1 : i1 to i32
+  "llvm.return"(%2) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem neg_not_signbit1_proof : neg_not_signbit1_before ⊑ neg_not_signbit1_after := by
+  unfold neg_not_signbit1_before neg_not_signbit1_after
+  simp_alive_peephole
+  intros
+  ---BEGIN neg_not_signbit1
+  all_goals (try extract_goal ; sorry)
+  ---END neg_not_signbit1
+
+
+
 def neg_not_signbit2_before := [llvm|
 {
 ^0(%arg4 : i8):
@@ -321,5 +352,81 @@ theorem neg_not_signbit3_proof : neg_not_signbit3_before ⊑ neg_not_signbit3_af
   ---BEGIN neg_not_signbit3
   all_goals (try extract_goal ; sorry)
   ---END neg_not_signbit3
+
+
+
+def neg_mask_before := [llvm|
+{
+^0(%arg1 : i32, %arg2 : i16):
+  %0 = llvm.mlir.constant(15 : i16) : i16
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.sext %arg2 : i16 to i32
+  %3 = llvm.sub %arg1, %2 overflow<nsw> : i32
+  %4 = llvm.lshr %arg2, %0 : i16
+  %5 = llvm.zext %4 : i16 to i32
+  %6 = llvm.sub %1, %5 overflow<nsw> : i32
+  %7 = llvm.and %3, %6 : i32
+  "llvm.return"(%7) : (i32) -> ()
+}
+]
+def neg_mask_after := [llvm|
+{
+^0(%arg1 : i32, %arg2 : i16):
+  %0 = llvm.mlir.constant(0 : i16) : i16
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.sext %arg2 : i16 to i32
+  %3 = llvm.sub %arg1, %2 overflow<nsw> : i32
+  %4 = llvm.icmp "slt" %arg2, %0 : i16
+  %5 = "llvm.select"(%4, %3, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem neg_mask_proof : neg_mask_before ⊑ neg_mask_after := by
+  unfold neg_mask_before neg_mask_after
+  simp_alive_peephole
+  intros
+  ---BEGIN neg_mask
+  all_goals (try extract_goal ; sorry)
+  ---END neg_mask
+
+
+
+def neg_mask_const_before := [llvm|
+{
+^0(%arg0 : i16):
+  %0 = llvm.mlir.constant(1000 : i32) : i32
+  %1 = llvm.mlir.constant(15 : i16) : i16
+  %2 = llvm.mlir.constant(0 : i32) : i32
+  %3 = llvm.sext %arg0 : i16 to i32
+  %4 = llvm.sub %0, %3 overflow<nsw> : i32
+  %5 = llvm.lshr %arg0, %1 : i16
+  %6 = llvm.zext %5 : i16 to i32
+  %7 = llvm.sub %2, %6 overflow<nsw> : i32
+  %8 = llvm.and %4, %7 : i32
+  "llvm.return"(%8) : (i32) -> ()
+}
+]
+def neg_mask_const_after := [llvm|
+{
+^0(%arg0 : i16):
+  %0 = llvm.mlir.constant(1000 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i16) : i16
+  %2 = llvm.mlir.constant(0 : i32) : i32
+  %3 = llvm.sext %arg0 : i16 to i32
+  %4 = llvm.sub %0, %3 overflow<nsw> : i32
+  %5 = llvm.icmp "slt" %arg0, %1 : i16
+  %6 = "llvm.select"(%5, %4, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  "llvm.return"(%6) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem neg_mask_const_proof : neg_mask_const_before ⊑ neg_mask_const_after := by
+  unfold neg_mask_const_before neg_mask_const_after
+  simp_alive_peephole
+  intros
+  ---BEGIN neg_mask_const
+  all_goals (try extract_goal ; sorry)
+  ---END neg_mask_const
 
 

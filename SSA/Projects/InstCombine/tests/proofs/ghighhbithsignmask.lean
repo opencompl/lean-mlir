@@ -159,3 +159,33 @@ theorem n9_proof : n9_before ⊑ n9_after := by
   ---END n9
 
 
+
+def n10_before := [llvm|
+{
+^0(%arg0 : i64):
+  %0 = llvm.mlir.constant(63) : i64
+  %1 = llvm.mlir.constant(1) : i64
+  %2 = llvm.lshr %arg0, %0 : i64
+  %3 = llvm.sub %1, %2 : i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+def n10_after := [llvm|
+{
+^0(%arg0 : i64):
+  %0 = llvm.mlir.constant(-1) : i64
+  %1 = llvm.icmp "sgt" %arg0, %0 : i64
+  %2 = llvm.zext %1 : i1 to i64
+  "llvm.return"(%2) : (i64) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem n10_proof : n10_before ⊑ n10_after := by
+  unfold n10_before n10_after
+  simp_alive_peephole
+  intros
+  ---BEGIN n10
+  apply n10_thm
+  ---END n10
+
+

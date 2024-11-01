@@ -1,42 +1,107 @@
 1: "select_icmp_eq_pow2"
-4: "select_icmp_eq_pow2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "select_icmp_eq_pow2_flipped"
-4: "select_icmp_eq_pow2_flipped" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "select_icmp_eq_not_pow2"
-4: "select_icmp_eq_not_pow2" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "select_icmp_eq_not_pow2" is unchanged by InstCombine
 
 1: "select_icmp_ne_pow2"
-4: "select_icmp_ne_pow2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "select_icmp_ne_pow2_flipped"
-4: "select_icmp_ne_pow2_flipped" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "select_icmp_ne_not_pow2"
-4: "select_icmp_ne_not_pow2" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "select_icmp_slt_zero_smin"
-4: "select_icmp_slt_zero_smin" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "select_icmp_slt_zero_smin_flipped"
-4: "select_icmp_slt_zero_smin_flipped" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "select_icmp_slt_not_zero"
-4: "select_icmp_slt_not_zero" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "select_icmp_slt_not_zero" is unchanged by InstCombine
 
 1: "select_icmp_slt_not_smin"
-4: "select_icmp_slt_not_smin" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "select_icmp_slt_not_smin" is unchanged by InstCombine
 
 1: "select_icmp_sgt_allones_smin"
-4: "select_icmp_sgt_allones_smin" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "select_icmp_sgt_allones_smin_flipped"
-4: "select_icmp_sgt_allones_smin_flipped" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "select_icmp_sgt_not_allones"
-4: "select_icmp_sgt_not_allones" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "select_icmp_sgt_not_allones" is unchanged by InstCombine
 
 1: "select_icmp_sgt_not_smin"
-4: "select_icmp_sgt_not_smin" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.return
 

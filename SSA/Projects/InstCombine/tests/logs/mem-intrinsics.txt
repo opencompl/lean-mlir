@@ -1,6 +1,4 @@
 1: "memset_null"
-4: "memset_null" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "memset_null" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 4: "memset_null" has unsupported operation: llvm.return
@@ -15,22 +13,16 @@
 4: "memset_null_ub" has unsupported operation: llvm.return
 
 1: "memcpy_null_src"
-4: "memcpy_null_src" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "memcpy_null_src" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 4: "memcpy_null_src" has unsupported operation: llvm.return
 
 1: "memmove_null_src"
-4: "memmove_null_src" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "memmove_null_src" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 4: "memmove_null_src" has unsupported operation: llvm.return
 
 1: "memset_element_atomic"
-4: "memset_element_atomic" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "memset_element_atomic" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 4: "memset_element_atomic" has unsupported operation: llvm.return

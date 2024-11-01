@@ -328,3 +328,109 @@ theorem orcond.110.inv.inner.cond.in.inner.sel.inv.inner.cond.in.outer.cond_proo
   ---END orcond.110.inv.inner.cond.in.inner.sel.inv.inner.cond.in.outer.cond
 
 
+
+def test_implied_true_before := [llvm|
+{
+^0(%arg9 : i8):
+  %0 = llvm.mlir.constant(10 : i8) : i8
+  %1 = llvm.mlir.constant(0 : i8) : i8
+  %2 = llvm.mlir.constant(5 : i8) : i8
+  %3 = llvm.mlir.constant(20 : i8) : i8
+  %4 = llvm.icmp "slt" %arg9, %0 : i8
+  %5 = llvm.icmp "slt" %arg9, %1 : i8
+  %6 = "llvm.select"(%4, %1, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  %7 = "llvm.select"(%5, %6, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  "llvm.return"(%7) : (i8) -> ()
+}
+]
+def test_implied_true_after := [llvm|
+{
+^0(%arg9 : i8):
+  %0 = llvm.mlir.constant(0 : i8) : i8
+  %1 = llvm.mlir.constant(20 : i8) : i8
+  %2 = llvm.icmp "slt" %arg9, %0 : i8
+  %3 = "llvm.select"(%2, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test_implied_true_proof : test_implied_true_before ⊑ test_implied_true_after := by
+  unfold test_implied_true_before test_implied_true_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test_implied_true
+  all_goals (try extract_goal ; sorry)
+  ---END test_implied_true
+
+
+
+def test_implied_true_falseval_before := [llvm|
+{
+^0(%arg7 : i8):
+  %0 = llvm.mlir.constant(10 : i8) : i8
+  %1 = llvm.mlir.constant(0 : i8) : i8
+  %2 = llvm.mlir.constant(5 : i8) : i8
+  %3 = llvm.mlir.constant(20 : i8) : i8
+  %4 = llvm.icmp "slt" %arg7, %0 : i8
+  %5 = llvm.icmp "sgt" %arg7, %1 : i8
+  %6 = "llvm.select"(%4, %1, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  %7 = "llvm.select"(%5, %3, %6) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  "llvm.return"(%7) : (i8) -> ()
+}
+]
+def test_implied_true_falseval_after := [llvm|
+{
+^0(%arg7 : i8):
+  %0 = llvm.mlir.constant(0 : i8) : i8
+  %1 = llvm.mlir.constant(20 : i8) : i8
+  %2 = llvm.icmp "sgt" %arg7, %0 : i8
+  %3 = "llvm.select"(%2, %1, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test_implied_true_falseval_proof : test_implied_true_falseval_before ⊑ test_implied_true_falseval_after := by
+  unfold test_implied_true_falseval_before test_implied_true_falseval_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test_implied_true_falseval
+  all_goals (try extract_goal ; sorry)
+  ---END test_implied_true_falseval
+
+
+
+def test_implied_false_before := [llvm|
+{
+^0(%arg6 : i8):
+  %0 = llvm.mlir.constant(10 : i8) : i8
+  %1 = llvm.mlir.constant(0 : i8) : i8
+  %2 = llvm.mlir.constant(5 : i8) : i8
+  %3 = llvm.mlir.constant(20 : i8) : i8
+  %4 = llvm.icmp "sgt" %arg6, %0 : i8
+  %5 = llvm.icmp "slt" %arg6, %1 : i8
+  %6 = "llvm.select"(%4, %1, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  %7 = "llvm.select"(%5, %6, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  "llvm.return"(%7) : (i8) -> ()
+}
+]
+def test_implied_false_after := [llvm|
+{
+^0(%arg6 : i8):
+  %0 = llvm.mlir.constant(0 : i8) : i8
+  %1 = llvm.mlir.constant(5 : i8) : i8
+  %2 = llvm.mlir.constant(20 : i8) : i8
+  %3 = llvm.icmp "slt" %arg6, %0 : i8
+  %4 = "llvm.select"(%3, %1, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test_implied_false_proof : test_implied_false_before ⊑ test_implied_false_after := by
+  unfold test_implied_false_before test_implied_false_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test_implied_false
+  all_goals (try extract_goal ; sorry)
+  ---END test_implied_false
+
+

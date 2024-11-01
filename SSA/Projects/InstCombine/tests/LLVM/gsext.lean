@@ -199,6 +199,138 @@ theorem test10_proof : test10_before ⊑ test10_after := by
 
 
 
+def test13_before := [llvm|
+{
+^0(%arg13 : i32):
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.and %arg13, %0 : i32
+  %3 = llvm.icmp "eq" %2, %1 : i32
+  %4 = llvm.sext %3 : i1 to i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def test13_after := [llvm|
+{
+^0(%arg13 : i32):
+  %0 = llvm.mlir.constant(3 : i32) : i32
+  %1 = llvm.mlir.constant(1 : i32) : i32
+  %2 = llvm.mlir.constant(-1 : i32) : i32
+  %3 = llvm.lshr %arg13, %0 : i32
+  %4 = llvm.and %3, %1 : i32
+  %5 = llvm.add %4, %2 overflow<nsw> : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test13_proof : test13_before ⊑ test13_after := by
+  unfold test13_before test13_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test13
+  all_goals (try extract_goal ; sorry)
+  ---END test13
+
+
+
+def test14_before := [llvm|
+{
+^0(%arg12 : i16):
+  %0 = llvm.mlir.constant(16 : i16) : i16
+  %1 = llvm.and %arg12, %0 : i16
+  %2 = llvm.icmp "ne" %1, %0 : i16
+  %3 = llvm.sext %2 : i1 to i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+def test14_after := [llvm|
+{
+^0(%arg12 : i16):
+  %0 = llvm.mlir.constant(4 : i16) : i16
+  %1 = llvm.mlir.constant(1 : i16) : i16
+  %2 = llvm.mlir.constant(-1 : i16) : i16
+  %3 = llvm.lshr %arg12, %0 : i16
+  %4 = llvm.and %3, %1 : i16
+  %5 = llvm.add %4, %2 overflow<nsw> : i16
+  %6 = llvm.sext %5 : i16 to i32
+  "llvm.return"(%6) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test14_proof : test14_before ⊑ test14_after := by
+  unfold test14_before test14_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test14
+  all_goals (try extract_goal ; sorry)
+  ---END test14
+
+
+
+def test15_before := [llvm|
+{
+^0(%arg11 : i32):
+  %0 = llvm.mlir.constant(16 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.and %arg11, %0 : i32
+  %3 = llvm.icmp "ne" %2, %1 : i32
+  %4 = llvm.sext %3 : i1 to i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def test15_after := [llvm|
+{
+^0(%arg11 : i32):
+  %0 = llvm.mlir.constant(27 : i32) : i32
+  %1 = llvm.mlir.constant(31 : i32) : i32
+  %2 = llvm.shl %arg11, %0 : i32
+  %3 = llvm.ashr %2, %1 : i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test15_proof : test15_before ⊑ test15_after := by
+  unfold test15_before test15_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test15
+  all_goals (try extract_goal ; sorry)
+  ---END test15
+
+
+
+def test16_before := [llvm|
+{
+^0(%arg10 : i16):
+  %0 = llvm.mlir.constant(8 : i16) : i16
+  %1 = llvm.and %arg10, %0 : i16
+  %2 = llvm.icmp "eq" %1, %0 : i16
+  %3 = llvm.sext %2 : i1 to i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+def test16_after := [llvm|
+{
+^0(%arg10 : i16):
+  %0 = llvm.mlir.constant(12 : i16) : i16
+  %1 = llvm.mlir.constant(15 : i16) : i16
+  %2 = llvm.shl %arg10, %0 : i16
+  %3 = llvm.ashr %2, %1 : i16
+  %4 = llvm.sext %3 : i16 to i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test16_proof : test16_before ⊑ test16_after := by
+  unfold test16_before test16_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test16
+  all_goals (try extract_goal ; sorry)
+  ---END test16
+
+
+
 def test17_before := [llvm|
 {
 ^0(%arg9 : i1):

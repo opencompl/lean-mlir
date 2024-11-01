@@ -1,134 +1,146 @@
 1: "eq_zero"
-4: "eq_zero" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "eq_zero" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "eq_zero" is unchanged by InstCombine
 
 1: "ne_zero"
-4: "ne_zero" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ne_zero" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "ne_zero" is unchanged by InstCombine
 
 1: "eq_ne_zero"
-4: "eq_ne_zero" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "eq_ne_zero" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "eq_ne_zero" is unchanged by InstCombine
 
 1: "slt_zero"
-4: "slt_zero" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.xor
+2: llvm.return
 
 1: "use"
 5: "use" is empty
 
 1: "slt_zero_extra_uses"
-4: "slt_zero_extra_uses" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "slt_zero_extra_uses" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "slt_zero_extra_uses" has unsupported operation: llvm.call
 
 4: "slt_zero_extra_uses" has unsupported operation: llvm.call
 
 1: "sgt_zero"
-4: "sgt_zero" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "sgt_zero" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "sgt_zero" is unchanged by InstCombine
 
 1: "sgt_minus1"
-4: "sgt_minus1" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.xor
+2: llvm.return
 
 1: "slt_zero_sgt_minus1"
-4: "slt_zero_sgt_minus1" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.xor
+2: llvm.return
 
 1: "sgt_minus1_slt_zero_sgt"
-4: "sgt_minus1_slt_zero_sgt" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "sgt_minus1_slt_zero_sgt" contains vectors which are unsupported
 
 1: "different_type_cmp_ops"
-4: "different_type_cmp_ops" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "different_type_cmp_ops" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "different_type_cmp_ops" is unchanged by InstCombine
 
 1: "test13"
-4: "test13" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.xor
+2: llvm.return
 
 1: "test14"
-4: "test14" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "test14" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.xor
+2: llvm.return
 
 1: "xor_icmp_ptr"
 4: "xor_icmp_ptr" has unsupported operation: llvm.mlir.zero
 
-4: "xor_icmp_ptr" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "xor_icmp_ptr" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "xor_icmp_true_signed"
-4: "xor_icmp_true_signed" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "xor_icmp_true_signed" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.xor
+2: llvm.return
 
 1: "xor_icmp_true_signed_multiuse1"
-4: "xor_icmp_true_signed_multiuse1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "xor_icmp_true_signed_multiuse1" has unsupported operation: llvm.call
 
 1: "xor_icmp_true_signed_multiuse2"
-4: "xor_icmp_true_signed_multiuse2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "xor_icmp_true_signed_multiuse2" has unsupported operation: llvm.call
-
-4: "xor_icmp_true_signed_multiuse2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "xor_icmp_true_signed_multiuse2" has unsupported operation: llvm.call
 
 1: "xor_icmp_true_signed_commuted"
-4: "xor_icmp_true_signed_commuted" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "xor_icmp_true_signed_commuted" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.xor
+2: llvm.return
 
 1: "xor_icmp_true_unsigned"
-4: "xor_icmp_true_unsigned" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "xor_icmp_true_unsigned" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.xor
+2: llvm.return
 
 1: "xor_icmp_to_ne"
-4: "xor_icmp_to_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.xor
+2: llvm.return
 
 1: "xor_icmp_to_ne_multiuse1"
-4: "xor_icmp_to_ne_multiuse1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "xor_icmp_to_ne_multiuse1" has unsupported operation: llvm.call
 
-4: "xor_icmp_to_ne_multiuse1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "xor_icmp_to_icmp_add"
-4: "xor_icmp_to_icmp_add" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.xor
+2: llvm.return
 
 1: "xor_icmp_invalid_range"
-4: "xor_icmp_invalid_range" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.xor
+2: llvm.return
 
 1: "xor_icmp_to_ne_multiuse2"
-4: "xor_icmp_to_ne_multiuse2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "xor_icmp_to_ne_multiuse2" has unsupported operation: llvm.call
-
-4: "xor_icmp_to_ne_multiuse2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "xor_icmp_to_ne_multiuse2" has unsupported operation: llvm.call
 
 1: "xor_icmp_to_icmp_add_multiuse1"
-4: "xor_icmp_to_icmp_add_multiuse1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "xor_icmp_to_icmp_add_multiuse1" has unsupported operation: llvm.call
 
-4: "xor_icmp_to_icmp_add_multiuse1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "xor_icmp_to_icmp_add_multiuse2"
-4: "xor_icmp_to_icmp_add_multiuse2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "xor_icmp_to_icmp_add_multiuse2" has unsupported operation: llvm.call
-
-4: "xor_icmp_to_icmp_add_multiuse2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "xor_icmp_to_icmp_add_multiuse2" has unsupported operation: llvm.call
 

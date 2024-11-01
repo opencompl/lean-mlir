@@ -134,6 +134,80 @@ theorem test15a_thm (e : IntW 1) :
     all_goals sorry
 
 
+theorem test16_thm (e : IntW 84) :
+  icmp IntPredicate.ne (LLVM.and (ashr e (const? 4)) (const? 1)) (const? 0) ⊑
+    icmp IntPredicate.ne (LLVM.and e (const? 16)) (const? 0) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test17_thm (e : IntW 106) :
+  icmp IntPredicate.eq (lshr e (const? 3)) (const? 1234) ⊑
+    icmp IntPredicate.eq (LLVM.and e (const? (-8))) (const? 9872) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test18_thm (e : IntW 11) : icmp IntPredicate.eq (lshr e (const? 10)) (const? 123) ⊑ const? 0 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test19_thm (e : IntW 37) :
+  icmp IntPredicate.eq (ashr e (const? 2)) (const? 0) ⊑ icmp IntPredicate.ult e (const? 4) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test19a_thm (e : IntW 39) :
+  icmp IntPredicate.eq (ashr e (const? 2)) (const? (-1)) ⊑ icmp IntPredicate.ugt e (const? (-5)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test20_thm (e : IntW 13) : icmp IntPredicate.eq (ashr e (const? 12)) (const? 123) ⊑ const? 0 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test21_thm (e : IntW 12) :
+  icmp IntPredicate.eq (shl e (const? 6)) (const? (-128)) ⊑
+    icmp IntPredicate.eq (LLVM.and e (const? 63)) (const? 62) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test22_thm (e : IntW 14) :
+  icmp IntPredicate.eq (shl e (const? 7)) (const? 0) ⊑
+    icmp IntPredicate.eq (LLVM.and e (const? 127)) (const? 0) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
 theorem test23_thm (e : IntW 44) : trunc 11 (ashr (shl e (const? 33)) (const? 33)) ⊑ trunc 11 e := by 
     simp_alive_undef
     simp_alive_ops

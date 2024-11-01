@@ -1,5 +1,13 @@
 1: "foo"
-4: "foo" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.add
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "shrink_select"
 2: llvm.func
@@ -18,7 +26,13 @@
 4: "min_max_bitcast" has unsupported operation: llvm.return
 
 1: "foo2"
-4: "foo2" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.add
+2: llvm.sub
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "test43"
 4: "test43" has unsupported operation: builtin.unregistered: llvm.intr.smax

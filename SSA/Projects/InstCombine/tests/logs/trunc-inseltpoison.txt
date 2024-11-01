@@ -447,5 +447,14 @@
 8: "narrow_sub_vec_constant" contains vectors which are unsupported
 
 1: "PR44545"
-4: "PR44545" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.trunc
+2: llvm.add
+2: llvm.return
 

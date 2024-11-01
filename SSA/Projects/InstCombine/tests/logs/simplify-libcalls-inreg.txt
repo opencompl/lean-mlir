@@ -18,8 +18,6 @@
 
 4: "baz" has unsupported operation: llvm.call
 
-4: "baz" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "test_fewer_params_than_num_register_parameters"
 4: "test_fewer_params_than_num_register_parameters" has unsupported operation: llvm.call
 

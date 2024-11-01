@@ -1,8 +1,8 @@
 1: "fold_to_new_instruction"
-4: "fold_to_new_instruction" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "fold_to_new_instruction" is unchanged by InstCombine
 
 1: "fold_to_new_instruction2"
-4: "fold_to_new_instruction2" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "fold_to_new_instruction2" is unchanged by InstCombine
 
 1: "do_not_add_annotation_to_existing_instr"
 2: llvm.func

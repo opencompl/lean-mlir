@@ -13,27 +13,17 @@
 1: "big_divisor"
 4: "big_divisor" has unsupported operation: builtin.unregistered: llvm.freeze
 
-4: "big_divisor" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "biggest_divisor"
 4: "biggest_divisor" has unsupported operation: builtin.unregistered: llvm.freeze
-
-4: "biggest_divisor" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "urem_with_sext_bool_divisor"
 4: "urem_with_sext_bool_divisor" has unsupported operation: builtin.unregistered: llvm.freeze
 
-4: "urem_with_sext_bool_divisor" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "urem_with_sext_bool_divisor_vec"
 4: "urem_with_sext_bool_divisor_vec" has unsupported operation: builtin.unregistered: llvm.freeze
 
-4: "urem_with_sext_bool_divisor_vec" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "big_divisor_vec"
 4: "big_divisor_vec" has unsupported operation: builtin.unregistered: llvm.freeze
-
-4: "big_divisor_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "urem1"
 4: "urem1" has unsupported operation: builtin.unregistered: llvm.freeze
@@ -72,10 +62,15 @@
 8: "weird_vec_power_of_2_constant_splat_divisor" contains vectors which are unsupported
 
 1: "test3a"
-4: "test3a" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.icmp
+2: llvm.return
 
 1: "test3a_vec"
-4: "test3a_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "test3a_vec" contains vectors which are unsupported
 
 1: "test4"
 2: llvm.func
@@ -182,10 +177,22 @@
 2: llvm.return
 
 1: "test17"
-4: "test17" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.urem
+2: llvm.return
 
 1: "test18"
-4: "test18" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.urem
+2: llvm.return
 
 1: "test19"
 2: llvm.func
@@ -250,8 +257,6 @@
 
 4: "pr27968_0" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "pr27968_0" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "pr27968_0" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "pr27968_1"
@@ -276,8 +281,6 @@
 
 4: "pr27968_2" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "pr27968_2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "pr27968_2" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "pr27968_3"
@@ -300,39 +303,68 @@
 8: "test23" contains vectors which are unsupported
 
 1: "test24"
-4: "test24" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.urem
+2: llvm.icmp
+2: llvm.return
 
 1: "test24_vec"
-4: "test24_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "test24_vec" contains vectors which are unsupported
 
 1: "test25"
-4: "test25" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.icmp
+2: llvm.return
 
 1: "test25_vec"
-4: "test25_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "test25_vec" contains vectors which are unsupported
 
 1: "test26"
-4: "test26" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.srem
+2: llvm.icmp
+2: llvm.return
 
 1: "test27"
 4: "test27" has unsupported operation: llvm.store
 
-4: "test27" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "test28"
-4: "test28" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.icmp
+2: llvm.return
 
 1: "positive_and_odd_eq"
-4: "positive_and_odd_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.icmp
+2: llvm.return
 
 1: "negative_and_odd_eq"
-4: "negative_and_odd_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "negative_and_odd_eq" is unchanged by InstCombine
 
 1: "positive_and_odd_ne"
-4: "positive_and_odd_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.icmp
+2: llvm.return
 
 1: "negative_and_odd_ne"
-4: "negative_and_odd_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "negative_and_odd_ne" is unchanged by InstCombine
 
 1: "PR34870"
 4: "PR34870" has unsupported operation: builtin.unregistered: llvm.frem
@@ -424,47 +456,33 @@
 1: "PR62401"
 4: "PR62401" has unsupported operation: builtin.unregistered: llvm.freeze
 
-4: "PR62401" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "rem_pow2_or_zero"
 4: "rem_pow2_or_zero" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
-
-4: "rem_pow2_or_zero" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "rem_pow2_or_zero" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "rem_pow2"
 4: "rem_pow2" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
-4: "rem_pow2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "rem_pow2" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "rem_pow2_domcond"
 4: "rem_pow2_domcond" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
-
-4: "rem_pow2_domcond" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "rem_pow2_domcond" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "rem_pow2_domcond_in_else"
 4: "rem_pow2_domcond_in_else" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
-4: "rem_pow2_domcond_in_else" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "rem_pow2_domcond_in_else" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "rem_pow2_or_zero_domcond"
 4: "rem_pow2_or_zero_domcond" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
-4: "rem_pow2_or_zero_domcond" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "rem_pow2_or_zero_domcond" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "rem_pow2_non_domcond"
 4: "rem_pow2_non_domcond" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
-
-4: "rem_pow2_non_domcond" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "rem_pow2_non_domcond" has unsupported operation: builtin.unregistered: llvm.cond_br
 

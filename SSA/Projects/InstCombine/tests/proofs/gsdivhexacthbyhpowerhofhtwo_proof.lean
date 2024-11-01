@@ -13,6 +13,15 @@ theorem t0_thm (e : IntW 8) : LLVM.sdiv e (const? 32) ⊑ ashr e (const? 5) := b
     all_goals sorry
 
 
+theorem n2_thm (e : IntW 8) :
+  LLVM.sdiv e (const? (-128)) ⊑ zext 8 (icmp IntPredicate.eq e (const? (-128))) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
 theorem shl1_nsw_thm (e e_1 : IntW 8) :
   LLVM.sdiv e_1 (shl (const? 1) e { «nsw» := true, «nuw» := false }) ⊑ ashr e_1 e := by 
     simp_alive_undef

@@ -3,22 +3,16 @@
 
 4: "foo1" has unsupported operation: builtin.unregistered: llvm.ptrtoint
 
-4: "foo1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "foo1" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "foo2"
 4: "foo2" has unsupported operation: builtin.unregistered: llvm.ptrtoint
-
-4: "foo2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "foo2" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 4: "foo2" has unsupported operation: llvm.load
 
 1: "simple"
-4: "simple" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "simple" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "can1"
@@ -46,41 +40,27 @@
 4: "can2_logical" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "bar1"
-4: "bar1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "bar1" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "bar2"
-4: "bar2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "bar2" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "bar3"
 4: "bar3" has unsupported operation: builtin.unregistered: llvm.intr.assume
-
-4: "bar3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "bar3" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 4: "bar3" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "known_bits_recursion_via_assumes"
-4: "known_bits_recursion_via_assumes" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "known_bits_recursion_via_assumes" has unsupported operation: builtin.unregistered: llvm.intr.assume
-
-4: "known_bits_recursion_via_assumes" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "known_bits_recursion_via_assumes" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "icmp1"
-4: "icmp1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "icmp1" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "icmp2"
-4: "icmp2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "icmp2" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "assume_not"
@@ -105,8 +85,6 @@
 1: "nonnull2"
 4: "nonnull2" has unsupported operation: llvm.load
 
-4: "nonnull2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "nonnull2" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "nonnull3"
@@ -114,13 +92,9 @@
 
 4: "nonnull3" has unsupported operation: llvm.load
 
-4: "nonnull3" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "nonnull3" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "nonnull3" has unsupported operation: builtin.unregistered: llvm.intr.assume
-
-4: "nonnull3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "nonnull4"
 4: "nonnull4" has unsupported operation: llvm.mlir.zero
@@ -128,8 +102,6 @@
 4: "nonnull4" has unsupported operation: llvm.load
 
 4: "nonnull4" has unsupported operation: llvm.call
-
-4: "nonnull4" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "nonnull4" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
@@ -139,8 +111,6 @@
 4: "nonnull5" has unsupported operation: llvm.load
 
 4: "nonnull5" has unsupported operation: llvm.call
-
-4: "nonnull5" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "nonnull5" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
@@ -167,8 +137,6 @@
 
 4: "PR40940" has unsupported operation: builtin.unregistered: llvm.bitcast
 
-4: "PR40940" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "PR40940" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "nonnull3A"
@@ -178,11 +146,7 @@
 
 4: "nonnull3A" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "nonnull3A" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "nonnull3A" has unsupported operation: builtin.unregistered: llvm.intr.assume
-
-4: "nonnull3A" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "nonnull3B"
 4: "nonnull3B" has unsupported operation: llvm.mlir.zero
@@ -190,8 +154,6 @@
 4: "nonnull3B" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "nonnull3B" has unsupported operation: llvm.load
-
-4: "nonnull3B" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "nonnull3B" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
@@ -205,8 +167,6 @@
 
 4: "nonnull3C" has unsupported operation: llvm.load
 
-4: "nonnull3C" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "nonnull3C" has unsupported operation: llvm.call
 
 4: "nonnull3C" has unsupported operation: builtin.unregistered: llvm.br
@@ -217,8 +177,6 @@
 4: "nonnull3D" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "nonnull3D" has unsupported operation: llvm.load
-
-4: "nonnull3D" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "nonnull3D" has unsupported operation: llvm.call
 
@@ -245,17 +203,9 @@
 4: "PR36270" has unsupported operation: builtin.unregistered: llvm.unreachable
 
 1: "unreachable_assume"
-4: "unreachable_assume" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "unreachable_assume" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "unreachable_assume" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
-4: "unreachable_assume" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "unreachable_assume" has unsupported operation: builtin.unregistered: llvm.cond_br
-
-4: "unreachable_assume" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "unreachable_assume" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
@@ -264,17 +214,9 @@
 4: "unreachable_assume" has unsupported operation: builtin.unregistered: llvm.unreachable
 
 1: "unreachable_assume_logical"
-4: "unreachable_assume_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "unreachable_assume_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "unreachable_assume_logical" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
-4: "unreachable_assume_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "unreachable_assume_logical" has unsupported operation: builtin.unregistered: llvm.cond_br
-
-4: "unreachable_assume_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "unreachable_assume_logical" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
@@ -283,17 +225,9 @@
 4: "unreachable_assume_logical" has unsupported operation: builtin.unregistered: llvm.unreachable
 
 1: "unreachable_assumes_and_store"
-4: "unreachable_assumes_and_store" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "unreachable_assumes_and_store" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "unreachable_assumes_and_store" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
-4: "unreachable_assumes_and_store" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "unreachable_assumes_and_store" has unsupported operation: builtin.unregistered: llvm.cond_br
-
-4: "unreachable_assumes_and_store" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "unreachable_assumes_and_store" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
@@ -302,17 +236,9 @@
 4: "unreachable_assumes_and_store" has unsupported operation: builtin.unregistered: llvm.unreachable
 
 1: "unreachable_assumes_and_store_logical"
-4: "unreachable_assumes_and_store_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "unreachable_assumes_and_store_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "unreachable_assumes_and_store_logical" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
-4: "unreachable_assumes_and_store_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "unreachable_assumes_and_store_logical" has unsupported operation: builtin.unregistered: llvm.cond_br
-
-4: "unreachable_assumes_and_store_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "unreachable_assumes_and_store_logical" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
@@ -328,8 +254,6 @@
 4: "canonicalize_assume" has unsupported operation: llvm.return
 
 1: "assume_makes_and_known_assume_on_arg"
-4: "assume_makes_and_known_assume_on_arg" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "assume_makes_and_known_assume_on_arg" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 4: "assume_makes_and_known_assume_on_arg" has unsupported operation: llvm.store
@@ -337,8 +261,6 @@
 4: "assume_makes_and_known_assume_on_arg" has unsupported operation: llvm.return
 
 1: "assume_makes_and_known_assume_on_mul"
-4: "assume_makes_and_known_assume_on_mul" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "assume_makes_and_known_assume_on_mul" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 4: "assume_makes_and_known_assume_on_mul" has unsupported operation: llvm.store
@@ -346,8 +268,6 @@
 4: "assume_makes_and_known_assume_on_mul" has unsupported operation: llvm.return
 
 1: "assume_makes_and_known_assume_on_bitwise"
-4: "assume_makes_and_known_assume_on_bitwise" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "assume_makes_and_known_assume_on_bitwise" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 4: "assume_makes_and_known_assume_on_bitwise" has unsupported operation: llvm.store
@@ -355,42 +275,26 @@
 4: "assume_makes_and_known_assume_on_bitwise" has unsupported operation: llvm.return
 
 1: "range_16_31_top28"
-4: "range_16_31_top28" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "range_16_31_top28" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "range_16_31_top29"
-4: "range_16_31_top29" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "range_16_31_top29" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "range_16_30_top28"
-4: "range_16_30_top28" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "range_16_30_top28" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "range_16_32_top28"
-4: "range_16_32_top28" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "range_16_32_top28" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "range_16_32_top27"
-4: "range_16_32_top27" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "range_16_32_top27" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "range_16_32_top26"
-4: "range_16_32_top26" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "range_16_32_top26" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "range_15_31_top28"
-4: "range_15_31_top28" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "range_15_31_top28" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "range_15_31_top27"
-4: "range_15_31_top27" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "range_15_31_top27" has unsupported operation: builtin.unregistered: llvm.intr.assume
 

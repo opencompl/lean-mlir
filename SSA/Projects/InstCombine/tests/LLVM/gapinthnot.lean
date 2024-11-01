@@ -38,3 +38,30 @@ theorem test1_proof : test1_before ⊑ test1_after := by
   ---END test1
 
 
+
+def test2_before := [llvm|
+{
+^0(%arg0 : i52, %arg1 : i52):
+  %0 = llvm.mlir.constant(true) : i1
+  %1 = llvm.icmp "ule" %arg0, %arg1 : i52
+  %2 = llvm.xor %1, %0 : i1
+  "llvm.return"(%2) : (i1) -> ()
+}
+]
+def test2_after := [llvm|
+{
+^0(%arg0 : i52, %arg1 : i52):
+  %0 = llvm.icmp "ugt" %arg0, %arg1 : i52
+  "llvm.return"(%0) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test2_proof : test2_before ⊑ test2_after := by
+  unfold test2_before test2_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test2
+  all_goals (try extract_goal ; sorry)
+  ---END test2
+
+

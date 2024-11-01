@@ -1,11 +1,23 @@
 1: "t0_const_after_fold_lshr_shl_ne"
-4: "t0_const_after_fold_lshr_shl_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.lshr
+2: llvm.add
+2: llvm.zext
+2: llvm.shl
+2: llvm.trunc
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
 
 1: "t1_vec_splat"
-4: "t1_vec_splat" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "t1_vec_splat" contains vectors which are unsupported
 
 1: "t2_vec_nonsplat"
-4: "t2_vec_nonsplat" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "t2_vec_nonsplat" contains vectors which are unsupported
 
 1: "gen32"
 5: "gen32" is empty
@@ -34,8 +46,6 @@
 
 4: "t3_oneuse0" has unsupported operation: llvm.call
 
-4: "t3_oneuse0" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "t4_oneuse1"
 4: "t4_oneuse1" has unsupported operation: llvm.call
 
@@ -49,8 +59,6 @@
 
 4: "t4_oneuse1" has unsupported operation: llvm.call
 
-4: "t4_oneuse1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "t5_oneuse2"
 4: "t5_oneuse2" has unsupported operation: llvm.call
 
@@ -62,8 +70,6 @@
 
 4: "t5_oneuse2" has unsupported operation: llvm.call
 
-4: "t5_oneuse2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "t6_oneuse3"
 4: "t6_oneuse3" has unsupported operation: llvm.call
 
@@ -73,8 +79,6 @@
 
 4: "t6_oneuse3" has unsupported operation: llvm.call
 
-4: "t6_oneuse3" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "t7_oneuse4"
 4: "t7_oneuse4" has unsupported operation: llvm.call
 
@@ -83,8 +87,6 @@
 4: "t7_oneuse4" has unsupported operation: llvm.call
 
 4: "t7_oneuse4" has unsupported operation: llvm.call
-
-4: "t7_oneuse4" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "t8_oneuse5"
 4: "t8_oneuse5" has unsupported operation: llvm.call
@@ -98,8 +100,6 @@
 4: "t8_oneuse5" has unsupported operation: llvm.call
 
 4: "t8_oneuse5" has unsupported operation: llvm.call
-
-4: "t8_oneuse5" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "t9_oneuse5"
 4: "t9_oneuse5" has unsupported operation: llvm.call
@@ -115,20 +115,48 @@
 4: "t9_oneuse5" has unsupported operation: llvm.call
 
 1: "t10_constants"
-4: "t10_constants" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.trunc
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
 
 1: "t11_constants_vec_splat"
-4: "t11_constants_vec_splat" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "t11_constants_vec_splat" contains vectors which are unsupported
 
 1: "t12_constants_vec_nonsplat"
-4: "t12_constants_vec_nonsplat" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "t12_constants_vec_nonsplat" contains vectors which are unsupported
 
 1: "n13_overshift"
-4: "n13_overshift" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "n13_overshift" is unchanged by InstCombine
 
 1: "n14_trunc_of_lshr"
-4: "n14_trunc_of_lshr" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.zext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.add
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
 
 1: "n15_variable_shamts"
-4: "n15_variable_shamts" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.trunc
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
 

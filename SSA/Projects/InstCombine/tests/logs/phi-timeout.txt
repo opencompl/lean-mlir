@@ -5,8 +5,6 @@
 
 4: "timeout" has unsupported operation: llvm.load
 
-4: "timeout" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "timeout" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "timeout" has unsupported operation: llvm.load

@@ -237,21 +237,15 @@
 1: "_gep_phi1"
 4: "_gep_phi1" has unsupported operation: llvm.mlir.zero
 
-4: "_gep_phi1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "_gep_phi1" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "_gep_phi1" has unsupported operation: llvm.load
-
-4: "_gep_phi1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "_gep_phi1" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "_gep_phi1" has unsupported operation: llvm.getelementptr
 
 4: "_gep_phi1" has unsupported operation: llvm.load
-
-4: "_gep_phi1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "_gep_phi1" has unsupported operation: builtin.unregistered: llvm.cond_br
 
@@ -260,13 +254,9 @@
 1: "_gep_phi2"
 4: "_gep_phi2" has unsupported operation: llvm.mlir.zero
 
-4: "_gep_phi2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "_gep_phi2" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "_gep_phi2" has unsupported operation: llvm.load
-
-4: "_gep_phi2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "_gep_phi2" has unsupported operation: builtin.unregistered: llvm.cond_br
 
@@ -274,11 +264,7 @@
 
 4: "_gep_phi2" has unsupported operation: llvm.load
 
-4: "_gep_phi2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "_gep_phi2" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "_gep_phi2" has unsupported operation: builtin.unregistered: llvm.br
-
-4: "_gep_phi2" has unsupported operation: builtin.unregistered: llvm.icmp
 

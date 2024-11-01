@@ -8,7 +8,10 @@
 7: "n1" is unchanged by InstCombine
 
 1: "n2"
-4: "n2" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.return
 
 1: "t3_vec_splat"
 8: "t3_vec_splat" contains vectors which are unsupported

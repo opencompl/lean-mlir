@@ -13,6 +13,42 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gselect_meta_statements
 
+def foo_before := [llvm|
+{
+^0(%arg54 : i32):
+  %0 = llvm.mlir.constant(2 : i32) : i32
+  %1 = llvm.mlir.constant(20 : i32) : i32
+  %2 = llvm.mlir.constant(-20 : i32) : i32
+  %3 = llvm.icmp "sgt" %arg54, %0 : i32
+  %4 = llvm.add %arg54, %1 overflow<nsw> : i32
+  %5 = llvm.add %arg54, %2 : i32
+  %6 = "llvm.select"(%3, %4, %5) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  "llvm.return"(%6) : (i32) -> ()
+}
+]
+def foo_after := [llvm|
+{
+^0(%arg54 : i32):
+  %0 = llvm.mlir.constant(2 : i32) : i32
+  %1 = llvm.mlir.constant(20 : i32) : i32
+  %2 = llvm.mlir.constant(-20 : i32) : i32
+  %3 = llvm.icmp "sgt" %arg54, %0 : i32
+  %4 = "llvm.select"(%3, %1, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  %5 = llvm.add %arg54, %4 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem foo_proof : foo_before ⊑ foo_after := by
+  unfold foo_before foo_after
+  simp_alive_peephole
+  intros
+  ---BEGIN foo
+  apply foo_thm
+  ---END foo
+
+
+
 def shrink_select_before := [llvm|
 {
 ^0(%arg52 : i1, %arg53 : i32):
@@ -39,6 +75,40 @@ theorem shrink_select_proof : shrink_select_before ⊑ shrink_select_after := by
   ---BEGIN shrink_select
   apply shrink_select_thm
   ---END shrink_select
+
+
+
+def foo2_before := [llvm|
+{
+^0(%arg46 : i32, %arg47 : i32):
+  %0 = llvm.mlir.constant(2 : i32) : i32
+  %1 = llvm.icmp "sgt" %arg46, %0 : i32
+  %2 = llvm.add %arg46, %arg47 overflow<nsw> : i32
+  %3 = llvm.sub %arg46, %arg47 overflow<nsw> : i32
+  %4 = "llvm.select"(%1, %2, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def foo2_after := [llvm|
+{
+^0(%arg46 : i32, %arg47 : i32):
+  %0 = llvm.mlir.constant(2 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.icmp "sgt" %arg46, %0 : i32
+  %3 = llvm.sub %1, %arg47 : i32
+  %4 = "llvm.select"(%2, %arg47, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  %5 = llvm.add %arg46, %4 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem foo2_proof : foo2_before ⊑ foo2_after := by
+  unfold foo2_before foo2_after
+  simp_alive_peephole
+  intros
+  ---BEGIN foo2
+  apply foo2_thm
+  ---END foo2
 
 
 

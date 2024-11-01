@@ -15,6 +15,17 @@ theorem srem2_ashr_mask_thm (e : IntW 32) :
     all_goals sorry
 
 
+theorem srem8_ashr_mask_thm (e : IntW 32) :
+  LLVM.and (ashr (LLVM.srem e (const? 8)) (const? 31)) (const? 2) ⊑
+    select (icmp IntPredicate.ugt (LLVM.and e (const? (-2147483641))) (const? (-2147483648))) (const? 2)
+      (const? 0) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
 theorem ashr_can_be_lshr_thm (e : IntW 32) : trunc 16 (ashr e (const? 16)) ⊑ trunc 16 (lshr e (const? 16)) := by 
     simp_alive_undef
     simp_alive_ops

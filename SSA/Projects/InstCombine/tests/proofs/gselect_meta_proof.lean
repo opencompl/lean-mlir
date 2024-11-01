@@ -5,8 +5,30 @@ open BitVec
 open LLVM
 
 section gselect_meta_proof
+theorem foo_thm (e : IntW 32) :
+  select (icmp IntPredicate.sgt e (const? 2)) (add e (const? 20) { «nsw» := true, «nuw» := false })
+      (add e (const? (-20))) ⊑
+    add e (select (icmp IntPredicate.sgt e (const? 2)) (const? 20) (const? (-20))) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
 theorem shrink_select_thm (e : IntW 32) (e_1 : IntW 1) :
   trunc 8 (select e_1 e (const? 42)) ⊑ select e_1 (trunc 8 e) (const? 42) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem foo2_thm (e e_1 : IntW 32) :
+  select (icmp IntPredicate.sgt e_1 (const? 2)) (add e_1 e { «nsw» := true, «nuw» := false })
+      (sub e_1 e { «nsw» := true, «nuw» := false }) ⊑
+    add e_1 (select (icmp IntPredicate.sgt e_1 (const? 2)) e (sub (const? 0) e)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

@@ -19,7 +19,12 @@
 2: llvm.return
 
 1: "test4"
-4: "test4" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
 
 1: "test5"
 4: "test5" has unsupported operation: llvm.store
@@ -53,7 +58,12 @@
 2: llvm.return
 
 1: "test11"
-4: "test11" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
 
 1: "test12"
 4: "test12" has unsupported operation: llvm.store

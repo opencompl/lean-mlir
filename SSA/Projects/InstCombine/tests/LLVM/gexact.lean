@@ -147,6 +147,329 @@ theorem udiv2_proof : udiv2_before ⊑ udiv2_after := by
 
 
 
+def ashr_icmp1_before := [llvm|
+{
+^0(%arg27 : i64):
+  %0 = llvm.mlir.constant(2) : i64
+  %1 = llvm.mlir.constant(0) : i64
+  %2 = llvm.ashr %arg27, %0 : i64
+  %3 = llvm.icmp "eq" %2, %1 : i64
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+def ashr_icmp1_after := [llvm|
+{
+^0(%arg27 : i64):
+  %0 = llvm.mlir.constant(0) : i64
+  %1 = llvm.icmp "eq" %arg27, %0 : i64
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem ashr_icmp1_proof : ashr_icmp1_before ⊑ ashr_icmp1_after := by
+  unfold ashr_icmp1_before ashr_icmp1_after
+  simp_alive_peephole
+  intros
+  ---BEGIN ashr_icmp1
+  all_goals (try extract_goal ; sorry)
+  ---END ashr_icmp1
+
+
+
+def ashr_icmp2_before := [llvm|
+{
+^0(%arg26 : i64):
+  %0 = llvm.mlir.constant(2) : i64
+  %1 = llvm.mlir.constant(4) : i64
+  %2 = llvm.ashr %arg26, %0 : i64
+  %3 = llvm.icmp "slt" %2, %1 : i64
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+def ashr_icmp2_after := [llvm|
+{
+^0(%arg26 : i64):
+  %0 = llvm.mlir.constant(16) : i64
+  %1 = llvm.icmp "slt" %arg26, %0 : i64
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem ashr_icmp2_proof : ashr_icmp2_before ⊑ ashr_icmp2_after := by
+  unfold ashr_icmp2_before ashr_icmp2_after
+  simp_alive_peephole
+  intros
+  ---BEGIN ashr_icmp2
+  all_goals (try extract_goal ; sorry)
+  ---END ashr_icmp2
+
+
+
+def pr9998_before := [llvm|
+{
+^0(%arg24 : i32):
+  %0 = llvm.mlir.constant(31 : i32) : i32
+  %1 = llvm.mlir.constant(7297771788697658747) : i64
+  %2 = llvm.shl %arg24, %0 : i32
+  %3 = llvm.ashr %2, %0 : i32
+  %4 = llvm.sext %3 : i32 to i64
+  %5 = llvm.icmp "ugt" %4, %1 : i64
+  "llvm.return"(%5) : (i1) -> ()
+}
+]
+def pr9998_after := [llvm|
+{
+^0(%arg24 : i32):
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.and %arg24, %0 : i32
+  %3 = llvm.icmp "ne" %2, %1 : i32
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem pr9998_proof : pr9998_before ⊑ pr9998_after := by
+  unfold pr9998_before pr9998_after
+  simp_alive_peephole
+  intros
+  ---BEGIN pr9998
+  all_goals (try extract_goal ; sorry)
+  ---END pr9998
+
+
+
+def udiv_icmp1_before := [llvm|
+{
+^0(%arg22 : i64):
+  %0 = llvm.mlir.constant(5) : i64
+  %1 = llvm.mlir.constant(0) : i64
+  %2 = llvm.udiv %arg22, %0 : i64
+  %3 = llvm.icmp "ne" %2, %1 : i64
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+def udiv_icmp1_after := [llvm|
+{
+^0(%arg22 : i64):
+  %0 = llvm.mlir.constant(0) : i64
+  %1 = llvm.icmp "ne" %arg22, %0 : i64
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem udiv_icmp1_proof : udiv_icmp1_before ⊑ udiv_icmp1_after := by
+  unfold udiv_icmp1_before udiv_icmp1_after
+  simp_alive_peephole
+  intros
+  ---BEGIN udiv_icmp1
+  all_goals (try extract_goal ; sorry)
+  ---END udiv_icmp1
+
+
+
+def udiv_icmp2_before := [llvm|
+{
+^0(%arg20 : i64):
+  %0 = llvm.mlir.constant(5) : i64
+  %1 = llvm.mlir.constant(0) : i64
+  %2 = llvm.udiv %arg20, %0 : i64
+  %3 = llvm.icmp "eq" %2, %1 : i64
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+def udiv_icmp2_after := [llvm|
+{
+^0(%arg20 : i64):
+  %0 = llvm.mlir.constant(0) : i64
+  %1 = llvm.icmp "eq" %arg20, %0 : i64
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem udiv_icmp2_proof : udiv_icmp2_before ⊑ udiv_icmp2_after := by
+  unfold udiv_icmp2_before udiv_icmp2_after
+  simp_alive_peephole
+  intros
+  ---BEGIN udiv_icmp2
+  all_goals (try extract_goal ; sorry)
+  ---END udiv_icmp2
+
+
+
+def sdiv_icmp1_before := [llvm|
+{
+^0(%arg18 : i64):
+  %0 = llvm.mlir.constant(5) : i64
+  %1 = llvm.mlir.constant(0) : i64
+  %2 = llvm.sdiv %arg18, %0 : i64
+  %3 = llvm.icmp "eq" %2, %1 : i64
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+def sdiv_icmp1_after := [llvm|
+{
+^0(%arg18 : i64):
+  %0 = llvm.mlir.constant(0) : i64
+  %1 = llvm.icmp "eq" %arg18, %0 : i64
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem sdiv_icmp1_proof : sdiv_icmp1_before ⊑ sdiv_icmp1_after := by
+  unfold sdiv_icmp1_before sdiv_icmp1_after
+  simp_alive_peephole
+  intros
+  ---BEGIN sdiv_icmp1
+  all_goals (try extract_goal ; sorry)
+  ---END sdiv_icmp1
+
+
+
+def sdiv_icmp2_before := [llvm|
+{
+^0(%arg16 : i64):
+  %0 = llvm.mlir.constant(5) : i64
+  %1 = llvm.mlir.constant(1) : i64
+  %2 = llvm.sdiv %arg16, %0 : i64
+  %3 = llvm.icmp "eq" %2, %1 : i64
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+def sdiv_icmp2_after := [llvm|
+{
+^0(%arg16 : i64):
+  %0 = llvm.mlir.constant(5) : i64
+  %1 = llvm.icmp "eq" %arg16, %0 : i64
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem sdiv_icmp2_proof : sdiv_icmp2_before ⊑ sdiv_icmp2_after := by
+  unfold sdiv_icmp2_before sdiv_icmp2_after
+  simp_alive_peephole
+  intros
+  ---BEGIN sdiv_icmp2
+  all_goals (try extract_goal ; sorry)
+  ---END sdiv_icmp2
+
+
+
+def sdiv_icmp3_before := [llvm|
+{
+^0(%arg14 : i64):
+  %0 = llvm.mlir.constant(5) : i64
+  %1 = llvm.mlir.constant(-1) : i64
+  %2 = llvm.sdiv %arg14, %0 : i64
+  %3 = llvm.icmp "eq" %2, %1 : i64
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+def sdiv_icmp3_after := [llvm|
+{
+^0(%arg14 : i64):
+  %0 = llvm.mlir.constant(-5) : i64
+  %1 = llvm.icmp "eq" %arg14, %0 : i64
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem sdiv_icmp3_proof : sdiv_icmp3_before ⊑ sdiv_icmp3_after := by
+  unfold sdiv_icmp3_before sdiv_icmp3_after
+  simp_alive_peephole
+  intros
+  ---BEGIN sdiv_icmp3
+  all_goals (try extract_goal ; sorry)
+  ---END sdiv_icmp3
+
+
+
+def sdiv_icmp4_before := [llvm|
+{
+^0(%arg12 : i64):
+  %0 = llvm.mlir.constant(-5) : i64
+  %1 = llvm.mlir.constant(0) : i64
+  %2 = llvm.sdiv %arg12, %0 : i64
+  %3 = llvm.icmp "eq" %2, %1 : i64
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+def sdiv_icmp4_after := [llvm|
+{
+^0(%arg12 : i64):
+  %0 = llvm.mlir.constant(0) : i64
+  %1 = llvm.icmp "eq" %arg12, %0 : i64
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem sdiv_icmp4_proof : sdiv_icmp4_before ⊑ sdiv_icmp4_after := by
+  unfold sdiv_icmp4_before sdiv_icmp4_after
+  simp_alive_peephole
+  intros
+  ---BEGIN sdiv_icmp4
+  all_goals (try extract_goal ; sorry)
+  ---END sdiv_icmp4
+
+
+
+def sdiv_icmp5_before := [llvm|
+{
+^0(%arg10 : i64):
+  %0 = llvm.mlir.constant(-5) : i64
+  %1 = llvm.mlir.constant(1) : i64
+  %2 = llvm.sdiv %arg10, %0 : i64
+  %3 = llvm.icmp "eq" %2, %1 : i64
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+def sdiv_icmp5_after := [llvm|
+{
+^0(%arg10 : i64):
+  %0 = llvm.mlir.constant(-5) : i64
+  %1 = llvm.icmp "eq" %arg10, %0 : i64
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem sdiv_icmp5_proof : sdiv_icmp5_before ⊑ sdiv_icmp5_after := by
+  unfold sdiv_icmp5_before sdiv_icmp5_after
+  simp_alive_peephole
+  intros
+  ---BEGIN sdiv_icmp5
+  all_goals (try extract_goal ; sorry)
+  ---END sdiv_icmp5
+
+
+
+def sdiv_icmp6_before := [llvm|
+{
+^0(%arg8 : i64):
+  %0 = llvm.mlir.constant(-5) : i64
+  %1 = llvm.mlir.constant(-1) : i64
+  %2 = llvm.sdiv %arg8, %0 : i64
+  %3 = llvm.icmp "eq" %2, %1 : i64
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+def sdiv_icmp6_after := [llvm|
+{
+^0(%arg8 : i64):
+  %0 = llvm.mlir.constant(5) : i64
+  %1 = llvm.icmp "eq" %arg8, %0 : i64
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem sdiv_icmp6_proof : sdiv_icmp6_before ⊑ sdiv_icmp6_after := by
+  unfold sdiv_icmp6_before sdiv_icmp6_after
+  simp_alive_peephole
+  intros
+  ---BEGIN sdiv_icmp6
+  all_goals (try extract_goal ; sorry)
+  ---END sdiv_icmp6
+
+
+
 def mul_of_udiv_before := [llvm|
 {
 ^0(%arg6 : i8):

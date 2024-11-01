@@ -13,6 +13,36 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gnarrow_statements
 
+def test1_before := [llvm|
+{
+^0(%arg14 : i32, %arg15 : i32):
+  %0 = llvm.icmp "slt" %arg14, %arg15 : i32
+  %1 = llvm.zext %0 : i1 to i32
+  %2 = llvm.icmp "sgt" %arg14, %arg15 : i32
+  %3 = llvm.zext %2 : i1 to i32
+  %4 = llvm.and %1, %3 : i32
+  %5 = llvm.trunc %4 : i32 to i1
+  "llvm.return"(%5) : (i1) -> ()
+}
+]
+def test1_after := [llvm|
+{
+^0(%arg14 : i32, %arg15 : i32):
+  %0 = llvm.mlir.constant(false) : i1
+  "llvm.return"(%0) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test1_proof : test1_before ⊑ test1_after := by
+  unfold test1_before test1_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test1
+  all_goals (try extract_goal ; sorry)
+  ---END test1
+
+
+
 def shrink_xor_before := [llvm|
 {
 ^0(%arg13 : i64):

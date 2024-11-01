@@ -51,67 +51,124 @@
 7: "ashr1_vec" is unchanged by InstCombine
 
 1: "ashr_icmp1"
-4: "ashr_icmp1" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.icmp
+2: llvm.return
 
 1: "ashr_icmp2"
-4: "ashr_icmp2" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.icmp
+2: llvm.return
 
 1: "ashr_icmp2_vec"
-4: "ashr_icmp2_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "ashr_icmp2_vec" contains vectors which are unsupported
 
 1: "pr9998"
-4: "pr9998" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.ashr
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
 
 1: "pr9998vec"
-4: "pr9998vec" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "pr9998vec" contains vectors which are unsupported
 
 1: "udiv_icmp1"
-4: "udiv_icmp1" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.icmp
+2: llvm.return
 
 1: "udiv_icmp1_vec"
-4: "udiv_icmp1_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "udiv_icmp1_vec" contains vectors which are unsupported
 
 1: "udiv_icmp2"
-4: "udiv_icmp2" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.icmp
+2: llvm.return
 
 1: "udiv_icmp2_vec"
-4: "udiv_icmp2_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "udiv_icmp2_vec" contains vectors which are unsupported
 
 1: "sdiv_icmp1"
-4: "sdiv_icmp1" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.icmp
+2: llvm.return
 
 1: "sdiv_icmp1_vec"
-4: "sdiv_icmp1_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "sdiv_icmp1_vec" contains vectors which are unsupported
 
 1: "sdiv_icmp2"
-4: "sdiv_icmp2" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.icmp
+2: llvm.return
 
 1: "sdiv_icmp2_vec"
-4: "sdiv_icmp2_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "sdiv_icmp2_vec" contains vectors which are unsupported
 
 1: "sdiv_icmp3"
-4: "sdiv_icmp3" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.icmp
+2: llvm.return
 
 1: "sdiv_icmp3_vec"
-4: "sdiv_icmp3_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "sdiv_icmp3_vec" contains vectors which are unsupported
 
 1: "sdiv_icmp4"
-4: "sdiv_icmp4" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.icmp
+2: llvm.return
 
 1: "sdiv_icmp4_vec"
-4: "sdiv_icmp4_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "sdiv_icmp4_vec" contains vectors which are unsupported
 
 1: "sdiv_icmp5"
-4: "sdiv_icmp5" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.icmp
+2: llvm.return
 
 1: "sdiv_icmp5_vec"
-4: "sdiv_icmp5_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "sdiv_icmp5_vec" contains vectors which are unsupported
 
 1: "sdiv_icmp6"
-4: "sdiv_icmp6" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.icmp
+2: llvm.return
 
 1: "sdiv_icmp6_vec"
-4: "sdiv_icmp6_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "sdiv_icmp6_vec" contains vectors which are unsupported
 
 1: "mul_of_udiv"
 2: llvm.func
