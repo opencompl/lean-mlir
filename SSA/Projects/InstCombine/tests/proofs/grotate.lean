@@ -49,6 +49,7 @@ set_option debug.skipKernelTC true in
 theorem rotateleft_9_neg_mask_wide_amount_commute_proof : rotateleft_9_neg_mask_wide_amount_commute_before ⊑ rotateleft_9_neg_mask_wide_amount_commute_after := by
   unfold rotateleft_9_neg_mask_wide_amount_commute_before rotateleft_9_neg_mask_wide_amount_commute_after
   simp_alive_peephole
+  intros
   ---BEGIN rotateleft_9_neg_mask_wide_amount_commute
   apply rotateleft_9_neg_mask_wide_amount_commute_thm
   ---END rotateleft_9_neg_mask_wide_amount_commute

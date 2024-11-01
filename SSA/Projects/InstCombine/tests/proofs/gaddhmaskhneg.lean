@@ -38,6 +38,7 @@ set_option debug.skipKernelTC true in
 theorem dec_mask_neg_i32_proof : dec_mask_neg_i32_before ⊑ dec_mask_neg_i32_after := by
   unfold dec_mask_neg_i32_before dec_mask_neg_i32_after
   simp_alive_peephole
+  intros
   ---BEGIN dec_mask_neg_i32
   apply dec_mask_neg_i32_thm
   ---END dec_mask_neg_i32
@@ -73,6 +74,7 @@ set_option debug.skipKernelTC true in
 theorem dec_mask_commute_neg_i32_proof : dec_mask_commute_neg_i32_before ⊑ dec_mask_commute_neg_i32_after := by
   unfold dec_mask_commute_neg_i32_before dec_mask_commute_neg_i32_after
   simp_alive_peephole
+  intros
   ---BEGIN dec_mask_commute_neg_i32
   apply dec_mask_commute_neg_i32_thm
   ---END dec_mask_commute_neg_i32
@@ -104,6 +106,7 @@ set_option debug.skipKernelTC true in
 theorem dec_commute_mask_neg_i32_proof : dec_commute_mask_neg_i32_before ⊑ dec_commute_mask_neg_i32_after := by
   unfold dec_commute_mask_neg_i32_before dec_commute_mask_neg_i32_after
   simp_alive_peephole
+  intros
   ---BEGIN dec_commute_mask_neg_i32
   apply dec_commute_mask_neg_i32_thm
   ---END dec_commute_mask_neg_i32

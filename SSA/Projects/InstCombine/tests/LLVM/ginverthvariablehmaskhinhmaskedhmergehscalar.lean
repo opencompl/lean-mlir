@@ -37,6 +37,7 @@ set_option debug.skipKernelTC true in
 theorem scalar_proof : scalar_before ⊑ scalar_after := by
   unfold scalar_before scalar_after
   simp_alive_peephole
+  intros
   ---BEGIN scalar
   all_goals (try extract_goal ; sorry)
   ---END scalar
@@ -65,6 +66,7 @@ set_option debug.skipKernelTC true in
 theorem in_constant_varx_mone_invmask_proof : in_constant_varx_mone_invmask_before ⊑ in_constant_varx_mone_invmask_after := by
   unfold in_constant_varx_mone_invmask_before in_constant_varx_mone_invmask_after
   simp_alive_peephole
+  intros
   ---BEGIN in_constant_varx_mone_invmask
   all_goals (try extract_goal ; sorry)
   ---END in_constant_varx_mone_invmask
@@ -97,6 +99,7 @@ set_option debug.skipKernelTC true in
 theorem in_constant_varx_6_invmask_proof : in_constant_varx_6_invmask_before ⊑ in_constant_varx_6_invmask_after := by
   unfold in_constant_varx_6_invmask_before in_constant_varx_6_invmask_after
   simp_alive_peephole
+  intros
   ---BEGIN in_constant_varx_6_invmask
   all_goals (try extract_goal ; sorry)
   ---END in_constant_varx_6_invmask
@@ -127,6 +130,7 @@ set_option debug.skipKernelTC true in
 theorem in_constant_mone_vary_invmask_proof : in_constant_mone_vary_invmask_before ⊑ in_constant_mone_vary_invmask_after := by
   unfold in_constant_mone_vary_invmask_before in_constant_mone_vary_invmask_after
   simp_alive_peephole
+  intros
   ---BEGIN in_constant_mone_vary_invmask
   all_goals (try extract_goal ; sorry)
   ---END in_constant_mone_vary_invmask
@@ -159,6 +163,7 @@ set_option debug.skipKernelTC true in
 theorem in_constant_6_vary_invmask_proof : in_constant_6_vary_invmask_before ⊑ in_constant_6_vary_invmask_after := by
   unfold in_constant_6_vary_invmask_before in_constant_6_vary_invmask_after
   simp_alive_peephole
+  intros
   ---BEGIN in_constant_6_vary_invmask
   all_goals (try extract_goal ; sorry)
   ---END in_constant_6_vary_invmask
@@ -189,6 +194,7 @@ set_option debug.skipKernelTC true in
 theorem c_1_0_0_proof : c_1_0_0_before ⊑ c_1_0_0_after := by
   unfold c_1_0_0_before c_1_0_0_after
   simp_alive_peephole
+  intros
   ---BEGIN c_1_0_0
   all_goals (try extract_goal ; sorry)
   ---END c_1_0_0
@@ -219,6 +225,7 @@ set_option debug.skipKernelTC true in
 theorem c_0_1_0_proof : c_0_1_0_before ⊑ c_0_1_0_after := by
   unfold c_0_1_0_before c_0_1_0_after
   simp_alive_peephole
+  intros
   ---BEGIN c_0_1_0
   all_goals (try extract_goal ; sorry)
   ---END c_0_1_0
@@ -249,6 +256,7 @@ set_option debug.skipKernelTC true in
 theorem c_1_1_0_proof : c_1_1_0_before ⊑ c_1_1_0_after := by
   unfold c_1_1_0_before c_1_1_0_after
   simp_alive_peephole
+  intros
   ---BEGIN c_1_1_0
   all_goals (try extract_goal ; sorry)
   ---END c_1_1_0
@@ -281,6 +289,7 @@ set_option debug.skipKernelTC true in
 theorem commutativity_constant_varx_6_invmask_proof : commutativity_constant_varx_6_invmask_before ⊑ commutativity_constant_varx_6_invmask_after := by
   unfold commutativity_constant_varx_6_invmask_before commutativity_constant_varx_6_invmask_after
   simp_alive_peephole
+  intros
   ---BEGIN commutativity_constant_varx_6_invmask
   all_goals (try extract_goal ; sorry)
   ---END commutativity_constant_varx_6_invmask
@@ -313,6 +322,7 @@ set_option debug.skipKernelTC true in
 theorem commutativity_constant_6_vary_invmask_proof : commutativity_constant_6_vary_invmask_before ⊑ commutativity_constant_6_vary_invmask_after := by
   unfold commutativity_constant_6_vary_invmask_before commutativity_constant_6_vary_invmask_after
   simp_alive_peephole
+  intros
   ---BEGIN commutativity_constant_6_vary_invmask
   all_goals (try extract_goal ; sorry)
   ---END commutativity_constant_6_vary_invmask

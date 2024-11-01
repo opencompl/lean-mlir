@@ -34,6 +34,7 @@ set_option debug.skipKernelTC true in
 theorem udiv_i8_proof : udiv_i8_before ⊑ udiv_i8_after := by
   unfold udiv_i8_before udiv_i8_after
   simp_alive_peephole
+  intros
   ---BEGIN udiv_i8
   apply udiv_i8_thm
   ---END udiv_i8
@@ -61,6 +62,7 @@ set_option debug.skipKernelTC true in
 theorem urem_i8_proof : urem_i8_before ⊑ urem_i8_after := by
   unfold urem_i8_before urem_i8_after
   simp_alive_peephole
+  intros
   ---BEGIN urem_i8
   apply urem_i8_thm
   ---END urem_i8
@@ -88,6 +90,7 @@ set_option debug.skipKernelTC true in
 theorem udiv_i32_proof : udiv_i32_before ⊑ udiv_i32_after := by
   unfold udiv_i32_before udiv_i32_after
   simp_alive_peephole
+  intros
   ---BEGIN udiv_i32
   apply udiv_i32_thm
   ---END udiv_i32
@@ -120,6 +123,7 @@ set_option debug.skipKernelTC true in
 theorem udiv_i32_multiuse_proof : udiv_i32_multiuse_before ⊑ udiv_i32_multiuse_after := by
   unfold udiv_i32_multiuse_before udiv_i32_multiuse_after
   simp_alive_peephole
+  intros
   ---BEGIN udiv_i32_multiuse
   apply udiv_i32_multiuse_thm
   ---END udiv_i32_multiuse
@@ -147,6 +151,7 @@ set_option debug.skipKernelTC true in
 theorem udiv_illegal_type_proof : udiv_illegal_type_before ⊑ udiv_illegal_type_after := by
   unfold udiv_illegal_type_before udiv_illegal_type_after
   simp_alive_peephole
+  intros
   ---BEGIN udiv_illegal_type
   apply udiv_illegal_type_thm
   ---END udiv_illegal_type
@@ -174,6 +179,7 @@ set_option debug.skipKernelTC true in
 theorem urem_i32_proof : urem_i32_before ⊑ urem_i32_after := by
   unfold urem_i32_before urem_i32_after
   simp_alive_peephole
+  intros
   ---BEGIN urem_i32
   apply urem_i32_thm
   ---END urem_i32
@@ -206,6 +212,7 @@ set_option debug.skipKernelTC true in
 theorem urem_i32_multiuse_proof : urem_i32_multiuse_before ⊑ urem_i32_multiuse_after := by
   unfold urem_i32_multiuse_before urem_i32_multiuse_after
   simp_alive_peephole
+  intros
   ---BEGIN urem_i32_multiuse
   apply urem_i32_multiuse_thm
   ---END urem_i32_multiuse
@@ -233,6 +240,7 @@ set_option debug.skipKernelTC true in
 theorem urem_illegal_type_proof : urem_illegal_type_before ⊑ urem_illegal_type_after := by
   unfold urem_illegal_type_before urem_illegal_type_after
   simp_alive_peephole
+  intros
   ---BEGIN urem_illegal_type
   apply urem_illegal_type_thm
   ---END urem_illegal_type
@@ -261,6 +269,7 @@ set_option debug.skipKernelTC true in
 theorem udiv_i32_c_proof : udiv_i32_c_before ⊑ udiv_i32_c_after := by
   unfold udiv_i32_c_before udiv_i32_c_after
   simp_alive_peephole
+  intros
   ---BEGIN udiv_i32_c
   apply udiv_i32_c_thm
   ---END udiv_i32_c
@@ -291,6 +300,7 @@ set_option debug.skipKernelTC true in
 theorem udiv_i32_c_multiuse_proof : udiv_i32_c_multiuse_before ⊑ udiv_i32_c_multiuse_after := by
   unfold udiv_i32_c_multiuse_before udiv_i32_c_multiuse_after
   simp_alive_peephole
+  intros
   ---BEGIN udiv_i32_c_multiuse
   apply udiv_i32_c_multiuse_thm
   ---END udiv_i32_c_multiuse
@@ -319,6 +329,7 @@ set_option debug.skipKernelTC true in
 theorem udiv_illegal_type_c_proof : udiv_illegal_type_c_before ⊑ udiv_illegal_type_c_after := by
   unfold udiv_illegal_type_c_before udiv_illegal_type_c_after
   simp_alive_peephole
+  intros
   ---BEGIN udiv_illegal_type_c
   apply udiv_illegal_type_c_thm
   ---END udiv_illegal_type_c
@@ -347,6 +358,7 @@ set_option debug.skipKernelTC true in
 theorem urem_i32_c_proof : urem_i32_c_before ⊑ urem_i32_c_after := by
   unfold urem_i32_c_before urem_i32_c_after
   simp_alive_peephole
+  intros
   ---BEGIN urem_i32_c
   apply urem_i32_c_thm
   ---END urem_i32_c
@@ -377,6 +389,7 @@ set_option debug.skipKernelTC true in
 theorem urem_i32_c_multiuse_proof : urem_i32_c_multiuse_before ⊑ urem_i32_c_multiuse_after := by
   unfold urem_i32_c_multiuse_before urem_i32_c_multiuse_after
   simp_alive_peephole
+  intros
   ---BEGIN urem_i32_c_multiuse
   apply urem_i32_c_multiuse_thm
   ---END urem_i32_c_multiuse
@@ -405,6 +418,7 @@ set_option debug.skipKernelTC true in
 theorem urem_illegal_type_c_proof : urem_illegal_type_c_before ⊑ urem_illegal_type_c_after := by
   unfold urem_illegal_type_c_before urem_illegal_type_c_after
   simp_alive_peephole
+  intros
   ---BEGIN urem_illegal_type_c
   apply urem_illegal_type_c_thm
   ---END urem_illegal_type_c
@@ -433,6 +447,7 @@ set_option debug.skipKernelTC true in
 theorem udiv_c_i32_proof : udiv_c_i32_before ⊑ udiv_c_i32_after := by
   unfold udiv_c_i32_before udiv_c_i32_after
   simp_alive_peephole
+  intros
   ---BEGIN udiv_c_i32
   apply udiv_c_i32_thm
   ---END udiv_c_i32
@@ -461,6 +476,7 @@ set_option debug.skipKernelTC true in
 theorem urem_c_i32_proof : urem_c_i32_before ⊑ urem_c_i32_after := by
   unfold urem_c_i32_before urem_c_i32_after
   simp_alive_peephole
+  intros
   ---BEGIN urem_c_i32
   apply urem_c_i32_thm
   ---END urem_c_i32

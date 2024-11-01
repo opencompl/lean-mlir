@@ -33,6 +33,7 @@ set_option debug.skipKernelTC true in
 theorem t0_proof : t0_before ⊑ t0_after := by
   unfold t0_before t0_after
   simp_alive_peephole
+  intros
   ---BEGIN t0
   apply t0_thm
   ---END t0
@@ -59,6 +60,7 @@ set_option debug.skipKernelTC true in
 theorem shl1_nsw_proof : shl1_nsw_before ⊑ shl1_nsw_after := by
   unfold shl1_nsw_before shl1_nsw_after
   simp_alive_peephole
+  intros
   ---BEGIN shl1_nsw
   apply shl1_nsw_thm
   ---END shl1_nsw
@@ -87,6 +89,7 @@ set_option debug.skipKernelTC true in
 theorem shl1_nsw_not_exact_proof : shl1_nsw_not_exact_before ⊑ shl1_nsw_not_exact_after := by
   unfold shl1_nsw_not_exact_before shl1_nsw_not_exact_after
   simp_alive_peephole
+  intros
   ---BEGIN shl1_nsw_not_exact
   apply shl1_nsw_not_exact_thm
   ---END shl1_nsw_not_exact
@@ -117,6 +120,7 @@ set_option debug.skipKernelTC true in
 theorem prove_exact_with_high_mask_proof : prove_exact_with_high_mask_before ⊑ prove_exact_with_high_mask_after := by
   unfold prove_exact_with_high_mask_before prove_exact_with_high_mask_after
   simp_alive_peephole
+  intros
   ---BEGIN prove_exact_with_high_mask
   apply prove_exact_with_high_mask_thm
   ---END prove_exact_with_high_mask
@@ -145,6 +149,7 @@ set_option debug.skipKernelTC true in
 theorem prove_exact_with_high_mask_limit_proof : prove_exact_with_high_mask_limit_before ⊑ prove_exact_with_high_mask_limit_after := by
   unfold prove_exact_with_high_mask_limit_before prove_exact_with_high_mask_limit_after
   simp_alive_peephole
+  intros
   ---BEGIN prove_exact_with_high_mask_limit
   apply prove_exact_with_high_mask_limit_thm
   ---END prove_exact_with_high_mask_limit

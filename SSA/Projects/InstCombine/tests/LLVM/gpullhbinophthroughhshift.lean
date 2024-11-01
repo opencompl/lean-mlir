@@ -37,6 +37,7 @@ set_option debug.skipKernelTC true in
 theorem and_signbit_shl_proof : and_signbit_shl_before ⊑ and_signbit_shl_after := by
   unfold and_signbit_shl_before and_signbit_shl_after
   simp_alive_peephole
+  intros
   ---BEGIN and_signbit_shl
   all_goals (try extract_goal ; sorry)
   ---END and_signbit_shl
@@ -67,6 +68,7 @@ set_option debug.skipKernelTC true in
 theorem and_nosignbit_shl_proof : and_nosignbit_shl_before ⊑ and_nosignbit_shl_after := by
   unfold and_nosignbit_shl_before and_nosignbit_shl_after
   simp_alive_peephole
+  intros
   ---BEGIN and_nosignbit_shl
   all_goals (try extract_goal ; sorry)
   ---END and_nosignbit_shl
@@ -97,6 +99,7 @@ set_option debug.skipKernelTC true in
 theorem or_signbit_shl_proof : or_signbit_shl_before ⊑ or_signbit_shl_after := by
   unfold or_signbit_shl_before or_signbit_shl_after
   simp_alive_peephole
+  intros
   ---BEGIN or_signbit_shl
   all_goals (try extract_goal ; sorry)
   ---END or_signbit_shl
@@ -127,6 +130,7 @@ set_option debug.skipKernelTC true in
 theorem or_nosignbit_shl_proof : or_nosignbit_shl_before ⊑ or_nosignbit_shl_after := by
   unfold or_nosignbit_shl_before or_nosignbit_shl_after
   simp_alive_peephole
+  intros
   ---BEGIN or_nosignbit_shl
   all_goals (try extract_goal ; sorry)
   ---END or_nosignbit_shl
@@ -157,6 +161,7 @@ set_option debug.skipKernelTC true in
 theorem xor_signbit_shl_proof : xor_signbit_shl_before ⊑ xor_signbit_shl_after := by
   unfold xor_signbit_shl_before xor_signbit_shl_after
   simp_alive_peephole
+  intros
   ---BEGIN xor_signbit_shl
   all_goals (try extract_goal ; sorry)
   ---END xor_signbit_shl
@@ -187,6 +192,7 @@ set_option debug.skipKernelTC true in
 theorem xor_nosignbit_shl_proof : xor_nosignbit_shl_before ⊑ xor_nosignbit_shl_after := by
   unfold xor_nosignbit_shl_before xor_nosignbit_shl_after
   simp_alive_peephole
+  intros
   ---BEGIN xor_nosignbit_shl
   all_goals (try extract_goal ; sorry)
   ---END xor_nosignbit_shl
@@ -217,6 +223,7 @@ set_option debug.skipKernelTC true in
 theorem add_signbit_shl_proof : add_signbit_shl_before ⊑ add_signbit_shl_after := by
   unfold add_signbit_shl_before add_signbit_shl_after
   simp_alive_peephole
+  intros
   ---BEGIN add_signbit_shl
   all_goals (try extract_goal ; sorry)
   ---END add_signbit_shl
@@ -247,6 +254,7 @@ set_option debug.skipKernelTC true in
 theorem add_nosignbit_shl_proof : add_nosignbit_shl_before ⊑ add_nosignbit_shl_after := by
   unfold add_nosignbit_shl_before add_nosignbit_shl_after
   simp_alive_peephole
+  intros
   ---BEGIN add_nosignbit_shl
   all_goals (try extract_goal ; sorry)
   ---END add_nosignbit_shl
@@ -277,6 +285,7 @@ set_option debug.skipKernelTC true in
 theorem and_signbit_lshr_proof : and_signbit_lshr_before ⊑ and_signbit_lshr_after := by
   unfold and_signbit_lshr_before and_signbit_lshr_after
   simp_alive_peephole
+  intros
   ---BEGIN and_signbit_lshr
   all_goals (try extract_goal ; sorry)
   ---END and_signbit_lshr
@@ -307,6 +316,7 @@ set_option debug.skipKernelTC true in
 theorem and_nosignbit_lshr_proof : and_nosignbit_lshr_before ⊑ and_nosignbit_lshr_after := by
   unfold and_nosignbit_lshr_before and_nosignbit_lshr_after
   simp_alive_peephole
+  intros
   ---BEGIN and_nosignbit_lshr
   all_goals (try extract_goal ; sorry)
   ---END and_nosignbit_lshr
@@ -337,6 +347,7 @@ set_option debug.skipKernelTC true in
 theorem or_signbit_lshr_proof : or_signbit_lshr_before ⊑ or_signbit_lshr_after := by
   unfold or_signbit_lshr_before or_signbit_lshr_after
   simp_alive_peephole
+  intros
   ---BEGIN or_signbit_lshr
   all_goals (try extract_goal ; sorry)
   ---END or_signbit_lshr
@@ -367,6 +378,7 @@ set_option debug.skipKernelTC true in
 theorem or_nosignbit_lshr_proof : or_nosignbit_lshr_before ⊑ or_nosignbit_lshr_after := by
   unfold or_nosignbit_lshr_before or_nosignbit_lshr_after
   simp_alive_peephole
+  intros
   ---BEGIN or_nosignbit_lshr
   all_goals (try extract_goal ; sorry)
   ---END or_nosignbit_lshr
@@ -397,6 +409,7 @@ set_option debug.skipKernelTC true in
 theorem xor_signbit_lshr_proof : xor_signbit_lshr_before ⊑ xor_signbit_lshr_after := by
   unfold xor_signbit_lshr_before xor_signbit_lshr_after
   simp_alive_peephole
+  intros
   ---BEGIN xor_signbit_lshr
   all_goals (try extract_goal ; sorry)
   ---END xor_signbit_lshr
@@ -427,6 +440,7 @@ set_option debug.skipKernelTC true in
 theorem xor_nosignbit_lshr_proof : xor_nosignbit_lshr_before ⊑ xor_nosignbit_lshr_after := by
   unfold xor_nosignbit_lshr_before xor_nosignbit_lshr_after
   simp_alive_peephole
+  intros
   ---BEGIN xor_nosignbit_lshr
   all_goals (try extract_goal ; sorry)
   ---END xor_nosignbit_lshr
@@ -457,6 +471,7 @@ set_option debug.skipKernelTC true in
 theorem and_signbit_ashr_proof : and_signbit_ashr_before ⊑ and_signbit_ashr_after := by
   unfold and_signbit_ashr_before and_signbit_ashr_after
   simp_alive_peephole
+  intros
   ---BEGIN and_signbit_ashr
   all_goals (try extract_goal ; sorry)
   ---END and_signbit_ashr
@@ -487,6 +502,7 @@ set_option debug.skipKernelTC true in
 theorem and_nosignbit_ashr_proof : and_nosignbit_ashr_before ⊑ and_nosignbit_ashr_after := by
   unfold and_nosignbit_ashr_before and_nosignbit_ashr_after
   simp_alive_peephole
+  intros
   ---BEGIN and_nosignbit_ashr
   all_goals (try extract_goal ; sorry)
   ---END and_nosignbit_ashr
@@ -517,6 +533,7 @@ set_option debug.skipKernelTC true in
 theorem or_signbit_ashr_proof : or_signbit_ashr_before ⊑ or_signbit_ashr_after := by
   unfold or_signbit_ashr_before or_signbit_ashr_after
   simp_alive_peephole
+  intros
   ---BEGIN or_signbit_ashr
   all_goals (try extract_goal ; sorry)
   ---END or_signbit_ashr
@@ -547,6 +564,7 @@ set_option debug.skipKernelTC true in
 theorem or_nosignbit_ashr_proof : or_nosignbit_ashr_before ⊑ or_nosignbit_ashr_after := by
   unfold or_nosignbit_ashr_before or_nosignbit_ashr_after
   simp_alive_peephole
+  intros
   ---BEGIN or_nosignbit_ashr
   all_goals (try extract_goal ; sorry)
   ---END or_nosignbit_ashr
@@ -577,6 +595,7 @@ set_option debug.skipKernelTC true in
 theorem xor_signbit_ashr_proof : xor_signbit_ashr_before ⊑ xor_signbit_ashr_after := by
   unfold xor_signbit_ashr_before xor_signbit_ashr_after
   simp_alive_peephole
+  intros
   ---BEGIN xor_signbit_ashr
   all_goals (try extract_goal ; sorry)
   ---END xor_signbit_ashr
@@ -607,6 +626,7 @@ set_option debug.skipKernelTC true in
 theorem xor_nosignbit_ashr_proof : xor_nosignbit_ashr_before ⊑ xor_nosignbit_ashr_after := by
   unfold xor_nosignbit_ashr_before xor_nosignbit_ashr_after
   simp_alive_peephole
+  intros
   ---BEGIN xor_nosignbit_ashr
   all_goals (try extract_goal ; sorry)
   ---END xor_nosignbit_ashr

@@ -33,6 +33,7 @@ set_option debug.skipKernelTC true in
 theorem t0_proof : t0_before ⊑ t0_after := by
   unfold t0_before t0_after
   simp_alive_peephole
+  intros
   ---BEGIN t0
   apply t0_thm
   ---END t0
@@ -59,6 +60,7 @@ set_option debug.skipKernelTC true in
 theorem t1_flags_proof : t1_flags_before ⊑ t1_flags_after := by
   unfold t1_flags_before t1_flags_after
   simp_alive_peephole
+  intros
   ---BEGIN t1_flags
   apply t1_flags_thm
   ---END t1_flags
@@ -85,6 +87,7 @@ set_option debug.skipKernelTC true in
 theorem t1_flags_nuw_only_proof : t1_flags_nuw_only_before ⊑ t1_flags_nuw_only_after := by
   unfold t1_flags_nuw_only_before t1_flags_nuw_only_after
   simp_alive_peephole
+  intros
   ---BEGIN t1_flags_nuw_only
   apply t1_flags_nuw_only_thm
   ---END t1_flags_nuw_only
@@ -111,6 +114,7 @@ set_option debug.skipKernelTC true in
 theorem t1_flags_sub_nsw_sub_proof : t1_flags_sub_nsw_sub_before ⊑ t1_flags_sub_nsw_sub_after := by
   unfold t1_flags_sub_nsw_sub_before t1_flags_sub_nsw_sub_after
   simp_alive_peephole
+  intros
   ---BEGIN t1_flags_sub_nsw_sub
   apply t1_flags_sub_nsw_sub_thm
   ---END t1_flags_sub_nsw_sub
@@ -137,6 +141,7 @@ set_option debug.skipKernelTC true in
 theorem t1_flags_nuw_first_proof : t1_flags_nuw_first_before ⊑ t1_flags_nuw_first_after := by
   unfold t1_flags_nuw_first_before t1_flags_nuw_first_after
   simp_alive_peephole
+  intros
   ---BEGIN t1_flags_nuw_first
   apply t1_flags_nuw_first_thm
   ---END t1_flags_nuw_first
@@ -163,6 +168,7 @@ set_option debug.skipKernelTC true in
 theorem t1_flags_nuw_second_proof : t1_flags_nuw_second_before ⊑ t1_flags_nuw_second_after := by
   unfold t1_flags_nuw_second_before t1_flags_nuw_second_after
   simp_alive_peephole
+  intros
   ---BEGIN t1_flags_nuw_second
   apply t1_flags_nuw_second_thm
   ---END t1_flags_nuw_second
@@ -189,6 +195,7 @@ set_option debug.skipKernelTC true in
 theorem t1_flags_nuw_nsw_first_proof : t1_flags_nuw_nsw_first_before ⊑ t1_flags_nuw_nsw_first_after := by
   unfold t1_flags_nuw_nsw_first_before t1_flags_nuw_nsw_first_after
   simp_alive_peephole
+  intros
   ---BEGIN t1_flags_nuw_nsw_first
   apply t1_flags_nuw_nsw_first_thm
   ---END t1_flags_nuw_nsw_first
@@ -215,6 +222,7 @@ set_option debug.skipKernelTC true in
 theorem t1_flags_nuw_nsw_second_proof : t1_flags_nuw_nsw_second_before ⊑ t1_flags_nuw_nsw_second_after := by
   unfold t1_flags_nuw_nsw_second_before t1_flags_nuw_nsw_second_after
   simp_alive_peephole
+  intros
   ---BEGIN t1_flags_nuw_nsw_second
   apply t1_flags_nuw_nsw_second_thm
   ---END t1_flags_nuw_nsw_second
@@ -243,6 +251,7 @@ set_option debug.skipKernelTC true in
 theorem t3_c0_proof : t3_c0_before ⊑ t3_c0_after := by
   unfold t3_c0_before t3_c0_after
   simp_alive_peephole
+  intros
   ---BEGIN t3_c0
   apply t3_c0_thm
   ---END t3_c0
@@ -271,6 +280,7 @@ set_option debug.skipKernelTC true in
 theorem t4_c1_proof : t4_c1_before ⊑ t4_c1_after := by
   unfold t4_c1_before t4_c1_after
   simp_alive_peephole
+  intros
   ---BEGIN t4_c1
   apply t4_c1_thm
   ---END t4_c1
@@ -299,6 +309,7 @@ set_option debug.skipKernelTC true in
 theorem t5_c2_proof : t5_c2_before ⊑ t5_c2_after := by
   unfold t5_c2_before t5_c2_after
   simp_alive_peephole
+  intros
   ---BEGIN t5_c2
   apply t5_c2_thm
   ---END t5_c2
@@ -327,6 +338,7 @@ set_option debug.skipKernelTC true in
 theorem t9_c0_c2_proof : t9_c0_c2_before ⊑ t9_c0_c2_after := by
   unfold t9_c0_c2_before t9_c0_c2_after
   simp_alive_peephole
+  intros
   ---BEGIN t9_c0_c2
   apply t9_c0_c2_thm
   ---END t9_c0_c2
@@ -355,6 +367,7 @@ set_option debug.skipKernelTC true in
 theorem t10_c1_c2_proof : t10_c1_c2_before ⊑ t10_c1_c2_after := by
   unfold t10_c1_c2_before t10_c1_c2_after
   simp_alive_peephole
+  intros
   ---BEGIN t10_c1_c2
   apply t10_c1_c2_thm
   ---END t10_c1_c2

@@ -37,6 +37,7 @@ set_option debug.skipKernelTC true in
 theorem xor_logic_and_logic_or1_proof : xor_logic_and_logic_or1_before ⊑ xor_logic_and_logic_or1_after := by
   unfold xor_logic_and_logic_or1_before xor_logic_and_logic_or1_after
   simp_alive_peephole
+  intros
   ---BEGIN xor_logic_and_logic_or1
   all_goals (try extract_goal ; sorry)
   ---END xor_logic_and_logic_or1
@@ -67,6 +68,7 @@ set_option debug.skipKernelTC true in
 theorem xor_logic_and_logic_or2_proof : xor_logic_and_logic_or2_before ⊑ xor_logic_and_logic_or2_after := by
   unfold xor_logic_and_logic_or2_before xor_logic_and_logic_or2_after
   simp_alive_peephole
+  intros
   ---BEGIN xor_logic_and_logic_or2
   all_goals (try extract_goal ; sorry)
   ---END xor_logic_and_logic_or2
@@ -97,6 +99,7 @@ set_option debug.skipKernelTC true in
 theorem xor_logic_and_logic_or4_proof : xor_logic_and_logic_or4_before ⊑ xor_logic_and_logic_or4_after := by
   unfold xor_logic_and_logic_or4_before xor_logic_and_logic_or4_after
   simp_alive_peephole
+  intros
   ---BEGIN xor_logic_and_logic_or4
   all_goals (try extract_goal ; sorry)
   ---END xor_logic_and_logic_or4
@@ -126,6 +129,7 @@ set_option debug.skipKernelTC true in
 theorem xor_and_logic_or1_proof : xor_and_logic_or1_before ⊑ xor_and_logic_or1_after := by
   unfold xor_and_logic_or1_before xor_and_logic_or1_after
   simp_alive_peephole
+  intros
   ---BEGIN xor_and_logic_or1
   all_goals (try extract_goal ; sorry)
   ---END xor_and_logic_or1
@@ -155,6 +159,7 @@ set_option debug.skipKernelTC true in
 theorem xor_and_logic_or2_proof : xor_and_logic_or2_before ⊑ xor_and_logic_or2_after := by
   unfold xor_and_logic_or2_before xor_and_logic_or2_after
   simp_alive_peephole
+  intros
   ---BEGIN xor_and_logic_or2
   all_goals (try extract_goal ; sorry)
   ---END xor_and_logic_or2
@@ -184,6 +189,7 @@ set_option debug.skipKernelTC true in
 theorem xor_logic_and_or1_proof : xor_logic_and_or1_before ⊑ xor_logic_and_or1_after := by
   unfold xor_logic_and_or1_before xor_logic_and_or1_after
   simp_alive_peephole
+  intros
   ---BEGIN xor_logic_and_or1
   all_goals (try extract_goal ; sorry)
   ---END xor_logic_and_or1
@@ -213,6 +219,7 @@ set_option debug.skipKernelTC true in
 theorem xor_logic_and_or2_proof : xor_logic_and_or2_before ⊑ xor_logic_and_or2_after := by
   unfold xor_logic_and_or2_before xor_logic_and_or2_after
   simp_alive_peephole
+  intros
   ---BEGIN xor_logic_and_or2
   all_goals (try extract_goal ; sorry)
   ---END xor_logic_and_or2
@@ -241,6 +248,7 @@ set_option debug.skipKernelTC true in
 theorem xor_and_or_proof : xor_and_or_before ⊑ xor_and_or_after := by
   unfold xor_and_or_before xor_and_or_after
   simp_alive_peephole
+  intros
   ---BEGIN xor_and_or
   all_goals (try extract_goal ; sorry)
   ---END xor_and_or

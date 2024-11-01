@@ -35,6 +35,7 @@ set_option debug.skipKernelTC true in
 theorem bools_proof : bools_before ⊑ bools_after := by
   unfold bools_before bools_after
   simp_alive_peephole
+  intros
   ---BEGIN bools
   apply bools_thm
   ---END bools
@@ -64,6 +65,7 @@ set_option debug.skipKernelTC true in
 theorem bools_logical_proof : bools_logical_before ⊑ bools_logical_after := by
   unfold bools_logical_before bools_logical_after
   simp_alive_peephole
+  intros
   ---BEGIN bools_logical
   apply bools_logical_thm
   ---END bools_logical
@@ -97,6 +99,7 @@ set_option debug.skipKernelTC true in
 theorem bools_multi_uses1_proof : bools_multi_uses1_before ⊑ bools_multi_uses1_after := by
   unfold bools_multi_uses1_before bools_multi_uses1_after
   simp_alive_peephole
+  intros
   ---BEGIN bools_multi_uses1
   apply bools_multi_uses1_thm
   ---END bools_multi_uses1
@@ -132,6 +135,7 @@ set_option debug.skipKernelTC true in
 theorem bools_multi_uses1_logical_proof : bools_multi_uses1_logical_before ⊑ bools_multi_uses1_logical_after := by
   unfold bools_multi_uses1_logical_before bools_multi_uses1_logical_after
   simp_alive_peephole
+  intros
   ---BEGIN bools_multi_uses1_logical
   apply bools_multi_uses1_logical_thm
   ---END bools_multi_uses1_logical
@@ -162,6 +166,7 @@ set_option debug.skipKernelTC true in
 theorem bools_multi_uses2_proof : bools_multi_uses2_before ⊑ bools_multi_uses2_after := by
   unfold bools_multi_uses2_before bools_multi_uses2_after
   simp_alive_peephole
+  intros
   ---BEGIN bools_multi_uses2
   apply bools_multi_uses2_thm
   ---END bools_multi_uses2
@@ -200,6 +205,7 @@ set_option debug.skipKernelTC true in
 theorem bools_multi_uses2_logical_proof : bools_multi_uses2_logical_before ⊑ bools_multi_uses2_logical_after := by
   unfold bools_multi_uses2_logical_before bools_multi_uses2_logical_after
   simp_alive_peephole
+  intros
   ---BEGIN bools_multi_uses2_logical
   apply bools_multi_uses2_logical_thm
   ---END bools_multi_uses2_logical

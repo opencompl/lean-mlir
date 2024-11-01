@@ -35,6 +35,7 @@ set_option debug.skipKernelTC true in
 theorem t0_proof : t0_before ⊑ t0_after := by
   unfold t0_before t0_after
   simp_alive_peephole
+  intros
   ---BEGIN t0
   all_goals (try extract_goal ; sorry)
   ---END t0
@@ -67,6 +68,7 @@ set_option debug.skipKernelTC true in
 theorem n12_proof : n12_before ⊑ n12_after := by
   unfold n12_before n12_after
   simp_alive_peephole
+  intros
   ---BEGIN n12
   all_goals (try extract_goal ; sorry)
   ---END n12

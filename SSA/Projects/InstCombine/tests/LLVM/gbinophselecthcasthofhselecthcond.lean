@@ -37,6 +37,7 @@ set_option debug.skipKernelTC true in
 theorem add_select_zext_proof : add_select_zext_before ⊑ add_select_zext_after := by
   unfold add_select_zext_before add_select_zext_after
   simp_alive_peephole
+  intros
   ---BEGIN add_select_zext
   all_goals (try extract_goal ; sorry)
   ---END add_select_zext
@@ -67,6 +68,7 @@ set_option debug.skipKernelTC true in
 theorem add_select_sext_proof : add_select_sext_before ⊑ add_select_sext_after := by
   unfold add_select_sext_before add_select_sext_after
   simp_alive_peephole
+  intros
   ---BEGIN add_select_sext
   all_goals (try extract_goal ; sorry)
   ---END add_select_sext
@@ -99,6 +101,7 @@ set_option debug.skipKernelTC true in
 theorem add_select_not_zext_proof : add_select_not_zext_before ⊑ add_select_not_zext_after := by
   unfold add_select_not_zext_before add_select_not_zext_after
   simp_alive_peephole
+  intros
   ---BEGIN add_select_not_zext
   all_goals (try extract_goal ; sorry)
   ---END add_select_not_zext
@@ -131,6 +134,7 @@ set_option debug.skipKernelTC true in
 theorem add_select_not_sext_proof : add_select_not_sext_before ⊑ add_select_not_sext_after := by
   unfold add_select_not_sext_before add_select_not_sext_after
   simp_alive_peephole
+  intros
   ---BEGIN add_select_not_sext
   all_goals (try extract_goal ; sorry)
   ---END add_select_not_sext
@@ -159,6 +163,7 @@ set_option debug.skipKernelTC true in
 theorem sub_select_sext_proof : sub_select_sext_before ⊑ sub_select_sext_after := by
   unfold sub_select_sext_before sub_select_sext_after
   simp_alive_peephole
+  intros
   ---BEGIN sub_select_sext
   all_goals (try extract_goal ; sorry)
   ---END sub_select_sext
@@ -189,6 +194,7 @@ set_option debug.skipKernelTC true in
 theorem sub_select_not_zext_proof : sub_select_not_zext_before ⊑ sub_select_not_zext_after := by
   unfold sub_select_not_zext_before sub_select_not_zext_after
   simp_alive_peephole
+  intros
   ---BEGIN sub_select_not_zext
   all_goals (try extract_goal ; sorry)
   ---END sub_select_not_zext
@@ -219,6 +225,7 @@ set_option debug.skipKernelTC true in
 theorem sub_select_not_sext_proof : sub_select_not_sext_before ⊑ sub_select_not_sext_after := by
   unfold sub_select_not_sext_before sub_select_not_sext_after
   simp_alive_peephole
+  intros
   ---BEGIN sub_select_not_sext
   all_goals (try extract_goal ; sorry)
   ---END sub_select_not_sext
@@ -247,6 +254,7 @@ set_option debug.skipKernelTC true in
 theorem mul_select_zext_proof : mul_select_zext_before ⊑ mul_select_zext_after := by
   unfold mul_select_zext_before mul_select_zext_after
   simp_alive_peephole
+  intros
   ---BEGIN mul_select_zext
   all_goals (try extract_goal ; sorry)
   ---END mul_select_zext
@@ -277,6 +285,7 @@ set_option debug.skipKernelTC true in
 theorem mul_select_sext_proof : mul_select_sext_before ⊑ mul_select_sext_after := by
   unfold mul_select_sext_before mul_select_sext_after
   simp_alive_peephole
+  intros
   ---BEGIN mul_select_sext
   all_goals (try extract_goal ; sorry)
   ---END mul_select_sext
@@ -309,6 +318,7 @@ set_option debug.skipKernelTC true in
 theorem select_zext_different_condition_proof : select_zext_different_condition_before ⊑ select_zext_different_condition_after := by
   unfold select_zext_different_condition_before select_zext_different_condition_after
   simp_alive_peephole
+  intros
   ---BEGIN select_zext_different_condition
   all_goals (try extract_goal ; sorry)
   ---END select_zext_different_condition
@@ -340,6 +350,7 @@ set_option debug.skipKernelTC true in
 theorem multiuse_add_proof : multiuse_add_before ⊑ multiuse_add_after := by
   unfold multiuse_add_before multiuse_add_after
   simp_alive_peephole
+  intros
   ---BEGIN multiuse_add
   all_goals (try extract_goal ; sorry)
   ---END multiuse_add
@@ -371,6 +382,7 @@ set_option debug.skipKernelTC true in
 theorem multiuse_select_proof : multiuse_select_before ⊑ multiuse_select_after := by
   unfold multiuse_select_before multiuse_select_after
   simp_alive_peephole
+  intros
   ---BEGIN multiuse_select
   all_goals (try extract_goal ; sorry)
   ---END multiuse_select
@@ -399,6 +411,7 @@ set_option debug.skipKernelTC true in
 theorem select_non_const_sides_proof : select_non_const_sides_before ⊑ select_non_const_sides_after := by
   unfold select_non_const_sides_before select_non_const_sides_after
   simp_alive_peephole
+  intros
   ---BEGIN select_non_const_sides
   all_goals (try extract_goal ; sorry)
   ---END select_non_const_sides
@@ -429,6 +442,7 @@ set_option debug.skipKernelTC true in
 theorem sub_select_sext_op_swapped_non_const_args_proof : sub_select_sext_op_swapped_non_const_args_before ⊑ sub_select_sext_op_swapped_non_const_args_after := by
   unfold sub_select_sext_op_swapped_non_const_args_before sub_select_sext_op_swapped_non_const_args_after
   simp_alive_peephole
+  intros
   ---BEGIN sub_select_sext_op_swapped_non_const_args
   all_goals (try extract_goal ; sorry)
   ---END sub_select_sext_op_swapped_non_const_args
@@ -459,6 +473,7 @@ set_option debug.skipKernelTC true in
 theorem sub_select_zext_op_swapped_non_const_args_proof : sub_select_zext_op_swapped_non_const_args_before ⊑ sub_select_zext_op_swapped_non_const_args_after := by
   unfold sub_select_zext_op_swapped_non_const_args_before sub_select_zext_op_swapped_non_const_args_after
   simp_alive_peephole
+  intros
   ---BEGIN sub_select_zext_op_swapped_non_const_args
   all_goals (try extract_goal ; sorry)
   ---END sub_select_zext_op_swapped_non_const_args

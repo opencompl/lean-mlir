@@ -35,6 +35,7 @@ set_option debug.skipKernelTC true in
 theorem test21_proof : test21_before ⊑ test21_after := by
   unfold test21_before test21_after
   simp_alive_peephole
+  intros
   ---BEGIN test21
   all_goals (try extract_goal ; sorry)
   ---END test21

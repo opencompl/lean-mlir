@@ -42,6 +42,7 @@ set_option debug.skipKernelTC true in
 theorem and_xor_common_op_proof : and_xor_common_op_before ⊑ and_xor_common_op_after := by
   unfold and_xor_common_op_before and_xor_common_op_after
   simp_alive_peephole
+  intros
   ---BEGIN and_xor_common_op
   all_goals (try extract_goal ; sorry)
   ---END and_xor_common_op
@@ -77,6 +78,7 @@ set_option debug.skipKernelTC true in
 theorem and_xor_common_op_commute1_proof : and_xor_common_op_commute1_before ⊑ and_xor_common_op_commute1_after := by
   unfold and_xor_common_op_commute1_before and_xor_common_op_commute1_after
   simp_alive_peephole
+  intros
   ---BEGIN and_xor_common_op_commute1
   all_goals (try extract_goal ; sorry)
   ---END and_xor_common_op_commute1
@@ -112,6 +114,7 @@ set_option debug.skipKernelTC true in
 theorem and_xor_common_op_commute2_proof : and_xor_common_op_commute2_before ⊑ and_xor_common_op_commute2_after := by
   unfold and_xor_common_op_commute2_before and_xor_common_op_commute2_after
   simp_alive_peephole
+  intros
   ---BEGIN and_xor_common_op_commute2
   all_goals (try extract_goal ; sorry)
   ---END and_xor_common_op_commute2
@@ -139,6 +142,7 @@ set_option debug.skipKernelTC true in
 theorem and_xor_not_common_op_proof : and_xor_not_common_op_before ⊑ and_xor_not_common_op_after := by
   unfold and_xor_not_common_op_before and_xor_not_common_op_after
   simp_alive_peephole
+  intros
   ---BEGIN and_xor_not_common_op
   all_goals (try extract_goal ; sorry)
   ---END and_xor_not_common_op
@@ -166,6 +170,7 @@ set_option debug.skipKernelTC true in
 theorem and_not_xor_common_op_proof : and_not_xor_common_op_before ⊑ and_not_xor_common_op_after := by
   unfold and_not_xor_common_op_before and_not_xor_common_op_after
   simp_alive_peephole
+  intros
   ---BEGIN and_not_xor_common_op
   all_goals (try extract_goal ; sorry)
   ---END and_not_xor_common_op
@@ -192,6 +197,7 @@ set_option debug.skipKernelTC true in
 theorem or_proof : or_before ⊑ or_after := by
   unfold or_before or_after
   simp_alive_peephole
+  intros
   ---BEGIN or
   all_goals (try extract_goal ; sorry)
   ---END or
@@ -218,6 +224,7 @@ set_option debug.skipKernelTC true in
 theorem or2_proof : or2_before ⊑ or2_after := by
   unfold or2_before or2_after
   simp_alive_peephole
+  intros
   ---BEGIN or2
   all_goals (try extract_goal ; sorry)
   ---END or2
@@ -251,6 +258,7 @@ set_option debug.skipKernelTC true in
 theorem and_xor_or1_proof : and_xor_or1_before ⊑ and_xor_or1_after := by
   unfold and_xor_or1_before and_xor_or1_after
   simp_alive_peephole
+  intros
   ---BEGIN and_xor_or1
   all_goals (try extract_goal ; sorry)
   ---END and_xor_or1
@@ -284,6 +292,7 @@ set_option debug.skipKernelTC true in
 theorem and_xor_or2_proof : and_xor_or2_before ⊑ and_xor_or2_after := by
   unfold and_xor_or2_before and_xor_or2_after
   simp_alive_peephole
+  intros
   ---BEGIN and_xor_or2
   all_goals (try extract_goal ; sorry)
   ---END and_xor_or2
@@ -317,6 +326,7 @@ set_option debug.skipKernelTC true in
 theorem and_xor_or3_proof : and_xor_or3_before ⊑ and_xor_or3_after := by
   unfold and_xor_or3_before and_xor_or3_after
   simp_alive_peephole
+  intros
   ---BEGIN and_xor_or3
   all_goals (try extract_goal ; sorry)
   ---END and_xor_or3
@@ -350,6 +360,7 @@ set_option debug.skipKernelTC true in
 theorem and_xor_or4_proof : and_xor_or4_before ⊑ and_xor_or4_after := by
   unfold and_xor_or4_before and_xor_or4_after
   simp_alive_peephole
+  intros
   ---BEGIN and_xor_or4
   all_goals (try extract_goal ; sorry)
   ---END and_xor_or4
@@ -383,6 +394,7 @@ set_option debug.skipKernelTC true in
 theorem and_xor_or5_proof : and_xor_or5_before ⊑ and_xor_or5_after := by
   unfold and_xor_or5_before and_xor_or5_after
   simp_alive_peephole
+  intros
   ---BEGIN and_xor_or5
   all_goals (try extract_goal ; sorry)
   ---END and_xor_or5
@@ -416,6 +428,7 @@ set_option debug.skipKernelTC true in
 theorem and_xor_or6_proof : and_xor_or6_before ⊑ and_xor_or6_after := by
   unfold and_xor_or6_before and_xor_or6_after
   simp_alive_peephole
+  intros
   ---BEGIN and_xor_or6
   all_goals (try extract_goal ; sorry)
   ---END and_xor_or6
@@ -449,6 +462,7 @@ set_option debug.skipKernelTC true in
 theorem and_xor_or7_proof : and_xor_or7_before ⊑ and_xor_or7_after := by
   unfold and_xor_or7_before and_xor_or7_after
   simp_alive_peephole
+  intros
   ---BEGIN and_xor_or7
   all_goals (try extract_goal ; sorry)
   ---END and_xor_or7
@@ -482,6 +496,7 @@ set_option debug.skipKernelTC true in
 theorem and_xor_or8_proof : and_xor_or8_before ⊑ and_xor_or8_after := by
   unfold and_xor_or8_before and_xor_or8_after
   simp_alive_peephole
+  intros
   ---BEGIN and_xor_or8
   all_goals (try extract_goal ; sorry)
   ---END and_xor_or8
@@ -511,6 +526,7 @@ set_option debug.skipKernelTC true in
 theorem and_shl_proof : and_shl_before ⊑ and_shl_after := by
   unfold and_shl_before and_shl_after
   simp_alive_peephole
+  intros
   ---BEGIN and_shl
   all_goals (try extract_goal ; sorry)
   ---END and_shl
@@ -540,6 +556,7 @@ set_option debug.skipKernelTC true in
 theorem or_shl_proof : or_shl_before ⊑ or_shl_after := by
   unfold or_shl_before or_shl_after
   simp_alive_peephole
+  intros
   ---BEGIN or_shl
   all_goals (try extract_goal ; sorry)
   ---END or_shl
@@ -569,6 +586,7 @@ set_option debug.skipKernelTC true in
 theorem or_lshr_proof : or_lshr_before ⊑ or_lshr_after := by
   unfold or_lshr_before or_lshr_after
   simp_alive_peephole
+  intros
   ---BEGIN or_lshr
   all_goals (try extract_goal ; sorry)
   ---END or_lshr
@@ -598,6 +616,7 @@ set_option debug.skipKernelTC true in
 theorem xor_lshr_proof : xor_lshr_before ⊑ xor_lshr_after := by
   unfold xor_lshr_before xor_lshr_after
   simp_alive_peephole
+  intros
   ---BEGIN xor_lshr
   all_goals (try extract_goal ; sorry)
   ---END xor_lshr
@@ -631,6 +650,7 @@ set_option debug.skipKernelTC true in
 theorem xor_lshr_multiuse_proof : xor_lshr_multiuse_before ⊑ xor_lshr_multiuse_after := by
   unfold xor_lshr_multiuse_before xor_lshr_multiuse_after
   simp_alive_peephole
+  intros
   ---BEGIN xor_lshr_multiuse
   all_goals (try extract_goal ; sorry)
   ---END xor_lshr_multiuse
@@ -666,6 +686,7 @@ set_option debug.skipKernelTC true in
 theorem not_and_and_not_proof : not_and_and_not_before ⊑ not_and_and_not_after := by
   unfold not_and_and_not_before not_and_and_not_after
   simp_alive_peephole
+  intros
   ---BEGIN not_and_and_not
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_not
@@ -697,6 +718,7 @@ set_option debug.skipKernelTC true in
 theorem not_and_and_not_commute1_proof : not_and_and_not_commute1_before ⊑ not_and_and_not_commute1_after := by
   unfold not_and_and_not_commute1_before not_and_and_not_commute1_after
   simp_alive_peephole
+  intros
   ---BEGIN not_and_and_not_commute1
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_not_commute1
@@ -732,6 +754,7 @@ set_option debug.skipKernelTC true in
 theorem not_or_or_not_proof : not_or_or_not_before ⊑ not_or_or_not_after := by
   unfold not_or_or_not_before not_or_or_not_after
   simp_alive_peephole
+  intros
   ---BEGIN not_or_or_not
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_not
@@ -763,6 +786,7 @@ set_option debug.skipKernelTC true in
 theorem not_or_or_not_commute1_proof : not_or_or_not_commute1_before ⊑ not_or_or_not_commute1_after := by
   unfold not_or_or_not_commute1_before not_or_or_not_commute1_after
   simp_alive_peephole
+  intros
   ---BEGIN not_or_or_not_commute1
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_not_commute1
@@ -797,6 +821,7 @@ set_option debug.skipKernelTC true in
 theorem or_not_and_proof : or_not_and_before ⊑ or_not_and_after := by
   unfold or_not_and_before or_not_and_after
   simp_alive_peephole
+  intros
   ---BEGIN or_not_and
   all_goals (try extract_goal ; sorry)
   ---END or_not_and
@@ -835,6 +860,7 @@ set_option debug.skipKernelTC true in
 theorem or_not_and_commute1_proof : or_not_and_commute1_before ⊑ or_not_and_commute1_after := by
   unfold or_not_and_commute1_before or_not_and_commute1_after
   simp_alive_peephole
+  intros
   ---BEGIN or_not_and_commute1
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_commute1
@@ -873,6 +899,7 @@ set_option debug.skipKernelTC true in
 theorem or_not_and_commute2_proof : or_not_and_commute2_before ⊑ or_not_and_commute2_after := by
   unfold or_not_and_commute2_before or_not_and_commute2_after
   simp_alive_peephole
+  intros
   ---BEGIN or_not_and_commute2
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_commute2
@@ -907,6 +934,7 @@ set_option debug.skipKernelTC true in
 theorem or_not_and_commute3_proof : or_not_and_commute3_before ⊑ or_not_and_commute3_after := by
   unfold or_not_and_commute3_before or_not_and_commute3_after
   simp_alive_peephole
+  intros
   ---BEGIN or_not_and_commute3
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_commute3
@@ -945,6 +973,7 @@ set_option debug.skipKernelTC true in
 theorem or_not_and_commute4_proof : or_not_and_commute4_before ⊑ or_not_and_commute4_after := by
   unfold or_not_and_commute4_before or_not_and_commute4_after
   simp_alive_peephole
+  intros
   ---BEGIN or_not_and_commute4
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_commute4
@@ -985,6 +1014,7 @@ set_option debug.skipKernelTC true in
 theorem or_not_and_commute5_proof : or_not_and_commute5_before ⊑ or_not_and_commute5_after := by
   unfold or_not_and_commute5_before or_not_and_commute5_after
   simp_alive_peephole
+  intros
   ---BEGIN or_not_and_commute5
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_commute5
@@ -1019,6 +1049,7 @@ set_option debug.skipKernelTC true in
 theorem or_not_and_commute6_proof : or_not_and_commute6_before ⊑ or_not_and_commute6_after := by
   unfold or_not_and_commute6_before or_not_and_commute6_after
   simp_alive_peephole
+  intros
   ---BEGIN or_not_and_commute6
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_commute6
@@ -1053,6 +1084,7 @@ set_option debug.skipKernelTC true in
 theorem or_not_and_commute7_proof : or_not_and_commute7_before ⊑ or_not_and_commute7_after := by
   unfold or_not_and_commute7_before or_not_and_commute7_after
   simp_alive_peephole
+  intros
   ---BEGIN or_not_and_commute7
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_commute7
@@ -1093,6 +1125,7 @@ set_option debug.skipKernelTC true in
 theorem or_not_and_commute8_proof : or_not_and_commute8_before ⊑ or_not_and_commute8_after := by
   unfold or_not_and_commute8_before or_not_and_commute8_after
   simp_alive_peephole
+  intros
   ---BEGIN or_not_and_commute8
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_commute8
@@ -1135,6 +1168,7 @@ set_option debug.skipKernelTC true in
 theorem or_not_and_commute9_proof : or_not_and_commute9_before ⊑ or_not_and_commute9_after := by
   unfold or_not_and_commute9_before or_not_and_commute9_after
   simp_alive_peephole
+  intros
   ---BEGIN or_not_and_commute9
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_commute9
@@ -1173,6 +1207,7 @@ set_option debug.skipKernelTC true in
 theorem or_not_and_wrong_c_proof : or_not_and_wrong_c_before ⊑ or_not_and_wrong_c_after := by
   unfold or_not_and_wrong_c_before or_not_and_wrong_c_after
   simp_alive_peephole
+  intros
   ---BEGIN or_not_and_wrong_c
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_wrong_c
@@ -1211,6 +1246,7 @@ set_option debug.skipKernelTC true in
 theorem or_not_and_wrong_b_proof : or_not_and_wrong_b_before ⊑ or_not_and_wrong_b_after := by
   unfold or_not_and_wrong_b_before or_not_and_wrong_b_after
   simp_alive_peephole
+  intros
   ---BEGIN or_not_and_wrong_b
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_wrong_b
@@ -1245,6 +1281,7 @@ set_option debug.skipKernelTC true in
 theorem and_not_or_proof : and_not_or_before ⊑ and_not_or_after := by
   unfold and_not_or_before and_not_or_after
   simp_alive_peephole
+  intros
   ---BEGIN and_not_or
   all_goals (try extract_goal ; sorry)
   ---END and_not_or
@@ -1283,6 +1320,7 @@ set_option debug.skipKernelTC true in
 theorem and_not_or_commute1_proof : and_not_or_commute1_before ⊑ and_not_or_commute1_after := by
   unfold and_not_or_commute1_before and_not_or_commute1_after
   simp_alive_peephole
+  intros
   ---BEGIN and_not_or_commute1
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_commute1
@@ -1321,6 +1359,7 @@ set_option debug.skipKernelTC true in
 theorem and_not_or_commute2_proof : and_not_or_commute2_before ⊑ and_not_or_commute2_after := by
   unfold and_not_or_commute2_before and_not_or_commute2_after
   simp_alive_peephole
+  intros
   ---BEGIN and_not_or_commute2
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_commute2
@@ -1355,6 +1394,7 @@ set_option debug.skipKernelTC true in
 theorem and_not_or_commute3_proof : and_not_or_commute3_before ⊑ and_not_or_commute3_after := by
   unfold and_not_or_commute3_before and_not_or_commute3_after
   simp_alive_peephole
+  intros
   ---BEGIN and_not_or_commute3
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_commute3
@@ -1393,6 +1433,7 @@ set_option debug.skipKernelTC true in
 theorem and_not_or_commute4_proof : and_not_or_commute4_before ⊑ and_not_or_commute4_after := by
   unfold and_not_or_commute4_before and_not_or_commute4_after
   simp_alive_peephole
+  intros
   ---BEGIN and_not_or_commute4
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_commute4
@@ -1433,6 +1474,7 @@ set_option debug.skipKernelTC true in
 theorem and_not_or_commute5_proof : and_not_or_commute5_before ⊑ and_not_or_commute5_after := by
   unfold and_not_or_commute5_before and_not_or_commute5_after
   simp_alive_peephole
+  intros
   ---BEGIN and_not_or_commute5
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_commute5
@@ -1467,6 +1509,7 @@ set_option debug.skipKernelTC true in
 theorem and_not_or_commute6_proof : and_not_or_commute6_before ⊑ and_not_or_commute6_after := by
   unfold and_not_or_commute6_before and_not_or_commute6_after
   simp_alive_peephole
+  intros
   ---BEGIN and_not_or_commute6
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_commute6
@@ -1501,6 +1544,7 @@ set_option debug.skipKernelTC true in
 theorem and_not_or_commute7_proof : and_not_or_commute7_before ⊑ and_not_or_commute7_after := by
   unfold and_not_or_commute7_before and_not_or_commute7_after
   simp_alive_peephole
+  intros
   ---BEGIN and_not_or_commute7
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_commute7
@@ -1541,6 +1585,7 @@ set_option debug.skipKernelTC true in
 theorem and_not_or_commute8_proof : and_not_or_commute8_before ⊑ and_not_or_commute8_after := by
   unfold and_not_or_commute8_before and_not_or_commute8_after
   simp_alive_peephole
+  intros
   ---BEGIN and_not_or_commute8
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_commute8
@@ -1583,6 +1628,7 @@ set_option debug.skipKernelTC true in
 theorem and_not_or_commute9_proof : and_not_or_commute9_before ⊑ and_not_or_commute9_after := by
   unfold and_not_or_commute9_before and_not_or_commute9_after
   simp_alive_peephole
+  intros
   ---BEGIN and_not_or_commute9
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_commute9
@@ -1621,6 +1667,7 @@ set_option debug.skipKernelTC true in
 theorem and_not_or_wrong_c_proof : and_not_or_wrong_c_before ⊑ and_not_or_wrong_c_after := by
   unfold and_not_or_wrong_c_before and_not_or_wrong_c_after
   simp_alive_peephole
+  intros
   ---BEGIN and_not_or_wrong_c
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_wrong_c
@@ -1659,6 +1706,7 @@ set_option debug.skipKernelTC true in
 theorem and_not_or_wrong_b_proof : and_not_or_wrong_b_before ⊑ and_not_or_wrong_b_after := by
   unfold and_not_or_wrong_b_before and_not_or_wrong_b_after
   simp_alive_peephole
+  intros
   ---BEGIN and_not_or_wrong_b
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_wrong_b
@@ -1692,6 +1740,7 @@ set_option debug.skipKernelTC true in
 theorem or_and_not_not_proof : or_and_not_not_before ⊑ or_and_not_not_after := by
   unfold or_and_not_not_before or_and_not_not_after
   simp_alive_peephole
+  intros
   ---BEGIN or_and_not_not
   all_goals (try extract_goal ; sorry)
   ---END or_and_not_not
@@ -1729,6 +1778,7 @@ set_option debug.skipKernelTC true in
 theorem or_and_not_not_commute1_proof : or_and_not_not_commute1_before ⊑ or_and_not_not_commute1_after := by
   unfold or_and_not_not_commute1_before or_and_not_not_commute1_after
   simp_alive_peephole
+  intros
   ---BEGIN or_and_not_not_commute1
   all_goals (try extract_goal ; sorry)
   ---END or_and_not_not_commute1
@@ -1762,6 +1812,7 @@ set_option debug.skipKernelTC true in
 theorem or_and_not_not_commute2_proof : or_and_not_not_commute2_before ⊑ or_and_not_not_commute2_after := by
   unfold or_and_not_not_commute2_before or_and_not_not_commute2_after
   simp_alive_peephole
+  intros
   ---BEGIN or_and_not_not_commute2
   all_goals (try extract_goal ; sorry)
   ---END or_and_not_not_commute2
@@ -1795,6 +1846,7 @@ set_option debug.skipKernelTC true in
 theorem or_and_not_not_commute3_proof : or_and_not_not_commute3_before ⊑ or_and_not_not_commute3_after := by
   unfold or_and_not_not_commute3_before or_and_not_not_commute3_after
   simp_alive_peephole
+  intros
   ---BEGIN or_and_not_not_commute3
   all_goals (try extract_goal ; sorry)
   ---END or_and_not_not_commute3
@@ -1828,6 +1880,7 @@ set_option debug.skipKernelTC true in
 theorem or_and_not_not_commute4_proof : or_and_not_not_commute4_before ⊑ or_and_not_not_commute4_after := by
   unfold or_and_not_not_commute4_before or_and_not_not_commute4_after
   simp_alive_peephole
+  intros
   ---BEGIN or_and_not_not_commute4
   all_goals (try extract_goal ; sorry)
   ---END or_and_not_not_commute4
@@ -1861,6 +1914,7 @@ set_option debug.skipKernelTC true in
 theorem or_and_not_not_commute5_proof : or_and_not_not_commute5_before ⊑ or_and_not_not_commute5_after := by
   unfold or_and_not_not_commute5_before or_and_not_not_commute5_after
   simp_alive_peephole
+  intros
   ---BEGIN or_and_not_not_commute5
   all_goals (try extract_goal ; sorry)
   ---END or_and_not_not_commute5
@@ -1898,6 +1952,7 @@ set_option debug.skipKernelTC true in
 theorem or_and_not_not_commute6_proof : or_and_not_not_commute6_before ⊑ or_and_not_not_commute6_after := by
   unfold or_and_not_not_commute6_before or_and_not_not_commute6_after
   simp_alive_peephole
+  intros
   ---BEGIN or_and_not_not_commute6
   all_goals (try extract_goal ; sorry)
   ---END or_and_not_not_commute6
@@ -1931,6 +1986,7 @@ set_option debug.skipKernelTC true in
 theorem or_and_not_not_commute7_proof : or_and_not_not_commute7_before ⊑ or_and_not_not_commute7_after := by
   unfold or_and_not_not_commute7_before or_and_not_not_commute7_after
   simp_alive_peephole
+  intros
   ---BEGIN or_and_not_not_commute7
   all_goals (try extract_goal ; sorry)
   ---END or_and_not_not_commute7
@@ -1967,6 +2023,7 @@ set_option debug.skipKernelTC true in
 theorem or_and_not_not_wrong_a_proof : or_and_not_not_wrong_a_before ⊑ or_and_not_not_wrong_a_after := by
   unfold or_and_not_not_wrong_a_before or_and_not_not_wrong_a_after
   simp_alive_peephole
+  intros
   ---BEGIN or_and_not_not_wrong_a
   all_goals (try extract_goal ; sorry)
   ---END or_and_not_not_wrong_a
@@ -2003,6 +2060,7 @@ set_option debug.skipKernelTC true in
 theorem or_and_not_not_wrong_b_proof : or_and_not_not_wrong_b_before ⊑ or_and_not_not_wrong_b_after := by
   unfold or_and_not_not_wrong_b_before or_and_not_not_wrong_b_after
   simp_alive_peephole
+  intros
   ---BEGIN or_and_not_not_wrong_b
   all_goals (try extract_goal ; sorry)
   ---END or_and_not_not_wrong_b
@@ -2036,6 +2094,7 @@ set_option debug.skipKernelTC true in
 theorem and_or_not_not_proof : and_or_not_not_before ⊑ and_or_not_not_after := by
   unfold and_or_not_not_before and_or_not_not_after
   simp_alive_peephole
+  intros
   ---BEGIN and_or_not_not
   all_goals (try extract_goal ; sorry)
   ---END and_or_not_not
@@ -2073,6 +2132,7 @@ set_option debug.skipKernelTC true in
 theorem and_or_not_not_commute1_proof : and_or_not_not_commute1_before ⊑ and_or_not_not_commute1_after := by
   unfold and_or_not_not_commute1_before and_or_not_not_commute1_after
   simp_alive_peephole
+  intros
   ---BEGIN and_or_not_not_commute1
   all_goals (try extract_goal ; sorry)
   ---END and_or_not_not_commute1
@@ -2106,6 +2166,7 @@ set_option debug.skipKernelTC true in
 theorem and_or_not_not_commute2_proof : and_or_not_not_commute2_before ⊑ and_or_not_not_commute2_after := by
   unfold and_or_not_not_commute2_before and_or_not_not_commute2_after
   simp_alive_peephole
+  intros
   ---BEGIN and_or_not_not_commute2
   all_goals (try extract_goal ; sorry)
   ---END and_or_not_not_commute2
@@ -2139,6 +2200,7 @@ set_option debug.skipKernelTC true in
 theorem and_or_not_not_commute3_proof : and_or_not_not_commute3_before ⊑ and_or_not_not_commute3_after := by
   unfold and_or_not_not_commute3_before and_or_not_not_commute3_after
   simp_alive_peephole
+  intros
   ---BEGIN and_or_not_not_commute3
   all_goals (try extract_goal ; sorry)
   ---END and_or_not_not_commute3
@@ -2172,6 +2234,7 @@ set_option debug.skipKernelTC true in
 theorem and_or_not_not_commute4_proof : and_or_not_not_commute4_before ⊑ and_or_not_not_commute4_after := by
   unfold and_or_not_not_commute4_before and_or_not_not_commute4_after
   simp_alive_peephole
+  intros
   ---BEGIN and_or_not_not_commute4
   all_goals (try extract_goal ; sorry)
   ---END and_or_not_not_commute4
@@ -2205,6 +2268,7 @@ set_option debug.skipKernelTC true in
 theorem and_or_not_not_commute5_proof : and_or_not_not_commute5_before ⊑ and_or_not_not_commute5_after := by
   unfold and_or_not_not_commute5_before and_or_not_not_commute5_after
   simp_alive_peephole
+  intros
   ---BEGIN and_or_not_not_commute5
   all_goals (try extract_goal ; sorry)
   ---END and_or_not_not_commute5
@@ -2242,6 +2306,7 @@ set_option debug.skipKernelTC true in
 theorem and_or_not_not_commute6_proof : and_or_not_not_commute6_before ⊑ and_or_not_not_commute6_after := by
   unfold and_or_not_not_commute6_before and_or_not_not_commute6_after
   simp_alive_peephole
+  intros
   ---BEGIN and_or_not_not_commute6
   all_goals (try extract_goal ; sorry)
   ---END and_or_not_not_commute6
@@ -2275,6 +2340,7 @@ set_option debug.skipKernelTC true in
 theorem and_or_not_not_commute7_proof : and_or_not_not_commute7_before ⊑ and_or_not_not_commute7_after := by
   unfold and_or_not_not_commute7_before and_or_not_not_commute7_after
   simp_alive_peephole
+  intros
   ---BEGIN and_or_not_not_commute7
   all_goals (try extract_goal ; sorry)
   ---END and_or_not_not_commute7
@@ -2310,6 +2376,7 @@ set_option debug.skipKernelTC true in
 theorem and_or_not_not_wrong_a_proof : and_or_not_not_wrong_a_before ⊑ and_or_not_not_wrong_a_after := by
   unfold and_or_not_not_wrong_a_before and_or_not_not_wrong_a_after
   simp_alive_peephole
+  intros
   ---BEGIN and_or_not_not_wrong_a
   all_goals (try extract_goal ; sorry)
   ---END and_or_not_not_wrong_a
@@ -2346,6 +2413,7 @@ set_option debug.skipKernelTC true in
 theorem and_or_not_not_wrong_b_proof : and_or_not_not_wrong_b_before ⊑ and_or_not_not_wrong_b_after := by
   unfold and_or_not_not_wrong_b_before and_or_not_not_wrong_b_after
   simp_alive_peephole
+  intros
   ---BEGIN and_or_not_not_wrong_b
   all_goals (try extract_goal ; sorry)
   ---END and_or_not_not_wrong_b
@@ -2382,6 +2450,7 @@ set_option debug.skipKernelTC true in
 theorem and_not_or_or_not_or_xor_proof : and_not_or_or_not_or_xor_before ⊑ and_not_or_or_not_or_xor_after := by
   unfold and_not_or_or_not_or_xor_before and_not_or_or_not_or_xor_after
   simp_alive_peephole
+  intros
   ---BEGIN and_not_or_or_not_or_xor
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_or_not_or_xor
@@ -2418,6 +2487,7 @@ set_option debug.skipKernelTC true in
 theorem and_not_or_or_not_or_xor_commute1_proof : and_not_or_or_not_or_xor_commute1_before ⊑ and_not_or_or_not_or_xor_commute1_after := by
   unfold and_not_or_or_not_or_xor_commute1_before and_not_or_or_not_or_xor_commute1_after
   simp_alive_peephole
+  intros
   ---BEGIN and_not_or_or_not_or_xor_commute1
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_or_not_or_xor_commute1
@@ -2458,6 +2528,7 @@ set_option debug.skipKernelTC true in
 theorem and_not_or_or_not_or_xor_commute2_proof : and_not_or_or_not_or_xor_commute2_before ⊑ and_not_or_or_not_or_xor_commute2_after := by
   unfold and_not_or_or_not_or_xor_commute2_before and_not_or_or_not_or_xor_commute2_after
   simp_alive_peephole
+  intros
   ---BEGIN and_not_or_or_not_or_xor_commute2
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_or_not_or_xor_commute2
@@ -2494,6 +2565,7 @@ set_option debug.skipKernelTC true in
 theorem and_not_or_or_not_or_xor_commute3_proof : and_not_or_or_not_or_xor_commute3_before ⊑ and_not_or_or_not_or_xor_commute3_after := by
   unfold and_not_or_or_not_or_xor_commute3_before and_not_or_or_not_or_xor_commute3_after
   simp_alive_peephole
+  intros
   ---BEGIN and_not_or_or_not_or_xor_commute3
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_or_not_or_xor_commute3
@@ -2534,6 +2606,7 @@ set_option debug.skipKernelTC true in
 theorem and_not_or_or_not_or_xor_commute4_proof : and_not_or_or_not_or_xor_commute4_before ⊑ and_not_or_or_not_or_xor_commute4_after := by
   unfold and_not_or_or_not_or_xor_commute4_before and_not_or_or_not_or_xor_commute4_after
   simp_alive_peephole
+  intros
   ---BEGIN and_not_or_or_not_or_xor_commute4
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_or_not_or_xor_commute4
@@ -2570,6 +2643,7 @@ set_option debug.skipKernelTC true in
 theorem and_not_or_or_not_or_xor_commute5_proof : and_not_or_or_not_or_xor_commute5_before ⊑ and_not_or_or_not_or_xor_commute5_after := by
   unfold and_not_or_or_not_or_xor_commute5_before and_not_or_or_not_or_xor_commute5_after
   simp_alive_peephole
+  intros
   ---BEGIN and_not_or_or_not_or_xor_commute5
   all_goals (try extract_goal ; sorry)
   ---END and_not_or_or_not_or_xor_commute5
@@ -2607,6 +2681,7 @@ set_option debug.skipKernelTC true in
 theorem or_not_and_and_not_and_xor_proof : or_not_and_and_not_and_xor_before ⊑ or_not_and_and_not_and_xor_after := by
   unfold or_not_and_and_not_and_xor_before or_not_and_and_not_and_xor_after
   simp_alive_peephole
+  intros
   ---BEGIN or_not_and_and_not_and_xor
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_and_not_and_xor
@@ -2644,6 +2719,7 @@ set_option debug.skipKernelTC true in
 theorem or_not_and_and_not_and_xor_commute1_proof : or_not_and_and_not_and_xor_commute1_before ⊑ or_not_and_and_not_and_xor_commute1_after := by
   unfold or_not_and_and_not_and_xor_commute1_before or_not_and_and_not_and_xor_commute1_after
   simp_alive_peephole
+  intros
   ---BEGIN or_not_and_and_not_and_xor_commute1
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_and_not_and_xor_commute1
@@ -2685,6 +2761,7 @@ set_option debug.skipKernelTC true in
 theorem or_not_and_and_not_and_xor_commute2_proof : or_not_and_and_not_and_xor_commute2_before ⊑ or_not_and_and_not_and_xor_commute2_after := by
   unfold or_not_and_and_not_and_xor_commute2_before or_not_and_and_not_and_xor_commute2_after
   simp_alive_peephole
+  intros
   ---BEGIN or_not_and_and_not_and_xor_commute2
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_and_not_and_xor_commute2
@@ -2722,6 +2799,7 @@ set_option debug.skipKernelTC true in
 theorem or_not_and_and_not_and_xor_commute3_proof : or_not_and_and_not_and_xor_commute3_before ⊑ or_not_and_and_not_and_xor_commute3_after := by
   unfold or_not_and_and_not_and_xor_commute3_before or_not_and_and_not_and_xor_commute3_after
   simp_alive_peephole
+  intros
   ---BEGIN or_not_and_and_not_and_xor_commute3
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_and_not_and_xor_commute3
@@ -2763,6 +2841,7 @@ set_option debug.skipKernelTC true in
 theorem or_not_and_and_not_and_xor_commute4_proof : or_not_and_and_not_and_xor_commute4_before ⊑ or_not_and_and_not_and_xor_commute4_after := by
   unfold or_not_and_and_not_and_xor_commute4_before or_not_and_and_not_and_xor_commute4_after
   simp_alive_peephole
+  intros
   ---BEGIN or_not_and_and_not_and_xor_commute4
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_and_not_and_xor_commute4
@@ -2800,6 +2879,7 @@ set_option debug.skipKernelTC true in
 theorem or_not_and_and_not_and_xor_commute5_proof : or_not_and_and_not_and_xor_commute5_before ⊑ or_not_and_and_not_and_xor_commute5_after := by
   unfold or_not_and_and_not_and_xor_commute5_before or_not_and_and_not_and_xor_commute5_after
   simp_alive_peephole
+  intros
   ---BEGIN or_not_and_and_not_and_xor_commute5
   all_goals (try extract_goal ; sorry)
   ---END or_not_and_and_not_and_xor_commute5
@@ -2834,6 +2914,7 @@ set_option debug.skipKernelTC true in
 theorem not_and_and_or_not_or_or_proof : not_and_and_or_not_or_or_before ⊑ not_and_and_or_not_or_or_after := by
   unfold not_and_and_or_not_or_or_before not_and_and_or_not_or_or_after
   simp_alive_peephole
+  intros
   ---BEGIN not_and_and_or_not_or_or
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_not_or_or
@@ -2868,6 +2949,7 @@ set_option debug.skipKernelTC true in
 theorem not_and_and_or_not_or_or_commute1_or_proof : not_and_and_or_not_or_or_commute1_or_before ⊑ not_and_and_or_not_or_or_commute1_or_after := by
   unfold not_and_and_or_not_or_or_commute1_or_before not_and_and_or_not_or_or_commute1_or_after
   simp_alive_peephole
+  intros
   ---BEGIN not_and_and_or_not_or_or_commute1_or
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_not_or_or_commute1_or
@@ -2902,6 +2984,7 @@ set_option debug.skipKernelTC true in
 theorem not_and_and_or_not_or_or_commute2_or_proof : not_and_and_or_not_or_or_commute2_or_before ⊑ not_and_and_or_not_or_or_commute2_or_after := by
   unfold not_and_and_or_not_or_or_commute2_or_before not_and_and_or_not_or_or_commute2_or_after
   simp_alive_peephole
+  intros
   ---BEGIN not_and_and_or_not_or_or_commute2_or
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_not_or_or_commute2_or
@@ -2936,6 +3019,7 @@ set_option debug.skipKernelTC true in
 theorem not_and_and_or_not_or_or_commute1_and_proof : not_and_and_or_not_or_or_commute1_and_before ⊑ not_and_and_or_not_or_or_commute1_and_after := by
   unfold not_and_and_or_not_or_or_commute1_and_before not_and_and_or_not_or_or_commute1_and_after
   simp_alive_peephole
+  intros
   ---BEGIN not_and_and_or_not_or_or_commute1_and
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_not_or_or_commute1_and
@@ -2970,6 +3054,7 @@ set_option debug.skipKernelTC true in
 theorem not_and_and_or_not_or_or_commute2_and_proof : not_and_and_or_not_or_or_commute2_and_before ⊑ not_and_and_or_not_or_or_commute2_and_after := by
   unfold not_and_and_or_not_or_or_commute2_and_before not_and_and_or_not_or_or_commute2_and_after
   simp_alive_peephole
+  intros
   ---BEGIN not_and_and_or_not_or_or_commute2_and
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_not_or_or_commute2_and
@@ -3004,6 +3089,7 @@ set_option debug.skipKernelTC true in
 theorem not_and_and_or_not_or_or_commute1_proof : not_and_and_or_not_or_or_commute1_before ⊑ not_and_and_or_not_or_or_commute1_after := by
   unfold not_and_and_or_not_or_or_commute1_before not_and_and_or_not_or_or_commute1_after
   simp_alive_peephole
+  intros
   ---BEGIN not_and_and_or_not_or_or_commute1
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_not_or_or_commute1
@@ -3042,6 +3128,7 @@ set_option debug.skipKernelTC true in
 theorem not_and_and_or_not_or_or_commute2_proof : not_and_and_or_not_or_or_commute2_before ⊑ not_and_and_or_not_or_or_commute2_after := by
   unfold not_and_and_or_not_or_or_commute2_before not_and_and_or_not_or_or_commute2_after
   simp_alive_peephole
+  intros
   ---BEGIN not_and_and_or_not_or_or_commute2
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_not_or_or_commute2
@@ -3080,6 +3167,7 @@ set_option debug.skipKernelTC true in
 theorem not_and_and_or_not_or_or_commute3_proof : not_and_and_or_not_or_or_commute3_before ⊑ not_and_and_or_not_or_or_commute3_after := by
   unfold not_and_and_or_not_or_or_commute3_before not_and_and_or_not_or_or_commute3_after
   simp_alive_peephole
+  intros
   ---BEGIN not_and_and_or_not_or_or_commute3
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_not_or_or_commute3
@@ -3118,6 +3206,7 @@ set_option debug.skipKernelTC true in
 theorem not_and_and_or_not_or_or_commute4_proof : not_and_and_or_not_or_or_commute4_before ⊑ not_and_and_or_not_or_or_commute4_after := by
   unfold not_and_and_or_not_or_or_commute4_before not_and_and_or_not_or_or_commute4_after
   simp_alive_peephole
+  intros
   ---BEGIN not_and_and_or_not_or_or_commute4
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_not_or_or_commute4
@@ -3152,6 +3241,7 @@ set_option debug.skipKernelTC true in
 theorem not_or_or_and_not_and_and_proof : not_or_or_and_not_and_and_before ⊑ not_or_or_and_not_and_and_after := by
   unfold not_or_or_and_not_and_and_before not_or_or_and_not_and_and_after
   simp_alive_peephole
+  intros
   ---BEGIN not_or_or_and_not_and_and
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_not_and_and
@@ -3186,6 +3276,7 @@ set_option debug.skipKernelTC true in
 theorem not_or_or_and_not_and_and_commute1_and_proof : not_or_or_and_not_and_and_commute1_and_before ⊑ not_or_or_and_not_and_and_commute1_and_after := by
   unfold not_or_or_and_not_and_and_commute1_and_before not_or_or_and_not_and_and_commute1_and_after
   simp_alive_peephole
+  intros
   ---BEGIN not_or_or_and_not_and_and_commute1_and
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_not_and_and_commute1_and
@@ -3220,6 +3311,7 @@ set_option debug.skipKernelTC true in
 theorem not_or_or_and_not_and_and_commute2_and_proof : not_or_or_and_not_and_and_commute2_and_before ⊑ not_or_or_and_not_and_and_commute2_and_after := by
   unfold not_or_or_and_not_and_and_commute2_and_before not_or_or_and_not_and_and_commute2_and_after
   simp_alive_peephole
+  intros
   ---BEGIN not_or_or_and_not_and_and_commute2_and
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_not_and_and_commute2_and
@@ -3254,6 +3346,7 @@ set_option debug.skipKernelTC true in
 theorem not_or_or_and_not_and_and_commute1_or_proof : not_or_or_and_not_and_and_commute1_or_before ⊑ not_or_or_and_not_and_and_commute1_or_after := by
   unfold not_or_or_and_not_and_and_commute1_or_before not_or_or_and_not_and_and_commute1_or_after
   simp_alive_peephole
+  intros
   ---BEGIN not_or_or_and_not_and_and_commute1_or
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_not_and_and_commute1_or
@@ -3288,6 +3381,7 @@ set_option debug.skipKernelTC true in
 theorem not_or_or_and_not_and_and_commute2_or_proof : not_or_or_and_not_and_and_commute2_or_before ⊑ not_or_or_and_not_and_and_commute2_or_after := by
   unfold not_or_or_and_not_and_and_commute2_or_before not_or_or_and_not_and_and_commute2_or_after
   simp_alive_peephole
+  intros
   ---BEGIN not_or_or_and_not_and_and_commute2_or
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_not_and_and_commute2_or
@@ -3322,6 +3416,7 @@ set_option debug.skipKernelTC true in
 theorem not_or_or_and_not_and_and_commute1_proof : not_or_or_and_not_and_and_commute1_before ⊑ not_or_or_and_not_and_and_commute1_after := by
   unfold not_or_or_and_not_and_and_commute1_before not_or_or_and_not_and_and_commute1_after
   simp_alive_peephole
+  intros
   ---BEGIN not_or_or_and_not_and_and_commute1
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_not_and_and_commute1
@@ -3360,6 +3455,7 @@ set_option debug.skipKernelTC true in
 theorem not_or_or_and_not_and_and_commute2_proof : not_or_or_and_not_and_and_commute2_before ⊑ not_or_or_and_not_and_and_commute2_after := by
   unfold not_or_or_and_not_and_and_commute2_before not_or_or_and_not_and_and_commute2_after
   simp_alive_peephole
+  intros
   ---BEGIN not_or_or_and_not_and_and_commute2
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_not_and_and_commute2
@@ -3398,6 +3494,7 @@ set_option debug.skipKernelTC true in
 theorem not_or_or_and_not_and_and_commute3_proof : not_or_or_and_not_and_and_commute3_before ⊑ not_or_or_and_not_and_and_commute3_after := by
   unfold not_or_or_and_not_and_and_commute3_before not_or_or_and_not_and_and_commute3_after
   simp_alive_peephole
+  intros
   ---BEGIN not_or_or_and_not_and_and_commute3
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_not_and_and_commute3
@@ -3436,6 +3533,7 @@ set_option debug.skipKernelTC true in
 theorem not_or_or_and_not_and_and_commute4_proof : not_or_or_and_not_and_and_commute4_before ⊑ not_or_or_and_not_and_and_commute4_after := by
   unfold not_or_or_and_not_and_and_commute4_before not_or_or_and_not_and_and_commute4_after
   simp_alive_peephole
+  intros
   ---BEGIN not_or_or_and_not_and_and_commute4
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_not_and_and_commute4
@@ -3470,6 +3568,7 @@ set_option debug.skipKernelTC true in
 theorem not_and_and_or_no_or_proof : not_and_and_or_no_or_before ⊑ not_and_and_or_no_or_after := by
   unfold not_and_and_or_no_or_before not_and_and_or_no_or_after
   simp_alive_peephole
+  intros
   ---BEGIN not_and_and_or_no_or
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_no_or
@@ -3504,6 +3603,7 @@ set_option debug.skipKernelTC true in
 theorem not_and_and_or_no_or_commute1_and_proof : not_and_and_or_no_or_commute1_and_before ⊑ not_and_and_or_no_or_commute1_and_after := by
   unfold not_and_and_or_no_or_commute1_and_before not_and_and_or_no_or_commute1_and_after
   simp_alive_peephole
+  intros
   ---BEGIN not_and_and_or_no_or_commute1_and
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_no_or_commute1_and
@@ -3538,6 +3638,7 @@ set_option debug.skipKernelTC true in
 theorem not_and_and_or_no_or_commute2_and_proof : not_and_and_or_no_or_commute2_and_before ⊑ not_and_and_or_no_or_commute2_and_after := by
   unfold not_and_and_or_no_or_commute2_and_before not_and_and_or_no_or_commute2_and_after
   simp_alive_peephole
+  intros
   ---BEGIN not_and_and_or_no_or_commute2_and
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_no_or_commute2_and
@@ -3572,6 +3673,7 @@ set_option debug.skipKernelTC true in
 theorem not_and_and_or_no_or_commute1_proof : not_and_and_or_no_or_commute1_before ⊑ not_and_and_or_no_or_commute1_after := by
   unfold not_and_and_or_no_or_commute1_before not_and_and_or_no_or_commute1_after
   simp_alive_peephole
+  intros
   ---BEGIN not_and_and_or_no_or_commute1
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_no_or_commute1
@@ -3610,6 +3712,7 @@ set_option debug.skipKernelTC true in
 theorem not_and_and_or_no_or_commute2_proof : not_and_and_or_no_or_commute2_before ⊑ not_and_and_or_no_or_commute2_after := by
   unfold not_and_and_or_no_or_commute2_before not_and_and_or_no_or_commute2_after
   simp_alive_peephole
+  intros
   ---BEGIN not_and_and_or_no_or_commute2
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_no_or_commute2
@@ -3648,6 +3751,7 @@ set_option debug.skipKernelTC true in
 theorem not_and_and_or_no_or_commute3_proof : not_and_and_or_no_or_commute3_before ⊑ not_and_and_or_no_or_commute3_after := by
   unfold not_and_and_or_no_or_commute3_before not_and_and_or_no_or_commute3_after
   simp_alive_peephole
+  intros
   ---BEGIN not_and_and_or_no_or_commute3
   all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_no_or_commute3
@@ -3682,6 +3786,7 @@ set_option debug.skipKernelTC true in
 theorem not_or_or_and_no_and_proof : not_or_or_and_no_and_before ⊑ not_or_or_and_no_and_after := by
   unfold not_or_or_and_no_and_before not_or_or_and_no_and_after
   simp_alive_peephole
+  intros
   ---BEGIN not_or_or_and_no_and
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_no_and
@@ -3716,6 +3821,7 @@ set_option debug.skipKernelTC true in
 theorem not_or_or_and_no_and_commute1_or_proof : not_or_or_and_no_and_commute1_or_before ⊑ not_or_or_and_no_and_commute1_or_after := by
   unfold not_or_or_and_no_and_commute1_or_before not_or_or_and_no_and_commute1_or_after
   simp_alive_peephole
+  intros
   ---BEGIN not_or_or_and_no_and_commute1_or
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_no_and_commute1_or
@@ -3750,6 +3856,7 @@ set_option debug.skipKernelTC true in
 theorem not_or_or_and_no_and_commute2_or_proof : not_or_or_and_no_and_commute2_or_before ⊑ not_or_or_and_no_and_commute2_or_after := by
   unfold not_or_or_and_no_and_commute2_or_before not_or_or_and_no_and_commute2_or_after
   simp_alive_peephole
+  intros
   ---BEGIN not_or_or_and_no_and_commute2_or
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_no_and_commute2_or
@@ -3784,6 +3891,7 @@ set_option debug.skipKernelTC true in
 theorem not_or_or_and_no_and_commute1_proof : not_or_or_and_no_and_commute1_before ⊑ not_or_or_and_no_and_commute1_after := by
   unfold not_or_or_and_no_and_commute1_before not_or_or_and_no_and_commute1_after
   simp_alive_peephole
+  intros
   ---BEGIN not_or_or_and_no_and_commute1
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_no_and_commute1
@@ -3822,6 +3930,7 @@ set_option debug.skipKernelTC true in
 theorem not_or_or_and_no_and_commute2_proof : not_or_or_and_no_and_commute2_before ⊑ not_or_or_and_no_and_commute2_after := by
   unfold not_or_or_and_no_and_commute2_before not_or_or_and_no_and_commute2_after
   simp_alive_peephole
+  intros
   ---BEGIN not_or_or_and_no_and_commute2
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_no_and_commute2
@@ -3860,6 +3969,7 @@ set_option debug.skipKernelTC true in
 theorem not_or_or_and_no_and_commute3_proof : not_or_or_and_no_and_commute3_before ⊑ not_or_or_and_no_and_commute3_after := by
   unfold not_or_or_and_no_and_commute3_before not_or_or_and_no_and_commute3_after
   simp_alive_peephole
+  intros
   ---BEGIN not_or_or_and_no_and_commute3
   all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_no_and_commute3
@@ -3890,6 +4000,7 @@ set_option debug.skipKernelTC true in
 theorem and_orn_xor_proof : and_orn_xor_before ⊑ and_orn_xor_after := by
   unfold and_orn_xor_before and_orn_xor_after
   simp_alive_peephole
+  intros
   ---BEGIN and_orn_xor
   all_goals (try extract_goal ; sorry)
   ---END and_orn_xor
@@ -3924,6 +4035,7 @@ set_option debug.skipKernelTC true in
 theorem and_orn_xor_commute8_proof : and_orn_xor_commute8_before ⊑ and_orn_xor_commute8_after := by
   unfold and_orn_xor_commute8_before and_orn_xor_commute8_after
   simp_alive_peephole
+  intros
   ---BEGIN and_orn_xor_commute8
   all_goals (try extract_goal ; sorry)
   ---END and_orn_xor_commute8
@@ -3952,6 +4064,7 @@ set_option debug.skipKernelTC true in
 theorem and_zext_zext_proof : and_zext_zext_before ⊑ and_zext_zext_after := by
   unfold and_zext_zext_before and_zext_zext_after
   simp_alive_peephole
+  intros
   ---BEGIN and_zext_zext
   all_goals (try extract_goal ; sorry)
   ---END and_zext_zext
@@ -3980,6 +4093,7 @@ set_option debug.skipKernelTC true in
 theorem or_zext_zext_proof : or_zext_zext_before ⊑ or_zext_zext_after := by
   unfold or_zext_zext_before or_zext_zext_after
   simp_alive_peephole
+  intros
   ---BEGIN or_zext_zext
   all_goals (try extract_goal ; sorry)
   ---END or_zext_zext
@@ -4008,6 +4122,7 @@ set_option debug.skipKernelTC true in
 theorem and_sext_sext_proof : and_sext_sext_before ⊑ and_sext_sext_after := by
   unfold and_sext_sext_before and_sext_sext_after
   simp_alive_peephole
+  intros
   ---BEGIN and_sext_sext
   all_goals (try extract_goal ; sorry)
   ---END and_sext_sext
@@ -4036,6 +4151,7 @@ set_option debug.skipKernelTC true in
 theorem or_sext_sext_proof : or_sext_sext_before ⊑ or_sext_sext_after := by
   unfold or_sext_sext_before or_sext_sext_after
   simp_alive_peephole
+  intros
   ---BEGIN or_sext_sext
   all_goals (try extract_goal ; sorry)
   ---END or_sext_sext
@@ -4064,6 +4180,7 @@ set_option debug.skipKernelTC true in
 theorem xor_sext_sext_proof : xor_sext_sext_before ⊑ xor_sext_sext_after := by
   unfold xor_sext_sext_before xor_sext_sext_after
   simp_alive_peephole
+  intros
   ---BEGIN xor_sext_sext
   all_goals (try extract_goal ; sorry)
   ---END xor_sext_sext
@@ -4094,6 +4211,7 @@ set_option debug.skipKernelTC true in
 theorem canonicalize_logic_first_or0_proof : canonicalize_logic_first_or0_before ⊑ canonicalize_logic_first_or0_after := by
   unfold canonicalize_logic_first_or0_before canonicalize_logic_first_or0_after
   simp_alive_peephole
+  intros
   ---BEGIN canonicalize_logic_first_or0
   all_goals (try extract_goal ; sorry)
   ---END canonicalize_logic_first_or0
@@ -4124,6 +4242,7 @@ set_option debug.skipKernelTC true in
 theorem canonicalize_logic_first_or0_nsw_proof : canonicalize_logic_first_or0_nsw_before ⊑ canonicalize_logic_first_or0_nsw_after := by
   unfold canonicalize_logic_first_or0_nsw_before canonicalize_logic_first_or0_nsw_after
   simp_alive_peephole
+  intros
   ---BEGIN canonicalize_logic_first_or0_nsw
   all_goals (try extract_goal ; sorry)
   ---END canonicalize_logic_first_or0_nsw
@@ -4154,6 +4273,7 @@ set_option debug.skipKernelTC true in
 theorem canonicalize_logic_first_or0_nswnuw_proof : canonicalize_logic_first_or0_nswnuw_before ⊑ canonicalize_logic_first_or0_nswnuw_after := by
   unfold canonicalize_logic_first_or0_nswnuw_before canonicalize_logic_first_or0_nswnuw_after
   simp_alive_peephole
+  intros
   ---BEGIN canonicalize_logic_first_or0_nswnuw
   all_goals (try extract_goal ; sorry)
   ---END canonicalize_logic_first_or0_nswnuw
@@ -4184,6 +4304,7 @@ set_option debug.skipKernelTC true in
 theorem canonicalize_logic_first_and0_proof : canonicalize_logic_first_and0_before ⊑ canonicalize_logic_first_and0_after := by
   unfold canonicalize_logic_first_and0_before canonicalize_logic_first_and0_after
   simp_alive_peephole
+  intros
   ---BEGIN canonicalize_logic_first_and0
   all_goals (try extract_goal ; sorry)
   ---END canonicalize_logic_first_and0
@@ -4214,6 +4335,7 @@ set_option debug.skipKernelTC true in
 theorem canonicalize_logic_first_and0_nsw_proof : canonicalize_logic_first_and0_nsw_before ⊑ canonicalize_logic_first_and0_nsw_after := by
   unfold canonicalize_logic_first_and0_nsw_before canonicalize_logic_first_and0_nsw_after
   simp_alive_peephole
+  intros
   ---BEGIN canonicalize_logic_first_and0_nsw
   all_goals (try extract_goal ; sorry)
   ---END canonicalize_logic_first_and0_nsw
@@ -4244,6 +4366,7 @@ set_option debug.skipKernelTC true in
 theorem canonicalize_logic_first_and0_nswnuw_proof : canonicalize_logic_first_and0_nswnuw_before ⊑ canonicalize_logic_first_and0_nswnuw_after := by
   unfold canonicalize_logic_first_and0_nswnuw_before canonicalize_logic_first_and0_nswnuw_after
   simp_alive_peephole
+  intros
   ---BEGIN canonicalize_logic_first_and0_nswnuw
   all_goals (try extract_goal ; sorry)
   ---END canonicalize_logic_first_and0_nswnuw
@@ -4274,6 +4397,7 @@ set_option debug.skipKernelTC true in
 theorem canonicalize_logic_first_xor_0_proof : canonicalize_logic_first_xor_0_before ⊑ canonicalize_logic_first_xor_0_after := by
   unfold canonicalize_logic_first_xor_0_before canonicalize_logic_first_xor_0_after
   simp_alive_peephole
+  intros
   ---BEGIN canonicalize_logic_first_xor_0
   all_goals (try extract_goal ; sorry)
   ---END canonicalize_logic_first_xor_0
@@ -4304,6 +4428,7 @@ set_option debug.skipKernelTC true in
 theorem canonicalize_logic_first_xor_0_nsw_proof : canonicalize_logic_first_xor_0_nsw_before ⊑ canonicalize_logic_first_xor_0_nsw_after := by
   unfold canonicalize_logic_first_xor_0_nsw_before canonicalize_logic_first_xor_0_nsw_after
   simp_alive_peephole
+  intros
   ---BEGIN canonicalize_logic_first_xor_0_nsw
   all_goals (try extract_goal ; sorry)
   ---END canonicalize_logic_first_xor_0_nsw
@@ -4334,6 +4459,7 @@ set_option debug.skipKernelTC true in
 theorem canonicalize_logic_first_xor_0_nswnuw_proof : canonicalize_logic_first_xor_0_nswnuw_before ⊑ canonicalize_logic_first_xor_0_nswnuw_after := by
   unfold canonicalize_logic_first_xor_0_nswnuw_before canonicalize_logic_first_xor_0_nswnuw_after
   simp_alive_peephole
+  intros
   ---BEGIN canonicalize_logic_first_xor_0_nswnuw
   all_goals (try extract_goal ; sorry)
   ---END canonicalize_logic_first_xor_0_nswnuw

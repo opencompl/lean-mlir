@@ -33,6 +33,7 @@ set_option debug.skipKernelTC true in
 theorem zext_proof : zext_before ⊑ zext_after := by
   unfold zext_before zext_after
   simp_alive_peephole
+  intros
   ---BEGIN zext
   apply zext_thm
   ---END zext
@@ -59,6 +60,7 @@ set_option debug.skipKernelTC true in
 theorem sext_proof : sext_before ⊑ sext_after := by
   unfold sext_before sext_after
   simp_alive_peephole
+  intros
   ---BEGIN sext
   apply sext_thm
   ---END sext
@@ -87,6 +89,7 @@ set_option debug.skipKernelTC true in
 theorem not_zext_proof : not_zext_before ⊑ not_zext_after := by
   unfold not_zext_before not_zext_after
   simp_alive_peephole
+  intros
   ---BEGIN not_zext
   apply not_zext_thm
   ---END not_zext
@@ -115,6 +118,7 @@ set_option debug.skipKernelTC true in
 theorem not_sext_proof : not_sext_before ⊑ not_sext_after := by
   unfold not_sext_before not_sext_after
   simp_alive_peephole
+  intros
   ---BEGIN not_sext
   apply not_sext_thm
   ---END not_sext

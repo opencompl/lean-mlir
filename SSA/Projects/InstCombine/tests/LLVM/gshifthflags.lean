@@ -39,6 +39,7 @@ set_option debug.skipKernelTC true in
 theorem shl_add_nuw_proof : shl_add_nuw_before ⊑ shl_add_nuw_after := by
   unfold shl_add_nuw_before shl_add_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_add_nuw
   all_goals (try extract_goal ; sorry)
   ---END shl_add_nuw
@@ -71,6 +72,7 @@ set_option debug.skipKernelTC true in
 theorem shl_add_nuw_and_nsw_proof : shl_add_nuw_and_nsw_before ⊑ shl_add_nuw_and_nsw_after := by
   unfold shl_add_nuw_and_nsw_before shl_add_nuw_and_nsw_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_add_nuw_and_nsw
   all_goals (try extract_goal ; sorry)
   ---END shl_add_nuw_and_nsw
@@ -103,6 +105,7 @@ set_option debug.skipKernelTC true in
 theorem shl_add_nsw_proof : shl_add_nsw_before ⊑ shl_add_nsw_after := by
   unfold shl_add_nsw_before shl_add_nsw_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_add_nsw
   all_goals (try extract_goal ; sorry)
   ---END shl_add_nsw

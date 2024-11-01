@@ -40,6 +40,7 @@ set_option debug.skipKernelTC true in
 theorem narrow_source_matching_signbits_proof : narrow_source_matching_signbits_before ⊑ narrow_source_matching_signbits_after := by
   unfold narrow_source_matching_signbits_before narrow_source_matching_signbits_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_source_matching_signbits
   apply narrow_source_matching_signbits_thm
   ---END narrow_source_matching_signbits
@@ -73,6 +74,7 @@ set_option debug.skipKernelTC true in
 theorem wide_source_matching_signbits_proof : wide_source_matching_signbits_before ⊑ wide_source_matching_signbits_after := by
   unfold wide_source_matching_signbits_before wide_source_matching_signbits_after
   simp_alive_peephole
+  intros
   ---BEGIN wide_source_matching_signbits
   apply wide_source_matching_signbits_thm
   ---END wide_source_matching_signbits
@@ -105,6 +107,7 @@ set_option debug.skipKernelTC true in
 theorem same_source_matching_signbits_proof : same_source_matching_signbits_before ⊑ same_source_matching_signbits_after := by
   unfold same_source_matching_signbits_before same_source_matching_signbits_after
   simp_alive_peephole
+  intros
   ---BEGIN same_source_matching_signbits
   apply same_source_matching_signbits_thm
   ---END same_source_matching_signbits
@@ -139,6 +142,7 @@ set_option debug.skipKernelTC true in
 theorem same_source_not_matching_signbits_proof : same_source_not_matching_signbits_before ⊑ same_source_not_matching_signbits_after := by
   unfold same_source_not_matching_signbits_before same_source_not_matching_signbits_after
   simp_alive_peephole
+  intros
   ---BEGIN same_source_not_matching_signbits
   apply same_source_not_matching_signbits_thm
   ---END same_source_not_matching_signbits

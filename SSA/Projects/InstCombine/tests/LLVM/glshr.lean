@@ -38,6 +38,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_exact_proof : lshr_exact_before ⊑ lshr_exact_after := by
   unfold lshr_exact_before lshr_exact_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_exact
   all_goals (try extract_goal ; sorry)
   ---END lshr_exact
@@ -69,6 +70,7 @@ set_option debug.skipKernelTC true in
 theorem shl_add_proof : shl_add_before ⊑ shl_add_after := by
   unfold shl_add_before shl_add_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_add
   all_goals (try extract_goal ; sorry)
   ---END shl_add
@@ -95,6 +97,7 @@ set_option debug.skipKernelTC true in
 theorem bool_zext_proof : bool_zext_before ⊑ bool_zext_after := by
   unfold bool_zext_before bool_zext_after
   simp_alive_peephole
+  intros
   ---BEGIN bool_zext
   all_goals (try extract_goal ; sorry)
   ---END bool_zext
@@ -123,6 +126,7 @@ set_option debug.skipKernelTC true in
 theorem smear_sign_and_widen_proof : smear_sign_and_widen_before ⊑ smear_sign_and_widen_after := by
   unfold smear_sign_and_widen_before smear_sign_and_widen_after
   simp_alive_peephole
+  intros
   ---BEGIN smear_sign_and_widen
   all_goals (try extract_goal ; sorry)
   ---END smear_sign_and_widen
@@ -151,6 +155,7 @@ set_option debug.skipKernelTC true in
 theorem fake_sext_proof : fake_sext_before ⊑ fake_sext_after := by
   unfold fake_sext_before fake_sext_after
   simp_alive_peephole
+  intros
   ---BEGIN fake_sext
   all_goals (try extract_goal ; sorry)
   ---END fake_sext
@@ -177,6 +182,7 @@ set_option debug.skipKernelTC true in
 theorem mul_splat_fold_proof : mul_splat_fold_before ⊑ mul_splat_fold_after := by
   unfold mul_splat_fold_before mul_splat_fold_after
   simp_alive_peephole
+  intros
   ---BEGIN mul_splat_fold
   all_goals (try extract_goal ; sorry)
   ---END mul_splat_fold
@@ -204,6 +210,7 @@ set_option debug.skipKernelTC true in
 theorem shl_add_lshr_flag_preservation_proof : shl_add_lshr_flag_preservation_before ⊑ shl_add_lshr_flag_preservation_after := by
   unfold shl_add_lshr_flag_preservation_before shl_add_lshr_flag_preservation_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_add_lshr_flag_preservation
   all_goals (try extract_goal ; sorry)
   ---END shl_add_lshr_flag_preservation
@@ -231,6 +238,7 @@ set_option debug.skipKernelTC true in
 theorem shl_add_lshr_proof : shl_add_lshr_before ⊑ shl_add_lshr_after := by
   unfold shl_add_lshr_before shl_add_lshr_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_add_lshr
   all_goals (try extract_goal ; sorry)
   ---END shl_add_lshr
@@ -260,6 +268,7 @@ set_option debug.skipKernelTC true in
 theorem shl_add_lshr_comm_proof : shl_add_lshr_comm_before ⊑ shl_add_lshr_comm_after := by
   unfold shl_add_lshr_comm_before shl_add_lshr_comm_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_add_lshr_comm
   all_goals (try extract_goal ; sorry)
   ---END shl_add_lshr_comm
@@ -287,6 +296,7 @@ set_option debug.skipKernelTC true in
 theorem shl_sub_lshr_proof : shl_sub_lshr_before ⊑ shl_sub_lshr_after := by
   unfold shl_sub_lshr_before shl_sub_lshr_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_sub_lshr
   all_goals (try extract_goal ; sorry)
   ---END shl_sub_lshr
@@ -314,6 +324,7 @@ set_option debug.skipKernelTC true in
 theorem shl_sub_lshr_reverse_proof : shl_sub_lshr_reverse_before ⊑ shl_sub_lshr_reverse_after := by
   unfold shl_sub_lshr_reverse_before shl_sub_lshr_reverse_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_sub_lshr_reverse
   all_goals (try extract_goal ; sorry)
   ---END shl_sub_lshr_reverse
@@ -341,6 +352,7 @@ set_option debug.skipKernelTC true in
 theorem shl_sub_lshr_reverse_no_nsw_proof : shl_sub_lshr_reverse_no_nsw_before ⊑ shl_sub_lshr_reverse_no_nsw_after := by
   unfold shl_sub_lshr_reverse_no_nsw_before shl_sub_lshr_reverse_no_nsw_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_sub_lshr_reverse_no_nsw
   all_goals (try extract_goal ; sorry)
   ---END shl_sub_lshr_reverse_no_nsw
@@ -368,6 +380,7 @@ set_option debug.skipKernelTC true in
 theorem shl_sub_lshr_reverse_nsw_on_op1_proof : shl_sub_lshr_reverse_nsw_on_op1_before ⊑ shl_sub_lshr_reverse_nsw_on_op1_after := by
   unfold shl_sub_lshr_reverse_nsw_on_op1_before shl_sub_lshr_reverse_nsw_on_op1_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_sub_lshr_reverse_nsw_on_op1
   all_goals (try extract_goal ; sorry)
   ---END shl_sub_lshr_reverse_nsw_on_op1
@@ -395,6 +408,7 @@ set_option debug.skipKernelTC true in
 theorem shl_or_lshr_proof : shl_or_lshr_before ⊑ shl_or_lshr_after := by
   unfold shl_or_lshr_before shl_or_lshr_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_or_lshr
   all_goals (try extract_goal ; sorry)
   ---END shl_or_lshr
@@ -422,6 +436,7 @@ set_option debug.skipKernelTC true in
 theorem shl_or_disjoint_lshr_proof : shl_or_disjoint_lshr_before ⊑ shl_or_disjoint_lshr_after := by
   unfold shl_or_disjoint_lshr_before shl_or_disjoint_lshr_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_or_disjoint_lshr
   all_goals (try extract_goal ; sorry)
   ---END shl_or_disjoint_lshr
@@ -449,6 +464,7 @@ set_option debug.skipKernelTC true in
 theorem shl_or_lshr_comm_proof : shl_or_lshr_comm_before ⊑ shl_or_lshr_comm_after := by
   unfold shl_or_lshr_comm_before shl_or_lshr_comm_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_or_lshr_comm
   all_goals (try extract_goal ; sorry)
   ---END shl_or_lshr_comm
@@ -476,6 +492,7 @@ set_option debug.skipKernelTC true in
 theorem shl_or_disjoint_lshr_comm_proof : shl_or_disjoint_lshr_comm_before ⊑ shl_or_disjoint_lshr_comm_after := by
   unfold shl_or_disjoint_lshr_comm_before shl_or_disjoint_lshr_comm_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_or_disjoint_lshr_comm
   all_goals (try extract_goal ; sorry)
   ---END shl_or_disjoint_lshr_comm
@@ -503,6 +520,7 @@ set_option debug.skipKernelTC true in
 theorem shl_xor_lshr_proof : shl_xor_lshr_before ⊑ shl_xor_lshr_after := by
   unfold shl_xor_lshr_before shl_xor_lshr_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_xor_lshr
   all_goals (try extract_goal ; sorry)
   ---END shl_xor_lshr
@@ -530,6 +548,7 @@ set_option debug.skipKernelTC true in
 theorem shl_xor_lshr_comm_proof : shl_xor_lshr_comm_before ⊑ shl_xor_lshr_comm_after := by
   unfold shl_xor_lshr_comm_before shl_xor_lshr_comm_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_xor_lshr_comm
   all_goals (try extract_goal ; sorry)
   ---END shl_xor_lshr_comm
@@ -557,6 +576,7 @@ set_option debug.skipKernelTC true in
 theorem shl_and_lshr_proof : shl_and_lshr_before ⊑ shl_and_lshr_after := by
   unfold shl_and_lshr_before shl_and_lshr_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_and_lshr
   all_goals (try extract_goal ; sorry)
   ---END shl_and_lshr
@@ -584,6 +604,7 @@ set_option debug.skipKernelTC true in
 theorem shl_and_lshr_comm_proof : shl_and_lshr_comm_before ⊑ shl_and_lshr_comm_after := by
   unfold shl_and_lshr_comm_before shl_and_lshr_comm_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_and_lshr_comm
   all_goals (try extract_goal ; sorry)
   ---END shl_and_lshr_comm
@@ -611,6 +632,7 @@ set_option debug.skipKernelTC true in
 theorem shl_lshr_and_exact_proof : shl_lshr_and_exact_before ⊑ shl_lshr_and_exact_after := by
   unfold shl_lshr_and_exact_before shl_lshr_and_exact_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_lshr_and_exact
   all_goals (try extract_goal ; sorry)
   ---END shl_lshr_and_exact
@@ -640,6 +662,7 @@ set_option debug.skipKernelTC true in
 theorem mul_splat_fold_no_nuw_proof : mul_splat_fold_no_nuw_before ⊑ mul_splat_fold_no_nuw_after := by
   unfold mul_splat_fold_no_nuw_before mul_splat_fold_no_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN mul_splat_fold_no_nuw
   all_goals (try extract_goal ; sorry)
   ---END mul_splat_fold_no_nuw
@@ -666,6 +689,7 @@ set_option debug.skipKernelTC true in
 theorem mul_splat_fold_too_narrow_proof : mul_splat_fold_too_narrow_before ⊑ mul_splat_fold_too_narrow_after := by
   unfold mul_splat_fold_too_narrow_before mul_splat_fold_too_narrow_after
   simp_alive_peephole
+  intros
   ---BEGIN mul_splat_fold_too_narrow
   all_goals (try extract_goal ; sorry)
   ---END mul_splat_fold_too_narrow
@@ -695,6 +719,7 @@ set_option debug.skipKernelTC true in
 theorem negative_and_odd_proof : negative_and_odd_before ⊑ negative_and_odd_after := by
   unfold negative_and_odd_before negative_and_odd_after
   simp_alive_peephole
+  intros
   ---BEGIN negative_and_odd
   all_goals (try extract_goal ; sorry)
   ---END negative_and_odd
@@ -725,6 +750,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_sandwich_proof : trunc_sandwich_before ⊑ trunc_sandwich_after := by
   unfold trunc_sandwich_before trunc_sandwich_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_sandwich
   all_goals (try extract_goal ; sorry)
   ---END trunc_sandwich
@@ -755,6 +781,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_sandwich_min_shift1_proof : trunc_sandwich_min_shift1_before ⊑ trunc_sandwich_min_shift1_after := by
   unfold trunc_sandwich_min_shift1_before trunc_sandwich_min_shift1_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_sandwich_min_shift1
   all_goals (try extract_goal ; sorry)
   ---END trunc_sandwich_min_shift1
@@ -787,6 +814,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_sandwich_small_shift1_proof : trunc_sandwich_small_shift1_before ⊑ trunc_sandwich_small_shift1_after := by
   unfold trunc_sandwich_small_shift1_before trunc_sandwich_small_shift1_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_sandwich_small_shift1
   all_goals (try extract_goal ; sorry)
   ---END trunc_sandwich_small_shift1
@@ -817,6 +845,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_sandwich_max_sum_shift_proof : trunc_sandwich_max_sum_shift_before ⊑ trunc_sandwich_max_sum_shift_after := by
   unfold trunc_sandwich_max_sum_shift_before trunc_sandwich_max_sum_shift_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_sandwich_max_sum_shift
   all_goals (try extract_goal ; sorry)
   ---END trunc_sandwich_max_sum_shift
@@ -847,6 +876,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_sandwich_max_sum_shift2_proof : trunc_sandwich_max_sum_shift2_before ⊑ trunc_sandwich_max_sum_shift2_after := by
   unfold trunc_sandwich_max_sum_shift2_before trunc_sandwich_max_sum_shift2_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_sandwich_max_sum_shift2
   all_goals (try extract_goal ; sorry)
   ---END trunc_sandwich_max_sum_shift2
@@ -875,6 +905,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_sandwich_big_sum_shift1_proof : trunc_sandwich_big_sum_shift1_before ⊑ trunc_sandwich_big_sum_shift1_after := by
   unfold trunc_sandwich_big_sum_shift1_before trunc_sandwich_big_sum_shift1_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_sandwich_big_sum_shift1
   all_goals (try extract_goal ; sorry)
   ---END trunc_sandwich_big_sum_shift1
@@ -903,6 +934,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_sandwich_big_sum_shift2_proof : trunc_sandwich_big_sum_shift2_before ⊑ trunc_sandwich_big_sum_shift2_after := by
   unfold trunc_sandwich_big_sum_shift2_before trunc_sandwich_big_sum_shift2_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_sandwich_big_sum_shift2
   all_goals (try extract_goal ; sorry)
   ---END trunc_sandwich_big_sum_shift2
@@ -931,6 +963,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_sext_i1_to_i16_proof : lshr_sext_i1_to_i16_before ⊑ lshr_sext_i1_to_i16_after := by
   unfold lshr_sext_i1_to_i16_before lshr_sext_i1_to_i16_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_sext_i1_to_i16
   all_goals (try extract_goal ; sorry)
   ---END lshr_sext_i1_to_i16
@@ -959,6 +992,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_sext_i1_to_i128_proof : lshr_sext_i1_to_i128_before ⊑ lshr_sext_i1_to_i128_after := by
   unfold lshr_sext_i1_to_i128_before lshr_sext_i1_to_i128_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_sext_i1_to_i128
   all_goals (try extract_goal ; sorry)
   ---END lshr_sext_i1_to_i128
@@ -988,6 +1022,7 @@ set_option debug.skipKernelTC true in
 theorem bool_add_lshr_proof : bool_add_lshr_before ⊑ bool_add_lshr_after := by
   unfold bool_add_lshr_before bool_add_lshr_after
   simp_alive_peephole
+  intros
   ---BEGIN bool_add_lshr
   all_goals (try extract_goal ; sorry)
   ---END bool_add_lshr
@@ -1020,6 +1055,7 @@ set_option debug.skipKernelTC true in
 theorem bool_add_ashr_proof : bool_add_ashr_before ⊑ bool_add_ashr_after := by
   unfold bool_add_ashr_before bool_add_ashr_after
   simp_alive_peephole
+  intros
   ---BEGIN bool_add_ashr
   all_goals (try extract_goal ; sorry)
   ---END bool_add_ashr

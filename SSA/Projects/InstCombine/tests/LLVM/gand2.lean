@@ -32,6 +32,7 @@ set_option debug.skipKernelTC true in
 theorem test2_proof : test2_before ⊑ test2_after := by
   unfold test2_before test2_after
   simp_alive_peephole
+  intros
   ---BEGIN test2
   all_goals (try extract_goal ; sorry)
   ---END test2
@@ -59,6 +60,7 @@ set_option debug.skipKernelTC true in
 theorem test2_logical_proof : test2_logical_before ⊑ test2_logical_after := by
   unfold test2_logical_before test2_logical_after
   simp_alive_peephole
+  intros
   ---BEGIN test2_logical
   all_goals (try extract_goal ; sorry)
   ---END test2_logical
@@ -84,6 +86,7 @@ set_option debug.skipKernelTC true in
 theorem test3_proof : test3_before ⊑ test3_after := by
   unfold test3_before test3_after
   simp_alive_peephole
+  intros
   ---BEGIN test3
   all_goals (try extract_goal ; sorry)
   ---END test3
@@ -112,6 +115,7 @@ set_option debug.skipKernelTC true in
 theorem test9_proof : test9_before ⊑ test9_after := by
   unfold test9_before test9_after
   simp_alive_peephole
+  intros
   ---BEGIN test9
   all_goals (try extract_goal ; sorry)
   ---END test9
@@ -143,6 +147,7 @@ set_option debug.skipKernelTC true in
 theorem test10_proof : test10_before ⊑ test10_after := by
   unfold test10_before test10_after
   simp_alive_peephole
+  intros
   ---BEGIN test10
   all_goals (try extract_goal ; sorry)
   ---END test10
@@ -173,6 +178,7 @@ set_option debug.skipKernelTC true in
 theorem and1_shl1_is_cmp_eq_0_multiuse_proof : and1_shl1_is_cmp_eq_0_multiuse_before ⊑ and1_shl1_is_cmp_eq_0_multiuse_after := by
   unfold and1_shl1_is_cmp_eq_0_multiuse_before and1_shl1_is_cmp_eq_0_multiuse_after
   simp_alive_peephole
+  intros
   ---BEGIN and1_shl1_is_cmp_eq_0_multiuse
   all_goals (try extract_goal ; sorry)
   ---END and1_shl1_is_cmp_eq_0_multiuse
@@ -200,6 +206,7 @@ set_option debug.skipKernelTC true in
 theorem and1_lshr1_is_cmp_eq_0_proof : and1_lshr1_is_cmp_eq_0_before ⊑ and1_lshr1_is_cmp_eq_0_after := by
   unfold and1_lshr1_is_cmp_eq_0_before and1_lshr1_is_cmp_eq_0_after
   simp_alive_peephole
+  intros
   ---BEGIN and1_lshr1_is_cmp_eq_0
   all_goals (try extract_goal ; sorry)
   ---END and1_lshr1_is_cmp_eq_0
@@ -229,6 +236,7 @@ set_option debug.skipKernelTC true in
 theorem and1_lshr1_is_cmp_eq_0_multiuse_proof : and1_lshr1_is_cmp_eq_0_multiuse_before ⊑ and1_lshr1_is_cmp_eq_0_multiuse_after := by
   unfold and1_lshr1_is_cmp_eq_0_multiuse_before and1_lshr1_is_cmp_eq_0_multiuse_after
   simp_alive_peephole
+  intros
   ---BEGIN and1_lshr1_is_cmp_eq_0_multiuse
   all_goals (try extract_goal ; sorry)
   ---END and1_lshr1_is_cmp_eq_0_multiuse
@@ -262,6 +270,7 @@ set_option debug.skipKernelTC true in
 theorem test11_proof : test11_before ⊑ test11_after := by
   unfold test11_before test11_after
   simp_alive_peephole
+  intros
   ---BEGIN test11
   all_goals (try extract_goal ; sorry)
   ---END test11
@@ -295,6 +304,7 @@ set_option debug.skipKernelTC true in
 theorem test12_proof : test12_before ⊑ test12_after := by
   unfold test12_before test12_after
   simp_alive_peephole
+  intros
   ---BEGIN test12
   all_goals (try extract_goal ; sorry)
   ---END test12
@@ -328,6 +338,7 @@ set_option debug.skipKernelTC true in
 theorem test13_proof : test13_before ⊑ test13_after := by
   unfold test13_before test13_after
   simp_alive_peephole
+  intros
   ---BEGIN test13
   all_goals (try extract_goal ; sorry)
   ---END test13
@@ -363,6 +374,7 @@ set_option debug.skipKernelTC true in
 theorem test14_proof : test14_before ⊑ test14_after := by
   unfold test14_before test14_after
   simp_alive_peephole
+  intros
   ---BEGIN test14
   all_goals (try extract_goal ; sorry)
   ---END test14

@@ -42,6 +42,7 @@ set_option debug.skipKernelTC true in
 theorem mul8_low_A0_B0_proof : mul8_low_A0_B0_before ⊑ mul8_low_A0_B0_after := by
   unfold mul8_low_A0_B0_before mul8_low_A0_B0_after
   simp_alive_peephole
+  intros
   ---BEGIN mul8_low_A0_B0
   apply mul8_low_A0_B0_thm
   ---END mul8_low_A0_B0
@@ -77,6 +78,7 @@ set_option debug.skipKernelTC true in
 theorem mul8_low_proof : mul8_low_before ⊑ mul8_low_after := by
   unfold mul8_low_before mul8_low_after
   simp_alive_peephole
+  intros
   ---BEGIN mul8_low
   apply mul8_low_thm
   ---END mul8_low
@@ -112,6 +114,7 @@ set_option debug.skipKernelTC true in
 theorem mul16_low_proof : mul16_low_before ⊑ mul16_low_after := by
   unfold mul16_low_before mul16_low_after
   simp_alive_peephole
+  intros
   ---BEGIN mul16_low
   apply mul16_low_thm
   ---END mul16_low
@@ -147,6 +150,7 @@ set_option debug.skipKernelTC true in
 theorem mul32_low_proof : mul32_low_before ⊑ mul32_low_after := by
   unfold mul32_low_before mul32_low_after
   simp_alive_peephole
+  intros
   ---BEGIN mul32_low
   apply mul32_low_thm
   ---END mul32_low
@@ -182,6 +186,7 @@ set_option debug.skipKernelTC true in
 theorem mul64_low_proof : mul64_low_before ⊑ mul64_low_after := by
   unfold mul64_low_before mul64_low_after
   simp_alive_peephole
+  intros
   ---BEGIN mul64_low
   apply mul64_low_thm
   ---END mul64_low
@@ -217,6 +222,7 @@ set_option debug.skipKernelTC true in
 theorem mul128_low_proof : mul128_low_before ⊑ mul128_low_after := by
   unfold mul128_low_before mul128_low_after
   simp_alive_peephole
+  intros
   ---BEGIN mul128_low
   apply mul128_low_thm
   ---END mul128_low
@@ -252,6 +258,7 @@ set_option debug.skipKernelTC true in
 theorem mul130_low_proof : mul130_low_before ⊑ mul130_low_after := by
   unfold mul130_low_before mul130_low_after
   simp_alive_peephole
+  intros
   ---BEGIN mul130_low
   apply mul130_low_thm
   ---END mul130_low
@@ -298,6 +305,7 @@ set_option debug.skipKernelTC true in
 theorem mul9_low_proof : mul9_low_before ⊑ mul9_low_after := by
   unfold mul9_low_before mul9_low_after
   simp_alive_peephole
+  intros
   ---BEGIN mul9_low
   apply mul9_low_thm
   ---END mul9_low
@@ -344,6 +352,7 @@ set_option debug.skipKernelTC true in
 theorem mul16_low_miss_shift_amount_proof : mul16_low_miss_shift_amount_before ⊑ mul16_low_miss_shift_amount_after := by
   unfold mul16_low_miss_shift_amount_before mul16_low_miss_shift_amount_after
   simp_alive_peephole
+  intros
   ---BEGIN mul16_low_miss_shift_amount
   apply mul16_low_miss_shift_amount_thm
   ---END mul16_low_miss_shift_amount
@@ -390,6 +399,7 @@ set_option debug.skipKernelTC true in
 theorem mul8_low_miss_half_width_proof : mul8_low_miss_half_width_before ⊑ mul8_low_miss_half_width_after := by
   unfold mul8_low_miss_half_width_before mul8_low_miss_half_width_after
   simp_alive_peephole
+  intros
   ---BEGIN mul8_low_miss_half_width
   apply mul8_low_miss_half_width_thm
   ---END mul8_low_miss_half_width

@@ -34,6 +34,7 @@ set_option debug.skipKernelTC true in
 theorem test_with_even_proof : test_with_even_before ⊑ test_with_even_after := by
   unfold test_with_even_before test_with_even_after
   simp_alive_peephole
+  intros
   ---BEGIN test_with_even
   apply test_with_even_thm
   ---END test_with_even
@@ -61,6 +62,7 @@ set_option debug.skipKernelTC true in
 theorem test_with_neg_even_proof : test_with_neg_even_before ⊑ test_with_neg_even_after := by
   unfold test_with_neg_even_before test_with_neg_even_after
   simp_alive_peephole
+  intros
   ---BEGIN test_with_neg_even
   apply test_with_neg_even_thm
   ---END test_with_neg_even
@@ -86,6 +88,7 @@ set_option debug.skipKernelTC true in
 theorem test1_proof : test1_before ⊑ test1_after := by
   unfold test1_before test1_after
   simp_alive_peephole
+  intros
   ---BEGIN test1
   apply test1_thm
   ---END test1
@@ -110,6 +113,7 @@ set_option debug.skipKernelTC true in
 theorem test2_proof : test2_before ⊑ test2_after := by
   unfold test2_before test2_after
   simp_alive_peephole
+  intros
   ---BEGIN test2
   apply test2_thm
   ---END test2
@@ -135,6 +139,7 @@ set_option debug.skipKernelTC true in
 theorem test3_proof : test3_before ⊑ test3_after := by
   unfold test3_before test3_after
   simp_alive_peephole
+  intros
   ---BEGIN test3
   apply test3_thm
   ---END test3
@@ -160,6 +165,7 @@ set_option debug.skipKernelTC true in
 theorem test3_logical_proof : test3_logical_before ⊑ test3_logical_after := by
   unfold test3_logical_before test3_logical_after
   simp_alive_peephole
+  intros
   ---BEGIN test3_logical
   apply test3_logical_thm
   ---END test3_logical
@@ -184,6 +190,7 @@ set_option debug.skipKernelTC true in
 theorem test4_proof : test4_before ⊑ test4_after := by
   unfold test4_before test4_after
   simp_alive_peephole
+  intros
   ---BEGIN test4
   apply test4_thm
   ---END test4
@@ -209,6 +216,7 @@ set_option debug.skipKernelTC true in
 theorem test4_logical_proof : test4_logical_before ⊑ test4_logical_after := by
   unfold test4_logical_before test4_logical_after
   simp_alive_peephole
+  intros
   ---BEGIN test4_logical
   apply test4_logical_thm
   ---END test4_logical
@@ -232,6 +240,7 @@ set_option debug.skipKernelTC true in
 theorem test5_proof : test5_before ⊑ test5_after := by
   unfold test5_before test5_after
   simp_alive_peephole
+  intros
   ---BEGIN test5
   apply test5_thm
   ---END test5
@@ -255,6 +264,7 @@ set_option debug.skipKernelTC true in
 theorem test6_proof : test6_before ⊑ test6_after := by
   unfold test6_before test6_after
   simp_alive_peephole
+  intros
   ---BEGIN test6
   apply test6_thm
   ---END test6
@@ -279,6 +289,7 @@ set_option debug.skipKernelTC true in
 theorem test6_logical_proof : test6_logical_before ⊑ test6_logical_after := by
   unfold test6_logical_before test6_logical_after
   simp_alive_peephole
+  intros
   ---BEGIN test6_logical
   apply test6_logical_thm
   ---END test6_logical
@@ -305,6 +316,7 @@ set_option debug.skipKernelTC true in
 theorem test7_proof : test7_before ⊑ test7_after := by
   unfold test7_before test7_after
   simp_alive_peephole
+  intros
   ---BEGIN test7
   apply test7_thm
   ---END test7
@@ -332,6 +344,7 @@ set_option debug.skipKernelTC true in
 theorem test8_proof : test8_before ⊑ test8_after := by
   unfold test8_before test8_after
   simp_alive_peephole
+  intros
   ---BEGIN test8
   apply test8_thm
   ---END test8
@@ -361,6 +374,7 @@ set_option debug.skipKernelTC true in
 theorem test10_proof : test10_before ⊑ test10_after := by
   unfold test10_before test10_after
   simp_alive_peephole
+  intros
   ---BEGIN test10
   apply test10_thm
   ---END test10
@@ -388,6 +402,7 @@ set_option debug.skipKernelTC true in
 theorem test15_proof : test15_before ⊑ test15_after := by
   unfold test15_before test15_after
   simp_alive_peephole
+  intros
   ---BEGIN test15
   apply test15_thm
   ---END test15
@@ -415,6 +430,7 @@ set_option debug.skipKernelTC true in
 theorem test16_proof : test16_before ⊑ test16_after := by
   unfold test16_before test16_after
   simp_alive_peephole
+  intros
   ---BEGIN test16
   apply test16_thm
   ---END test16
@@ -443,6 +459,7 @@ set_option debug.skipKernelTC true in
 theorem test19_proof : test19_before ⊑ test19_after := by
   unfold test19_before test19_after
   simp_alive_peephole
+  intros
   ---BEGIN test19
   apply test19_thm
   ---END test19
@@ -471,6 +488,7 @@ set_option debug.skipKernelTC true in
 theorem test20_proof : test20_before ⊑ test20_after := by
   unfold test20_before test20_after
   simp_alive_peephole
+  intros
   ---BEGIN test20
   apply test20_thm
   ---END test20
@@ -501,6 +519,7 @@ set_option debug.skipKernelTC true in
 theorem test27_proof : test27_before ⊑ test27_after := by
   unfold test27_before test27_after
   simp_alive_peephole
+  intros
   ---BEGIN test27
   apply test27_thm
   ---END test27
@@ -529,6 +548,7 @@ set_option debug.skipKernelTC true in
 theorem ashr_lowmask_proof : ashr_lowmask_before ⊑ ashr_lowmask_after := by
   unfold ashr_lowmask_before ashr_lowmask_after
   simp_alive_peephole
+  intros
   ---BEGIN ashr_lowmask
   apply ashr_lowmask_thm
   ---END ashr_lowmask
@@ -555,6 +575,7 @@ set_option debug.skipKernelTC true in
 theorem test29_proof : test29_before ⊑ test29_after := by
   unfold test29_before test29_after
   simp_alive_peephole
+  intros
   ---BEGIN test29
   apply test29_thm
   ---END test29
@@ -581,6 +602,7 @@ set_option debug.skipKernelTC true in
 theorem test30_proof : test30_before ⊑ test30_after := by
   unfold test30_before test30_after
   simp_alive_peephole
+  intros
   ---BEGIN test30
   apply test30_thm
   ---END test30
@@ -611,6 +633,7 @@ set_option debug.skipKernelTC true in
 theorem test31_proof : test31_before ⊑ test31_after := by
   unfold test31_before test31_after
   simp_alive_peephole
+  intros
   ---BEGIN test31
   apply test31_thm
   ---END test31
@@ -642,6 +665,7 @@ set_option debug.skipKernelTC true in
 theorem and_zext_demanded_proof : and_zext_demanded_before ⊑ and_zext_demanded_after := by
   unfold and_zext_demanded_before and_zext_demanded_after
   simp_alive_peephole
+  intros
   ---BEGIN and_zext_demanded
   apply and_zext_demanded_thm
   ---END and_zext_demanded
@@ -671,6 +695,7 @@ set_option debug.skipKernelTC true in
 theorem test32_proof : test32_before ⊑ test32_after := by
   unfold test32_before test32_after
   simp_alive_peephole
+  intros
   ---BEGIN test32
   apply test32_thm
   ---END test32
@@ -701,6 +726,7 @@ set_option debug.skipKernelTC true in
 theorem test33_proof : test33_before ⊑ test33_after := by
   unfold test33_before test33_after
   simp_alive_peephole
+  intros
   ---BEGIN test33
   apply test33_thm
   ---END test33
@@ -731,6 +757,7 @@ set_option debug.skipKernelTC true in
 theorem test33b_proof : test33b_before ⊑ test33b_after := by
   unfold test33b_before test33b_after
   simp_alive_peephole
+  intros
   ---BEGIN test33b
   apply test33b_thm
   ---END test33b
@@ -755,6 +782,7 @@ set_option debug.skipKernelTC true in
 theorem test34_proof : test34_before ⊑ test34_after := by
   unfold test34_before test34_after
   simp_alive_peephole
+  intros
   ---BEGIN test34
   apply test34_thm
   ---END test34
@@ -787,6 +815,7 @@ set_option debug.skipKernelTC true in
 theorem test35_proof : test35_before ⊑ test35_after := by
   unfold test35_before test35_after
   simp_alive_peephole
+  intros
   ---BEGIN test35
   apply test35_thm
   ---END test35
@@ -819,6 +848,7 @@ set_option debug.skipKernelTC true in
 theorem test36_proof : test36_before ⊑ test36_after := by
   unfold test36_before test36_after
   simp_alive_peephole
+  intros
   ---BEGIN test36
   apply test36_thm
   ---END test36
@@ -851,6 +881,7 @@ set_option debug.skipKernelTC true in
 theorem test37_proof : test37_before ⊑ test37_after := by
   unfold test37_before test37_after
   simp_alive_peephole
+  intros
   ---BEGIN test37
   apply test37_thm
   ---END test37
@@ -881,6 +912,7 @@ set_option debug.skipKernelTC true in
 theorem test38_proof : test38_before ⊑ test38_after := by
   unfold test38_before test38_after
   simp_alive_peephole
+  intros
   ---BEGIN test38
   apply test38_thm
   ---END test38
@@ -911,6 +943,7 @@ set_option debug.skipKernelTC true in
 theorem test39_proof : test39_before ⊑ test39_after := by
   unfold test39_before test39_after
   simp_alive_peephole
+  intros
   ---BEGIN test39
   apply test39_thm
   ---END test39
@@ -940,6 +973,7 @@ set_option debug.skipKernelTC true in
 theorem lowmask_add_zext_proof : lowmask_add_zext_before ⊑ lowmask_add_zext_after := by
   unfold lowmask_add_zext_before lowmask_add_zext_after
   simp_alive_peephole
+  intros
   ---BEGIN lowmask_add_zext
   apply lowmask_add_zext_thm
   ---END lowmask_add_zext
@@ -971,6 +1005,7 @@ set_option debug.skipKernelTC true in
 theorem lowmask_add_zext_commute_proof : lowmask_add_zext_commute_before ⊑ lowmask_add_zext_commute_after := by
   unfold lowmask_add_zext_commute_before lowmask_add_zext_commute_after
   simp_alive_peephole
+  intros
   ---BEGIN lowmask_add_zext_commute
   apply lowmask_add_zext_commute_thm
   ---END lowmask_add_zext_commute
@@ -1001,6 +1036,7 @@ set_option debug.skipKernelTC true in
 theorem lowmask_add_zext_wrong_mask_proof : lowmask_add_zext_wrong_mask_before ⊑ lowmask_add_zext_wrong_mask_after := by
   unfold lowmask_add_zext_wrong_mask_before lowmask_add_zext_wrong_mask_after
   simp_alive_peephole
+  intros
   ---BEGIN lowmask_add_zext_wrong_mask
   apply lowmask_add_zext_wrong_mask_thm
   ---END lowmask_add_zext_wrong_mask
@@ -1030,6 +1066,7 @@ set_option debug.skipKernelTC true in
 theorem lowmask_sub_zext_commute_proof : lowmask_sub_zext_commute_before ⊑ lowmask_sub_zext_commute_after := by
   unfold lowmask_sub_zext_commute_before lowmask_sub_zext_commute_after
   simp_alive_peephole
+  intros
   ---BEGIN lowmask_sub_zext_commute
   apply lowmask_sub_zext_commute_thm
   ---END lowmask_sub_zext_commute
@@ -1059,6 +1096,7 @@ set_option debug.skipKernelTC true in
 theorem lowmask_mul_zext_proof : lowmask_mul_zext_before ⊑ lowmask_mul_zext_after := by
   unfold lowmask_mul_zext_before lowmask_mul_zext_after
   simp_alive_peephole
+  intros
   ---BEGIN lowmask_mul_zext
   apply lowmask_mul_zext_thm
   ---END lowmask_mul_zext
@@ -1090,6 +1128,7 @@ set_option debug.skipKernelTC true in
 theorem lowmask_xor_zext_commute_proof : lowmask_xor_zext_commute_before ⊑ lowmask_xor_zext_commute_after := by
   unfold lowmask_xor_zext_commute_before lowmask_xor_zext_commute_after
   simp_alive_peephole
+  intros
   ---BEGIN lowmask_xor_zext_commute
   apply lowmask_xor_zext_commute_thm
   ---END lowmask_xor_zext_commute
@@ -1119,6 +1158,7 @@ set_option debug.skipKernelTC true in
 theorem lowmask_or_zext_commute_proof : lowmask_or_zext_commute_before ⊑ lowmask_or_zext_commute_after := by
   unfold lowmask_or_zext_commute_before lowmask_or_zext_commute_after
   simp_alive_peephole
+  intros
   ---BEGIN lowmask_or_zext_commute
   apply lowmask_or_zext_commute_thm
   ---END lowmask_or_zext_commute
@@ -1149,6 +1189,7 @@ set_option debug.skipKernelTC true in
 theorem test40_proof : test40_before ⊑ test40_after := by
   unfold test40_before test40_after
   simp_alive_peephole
+  intros
   ---BEGIN test40
   apply test40_thm
   ---END test40
@@ -1179,6 +1220,7 @@ set_option debug.skipKernelTC true in
 theorem test42_proof : test42_before ⊑ test42_after := by
   unfold test42_before test42_after
   simp_alive_peephole
+  intros
   ---BEGIN test42
   apply test42_thm
   ---END test42
@@ -1209,6 +1251,7 @@ set_option debug.skipKernelTC true in
 theorem test43_proof : test43_before ⊑ test43_after := by
   unfold test43_before test43_after
   simp_alive_peephole
+  intros
   ---BEGIN test43
   apply test43_thm
   ---END test43
@@ -1236,6 +1279,7 @@ set_option debug.skipKernelTC true in
 theorem test44_proof : test44_before ⊑ test44_after := by
   unfold test44_before test44_after
   simp_alive_peephole
+  intros
   ---BEGIN test44
   apply test44_thm
   ---END test44
@@ -1263,6 +1307,7 @@ set_option debug.skipKernelTC true in
 theorem test45_proof : test45_before ⊑ test45_after := by
   unfold test45_before test45_after
   simp_alive_peephole
+  intros
   ---BEGIN test45
   apply test45_thm
   ---END test45
@@ -1290,6 +1335,7 @@ set_option debug.skipKernelTC true in
 theorem test46_proof : test46_before ⊑ test46_after := by
   unfold test46_before test46_after
   simp_alive_peephole
+  intros
   ---BEGIN test46
   apply test46_thm
   ---END test46
@@ -1317,6 +1363,7 @@ set_option debug.skipKernelTC true in
 theorem test47_proof : test47_before ⊑ test47_after := by
   unfold test47_before test47_after
   simp_alive_peephole
+  intros
   ---BEGIN test47
   apply test47_thm
   ---END test47
@@ -1347,6 +1394,7 @@ set_option debug.skipKernelTC true in
 theorem lowbitmask_casted_shift_proof : lowbitmask_casted_shift_before ⊑ lowbitmask_casted_shift_after := by
   unfold lowbitmask_casted_shift_before lowbitmask_casted_shift_after
   simp_alive_peephole
+  intros
   ---BEGIN lowbitmask_casted_shift
   apply lowbitmask_casted_shift_thm
   ---END lowbitmask_casted_shift
@@ -1375,6 +1423,7 @@ set_option debug.skipKernelTC true in
 theorem lowmask_add_2_proof : lowmask_add_2_before ⊑ lowmask_add_2_after := by
   unfold lowmask_add_2_before lowmask_add_2_after
   simp_alive_peephole
+  intros
   ---BEGIN lowmask_add_2
   apply lowmask_add_2_thm
   ---END lowmask_add_2
@@ -1403,6 +1452,7 @@ set_option debug.skipKernelTC true in
 theorem flip_masked_bit_proof : flip_masked_bit_before ⊑ flip_masked_bit_after := by
   unfold flip_masked_bit_before flip_masked_bit_after
   simp_alive_peephole
+  intros
   ---BEGIN flip_masked_bit
   apply flip_masked_bit_thm
   ---END flip_masked_bit
@@ -1433,6 +1483,7 @@ set_option debug.skipKernelTC true in
 theorem not_signbit_splat_mask1_proof : not_signbit_splat_mask1_before ⊑ not_signbit_splat_mask1_after := by
   unfold not_signbit_splat_mask1_before not_signbit_splat_mask1_after
   simp_alive_peephole
+  intros
   ---BEGIN not_signbit_splat_mask1
   apply not_signbit_splat_mask1_thm
   ---END not_signbit_splat_mask1
@@ -1463,6 +1514,7 @@ set_option debug.skipKernelTC true in
 theorem not_signbit_splat_mask2_proof : not_signbit_splat_mask2_before ⊑ not_signbit_splat_mask2_after := by
   unfold not_signbit_splat_mask2_before not_signbit_splat_mask2_after
   simp_alive_peephole
+  intros
   ---BEGIN not_signbit_splat_mask2
   apply not_signbit_splat_mask2_thm
   ---END not_signbit_splat_mask2
@@ -1495,6 +1547,7 @@ set_option debug.skipKernelTC true in
 theorem not_ashr_not_bitwidth_mask_proof : not_ashr_not_bitwidth_mask_before ⊑ not_ashr_not_bitwidth_mask_after := by
   unfold not_ashr_not_bitwidth_mask_before not_ashr_not_bitwidth_mask_after
   simp_alive_peephole
+  intros
   ---BEGIN not_ashr_not_bitwidth_mask
   apply not_ashr_not_bitwidth_mask_thm
   ---END not_ashr_not_bitwidth_mask
@@ -1527,6 +1580,7 @@ set_option debug.skipKernelTC true in
 theorem not_lshr_bitwidth_mask_proof : not_lshr_bitwidth_mask_before ⊑ not_lshr_bitwidth_mask_after := by
   unfold not_lshr_bitwidth_mask_before not_lshr_bitwidth_mask_after
   simp_alive_peephole
+  intros
   ---BEGIN not_lshr_bitwidth_mask
   apply not_lshr_bitwidth_mask_thm
   ---END not_lshr_bitwidth_mask
@@ -1561,6 +1615,7 @@ set_option debug.skipKernelTC true in
 theorem not_invert_signbit_splat_mask2_proof : not_invert_signbit_splat_mask2_before ⊑ not_invert_signbit_splat_mask2_after := by
   unfold not_invert_signbit_splat_mask2_before not_invert_signbit_splat_mask2_after
   simp_alive_peephole
+  intros
   ---BEGIN not_invert_signbit_splat_mask2
   apply not_invert_signbit_splat_mask2_thm
   ---END not_invert_signbit_splat_mask2
@@ -1590,6 +1645,7 @@ set_option debug.skipKernelTC true in
 theorem shl_lshr_pow2_const_negative_overflow1_proof : shl_lshr_pow2_const_negative_overflow1_before ⊑ shl_lshr_pow2_const_negative_overflow1_after := by
   unfold shl_lshr_pow2_const_negative_overflow1_before shl_lshr_pow2_const_negative_overflow1_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_lshr_pow2_const_negative_overflow1
   apply shl_lshr_pow2_const_negative_overflow1_thm
   ---END shl_lshr_pow2_const_negative_overflow1
@@ -1619,6 +1675,7 @@ set_option debug.skipKernelTC true in
 theorem shl_lshr_pow2_const_negative_overflow2_proof : shl_lshr_pow2_const_negative_overflow2_before ⊑ shl_lshr_pow2_const_negative_overflow2_after := by
   unfold shl_lshr_pow2_const_negative_overflow2_before shl_lshr_pow2_const_negative_overflow2_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_lshr_pow2_const_negative_overflow2
   apply shl_lshr_pow2_const_negative_overflow2_thm
   ---END shl_lshr_pow2_const_negative_overflow2
@@ -1651,6 +1708,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_lshr_pow2_const_negative_nopow2_1_proof : lshr_lshr_pow2_const_negative_nopow2_1_before ⊑ lshr_lshr_pow2_const_negative_nopow2_1_after := by
   unfold lshr_lshr_pow2_const_negative_nopow2_1_before lshr_lshr_pow2_const_negative_nopow2_1_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_lshr_pow2_const_negative_nopow2_1
   apply lshr_lshr_pow2_const_negative_nopow2_1_thm
   ---END lshr_lshr_pow2_const_negative_nopow2_1
@@ -1683,6 +1741,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_lshr_pow2_const_negative_nopow2_2_proof : lshr_lshr_pow2_const_negative_nopow2_2_before ⊑ lshr_lshr_pow2_const_negative_nopow2_2_after := by
   unfold lshr_lshr_pow2_const_negative_nopow2_2_before lshr_lshr_pow2_const_negative_nopow2_2_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_lshr_pow2_const_negative_nopow2_2
   apply lshr_lshr_pow2_const_negative_nopow2_2_thm
   ---END lshr_lshr_pow2_const_negative_nopow2_2
@@ -1712,6 +1771,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_lshr_pow2_const_negative_overflow_proof : lshr_lshr_pow2_const_negative_overflow_before ⊑ lshr_lshr_pow2_const_negative_overflow_after := by
   unfold lshr_lshr_pow2_const_negative_overflow_before lshr_lshr_pow2_const_negative_overflow_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_lshr_pow2_const_negative_overflow
   apply lshr_lshr_pow2_const_negative_overflow_thm
   ---END lshr_lshr_pow2_const_negative_overflow
@@ -1741,6 +1801,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_shl_pow2_const_overflow_proof : lshr_shl_pow2_const_overflow_before ⊑ lshr_shl_pow2_const_overflow_after := by
   unfold lshr_shl_pow2_const_overflow_before lshr_shl_pow2_const_overflow_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_shl_pow2_const_overflow
   apply lshr_shl_pow2_const_overflow_thm
   ---END lshr_shl_pow2_const_overflow
@@ -1769,6 +1830,7 @@ set_option debug.skipKernelTC true in
 theorem and_zext_proof : and_zext_before ⊑ and_zext_after := by
   unfold and_zext_before and_zext_after
   simp_alive_peephole
+  intros
   ---BEGIN and_zext
   apply and_zext_thm
   ---END and_zext
@@ -1797,6 +1859,7 @@ set_option debug.skipKernelTC true in
 theorem and_zext_commuted_proof : and_zext_commuted_before ⊑ and_zext_commuted_after := by
   unfold and_zext_commuted_before and_zext_commuted_after
   simp_alive_peephole
+  intros
   ---BEGIN and_zext_commuted
   apply and_zext_commuted_thm
   ---END and_zext_commuted
@@ -1827,6 +1890,7 @@ set_option debug.skipKernelTC true in
 theorem add_constant_equal_with_the_top_bit_of_demandedbits_pass_proof : add_constant_equal_with_the_top_bit_of_demandedbits_pass_before ⊑ add_constant_equal_with_the_top_bit_of_demandedbits_pass_after := by
   unfold add_constant_equal_with_the_top_bit_of_demandedbits_pass_before add_constant_equal_with_the_top_bit_of_demandedbits_pass_after
   simp_alive_peephole
+  intros
   ---BEGIN add_constant_equal_with_the_top_bit_of_demandedbits_pass
   apply add_constant_equal_with_the_top_bit_of_demandedbits_pass_thm
   ---END add_constant_equal_with_the_top_bit_of_demandedbits_pass
@@ -1859,6 +1923,7 @@ set_option debug.skipKernelTC true in
 theorem add_constant_equal_with_the_top_bit_of_demandedbits_insertpt_proof : add_constant_equal_with_the_top_bit_of_demandedbits_insertpt_before ⊑ add_constant_equal_with_the_top_bit_of_demandedbits_insertpt_after := by
   unfold add_constant_equal_with_the_top_bit_of_demandedbits_insertpt_before add_constant_equal_with_the_top_bit_of_demandedbits_insertpt_after
   simp_alive_peephole
+  intros
   ---BEGIN add_constant_equal_with_the_top_bit_of_demandedbits_insertpt
   apply add_constant_equal_with_the_top_bit_of_demandedbits_insertpt_thm
   ---END add_constant_equal_with_the_top_bit_of_demandedbits_insertpt

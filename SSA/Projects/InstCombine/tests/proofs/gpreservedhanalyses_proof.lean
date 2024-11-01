@@ -5,7 +5,7 @@ open BitVec
 open LLVM
 
 section gpreservedhanalyses_proof
-theorem test_thm (e✝ : IntW 32) : add (add e✝ (const? 5)) (const? (-5)) ⊑ e✝ := by 
+theorem test_thm (e : IntW 32) : add (add e (const? 5)) (const? (-5)) ⊑ e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

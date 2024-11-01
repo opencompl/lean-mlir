@@ -34,6 +34,7 @@ set_option debug.skipKernelTC true in
 theorem land_land_left1_proof : land_land_left1_before ⊑ land_land_left1_after := by
   unfold land_land_left1_before land_land_left1_after
   simp_alive_peephole
+  intros
   ---BEGIN land_land_left1
   apply land_land_left1_thm
   ---END land_land_left1
@@ -61,6 +62,7 @@ set_option debug.skipKernelTC true in
 theorem land_land_left2_proof : land_land_left2_before ⊑ land_land_left2_after := by
   unfold land_land_left2_before land_land_left2_after
   simp_alive_peephole
+  intros
   ---BEGIN land_land_left2
   apply land_land_left2_thm
   ---END land_land_left2
@@ -88,6 +90,7 @@ set_option debug.skipKernelTC true in
 theorem land_band_left1_proof : land_band_left1_before ⊑ land_band_left1_after := by
   unfold land_band_left1_before land_band_left1_after
   simp_alive_peephole
+  intros
   ---BEGIN land_band_left1
   apply land_band_left1_thm
   ---END land_band_left1
@@ -115,6 +118,7 @@ set_option debug.skipKernelTC true in
 theorem land_band_left2_proof : land_band_left2_before ⊑ land_band_left2_after := by
   unfold land_band_left2_before land_band_left2_after
   simp_alive_peephole
+  intros
   ---BEGIN land_band_left2
   apply land_band_left2_thm
   ---END land_band_left2
@@ -141,6 +145,7 @@ set_option debug.skipKernelTC true in
 theorem land_lor_left1_proof : land_lor_left1_before ⊑ land_lor_left1_after := by
   unfold land_lor_left1_before land_lor_left1_after
   simp_alive_peephole
+  intros
   ---BEGIN land_lor_left1
   apply land_lor_left1_thm
   ---END land_lor_left1
@@ -167,6 +172,7 @@ set_option debug.skipKernelTC true in
 theorem land_lor_left2_proof : land_lor_left2_before ⊑ land_lor_left2_after := by
   unfold land_lor_left2_before land_lor_left2_after
   simp_alive_peephole
+  intros
   ---BEGIN land_lor_left2
   apply land_lor_left2_thm
   ---END land_lor_left2
@@ -192,6 +198,7 @@ set_option debug.skipKernelTC true in
 theorem land_bor_left1_proof : land_bor_left1_before ⊑ land_bor_left1_after := by
   unfold land_bor_left1_before land_bor_left1_after
   simp_alive_peephole
+  intros
   ---BEGIN land_bor_left1
   apply land_bor_left1_thm
   ---END land_bor_left1
@@ -217,6 +224,7 @@ set_option debug.skipKernelTC true in
 theorem land_bor_left2_proof : land_bor_left2_before ⊑ land_bor_left2_after := by
   unfold land_bor_left2_before land_bor_left2_after
   simp_alive_peephole
+  intros
   ---BEGIN land_bor_left2
   apply land_bor_left2_thm
   ---END land_bor_left2
@@ -243,6 +251,7 @@ set_option debug.skipKernelTC true in
 theorem band_land_left1_proof : band_land_left1_before ⊑ band_land_left1_after := by
   unfold band_land_left1_before band_land_left1_after
   simp_alive_peephole
+  intros
   ---BEGIN band_land_left1
   apply band_land_left1_thm
   ---END band_land_left1
@@ -269,6 +278,7 @@ set_option debug.skipKernelTC true in
 theorem band_land_left2_proof : band_land_left2_before ⊑ band_land_left2_after := by
   unfold band_land_left2_before band_land_left2_after
   simp_alive_peephole
+  intros
   ---BEGIN band_land_left2
   apply band_land_left2_thm
   ---END band_land_left2
@@ -294,6 +304,7 @@ set_option debug.skipKernelTC true in
 theorem band_lor_left1_proof : band_lor_left1_before ⊑ band_lor_left1_after := by
   unfold band_lor_left1_before band_lor_left1_after
   simp_alive_peephole
+  intros
   ---BEGIN band_lor_left1
   apply band_lor_left1_thm
   ---END band_lor_left1
@@ -319,6 +330,7 @@ set_option debug.skipKernelTC true in
 theorem band_lor_left2_proof : band_lor_left2_before ⊑ band_lor_left2_after := by
   unfold band_lor_left2_before band_lor_left2_after
   simp_alive_peephole
+  intros
   ---BEGIN band_lor_left2
   apply band_lor_left2_thm
   ---END band_lor_left2
@@ -345,6 +357,7 @@ set_option debug.skipKernelTC true in
 theorem lor_land_left1_proof : lor_land_left1_before ⊑ lor_land_left1_after := by
   unfold lor_land_left1_before lor_land_left1_after
   simp_alive_peephole
+  intros
   ---BEGIN lor_land_left1
   apply lor_land_left1_thm
   ---END lor_land_left1
@@ -371,6 +384,7 @@ set_option debug.skipKernelTC true in
 theorem lor_land_left2_proof : lor_land_left2_before ⊑ lor_land_left2_after := by
   unfold lor_land_left2_before lor_land_left2_after
   simp_alive_peephole
+  intros
   ---BEGIN lor_land_left2
   apply lor_land_left2_thm
   ---END lor_land_left2
@@ -396,6 +410,7 @@ set_option debug.skipKernelTC true in
 theorem lor_band_left1_proof : lor_band_left1_before ⊑ lor_band_left1_after := by
   unfold lor_band_left1_before lor_band_left1_after
   simp_alive_peephole
+  intros
   ---BEGIN lor_band_left1
   apply lor_band_left1_thm
   ---END lor_band_left1
@@ -421,6 +436,7 @@ set_option debug.skipKernelTC true in
 theorem lor_band_left2_proof : lor_band_left2_before ⊑ lor_band_left2_after := by
   unfold lor_band_left2_before lor_band_left2_after
   simp_alive_peephole
+  intros
   ---BEGIN lor_band_left2
   apply lor_band_left2_thm
   ---END lor_band_left2
@@ -448,6 +464,7 @@ set_option debug.skipKernelTC true in
 theorem lor_lor_left1_proof : lor_lor_left1_before ⊑ lor_lor_left1_after := by
   unfold lor_lor_left1_before lor_lor_left1_after
   simp_alive_peephole
+  intros
   ---BEGIN lor_lor_left1
   apply lor_lor_left1_thm
   ---END lor_lor_left1
@@ -475,6 +492,7 @@ set_option debug.skipKernelTC true in
 theorem lor_lor_left2_proof : lor_lor_left2_before ⊑ lor_lor_left2_after := by
   unfold lor_lor_left2_before lor_lor_left2_after
   simp_alive_peephole
+  intros
   ---BEGIN lor_lor_left2
   apply lor_lor_left2_thm
   ---END lor_lor_left2
@@ -502,6 +520,7 @@ set_option debug.skipKernelTC true in
 theorem lor_bor_left1_proof : lor_bor_left1_before ⊑ lor_bor_left1_after := by
   unfold lor_bor_left1_before lor_bor_left1_after
   simp_alive_peephole
+  intros
   ---BEGIN lor_bor_left1
   apply lor_bor_left1_thm
   ---END lor_bor_left1
@@ -529,6 +548,7 @@ set_option debug.skipKernelTC true in
 theorem lor_bor_left2_proof : lor_bor_left2_before ⊑ lor_bor_left2_after := by
   unfold lor_bor_left2_before lor_bor_left2_after
   simp_alive_peephole
+  intros
   ---BEGIN lor_bor_left2
   apply lor_bor_left2_thm
   ---END lor_bor_left2
@@ -554,6 +574,7 @@ set_option debug.skipKernelTC true in
 theorem bor_land_left1_proof : bor_land_left1_before ⊑ bor_land_left1_after := by
   unfold bor_land_left1_before bor_land_left1_after
   simp_alive_peephole
+  intros
   ---BEGIN bor_land_left1
   apply bor_land_left1_thm
   ---END bor_land_left1
@@ -579,6 +600,7 @@ set_option debug.skipKernelTC true in
 theorem bor_land_left2_proof : bor_land_left2_before ⊑ bor_land_left2_after := by
   unfold bor_land_left2_before bor_land_left2_after
   simp_alive_peephole
+  intros
   ---BEGIN bor_land_left2
   apply bor_land_left2_thm
   ---END bor_land_left2
@@ -605,6 +627,7 @@ set_option debug.skipKernelTC true in
 theorem bor_lor_left1_proof : bor_lor_left1_before ⊑ bor_lor_left1_after := by
   unfold bor_lor_left1_before bor_lor_left1_after
   simp_alive_peephole
+  intros
   ---BEGIN bor_lor_left1
   apply bor_lor_left1_thm
   ---END bor_lor_left1
@@ -631,6 +654,7 @@ set_option debug.skipKernelTC true in
 theorem bor_lor_left2_proof : bor_lor_left2_before ⊑ bor_lor_left2_after := by
   unfold bor_lor_left2_before bor_lor_left2_after
   simp_alive_peephole
+  intros
   ---BEGIN bor_lor_left2
   apply bor_lor_left2_thm
   ---END bor_lor_left2
@@ -658,6 +682,7 @@ set_option debug.skipKernelTC true in
 theorem land_land_right1_proof : land_land_right1_before ⊑ land_land_right1_after := by
   unfold land_land_right1_before land_land_right1_after
   simp_alive_peephole
+  intros
   ---BEGIN land_land_right1
   apply land_land_right1_thm
   ---END land_land_right1
@@ -685,6 +710,7 @@ set_option debug.skipKernelTC true in
 theorem land_land_right2_proof : land_land_right2_before ⊑ land_land_right2_after := by
   unfold land_land_right2_before land_land_right2_after
   simp_alive_peephole
+  intros
   ---BEGIN land_land_right2
   apply land_land_right2_thm
   ---END land_land_right2
@@ -712,6 +738,7 @@ set_option debug.skipKernelTC true in
 theorem land_band_right1_proof : land_band_right1_before ⊑ land_band_right1_after := by
   unfold land_band_right1_before land_band_right1_after
   simp_alive_peephole
+  intros
   ---BEGIN land_band_right1
   apply land_band_right1_thm
   ---END land_band_right1
@@ -739,6 +766,7 @@ set_option debug.skipKernelTC true in
 theorem land_band_right2_proof : land_band_right2_before ⊑ land_band_right2_after := by
   unfold land_band_right2_before land_band_right2_after
   simp_alive_peephole
+  intros
   ---BEGIN land_band_right2
   apply land_band_right2_thm
   ---END land_band_right2
@@ -765,6 +793,7 @@ set_option debug.skipKernelTC true in
 theorem land_lor_right1_proof : land_lor_right1_before ⊑ land_lor_right1_after := by
   unfold land_lor_right1_before land_lor_right1_after
   simp_alive_peephole
+  intros
   ---BEGIN land_lor_right1
   apply land_lor_right1_thm
   ---END land_lor_right1
@@ -791,6 +820,7 @@ set_option debug.skipKernelTC true in
 theorem land_lor_right2_proof : land_lor_right2_before ⊑ land_lor_right2_after := by
   unfold land_lor_right2_before land_lor_right2_after
   simp_alive_peephole
+  intros
   ---BEGIN land_lor_right2
   apply land_lor_right2_thm
   ---END land_lor_right2
@@ -816,6 +846,7 @@ set_option debug.skipKernelTC true in
 theorem land_bor_right1_proof : land_bor_right1_before ⊑ land_bor_right1_after := by
   unfold land_bor_right1_before land_bor_right1_after
   simp_alive_peephole
+  intros
   ---BEGIN land_bor_right1
   apply land_bor_right1_thm
   ---END land_bor_right1
@@ -841,6 +872,7 @@ set_option debug.skipKernelTC true in
 theorem land_bor_right2_proof : land_bor_right2_before ⊑ land_bor_right2_after := by
   unfold land_bor_right2_before land_bor_right2_after
   simp_alive_peephole
+  intros
   ---BEGIN land_bor_right2
   apply land_bor_right2_thm
   ---END land_bor_right2
@@ -868,6 +900,7 @@ set_option debug.skipKernelTC true in
 theorem band_land_right1_proof : band_land_right1_before ⊑ band_land_right1_after := by
   unfold band_land_right1_before band_land_right1_after
   simp_alive_peephole
+  intros
   ---BEGIN band_land_right1
   apply band_land_right1_thm
   ---END band_land_right1
@@ -895,6 +928,7 @@ set_option debug.skipKernelTC true in
 theorem band_land_right2_proof : band_land_right2_before ⊑ band_land_right2_after := by
   unfold band_land_right2_before band_land_right2_after
   simp_alive_peephole
+  intros
   ---BEGIN band_land_right2
   apply band_land_right2_thm
   ---END band_land_right2
@@ -920,6 +954,7 @@ set_option debug.skipKernelTC true in
 theorem band_lor_right1_proof : band_lor_right1_before ⊑ band_lor_right1_after := by
   unfold band_lor_right1_before band_lor_right1_after
   simp_alive_peephole
+  intros
   ---BEGIN band_lor_right1
   apply band_lor_right1_thm
   ---END band_lor_right1
@@ -945,6 +980,7 @@ set_option debug.skipKernelTC true in
 theorem band_lor_right2_proof : band_lor_right2_before ⊑ band_lor_right2_after := by
   unfold band_lor_right2_before band_lor_right2_after
   simp_alive_peephole
+  intros
   ---BEGIN band_lor_right2
   apply band_lor_right2_thm
   ---END band_lor_right2
@@ -971,6 +1007,7 @@ set_option debug.skipKernelTC true in
 theorem lor_land_right1_proof : lor_land_right1_before ⊑ lor_land_right1_after := by
   unfold lor_land_right1_before lor_land_right1_after
   simp_alive_peephole
+  intros
   ---BEGIN lor_land_right1
   apply lor_land_right1_thm
   ---END lor_land_right1
@@ -997,6 +1034,7 @@ set_option debug.skipKernelTC true in
 theorem lor_land_right2_proof : lor_land_right2_before ⊑ lor_land_right2_after := by
   unfold lor_land_right2_before lor_land_right2_after
   simp_alive_peephole
+  intros
   ---BEGIN lor_land_right2
   apply lor_land_right2_thm
   ---END lor_land_right2
@@ -1022,6 +1060,7 @@ set_option debug.skipKernelTC true in
 theorem lor_band_right1_proof : lor_band_right1_before ⊑ lor_band_right1_after := by
   unfold lor_band_right1_before lor_band_right1_after
   simp_alive_peephole
+  intros
   ---BEGIN lor_band_right1
   apply lor_band_right1_thm
   ---END lor_band_right1
@@ -1047,6 +1086,7 @@ set_option debug.skipKernelTC true in
 theorem lor_band_right2_proof : lor_band_right2_before ⊑ lor_band_right2_after := by
   unfold lor_band_right2_before lor_band_right2_after
   simp_alive_peephole
+  intros
   ---BEGIN lor_band_right2
   apply lor_band_right2_thm
   ---END lor_band_right2
@@ -1074,6 +1114,7 @@ set_option debug.skipKernelTC true in
 theorem lor_lor_right1_proof : lor_lor_right1_before ⊑ lor_lor_right1_after := by
   unfold lor_lor_right1_before lor_lor_right1_after
   simp_alive_peephole
+  intros
   ---BEGIN lor_lor_right1
   apply lor_lor_right1_thm
   ---END lor_lor_right1
@@ -1101,6 +1142,7 @@ set_option debug.skipKernelTC true in
 theorem lor_lor_right2_proof : lor_lor_right2_before ⊑ lor_lor_right2_after := by
   unfold lor_lor_right2_before lor_lor_right2_after
   simp_alive_peephole
+  intros
   ---BEGIN lor_lor_right2
   apply lor_lor_right2_thm
   ---END lor_lor_right2
@@ -1128,6 +1170,7 @@ set_option debug.skipKernelTC true in
 theorem lor_bor_right1_proof : lor_bor_right1_before ⊑ lor_bor_right1_after := by
   unfold lor_bor_right1_before lor_bor_right1_after
   simp_alive_peephole
+  intros
   ---BEGIN lor_bor_right1
   apply lor_bor_right1_thm
   ---END lor_bor_right1
@@ -1155,6 +1198,7 @@ set_option debug.skipKernelTC true in
 theorem lor_bor_right2_proof : lor_bor_right2_before ⊑ lor_bor_right2_after := by
   unfold lor_bor_right2_before lor_bor_right2_after
   simp_alive_peephole
+  intros
   ---BEGIN lor_bor_right2
   apply lor_bor_right2_thm
   ---END lor_bor_right2
@@ -1180,6 +1224,7 @@ set_option debug.skipKernelTC true in
 theorem bor_land_right1_proof : bor_land_right1_before ⊑ bor_land_right1_after := by
   unfold bor_land_right1_before bor_land_right1_after
   simp_alive_peephole
+  intros
   ---BEGIN bor_land_right1
   apply bor_land_right1_thm
   ---END bor_land_right1
@@ -1205,6 +1250,7 @@ set_option debug.skipKernelTC true in
 theorem bor_land_right2_proof : bor_land_right2_before ⊑ bor_land_right2_after := by
   unfold bor_land_right2_before bor_land_right2_after
   simp_alive_peephole
+  intros
   ---BEGIN bor_land_right2
   apply bor_land_right2_thm
   ---END bor_land_right2
@@ -1232,6 +1278,7 @@ set_option debug.skipKernelTC true in
 theorem bor_lor_right1_proof : bor_lor_right1_before ⊑ bor_lor_right1_after := by
   unfold bor_lor_right1_before bor_lor_right1_after
   simp_alive_peephole
+  intros
   ---BEGIN bor_lor_right1
   apply bor_lor_right1_thm
   ---END bor_lor_right1
@@ -1259,6 +1306,7 @@ set_option debug.skipKernelTC true in
 theorem bor_lor_right2_proof : bor_lor_right2_before ⊑ bor_lor_right2_after := by
   unfold bor_lor_right2_before bor_lor_right2_after
   simp_alive_peephole
+  intros
   ---BEGIN bor_lor_right2
   apply bor_lor_right2_thm
   ---END bor_lor_right2

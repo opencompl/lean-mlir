@@ -35,6 +35,7 @@ set_option debug.skipKernelTC true in
 theorem sub_to_xor_proof : sub_to_xor_before ⊑ sub_to_xor_after := by
   unfold sub_to_xor_before sub_to_xor_after
   simp_alive_peephole
+  intros
   ---BEGIN sub_to_xor
   apply sub_to_xor_thm
   ---END sub_to_xor
@@ -63,6 +64,7 @@ set_option debug.skipKernelTC true in
 theorem sub_to_xor_or_commuted_proof : sub_to_xor_or_commuted_before ⊑ sub_to_xor_or_commuted_after := by
   unfold sub_to_xor_or_commuted_before sub_to_xor_or_commuted_after
   simp_alive_peephole
+  intros
   ---BEGIN sub_to_xor_or_commuted
   apply sub_to_xor_or_commuted_thm
   ---END sub_to_xor_or_commuted
@@ -91,6 +93,7 @@ set_option debug.skipKernelTC true in
 theorem sub_to_xor_and_commuted_proof : sub_to_xor_and_commuted_before ⊑ sub_to_xor_and_commuted_after := by
   unfold sub_to_xor_and_commuted_before sub_to_xor_and_commuted_after
   simp_alive_peephole
+  intros
   ---BEGIN sub_to_xor_and_commuted
   apply sub_to_xor_and_commuted_thm
   ---END sub_to_xor_and_commuted

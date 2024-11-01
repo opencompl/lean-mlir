@@ -39,6 +39,7 @@ set_option debug.skipKernelTC true in
 theorem neg_proof : neg_before ⊑ neg_after := by
   unfold neg_before neg_after
   simp_alive_peephole
+  intros
   ---BEGIN neg
   apply neg_thm
   ---END neg
@@ -71,6 +72,7 @@ set_option debug.skipKernelTC true in
 theorem not_proof : not_before ⊑ not_after := by
   unfold not_before not_after
   simp_alive_peephole
+  intros
   ---BEGIN not
   apply not_thm
   ---END not

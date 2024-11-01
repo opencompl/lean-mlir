@@ -35,6 +35,7 @@ set_option debug.skipKernelTC true in
 theorem reassoc_add_nuw_proof : reassoc_add_nuw_before ⊑ reassoc_add_nuw_after := by
   unfold reassoc_add_nuw_before reassoc_add_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN reassoc_add_nuw
   all_goals (try extract_goal ; sorry)
   ---END reassoc_add_nuw
@@ -63,6 +64,7 @@ set_option debug.skipKernelTC true in
 theorem reassoc_sub_nuw_proof : reassoc_sub_nuw_before ⊑ reassoc_sub_nuw_after := by
   unfold reassoc_sub_nuw_before reassoc_sub_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN reassoc_sub_nuw
   all_goals (try extract_goal ; sorry)
   ---END reassoc_sub_nuw
@@ -91,6 +93,7 @@ set_option debug.skipKernelTC true in
 theorem reassoc_mul_nuw_proof : reassoc_mul_nuw_before ⊑ reassoc_mul_nuw_after := by
   unfold reassoc_mul_nuw_before reassoc_mul_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN reassoc_mul_nuw
   all_goals (try extract_goal ; sorry)
   ---END reassoc_mul_nuw
@@ -119,6 +122,7 @@ set_option debug.skipKernelTC true in
 theorem no_reassoc_add_nuw_none_proof : no_reassoc_add_nuw_none_before ⊑ no_reassoc_add_nuw_none_after := by
   unfold no_reassoc_add_nuw_none_before no_reassoc_add_nuw_none_after
   simp_alive_peephole
+  intros
   ---BEGIN no_reassoc_add_nuw_none
   all_goals (try extract_goal ; sorry)
   ---END no_reassoc_add_nuw_none
@@ -147,6 +151,7 @@ set_option debug.skipKernelTC true in
 theorem no_reassoc_add_none_nuw_proof : no_reassoc_add_none_nuw_before ⊑ no_reassoc_add_none_nuw_after := by
   unfold no_reassoc_add_none_nuw_before no_reassoc_add_none_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN no_reassoc_add_none_nuw
   all_goals (try extract_goal ; sorry)
   ---END no_reassoc_add_none_nuw
@@ -177,6 +182,7 @@ set_option debug.skipKernelTC true in
 theorem reassoc_x2_add_nuw_proof : reassoc_x2_add_nuw_before ⊑ reassoc_x2_add_nuw_after := by
   unfold reassoc_x2_add_nuw_before reassoc_x2_add_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN reassoc_x2_add_nuw
   all_goals (try extract_goal ; sorry)
   ---END reassoc_x2_add_nuw
@@ -207,6 +213,7 @@ set_option debug.skipKernelTC true in
 theorem reassoc_x2_mul_nuw_proof : reassoc_x2_mul_nuw_before ⊑ reassoc_x2_mul_nuw_after := by
   unfold reassoc_x2_mul_nuw_before reassoc_x2_mul_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN reassoc_x2_mul_nuw
   all_goals (try extract_goal ; sorry)
   ---END reassoc_x2_mul_nuw
@@ -237,6 +244,7 @@ set_option debug.skipKernelTC true in
 theorem reassoc_x2_sub_nuw_proof : reassoc_x2_sub_nuw_before ⊑ reassoc_x2_sub_nuw_after := by
   unfold reassoc_x2_sub_nuw_before reassoc_x2_sub_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN reassoc_x2_sub_nuw
   all_goals (try extract_goal ; sorry)
   ---END reassoc_x2_sub_nuw
@@ -264,6 +272,7 @@ set_option debug.skipKernelTC true in
 theorem tryFactorization_add_nuw_mul_nuw_proof : tryFactorization_add_nuw_mul_nuw_before ⊑ tryFactorization_add_nuw_mul_nuw_after := by
   unfold tryFactorization_add_nuw_mul_nuw_before tryFactorization_add_nuw_mul_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN tryFactorization_add_nuw_mul_nuw
   all_goals (try extract_goal ; sorry)
   ---END tryFactorization_add_nuw_mul_nuw
@@ -291,6 +300,7 @@ set_option debug.skipKernelTC true in
 theorem tryFactorization_add_nuw_mul_nuw_int_max_proof : tryFactorization_add_nuw_mul_nuw_int_max_before ⊑ tryFactorization_add_nuw_mul_nuw_int_max_after := by
   unfold tryFactorization_add_nuw_mul_nuw_int_max_before tryFactorization_add_nuw_mul_nuw_int_max_after
   simp_alive_peephole
+  intros
   ---BEGIN tryFactorization_add_nuw_mul_nuw_int_max
   all_goals (try extract_goal ; sorry)
   ---END tryFactorization_add_nuw_mul_nuw_int_max
@@ -318,6 +328,7 @@ set_option debug.skipKernelTC true in
 theorem tryFactorization_add_mul_nuw_proof : tryFactorization_add_mul_nuw_before ⊑ tryFactorization_add_mul_nuw_after := by
   unfold tryFactorization_add_mul_nuw_before tryFactorization_add_mul_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN tryFactorization_add_mul_nuw
   all_goals (try extract_goal ; sorry)
   ---END tryFactorization_add_mul_nuw
@@ -345,6 +356,7 @@ set_option debug.skipKernelTC true in
 theorem tryFactorization_add_nuw_mul_proof : tryFactorization_add_nuw_mul_before ⊑ tryFactorization_add_nuw_mul_after := by
   unfold tryFactorization_add_nuw_mul_before tryFactorization_add_nuw_mul_after
   simp_alive_peephole
+  intros
   ---BEGIN tryFactorization_add_nuw_mul
   all_goals (try extract_goal ; sorry)
   ---END tryFactorization_add_nuw_mul
@@ -372,6 +384,7 @@ set_option debug.skipKernelTC true in
 theorem tryFactorization_add_nuw_mul_nuw_mul_nuw_var_proof : tryFactorization_add_nuw_mul_nuw_mul_nuw_var_before ⊑ tryFactorization_add_nuw_mul_nuw_mul_nuw_var_after := by
   unfold tryFactorization_add_nuw_mul_nuw_mul_nuw_var_before tryFactorization_add_nuw_mul_nuw_mul_nuw_var_after
   simp_alive_peephole
+  intros
   ---BEGIN tryFactorization_add_nuw_mul_nuw_mul_nuw_var
   all_goals (try extract_goal ; sorry)
   ---END tryFactorization_add_nuw_mul_nuw_mul_nuw_var
@@ -399,6 +412,7 @@ set_option debug.skipKernelTC true in
 theorem tryFactorization_add_nuw_mul_mul_nuw_var_proof : tryFactorization_add_nuw_mul_mul_nuw_var_before ⊑ tryFactorization_add_nuw_mul_mul_nuw_var_after := by
   unfold tryFactorization_add_nuw_mul_mul_nuw_var_before tryFactorization_add_nuw_mul_mul_nuw_var_after
   simp_alive_peephole
+  intros
   ---BEGIN tryFactorization_add_nuw_mul_mul_nuw_var
   all_goals (try extract_goal ; sorry)
   ---END tryFactorization_add_nuw_mul_mul_nuw_var
@@ -426,6 +440,7 @@ set_option debug.skipKernelTC true in
 theorem tryFactorization_add_nuw_mul_nuw_mul_var_proof : tryFactorization_add_nuw_mul_nuw_mul_var_before ⊑ tryFactorization_add_nuw_mul_nuw_mul_var_after := by
   unfold tryFactorization_add_nuw_mul_nuw_mul_var_before tryFactorization_add_nuw_mul_nuw_mul_var_after
   simp_alive_peephole
+  intros
   ---BEGIN tryFactorization_add_nuw_mul_nuw_mul_var
   all_goals (try extract_goal ; sorry)
   ---END tryFactorization_add_nuw_mul_nuw_mul_var
@@ -453,6 +468,7 @@ set_option debug.skipKernelTC true in
 theorem tryFactorization_add_mul_nuw_mul_var_proof : tryFactorization_add_mul_nuw_mul_var_before ⊑ tryFactorization_add_mul_nuw_mul_var_after := by
   unfold tryFactorization_add_mul_nuw_mul_var_before tryFactorization_add_mul_nuw_mul_var_after
   simp_alive_peephole
+  intros
   ---BEGIN tryFactorization_add_mul_nuw_mul_var
   all_goals (try extract_goal ; sorry)
   ---END tryFactorization_add_mul_nuw_mul_var

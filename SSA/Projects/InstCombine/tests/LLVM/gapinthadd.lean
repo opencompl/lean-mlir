@@ -32,6 +32,7 @@ set_option debug.skipKernelTC true in
 theorem test1_proof : test1_before ⊑ test1_after := by
   unfold test1_before test1_after
   simp_alive_peephole
+  intros
   ---BEGIN test1
   all_goals (try extract_goal ; sorry)
   ---END test1
@@ -57,6 +58,7 @@ set_option debug.skipKernelTC true in
 theorem test2_proof : test2_before ⊑ test2_after := by
   unfold test2_before test2_after
   simp_alive_peephole
+  intros
   ---BEGIN test2
   all_goals (try extract_goal ; sorry)
   ---END test2
@@ -82,6 +84,7 @@ set_option debug.skipKernelTC true in
 theorem test3_proof : test3_before ⊑ test3_after := by
   unfold test3_before test3_after
   simp_alive_peephole
+  intros
   ---BEGIN test3
   all_goals (try extract_goal ; sorry)
   ---END test3
@@ -110,6 +113,7 @@ set_option debug.skipKernelTC true in
 theorem test4_proof : test4_before ⊑ test4_after := by
   unfold test4_before test4_after
   simp_alive_peephole
+  intros
   ---BEGIN test4
   all_goals (try extract_goal ; sorry)
   ---END test4
@@ -138,6 +142,7 @@ set_option debug.skipKernelTC true in
 theorem sext_proof : sext_before ⊑ sext_after := by
   unfold sext_before sext_after
   simp_alive_peephole
+  intros
   ---BEGIN sext
   all_goals (try extract_goal ; sorry)
   ---END sext
@@ -175,6 +180,7 @@ set_option debug.skipKernelTC true in
 theorem sext_multiuse_proof : sext_multiuse_before ⊑ sext_multiuse_after := by
   unfold sext_multiuse_before sext_multiuse_after
   simp_alive_peephole
+  intros
   ---BEGIN sext_multiuse
   all_goals (try extract_goal ; sorry)
   ---END sext_multiuse
@@ -202,6 +208,7 @@ set_option debug.skipKernelTC true in
 theorem test5_proof : test5_before ⊑ test5_after := by
   unfold test5_before test5_after
   simp_alive_peephole
+  intros
   ---BEGIN test5
   all_goals (try extract_goal ; sorry)
   ---END test5
@@ -229,6 +236,7 @@ set_option debug.skipKernelTC true in
 theorem test6_proof : test6_before ⊑ test6_after := by
   unfold test6_before test6_after
   simp_alive_peephole
+  intros
   ---BEGIN test6
   all_goals (try extract_goal ; sorry)
   ---END test6
@@ -256,6 +264,7 @@ set_option debug.skipKernelTC true in
 theorem test7_proof : test7_before ⊑ test7_after := by
   unfold test7_before test7_after
   simp_alive_peephole
+  intros
   ---BEGIN test7
   all_goals (try extract_goal ; sorry)
   ---END test7
@@ -287,6 +296,7 @@ set_option debug.skipKernelTC true in
 theorem test8_proof : test8_before ⊑ test8_after := by
   unfold test8_before test8_after
   simp_alive_peephole
+  intros
   ---BEGIN test8
   all_goals (try extract_goal ; sorry)
   ---END test8
@@ -317,6 +327,7 @@ set_option debug.skipKernelTC true in
 theorem test9_proof : test9_before ⊑ test9_after := by
   unfold test9_before test9_after
   simp_alive_peephole
+  intros
   ---BEGIN test9
   all_goals (try extract_goal ; sorry)
   ---END test9

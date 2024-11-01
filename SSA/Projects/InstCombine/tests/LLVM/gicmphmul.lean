@@ -37,6 +37,7 @@ set_option debug.skipKernelTC true in
 theorem mul_of_pow2s_proof : mul_of_pow2s_before ⊑ mul_of_pow2s_after := by
   unfold mul_of_pow2s_before mul_of_pow2s_after
   simp_alive_peephole
+  intros
   ---BEGIN mul_of_pow2s
   all_goals (try extract_goal ; sorry)
   ---END mul_of_pow2s

@@ -37,6 +37,7 @@ set_option debug.skipKernelTC true in
 theorem src_proof : src_before ⊑ src_after := by
   unfold src_before src_after
   simp_alive_peephole
+  intros
   ---BEGIN src
   all_goals (try extract_goal ; sorry)
   ---END src
@@ -67,6 +68,7 @@ set_option debug.skipKernelTC true in
 theorem src2_proof : src2_before ⊑ src2_after := by
   unfold src2_before src2_after
   simp_alive_peephole
+  intros
   ---BEGIN src2
   all_goals (try extract_goal ; sorry)
   ---END src2
@@ -98,6 +100,7 @@ set_option debug.skipKernelTC true in
 theorem src3_proof : src3_before ⊑ src3_after := by
   unfold src3_before src3_after
   simp_alive_peephole
+  intros
   ---BEGIN src3
   all_goals (try extract_goal ; sorry)
   ---END src3
@@ -128,6 +131,7 @@ set_option debug.skipKernelTC true in
 theorem src4_proof : src4_before ⊑ src4_after := by
   unfold src4_before src4_after
   simp_alive_peephole
+  intros
   ---BEGIN src4
   all_goals (try extract_goal ; sorry)
   ---END src4
@@ -158,6 +162,7 @@ set_option debug.skipKernelTC true in
 theorem src5_proof : src5_before ⊑ src5_after := by
   unfold src5_before src5_after
   simp_alive_peephole
+  intros
   ---BEGIN src5
   all_goals (try extract_goal ; sorry)
   ---END src5

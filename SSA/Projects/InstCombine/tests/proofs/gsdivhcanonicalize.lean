@@ -35,6 +35,7 @@ set_option debug.skipKernelTC true in
 theorem test_sdiv_canonicalize_op0_proof : test_sdiv_canonicalize_op0_before ⊑ test_sdiv_canonicalize_op0_after := by
   unfold test_sdiv_canonicalize_op0_before test_sdiv_canonicalize_op0_after
   simp_alive_peephole
+  intros
   ---BEGIN test_sdiv_canonicalize_op0
   apply test_sdiv_canonicalize_op0_thm
   ---END test_sdiv_canonicalize_op0
@@ -63,6 +64,7 @@ set_option debug.skipKernelTC true in
 theorem test_sdiv_canonicalize_op0_exact_proof : test_sdiv_canonicalize_op0_exact_before ⊑ test_sdiv_canonicalize_op0_exact_after := by
   unfold test_sdiv_canonicalize_op0_exact_before test_sdiv_canonicalize_op0_exact_after
   simp_alive_peephole
+  intros
   ---BEGIN test_sdiv_canonicalize_op0_exact
   apply test_sdiv_canonicalize_op0_exact_thm
   ---END test_sdiv_canonicalize_op0_exact
