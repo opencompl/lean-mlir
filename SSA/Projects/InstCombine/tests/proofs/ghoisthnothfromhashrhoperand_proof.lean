@@ -6,7 +6,7 @@ open LLVM
 
 section ghoisthnothfromhashrhoperand_proof
 theorem t0_thm (e e_1 : IntW 8) :
-  ashr (LLVM.xor e_1 (const? (-1))) e ⊑ LLVM.xor (ashr e_1 e) (const? (-1)) := by 
+  ashr (LLVM.xor e_1 (const? 8 (-1))) e ⊑ LLVM.xor (ashr e_1 e) (const? 8 (-1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -15,7 +15,7 @@ theorem t0_thm (e e_1 : IntW 8) :
 
 
 theorem t1_thm (e e_1 : IntW 8) :
-  ashr (LLVM.xor e_1 (const? (-1))) e ⊑ LLVM.xor (ashr e_1 e) (const? (-1)) := by 
+  ashr (LLVM.xor e_1 (const? 8 (-1))) e ⊑ LLVM.xor (ashr e_1 e) (const? 8 (-1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

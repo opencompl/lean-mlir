@@ -7,8 +7,9 @@ open LLVM
 section gabsh1_proof
 theorem abs_must_be_positive_thm (e : IntW 32) :
   icmp IntPredicate.sge
-      (select (icmp IntPredicate.sge e (const? 0)) e (sub (const? 0) e { «nsw» := true, «nuw» := false })) (const? 0) ⊑
-    const? 1 := by 
+      (select (icmp IntPredicate.sge e (const? 32 0)) e (sub (const? 32 0) e { «nsw» := true, «nuw» := false }))
+      (const? 32 0) ⊑
+    const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
