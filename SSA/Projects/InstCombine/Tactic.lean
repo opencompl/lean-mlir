@@ -17,9 +17,9 @@ and all `Width.mvar` should be resolved into `Width.concrete`.  -/
 macro "simp_alive_meta" : tactic =>
  `(tactic|
      (
-      simp (config := {failIfUnchanged := false }) only [Com.changeDialect_ret,
+      simp (config := {failIfUnchanged := false, implicitDefEqProofs := false }) only [Com.changeDialect_ret,
         Com.changeDialect_var, Expr.changeDialect]
-      simp (config := {failIfUnchanged := false }) only [(HVector.changeDialect_nil)]
+      simp (config := {failIfUnchanged := false, implicitDefEqProofs := false}) only [(HVector.changeDialect_nil)]
       dsimp (config := {failIfUnchanged := false }) only [HVector.map']
       dsimp (config := {failIfUnchanged := false }) only [Functor.map]
       dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.succ_eq_toSnoc]
@@ -50,7 +50,7 @@ macro "simp_alive_meta" : tactic =>
       dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero'']
       -- How can I avoid this `simp! only` and instead use a plain `simp only`?
       dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.ofNat_eq_concrete]
-      simp! (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_ofNat_eq]
+      simp! (config := {failIfUnchanged := false, implicitDefEqProofs := false}) only [ConcreteOrMVar.instantiate_ofNat_eq]
    )
  )
 

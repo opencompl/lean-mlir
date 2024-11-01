@@ -81,9 +81,6 @@ Because LLVM integers use a two’s complement representation, this instruction 
 def add? {w : Nat} (x y : BitVec w) : IntW w :=
   pure <| x + y
 
-@[simp_llvm_option]
-theorem add?_eq : LLVM.add? a b  = .some (BitVec.add a b) := rfl
-
 structure NoWrapFlags where
   nsw : Bool := false
   nuw : Bool := false
@@ -93,12 +90,7 @@ structure NoWrapFlags where
 def add {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  if flags.nsw ∧ x'.msb = y'.msb ∧ (x' + y').msb ≠ x'.msb then
-    none
-  else if flags.nuw ∧ (x' + y' < x' ∨ x' + y' < y') then
-    none
-  else
-    add? x' y'
+  add? x' y'
 
 /--
 The value produced is the integer difference of the two operands.
