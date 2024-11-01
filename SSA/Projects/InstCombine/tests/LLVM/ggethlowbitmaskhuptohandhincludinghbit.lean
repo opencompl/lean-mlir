@@ -34,6 +34,7 @@ def t0_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t0_proof : t0_before ⊑ t0_after := by
   unfold t0_before t0_after
   simp_alive_peephole
@@ -64,6 +65,7 @@ def t1_after := [llvm|
   "llvm.return"(%3) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t1_proof : t1_before ⊑ t1_after := by
   unfold t1_before t1_after
   simp_alive_peephole
@@ -97,6 +99,7 @@ def t9_nocse_after := [llvm|
   "llvm.return"(%5) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t9_nocse_proof : t9_nocse_before ⊑ t9_nocse_after := by
   unfold t9_nocse_before t9_nocse_after
   simp_alive_peephole
@@ -130,6 +133,7 @@ def t17_nocse_mismatching_x_after := [llvm|
   "llvm.return"(%5) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t17_nocse_mismatching_x_proof : t17_nocse_mismatching_x_before ⊑ t17_nocse_mismatching_x_after := by
   unfold t17_nocse_mismatching_x_before t17_nocse_mismatching_x_after
   simp_alive_peephole

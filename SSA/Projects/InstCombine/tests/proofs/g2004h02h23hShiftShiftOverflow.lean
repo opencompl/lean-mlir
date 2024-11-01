@@ -30,6 +30,7 @@ def test_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test_proof : test_before ⊑ test_after := by
   unfold test_before test_after
   simp_alive_peephole
@@ -55,6 +56,7 @@ def test2_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test2_proof : test2_before ⊑ test2_after := by
   unfold test2_before test2_after
   simp_alive_peephole

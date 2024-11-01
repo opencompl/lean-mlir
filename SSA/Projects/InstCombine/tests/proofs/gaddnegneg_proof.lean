@@ -5,8 +5,8 @@ open BitVec
 open LLVM
 
 section gaddnegneg_proof
-theorem l_thm :
-  ∀ (e e_1 e_2 : IntW 32), add (add (sub (const? 0) e_2) (sub (const? 0) e_1)) e ⊑ sub e (add e_2 e_1) := by 
+theorem l_thm (e✝ e✝¹ e✝² : IntW 32) :
+  add (add (sub (const? 0) e✝²) (sub (const? 0) e✝¹)) e✝ ⊑ sub e✝ (add e✝² e✝¹) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

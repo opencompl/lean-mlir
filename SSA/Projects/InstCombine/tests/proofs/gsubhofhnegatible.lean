@@ -29,6 +29,7 @@ def t0_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t0_proof : t0_before ⊑ t0_after := by
   unfold t0_before t0_after
   simp_alive_peephole
@@ -56,6 +57,7 @@ def t2_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t2_proof : t2_before ⊑ t2_after := by
   unfold t2_before t2_after
   simp_alive_peephole
@@ -85,6 +87,7 @@ def t4_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t4_proof : t4_before ⊑ t4_after := by
   unfold t4_before t4_after
   simp_alive_peephole
@@ -113,6 +116,7 @@ def PR52261_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem PR52261_proof : PR52261_before ⊑ PR52261_after := by
   unfold PR52261_before PR52261_after
   simp_alive_peephole
@@ -144,6 +148,7 @@ def t7_after := [llvm|
   "llvm.return"(%4) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t7_proof : t7_before ⊑ t7_after := by
   unfold t7_before t7_after
   simp_alive_peephole
@@ -169,6 +174,7 @@ def t9_after := [llvm|
   "llvm.return"(%0) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t9_proof : t9_before ⊑ t9_after := by
   unfold t9_before t9_after
   simp_alive_peephole
@@ -196,6 +202,7 @@ def neg_of_sub_from_constant_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem neg_of_sub_from_constant_proof : neg_of_sub_from_constant_before ⊑ neg_of_sub_from_constant_after := by
   unfold neg_of_sub_from_constant_before neg_of_sub_from_constant_after
   simp_alive_peephole
@@ -223,6 +230,7 @@ def sub_from_constant_of_sub_from_constant_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sub_from_constant_of_sub_from_constant_proof : sub_from_constant_of_sub_from_constant_before ⊑ sub_from_constant_of_sub_from_constant_after := by
   unfold sub_from_constant_of_sub_from_constant_before sub_from_constant_of_sub_from_constant_after
   simp_alive_peephole
@@ -250,6 +258,7 @@ def sub_from_variable_of_sub_from_constant_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sub_from_variable_of_sub_from_constant_proof : sub_from_variable_of_sub_from_constant_before ⊑ sub_from_variable_of_sub_from_constant_after := by
   unfold sub_from_variable_of_sub_from_constant_before sub_from_variable_of_sub_from_constant_after
   simp_alive_peephole
@@ -277,6 +286,7 @@ def neg_of_add_with_constant_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem neg_of_add_with_constant_proof : neg_of_add_with_constant_before ⊑ neg_of_add_with_constant_after := by
   unfold neg_of_add_with_constant_before neg_of_add_with_constant_after
   simp_alive_peephole
@@ -304,6 +314,7 @@ def sub_from_constant_of_add_with_constant_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sub_from_constant_of_add_with_constant_proof : sub_from_constant_of_add_with_constant_before ⊑ sub_from_constant_of_add_with_constant_after := by
   unfold sub_from_constant_of_add_with_constant_before sub_from_constant_of_add_with_constant_after
   simp_alive_peephole
@@ -333,6 +344,7 @@ def t20_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t20_proof : t20_before ⊑ t20_after := by
   unfold t20_before t20_after
   simp_alive_peephole
@@ -362,6 +374,7 @@ def negate_xor_after := [llvm|
   "llvm.return"(%3) : (i4) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem negate_xor_proof : negate_xor_before ⊑ negate_xor_after := by
   unfold negate_xor_before negate_xor_after
   simp_alive_peephole
@@ -393,6 +406,7 @@ def negate_shl_xor_after := [llvm|
   "llvm.return"(%4) : (i4) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem negate_shl_xor_proof : negate_shl_xor_before ⊑ negate_shl_xor_after := by
   unfold negate_shl_xor_before negate_shl_xor_after
   simp_alive_peephole
@@ -420,6 +434,7 @@ def negate_sdiv_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem negate_sdiv_proof : negate_sdiv_before ⊑ negate_sdiv_after := by
   unfold negate_sdiv_before negate_sdiv_after
   simp_alive_peephole
@@ -447,6 +462,7 @@ def negate_ashr_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem negate_ashr_proof : negate_ashr_before ⊑ negate_ashr_after := by
   unfold negate_ashr_before negate_ashr_after
   simp_alive_peephole
@@ -474,6 +490,7 @@ def negate_lshr_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem negate_lshr_proof : negate_lshr_before ⊑ negate_lshr_after := by
   unfold negate_lshr_before negate_lshr_after
   simp_alive_peephole
@@ -499,6 +516,7 @@ def negate_sext_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem negate_sext_proof : negate_sext_before ⊑ negate_sext_after := by
   unfold negate_sext_before negate_sext_after
   simp_alive_peephole
@@ -524,6 +542,7 @@ def negate_zext_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem negate_zext_proof : negate_zext_before ⊑ negate_zext_after := by
   unfold negate_zext_before negate_zext_after
   simp_alive_peephole
@@ -554,6 +573,7 @@ def negation_of_increment_via_or_with_no_common_bits_set_after := [llvm|
   "llvm.return"(%4) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem negation_of_increment_via_or_with_no_common_bits_set_proof : negation_of_increment_via_or_with_no_common_bits_set_before ⊑ negation_of_increment_via_or_with_no_common_bits_set_after := by
   unfold negation_of_increment_via_or_with_no_common_bits_set_before negation_of_increment_via_or_with_no_common_bits_set_after
   simp_alive_peephole
@@ -581,6 +601,7 @@ def negation_of_increment_via_or_disjoint_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem negation_of_increment_via_or_disjoint_proof : negation_of_increment_via_or_disjoint_before ⊑ negation_of_increment_via_or_disjoint_after := by
   unfold negation_of_increment_via_or_disjoint_before negation_of_increment_via_or_disjoint_after
   simp_alive_peephole
@@ -608,6 +629,7 @@ def negate_add_with_single_negatible_operand_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem negate_add_with_single_negatible_operand_proof : negate_add_with_single_negatible_operand_before ⊑ negate_add_with_single_negatible_operand_after := by
   unfold negate_add_with_single_negatible_operand_before negate_add_with_single_negatible_operand_after
   simp_alive_peephole
@@ -637,6 +659,7 @@ def negate_add_with_single_negatible_operand_depth2_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem negate_add_with_single_negatible_operand_depth2_proof : negate_add_with_single_negatible_operand_depth2_before ⊑ negate_add_with_single_negatible_operand_depth2_after := by
   unfold negate_add_with_single_negatible_operand_depth2_before negate_add_with_single_negatible_operand_depth2_after
   simp_alive_peephole

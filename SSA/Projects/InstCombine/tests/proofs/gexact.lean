@@ -29,6 +29,7 @@ def sdiv2_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sdiv2_proof : sdiv2_before ⊑ sdiv2_after := by
   unfold sdiv2_before sdiv2_after
   simp_alive_peephole
@@ -53,6 +54,7 @@ def sdiv4_after := [llvm|
   "llvm.return"(%arg36) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sdiv4_proof : sdiv4_before ⊑ sdiv4_after := by
   unfold sdiv4_before sdiv4_after
   simp_alive_peephole
@@ -80,6 +82,7 @@ def sdiv6_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sdiv6_proof : sdiv6_before ⊑ sdiv6_after := by
   unfold sdiv6_before sdiv6_after
   simp_alive_peephole
@@ -103,6 +106,7 @@ def udiv1_after := [llvm|
   "llvm.return"(%arg32) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem udiv1_proof : udiv1_before ⊑ udiv1_after := by
   unfold udiv1_before udiv1_after
   simp_alive_peephole
@@ -128,6 +132,7 @@ def udiv2_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem udiv2_proof : udiv2_before ⊑ udiv2_after := by
   unfold udiv2_before udiv2_after
   simp_alive_peephole
@@ -155,6 +160,7 @@ def mul_of_udiv_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem mul_of_udiv_proof : mul_of_udiv_before ⊑ mul_of_udiv_after := by
   unfold mul_of_udiv_before mul_of_udiv_after
   simp_alive_peephole
@@ -184,6 +190,7 @@ def mul_of_sdiv_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem mul_of_sdiv_proof : mul_of_sdiv_before ⊑ mul_of_sdiv_after := by
   unfold mul_of_sdiv_before mul_of_sdiv_after
   simp_alive_peephole
@@ -213,6 +220,7 @@ def mul_of_udiv_fail_bad_remainder_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem mul_of_udiv_fail_bad_remainder_proof : mul_of_udiv_fail_bad_remainder_before ⊑ mul_of_udiv_fail_bad_remainder_after := by
   unfold mul_of_udiv_fail_bad_remainder_before mul_of_udiv_fail_bad_remainder_after
   simp_alive_peephole
@@ -240,6 +248,7 @@ def mul_of_sdiv_fail_ub_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem mul_of_sdiv_fail_ub_proof : mul_of_sdiv_fail_ub_before ⊑ mul_of_sdiv_fail_ub_after := by
   unfold mul_of_sdiv_fail_ub_before mul_of_sdiv_fail_ub_after
   simp_alive_peephole

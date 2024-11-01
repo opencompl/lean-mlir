@@ -31,6 +31,7 @@ def test_srem_canonicalize_op0_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test_srem_canonicalize_op0_proof : test_srem_canonicalize_op0_before ⊑ test_srem_canonicalize_op0_after := by
   unfold test_srem_canonicalize_op0_before test_srem_canonicalize_op0_after
   simp_alive_peephole

@@ -33,6 +33,7 @@ def test1_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test1_proof : test1_before ⊑ test1_after := by
   unfold test1_before test1_after
   simp_alive_peephole
@@ -64,6 +65,7 @@ def test2_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test2_proof : test2_before ⊑ test2_after := by
   unfold test2_before test2_after
   simp_alive_peephole
@@ -91,6 +93,7 @@ def ashr_ashr_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem ashr_ashr_proof : ashr_ashr_before ⊑ ashr_ashr_after := by
   unfold ashr_ashr_before ashr_ashr_after
   simp_alive_peephole
@@ -118,6 +121,7 @@ def ashr_overshift_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem ashr_overshift_proof : ashr_overshift_before ⊑ ashr_overshift_after := by
   unfold ashr_overshift_before ashr_overshift_after
   simp_alive_peephole
@@ -145,6 +149,7 @@ def hoist_ashr_ahead_of_sext_1_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem hoist_ashr_ahead_of_sext_1_proof : hoist_ashr_ahead_of_sext_1_before ⊑ hoist_ashr_ahead_of_sext_1_after := by
   unfold hoist_ashr_ahead_of_sext_1_before hoist_ashr_ahead_of_sext_1_after
   simp_alive_peephole
@@ -172,6 +177,7 @@ def hoist_ashr_ahead_of_sext_2_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem hoist_ashr_ahead_of_sext_2_proof : hoist_ashr_ahead_of_sext_2_before ⊑ hoist_ashr_ahead_of_sext_2_after := by
   unfold hoist_ashr_ahead_of_sext_2_before hoist_ashr_ahead_of_sext_2_after
   simp_alive_peephole

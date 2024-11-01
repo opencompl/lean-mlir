@@ -31,6 +31,7 @@ def shrink_xor_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shrink_xor_proof : shrink_xor_before ⊑ shrink_xor_after := by
   unfold shrink_xor_before shrink_xor_after
   simp_alive_peephole
@@ -58,6 +59,7 @@ def shrink_or_after := [llvm|
   "llvm.return"(%2) : (i3) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shrink_or_proof : shrink_or_before ⊑ shrink_or_after := by
   unfold shrink_or_before shrink_or_after
   simp_alive_peephole

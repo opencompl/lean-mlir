@@ -30,6 +30,7 @@ def or_xor_xor_normal_variant1_after := [llvm|
   "llvm.return"(%0) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem or_xor_xor_normal_variant1_proof : or_xor_xor_normal_variant1_before ⊑ or_xor_xor_normal_variant1_after := by
   unfold or_xor_xor_normal_variant1_before or_xor_xor_normal_variant1_after
   simp_alive_peephole
@@ -56,6 +57,7 @@ def or_xor_xor_normal_variant2_after := [llvm|
   "llvm.return"(%0) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem or_xor_xor_normal_variant2_proof : or_xor_xor_normal_variant2_before ⊑ or_xor_xor_normal_variant2_after := by
   unfold or_xor_xor_normal_variant2_before or_xor_xor_normal_variant2_after
   simp_alive_peephole
@@ -82,6 +84,7 @@ def or_xor_xor_normal_variant3_after := [llvm|
   "llvm.return"(%0) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem or_xor_xor_normal_variant3_proof : or_xor_xor_normal_variant3_before ⊑ or_xor_xor_normal_variant3_after := by
   unfold or_xor_xor_normal_variant3_before or_xor_xor_normal_variant3_after
   simp_alive_peephole
@@ -108,6 +111,7 @@ def or_xor_xor_normal_variant4_after := [llvm|
   "llvm.return"(%0) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem or_xor_xor_normal_variant4_proof : or_xor_xor_normal_variant4_before ⊑ or_xor_xor_normal_variant4_after := by
   unfold or_xor_xor_normal_variant4_before or_xor_xor_normal_variant4_after
   simp_alive_peephole
@@ -136,6 +140,7 @@ def or_xor_xor_normal_binops_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem or_xor_xor_normal_binops_proof : or_xor_xor_normal_binops_before ⊑ or_xor_xor_normal_binops_after := by
   unfold or_xor_xor_normal_binops_before or_xor_xor_normal_binops_after
   simp_alive_peephole

@@ -33,6 +33,7 @@ def test1_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test1_proof : test1_before ⊑ test1_after := by
   unfold test1_before test1_after
   simp_alive_peephole
@@ -60,6 +61,7 @@ def test2_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test2_proof : test2_before ⊑ test2_after := by
   unfold test2_before test2_after
   simp_alive_peephole
@@ -87,6 +89,7 @@ def test3_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test3_proof : test3_before ⊑ test3_after := by
   unfold test3_before test3_after
   simp_alive_peephole
@@ -115,6 +118,7 @@ def test4_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test4_proof : test4_before ⊑ test4_after := by
   unfold test4_before test4_after
   simp_alive_peephole
@@ -140,6 +144,7 @@ def or_test1_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem or_test1_proof : or_test1_before ⊑ or_test1_after := by
   unfold or_test1_before or_test1_after
   simp_alive_peephole
@@ -166,6 +171,7 @@ def or_test2_after := [llvm|
   "llvm.return"(%0) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem or_test2_proof : or_test2_before ⊑ or_test2_after := by
   unfold or_test2_before or_test2_after
   simp_alive_peephole

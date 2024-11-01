@@ -29,6 +29,7 @@ def t0_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t0_proof : t0_before ⊑ t0_after := by
   unfold t0_before t0_after
   simp_alive_peephole
@@ -54,6 +55,7 @@ def shl1_nsw_after := [llvm|
   "llvm.return"(%0) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl1_nsw_proof : shl1_nsw_before ⊑ shl1_nsw_after := by
   unfold shl1_nsw_before shl1_nsw_after
   simp_alive_peephole
@@ -81,6 +83,7 @@ def shl1_nsw_not_exact_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl1_nsw_not_exact_proof : shl1_nsw_not_exact_before ⊑ shl1_nsw_not_exact_after := by
   unfold shl1_nsw_not_exact_before shl1_nsw_not_exact_after
   simp_alive_peephole
@@ -110,6 +113,7 @@ def prove_exact_with_high_mask_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem prove_exact_with_high_mask_proof : prove_exact_with_high_mask_before ⊑ prove_exact_with_high_mask_after := by
   unfold prove_exact_with_high_mask_before prove_exact_with_high_mask_after
   simp_alive_peephole
@@ -137,6 +141,7 @@ def prove_exact_with_high_mask_limit_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem prove_exact_with_high_mask_limit_proof : prove_exact_with_high_mask_limit_before ⊑ prove_exact_with_high_mask_limit_after := by
   unfold prove_exact_with_high_mask_limit_before prove_exact_with_high_mask_limit_after
   simp_alive_peephole

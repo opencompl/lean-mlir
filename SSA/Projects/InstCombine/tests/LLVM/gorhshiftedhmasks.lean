@@ -43,6 +43,7 @@ def or_and_shifts1_after := [llvm|
   "llvm.return"(%8) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem or_and_shifts1_proof : or_and_shifts1_before ⊑ or_and_shifts1_after := by
   unfold or_and_shifts1_before or_and_shifts1_after
   simp_alive_peephole
@@ -82,6 +83,7 @@ def or_and_shift_shift_and_after := [llvm|
   "llvm.return"(%8) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem or_and_shift_shift_and_proof : or_and_shift_shift_and_before ⊑ or_and_shift_shift_and_after := by
   unfold or_and_shift_shift_and_before or_and_shift_shift_and_after
   simp_alive_peephole
@@ -128,6 +130,7 @@ def multiuse1_after := [llvm|
   "llvm.return"(%11) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem multiuse1_proof : multiuse1_before ⊑ multiuse1_after := by
   unfold multiuse1_before multiuse1_after
   simp_alive_peephole
@@ -185,6 +188,7 @@ def multiuse2_after := [llvm|
   "llvm.return"(%16) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem multiuse2_proof : multiuse2_before ⊑ multiuse2_after := by
   unfold multiuse2_before multiuse2_after
   simp_alive_peephole
@@ -234,6 +238,7 @@ def multiuse3_after := [llvm|
   "llvm.return"(%12) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem multiuse3_proof : multiuse3_before ⊑ multiuse3_after := by
   unfold multiuse3_before multiuse3_after
   simp_alive_peephole
@@ -265,6 +270,7 @@ def shl_mask_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_mask_proof : shl_mask_before ⊑ shl_mask_after := by
   unfold shl_mask_before shl_mask_after
   simp_alive_peephole
@@ -296,6 +302,7 @@ def shl_mask_wrong_shl_const_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_mask_wrong_shl_const_proof : shl_mask_wrong_shl_const_before ⊑ shl_mask_wrong_shl_const_after := by
   unfold shl_mask_wrong_shl_const_before shl_mask_wrong_shl_const_after
   simp_alive_peephole
@@ -327,6 +334,7 @@ def shl_mask_weird_type_after := [llvm|
   "llvm.return"(%4) : (i37) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_mask_weird_type_proof : shl_mask_weird_type_before ⊑ shl_mask_weird_type_after := by
   unfold shl_mask_weird_type_before shl_mask_weird_type_after
   simp_alive_peephole
@@ -362,6 +370,7 @@ def shl_mul_mask_after := [llvm|
   "llvm.return"(%6) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_mul_mask_proof : shl_mul_mask_before ⊑ shl_mul_mask_after := by
   unfold shl_mul_mask_before shl_mul_mask_after
   simp_alive_peephole
@@ -397,6 +406,7 @@ def shl_mul_mask_wrong_mul_const_after := [llvm|
   "llvm.return"(%6) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_mul_mask_wrong_mul_const_proof : shl_mul_mask_wrong_mul_const_before ⊑ shl_mul_mask_wrong_mul_const_after := by
   unfold shl_mul_mask_wrong_mul_const_before shl_mul_mask_wrong_mul_const_after
   simp_alive_peephole

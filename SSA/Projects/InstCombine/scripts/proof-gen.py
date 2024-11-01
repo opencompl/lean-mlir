@@ -104,7 +104,7 @@ def main():
                 print(file_path)
                 worklist.append(file_path)
     print(f"worklist = {worklist}")
-    with Pool(2) as p:
+    with Pool(12) as p:
         p.map(process_file, worklist)
 
 

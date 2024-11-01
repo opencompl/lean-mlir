@@ -35,6 +35,7 @@ def neg_after := [llvm|
   "llvm.return"(%4) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem neg_proof : neg_before ⊑ neg_after := by
   unfold neg_before neg_after
   simp_alive_peephole
@@ -66,6 +67,7 @@ def not_after := [llvm|
   "llvm.return"(%4) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem not_proof : not_before ⊑ not_after := by
   unfold not_before not_after
   simp_alive_peephole

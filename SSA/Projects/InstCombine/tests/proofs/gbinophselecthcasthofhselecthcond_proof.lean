@@ -5,8 +5,8 @@ open BitVec
 open LLVM
 
 section gbinophselecthcasthofhselecthcond_proof
-theorem add_select_zext_thm :
-  ∀ (e : IntW 1), add (select e (const? 64) (const? 1)) (zext 64 e) ⊑ select e (const? 65) (const? 1) := by 
+theorem add_select_zext_thm (e✝ : IntW 1) :
+  add (select e✝ (const? 64) (const? 1)) (zext 64 e✝) ⊑ select e✝ (const? 65) (const? 1) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -14,8 +14,8 @@ theorem add_select_zext_thm :
     all_goals sorry
 
 
-theorem add_select_sext_thm :
-  ∀ (e : IntW 1), add (select e (const? 64) (const? 1)) (sext 64 e) ⊑ select e (const? 63) (const? 1) := by 
+theorem add_select_sext_thm (e✝ : IntW 1) :
+  add (select e✝ (const? 64) (const? 1)) (sext 64 e✝) ⊑ select e✝ (const? 63) (const? 1) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -23,9 +23,8 @@ theorem add_select_sext_thm :
     all_goals sorry
 
 
-theorem add_select_not_zext_thm :
-  ∀ (e : IntW 1),
-    add (select e (const? 64) (const? 1)) (zext 64 (LLVM.xor e (const? 1))) ⊑ select e (const? 64) (const? 2) := by 
+theorem add_select_not_zext_thm (e✝ : IntW 1) :
+  add (select e✝ (const? 64) (const? 1)) (zext 64 (LLVM.xor e✝ (const? 1))) ⊑ select e✝ (const? 64) (const? 2) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -33,9 +32,8 @@ theorem add_select_not_zext_thm :
     all_goals sorry
 
 
-theorem add_select_not_sext_thm :
-  ∀ (e : IntW 1),
-    add (select e (const? 64) (const? 1)) (sext 64 (LLVM.xor e (const? 1))) ⊑ select e (const? 64) (const? 0) := by 
+theorem add_select_not_sext_thm (e✝ : IntW 1) :
+  add (select e✝ (const? 64) (const? 1)) (sext 64 (LLVM.xor e✝ (const? 1))) ⊑ select e✝ (const? 64) (const? 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -43,8 +41,8 @@ theorem add_select_not_sext_thm :
     all_goals sorry
 
 
-theorem sub_select_sext_thm :
-  ∀ (e : IntW 64) (e_1 : IntW 1), sub (select e_1 (const? 64) e) (sext 64 e_1) ⊑ select e_1 (const? 65) e := by 
+theorem sub_select_sext_thm (e✝ : IntW 64) (e✝¹ : IntW 1) :
+  sub (select e✝¹ (const? 64) e✝) (sext 64 e✝¹) ⊑ select e✝¹ (const? 65) e✝ := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -52,9 +50,8 @@ theorem sub_select_sext_thm :
     all_goals sorry
 
 
-theorem sub_select_not_zext_thm :
-  ∀ (e : IntW 64) (e_1 : IntW 1),
-    sub (select e_1 e (const? 64)) (zext 64 (LLVM.xor e_1 (const? 1))) ⊑ select e_1 e (const? 63) := by 
+theorem sub_select_not_zext_thm (e✝ : IntW 64) (e✝¹ : IntW 1) :
+  sub (select e✝¹ e✝ (const? 64)) (zext 64 (LLVM.xor e✝¹ (const? 1))) ⊑ select e✝¹ e✝ (const? 63) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -62,9 +59,8 @@ theorem sub_select_not_zext_thm :
     all_goals sorry
 
 
-theorem sub_select_not_sext_thm :
-  ∀ (e : IntW 64) (e_1 : IntW 1),
-    sub (select e_1 e (const? 64)) (sext 64 (LLVM.xor e_1 (const? 1))) ⊑ select e_1 e (const? 65) := by 
+theorem sub_select_not_sext_thm (e✝ : IntW 64) (e✝¹ : IntW 1) :
+  sub (select e✝¹ e✝ (const? 64)) (sext 64 (LLVM.xor e✝¹ (const? 1))) ⊑ select e✝¹ e✝ (const? 65) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -72,8 +68,8 @@ theorem sub_select_not_sext_thm :
     all_goals sorry
 
 
-theorem mul_select_zext_thm :
-  ∀ (e : IntW 64) (e_1 : IntW 1), mul (select e_1 e (const? 1)) (zext 64 e_1) ⊑ select e_1 e (const? 0) := by 
+theorem mul_select_zext_thm (e✝ : IntW 64) (e✝¹ : IntW 1) :
+  mul (select e✝¹ e✝ (const? 1)) (zext 64 e✝¹) ⊑ select e✝¹ e✝ (const? 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -81,8 +77,8 @@ theorem mul_select_zext_thm :
     all_goals sorry
 
 
-theorem mul_select_sext_thm :
-  ∀ (e : IntW 1), mul (select e (const? 64) (const? 1)) (sext 64 e) ⊑ select e (const? (-64)) (const? 0) := by 
+theorem mul_select_sext_thm (e✝ : IntW 1) :
+  mul (select e✝ (const? 64) (const? 1)) (sext 64 e✝) ⊑ select e✝ (const? (-64)) (const? 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -90,10 +86,9 @@ theorem mul_select_sext_thm :
     all_goals sorry
 
 
-theorem select_zext_different_condition_thm :
-  ∀ (e e_1 : IntW 1),
-    add (select e_1 (const? 64) (const? 1)) (zext 64 e) ⊑
-      add (select e_1 (const? 64) (const? 1)) (zext 64 e) { «nsw» := true, «nuw» := true } := by 
+theorem select_zext_different_condition_thm (e✝ e✝¹ : IntW 1) :
+  add (select e✝¹ (const? 64) (const? 1)) (zext 64 e✝) ⊑
+    add (select e✝¹ (const? 64) (const? 1)) (zext 64 e✝) { «nsw» := true, «nuw» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -101,9 +96,8 @@ theorem select_zext_different_condition_thm :
     all_goals sorry
 
 
-theorem multiuse_add_thm :
-  ∀ (e : IntW 1),
-    add (add (select e (const? 64) (const? 1)) (zext 64 e)) (const? 1) ⊑ select e (const? 66) (const? 2) := by 
+theorem multiuse_add_thm (e✝ : IntW 1) :
+  add (add (select e✝ (const? 64) (const? 1)) (zext 64 e✝)) (const? 1) ⊑ select e✝ (const? 66) (const? 2) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -111,10 +105,9 @@ theorem multiuse_add_thm :
     all_goals sorry
 
 
-theorem multiuse_select_thm :
-  ∀ (e : IntW 1),
-    mul (select e (const? 64) (const? 0)) (sub (select e (const? 64) (const? 0)) (zext 64 e)) ⊑
-      select e (const? 4032) (const? 0) := by 
+theorem multiuse_select_thm (e✝ : IntW 1) :
+  mul (select e✝ (const? 64) (const? 0)) (sub (select e✝ (const? 64) (const? 0)) (zext 64 e✝)) ⊑
+    select e✝ (const? 4032) (const? 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -122,9 +115,8 @@ theorem multiuse_select_thm :
     all_goals sorry
 
 
-theorem select_non_const_sides_thm :
-  ∀ (e e_1 : IntW 64) (e_2 : IntW 1),
-    sub (select e_2 e_1 e) (zext 64 e_2) ⊑ select e_2 (add e_1 (const? (-1))) e := by 
+theorem select_non_const_sides_thm (e✝ e✝¹ : IntW 64) (e✝² : IntW 1) :
+  sub (select e✝² e✝¹ e✝) (zext 64 e✝²) ⊑ select e✝² (add e✝¹ (const? (-1))) e✝ := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -132,9 +124,8 @@ theorem select_non_const_sides_thm :
     all_goals sorry
 
 
-theorem sub_select_sext_op_swapped_non_const_args_thm :
-  ∀ (e e_1 : IntW 6) (e_2 : IntW 1),
-    sub (sext 6 e_2) (select e_2 e_1 e) ⊑ select e_2 (LLVM.xor e_1 (const? (-1))) (sub (const? 0) e) := by 
+theorem sub_select_sext_op_swapped_non_const_args_thm (e✝ e✝¹ : IntW 6) (e✝² : IntW 1) :
+  sub (sext 6 e✝²) (select e✝² e✝¹ e✝) ⊑ select e✝² (LLVM.xor e✝¹ (const? (-1))) (sub (const? 0) e✝) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -142,9 +133,8 @@ theorem sub_select_sext_op_swapped_non_const_args_thm :
     all_goals sorry
 
 
-theorem sub_select_zext_op_swapped_non_const_args_thm :
-  ∀ (e e_1 : IntW 6) (e_2 : IntW 1),
-    sub (zext 6 e_2) (select e_2 e_1 e) ⊑ select e_2 (sub (const? 1) e_1) (sub (const? 0) e) := by 
+theorem sub_select_zext_op_swapped_non_const_args_thm (e✝ e✝¹ : IntW 6) (e✝² : IntW 1) :
+  sub (zext 6 e✝²) (select e✝² e✝¹ e✝) ⊑ select e✝² (sub (const? 1) e✝¹) (sub (const? 0) e✝) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

@@ -30,6 +30,7 @@ def udiv_common_divisor_after := [llvm|
   "llvm.return"(%1) : (i5) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem udiv_common_divisor_proof : udiv_common_divisor_before ⊑ udiv_common_divisor_after := by
   unfold udiv_common_divisor_before udiv_common_divisor_after
   simp_alive_peephole
@@ -56,6 +57,7 @@ def urem_common_divisor_after := [llvm|
   "llvm.return"(%1) : (i5) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem urem_common_divisor_proof : urem_common_divisor_before ⊑ urem_common_divisor_after := by
   unfold urem_common_divisor_before urem_common_divisor_after
   simp_alive_peephole
@@ -82,6 +84,7 @@ def sdiv_common_divisor_defined_cond_after := [llvm|
   "llvm.return"(%1) : (i5) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sdiv_common_divisor_defined_cond_proof : sdiv_common_divisor_defined_cond_before ⊑ sdiv_common_divisor_defined_cond_after := by
   unfold sdiv_common_divisor_defined_cond_before sdiv_common_divisor_defined_cond_after
   simp_alive_peephole
@@ -108,6 +111,7 @@ def srem_common_divisor_defined_cond_after := [llvm|
   "llvm.return"(%1) : (i5) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem srem_common_divisor_defined_cond_proof : srem_common_divisor_defined_cond_before ⊑ srem_common_divisor_defined_cond_after := by
   unfold srem_common_divisor_defined_cond_before srem_common_divisor_defined_cond_after
   simp_alive_peephole
@@ -134,6 +138,7 @@ def udiv_common_divisor_defined_cond_after := [llvm|
   "llvm.return"(%1) : (i5) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem udiv_common_divisor_defined_cond_proof : udiv_common_divisor_defined_cond_before ⊑ udiv_common_divisor_defined_cond_after := by
   unfold udiv_common_divisor_defined_cond_before udiv_common_divisor_defined_cond_after
   simp_alive_peephole
@@ -160,6 +165,7 @@ def urem_common_divisor_defined_cond_after := [llvm|
   "llvm.return"(%1) : (i5) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem urem_common_divisor_defined_cond_proof : urem_common_divisor_defined_cond_before ⊑ urem_common_divisor_defined_cond_after := by
   unfold urem_common_divisor_defined_cond_before urem_common_divisor_defined_cond_after
   simp_alive_peephole
@@ -186,6 +192,7 @@ def sdiv_common_dividend_defined_cond_after := [llvm|
   "llvm.return"(%1) : (i5) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sdiv_common_dividend_defined_cond_proof : sdiv_common_dividend_defined_cond_before ⊑ sdiv_common_dividend_defined_cond_after := by
   unfold sdiv_common_dividend_defined_cond_before sdiv_common_dividend_defined_cond_after
   simp_alive_peephole
@@ -212,6 +219,7 @@ def srem_common_dividend_defined_cond_after := [llvm|
   "llvm.return"(%1) : (i5) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem srem_common_dividend_defined_cond_proof : srem_common_dividend_defined_cond_before ⊑ srem_common_dividend_defined_cond_after := by
   unfold srem_common_dividend_defined_cond_before srem_common_dividend_defined_cond_after
   simp_alive_peephole
@@ -238,6 +246,7 @@ def udiv_common_dividend_defined_cond_after := [llvm|
   "llvm.return"(%1) : (i5) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem udiv_common_dividend_defined_cond_proof : udiv_common_dividend_defined_cond_before ⊑ udiv_common_dividend_defined_cond_after := by
   unfold udiv_common_dividend_defined_cond_before udiv_common_dividend_defined_cond_after
   simp_alive_peephole
@@ -264,6 +273,7 @@ def urem_common_dividend_defined_cond_after := [llvm|
   "llvm.return"(%1) : (i5) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem urem_common_dividend_defined_cond_proof : urem_common_dividend_defined_cond_before ⊑ urem_common_dividend_defined_cond_after := by
   unfold urem_common_dividend_defined_cond_before urem_common_dividend_defined_cond_after
   simp_alive_peephole

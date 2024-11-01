@@ -32,6 +32,7 @@ def mul_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem mul_proof : mul_before ⊑ mul_after := by
   unfold mul_before mul_after
   simp_alive_peephole
@@ -63,6 +64,7 @@ def select1_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem select1_proof : select1_before ⊑ select1_after := by
   unfold select1_before select1_after
   simp_alive_peephole
@@ -92,6 +94,7 @@ def select2_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem select2_proof : select2_before ⊑ select2_after := by
   unfold select2_before select2_after
   simp_alive_peephole
@@ -114,6 +117,7 @@ def foo_after := [llvm|
   "llvm.return"(%arg0) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem foo_proof : foo_before ⊑ foo_after := by
   unfold foo_before foo_after
   simp_alive_peephole

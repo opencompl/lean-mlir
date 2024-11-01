@@ -37,6 +37,7 @@ def a_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem a_proof : a_before ⊑ a_after := by
   unfold a_before a_after
   simp_alive_peephole
@@ -71,6 +72,7 @@ def PR30273_three_bools_after := [llvm|
   "llvm.return"(%6) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem PR30273_three_bools_proof : PR30273_three_bools_before ⊑ PR30273_three_bools_after := by
   unfold PR30273_three_bools_before PR30273_three_bools_after
   simp_alive_peephole
@@ -98,6 +100,7 @@ def zext_add_scalar_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem zext_add_scalar_proof : zext_add_scalar_before ⊑ zext_add_scalar_after := by
   unfold zext_add_scalar_before zext_add_scalar_after
   simp_alive_peephole
@@ -123,6 +126,7 @@ def zext_negate_after := [llvm|
   "llvm.return"(%0) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem zext_negate_proof : zext_negate_before ⊑ zext_negate_after := by
   unfold zext_negate_before zext_negate_after
   simp_alive_peephole
@@ -150,6 +154,7 @@ def zext_sub_const_after := [llvm|
   "llvm.return"(%2) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem zext_sub_const_proof : zext_sub_const_before ⊑ zext_sub_const_after := by
   unfold zext_sub_const_before zext_sub_const_after
   simp_alive_peephole
@@ -175,6 +180,7 @@ def sext_negate_after := [llvm|
   "llvm.return"(%0) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sext_negate_proof : sext_negate_before ⊑ sext_negate_after := by
   unfold sext_negate_before sext_negate_after
   simp_alive_peephole
@@ -202,6 +208,7 @@ def sext_sub_const_after := [llvm|
   "llvm.return"(%2) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sext_sub_const_proof : sext_sub_const_before ⊑ sext_sub_const_after := by
   unfold sext_sub_const_before sext_sub_const_after
   simp_alive_peephole
@@ -227,6 +234,7 @@ def sext_sub_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sext_sub_proof : sext_sub_before ⊑ sext_sub_after := by
   unfold sext_sub_before sext_sub_after
   simp_alive_peephole
@@ -252,6 +260,7 @@ def sext_sub_nuw_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sext_sub_nuw_proof : sext_sub_nuw_before ⊑ sext_sub_nuw_after := by
   unfold sext_sub_nuw_before sext_sub_nuw_after
   simp_alive_peephole
@@ -277,6 +286,7 @@ def sextbool_add_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sextbool_add_proof : sextbool_add_before ⊑ sextbool_add_after := by
   unfold sextbool_add_before sextbool_add_after
   simp_alive_peephole
@@ -306,6 +316,7 @@ def sextbool_add_commute_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sextbool_add_commute_proof : sextbool_add_commute_before ⊑ sextbool_add_commute_after := by
   unfold sextbool_add_commute_before sextbool_add_commute_after
   simp_alive_peephole

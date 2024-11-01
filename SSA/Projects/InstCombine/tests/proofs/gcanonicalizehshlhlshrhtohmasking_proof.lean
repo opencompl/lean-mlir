@@ -5,7 +5,7 @@ open BitVec
 open LLVM
 
 section gcanonicalizehshlhlshrhtohmasking_proof
-theorem positive_samevar_thm : ∀ (e e_1 : IntW 32), lshr (shl e_1 e) e ⊑ LLVM.and (lshr (const? (-1)) e) e_1 := by 
+theorem positive_samevar_thm (e✝ e✝¹ : IntW 32) : lshr (shl e✝¹ e✝) e✝ ⊑ LLVM.and (lshr (const? (-1)) e✝) e✝¹ := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -13,7 +13,7 @@ theorem positive_samevar_thm : ∀ (e e_1 : IntW 32), lshr (shl e_1 e) e ⊑ LLV
     all_goals sorry
 
 
-theorem positive_sameconst_thm : ∀ (e : IntW 32), lshr (shl e (const? 5)) (const? 5) ⊑ LLVM.and e (const? 134217727) := by 
+theorem positive_sameconst_thm (e✝ : IntW 32) : lshr (shl e✝ (const? 5)) (const? 5) ⊑ LLVM.and e✝ (const? 134217727) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -21,8 +21,8 @@ theorem positive_sameconst_thm : ∀ (e : IntW 32), lshr (shl e (const? 5)) (con
     all_goals sorry
 
 
-theorem positive_biggerShl_thm :
-  ∀ (e : IntW 32), lshr (shl e (const? 10)) (const? 5) ⊑ LLVM.and (shl e (const? 5)) (const? 134217696) := by 
+theorem positive_biggerShl_thm (e✝ : IntW 32) :
+  lshr (shl e✝ (const? 10)) (const? 5) ⊑ LLVM.and (shl e✝ (const? 5)) (const? 134217696) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -30,8 +30,8 @@ theorem positive_biggerShl_thm :
     all_goals sorry
 
 
-theorem positive_biggerLshr_thm :
-  ∀ (e : IntW 32), lshr (shl e (const? 5)) (const? 10) ⊑ LLVM.and (lshr e (const? 5)) (const? 4194303) := by 
+theorem positive_biggerLshr_thm (e✝ : IntW 32) :
+  lshr (shl e✝ (const? 5)) (const? 10) ⊑ LLVM.and (lshr e✝ (const? 5)) (const? 4194303) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -39,8 +39,8 @@ theorem positive_biggerLshr_thm :
     all_goals sorry
 
 
-theorem positive_biggerLshr_lshrexact_thm :
-  ∀ (e : IntW 32), lshr (shl e (const? 5)) (const? 10) ⊑ LLVM.and (lshr e (const? 5)) (const? 4194303) := by 
+theorem positive_biggerLshr_lshrexact_thm (e✝ : IntW 32) :
+  lshr (shl e✝ (const? 5)) (const? 10) ⊑ LLVM.and (lshr e✝ (const? 5)) (const? 4194303) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -48,7 +48,7 @@ theorem positive_biggerLshr_lshrexact_thm :
     all_goals sorry
 
 
-theorem positive_samevar_shlnuw_thm : ∀ (e e_1 : IntW 32), lshr (shl e_1 e { «nsw» := false, «nuw» := true }) e ⊑ e_1 := by 
+theorem positive_samevar_shlnuw_thm (e✝ e✝¹ : IntW 32) : lshr (shl e✝¹ e✝ { «nsw» := false, «nuw» := true }) e✝ ⊑ e✝¹ := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -56,7 +56,7 @@ theorem positive_samevar_shlnuw_thm : ∀ (e e_1 : IntW 32), lshr (shl e_1 e { �
     all_goals sorry
 
 
-theorem positive_sameconst_shlnuw_thm : ∀ (e : IntW 32), lshr (shl e (const? 5) { «nsw» := false, «nuw» := true }) (const? 5) ⊑ e := by 
+theorem positive_sameconst_shlnuw_thm (e✝ : IntW 32) : lshr (shl e✝ (const? 5) { «nsw» := false, «nuw» := true }) (const? 5) ⊑ e✝ := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -64,10 +64,9 @@ theorem positive_sameconst_shlnuw_thm : ∀ (e : IntW 32), lshr (shl e (const? 5
     all_goals sorry
 
 
-theorem positive_biggerShl_shlnuw_thm :
-  ∀ (e : IntW 32),
-    lshr (shl e (const? 10) { «nsw» := false, «nuw» := true }) (const? 5) ⊑
-      shl e (const? 5) { «nsw» := true, «nuw» := true } := by 
+theorem positive_biggerShl_shlnuw_thm (e✝ : IntW 32) :
+  lshr (shl e✝ (const? 10) { «nsw» := false, «nuw» := true }) (const? 5) ⊑
+    shl e✝ (const? 5) { «nsw» := true, «nuw» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -75,8 +74,8 @@ theorem positive_biggerShl_shlnuw_thm :
     all_goals sorry
 
 
-theorem positive_biggerLshr_shlnuw_thm :
-  ∀ (e : IntW 32), lshr (shl e (const? 5) { «nsw» := false, «nuw» := true }) (const? 10) ⊑ lshr e (const? 5) := by 
+theorem positive_biggerLshr_shlnuw_thm (e✝ : IntW 32) :
+  lshr (shl e✝ (const? 5) { «nsw» := false, «nuw» := true }) (const? 10) ⊑ lshr e✝ (const? 5) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -84,8 +83,8 @@ theorem positive_biggerLshr_shlnuw_thm :
     all_goals sorry
 
 
-theorem positive_biggerLshr_shlnuw_lshrexact_thm :
-  ∀ (e : IntW 32), lshr (shl e (const? 5) { «nsw» := false, «nuw» := true }) (const? 10) ⊑ lshr e (const? 5) := by 
+theorem positive_biggerLshr_shlnuw_lshrexact_thm (e✝ : IntW 32) :
+  lshr (shl e✝ (const? 5) { «nsw» := false, «nuw» := true }) (const? 10) ⊑ lshr e✝ (const? 5) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

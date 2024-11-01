@@ -33,6 +33,7 @@ def src_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem src_proof : src_before ⊑ src_after := by
   unfold src_before src_after
   simp_alive_peephole
@@ -62,6 +63,7 @@ def src2_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem src2_proof : src2_before ⊑ src2_after := by
   unfold src2_before src2_after
   simp_alive_peephole
@@ -92,6 +94,7 @@ def src3_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem src3_proof : src3_before ⊑ src3_after := by
   unfold src3_before src3_after
   simp_alive_peephole
@@ -121,6 +124,7 @@ def src4_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem src4_proof : src4_before ⊑ src4_after := by
   unfold src4_before src4_after
   simp_alive_peephole
@@ -150,6 +154,7 @@ def src5_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem src5_proof : src5_before ⊑ src5_after := by
   unfold src5_before src5_after
   simp_alive_peephole

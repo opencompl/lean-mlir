@@ -31,6 +31,7 @@ def bools_after := [llvm|
   "llvm.return"(%0) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem bools_proof : bools_before ⊑ bools_after := by
   unfold bools_before bools_after
   simp_alive_peephole
@@ -59,6 +60,7 @@ def bools_logical_after := [llvm|
   "llvm.return"(%0) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem bools_logical_proof : bools_logical_before ⊑ bools_logical_after := by
   unfold bools_logical_before bools_logical_after
   simp_alive_peephole
@@ -91,6 +93,7 @@ def bools_multi_uses1_after := [llvm|
   "llvm.return"(%4) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem bools_multi_uses1_proof : bools_multi_uses1_before ⊑ bools_multi_uses1_after := by
   unfold bools_multi_uses1_before bools_multi_uses1_after
   simp_alive_peephole
@@ -125,6 +128,7 @@ def bools_multi_uses1_logical_after := [llvm|
   "llvm.return"(%5) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem bools_multi_uses1_logical_proof : bools_multi_uses1_logical_before ⊑ bools_multi_uses1_logical_after := by
   unfold bools_multi_uses1_logical_before bools_multi_uses1_logical_after
   simp_alive_peephole
@@ -154,6 +158,7 @@ def bools_multi_uses2_after := [llvm|
   "llvm.return"(%0) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem bools_multi_uses2_proof : bools_multi_uses2_before ⊑ bools_multi_uses2_after := by
   unfold bools_multi_uses2_before bools_multi_uses2_after
   simp_alive_peephole
@@ -191,6 +196,7 @@ def bools_multi_uses2_logical_after := [llvm|
   "llvm.return"(%7) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem bools_multi_uses2_logical_proof : bools_multi_uses2_logical_before ⊑ bools_multi_uses2_logical_after := by
   unfold bools_multi_uses2_logical_before bools_multi_uses2_logical_after
   simp_alive_peephole

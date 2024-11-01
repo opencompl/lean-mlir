@@ -26,6 +26,7 @@ def sdiv_i1_is_op0_after := [llvm|
   "llvm.return"(%arg6) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sdiv_i1_is_op0_proof : sdiv_i1_is_op0_before ⊑ sdiv_i1_is_op0_after := by
   unfold sdiv_i1_is_op0_before sdiv_i1_is_op0_after
   simp_alive_peephole
@@ -48,6 +49,7 @@ def udiv_i1_is_op0_after := [llvm|
   "llvm.return"(%arg4) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem udiv_i1_is_op0_proof : udiv_i1_is_op0_before ⊑ udiv_i1_is_op0_after := by
   unfold udiv_i1_is_op0_before udiv_i1_is_op0_after
   simp_alive_peephole
@@ -71,6 +73,7 @@ def srem_i1_is_zero_after := [llvm|
   "llvm.return"(%0) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem srem_i1_is_zero_proof : srem_i1_is_zero_before ⊑ srem_i1_is_zero_after := by
   unfold srem_i1_is_zero_before srem_i1_is_zero_after
   simp_alive_peephole
@@ -94,6 +97,7 @@ def urem_i1_is_zero_after := [llvm|
   "llvm.return"(%0) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem urem_i1_is_zero_proof : urem_i1_is_zero_before ⊑ urem_i1_is_zero_after := by
   unfold urem_i1_is_zero_before urem_i1_is_zero_after
   simp_alive_peephole

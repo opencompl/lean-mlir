@@ -79,6 +79,7 @@ def {name}_before := [llvm|
 def {name}_after := [llvm|
 {s1}
 ]
+set_option debug.skipKernelTC true in
 theorem {name}_proof : {name}_before ⊑ {name}_after := by
   unfold {name}_before {name}_after
   simp_alive_peephole

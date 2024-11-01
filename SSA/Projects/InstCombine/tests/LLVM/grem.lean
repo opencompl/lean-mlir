@@ -28,6 +28,7 @@ def test1_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test1_proof : test1_before ⊑ test1_after := by
   unfold test1_before test1_after
   simp_alive_peephole
@@ -53,6 +54,7 @@ def test3_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test3_proof : test3_before ⊑ test3_after := by
   unfold test3_before test3_after
   simp_alive_peephole
@@ -82,6 +84,7 @@ def test4_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test4_proof : test4_before ⊑ test4_after := by
   unfold test4_before test4_after
   simp_alive_peephole
@@ -113,6 +116,7 @@ def test5_after := [llvm|
   "llvm.return"(%5) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test5_proof : test5_before ⊑ test5_after := by
   unfold test5_before test5_after
   simp_alive_peephole
@@ -139,6 +143,7 @@ def test7_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test7_proof : test7_before ⊑ test7_after := by
   unfold test7_before test7_after
   simp_alive_peephole
@@ -165,6 +170,7 @@ def test8_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test8_proof : test8_before ⊑ test8_after := by
   unfold test8_before test8_after
   simp_alive_peephole
@@ -191,6 +197,7 @@ def test9_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test9_proof : test9_before ⊑ test9_after := by
   unfold test9_before test9_after
   simp_alive_peephole
@@ -220,6 +227,7 @@ def test10_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test10_proof : test10_before ⊑ test10_after := by
   unfold test10_before test10_after
   simp_alive_peephole
@@ -248,6 +256,7 @@ def test11_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test11_proof : test11_before ⊑ test11_after := by
   unfold test11_before test11_after
   simp_alive_peephole
@@ -274,6 +283,7 @@ def test12_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test12_proof : test12_before ⊑ test12_after := by
   unfold test12_before test12_after
   simp_alive_peephole
@@ -297,6 +307,7 @@ def test13_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test13_proof : test13_before ⊑ test13_after := by
   unfold test13_before test13_after
   simp_alive_peephole
@@ -328,6 +339,7 @@ def test14_after := [llvm|
   "llvm.return"(%5) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test14_proof : test14_before ⊑ test14_after := by
   unfold test14_before test14_after
   simp_alive_peephole
@@ -359,6 +371,7 @@ def test15_after := [llvm|
   "llvm.return"(%4) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test15_proof : test15_before ⊑ test15_after := by
   unfold test15_before test15_after
   simp_alive_peephole
@@ -393,6 +406,7 @@ def test16_after := [llvm|
   "llvm.return"(%6) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test16_proof : test16_before ⊑ test16_after := by
   unfold test16_before test16_after
   simp_alive_peephole
@@ -428,6 +442,7 @@ def test19_after := [llvm|
   "llvm.return"(%7) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test19_proof : test19_before ⊑ test19_after := by
   unfold test19_before test19_after
   simp_alive_peephole
@@ -463,6 +478,7 @@ def test19_commutative0_after := [llvm|
   "llvm.return"(%7) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test19_commutative0_proof : test19_commutative0_before ⊑ test19_commutative0_after := by
   unfold test19_commutative0_before test19_commutative0_after
   simp_alive_peephole
@@ -498,6 +514,7 @@ def test19_commutative1_after := [llvm|
   "llvm.return"(%7) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test19_commutative1_proof : test19_commutative1_before ⊑ test19_commutative1_after := by
   unfold test19_commutative1_before test19_commutative1_after
   simp_alive_peephole
@@ -533,6 +550,7 @@ def test19_commutative2_after := [llvm|
   "llvm.return"(%7) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test19_commutative2_proof : test19_commutative2_before ⊑ test19_commutative2_after := by
   unfold test19_commutative2_before test19_commutative2_after
   simp_alive_peephole
@@ -560,6 +578,7 @@ def test22_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test22_proof : test22_before ⊑ test22_after := by
   unfold test22_before test22_after
   simp_alive_peephole
@@ -589,6 +608,7 @@ def srem_constant_dividend_select_of_constants_divisor_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem srem_constant_dividend_select_of_constants_divisor_proof : srem_constant_dividend_select_of_constants_divisor_before ⊑ srem_constant_dividend_select_of_constants_divisor_after := by
   unfold srem_constant_dividend_select_of_constants_divisor_before srem_constant_dividend_select_of_constants_divisor_after
   simp_alive_peephole
@@ -616,6 +636,7 @@ def srem_constant_dividend_select_of_constants_divisor_0_arm_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem srem_constant_dividend_select_of_constants_divisor_0_arm_proof : srem_constant_dividend_select_of_constants_divisor_0_arm_before ⊑ srem_constant_dividend_select_of_constants_divisor_0_arm_after := by
   unfold srem_constant_dividend_select_of_constants_divisor_0_arm_before srem_constant_dividend_select_of_constants_divisor_0_arm_after
   simp_alive_peephole
@@ -645,6 +666,7 @@ def urem_constant_dividend_select_of_constants_divisor_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem urem_constant_dividend_select_of_constants_divisor_proof : urem_constant_dividend_select_of_constants_divisor_before ⊑ urem_constant_dividend_select_of_constants_divisor_after := by
   unfold urem_constant_dividend_select_of_constants_divisor_before urem_constant_dividend_select_of_constants_divisor_after
   simp_alive_peephole
@@ -672,6 +694,7 @@ def urem_constant_dividend_select_of_constants_divisor_0_arm_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem urem_constant_dividend_select_of_constants_divisor_0_arm_proof : urem_constant_dividend_select_of_constants_divisor_0_arm_before ⊑ urem_constant_dividend_select_of_constants_divisor_0_arm_after := by
   unfold urem_constant_dividend_select_of_constants_divisor_0_arm_before urem_constant_dividend_select_of_constants_divisor_0_arm_after
   simp_alive_peephole

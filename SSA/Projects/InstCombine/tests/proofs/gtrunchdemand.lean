@@ -35,6 +35,7 @@ def trunc_lshr_after := [llvm|
   "llvm.return"(%4) : (i6) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem trunc_lshr_proof : trunc_lshr_before ⊑ trunc_lshr_after := by
   unfold trunc_lshr_before trunc_lshr_after
   simp_alive_peephole
@@ -64,6 +65,7 @@ def trunc_lshr_exact_mask_after := [llvm|
   "llvm.return"(%2) : (i6) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem trunc_lshr_exact_mask_proof : trunc_lshr_exact_mask_before ⊑ trunc_lshr_exact_mask_after := by
   unfold trunc_lshr_exact_mask_before trunc_lshr_exact_mask_after
   simp_alive_peephole
@@ -95,6 +97,7 @@ def or_trunc_lshr_after := [llvm|
   "llvm.return"(%4) : (i6) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem or_trunc_lshr_proof : or_trunc_lshr_before ⊑ or_trunc_lshr_after := by
   unfold or_trunc_lshr_before or_trunc_lshr_after
   simp_alive_peephole
@@ -126,6 +129,7 @@ def or_trunc_lshr_more_after := [llvm|
   "llvm.return"(%4) : (i6) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem or_trunc_lshr_more_proof : or_trunc_lshr_more_before ⊑ or_trunc_lshr_more_after := by
   unfold or_trunc_lshr_more_before or_trunc_lshr_more_after
   simp_alive_peephole

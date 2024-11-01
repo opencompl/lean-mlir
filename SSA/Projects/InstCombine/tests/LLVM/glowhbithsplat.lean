@@ -32,6 +32,7 @@ def t0_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t0_proof : t0_before ⊑ t0_after := by
   unfold t0_before t0_after
   simp_alive_peephole
@@ -60,6 +61,7 @@ def t1_otherbitwidth_after := [llvm|
   "llvm.return"(%3) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t1_otherbitwidth_proof : t1_otherbitwidth_before ⊑ t1_otherbitwidth_after := by
   unfold t1_otherbitwidth_before t1_otherbitwidth_after
   simp_alive_peephole

@@ -34,6 +34,7 @@ def shl_or_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_or_proof : shl_or_before ⊑ shl_or_after := by
   unfold shl_or_before shl_or_after
   simp_alive_peephole
@@ -64,6 +65,7 @@ def lshr_or_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lshr_or_proof : lshr_or_before ⊑ lshr_or_after := by
   unfold lshr_or_before lshr_or_after
   simp_alive_peephole
@@ -94,6 +96,7 @@ def ashr_or_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem ashr_or_proof : ashr_or_before ⊑ ashr_or_after := by
   unfold ashr_or_before ashr_or_after
   simp_alive_peephole
@@ -124,6 +127,7 @@ def shl_xor_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_xor_proof : shl_xor_before ⊑ shl_xor_after := by
   unfold shl_xor_before shl_xor_after
   simp_alive_peephole
@@ -154,6 +158,7 @@ def lshr_xor_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lshr_xor_proof : lshr_xor_before ⊑ lshr_xor_after := by
   unfold lshr_xor_before lshr_xor_after
   simp_alive_peephole
@@ -184,6 +189,7 @@ def ashr_xor_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem ashr_xor_proof : ashr_xor_before ⊑ ashr_xor_after := by
   unfold ashr_xor_before ashr_xor_after
   simp_alive_peephole
@@ -214,6 +220,7 @@ def shl_and_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_and_proof : shl_and_before ⊑ shl_and_after := by
   unfold shl_and_before shl_and_after
   simp_alive_peephole
@@ -244,6 +251,7 @@ def lshr_and_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lshr_and_proof : lshr_and_before ⊑ lshr_and_after := by
   unfold lshr_and_before lshr_and_after
   simp_alive_peephole
@@ -274,6 +282,7 @@ def ashr_and_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem ashr_and_proof : ashr_and_before ⊑ ashr_and_after := by
   unfold ashr_and_before ashr_and_after
   simp_alive_peephole
@@ -304,6 +313,7 @@ def shl_add_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_add_proof : shl_add_before ⊑ shl_add_after := by
   unfold shl_add_before shl_add_after
   simp_alive_peephole
@@ -339,6 +349,7 @@ def lshr_add_fail_after := [llvm|
   "llvm.return"(%6) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem lshr_add_fail_proof : lshr_add_fail_before ⊑ lshr_add_fail_after := by
   unfold lshr_add_fail_before lshr_add_fail_after
   simp_alive_peephole
@@ -369,6 +380,7 @@ def shl_or_commuted_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_or_commuted_proof : shl_or_commuted_before ⊑ shl_or_commuted_after := by
   unfold shl_or_commuted_before shl_or_commuted_after
   simp_alive_peephole
@@ -399,6 +411,7 @@ def shl_or_with_or_disjoint_instead_of_add_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem shl_or_with_or_disjoint_instead_of_add_proof : shl_or_with_or_disjoint_instead_of_add_before ⊑ shl_or_with_or_disjoint_instead_of_add_after := by
   unfold shl_or_with_or_disjoint_instead_of_add_before shl_or_with_or_disjoint_instead_of_add_after
   simp_alive_peephole

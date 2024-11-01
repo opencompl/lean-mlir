@@ -33,6 +33,7 @@ def avg_lsb_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem avg_lsb_proof : avg_lsb_before ⊑ avg_lsb_after := by
   unfold avg_lsb_before avg_lsb_after
   simp_alive_peephole

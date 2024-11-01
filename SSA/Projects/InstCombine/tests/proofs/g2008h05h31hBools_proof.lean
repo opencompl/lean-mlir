@@ -5,7 +5,7 @@ open BitVec
 open LLVM
 
 section g2008h05h31hBools_proof
-theorem foo1_thm : ∀ (e e_1 : IntW 1), sub e_1 e ⊑ LLVM.xor e e_1 := by 
+theorem foo1_thm (e✝ e✝¹ : IntW 1) : sub e✝¹ e✝ ⊑ LLVM.xor e✝ e✝¹ := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -13,7 +13,7 @@ theorem foo1_thm : ∀ (e e_1 : IntW 1), sub e_1 e ⊑ LLVM.xor e e_1 := by
     all_goals sorry
 
 
-theorem foo2_thm : ∀ (e e_1 : IntW 1), mul e_1 e ⊑ LLVM.and e_1 e := by 
+theorem foo2_thm (e✝ e✝¹ : IntW 1) : mul e✝¹ e✝ ⊑ LLVM.and e✝¹ e✝ := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -21,7 +21,7 @@ theorem foo2_thm : ∀ (e e_1 : IntW 1), mul e_1 e ⊑ LLVM.and e_1 e := by
     all_goals sorry
 
 
-theorem foo3_thm : ∀ (e e_1 : IntW 1), LLVM.udiv e_1 e ⊑ e_1 := by 
+theorem foo3_thm (e✝ e✝¹ : IntW 1) : LLVM.udiv e✝¹ e✝ ⊑ e✝¹ := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -29,7 +29,7 @@ theorem foo3_thm : ∀ (e e_1 : IntW 1), LLVM.udiv e_1 e ⊑ e_1 := by
     all_goals sorry
 
 
-theorem foo4_thm : ∀ (e e_1 : IntW 1), LLVM.sdiv e_1 e ⊑ e_1 := by 
+theorem foo4_thm (e✝ e✝¹ : IntW 1) : LLVM.sdiv e✝¹ e✝ ⊑ e✝¹ := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

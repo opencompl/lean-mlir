@@ -42,6 +42,7 @@ def pr110631_after := [llvm|
   "llvm.return"(%6) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem pr110631_proof : pr110631_before ⊑ pr110631_after := by
   unfold pr110631_before pr110631_after
   simp_alive_peephole

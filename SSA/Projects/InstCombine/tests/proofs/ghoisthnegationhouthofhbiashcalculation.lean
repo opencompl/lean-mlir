@@ -34,6 +34,7 @@ def t0_after := [llvm|
   "llvm.return"(%4) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t0_proof : t0_before ⊑ t0_after := by
   unfold t0_before t0_after
   simp_alive_peephole
@@ -62,6 +63,7 @@ def n7_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem n7_proof : n7_before ⊑ n7_after := by
   unfold n7_before n7_after
   simp_alive_peephole

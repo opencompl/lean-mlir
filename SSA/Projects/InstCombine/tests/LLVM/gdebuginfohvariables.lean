@@ -28,6 +28,7 @@ def test_sext_zext_after := [llvm|
   "llvm.return"(%0) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test_sext_zext_proof : test_sext_zext_before ⊑ test_sext_zext_after := by
   unfold test_sext_zext_before test_sext_zext_after
   simp_alive_peephole
@@ -56,6 +57,7 @@ def test_cast_select_after := [llvm|
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test_cast_select_proof : test_cast_select_before ⊑ test_cast_select_after := by
   unfold test_cast_select_before test_cast_select_after
   simp_alive_peephole

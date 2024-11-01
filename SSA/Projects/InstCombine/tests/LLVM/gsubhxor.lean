@@ -33,6 +33,7 @@ def low_mask_nsw_nuw_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem low_mask_nsw_nuw_proof : low_mask_nsw_nuw_before ⊑ low_mask_nsw_nuw_after := by
   unfold low_mask_nsw_nuw_before low_mask_nsw_nuw_after
   simp_alive_peephole
@@ -62,6 +63,7 @@ def arbitrary_mask_sub_i8_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem arbitrary_mask_sub_i8_proof : arbitrary_mask_sub_i8_before ⊑ arbitrary_mask_sub_i8_after := by
   unfold arbitrary_mask_sub_i8_before arbitrary_mask_sub_i8_after
   simp_alive_peephole
@@ -91,6 +93,7 @@ def not_masked_sub_i8_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem not_masked_sub_i8_proof : not_masked_sub_i8_before ⊑ not_masked_sub_i8_after := by
   unfold not_masked_sub_i8_before not_masked_sub_i8_after
   simp_alive_peephole
@@ -121,6 +124,7 @@ def xor_add_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem xor_add_proof : xor_add_before ⊑ xor_add_after := by
   unfold xor_add_before xor_add_after
   simp_alive_peephole

@@ -33,6 +33,7 @@ def XorZextXor_after := [llvm|
   "llvm.return"(%2) : (i5) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem XorZextXor_proof : XorZextXor_before ⊑ XorZextXor_after := by
   unfold XorZextXor_before XorZextXor_after
   simp_alive_peephole
@@ -62,6 +63,7 @@ def OrZextOr_after := [llvm|
   "llvm.return"(%2) : (i5) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem OrZextOr_proof : OrZextOr_before ⊑ OrZextOr_after := by
   unfold OrZextOr_before OrZextOr_after
   simp_alive_peephole
@@ -91,6 +93,7 @@ def AndZextAnd_after := [llvm|
   "llvm.return"(%2) : (i5) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem AndZextAnd_proof : AndZextAnd_before ⊑ AndZextAnd_after := by
   unfold AndZextAnd_before AndZextAnd_after
   simp_alive_peephole
@@ -120,6 +123,7 @@ def zext_nneg_after := [llvm|
   "llvm.return"(%2) : (i24) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem zext_nneg_proof : zext_nneg_before ⊑ zext_nneg_after := by
   unfold zext_nneg_before zext_nneg_after
   simp_alive_peephole

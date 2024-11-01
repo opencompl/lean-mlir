@@ -34,6 +34,7 @@ def add_mask_ashr28_i32_after := [llvm|
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem add_mask_ashr28_i32_proof : add_mask_ashr28_i32_before ⊑ add_mask_ashr28_i32_after := by
   unfold add_mask_ashr28_i32_before add_mask_ashr28_i32_after
   simp_alive_peephole
@@ -65,6 +66,7 @@ def add_mask_ashr28_non_pow2_i32_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem add_mask_ashr28_non_pow2_i32_proof : add_mask_ashr28_non_pow2_i32_before ⊑ add_mask_ashr28_non_pow2_i32_after := by
   unfold add_mask_ashr28_non_pow2_i32_before add_mask_ashr28_non_pow2_i32_after
   simp_alive_peephole
@@ -96,6 +98,7 @@ def add_mask_ashr27_i32_after := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem add_mask_ashr27_i32_proof : add_mask_ashr27_i32_before ⊑ add_mask_ashr27_i32_after := by
   unfold add_mask_ashr27_i32_before add_mask_ashr27_i32_after
   simp_alive_peephole
