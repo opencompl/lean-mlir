@@ -5,9 +5,9 @@ open BitVec
 open LLVM
 
 section gaddhmask_proof
-theorem add_mask_ashr28_i32_thm (e✝ : IntW 32) :
-  add (LLVM.and (ashr e✝ (const? 28)) (const? 8)) (ashr e✝ (const? 28)) ⊑
-    LLVM.and (lshr e✝ (const? 28)) (const? 7) := by 
+theorem add_mask_ashr28_i32_thm (e : IntW 32) :
+  add (LLVM.and (ashr e (const? 28)) (const? 8)) (ashr e (const? 28)) ⊑
+    LLVM.and (lshr e (const? 28)) (const? 7) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -15,9 +15,9 @@ theorem add_mask_ashr28_i32_thm (e✝ : IntW 32) :
     all_goals sorry
 
 
-theorem add_mask_ashr28_non_pow2_i32_thm (e✝ : IntW 32) :
-  add (LLVM.and (ashr e✝ (const? 28)) (const? 9)) (ashr e✝ (const? 28)) ⊑
-    add (LLVM.and (ashr e✝ (const? 28)) (const? 9)) (ashr e✝ (const? 28)) { «nsw» := true, «nuw» := false } := by 
+theorem add_mask_ashr28_non_pow2_i32_thm (e : IntW 32) :
+  add (LLVM.and (ashr e (const? 28)) (const? 9)) (ashr e (const? 28)) ⊑
+    add (LLVM.and (ashr e (const? 28)) (const? 9)) (ashr e (const? 28)) { «nsw» := true, «nuw» := false } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -25,9 +25,9 @@ theorem add_mask_ashr28_non_pow2_i32_thm (e✝ : IntW 32) :
     all_goals sorry
 
 
-theorem add_mask_ashr27_i32_thm (e✝ : IntW 32) :
-  add (LLVM.and (ashr e✝ (const? 27)) (const? 8)) (ashr e✝ (const? 27)) ⊑
-    add (LLVM.and (ashr e✝ (const? 27)) (const? 8)) (ashr e✝ (const? 27)) { «nsw» := true, «nuw» := false } := by 
+theorem add_mask_ashr27_i32_thm (e : IntW 32) :
+  add (LLVM.and (ashr e (const? 27)) (const? 8)) (ashr e (const? 27)) ⊑
+    add (LLVM.and (ashr e (const? 27)) (const? 8)) (ashr e (const? 27)) { «nsw» := true, «nuw» := false } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

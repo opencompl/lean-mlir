@@ -36,6 +36,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_lshr_trunc_proof : trunc_lshr_trunc_before ⊑ trunc_lshr_trunc_after := by
   unfold trunc_lshr_trunc_before trunc_lshr_trunc_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_lshr_trunc
   apply trunc_lshr_trunc_thm
   ---END trunc_lshr_trunc
@@ -65,6 +66,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_ashr_trunc_proof : trunc_ashr_trunc_before ⊑ trunc_ashr_trunc_after := by
   unfold trunc_ashr_trunc_before trunc_ashr_trunc_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_ashr_trunc
   apply trunc_ashr_trunc_thm
   ---END trunc_ashr_trunc
@@ -94,6 +96,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_ashr_trunc_exact_proof : trunc_ashr_trunc_exact_before ⊑ trunc_ashr_trunc_exact_after := by
   unfold trunc_ashr_trunc_exact_before trunc_ashr_trunc_exact_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_ashr_trunc_exact
   apply trunc_ashr_trunc_exact_thm
   ---END trunc_ashr_trunc_exact
