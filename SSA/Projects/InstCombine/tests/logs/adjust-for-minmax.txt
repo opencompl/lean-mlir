@@ -107,5 +107,5 @@
 4: "umin_zext_vec" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
 1: "scalar_select_of_vectors"
-4: "scalar_select_of_vectors" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "scalar_select_of_vectors" is unchanged by InstCombine
 

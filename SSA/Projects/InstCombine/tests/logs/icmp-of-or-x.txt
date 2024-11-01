@@ -8,114 +8,172 @@
 5: "use.i8" is empty
 
 1: "or_ugt"
-4: "or_ugt" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
 
 1: "or_ule"
-4: "or_ule" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "or_ule" contains vectors which are unsupported
 
 1: "or_slt_pos"
-4: "or_slt_pos" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "or_slt_pos" is unchanged by InstCombine
 
 1: "or_sle_pos"
-4: "or_sle_pos" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "or_sle_pos" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
-4: "or_sle_pos" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "or_sle_fail_maybe_neg"
-4: "or_sle_fail_maybe_neg" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "or_sle_fail_maybe_neg" is unchanged by InstCombine
 
 1: "or_eq_noundef"
-4: "or_eq_noundef" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "or_eq_noundef" is unchanged by InstCombine
 
 1: "or_eq_notY_eq_0"
-4: "or_eq_notY_eq_0" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
 
 1: "or_eq_notY_eq_0_fail_multiuse"
 4: "or_eq_notY_eq_0_fail_multiuse" has unsupported operation: llvm.call
 
-4: "or_eq_notY_eq_0_fail_multiuse" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "or_ne_notY_eq_1s"
-4: "or_ne_notY_eq_1s" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
 
 1: "or_ne_notY_eq_1s_fail_bad_not"
-4: "or_ne_notY_eq_1s_fail_bad_not" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
 
 1: "or_ne_vecC"
-4: "or_ne_vecC" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "or_ne_vecC" contains vectors which are unsupported
 
 1: "or_eq_fail_maybe_undef"
-4: "or_eq_fail_maybe_undef" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "or_eq_fail_maybe_undef" is unchanged by InstCombine
 
 1: "or_ne_noundef"
-4: "or_ne_noundef" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "or_ne_noundef" is unchanged by InstCombine
 
 1: "or_ne_noundef_fail_reuse"
-4: "or_ne_noundef_fail_reuse" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "or_ne_noundef_fail_reuse" has unsupported operation: llvm.call
 
 1: "or_slt_intmin"
-4: "or_slt_intmin" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "or_slt_intmin" is unchanged by InstCombine
 
 1: "or_slt_intmin_2"
-4: "or_slt_intmin_2" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "or_slt_intmin_2" is unchanged by InstCombine
 
 1: "or_sle_intmin_indirect_2"
-4: "or_sle_intmin_indirect_2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "or_sle_intmin_indirect_2" has unsupported operation: builtin.unregistered: llvm.cond_br
-
-4: "or_sle_intmin_indirect_2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "or_sle_intmin_indirect_2" has unsupported operation: llvm.call
 
 1: "or_sge_intmin"
-4: "or_sge_intmin" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "or_sge_intmin" is unchanged by InstCombine
 
 1: "or_sgt_intmin_indirect"
-4: "or_sgt_intmin_indirect" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "or_sgt_intmin_indirect" has unsupported operation: builtin.unregistered: llvm.cond_br
-
-4: "or_sgt_intmin_indirect" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "or_sgt_intmin_indirect" has unsupported operation: llvm.call
 
 1: "or_sgt_intmin_2"
-4: "or_sgt_intmin_2" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "or_sgt_intmin_2" is unchanged by InstCombine
 
 1: "or_simplify_ule"
-4: "or_simplify_ule" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.and
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
 
 1: "or_simplify_uge"
-4: "or_simplify_uge" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.and
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
 
 1: "or_simplify_ule_fail"
-4: "or_simplify_ule_fail" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.and
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
 
 1: "or_simplify_ugt"
-4: "or_simplify_ugt" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.and
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
 
 1: "or_simplify_ult"
-4: "or_simplify_ult" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.and
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
 
 1: "or_simplify_ugt_fail"
-4: "or_simplify_ugt_fail" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.or
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
 
 1: "pr64610"
 4: "pr64610" has unsupported operation after optimization: llvm.load
 
-4: "pr64610" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
 1: "icmp_eq_x_invertable_y2_todo"
-4: "icmp_eq_x_invertable_y2_todo" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
 
 1: "icmp_eq_x_invertable_y2"
-4: "icmp_eq_x_invertable_y2" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
 
 1: "PR38139"
-4: "PR38139" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
 

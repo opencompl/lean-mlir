@@ -69,6 +69,139 @@ theorem fold_xor_zext_sandwich_proof : fold_xor_zext_sandwich_before ⊑ fold_xo
 
 
 
+def fold_and_zext_icmp_before := [llvm|
+{
+^0(%arg97 : i64, %arg98 : i64, %arg99 : i64):
+  %0 = llvm.icmp "sgt" %arg97, %arg98 : i64
+  %1 = llvm.zext %0 : i1 to i8
+  %2 = llvm.icmp "slt" %arg97, %arg99 : i64
+  %3 = llvm.zext %2 : i1 to i8
+  %4 = llvm.and %1, %3 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+def fold_and_zext_icmp_after := [llvm|
+{
+^0(%arg97 : i64, %arg98 : i64, %arg99 : i64):
+  %0 = llvm.icmp "sgt" %arg97, %arg98 : i64
+  %1 = llvm.icmp "slt" %arg97, %arg99 : i64
+  %2 = llvm.and %0, %1 : i1
+  %3 = llvm.zext %2 : i1 to i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem fold_and_zext_icmp_proof : fold_and_zext_icmp_before ⊑ fold_and_zext_icmp_after := by
+  unfold fold_and_zext_icmp_before fold_and_zext_icmp_after
+  simp_alive_peephole
+  intros
+  ---BEGIN fold_and_zext_icmp
+  all_goals (try extract_goal ; sorry)
+  ---END fold_and_zext_icmp
+
+
+
+def fold_or_zext_icmp_before := [llvm|
+{
+^0(%arg94 : i64, %arg95 : i64, %arg96 : i64):
+  %0 = llvm.icmp "sgt" %arg94, %arg95 : i64
+  %1 = llvm.zext %0 : i1 to i8
+  %2 = llvm.icmp "slt" %arg94, %arg96 : i64
+  %3 = llvm.zext %2 : i1 to i8
+  %4 = llvm.or %1, %3 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+def fold_or_zext_icmp_after := [llvm|
+{
+^0(%arg94 : i64, %arg95 : i64, %arg96 : i64):
+  %0 = llvm.icmp "sgt" %arg94, %arg95 : i64
+  %1 = llvm.icmp "slt" %arg94, %arg96 : i64
+  %2 = llvm.or %0, %1 : i1
+  %3 = llvm.zext %2 : i1 to i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem fold_or_zext_icmp_proof : fold_or_zext_icmp_before ⊑ fold_or_zext_icmp_after := by
+  unfold fold_or_zext_icmp_before fold_or_zext_icmp_after
+  simp_alive_peephole
+  intros
+  ---BEGIN fold_or_zext_icmp
+  all_goals (try extract_goal ; sorry)
+  ---END fold_or_zext_icmp
+
+
+
+def fold_xor_zext_icmp_before := [llvm|
+{
+^0(%arg91 : i64, %arg92 : i64, %arg93 : i64):
+  %0 = llvm.icmp "sgt" %arg91, %arg92 : i64
+  %1 = llvm.zext %0 : i1 to i8
+  %2 = llvm.icmp "slt" %arg91, %arg93 : i64
+  %3 = llvm.zext %2 : i1 to i8
+  %4 = llvm.xor %1, %3 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+def fold_xor_zext_icmp_after := [llvm|
+{
+^0(%arg91 : i64, %arg92 : i64, %arg93 : i64):
+  %0 = llvm.icmp "sgt" %arg91, %arg92 : i64
+  %1 = llvm.icmp "slt" %arg91, %arg93 : i64
+  %2 = llvm.xor %0, %1 : i1
+  %3 = llvm.zext %2 : i1 to i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem fold_xor_zext_icmp_proof : fold_xor_zext_icmp_before ⊑ fold_xor_zext_icmp_after := by
+  unfold fold_xor_zext_icmp_before fold_xor_zext_icmp_after
+  simp_alive_peephole
+  intros
+  ---BEGIN fold_xor_zext_icmp
+  all_goals (try extract_goal ; sorry)
+  ---END fold_xor_zext_icmp
+
+
+
+def fold_nested_logic_zext_icmp_before := [llvm|
+{
+^0(%arg87 : i64, %arg88 : i64, %arg89 : i64, %arg90 : i64):
+  %0 = llvm.icmp "sgt" %arg87, %arg88 : i64
+  %1 = llvm.zext %0 : i1 to i8
+  %2 = llvm.icmp "slt" %arg87, %arg89 : i64
+  %3 = llvm.zext %2 : i1 to i8
+  %4 = llvm.and %1, %3 : i8
+  %5 = llvm.icmp "eq" %arg87, %arg90 : i64
+  %6 = llvm.zext %5 : i1 to i8
+  %7 = llvm.or %4, %6 : i8
+  "llvm.return"(%7) : (i8) -> ()
+}
+]
+def fold_nested_logic_zext_icmp_after := [llvm|
+{
+^0(%arg87 : i64, %arg88 : i64, %arg89 : i64, %arg90 : i64):
+  %0 = llvm.icmp "sgt" %arg87, %arg88 : i64
+  %1 = llvm.icmp "slt" %arg87, %arg89 : i64
+  %2 = llvm.and %0, %1 : i1
+  %3 = llvm.icmp "eq" %arg87, %arg90 : i64
+  %4 = llvm.or %2, %3 : i1
+  %5 = llvm.zext %4 : i1 to i8
+  "llvm.return"(%5) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem fold_nested_logic_zext_icmp_proof : fold_nested_logic_zext_icmp_before ⊑ fold_nested_logic_zext_icmp_after := by
+  unfold fold_nested_logic_zext_icmp_before fold_nested_logic_zext_icmp_after
+  simp_alive_peephole
+  intros
+  ---BEGIN fold_nested_logic_zext_icmp
+  all_goals (try extract_goal ; sorry)
+  ---END fold_nested_logic_zext_icmp
+
+
+
 def sext_zext_apint1_before := [llvm|
 {
 ^0(%arg86 : i77):
@@ -118,6 +251,321 @@ theorem sext_zext_apint2_proof : sext_zext_apint2_before ⊑ sext_zext_apint2_af
   ---BEGIN sext_zext_apint2
   all_goals (try extract_goal ; sorry)
   ---END sext_zext_apint2
+
+
+
+def masked_bit_set_before := [llvm|
+{
+^0(%arg83 : i32, %arg84 : i32):
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.shl %0, %arg84 : i32
+  %3 = llvm.and %2, %arg83 : i32
+  %4 = llvm.icmp "ne" %3, %1 : i32
+  %5 = llvm.zext %4 : i1 to i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+def masked_bit_set_after := [llvm|
+{
+^0(%arg83 : i32, %arg84 : i32):
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.lshr %arg83, %arg84 : i32
+  %2 = llvm.and %1, %0 : i32
+  "llvm.return"(%2) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem masked_bit_set_proof : masked_bit_set_before ⊑ masked_bit_set_after := by
+  unfold masked_bit_set_before masked_bit_set_after
+  simp_alive_peephole
+  intros
+  ---BEGIN masked_bit_set
+  all_goals (try extract_goal ; sorry)
+  ---END masked_bit_set
+
+
+
+def masked_bit_clear_commute_before := [llvm|
+{
+^0(%arg77 : i32, %arg78 : i32):
+  %0 = llvm.mlir.constant(42 : i32) : i32
+  %1 = llvm.mlir.constant(1 : i32) : i32
+  %2 = llvm.mlir.constant(0 : i32) : i32
+  %3 = llvm.srem %0, %arg77 : i32
+  %4 = llvm.shl %1, %arg78 : i32
+  %5 = llvm.and %3, %4 : i32
+  %6 = llvm.icmp "eq" %5, %2 : i32
+  %7 = llvm.zext %6 : i1 to i32
+  "llvm.return"(%7) : (i32) -> ()
+}
+]
+def masked_bit_clear_commute_after := [llvm|
+{
+^0(%arg77 : i32, %arg78 : i32):
+  %0 = llvm.mlir.constant(42 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
+  %2 = llvm.mlir.constant(1 : i32) : i32
+  %3 = llvm.srem %0, %arg77 : i32
+  %4 = llvm.xor %3, %1 : i32
+  %5 = llvm.lshr %4, %arg78 : i32
+  %6 = llvm.and %5, %2 : i32
+  "llvm.return"(%6) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem masked_bit_clear_commute_proof : masked_bit_clear_commute_before ⊑ masked_bit_clear_commute_after := by
+  unfold masked_bit_clear_commute_before masked_bit_clear_commute_after
+  simp_alive_peephole
+  intros
+  ---BEGIN masked_bit_clear_commute
+  all_goals (try extract_goal ; sorry)
+  ---END masked_bit_clear_commute
+
+
+
+def div_bit_set_before := [llvm|
+{
+^0(%arg61 : i32, %arg62 : i32):
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.shl %0, %arg62 : i32
+  %3 = llvm.sdiv %2, %arg61 : i32
+  %4 = llvm.icmp "ne" %3, %1 : i32
+  %5 = llvm.zext %4 : i1 to i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+def div_bit_set_after := [llvm|
+{
+^0(%arg61 : i32, %arg62 : i32):
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.shl %0, %arg62 overflow<nuw> : i32
+  %3 = llvm.sdiv %2, %arg61 : i32
+  %4 = llvm.icmp "ne" %3, %1 : i32
+  %5 = llvm.zext %4 : i1 to i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem div_bit_set_proof : div_bit_set_before ⊑ div_bit_set_after := by
+  unfold div_bit_set_before div_bit_set_after
+  simp_alive_peephole
+  intros
+  ---BEGIN div_bit_set
+  all_goals (try extract_goal ; sorry)
+  ---END div_bit_set
+
+
+
+def masked_bit_set_nonzero_cmp_before := [llvm|
+{
+^0(%arg59 : i32, %arg60 : i32):
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.shl %0, %arg60 : i32
+  %2 = llvm.and %1, %arg59 : i32
+  %3 = llvm.icmp "ne" %2, %0 : i32
+  %4 = llvm.zext %3 : i1 to i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def masked_bit_set_nonzero_cmp_after := [llvm|
+{
+^0(%arg59 : i32, %arg60 : i32):
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.shl %0, %arg60 overflow<nuw> : i32
+  %2 = llvm.and %1, %arg59 : i32
+  %3 = llvm.icmp "ne" %2, %0 : i32
+  %4 = llvm.zext %3 : i1 to i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem masked_bit_set_nonzero_cmp_proof : masked_bit_set_nonzero_cmp_before ⊑ masked_bit_set_nonzero_cmp_after := by
+  unfold masked_bit_set_nonzero_cmp_before masked_bit_set_nonzero_cmp_after
+  simp_alive_peephole
+  intros
+  ---BEGIN masked_bit_set_nonzero_cmp
+  all_goals (try extract_goal ; sorry)
+  ---END masked_bit_set_nonzero_cmp
+
+
+
+def masked_bit_wrong_pred_before := [llvm|
+{
+^0(%arg57 : i32, %arg58 : i32):
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.shl %0, %arg58 : i32
+  %3 = llvm.and %2, %arg57 : i32
+  %4 = llvm.icmp "sgt" %3, %1 : i32
+  %5 = llvm.zext %4 : i1 to i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+def masked_bit_wrong_pred_after := [llvm|
+{
+^0(%arg57 : i32, %arg58 : i32):
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.shl %0, %arg58 overflow<nuw> : i32
+  %3 = llvm.and %2, %arg57 : i32
+  %4 = llvm.icmp "sgt" %3, %1 : i32
+  %5 = llvm.zext %4 : i1 to i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem masked_bit_wrong_pred_proof : masked_bit_wrong_pred_before ⊑ masked_bit_wrong_pred_after := by
+  unfold masked_bit_wrong_pred_before masked_bit_wrong_pred_after
+  simp_alive_peephole
+  intros
+  ---BEGIN masked_bit_wrong_pred
+  all_goals (try extract_goal ; sorry)
+  ---END masked_bit_wrong_pred
+
+
+
+def zext_or_masked_bit_test_before := [llvm|
+{
+^0(%arg54 : i32, %arg55 : i32, %arg56 : i32):
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.shl %0, %arg55 : i32
+  %3 = llvm.and %2, %arg54 : i32
+  %4 = llvm.icmp "ne" %3, %1 : i32
+  %5 = llvm.icmp "eq" %arg56, %arg55 : i32
+  %6 = llvm.or %4, %5 : i1
+  %7 = llvm.zext %6 : i1 to i32
+  "llvm.return"(%7) : (i32) -> ()
+}
+]
+def zext_or_masked_bit_test_after := [llvm|
+{
+^0(%arg54 : i32, %arg55 : i32, %arg56 : i32):
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.shl %0, %arg55 overflow<nuw> : i32
+  %3 = llvm.and %2, %arg54 : i32
+  %4 = llvm.icmp "ne" %3, %1 : i32
+  %5 = llvm.icmp "eq" %arg56, %arg55 : i32
+  %6 = llvm.or %4, %5 : i1
+  %7 = llvm.zext %6 : i1 to i32
+  "llvm.return"(%7) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem zext_or_masked_bit_test_proof : zext_or_masked_bit_test_before ⊑ zext_or_masked_bit_test_after := by
+  unfold zext_or_masked_bit_test_before zext_or_masked_bit_test_after
+  simp_alive_peephole
+  intros
+  ---BEGIN zext_or_masked_bit_test
+  all_goals (try extract_goal ; sorry)
+  ---END zext_or_masked_bit_test
+
+
+
+def zext_masked_bit_zero_to_smaller_bitwidth_before := [llvm|
+{
+^0(%arg49 : i32, %arg50 : i32):
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.shl %0, %arg50 : i32
+  %3 = llvm.and %2, %arg49 : i32
+  %4 = llvm.icmp "eq" %3, %1 : i32
+  %5 = llvm.zext %4 : i1 to i16
+  "llvm.return"(%5) : (i16) -> ()
+}
+]
+def zext_masked_bit_zero_to_smaller_bitwidth_after := [llvm|
+{
+^0(%arg49 : i32, %arg50 : i32):
+  %0 = llvm.mlir.constant(-1 : i32) : i32
+  %1 = llvm.mlir.constant(1 : i16) : i16
+  %2 = llvm.xor %arg49, %0 : i32
+  %3 = llvm.lshr %2, %arg50 : i32
+  %4 = llvm.trunc %3 : i32 to i16
+  %5 = llvm.and %4, %1 : i16
+  "llvm.return"(%5) : (i16) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem zext_masked_bit_zero_to_smaller_bitwidth_proof : zext_masked_bit_zero_to_smaller_bitwidth_before ⊑ zext_masked_bit_zero_to_smaller_bitwidth_after := by
+  unfold zext_masked_bit_zero_to_smaller_bitwidth_before zext_masked_bit_zero_to_smaller_bitwidth_after
+  simp_alive_peephole
+  intros
+  ---BEGIN zext_masked_bit_zero_to_smaller_bitwidth
+  all_goals (try extract_goal ; sorry)
+  ---END zext_masked_bit_zero_to_smaller_bitwidth
+
+
+
+def zext_masked_bit_nonzero_to_smaller_bitwidth_before := [llvm|
+{
+^0(%arg43 : i32, %arg44 : i32):
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.shl %0, %arg44 : i32
+  %3 = llvm.and %2, %arg43 : i32
+  %4 = llvm.icmp "ne" %3, %1 : i32
+  %5 = llvm.zext %4 : i1 to i16
+  "llvm.return"(%5) : (i16) -> ()
+}
+]
+def zext_masked_bit_nonzero_to_smaller_bitwidth_after := [llvm|
+{
+^0(%arg43 : i32, %arg44 : i32):
+  %0 = llvm.mlir.constant(1 : i16) : i16
+  %1 = llvm.lshr %arg43, %arg44 : i32
+  %2 = llvm.trunc %1 : i32 to i16
+  %3 = llvm.and %2, %0 : i16
+  "llvm.return"(%3) : (i16) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem zext_masked_bit_nonzero_to_smaller_bitwidth_proof : zext_masked_bit_nonzero_to_smaller_bitwidth_before ⊑ zext_masked_bit_nonzero_to_smaller_bitwidth_after := by
+  unfold zext_masked_bit_nonzero_to_smaller_bitwidth_before zext_masked_bit_nonzero_to_smaller_bitwidth_after
+  simp_alive_peephole
+  intros
+  ---BEGIN zext_masked_bit_nonzero_to_smaller_bitwidth
+  all_goals (try extract_goal ; sorry)
+  ---END zext_masked_bit_nonzero_to_smaller_bitwidth
+
+
+
+def zext_masked_bit_zero_to_larger_bitwidth_before := [llvm|
+{
+^0(%arg39 : i32, %arg40 : i32):
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.shl %0, %arg40 : i32
+  %3 = llvm.and %2, %arg39 : i32
+  %4 = llvm.icmp "eq" %3, %1 : i32
+  %5 = llvm.zext %4 : i1 to i64
+  "llvm.return"(%5) : (i64) -> ()
+}
+]
+def zext_masked_bit_zero_to_larger_bitwidth_after := [llvm|
+{
+^0(%arg39 : i32, %arg40 : i32):
+  %0 = llvm.mlir.constant(-1 : i32) : i32
+  %1 = llvm.mlir.constant(1 : i32) : i32
+  %2 = llvm.xor %arg39, %0 : i32
+  %3 = llvm.lshr %2, %arg40 : i32
+  %4 = llvm.and %3, %1 : i32
+  %5 = llvm.zext %4 : i32 to i64
+  "llvm.return"(%5) : (i64) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem zext_masked_bit_zero_to_larger_bitwidth_proof : zext_masked_bit_zero_to_larger_bitwidth_before ⊑ zext_masked_bit_zero_to_larger_bitwidth_after := by
+  unfold zext_masked_bit_zero_to_larger_bitwidth_before zext_masked_bit_zero_to_larger_bitwidth_after
+  simp_alive_peephole
+  intros
+  ---BEGIN zext_masked_bit_zero_to_larger_bitwidth
+  all_goals (try extract_goal ; sorry)
+  ---END zext_masked_bit_zero_to_larger_bitwidth
 
 
 

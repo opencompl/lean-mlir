@@ -1,0 +1,2 @@
+3: memchr-8.ll: parsing has failed
+

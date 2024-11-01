@@ -4,8 +4,6 @@
 1: "test12"
 4: "test12" has unsupported operation: llvm.mlir.zero
 
-4: "test12" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test12" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test12" has unsupported operation: llvm.call

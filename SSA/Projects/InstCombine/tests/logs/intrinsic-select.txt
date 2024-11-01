@@ -87,11 +87,7 @@
 4: "test_drop_noundef" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
 1: "pr85536"
-4: "pr85536" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "pr85536" has unsupported operation: builtin.unregistered: llvm.intr.smin
-
-4: "pr85536" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test_fabs_select1"
 4: "test_fabs_select1" has unsupported operation: builtin.unregistered: llvm.fcmp

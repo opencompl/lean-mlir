@@ -1,17 +1,11 @@
 1: "alloca_argument_compare"
 4: "alloca_argument_compare" has unsupported operation after optimization: llvm.alloca
 
-4: "alloca_argument_compare" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
 1: "alloca_argument_compare_swapped"
 4: "alloca_argument_compare_swapped" has unsupported operation after optimization: llvm.alloca
 
-4: "alloca_argument_compare_swapped" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
 1: "alloca_argument_compare_ne"
 4: "alloca_argument_compare_ne" has unsupported operation after optimization: llvm.alloca
-
-4: "alloca_argument_compare_ne" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "alloca_argument_compare_derived_ptrs"
 4: "alloca_argument_compare_derived_ptrs" has unsupported operation after optimization: llvm.alloca
@@ -20,8 +14,6 @@
 
 4: "alloca_argument_compare_derived_ptrs" has unsupported operation after optimization: llvm.getelementptr
 
-4: "alloca_argument_compare_derived_ptrs" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
 1: "escape"
 5: "escape" is empty
 
@@ -29,8 +21,6 @@
 4: "alloca_argument_compare_escaped_alloca" has unsupported operation: llvm.alloca
 
 4: "alloca_argument_compare_escaped_alloca" has unsupported operation: llvm.call
-
-4: "alloca_argument_compare_escaped_alloca" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "check_compares"
 5: "check_compares" is empty
@@ -43,8 +33,6 @@
 1: "alloca_argument_compare_escaped_through_store"
 4: "alloca_argument_compare_escaped_through_store" has unsupported operation: llvm.alloca
 
-4: "alloca_argument_compare_escaped_through_store" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "alloca_argument_compare_escaped_through_store" has unsupported operation: llvm.getelementptr
 
 4: "alloca_argument_compare_escaped_through_store" has unsupported operation: llvm.store
@@ -53,8 +41,6 @@
 4: "alloca_argument_compare_benign_instrs" has unsupported operation after optimization: llvm.alloca
 
 4: "alloca_argument_compare_benign_instrs" has unsupported operation after optimization: builtin.unregistered: llvm.intr.lifetime.start
-
-4: "alloca_argument_compare_benign_instrs" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 4: "alloca_argument_compare_benign_instrs" has unsupported operation after optimization: llvm.load
 
@@ -79,16 +65,12 @@
 
 4: "ptrtoint_single_cmp" has unsupported operation after optimization: llvm.inttoptr
 
-4: "ptrtoint_single_cmp" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
 1: "offset_single_cmp"
 4: "offset_single_cmp" has unsupported operation after optimization: llvm.alloca
 
 4: "offset_single_cmp" has unsupported operation after optimization: llvm.alloca
 
 4: "offset_single_cmp" has unsupported operation after optimization: llvm.getelementptr
-
-4: "offset_single_cmp" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "witness"
 5: "witness" is empty
@@ -142,17 +124,11 @@
 1: "select_alloca_unrelated_ptr"
 4: "select_alloca_unrelated_ptr" has unsupported operation: llvm.alloca
 
-4: "select_alloca_unrelated_ptr" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "select_alloca_unrelated_ptr" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "select_alloca_unrelated_ptr" has unsupported operation: llvm.call
 
 4: "select_alloca_unrelated_ptr" has unsupported operation: llvm.return
 
 1: "alloca_offset_icmp"
-4: "alloca_offset_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "alloca_offset_icmp" has unsupported operation: llvm.call
 
 4: "alloca_offset_icmp" has unsupported operation: llvm.return

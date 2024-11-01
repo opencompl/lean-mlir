@@ -50,8 +50,6 @@
 
 4: "constantexpr2" has unsupported operation: llvm.mlir.addressof
 
-4: "constantexpr2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "constantexpr2" has unsupported operation: llvm.load
 
 4: "constantexpr2" has unsupported operation: llvm.load

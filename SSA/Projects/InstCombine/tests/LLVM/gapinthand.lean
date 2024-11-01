@@ -92,6 +92,35 @@ theorem test3_proof : test3_before ⊑ test3_after := by
 
 
 
+def test4_before := [llvm|
+{
+^0(%arg10 : i37):
+  %0 = llvm.mlir.constant(-2147483648 : i37) : i37
+  %1 = llvm.mlir.constant(0 : i37) : i37
+  %2 = llvm.and %arg10, %0 : i37
+  %3 = llvm.icmp "ne" %2, %1 : i37
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+def test4_after := [llvm|
+{
+^0(%arg10 : i37):
+  %0 = llvm.mlir.constant(2147483647 : i37) : i37
+  %1 = llvm.icmp "ugt" %arg10, %0 : i37
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test4_proof : test4_before ⊑ test4_after := by
+  unfold test4_before test4_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test4
+  all_goals (try extract_goal ; sorry)
+  ---END test4
+
+
+
 def test7_before := [llvm|
 {
 ^0(%arg7 : i47):
@@ -197,6 +226,35 @@ theorem test10_proof : test10_before ⊑ test10_after := by
   ---BEGIN test10
   all_goals (try extract_goal ; sorry)
   ---END test10
+
+
+
+def test11_before := [llvm|
+{
+^0(%arg3 : i737):
+  %0 = llvm.mlir.constant(-2147483648 : i737) : i737
+  %1 = llvm.mlir.constant(0 : i737) : i737
+  %2 = llvm.and %arg3, %0 : i737
+  %3 = llvm.icmp "ne" %2, %1 : i737
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+def test11_after := [llvm|
+{
+^0(%arg3 : i737):
+  %0 = llvm.mlir.constant(2147483647 : i737) : i737
+  %1 = llvm.icmp "ugt" %arg3, %0 : i737
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test11_proof : test11_before ⊑ test11_after := by
+  unfold test11_before test11_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test11
+  all_goals (try extract_goal ; sorry)
+  ---END test11
 
 
 

@@ -54,42 +54,30 @@
 1: "constant_fold_cmp_constantexpr_inttoptr"
 4: "constant_fold_cmp_constantexpr_inttoptr" has unsupported operation after optimization: llvm.mlir.zero
 
-4: "constant_fold_cmp_constantexpr_inttoptr" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
 1: "constant_fold_inttoptr_null"
 4: "constant_fold_inttoptr_null" has unsupported operation after optimization: llvm.inttoptr
 
 4: "constant_fold_inttoptr_null" has unsupported operation after optimization: llvm.mlir.zero
-
-4: "constant_fold_inttoptr_null" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "constant_fold_ptrtoint_null"
 4: "constant_fold_ptrtoint_null" has unsupported operation: llvm.mlir.addressof
 
 4: "constant_fold_ptrtoint_null" has unsupported operation: builtin.unregistered: llvm.ptrtoint
 
-4: "constant_fold_ptrtoint_null" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "constant_fold_ptrtoint_null_2"
 4: "constant_fold_ptrtoint_null_2" has unsupported operation: llvm.mlir.addressof
 
 4: "constant_fold_ptrtoint_null_2" has unsupported operation: builtin.unregistered: llvm.ptrtoint
-
-4: "constant_fold_ptrtoint_null_2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "constant_fold_ptrtoint"
 4: "constant_fold_ptrtoint" has unsupported operation after optimization: llvm.mlir.addressof
 
 4: "constant_fold_ptrtoint" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
 
-4: "constant_fold_ptrtoint" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
 1: "constant_fold_inttoptr"
 4: "constant_fold_inttoptr" has unsupported operation after optimization: llvm.inttoptr
 
 4: "constant_fold_inttoptr" has unsupported operation after optimization: llvm.inttoptr
-
-4: "constant_fold_inttoptr" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "constant_fold_bitcast_ftoi_load"
 4: "constant_fold_bitcast_ftoi_load" has unsupported operation: llvm.mlir.addressof

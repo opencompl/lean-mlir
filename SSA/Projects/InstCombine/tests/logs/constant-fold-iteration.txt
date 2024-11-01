@@ -3,5 +3,3 @@
 
 4: "a" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
 
-4: "a" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-

@@ -227,6 +227,35 @@ theorem test7_proof : test7_before ⊑ test7_after := by
 
 
 
+def test9_before := [llvm|
+{
+^0(%arg200 : i8):
+  %0 = llvm.mlir.constant(123 : i8) : i8
+  %1 = llvm.mlir.constant(34 : i8) : i8
+  %2 = llvm.xor %arg200, %0 : i8
+  %3 = llvm.icmp "eq" %2, %1 : i8
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+def test9_after := [llvm|
+{
+^0(%arg200 : i8):
+  %0 = llvm.mlir.constant(89 : i8) : i8
+  %1 = llvm.icmp "eq" %arg200, %0 : i8
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test9_proof : test9_before ⊑ test9_after := by
+  unfold test9_before test9_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test9
+  all_goals (try extract_goal ; sorry)
+  ---END test9
+
+
+
 def test10_before := [llvm|
 {
 ^0(%arg198 : i8):
@@ -286,6 +315,35 @@ theorem test11_proof : test11_before ⊑ test11_after := by
   ---BEGIN test11
   all_goals (try extract_goal ; sorry)
   ---END test11
+
+
+
+def test12_before := [llvm|
+{
+^0(%arg196 : i8):
+  %0 = llvm.mlir.constant(4 : i8) : i8
+  %1 = llvm.mlir.constant(0 : i8) : i8
+  %2 = llvm.xor %arg196, %0 : i8
+  %3 = llvm.icmp "ne" %2, %1 : i8
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+def test12_after := [llvm|
+{
+^0(%arg196 : i8):
+  %0 = llvm.mlir.constant(4 : i8) : i8
+  %1 = llvm.icmp "ne" %arg196, %0 : i8
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test12_proof : test12_before ⊑ test12_after := by
+  unfold test12_before test12_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test12
+  all_goals (try extract_goal ; sorry)
+  ---END test12
 
 
 
@@ -403,6 +461,60 @@ theorem fold_zext_xor_sandwich_proof : fold_zext_xor_sandwich_before ⊑ fold_ze
 
 
 
+def test23_before := [llvm|
+{
+^0(%arg185 : i32, %arg186 : i32):
+  %0 = llvm.xor %arg186, %arg185 : i32
+  %1 = llvm.icmp "eq" %0, %arg185 : i32
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+def test23_after := [llvm|
+{
+^0(%arg185 : i32, %arg186 : i32):
+  %0 = llvm.mlir.constant(0 : i32) : i32
+  %1 = llvm.icmp "eq" %arg186, %0 : i32
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test23_proof : test23_before ⊑ test23_after := by
+  unfold test23_before test23_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test23
+  all_goals (try extract_goal ; sorry)
+  ---END test23
+
+
+
+def test24_before := [llvm|
+{
+^0(%arg183 : i32, %arg184 : i32):
+  %0 = llvm.xor %arg184, %arg183 : i32
+  %1 = llvm.icmp "ne" %0, %arg183 : i32
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+def test24_after := [llvm|
+{
+^0(%arg183 : i32, %arg184 : i32):
+  %0 = llvm.mlir.constant(0 : i32) : i32
+  %1 = llvm.icmp "ne" %arg184, %0 : i32
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test24_proof : test24_before ⊑ test24_after := by
+  unfold test24_before test24_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test24
+  all_goals (try extract_goal ; sorry)
+  ---END test24
+
+
+
 def test25_before := [llvm|
 {
 ^0(%arg181 : i32, %arg182 : i32):
@@ -428,6 +540,35 @@ theorem test25_proof : test25_before ⊑ test25_after := by
   ---BEGIN test25
   all_goals (try extract_goal ; sorry)
   ---END test25
+
+
+
+def test27_before := [llvm|
+{
+^0(%arg178 : i32, %arg179 : i32, %arg180 : i32):
+  %0 = llvm.xor %arg180, %arg178 : i32
+  %1 = llvm.xor %arg180, %arg179 : i32
+  %2 = llvm.icmp "eq" %0, %1 : i32
+  %3 = llvm.zext %2 : i1 to i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+def test27_after := [llvm|
+{
+^0(%arg178 : i32, %arg179 : i32, %arg180 : i32):
+  %0 = llvm.icmp "eq" %arg178, %arg179 : i32
+  %1 = llvm.zext %0 : i1 to i32
+  "llvm.return"(%1) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test27_proof : test27_before ⊑ test27_after := by
+  unfold test27_before test27_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test27
+  all_goals (try extract_goal ; sorry)
+  ---END test27
 
 
 

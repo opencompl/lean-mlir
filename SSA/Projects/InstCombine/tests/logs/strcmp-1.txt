@@ -42,8 +42,6 @@
 
 4: "test7" has unsupported operation: llvm.call
 
-4: "test7" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "memcmp"
 5: "memcmp" is empty
 

@@ -49,3 +49,13 @@ theorem addhshlhsdivhnegative1_thm (e : IntW 32) : add (shl (LLVM.sdiv e (const?
     all_goals sorry
 
 
+theorem addhshlhsdivhnegative2_thm (e : IntW 32) :
+  add (shl (LLVM.sdiv e (const? (-2147483648))) (const? 31)) e ⊑
+    add (select (icmp IntPredicate.eq e (const? (-2147483648))) (const? (-2147483648)) (const? 0)) e := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+

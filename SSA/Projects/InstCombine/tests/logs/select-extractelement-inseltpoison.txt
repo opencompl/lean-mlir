@@ -2,63 +2,43 @@
 5: "v4float_user" is empty
 
 1: "extract_one_select"
-4: "extract_one_select" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "extract_one_select" has unsupported operation: builtin.unregistered: llvm.extractelement
 
 1: "extract_two_select"
 4: "extract_two_select" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
-4: "extract_two_select" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "extract_two_select" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 1: "extract_one_select_user"
-4: "extract_one_select_user" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "extract_one_select_user" has unsupported operation: builtin.unregistered: llvm.extractelement
 
 4: "extract_one_select_user" has unsupported operation: llvm.call
 
 1: "extract_one_vselect_user"
-4: "extract_one_vselect_user" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "extract_one_vselect_user" has unsupported operation: builtin.unregistered: llvm.extractelement
 
 4: "extract_one_vselect_user" has unsupported operation: llvm.call
 
 1: "extract_one_vselect"
-4: "extract_one_vselect" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "extract_one_vselect" has unsupported operation: builtin.unregistered: llvm.extractelement
 
 1: "extract_two_vselect"
 4: "extract_two_vselect" has unsupported operation: builtin.unregistered: llvm.mlir.poison
-
-4: "extract_two_vselect" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "extract_two_vselect" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 1: "simple_vector_select"
 4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.extractelement
 
-4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.extractelement
-
-4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.extractelement
 
-4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.shufflevector
 
 4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.extractelement
-
-4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.shufflevector
 

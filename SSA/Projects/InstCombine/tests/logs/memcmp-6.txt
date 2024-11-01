@@ -19,23 +19,15 @@
 4: "fold_memcmp_cst_cst" has unsupported operation: llvm.return
 
 1: "fold_memcmp_cst_var"
-4: "fold_memcmp_cst_var" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "fold_memcmp_cst_var" has unsupported operation: llvm.store
-
-4: "fold_memcmp_cst_var" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "fold_memcmp_cst_var" has unsupported operation: llvm.getelementptr
 
 4: "fold_memcmp_cst_var" has unsupported operation: llvm.store
 
-4: "fold_memcmp_cst_var" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "fold_memcmp_cst_var" has unsupported operation: llvm.getelementptr
 
 4: "fold_memcmp_cst_var" has unsupported operation: llvm.store
-
-4: "fold_memcmp_cst_var" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "fold_memcmp_cst_var" has unsupported operation: llvm.getelementptr
 

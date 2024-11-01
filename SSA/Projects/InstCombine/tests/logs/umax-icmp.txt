@@ -1,94 +1,156 @@
 1: "eq_umax1"
-4: "eq_umax1" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
 
 1: "eq_umax2"
-4: "eq_umax2" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
 
 1: "eq_umax3"
-4: "eq_umax3" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
 
 1: "eq_umax4"
-4: "eq_umax4" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
 
 1: "ule_umax1"
-4: "ule_umax1" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
 
 1: "ule_umax2"
-4: "ule_umax2" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
 
 1: "ule_umax3"
-4: "ule_umax3" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
 
 1: "ule_umax4"
-4: "ule_umax4" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
 
 1: "ne_umax1"
-4: "ne_umax1" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
 
 1: "ne_umax2"
-4: "ne_umax2" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
 
 1: "ne_umax3"
-4: "ne_umax3" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
 
 1: "ne_umax4"
-4: "ne_umax4" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
 
 1: "ugt_umax1"
-4: "ugt_umax1" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
 
 1: "ugt_umax2"
-4: "ugt_umax2" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
 
 1: "ugt_umax3"
-4: "ugt_umax3" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
 
 1: "ugt_umax4"
-4: "ugt_umax4" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
 
 1: "use"
 5: "use" is empty
 
 1: "eq_umax_contextual"
-4: "eq_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "eq_umax_contextual" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "eq_umax_contextual" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
-4: "eq_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "eq_umax_contextual" has unsupported operation: llvm.call
 
-4: "eq_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "eq_umax_contextual" has unsupported operation: llvm.call
-
-4: "eq_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "eq_umax_contextual" has unsupported operation: llvm.call
-
-4: "eq_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "eq_umax_contextual" has unsupported operation: llvm.call
 
 4: "eq_umax_contextual" has unsupported operation: llvm.call
 
-4: "eq_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "eq_umax_contextual" has unsupported operation: llvm.call
-
-4: "eq_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "eq_umax_contextual" has unsupported operation: llvm.call
 
 4: "eq_umax_contextual" has unsupported operation: llvm.call
 
-4: "eq_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "eq_umax_contextual" has unsupported operation: llvm.call
 
-4: "eq_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "eq_umax_contextual" has unsupported operation: llvm.call
 
 4: "eq_umax_contextual" has unsupported operation: llvm.call
 
@@ -97,45 +159,27 @@
 4: "eq_umax_contextual" has unsupported operation: llvm.return
 
 1: "eq_umax_contextual_commuted"
-4: "eq_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "eq_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "eq_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
-4: "eq_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "eq_umax_contextual_commuted" has unsupported operation: llvm.call
 
-4: "eq_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "eq_umax_contextual_commuted" has unsupported operation: llvm.call
-
-4: "eq_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "eq_umax_contextual_commuted" has unsupported operation: llvm.call
-
-4: "eq_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "eq_umax_contextual_commuted" has unsupported operation: llvm.call
 
 4: "eq_umax_contextual_commuted" has unsupported operation: llvm.call
 
-4: "eq_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "eq_umax_contextual_commuted" has unsupported operation: llvm.call
-
-4: "eq_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "eq_umax_contextual_commuted" has unsupported operation: llvm.call
 
 4: "eq_umax_contextual_commuted" has unsupported operation: llvm.call
 
-4: "eq_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "eq_umax_contextual_commuted" has unsupported operation: llvm.call
 
-4: "eq_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "eq_umax_contextual_commuted" has unsupported operation: llvm.call
 
 4: "eq_umax_contextual_commuted" has unsupported operation: llvm.call
 
@@ -144,49 +188,27 @@
 4: "eq_umax_contextual_commuted" has unsupported operation: llvm.return
 
 1: "ult_umax_contextual"
-4: "ult_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "ult_umax_contextual" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "ult_umax_contextual" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
-4: "ult_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "ult_umax_contextual" has unsupported operation: llvm.call
 
 4: "ult_umax_contextual" has unsupported operation: llvm.call
 
-4: "ult_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "ult_umax_contextual" has unsupported operation: llvm.call
 
 4: "ult_umax_contextual" has unsupported operation: llvm.call
 
-4: "ult_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "ult_umax_contextual" has unsupported operation: llvm.call
 
 4: "ult_umax_contextual" has unsupported operation: llvm.call
 
-4: "ult_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "ult_umax_contextual" has unsupported operation: llvm.call
 
 4: "ult_umax_contextual" has unsupported operation: llvm.call
 
-4: "ult_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "ult_umax_contextual" has unsupported operation: llvm.call
-
-4: "ult_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ult_umax_contextual" has unsupported operation: llvm.call
-
-4: "ult_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ult_umax_contextual" has unsupported operation: llvm.call
-
-4: "ult_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ult_umax_contextual" has unsupported operation: llvm.call
-
-4: "ult_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ult_umax_contextual" has unsupported operation: llvm.call
-
-4: "ult_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "ult_umax_contextual" has unsupported operation: llvm.call
 
@@ -195,49 +217,27 @@
 4: "ult_umax_contextual" has unsupported operation: llvm.return
 
 1: "ult_umax_contextual_commuted"
-4: "ult_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "ult_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "ult_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
-4: "ult_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "ult_umax_contextual_commuted" has unsupported operation: llvm.call
 
 4: "ult_umax_contextual_commuted" has unsupported operation: llvm.call
 
-4: "ult_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "ult_umax_contextual_commuted" has unsupported operation: llvm.call
 
 4: "ult_umax_contextual_commuted" has unsupported operation: llvm.call
 
-4: "ult_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "ult_umax_contextual_commuted" has unsupported operation: llvm.call
 
 4: "ult_umax_contextual_commuted" has unsupported operation: llvm.call
 
-4: "ult_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "ult_umax_contextual_commuted" has unsupported operation: llvm.call
 
 4: "ult_umax_contextual_commuted" has unsupported operation: llvm.call
 
-4: "ult_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "ult_umax_contextual_commuted" has unsupported operation: llvm.call
-
-4: "ult_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ult_umax_contextual_commuted" has unsupported operation: llvm.call
-
-4: "ult_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ult_umax_contextual_commuted" has unsupported operation: llvm.call
-
-4: "ult_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ult_umax_contextual_commuted" has unsupported operation: llvm.call
-
-4: "ult_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ult_umax_contextual_commuted" has unsupported operation: llvm.call
-
-4: "ult_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "ult_umax_contextual_commuted" has unsupported operation: llvm.call
 
@@ -246,49 +246,27 @@
 4: "ult_umax_contextual_commuted" has unsupported operation: llvm.return
 
 1: "ule_umax_contextual"
-4: "ule_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "ule_umax_contextual" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "ule_umax_contextual" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
-4: "ule_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "ule_umax_contextual" has unsupported operation: llvm.call
 
 4: "ule_umax_contextual" has unsupported operation: llvm.call
 
-4: "ule_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "ule_umax_contextual" has unsupported operation: llvm.call
 
 4: "ule_umax_contextual" has unsupported operation: llvm.call
 
-4: "ule_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "ule_umax_contextual" has unsupported operation: llvm.call
 
 4: "ule_umax_contextual" has unsupported operation: llvm.call
 
-4: "ule_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "ule_umax_contextual" has unsupported operation: llvm.call
 
 4: "ule_umax_contextual" has unsupported operation: llvm.call
 
-4: "ule_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "ule_umax_contextual" has unsupported operation: llvm.call
-
-4: "ule_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ule_umax_contextual" has unsupported operation: llvm.call
-
-4: "ule_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ule_umax_contextual" has unsupported operation: llvm.call
-
-4: "ule_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ule_umax_contextual" has unsupported operation: llvm.call
-
-4: "ule_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ule_umax_contextual" has unsupported operation: llvm.call
-
-4: "ule_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "ule_umax_contextual" has unsupported operation: llvm.call
 
@@ -297,49 +275,27 @@
 4: "ule_umax_contextual" has unsupported operation: llvm.return
 
 1: "ule_umax_contextual_commuted"
-4: "ule_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "ule_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "ule_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
-4: "ule_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "ule_umax_contextual_commuted" has unsupported operation: llvm.call
 
 4: "ule_umax_contextual_commuted" has unsupported operation: llvm.call
 
-4: "ule_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "ule_umax_contextual_commuted" has unsupported operation: llvm.call
 
 4: "ule_umax_contextual_commuted" has unsupported operation: llvm.call
 
-4: "ule_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "ule_umax_contextual_commuted" has unsupported operation: llvm.call
 
 4: "ule_umax_contextual_commuted" has unsupported operation: llvm.call
 
-4: "ule_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "ule_umax_contextual_commuted" has unsupported operation: llvm.call
 
 4: "ule_umax_contextual_commuted" has unsupported operation: llvm.call
 
-4: "ule_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "ule_umax_contextual_commuted" has unsupported operation: llvm.call
-
-4: "ule_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ule_umax_contextual_commuted" has unsupported operation: llvm.call
-
-4: "ule_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ule_umax_contextual_commuted" has unsupported operation: llvm.call
-
-4: "ule_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ule_umax_contextual_commuted" has unsupported operation: llvm.call
-
-4: "ule_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ule_umax_contextual_commuted" has unsupported operation: llvm.call
-
-4: "ule_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "ule_umax_contextual_commuted" has unsupported operation: llvm.call
 
@@ -348,25 +304,15 @@
 4: "ule_umax_contextual_commuted" has unsupported operation: llvm.return
 
 1: "ugt_umax_contextual"
-4: "ugt_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "ugt_umax_contextual" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "ugt_umax_contextual" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
-4: "ugt_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "ugt_umax_contextual" has unsupported operation: llvm.call
 
 4: "ugt_umax_contextual" has unsupported operation: llvm.call
 
-4: "ugt_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "ugt_umax_contextual" has unsupported operation: llvm.call
-
-4: "ugt_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ugt_umax_contextual" has unsupported operation: llvm.call
-
-4: "ugt_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "ugt_umax_contextual" has unsupported operation: llvm.call
 
@@ -387,25 +333,15 @@
 4: "ugt_umax_contextual" has unsupported operation: llvm.return
 
 1: "ugt_umax_contextual_commuted"
-4: "ugt_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "ugt_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "ugt_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
-4: "ugt_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "ugt_umax_contextual_commuted" has unsupported operation: llvm.call
 
 4: "ugt_umax_contextual_commuted" has unsupported operation: llvm.call
 
-4: "ugt_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "ugt_umax_contextual_commuted" has unsupported operation: llvm.call
-
-4: "ugt_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "ugt_umax_contextual_commuted" has unsupported operation: llvm.call
-
-4: "ugt_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "ugt_umax_contextual_commuted" has unsupported operation: llvm.call
 
@@ -426,45 +362,27 @@
 4: "ugt_umax_contextual_commuted" has unsupported operation: llvm.return
 
 1: "uge_umax_contextual"
-4: "uge_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "uge_umax_contextual" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "uge_umax_contextual" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
-4: "uge_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "uge_umax_contextual" has unsupported operation: llvm.call
 
-4: "uge_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "uge_umax_contextual" has unsupported operation: llvm.call
-
-4: "uge_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "uge_umax_contextual" has unsupported operation: llvm.call
-
-4: "uge_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "uge_umax_contextual" has unsupported operation: llvm.call
 
 4: "uge_umax_contextual" has unsupported operation: llvm.call
 
-4: "uge_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "uge_umax_contextual" has unsupported operation: llvm.call
-
-4: "uge_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "uge_umax_contextual" has unsupported operation: llvm.call
 
 4: "uge_umax_contextual" has unsupported operation: llvm.call
 
-4: "uge_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "uge_umax_contextual" has unsupported operation: llvm.call
 
-4: "uge_umax_contextual" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "uge_umax_contextual" has unsupported operation: llvm.call
 
 4: "uge_umax_contextual" has unsupported operation: llvm.call
 
@@ -473,45 +391,27 @@
 4: "uge_umax_contextual" has unsupported operation: llvm.return
 
 1: "uge_umax_contextual_commuted"
-4: "uge_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "uge_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "uge_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
-4: "uge_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "uge_umax_contextual_commuted" has unsupported operation: llvm.call
 
-4: "uge_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "uge_umax_contextual_commuted" has unsupported operation: llvm.call
-
-4: "uge_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "uge_umax_contextual_commuted" has unsupported operation: llvm.call
-
-4: "uge_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "uge_umax_contextual_commuted" has unsupported operation: llvm.call
 
 4: "uge_umax_contextual_commuted" has unsupported operation: llvm.call
 
-4: "uge_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "uge_umax_contextual_commuted" has unsupported operation: llvm.call
-
-4: "uge_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "uge_umax_contextual_commuted" has unsupported operation: llvm.call
 
 4: "uge_umax_contextual_commuted" has unsupported operation: llvm.call
 
-4: "uge_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "uge_umax_contextual_commuted" has unsupported operation: llvm.call
 
-4: "uge_umax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "uge_umax_contextual_commuted" has unsupported operation: llvm.call
 
 4: "uge_umax_contextual_commuted" has unsupported operation: llvm.call
 

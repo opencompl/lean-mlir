@@ -1,3 +1,7 @@
 1: "test"
-4: "test" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.zext
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
 

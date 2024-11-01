@@ -123,6 +123,39 @@ theorem and_add_bool_to_select_proof : and_add_bool_to_select_before ⊑ and_add
 
 
 
+def and_add_bool_no_fold_before := [llvm|
+{
+^0(%arg4 : i32):
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
+  %2 = llvm.and %arg4, %0 : i32
+  %3 = llvm.add %1, %2 : i32
+  %4 = llvm.and %3, %arg4 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def and_add_bool_no_fold_after := [llvm|
+{
+^0(%arg4 : i32):
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.and %arg4, %0 : i32
+  %3 = llvm.icmp "eq" %2, %1 : i32
+  %4 = "llvm.select"(%3, %arg4, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem and_add_bool_no_fold_proof : and_add_bool_no_fold_before ⊑ and_add_bool_no_fold_after := by
+  unfold and_add_bool_no_fold_before and_add_bool_no_fold_after
+  simp_alive_peephole
+  intros
+  ---BEGIN and_add_bool_no_fold
+  all_goals (try extract_goal ; sorry)
+  ---END and_add_bool_no_fold
+
+
+
 def and_add_bool_to_select_multi_use_before := [llvm|
 {
 ^0(%arg0 : i1, %arg1 : i32):

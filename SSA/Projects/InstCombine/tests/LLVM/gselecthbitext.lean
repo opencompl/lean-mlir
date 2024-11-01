@@ -558,6 +558,41 @@ theorem test_zext4_proof : test_zext4_before ⊑ test_zext4_after := by
 
 
 
+def test_op_op_before := [llvm|
+{
+^0(%arg20 : i32, %arg21 : i32, %arg22 : i32):
+  %0 = llvm.mlir.constant(0 : i32) : i32
+  %1 = llvm.icmp "sgt" %arg20, %0 : i32
+  %2 = llvm.sext %1 : i1 to i32
+  %3 = llvm.icmp "sgt" %arg21, %0 : i32
+  %4 = llvm.sext %3 : i1 to i32
+  %5 = llvm.icmp "sgt" %arg22, %0 : i32
+  %6 = "llvm.select"(%5, %2, %4) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  "llvm.return"(%6) : (i32) -> ()
+}
+]
+def test_op_op_after := [llvm|
+{
+^0(%arg20 : i32, %arg21 : i32, %arg22 : i32):
+  %0 = llvm.mlir.constant(0 : i32) : i32
+  %1 = llvm.icmp "sgt" %arg22, %0 : i32
+  %2 = "llvm.select"(%1, %arg20, %arg21) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  %3 = llvm.icmp "sgt" %2, %0 : i32
+  %4 = llvm.sext %3 : i1 to i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test_op_op_proof : test_op_op_before ⊑ test_op_op_after := by
+  unfold test_op_op_before test_op_op_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test_op_op
+  all_goals (try extract_goal ; sorry)
+  ---END test_op_op
+
+
+
 def sext_true_val_must_be_all_ones_before := [llvm|
 {
 ^0(%arg7 : i1):

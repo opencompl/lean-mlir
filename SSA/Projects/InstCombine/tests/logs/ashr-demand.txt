@@ -8,7 +8,14 @@
 2: llvm.return
 
 1: "srem8_ashr_mask"
-4: "srem8_ashr_mask" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.ashr
+2: llvm.and
+2: llvm.return
 
 1: "srem2_ashr_mask_vector"
 8: "srem2_ashr_mask_vector" contains vectors which are unsupported

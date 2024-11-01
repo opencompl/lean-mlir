@@ -1,0 +1,209 @@
+
+import SSA.Projects.InstCombine.TacticAuto
+import SSA.Projects.InstCombine.LLVM.Semantics
+open BitVec
+open LLVM
+
+section gonehot_merge_proof
+theorem and_consts_thm (e : IntW 32) :
+  LLVM.or (icmp IntPredicate.eq (LLVM.and (const? 4) e) (const? 0))
+      (icmp IntPredicate.eq (LLVM.and (const? 8) e) (const? 0)) ⊑
+    icmp IntPredicate.ne (LLVM.and e (const? 12)) (const? 12) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem and_consts_logical_thm (e : IntW 32) :
+  select (icmp IntPredicate.eq (LLVM.and (const? 4) e) (const? 0)) (const? 1)
+      (icmp IntPredicate.eq (LLVM.and (const? 8) e) (const? 0)) ⊑
+    icmp IntPredicate.ne (LLVM.and e (const? 12)) (const? 12) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem foo1_and_thm (e e_1 e_2 : IntW 32) :
+  LLVM.or (icmp IntPredicate.eq (LLVM.and (shl (const? 1) e_2) e_1) (const? 0))
+      (icmp IntPredicate.eq (LLVM.and (shl (const? 1) e) e_1) (const? 0)) ⊑
+    icmp IntPredicate.ne
+      (LLVM.and e_1
+        (LLVM.or (shl (const? 1) e_2 { «nsw» := false, «nuw» := true })
+          (shl (const? 1) e { «nsw» := false, «nuw» := true })))
+      (LLVM.or (shl (const? 1) e_2 { «nsw» := false, «nuw» := true })
+        (shl (const? 1) e { «nsw» := false, «nuw» := true })) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem foo1_and_commuted_thm (e e_1 e_2 : IntW 32) :
+  LLVM.or (icmp IntPredicate.eq (LLVM.and (mul e_2 e_2) (shl (const? 1) e_1)) (const? 0))
+      (icmp IntPredicate.eq (LLVM.and (shl (const? 1) e) (mul e_2 e_2)) (const? 0)) ⊑
+    icmp IntPredicate.ne
+      (LLVM.and (mul e_2 e_2)
+        (LLVM.or (shl (const? 1) e_1 { «nsw» := false, «nuw» := true })
+          (shl (const? 1) e { «nsw» := false, «nuw» := true })))
+      (LLVM.or (shl (const? 1) e_1 { «nsw» := false, «nuw» := true })
+        (shl (const? 1) e { «nsw» := false, «nuw» := true })) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem or_consts_thm (e : IntW 32) :
+  LLVM.and (icmp IntPredicate.ne (LLVM.and (const? 4) e) (const? 0))
+      (icmp IntPredicate.ne (LLVM.and (const? 8) e) (const? 0)) ⊑
+    icmp IntPredicate.eq (LLVM.and e (const? 12)) (const? 12) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem or_consts_logical_thm (e : IntW 32) :
+  select (icmp IntPredicate.ne (LLVM.and (const? 4) e) (const? 0))
+      (icmp IntPredicate.ne (LLVM.and (const? 8) e) (const? 0)) (const? 0) ⊑
+    icmp IntPredicate.eq (LLVM.and e (const? 12)) (const? 12) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem foo1_or_thm (e e_1 e_2 : IntW 32) :
+  LLVM.and (icmp IntPredicate.ne (LLVM.and (shl (const? 1) e_2) e_1) (const? 0))
+      (icmp IntPredicate.ne (LLVM.and (shl (const? 1) e) e_1) (const? 0)) ⊑
+    icmp IntPredicate.eq
+      (LLVM.and e_1
+        (LLVM.or (shl (const? 1) e_2 { «nsw» := false, «nuw» := true })
+          (shl (const? 1) e { «nsw» := false, «nuw» := true })))
+      (LLVM.or (shl (const? 1) e_2 { «nsw» := false, «nuw» := true })
+        (shl (const? 1) e { «nsw» := false, «nuw» := true })) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem foo1_or_commuted_thm (e e_1 e_2 : IntW 32) :
+  LLVM.and (icmp IntPredicate.ne (LLVM.and (mul e_2 e_2) (shl (const? 1) e_1)) (const? 0))
+      (icmp IntPredicate.ne (LLVM.and (shl (const? 1) e) (mul e_2 e_2)) (const? 0)) ⊑
+    icmp IntPredicate.eq
+      (LLVM.and (mul e_2 e_2)
+        (LLVM.or (shl (const? 1) e_1 { «nsw» := false, «nuw» := true })
+          (shl (const? 1) e { «nsw» := false, «nuw» := true })))
+      (LLVM.or (shl (const? 1) e_1 { «nsw» := false, «nuw» := true })
+        (shl (const? 1) e { «nsw» := false, «nuw» := true })) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem foo1_and_signbit_lshr_thm (e e_1 e_2 : IntW 32) :
+  LLVM.or (icmp IntPredicate.eq (LLVM.and (shl (const? 1) e_2) e_1) (const? 0))
+      (icmp IntPredicate.eq (LLVM.and (lshr (const? (-2147483648)) e) e_1) (const? 0)) ⊑
+    icmp IntPredicate.ne
+      (LLVM.and e_1 (LLVM.or (shl (const? 1) e_2 { «nsw» := false, «nuw» := true }) (lshr (const? (-2147483648)) e)))
+      (LLVM.or (shl (const? 1) e_2 { «nsw» := false, «nuw» := true }) (lshr (const? (-2147483648)) e)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem foo1_or_signbit_lshr_thm (e e_1 e_2 : IntW 32) :
+  LLVM.and (icmp IntPredicate.ne (LLVM.and (shl (const? 1) e_2) e_1) (const? 0))
+      (icmp IntPredicate.ne (LLVM.and (lshr (const? (-2147483648)) e) e_1) (const? 0)) ⊑
+    icmp IntPredicate.eq
+      (LLVM.and e_1 (LLVM.or (shl (const? 1) e_2 { «nsw» := false, «nuw» := true }) (lshr (const? (-2147483648)) e)))
+      (LLVM.or (shl (const? 1) e_2 { «nsw» := false, «nuw» := true }) (lshr (const? (-2147483648)) e)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem foo1_and_signbit_lshr_without_shifting_signbit_thm (e e_1 e_2 : IntW 32) :
+  LLVM.or (icmp IntPredicate.eq (LLVM.and (shl (const? 1) e_2) e_1) (const? 0))
+      (icmp IntPredicate.sgt (shl e_1 e) (const? (-1))) ⊑
+    LLVM.or (icmp IntPredicate.eq (LLVM.and (shl (const? 1) e_2 { «nsw» := false, «nuw» := true }) e_1) (const? 0))
+      (icmp IntPredicate.sgt (shl e_1 e) (const? (-1))) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem foo1_and_signbit_lshr_without_shifting_signbit_logical_thm (e e_1 e_2 : IntW 32) :
+  select (icmp IntPredicate.eq (LLVM.and (shl (const? 1) e_2) e_1) (const? 0)) (const? 1)
+      (icmp IntPredicate.sgt (shl e_1 e) (const? (-1))) ⊑
+    select (icmp IntPredicate.eq (LLVM.and (shl (const? 1) e_2 { «nsw» := false, «nuw» := true }) e_1) (const? 0))
+      (const? 1) (icmp IntPredicate.sgt (shl e_1 e) (const? (-1))) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem foo1_or_signbit_lshr_without_shifting_signbit_thm (e e_1 e_2 : IntW 32) :
+  LLVM.and (icmp IntPredicate.ne (LLVM.and (shl (const? 1) e_2) e_1) (const? 0))
+      (icmp IntPredicate.slt (shl e_1 e) (const? 0)) ⊑
+    LLVM.and (icmp IntPredicate.ne (LLVM.and (shl (const? 1) e_2 { «nsw» := false, «nuw» := true }) e_1) (const? 0))
+      (icmp IntPredicate.slt (shl e_1 e) (const? 0)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem foo1_or_signbit_lshr_without_shifting_signbit_logical_thm (e e_1 e_2 : IntW 32) :
+  select (icmp IntPredicate.ne (LLVM.and (shl (const? 1) e_2) e_1) (const? 0))
+      (icmp IntPredicate.slt (shl e_1 e) (const? 0)) (const? 0) ⊑
+    select (icmp IntPredicate.ne (LLVM.and (shl (const? 1) e_2 { «nsw» := false, «nuw» := true }) e_1) (const? 0))
+      (icmp IntPredicate.slt (shl e_1 e) (const? 0)) (const? 0) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem foo1_and_signbit_lshr_without_shifting_signbit_both_sides_thm (e e_1 e_2 : IntW 32) :
+  LLVM.or (icmp IntPredicate.sgt (shl e_2 e_1) (const? (-1))) (icmp IntPredicate.sgt (shl e_2 e) (const? (-1))) ⊑
+    icmp IntPredicate.sgt (LLVM.and (shl e_2 e_1) (shl e_2 e)) (const? (-1)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem foo1_or_signbit_lshr_without_shifting_signbit_both_sides_thm (e e_1 e_2 : IntW 32) :
+  LLVM.and (icmp IntPredicate.slt (shl e_2 e_1) (const? 0)) (icmp IntPredicate.slt (shl e_2 e) (const? 0)) ⊑
+    icmp IntPredicate.slt (LLVM.and (shl e_2 e_1) (shl e_2 e)) (const? 0) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+

@@ -6,8 +6,6 @@
 
 4: "_start" has unsupported operation: llvm.load
 
-4: "_start" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "_start" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "_start" has unsupported operation: llvm.return

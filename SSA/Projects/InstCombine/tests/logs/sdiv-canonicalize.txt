@@ -33,10 +33,10 @@
 4: "test_sdiv_canonicalize_constexpr" has unsupported operation: builtin.unregistered: llvm.ptrtoint
 
 1: "sdiv_abs_nsw"
-4: "sdiv_abs_nsw" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "sdiv_abs_nsw" has unsupported operation after optimization: builtin.unregistered: llvm.intr.abs
 
 1: "sdiv_abs_nsw_vec"
-4: "sdiv_abs_nsw_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "sdiv_abs_nsw_vec" contains vectors which are unsupported
 
 1: "sdiv_abs"
 4: "sdiv_abs" has unsupported operation: builtin.unregistered: llvm.intr.abs

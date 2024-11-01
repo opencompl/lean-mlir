@@ -3,5 +3,3 @@
 
 4: "test" has unsupported operation after optimization: llvm.inttoptr
 
-4: "test" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-

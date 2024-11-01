@@ -1,7 +1,12 @@
 1: "test1"
-4: "test1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "test1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.icmp
+2: llvm.zext
+2: llvm.icmp
+2: llvm.zext
+2: llvm.and
+2: llvm.trunc
+2: llvm.return
 
 1: "shrink_xor"
 2: llvm.func
@@ -36,13 +41,7 @@
 
 4: "searchArray1" has unsupported operation: llvm.load
 
-4: "searchArray1" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "searchArray1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "searchArray1" has unsupported operation: builtin.unregistered: llvm.cond_br
-
-4: "searchArray1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "searchArray2"
 4: "searchArray2" has unsupported operation: builtin.unregistered: llvm.br
@@ -51,13 +50,7 @@
 
 4: "searchArray2" has unsupported operation: llvm.load
 
-4: "searchArray2" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "searchArray2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "searchArray2" has unsupported operation: builtin.unregistered: llvm.cond_br
-
-4: "searchArray2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "shrinkLogicAndPhi1"
 4: "shrinkLogicAndPhi1" has unsupported operation: builtin.unregistered: llvm.cond_br

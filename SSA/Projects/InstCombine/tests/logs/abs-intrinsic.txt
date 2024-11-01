@@ -66,13 +66,9 @@
 4: "abs_of_select_neg_false_val" has unsupported operation: builtin.unregistered: llvm.intr.abs
 
 1: "abs_dom_cond_nopoison"
-4: "abs_dom_cond_nopoison" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "abs_dom_cond_nopoison" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "abs_dom_cond_poison"
-4: "abs_dom_cond_poison" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "abs_dom_cond_poison" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "zext_abs"
@@ -88,13 +84,9 @@
 8: "select_abs" contains vectors which are unsupported
 
 1: "assume_abs"
-4: "assume_abs" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "assume_abs" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "abs_assume_neg"
-4: "abs_assume_neg" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "abs_assume_neg" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "abs_known_neg"
@@ -103,18 +95,14 @@
 1: "abs_eq_int_min_poison"
 4: "abs_eq_int_min_poison" has unsupported operation after optimization: builtin.unregistered: llvm.intr.abs
 
-4: "abs_eq_int_min_poison" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
 1: "abs_ne_int_min_poison"
 4: "abs_ne_int_min_poison" has unsupported operation after optimization: builtin.unregistered: llvm.intr.abs
 
-4: "abs_ne_int_min_poison" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
 1: "abs_eq_int_min_nopoison"
-4: "abs_eq_int_min_nopoison" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "abs_eq_int_min_nopoison" has unsupported operation after optimization: builtin.unregistered: llvm.intr.abs
 
 1: "abs_ne_int_min_nopoison"
-4: "abs_ne_int_min_nopoison" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "abs_ne_int_min_nopoison" has unsupported operation after optimization: builtin.unregistered: llvm.intr.abs
 
 1: "abs_sext"
 4: "abs_sext" has unsupported operation: builtin.unregistered: llvm.intr.abs
@@ -152,71 +140,51 @@
 4: "srem_by_3" has unsupported operation: builtin.unregistered: llvm.intr.abs
 
 1: "sub_abs_gt"
-4: "sub_abs_gt" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "sub_abs_gt" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "sub_abs_gt" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "sub_abs_sgeT"
-4: "sub_abs_sgeT" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "sub_abs_sgeT" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "sub_abs_sgeT" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "sub_abs_sgeT_swap"
-4: "sub_abs_sgeT_swap" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "sub_abs_sgeT_swap" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "sub_abs_sgeT_swap" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "sub_abs_sgeT_false"
-4: "sub_abs_sgeT_false" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "sub_abs_sgeT_false" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "sub_abs_sgeT_false" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "sub_abs_lt"
-4: "sub_abs_lt" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "sub_abs_lt" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "sub_abs_lt" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "sub_abs_sle"
-4: "sub_abs_sle" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "sub_abs_sle" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "sub_abs_sle" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "sub_abs_sleF"
-4: "sub_abs_sleF" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "sub_abs_sleF" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "sub_abs_sleF" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "sub_abs_sleT"
-4: "sub_abs_sleT" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "sub_abs_sleT" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "sub_abs_sleT" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "sub_abs_lt_min_not_poison"
-4: "sub_abs_lt_min_not_poison" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "sub_abs_lt_min_not_poison" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "sub_abs_lt_min_not_poison" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "sub_abs_wrong_pred"
-4: "sub_abs_wrong_pred" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "sub_abs_wrong_pred" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "sub_abs_wrong_pred" has unsupported operation: builtin.unregistered: llvm.intr.abs
@@ -224,8 +192,6 @@
 4: "sub_abs_wrong_pred" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "sub_abs_no_nsw"
-4: "sub_abs_no_nsw" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "sub_abs_no_nsw" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "sub_abs_no_nsw" has unsupported operation: builtin.unregistered: llvm.intr.abs

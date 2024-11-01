@@ -9,17 +9,11 @@
 
 4: "icmp_func" has unsupported operation after optimization: llvm.mlir.addressof
 
-4: "icmp_func" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
 1: "icmp_fptr"
 4: "icmp_fptr" has unsupported operation: llvm.mlir.addressof
-
-4: "icmp_fptr" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "icmp_glob"
 4: "icmp_glob" has unsupported operation after optimization: llvm.mlir.addressof
 
 4: "icmp_glob" has unsupported operation after optimization: llvm.mlir.addressof
-
-4: "icmp_glob" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 

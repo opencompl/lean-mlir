@@ -192,8 +192,6 @@
 1: "is_signbit_set"
 4: "is_signbit_set" has unsupported operation: builtin.unregistered: llvm.bitcast
 
-4: "is_signbit_set" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "is_signbit_set_1"
 4: "is_signbit_set_1" has unsupported operation: builtin.unregistered: llvm.intr.copysign
 
@@ -211,8 +209,6 @@
 
 1: "is_signbit_set_anyzero"
 4: "is_signbit_set_anyzero" has unsupported operation: builtin.unregistered: llvm.bitcast
-
-4: "is_signbit_set_anyzero" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "is_signbit_clear"
 4: "is_signbit_clear" has unsupported operation: builtin.unregistered: llvm.intr.copysign
@@ -453,10 +449,12 @@
 4: "fneg_une_swap" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "bitcast_eq0"
-4: "bitcast_eq0" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "bitcast_eq0" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+4: "bitcast_eq0" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
 
 1: "bitcast_ne0"
-4: "bitcast_ne0" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "bitcast_ne0" contains vectors which are unsupported
 
 1: "bitcast_eq0_use"
 4: "bitcast_eq0_use" has unsupported operation: builtin.unregistered: llvm.bitcast

@@ -68,7 +68,5 @@
 4: "xor_add_splat_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 1: "xor_dominating_cond"
-4: "xor_dominating_cond" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "xor_dominating_cond" has unsupported operation: builtin.unregistered: llvm.cond_br
 

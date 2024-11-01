@@ -124,3 +124,61 @@ theorem not_sext_proof : not_sext_before ⊑ not_sext_after := by
   ---END not_sext
 
 
+
+def test3_before := [llvm|
+{
+^0(%arg1 : i41):
+  %0 = llvm.mlir.constant(0 : i41) : i41
+  %1 = llvm.mlir.constant(-1 : i41) : i41
+  %2 = llvm.icmp "slt" %arg1, %0 : i41
+  %3 = "llvm.select"(%2, %1, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i41, i41) -> i41
+  "llvm.return"(%3) : (i41) -> ()
+}
+]
+def test3_after := [llvm|
+{
+^0(%arg1 : i41):
+  %0 = llvm.mlir.constant(40 : i41) : i41
+  %1 = llvm.ashr %arg1, %0 : i41
+  "llvm.return"(%1) : (i41) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test3_proof : test3_before ⊑ test3_after := by
+  unfold test3_before test3_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test3
+  apply test3_thm
+  ---END test3
+
+
+
+def test4_before := [llvm|
+{
+^0(%arg0 : i1023):
+  %0 = llvm.mlir.constant(0 : i1023) : i1023
+  %1 = llvm.mlir.constant(-1 : i1023) : i1023
+  %2 = llvm.icmp "slt" %arg0, %0 : i1023
+  %3 = "llvm.select"(%2, %1, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1023, i1023) -> i1023
+  "llvm.return"(%3) : (i1023) -> ()
+}
+]
+def test4_after := [llvm|
+{
+^0(%arg0 : i1023):
+  %0 = llvm.mlir.constant(1022 : i1023) : i1023
+  %1 = llvm.ashr %arg0, %0 : i1023
+  "llvm.return"(%1) : (i1023) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test4_proof : test4_before ⊑ test4_after := by
+  unfold test4_before test4_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test4
+  apply test4_thm
+  ---END test4
+
+

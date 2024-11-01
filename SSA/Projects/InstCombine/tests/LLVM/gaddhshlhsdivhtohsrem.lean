@@ -165,3 +165,36 @@ theorem addhshlhsdivhnegative1_proof : addhshlhsdivhnegative1_before ⊑ addhshl
   ---END addhshlhsdivhnegative1
 
 
+
+def addhshlhsdivhnegative2_before := [llvm|
+{
+^0(%arg6 : i32):
+  %0 = llvm.mlir.constant(-2147483648 : i32) : i32
+  %1 = llvm.mlir.constant(31 : i32) : i32
+  %2 = llvm.sdiv %arg6, %0 : i32
+  %3 = llvm.shl %2, %1 : i32
+  %4 = llvm.add %3, %arg6 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def addhshlhsdivhnegative2_after := [llvm|
+{
+^0(%arg6 : i32):
+  %0 = llvm.mlir.constant(-2147483648 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.icmp "eq" %arg6, %0 : i32
+  %3 = "llvm.select"(%2, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  %4 = llvm.add %3, %arg6 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem addhshlhsdivhnegative2_proof : addhshlhsdivhnegative2_before ⊑ addhshlhsdivhnegative2_after := by
+  unfold addhshlhsdivhnegative2_before addhshlhsdivhnegative2_after
+  simp_alive_peephole
+  intros
+  ---BEGIN addhshlhsdivhnegative2
+  all_goals (try extract_goal ; sorry)
+  ---END addhshlhsdivhnegative2
+
+

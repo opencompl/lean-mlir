@@ -338,33 +338,21 @@
 4: "negate_shufflevector_oneinput_extrause" has unsupported operation: llvm.call
 
 1: "negation_of_zeroext_of_nonnegative"
-4: "negation_of_zeroext_of_nonnegative" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "negation_of_zeroext_of_nonnegative" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "negation_of_zeroext_of_positive"
-4: "negation_of_zeroext_of_positive" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "negation_of_zeroext_of_positive" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "negation_of_signext_of_negative"
-4: "negation_of_signext_of_negative" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "negation_of_signext_of_negative" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "negation_of_signext_of_nonpositive"
-4: "negation_of_signext_of_nonpositive" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "negation_of_signext_of_nonpositive" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "negation_of_signext_of_nonnegative__wrong_cast"
-4: "negation_of_signext_of_nonnegative__wrong_cast" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "negation_of_signext_of_nonnegative__wrong_cast" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "negation_of_zeroext_of_negative_wrongcast"
-4: "negation_of_zeroext_of_negative_wrongcast" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "negation_of_zeroext_of_negative_wrongcast" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "negation_of_increment_via_or_with_no_common_bits_set"

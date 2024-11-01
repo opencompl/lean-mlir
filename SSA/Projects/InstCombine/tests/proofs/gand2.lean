@@ -93,6 +93,137 @@ theorem test3_proof : test3_before ⊑ test3_after := by
 
 
 
+def test7_before := [llvm|
+{
+^0(%arg24 : i32, %arg25 : i1):
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
+  %2 = llvm.icmp "slt" %arg24, %0 : i32
+  %3 = llvm.icmp "sgt" %arg24, %1 : i32
+  %4 = llvm.and %2, %arg25 : i1
+  %5 = llvm.and %4, %3 : i1
+  "llvm.return"(%5) : (i1) -> ()
+}
+]
+def test7_after := [llvm|
+{
+^0(%arg24 : i32, %arg25 : i1):
+  %0 = llvm.mlir.constant(0 : i32) : i32
+  %1 = llvm.icmp "eq" %arg24, %0 : i32
+  %2 = llvm.and %1, %arg25 : i1
+  "llvm.return"(%2) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test7_proof : test7_before ⊑ test7_after := by
+  unfold test7_before test7_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test7
+  apply test7_thm
+  ---END test7
+
+
+
+def test7_logical_before := [llvm|
+{
+^0(%arg22 : i32, %arg23 : i1):
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
+  %2 = llvm.mlir.constant(false) : i1
+  %3 = llvm.icmp "slt" %arg22, %0 : i32
+  %4 = llvm.icmp "sgt" %arg22, %1 : i32
+  %5 = "llvm.select"(%3, %arg23, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  %6 = "llvm.select"(%5, %4, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  "llvm.return"(%6) : (i1) -> ()
+}
+]
+def test7_logical_after := [llvm|
+{
+^0(%arg22 : i32, %arg23 : i1):
+  %0 = llvm.mlir.constant(0 : i32) : i32
+  %1 = llvm.mlir.constant(false) : i1
+  %2 = llvm.icmp "eq" %arg22, %0 : i32
+  %3 = "llvm.select"(%2, %arg23, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test7_logical_proof : test7_logical_before ⊑ test7_logical_after := by
+  unfold test7_logical_before test7_logical_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test7_logical
+  apply test7_logical_thm
+  ---END test7_logical
+
+
+
+def test8_before := [llvm|
+{
+^0(%arg21 : i32):
+  %0 = llvm.mlir.constant(0 : i32) : i32
+  %1 = llvm.mlir.constant(14 : i32) : i32
+  %2 = llvm.icmp "ne" %arg21, %0 : i32
+  %3 = llvm.icmp "ult" %arg21, %1 : i32
+  %4 = llvm.and %2, %3 : i1
+  "llvm.return"(%4) : (i1) -> ()
+}
+]
+def test8_after := [llvm|
+{
+^0(%arg21 : i32):
+  %0 = llvm.mlir.constant(-1 : i32) : i32
+  %1 = llvm.mlir.constant(13 : i32) : i32
+  %2 = llvm.add %arg21, %0 : i32
+  %3 = llvm.icmp "ult" %2, %1 : i32
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test8_proof : test8_before ⊑ test8_after := by
+  unfold test8_before test8_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test8
+  apply test8_thm
+  ---END test8
+
+
+
+def test8_logical_before := [llvm|
+{
+^0(%arg20 : i32):
+  %0 = llvm.mlir.constant(0 : i32) : i32
+  %1 = llvm.mlir.constant(14 : i32) : i32
+  %2 = llvm.mlir.constant(false) : i1
+  %3 = llvm.icmp "ne" %arg20, %0 : i32
+  %4 = llvm.icmp "ult" %arg20, %1 : i32
+  %5 = "llvm.select"(%3, %4, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
+  "llvm.return"(%5) : (i1) -> ()
+}
+]
+def test8_logical_after := [llvm|
+{
+^0(%arg20 : i32):
+  %0 = llvm.mlir.constant(-1 : i32) : i32
+  %1 = llvm.mlir.constant(13 : i32) : i32
+  %2 = llvm.add %arg20, %0 : i32
+  %3 = llvm.icmp "ult" %2, %1 : i32
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test8_logical_proof : test8_logical_before ⊑ test8_logical_after := by
+  unfold test8_logical_before test8_logical_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test8_logical
+  apply test8_logical_thm
+  ---END test8_logical
+
+
+
 def test9_before := [llvm|
 {
 ^0(%arg18 : i64):
@@ -151,6 +282,35 @@ theorem test10_proof : test10_before ⊑ test10_after := by
   ---BEGIN test10
   apply test10_thm
   ---END test10
+
+
+
+def and1_shl1_is_cmp_eq_0_before := [llvm|
+{
+^0(%arg15 : i8):
+  %0 = llvm.mlir.constant(1 : i8) : i8
+  %1 = llvm.shl %0, %arg15 : i8
+  %2 = llvm.and %1, %0 : i8
+  "llvm.return"(%2) : (i8) -> ()
+}
+]
+def and1_shl1_is_cmp_eq_0_after := [llvm|
+{
+^0(%arg15 : i8):
+  %0 = llvm.mlir.constant(0 : i8) : i8
+  %1 = llvm.icmp "eq" %arg15, %0 : i8
+  %2 = llvm.zext %1 : i1 to i8
+  "llvm.return"(%2) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem and1_shl1_is_cmp_eq_0_proof : and1_shl1_is_cmp_eq_0_before ⊑ and1_shl1_is_cmp_eq_0_after := by
+  unfold and1_shl1_is_cmp_eq_0_before and1_shl1_is_cmp_eq_0_after
+  simp_alive_peephole
+  intros
+  ---BEGIN and1_shl1_is_cmp_eq_0
+  apply and1_shl1_is_cmp_eq_0_thm
+  ---END and1_shl1_is_cmp_eq_0
 
 
 

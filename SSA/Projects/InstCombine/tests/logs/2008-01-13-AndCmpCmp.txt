@@ -1,10 +1,13 @@
 1: "test"
-4: "test" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "test" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "test" is unchanged by InstCombine
 
 1: "test_logical"
-4: "test_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "test_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
 

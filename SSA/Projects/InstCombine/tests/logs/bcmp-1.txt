@@ -42,8 +42,6 @@
 
 4: "test_simplify7" has unsupported operation: llvm.call
 
-4: "test_simplify7" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "test_simplify8"
 4: "test_simplify8" has unsupported operation: llvm.alloca
 
@@ -54,8 +52,6 @@
 4: "test_simplify8" has unsupported operation: llvm.store
 
 4: "test_simplify8" has unsupported operation: llvm.call
-
-4: "test_simplify8" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "test_simplify9"
 4: "test_simplify9" has unsupported operation: llvm.alloca
@@ -68,10 +64,6 @@
 
 4: "test_simplify9" has unsupported operation: llvm.call
 
-4: "test_simplify9" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "test_simplify10"
 4: "test_simplify10" has unsupported operation: llvm.call
-
-4: "test_simplify10" has unsupported operation: builtin.unregistered: llvm.icmp
 

@@ -3,5 +3,3 @@
 
 4: "test" has unsupported operation: llvm.getelementptr
 
-4: "test" has unsupported operation: builtin.unregistered: llvm.icmp
-

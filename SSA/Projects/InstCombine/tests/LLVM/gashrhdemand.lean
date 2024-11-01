@@ -44,6 +44,42 @@ theorem srem2_ashr_mask_proof : srem2_ashr_mask_before ⊑ srem2_ashr_mask_after
 
 
 
+def srem8_ashr_mask_before := [llvm|
+{
+^0(%arg5 : i32):
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(31 : i32) : i32
+  %2 = llvm.mlir.constant(2 : i32) : i32
+  %3 = llvm.srem %arg5, %0 : i32
+  %4 = llvm.ashr %3, %1 : i32
+  %5 = llvm.and %4, %2 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+def srem8_ashr_mask_after := [llvm|
+{
+^0(%arg5 : i32):
+  %0 = llvm.mlir.constant(-2147483641 : i32) : i32
+  %1 = llvm.mlir.constant(-2147483648 : i32) : i32
+  %2 = llvm.mlir.constant(2 : i32) : i32
+  %3 = llvm.mlir.constant(0 : i32) : i32
+  %4 = llvm.and %arg5, %0 : i32
+  %5 = llvm.icmp "ugt" %4, %1 : i32
+  %6 = "llvm.select"(%5, %2, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  "llvm.return"(%6) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem srem8_ashr_mask_proof : srem8_ashr_mask_before ⊑ srem8_ashr_mask_after := by
+  unfold srem8_ashr_mask_before srem8_ashr_mask_after
+  simp_alive_peephole
+  intros
+  ---BEGIN srem8_ashr_mask
+  all_goals (try extract_goal ; sorry)
+  ---END srem8_ashr_mask
+
+
+
 def ashr_can_be_lshr_before := [llvm|
 {
 ^0(%arg1 : i32):

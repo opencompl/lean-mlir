@@ -149,5 +149,5 @@
 7: "n20" is unchanged by InstCombine
 
 1: "pr44802"
-4: "pr44802" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "pr44802" is unchanged by InstCombine
 

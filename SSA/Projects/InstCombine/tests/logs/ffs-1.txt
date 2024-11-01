@@ -46,8 +46,6 @@
 1: "test_simplify13"
 4: "test_simplify13" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
-4: "test_simplify13" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "test_simplify14"
 4: "test_simplify14" has unsupported operation: llvm.call
 

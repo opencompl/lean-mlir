@@ -19,8 +19,6 @@
 
 4: "pr8547" has unsupported operation: llvm.store
 
-4: "pr8547" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "pr8547" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "shl_shl"

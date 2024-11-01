@@ -13,6 +13,64 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gxor2_statements
 
+def test0_before := [llvm|
+{
+^0(%arg123 : i32):
+  %0 = llvm.mlir.constant(-2147483648 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
+  %2 = llvm.xor %arg123, %0 : i32
+  %3 = llvm.icmp "sgt" %2, %1 : i32
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+def test0_after := [llvm|
+{
+^0(%arg123 : i32):
+  %0 = llvm.mlir.constant(0 : i32) : i32
+  %1 = llvm.icmp "slt" %arg123, %0 : i32
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test0_proof : test0_before ⊑ test0_after := by
+  unfold test0_before test0_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test0
+  apply test0_thm
+  ---END test0
+
+
+
+def test1_before := [llvm|
+{
+^0(%arg121 : i32):
+  %0 = llvm.mlir.constant(12345 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.xor %arg121, %0 : i32
+  %3 = llvm.icmp "slt" %2, %1 : i32
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+def test1_after := [llvm|
+{
+^0(%arg121 : i32):
+  %0 = llvm.mlir.constant(0 : i32) : i32
+  %1 = llvm.icmp "slt" %arg121, %0 : i32
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test1_proof : test1_before ⊑ test1_after := by
+  unfold test1_before test1_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test1
+  apply test1_thm
+  ---END test1
+
+
+
 def test2_before := [llvm|
 {
 ^0(%arg120 : i32):

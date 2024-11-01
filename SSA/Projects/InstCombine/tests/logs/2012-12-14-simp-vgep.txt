@@ -13,5 +13,3 @@
 
 4: "foo" has unsupported operation: llvm.load
 
-4: "foo" has unsupported operation: builtin.unregistered: llvm.icmp
-

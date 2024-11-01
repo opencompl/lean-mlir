@@ -7,7 +7,5 @@
 
 4: "test" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "test" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test" has unsupported operation: builtin.unregistered: llvm.cond_br
 

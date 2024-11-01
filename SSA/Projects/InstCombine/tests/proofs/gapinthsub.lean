@@ -254,6 +254,33 @@ theorem test9_proof : test9_before ⊑ test9_after := by
 
 
 
+def test11_before := [llvm|
+{
+^0(%arg12 : i9, %arg13 : i9):
+  %0 = llvm.mlir.constant(0 : i9) : i9
+  %1 = llvm.sub %arg12, %arg13 : i9
+  %2 = llvm.icmp "ne" %1, %0 : i9
+  "llvm.return"(%2) : (i1) -> ()
+}
+]
+def test11_after := [llvm|
+{
+^0(%arg12 : i9, %arg13 : i9):
+  %0 = llvm.icmp "ne" %arg12, %arg13 : i9
+  "llvm.return"(%0) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test11_proof : test11_before ⊑ test11_after := by
+  unfold test11_before test11_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test11
+  apply test11_thm
+  ---END test11
+
+
+
 def test12_before := [llvm|
 {
 ^0(%arg11 : i43):
@@ -391,5 +418,59 @@ theorem test19_proof : test19_before ⊑ test19_after := by
   ---BEGIN test19
   apply test19_thm
   ---END test19
+
+
+
+def test20_before := [llvm|
+{
+^0(%arg2 : i33, %arg3 : i33):
+  %0 = llvm.sub %arg2, %arg3 : i33
+  %1 = llvm.icmp "ne" %0, %arg2 : i33
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+def test20_after := [llvm|
+{
+^0(%arg2 : i33, %arg3 : i33):
+  %0 = llvm.mlir.constant(0 : i33) : i33
+  %1 = llvm.icmp "ne" %arg3, %0 : i33
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test20_proof : test20_before ⊑ test20_after := by
+  unfold test20_before test20_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test20
+  apply test20_thm
+  ---END test20
+
+
+
+def test21_before := [llvm|
+{
+^0(%arg0 : i256, %arg1 : i256):
+  %0 = llvm.sub %arg0, %arg1 : i256
+  %1 = llvm.icmp "ne" %0, %arg0 : i256
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+def test21_after := [llvm|
+{
+^0(%arg0 : i256, %arg1 : i256):
+  %0 = llvm.mlir.constant(0 : i256) : i256
+  %1 = llvm.icmp "ne" %arg1, %0 : i256
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test21_proof : test21_before ⊑ test21_after := by
+  unfold test21_before test21_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test21
+  apply test21_thm
+  ---END test21
 
 

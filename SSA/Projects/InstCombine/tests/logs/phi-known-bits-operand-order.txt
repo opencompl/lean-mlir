@@ -12,8 +12,6 @@
 
 4: "phi_recurrence_start_first" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "phi_recurrence_start_first" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "phi_recurrence_start_first" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "phi_recurrence_start_first" has unsupported operation: builtin.unregistered: llvm.br
@@ -30,8 +28,6 @@
 4: "phi_recurrence_step_first" has unsupported operation: llvm.call
 
 4: "phi_recurrence_step_first" has unsupported operation: builtin.unregistered: llvm.cond_br
-
-4: "phi_recurrence_step_first" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "phi_recurrence_step_first" has unsupported operation: builtin.unregistered: llvm.cond_br
 

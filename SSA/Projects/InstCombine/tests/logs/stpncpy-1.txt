@@ -9,8 +9,6 @@
 
 4: "fold_stpncpy_overlap" has unsupported operation: llvm.load
 
-4: "fold_stpncpy_overlap" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "fold_stpncpy_overlap" has unsupported operation: llvm.getelementptr
 
 4: "fold_stpncpy_overlap" has unsupported operation: llvm.call
@@ -203,8 +201,6 @@
 4: "fold_stpncpy_s" has unsupported operation: llvm.load
 
 4: "fold_stpncpy_s" has unsupported operation: llvm.store
-
-4: "fold_stpncpy_s" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "fold_stpncpy_s" has unsupported operation: llvm.getelementptr
 

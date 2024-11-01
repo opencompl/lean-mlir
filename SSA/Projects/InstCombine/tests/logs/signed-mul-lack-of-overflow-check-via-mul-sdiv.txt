@@ -47,21 +47,17 @@
 1: "t6_extrause1"
 4: "t6_extrause1" has unsupported operation: llvm.call
 
-4: "t6_extrause1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "t7_extrause2"
 4: "t7_extrause2" has unsupported operation: llvm.call
 
 4: "t7_extrause2" has unsupported operation: llvm.call
 
-4: "t7_extrause2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "n8_different_x"
-4: "n8_different_x" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "n8_different_x" is unchanged by InstCombine
 
 1: "n9_different_y"
-4: "n9_different_y" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "n9_different_y" is unchanged by InstCombine
 
 1: "n10_wrong_pred"
-4: "n10_wrong_pred" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "n10_wrong_pred" is unchanged by InstCombine
 

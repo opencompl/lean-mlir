@@ -32,16 +32,12 @@
 
 4: "fold_a12345_3_n" has unsupported operation: llvm.getelementptr
 
-4: "fold_a12345_3_n" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "fold_a12345_259_n"
 4: "fold_a12345_259_n" has unsupported operation: llvm.mlir.zero
 
 4: "fold_a12345_259_n" has unsupported operation: llvm.mlir.addressof
 
 4: "fold_a12345_259_n" has unsupported operation: llvm.getelementptr
-
-4: "fold_a12345_259_n" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "call_ax_1_n"
 4: "call_ax_1_n" has unsupported operation: llvm.mlir.addressof

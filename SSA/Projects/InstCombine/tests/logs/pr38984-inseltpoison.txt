@@ -20,5 +20,3 @@
 
 4: "PR38984_2" has unsupported operation: llvm.getelementptr
 
-4: "PR38984_2" has unsupported operation: builtin.unregistered: llvm.icmp
-

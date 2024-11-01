@@ -78,8 +78,6 @@
 4: "t15" has unsupported operation: builtin.unregistered: llvm.fptosi
 
 1: "t16"
-4: "t16" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "t16" has unsupported operation: builtin.unregistered: llvm.sitofp
 
 1: "t17"

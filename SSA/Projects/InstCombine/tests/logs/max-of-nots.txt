@@ -87,24 +87,48 @@
 4: "max_of_nots_weird_type_vec" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
 1: "max_of_min"
-4: "max_of_min" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "max_of_min" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "max_of_min_swap"
-4: "max_of_min_swap" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "max_of_min_swap" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "min_of_max"
-4: "min_of_max" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "min_of_max" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "min_of_max_swap"
-4: "min_of_max_swap" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "min_of_max_swap" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "max_of_min_vec"
 8: "max_of_min_vec" contains vectors which are unsupported

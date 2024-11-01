@@ -32,8 +32,6 @@
 
 4: "scalarize_phi" has unsupported operation: llvm.load
 
-4: "scalarize_phi" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "scalarize_phi" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "scalarize_phi" has unsupported operation: llvm.store
@@ -131,8 +129,6 @@
 1: "cheap_to_extract_icmp"
 4: "cheap_to_extract_icmp" has unsupported operation: builtin.unregistered: llvm.extractelement
 
-4: "cheap_to_extract_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "cheap_to_extract_icmp" has unsupported operation: builtin.unregistered: llvm.extractelement
 
 1: "cheap_to_extract_fcmp"
@@ -145,8 +141,6 @@
 1: "extractelt_vector_icmp_constrhs"
 4: "extractelt_vector_icmp_constrhs" has unsupported operation: builtin.unregistered: llvm.extractelement
 
-4: "extractelt_vector_icmp_constrhs" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "extractelt_vector_fcmp_constrhs"
 4: "extractelt_vector_fcmp_constrhs" has unsupported operation: builtin.unregistered: llvm.extractelement
 
@@ -154,8 +148,6 @@
 
 1: "extractelt_vector_icmp_constrhs_dynidx"
 4: "extractelt_vector_icmp_constrhs_dynidx" has unsupported operation: builtin.unregistered: llvm.extractelement
-
-4: "extractelt_vector_icmp_constrhs_dynidx" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "extractelt_vector_fcmp_constrhs_dynidx"
 4: "extractelt_vector_fcmp_constrhs_dynidx" has unsupported operation: builtin.unregistered: llvm.extractelement

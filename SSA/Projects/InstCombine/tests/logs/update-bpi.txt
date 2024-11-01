@@ -1,7 +1,5 @@
 1: "invert_cond"
 4: "invert_cond" has unsupported operation: llvm.mlir.zero
 
-4: "invert_cond" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "invert_cond" has unsupported operation: builtin.unregistered: llvm.cond_br
 

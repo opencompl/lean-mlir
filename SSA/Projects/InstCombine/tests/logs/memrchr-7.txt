@@ -13,16 +13,12 @@
 
 4: "call_memrchr_ap5_c_5_eq_a" has unsupported operation after optimization: llvm.call
 
-4: "call_memrchr_ap5_c_5_eq_a" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
 1: "fold_memrchr_ap5_c_n_eq_a"
 4: "fold_memrchr_ap5_c_n_eq_a" has unsupported operation after optimization: llvm.mlir.addressof
 
 4: "fold_memrchr_ap5_c_n_eq_a" has unsupported operation after optimization: llvm.getelementptr
 
 4: "fold_memrchr_ap5_c_n_eq_a" has unsupported operation after optimization: llvm.call
-
-4: "fold_memrchr_ap5_c_n_eq_a" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "fold_memrchr_ap5_c_n_eqz"
 4: "fold_memrchr_ap5_c_n_eqz" has unsupported operation after optimization: llvm.mlir.addressof
@@ -33,8 +29,6 @@
 
 4: "fold_memrchr_ap5_c_n_eqz" has unsupported operation after optimization: llvm.call
 
-4: "fold_memrchr_ap5_c_n_eqz" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
 1: "fold_memrchr_a_nul_n_eqz"
 4: "fold_memrchr_a_nul_n_eqz" has unsupported operation after optimization: llvm.mlir.addressof
 
@@ -43,6 +37,4 @@
 4: "fold_memrchr_a_nul_n_eqz" has unsupported operation after optimization: llvm.getelementptr
 
 4: "fold_memrchr_a_nul_n_eqz" has unsupported operation after optimization: llvm.call
-
-4: "fold_memrchr_a_nul_n_eqz" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 

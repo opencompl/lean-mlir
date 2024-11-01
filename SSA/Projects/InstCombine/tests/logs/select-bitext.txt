@@ -205,19 +205,21 @@
 7: "test_bits_zext" is unchanged by InstCombine
 
 1: "sel_sext_const_uses"
-4: "sel_sext_const_uses" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "sel_sext_const_uses" has unsupported operation: llvm.call
 
 1: "sel_zext_const_uses"
-4: "sel_zext_const_uses" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "sel_zext_const_uses" has unsupported operation: llvm.call
 
 1: "test_op_op"
-4: "test_op_op" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "test_op_op" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sext
+2: llvm.icmp
+2: llvm.sext
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "test_vectors_sext"
 8: "test_vectors_sext" contains vectors which are unsupported

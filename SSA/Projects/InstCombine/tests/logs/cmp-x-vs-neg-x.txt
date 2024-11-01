@@ -5,51 +5,95 @@
 5: "use8" is empty
 
 1: "t0"
-4: "t0" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.icmp
+2: llvm.return
 
 1: "t0_commutative"
 4: "t0_commutative" has unsupported operation: llvm.call
 
-4: "t0_commutative" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "t0_extrause"
 4: "t0_extrause" has unsupported operation: llvm.call
 
-4: "t0_extrause" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "t1"
-4: "t1" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.icmp
+2: llvm.return
 
 1: "t2"
-4: "t2" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.icmp
+2: llvm.return
 
 1: "t3"
-4: "t3" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.icmp
+2: llvm.return
 
 1: "t4"
-4: "t4" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.icmp
+2: llvm.return
 
 1: "t5"
-4: "t5" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.icmp
+2: llvm.return
 
 1: "t6"
-4: "t6" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.icmp
+2: llvm.return
 
 1: "t7"
-4: "t7" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.icmp
+2: llvm.return
 
 1: "t8"
-4: "t8" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.icmp
+2: llvm.return
 
 1: "t9"
-4: "t9" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.icmp
+2: llvm.return
 
 1: "n10"
-4: "n10" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.icmp
+2: llvm.return
 
 1: "n11"
-4: "n11" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "n11" is unchanged by InstCombine
 
 1: "n12"
-4: "n12" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.icmp
+2: llvm.return
 

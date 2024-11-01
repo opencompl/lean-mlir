@@ -2,19 +2,21 @@
 5: "gen1" is empty
 
 1: "positive_easyinvert"
-4: "positive_easyinvert" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "positive_easyinvert" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.xor
+2: llvm.xor
+2: llvm.return
 
 1: "positive_easyinvert0"
 4: "positive_easyinvert0" has unsupported operation: llvm.call
 
-4: "positive_easyinvert0" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "positive_easyinvert1"
 4: "positive_easyinvert1" has unsupported operation: llvm.call
-
-4: "positive_easyinvert1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "use1"
 5: "use1" is empty
@@ -22,21 +24,15 @@
 1: "oneuse_easyinvert_0"
 4: "oneuse_easyinvert_0" has unsupported operation: llvm.call
 
-4: "oneuse_easyinvert_0" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "oneuse_easyinvert_0" has unsupported operation: llvm.call
 
 1: "oneuse_easyinvert_1"
 4: "oneuse_easyinvert_1" has unsupported operation: llvm.call
 
-4: "oneuse_easyinvert_1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "oneuse_easyinvert_1" has unsupported operation: llvm.call
 
 1: "oneuse_easyinvert_2"
 4: "oneuse_easyinvert_2" has unsupported operation: llvm.call
-
-4: "oneuse_easyinvert_2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "oneuse_easyinvert_2" has unsupported operation: llvm.call
 

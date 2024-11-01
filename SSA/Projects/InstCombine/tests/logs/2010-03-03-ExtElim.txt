@@ -5,25 +5,13 @@
 
 4: "PR6486" has unsupported operation after optimization: llvm.load
 
-4: "PR6486" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "PR6486" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
 1: "PR16462_1"
 4: "PR16462_1" has unsupported operation after optimization: llvm.mlir.addressof
 
 4: "PR16462_1" has unsupported operation after optimization: llvm.mlir.addressof
 
-4: "PR16462_1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "PR16462_1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
 1: "PR16462_2"
 4: "PR16462_2" has unsupported operation after optimization: llvm.mlir.addressof
 
 4: "PR16462_2" has unsupported operation after optimization: llvm.mlir.addressof
-
-4: "PR16462_2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
-4: "PR16462_2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 

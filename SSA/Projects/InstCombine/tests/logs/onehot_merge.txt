@@ -1,283 +1,339 @@
 1: "and_consts"
-4: "and_consts" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
 
 1: "and_consts_logical"
-4: "and_consts_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "and_consts_vector"
-4: "and_consts_vector" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "and_consts_vector" contains vectors which are unsupported
 
 1: "foo1_and"
-4: "foo1_and" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
 
 1: "foo1_and_logical"
 4: "foo1_and_logical" has unsupported operation: builtin.unregistered: llvm.freeze
 
-4: "foo1_and_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "foo1_and_vector"
-4: "foo1_and_vector" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "foo1_and_vector" contains vectors which are unsupported
 
 1: "foo1_and_commuted"
-4: "foo1_and_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.shl
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
 
 1: "foo1_and_commuted_logical"
 4: "foo1_and_commuted_logical" has unsupported operation: builtin.unregistered: llvm.freeze
 
-4: "foo1_and_commuted_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "foo1_and_commuted_vector"
-4: "foo1_and_commuted_vector" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "foo1_and_commuted_vector" contains vectors which are unsupported
 
 1: "or_consts"
-4: "or_consts" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
 
 1: "or_consts_logical"
-4: "or_consts_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "or_consts_vector"
-4: "or_consts_vector" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "or_consts_vector" contains vectors which are unsupported
 
 1: "foo1_or"
-4: "foo1_or" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
 
 1: "foo1_or_logical"
 4: "foo1_or_logical" has unsupported operation: builtin.unregistered: llvm.freeze
 
-4: "foo1_or_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "foo1_or_vector"
-4: "foo1_or_vector" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "foo1_or_vector" contains vectors which are unsupported
 
 1: "foo1_or_commuted"
-4: "foo1_or_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.shl
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
 
 1: "foo1_or_commuted_logical"
 4: "foo1_or_commuted_logical" has unsupported operation: builtin.unregistered: llvm.freeze
 
-4: "foo1_or_commuted_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "foo1_or_commuted_vector"
-4: "foo1_or_commuted_vector" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "foo1_or_commuted_vector" contains vectors which are unsupported
 
 1: "foo1_and_signbit_lshr"
-4: "foo1_and_signbit_lshr" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
 
 1: "foo1_and_signbit_lshr_logical"
 4: "foo1_and_signbit_lshr_logical" has unsupported operation: builtin.unregistered: llvm.freeze
 
-4: "foo1_and_signbit_lshr_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "foo1_and_signbit_lshr_vector"
-4: "foo1_and_signbit_lshr_vector" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "foo1_and_signbit_lshr_vector" contains vectors which are unsupported
 
 1: "foo1_or_signbit_lshr"
-4: "foo1_or_signbit_lshr" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
 
 1: "foo1_or_signbit_lshr_logical"
 4: "foo1_or_signbit_lshr_logical" has unsupported operation: builtin.unregistered: llvm.freeze
 
-4: "foo1_or_signbit_lshr_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "foo1_or_signbit_lshr_vector"
-4: "foo1_or_signbit_lshr_vector" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "foo1_or_signbit_lshr_vector" contains vectors which are unsupported
 
 1: "foo1_and_signbit_lshr_without_shifting_signbit"
-4: "foo1_and_signbit_lshr_without_shifting_signbit" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "foo1_and_signbit_lshr_without_shifting_signbit" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.shl
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
 
 1: "foo1_and_signbit_lshr_without_shifting_signbit_logical"
-4: "foo1_and_signbit_lshr_without_shifting_signbit_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "foo1_and_signbit_lshr_without_shifting_signbit_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.shl
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "foo1_or_signbit_lshr_without_shifting_signbit"
-4: "foo1_or_signbit_lshr_without_shifting_signbit" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "foo1_or_signbit_lshr_without_shifting_signbit" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.shl
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
 
 1: "foo1_or_signbit_lshr_without_shifting_signbit_logical"
-4: "foo1_or_signbit_lshr_without_shifting_signbit_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "foo1_or_signbit_lshr_without_shifting_signbit_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.shl
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "foo1_and_signbit_lshr_without_shifting_signbit_both_sides"
-4: "foo1_and_signbit_lshr_without_shifting_signbit_both_sides" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.shl
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
 
 1: "foo1_and_signbit_lshr_without_shifting_signbit_both_sides_logical"
-4: "foo1_and_signbit_lshr_without_shifting_signbit_both_sides_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "foo1_and_signbit_lshr_without_shifting_signbit_both_sides_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "foo1_and_signbit_lshr_without_shifting_signbit_both_sides_logical" is unchanged by InstCombine
 
 1: "foo1_or_signbit_lshr_without_shifting_signbit_both_sides"
-4: "foo1_or_signbit_lshr_without_shifting_signbit_both_sides" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.shl
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
 
 1: "foo1_or_signbit_lshr_without_shifting_signbit_both_sides_splat"
-4: "foo1_or_signbit_lshr_without_shifting_signbit_both_sides_splat" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "foo1_or_signbit_lshr_without_shifting_signbit_both_sides_splat" contains vectors which are unsupported
 
 1: "foo1_or_signbit_lshr_without_shifting_signbit_both_sides_logical"
-4: "foo1_or_signbit_lshr_without_shifting_signbit_both_sides_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "foo1_or_signbit_lshr_without_shifting_signbit_both_sides_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "foo1_or_signbit_lshr_without_shifting_signbit_both_sides_logical" is unchanged by InstCombine
 
 1: "foo1_and_extra_use_shl"
 4: "foo1_and_extra_use_shl" has unsupported operation: llvm.store
-
-4: "foo1_and_extra_use_shl" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "foo1_and_extra_use_shl_logical"
 4: "foo1_and_extra_use_shl_logical" has unsupported operation: llvm.store
 
 4: "foo1_and_extra_use_shl_logical" has unsupported operation: builtin.unregistered: llvm.freeze
 
-4: "foo1_and_extra_use_shl_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "foo1_and_extra_use_and"
 4: "foo1_and_extra_use_and" has unsupported operation: llvm.store
-
-4: "foo1_and_extra_use_and" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "foo1_and_extra_use_and_logical"
 4: "foo1_and_extra_use_and_logical" has unsupported operation: llvm.store
 
 4: "foo1_and_extra_use_and_logical" has unsupported operation: builtin.unregistered: llvm.freeze
 
-4: "foo1_and_extra_use_and_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "foo1_and_extra_use_cmp"
-4: "foo1_and_extra_use_cmp" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "foo1_and_extra_use_cmp" has unsupported operation: llvm.store
 
-4: "foo1_and_extra_use_cmp" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "foo1_and_extra_use_cmp_logical"
-4: "foo1_and_extra_use_cmp_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "foo1_and_extra_use_cmp_logical" has unsupported operation: llvm.store
 
 4: "foo1_and_extra_use_cmp_logical" has unsupported operation: builtin.unregistered: llvm.freeze
 
-4: "foo1_and_extra_use_cmp_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "foo1_and_extra_use_shl2"
 4: "foo1_and_extra_use_shl2" has unsupported operation: llvm.store
-
-4: "foo1_and_extra_use_shl2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "foo1_and_extra_use_shl2_logical"
 4: "foo1_and_extra_use_shl2_logical" has unsupported operation: builtin.unregistered: llvm.freeze
 
 4: "foo1_and_extra_use_shl2_logical" has unsupported operation: llvm.store
 
-4: "foo1_and_extra_use_shl2_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "foo1_and_extra_use_and2"
 4: "foo1_and_extra_use_and2" has unsupported operation: llvm.store
-
-4: "foo1_and_extra_use_and2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "foo1_and_extra_use_and2_logical"
 4: "foo1_and_extra_use_and2_logical" has unsupported operation: builtin.unregistered: llvm.freeze
 
 4: "foo1_and_extra_use_and2_logical" has unsupported operation: llvm.store
 
-4: "foo1_and_extra_use_and2_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "foo1_and_extra_use_cmp2"
-4: "foo1_and_extra_use_cmp2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "foo1_and_extra_use_cmp2" has unsupported operation: llvm.store
-
-4: "foo1_and_extra_use_cmp2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "foo1_and_extra_use_cmp2_logical"
 4: "foo1_and_extra_use_cmp2_logical" has unsupported operation: builtin.unregistered: llvm.freeze
 
-4: "foo1_and_extra_use_cmp2_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "foo1_and_extra_use_cmp2_logical" has unsupported operation: llvm.store
-
-4: "foo1_and_extra_use_cmp2_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_shl1"
 4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_shl1" has unsupported operation: llvm.store
 
-4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_shl1" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_shl1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_shl1_logical"
 4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_shl1_logical" has unsupported operation: llvm.store
-
-4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_shl1_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_shl1_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_and"
 4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_and" has unsupported operation: llvm.store
 
-4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_and" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_and" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_and_logical"
 4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_and_logical" has unsupported operation: llvm.store
 
-4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_and_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_and_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_cmp1"
-4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_cmp1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_cmp1" has unsupported operation: llvm.store
 
-4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_cmp1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_cmp1_logical"
-4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_cmp1_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_cmp1_logical" has unsupported operation: llvm.store
 
-4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_cmp1_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_shl2"
-4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_shl2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_shl2" has unsupported operation: llvm.store
 
-4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_shl2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_shl2_logical"
-4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_shl2_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_shl2_logical" has unsupported operation: llvm.store
 
-4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_shl2_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_cmp2"
-4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_cmp2" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_cmp2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_cmp2" has unsupported operation: llvm.store
 
 1: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_cmp2_logical"
-4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_cmp2_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_cmp2_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "foo1_and_signbit_lshr_without_shifting_signbit_extra_use_cmp2_logical" has unsupported operation: llvm.store
 
 1: "foo1_and_signbit_lshr_without_shifting_signbit_not_pwr2"
-4: "foo1_and_signbit_lshr_without_shifting_signbit_not_pwr2" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "foo1_and_signbit_lshr_without_shifting_signbit_not_pwr2" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "foo1_and_signbit_lshr_without_shifting_signbit_not_pwr2" is unchanged by InstCombine
 
 1: "foo1_and_signbit_lshr_without_shifting_signbit_not_pwr2_logical"
-4: "foo1_and_signbit_lshr_without_shifting_signbit_not_pwr2_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "foo1_and_signbit_lshr_without_shifting_signbit_not_pwr2_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "foo1_and_signbit_lshr_without_shifting_signbit_not_pwr2_logical" is unchanged by InstCombine
 

@@ -1242,6 +1242,17 @@ theorem xor_sext_sext_thm (e : IntW 4) (e_1 : IntW 8) :
     all_goals sorry
 
 
+theorem PR56294_thm (e : IntW 8) :
+  icmp IntPredicate.ne (LLVM.and (zext 32 (icmp IntPredicate.eq e (const? 2))) (zext 32 (LLVM.and e (const? 1))))
+      (const? 0) ⊑
+    const? 0 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
 theorem canonicalize_logic_first_or0_thm (e : IntW 32) :
   LLVM.or (add e (const? 112)) (const? 15) ⊑ add (LLVM.or e (const? 15)) (const? 112) := by 
     simp_alive_undef
@@ -1322,6 +1333,15 @@ theorem canonicalize_logic_first_xor_0_nsw_thm (e : IntW 8) :
 theorem canonicalize_logic_first_xor_0_nswnuw_thm (e : IntW 8) :
   LLVM.xor (add e (const? 96) { «nsw» := true, «nuw» := true }) (const? 31) ⊑
     add (LLVM.xor e (const? 31)) (const? 96) { «nsw» := true, «nuw» := true } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test_and_xor_freely_invertable_thm (e : IntW 1) (e_1 e_2 : IntW 32) :
+  LLVM.and (LLVM.xor (icmp IntPredicate.sgt e_2 e_1) e) e ⊑ LLVM.and (icmp IntPredicate.sle e_2 e_1) e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

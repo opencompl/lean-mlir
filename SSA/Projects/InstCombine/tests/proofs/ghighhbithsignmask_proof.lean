@@ -46,3 +46,12 @@ theorem n9_thm (e : IntW 64) :
     all_goals sorry
 
 
+theorem n10_thm (e : IntW 64) :
+  sub (const? 1) (lshr e (const? 63)) ⊑ zext 64 (icmp IntPredicate.sgt e (const? (-1))) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+

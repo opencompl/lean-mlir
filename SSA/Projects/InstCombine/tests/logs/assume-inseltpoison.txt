@@ -5,7 +5,5 @@
 
 4: "PR40940" has unsupported operation: builtin.unregistered: llvm.bitcast
 
-4: "PR40940" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "PR40940" has unsupported operation: builtin.unregistered: llvm.intr.assume
 

@@ -131,6 +131,16 @@ theorem ashr_2_add_zext_basic_thm (e e_1 : IntW 1) :
     all_goals sorry
 
 
+theorem lshr_16_add_zext_basic_thm (e e_1 : IntW 16) :
+  lshr (add (zext 32 e_1) (zext 32 e)) (const? 16) ⊑
+    zext 32 (icmp IntPredicate.ugt e (LLVM.xor e_1 (const? (-1)))) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
 theorem lshr_16_add_zext_basic_multiuse_thm (e e_1 : IntW 16) :
   LLVM.or (lshr (add (zext 32 e_1) (zext 32 e)) (const? 16)) (zext 32 e_1) ⊑
     LLVM.or (lshr (add (zext 32 e_1) (zext 32 e) { «nsw» := true, «nuw» := true }) (const? 16)) (zext 32 e_1) := by 
@@ -156,6 +166,16 @@ theorem lshr_16_add_not_known_16_leading_zeroes_thm (e e_1 : IntW 32) :
   lshr (add (LLVM.and e_1 (const? 131071)) (LLVM.and e (const? 65535))) (const? 16) ⊑
     lshr (add (LLVM.and e_1 (const? 131071)) (LLVM.and e (const? 65535)) { «nsw» := true, «nuw» := true })
       (const? 16) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem lshr_32_add_zext_basic_thm (e e_1 : IntW 32) :
+  lshr (add (zext 64 e_1) (zext 64 e)) (const? 32) ⊑
+    zext 64 (icmp IntPredicate.ugt e (LLVM.xor e_1 (const? (-1)))) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -191,6 +211,16 @@ theorem lshr_33_i32_add_zext_basic_thm (e e_1 : IntW 32) : lshr (add (zext 64 e_
     all_goals sorry
 
 
+theorem lshr_16_to_64_add_zext_basic_thm (e e_1 : IntW 16) :
+  lshr (add (zext 64 e_1) (zext 64 e)) (const? 16) ⊑
+    zext 64 (icmp IntPredicate.ugt e (LLVM.xor e_1 (const? (-1)))) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
 theorem lshr_32_add_known_32_leading_zeroes_thm (e e_1 : IntW 64) :
   lshr (add (LLVM.and e_1 (const? 4294967295)) (LLVM.and e (const? 4294967295))) (const? 32) ⊑
     lshr (add (LLVM.and e_1 (const? 4294967295)) (LLVM.and e (const? 4294967295)) { «nsw» := true, «nuw» := true })
@@ -206,6 +236,46 @@ theorem lshr_32_add_not_known_32_leading_zeroes_thm (e e_1 : IntW 64) :
   lshr (add (LLVM.and e_1 (const? 8589934591)) (LLVM.and e (const? 4294967295))) (const? 32) ⊑
     lshr (add (LLVM.and e_1 (const? 8589934591)) (LLVM.and e (const? 4294967295)) { «nsw» := true, «nuw» := true })
       (const? 32) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem ashr_16_add_zext_basic_thm (e e_1 : IntW 16) :
+  lshr (add (zext 32 e_1) (zext 32 e)) (const? 16) ⊑
+    zext 32 (icmp IntPredicate.ugt e (LLVM.xor e_1 (const? (-1)))) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem ashr_32_add_zext_basic_thm (e e_1 : IntW 32) :
+  ashr (add (zext 64 e_1) (zext 64 e)) (const? 32) ⊑
+    zext 64 (icmp IntPredicate.ugt e (LLVM.xor e_1 (const? (-1)))) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem ashr_16_to_64_add_zext_basic_thm (e e_1 : IntW 16) :
+  ashr (add (zext 64 e_1) (zext 64 e)) (const? 16) ⊑
+    zext 64 (icmp IntPredicate.ugt e (LLVM.xor e_1 (const? (-1)))) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem lshr_32_add_zext_trunc_thm (e e_1 : IntW 32) :
+  add (trunc 32 (add (zext 64 e_1) (zext 64 e))) (trunc 32 (lshr (add (zext 64 e_1) (zext 64 e)) (const? 32))) ⊑
+    add (add e_1 e) (zext 32 (icmp IntPredicate.ult (add e_1 e) e_1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

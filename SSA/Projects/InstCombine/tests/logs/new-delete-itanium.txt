@@ -1,8 +1,6 @@
 1: "test6a"
 4: "test6a" has unsupported operation: llvm.mlir.zero
 
-4: "test6a" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test6a" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test6a" has unsupported operation: llvm.call

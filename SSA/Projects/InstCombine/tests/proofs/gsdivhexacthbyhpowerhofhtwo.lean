@@ -40,6 +40,34 @@ theorem t0_proof : t0_before ⊑ t0_after := by
 
 
 
+def n2_before := [llvm|
+{
+^0(%arg20 : i8):
+  %0 = llvm.mlir.constant(-128 : i8) : i8
+  %1 = llvm.sdiv %arg20, %0 : i8
+  "llvm.return"(%1) : (i8) -> ()
+}
+]
+def n2_after := [llvm|
+{
+^0(%arg20 : i8):
+  %0 = llvm.mlir.constant(-128 : i8) : i8
+  %1 = llvm.icmp "eq" %arg20, %0 : i8
+  %2 = llvm.zext %1 : i1 to i8
+  "llvm.return"(%2) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem n2_proof : n2_before ⊑ n2_after := by
+  unfold n2_before n2_after
+  simp_alive_peephole
+  intros
+  ---BEGIN n2
+  apply n2_thm
+  ---END n2
+
+
+
 def shl1_nsw_before := [llvm|
 {
 ^0(%arg14 : i8, %arg15 : i8):

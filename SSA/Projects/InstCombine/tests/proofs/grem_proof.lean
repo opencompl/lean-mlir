@@ -21,6 +21,16 @@ theorem test3_thm (e : IntW 32) : urem e (const? 8) ⊑ LLVM.and e (const? 7) :=
     all_goals sorry
 
 
+theorem test3a_thm (e : IntW 32) :
+  icmp IntPredicate.ne (LLVM.srem e (const? (-8))) (const? 0) ⊑
+    icmp IntPredicate.ne (LLVM.and e (const? 7)) (const? 0) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
 theorem test4_thm (e : IntW 1) (e_1 : IntW 32) :
   urem e_1 (select e (const? 1) (const? 8)) ⊑ LLVM.and e_1 (select e (const? 0) (const? 7)) := by 
     simp_alive_undef
@@ -128,6 +138,24 @@ theorem test16_thm (e e_1 : IntW 32) :
     all_goals sorry
 
 
+theorem test17_thm (e : IntW 32) : urem (const? 1) e ⊑ zext 32 (icmp IntPredicate.ne e (const? 1)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test18_thm (e : IntW 16) (e_1 : IntW 32) :
+  urem e_1 (select (icmp IntPredicate.ne (LLVM.and e (const? 4)) (const? 0)) (const? 32) (const? 64)) ⊑
+    LLVM.and e_1 (select (icmp IntPredicate.eq (LLVM.and e (const? 4)) (const? 0)) (const? 63) (const? 31)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
 theorem test19_thm (e e_1 : IntW 32) :
   urem e_1 (add (LLVM.and (shl (const? 1) e) (shl (const? 1) e_1)) (shl (const? 1) e)) ⊑
     LLVM.and e_1
@@ -193,6 +221,67 @@ theorem test19_commutative2_thm (e e_1 : IntW 32) :
 theorem test22_thm (e : IntW 32) :
   LLVM.srem (LLVM.and e (const? 2147483647)) (const? 2147483647) ⊑
     urem (LLVM.and e (const? 2147483647)) (const? 2147483647) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test24_thm (e : IntW 32) :
+  icmp IntPredicate.ne (urem e (const? (-2147483648))) (const? 0) ⊑
+    icmp IntPredicate.ne (LLVM.and e (const? 2147483647)) (const? 0) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test25_thm (e : IntW 32) :
+  icmp IntPredicate.ne (LLVM.srem e (const? (-2147483648))) (const? 0) ⊑
+    icmp IntPredicate.ne (LLVM.and e (const? 2147483647)) (const? 0) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test26_thm (e e_1 : IntW 32) :
+  icmp IntPredicate.ne (LLVM.srem e_1 (shl (const? 1) e)) (const? 0) ⊑
+    icmp IntPredicate.ne (LLVM.and e_1 (LLVM.xor (shl (const? (-1)) e { «nsw» := true, «nuw» := false }) (const? (-1))))
+      (const? 0) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem test28_thm (e : IntW 32) :
+  icmp IntPredicate.eq (LLVM.srem e (const? (-2147483648))) (const? 0) ⊑
+    icmp IntPredicate.eq (LLVM.and e (const? 2147483647)) (const? 0) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem positive_and_odd_eq_thm (e : IntW 32) :
+  icmp IntPredicate.eq (LLVM.srem e (const? 2)) (const? 1) ⊑
+    icmp IntPredicate.eq (LLVM.and e (const? (-2147483647))) (const? 1) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    try alive_auto
+    all_goals sorry
+
+
+theorem positive_and_odd_ne_thm (e : IntW 32) :
+  icmp IntPredicate.ne (LLVM.srem e (const? 2)) (const? 1) ⊑
+    icmp IntPredicate.ne (LLVM.and e (const? (-2147483647))) (const? 1) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

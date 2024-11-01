@@ -4,15 +4,11 @@
 1: "test2"
 4: "test2" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "test2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test2" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test2" has unsupported operation: llvm.call
 
 4: "test2" has unsupported operation: builtin.unregistered: llvm.br
-
-4: "test2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "test2" has unsupported operation: builtin.unregistered: llvm.cond_br
 
@@ -80,8 +76,6 @@
 5: "dummy" is empty
 
 1: "test8"
-4: "test8" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test8" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test8" has unsupported operation: llvm.call
