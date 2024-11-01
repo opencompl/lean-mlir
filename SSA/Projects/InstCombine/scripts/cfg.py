@@ -16,11 +16,6 @@ test_path = "SSA/Projects/InstCombine/tests/LLVM"
 proof_path = "SSA/Projects/InstCombine/tests/proofs"
 log_path = "SSA/Projects/InstCombine/tests/logs"
 llvm_test_path = llvm_path + "/llvm/test/Transforms/InstCombine"
-
-test_path = "SSA/Projects/InstCombine/scripts/files/LLVM"
-proof_path = "SSA/Projects/InstCombine/scripts/files/proofs"
-log_path = "SSA/Projects/InstCombine/scripts/files/logs"
-llvm_test_path = "SSA/Projects/InstCombine/scripts/files"
 expensive_files = [
     "pr96012.ll",
 ]
