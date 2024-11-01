@@ -37,6 +37,7 @@ set_option debug.skipKernelTC true in
 theorem test1_proof : test1_before ⊑ test1_after := by
   unfold test1_before test1_after
   simp_alive_peephole
+  intros
   ---BEGIN test1
   apply test1_thm
   ---END test1
@@ -69,6 +70,7 @@ set_option debug.skipKernelTC true in
 theorem test2_proof : test2_before ⊑ test2_after := by
   unfold test2_before test2_after
   simp_alive_peephole
+  intros
   ---BEGIN test2
   apply test2_thm
   ---END test2
@@ -97,6 +99,7 @@ set_option debug.skipKernelTC true in
 theorem ashr_ashr_proof : ashr_ashr_before ⊑ ashr_ashr_after := by
   unfold ashr_ashr_before ashr_ashr_after
   simp_alive_peephole
+  intros
   ---BEGIN ashr_ashr
   apply ashr_ashr_thm
   ---END ashr_ashr
@@ -125,6 +128,7 @@ set_option debug.skipKernelTC true in
 theorem ashr_overshift_proof : ashr_overshift_before ⊑ ashr_overshift_after := by
   unfold ashr_overshift_before ashr_overshift_after
   simp_alive_peephole
+  intros
   ---BEGIN ashr_overshift
   apply ashr_overshift_thm
   ---END ashr_overshift
@@ -153,6 +157,7 @@ set_option debug.skipKernelTC true in
 theorem hoist_ashr_ahead_of_sext_1_proof : hoist_ashr_ahead_of_sext_1_before ⊑ hoist_ashr_ahead_of_sext_1_after := by
   unfold hoist_ashr_ahead_of_sext_1_before hoist_ashr_ahead_of_sext_1_after
   simp_alive_peephole
+  intros
   ---BEGIN hoist_ashr_ahead_of_sext_1
   apply hoist_ashr_ahead_of_sext_1_thm
   ---END hoist_ashr_ahead_of_sext_1
@@ -181,6 +186,7 @@ set_option debug.skipKernelTC true in
 theorem hoist_ashr_ahead_of_sext_2_proof : hoist_ashr_ahead_of_sext_2_before ⊑ hoist_ashr_ahead_of_sext_2_after := by
   unfold hoist_ashr_ahead_of_sext_2_before hoist_ashr_ahead_of_sext_2_after
   simp_alive_peephole
+  intros
   ---BEGIN hoist_ashr_ahead_of_sext_2
   apply hoist_ashr_ahead_of_sext_2_thm
   ---END hoist_ashr_ahead_of_sext_2

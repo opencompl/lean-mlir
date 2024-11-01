@@ -35,6 +35,7 @@ set_option debug.skipKernelTC true in
 theorem udiv400_proof : udiv400_before ⊑ udiv400_after := by
   unfold udiv400_before udiv400_after
   simp_alive_peephole
+  intros
   ---BEGIN udiv400
   apply udiv400_thm
   ---END udiv400
@@ -63,6 +64,7 @@ set_option debug.skipKernelTC true in
 theorem sdiv400_yes_proof : sdiv400_yes_before ⊑ sdiv400_yes_after := by
   unfold sdiv400_yes_before sdiv400_yes_after
   simp_alive_peephole
+  intros
   ---BEGIN sdiv400_yes
   apply sdiv400_yes_thm
   ---END sdiv400_yes
@@ -91,6 +93,7 @@ set_option debug.skipKernelTC true in
 theorem udiv_i80_proof : udiv_i80_before ⊑ udiv_i80_after := by
   unfold udiv_i80_before udiv_i80_after
   simp_alive_peephole
+  intros
   ---BEGIN udiv_i80
   apply udiv_i80_thm
   ---END udiv_i80

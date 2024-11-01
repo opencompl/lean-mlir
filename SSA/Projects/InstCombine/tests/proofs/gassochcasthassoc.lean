@@ -37,6 +37,7 @@ set_option debug.skipKernelTC true in
 theorem XorZextXor_proof : XorZextXor_before ⊑ XorZextXor_after := by
   unfold XorZextXor_before XorZextXor_after
   simp_alive_peephole
+  intros
   ---BEGIN XorZextXor
   apply XorZextXor_thm
   ---END XorZextXor
@@ -67,6 +68,7 @@ set_option debug.skipKernelTC true in
 theorem OrZextOr_proof : OrZextOr_before ⊑ OrZextOr_after := by
   unfold OrZextOr_before OrZextOr_after
   simp_alive_peephole
+  intros
   ---BEGIN OrZextOr
   apply OrZextOr_thm
   ---END OrZextOr
@@ -97,6 +99,7 @@ set_option debug.skipKernelTC true in
 theorem AndZextAnd_proof : AndZextAnd_before ⊑ AndZextAnd_after := by
   unfold AndZextAnd_before AndZextAnd_after
   simp_alive_peephole
+  intros
   ---BEGIN AndZextAnd
   apply AndZextAnd_thm
   ---END AndZextAnd
@@ -127,6 +130,7 @@ set_option debug.skipKernelTC true in
 theorem zext_nneg_proof : zext_nneg_before ⊑ zext_nneg_after := by
   unfold zext_nneg_before zext_nneg_after
   simp_alive_peephole
+  intros
   ---BEGIN zext_nneg
   apply zext_nneg_thm
   ---END zext_nneg

@@ -33,6 +33,7 @@ set_option debug.skipKernelTC true in
 theorem and_sext_to_sel_proof : and_sext_to_sel_before ⊑ and_sext_to_sel_after := by
   unfold and_sext_to_sel_before and_sext_to_sel_after
   simp_alive_peephole
+  intros
   ---BEGIN and_sext_to_sel
   all_goals (try extract_goal ; sorry)
   ---END and_sext_to_sel
@@ -59,6 +60,7 @@ set_option debug.skipKernelTC true in
 theorem or_sext_to_sel_proof : or_sext_to_sel_before ⊑ or_sext_to_sel_after := by
   unfold or_sext_to_sel_before or_sext_to_sel_after
   simp_alive_peephole
+  intros
   ---BEGIN or_sext_to_sel
   all_goals (try extract_goal ; sorry)
   ---END or_sext_to_sel
@@ -85,6 +87,7 @@ set_option debug.skipKernelTC true in
 theorem xor_sext_to_sel_proof : xor_sext_to_sel_before ⊑ xor_sext_to_sel_after := by
   unfold xor_sext_to_sel_before xor_sext_to_sel_after
   simp_alive_peephole
+  intros
   ---BEGIN xor_sext_to_sel
   all_goals (try extract_goal ; sorry)
   ---END xor_sext_to_sel
@@ -113,6 +116,7 @@ set_option debug.skipKernelTC true in
 theorem and_add_bool_to_select_proof : and_add_bool_to_select_before ⊑ and_add_bool_to_select_after := by
   unfold and_add_bool_to_select_before and_add_bool_to_select_after
   simp_alive_peephole
+  intros
   ---BEGIN and_add_bool_to_select
   all_goals (try extract_goal ; sorry)
   ---END and_add_bool_to_select
@@ -144,6 +148,7 @@ set_option debug.skipKernelTC true in
 theorem and_add_bool_to_select_multi_use_proof : and_add_bool_to_select_multi_use_before ⊑ and_add_bool_to_select_multi_use_after := by
   unfold and_add_bool_to_select_multi_use_before and_add_bool_to_select_multi_use_after
   simp_alive_peephole
+  intros
   ---BEGIN and_add_bool_to_select_multi_use
   all_goals (try extract_goal ; sorry)
   ---END and_add_bool_to_select_multi_use

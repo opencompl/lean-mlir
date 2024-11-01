@@ -31,6 +31,7 @@ set_option debug.skipKernelTC true in
 theorem test1_proof : test1_before ⊑ test1_after := by
   unfold test1_before test1_after
   simp_alive_peephole
+  intros
   ---BEGIN test1
   apply test1_thm
   ---END test1
@@ -55,6 +56,7 @@ set_option debug.skipKernelTC true in
 theorem test2_proof : test2_before ⊑ test2_after := by
   unfold test2_before test2_after
   simp_alive_peephole
+  intros
   ---BEGIN test2
   apply test2_thm
   ---END test2
@@ -80,6 +82,7 @@ set_option debug.skipKernelTC true in
 theorem test3_proof : test3_before ⊑ test3_after := by
   unfold test3_before test3_after
   simp_alive_peephole
+  intros
   ---BEGIN test3
   apply test3_thm
   ---END test3
@@ -106,6 +109,7 @@ set_option debug.skipKernelTC true in
 theorem test4_proof : test4_before ⊑ test4_after := by
   unfold test4_before test4_after
   simp_alive_peephole
+  intros
   ---BEGIN test4
   apply test4_thm
   ---END test4
@@ -132,6 +136,7 @@ set_option debug.skipKernelTC true in
 theorem test5_proof : test5_before ⊑ test5_after := by
   unfold test5_before test5_after
   simp_alive_peephole
+  intros
   ---BEGIN test5
   apply test5_thm
   ---END test5
@@ -159,6 +164,7 @@ set_option debug.skipKernelTC true in
 theorem test6_proof : test6_before ⊑ test6_after := by
   unfold test6_before test6_after
   simp_alive_peephole
+  intros
   ---BEGIN test6
   apply test6_thm
   ---END test6
@@ -185,6 +191,7 @@ set_option debug.skipKernelTC true in
 theorem test7_proof : test7_before ⊑ test7_after := by
   unfold test7_before test7_after
   simp_alive_peephole
+  intros
   ---BEGIN test7
   apply test7_thm
   ---END test7
@@ -212,6 +219,7 @@ set_option debug.skipKernelTC true in
 theorem test8_proof : test8_before ⊑ test8_after := by
   unfold test8_before test8_after
   simp_alive_peephole
+  intros
   ---BEGIN test8
   apply test8_thm
   ---END test8
@@ -239,6 +247,7 @@ set_option debug.skipKernelTC true in
 theorem test9_proof : test9_before ⊑ test9_after := by
   unfold test9_before test9_after
   simp_alive_peephole
+  intros
   ---BEGIN test9
   apply test9_thm
   ---END test9
@@ -267,6 +276,7 @@ set_option debug.skipKernelTC true in
 theorem test12_proof : test12_before ⊑ test12_after := by
   unfold test12_before test12_after
   simp_alive_peephole
+  intros
   ---BEGIN test12
   apply test12_thm
   ---END test12
@@ -295,6 +305,7 @@ set_option debug.skipKernelTC true in
 theorem test13_proof : test13_before ⊑ test13_after := by
   unfold test13_before test13_after
   simp_alive_peephole
+  intros
   ---BEGIN test13
   apply test13_thm
   ---END test13
@@ -323,6 +334,7 @@ set_option debug.skipKernelTC true in
 theorem test16_proof : test16_before ⊑ test16_after := by
   unfold test16_before test16_after
   simp_alive_peephole
+  intros
   ---BEGIN test16
   apply test16_thm
   ---END test16
@@ -350,6 +362,7 @@ set_option debug.skipKernelTC true in
 theorem test18_proof : test18_before ⊑ test18_after := by
   unfold test18_before test18_after
   simp_alive_peephole
+  intros
   ---BEGIN test18
   apply test18_thm
   ---END test18
@@ -374,6 +387,7 @@ set_option debug.skipKernelTC true in
 theorem test19_proof : test19_before ⊑ test19_after := by
   unfold test19_before test19_after
   simp_alive_peephole
+  intros
   ---BEGIN test19
   apply test19_thm
   ---END test19

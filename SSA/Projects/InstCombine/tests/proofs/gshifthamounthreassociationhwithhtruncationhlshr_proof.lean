@@ -5,9 +5,9 @@ open BitVec
 open LLVM
 
 section gshifthamounthreassociationhwithhtruncationhlshr_proof
-theorem t0_thm (e✝ : IntW 16) (e✝¹ : IntW 32) :
-  lshr (trunc 16 (lshr e✝¹ (zext 32 (sub (const? 32) e✝)))) (add e✝ (const? (-1))) ⊑
-    trunc 16 (lshr e✝¹ (const? 31)) := by 
+theorem t0_thm (e : IntW 16) (e_1 : IntW 32) :
+  lshr (trunc 16 (lshr e_1 (zext 32 (sub (const? 32) e)))) (add e (const? (-1))) ⊑
+    trunc 16 (lshr e_1 (const? 31)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

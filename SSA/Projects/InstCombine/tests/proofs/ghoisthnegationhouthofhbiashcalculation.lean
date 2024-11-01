@@ -38,6 +38,7 @@ set_option debug.skipKernelTC true in
 theorem t0_proof : t0_before ⊑ t0_after := by
   unfold t0_before t0_after
   simp_alive_peephole
+  intros
   ---BEGIN t0
   apply t0_thm
   ---END t0
@@ -67,6 +68,7 @@ set_option debug.skipKernelTC true in
 theorem n7_proof : n7_before ⊑ n7_after := by
   unfold n7_before n7_after
   simp_alive_peephole
+  intros
   ---BEGIN n7
   apply n7_thm
   ---END n7

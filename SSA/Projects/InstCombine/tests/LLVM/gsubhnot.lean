@@ -35,6 +35,7 @@ set_option debug.skipKernelTC true in
 theorem sub_not_proof : sub_not_before ⊑ sub_not_after := by
   unfold sub_not_before sub_not_after
   simp_alive_peephole
+  intros
   ---BEGIN sub_not
   all_goals (try extract_goal ; sorry)
   ---END sub_not
@@ -63,6 +64,7 @@ set_option debug.skipKernelTC true in
 theorem dec_sub_proof : dec_sub_before ⊑ dec_sub_after := by
   unfold dec_sub_before dec_sub_after
   simp_alive_peephole
+  intros
   ---BEGIN dec_sub
   all_goals (try extract_goal ; sorry)
   ---END dec_sub
@@ -91,6 +93,7 @@ set_option debug.skipKernelTC true in
 theorem sub_inc_proof : sub_inc_before ⊑ sub_inc_after := by
   unfold sub_inc_before sub_inc_after
   simp_alive_peephole
+  intros
   ---BEGIN sub_inc
   all_goals (try extract_goal ; sorry)
   ---END sub_inc
@@ -119,6 +122,7 @@ set_option debug.skipKernelTC true in
 theorem sub_dec_proof : sub_dec_before ⊑ sub_dec_after := by
   unfold sub_dec_before sub_dec_after
   simp_alive_peephole
+  intros
   ---BEGIN sub_dec
   all_goals (try extract_goal ; sorry)
   ---END sub_dec

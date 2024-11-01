@@ -36,6 +36,7 @@ set_option debug.skipKernelTC true in
 theorem addhshlhsdivhscalar0_proof : addhshlhsdivhscalar0_before ⊑ addhshlhsdivhscalar0_after := by
   unfold addhshlhsdivhscalar0_before addhshlhsdivhscalar0_after
   simp_alive_peephole
+  intros
   ---BEGIN addhshlhsdivhscalar0
   apply addhshlhsdivhscalar0_thm
   ---END addhshlhsdivhscalar0
@@ -65,6 +66,7 @@ set_option debug.skipKernelTC true in
 theorem addhshlhsdivhscalar1_proof : addhshlhsdivhscalar1_before ⊑ addhshlhsdivhscalar1_after := by
   unfold addhshlhsdivhscalar1_before addhshlhsdivhscalar1_after
   simp_alive_peephole
+  intros
   ---BEGIN addhshlhsdivhscalar1
   apply addhshlhsdivhscalar1_thm
   ---END addhshlhsdivhscalar1
@@ -94,6 +96,7 @@ set_option debug.skipKernelTC true in
 theorem addhshlhsdivhscalar2_proof : addhshlhsdivhscalar2_before ⊑ addhshlhsdivhscalar2_after := by
   unfold addhshlhsdivhscalar2_before addhshlhsdivhscalar2_after
   simp_alive_peephole
+  intros
   ---BEGIN addhshlhsdivhscalar2
   apply addhshlhsdivhscalar2_thm
   ---END addhshlhsdivhscalar2
@@ -126,6 +129,7 @@ set_option debug.skipKernelTC true in
 theorem addhshlhsdivhnegative0_proof : addhshlhsdivhnegative0_before ⊑ addhshlhsdivhnegative0_after := by
   unfold addhshlhsdivhnegative0_before addhshlhsdivhnegative0_after
   simp_alive_peephole
+  intros
   ---BEGIN addhshlhsdivhnegative0
   apply addhshlhsdivhnegative0_thm
   ---END addhshlhsdivhnegative0
@@ -155,6 +159,7 @@ set_option debug.skipKernelTC true in
 theorem addhshlhsdivhnegative1_proof : addhshlhsdivhnegative1_before ⊑ addhshlhsdivhnegative1_after := by
   unfold addhshlhsdivhnegative1_before addhshlhsdivhnegative1_after
   simp_alive_peephole
+  intros
   ---BEGIN addhshlhsdivhnegative1
   apply addhshlhsdivhnegative1_thm
   ---END addhshlhsdivhnegative1

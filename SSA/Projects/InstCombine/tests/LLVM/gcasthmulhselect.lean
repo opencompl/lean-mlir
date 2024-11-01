@@ -36,6 +36,7 @@ set_option debug.skipKernelTC true in
 theorem mul_proof : mul_before ⊑ mul_after := by
   unfold mul_before mul_after
   simp_alive_peephole
+  intros
   ---BEGIN mul
   all_goals (try extract_goal ; sorry)
   ---END mul
@@ -68,6 +69,7 @@ set_option debug.skipKernelTC true in
 theorem select1_proof : select1_before ⊑ select1_after := by
   unfold select1_before select1_after
   simp_alive_peephole
+  intros
   ---BEGIN select1
   all_goals (try extract_goal ; sorry)
   ---END select1
@@ -98,6 +100,7 @@ set_option debug.skipKernelTC true in
 theorem select2_proof : select2_before ⊑ select2_after := by
   unfold select2_before select2_after
   simp_alive_peephole
+  intros
   ---BEGIN select2
   all_goals (try extract_goal ; sorry)
   ---END select2
@@ -121,6 +124,7 @@ set_option debug.skipKernelTC true in
 theorem foo_proof : foo_before ⊑ foo_after := by
   unfold foo_before foo_after
   simp_alive_peephole
+  intros
   ---BEGIN foo
   all_goals (try extract_goal ; sorry)
   ---END foo

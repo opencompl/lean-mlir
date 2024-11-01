@@ -35,6 +35,7 @@ set_option debug.skipKernelTC true in
 theorem shrink_select_proof : shrink_select_before ⊑ shrink_select_after := by
   unfold shrink_select_before shrink_select_after
   simp_alive_peephole
+  intros
   ---BEGIN shrink_select
   all_goals (try extract_goal ; sorry)
   ---END shrink_select
@@ -61,6 +62,7 @@ set_option debug.skipKernelTC true in
 theorem not_cond_proof : not_cond_before ⊑ not_cond_after := by
   unfold not_cond_before not_cond_after
   simp_alive_peephole
+  intros
   ---BEGIN not_cond
   all_goals (try extract_goal ; sorry)
   ---END not_cond
@@ -88,6 +90,7 @@ set_option debug.skipKernelTC true in
 theorem select_add_proof : select_add_before ⊑ select_add_after := by
   unfold select_add_before select_add_after
   simp_alive_peephole
+  intros
   ---BEGIN select_add
   all_goals (try extract_goal ; sorry)
   ---END select_add
@@ -115,6 +118,7 @@ set_option debug.skipKernelTC true in
 theorem select_sub_proof : select_sub_before ⊑ select_sub_after := by
   unfold select_sub_before select_sub_after
   simp_alive_peephole
+  intros
   ---BEGIN select_sub
   all_goals (try extract_goal ; sorry)
   ---END select_sub
@@ -142,6 +146,7 @@ set_option debug.skipKernelTC true in
 theorem select_ashr_proof : select_ashr_before ⊑ select_ashr_after := by
   unfold select_ashr_before select_ashr_after
   simp_alive_peephole
+  intros
   ---BEGIN select_ashr
   all_goals (try extract_goal ; sorry)
   ---END select_ashr

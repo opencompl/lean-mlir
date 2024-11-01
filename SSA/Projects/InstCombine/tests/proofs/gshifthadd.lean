@@ -37,6 +37,7 @@ set_option debug.skipKernelTC true in
 theorem shl_C1_add_A_C2_i32_proof : shl_C1_add_A_C2_i32_before ⊑ shl_C1_add_A_C2_i32_after := by
   unfold shl_C1_add_A_C2_i32_before shl_C1_add_A_C2_i32_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_C1_add_A_C2_i32
   apply shl_C1_add_A_C2_i32_thm
   ---END shl_C1_add_A_C2_i32
@@ -66,6 +67,7 @@ set_option debug.skipKernelTC true in
 theorem ashr_C1_add_A_C2_i32_proof : ashr_C1_add_A_C2_i32_before ⊑ ashr_C1_add_A_C2_i32_after := by
   unfold ashr_C1_add_A_C2_i32_before ashr_C1_add_A_C2_i32_after
   simp_alive_peephole
+  intros
   ---BEGIN ashr_C1_add_A_C2_i32
   apply ashr_C1_add_A_C2_i32_thm
   ---END ashr_C1_add_A_C2_i32
@@ -98,6 +100,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_C1_add_A_C2_i32_proof : lshr_C1_add_A_C2_i32_before ⊑ lshr_C1_add_A_C2_i32_after := by
   unfold lshr_C1_add_A_C2_i32_before lshr_C1_add_A_C2_i32_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_C1_add_A_C2_i32
   apply lshr_C1_add_A_C2_i32_thm
   ---END lshr_C1_add_A_C2_i32
@@ -126,6 +129,7 @@ set_option debug.skipKernelTC true in
 theorem shl_add_nuw_proof : shl_add_nuw_before ⊑ shl_add_nuw_after := by
   unfold shl_add_nuw_before shl_add_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_add_nuw
   apply shl_add_nuw_thm
   ---END shl_add_nuw
@@ -153,6 +157,7 @@ set_option debug.skipKernelTC true in
 theorem shl_nuw_add_nuw_proof : shl_nuw_add_nuw_before ⊑ shl_nuw_add_nuw_after := by
   unfold shl_nuw_add_nuw_before shl_nuw_add_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_nuw_add_nuw
   apply shl_nuw_add_nuw_thm
   ---END shl_nuw_add_nuw
@@ -181,6 +186,7 @@ set_option debug.skipKernelTC true in
 theorem shl_nsw_add_nuw_proof : shl_nsw_add_nuw_before ⊑ shl_nsw_add_nuw_after := by
   unfold shl_nsw_add_nuw_before shl_nsw_add_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_nsw_add_nuw
   apply shl_nsw_add_nuw_thm
   ---END shl_nsw_add_nuw
@@ -209,6 +215,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_exact_add_nuw_proof : lshr_exact_add_nuw_before ⊑ lshr_exact_add_nuw_after := by
   unfold lshr_exact_add_nuw_before lshr_exact_add_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_exact_add_nuw
   apply lshr_exact_add_nuw_thm
   ---END lshr_exact_add_nuw
@@ -237,6 +244,7 @@ set_option debug.skipKernelTC true in
 theorem ashr_exact_add_nuw_proof : ashr_exact_add_nuw_before ⊑ ashr_exact_add_nuw_after := by
   unfold ashr_exact_add_nuw_before ashr_exact_add_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN ashr_exact_add_nuw
   apply ashr_exact_add_nuw_thm
   ---END ashr_exact_add_nuw
@@ -265,6 +273,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_exact_add_negative_shift_positive_proof : lshr_exact_add_negative_shift_positive_before ⊑ lshr_exact_add_negative_shift_positive_after := by
   unfold lshr_exact_add_negative_shift_positive_before lshr_exact_add_negative_shift_positive_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_exact_add_negative_shift_positive
   apply lshr_exact_add_negative_shift_positive_thm
   ---END lshr_exact_add_negative_shift_positive
@@ -293,6 +302,7 @@ set_option debug.skipKernelTC true in
 theorem ashr_exact_add_negative_shift_negative_proof : ashr_exact_add_negative_shift_negative_before ⊑ ashr_exact_add_negative_shift_negative_after := by
   unfold ashr_exact_add_negative_shift_negative_before ashr_exact_add_negative_shift_negative_after
   simp_alive_peephole
+  intros
   ---BEGIN ashr_exact_add_negative_shift_negative
   apply ashr_exact_add_negative_shift_negative_thm
   ---END ashr_exact_add_negative_shift_negative
@@ -321,6 +331,7 @@ set_option debug.skipKernelTC true in
 theorem shl_nsw_add_negative_proof : shl_nsw_add_negative_before ⊑ shl_nsw_add_negative_after := by
   unfold shl_nsw_add_negative_before shl_nsw_add_negative_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_nsw_add_negative
   apply shl_nsw_add_negative_thm
   ---END shl_nsw_add_negative
@@ -351,6 +362,7 @@ set_option debug.skipKernelTC true in
 theorem shl_nsw_add_negative_invalid_constant3_proof : shl_nsw_add_negative_invalid_constant3_before ⊑ shl_nsw_add_negative_invalid_constant3_after := by
   unfold shl_nsw_add_negative_invalid_constant3_before shl_nsw_add_negative_invalid_constant3_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_nsw_add_negative_invalid_constant3
   apply shl_nsw_add_negative_invalid_constant3_thm
   ---END shl_nsw_add_negative_invalid_constant3
@@ -380,6 +392,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_2_add_zext_basic_proof : lshr_2_add_zext_basic_before ⊑ lshr_2_add_zext_basic_after := by
   unfold lshr_2_add_zext_basic_before lshr_2_add_zext_basic_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_2_add_zext_basic
   apply lshr_2_add_zext_basic_thm
   ---END lshr_2_add_zext_basic
@@ -412,6 +425,7 @@ set_option debug.skipKernelTC true in
 theorem ashr_2_add_zext_basic_proof : ashr_2_add_zext_basic_before ⊑ ashr_2_add_zext_basic_after := by
   unfold ashr_2_add_zext_basic_before ashr_2_add_zext_basic_after
   simp_alive_peephole
+  intros
   ---BEGIN ashr_2_add_zext_basic
   apply ashr_2_add_zext_basic_thm
   ---END ashr_2_add_zext_basic
@@ -446,6 +460,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_16_add_zext_basic_multiuse_proof : lshr_16_add_zext_basic_multiuse_before ⊑ lshr_16_add_zext_basic_multiuse_after := by
   unfold lshr_16_add_zext_basic_multiuse_before lshr_16_add_zext_basic_multiuse_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_16_add_zext_basic_multiuse
   apply lshr_16_add_zext_basic_multiuse_thm
   ---END lshr_16_add_zext_basic_multiuse
@@ -480,6 +495,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_16_add_known_16_leading_zeroes_proof : lshr_16_add_known_16_leading_zeroes_before ⊑ lshr_16_add_known_16_leading_zeroes_after := by
   unfold lshr_16_add_known_16_leading_zeroes_before lshr_16_add_known_16_leading_zeroes_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_16_add_known_16_leading_zeroes
   apply lshr_16_add_known_16_leading_zeroes_thm
   ---END lshr_16_add_known_16_leading_zeroes
@@ -516,6 +532,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_16_add_not_known_16_leading_zeroes_proof : lshr_16_add_not_known_16_leading_zeroes_before ⊑ lshr_16_add_not_known_16_leading_zeroes_after := by
   unfold lshr_16_add_not_known_16_leading_zeroes_before lshr_16_add_not_known_16_leading_zeroes_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_16_add_not_known_16_leading_zeroes
   apply lshr_16_add_not_known_16_leading_zeroes_thm
   ---END lshr_16_add_not_known_16_leading_zeroes
@@ -550,6 +567,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_32_add_zext_basic_multiuse_proof : lshr_32_add_zext_basic_multiuse_before ⊑ lshr_32_add_zext_basic_multiuse_after := by
   unfold lshr_32_add_zext_basic_multiuse_before lshr_32_add_zext_basic_multiuse_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_32_add_zext_basic_multiuse
   apply lshr_32_add_zext_basic_multiuse_thm
   ---END lshr_32_add_zext_basic_multiuse
@@ -582,6 +600,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_31_i32_add_zext_basic_proof : lshr_31_i32_add_zext_basic_before ⊑ lshr_31_i32_add_zext_basic_after := by
   unfold lshr_31_i32_add_zext_basic_before lshr_31_i32_add_zext_basic_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_31_i32_add_zext_basic
   apply lshr_31_i32_add_zext_basic_thm
   ---END lshr_31_i32_add_zext_basic
@@ -610,6 +629,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_33_i32_add_zext_basic_proof : lshr_33_i32_add_zext_basic_before ⊑ lshr_33_i32_add_zext_basic_after := by
   unfold lshr_33_i32_add_zext_basic_before lshr_33_i32_add_zext_basic_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_33_i32_add_zext_basic
   apply lshr_33_i32_add_zext_basic_thm
   ---END lshr_33_i32_add_zext_basic
@@ -644,6 +664,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_32_add_known_32_leading_zeroes_proof : lshr_32_add_known_32_leading_zeroes_before ⊑ lshr_32_add_known_32_leading_zeroes_after := by
   unfold lshr_32_add_known_32_leading_zeroes_before lshr_32_add_known_32_leading_zeroes_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_32_add_known_32_leading_zeroes
   apply lshr_32_add_known_32_leading_zeroes_thm
   ---END lshr_32_add_known_32_leading_zeroes
@@ -680,6 +701,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_32_add_not_known_32_leading_zeroes_proof : lshr_32_add_not_known_32_leading_zeroes_before ⊑ lshr_32_add_not_known_32_leading_zeroes_after := by
   unfold lshr_32_add_not_known_32_leading_zeroes_before lshr_32_add_not_known_32_leading_zeroes_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_32_add_not_known_32_leading_zeroes
   apply lshr_32_add_not_known_32_leading_zeroes_thm
   ---END lshr_32_add_not_known_32_leading_zeroes
@@ -708,6 +730,7 @@ set_option debug.skipKernelTC true in
 theorem shl_fold_or_disjoint_cnt_proof : shl_fold_or_disjoint_cnt_before ⊑ shl_fold_or_disjoint_cnt_after := by
   unfold shl_fold_or_disjoint_cnt_before shl_fold_or_disjoint_cnt_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_fold_or_disjoint_cnt
   apply shl_fold_or_disjoint_cnt_thm
   ---END shl_fold_or_disjoint_cnt

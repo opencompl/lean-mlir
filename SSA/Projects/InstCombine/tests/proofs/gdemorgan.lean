@@ -36,6 +36,7 @@ set_option debug.skipKernelTC true in
 theorem demorgan_or_apint1_proof : demorgan_or_apint1_before ⊑ demorgan_or_apint1_after := by
   unfold demorgan_or_apint1_before demorgan_or_apint1_after
   simp_alive_peephole
+  intros
   ---BEGIN demorgan_or_apint1
   apply demorgan_or_apint1_thm
   ---END demorgan_or_apint1
@@ -65,6 +66,7 @@ set_option debug.skipKernelTC true in
 theorem demorgan_or_apint2_proof : demorgan_or_apint2_before ⊑ demorgan_or_apint2_after := by
   unfold demorgan_or_apint2_before demorgan_or_apint2_after
   simp_alive_peephole
+  intros
   ---BEGIN demorgan_or_apint2
   apply demorgan_or_apint2_thm
   ---END demorgan_or_apint2
@@ -94,6 +96,7 @@ set_option debug.skipKernelTC true in
 theorem demorgan_and_apint1_proof : demorgan_and_apint1_before ⊑ demorgan_and_apint1_after := by
   unfold demorgan_and_apint1_before demorgan_and_apint1_after
   simp_alive_peephole
+  intros
   ---BEGIN demorgan_and_apint1
   apply demorgan_and_apint1_thm
   ---END demorgan_and_apint1
@@ -123,6 +126,7 @@ set_option debug.skipKernelTC true in
 theorem demorgan_and_apint2_proof : demorgan_and_apint2_before ⊑ demorgan_and_apint2_after := by
   unfold demorgan_and_apint2_before demorgan_and_apint2_after
   simp_alive_peephole
+  intros
   ---BEGIN demorgan_and_apint2
   apply demorgan_and_apint2_thm
   ---END demorgan_and_apint2
@@ -152,6 +156,7 @@ set_option debug.skipKernelTC true in
 theorem demorgan_and_apint3_proof : demorgan_and_apint3_before ⊑ demorgan_and_apint3_after := by
   unfold demorgan_and_apint3_before demorgan_and_apint3_after
   simp_alive_peephole
+  intros
   ---BEGIN demorgan_and_apint3
   apply demorgan_and_apint3_thm
   ---END demorgan_and_apint3
@@ -181,6 +186,7 @@ set_option debug.skipKernelTC true in
 theorem demorgan_and_apint4_proof : demorgan_and_apint4_before ⊑ demorgan_and_apint4_after := by
   unfold demorgan_and_apint4_before demorgan_and_apint4_after
   simp_alive_peephole
+  intros
   ---BEGIN demorgan_and_apint4
   apply demorgan_and_apint4_thm
   ---END demorgan_and_apint4
@@ -210,6 +216,7 @@ set_option debug.skipKernelTC true in
 theorem demorgan_and_apint5_proof : demorgan_and_apint5_before ⊑ demorgan_and_apint5_after := by
   unfold demorgan_and_apint5_before demorgan_and_apint5_after
   simp_alive_peephole
+  intros
   ---BEGIN demorgan_and_apint5
   apply demorgan_and_apint5_thm
   ---END demorgan_and_apint5
@@ -238,6 +245,7 @@ set_option debug.skipKernelTC true in
 theorem test3_proof : test3_before ⊑ test3_after := by
   unfold test3_before test3_after
   simp_alive_peephole
+  intros
   ---BEGIN test3
   apply test3_thm
   ---END test3
@@ -267,6 +275,7 @@ set_option debug.skipKernelTC true in
 theorem test4_proof : test4_before ⊑ test4_after := by
   unfold test4_before test4_after
   simp_alive_peephole
+  intros
   ---BEGIN test4
   apply test4_thm
   ---END test4
@@ -295,6 +304,7 @@ set_option debug.skipKernelTC true in
 theorem test5_proof : test5_before ⊑ test5_after := by
   unfold test5_before test5_after
   simp_alive_peephole
+  intros
   ---BEGIN test5
   apply test5_thm
   ---END test5
@@ -323,6 +333,7 @@ set_option debug.skipKernelTC true in
 theorem test3_apint_proof : test3_apint_before ⊑ test3_apint_after := by
   unfold test3_apint_before test3_apint_after
   simp_alive_peephole
+  intros
   ---BEGIN test3_apint
   apply test3_apint_thm
   ---END test3_apint
@@ -353,6 +364,7 @@ set_option debug.skipKernelTC true in
 theorem test4_apint_proof : test4_apint_before ⊑ test4_apint_after := by
   unfold test4_apint_before test4_apint_after
   simp_alive_peephole
+  intros
   ---BEGIN test4_apint
   apply test4_apint_thm
   ---END test4_apint
@@ -381,6 +393,7 @@ set_option debug.skipKernelTC true in
 theorem test5_apint_proof : test5_apint_before ⊑ test5_apint_after := by
   unfold test5_apint_before test5_apint_after
   simp_alive_peephole
+  intros
   ---BEGIN test5_apint
   apply test5_apint_thm
   ---END test5_apint
@@ -410,6 +423,7 @@ set_option debug.skipKernelTC true in
 theorem demorgan_nand_proof : demorgan_nand_before ⊑ demorgan_nand_after := by
   unfold demorgan_nand_before demorgan_nand_after
   simp_alive_peephole
+  intros
   ---BEGIN demorgan_nand
   apply demorgan_nand_thm
   ---END demorgan_nand
@@ -439,6 +453,7 @@ set_option debug.skipKernelTC true in
 theorem demorgan_nand_apint1_proof : demorgan_nand_apint1_before ⊑ demorgan_nand_apint1_after := by
   unfold demorgan_nand_apint1_before demorgan_nand_apint1_after
   simp_alive_peephole
+  intros
   ---BEGIN demorgan_nand_apint1
   apply demorgan_nand_apint1_thm
   ---END demorgan_nand_apint1
@@ -468,6 +483,7 @@ set_option debug.skipKernelTC true in
 theorem demorgan_nand_apint2_proof : demorgan_nand_apint2_before ⊑ demorgan_nand_apint2_after := by
   unfold demorgan_nand_apint2_before demorgan_nand_apint2_after
   simp_alive_peephole
+  intros
   ---BEGIN demorgan_nand_apint2
   apply demorgan_nand_apint2_thm
   ---END demorgan_nand_apint2
@@ -497,6 +513,7 @@ set_option debug.skipKernelTC true in
 theorem demorgan_nor_proof : demorgan_nor_before ⊑ demorgan_nor_after := by
   unfold demorgan_nor_before demorgan_nor_after
   simp_alive_peephole
+  intros
   ---BEGIN demorgan_nor
   apply demorgan_nor_thm
   ---END demorgan_nor
@@ -533,6 +550,7 @@ set_option debug.skipKernelTC true in
 theorem demorgan_nor_use2a_proof : demorgan_nor_use2a_before ⊑ demorgan_nor_use2a_after := by
   unfold demorgan_nor_use2a_before demorgan_nor_use2a_after
   simp_alive_peephole
+  intros
   ---BEGIN demorgan_nor_use2a
   apply demorgan_nor_use2a_thm
   ---END demorgan_nor_use2a
@@ -568,6 +586,7 @@ set_option debug.skipKernelTC true in
 theorem demorgan_nor_use2b_proof : demorgan_nor_use2b_before ⊑ demorgan_nor_use2b_after := by
   unfold demorgan_nor_use2b_before demorgan_nor_use2b_after
   simp_alive_peephole
+  intros
   ---BEGIN demorgan_nor_use2b
   apply demorgan_nor_use2b_thm
   ---END demorgan_nor_use2b
@@ -604,6 +623,7 @@ set_option debug.skipKernelTC true in
 theorem demorgan_nor_use2c_proof : demorgan_nor_use2c_before ⊑ demorgan_nor_use2c_after := by
   unfold demorgan_nor_use2c_before demorgan_nor_use2c_after
   simp_alive_peephole
+  intros
   ---BEGIN demorgan_nor_use2c
   apply demorgan_nor_use2c_thm
   ---END demorgan_nor_use2c
@@ -646,6 +666,7 @@ set_option debug.skipKernelTC true in
 theorem demorgan_nor_use2ab_proof : demorgan_nor_use2ab_before ⊑ demorgan_nor_use2ab_after := by
   unfold demorgan_nor_use2ab_before demorgan_nor_use2ab_after
   simp_alive_peephole
+  intros
   ---BEGIN demorgan_nor_use2ab
   apply demorgan_nor_use2ab_thm
   ---END demorgan_nor_use2ab
@@ -688,6 +709,7 @@ set_option debug.skipKernelTC true in
 theorem demorgan_nor_use2ac_proof : demorgan_nor_use2ac_before ⊑ demorgan_nor_use2ac_after := by
   unfold demorgan_nor_use2ac_before demorgan_nor_use2ac_after
   simp_alive_peephole
+  intros
   ---BEGIN demorgan_nor_use2ac
   apply demorgan_nor_use2ac_thm
   ---END demorgan_nor_use2ac
@@ -728,6 +750,7 @@ set_option debug.skipKernelTC true in
 theorem demorgan_nor_use2bc_proof : demorgan_nor_use2bc_before ⊑ demorgan_nor_use2bc_after := by
   unfold demorgan_nor_use2bc_before demorgan_nor_use2bc_after
   simp_alive_peephole
+  intros
   ---BEGIN demorgan_nor_use2bc
   apply demorgan_nor_use2bc_thm
   ---END demorgan_nor_use2bc
@@ -757,6 +780,7 @@ set_option debug.skipKernelTC true in
 theorem demorganize_constant2_proof : demorganize_constant2_before ⊑ demorganize_constant2_after := by
   unfold demorganize_constant2_before demorganize_constant2_after
   simp_alive_peephole
+  intros
   ---BEGIN demorganize_constant2
   apply demorganize_constant2_thm
   ---END demorganize_constant2
@@ -789,6 +813,7 @@ set_option debug.skipKernelTC true in
 theorem demorgan_or_zext_proof : demorgan_or_zext_before ⊑ demorgan_or_zext_after := by
   unfold demorgan_or_zext_before demorgan_or_zext_after
   simp_alive_peephole
+  intros
   ---BEGIN demorgan_or_zext
   apply demorgan_or_zext_thm
   ---END demorgan_or_zext
@@ -821,6 +846,7 @@ set_option debug.skipKernelTC true in
 theorem demorgan_and_zext_proof : demorgan_and_zext_before ⊑ demorgan_and_zext_after := by
   unfold demorgan_and_zext_before demorgan_and_zext_after
   simp_alive_peephole
+  intros
   ---BEGIN demorgan_and_zext
   apply demorgan_and_zext_thm
   ---END demorgan_and_zext
@@ -850,6 +876,7 @@ set_option debug.skipKernelTC true in
 theorem demorgan_plus_and_to_xor_proof : demorgan_plus_and_to_xor_before ⊑ demorgan_plus_and_to_xor_after := by
   unfold demorgan_plus_and_to_xor_before demorgan_plus_and_to_xor_after
   simp_alive_peephole
+  intros
   ---BEGIN demorgan_plus_and_to_xor
   apply demorgan_plus_and_to_xor_thm
   ---END demorgan_plus_and_to_xor
@@ -880,6 +907,7 @@ set_option debug.skipKernelTC true in
 theorem PR45984_proof : PR45984_before ⊑ PR45984_after := by
   unfold PR45984_before PR45984_after
   simp_alive_peephole
+  intros
   ---BEGIN PR45984
   apply PR45984_thm
   ---END PR45984

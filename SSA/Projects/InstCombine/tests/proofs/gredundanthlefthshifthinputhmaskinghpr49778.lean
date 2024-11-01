@@ -41,6 +41,7 @@ set_option debug.skipKernelTC true in
 theorem src_proof : src_before ⊑ src_after := by
   unfold src_before src_after
   simp_alive_peephole
+  intros
   ---BEGIN src
   apply src_thm
   ---END src

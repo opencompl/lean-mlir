@@ -38,6 +38,7 @@ set_option debug.skipKernelTC true in
 theorem sextinreg_proof : sextinreg_before ⊑ sextinreg_after := by
   unfold sextinreg_before sextinreg_after
   simp_alive_peephole
+  intros
   ---BEGIN sextinreg
   apply sextinreg_thm
   ---END sextinreg
@@ -69,6 +70,7 @@ set_option debug.skipKernelTC true in
 theorem sextinreg_alt_proof : sextinreg_alt_before ⊑ sextinreg_alt_after := by
   unfold sextinreg_alt_before sextinreg_alt_after
   simp_alive_peephole
+  intros
   ---BEGIN sextinreg_alt
   apply sextinreg_alt_thm
   ---END sextinreg_alt
@@ -97,6 +99,7 @@ set_option debug.skipKernelTC true in
 theorem sext_proof : sext_before ⊑ sext_after := by
   unfold sext_before sext_after
   simp_alive_peephole
+  intros
   ---BEGIN sext
   apply sext_thm
   ---END sext
@@ -128,6 +131,7 @@ set_option debug.skipKernelTC true in
 theorem sextinreg2_proof : sextinreg2_before ⊑ sextinreg2_after := by
   unfold sextinreg2_before sextinreg2_after
   simp_alive_peephole
+  intros
   ---BEGIN sextinreg2
   apply sextinreg2_thm
   ---END sextinreg2
@@ -155,6 +159,7 @@ set_option debug.skipKernelTC true in
 theorem test6_proof : test6_before ⊑ test6_after := by
   unfold test6_before test6_after
   simp_alive_peephole
+  intros
   ---BEGIN test6
   apply test6_thm
   ---END test6
@@ -185,6 +190,7 @@ set_option debug.skipKernelTC true in
 theorem ashr_proof : ashr_before ⊑ ashr_after := by
   unfold ashr_before ashr_after
   simp_alive_peephole
+  intros
   ---BEGIN ashr
   apply ashr_thm
   ---END ashr

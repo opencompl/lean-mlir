@@ -33,6 +33,7 @@ set_option debug.skipKernelTC true in
 theorem add_or_sub_comb_i32_commuted1_nuw_proof : add_or_sub_comb_i32_commuted1_nuw_before ⊑ add_or_sub_comb_i32_commuted1_nuw_after := by
   unfold add_or_sub_comb_i32_commuted1_nuw_before add_or_sub_comb_i32_commuted1_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN add_or_sub_comb_i32_commuted1_nuw
   all_goals (try extract_goal ; sorry)
   ---END add_or_sub_comb_i32_commuted1_nuw
@@ -64,6 +65,7 @@ set_option debug.skipKernelTC true in
 theorem add_or_sub_comb_i8_commuted2_nsw_proof : add_or_sub_comb_i8_commuted2_nsw_before ⊑ add_or_sub_comb_i8_commuted2_nsw_after := by
   unfold add_or_sub_comb_i8_commuted2_nsw_before add_or_sub_comb_i8_commuted2_nsw_after
   simp_alive_peephole
+  intros
   ---BEGIN add_or_sub_comb_i8_commuted2_nsw
   all_goals (try extract_goal ; sorry)
   ---END add_or_sub_comb_i8_commuted2_nsw
@@ -92,6 +94,7 @@ set_option debug.skipKernelTC true in
 theorem add_or_sub_comb_i128_commuted3_nuw_nsw_proof : add_or_sub_comb_i128_commuted3_nuw_nsw_before ⊑ add_or_sub_comb_i128_commuted3_nuw_nsw_after := by
   unfold add_or_sub_comb_i128_commuted3_nuw_nsw_before add_or_sub_comb_i128_commuted3_nuw_nsw_after
   simp_alive_peephole
+  intros
   ---BEGIN add_or_sub_comb_i128_commuted3_nuw_nsw
   all_goals (try extract_goal ; sorry)
   ---END add_or_sub_comb_i128_commuted3_nuw_nsw
@@ -123,6 +126,7 @@ set_option debug.skipKernelTC true in
 theorem add_or_sub_comb_i64_commuted4_proof : add_or_sub_comb_i64_commuted4_before ⊑ add_or_sub_comb_i64_commuted4_after := by
   unfold add_or_sub_comb_i64_commuted4_before add_or_sub_comb_i64_commuted4_after
   simp_alive_peephole
+  intros
   ---BEGIN add_or_sub_comb_i64_commuted4
   all_goals (try extract_goal ; sorry)
   ---END add_or_sub_comb_i64_commuted4
@@ -153,6 +157,7 @@ set_option debug.skipKernelTC true in
 theorem add_or_sub_comb_i8_negative_y_sub_proof : add_or_sub_comb_i8_negative_y_sub_before ⊑ add_or_sub_comb_i8_negative_y_sub_after := by
   unfold add_or_sub_comb_i8_negative_y_sub_before add_or_sub_comb_i8_negative_y_sub_after
   simp_alive_peephole
+  intros
   ---BEGIN add_or_sub_comb_i8_negative_y_sub
   all_goals (try extract_goal ; sorry)
   ---END add_or_sub_comb_i8_negative_y_sub
@@ -183,6 +188,7 @@ set_option debug.skipKernelTC true in
 theorem add_or_sub_comb_i8_negative_y_or_proof : add_or_sub_comb_i8_negative_y_or_before ⊑ add_or_sub_comb_i8_negative_y_or_after := by
   unfold add_or_sub_comb_i8_negative_y_or_before add_or_sub_comb_i8_negative_y_or_after
   simp_alive_peephole
+  intros
   ---BEGIN add_or_sub_comb_i8_negative_y_or
   all_goals (try extract_goal ; sorry)
   ---END add_or_sub_comb_i8_negative_y_or
@@ -213,6 +219,7 @@ set_option debug.skipKernelTC true in
 theorem add_or_sub_comb_i8_negative_y_add_proof : add_or_sub_comb_i8_negative_y_add_before ⊑ add_or_sub_comb_i8_negative_y_add_after := by
   unfold add_or_sub_comb_i8_negative_y_add_before add_or_sub_comb_i8_negative_y_add_after
   simp_alive_peephole
+  intros
   ---BEGIN add_or_sub_comb_i8_negative_y_add
   all_goals (try extract_goal ; sorry)
   ---END add_or_sub_comb_i8_negative_y_add
@@ -243,6 +250,7 @@ set_option debug.skipKernelTC true in
 theorem add_or_sub_comb_i8_negative_xor_instead_or_proof : add_or_sub_comb_i8_negative_xor_instead_or_before ⊑ add_or_sub_comb_i8_negative_xor_instead_or_after := by
   unfold add_or_sub_comb_i8_negative_xor_instead_or_before add_or_sub_comb_i8_negative_xor_instead_or_after
   simp_alive_peephole
+  intros
   ---BEGIN add_or_sub_comb_i8_negative_xor_instead_or
   all_goals (try extract_goal ; sorry)
   ---END add_or_sub_comb_i8_negative_xor_instead_or

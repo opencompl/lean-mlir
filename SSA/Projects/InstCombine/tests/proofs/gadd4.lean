@@ -38,6 +38,7 @@ set_option debug.skipKernelTC true in
 theorem match_unsigned_proof : match_unsigned_before ⊑ match_unsigned_after := by
   unfold match_unsigned_before match_unsigned_after
   simp_alive_peephole
+  intros
   ---BEGIN match_unsigned
   apply match_unsigned_thm
   ---END match_unsigned
@@ -70,6 +71,7 @@ set_option debug.skipKernelTC true in
 theorem match_andAsRem_lshrAsDiv_shlAsMul_proof : match_andAsRem_lshrAsDiv_shlAsMul_before ⊑ match_andAsRem_lshrAsDiv_shlAsMul_after := by
   unfold match_andAsRem_lshrAsDiv_shlAsMul_before match_andAsRem_lshrAsDiv_shlAsMul_after
   simp_alive_peephole
+  intros
   ---BEGIN match_andAsRem_lshrAsDiv_shlAsMul
   apply match_andAsRem_lshrAsDiv_shlAsMul_thm
   ---END match_andAsRem_lshrAsDiv_shlAsMul
@@ -107,6 +109,7 @@ set_option debug.skipKernelTC true in
 theorem match_signed_proof : match_signed_before ⊑ match_signed_after := by
   unfold match_signed_before match_signed_after
   simp_alive_peephole
+  intros
   ---BEGIN match_signed
   apply match_signed_thm
   ---END match_signed
@@ -143,6 +146,7 @@ set_option debug.skipKernelTC true in
 theorem not_match_inconsistent_signs_proof : not_match_inconsistent_signs_before ⊑ not_match_inconsistent_signs_after := by
   unfold not_match_inconsistent_signs_before not_match_inconsistent_signs_after
   simp_alive_peephole
+  intros
   ---BEGIN not_match_inconsistent_signs
   apply not_match_inconsistent_signs_thm
   ---END not_match_inconsistent_signs
@@ -181,6 +185,7 @@ set_option debug.skipKernelTC true in
 theorem not_match_inconsistent_values_proof : not_match_inconsistent_values_before ⊑ not_match_inconsistent_values_after := by
   unfold not_match_inconsistent_values_before not_match_inconsistent_values_after
   simp_alive_peephole
+  intros
   ---BEGIN not_match_inconsistent_values
   apply not_match_inconsistent_values_thm
   ---END not_match_inconsistent_values
@@ -214,6 +219,7 @@ set_option debug.skipKernelTC true in
 theorem fold_add_udiv_urem_proof : fold_add_udiv_urem_before ⊑ fold_add_udiv_urem_after := by
   unfold fold_add_udiv_urem_before fold_add_udiv_urem_after
   simp_alive_peephole
+  intros
   ---BEGIN fold_add_udiv_urem
   apply fold_add_udiv_urem_thm
   ---END fold_add_udiv_urem
@@ -247,6 +253,7 @@ set_option debug.skipKernelTC true in
 theorem fold_add_sdiv_srem_proof : fold_add_sdiv_srem_before ⊑ fold_add_sdiv_srem_after := by
   unfold fold_add_sdiv_srem_before fold_add_sdiv_srem_after
   simp_alive_peephole
+  intros
   ---BEGIN fold_add_sdiv_srem
   apply fold_add_sdiv_srem_thm
   ---END fold_add_sdiv_srem
@@ -279,6 +286,7 @@ set_option debug.skipKernelTC true in
 theorem fold_add_udiv_urem_to_mul_proof : fold_add_udiv_urem_to_mul_before ⊑ fold_add_udiv_urem_to_mul_after := by
   unfold fold_add_udiv_urem_to_mul_before fold_add_udiv_urem_to_mul_after
   simp_alive_peephole
+  intros
   ---BEGIN fold_add_udiv_urem_to_mul
   apply fold_add_udiv_urem_to_mul_thm
   ---END fold_add_udiv_urem_to_mul
@@ -312,6 +320,7 @@ set_option debug.skipKernelTC true in
 theorem fold_add_udiv_urem_commuted_proof : fold_add_udiv_urem_commuted_before ⊑ fold_add_udiv_urem_commuted_after := by
   unfold fold_add_udiv_urem_commuted_before fold_add_udiv_urem_commuted_after
   simp_alive_peephole
+  intros
   ---BEGIN fold_add_udiv_urem_commuted
   apply fold_add_udiv_urem_commuted_thm
   ---END fold_add_udiv_urem_commuted
@@ -345,6 +354,7 @@ set_option debug.skipKernelTC true in
 theorem fold_add_udiv_urem_or_disjoint_proof : fold_add_udiv_urem_or_disjoint_before ⊑ fold_add_udiv_urem_or_disjoint_after := by
   unfold fold_add_udiv_urem_or_disjoint_before fold_add_udiv_urem_or_disjoint_after
   simp_alive_peephole
+  intros
   ---BEGIN fold_add_udiv_urem_or_disjoint
   apply fold_add_udiv_urem_or_disjoint_thm
   ---END fold_add_udiv_urem_or_disjoint
@@ -379,6 +389,7 @@ set_option debug.skipKernelTC true in
 theorem fold_add_udiv_urem_without_noundef_proof : fold_add_udiv_urem_without_noundef_before ⊑ fold_add_udiv_urem_without_noundef_after := by
   unfold fold_add_udiv_urem_without_noundef_before fold_add_udiv_urem_without_noundef_after
   simp_alive_peephole
+  intros
   ---BEGIN fold_add_udiv_urem_without_noundef
   apply fold_add_udiv_urem_without_noundef_thm
   ---END fold_add_udiv_urem_without_noundef

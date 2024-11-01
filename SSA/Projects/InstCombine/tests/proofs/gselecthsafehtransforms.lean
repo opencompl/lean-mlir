@@ -36,6 +36,7 @@ set_option debug.skipKernelTC true in
 theorem bools_logical_commute0_proof : bools_logical_commute0_before ⊑ bools_logical_commute0_after := by
   unfold bools_logical_commute0_before bools_logical_commute0_after
   simp_alive_peephole
+  intros
   ---BEGIN bools_logical_commute0
   apply bools_logical_commute0_thm
   ---END bools_logical_commute0
@@ -65,6 +66,7 @@ set_option debug.skipKernelTC true in
 theorem bools_logical_commute0_and1_proof : bools_logical_commute0_and1_before ⊑ bools_logical_commute0_and1_after := by
   unfold bools_logical_commute0_and1_before bools_logical_commute0_and1_after
   simp_alive_peephole
+  intros
   ---BEGIN bools_logical_commute0_and1
   apply bools_logical_commute0_and1_thm
   ---END bools_logical_commute0_and1
@@ -94,6 +96,7 @@ set_option debug.skipKernelTC true in
 theorem bools_logical_commute0_and2_proof : bools_logical_commute0_and2_before ⊑ bools_logical_commute0_and2_after := by
   unfold bools_logical_commute0_and2_before bools_logical_commute0_and2_after
   simp_alive_peephole
+  intros
   ---BEGIN bools_logical_commute0_and2
   apply bools_logical_commute0_and2_thm
   ---END bools_logical_commute0_and2
@@ -122,6 +125,7 @@ set_option debug.skipKernelTC true in
 theorem bools_logical_commute0_and1_and2_proof : bools_logical_commute0_and1_and2_before ⊑ bools_logical_commute0_and1_and2_after := by
   unfold bools_logical_commute0_and1_and2_before bools_logical_commute0_and1_and2_after
   simp_alive_peephole
+  intros
   ---BEGIN bools_logical_commute0_and1_and2
   apply bools_logical_commute0_and1_and2_thm
   ---END bools_logical_commute0_and1_and2
@@ -151,6 +155,7 @@ set_option debug.skipKernelTC true in
 theorem bools_logical_commute1_proof : bools_logical_commute1_before ⊑ bools_logical_commute1_after := by
   unfold bools_logical_commute1_before bools_logical_commute1_after
   simp_alive_peephole
+  intros
   ---BEGIN bools_logical_commute1
   apply bools_logical_commute1_thm
   ---END bools_logical_commute1
@@ -180,6 +185,7 @@ set_option debug.skipKernelTC true in
 theorem bools_logical_commute1_and2_proof : bools_logical_commute1_and2_before ⊑ bools_logical_commute1_and2_after := by
   unfold bools_logical_commute1_and2_before bools_logical_commute1_and2_after
   simp_alive_peephole
+  intros
   ---BEGIN bools_logical_commute1_and2
   apply bools_logical_commute1_and2_thm
   ---END bools_logical_commute1_and2
@@ -209,6 +215,7 @@ set_option debug.skipKernelTC true in
 theorem bools_logical_commute3_and2_proof : bools_logical_commute3_and2_before ⊑ bools_logical_commute3_and2_after := by
   unfold bools_logical_commute3_and2_before bools_logical_commute3_and2_after
   simp_alive_peephole
+  intros
   ---BEGIN bools_logical_commute3_and2
   apply bools_logical_commute3_and2_thm
   ---END bools_logical_commute3_and2
@@ -238,6 +245,7 @@ set_option debug.skipKernelTC true in
 theorem bools2_logical_commute0_proof : bools2_logical_commute0_before ⊑ bools2_logical_commute0_after := by
   unfold bools2_logical_commute0_before bools2_logical_commute0_after
   simp_alive_peephole
+  intros
   ---BEGIN bools2_logical_commute0
   apply bools2_logical_commute0_thm
   ---END bools2_logical_commute0
@@ -267,6 +275,7 @@ set_option debug.skipKernelTC true in
 theorem bools2_logical_commute0_and1_proof : bools2_logical_commute0_and1_before ⊑ bools2_logical_commute0_and1_after := by
   unfold bools2_logical_commute0_and1_before bools2_logical_commute0_and1_after
   simp_alive_peephole
+  intros
   ---BEGIN bools2_logical_commute0_and1
   apply bools2_logical_commute0_and1_thm
   ---END bools2_logical_commute0_and1
@@ -296,6 +305,7 @@ set_option debug.skipKernelTC true in
 theorem bools2_logical_commute0_and2_proof : bools2_logical_commute0_and2_before ⊑ bools2_logical_commute0_and2_after := by
   unfold bools2_logical_commute0_and2_before bools2_logical_commute0_and2_after
   simp_alive_peephole
+  intros
   ---BEGIN bools2_logical_commute0_and2
   apply bools2_logical_commute0_and2_thm
   ---END bools2_logical_commute0_and2
@@ -324,6 +334,7 @@ set_option debug.skipKernelTC true in
 theorem bools2_logical_commute0_and1_and2_proof : bools2_logical_commute0_and1_and2_before ⊑ bools2_logical_commute0_and1_and2_after := by
   unfold bools2_logical_commute0_and1_and2_before bools2_logical_commute0_and1_and2_after
   simp_alive_peephole
+  intros
   ---BEGIN bools2_logical_commute0_and1_and2
   apply bools2_logical_commute0_and1_and2_thm
   ---END bools2_logical_commute0_and1_and2
@@ -353,6 +364,7 @@ set_option debug.skipKernelTC true in
 theorem bools2_logical_commute1_proof : bools2_logical_commute1_before ⊑ bools2_logical_commute1_after := by
   unfold bools2_logical_commute1_before bools2_logical_commute1_after
   simp_alive_peephole
+  intros
   ---BEGIN bools2_logical_commute1
   apply bools2_logical_commute1_thm
   ---END bools2_logical_commute1
@@ -382,6 +394,7 @@ set_option debug.skipKernelTC true in
 theorem bools2_logical_commute1_and1_proof : bools2_logical_commute1_and1_before ⊑ bools2_logical_commute1_and1_after := by
   unfold bools2_logical_commute1_and1_before bools2_logical_commute1_and1_after
   simp_alive_peephole
+  intros
   ---BEGIN bools2_logical_commute1_and1
   apply bools2_logical_commute1_and1_thm
   ---END bools2_logical_commute1_and1
@@ -411,6 +424,7 @@ set_option debug.skipKernelTC true in
 theorem bools2_logical_commute1_and2_proof : bools2_logical_commute1_and2_before ⊑ bools2_logical_commute1_and2_after := by
   unfold bools2_logical_commute1_and2_before bools2_logical_commute1_and2_after
   simp_alive_peephole
+  intros
   ---BEGIN bools2_logical_commute1_and2
   apply bools2_logical_commute1_and2_thm
   ---END bools2_logical_commute1_and2
@@ -439,6 +453,7 @@ set_option debug.skipKernelTC true in
 theorem bools2_logical_commute1_and1_and2_proof : bools2_logical_commute1_and1_and2_before ⊑ bools2_logical_commute1_and1_and2_after := by
   unfold bools2_logical_commute1_and1_and2_before bools2_logical_commute1_and1_and2_after
   simp_alive_peephole
+  intros
   ---BEGIN bools2_logical_commute1_and1_and2
   apply bools2_logical_commute1_and1_and2_thm
   ---END bools2_logical_commute1_and1_and2
@@ -468,6 +483,7 @@ set_option debug.skipKernelTC true in
 theorem bools2_logical_commute2_proof : bools2_logical_commute2_before ⊑ bools2_logical_commute2_after := by
   unfold bools2_logical_commute2_before bools2_logical_commute2_after
   simp_alive_peephole
+  intros
   ---BEGIN bools2_logical_commute2
   apply bools2_logical_commute2_thm
   ---END bools2_logical_commute2
@@ -497,6 +513,7 @@ set_option debug.skipKernelTC true in
 theorem bools2_logical_commute2_and1_proof : bools2_logical_commute2_and1_before ⊑ bools2_logical_commute2_and1_after := by
   unfold bools2_logical_commute2_and1_before bools2_logical_commute2_and1_after
   simp_alive_peephole
+  intros
   ---BEGIN bools2_logical_commute2_and1
   apply bools2_logical_commute2_and1_thm
   ---END bools2_logical_commute2_and1
@@ -526,6 +543,7 @@ set_option debug.skipKernelTC true in
 theorem bools2_logical_commute3_nopoison_proof : bools2_logical_commute3_nopoison_before ⊑ bools2_logical_commute3_nopoison_after := by
   unfold bools2_logical_commute3_nopoison_before bools2_logical_commute3_nopoison_after
   simp_alive_peephole
+  intros
   ---BEGIN bools2_logical_commute3_nopoison
   apply bools2_logical_commute3_nopoison_thm
   ---END bools2_logical_commute3_nopoison
@@ -555,6 +573,7 @@ set_option debug.skipKernelTC true in
 theorem bools2_logical_commute3_and1_proof : bools2_logical_commute3_and1_before ⊑ bools2_logical_commute3_and1_after := by
   unfold bools2_logical_commute3_and1_before bools2_logical_commute3_and1_after
   simp_alive_peephole
+  intros
   ---BEGIN bools2_logical_commute3_and1
   apply bools2_logical_commute3_and1_thm
   ---END bools2_logical_commute3_and1

@@ -38,6 +38,7 @@ set_option debug.skipKernelTC true in
 theorem add_mask_ashr28_i32_proof : add_mask_ashr28_i32_before ⊑ add_mask_ashr28_i32_after := by
   unfold add_mask_ashr28_i32_before add_mask_ashr28_i32_after
   simp_alive_peephole
+  intros
   ---BEGIN add_mask_ashr28_i32
   apply add_mask_ashr28_i32_thm
   ---END add_mask_ashr28_i32
@@ -70,6 +71,7 @@ set_option debug.skipKernelTC true in
 theorem add_mask_ashr28_non_pow2_i32_proof : add_mask_ashr28_non_pow2_i32_before ⊑ add_mask_ashr28_non_pow2_i32_after := by
   unfold add_mask_ashr28_non_pow2_i32_before add_mask_ashr28_non_pow2_i32_after
   simp_alive_peephole
+  intros
   ---BEGIN add_mask_ashr28_non_pow2_i32
   apply add_mask_ashr28_non_pow2_i32_thm
   ---END add_mask_ashr28_non_pow2_i32
@@ -102,6 +104,7 @@ set_option debug.skipKernelTC true in
 theorem add_mask_ashr27_i32_proof : add_mask_ashr27_i32_before ⊑ add_mask_ashr27_i32_after := by
   unfold add_mask_ashr27_i32_before add_mask_ashr27_i32_after
   simp_alive_peephole
+  intros
   ---BEGIN add_mask_ashr27_i32
   apply add_mask_ashr27_i32_thm
   ---END add_mask_ashr27_i32

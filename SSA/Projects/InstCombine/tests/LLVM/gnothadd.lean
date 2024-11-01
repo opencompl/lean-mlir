@@ -34,6 +34,7 @@ set_option debug.skipKernelTC true in
 theorem basic_proof : basic_before ⊑ basic_after := by
   unfold basic_before basic_after
   simp_alive_peephole
+  intros
   ---BEGIN basic
   all_goals (try extract_goal ; sorry)
   ---END basic
@@ -61,6 +62,7 @@ set_option debug.skipKernelTC true in
 theorem basic_com_add_proof : basic_com_add_before ⊑ basic_com_add_after := by
   unfold basic_com_add_before basic_com_add_after
   simp_alive_peephole
+  intros
   ---BEGIN basic_com_add
   all_goals (try extract_goal ; sorry)
   ---END basic_com_add
@@ -88,6 +90,7 @@ set_option debug.skipKernelTC true in
 theorem basic_preserve_nsw_proof : basic_preserve_nsw_before ⊑ basic_preserve_nsw_after := by
   unfold basic_preserve_nsw_before basic_preserve_nsw_after
   simp_alive_peephole
+  intros
   ---BEGIN basic_preserve_nsw
   all_goals (try extract_goal ; sorry)
   ---END basic_preserve_nsw
@@ -115,6 +118,7 @@ set_option debug.skipKernelTC true in
 theorem basic_preserve_nuw_proof : basic_preserve_nuw_before ⊑ basic_preserve_nuw_after := by
   unfold basic_preserve_nuw_before basic_preserve_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN basic_preserve_nuw
   all_goals (try extract_goal ; sorry)
   ---END basic_preserve_nuw
@@ -142,6 +146,7 @@ set_option debug.skipKernelTC true in
 theorem basic_preserve_nuw_nsw_proof : basic_preserve_nuw_nsw_before ⊑ basic_preserve_nuw_nsw_after := by
   unfold basic_preserve_nuw_nsw_before basic_preserve_nuw_nsw_after
   simp_alive_peephole
+  intros
   ---BEGIN basic_preserve_nuw_nsw
   all_goals (try extract_goal ; sorry)
   ---END basic_preserve_nuw_nsw

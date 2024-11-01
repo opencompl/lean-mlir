@@ -5,8 +5,8 @@ open BitVec
 open LLVM
 
 section gaddhshift_proof
-theorem flip_add_of_shift_neg_thm (e✝ e✝¹ e✝² : IntW 8) :
-  add (shl (sub (const? 0) e✝²) e✝¹ { «nsw» := true, «nuw» := true }) e✝ ⊑ sub e✝ (shl e✝² e✝¹) := by 
+theorem flip_add_of_shift_neg_thm (e e_1 e_2 : IntW 8) :
+  add (shl (sub (const? 0) e_2) e_1 { «nsw» := true, «nuw» := true }) e ⊑ sub e (shl e_2 e_1) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

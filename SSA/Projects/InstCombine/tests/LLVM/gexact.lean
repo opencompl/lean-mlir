@@ -33,6 +33,7 @@ set_option debug.skipKernelTC true in
 theorem sdiv2_proof : sdiv2_before ⊑ sdiv2_after := by
   unfold sdiv2_before sdiv2_after
   simp_alive_peephole
+  intros
   ---BEGIN sdiv2
   all_goals (try extract_goal ; sorry)
   ---END sdiv2
@@ -58,6 +59,7 @@ set_option debug.skipKernelTC true in
 theorem sdiv4_proof : sdiv4_before ⊑ sdiv4_after := by
   unfold sdiv4_before sdiv4_after
   simp_alive_peephole
+  intros
   ---BEGIN sdiv4
   all_goals (try extract_goal ; sorry)
   ---END sdiv4
@@ -86,6 +88,7 @@ set_option debug.skipKernelTC true in
 theorem sdiv6_proof : sdiv6_before ⊑ sdiv6_after := by
   unfold sdiv6_before sdiv6_after
   simp_alive_peephole
+  intros
   ---BEGIN sdiv6
   all_goals (try extract_goal ; sorry)
   ---END sdiv6
@@ -110,6 +113,7 @@ set_option debug.skipKernelTC true in
 theorem udiv1_proof : udiv1_before ⊑ udiv1_after := by
   unfold udiv1_before udiv1_after
   simp_alive_peephole
+  intros
   ---BEGIN udiv1
   all_goals (try extract_goal ; sorry)
   ---END udiv1
@@ -136,6 +140,7 @@ set_option debug.skipKernelTC true in
 theorem udiv2_proof : udiv2_before ⊑ udiv2_after := by
   unfold udiv2_before udiv2_after
   simp_alive_peephole
+  intros
   ---BEGIN udiv2
   all_goals (try extract_goal ; sorry)
   ---END udiv2
@@ -164,6 +169,7 @@ set_option debug.skipKernelTC true in
 theorem mul_of_udiv_proof : mul_of_udiv_before ⊑ mul_of_udiv_after := by
   unfold mul_of_udiv_before mul_of_udiv_after
   simp_alive_peephole
+  intros
   ---BEGIN mul_of_udiv
   all_goals (try extract_goal ; sorry)
   ---END mul_of_udiv
@@ -194,6 +200,7 @@ set_option debug.skipKernelTC true in
 theorem mul_of_sdiv_proof : mul_of_sdiv_before ⊑ mul_of_sdiv_after := by
   unfold mul_of_sdiv_before mul_of_sdiv_after
   simp_alive_peephole
+  intros
   ---BEGIN mul_of_sdiv
   all_goals (try extract_goal ; sorry)
   ---END mul_of_sdiv
@@ -224,6 +231,7 @@ set_option debug.skipKernelTC true in
 theorem mul_of_udiv_fail_bad_remainder_proof : mul_of_udiv_fail_bad_remainder_before ⊑ mul_of_udiv_fail_bad_remainder_after := by
   unfold mul_of_udiv_fail_bad_remainder_before mul_of_udiv_fail_bad_remainder_after
   simp_alive_peephole
+  intros
   ---BEGIN mul_of_udiv_fail_bad_remainder
   all_goals (try extract_goal ; sorry)
   ---END mul_of_udiv_fail_bad_remainder
@@ -252,6 +260,7 @@ set_option debug.skipKernelTC true in
 theorem mul_of_sdiv_fail_ub_proof : mul_of_sdiv_fail_ub_before ⊑ mul_of_sdiv_fail_ub_after := by
   unfold mul_of_sdiv_fail_ub_before mul_of_sdiv_fail_ub_after
   simp_alive_peephole
+  intros
   ---BEGIN mul_of_sdiv_fail_ub
   all_goals (try extract_goal ; sorry)
   ---END mul_of_sdiv_fail_ub

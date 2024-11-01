@@ -37,6 +37,7 @@ set_option debug.skipKernelTC true in
 theorem t0_proof : t0_before ⊑ t0_after := by
   unfold t0_before t0_after
   simp_alive_peephole
+  intros
   ---BEGIN t0
   apply t0_thm
   ---END t0
@@ -67,6 +68,7 @@ set_option debug.skipKernelTC true in
 theorem t1_exact_proof : t1_exact_before ⊑ t1_exact_after := by
   unfold t1_exact_before t1_exact_after
   simp_alive_peephole
+  intros
   ---BEGIN t1_exact
   apply t1_exact_thm
   ---END t1_exact
@@ -97,6 +99,7 @@ set_option debug.skipKernelTC true in
 theorem t2_proof : t2_before ⊑ t2_after := by
   unfold t2_before t2_after
   simp_alive_peephole
+  intros
   ---BEGIN t2
   apply t2_thm
   ---END t2
@@ -127,6 +130,7 @@ set_option debug.skipKernelTC true in
 theorem t3_exact_proof : t3_exact_before ⊑ t3_exact_after := by
   unfold t3_exact_before t3_exact_after
   simp_alive_peephole
+  intros
   ---BEGIN t3_exact
   apply t3_exact_thm
   ---END t3_exact
@@ -159,6 +163,7 @@ set_option debug.skipKernelTC true in
 theorem n9_proof : n9_before ⊑ n9_after := by
   unfold n9_before n9_after
   simp_alive_peephole
+  intros
   ---BEGIN n9
   apply n9_thm
   ---END n9
@@ -191,6 +196,7 @@ set_option debug.skipKernelTC true in
 theorem n10_proof : n10_before ⊑ n10_after := by
   unfold n10_before n10_after
   simp_alive_peephole
+  intros
   ---BEGIN n10
   apply n10_thm
   ---END n10

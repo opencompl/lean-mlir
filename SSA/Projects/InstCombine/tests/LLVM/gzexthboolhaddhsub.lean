@@ -41,6 +41,7 @@ set_option debug.skipKernelTC true in
 theorem a_proof : a_before ⊑ a_after := by
   unfold a_before a_after
   simp_alive_peephole
+  intros
   ---BEGIN a
   all_goals (try extract_goal ; sorry)
   ---END a
@@ -76,6 +77,7 @@ set_option debug.skipKernelTC true in
 theorem PR30273_three_bools_proof : PR30273_three_bools_before ⊑ PR30273_three_bools_after := by
   unfold PR30273_three_bools_before PR30273_three_bools_after
   simp_alive_peephole
+  intros
   ---BEGIN PR30273_three_bools
   all_goals (try extract_goal ; sorry)
   ---END PR30273_three_bools
@@ -104,6 +106,7 @@ set_option debug.skipKernelTC true in
 theorem zext_add_scalar_proof : zext_add_scalar_before ⊑ zext_add_scalar_after := by
   unfold zext_add_scalar_before zext_add_scalar_after
   simp_alive_peephole
+  intros
   ---BEGIN zext_add_scalar
   all_goals (try extract_goal ; sorry)
   ---END zext_add_scalar
@@ -130,6 +133,7 @@ set_option debug.skipKernelTC true in
 theorem zext_negate_proof : zext_negate_before ⊑ zext_negate_after := by
   unfold zext_negate_before zext_negate_after
   simp_alive_peephole
+  intros
   ---BEGIN zext_negate
   all_goals (try extract_goal ; sorry)
   ---END zext_negate
@@ -158,6 +162,7 @@ set_option debug.skipKernelTC true in
 theorem zext_sub_const_proof : zext_sub_const_before ⊑ zext_sub_const_after := by
   unfold zext_sub_const_before zext_sub_const_after
   simp_alive_peephole
+  intros
   ---BEGIN zext_sub_const
   all_goals (try extract_goal ; sorry)
   ---END zext_sub_const
@@ -184,6 +189,7 @@ set_option debug.skipKernelTC true in
 theorem sext_negate_proof : sext_negate_before ⊑ sext_negate_after := by
   unfold sext_negate_before sext_negate_after
   simp_alive_peephole
+  intros
   ---BEGIN sext_negate
   all_goals (try extract_goal ; sorry)
   ---END sext_negate
@@ -212,6 +218,7 @@ set_option debug.skipKernelTC true in
 theorem sext_sub_const_proof : sext_sub_const_before ⊑ sext_sub_const_after := by
   unfold sext_sub_const_before sext_sub_const_after
   simp_alive_peephole
+  intros
   ---BEGIN sext_sub_const
   all_goals (try extract_goal ; sorry)
   ---END sext_sub_const
@@ -238,6 +245,7 @@ set_option debug.skipKernelTC true in
 theorem sext_sub_proof : sext_sub_before ⊑ sext_sub_after := by
   unfold sext_sub_before sext_sub_after
   simp_alive_peephole
+  intros
   ---BEGIN sext_sub
   all_goals (try extract_goal ; sorry)
   ---END sext_sub
@@ -264,6 +272,7 @@ set_option debug.skipKernelTC true in
 theorem sext_sub_nuw_proof : sext_sub_nuw_before ⊑ sext_sub_nuw_after := by
   unfold sext_sub_nuw_before sext_sub_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN sext_sub_nuw
   all_goals (try extract_goal ; sorry)
   ---END sext_sub_nuw
@@ -290,6 +299,7 @@ set_option debug.skipKernelTC true in
 theorem sextbool_add_proof : sextbool_add_before ⊑ sextbool_add_after := by
   unfold sextbool_add_before sextbool_add_after
   simp_alive_peephole
+  intros
   ---BEGIN sextbool_add
   all_goals (try extract_goal ; sorry)
   ---END sextbool_add
@@ -320,6 +330,7 @@ set_option debug.skipKernelTC true in
 theorem sextbool_add_commute_proof : sextbool_add_commute_before ⊑ sextbool_add_commute_after := by
   unfold sextbool_add_commute_before sextbool_add_commute_after
   simp_alive_peephole
+  intros
   ---BEGIN sextbool_add_commute
   all_goals (try extract_goal ; sorry)
   ---END sextbool_add_commute

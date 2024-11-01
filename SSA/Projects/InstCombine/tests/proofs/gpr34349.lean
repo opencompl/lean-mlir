@@ -53,6 +53,7 @@ set_option debug.skipKernelTC true in
 theorem fast_div_201_proof : fast_div_201_before ⊑ fast_div_201_after := by
   unfold fast_div_201_before fast_div_201_after
   simp_alive_peephole
+  intros
   ---BEGIN fast_div_201
   apply fast_div_201_thm
   ---END fast_div_201

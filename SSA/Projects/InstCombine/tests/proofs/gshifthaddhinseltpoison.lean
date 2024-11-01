@@ -37,6 +37,7 @@ set_option debug.skipKernelTC true in
 theorem shl_C1_add_A_C2_i32_proof : shl_C1_add_A_C2_i32_before ⊑ shl_C1_add_A_C2_i32_after := by
   unfold shl_C1_add_A_C2_i32_before shl_C1_add_A_C2_i32_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_C1_add_A_C2_i32
   apply shl_C1_add_A_C2_i32_thm
   ---END shl_C1_add_A_C2_i32
@@ -66,6 +67,7 @@ set_option debug.skipKernelTC true in
 theorem ashr_C1_add_A_C2_i32_proof : ashr_C1_add_A_C2_i32_before ⊑ ashr_C1_add_A_C2_i32_after := by
   unfold ashr_C1_add_A_C2_i32_before ashr_C1_add_A_C2_i32_after
   simp_alive_peephole
+  intros
   ---BEGIN ashr_C1_add_A_C2_i32
   apply ashr_C1_add_A_C2_i32_thm
   ---END ashr_C1_add_A_C2_i32
@@ -98,6 +100,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_C1_add_A_C2_i32_proof : lshr_C1_add_A_C2_i32_before ⊑ lshr_C1_add_A_C2_i32_after := by
   unfold lshr_C1_add_A_C2_i32_before lshr_C1_add_A_C2_i32_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_C1_add_A_C2_i32
   apply lshr_C1_add_A_C2_i32_thm
   ---END lshr_C1_add_A_C2_i32

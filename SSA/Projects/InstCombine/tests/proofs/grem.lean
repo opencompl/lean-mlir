@@ -32,6 +32,7 @@ set_option debug.skipKernelTC true in
 theorem test1_proof : test1_before ⊑ test1_after := by
   unfold test1_before test1_after
   simp_alive_peephole
+  intros
   ---BEGIN test1
   apply test1_thm
   ---END test1
@@ -58,6 +59,7 @@ set_option debug.skipKernelTC true in
 theorem test3_proof : test3_before ⊑ test3_after := by
   unfold test3_before test3_after
   simp_alive_peephole
+  intros
   ---BEGIN test3
   apply test3_thm
   ---END test3
@@ -88,6 +90,7 @@ set_option debug.skipKernelTC true in
 theorem test4_proof : test4_before ⊑ test4_after := by
   unfold test4_before test4_after
   simp_alive_peephole
+  intros
   ---BEGIN test4
   apply test4_thm
   ---END test4
@@ -120,6 +123,7 @@ set_option debug.skipKernelTC true in
 theorem test5_proof : test5_before ⊑ test5_after := by
   unfold test5_before test5_after
   simp_alive_peephole
+  intros
   ---BEGIN test5
   apply test5_thm
   ---END test5
@@ -147,6 +151,7 @@ set_option debug.skipKernelTC true in
 theorem test7_proof : test7_before ⊑ test7_after := by
   unfold test7_before test7_after
   simp_alive_peephole
+  intros
   ---BEGIN test7
   apply test7_thm
   ---END test7
@@ -174,6 +179,7 @@ set_option debug.skipKernelTC true in
 theorem test8_proof : test8_before ⊑ test8_after := by
   unfold test8_before test8_after
   simp_alive_peephole
+  intros
   ---BEGIN test8
   apply test8_thm
   ---END test8
@@ -201,6 +207,7 @@ set_option debug.skipKernelTC true in
 theorem test9_proof : test9_before ⊑ test9_after := by
   unfold test9_before test9_after
   simp_alive_peephole
+  intros
   ---BEGIN test9
   apply test9_thm
   ---END test9
@@ -231,6 +238,7 @@ set_option debug.skipKernelTC true in
 theorem test10_proof : test10_before ⊑ test10_after := by
   unfold test10_before test10_after
   simp_alive_peephole
+  intros
   ---BEGIN test10
   apply test10_thm
   ---END test10
@@ -260,6 +268,7 @@ set_option debug.skipKernelTC true in
 theorem test11_proof : test11_before ⊑ test11_after := by
   unfold test11_before test11_after
   simp_alive_peephole
+  intros
   ---BEGIN test11
   apply test11_thm
   ---END test11
@@ -287,6 +296,7 @@ set_option debug.skipKernelTC true in
 theorem test12_proof : test12_before ⊑ test12_after := by
   unfold test12_before test12_after
   simp_alive_peephole
+  intros
   ---BEGIN test12
   apply test12_thm
   ---END test12
@@ -311,6 +321,7 @@ set_option debug.skipKernelTC true in
 theorem test13_proof : test13_before ⊑ test13_after := by
   unfold test13_before test13_after
   simp_alive_peephole
+  intros
   ---BEGIN test13
   apply test13_thm
   ---END test13
@@ -343,6 +354,7 @@ set_option debug.skipKernelTC true in
 theorem test14_proof : test14_before ⊑ test14_after := by
   unfold test14_before test14_after
   simp_alive_peephole
+  intros
   ---BEGIN test14
   apply test14_thm
   ---END test14
@@ -375,6 +387,7 @@ set_option debug.skipKernelTC true in
 theorem test15_proof : test15_before ⊑ test15_after := by
   unfold test15_before test15_after
   simp_alive_peephole
+  intros
   ---BEGIN test15
   apply test15_thm
   ---END test15
@@ -410,6 +423,7 @@ set_option debug.skipKernelTC true in
 theorem test16_proof : test16_before ⊑ test16_after := by
   unfold test16_before test16_after
   simp_alive_peephole
+  intros
   ---BEGIN test16
   apply test16_thm
   ---END test16
@@ -446,6 +460,7 @@ set_option debug.skipKernelTC true in
 theorem test19_proof : test19_before ⊑ test19_after := by
   unfold test19_before test19_after
   simp_alive_peephole
+  intros
   ---BEGIN test19
   apply test19_thm
   ---END test19
@@ -482,6 +497,7 @@ set_option debug.skipKernelTC true in
 theorem test19_commutative0_proof : test19_commutative0_before ⊑ test19_commutative0_after := by
   unfold test19_commutative0_before test19_commutative0_after
   simp_alive_peephole
+  intros
   ---BEGIN test19_commutative0
   apply test19_commutative0_thm
   ---END test19_commutative0
@@ -518,6 +534,7 @@ set_option debug.skipKernelTC true in
 theorem test19_commutative1_proof : test19_commutative1_before ⊑ test19_commutative1_after := by
   unfold test19_commutative1_before test19_commutative1_after
   simp_alive_peephole
+  intros
   ---BEGIN test19_commutative1
   apply test19_commutative1_thm
   ---END test19_commutative1
@@ -554,6 +571,7 @@ set_option debug.skipKernelTC true in
 theorem test19_commutative2_proof : test19_commutative2_before ⊑ test19_commutative2_after := by
   unfold test19_commutative2_before test19_commutative2_after
   simp_alive_peephole
+  intros
   ---BEGIN test19_commutative2
   apply test19_commutative2_thm
   ---END test19_commutative2
@@ -582,6 +600,7 @@ set_option debug.skipKernelTC true in
 theorem test22_proof : test22_before ⊑ test22_after := by
   unfold test22_before test22_after
   simp_alive_peephole
+  intros
   ---BEGIN test22
   apply test22_thm
   ---END test22
@@ -612,6 +631,7 @@ set_option debug.skipKernelTC true in
 theorem srem_constant_dividend_select_of_constants_divisor_proof : srem_constant_dividend_select_of_constants_divisor_before ⊑ srem_constant_dividend_select_of_constants_divisor_after := by
   unfold srem_constant_dividend_select_of_constants_divisor_before srem_constant_dividend_select_of_constants_divisor_after
   simp_alive_peephole
+  intros
   ---BEGIN srem_constant_dividend_select_of_constants_divisor
   apply srem_constant_dividend_select_of_constants_divisor_thm
   ---END srem_constant_dividend_select_of_constants_divisor
@@ -640,6 +660,7 @@ set_option debug.skipKernelTC true in
 theorem srem_constant_dividend_select_of_constants_divisor_0_arm_proof : srem_constant_dividend_select_of_constants_divisor_0_arm_before ⊑ srem_constant_dividend_select_of_constants_divisor_0_arm_after := by
   unfold srem_constant_dividend_select_of_constants_divisor_0_arm_before srem_constant_dividend_select_of_constants_divisor_0_arm_after
   simp_alive_peephole
+  intros
   ---BEGIN srem_constant_dividend_select_of_constants_divisor_0_arm
   apply srem_constant_dividend_select_of_constants_divisor_0_arm_thm
   ---END srem_constant_dividend_select_of_constants_divisor_0_arm
@@ -670,6 +691,7 @@ set_option debug.skipKernelTC true in
 theorem urem_constant_dividend_select_of_constants_divisor_proof : urem_constant_dividend_select_of_constants_divisor_before ⊑ urem_constant_dividend_select_of_constants_divisor_after := by
   unfold urem_constant_dividend_select_of_constants_divisor_before urem_constant_dividend_select_of_constants_divisor_after
   simp_alive_peephole
+  intros
   ---BEGIN urem_constant_dividend_select_of_constants_divisor
   apply urem_constant_dividend_select_of_constants_divisor_thm
   ---END urem_constant_dividend_select_of_constants_divisor
@@ -698,6 +720,7 @@ set_option debug.skipKernelTC true in
 theorem urem_constant_dividend_select_of_constants_divisor_0_arm_proof : urem_constant_dividend_select_of_constants_divisor_0_arm_before ⊑ urem_constant_dividend_select_of_constants_divisor_0_arm_after := by
   unfold urem_constant_dividend_select_of_constants_divisor_0_arm_before urem_constant_dividend_select_of_constants_divisor_0_arm_after
   simp_alive_peephole
+  intros
   ---BEGIN urem_constant_dividend_select_of_constants_divisor_0_arm
   apply urem_constant_dividend_select_of_constants_divisor_0_arm_thm
   ---END urem_constant_dividend_select_of_constants_divisor_0_arm

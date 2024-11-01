@@ -34,6 +34,7 @@ set_option debug.skipKernelTC true in
 theorem t0_sub_from_trueval_proof : t0_sub_from_trueval_before ⊑ t0_sub_from_trueval_after := by
   unfold t0_sub_from_trueval_before t0_sub_from_trueval_after
   simp_alive_peephole
+  intros
   ---BEGIN t0_sub_from_trueval
   apply t0_sub_from_trueval_thm
   ---END t0_sub_from_trueval
@@ -61,6 +62,7 @@ set_option debug.skipKernelTC true in
 theorem t1_sub_from_falseval_proof : t1_sub_from_falseval_before ⊑ t1_sub_from_falseval_after := by
   unfold t1_sub_from_falseval_before t1_sub_from_falseval_after
   simp_alive_peephole
+  intros
   ---BEGIN t1_sub_from_falseval
   apply t1_sub_from_falseval_thm
   ---END t1_sub_from_falseval

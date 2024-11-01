@@ -35,6 +35,7 @@ set_option debug.skipKernelTC true in
 theorem test_srem_canonicalize_op0_proof : test_srem_canonicalize_op0_before ⊑ test_srem_canonicalize_op0_after := by
   unfold test_srem_canonicalize_op0_before test_srem_canonicalize_op0_after
   simp_alive_peephole
+  intros
   ---BEGIN test_srem_canonicalize_op0
   all_goals (try extract_goal ; sorry)
   ---END test_srem_canonicalize_op0

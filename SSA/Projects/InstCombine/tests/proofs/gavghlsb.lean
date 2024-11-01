@@ -37,6 +37,7 @@ set_option debug.skipKernelTC true in
 theorem avg_lsb_proof : avg_lsb_before ⊑ avg_lsb_after := by
   unfold avg_lsb_before avg_lsb_after
   simp_alive_peephole
+  intros
   ---BEGIN avg_lsb
   apply avg_lsb_thm
   ---END avg_lsb

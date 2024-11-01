@@ -35,6 +35,7 @@ set_option debug.skipKernelTC true in
 theorem t0_scalar_proof : t0_scalar_before ⊑ t0_scalar_after := by
   unfold t0_scalar_before t0_scalar_after
   simp_alive_peephole
+  intros
   ---BEGIN t0_scalar
   all_goals (try extract_goal ; sorry)
   ---END t0_scalar

@@ -33,6 +33,7 @@ set_option debug.skipKernelTC true in
 theorem do_not_add_annotation_to_existing_instr_proof : do_not_add_annotation_to_existing_instr_before ⊑ do_not_add_annotation_to_existing_instr_after := by
   unfold do_not_add_annotation_to_existing_instr_before do_not_add_annotation_to_existing_instr_after
   simp_alive_peephole
+  intros
   ---BEGIN do_not_add_annotation_to_existing_instr
   apply do_not_add_annotation_to_existing_instr_thm
   ---END do_not_add_annotation_to_existing_instr

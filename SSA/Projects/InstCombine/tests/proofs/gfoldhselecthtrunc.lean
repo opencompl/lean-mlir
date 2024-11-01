@@ -34,6 +34,7 @@ set_option debug.skipKernelTC true in
 theorem fold_select_trunc_nuw_true_proof : fold_select_trunc_nuw_true_before ⊑ fold_select_trunc_nuw_true_after := by
   unfold fold_select_trunc_nuw_true_before fold_select_trunc_nuw_true_after
   simp_alive_peephole
+  intros
   ---BEGIN fold_select_trunc_nuw_true
   apply fold_select_trunc_nuw_true_thm
   ---END fold_select_trunc_nuw_true
@@ -61,6 +62,7 @@ set_option debug.skipKernelTC true in
 theorem fold_select_trunc_nuw_false_proof : fold_select_trunc_nuw_false_before ⊑ fold_select_trunc_nuw_false_after := by
   unfold fold_select_trunc_nuw_false_before fold_select_trunc_nuw_false_after
   simp_alive_peephole
+  intros
   ---BEGIN fold_select_trunc_nuw_false
   apply fold_select_trunc_nuw_false_thm
   ---END fold_select_trunc_nuw_false
@@ -88,6 +90,7 @@ set_option debug.skipKernelTC true in
 theorem fold_select_trunc_nsw_true_proof : fold_select_trunc_nsw_true_before ⊑ fold_select_trunc_nsw_true_after := by
   unfold fold_select_trunc_nsw_true_before fold_select_trunc_nsw_true_after
   simp_alive_peephole
+  intros
   ---BEGIN fold_select_trunc_nsw_true
   apply fold_select_trunc_nsw_true_thm
   ---END fold_select_trunc_nsw_true
@@ -115,6 +118,7 @@ set_option debug.skipKernelTC true in
 theorem fold_select_trunc_nsw_false_proof : fold_select_trunc_nsw_false_before ⊑ fold_select_trunc_nsw_false_after := by
   unfold fold_select_trunc_nsw_false_before fold_select_trunc_nsw_false_after
   simp_alive_peephole
+  intros
   ---BEGIN fold_select_trunc_nsw_false
   apply fold_select_trunc_nsw_false_thm
   ---END fold_select_trunc_nsw_false
