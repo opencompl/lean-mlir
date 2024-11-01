@@ -31,6 +31,7 @@ set_option debug.skipKernelTC true in
 theorem foo1_proof : foo1_before ⊑ foo1_after := by
   unfold foo1_before foo1_after
   simp_alive_peephole
+  intros
   ---BEGIN foo1
   all_goals (try extract_goal ; sorry)
   ---END foo1
@@ -55,6 +56,7 @@ set_option debug.skipKernelTC true in
 theorem foo2_proof : foo2_before ⊑ foo2_after := by
   unfold foo2_before foo2_after
   simp_alive_peephole
+  intros
   ---BEGIN foo2
   all_goals (try extract_goal ; sorry)
   ---END foo2
@@ -78,6 +80,7 @@ set_option debug.skipKernelTC true in
 theorem foo3_proof : foo3_before ⊑ foo3_after := by
   unfold foo3_before foo3_after
   simp_alive_peephole
+  intros
   ---BEGIN foo3
   all_goals (try extract_goal ; sorry)
   ---END foo3
@@ -101,6 +104,7 @@ set_option debug.skipKernelTC true in
 theorem foo4_proof : foo4_before ⊑ foo4_after := by
   unfold foo4_before foo4_after
   simp_alive_peephole
+  intros
   ---BEGIN foo4
   all_goals (try extract_goal ; sorry)
   ---END foo4

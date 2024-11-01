@@ -32,6 +32,7 @@ set_option debug.skipKernelTC true in
 theorem test1_proof : test1_before ⊑ test1_after := by
   unfold test1_before test1_after
   simp_alive_peephole
+  intros
   ---BEGIN test1
   all_goals (try extract_goal ; sorry)
   ---END test1
@@ -59,6 +60,7 @@ set_option debug.skipKernelTC true in
 theorem not_ashr_not_proof : not_ashr_not_before ⊑ not_ashr_not_after := by
   unfold not_ashr_not_before not_ashr_not_after
   simp_alive_peephole
+  intros
   ---BEGIN not_ashr_not
   all_goals (try extract_goal ; sorry)
   ---END not_ashr_not
@@ -87,6 +89,7 @@ set_option debug.skipKernelTC true in
 theorem not_ashr_const_proof : not_ashr_const_before ⊑ not_ashr_const_after := by
   unfold not_ashr_const_before not_ashr_const_after
   simp_alive_peephole
+  intros
   ---BEGIN not_ashr_const
   all_goals (try extract_goal ; sorry)
   ---END not_ashr_const
@@ -115,6 +118,7 @@ set_option debug.skipKernelTC true in
 theorem not_lshr_const_proof : not_lshr_const_before ⊑ not_lshr_const_after := by
   unfold not_lshr_const_before not_lshr_const_after
   simp_alive_peephole
+  intros
   ---BEGIN not_lshr_const
   all_goals (try extract_goal ; sorry)
   ---END not_lshr_const
@@ -143,6 +147,7 @@ set_option debug.skipKernelTC true in
 theorem not_sub_proof : not_sub_before ⊑ not_sub_after := by
   unfold not_sub_before not_sub_after
   simp_alive_peephole
+  intros
   ---BEGIN not_sub
   all_goals (try extract_goal ; sorry)
   ---END not_sub
@@ -171,6 +176,7 @@ set_option debug.skipKernelTC true in
 theorem not_add_proof : not_add_before ⊑ not_add_after := by
   unfold not_add_before not_add_after
   simp_alive_peephole
+  intros
   ---BEGIN not_add
   all_goals (try extract_goal ; sorry)
   ---END not_add
@@ -202,6 +208,7 @@ set_option debug.skipKernelTC true in
 theorem not_or_neg_proof : not_or_neg_before ⊑ not_or_neg_after := by
   unfold not_or_neg_before not_or_neg_after
   simp_alive_peephole
+  intros
   ---BEGIN not_or_neg
   all_goals (try extract_goal ; sorry)
   ---END not_or_neg
@@ -231,6 +238,7 @@ set_option debug.skipKernelTC true in
 theorem not_select_bool_const1_proof : not_select_bool_const1_before ⊑ not_select_bool_const1_after := by
   unfold not_select_bool_const1_before not_select_bool_const1_after
   simp_alive_peephole
+  intros
   ---BEGIN not_select_bool_const1
   all_goals (try extract_goal ; sorry)
   ---END not_select_bool_const1
@@ -260,6 +268,7 @@ set_option debug.skipKernelTC true in
 theorem not_select_bool_const4_proof : not_select_bool_const4_before ⊑ not_select_bool_const4_after := by
   unfold not_select_bool_const4_before not_select_bool_const4_after
   simp_alive_peephole
+  intros
   ---BEGIN not_select_bool_const4
   all_goals (try extract_goal ; sorry)
   ---END not_select_bool_const4
@@ -290,6 +299,7 @@ set_option debug.skipKernelTC true in
 theorem not_logicalAnd_not_op1_proof : not_logicalAnd_not_op1_before ⊑ not_logicalAnd_not_op1_after := by
   unfold not_logicalAnd_not_op1_before not_logicalAnd_not_op1_after
   simp_alive_peephole
+  intros
   ---BEGIN not_logicalAnd_not_op1
   all_goals (try extract_goal ; sorry)
   ---END not_logicalAnd_not_op1
@@ -320,6 +330,7 @@ set_option debug.skipKernelTC true in
 theorem not_logicalOr_not_op1_proof : not_logicalOr_not_op1_before ⊑ not_logicalOr_not_op1_after := by
   unfold not_logicalOr_not_op1_before not_logicalOr_not_op1_after
   simp_alive_peephole
+  intros
   ---BEGIN not_logicalOr_not_op1
   all_goals (try extract_goal ; sorry)
   ---END not_logicalOr_not_op1
@@ -354,6 +365,7 @@ set_option debug.skipKernelTC true in
 theorem test_zext_nneg_proof : test_zext_nneg_before ⊑ test_zext_nneg_after := by
   unfold test_zext_nneg_before test_zext_nneg_after
   simp_alive_peephole
+  intros
   ---BEGIN test_zext_nneg
   all_goals (try extract_goal ; sorry)
   ---END test_zext_nneg
@@ -385,6 +397,7 @@ set_option debug.skipKernelTC true in
 theorem test_invert_demorgan_and2_proof : test_invert_demorgan_and2_before ⊑ test_invert_demorgan_and2_after := by
   unfold test_invert_demorgan_and2_before test_invert_demorgan_and2_after
   simp_alive_peephole
+  intros
   ---BEGIN test_invert_demorgan_and2
   all_goals (try extract_goal ; sorry)
   ---END test_invert_demorgan_and2

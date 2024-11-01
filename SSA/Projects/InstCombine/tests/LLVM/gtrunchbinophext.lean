@@ -34,6 +34,7 @@ set_option debug.skipKernelTC true in
 theorem narrow_sext_and_proof : narrow_sext_and_before ⊑ narrow_sext_and_after := by
   unfold narrow_sext_and_before narrow_sext_and_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_sext_and
   all_goals (try extract_goal ; sorry)
   ---END narrow_sext_and
@@ -61,6 +62,7 @@ set_option debug.skipKernelTC true in
 theorem narrow_zext_and_proof : narrow_zext_and_before ⊑ narrow_zext_and_after := by
   unfold narrow_zext_and_before narrow_zext_and_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_zext_and
   all_goals (try extract_goal ; sorry)
   ---END narrow_zext_and
@@ -88,6 +90,7 @@ set_option debug.skipKernelTC true in
 theorem narrow_sext_or_proof : narrow_sext_or_before ⊑ narrow_sext_or_after := by
   unfold narrow_sext_or_before narrow_sext_or_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_sext_or
   all_goals (try extract_goal ; sorry)
   ---END narrow_sext_or
@@ -115,6 +118,7 @@ set_option debug.skipKernelTC true in
 theorem narrow_zext_or_proof : narrow_zext_or_before ⊑ narrow_zext_or_after := by
   unfold narrow_zext_or_before narrow_zext_or_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_zext_or
   all_goals (try extract_goal ; sorry)
   ---END narrow_zext_or
@@ -142,6 +146,7 @@ set_option debug.skipKernelTC true in
 theorem narrow_sext_xor_proof : narrow_sext_xor_before ⊑ narrow_sext_xor_after := by
   unfold narrow_sext_xor_before narrow_sext_xor_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_sext_xor
   all_goals (try extract_goal ; sorry)
   ---END narrow_sext_xor
@@ -169,6 +174,7 @@ set_option debug.skipKernelTC true in
 theorem narrow_zext_xor_proof : narrow_zext_xor_before ⊑ narrow_zext_xor_after := by
   unfold narrow_zext_xor_before narrow_zext_xor_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_zext_xor
   all_goals (try extract_goal ; sorry)
   ---END narrow_zext_xor
@@ -196,6 +202,7 @@ set_option debug.skipKernelTC true in
 theorem narrow_sext_add_proof : narrow_sext_add_before ⊑ narrow_sext_add_after := by
   unfold narrow_sext_add_before narrow_sext_add_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_sext_add
   all_goals (try extract_goal ; sorry)
   ---END narrow_sext_add
@@ -223,6 +230,7 @@ set_option debug.skipKernelTC true in
 theorem narrow_zext_add_proof : narrow_zext_add_before ⊑ narrow_zext_add_after := by
   unfold narrow_zext_add_before narrow_zext_add_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_zext_add
   all_goals (try extract_goal ; sorry)
   ---END narrow_zext_add
@@ -250,6 +258,7 @@ set_option debug.skipKernelTC true in
 theorem narrow_sext_sub_proof : narrow_sext_sub_before ⊑ narrow_sext_sub_after := by
   unfold narrow_sext_sub_before narrow_sext_sub_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_sext_sub
   all_goals (try extract_goal ; sorry)
   ---END narrow_sext_sub
@@ -277,6 +286,7 @@ set_option debug.skipKernelTC true in
 theorem narrow_zext_sub_proof : narrow_zext_sub_before ⊑ narrow_zext_sub_after := by
   unfold narrow_zext_sub_before narrow_zext_sub_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_zext_sub
   all_goals (try extract_goal ; sorry)
   ---END narrow_zext_sub
@@ -304,6 +314,7 @@ set_option debug.skipKernelTC true in
 theorem narrow_sext_mul_proof : narrow_sext_mul_before ⊑ narrow_sext_mul_after := by
   unfold narrow_sext_mul_before narrow_sext_mul_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_sext_mul
   all_goals (try extract_goal ; sorry)
   ---END narrow_sext_mul
@@ -331,6 +342,7 @@ set_option debug.skipKernelTC true in
 theorem narrow_zext_mul_proof : narrow_zext_mul_before ⊑ narrow_zext_mul_after := by
   unfold narrow_zext_mul_before narrow_zext_mul_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_zext_mul
   all_goals (try extract_goal ; sorry)
   ---END narrow_zext_mul
@@ -365,6 +377,7 @@ set_option debug.skipKernelTC true in
 theorem narrow_zext_ashr_keep_trunc_proof : narrow_zext_ashr_keep_trunc_before ⊑ narrow_zext_ashr_keep_trunc_after := by
   unfold narrow_zext_ashr_keep_trunc_before narrow_zext_ashr_keep_trunc_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_zext_ashr_keep_trunc
   all_goals (try extract_goal ; sorry)
   ---END narrow_zext_ashr_keep_trunc
@@ -399,6 +412,7 @@ set_option debug.skipKernelTC true in
 theorem narrow_zext_ashr_keep_trunc2_proof : narrow_zext_ashr_keep_trunc2_before ⊑ narrow_zext_ashr_keep_trunc2_after := by
   unfold narrow_zext_ashr_keep_trunc2_before narrow_zext_ashr_keep_trunc2_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_zext_ashr_keep_trunc2
   all_goals (try extract_goal ; sorry)
   ---END narrow_zext_ashr_keep_trunc2
@@ -433,6 +447,7 @@ set_option debug.skipKernelTC true in
 theorem narrow_zext_ashr_keep_trunc3_proof : narrow_zext_ashr_keep_trunc3_before ⊑ narrow_zext_ashr_keep_trunc3_after := by
   unfold narrow_zext_ashr_keep_trunc3_before narrow_zext_ashr_keep_trunc3_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_zext_ashr_keep_trunc3
   all_goals (try extract_goal ; sorry)
   ---END narrow_zext_ashr_keep_trunc3
@@ -467,6 +482,7 @@ set_option debug.skipKernelTC true in
 theorem dont_narrow_zext_ashr_keep_trunc_proof : dont_narrow_zext_ashr_keep_trunc_before ⊑ dont_narrow_zext_ashr_keep_trunc_after := by
   unfold dont_narrow_zext_ashr_keep_trunc_before dont_narrow_zext_ashr_keep_trunc_after
   simp_alive_peephole
+  intros
   ---BEGIN dont_narrow_zext_ashr_keep_trunc
   all_goals (try extract_goal ; sorry)
   ---END dont_narrow_zext_ashr_keep_trunc

@@ -35,6 +35,7 @@ set_option debug.skipKernelTC true in
 theorem shrink_xor_proof : shrink_xor_before ⊑ shrink_xor_after := by
   unfold shrink_xor_before shrink_xor_after
   simp_alive_peephole
+  intros
   ---BEGIN shrink_xor
   all_goals (try extract_goal ; sorry)
   ---END shrink_xor
@@ -63,6 +64,7 @@ set_option debug.skipKernelTC true in
 theorem shrink_or_proof : shrink_or_before ⊑ shrink_or_after := by
   unfold shrink_or_before shrink_or_after
   simp_alive_peephole
+  intros
   ---BEGIN shrink_or
   all_goals (try extract_goal ; sorry)
   ---END shrink_or

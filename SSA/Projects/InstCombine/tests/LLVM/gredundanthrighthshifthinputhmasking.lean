@@ -37,6 +37,7 @@ set_option debug.skipKernelTC true in
 theorem t0_lshr_proof : t0_lshr_before ⊑ t0_lshr_after := by
   unfold t0_lshr_before t0_lshr_after
   simp_alive_peephole
+  intros
   ---BEGIN t0_lshr
   all_goals (try extract_goal ; sorry)
   ---END t0_lshr
@@ -67,6 +68,7 @@ set_option debug.skipKernelTC true in
 theorem t1_sshr_proof : t1_sshr_before ⊑ t1_sshr_after := by
   unfold t1_sshr_before t1_sshr_after
   simp_alive_peephole
+  intros
   ---BEGIN t1_sshr
   all_goals (try extract_goal ; sorry)
   ---END t1_sshr
@@ -97,6 +99,7 @@ set_option debug.skipKernelTC true in
 theorem n13_proof : n13_before ⊑ n13_after := by
   unfold n13_before n13_after
   simp_alive_peephole
+  intros
   ---BEGIN n13
   all_goals (try extract_goal ; sorry)
   ---END n13

@@ -32,6 +32,7 @@ set_option debug.skipKernelTC true in
 theorem test1_proof : test1_before ⊑ test1_after := by
   unfold test1_before test1_after
   simp_alive_peephole
+  intros
   ---BEGIN test1
   all_goals (try extract_goal ; sorry)
   ---END test1
@@ -58,6 +59,7 @@ set_option debug.skipKernelTC true in
 theorem test3_proof : test3_before ⊑ test3_after := by
   unfold test3_before test3_after
   simp_alive_peephole
+  intros
   ---BEGIN test3
   all_goals (try extract_goal ; sorry)
   ---END test3
@@ -88,6 +90,7 @@ set_option debug.skipKernelTC true in
 theorem test4_proof : test4_before ⊑ test4_after := by
   unfold test4_before test4_after
   simp_alive_peephole
+  intros
   ---BEGIN test4
   all_goals (try extract_goal ; sorry)
   ---END test4
@@ -120,6 +123,7 @@ set_option debug.skipKernelTC true in
 theorem test5_proof : test5_before ⊑ test5_after := by
   unfold test5_before test5_after
   simp_alive_peephole
+  intros
   ---BEGIN test5
   all_goals (try extract_goal ; sorry)
   ---END test5
@@ -147,6 +151,7 @@ set_option debug.skipKernelTC true in
 theorem test7_proof : test7_before ⊑ test7_after := by
   unfold test7_before test7_after
   simp_alive_peephole
+  intros
   ---BEGIN test7
   all_goals (try extract_goal ; sorry)
   ---END test7
@@ -174,6 +179,7 @@ set_option debug.skipKernelTC true in
 theorem test8_proof : test8_before ⊑ test8_after := by
   unfold test8_before test8_after
   simp_alive_peephole
+  intros
   ---BEGIN test8
   all_goals (try extract_goal ; sorry)
   ---END test8
@@ -201,6 +207,7 @@ set_option debug.skipKernelTC true in
 theorem test9_proof : test9_before ⊑ test9_after := by
   unfold test9_before test9_after
   simp_alive_peephole
+  intros
   ---BEGIN test9
   all_goals (try extract_goal ; sorry)
   ---END test9
@@ -231,6 +238,7 @@ set_option debug.skipKernelTC true in
 theorem test10_proof : test10_before ⊑ test10_after := by
   unfold test10_before test10_after
   simp_alive_peephole
+  intros
   ---BEGIN test10
   all_goals (try extract_goal ; sorry)
   ---END test10
@@ -260,6 +268,7 @@ set_option debug.skipKernelTC true in
 theorem test11_proof : test11_before ⊑ test11_after := by
   unfold test11_before test11_after
   simp_alive_peephole
+  intros
   ---BEGIN test11
   all_goals (try extract_goal ; sorry)
   ---END test11
@@ -287,6 +296,7 @@ set_option debug.skipKernelTC true in
 theorem test12_proof : test12_before ⊑ test12_after := by
   unfold test12_before test12_after
   simp_alive_peephole
+  intros
   ---BEGIN test12
   all_goals (try extract_goal ; sorry)
   ---END test12
@@ -311,6 +321,7 @@ set_option debug.skipKernelTC true in
 theorem test13_proof : test13_before ⊑ test13_after := by
   unfold test13_before test13_after
   simp_alive_peephole
+  intros
   ---BEGIN test13
   all_goals (try extract_goal ; sorry)
   ---END test13
@@ -343,6 +354,7 @@ set_option debug.skipKernelTC true in
 theorem test14_proof : test14_before ⊑ test14_after := by
   unfold test14_before test14_after
   simp_alive_peephole
+  intros
   ---BEGIN test14
   all_goals (try extract_goal ; sorry)
   ---END test14
@@ -375,6 +387,7 @@ set_option debug.skipKernelTC true in
 theorem test15_proof : test15_before ⊑ test15_after := by
   unfold test15_before test15_after
   simp_alive_peephole
+  intros
   ---BEGIN test15
   all_goals (try extract_goal ; sorry)
   ---END test15
@@ -410,6 +423,7 @@ set_option debug.skipKernelTC true in
 theorem test16_proof : test16_before ⊑ test16_after := by
   unfold test16_before test16_after
   simp_alive_peephole
+  intros
   ---BEGIN test16
   all_goals (try extract_goal ; sorry)
   ---END test16
@@ -446,6 +460,7 @@ set_option debug.skipKernelTC true in
 theorem test19_proof : test19_before ⊑ test19_after := by
   unfold test19_before test19_after
   simp_alive_peephole
+  intros
   ---BEGIN test19
   all_goals (try extract_goal ; sorry)
   ---END test19
@@ -482,6 +497,7 @@ set_option debug.skipKernelTC true in
 theorem test19_commutative0_proof : test19_commutative0_before ⊑ test19_commutative0_after := by
   unfold test19_commutative0_before test19_commutative0_after
   simp_alive_peephole
+  intros
   ---BEGIN test19_commutative0
   all_goals (try extract_goal ; sorry)
   ---END test19_commutative0
@@ -518,6 +534,7 @@ set_option debug.skipKernelTC true in
 theorem test19_commutative1_proof : test19_commutative1_before ⊑ test19_commutative1_after := by
   unfold test19_commutative1_before test19_commutative1_after
   simp_alive_peephole
+  intros
   ---BEGIN test19_commutative1
   all_goals (try extract_goal ; sorry)
   ---END test19_commutative1
@@ -554,6 +571,7 @@ set_option debug.skipKernelTC true in
 theorem test19_commutative2_proof : test19_commutative2_before ⊑ test19_commutative2_after := by
   unfold test19_commutative2_before test19_commutative2_after
   simp_alive_peephole
+  intros
   ---BEGIN test19_commutative2
   all_goals (try extract_goal ; sorry)
   ---END test19_commutative2
@@ -582,6 +600,7 @@ set_option debug.skipKernelTC true in
 theorem test22_proof : test22_before ⊑ test22_after := by
   unfold test22_before test22_after
   simp_alive_peephole
+  intros
   ---BEGIN test22
   all_goals (try extract_goal ; sorry)
   ---END test22
@@ -612,6 +631,7 @@ set_option debug.skipKernelTC true in
 theorem srem_constant_dividend_select_of_constants_divisor_proof : srem_constant_dividend_select_of_constants_divisor_before ⊑ srem_constant_dividend_select_of_constants_divisor_after := by
   unfold srem_constant_dividend_select_of_constants_divisor_before srem_constant_dividend_select_of_constants_divisor_after
   simp_alive_peephole
+  intros
   ---BEGIN srem_constant_dividend_select_of_constants_divisor
   all_goals (try extract_goal ; sorry)
   ---END srem_constant_dividend_select_of_constants_divisor
@@ -640,6 +660,7 @@ set_option debug.skipKernelTC true in
 theorem srem_constant_dividend_select_of_constants_divisor_0_arm_proof : srem_constant_dividend_select_of_constants_divisor_0_arm_before ⊑ srem_constant_dividend_select_of_constants_divisor_0_arm_after := by
   unfold srem_constant_dividend_select_of_constants_divisor_0_arm_before srem_constant_dividend_select_of_constants_divisor_0_arm_after
   simp_alive_peephole
+  intros
   ---BEGIN srem_constant_dividend_select_of_constants_divisor_0_arm
   all_goals (try extract_goal ; sorry)
   ---END srem_constant_dividend_select_of_constants_divisor_0_arm
@@ -670,6 +691,7 @@ set_option debug.skipKernelTC true in
 theorem urem_constant_dividend_select_of_constants_divisor_proof : urem_constant_dividend_select_of_constants_divisor_before ⊑ urem_constant_dividend_select_of_constants_divisor_after := by
   unfold urem_constant_dividend_select_of_constants_divisor_before urem_constant_dividend_select_of_constants_divisor_after
   simp_alive_peephole
+  intros
   ---BEGIN urem_constant_dividend_select_of_constants_divisor
   all_goals (try extract_goal ; sorry)
   ---END urem_constant_dividend_select_of_constants_divisor
@@ -698,6 +720,7 @@ set_option debug.skipKernelTC true in
 theorem urem_constant_dividend_select_of_constants_divisor_0_arm_proof : urem_constant_dividend_select_of_constants_divisor_0_arm_before ⊑ urem_constant_dividend_select_of_constants_divisor_0_arm_after := by
   unfold urem_constant_dividend_select_of_constants_divisor_0_arm_before urem_constant_dividend_select_of_constants_divisor_0_arm_after
   simp_alive_peephole
+  intros
   ---BEGIN urem_constant_dividend_select_of_constants_divisor_0_arm
   all_goals (try extract_goal ; sorry)
   ---END urem_constant_dividend_select_of_constants_divisor_0_arm

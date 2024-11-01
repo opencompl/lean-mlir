@@ -42,6 +42,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_add_proof : lshr_add_before ⊑ lshr_add_after := by
   unfold lshr_add_before lshr_add_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_add
   all_goals (try extract_goal ; sorry)
   ---END lshr_add
@@ -76,6 +77,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_sub_proof : lshr_sub_before ⊑ lshr_sub_after := by
   unfold lshr_sub_before lshr_sub_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_sub
   all_goals (try extract_goal ; sorry)
   ---END lshr_sub
@@ -109,6 +111,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_and_proof : lshr_and_before ⊑ lshr_and_after := by
   unfold lshr_and_before lshr_and_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_and
   all_goals (try extract_goal ; sorry)
   ---END lshr_and
@@ -144,6 +147,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_or_proof : lshr_or_before ⊑ lshr_or_after := by
   unfold lshr_or_before lshr_or_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_or
   all_goals (try extract_goal ; sorry)
   ---END lshr_or
@@ -179,6 +183,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_xor_proof : lshr_xor_before ⊑ lshr_xor_after := by
   unfold lshr_xor_before lshr_xor_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_xor
   all_goals (try extract_goal ; sorry)
   ---END lshr_xor
@@ -216,6 +221,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_and_add_proof : lshr_and_add_before ⊑ lshr_and_add_after := by
   unfold lshr_and_add_before lshr_and_add_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_and_add
   all_goals (try extract_goal ; sorry)
   ---END lshr_and_add
@@ -254,6 +260,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_and_sub_proof : lshr_and_sub_before ⊑ lshr_and_sub_after := by
   unfold lshr_and_sub_before lshr_and_sub_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_and_sub
   all_goals (try extract_goal ; sorry)
   ---END lshr_and_sub
@@ -291,6 +298,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_and_and_proof : lshr_and_and_before ⊑ lshr_and_and_after := by
   unfold lshr_and_and_before lshr_and_and_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_and_and
   all_goals (try extract_goal ; sorry)
   ---END lshr_and_and
@@ -328,6 +336,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_and_or_proof : lshr_and_or_before ⊑ lshr_and_or_after := by
   unfold lshr_and_or_before lshr_and_or_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_and_or
   all_goals (try extract_goal ; sorry)
   ---END lshr_and_or
@@ -365,6 +374,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_and_or_disjoint_proof : lshr_and_or_disjoint_before ⊑ lshr_and_or_disjoint_after := by
   unfold lshr_and_or_disjoint_before lshr_and_or_disjoint_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_and_or_disjoint
   all_goals (try extract_goal ; sorry)
   ---END lshr_and_or_disjoint
@@ -402,6 +412,7 @@ set_option debug.skipKernelTC true in
 theorem ashr_and_or_disjoint_proof : ashr_and_or_disjoint_before ⊑ ashr_and_or_disjoint_after := by
   unfold ashr_and_or_disjoint_before ashr_and_or_disjoint_after
   simp_alive_peephole
+  intros
   ---BEGIN ashr_and_or_disjoint
   all_goals (try extract_goal ; sorry)
   ---END ashr_and_or_disjoint
@@ -439,6 +450,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_and_xor_proof : lshr_and_xor_before ⊑ lshr_and_xor_after := by
   unfold lshr_and_xor_before lshr_and_xor_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_and_xor
   all_goals (try extract_goal ; sorry)
   ---END lshr_and_xor
@@ -472,6 +484,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_add_and_shl_proof : lshr_add_and_shl_before ⊑ lshr_add_and_shl_after := by
   unfold lshr_add_and_shl_before lshr_add_and_shl_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_add_and_shl
   all_goals (try extract_goal ; sorry)
   ---END lshr_add_and_shl
@@ -505,6 +518,7 @@ set_option debug.skipKernelTC true in
 theorem shl_add_and_lshr_proof : shl_add_and_lshr_before ⊑ shl_add_and_lshr_after := by
   unfold shl_add_and_lshr_before shl_add_and_lshr_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_add_and_lshr
   all_goals (try extract_goal ; sorry)
   ---END shl_add_and_lshr

@@ -37,6 +37,7 @@ set_option debug.skipKernelTC true in
 theorem zext_add_proof : zext_add_before ⊑ zext_add_after := by
   unfold zext_add_before zext_add_after
   simp_alive_peephole
+  intros
   ---BEGIN zext_add
   all_goals (try extract_goal ; sorry)
   ---END zext_add
@@ -67,6 +68,7 @@ set_option debug.skipKernelTC true in
 theorem zext_sub_proof : zext_sub_before ⊑ zext_sub_after := by
   unfold zext_sub_before zext_sub_after
   simp_alive_peephole
+  intros
   ---BEGIN zext_sub
   all_goals (try extract_goal ; sorry)
   ---END zext_sub
@@ -97,6 +99,7 @@ set_option debug.skipKernelTC true in
 theorem zext_mul_proof : zext_mul_before ⊑ zext_mul_after := by
   unfold zext_mul_before zext_mul_after
   simp_alive_peephole
+  intros
   ---BEGIN zext_mul
   all_goals (try extract_goal ; sorry)
   ---END zext_mul
@@ -127,6 +130,7 @@ set_option debug.skipKernelTC true in
 theorem zext_lshr_proof : zext_lshr_before ⊑ zext_lshr_after := by
   unfold zext_lshr_before zext_lshr_after
   simp_alive_peephole
+  intros
   ---BEGIN zext_lshr
   all_goals (try extract_goal ; sorry)
   ---END zext_lshr
@@ -157,6 +161,7 @@ set_option debug.skipKernelTC true in
 theorem zext_ashr_proof : zext_ashr_before ⊑ zext_ashr_after := by
   unfold zext_ashr_before zext_ashr_after
   simp_alive_peephole
+  intros
   ---BEGIN zext_ashr
   all_goals (try extract_goal ; sorry)
   ---END zext_ashr
@@ -187,6 +192,7 @@ set_option debug.skipKernelTC true in
 theorem zext_shl_proof : zext_shl_before ⊑ zext_shl_after := by
   unfold zext_shl_before zext_shl_after
   simp_alive_peephole
+  intros
   ---BEGIN zext_shl
   all_goals (try extract_goal ; sorry)
   ---END zext_shl

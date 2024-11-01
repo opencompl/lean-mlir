@@ -37,6 +37,7 @@ set_option debug.skipKernelTC true in
 theorem mul_selectp2_x_proof : mul_selectp2_x_before ⊑ mul_selectp2_x_after := by
   unfold mul_selectp2_x_before mul_selectp2_x_after
   simp_alive_peephole
+  intros
   ---BEGIN mul_selectp2_x
   all_goals (try extract_goal ; sorry)
   ---END mul_selectp2_x
@@ -67,6 +68,7 @@ set_option debug.skipKernelTC true in
 theorem mul_selectp2_x_propegate_nuw_proof : mul_selectp2_x_propegate_nuw_before ⊑ mul_selectp2_x_propegate_nuw_after := by
   unfold mul_selectp2_x_propegate_nuw_before mul_selectp2_x_propegate_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN mul_selectp2_x_propegate_nuw
   all_goals (try extract_goal ; sorry)
   ---END mul_selectp2_x_propegate_nuw
@@ -97,6 +99,7 @@ set_option debug.skipKernelTC true in
 theorem mul_selectp2_x_non_const_proof : mul_selectp2_x_non_const_before ⊑ mul_selectp2_x_non_const_after := by
   unfold mul_selectp2_x_non_const_before mul_selectp2_x_non_const_after
   simp_alive_peephole
+  intros
   ---BEGIN mul_selectp2_x_non_const
   all_goals (try extract_goal ; sorry)
   ---END mul_selectp2_x_non_const
@@ -129,6 +132,7 @@ set_option debug.skipKernelTC true in
 theorem mul_x_selectp2_proof : mul_x_selectp2_before ⊑ mul_x_selectp2_after := by
   unfold mul_x_selectp2_before mul_x_selectp2_after
   simp_alive_peephole
+  intros
   ---BEGIN mul_x_selectp2
   all_goals (try extract_goal ; sorry)
   ---END mul_x_selectp2
@@ -157,6 +161,7 @@ set_option debug.skipKernelTC true in
 theorem shl_add_log_may_cause_poison_pr62175_with_nuw_proof : shl_add_log_may_cause_poison_pr62175_with_nuw_before ⊑ shl_add_log_may_cause_poison_pr62175_with_nuw_after := by
   unfold shl_add_log_may_cause_poison_pr62175_with_nuw_before shl_add_log_may_cause_poison_pr62175_with_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_add_log_may_cause_poison_pr62175_with_nuw
   all_goals (try extract_goal ; sorry)
   ---END shl_add_log_may_cause_poison_pr62175_with_nuw
@@ -185,6 +190,7 @@ set_option debug.skipKernelTC true in
 theorem shl_add_log_may_cause_poison_pr62175_with_nsw_proof : shl_add_log_may_cause_poison_pr62175_with_nsw_before ⊑ shl_add_log_may_cause_poison_pr62175_with_nsw_after := by
   unfold shl_add_log_may_cause_poison_pr62175_with_nsw_before shl_add_log_may_cause_poison_pr62175_with_nsw_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_add_log_may_cause_poison_pr62175_with_nsw
   all_goals (try extract_goal ; sorry)
   ---END shl_add_log_may_cause_poison_pr62175_with_nsw

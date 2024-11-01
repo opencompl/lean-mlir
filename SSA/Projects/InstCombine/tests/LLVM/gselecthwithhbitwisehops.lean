@@ -40,6 +40,7 @@ set_option debug.skipKernelTC true in
 theorem set_bits_proof : set_bits_before ⊑ set_bits_after := by
   unfold set_bits_before set_bits_after
   simp_alive_peephole
+  intros
   ---BEGIN set_bits
   all_goals (try extract_goal ; sorry)
   ---END set_bits

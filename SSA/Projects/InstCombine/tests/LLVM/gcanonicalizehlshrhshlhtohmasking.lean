@@ -34,6 +34,7 @@ set_option debug.skipKernelTC true in
 theorem positive_samevar_proof : positive_samevar_before ⊑ positive_samevar_after := by
   unfold positive_samevar_before positive_samevar_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_samevar
   all_goals (try extract_goal ; sorry)
   ---END positive_samevar
@@ -61,6 +62,7 @@ set_option debug.skipKernelTC true in
 theorem positive_sameconst_proof : positive_sameconst_before ⊑ positive_sameconst_after := by
   unfold positive_sameconst_before positive_sameconst_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_sameconst
   all_goals (try extract_goal ; sorry)
   ---END positive_sameconst
@@ -91,6 +93,7 @@ set_option debug.skipKernelTC true in
 theorem positive_biggerlshr_proof : positive_biggerlshr_before ⊑ positive_biggerlshr_after := by
   unfold positive_biggerlshr_before positive_biggerlshr_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_biggerlshr
   all_goals (try extract_goal ; sorry)
   ---END positive_biggerlshr
@@ -121,6 +124,7 @@ set_option debug.skipKernelTC true in
 theorem positive_biggershl_proof : positive_biggershl_before ⊑ positive_biggershl_after := by
   unfold positive_biggershl_before positive_biggershl_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_biggershl
   all_goals (try extract_goal ; sorry)
   ---END positive_biggershl
@@ -148,6 +152,7 @@ set_option debug.skipKernelTC true in
 theorem positive_samevar_shlnuw_proof : positive_samevar_shlnuw_before ⊑ positive_samevar_shlnuw_after := by
   unfold positive_samevar_shlnuw_before positive_samevar_shlnuw_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_samevar_shlnuw
   all_goals (try extract_goal ; sorry)
   ---END positive_samevar_shlnuw
@@ -175,6 +180,7 @@ set_option debug.skipKernelTC true in
 theorem positive_sameconst_shlnuw_proof : positive_sameconst_shlnuw_before ⊑ positive_sameconst_shlnuw_after := by
   unfold positive_sameconst_shlnuw_before positive_sameconst_shlnuw_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_sameconst_shlnuw
   all_goals (try extract_goal ; sorry)
   ---END positive_sameconst_shlnuw
@@ -205,6 +211,7 @@ set_option debug.skipKernelTC true in
 theorem positive_biggerlshr_shlnuw_proof : positive_biggerlshr_shlnuw_before ⊑ positive_biggerlshr_shlnuw_after := by
   unfold positive_biggerlshr_shlnuw_before positive_biggerlshr_shlnuw_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_biggerlshr_shlnuw
   all_goals (try extract_goal ; sorry)
   ---END positive_biggerlshr_shlnuw
@@ -235,6 +242,7 @@ set_option debug.skipKernelTC true in
 theorem positive_biggershl_shlnuw_proof : positive_biggershl_shlnuw_before ⊑ positive_biggershl_shlnuw_after := by
   unfold positive_biggershl_shlnuw_before positive_biggershl_shlnuw_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_biggershl_shlnuw
   all_goals (try extract_goal ; sorry)
   ---END positive_biggershl_shlnuw
@@ -262,6 +270,7 @@ set_option debug.skipKernelTC true in
 theorem positive_samevar_shlnsw_proof : positive_samevar_shlnsw_before ⊑ positive_samevar_shlnsw_after := by
   unfold positive_samevar_shlnsw_before positive_samevar_shlnsw_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_samevar_shlnsw
   all_goals (try extract_goal ; sorry)
   ---END positive_samevar_shlnsw
@@ -289,6 +298,7 @@ set_option debug.skipKernelTC true in
 theorem positive_sameconst_shlnsw_proof : positive_sameconst_shlnsw_before ⊑ positive_sameconst_shlnsw_after := by
   unfold positive_sameconst_shlnsw_before positive_sameconst_shlnsw_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_sameconst_shlnsw
   all_goals (try extract_goal ; sorry)
   ---END positive_sameconst_shlnsw
@@ -319,6 +329,7 @@ set_option debug.skipKernelTC true in
 theorem positive_biggerlshr_shlnsw_proof : positive_biggerlshr_shlnsw_before ⊑ positive_biggerlshr_shlnsw_after := by
   unfold positive_biggerlshr_shlnsw_before positive_biggerlshr_shlnsw_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_biggerlshr_shlnsw
   all_goals (try extract_goal ; sorry)
   ---END positive_biggerlshr_shlnsw
@@ -349,6 +360,7 @@ set_option debug.skipKernelTC true in
 theorem positive_biggershl_shlnsw_proof : positive_biggershl_shlnsw_before ⊑ positive_biggershl_shlnsw_after := by
   unfold positive_biggershl_shlnsw_before positive_biggershl_shlnsw_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_biggershl_shlnsw
   all_goals (try extract_goal ; sorry)
   ---END positive_biggershl_shlnsw
@@ -376,6 +388,7 @@ set_option debug.skipKernelTC true in
 theorem positive_samevar_shlnuwnsw_proof : positive_samevar_shlnuwnsw_before ⊑ positive_samevar_shlnuwnsw_after := by
   unfold positive_samevar_shlnuwnsw_before positive_samevar_shlnuwnsw_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_samevar_shlnuwnsw
   all_goals (try extract_goal ; sorry)
   ---END positive_samevar_shlnuwnsw
@@ -403,6 +416,7 @@ set_option debug.skipKernelTC true in
 theorem positive_sameconst_shlnuwnsw_proof : positive_sameconst_shlnuwnsw_before ⊑ positive_sameconst_shlnuwnsw_after := by
   unfold positive_sameconst_shlnuwnsw_before positive_sameconst_shlnuwnsw_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_sameconst_shlnuwnsw
   all_goals (try extract_goal ; sorry)
   ---END positive_sameconst_shlnuwnsw
@@ -433,6 +447,7 @@ set_option debug.skipKernelTC true in
 theorem positive_biggerlshr_shlnuwnsw_proof : positive_biggerlshr_shlnuwnsw_before ⊑ positive_biggerlshr_shlnuwnsw_after := by
   unfold positive_biggerlshr_shlnuwnsw_before positive_biggerlshr_shlnuwnsw_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_biggerlshr_shlnuwnsw
   all_goals (try extract_goal ; sorry)
   ---END positive_biggerlshr_shlnuwnsw
@@ -463,6 +478,7 @@ set_option debug.skipKernelTC true in
 theorem positive_biggershl_shlnuwnsw_proof : positive_biggershl_shlnuwnsw_before ⊑ positive_biggershl_shlnuwnsw_after := by
   unfold positive_biggershl_shlnuwnsw_before positive_biggershl_shlnuwnsw_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_biggershl_shlnuwnsw
   all_goals (try extract_goal ; sorry)
   ---END positive_biggershl_shlnuwnsw
@@ -487,6 +503,7 @@ set_option debug.skipKernelTC true in
 theorem positive_samevar_lshrexact_proof : positive_samevar_lshrexact_before ⊑ positive_samevar_lshrexact_after := by
   unfold positive_samevar_lshrexact_before positive_samevar_lshrexact_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_samevar_lshrexact
   all_goals (try extract_goal ; sorry)
   ---END positive_samevar_lshrexact
@@ -512,6 +529,7 @@ set_option debug.skipKernelTC true in
 theorem positive_sameconst_lshrexact_proof : positive_sameconst_lshrexact_before ⊑ positive_sameconst_lshrexact_after := by
   unfold positive_sameconst_lshrexact_before positive_sameconst_lshrexact_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_sameconst_lshrexact
   all_goals (try extract_goal ; sorry)
   ---END positive_sameconst_lshrexact
@@ -540,6 +558,7 @@ set_option debug.skipKernelTC true in
 theorem positive_biggerlshr_lshrexact_proof : positive_biggerlshr_lshrexact_before ⊑ positive_biggerlshr_lshrexact_after := by
   unfold positive_biggerlshr_lshrexact_before positive_biggerlshr_lshrexact_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_biggerlshr_lshrexact
   all_goals (try extract_goal ; sorry)
   ---END positive_biggerlshr_lshrexact
@@ -568,6 +587,7 @@ set_option debug.skipKernelTC true in
 theorem positive_biggershl_lshrexact_proof : positive_biggershl_lshrexact_before ⊑ positive_biggershl_lshrexact_after := by
   unfold positive_biggershl_lshrexact_before positive_biggershl_lshrexact_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_biggershl_lshrexact
   all_goals (try extract_goal ; sorry)
   ---END positive_biggershl_lshrexact
@@ -592,6 +612,7 @@ set_option debug.skipKernelTC true in
 theorem positive_samevar_shlnsw_lshrexact_proof : positive_samevar_shlnsw_lshrexact_before ⊑ positive_samevar_shlnsw_lshrexact_after := by
   unfold positive_samevar_shlnsw_lshrexact_before positive_samevar_shlnsw_lshrexact_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_samevar_shlnsw_lshrexact
   all_goals (try extract_goal ; sorry)
   ---END positive_samevar_shlnsw_lshrexact
@@ -617,6 +638,7 @@ set_option debug.skipKernelTC true in
 theorem positive_sameconst_shlnsw_lshrexact_proof : positive_sameconst_shlnsw_lshrexact_before ⊑ positive_sameconst_shlnsw_lshrexact_after := by
   unfold positive_sameconst_shlnsw_lshrexact_before positive_sameconst_shlnsw_lshrexact_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_sameconst_shlnsw_lshrexact
   all_goals (try extract_goal ; sorry)
   ---END positive_sameconst_shlnsw_lshrexact
@@ -645,6 +667,7 @@ set_option debug.skipKernelTC true in
 theorem positive_biggerlshr_shlnsw_lshrexact_proof : positive_biggerlshr_shlnsw_lshrexact_before ⊑ positive_biggerlshr_shlnsw_lshrexact_after := by
   unfold positive_biggerlshr_shlnsw_lshrexact_before positive_biggerlshr_shlnsw_lshrexact_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_biggerlshr_shlnsw_lshrexact
   all_goals (try extract_goal ; sorry)
   ---END positive_biggerlshr_shlnsw_lshrexact
@@ -673,6 +696,7 @@ set_option debug.skipKernelTC true in
 theorem positive_biggershl_shlnsw_lshrexact_proof : positive_biggershl_shlnsw_lshrexact_before ⊑ positive_biggershl_shlnsw_lshrexact_after := by
   unfold positive_biggershl_shlnsw_lshrexact_before positive_biggershl_shlnsw_lshrexact_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_biggershl_shlnsw_lshrexact
   all_goals (try extract_goal ; sorry)
   ---END positive_biggershl_shlnsw_lshrexact
@@ -697,6 +721,7 @@ set_option debug.skipKernelTC true in
 theorem positive_samevar_shlnuw_lshrexact_proof : positive_samevar_shlnuw_lshrexact_before ⊑ positive_samevar_shlnuw_lshrexact_after := by
   unfold positive_samevar_shlnuw_lshrexact_before positive_samevar_shlnuw_lshrexact_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_samevar_shlnuw_lshrexact
   all_goals (try extract_goal ; sorry)
   ---END positive_samevar_shlnuw_lshrexact
@@ -722,6 +747,7 @@ set_option debug.skipKernelTC true in
 theorem positive_sameconst_shlnuw_lshrexact_proof : positive_sameconst_shlnuw_lshrexact_before ⊑ positive_sameconst_shlnuw_lshrexact_after := by
   unfold positive_sameconst_shlnuw_lshrexact_before positive_sameconst_shlnuw_lshrexact_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_sameconst_shlnuw_lshrexact
   all_goals (try extract_goal ; sorry)
   ---END positive_sameconst_shlnuw_lshrexact
@@ -750,6 +776,7 @@ set_option debug.skipKernelTC true in
 theorem positive_biggerlshr_shlnuw_lshrexact_proof : positive_biggerlshr_shlnuw_lshrexact_before ⊑ positive_biggerlshr_shlnuw_lshrexact_after := by
   unfold positive_biggerlshr_shlnuw_lshrexact_before positive_biggerlshr_shlnuw_lshrexact_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_biggerlshr_shlnuw_lshrexact
   all_goals (try extract_goal ; sorry)
   ---END positive_biggerlshr_shlnuw_lshrexact
@@ -778,6 +805,7 @@ set_option debug.skipKernelTC true in
 theorem positive_biggershl_shlnuw_lshrexact_proof : positive_biggershl_shlnuw_lshrexact_before ⊑ positive_biggershl_shlnuw_lshrexact_after := by
   unfold positive_biggershl_shlnuw_lshrexact_before positive_biggershl_shlnuw_lshrexact_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_biggershl_shlnuw_lshrexact
   all_goals (try extract_goal ; sorry)
   ---END positive_biggershl_shlnuw_lshrexact
@@ -802,6 +830,7 @@ set_option debug.skipKernelTC true in
 theorem positive_samevar_shlnuwnsw_lshrexact_proof : positive_samevar_shlnuwnsw_lshrexact_before ⊑ positive_samevar_shlnuwnsw_lshrexact_after := by
   unfold positive_samevar_shlnuwnsw_lshrexact_before positive_samevar_shlnuwnsw_lshrexact_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_samevar_shlnuwnsw_lshrexact
   all_goals (try extract_goal ; sorry)
   ---END positive_samevar_shlnuwnsw_lshrexact
@@ -827,6 +856,7 @@ set_option debug.skipKernelTC true in
 theorem positive_sameconst_shlnuwnsw_lshrexact_proof : positive_sameconst_shlnuwnsw_lshrexact_before ⊑ positive_sameconst_shlnuwnsw_lshrexact_after := by
   unfold positive_sameconst_shlnuwnsw_lshrexact_before positive_sameconst_shlnuwnsw_lshrexact_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_sameconst_shlnuwnsw_lshrexact
   all_goals (try extract_goal ; sorry)
   ---END positive_sameconst_shlnuwnsw_lshrexact
@@ -855,6 +885,7 @@ set_option debug.skipKernelTC true in
 theorem positive_biggerlshr_shlnuwnsw_lshrexact_proof : positive_biggerlshr_shlnuwnsw_lshrexact_before ⊑ positive_biggerlshr_shlnuwnsw_lshrexact_after := by
   unfold positive_biggerlshr_shlnuwnsw_lshrexact_before positive_biggerlshr_shlnuwnsw_lshrexact_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_biggerlshr_shlnuwnsw_lshrexact
   all_goals (try extract_goal ; sorry)
   ---END positive_biggerlshr_shlnuwnsw_lshrexact
@@ -883,6 +914,7 @@ set_option debug.skipKernelTC true in
 theorem positive_biggershl_shlnuwnsw_lshrexact_proof : positive_biggershl_shlnuwnsw_lshrexact_before ⊑ positive_biggershl_shlnuwnsw_lshrexact_after := by
   unfold positive_biggershl_shlnuwnsw_lshrexact_before positive_biggershl_shlnuwnsw_lshrexact_after
   simp_alive_peephole
+  intros
   ---BEGIN positive_biggershl_shlnuwnsw_lshrexact
   all_goals (try extract_goal ; sorry)
   ---END positive_biggershl_shlnuwnsw_lshrexact

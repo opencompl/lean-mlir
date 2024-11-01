@@ -35,6 +35,7 @@ set_option debug.skipKernelTC true in
 theorem andcond_proof : andcond_before ⊑ andcond_after := by
   unfold andcond_before andcond_after
   simp_alive_peephole
+  intros
   ---BEGIN andcond
   all_goals (try extract_goal ; sorry)
   ---END andcond
@@ -63,6 +64,7 @@ set_option debug.skipKernelTC true in
 theorem orcond_proof : orcond_before ⊑ orcond_after := by
   unfold orcond_before orcond_after
   simp_alive_peephole
+  intros
   ---BEGIN orcond
   all_goals (try extract_goal ; sorry)
   ---END orcond
@@ -96,6 +98,7 @@ set_option debug.skipKernelTC true in
 theorem andcond.001.inv.outer.cond_proof : andcond.001.inv.outer.cond_before ⊑ andcond.001.inv.outer.cond_after := by
   unfold andcond.001.inv.outer.cond_before andcond.001.inv.outer.cond_after
   simp_alive_peephole
+  intros
   ---BEGIN andcond.001.inv.outer.cond
   all_goals (try extract_goal ; sorry)
   ---END andcond.001.inv.outer.cond
@@ -127,6 +130,7 @@ set_option debug.skipKernelTC true in
 theorem orcond.001.inv.outer.cond_proof : orcond.001.inv.outer.cond_before ⊑ orcond.001.inv.outer.cond_after := by
   unfold orcond.001.inv.outer.cond_before orcond.001.inv.outer.cond_after
   simp_alive_peephole
+  intros
   ---BEGIN orcond.001.inv.outer.cond
   all_goals (try extract_goal ; sorry)
   ---END orcond.001.inv.outer.cond
@@ -158,6 +162,7 @@ set_option debug.skipKernelTC true in
 theorem andcond.010.inv.inner.cond.in.inner.sel_proof : andcond.010.inv.inner.cond.in.inner.sel_before ⊑ andcond.010.inv.inner.cond.in.inner.sel_after := by
   unfold andcond.010.inv.inner.cond.in.inner.sel_before andcond.010.inv.inner.cond.in.inner.sel_after
   simp_alive_peephole
+  intros
   ---BEGIN andcond.010.inv.inner.cond.in.inner.sel
   all_goals (try extract_goal ; sorry)
   ---END andcond.010.inv.inner.cond.in.inner.sel
@@ -188,6 +193,7 @@ set_option debug.skipKernelTC true in
 theorem orcond.010.inv.inner.cond.in.inner.sel_proof : orcond.010.inv.inner.cond.in.inner.sel_before ⊑ orcond.010.inv.inner.cond.in.inner.sel_after := by
   unfold orcond.010.inv.inner.cond.in.inner.sel_before orcond.010.inv.inner.cond.in.inner.sel_after
   simp_alive_peephole
+  intros
   ---BEGIN orcond.010.inv.inner.cond.in.inner.sel
   all_goals (try extract_goal ; sorry)
   ---END orcond.010.inv.inner.cond.in.inner.sel
@@ -218,6 +224,7 @@ set_option debug.skipKernelTC true in
 theorem andcond.100.inv.inner.cond.in.outer.cond_proof : andcond.100.inv.inner.cond.in.outer.cond_before ⊑ andcond.100.inv.inner.cond.in.outer.cond_after := by
   unfold andcond.100.inv.inner.cond.in.outer.cond_before andcond.100.inv.inner.cond.in.outer.cond_after
   simp_alive_peephole
+  intros
   ---BEGIN andcond.100.inv.inner.cond.in.outer.cond
   all_goals (try extract_goal ; sorry)
   ---END andcond.100.inv.inner.cond.in.outer.cond
@@ -247,6 +254,7 @@ set_option debug.skipKernelTC true in
 theorem orcond.100.inv.inner.cond.in.outer.cond_proof : orcond.100.inv.inner.cond.in.outer.cond_before ⊑ orcond.100.inv.inner.cond.in.outer.cond_after := by
   unfold orcond.100.inv.inner.cond.in.outer.cond_before orcond.100.inv.inner.cond.in.outer.cond_after
   simp_alive_peephole
+  intros
   ---BEGIN orcond.100.inv.inner.cond.in.outer.cond
   all_goals (try extract_goal ; sorry)
   ---END orcond.100.inv.inner.cond.in.outer.cond
@@ -281,6 +289,7 @@ set_option debug.skipKernelTC true in
 theorem andcond.110.inv.inner.cond.in.inner.sel.inv.inner.cond.in.outer.cond_proof : andcond.110.inv.inner.cond.in.inner.sel.inv.inner.cond.in.outer.cond_before ⊑ andcond.110.inv.inner.cond.in.inner.sel.inv.inner.cond.in.outer.cond_after := by
   unfold andcond.110.inv.inner.cond.in.inner.sel.inv.inner.cond.in.outer.cond_before andcond.110.inv.inner.cond.in.inner.sel.inv.inner.cond.in.outer.cond_after
   simp_alive_peephole
+  intros
   ---BEGIN andcond.110.inv.inner.cond.in.inner.sel.inv.inner.cond.in.outer.cond
   all_goals (try extract_goal ; sorry)
   ---END andcond.110.inv.inner.cond.in.inner.sel.inv.inner.cond.in.outer.cond
@@ -313,6 +322,7 @@ set_option debug.skipKernelTC true in
 theorem orcond.110.inv.inner.cond.in.inner.sel.inv.inner.cond.in.outer.cond_proof : orcond.110.inv.inner.cond.in.inner.sel.inv.inner.cond.in.outer.cond_before ⊑ orcond.110.inv.inner.cond.in.inner.sel.inv.inner.cond.in.outer.cond_after := by
   unfold orcond.110.inv.inner.cond.in.inner.sel.inv.inner.cond.in.outer.cond_before orcond.110.inv.inner.cond.in.inner.sel.inv.inner.cond.in.outer.cond_after
   simp_alive_peephole
+  intros
   ---BEGIN orcond.110.inv.inner.cond.in.inner.sel.inv.inner.cond.in.outer.cond
   all_goals (try extract_goal ; sorry)
   ---END orcond.110.inv.inner.cond.in.inner.sel.inv.inner.cond.in.outer.cond

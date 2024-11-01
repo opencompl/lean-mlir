@@ -46,6 +46,7 @@ set_option debug.skipKernelTC true in
 theorem pr110631_proof : pr110631_before ⊑ pr110631_after := by
   unfold pr110631_before pr110631_after
   simp_alive_peephole
+  intros
   ---BEGIN pr110631
   all_goals (try extract_goal ; sorry)
   ---END pr110631

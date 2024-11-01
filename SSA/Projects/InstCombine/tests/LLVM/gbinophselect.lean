@@ -35,6 +35,7 @@ set_option debug.skipKernelTC true in
 theorem and_sel_op0_proof : and_sel_op0_before ⊑ and_sel_op0_after := by
   unfold and_sel_op0_before and_sel_op0_after
   simp_alive_peephole
+  intros
   ---BEGIN and_sel_op0
   all_goals (try extract_goal ; sorry)
   ---END and_sel_op0
@@ -65,6 +66,7 @@ set_option debug.skipKernelTC true in
 theorem mul_sel_op0_proof : mul_sel_op0_before ⊑ mul_sel_op0_after := by
   unfold mul_sel_op0_before mul_sel_op0_after
   simp_alive_peephole
+  intros
   ---BEGIN mul_sel_op0
   all_goals (try extract_goal ; sorry)
   ---END mul_sel_op0
@@ -94,6 +96,7 @@ set_option debug.skipKernelTC true in
 theorem sub_sel_op1_proof : sub_sel_op1_before ⊑ sub_sel_op1_after := by
   unfold sub_sel_op1_before sub_sel_op1_after
   simp_alive_peephole
+  intros
   ---BEGIN sub_sel_op1
   all_goals (try extract_goal ; sorry)
   ---END sub_sel_op1
@@ -124,6 +127,7 @@ set_option debug.skipKernelTC true in
 theorem ashr_sel_op1_proof : ashr_sel_op1_before ⊑ ashr_sel_op1_after := by
   unfold ashr_sel_op1_before ashr_sel_op1_after
   simp_alive_peephole
+  intros
   ---BEGIN ashr_sel_op1
   all_goals (try extract_goal ; sorry)
   ---END ashr_sel_op1

@@ -36,6 +36,7 @@ set_option debug.skipKernelTC true in
 theorem sel_sext_constants_proof : sel_sext_constants_before ⊑ sel_sext_constants_after := by
   unfold sel_sext_constants_before sel_sext_constants_after
   simp_alive_peephole
+  intros
   ---BEGIN sel_sext_constants
   all_goals (try extract_goal ; sorry)
   ---END sel_sext_constants
@@ -65,6 +66,7 @@ set_option debug.skipKernelTC true in
 theorem sel_zext_constants_proof : sel_zext_constants_before ⊑ sel_zext_constants_after := by
   unfold sel_zext_constants_before sel_zext_constants_after
   simp_alive_peephole
+  intros
   ---BEGIN sel_zext_constants
   all_goals (try extract_goal ; sorry)
   ---END sel_zext_constants
@@ -93,6 +95,7 @@ set_option debug.skipKernelTC true in
 theorem sel_sext_proof : sel_sext_before ⊑ sel_sext_after := by
   unfold sel_sext_before sel_sext_after
   simp_alive_peephole
+  intros
   ---BEGIN sel_sext
   all_goals (try extract_goal ; sorry)
   ---END sel_sext
@@ -121,6 +124,7 @@ set_option debug.skipKernelTC true in
 theorem sel_zext_proof : sel_zext_before ⊑ sel_zext_after := by
   unfold sel_zext_before sel_zext_after
   simp_alive_peephole
+  intros
   ---BEGIN sel_zext
   all_goals (try extract_goal ; sorry)
   ---END sel_zext
@@ -151,6 +155,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_sel_larger_sext_proof : trunc_sel_larger_sext_before ⊑ trunc_sel_larger_sext_after := by
   unfold trunc_sel_larger_sext_before trunc_sel_larger_sext_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_sel_larger_sext
   all_goals (try extract_goal ; sorry)
   ---END trunc_sel_larger_sext
@@ -181,6 +186,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_sel_smaller_sext_proof : trunc_sel_smaller_sext_before ⊑ trunc_sel_smaller_sext_after := by
   unfold trunc_sel_smaller_sext_before trunc_sel_smaller_sext_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_sel_smaller_sext
   all_goals (try extract_goal ; sorry)
   ---END trunc_sel_smaller_sext
@@ -212,6 +218,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_sel_equal_sext_proof : trunc_sel_equal_sext_before ⊑ trunc_sel_equal_sext_after := by
   unfold trunc_sel_equal_sext_before trunc_sel_equal_sext_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_sel_equal_sext
   all_goals (try extract_goal ; sorry)
   ---END trunc_sel_equal_sext
@@ -243,6 +250,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_sel_larger_zext_proof : trunc_sel_larger_zext_before ⊑ trunc_sel_larger_zext_after := by
   unfold trunc_sel_larger_zext_before trunc_sel_larger_zext_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_sel_larger_zext
   all_goals (try extract_goal ; sorry)
   ---END trunc_sel_larger_zext
@@ -274,6 +282,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_sel_smaller_zext_proof : trunc_sel_smaller_zext_before ⊑ trunc_sel_smaller_zext_after := by
   unfold trunc_sel_smaller_zext_before trunc_sel_smaller_zext_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_sel_smaller_zext
   all_goals (try extract_goal ; sorry)
   ---END trunc_sel_smaller_zext
@@ -304,6 +313,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_sel_equal_zext_proof : trunc_sel_equal_zext_before ⊑ trunc_sel_equal_zext_after := by
   unfold trunc_sel_equal_zext_before trunc_sel_equal_zext_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_sel_equal_zext
   all_goals (try extract_goal ; sorry)
   ---END trunc_sel_equal_zext
@@ -332,6 +342,7 @@ set_option debug.skipKernelTC true in
 theorem test_sext1_proof : test_sext1_before ⊑ test_sext1_after := by
   unfold test_sext1_before test_sext1_after
   simp_alive_peephole
+  intros
   ---BEGIN test_sext1
   all_goals (try extract_goal ; sorry)
   ---END test_sext1
@@ -360,6 +371,7 @@ set_option debug.skipKernelTC true in
 theorem test_sext2_proof : test_sext2_before ⊑ test_sext2_after := by
   unfold test_sext2_before test_sext2_after
   simp_alive_peephole
+  intros
   ---BEGIN test_sext2
   all_goals (try extract_goal ; sorry)
   ---END test_sext2
@@ -390,6 +402,7 @@ set_option debug.skipKernelTC true in
 theorem test_sext3_proof : test_sext3_before ⊑ test_sext3_after := by
   unfold test_sext3_before test_sext3_after
   simp_alive_peephole
+  intros
   ---BEGIN test_sext3
   all_goals (try extract_goal ; sorry)
   ---END test_sext3
@@ -419,6 +432,7 @@ set_option debug.skipKernelTC true in
 theorem test_sext4_proof : test_sext4_before ⊑ test_sext4_after := by
   unfold test_sext4_before test_sext4_after
   simp_alive_peephole
+  intros
   ---BEGIN test_sext4
   all_goals (try extract_goal ; sorry)
   ---END test_sext4
@@ -447,6 +461,7 @@ set_option debug.skipKernelTC true in
 theorem test_zext1_proof : test_zext1_before ⊑ test_zext1_after := by
   unfold test_zext1_before test_zext1_after
   simp_alive_peephole
+  intros
   ---BEGIN test_zext1
   all_goals (try extract_goal ; sorry)
   ---END test_zext1
@@ -475,6 +490,7 @@ set_option debug.skipKernelTC true in
 theorem test_zext2_proof : test_zext2_before ⊑ test_zext2_after := by
   unfold test_zext2_before test_zext2_after
   simp_alive_peephole
+  intros
   ---BEGIN test_zext2
   all_goals (try extract_goal ; sorry)
   ---END test_zext2
@@ -505,6 +521,7 @@ set_option debug.skipKernelTC true in
 theorem test_zext3_proof : test_zext3_before ⊑ test_zext3_after := by
   unfold test_zext3_before test_zext3_after
   simp_alive_peephole
+  intros
   ---BEGIN test_zext3
   all_goals (try extract_goal ; sorry)
   ---END test_zext3
@@ -534,6 +551,7 @@ set_option debug.skipKernelTC true in
 theorem test_zext4_proof : test_zext4_before ⊑ test_zext4_after := by
   unfold test_zext4_before test_zext4_after
   simp_alive_peephole
+  intros
   ---BEGIN test_zext4
   all_goals (try extract_goal ; sorry)
   ---END test_zext4
@@ -562,6 +580,7 @@ set_option debug.skipKernelTC true in
 theorem sext_true_val_must_be_all_ones_proof : sext_true_val_must_be_all_ones_before ⊑ sext_true_val_must_be_all_ones_after := by
   unfold sext_true_val_must_be_all_ones_before sext_true_val_must_be_all_ones_after
   simp_alive_peephole
+  intros
   ---BEGIN sext_true_val_must_be_all_ones
   all_goals (try extract_goal ; sorry)
   ---END sext_true_val_must_be_all_ones
@@ -590,6 +609,7 @@ set_option debug.skipKernelTC true in
 theorem zext_true_val_must_be_one_proof : zext_true_val_must_be_one_before ⊑ zext_true_val_must_be_one_after := by
   unfold zext_true_val_must_be_one_before zext_true_val_must_be_one_after
   simp_alive_peephole
+  intros
   ---BEGIN zext_true_val_must_be_one
   all_goals (try extract_goal ; sorry)
   ---END zext_true_val_must_be_one
@@ -618,6 +638,7 @@ set_option debug.skipKernelTC true in
 theorem sext_false_val_must_be_zero_proof : sext_false_val_must_be_zero_before ⊑ sext_false_val_must_be_zero_after := by
   unfold sext_false_val_must_be_zero_before sext_false_val_must_be_zero_after
   simp_alive_peephole
+  intros
   ---BEGIN sext_false_val_must_be_zero
   all_goals (try extract_goal ; sorry)
   ---END sext_false_val_must_be_zero
@@ -646,6 +667,7 @@ set_option debug.skipKernelTC true in
 theorem zext_false_val_must_be_zero_proof : zext_false_val_must_be_zero_before ⊑ zext_false_val_must_be_zero_after := by
   unfold zext_false_val_must_be_zero_before zext_false_val_must_be_zero_after
   simp_alive_peephole
+  intros
   ---BEGIN zext_false_val_must_be_zero
   all_goals (try extract_goal ; sorry)
   ---END zext_false_val_must_be_zero

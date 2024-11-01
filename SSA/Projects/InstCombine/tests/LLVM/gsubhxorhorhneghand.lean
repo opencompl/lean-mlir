@@ -35,6 +35,7 @@ set_option debug.skipKernelTC true in
 theorem sub_to_and_proof : sub_to_and_before ⊑ sub_to_and_after := by
   unfold sub_to_and_before sub_to_and_after
   simp_alive_peephole
+  intros
   ---BEGIN sub_to_and
   all_goals (try extract_goal ; sorry)
   ---END sub_to_and
@@ -63,6 +64,7 @@ set_option debug.skipKernelTC true in
 theorem sub_to_and_or_commuted_proof : sub_to_and_or_commuted_before ⊑ sub_to_and_or_commuted_after := by
   unfold sub_to_and_or_commuted_before sub_to_and_or_commuted_after
   simp_alive_peephole
+  intros
   ---BEGIN sub_to_and_or_commuted
   all_goals (try extract_goal ; sorry)
   ---END sub_to_and_or_commuted
@@ -91,6 +93,7 @@ set_option debug.skipKernelTC true in
 theorem sub_to_and_and_commuted_proof : sub_to_and_and_commuted_before ⊑ sub_to_and_and_commuted_after := by
   unfold sub_to_and_and_commuted_before sub_to_and_and_commuted_after
   simp_alive_peephole
+  intros
   ---BEGIN sub_to_and_and_commuted
   all_goals (try extract_goal ; sorry)
   ---END sub_to_and_and_commuted

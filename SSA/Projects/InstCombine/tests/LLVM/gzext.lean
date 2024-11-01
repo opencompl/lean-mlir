@@ -32,6 +32,7 @@ set_option debug.skipKernelTC true in
 theorem test_sext_zext_proof : test_sext_zext_before ⊑ test_sext_zext_after := by
   unfold test_sext_zext_before test_sext_zext_after
   simp_alive_peephole
+  intros
   ---BEGIN test_sext_zext
   all_goals (try extract_goal ; sorry)
   ---END test_sext_zext
@@ -61,6 +62,7 @@ set_option debug.skipKernelTC true in
 theorem fold_xor_zext_sandwich_proof : fold_xor_zext_sandwich_before ⊑ fold_xor_zext_sandwich_after := by
   unfold fold_xor_zext_sandwich_before fold_xor_zext_sandwich_after
   simp_alive_peephole
+  intros
   ---BEGIN fold_xor_zext_sandwich
   all_goals (try extract_goal ; sorry)
   ---END fold_xor_zext_sandwich
@@ -86,6 +88,7 @@ set_option debug.skipKernelTC true in
 theorem sext_zext_apint1_proof : sext_zext_apint1_before ⊑ sext_zext_apint1_after := by
   unfold sext_zext_apint1_before sext_zext_apint1_after
   simp_alive_peephole
+  intros
   ---BEGIN sext_zext_apint1
   all_goals (try extract_goal ; sorry)
   ---END sext_zext_apint1
@@ -111,6 +114,7 @@ set_option debug.skipKernelTC true in
 theorem sext_zext_apint2_proof : sext_zext_apint2_before ⊑ sext_zext_apint2_after := by
   unfold sext_zext_apint2_before sext_zext_apint2_after
   simp_alive_peephole
+  intros
   ---BEGIN sext_zext_apint2
   all_goals (try extract_goal ; sorry)
   ---END sext_zext_apint2
@@ -143,6 +147,7 @@ set_option debug.skipKernelTC true in
 theorem zext_nneg_flag_drop_proof : zext_nneg_flag_drop_before ⊑ zext_nneg_flag_drop_after := by
   unfold zext_nneg_flag_drop_before zext_nneg_flag_drop_after
   simp_alive_peephole
+  intros
   ---BEGIN zext_nneg_flag_drop
   all_goals (try extract_goal ; sorry)
   ---END zext_nneg_flag_drop
@@ -169,6 +174,7 @@ set_option debug.skipKernelTC true in
 theorem zext_nneg_redundant_and_proof : zext_nneg_redundant_and_before ⊑ zext_nneg_redundant_and_after := by
   unfold zext_nneg_redundant_and_before zext_nneg_redundant_and_after
   simp_alive_peephole
+  intros
   ---BEGIN zext_nneg_redundant_and
   all_goals (try extract_goal ; sorry)
   ---END zext_nneg_redundant_and
@@ -195,6 +201,7 @@ set_option debug.skipKernelTC true in
 theorem zext_nneg_signbit_extract_proof : zext_nneg_signbit_extract_before ⊑ zext_nneg_signbit_extract_after := by
   unfold zext_nneg_signbit_extract_before zext_nneg_signbit_extract_after
   simp_alive_peephole
+  intros
   ---BEGIN zext_nneg_signbit_extract
   all_goals (try extract_goal ; sorry)
   ---END zext_nneg_signbit_extract
@@ -219,6 +226,7 @@ set_option debug.skipKernelTC true in
 theorem zext_nneg_i1_proof : zext_nneg_i1_before ⊑ zext_nneg_i1_after := by
   unfold zext_nneg_i1_before zext_nneg_i1_after
   simp_alive_peephole
+  intros
   ---BEGIN zext_nneg_i1
   all_goals (try extract_goal ; sorry)
   ---END zext_nneg_i1

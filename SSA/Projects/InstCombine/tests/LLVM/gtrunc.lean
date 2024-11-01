@@ -35,6 +35,7 @@ set_option debug.skipKernelTC true in
 theorem test5_proof : test5_before ⊑ test5_after := by
   unfold test5_before test5_after
   simp_alive_peephole
+  intros
   ---BEGIN test5
   all_goals (try extract_goal ; sorry)
   ---END test5
@@ -64,6 +65,7 @@ set_option debug.skipKernelTC true in
 theorem test6_proof : test6_before ⊑ test6_after := by
   unfold test6_before test6_after
   simp_alive_peephole
+  intros
   ---BEGIN test6
   all_goals (try extract_goal ; sorry)
   ---END test6
@@ -97,6 +99,7 @@ set_option debug.skipKernelTC true in
 theorem ashr_mul_sign_bits_proof : ashr_mul_sign_bits_before ⊑ ashr_mul_sign_bits_after := by
   unfold ashr_mul_sign_bits_before ashr_mul_sign_bits_after
   simp_alive_peephole
+  intros
   ---BEGIN ashr_mul_sign_bits
   all_goals (try extract_goal ; sorry)
   ---END ashr_mul_sign_bits
@@ -130,6 +133,7 @@ set_option debug.skipKernelTC true in
 theorem ashr_mul_proof : ashr_mul_before ⊑ ashr_mul_after := by
   unfold ashr_mul_before ashr_mul_after
   simp_alive_peephole
+  intros
   ---BEGIN ashr_mul
   all_goals (try extract_goal ; sorry)
   ---END ashr_mul
@@ -162,6 +166,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_ashr_proof : trunc_ashr_before ⊑ trunc_ashr_after := by
   unfold trunc_ashr_before trunc_ashr_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_ashr
   all_goals (try extract_goal ; sorry)
   ---END trunc_ashr
@@ -191,6 +196,7 @@ set_option debug.skipKernelTC true in
 theorem test7_proof : test7_before ⊑ test7_after := by
   unfold test7_before test7_after
   simp_alive_peephole
+  intros
   ---BEGIN test7
   all_goals (try extract_goal ; sorry)
   ---END test7
@@ -224,6 +230,7 @@ set_option debug.skipKernelTC true in
 theorem test8_proof : test8_before ⊑ test8_after := by
   unfold test8_before test8_after
   simp_alive_peephole
+  intros
   ---BEGIN test8
   all_goals (try extract_goal ; sorry)
   ---END test8
@@ -252,6 +259,7 @@ set_option debug.skipKernelTC true in
 theorem test9_proof : test9_before ⊑ test9_after := by
   unfold test9_before test9_after
   simp_alive_peephole
+  intros
   ---BEGIN test9
   all_goals (try extract_goal ; sorry)
   ---END test9
@@ -285,6 +293,7 @@ set_option debug.skipKernelTC true in
 theorem test11_proof : test11_before ⊑ test11_after := by
   unfold test11_before test11_after
   simp_alive_peephole
+  intros
   ---BEGIN test11
   all_goals (try extract_goal ; sorry)
   ---END test11
@@ -318,6 +327,7 @@ set_option debug.skipKernelTC true in
 theorem test12_proof : test12_before ⊑ test12_after := by
   unfold test12_before test12_after
   simp_alive_peephole
+  intros
   ---BEGIN test12
   all_goals (try extract_goal ; sorry)
   ---END test12
@@ -351,6 +361,7 @@ set_option debug.skipKernelTC true in
 theorem test13_proof : test13_before ⊑ test13_after := by
   unfold test13_before test13_after
   simp_alive_peephole
+  intros
   ---BEGIN test13
   all_goals (try extract_goal ; sorry)
   ---END test13
@@ -379,6 +390,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_shl_31_i32_i64_proof : trunc_shl_31_i32_i64_before ⊑ trunc_shl_31_i32_i64_after := by
   unfold trunc_shl_31_i32_i64_before trunc_shl_31_i32_i64_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_shl_31_i32_i64
   all_goals (try extract_goal ; sorry)
   ---END trunc_shl_31_i32_i64
@@ -407,6 +419,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_shl_nsw_31_i32_i64_proof : trunc_shl_nsw_31_i32_i64_before ⊑ trunc_shl_nsw_31_i32_i64_after := by
   unfold trunc_shl_nsw_31_i32_i64_before trunc_shl_nsw_31_i32_i64_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_shl_nsw_31_i32_i64
   all_goals (try extract_goal ; sorry)
   ---END trunc_shl_nsw_31_i32_i64
@@ -435,6 +448,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_shl_nuw_31_i32_i64_proof : trunc_shl_nuw_31_i32_i64_before ⊑ trunc_shl_nuw_31_i32_i64_after := by
   unfold trunc_shl_nuw_31_i32_i64_before trunc_shl_nuw_31_i32_i64_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_shl_nuw_31_i32_i64
   all_goals (try extract_goal ; sorry)
   ---END trunc_shl_nuw_31_i32_i64
@@ -463,6 +477,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_shl_nsw_nuw_31_i32_i64_proof : trunc_shl_nsw_nuw_31_i32_i64_before ⊑ trunc_shl_nsw_nuw_31_i32_i64_after := by
   unfold trunc_shl_nsw_nuw_31_i32_i64_before trunc_shl_nsw_nuw_31_i32_i64_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_shl_nsw_nuw_31_i32_i64
   all_goals (try extract_goal ; sorry)
   ---END trunc_shl_nsw_nuw_31_i32_i64
@@ -491,6 +506,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_shl_15_i16_i64_proof : trunc_shl_15_i16_i64_before ⊑ trunc_shl_15_i16_i64_after := by
   unfold trunc_shl_15_i16_i64_before trunc_shl_15_i16_i64_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_shl_15_i16_i64
   all_goals (try extract_goal ; sorry)
   ---END trunc_shl_15_i16_i64
@@ -519,6 +535,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_shl_15_i16_i32_proof : trunc_shl_15_i16_i32_before ⊑ trunc_shl_15_i16_i32_after := by
   unfold trunc_shl_15_i16_i32_before trunc_shl_15_i16_i32_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_shl_15_i16_i32
   all_goals (try extract_goal ; sorry)
   ---END trunc_shl_15_i16_i32
@@ -547,6 +564,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_shl_7_i8_i64_proof : trunc_shl_7_i8_i64_before ⊑ trunc_shl_7_i8_i64_after := by
   unfold trunc_shl_7_i8_i64_before trunc_shl_7_i8_i64_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_shl_7_i8_i64
   all_goals (try extract_goal ; sorry)
   ---END trunc_shl_7_i8_i64
@@ -575,6 +593,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_shl_1_i32_i64_proof : trunc_shl_1_i32_i64_before ⊑ trunc_shl_1_i32_i64_after := by
   unfold trunc_shl_1_i32_i64_before trunc_shl_1_i32_i64_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_shl_1_i32_i64
   all_goals (try extract_goal ; sorry)
   ---END trunc_shl_1_i32_i64
@@ -603,6 +622,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_shl_16_i32_i64_proof : trunc_shl_16_i32_i64_before ⊑ trunc_shl_16_i32_i64_after := by
   unfold trunc_shl_16_i32_i64_before trunc_shl_16_i32_i64_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_shl_16_i32_i64
   all_goals (try extract_goal ; sorry)
   ---END trunc_shl_16_i32_i64
@@ -629,6 +649,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_shl_33_i32_i64_proof : trunc_shl_33_i32_i64_before ⊑ trunc_shl_33_i32_i64_after := by
   unfold trunc_shl_33_i32_i64_before trunc_shl_33_i32_i64_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_shl_33_i32_i64
   all_goals (try extract_goal ; sorry)
   ---END trunc_shl_33_i32_i64
@@ -655,6 +676,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_shl_32_i32_i64_proof : trunc_shl_32_i32_i64_before ⊑ trunc_shl_32_i32_i64_after := by
   unfold trunc_shl_32_i32_i64_before trunc_shl_32_i32_i64_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_shl_32_i32_i64
   all_goals (try extract_goal ; sorry)
   ---END trunc_shl_32_i32_i64
@@ -687,6 +709,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_shl_lshr_infloop_proof : trunc_shl_lshr_infloop_before ⊑ trunc_shl_lshr_infloop_after := by
   unfold trunc_shl_lshr_infloop_before trunc_shl_lshr_infloop_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_shl_lshr_infloop
   all_goals (try extract_goal ; sorry)
   ---END trunc_shl_lshr_infloop
@@ -719,6 +742,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_shl_ashr_infloop_proof : trunc_shl_ashr_infloop_before ⊑ trunc_shl_ashr_infloop_after := by
   unfold trunc_shl_ashr_infloop_before trunc_shl_ashr_infloop_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_shl_ashr_infloop
   all_goals (try extract_goal ; sorry)
   ---END trunc_shl_ashr_infloop
@@ -749,6 +773,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_shl_shl_infloop_proof : trunc_shl_shl_infloop_before ⊑ trunc_shl_shl_infloop_after := by
   unfold trunc_shl_shl_infloop_before trunc_shl_shl_infloop_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_shl_shl_infloop
   all_goals (try extract_goal ; sorry)
   ---END trunc_shl_shl_infloop
@@ -779,6 +804,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_shl_lshr_var_proof : trunc_shl_lshr_var_before ⊑ trunc_shl_lshr_var_after := by
   unfold trunc_shl_lshr_var_before trunc_shl_lshr_var_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_shl_lshr_var
   all_goals (try extract_goal ; sorry)
   ---END trunc_shl_lshr_var
@@ -809,6 +835,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_shl_ashr_var_proof : trunc_shl_ashr_var_before ⊑ trunc_shl_ashr_var_after := by
   unfold trunc_shl_ashr_var_before trunc_shl_ashr_var_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_shl_ashr_var
   all_goals (try extract_goal ; sorry)
   ---END trunc_shl_ashr_var
@@ -839,6 +866,7 @@ set_option debug.skipKernelTC true in
 theorem trunc_shl_shl_var_proof : trunc_shl_shl_var_before ⊑ trunc_shl_shl_var_after := by
   unfold trunc_shl_shl_var_before trunc_shl_shl_var_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_shl_shl_var
   all_goals (try extract_goal ; sorry)
   ---END trunc_shl_shl_var
@@ -867,6 +895,7 @@ set_option debug.skipKernelTC true in
 theorem drop_nsw_trunc_proof : drop_nsw_trunc_before ⊑ drop_nsw_trunc_after := by
   unfold drop_nsw_trunc_before drop_nsw_trunc_after
   simp_alive_peephole
+  intros
   ---BEGIN drop_nsw_trunc
   all_goals (try extract_goal ; sorry)
   ---END drop_nsw_trunc
@@ -895,6 +924,7 @@ set_option debug.skipKernelTC true in
 theorem drop_nuw_trunc_proof : drop_nuw_trunc_before ⊑ drop_nuw_trunc_after := by
   unfold drop_nuw_trunc_before drop_nuw_trunc_after
   simp_alive_peephole
+  intros
   ---BEGIN drop_nuw_trunc
   all_goals (try extract_goal ; sorry)
   ---END drop_nuw_trunc
@@ -923,6 +953,7 @@ set_option debug.skipKernelTC true in
 theorem drop_both_trunc_proof : drop_both_trunc_before ⊑ drop_both_trunc_after := by
   unfold drop_both_trunc_before drop_both_trunc_after
   simp_alive_peephole
+  intros
   ---BEGIN drop_both_trunc
   all_goals (try extract_goal ; sorry)
   ---END drop_both_trunc

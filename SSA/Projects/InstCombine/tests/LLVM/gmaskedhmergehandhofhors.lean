@@ -39,6 +39,7 @@ set_option debug.skipKernelTC true in
 theorem p_proof : p_before ⊑ p_after := by
   unfold p_before p_after
   simp_alive_peephole
+  intros
   ---BEGIN p
   all_goals (try extract_goal ; sorry)
   ---END p
@@ -71,6 +72,7 @@ set_option debug.skipKernelTC true in
 theorem p_commutative2_proof : p_commutative2_before ⊑ p_commutative2_after := by
   unfold p_commutative2_before p_commutative2_after
   simp_alive_peephole
+  intros
   ---BEGIN p_commutative2
   all_goals (try extract_goal ; sorry)
   ---END p_commutative2
@@ -103,6 +105,7 @@ set_option debug.skipKernelTC true in
 theorem n2_badmask_proof : n2_badmask_before ⊑ n2_badmask_after := by
   unfold n2_badmask_before n2_badmask_after
   simp_alive_peephole
+  intros
   ---BEGIN n2_badmask
   all_goals (try extract_goal ; sorry)
   ---END n2_badmask
@@ -132,6 +135,7 @@ set_option debug.skipKernelTC true in
 theorem n3_constmask_samemask_proof : n3_constmask_samemask_before ⊑ n3_constmask_samemask_after := by
   unfold n3_constmask_samemask_before n3_constmask_samemask_after
   simp_alive_peephole
+  intros
   ---BEGIN n3_constmask_samemask
   all_goals (try extract_goal ; sorry)
   ---END n3_constmask_samemask

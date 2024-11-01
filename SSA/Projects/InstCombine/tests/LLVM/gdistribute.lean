@@ -34,6 +34,7 @@ set_option debug.skipKernelTC true in
 theorem factorize_proof : factorize_before ⊑ factorize_after := by
   unfold factorize_before factorize_after
   simp_alive_peephole
+  intros
   ---BEGIN factorize
   all_goals (try extract_goal ; sorry)
   ---END factorize
@@ -61,6 +62,7 @@ set_option debug.skipKernelTC true in
 theorem factorize2_proof : factorize2_before ⊑ factorize2_after := by
   unfold factorize2_before factorize2_after
   simp_alive_peephole
+  intros
   ---BEGIN factorize2
   all_goals (try extract_goal ; sorry)
   ---END factorize2
@@ -88,6 +90,7 @@ set_option debug.skipKernelTC true in
 theorem factorize3_proof : factorize3_before ⊑ factorize3_after := by
   unfold factorize3_before factorize3_after
   simp_alive_peephole
+  intros
   ---BEGIN factorize3
   all_goals (try extract_goal ; sorry)
   ---END factorize3
@@ -116,6 +119,7 @@ set_option debug.skipKernelTC true in
 theorem factorize4_proof : factorize4_before ⊑ factorize4_after := by
   unfold factorize4_before factorize4_after
   simp_alive_peephole
+  intros
   ---BEGIN factorize4
   all_goals (try extract_goal ; sorry)
   ---END factorize4
@@ -144,6 +148,7 @@ set_option debug.skipKernelTC true in
 theorem factorize5_proof : factorize5_before ⊑ factorize5_after := by
   unfold factorize5_before factorize5_after
   simp_alive_peephole
+  intros
   ---BEGIN factorize5
   all_goals (try extract_goal ; sorry)
   ---END factorize5
@@ -173,6 +178,7 @@ set_option debug.skipKernelTC true in
 theorem expand_proof : expand_before ⊑ expand_after := by
   unfold expand_before expand_after
   simp_alive_peephole
+  intros
   ---BEGIN expand
   all_goals (try extract_goal ; sorry)
   ---END expand

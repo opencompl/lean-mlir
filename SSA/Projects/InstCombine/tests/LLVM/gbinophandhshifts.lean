@@ -40,6 +40,7 @@ set_option debug.skipKernelTC true in
 theorem shl_and_and_proof : shl_and_and_before ⊑ shl_and_and_after := by
   unfold shl_and_and_before shl_and_and_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_and_and
   all_goals (try extract_goal ; sorry)
   ---END shl_and_and
@@ -76,6 +77,7 @@ set_option debug.skipKernelTC true in
 theorem shl_and_and_fail_proof : shl_and_and_fail_before ⊑ shl_and_and_fail_after := by
   unfold shl_and_and_fail_before shl_and_and_fail_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_and_and_fail
   all_goals (try extract_goal ; sorry)
   ---END shl_and_and_fail
@@ -109,6 +111,7 @@ set_option debug.skipKernelTC true in
 theorem shl_add_add_proof : shl_add_add_before ⊑ shl_add_add_after := by
   unfold shl_add_add_before shl_add_add_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_add_add
   all_goals (try extract_goal ; sorry)
   ---END shl_add_add
@@ -143,6 +146,7 @@ set_option debug.skipKernelTC true in
 theorem shl_add_add_fail_proof : shl_add_add_fail_before ⊑ shl_add_add_fail_after := by
   unfold shl_add_add_fail_before shl_add_add_fail_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_add_add_fail
   all_goals (try extract_goal ; sorry)
   ---END shl_add_add_fail
@@ -176,6 +180,7 @@ set_option debug.skipKernelTC true in
 theorem shl_and_xor_proof : shl_and_xor_before ⊑ shl_and_xor_after := by
   unfold shl_and_xor_before shl_and_xor_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_and_xor
   all_goals (try extract_goal ; sorry)
   ---END shl_and_xor
@@ -209,6 +214,7 @@ set_option debug.skipKernelTC true in
 theorem shl_and_add_proof : shl_and_add_before ⊑ shl_and_add_after := by
   unfold shl_and_add_before shl_and_add_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_and_add
   all_goals (try extract_goal ; sorry)
   ---END shl_and_add
@@ -242,6 +248,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_or_and_proof : lshr_or_and_before ⊑ lshr_or_and_after := by
   unfold lshr_or_and_before lshr_or_and_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_or_and
   all_goals (try extract_goal ; sorry)
   ---END lshr_or_and
@@ -275,6 +282,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_or_or_fail_proof : lshr_or_or_fail_before ⊑ lshr_or_or_fail_after := by
   unfold lshr_or_or_fail_before lshr_or_or_fail_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_or_or_fail
   all_goals (try extract_goal ; sorry)
   ---END lshr_or_or_fail
@@ -304,6 +312,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_or_or_no_const_proof : lshr_or_or_no_const_before ⊑ lshr_or_or_no_const_after := by
   unfold lshr_or_or_no_const_before lshr_or_or_no_const_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_or_or_no_const
   all_goals (try extract_goal ; sorry)
   ---END lshr_or_or_no_const
@@ -333,6 +342,7 @@ set_option debug.skipKernelTC true in
 theorem shl_xor_xor_no_const_proof : shl_xor_xor_no_const_before ⊑ shl_xor_xor_no_const_after := by
   unfold shl_xor_xor_no_const_before shl_xor_xor_no_const_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_xor_xor_no_const
   all_goals (try extract_goal ; sorry)
   ---END shl_xor_xor_no_const
@@ -362,6 +372,7 @@ set_option debug.skipKernelTC true in
 theorem shl_add_add_no_const_proof : shl_add_add_no_const_before ⊑ shl_add_add_no_const_after := by
   unfold shl_add_add_no_const_before shl_add_add_no_const_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_add_add_no_const
   all_goals (try extract_goal ; sorry)
   ---END shl_add_add_no_const
@@ -395,6 +406,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_xor_or_good_mask_proof : lshr_xor_or_good_mask_before ⊑ lshr_xor_or_good_mask_after := by
   unfold lshr_xor_or_good_mask_before lshr_xor_or_good_mask_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_xor_or_good_mask
   all_goals (try extract_goal ; sorry)
   ---END lshr_xor_or_good_mask
@@ -428,6 +440,7 @@ set_option debug.skipKernelTC true in
 theorem shl_xor_xor_good_mask_proof : shl_xor_xor_good_mask_before ⊑ shl_xor_xor_good_mask_after := by
   unfold shl_xor_xor_good_mask_before shl_xor_xor_good_mask_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_xor_xor_good_mask
   all_goals (try extract_goal ; sorry)
   ---END shl_xor_xor_good_mask
@@ -461,6 +474,7 @@ set_option debug.skipKernelTC true in
 theorem shl_xor_xor_bad_mask_distribute_proof : shl_xor_xor_bad_mask_distribute_before ⊑ shl_xor_xor_bad_mask_distribute_after := by
   unfold shl_xor_xor_bad_mask_distribute_before shl_xor_xor_bad_mask_distribute_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_xor_xor_bad_mask_distribute
   all_goals (try extract_goal ; sorry)
   ---END shl_xor_xor_bad_mask_distribute
@@ -494,6 +508,7 @@ set_option debug.skipKernelTC true in
 theorem shl_add_and_proof : shl_add_and_before ⊑ shl_add_and_after := by
   unfold shl_add_and_before shl_add_and_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_add_and
   all_goals (try extract_goal ; sorry)
   ---END shl_add_and
@@ -528,6 +543,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_and_add_fail_proof : lshr_and_add_fail_before ⊑ lshr_and_add_fail_after := by
   unfold lshr_and_add_fail_before lshr_and_add_fail_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_and_add_fail
   all_goals (try extract_goal ; sorry)
   ---END lshr_and_add_fail
@@ -562,6 +578,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_add_or_fail_proof : lshr_add_or_fail_before ⊑ lshr_add_or_fail_after := by
   unfold lshr_add_or_fail_before lshr_add_or_fail_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_add_or_fail
   all_goals (try extract_goal ; sorry)
   ---END lshr_add_or_fail
@@ -596,6 +613,7 @@ set_option debug.skipKernelTC true in
 theorem lshr_add_xor_fail_proof : lshr_add_xor_fail_before ⊑ lshr_add_xor_fail_after := by
   unfold lshr_add_xor_fail_before lshr_add_xor_fail_after
   simp_alive_peephole
+  intros
   ---BEGIN lshr_add_xor_fail
   all_goals (try extract_goal ; sorry)
   ---END lshr_add_xor_fail
@@ -630,6 +648,7 @@ set_option debug.skipKernelTC true in
 theorem shl_add_and_fail_mismatch_shift_proof : shl_add_and_fail_mismatch_shift_before ⊑ shl_add_and_fail_mismatch_shift_after := by
   unfold shl_add_and_fail_mismatch_shift_before shl_add_and_fail_mismatch_shift_after
   simp_alive_peephole
+  intros
   ---BEGIN shl_add_and_fail_mismatch_shift
   all_goals (try extract_goal ; sorry)
   ---END shl_add_and_fail_mismatch_shift
@@ -661,6 +680,7 @@ set_option debug.skipKernelTC true in
 theorem and_ashr_not_proof : and_ashr_not_before ⊑ and_ashr_not_after := by
   unfold and_ashr_not_before and_ashr_not_after
   simp_alive_peephole
+  intros
   ---BEGIN and_ashr_not
   all_goals (try extract_goal ; sorry)
   ---END and_ashr_not
@@ -692,6 +712,7 @@ set_option debug.skipKernelTC true in
 theorem and_ashr_not_commuted_proof : and_ashr_not_commuted_before ⊑ and_ashr_not_commuted_after := by
   unfold and_ashr_not_commuted_before and_ashr_not_commuted_after
   simp_alive_peephole
+  intros
   ---BEGIN and_ashr_not_commuted
   all_goals (try extract_goal ; sorry)
   ---END and_ashr_not_commuted
@@ -723,6 +744,7 @@ set_option debug.skipKernelTC true in
 theorem or_ashr_not_proof : or_ashr_not_before ⊑ or_ashr_not_after := by
   unfold or_ashr_not_before or_ashr_not_after
   simp_alive_peephole
+  intros
   ---BEGIN or_ashr_not
   all_goals (try extract_goal ; sorry)
   ---END or_ashr_not
@@ -754,6 +776,7 @@ set_option debug.skipKernelTC true in
 theorem or_ashr_not_commuted_proof : or_ashr_not_commuted_before ⊑ or_ashr_not_commuted_after := by
   unfold or_ashr_not_commuted_before or_ashr_not_commuted_after
   simp_alive_peephole
+  intros
   ---BEGIN or_ashr_not_commuted
   all_goals (try extract_goal ; sorry)
   ---END or_ashr_not_commuted
@@ -785,6 +808,7 @@ set_option debug.skipKernelTC true in
 theorem xor_ashr_not_proof : xor_ashr_not_before ⊑ xor_ashr_not_after := by
   unfold xor_ashr_not_before xor_ashr_not_after
   simp_alive_peephole
+  intros
   ---BEGIN xor_ashr_not
   all_goals (try extract_goal ; sorry)
   ---END xor_ashr_not
@@ -816,6 +840,7 @@ set_option debug.skipKernelTC true in
 theorem xor_ashr_not_commuted_proof : xor_ashr_not_commuted_before ⊑ xor_ashr_not_commuted_after := by
   unfold xor_ashr_not_commuted_before xor_ashr_not_commuted_after
   simp_alive_peephole
+  intros
   ---BEGIN xor_ashr_not_commuted
   all_goals (try extract_goal ; sorry)
   ---END xor_ashr_not_commuted
@@ -848,6 +873,7 @@ set_option debug.skipKernelTC true in
 theorem xor_ashr_not_fail_lshr_ashr_proof : xor_ashr_not_fail_lshr_ashr_before ⊑ xor_ashr_not_fail_lshr_ashr_after := by
   unfold xor_ashr_not_fail_lshr_ashr_before xor_ashr_not_fail_lshr_ashr_after
   simp_alive_peephole
+  intros
   ---BEGIN xor_ashr_not_fail_lshr_ashr
   all_goals (try extract_goal ; sorry)
   ---END xor_ashr_not_fail_lshr_ashr
@@ -880,6 +906,7 @@ set_option debug.skipKernelTC true in
 theorem xor_ashr_not_fail_ashr_lshr_proof : xor_ashr_not_fail_ashr_lshr_before ⊑ xor_ashr_not_fail_ashr_lshr_after := by
   unfold xor_ashr_not_fail_ashr_lshr_before xor_ashr_not_fail_ashr_lshr_after
   simp_alive_peephole
+  intros
   ---BEGIN xor_ashr_not_fail_ashr_lshr
   all_goals (try extract_goal ; sorry)
   ---END xor_ashr_not_fail_ashr_lshr
@@ -911,6 +938,7 @@ set_option debug.skipKernelTC true in
 theorem xor_ashr_not_fail_invalid_xor_constant_proof : xor_ashr_not_fail_invalid_xor_constant_before ⊑ xor_ashr_not_fail_invalid_xor_constant_after := by
   unfold xor_ashr_not_fail_invalid_xor_constant_before xor_ashr_not_fail_invalid_xor_constant_after
   simp_alive_peephole
+  intros
   ---BEGIN xor_ashr_not_fail_invalid_xor_constant
   all_goals (try extract_goal ; sorry)
   ---END xor_ashr_not_fail_invalid_xor_constant

@@ -37,6 +37,7 @@ set_option debug.skipKernelTC true in
 theorem pr40493_neg3_proof : pr40493_neg3_before ⊑ pr40493_neg3_after := by
   unfold pr40493_neg3_before pr40493_neg3_after
   simp_alive_peephole
+  intros
   ---BEGIN pr40493_neg3
   all_goals (try extract_goal ; sorry)
   ---END pr40493_neg3
@@ -68,6 +69,7 @@ set_option debug.skipKernelTC true in
 theorem pr51551_demand3bits_proof : pr51551_demand3bits_before ⊑ pr51551_demand3bits_after := by
   unfold pr51551_demand3bits_before pr51551_demand3bits_after
   simp_alive_peephole
+  intros
   ---BEGIN pr51551_demand3bits
   all_goals (try extract_goal ; sorry)
   ---END pr51551_demand3bits

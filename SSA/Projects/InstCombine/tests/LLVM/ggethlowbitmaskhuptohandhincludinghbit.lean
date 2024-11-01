@@ -38,6 +38,7 @@ set_option debug.skipKernelTC true in
 theorem t0_proof : t0_before ⊑ t0_after := by
   unfold t0_before t0_after
   simp_alive_peephole
+  intros
   ---BEGIN t0
   all_goals (try extract_goal ; sorry)
   ---END t0
@@ -69,6 +70,7 @@ set_option debug.skipKernelTC true in
 theorem t1_proof : t1_before ⊑ t1_after := by
   unfold t1_before t1_after
   simp_alive_peephole
+  intros
   ---BEGIN t1
   all_goals (try extract_goal ; sorry)
   ---END t1
@@ -103,6 +105,7 @@ set_option debug.skipKernelTC true in
 theorem t9_nocse_proof : t9_nocse_before ⊑ t9_nocse_after := by
   unfold t9_nocse_before t9_nocse_after
   simp_alive_peephole
+  intros
   ---BEGIN t9_nocse
   all_goals (try extract_goal ; sorry)
   ---END t9_nocse
@@ -137,6 +140,7 @@ set_option debug.skipKernelTC true in
 theorem t17_nocse_mismatching_x_proof : t17_nocse_mismatching_x_before ⊑ t17_nocse_mismatching_x_after := by
   unfold t17_nocse_mismatching_x_before t17_nocse_mismatching_x_after
   simp_alive_peephole
+  intros
   ---BEGIN t17_nocse_mismatching_x
   all_goals (try extract_goal ; sorry)
   ---END t17_nocse_mismatching_x

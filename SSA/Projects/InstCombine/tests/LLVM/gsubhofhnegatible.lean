@@ -33,6 +33,7 @@ set_option debug.skipKernelTC true in
 theorem t0_proof : t0_before ⊑ t0_after := by
   unfold t0_before t0_after
   simp_alive_peephole
+  intros
   ---BEGIN t0
   all_goals (try extract_goal ; sorry)
   ---END t0
@@ -61,6 +62,7 @@ set_option debug.skipKernelTC true in
 theorem t2_proof : t2_before ⊑ t2_after := by
   unfold t2_before t2_after
   simp_alive_peephole
+  intros
   ---BEGIN t2
   all_goals (try extract_goal ; sorry)
   ---END t2
@@ -91,6 +93,7 @@ set_option debug.skipKernelTC true in
 theorem t4_proof : t4_before ⊑ t4_after := by
   unfold t4_before t4_after
   simp_alive_peephole
+  intros
   ---BEGIN t4
   all_goals (try extract_goal ; sorry)
   ---END t4
@@ -120,6 +123,7 @@ set_option debug.skipKernelTC true in
 theorem PR52261_proof : PR52261_before ⊑ PR52261_after := by
   unfold PR52261_before PR52261_after
   simp_alive_peephole
+  intros
   ---BEGIN PR52261
   all_goals (try extract_goal ; sorry)
   ---END PR52261
@@ -152,6 +156,7 @@ set_option debug.skipKernelTC true in
 theorem t7_proof : t7_before ⊑ t7_after := by
   unfold t7_before t7_after
   simp_alive_peephole
+  intros
   ---BEGIN t7
   all_goals (try extract_goal ; sorry)
   ---END t7
@@ -178,6 +183,7 @@ set_option debug.skipKernelTC true in
 theorem t9_proof : t9_before ⊑ t9_after := by
   unfold t9_before t9_after
   simp_alive_peephole
+  intros
   ---BEGIN t9
   all_goals (try extract_goal ; sorry)
   ---END t9
@@ -206,6 +212,7 @@ set_option debug.skipKernelTC true in
 theorem neg_of_sub_from_constant_proof : neg_of_sub_from_constant_before ⊑ neg_of_sub_from_constant_after := by
   unfold neg_of_sub_from_constant_before neg_of_sub_from_constant_after
   simp_alive_peephole
+  intros
   ---BEGIN neg_of_sub_from_constant
   all_goals (try extract_goal ; sorry)
   ---END neg_of_sub_from_constant
@@ -234,6 +241,7 @@ set_option debug.skipKernelTC true in
 theorem sub_from_constant_of_sub_from_constant_proof : sub_from_constant_of_sub_from_constant_before ⊑ sub_from_constant_of_sub_from_constant_after := by
   unfold sub_from_constant_of_sub_from_constant_before sub_from_constant_of_sub_from_constant_after
   simp_alive_peephole
+  intros
   ---BEGIN sub_from_constant_of_sub_from_constant
   all_goals (try extract_goal ; sorry)
   ---END sub_from_constant_of_sub_from_constant
@@ -262,6 +270,7 @@ set_option debug.skipKernelTC true in
 theorem sub_from_variable_of_sub_from_constant_proof : sub_from_variable_of_sub_from_constant_before ⊑ sub_from_variable_of_sub_from_constant_after := by
   unfold sub_from_variable_of_sub_from_constant_before sub_from_variable_of_sub_from_constant_after
   simp_alive_peephole
+  intros
   ---BEGIN sub_from_variable_of_sub_from_constant
   all_goals (try extract_goal ; sorry)
   ---END sub_from_variable_of_sub_from_constant
@@ -290,6 +299,7 @@ set_option debug.skipKernelTC true in
 theorem neg_of_add_with_constant_proof : neg_of_add_with_constant_before ⊑ neg_of_add_with_constant_after := by
   unfold neg_of_add_with_constant_before neg_of_add_with_constant_after
   simp_alive_peephole
+  intros
   ---BEGIN neg_of_add_with_constant
   all_goals (try extract_goal ; sorry)
   ---END neg_of_add_with_constant
@@ -318,6 +328,7 @@ set_option debug.skipKernelTC true in
 theorem sub_from_constant_of_add_with_constant_proof : sub_from_constant_of_add_with_constant_before ⊑ sub_from_constant_of_add_with_constant_after := by
   unfold sub_from_constant_of_add_with_constant_before sub_from_constant_of_add_with_constant_after
   simp_alive_peephole
+  intros
   ---BEGIN sub_from_constant_of_add_with_constant
   all_goals (try extract_goal ; sorry)
   ---END sub_from_constant_of_add_with_constant
@@ -348,6 +359,7 @@ set_option debug.skipKernelTC true in
 theorem t20_proof : t20_before ⊑ t20_after := by
   unfold t20_before t20_after
   simp_alive_peephole
+  intros
   ---BEGIN t20
   all_goals (try extract_goal ; sorry)
   ---END t20
@@ -378,6 +390,7 @@ set_option debug.skipKernelTC true in
 theorem negate_xor_proof : negate_xor_before ⊑ negate_xor_after := by
   unfold negate_xor_before negate_xor_after
   simp_alive_peephole
+  intros
   ---BEGIN negate_xor
   all_goals (try extract_goal ; sorry)
   ---END negate_xor
@@ -410,6 +423,7 @@ set_option debug.skipKernelTC true in
 theorem negate_shl_xor_proof : negate_shl_xor_before ⊑ negate_shl_xor_after := by
   unfold negate_shl_xor_before negate_shl_xor_after
   simp_alive_peephole
+  intros
   ---BEGIN negate_shl_xor
   all_goals (try extract_goal ; sorry)
   ---END negate_shl_xor
@@ -438,6 +452,7 @@ set_option debug.skipKernelTC true in
 theorem negate_sdiv_proof : negate_sdiv_before ⊑ negate_sdiv_after := by
   unfold negate_sdiv_before negate_sdiv_after
   simp_alive_peephole
+  intros
   ---BEGIN negate_sdiv
   all_goals (try extract_goal ; sorry)
   ---END negate_sdiv
@@ -466,6 +481,7 @@ set_option debug.skipKernelTC true in
 theorem negate_ashr_proof : negate_ashr_before ⊑ negate_ashr_after := by
   unfold negate_ashr_before negate_ashr_after
   simp_alive_peephole
+  intros
   ---BEGIN negate_ashr
   all_goals (try extract_goal ; sorry)
   ---END negate_ashr
@@ -494,6 +510,7 @@ set_option debug.skipKernelTC true in
 theorem negate_lshr_proof : negate_lshr_before ⊑ negate_lshr_after := by
   unfold negate_lshr_before negate_lshr_after
   simp_alive_peephole
+  intros
   ---BEGIN negate_lshr
   all_goals (try extract_goal ; sorry)
   ---END negate_lshr
@@ -520,6 +537,7 @@ set_option debug.skipKernelTC true in
 theorem negate_sext_proof : negate_sext_before ⊑ negate_sext_after := by
   unfold negate_sext_before negate_sext_after
   simp_alive_peephole
+  intros
   ---BEGIN negate_sext
   all_goals (try extract_goal ; sorry)
   ---END negate_sext
@@ -546,6 +564,7 @@ set_option debug.skipKernelTC true in
 theorem negate_zext_proof : negate_zext_before ⊑ negate_zext_after := by
   unfold negate_zext_before negate_zext_after
   simp_alive_peephole
+  intros
   ---BEGIN negate_zext
   all_goals (try extract_goal ; sorry)
   ---END negate_zext
@@ -577,6 +596,7 @@ set_option debug.skipKernelTC true in
 theorem negation_of_increment_via_or_with_no_common_bits_set_proof : negation_of_increment_via_or_with_no_common_bits_set_before ⊑ negation_of_increment_via_or_with_no_common_bits_set_after := by
   unfold negation_of_increment_via_or_with_no_common_bits_set_before negation_of_increment_via_or_with_no_common_bits_set_after
   simp_alive_peephole
+  intros
   ---BEGIN negation_of_increment_via_or_with_no_common_bits_set
   all_goals (try extract_goal ; sorry)
   ---END negation_of_increment_via_or_with_no_common_bits_set
@@ -605,6 +625,7 @@ set_option debug.skipKernelTC true in
 theorem negation_of_increment_via_or_disjoint_proof : negation_of_increment_via_or_disjoint_before ⊑ negation_of_increment_via_or_disjoint_after := by
   unfold negation_of_increment_via_or_disjoint_before negation_of_increment_via_or_disjoint_after
   simp_alive_peephole
+  intros
   ---BEGIN negation_of_increment_via_or_disjoint
   all_goals (try extract_goal ; sorry)
   ---END negation_of_increment_via_or_disjoint
@@ -633,6 +654,7 @@ set_option debug.skipKernelTC true in
 theorem negate_add_with_single_negatible_operand_proof : negate_add_with_single_negatible_operand_before ⊑ negate_add_with_single_negatible_operand_after := by
   unfold negate_add_with_single_negatible_operand_before negate_add_with_single_negatible_operand_after
   simp_alive_peephole
+  intros
   ---BEGIN negate_add_with_single_negatible_operand
   all_goals (try extract_goal ; sorry)
   ---END negate_add_with_single_negatible_operand
@@ -663,6 +685,7 @@ set_option debug.skipKernelTC true in
 theorem negate_add_with_single_negatible_operand_depth2_proof : negate_add_with_single_negatible_operand_depth2_before ⊑ negate_add_with_single_negatible_operand_depth2_after := by
   unfold negate_add_with_single_negatible_operand_depth2_before negate_add_with_single_negatible_operand_depth2_after
   simp_alive_peephole
+  intros
   ---BEGIN negate_add_with_single_negatible_operand_depth2
   all_goals (try extract_goal ; sorry)
   ---END negate_add_with_single_negatible_operand_depth2

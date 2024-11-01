@@ -34,6 +34,7 @@ set_option debug.skipKernelTC true in
 theorem select_of_symmetric_selects_proof : select_of_symmetric_selects_before ⊑ select_of_symmetric_selects_after := by
   unfold select_of_symmetric_selects_before select_of_symmetric_selects_after
   simp_alive_peephole
+  intros
   ---BEGIN select_of_symmetric_selects
   all_goals (try extract_goal ; sorry)
   ---END select_of_symmetric_selects
@@ -61,6 +62,7 @@ set_option debug.skipKernelTC true in
 theorem select_of_symmetric_selects_negative1_proof : select_of_symmetric_selects_negative1_before ⊑ select_of_symmetric_selects_negative1_after := by
   unfold select_of_symmetric_selects_negative1_before select_of_symmetric_selects_negative1_after
   simp_alive_peephole
+  intros
   ---BEGIN select_of_symmetric_selects_negative1
   all_goals (try extract_goal ; sorry)
   ---END select_of_symmetric_selects_negative1
@@ -88,6 +90,7 @@ set_option debug.skipKernelTC true in
 theorem select_of_symmetric_selects_commuted_proof : select_of_symmetric_selects_commuted_before ⊑ select_of_symmetric_selects_commuted_after := by
   unfold select_of_symmetric_selects_commuted_before select_of_symmetric_selects_commuted_after
   simp_alive_peephole
+  intros
   ---BEGIN select_of_symmetric_selects_commuted
   all_goals (try extract_goal ; sorry)
   ---END select_of_symmetric_selects_commuted
