@@ -52,7 +52,7 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" : tactic =>
   `(tactic|
       (
       /- Then, unfold the definition of the denotation of a program -/
-      simp (config := {failIfUnchanged := false}) only [
+      simp (config := {failIfUnchanged := false, implicitDefEqProofs := true}) only [
         Int.ofNat_eq_coe, Nat.cast_zero, DerivedCtxt.snoc, DerivedCtxt.ofCtxt,
         DerivedCtxt.ofCtxt_empty, Valuation.snoc_last,
         Com.denote, Expr.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
@@ -118,7 +118,7 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident 
       only_goal
         simp (config := {failIfUnchanged := false}) only [Ctxt.Var.toSnoc, Ctxt.Var.last]
         repeat (generalize_or_fail at $Γv)
-        clear $Γv
+        --clear $Γv
   ))
 
 /-- `simp_peephole` with no extra user defined theorems. -/
