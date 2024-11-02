@@ -5,8 +5,8 @@ import os
 
 benchmark_dir = "../SSA/Projects/InstCombine/tests/proofs/"
 res_dir = "results/llvm/"
-# dir = 'plots/'
-dir = '../../paper-lean-bitvectors/plots/'
+dir = 'plots/'
+# dir = '../../paper-lean-bitvectors/plots/'
 
 
 col = [
