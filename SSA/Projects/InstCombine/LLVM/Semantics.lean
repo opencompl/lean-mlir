@@ -406,11 +406,11 @@ def ashr {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW 
  If the condition is an i1 and it evaluates to 1, the instruction returns the first value argument; otherwise, it returns the second value argument.
 -/
 @[simp_llvm_option]
-def select {w : Nat} (c? : IntW 1) (x? y? : IntW w ) : IntW w :=
-  match c? with
-  | none => none
-  | some 1#1 => x?
-  | some 0#1 => y?
+def select {w : Nat} (c? : IntW 1) (x? y? : IntW w ) : IntW w := do
+  let c ← c?
+  match c with
+  | 1#1 => x?
+  | 0#1 => y?
 
 inductive IntPredicate where
   | eq
