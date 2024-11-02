@@ -130,9 +130,6 @@ def alive_simplifyMulDivRem805 (w : Nat) :
       rw [LLVM.sdiv?_denom_zero_eq_none]
       apply Refinement.none_left
     case neg =>
-      simp only [Bool.false_eq_true, add_tsub_cancel_right, ge_iff_le, false_and, toNat_ofNat,
-        lt_add_iff_pos_left, add_pos_iff, zero_lt_one, or_true, Nat.one_mod_two_pow, _root_.or_self,
-        ↓reduceIte, Option.some_bind]
       rw [BitVec.ult_toNat]
       rw [BitVec.toNat_ofNat]
       cases w'

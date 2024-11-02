@@ -22,7 +22,7 @@ def and? {w : Nat} (x y : BitVec w) : IntW w :=
   pure <| x &&& y
 
 @[simp_llvm_option]
-theorem and?_eq : LLVM.and? a b  = .some (BitVec.and a b) := rfl
+theorem and?_eq : LLVM.and? a b  = .some (a &&& b) := rfl
 
 @[simp_llvm_option]
 def and {w : Nat} (x y : IntW w) : IntW w := do
@@ -39,7 +39,7 @@ def or? {w : Nat} (x y : BitVec w) : IntW w :=
   pure <| x ||| y
 
 @[simp_llvm_option]
-theorem or?_eq : LLVM.or? a b  = .some (BitVec.or a b) := rfl
+theorem or?_eq : LLVM.or? a b  = .some (a ||| b) := rfl
 
 structure DisjointFlag where
   disjoint : Bool := false
@@ -64,7 +64,7 @@ def xor? {w : Nat} (x y : BitVec w) : IntW w :=
   pure <| x ^^^ y
 
 @[simp_llvm_option]
-theorem xor?_eq : LLVM.xor? a b  = .some (BitVec.xor a b) := rfl
+theorem xor?_eq : LLVM.xor? a b  = .some (a ^^^ b) := rfl
 
 @[simp_llvm_option]
 def xor {w : Nat} (x y : IntW w) : IntW w := do
@@ -82,7 +82,7 @@ def add? {w : Nat} (x y : BitVec w) : IntW w :=
   pure <| x + y
 
 @[simp_llvm_option]
-theorem add?_eq : LLVM.add? a b  = .some (BitVec.add a b) := rfl
+theorem add?_eq : LLVM.add? a b  = .some (a + b) := rfl
 
 structure NoWrapFlags where
   nsw : Bool := false
@@ -110,7 +110,7 @@ def sub? {w : Nat} (x y : BitVec w) : IntW w :=
   pure <| x - y
 
 @[simp_llvm_option]
-theorem sub?_eq : LLVM.sub? a b  = .some (BitVec.sub a b) := rfl
+theorem sub?_eq : LLVM.sub? a b  = .some (a - b) := rfl
 
 @[simp_llvm_option]
 def sub {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w := do
@@ -143,7 +143,7 @@ def mul? {w : Nat} (x y : BitVec w) : IntW w :=
   pure <| x * y
 
 @[simp_llvm_option]
-theorem mul?_eq : LLVM.mul? a b  = .some (BitVec.mul a b) := rfl
+theorem mul?_eq : LLVM.mul? a b  = .some (a * b) := rfl
 
 @[simp_llvm_option]
 def mul {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w := do
@@ -543,7 +543,7 @@ def not? {w : Nat} (x : BitVec w) : IntW w := do
   pure (~~~x)
 
 @[simp_llvm_option]
-theorem not?_eq : LLVM.not? a = .some (BitVec.not a) := rfl
+theorem not?_eq : LLVM.not? a = .some (~~~ a) := rfl
 
 @[simp_llvm_option]
 def not {w : Nat} (x : IntW w) : IntW w := do
@@ -555,7 +555,7 @@ def neg? {w : Nat} (x : BitVec w) : IntW w := do
   pure <| (-.) x
 
 @[simp_llvm_option]
-theorem neg?_eq : LLVM.neg? a = .some (BitVec.neg a) := rfl
+theorem neg?_eq : LLVM.neg? a = .some (-a) := rfl
 
 @[simp_llvm_option]
 def neg {w : Nat} (x : IntW w) : IntW w := do

@@ -94,6 +94,9 @@ macro "simp_alive_undef" : tactic =>
         simp (config := {failIfUnchanged := false}) only [
             simp_llvm_option,
             BitVec.Refinement, bind_assoc,
+            Bool.false_eq_true, false_and, reduceIte,
+            (BitVec.ofInt_ofNat),
+            Option.some_bind''
           ]
       )
   )
