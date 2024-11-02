@@ -148,13 +148,13 @@ for file in os.listdir(benchmark_dir):
                             del counter_leanSAT_tot_times_average[-1]
                             del counter_leanSAT_rw_times_average[-1]
                             del counter_leanSAT_sat_times_average[-1]
-                    elif ("error:" in l and "Lean" not in l):
-                        err_locations.append(l.split(" ")[1])
-                        err_msg.append(l.split(" ")[2])
+                    elif (("error:" in l or "PANIC" in l) and "Lean" not in l and r == 0):
+                        err_loc_tot.append(l.split("error: ")[0].split("/")[-1][0:-1])
+                        err_msg_tot.append((l.split("error: ")[1])[0:-1])
                         errs = errs + 1  
-                elif ("error:" in l and "Lean" not in l):
-                    err_locations.append(l.split(" ")[1])
-                    err_msg.append(l.split(" ")[2])
+                elif (("error:" in l or "PANIC" in l) and "Lean" not in l and r == 0):
+                    err_loc_tot.append(l.split("error: ")[0].split("/")[-1][0:-1])
+                    err_msg_tot.append((l.split("error: ")[1])[0:-1])
                     errs = errs + 1  
                 l = res_file.readline()
 
@@ -174,10 +174,6 @@ for file in os.listdir(benchmark_dir):
             counter_leanSAT_rw.append(np.mean(counter_leanSAT_rw_times_average[id]))
             counter_leanSAT_sat.append (np.mean(counter_leanSAT_sat_times_average[id]))
 
-        for el in err_locations:
-            err_loc_tot.append(el.split("/")[-1])
-            err_msg_tot.append(err_msg[err_locations.index(el)])
-
         thmTot += ls 
         errTot += errs
 
@@ -185,12 +181,14 @@ for file in os.listdir(benchmark_dir):
 print("leanSAT and Bitwuzla solved: "+str(len(leanSAT)))
 print("leanSAT and Bitwuzla provided "+str(len(counter_leanSAT))+" counterexamples")
 print("There were "+str(inconsistencies)+" inconsistencies")
-
 print("Errors raised: "+str(errTot))
 
-err_a = np.array(err_loc_tot)
+err_a = np.array(err_msg_tot)
+
 unique_elements, counts = np.unique(err_a, return_counts=True)
-duplicates = unique_elements[counts > 1]
+
+for id, el in enumerate(unique_elements):
+    print("error "+el+" was raised "+str(counts[id])+" times")
 
 df_err = pd.DataFrame({'locations':err_loc_tot, 'err-msg':err_msg_tot})
 
