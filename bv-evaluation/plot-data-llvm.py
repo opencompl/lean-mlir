@@ -62,34 +62,50 @@ print('sat takes on average: '+str(np.mean(ceg_sat))+'%')
 
 # plot
 
-def cumul_solving_time(df, tool1, tool2, bm):
-    fig, ax = plt.subplots()
-    sorted1 = np.sort(df[tool1])
-    sorted2 = np.sort(df[tool2])
-    cumtime1 = [0]
-    cumtime1.extend(np.cumsum(sorted1))
-    cumtime2 = [0]
-    cumtime2.extend(np.cumsum(sorted2))
-    ax.plot(
-        cumtime1,
-        np.arange(0, len(df[tool1]) + 1),
-        marker="o",
-        color=col[0],
-        label=tool1,
-    )
-    ax.plot(
-        cumtime2,
-        np.arange(0, len(df[tool2]) + 1),
-        marker="x",
-        color=col[3],
-        label=tool2,
-    )
-    ax.set_xlabel("Time [ms]")
-    ax.set_ylabel("Problems solved", rotation="horizontal", ha="left", y=1)
-    # ax.set_xscale("log")
-    # ax.set_yscale("log")
-    ax.legend(loc="center right", ncols=1, frameon=False, bbox_to_anchor=(1.2, 0.5))
-    fig.savefig(dir+"cumul_problems_llvm_" + bm.split(".")[0] + ".pdf")
+def cumul_solving_time(df, tool1, tool2, filename):
+    
+    # sort before cumulating 
 
-cumul_solving_time(df, 'bitwuzla', 'leanSAT', 'llvm-cumul.pdf')
-cumul_solving_time(df_ceg, 'bitwuzla', 'leanSAT', 'llvm-ceg-cumul.pdf')
+    sorted1 = np.sort(df['bitwuzla'])
+    sorted2 = np.sort(df['leanSAT'])
+
+    cumtime1 = [0]
+    cumtime1.extend(sorted1)
+    cumtime2 = [0]
+    cumtime2.extend(sorted2)
+
+    if cumtime1[-1]>cumtime2[-1]:
+        tot_time = cumtime1[-1]
+    else:
+        tot_time = cumtime2[-1]
+
+    plt.figure(figsize =(8, 5))
+    plt.rc('axes.spines', **{'bottom':True, 'left':True, 'right':False, 'top':False})
+    plt.plot(cumtime1, np.arange(0, len(sorted1)+1), marker = 'o', color=col[0], label = 'Bitwuzla')
+    plt.plot(cumtime2, np.arange(0, len(sorted2)+1), marker = 'x', color=col[3], label = 'bv_decide')
+
+    # Add labels and title
+    plt.xlabel('Time [ms]', fontsize = 15)
+    plt.ylabel('Problems solved', rotation='horizontal', ha='center', y = 1, fontsize = 15)
+
+    # plt.title('Problems solved - '+tool1+" vs. "+tool2+" "+bm)
+    if tot_time < 250:
+        step = 50
+    elif tot_time < 750:
+        step = 100
+    elif tot_time < 1250:
+        step = 250
+    else:
+        step = 1000
+    plt.xticks(np.arange(0, tot_time+10, step), fontsize=14) 
+    plt.yticks(fontsize=14) 
+
+    plt.legend(frameon=False, fontsize = 15)
+    plt.tight_layout()
+
+    plt.savefig(dir+filename, dpi = 500)
+    plt.close()
+
+
+cumul_solving_time(df, 'bv_decide', 'BitWuzla', 'llvm-cumul.pdf')
+cumul_solving_time(df_ceg, 'bv_decide', 'BitWuzla', 'llvm-ceg-cumul.pdf')
