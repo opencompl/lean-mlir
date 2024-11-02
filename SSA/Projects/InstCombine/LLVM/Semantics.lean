@@ -409,8 +409,8 @@ def ashr {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW 
 def select {w : Nat} (c? : IntW 1) (x? y? : IntW w ) : IntW w :=
   match c? with
   | none => none
-  | some true => x?
-  | some false => y?
+  | some 1#1 => x?
+  | some 0#1 => y?
 
 inductive IntPredicate where
   | eq
