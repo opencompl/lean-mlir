@@ -474,6 +474,15 @@ theorem msb_abs {w : Nat} {x : BitVec w} :
     (x.abs).msb = (if x.msb = true then -x else x).msb := by
   simp [BitVec.abs]
 
+@[simp]
+theorem sdiv_allOnes {w : ℕ} {x : BitVec w} :
+    x.sdiv (BitVec.allOnes w) = -x := by
+  simp only [BitVec.sdiv_eq]
+  by_cases h : w = 0
+  · subst h
+    simp [BitVec.eq_nil x]
+  · rw [BitVec.msb_allOnes (by omega)]
+    by_cases h : x.msb <;> simp [h, BitVec.neg_allOnes]
 end BitVec
 
 namespace Bool
