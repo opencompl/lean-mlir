@@ -160,7 +160,7 @@ def alive_simplifyMulDivRem805 (w : Nat) :
                 ofBool_false, ofNat_eq_ofNat, Nat.reducePow, Fin.mk_one, Fin.isValue, ofFin_ofNat,
                 Option.some.injEq] at hugt
               contradiction
-          rw [LLVM.sdiv?_eq_pure_of_neq_allOnes (hy := by tauto)]
+          rw [LLVM.sdiv?_eq_some_of_neq_allOnes (hy := by tauto)]
           · have hcases := Nat.cases_of_lt_mod_add hugt
               (by simp)
               (by apply BitVec.isLt)
