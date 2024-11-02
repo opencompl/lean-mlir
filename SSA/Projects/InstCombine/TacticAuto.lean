@@ -8,7 +8,7 @@ import SSA.Experimental.Bits.Fast.Tactic
 import SSA.Experimental.Bits.AutoStructs.Tactic
 import SSA.Experimental.Bits.AutoStructs.ForLean
 import Std.Tactic.BVDecide
--- import Leanwuzla
+import Leanwuzla
 
 open Lean
 open Lean.Elab.Tactic
@@ -215,7 +215,7 @@ macro "alive_auto": tactic =>
 macro "bv_compare'": tactic =>
   `(tactic|
       (
-        -- bv_compare -- for evaluating performance
-        bv_decide -- replace this with bv_compare to evaluate performance
+        bv_compare -- for evaluating performance
+        -- bv_decide -- replace this with bv_compare to evaluate performance
       )
    )
