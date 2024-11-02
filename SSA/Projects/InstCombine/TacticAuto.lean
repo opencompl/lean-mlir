@@ -96,7 +96,7 @@ macro "simp_alive_undef" : tactic =>
             BitVec.Refinement, bind_assoc,
             Bool.false_eq_true, false_and, reduceIte,
             (BitVec.ofInt_ofNat),
-            pure_bind
+            Option.some_bind''
           ]
       )
   )

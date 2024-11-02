@@ -525,3 +525,6 @@ theorem not_bne' {a b : Bool} : (!bne a b) = (a == b) := by
   <;> simp
 
 end Bool
+
+theorem Option.some_bind'' (x : α) (f : α → Option β) : some x >>= f = f x := by
+  simp
