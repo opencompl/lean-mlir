@@ -10,15 +10,15 @@ theorem t0_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem n5_thm (e : IntW 8) : sub e (LLVM.and e (const? 8 42)) ⊑ LLVM.and e (const? 8 (-43)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

@@ -11,8 +11,8 @@ theorem add_mask_sign_i32_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_mask_sign_commute_i32_thm (e : IntW 32) :
@@ -21,8 +21,8 @@ theorem add_mask_sign_commute_i32_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_mask_ashr28_i32_thm (e : IntW 32) :
@@ -31,8 +31,8 @@ theorem add_mask_ashr28_i32_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_mask_ashr28_non_pow2_i32_thm (e : IntW 32) :
@@ -42,8 +42,8 @@ theorem add_mask_ashr28_non_pow2_i32_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_mask_ashr27_i32_thm (e : IntW 32) :
@@ -53,7 +53,7 @@ theorem add_mask_ashr27_i32_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

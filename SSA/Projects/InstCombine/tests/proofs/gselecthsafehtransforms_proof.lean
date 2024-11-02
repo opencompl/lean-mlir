@@ -11,8 +11,8 @@ theorem cond_eq_and_const_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem cond_eq_or_const_thm (e e_1 : IntW 8) :
@@ -21,8 +21,8 @@ theorem cond_eq_or_const_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_and_thm (e e_1 : IntW 32) (e_2 : IntW 1) :
@@ -31,8 +31,8 @@ theorem xor_and_thm (e e_1 : IntW 32) (e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_or_thm (e e_1 : IntW 32) (e_2 : IntW 1) :
@@ -41,8 +41,8 @@ theorem xor_or_thm (e e_1 : IntW 32) (e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_orn_cmp_1_logical_thm (e : IntW 1) (e_1 e_2 : IntW 32) :
@@ -51,8 +51,8 @@ theorem and_orn_cmp_1_logical_thm (e : IntW 1) (e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem andn_or_cmp_2_logical_thm (e e_1 : IntW 16) (e_2 : IntW 1) :
@@ -61,8 +61,8 @@ theorem andn_or_cmp_2_logical_thm (e e_1 : IntW 16) (e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem andn_or_cmp_2_partial_logical_thm (e : IntW 1) (e_1 e_2 : IntW 16) :
@@ -71,8 +71,8 @@ theorem andn_or_cmp_2_partial_logical_thm (e : IntW 1) (e_1 e_2 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bools_logical_commute0_thm (e e_1 e_2 : IntW 1) :
@@ -81,8 +81,8 @@ theorem bools_logical_commute0_thm (e e_1 e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bools_logical_commute0_and1_thm (e e_1 e_2 : IntW 1) :
@@ -90,8 +90,8 @@ theorem bools_logical_commute0_and1_thm (e e_1 e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bools_logical_commute0_and2_thm (e e_1 e_2 : IntW 1) :
@@ -99,8 +99,8 @@ theorem bools_logical_commute0_and2_thm (e e_1 e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bools_logical_commute0_and1_and2_thm (e e_1 e_2 : IntW 1) :
@@ -108,8 +108,8 @@ theorem bools_logical_commute0_and1_and2_thm (e e_1 e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bools_logical_commute1_thm (e e_1 e_2 : IntW 1) :
@@ -118,8 +118,8 @@ theorem bools_logical_commute1_thm (e e_1 e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bools_logical_commute1_and2_thm (e e_1 e_2 : IntW 1) :
@@ -127,8 +127,8 @@ theorem bools_logical_commute1_and2_thm (e e_1 e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bools_logical_commute3_and2_thm (e e_1 e_2 : IntW 1) :
@@ -136,8 +136,8 @@ theorem bools_logical_commute3_and2_thm (e e_1 e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bools2_logical_commute0_thm (e e_1 e_2 : IntW 1) :
@@ -146,8 +146,8 @@ theorem bools2_logical_commute0_thm (e e_1 e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bools2_logical_commute0_and1_thm (e e_1 e_2 : IntW 1) :
@@ -155,8 +155,8 @@ theorem bools2_logical_commute0_and1_thm (e e_1 e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bools2_logical_commute0_and2_thm (e e_1 e_2 : IntW 1) :
@@ -164,8 +164,8 @@ theorem bools2_logical_commute0_and2_thm (e e_1 e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bools2_logical_commute0_and1_and2_thm (e e_1 e_2 : IntW 1) :
@@ -173,8 +173,8 @@ theorem bools2_logical_commute0_and1_and2_thm (e e_1 e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bools2_logical_commute1_thm (e e_1 e_2 : IntW 1) :
@@ -183,8 +183,8 @@ theorem bools2_logical_commute1_thm (e e_1 e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bools2_logical_commute1_and1_thm (e e_1 e_2 : IntW 1) :
@@ -192,8 +192,8 @@ theorem bools2_logical_commute1_and1_thm (e e_1 e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bools2_logical_commute1_and2_thm (e e_1 e_2 : IntW 1) :
@@ -201,8 +201,8 @@ theorem bools2_logical_commute1_and2_thm (e e_1 e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bools2_logical_commute1_and1_and2_thm (e e_1 e_2 : IntW 1) :
@@ -210,8 +210,8 @@ theorem bools2_logical_commute1_and1_and2_thm (e e_1 e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bools2_logical_commute2_thm (e e_1 e_2 : IntW 1) :
@@ -220,8 +220,8 @@ theorem bools2_logical_commute2_thm (e e_1 e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bools2_logical_commute2_and1_thm (e e_1 e_2 : IntW 1) :
@@ -229,8 +229,8 @@ theorem bools2_logical_commute2_and1_thm (e e_1 e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bools2_logical_commute3_nopoison_thm (e e_1 e_2 : IntW 1) :
@@ -239,8 +239,8 @@ theorem bools2_logical_commute3_nopoison_thm (e e_1 e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bools2_logical_commute3_and1_thm (e e_1 e_2 : IntW 1) :
@@ -248,8 +248,8 @@ theorem bools2_logical_commute3_and1_thm (e e_1 e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem orn_and_cmp_1_logical_thm (e : IntW 1) (e_1 e_2 : IntW 37) :
@@ -258,8 +258,8 @@ theorem orn_and_cmp_1_logical_thm (e : IntW 1) (e_1 e_2 : IntW 37) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem orn_and_cmp_2_logical_thm (e e_1 : IntW 16) (e_2 : IntW 1) :
@@ -268,8 +268,8 @@ theorem orn_and_cmp_2_logical_thm (e e_1 : IntW 16) (e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem orn_and_cmp_2_partial_logical_thm (e : IntW 1) (e_1 e_2 : IntW 16) :
@@ -278,7 +278,7 @@ theorem orn_and_cmp_2_partial_logical_thm (e : IntW 1) (e_1 e_2 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

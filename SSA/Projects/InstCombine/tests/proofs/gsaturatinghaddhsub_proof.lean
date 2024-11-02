@@ -11,8 +11,8 @@ theorem test_simplify_decrement_invalid_ne_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_invalid_simplify_sub2_thm (e : IntW 8) :
@@ -21,8 +21,8 @@ theorem test_invalid_simplify_sub2_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_invalid_simplify_eq2_thm (e : IntW 8) :
@@ -31,8 +31,8 @@ theorem test_invalid_simplify_eq2_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_invalid_simplify_select_1_thm (e : IntW 8) :
@@ -41,8 +41,8 @@ theorem test_invalid_simplify_select_1_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_invalid_simplify_other_thm (e e_1 : IntW 8) :
@@ -51,8 +51,8 @@ theorem test_invalid_simplify_other_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem uadd_sat_flipped_wrong_bounds_thm (e : IntW 32) :
@@ -61,8 +61,8 @@ theorem uadd_sat_flipped_wrong_bounds_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem uadd_sat_flipped_wrong_bounds4_thm (e : IntW 32) :
@@ -71,8 +71,8 @@ theorem uadd_sat_flipped_wrong_bounds4_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem uadd_sat_flipped_wrong_bounds6_thm (e : IntW 32) :
@@ -81,8 +81,8 @@ theorem uadd_sat_flipped_wrong_bounds6_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem uadd_sat_flipped_wrong_bounds7_thm (e : IntW 32) :
@@ -91,8 +91,8 @@ theorem uadd_sat_flipped_wrong_bounds7_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem uadd_sat_canon_nuw_thm (e e_1 : IntW 32) :
@@ -102,8 +102,8 @@ theorem uadd_sat_canon_nuw_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem uadd_sat_canon_y_nuw_thm (e e_1 : IntW 32) :
@@ -113,8 +113,8 @@ theorem uadd_sat_canon_y_nuw_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem uadd_sat_via_add_nonstrict_thm (e e_1 : IntW 32) :
@@ -123,8 +123,8 @@ theorem uadd_sat_via_add_nonstrict_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem uadd_sat_via_add_swapped_cmp_nonstrict_thm (e e_1 : IntW 32) :
@@ -133,7 +133,7 @@ theorem uadd_sat_via_add_swapped_cmp_nonstrict_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

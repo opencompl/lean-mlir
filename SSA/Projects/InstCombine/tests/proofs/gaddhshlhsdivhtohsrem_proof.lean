@@ -10,8 +10,8 @@ theorem addhshlhsdivhscalar0_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem addhshlhsdivhscalar1_thm (e : IntW 8) :
@@ -19,8 +19,8 @@ theorem addhshlhsdivhscalar1_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem addhshlhsdivhscalar2_thm (e : IntW 32) :
@@ -28,8 +28,8 @@ theorem addhshlhsdivhscalar2_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem addhshlhsdivhnegative0_thm (e : IntW 8) :
@@ -38,8 +38,8 @@ theorem addhshlhsdivhnegative0_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem addhshlhsdivhnegative1_thm (e : IntW 32) :
@@ -47,8 +47,8 @@ theorem addhshlhsdivhnegative1_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem addhshlhsdivhnegative2_thm (e : IntW 32) :
@@ -57,7 +57,7 @@ theorem addhshlhsdivhnegative2_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

@@ -10,8 +10,8 @@ theorem shl_or_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lshr_or_thm (e : IntW 8) :
@@ -19,8 +19,8 @@ theorem lshr_or_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_or_thm (e : IntW 8) :
@@ -28,8 +28,8 @@ theorem ashr_or_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem shl_xor_thm (e : IntW 8) :
@@ -37,8 +37,8 @@ theorem shl_xor_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lshr_xor_thm (e : IntW 8) :
@@ -46,8 +46,8 @@ theorem lshr_xor_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_xor_thm (e : IntW 8) :
@@ -55,8 +55,8 @@ theorem ashr_xor_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem shl_and_thm (e : IntW 8) :
@@ -64,8 +64,8 @@ theorem shl_and_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lshr_and_thm (e : IntW 8) :
@@ -73,8 +73,8 @@ theorem lshr_and_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_and_thm (e : IntW 8) :
@@ -82,8 +82,8 @@ theorem ashr_and_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem shl_add_thm (e : IntW 8) :
@@ -91,8 +91,8 @@ theorem shl_add_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lshr_add_fail_thm (e : IntW 8) :
@@ -101,8 +101,8 @@ theorem lshr_add_fail_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem shl_or_commuted_thm (e : IntW 8) :
@@ -110,8 +110,8 @@ theorem shl_or_commuted_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem shl_or_with_or_disjoint_instead_of_add_thm (e : IntW 8) :
@@ -119,7 +119,7 @@ theorem shl_or_with_or_disjoint_instead_of_add_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

@@ -12,8 +12,8 @@ theorem sel_false_val_is_a_masked_shl_of_true_val1_thm (e : IntW 64) (e_1 : IntW
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sel_false_val_is_a_masked_shl_of_true_val2_thm (e : IntW 64) (e_1 : IntW 32) :
@@ -25,8 +25,8 @@ theorem sel_false_val_is_a_masked_shl_of_true_val2_thm (e : IntW 64) (e_1 : IntW
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sel_false_val_is_a_masked_lshr_of_true_val1_thm (e : IntW 64) (e_1 : IntW 32) :
@@ -36,8 +36,8 @@ theorem sel_false_val_is_a_masked_lshr_of_true_val1_thm (e : IntW 64) (e_1 : Int
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sel_false_val_is_a_masked_lshr_of_true_val2_thm (e : IntW 64) (e_1 : IntW 32) :
@@ -47,8 +47,8 @@ theorem sel_false_val_is_a_masked_lshr_of_true_val2_thm (e : IntW 64) (e_1 : Int
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sel_false_val_is_a_masked_ashr_of_true_val1_thm (e : IntW 64) (e_1 : IntW 32) :
@@ -58,8 +58,8 @@ theorem sel_false_val_is_a_masked_ashr_of_true_val1_thm (e : IntW 64) (e_1 : Int
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sel_false_val_is_a_masked_ashr_of_true_val2_thm (e : IntW 64) (e_1 : IntW 32) :
@@ -69,7 +69,7 @@ theorem sel_false_val_is_a_masked_ashr_of_true_val2_thm (e : IntW 64) (e_1 : Int
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

@@ -10,8 +10,8 @@ theorem test1_thm (e : IntW 64) (e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test2_thm (e : IntW 32) :
@@ -19,8 +19,8 @@ theorem test2_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test3_thm (e : IntW 32) :
@@ -29,8 +29,8 @@ theorem test3_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test4_thm (e : IntW 32) :
@@ -38,8 +38,8 @@ theorem test4_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test9_thm (e : IntW 16) :
@@ -47,8 +47,8 @@ theorem test9_thm (e : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test10_thm (e e_1 : IntW 32) :
@@ -58,8 +58,8 @@ theorem test10_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test11_thm (e e_1 : IntW 32) :
@@ -68,8 +68,8 @@ theorem test11_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test12_thm (e e_1 : IntW 32) :
@@ -79,8 +79,8 @@ theorem test12_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test13_thm (e e_1 : IntW 32) :
@@ -89,8 +89,8 @@ theorem test13_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test14_thm (e e_1 : IntW 32) :
@@ -100,8 +100,8 @@ theorem test14_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test15_thm (e e_1 : IntW 32) :
@@ -110,8 +110,8 @@ theorem test15_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test16_thm (e e_1 : IntW 32) :
@@ -121,8 +121,8 @@ theorem test16_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test17_thm (e e_1 : IntW 32) :
@@ -132,8 +132,8 @@ theorem test17_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test18_thm (e e_1 : IntW 32) :
@@ -143,8 +143,8 @@ theorem test18_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_nsw_mul_nsw_thm (e : IntW 16) :
@@ -153,8 +153,8 @@ theorem add_nsw_mul_nsw_thm (e : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem mul_add_to_mul_1_thm (e : IntW 16) :
@@ -163,8 +163,8 @@ theorem mul_add_to_mul_1_thm (e : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem mul_add_to_mul_2_thm (e : IntW 16) :
@@ -173,8 +173,8 @@ theorem mul_add_to_mul_2_thm (e : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem mul_add_to_mul_3_thm (e : IntW 16) :
@@ -182,8 +182,8 @@ theorem mul_add_to_mul_3_thm (e : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem mul_add_to_mul_4_thm (e : IntW 16) :
@@ -193,8 +193,8 @@ theorem mul_add_to_mul_4_thm (e : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem mul_add_to_mul_5_thm (e : IntW 16) :
@@ -204,8 +204,8 @@ theorem mul_add_to_mul_5_thm (e : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem mul_add_to_mul_6_thm (e e_1 : IntW 32) :
@@ -216,8 +216,8 @@ theorem mul_add_to_mul_6_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem mul_add_to_mul_7_thm (e : IntW 16) :
@@ -226,8 +226,8 @@ theorem mul_add_to_mul_7_thm (e : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem mul_add_to_mul_8_thm (e : IntW 16) :
@@ -237,8 +237,8 @@ theorem mul_add_to_mul_8_thm (e : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem mul_add_to_mul_9_thm (e : IntW 16) :
@@ -248,40 +248,40 @@ theorem mul_add_to_mul_9_thm (e : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_or_and_thm (e e_1 : IntW 32) : add (LLVM.or e_1 e) (LLVM.and e_1 e) ⊑ add e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_or_and_commutative_thm (e e_1 : IntW 32) : add (LLVM.or e_1 e) (LLVM.and e e_1) ⊑ add e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_and_or_thm (e e_1 : IntW 32) : add (LLVM.and e_1 e) (LLVM.or e_1 e) ⊑ add e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_and_or_commutative_thm (e e_1 : IntW 32) : add (LLVM.and e_1 e) (LLVM.or e e_1) ⊑ add e e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_nsw_or_and_thm (e e_1 : IntW 32) :
@@ -290,8 +290,8 @@ theorem add_nsw_or_and_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_nuw_or_and_thm (e e_1 : IntW 32) :
@@ -300,8 +300,8 @@ theorem add_nuw_or_and_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_nuw_nsw_or_and_thm (e e_1 : IntW 32) :
@@ -310,8 +310,8 @@ theorem add_nuw_nsw_or_and_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_of_mul_thm (e e_1 e_2 : IntW 8) :
@@ -321,8 +321,8 @@ theorem add_of_mul_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_of_selects_thm (e : IntW 32) (e_1 : IntW 1) :
@@ -330,8 +330,8 @@ theorem add_of_selects_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_undemanded_low_bits_thm (e : IntW 32) :
@@ -340,8 +340,8 @@ theorem add_undemanded_low_bits_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sub_undemanded_low_bits_thm (e : IntW 32) :
@@ -350,7 +350,7 @@ theorem sub_undemanded_low_bits_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

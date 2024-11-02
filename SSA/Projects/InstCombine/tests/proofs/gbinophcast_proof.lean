@@ -9,24 +9,24 @@ theorem and_sext_to_sel_thm (e : IntW 32) (e_1 : IntW 1) : LLVM.and (sext 32 e_1
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem or_sext_to_sel_thm (e : IntW 32) (e_1 : IntW 1) : LLVM.or (sext 32 e_1) e ⊑ select e_1 (const? 32 (-1)) e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_sext_to_sel_thm (e : IntW 32) (e_1 : IntW 1) : LLVM.xor (sext 32 e_1) e ⊑ LLVM.xor e (sext 32 e_1) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_add_bool_to_select_thm (e : IntW 32) (e_1 : IntW 1) :
@@ -34,8 +34,8 @@ theorem and_add_bool_to_select_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_add_bool_no_fold_thm (e : IntW 32) :
@@ -44,8 +44,8 @@ theorem and_add_bool_no_fold_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_add_bool_to_select_multi_use_thm (e : IntW 32) (e_1 : IntW 1) :
@@ -54,7 +54,7 @@ theorem and_add_bool_to_select_multi_use_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

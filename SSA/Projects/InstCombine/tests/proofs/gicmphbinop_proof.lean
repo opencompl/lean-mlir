@@ -10,8 +10,8 @@ theorem mul_unkV_oddC_eq_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem mul_unkV_oddC_sge_thm (e : IntW 8) :
@@ -20,8 +20,8 @@ theorem mul_unkV_oddC_sge_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem mul_unkV_evenC_ne_thm (e : IntW 64) :
@@ -30,8 +30,8 @@ theorem mul_unkV_evenC_ne_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem mul_setnzV_unkV_nuw_eq_thm (e e_1 : IntW 8) :
@@ -40,7 +40,7 @@ theorem mul_setnzV_unkV_nuw_eq_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

@@ -9,8 +9,8 @@ theorem test_sext_zext_thm (e : IntW 16) : sext 64 (zext 32 e) ⊑ zext 64 e := 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_cast_select_thm (e : IntW 1) :
@@ -18,7 +18,7 @@ theorem test_cast_select_thm (e : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

@@ -11,7 +11,7 @@ theorem cmp_x_and_negp2_with_eq_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

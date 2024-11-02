@@ -11,8 +11,8 @@ theorem scalar_i8_lshr_and_negC_eq_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem scalar_i16_lshr_and_negC_eq_thm (e e_1 : IntW 16) :
@@ -21,8 +21,8 @@ theorem scalar_i16_lshr_and_negC_eq_thm (e e_1 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem scalar_i32_lshr_and_negC_eq_thm (e e_1 : IntW 32) :
@@ -31,8 +31,8 @@ theorem scalar_i32_lshr_and_negC_eq_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem scalar_i64_lshr_and_negC_eq_thm (e e_1 : IntW 64) :
@@ -41,8 +41,8 @@ theorem scalar_i64_lshr_and_negC_eq_thm (e e_1 : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem scalar_i32_lshr_and_negC_ne_thm (e e_1 : IntW 32) :
@@ -51,8 +51,8 @@ theorem scalar_i32_lshr_and_negC_ne_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem scalar_i32_lshr_and_negC_eq_X_is_constant1_thm (e : IntW 32) :
@@ -61,8 +61,8 @@ theorem scalar_i32_lshr_and_negC_eq_X_is_constant1_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem scalar_i32_lshr_and_negC_eq_X_is_constant2_thm (e : IntW 32) :
@@ -71,8 +71,8 @@ theorem scalar_i32_lshr_and_negC_eq_X_is_constant2_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem scalar_i32_udiv_and_negC_eq_X_is_constant3_thm (e : IntW 32) :
@@ -81,8 +81,8 @@ theorem scalar_i32_udiv_and_negC_eq_X_is_constant3_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem scalar_i32_lshr_and_negC_slt_thm (e e_1 : IntW 32) :
@@ -91,8 +91,8 @@ theorem scalar_i32_lshr_and_negC_slt_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem scalar_i32_lshr_and_negC_eq_nonzero_thm (e e_1 : IntW 32) :
@@ -100,8 +100,8 @@ theorem scalar_i32_lshr_and_negC_eq_nonzero_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem scalar_i8_lshr_and_negC_eq_not_negatedPowerOf2_thm (e e_1 : IntW 8) :
@@ -110,7 +110,7 @@ theorem scalar_i8_lshr_and_negC_eq_not_negatedPowerOf2_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

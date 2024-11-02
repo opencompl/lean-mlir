@@ -11,8 +11,8 @@ theorem test_xor_ne_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_xor_eq_thm (e e_1 e_2 : IntW 8) :
@@ -21,8 +21,8 @@ theorem test_xor_eq_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_slt_xor_thm (e e_1 : IntW 32) :
@@ -31,8 +31,8 @@ theorem test_slt_xor_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_sle_xor_thm (e e_1 : IntW 32) :
@@ -41,8 +41,8 @@ theorem test_sle_xor_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_sgt_xor_thm (e e_1 : IntW 32) :
@@ -51,8 +51,8 @@ theorem test_sgt_xor_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_sge_xor_thm (e e_1 : IntW 32) :
@@ -61,8 +61,8 @@ theorem test_sge_xor_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_ult_xor_thm (e e_1 : IntW 32) :
@@ -71,8 +71,8 @@ theorem test_ult_xor_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_ule_xor_thm (e e_1 : IntW 32) :
@@ -81,8 +81,8 @@ theorem test_ule_xor_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_ugt_xor_thm (e e_1 : IntW 32) :
@@ -91,8 +91,8 @@ theorem test_ugt_xor_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_uge_xor_thm (e e_1 : IntW 32) :
@@ -101,8 +101,8 @@ theorem test_uge_xor_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_sge_thm (e e_1 : IntW 8) :
@@ -111,7 +111,7 @@ theorem xor_sge_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

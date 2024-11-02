@@ -9,16 +9,16 @@ theorem test1_thm (e : IntW 32) : LLVM.srem e (const? 32 1) ⊑ const? 32 0 := b
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test3_thm (e : IntW 32) : urem e (const? 32 8) ⊑ LLVM.and e (const? 32 7) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test3a_thm (e : IntW 32) :
@@ -27,8 +27,8 @@ theorem test3a_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test4_thm (e : IntW 1) (e_1 : IntW 32) :
@@ -36,8 +36,8 @@ theorem test4_thm (e : IntW 1) (e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test5_thm (e : IntW 8) (e_1 : IntW 32) :
@@ -46,32 +46,32 @@ theorem test5_thm (e : IntW 8) (e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test7_thm (e : IntW 32) : LLVM.srem (mul e (const? 32 8)) (const? 32 4) ⊑ const? 32 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test8_thm (e : IntW 32) : LLVM.srem (shl e (const? 32 4)) (const? 32 8) ⊑ const? 32 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test9_thm (e : IntW 32) : urem (mul e (const? 32 64)) (const? 32 32) ⊑ const? 32 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test10_thm (e : IntW 8) :
@@ -79,8 +79,8 @@ theorem test10_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test11_thm (e : IntW 32) :
@@ -88,24 +88,24 @@ theorem test11_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test12_thm (e : IntW 32) : LLVM.srem (LLVM.and e (const? 32 (-4))) (const? 32 2) ⊑ const? 32 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test13_thm (e : IntW 32) : LLVM.srem e e ⊑ const? 32 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test14_thm (e : IntW 32) (e_1 : IntW 64) :
@@ -116,8 +116,8 @@ theorem test14_thm (e : IntW 32) (e_1 : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test15_thm (e e_1 : IntW 32) :
@@ -127,8 +127,8 @@ theorem test15_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test16_thm (e e_1 : IntW 32) :
@@ -137,16 +137,16 @@ theorem test16_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test17_thm (e : IntW 32) : urem (const? 32 1) e ⊑ zext 32 (icmp IntPredicate.ne e (const? 32 1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test18_thm (e : IntW 16) (e_1 : IntW 32) :
@@ -156,8 +156,8 @@ theorem test18_thm (e : IntW 16) (e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test19_thm (e e_1 : IntW 32) :
@@ -172,8 +172,8 @@ theorem test19_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test19_commutative0_thm (e e_1 : IntW 32) :
@@ -188,8 +188,8 @@ theorem test19_commutative0_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test19_commutative1_thm (e e_1 : IntW 32) :
@@ -203,8 +203,8 @@ theorem test19_commutative1_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test19_commutative2_thm (e e_1 : IntW 32) :
@@ -218,8 +218,8 @@ theorem test19_commutative2_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test22_thm (e : IntW 32) :
@@ -228,8 +228,8 @@ theorem test22_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test24_thm (e : IntW 32) :
@@ -238,8 +238,8 @@ theorem test24_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test25_thm (e : IntW 32) :
@@ -248,8 +248,8 @@ theorem test25_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test26_thm (e e_1 : IntW 32) :
@@ -260,8 +260,8 @@ theorem test26_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test28_thm (e : IntW 32) :
@@ -270,8 +270,8 @@ theorem test28_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem positive_and_odd_eq_thm (e : IntW 32) :
@@ -280,8 +280,8 @@ theorem positive_and_odd_eq_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem positive_and_odd_ne_thm (e : IntW 32) :
@@ -290,8 +290,8 @@ theorem positive_and_odd_ne_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem srem_constant_dividend_select_of_constants_divisor_thm (e : IntW 1) :
@@ -299,8 +299,8 @@ theorem srem_constant_dividend_select_of_constants_divisor_thm (e : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem srem_constant_dividend_select_of_constants_divisor_0_arm_thm (e : IntW 1) :
@@ -308,8 +308,8 @@ theorem srem_constant_dividend_select_of_constants_divisor_0_arm_thm (e : IntW 1
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem urem_constant_dividend_select_of_constants_divisor_thm (e : IntW 1) :
@@ -317,15 +317,15 @@ theorem urem_constant_dividend_select_of_constants_divisor_thm (e : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem urem_constant_dividend_select_of_constants_divisor_0_arm_thm (e : IntW 1) : urem (const? 32 42) (select e (const? 32 12) (const? 32 0)) ⊑ const? 32 6 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

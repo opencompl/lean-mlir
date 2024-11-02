@@ -10,8 +10,8 @@ theorem narrow_sext_and_thm (e : IntW 32) (e_1 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem narrow_zext_and_thm (e : IntW 32) (e_1 : IntW 16) :
@@ -19,8 +19,8 @@ theorem narrow_zext_and_thm (e : IntW 32) (e_1 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem narrow_sext_or_thm (e : IntW 32) (e_1 : IntW 16) :
@@ -28,8 +28,8 @@ theorem narrow_sext_or_thm (e : IntW 32) (e_1 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem narrow_zext_or_thm (e : IntW 32) (e_1 : IntW 16) :
@@ -37,8 +37,8 @@ theorem narrow_zext_or_thm (e : IntW 32) (e_1 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem narrow_sext_xor_thm (e : IntW 32) (e_1 : IntW 16) :
@@ -46,8 +46,8 @@ theorem narrow_sext_xor_thm (e : IntW 32) (e_1 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem narrow_zext_xor_thm (e : IntW 32) (e_1 : IntW 16) :
@@ -55,56 +55,56 @@ theorem narrow_zext_xor_thm (e : IntW 32) (e_1 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem narrow_sext_add_thm (e : IntW 32) (e_1 : IntW 16) : trunc 16 (add (sext 32 e_1) e) ⊑ add e_1 (trunc 16 e) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem narrow_zext_add_thm (e : IntW 32) (e_1 : IntW 16) : trunc 16 (add (zext 32 e_1) e) ⊑ add e_1 (trunc 16 e) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem narrow_sext_sub_thm (e : IntW 32) (e_1 : IntW 16) : trunc 16 (sub (sext 32 e_1) e) ⊑ sub e_1 (trunc 16 e) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem narrow_zext_sub_thm (e : IntW 32) (e_1 : IntW 16) : trunc 16 (sub (zext 32 e_1) e) ⊑ sub e_1 (trunc 16 e) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem narrow_sext_mul_thm (e : IntW 32) (e_1 : IntW 16) : trunc 16 (mul (sext 32 e_1) e) ⊑ mul e_1 (trunc 16 e) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem narrow_zext_mul_thm (e : IntW 32) (e_1 : IntW 16) : trunc 16 (mul (zext 32 e_1) e) ⊑ mul e_1 (trunc 16 e) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem narrow_zext_ashr_keep_trunc_thm (e e_1 : IntW 8) :
@@ -113,8 +113,8 @@ theorem narrow_zext_ashr_keep_trunc_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem narrow_zext_ashr_keep_trunc2_thm (e e_1 : IntW 9) :
@@ -123,8 +123,8 @@ theorem narrow_zext_ashr_keep_trunc2_thm (e e_1 : IntW 9) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem narrow_zext_ashr_keep_trunc3_thm (e e_1 : IntW 8) :
@@ -133,8 +133,8 @@ theorem narrow_zext_ashr_keep_trunc3_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem dont_narrow_zext_ashr_keep_trunc_thm (e e_1 : IntW 8) :
@@ -143,7 +143,7 @@ theorem dont_narrow_zext_ashr_keep_trunc_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

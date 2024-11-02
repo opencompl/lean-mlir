@@ -9,15 +9,15 @@ theorem test_thm (e : IntW 32) : ashr (ashr e (const? 32 17)) (const? 32 17) ⊑
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test2_thm (e : IntW 32) : shl (shl e (const? 32 17)) (const? 32 17) ⊑ const? 32 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

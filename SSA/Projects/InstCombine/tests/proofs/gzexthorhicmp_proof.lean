@@ -12,8 +12,8 @@ theorem zext_or_eq_ult_add_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem select_zext_or_eq_ult_add_thm (e : IntW 32) :
@@ -23,7 +23,7 @@ theorem select_zext_or_eq_ult_add_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

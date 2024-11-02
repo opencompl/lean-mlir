@@ -10,8 +10,8 @@ theorem udiv_common_divisor_thm (e e_1 e_2 : IntW 5) (e_3 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem urem_common_divisor_thm (e e_1 e_2 : IntW 5) (e_3 : IntW 1) :
@@ -19,8 +19,8 @@ theorem urem_common_divisor_thm (e e_1 e_2 : IntW 5) (e_3 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sdiv_common_divisor_defined_cond_thm (e e_1 e_2 : IntW 5) (e_3 : IntW 1) :
@@ -28,8 +28,8 @@ theorem sdiv_common_divisor_defined_cond_thm (e e_1 e_2 : IntW 5) (e_3 : IntW 1)
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem srem_common_divisor_defined_cond_thm (e e_1 e_2 : IntW 5) (e_3 : IntW 1) :
@@ -37,8 +37,8 @@ theorem srem_common_divisor_defined_cond_thm (e e_1 e_2 : IntW 5) (e_3 : IntW 1)
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem udiv_common_divisor_defined_cond_thm (e e_1 e_2 : IntW 5) (e_3 : IntW 1) :
@@ -46,8 +46,8 @@ theorem udiv_common_divisor_defined_cond_thm (e e_1 e_2 : IntW 5) (e_3 : IntW 1)
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem urem_common_divisor_defined_cond_thm (e e_1 e_2 : IntW 5) (e_3 : IntW 1) :
@@ -55,8 +55,8 @@ theorem urem_common_divisor_defined_cond_thm (e e_1 e_2 : IntW 5) (e_3 : IntW 1)
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sdiv_common_dividend_defined_cond_thm (e e_1 e_2 : IntW 5) (e_3 : IntW 1) :
@@ -64,8 +64,8 @@ theorem sdiv_common_dividend_defined_cond_thm (e e_1 e_2 : IntW 5) (e_3 : IntW 1
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem srem_common_dividend_defined_cond_thm (e e_1 e_2 : IntW 5) (e_3 : IntW 1) :
@@ -73,8 +73,8 @@ theorem srem_common_dividend_defined_cond_thm (e e_1 e_2 : IntW 5) (e_3 : IntW 1
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem udiv_common_dividend_defined_cond_thm (e e_1 e_2 : IntW 5) (e_3 : IntW 1) :
@@ -82,8 +82,8 @@ theorem udiv_common_dividend_defined_cond_thm (e e_1 e_2 : IntW 5) (e_3 : IntW 1
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem urem_common_dividend_defined_cond_thm (e e_1 e_2 : IntW 5) (e_3 : IntW 1) :
@@ -91,8 +91,8 @@ theorem urem_common_dividend_defined_cond_thm (e e_1 e_2 : IntW 5) (e_3 : IntW 1
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem rem_euclid_1_thm (e : IntW 32) :
@@ -102,8 +102,8 @@ theorem rem_euclid_1_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem rem_euclid_2_thm (e : IntW 32) :
@@ -113,8 +113,8 @@ theorem rem_euclid_2_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem rem_euclid_wrong_sign_test_thm (e : IntW 32) :
@@ -126,8 +126,8 @@ theorem rem_euclid_wrong_sign_test_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem rem_euclid_add_different_const_thm (e : IntW 32) :
@@ -139,8 +139,8 @@ theorem rem_euclid_add_different_const_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem rem_euclid_wrong_operands_select_thm (e : IntW 32) :
@@ -151,8 +151,8 @@ theorem rem_euclid_wrong_operands_select_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem rem_euclid_i128_thm (e : IntW 128) :
@@ -162,8 +162,8 @@ theorem rem_euclid_i128_thm (e : IntW 128) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem rem_euclid_non_const_pow2_thm (e e_1 : IntW 8) :
@@ -173,8 +173,8 @@ theorem rem_euclid_non_const_pow2_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem rem_euclid_pow2_true_arm_folded_thm (e : IntW 32) :
@@ -183,8 +183,8 @@ theorem rem_euclid_pow2_true_arm_folded_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem rem_euclid_pow2_false_arm_folded_thm (e : IntW 32) :
@@ -193,8 +193,8 @@ theorem rem_euclid_pow2_false_arm_folded_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem pr89516_thm (e e_1 : IntW 8) :
@@ -209,7 +209,7 @@ theorem pr89516_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

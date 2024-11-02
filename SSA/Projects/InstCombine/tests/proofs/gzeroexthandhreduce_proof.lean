@@ -9,7 +9,7 @@ theorem test1_thm (e : IntW 8) : LLVM.and (zext 32 e) (const? 32 65544) ⊑ zext
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

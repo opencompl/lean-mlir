@@ -11,8 +11,8 @@ theorem test1_thm (e : IntW 17) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test2_thm (e : IntW 167) :
@@ -21,7 +21,7 @@ theorem test2_thm (e : IntW 167) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

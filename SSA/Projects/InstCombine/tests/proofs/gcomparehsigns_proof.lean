@@ -11,8 +11,8 @@ theorem test1_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test2_thm (e e_1 : IntW 32) :
@@ -21,8 +21,8 @@ theorem test2_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test3_thm (e e_1 : IntW 32) :
@@ -31,8 +31,8 @@ theorem test3_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test3i_thm (e e_1 : IntW 32) :
@@ -43,8 +43,8 @@ theorem test3i_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test4a_thm (e : IntW 32) :
@@ -53,8 +53,8 @@ theorem test4a_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test4b_thm (e : IntW 64) :
@@ -63,8 +63,8 @@ theorem test4b_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test4c_thm (e : IntW 64) :
@@ -74,8 +74,8 @@ theorem test4c_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem shift_trunc_signbit_test_thm (e : IntW 32) :
@@ -83,8 +83,8 @@ theorem shift_trunc_signbit_test_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem shift_trunc_wrong_shift_thm (e : IntW 32) :
@@ -93,7 +93,7 @@ theorem shift_trunc_wrong_shift_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

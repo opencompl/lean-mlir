@@ -11,8 +11,8 @@ theorem sub_ashr_and_i8_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sub_ashr_and_i16_thm (e e_1 : IntW 16) :
@@ -21,8 +21,8 @@ theorem sub_ashr_and_i16_thm (e e_1 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sub_ashr_and_i32_thm (e e_1 : IntW 32) :
@@ -31,8 +31,8 @@ theorem sub_ashr_and_i32_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sub_ashr_and_i64_thm (e e_1 : IntW 64) :
@@ -41,8 +41,8 @@ theorem sub_ashr_and_i64_thm (e e_1 : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sub_ashr_and_i32_nuw_nsw_thm (e e_1 : IntW 32) :
@@ -51,8 +51,8 @@ theorem sub_ashr_and_i32_nuw_nsw_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sub_ashr_and_i32_commute_thm (e e_1 : IntW 32) :
@@ -61,7 +61,7 @@ theorem sub_ashr_and_i32_commute_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

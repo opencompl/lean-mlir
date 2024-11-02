@@ -10,8 +10,8 @@ theorem sel_sext_constants_thm (e : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sel_zext_constants_thm (e : IntW 1) :
@@ -19,8 +19,8 @@ theorem sel_zext_constants_thm (e : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sel_sext_thm (e : IntW 32) (e_1 : IntW 1) :
@@ -28,8 +28,8 @@ theorem sel_sext_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sel_zext_thm (e : IntW 32) (e_1 : IntW 1) :
@@ -37,8 +37,8 @@ theorem sel_zext_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_sel_larger_sext_thm (e : IntW 32) (e_1 : IntW 1) :
@@ -46,8 +46,8 @@ theorem trunc_sel_larger_sext_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_sel_smaller_sext_thm (e : IntW 64) (e_1 : IntW 1) :
@@ -55,8 +55,8 @@ theorem trunc_sel_smaller_sext_thm (e : IntW 64) (e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_sel_equal_sext_thm (e : IntW 32) (e_1 : IntW 1) :
@@ -65,8 +65,8 @@ theorem trunc_sel_equal_sext_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_sel_larger_zext_thm (e : IntW 32) (e_1 : IntW 1) :
@@ -75,8 +75,8 @@ theorem trunc_sel_larger_zext_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_sel_smaller_zext_thm (e : IntW 64) (e_1 : IntW 1) :
@@ -85,8 +85,8 @@ theorem trunc_sel_smaller_zext_thm (e : IntW 64) (e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_sel_equal_zext_thm (e : IntW 32) (e_1 : IntW 1) :
@@ -94,8 +94,8 @@ theorem trunc_sel_equal_zext_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_sext1_thm (e e_1 : IntW 1) :
@@ -103,8 +103,8 @@ theorem test_sext1_thm (e e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_sext2_thm (e e_1 : IntW 1) :
@@ -112,8 +112,8 @@ theorem test_sext2_thm (e e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_sext3_thm (e e_1 : IntW 1) :
@@ -121,8 +121,8 @@ theorem test_sext3_thm (e e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_sext4_thm (e e_1 : IntW 1) :
@@ -130,8 +130,8 @@ theorem test_sext4_thm (e e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_zext1_thm (e e_1 : IntW 1) :
@@ -139,8 +139,8 @@ theorem test_zext1_thm (e e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_zext2_thm (e e_1 : IntW 1) :
@@ -148,8 +148,8 @@ theorem test_zext2_thm (e e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_zext3_thm (e e_1 : IntW 1) :
@@ -157,8 +157,8 @@ theorem test_zext3_thm (e e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_zext4_thm (e e_1 : IntW 1) :
@@ -166,8 +166,8 @@ theorem test_zext4_thm (e e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_op_op_thm (e e_1 e_2 : IntW 32) :
@@ -177,8 +177,8 @@ theorem test_op_op_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sext_true_val_must_be_all_ones_thm (e : IntW 1) :
@@ -186,31 +186,31 @@ theorem sext_true_val_must_be_all_ones_thm (e : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem zext_true_val_must_be_one_thm (e : IntW 1) : select e (zext 32 e) (const? 32 42) ⊑ select e (const? 32 1) (const? 32 42) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sext_false_val_must_be_zero_thm (e : IntW 1) : select e (const? 32 42) (sext 32 e) ⊑ select e (const? 32 42) (const? 32 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem zext_false_val_must_be_zero_thm (e : IntW 1) : select e (const? 32 42) (zext 32 e) ⊑ select e (const? 32 42) (const? 32 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

@@ -11,8 +11,8 @@ theorem narrow_source_matching_signbits_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem wide_source_matching_signbits_thm (e : IntW 32) :
@@ -21,8 +21,8 @@ theorem wide_source_matching_signbits_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem same_source_matching_signbits_thm (e : IntW 32) :
@@ -31,8 +31,8 @@ theorem same_source_matching_signbits_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem same_source_not_matching_signbits_thm (e : IntW 32) :
@@ -41,7 +41,7 @@ theorem same_source_not_matching_signbits_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

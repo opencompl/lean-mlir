@@ -12,8 +12,8 @@ theorem or_basic_thm (e : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem or_basic_commuted_thm (e : IntW 16) :
@@ -23,8 +23,8 @@ theorem or_basic_commuted_thm (e : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem or_nontrivial_mask1_thm (e : IntW 16) :
@@ -34,8 +34,8 @@ theorem or_nontrivial_mask1_thm (e : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem or_nontrivial_mask2_thm (e : IntW 16) :
@@ -45,8 +45,8 @@ theorem or_nontrivial_mask2_thm (e : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem or_wrong_const1_thm (e : IntW 16) :
@@ -56,7 +56,7 @@ theorem or_wrong_const1_thm (e : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

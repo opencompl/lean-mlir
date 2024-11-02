@@ -11,8 +11,8 @@ theorem slt_zero_thm (e e_1 : IntW 4) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sgt_minus1_thm (e e_1 : IntW 4) :
@@ -21,8 +21,8 @@ theorem sgt_minus1_thm (e e_1 : IntW 4) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem slt_zero_sgt_minus1_thm (e e_1 : IntW 4) :
@@ -31,8 +31,8 @@ theorem slt_zero_sgt_minus1_thm (e e_1 : IntW 4) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test13_thm (e e_1 : IntW 8) :
@@ -40,8 +40,8 @@ theorem test13_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test14_thm (e e_1 : IntW 8) :
@@ -49,8 +49,8 @@ theorem test14_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_icmp_true_signed_thm (e : IntW 32) :
@@ -58,8 +58,8 @@ theorem xor_icmp_true_signed_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_icmp_true_signed_commuted_thm (e : IntW 32) :
@@ -67,8 +67,8 @@ theorem xor_icmp_true_signed_commuted_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_icmp_true_unsigned_thm (e : IntW 32) :
@@ -76,8 +76,8 @@ theorem xor_icmp_true_unsigned_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_icmp_to_ne_thm (e : IntW 32) :
@@ -86,8 +86,8 @@ theorem xor_icmp_to_ne_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_icmp_to_icmp_add_thm (e : IntW 32) :
@@ -96,8 +96,8 @@ theorem xor_icmp_to_icmp_add_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_icmp_invalid_range_thm (e : IntW 8) :
@@ -106,7 +106,7 @@ theorem xor_icmp_invalid_range_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

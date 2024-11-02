@@ -11,8 +11,8 @@ theorem scalar0_thm (e e_1 : IntW 4) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem scalar1_thm (e e_1 : IntW 4) :
@@ -21,8 +21,8 @@ theorem scalar1_thm (e e_1 : IntW 4) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem in_constant_varx_mone_thm (e : IntW 4) :
@@ -30,8 +30,8 @@ theorem in_constant_varx_mone_thm (e : IntW 4) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem in_constant_varx_14_thm (e : IntW 4) :
@@ -39,8 +39,8 @@ theorem in_constant_varx_14_thm (e : IntW 4) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem in_constant_mone_vary_thm (e : IntW 4) :
@@ -48,8 +48,8 @@ theorem in_constant_mone_vary_thm (e : IntW 4) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem in_constant_14_vary_thm (e : IntW 4) :
@@ -57,8 +57,8 @@ theorem in_constant_14_vary_thm (e : IntW 4) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem c_1_0_0_thm (e e_1 : IntW 4) :
@@ -67,8 +67,8 @@ theorem c_1_0_0_thm (e e_1 : IntW 4) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem c_0_1_0_thm (e e_1 : IntW 4) :
@@ -77,8 +77,8 @@ theorem c_0_1_0_thm (e e_1 : IntW 4) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem c_1_1_0_thm (e e_1 : IntW 4) :
@@ -87,8 +87,8 @@ theorem c_1_1_0_thm (e e_1 : IntW 4) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem commutativity_constant_14_vary_thm (e : IntW 4) :
@@ -96,7 +96,7 @@ theorem commutativity_constant_14_vary_thm (e : IntW 4) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

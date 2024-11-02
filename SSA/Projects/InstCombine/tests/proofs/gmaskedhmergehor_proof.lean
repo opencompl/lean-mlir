@@ -11,8 +11,8 @@ theorem p_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem p_commutative0_thm (e e_1 e_2 : IntW 32) :
@@ -21,8 +21,8 @@ theorem p_commutative0_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem p_commutative2_thm (e e_1 e_2 : IntW 32) :
@@ -31,8 +31,8 @@ theorem p_commutative2_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem p_commutative4_thm (e e_1 e_2 : IntW 32) :
@@ -41,8 +41,8 @@ theorem p_commutative4_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem n2_badmask_thm (e e_1 e_2 e_3 : IntW 32) :
@@ -51,8 +51,8 @@ theorem n2_badmask_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem n3_constmask_samemask_thm (e e_1 : IntW 32) :
@@ -61,7 +61,7 @@ theorem n3_constmask_samemask_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

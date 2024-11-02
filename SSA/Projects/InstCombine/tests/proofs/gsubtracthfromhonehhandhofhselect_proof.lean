@@ -10,8 +10,8 @@ theorem t0_sub_from_trueval_thm (e : IntW 8) (e_1 : IntW 1) (e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem t1_sub_from_falseval_thm (e : IntW 8) (e_1 : IntW 1) (e_2 : IntW 8) :
@@ -19,7 +19,7 @@ theorem t1_sub_from_falseval_thm (e : IntW 8) (e_1 : IntW 1) (e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

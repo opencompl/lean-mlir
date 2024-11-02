@@ -11,8 +11,8 @@ theorem sgt_3_impliesF_eq_2_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sgt_3_impliesT_sgt_2_thm (e e_1 : IntW 8) :
@@ -21,8 +21,8 @@ theorem sgt_3_impliesT_sgt_2_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sgt_x_impliesF_eq_smin_todo_thm (e e_1 e_2 : IntW 8) :
@@ -31,8 +31,8 @@ theorem sgt_x_impliesF_eq_smin_todo_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem slt_x_impliesT_ne_smin_todo_thm (e e_1 e_2 : IntW 8) :
@@ -41,8 +41,8 @@ theorem slt_x_impliesT_ne_smin_todo_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ult_x_impliesT_eq_umax_todo_thm (e e_1 e_2 : IntW 8) :
@@ -51,8 +51,8 @@ theorem ult_x_impliesT_eq_umax_todo_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ult_1_impliesF_eq_1_thm (e e_1 : IntW 8) :
@@ -61,7 +61,7 @@ theorem ult_1_impliesF_eq_1_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

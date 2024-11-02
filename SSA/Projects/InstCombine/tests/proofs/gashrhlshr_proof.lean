@@ -10,8 +10,8 @@ theorem ashr_lshr_exact_ashr_only_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_lshr_no_exact_thm (e e_1 : IntW 32) :
@@ -19,8 +19,8 @@ theorem ashr_lshr_no_exact_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_lshr_exact_both_thm (e e_1 : IntW 32) :
@@ -28,8 +28,8 @@ theorem ashr_lshr_exact_both_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_lshr_exact_lshr_only_thm (e e_1 : IntW 32) :
@@ -37,8 +37,8 @@ theorem ashr_lshr_exact_lshr_only_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_lshr2_thm (e e_1 : IntW 32) :
@@ -46,8 +46,8 @@ theorem ashr_lshr2_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_lshr2_i128_thm (e e_1 : IntW 128) :
@@ -55,8 +55,8 @@ theorem ashr_lshr2_i128_thm (e e_1 : IntW 128) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_lshr_cst_thm (e : IntW 32) :
@@ -65,8 +65,8 @@ theorem ashr_lshr_cst_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_lshr_cst2_thm (e : IntW 32) :
@@ -75,8 +75,8 @@ theorem ashr_lshr_cst2_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_lshr_inv_thm (e e_1 : IntW 32) :
@@ -84,8 +84,8 @@ theorem ashr_lshr_inv_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_lshr_inv2_thm (e e_1 : IntW 32) :
@@ -93,8 +93,8 @@ theorem ashr_lshr_inv2_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_lshr_wrong_cond_thm (e e_1 : IntW 32) :
@@ -103,8 +103,8 @@ theorem ashr_lshr_wrong_cond_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_lshr_shift_wrong_pred_thm (e e_1 : IntW 32) :
@@ -113,8 +113,8 @@ theorem ashr_lshr_shift_wrong_pred_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_lshr_shift_wrong_pred2_thm (e e_1 e_2 : IntW 32) :
@@ -123,8 +123,8 @@ theorem ashr_lshr_shift_wrong_pred2_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_lshr_wrong_operands_thm (e e_1 : IntW 32) :
@@ -133,8 +133,8 @@ theorem ashr_lshr_wrong_operands_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_lshr_no_ashr_thm (e e_1 : IntW 32) :
@@ -143,8 +143,8 @@ theorem ashr_lshr_no_ashr_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_lshr_shift_amt_mismatch_thm (e e_1 e_2 : IntW 32) :
@@ -153,8 +153,8 @@ theorem ashr_lshr_shift_amt_mismatch_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_lshr_shift_base_mismatch_thm (e e_1 e_2 : IntW 32) :
@@ -163,8 +163,8 @@ theorem ashr_lshr_shift_base_mismatch_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_lshr_no_lshr_thm (e e_1 : IntW 32) :
@@ -173,8 +173,8 @@ theorem ashr_lshr_no_lshr_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lshr_sub_nsw_thm (e e_1 : IntW 32) :
@@ -182,8 +182,8 @@ theorem lshr_sub_nsw_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_sub_nsw_thm (e e_1 : IntW 17) :
@@ -191,8 +191,8 @@ theorem ashr_sub_nsw_thm (e e_1 : IntW 17) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_known_pos_exact_thm (e e_1 : IntW 8) :
@@ -200,8 +200,8 @@ theorem ashr_known_pos_exact_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lshr_mul_times_3_div_2_thm (e : IntW 32) :
@@ -210,8 +210,8 @@ theorem lshr_mul_times_3_div_2_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lshr_mul_times_3_div_2_exact_thm (e : IntW 32) :
@@ -220,8 +220,8 @@ theorem lshr_mul_times_3_div_2_exact_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lshr_mul_times_3_div_2_exact_2_thm (e : IntW 32) :
@@ -230,8 +230,8 @@ theorem lshr_mul_times_3_div_2_exact_2_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lshr_mul_times_5_div_4_thm (e : IntW 32) :
@@ -240,8 +240,8 @@ theorem lshr_mul_times_5_div_4_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lshr_mul_times_5_div_4_exact_thm (e : IntW 32) :
@@ -250,8 +250,8 @@ theorem lshr_mul_times_5_div_4_exact_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lshr_mul_times_5_div_4_exact_2_thm (e : IntW 32) :
@@ -260,8 +260,8 @@ theorem lshr_mul_times_5_div_4_exact_2_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_mul_times_3_div_2_thm (e : IntW 32) :
@@ -270,8 +270,8 @@ theorem ashr_mul_times_3_div_2_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_mul_times_3_div_2_exact_thm (e : IntW 32) :
@@ -280,8 +280,8 @@ theorem ashr_mul_times_3_div_2_exact_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_mul_times_3_div_2_exact_2_thm (e : IntW 32) :
@@ -290,8 +290,8 @@ theorem ashr_mul_times_3_div_2_exact_2_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_mul_times_5_div_4_thm (e : IntW 32) :
@@ -300,8 +300,8 @@ theorem ashr_mul_times_5_div_4_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_mul_times_5_div_4_exact_thm (e : IntW 32) :
@@ -310,8 +310,8 @@ theorem ashr_mul_times_5_div_4_exact_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_mul_times_5_div_4_exact_2_thm (e : IntW 32) :
@@ -320,8 +320,8 @@ theorem ashr_mul_times_5_div_4_exact_2_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lsb_mask_sign_zext_thm (e : IntW 32) :
@@ -330,8 +330,8 @@ theorem lsb_mask_sign_zext_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lsb_mask_sign_zext_commuted_thm (e : IntW 32) :
@@ -340,8 +340,8 @@ theorem lsb_mask_sign_zext_commuted_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lsb_mask_sign_zext_wrong_cst2_thm (e : IntW 32) :
@@ -350,8 +350,8 @@ theorem lsb_mask_sign_zext_wrong_cst2_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lsb_mask_sign_sext_thm (e : IntW 32) :
@@ -360,8 +360,8 @@ theorem lsb_mask_sign_sext_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lsb_mask_sign_sext_commuted_thm (e : IntW 32) :
@@ -370,8 +370,8 @@ theorem lsb_mask_sign_sext_commuted_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lsb_mask_sign_sext_wrong_cst2_thm (e : IntW 32) :
@@ -380,7 +380,7 @@ theorem lsb_mask_sign_sext_wrong_cst2_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

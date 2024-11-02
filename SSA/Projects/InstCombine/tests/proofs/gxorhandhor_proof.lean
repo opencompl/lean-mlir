@@ -10,8 +10,8 @@ theorem xor_logic_and_logic_or1_thm (e e_1 e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_logic_and_logic_or2_thm (e e_1 e_2 : IntW 1) :
@@ -19,8 +19,8 @@ theorem xor_logic_and_logic_or2_thm (e e_1 e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_logic_and_logic_or4_thm (e e_1 e_2 : IntW 1) :
@@ -28,8 +28,8 @@ theorem xor_logic_and_logic_or4_thm (e e_1 e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_and_logic_or1_thm (e e_1 e_2 : IntW 1) :
@@ -37,8 +37,8 @@ theorem xor_and_logic_or1_thm (e e_1 e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_and_logic_or2_thm (e e_1 e_2 : IntW 1) :
@@ -46,8 +46,8 @@ theorem xor_and_logic_or2_thm (e e_1 e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_logic_and_or1_thm (e e_1 e_2 : IntW 1) :
@@ -55,8 +55,8 @@ theorem xor_logic_and_or1_thm (e e_1 e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_logic_and_or2_thm (e e_1 e_2 : IntW 1) :
@@ -64,8 +64,8 @@ theorem xor_logic_and_or2_thm (e e_1 e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_and_or_thm (e e_1 e_2 : IntW 1) :
@@ -73,7 +73,7 @@ theorem xor_and_or_thm (e e_1 e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

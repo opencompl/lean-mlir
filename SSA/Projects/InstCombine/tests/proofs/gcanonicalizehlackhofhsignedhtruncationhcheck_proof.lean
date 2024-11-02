@@ -11,8 +11,8 @@ theorem p0_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem pb_thm (e : IntW 65) :
@@ -21,8 +21,8 @@ theorem pb_thm (e : IntW 65) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem n1_thm (e : IntW 8) :
@@ -30,7 +30,7 @@ theorem n1_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

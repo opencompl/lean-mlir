@@ -9,8 +9,8 @@ theorem test_sext_zext_thm (e : IntW 16) : sext 64 (zext 32 e) ⊑ zext 64 e := 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem fold_xor_zext_sandwich_thm (e : IntW 1) :
@@ -18,8 +18,8 @@ theorem fold_xor_zext_sandwich_thm (e : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem fold_and_zext_icmp_thm (e e_1 e_2 : IntW 64) :
@@ -28,8 +28,8 @@ theorem fold_and_zext_icmp_thm (e e_1 e_2 : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem fold_or_zext_icmp_thm (e e_1 e_2 : IntW 64) :
@@ -38,8 +38,8 @@ theorem fold_or_zext_icmp_thm (e e_1 e_2 : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem fold_xor_zext_icmp_thm (e e_1 e_2 : IntW 64) :
@@ -48,8 +48,8 @@ theorem fold_xor_zext_icmp_thm (e e_1 e_2 : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem fold_nested_logic_zext_icmp_thm (e e_1 e_2 e_3 : IntW 64) :
@@ -61,24 +61,24 @@ theorem fold_nested_logic_zext_icmp_thm (e e_1 e_2 e_3 : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sext_zext_apint1_thm (e : IntW 77) : sext 1024 (zext 533 e) ⊑ zext 1024 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sext_zext_apint2_thm (e : IntW 11) : sext 47 (zext 39 e) ⊑ zext 47 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem masked_bit_set_thm (e e_1 : IntW 32) :
@@ -87,8 +87,8 @@ theorem masked_bit_set_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem masked_bit_clear_commute_thm (e e_1 : IntW 32) :
@@ -97,8 +97,8 @@ theorem masked_bit_clear_commute_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem div_bit_set_thm (e e_1 : IntW 32) :
@@ -109,8 +109,8 @@ theorem div_bit_set_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem masked_bit_set_nonzero_cmp_thm (e e_1 : IntW 32) :
@@ -121,8 +121,8 @@ theorem masked_bit_set_nonzero_cmp_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem masked_bit_wrong_pred_thm (e e_1 : IntW 32) :
@@ -133,8 +133,8 @@ theorem masked_bit_wrong_pred_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem zext_or_masked_bit_test_thm (e e_1 e_2 : IntW 32) :
@@ -148,8 +148,8 @@ theorem zext_or_masked_bit_test_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem zext_masked_bit_zero_to_smaller_bitwidth_thm (e e_1 : IntW 32) :
@@ -158,8 +158,8 @@ theorem zext_masked_bit_zero_to_smaller_bitwidth_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem zext_masked_bit_nonzero_to_smaller_bitwidth_thm (e e_1 : IntW 32) :
@@ -168,8 +168,8 @@ theorem zext_masked_bit_nonzero_to_smaller_bitwidth_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem zext_masked_bit_zero_to_larger_bitwidth_thm (e e_1 : IntW 32) :
@@ -178,8 +178,8 @@ theorem zext_masked_bit_zero_to_larger_bitwidth_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem zext_nneg_flag_drop_thm (e : IntW 16) (e_1 : IntW 8) :
@@ -188,31 +188,31 @@ theorem zext_nneg_flag_drop_thm (e : IntW 16) (e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem zext_nneg_redundant_and_thm (e : IntW 8) : LLVM.and (zext 32 e) (const? 32 127) ⊑ zext 32 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem zext_nneg_signbit_extract_thm (e : IntW 32) : lshr (zext 64 e) (const? 64 31) ⊑ const? 64 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem zext_nneg_i1_thm (e : IntW 1) : zext 32 e ⊑ const? 32 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

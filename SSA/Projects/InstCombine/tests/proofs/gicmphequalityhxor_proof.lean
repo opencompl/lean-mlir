@@ -10,8 +10,8 @@ theorem cmpeq_xor_cst1_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem cmpeq_xor_cst3_thm (e e_1 : IntW 32) :
@@ -19,8 +19,8 @@ theorem cmpeq_xor_cst3_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem cmpne_xor_cst1_thm (e e_1 : IntW 32) :
@@ -28,8 +28,8 @@ theorem cmpne_xor_cst1_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem cmpne_xor_cst3_thm (e e_1 : IntW 32) :
@@ -37,8 +37,8 @@ theorem cmpne_xor_cst3_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem cmpeq_xor_cst1_commuted_thm (e e_1 : IntW 32) :
@@ -47,8 +47,8 @@ theorem cmpeq_xor_cst1_commuted_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem foo1_thm (e e_1 : IntW 32) :
@@ -58,8 +58,8 @@ theorem foo1_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem foo2_thm (e e_1 : IntW 32) :
@@ -69,7 +69,7 @@ theorem foo2_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

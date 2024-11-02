@@ -11,8 +11,8 @@ theorem PR1817_1_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR1817_1_logical_thm (e : IntW 32) :
@@ -21,8 +21,8 @@ theorem PR1817_1_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR1817_2_thm (e : IntW 32) :
@@ -31,8 +31,8 @@ theorem PR1817_2_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR1817_2_logical_thm (e : IntW 32) :
@@ -41,8 +41,8 @@ theorem PR1817_2_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR2330_thm (e e_1 : IntW 32) :
@@ -51,8 +51,8 @@ theorem PR2330_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem or_eq_with_one_bit_diff_constants1_thm (e : IntW 32) :
@@ -61,8 +61,8 @@ theorem or_eq_with_one_bit_diff_constants1_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem or_eq_with_one_bit_diff_constants1_logical_thm (e : IntW 32) :
@@ -71,8 +71,8 @@ theorem or_eq_with_one_bit_diff_constants1_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_ne_with_one_bit_diff_constants1_thm (e : IntW 32) :
@@ -81,8 +81,8 @@ theorem and_ne_with_one_bit_diff_constants1_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_ne_with_one_bit_diff_constants1_logical_thm (e : IntW 32) :
@@ -91,8 +91,8 @@ theorem and_ne_with_one_bit_diff_constants1_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem or_eq_with_one_bit_diff_constants2_thm (e : IntW 32) :
@@ -101,8 +101,8 @@ theorem or_eq_with_one_bit_diff_constants2_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem or_eq_with_one_bit_diff_constants2_logical_thm (e : IntW 32) :
@@ -111,8 +111,8 @@ theorem or_eq_with_one_bit_diff_constants2_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_ne_with_one_bit_diff_constants2_thm (e : IntW 19) :
@@ -121,8 +121,8 @@ theorem and_ne_with_one_bit_diff_constants2_thm (e : IntW 19) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_ne_with_one_bit_diff_constants2_logical_thm (e : IntW 19) :
@@ -131,8 +131,8 @@ theorem and_ne_with_one_bit_diff_constants2_logical_thm (e : IntW 19) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem or_eq_with_one_bit_diff_constants3_thm (e : IntW 8) :
@@ -141,8 +141,8 @@ theorem or_eq_with_one_bit_diff_constants3_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem or_eq_with_one_bit_diff_constants3_logical_thm (e : IntW 8) :
@@ -151,8 +151,8 @@ theorem or_eq_with_one_bit_diff_constants3_logical_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_ne_with_one_bit_diff_constants3_thm (e : IntW 8) :
@@ -161,8 +161,8 @@ theorem and_ne_with_one_bit_diff_constants3_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_ne_with_one_bit_diff_constants3_logical_thm (e : IntW 8) :
@@ -171,8 +171,8 @@ theorem and_ne_with_one_bit_diff_constants3_logical_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem or_eq_with_diff_one_thm (e : IntW 8) :
@@ -181,8 +181,8 @@ theorem or_eq_with_diff_one_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem or_eq_with_diff_one_logical_thm (e : IntW 8) :
@@ -191,8 +191,8 @@ theorem or_eq_with_diff_one_logical_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_ne_with_diff_one_thm (e : IntW 32) :
@@ -201,8 +201,8 @@ theorem and_ne_with_diff_one_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_ne_with_diff_one_logical_thm (e : IntW 32) :
@@ -211,8 +211,8 @@ theorem and_ne_with_diff_one_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem or_eq_with_diff_one_signed_thm (e : IntW 32) :
@@ -221,8 +221,8 @@ theorem or_eq_with_diff_one_signed_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem or_eq_with_diff_one_signed_logical_thm (e : IntW 32) :
@@ -231,8 +231,8 @@ theorem or_eq_with_diff_one_signed_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_ne_with_diff_one_signed_thm (e : IntW 64) :
@@ -241,8 +241,8 @@ theorem and_ne_with_diff_one_signed_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_ne_with_diff_one_signed_logical_thm (e : IntW 64) :
@@ -251,8 +251,8 @@ theorem and_ne_with_diff_one_signed_logical_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR42691_1_thm (e : IntW 32) :
@@ -261,8 +261,8 @@ theorem PR42691_1_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR42691_1_logical_thm (e : IntW 32) :
@@ -271,8 +271,8 @@ theorem PR42691_1_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR42691_2_thm (e : IntW 32) :
@@ -281,8 +281,8 @@ theorem PR42691_2_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR42691_2_logical_thm (e : IntW 32) :
@@ -291,8 +291,8 @@ theorem PR42691_2_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR42691_3_thm (e : IntW 32) :
@@ -301,8 +301,8 @@ theorem PR42691_3_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR42691_3_logical_thm (e : IntW 32) :
@@ -311,8 +311,8 @@ theorem PR42691_3_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR42691_4_thm (e : IntW 32) :
@@ -321,8 +321,8 @@ theorem PR42691_4_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR42691_4_logical_thm (e : IntW 32) :
@@ -331,8 +331,8 @@ theorem PR42691_4_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR42691_5_thm (e : IntW 32) :
@@ -341,8 +341,8 @@ theorem PR42691_5_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR42691_5_logical_thm (e : IntW 32) :
@@ -351,8 +351,8 @@ theorem PR42691_5_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR42691_6_thm (e : IntW 32) :
@@ -361,8 +361,8 @@ theorem PR42691_6_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR42691_6_logical_thm (e : IntW 32) :
@@ -371,8 +371,8 @@ theorem PR42691_6_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR42691_7_thm (e : IntW 32) :
@@ -381,8 +381,8 @@ theorem PR42691_7_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR42691_7_logical_thm (e : IntW 32) :
@@ -391,8 +391,8 @@ theorem PR42691_7_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR42691_8_thm (e : IntW 32) :
@@ -401,8 +401,8 @@ theorem PR42691_8_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR42691_8_logical_thm (e : IntW 32) :
@@ -411,8 +411,8 @@ theorem PR42691_8_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR42691_9_thm (e : IntW 32) :
@@ -421,8 +421,8 @@ theorem PR42691_9_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR42691_9_logical_thm (e : IntW 32) :
@@ -431,8 +431,8 @@ theorem PR42691_9_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR42691_10_thm (e : IntW 32) :
@@ -441,8 +441,8 @@ theorem PR42691_10_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR42691_10_logical_thm (e : IntW 32) :
@@ -451,8 +451,8 @@ theorem PR42691_10_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem substitute_constant_and_eq_eq_thm (e e_1 : IntW 8) :
@@ -461,8 +461,8 @@ theorem substitute_constant_and_eq_eq_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem substitute_constant_and_eq_eq_logical_thm (e e_1 : IntW 8) :
@@ -471,8 +471,8 @@ theorem substitute_constant_and_eq_eq_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem substitute_constant_and_eq_eq_commute_thm (e e_1 : IntW 8) :
@@ -481,8 +481,8 @@ theorem substitute_constant_and_eq_eq_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem substitute_constant_and_eq_eq_commute_logical_thm (e e_1 : IntW 8) :
@@ -491,8 +491,8 @@ theorem substitute_constant_and_eq_eq_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem substitute_constant_and_eq_ugt_swap_thm (e e_1 : IntW 8) :
@@ -501,8 +501,8 @@ theorem substitute_constant_and_eq_ugt_swap_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem substitute_constant_and_eq_ugt_swap_logical_thm (e e_1 : IntW 8) :
@@ -511,8 +511,8 @@ theorem substitute_constant_and_eq_ugt_swap_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem substitute_constant_and_ne_ugt_swap_logical_thm (e e_1 : IntW 8) :
@@ -521,8 +521,8 @@ theorem substitute_constant_and_ne_ugt_swap_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem substitute_constant_or_ne_swap_sle_thm (e e_1 : IntW 8) :
@@ -531,8 +531,8 @@ theorem substitute_constant_or_ne_swap_sle_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem substitute_constant_or_ne_swap_sle_logical_thm (e e_1 : IntW 8) :
@@ -541,8 +541,8 @@ theorem substitute_constant_or_ne_swap_sle_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem substitute_constant_or_ne_uge_commute_thm (e e_1 : IntW 8) :
@@ -551,8 +551,8 @@ theorem substitute_constant_or_ne_uge_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem substitute_constant_or_ne_uge_commute_logical_thm (e e_1 : IntW 8) :
@@ -561,8 +561,8 @@ theorem substitute_constant_or_ne_uge_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem or_ranges_overlap_thm (e : IntW 8) :
@@ -572,8 +572,8 @@ theorem or_ranges_overlap_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem or_ranges_adjacent_thm (e : IntW 8) :
@@ -583,8 +583,8 @@ theorem or_ranges_adjacent_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem or_ranges_separated_thm (e : IntW 8) :
@@ -595,8 +595,8 @@ theorem or_ranges_separated_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem or_ranges_single_elem_right_thm (e : IntW 8) :
@@ -606,8 +606,8 @@ theorem or_ranges_single_elem_right_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem or_ranges_single_elem_left_thm (e : IntW 8) :
@@ -617,8 +617,8 @@ theorem or_ranges_single_elem_left_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_ranges_overlap_thm (e : IntW 8) :
@@ -628,8 +628,8 @@ theorem and_ranges_overlap_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_ranges_overlap_single_thm (e : IntW 8) :
@@ -639,8 +639,8 @@ theorem and_ranges_overlap_single_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_ranges_no_overlap_thm (e : IntW 8) :
@@ -650,8 +650,8 @@ theorem and_ranges_no_overlap_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_ranges_signed_pred_thm (e : IntW 64) :
@@ -661,8 +661,8 @@ theorem and_ranges_signed_pred_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_two_ranges_to_mask_and_range_thm (e : IntW 8) :
@@ -672,8 +672,8 @@ theorem and_two_ranges_to_mask_and_range_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_two_ranges_to_mask_and_range_not_pow2_diff_thm (e : IntW 8) :
@@ -684,8 +684,8 @@ theorem and_two_ranges_to_mask_and_range_not_pow2_diff_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_two_ranges_to_mask_and_range_different_sizes_thm (e : IntW 8) :
@@ -696,8 +696,8 @@ theorem and_two_ranges_to_mask_and_range_different_sizes_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_two_ranges_to_mask_and_range_no_add_on_one_range_thm (e : IntW 16) :
@@ -707,8 +707,8 @@ theorem and_two_ranges_to_mask_and_range_no_add_on_one_range_thm (e : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem is_ascii_alphabetic_thm (e : IntW 32) :
@@ -718,8 +718,8 @@ theorem is_ascii_alphabetic_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem is_ascii_alphabetic_inverted_thm (e : IntW 32) :
@@ -730,8 +730,8 @@ theorem is_ascii_alphabetic_inverted_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bitwise_and_bitwise_and_icmps_thm (e e_1 e_2 : IntW 8) :
@@ -745,8 +745,8 @@ theorem bitwise_and_bitwise_and_icmps_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bitwise_and_bitwise_and_icmps_comm1_thm (e e_1 e_2 : IntW 8) :
@@ -760,8 +760,8 @@ theorem bitwise_and_bitwise_and_icmps_comm1_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bitwise_and_bitwise_and_icmps_comm2_thm (e e_1 e_2 : IntW 8) :
@@ -776,8 +776,8 @@ theorem bitwise_and_bitwise_and_icmps_comm2_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bitwise_and_bitwise_and_icmps_comm3_thm (e e_1 e_2 : IntW 8) :
@@ -792,8 +792,8 @@ theorem bitwise_and_bitwise_and_icmps_comm3_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bitwise_and_logical_and_icmps_thm (e e_1 e_2 : IntW 8) :
@@ -808,8 +808,8 @@ theorem bitwise_and_logical_and_icmps_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bitwise_and_logical_and_icmps_comm1_thm (e e_1 e_2 : IntW 8) :
@@ -824,8 +824,8 @@ theorem bitwise_and_logical_and_icmps_comm1_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bitwise_and_logical_and_icmps_comm3_thm (e e_1 e_2 : IntW 8) :
@@ -840,8 +840,8 @@ theorem bitwise_and_logical_and_icmps_comm3_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem logical_and_bitwise_and_icmps_thm (e e_1 e_2 : IntW 8) :
@@ -857,8 +857,8 @@ theorem logical_and_bitwise_and_icmps_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem logical_and_bitwise_and_icmps_comm1_thm (e e_1 e_2 : IntW 8) :
@@ -871,8 +871,8 @@ theorem logical_and_bitwise_and_icmps_comm1_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem logical_and_bitwise_and_icmps_comm2_thm (e e_1 e_2 : IntW 8) :
@@ -888,8 +888,8 @@ theorem logical_and_bitwise_and_icmps_comm2_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem logical_and_bitwise_and_icmps_comm3_thm (e e_1 e_2 : IntW 8) :
@@ -902,8 +902,8 @@ theorem logical_and_bitwise_and_icmps_comm3_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem logical_and_logical_and_icmps_thm (e e_1 e_2 : IntW 8) :
@@ -919,8 +919,8 @@ theorem logical_and_logical_and_icmps_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem logical_and_logical_and_icmps_comm1_thm (e e_1 e_2 : IntW 8) :
@@ -936,8 +936,8 @@ theorem logical_and_logical_and_icmps_comm1_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem logical_and_logical_and_icmps_comm2_thm (e e_1 e_2 : IntW 8) :
@@ -953,8 +953,8 @@ theorem logical_and_logical_and_icmps_comm2_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem logical_and_logical_and_icmps_comm3_thm (e e_1 e_2 : IntW 8) :
@@ -970,8 +970,8 @@ theorem logical_and_logical_and_icmps_comm3_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bitwise_or_bitwise_or_icmps_thm (e e_1 e_2 : IntW 8) :
@@ -984,8 +984,8 @@ theorem bitwise_or_bitwise_or_icmps_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bitwise_or_bitwise_or_icmps_comm1_thm (e e_1 e_2 : IntW 8) :
@@ -998,8 +998,8 @@ theorem bitwise_or_bitwise_or_icmps_comm1_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bitwise_or_bitwise_or_icmps_comm2_thm (e e_1 e_2 : IntW 8) :
@@ -1013,8 +1013,8 @@ theorem bitwise_or_bitwise_or_icmps_comm2_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bitwise_or_bitwise_or_icmps_comm3_thm (e e_1 e_2 : IntW 8) :
@@ -1028,8 +1028,8 @@ theorem bitwise_or_bitwise_or_icmps_comm3_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bitwise_or_logical_or_icmps_thm (e e_1 e_2 : IntW 8) :
@@ -1043,8 +1043,8 @@ theorem bitwise_or_logical_or_icmps_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bitwise_or_logical_or_icmps_comm1_thm (e e_1 e_2 : IntW 8) :
@@ -1058,8 +1058,8 @@ theorem bitwise_or_logical_or_icmps_comm1_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bitwise_or_logical_or_icmps_comm3_thm (e e_1 e_2 : IntW 8) :
@@ -1074,8 +1074,8 @@ theorem bitwise_or_logical_or_icmps_comm3_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem logical_or_bitwise_or_icmps_thm (e e_1 e_2 : IntW 8) :
@@ -1089,8 +1089,8 @@ theorem logical_or_bitwise_or_icmps_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem logical_or_bitwise_or_icmps_comm1_thm (e e_1 e_2 : IntW 8) :
@@ -1103,8 +1103,8 @@ theorem logical_or_bitwise_or_icmps_comm1_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem logical_or_bitwise_or_icmps_comm2_thm (e e_1 e_2 : IntW 8) :
@@ -1118,8 +1118,8 @@ theorem logical_or_bitwise_or_icmps_comm2_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem logical_or_bitwise_or_icmps_comm3_thm (e e_1 e_2 : IntW 8) :
@@ -1132,8 +1132,8 @@ theorem logical_or_bitwise_or_icmps_comm3_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem logical_or_logical_or_icmps_thm (e e_1 e_2 : IntW 8) :
@@ -1149,8 +1149,8 @@ theorem logical_or_logical_or_icmps_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem logical_or_logical_or_icmps_comm1_thm (e e_1 e_2 : IntW 8) :
@@ -1165,8 +1165,8 @@ theorem logical_or_logical_or_icmps_comm1_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem logical_or_logical_or_icmps_comm2_thm (e e_1 e_2 : IntW 8) :
@@ -1182,8 +1182,8 @@ theorem logical_or_logical_or_icmps_comm2_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem logical_or_logical_or_icmps_comm3_thm (e e_1 e_2 : IntW 8) :
@@ -1198,8 +1198,8 @@ theorem logical_or_logical_or_icmps_comm3_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bitwise_and_logical_and_masked_icmp_asymmetric_thm (e : IntW 1) (e_1 : IntW 32) :
@@ -1209,8 +1209,8 @@ theorem bitwise_and_logical_and_masked_icmp_asymmetric_thm (e : IntW 1) (e_1 : I
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bitwise_and_logical_and_masked_icmp_allzeros_thm (e : IntW 1) (e_1 : IntW 32) :
@@ -1220,8 +1220,8 @@ theorem bitwise_and_logical_and_masked_icmp_allzeros_thm (e : IntW 1) (e_1 : Int
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bitwise_and_logical_and_masked_icmp_allzeros_poison1_thm (e : IntW 1) (e_1 e_2 : IntW 32) :
@@ -1231,8 +1231,8 @@ theorem bitwise_and_logical_and_masked_icmp_allzeros_poison1_thm (e : IntW 1) (e
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bitwise_and_logical_and_masked_icmp_allones_thm (e : IntW 1) (e_1 : IntW 32) :
@@ -1242,8 +1242,8 @@ theorem bitwise_and_logical_and_masked_icmp_allones_thm (e : IntW 1) (e_1 : IntW
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bitwise_and_logical_and_masked_icmp_allones_poison1_thm (e : IntW 1) (e_1 e_2 : IntW 32) :
@@ -1254,8 +1254,8 @@ theorem bitwise_and_logical_and_masked_icmp_allones_poison1_thm (e : IntW 1) (e_
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bitwise_and_logical_and_masked_icmp_allones_poison2_thm (e : IntW 32) (e_1 : IntW 1) (e_2 : IntW 32) :
@@ -1266,8 +1266,8 @@ theorem bitwise_and_logical_and_masked_icmp_allones_poison2_thm (e : IntW 32) (e
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem samesign_thm (e e_1 : IntW 32) :
@@ -1277,8 +1277,8 @@ theorem samesign_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem samesign_different_sign_bittest2_thm (e e_1 : IntW 32) :
@@ -1287,8 +1287,8 @@ theorem samesign_different_sign_bittest2_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem samesign_commute1_thm (e e_1 : IntW 32) :
@@ -1298,8 +1298,8 @@ theorem samesign_commute1_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem samesign_commute2_thm (e e_1 : IntW 32) :
@@ -1309,8 +1309,8 @@ theorem samesign_commute2_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem samesign_commute3_thm (e e_1 : IntW 32) :
@@ -1320,8 +1320,8 @@ theorem samesign_commute3_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem samesign_inverted_thm (e e_1 : IntW 32) :
@@ -1331,8 +1331,8 @@ theorem samesign_inverted_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem samesign_inverted_different_sign_bittest1_thm (e e_1 : IntW 32) :
@@ -1342,8 +1342,8 @@ theorem samesign_inverted_different_sign_bittest1_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem samesign_inverted_different_sign_bittest2_thm (e e_1 : IntW 32) :
@@ -1353,8 +1353,8 @@ theorem samesign_inverted_different_sign_bittest2_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem samesign_inverted_commute1_thm (e e_1 : IntW 32) :
@@ -1364,8 +1364,8 @@ theorem samesign_inverted_commute1_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem samesign_inverted_commute2_thm (e e_1 : IntW 32) :
@@ -1375,8 +1375,8 @@ theorem samesign_inverted_commute2_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem samesign_inverted_commute3_thm (e e_1 : IntW 32) :
@@ -1386,8 +1386,8 @@ theorem samesign_inverted_commute3_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_slt_0_or_icmp_sgt_0_i32_thm (e : IntW 32) :
@@ -1396,8 +1396,8 @@ theorem icmp_slt_0_or_icmp_sgt_0_i32_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_slt_0_or_icmp_sgt_0_i64_thm (e : IntW 64) :
@@ -1406,8 +1406,8 @@ theorem icmp_slt_0_or_icmp_sgt_0_i64_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_slt_0_or_icmp_sgt_0_i64_fail0_thm (e : IntW 64) :
@@ -1415,8 +1415,8 @@ theorem icmp_slt_0_or_icmp_sgt_0_i64_fail0_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_slt_0_or_icmp_sgt_0_i64_fail3_thm (e : IntW 64) :
@@ -1425,8 +1425,8 @@ theorem icmp_slt_0_or_icmp_sgt_0_i64_fail3_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_slt_0_and_icmp_sge_neg1_i32_thm (e : IntW 32) :
@@ -1434,8 +1434,8 @@ theorem icmp_slt_0_and_icmp_sge_neg1_i32_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_slt_0_or_icmp_sge_neg1_i32_thm (e : IntW 32) :
@@ -1443,8 +1443,8 @@ theorem icmp_slt_0_or_icmp_sge_neg1_i32_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_slt_0_or_icmp_sge_100_i32_thm (e : IntW 32) :
@@ -1453,8 +1453,8 @@ theorem icmp_slt_0_or_icmp_sge_100_i32_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_slt_0_and_icmp_sge_neg1_i64_thm (e : IntW 64) :
@@ -1463,8 +1463,8 @@ theorem icmp_slt_0_and_icmp_sge_neg1_i64_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_slt_0_and_icmp_sge_neg2_i64_thm (e : IntW 64) :
@@ -1473,8 +1473,8 @@ theorem icmp_slt_0_and_icmp_sge_neg2_i64_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_and_icmp_sge_neg1_i64_thm (e : IntW 64) :
@@ -1483,8 +1483,8 @@ theorem ashr_and_icmp_sge_neg1_i64_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_slt_0_and_icmp_sgt_neg1_i64_thm (e : IntW 64) :
@@ -1492,8 +1492,8 @@ theorem icmp_slt_0_and_icmp_sgt_neg1_i64_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_slt_0_and_icmp_sge_neg1_i64_fail_thm (e : IntW 64) :
@@ -1503,8 +1503,8 @@ theorem icmp_slt_0_and_icmp_sge_neg1_i64_fail_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_x_slt_0_xor_icmp_y_sgt_neg1_i32_thm (e e_1 : IntW 32) :
@@ -1513,8 +1513,8 @@ theorem icmp_x_slt_0_xor_icmp_y_sgt_neg1_i32_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_slt_0_xor_icmp_sgt_neg2_i32_thm (e : IntW 32) :
@@ -1523,8 +1523,8 @@ theorem icmp_slt_0_xor_icmp_sgt_neg2_i32_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_slt_0_or_icmp_eq_100_i32_fail_thm (e : IntW 32) :
@@ -1533,8 +1533,8 @@ theorem icmp_slt_0_or_icmp_eq_100_i32_fail_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_slt_0_and_icmp_ne_neg2_i32_fail_thm (e : IntW 32) :
@@ -1543,8 +1543,8 @@ theorem icmp_slt_0_and_icmp_ne_neg2_i32_fail_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_x_slt_0_and_icmp_y_ne_neg2_i32_fail_thm (e e_1 : IntW 32) :
@@ -1553,8 +1553,8 @@ theorem icmp_x_slt_0_and_icmp_y_ne_neg2_i32_fail_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_x_slt_0_and_icmp_y_sgt_neg1_i32_fail_thm (e e_1 : IntW 32) :
@@ -1563,8 +1563,8 @@ theorem icmp_x_slt_0_and_icmp_y_sgt_neg1_i32_fail_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_slt_0_xor_icmp_sge_neg2_i32_fail_thm (e : IntW 32) :
@@ -1573,8 +1573,8 @@ theorem icmp_slt_0_xor_icmp_sge_neg2_i32_fail_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_slt_0_or_icmp_add_1_sge_100_i32_fail_thm (e : IntW 32) :
@@ -1585,8 +1585,8 @@ theorem icmp_slt_0_or_icmp_add_1_sge_100_i32_fail_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem logical_and_icmps1_thm (e : IntW 32) (e_1 : IntW 1) :
@@ -1596,8 +1596,8 @@ theorem logical_and_icmps1_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem logical_and_icmps2_thm (e : IntW 32) (e_1 : IntW 1) :
@@ -1607,8 +1607,8 @@ theorem logical_and_icmps2_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_eq_or_z_or_pow2orz_thm (e e_1 : IntW 8) :
@@ -1617,8 +1617,8 @@ theorem icmp_eq_or_z_or_pow2orz_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_eq_or_z_or_pow2orz_logical_thm (e e_1 : IntW 8) :
@@ -1628,8 +1628,8 @@ theorem icmp_eq_or_z_or_pow2orz_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_eq_or_z_or_pow2orz_fail_logic_or_thm (e e_1 : IntW 8) :
@@ -1640,8 +1640,8 @@ theorem icmp_eq_or_z_or_pow2orz_fail_logic_or_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_ne_and_z_and_onefail_thm (e : IntW 8) :
@@ -1651,8 +1651,8 @@ theorem icmp_ne_and_z_and_onefail_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_eq_or_z_or_pow2orz_fail_nonzero_const_thm (e e_1 : IntW 8) :
@@ -1662,8 +1662,8 @@ theorem icmp_eq_or_z_or_pow2orz_fail_nonzero_const_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_eq_or_z_or_pow2orz_fail_bad_pred2_thm (e e_1 : IntW 8) :
@@ -1673,8 +1673,8 @@ theorem icmp_eq_or_z_or_pow2orz_fail_bad_pred2_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_slt_to_mask_thm (e : IntW 8) :
@@ -1683,8 +1683,8 @@ theorem and_slt_to_mask_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_sgt_to_mask_thm (e : IntW 8) :
@@ -1693,8 +1693,8 @@ theorem and_sgt_to_mask_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_ugt_to_mask_thm (e : IntW 8) :
@@ -1703,7 +1703,7 @@ theorem and_ugt_to_mask_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

@@ -9,7 +9,7 @@ theorem foo_thm (e : IntW 32) : LLVM.and e (LLVM.or (const? 32 0) (const? 32 7))
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

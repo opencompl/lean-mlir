@@ -9,24 +9,24 @@ theorem zext_thm (e : IntW 1) : select e (const? 41 1) (const? 41 0) ⊑ zext 41
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sext_thm (e : IntW 1) : select e (const? 41 (-1)) (const? 41 0) ⊑ sext 41 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem not_zext_thm (e : IntW 1) : select e (const? 999 0) (const? 999 1) ⊑ zext 999 (LLVM.xor e (const? 1 1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem not_sext_thm (e : IntW 1) :
@@ -34,8 +34,8 @@ theorem not_sext_thm (e : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test3_thm (e : IntW 41) :
@@ -43,8 +43,8 @@ theorem test3_thm (e : IntW 41) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test4_thm (e : IntW 1023) :
@@ -53,7 +53,7 @@ theorem test4_thm (e : IntW 1023) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

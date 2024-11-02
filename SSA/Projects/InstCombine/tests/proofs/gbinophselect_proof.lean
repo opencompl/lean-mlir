@@ -9,8 +9,8 @@ theorem and_sel_op0_thm (e : IntW 1) : LLVM.and (select e (const? 32 25) (const?
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem mul_sel_op0_thm (e : IntW 32) (e_1 : IntW 1) :
@@ -18,8 +18,8 @@ theorem mul_sel_op0_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sub_sel_op1_thm (e : IntW 1) :
@@ -28,8 +28,8 @@ theorem sub_sel_op1_thm (e : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_sel_op1_thm (e : IntW 1) :
@@ -37,7 +37,7 @@ theorem ashr_sel_op1_thm (e : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

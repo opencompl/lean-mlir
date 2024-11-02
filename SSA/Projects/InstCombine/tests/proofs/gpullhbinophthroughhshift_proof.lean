@@ -10,8 +10,8 @@ theorem and_signbit_shl_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_nosignbit_shl_thm (e : IntW 32) :
@@ -20,8 +20,8 @@ theorem and_nosignbit_shl_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem or_signbit_shl_thm (e : IntW 32) :
@@ -29,8 +29,8 @@ theorem or_signbit_shl_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem or_nosignbit_shl_thm (e : IntW 32) :
@@ -38,8 +38,8 @@ theorem or_nosignbit_shl_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_signbit_shl_thm (e : IntW 32) :
@@ -47,8 +47,8 @@ theorem xor_signbit_shl_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_nosignbit_shl_thm (e : IntW 32) :
@@ -57,8 +57,8 @@ theorem xor_nosignbit_shl_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_signbit_shl_thm (e : IntW 32) :
@@ -66,8 +66,8 @@ theorem add_signbit_shl_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_nosignbit_shl_thm (e : IntW 32) :
@@ -75,8 +75,8 @@ theorem add_nosignbit_shl_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_signbit_lshr_thm (e : IntW 32) :
@@ -84,8 +84,8 @@ theorem and_signbit_lshr_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_nosignbit_lshr_thm (e : IntW 32) :
@@ -93,8 +93,8 @@ theorem and_nosignbit_lshr_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem or_signbit_lshr_thm (e : IntW 32) :
@@ -102,8 +102,8 @@ theorem or_signbit_lshr_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem or_nosignbit_lshr_thm (e : IntW 32) :
@@ -111,8 +111,8 @@ theorem or_nosignbit_lshr_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_signbit_lshr_thm (e : IntW 32) :
@@ -120,8 +120,8 @@ theorem xor_signbit_lshr_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_nosignbit_lshr_thm (e : IntW 32) :
@@ -129,8 +129,8 @@ theorem xor_nosignbit_lshr_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_signbit_ashr_thm (e : IntW 32) :
@@ -138,8 +138,8 @@ theorem and_signbit_ashr_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_nosignbit_ashr_thm (e : IntW 32) :
@@ -147,8 +147,8 @@ theorem and_nosignbit_ashr_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem or_signbit_ashr_thm (e : IntW 32) :
@@ -156,8 +156,8 @@ theorem or_signbit_ashr_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem or_nosignbit_ashr_thm (e : IntW 32) :
@@ -165,8 +165,8 @@ theorem or_nosignbit_ashr_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_signbit_ashr_thm (e : IntW 32) :
@@ -174,8 +174,8 @@ theorem xor_signbit_ashr_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_nosignbit_ashr_thm (e : IntW 32) :
@@ -183,7 +183,7 @@ theorem xor_nosignbit_ashr_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

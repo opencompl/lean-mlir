@@ -12,8 +12,8 @@ theorem PR39793_bswap_u64_as_u16_trunc_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR39793_bswap_u32_as_u16_trunc_thm (e : IntW 32) :
@@ -23,7 +23,7 @@ theorem PR39793_bswap_u32_as_u16_trunc_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

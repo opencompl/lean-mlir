@@ -11,8 +11,8 @@ theorem p0_scalar_urem_by_const_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem p1_scalar_urem_by_nonconst_thm (e e_1 : IntW 32) :
@@ -21,8 +21,8 @@ theorem p1_scalar_urem_by_nonconst_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem p2_scalar_shifted_urem_by_const_thm (e e_1 : IntW 32) :
@@ -32,7 +32,7 @@ theorem p2_scalar_shifted_urem_by_const_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

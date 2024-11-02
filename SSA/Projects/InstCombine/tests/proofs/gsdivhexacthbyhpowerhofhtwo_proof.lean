@@ -9,8 +9,8 @@ theorem t0_thm (e : IntW 8) : LLVM.sdiv e (const? 8 32) ⊑ ashr e (const? 8 5) 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem n2_thm (e : IntW 8) :
@@ -18,8 +18,8 @@ theorem n2_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem shl1_nsw_thm (e e_1 : IntW 8) :
@@ -27,8 +27,8 @@ theorem shl1_nsw_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem shl1_nsw_not_exact_thm (e e_1 : IntW 8) :
@@ -37,8 +37,8 @@ theorem shl1_nsw_not_exact_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem prove_exact_with_high_mask_thm (e : IntW 8) :
@@ -46,15 +46,15 @@ theorem prove_exact_with_high_mask_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem prove_exact_with_high_mask_limit_thm (e : IntW 8) : LLVM.sdiv (LLVM.and e (const? 8 (-8))) (const? 8 8) ⊑ ashr e (const? 8 3) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

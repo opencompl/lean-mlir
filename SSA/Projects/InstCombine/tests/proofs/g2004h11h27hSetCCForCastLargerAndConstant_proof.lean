@@ -10,24 +10,24 @@ theorem lt_signed_to_large_unsigned_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lt_signed_to_large_signed_thm (e : IntW 8) : icmp IntPredicate.slt (sext 32 e) (const? 32 1024) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lt_signed_to_large_negative_thm (e : IntW 8) : icmp IntPredicate.slt (sext 32 e) (const? 32 (-1024)) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lt_signed_to_small_unsigned_thm (e : IntW 8) :
@@ -35,8 +35,8 @@ theorem lt_signed_to_small_unsigned_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lt_signed_to_small_signed_thm (e : IntW 8) :
@@ -44,8 +44,8 @@ theorem lt_signed_to_small_signed_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lt_signed_to_small_negative_thm (e : IntW 8) :
@@ -53,32 +53,32 @@ theorem lt_signed_to_small_negative_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lt_unsigned_to_large_unsigned_thm (e : IntW 8) : icmp IntPredicate.ult (zext 32 e) (const? 32 1024) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lt_unsigned_to_large_signed_thm (e : IntW 8) : icmp IntPredicate.slt (zext 32 e) (const? 32 1024) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lt_unsigned_to_large_negative_thm (e : IntW 8) : icmp IntPredicate.slt (zext 32 e) (const? 32 (-1024)) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lt_unsigned_to_small_unsigned_thm (e : IntW 8) :
@@ -86,8 +86,8 @@ theorem lt_unsigned_to_small_unsigned_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lt_unsigned_to_small_signed_thm (e : IntW 8) :
@@ -95,16 +95,16 @@ theorem lt_unsigned_to_small_signed_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lt_unsigned_to_small_negative_thm (e : IntW 8) : icmp IntPredicate.slt (zext 32 e) (const? 32 (-17)) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem gt_signed_to_large_unsigned_thm (e : IntW 8) :
@@ -112,24 +112,24 @@ theorem gt_signed_to_large_unsigned_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem gt_signed_to_large_signed_thm (e : IntW 8) : icmp IntPredicate.sgt (sext 32 e) (const? 32 1024) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem gt_signed_to_large_negative_thm (e : IntW 8) : icmp IntPredicate.sgt (sext 32 e) (const? 32 (-1024)) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem gt_signed_to_small_unsigned_thm (e : IntW 8) :
@@ -137,8 +137,8 @@ theorem gt_signed_to_small_unsigned_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem gt_signed_to_small_signed_thm (e : IntW 8) :
@@ -146,8 +146,8 @@ theorem gt_signed_to_small_signed_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem gt_signed_to_small_negative_thm (e : IntW 8) :
@@ -155,32 +155,32 @@ theorem gt_signed_to_small_negative_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem gt_unsigned_to_large_unsigned_thm (e : IntW 8) : icmp IntPredicate.ugt (zext 32 e) (const? 32 1024) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem gt_unsigned_to_large_signed_thm (e : IntW 8) : icmp IntPredicate.sgt (zext 32 e) (const? 32 1024) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem gt_unsigned_to_large_negative_thm (e : IntW 8) : icmp IntPredicate.sgt (zext 32 e) (const? 32 (-1024)) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem gt_unsigned_to_small_unsigned_thm (e : IntW 8) :
@@ -188,8 +188,8 @@ theorem gt_unsigned_to_small_unsigned_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem gt_unsigned_to_small_signed_thm (e : IntW 8) :
@@ -197,16 +197,16 @@ theorem gt_unsigned_to_small_signed_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem gt_unsigned_to_small_negative_thm (e : IntW 8) : icmp IntPredicate.sgt (zext 32 e) (const? 32 (-17)) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem different_size_zext_zext_ugt_thm (e : IntW 4) (e_1 : IntW 7) :
@@ -214,8 +214,8 @@ theorem different_size_zext_zext_ugt_thm (e : IntW 4) (e_1 : IntW 7) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem different_size_zext_zext_ult_thm (e : IntW 7) (e_1 : IntW 4) :
@@ -223,8 +223,8 @@ theorem different_size_zext_zext_ult_thm (e : IntW 7) (e_1 : IntW 4) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem different_size_zext_zext_eq_thm (e : IntW 7) (e_1 : IntW 4) :
@@ -232,8 +232,8 @@ theorem different_size_zext_zext_eq_thm (e : IntW 7) (e_1 : IntW 4) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem different_size_zext_zext_ne_commute_thm (e : IntW 4) (e_1 : IntW 7) :
@@ -241,8 +241,8 @@ theorem different_size_zext_zext_ne_commute_thm (e : IntW 4) (e_1 : IntW 7) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem different_size_zext_zext_slt_thm (e : IntW 4) (e_1 : IntW 7) :
@@ -250,8 +250,8 @@ theorem different_size_zext_zext_slt_thm (e : IntW 4) (e_1 : IntW 7) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem different_size_zext_zext_sgt_thm (e : IntW 4) (e_1 : IntW 7) :
@@ -259,8 +259,8 @@ theorem different_size_zext_zext_sgt_thm (e : IntW 4) (e_1 : IntW 7) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem different_size_sext_sext_sgt_thm (e : IntW 4) (e_1 : IntW 7) :
@@ -268,8 +268,8 @@ theorem different_size_sext_sext_sgt_thm (e : IntW 4) (e_1 : IntW 7) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem different_size_sext_sext_sle_thm (e : IntW 4) (e_1 : IntW 7) :
@@ -277,8 +277,8 @@ theorem different_size_sext_sext_sle_thm (e : IntW 4) (e_1 : IntW 7) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem different_size_sext_sext_eq_thm (e : IntW 4) (e_1 : IntW 7) :
@@ -286,8 +286,8 @@ theorem different_size_sext_sext_eq_thm (e : IntW 4) (e_1 : IntW 7) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem different_size_sext_sext_ule_thm (e : IntW 4) (e_1 : IntW 7) :
@@ -295,7 +295,7 @@ theorem different_size_sext_sext_ule_thm (e : IntW 4) (e_1 : IntW 7) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

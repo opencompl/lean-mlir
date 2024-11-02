@@ -10,8 +10,8 @@ theorem t0_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem t1_exact_thm (e : IntW 64) :
@@ -19,8 +19,8 @@ theorem t1_exact_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem t2_thm (e : IntW 64) :
@@ -28,8 +28,8 @@ theorem t2_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem t3_exact_thm (e : IntW 64) :
@@ -37,8 +37,8 @@ theorem t3_exact_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem n9_thm (e : IntW 64) :
@@ -47,8 +47,8 @@ theorem n9_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem n10_thm (e : IntW 64) :
@@ -57,7 +57,7 @@ theorem n10_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

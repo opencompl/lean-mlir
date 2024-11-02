@@ -9,7 +9,7 @@ theorem test_thm (e : IntW 26) : sub (mul e (const? 26 2885)) (mul e (const? 26 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

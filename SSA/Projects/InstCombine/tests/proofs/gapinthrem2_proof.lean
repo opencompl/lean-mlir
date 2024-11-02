@@ -10,8 +10,8 @@ theorem test1_thm (e : IntW 333) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test2_thm (e : IntW 499) :
@@ -20,8 +20,8 @@ theorem test2_thm (e : IntW 499) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test3_thm (e : IntW 1) (e_1 : IntW 599) :
@@ -30,7 +30,7 @@ theorem test3_thm (e : IntW 1) (e_1 : IntW 599) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

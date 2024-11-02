@@ -10,8 +10,8 @@ theorem mul_selectp2_x_thm (e : IntW 8) (e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem mul_selectp2_x_propegate_nuw_thm (e : IntW 8) (e_1 : IntW 1) :
@@ -20,8 +20,8 @@ theorem mul_selectp2_x_propegate_nuw_thm (e : IntW 8) (e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem mul_selectp2_x_non_const_thm (e e_1 : IntW 8) (e_2 : IntW 1) :
@@ -29,8 +29,8 @@ theorem mul_selectp2_x_non_const_thm (e e_1 : IntW 8) (e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem mul_x_selectp2_thm (e : IntW 1) (e_1 : IntW 8) :
@@ -39,8 +39,8 @@ theorem mul_x_selectp2_thm (e : IntW 1) (e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem shl_add_log_may_cause_poison_pr62175_with_nuw_thm (e e_1 : IntW 8) :
@@ -48,8 +48,8 @@ theorem shl_add_log_may_cause_poison_pr62175_with_nuw_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem shl_add_log_may_cause_poison_pr62175_with_nsw_thm (e e_1 : IntW 8) :
@@ -57,7 +57,7 @@ theorem shl_add_log_may_cause_poison_pr62175_with_nsw_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

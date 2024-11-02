@@ -11,8 +11,8 @@ theorem shl_and_and_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem shl_and_and_fail_thm (e e_1 : IntW 8) :
@@ -21,8 +21,8 @@ theorem shl_and_and_fail_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem shl_add_add_thm (e e_1 : IntW 8) :
@@ -31,8 +31,8 @@ theorem shl_add_add_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem shl_add_add_fail_thm (e e_1 : IntW 8) :
@@ -42,8 +42,8 @@ theorem shl_add_add_fail_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem shl_and_xor_thm (e e_1 : IntW 8) :
@@ -52,8 +52,8 @@ theorem shl_and_xor_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem shl_and_add_thm (e e_1 : IntW 8) :
@@ -62,8 +62,8 @@ theorem shl_and_add_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lshr_or_and_thm (e e_1 : IntW 8) :
@@ -72,8 +72,8 @@ theorem lshr_or_and_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lshr_or_or_fail_thm (e e_1 : IntW 8) :
@@ -82,8 +82,8 @@ theorem lshr_or_or_fail_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lshr_or_or_no_const_thm (e e_1 e_2 e_3 : IntW 8) :
@@ -91,8 +91,8 @@ theorem lshr_or_or_no_const_thm (e e_1 e_2 e_3 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem shl_xor_xor_no_const_thm (e e_1 e_2 e_3 : IntW 8) :
@@ -100,8 +100,8 @@ theorem shl_xor_xor_no_const_thm (e e_1 e_2 e_3 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem shl_add_add_no_const_thm (e e_1 e_2 e_3 : IntW 8) :
@@ -109,8 +109,8 @@ theorem shl_add_add_no_const_thm (e e_1 e_2 e_3 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lshr_xor_or_good_mask_thm (e e_1 : IntW 8) :
@@ -119,8 +119,8 @@ theorem lshr_xor_or_good_mask_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem shl_xor_xor_good_mask_thm (e e_1 : IntW 8) :
@@ -129,8 +129,8 @@ theorem shl_xor_xor_good_mask_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem shl_xor_xor_bad_mask_distribute_thm (e e_1 : IntW 8) :
@@ -139,8 +139,8 @@ theorem shl_xor_xor_bad_mask_distribute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem shl_add_and_thm (e e_1 : IntW 8) :
@@ -149,8 +149,8 @@ theorem shl_add_and_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lshr_and_add_fail_thm (e e_1 : IntW 8) :
@@ -160,8 +160,8 @@ theorem lshr_and_add_fail_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lshr_add_or_fail_thm (e e_1 : IntW 8) :
@@ -171,8 +171,8 @@ theorem lshr_add_or_fail_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lshr_add_xor_fail_thm (e e_1 : IntW 8) :
@@ -182,8 +182,8 @@ theorem lshr_add_xor_fail_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem shl_add_and_fail_mismatch_shift_thm (e e_1 : IntW 8) :
@@ -193,8 +193,8 @@ theorem shl_add_and_fail_mismatch_shift_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_ashr_not_thm (e e_1 e_2 : IntW 8) :
@@ -203,8 +203,8 @@ theorem and_ashr_not_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem and_ashr_not_commuted_thm (e e_1 e_2 : IntW 8) :
@@ -213,8 +213,8 @@ theorem and_ashr_not_commuted_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem or_ashr_not_thm (e e_1 e_2 : IntW 8) :
@@ -223,8 +223,8 @@ theorem or_ashr_not_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem or_ashr_not_commuted_thm (e e_1 e_2 : IntW 8) :
@@ -233,8 +233,8 @@ theorem or_ashr_not_commuted_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_ashr_not_thm (e e_1 e_2 : IntW 8) :
@@ -243,8 +243,8 @@ theorem xor_ashr_not_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_ashr_not_commuted_thm (e e_1 e_2 : IntW 8) :
@@ -253,8 +253,8 @@ theorem xor_ashr_not_commuted_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_ashr_not_fail_lshr_ashr_thm (e e_1 e_2 : IntW 8) :
@@ -263,8 +263,8 @@ theorem xor_ashr_not_fail_lshr_ashr_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_ashr_not_fail_ashr_lshr_thm (e e_1 e_2 : IntW 8) :
@@ -273,8 +273,8 @@ theorem xor_ashr_not_fail_ashr_lshr_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_ashr_not_fail_invalid_xor_constant_thm (e e_1 e_2 : IntW 8) :
@@ -283,7 +283,7 @@ theorem xor_ashr_not_fail_invalid_xor_constant_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

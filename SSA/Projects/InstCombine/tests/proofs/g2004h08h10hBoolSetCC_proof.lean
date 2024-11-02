@@ -9,7 +9,7 @@ theorem test_thm (e : IntW 1) : icmp IntPredicate.ult e (const? 1 0) ⊑ const? 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

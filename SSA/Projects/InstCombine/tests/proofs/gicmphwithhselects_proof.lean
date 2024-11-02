@@ -10,8 +10,8 @@ theorem both_sides_fold_slt_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem both_sides_fold_eq_thm (e : IntW 32) (e_1 : IntW 1) :
@@ -19,8 +19,8 @@ theorem both_sides_fold_eq_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem one_side_fold_slt_thm (e e_1 e_2 : IntW 32) (e_3 : IntW 1) :
@@ -29,8 +29,8 @@ theorem one_side_fold_slt_thm (e e_1 e_2 : IntW 32) (e_3 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem one_side_fold_sgt_thm (e e_1 e_2 : IntW 32) (e_3 : IntW 1) :
@@ -39,8 +39,8 @@ theorem one_side_fold_sgt_thm (e e_1 e_2 : IntW 32) (e_3 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem one_side_fold_eq_thm (e e_1 e_2 : IntW 32) (e_3 : IntW 1) :
@@ -49,7 +49,7 @@ theorem one_side_fold_eq_thm (e e_1 e_2 : IntW 32) (e_3 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

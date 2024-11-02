@@ -9,24 +9,24 @@ theorem udiv_i8_thm (e e_1 : IntW 8) : trunc 8 (LLVM.udiv (zext 32 e_1) (zext 32
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem urem_i8_thm (e e_1 : IntW 8) : trunc 8 (urem (zext 32 e_1) (zext 32 e)) ⊑ urem e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem udiv_i32_thm (e e_1 : IntW 8) : LLVM.udiv (zext 32 e_1) (zext 32 e) ⊑ zext 32 (LLVM.udiv e_1 e) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem udiv_i32_multiuse_thm (e e_1 : IntW 8) :
@@ -36,24 +36,24 @@ theorem udiv_i32_multiuse_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem udiv_illegal_type_thm (e e_1 : IntW 9) : LLVM.udiv (zext 32 e_1) (zext 32 e) ⊑ zext 32 (LLVM.udiv e_1 e) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem urem_i32_thm (e e_1 : IntW 8) : urem (zext 32 e_1) (zext 32 e) ⊑ zext 32 (urem e_1 e) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem urem_i32_multiuse_thm (e e_1 : IntW 8) :
@@ -63,24 +63,24 @@ theorem urem_i32_multiuse_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem urem_illegal_type_thm (e e_1 : IntW 9) : urem (zext 32 e_1) (zext 32 e) ⊑ zext 32 (urem e_1 e) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem udiv_i32_c_thm (e : IntW 8) : LLVM.udiv (zext 32 e) (const? 32 10) ⊑ zext 32 (LLVM.udiv e (const? 8 10)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem udiv_i32_c_multiuse_thm (e : IntW 8) :
@@ -89,24 +89,24 @@ theorem udiv_i32_c_multiuse_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem udiv_illegal_type_c_thm (e : IntW 9) : LLVM.udiv (zext 32 e) (const? 32 10) ⊑ zext 32 (LLVM.udiv e (const? 9 10)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem urem_i32_c_thm (e : IntW 8) : urem (zext 32 e) (const? 32 10) ⊑ zext 32 (urem e (const? 8 10)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem urem_i32_c_multiuse_thm (e : IntW 8) :
@@ -115,31 +115,31 @@ theorem urem_i32_c_multiuse_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem urem_illegal_type_c_thm (e : IntW 9) : urem (zext 32 e) (const? 32 10) ⊑ zext 32 (urem e (const? 9 10)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem udiv_c_i32_thm (e : IntW 8) : LLVM.udiv (const? 32 10) (zext 32 e) ⊑ zext 32 (LLVM.udiv (const? 8 10) e) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem urem_c_i32_thm (e : IntW 8) : urem (const? 32 10) (zext 32 e) ⊑ zext 32 (urem (const? 8 10) e) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

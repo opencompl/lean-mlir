@@ -11,8 +11,8 @@ theorem srem2_ashr_mask_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem srem8_ashr_mask_thm (e : IntW 32) :
@@ -22,16 +22,16 @@ theorem srem8_ashr_mask_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_can_be_lshr_thm (e : IntW 32) : trunc 16 (ashr e (const? 32 16)) ⊑ trunc 16 (lshr e (const? 32 16)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_can_be_lshr_2_thm (e : IntW 32) :
@@ -40,7 +40,7 @@ theorem ashr_can_be_lshr_2_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

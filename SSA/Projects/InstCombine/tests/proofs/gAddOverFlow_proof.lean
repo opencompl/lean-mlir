@@ -11,8 +11,8 @@ theorem oppositesign_thm (e e_1 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem zero_sign_bit_thm (e : IntW 16) :
@@ -21,8 +21,8 @@ theorem zero_sign_bit_thm (e : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem zero_sign_bit2_thm (e e_1 : IntW 16) :
@@ -31,8 +31,8 @@ theorem zero_sign_bit2_thm (e e_1 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ripple_nsw1_thm (e e_1 : IntW 16) :
@@ -41,8 +41,8 @@ theorem ripple_nsw1_thm (e e_1 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ripple_nsw2_thm (e e_1 : IntW 16) :
@@ -51,8 +51,8 @@ theorem ripple_nsw2_thm (e e_1 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ripple_nsw3_thm (e e_1 : IntW 16) :
@@ -61,8 +61,8 @@ theorem ripple_nsw3_thm (e e_1 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ripple_nsw4_thm (e e_1 : IntW 16) :
@@ -71,8 +71,8 @@ theorem ripple_nsw4_thm (e e_1 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ripple_nsw5_thm (e e_1 : IntW 16) :
@@ -81,8 +81,8 @@ theorem ripple_nsw5_thm (e e_1 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ripple_nsw6_thm (e e_1 : IntW 16) :
@@ -91,8 +91,8 @@ theorem ripple_nsw6_thm (e e_1 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ripple_no_nsw2_thm (e e_1 : IntW 16) :
@@ -101,8 +101,8 @@ theorem ripple_no_nsw2_thm (e e_1 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR38021_thm (e : IntW 8) :
@@ -111,7 +111,7 @@ theorem PR38021_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

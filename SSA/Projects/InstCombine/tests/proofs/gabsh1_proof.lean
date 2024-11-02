@@ -13,8 +13,8 @@ theorem abs_must_be_positive_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem abs_diff_signed_slt_swap_wrong_pred1_thm (e e_1 : IntW 32) :
@@ -24,7 +24,7 @@ theorem abs_diff_signed_slt_swap_wrong_pred1_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

@@ -10,8 +10,8 @@ theorem slt_and_max_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem slt_and_max_logical_thm (e e_1 : IntW 8) :
@@ -19,8 +19,8 @@ theorem slt_and_max_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem slt_swap_and_max_thm (e e_1 : IntW 8) :
@@ -28,8 +28,8 @@ theorem slt_swap_and_max_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem slt_swap_and_max_logical_thm (e e_1 : IntW 8) :
@@ -37,8 +37,8 @@ theorem slt_swap_and_max_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem slt_swap_and_max_commute_thm (e e_1 : IntW 8) :
@@ -46,8 +46,8 @@ theorem slt_swap_and_max_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem slt_swap_and_max_commute_logical_thm (e e_1 : IntW 8) :
@@ -55,8 +55,8 @@ theorem slt_swap_and_max_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ult_and_max_thm (e e_1 : IntW 8) :
@@ -64,8 +64,8 @@ theorem ult_and_max_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ult_and_max_logical_thm (e e_1 : IntW 8) :
@@ -73,8 +73,8 @@ theorem ult_and_max_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ult_and_max_commute_thm (e e_1 : IntW 8) :
@@ -82,8 +82,8 @@ theorem ult_and_max_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ult_and_max_commute_logical_thm (e e_1 : IntW 8) :
@@ -91,8 +91,8 @@ theorem ult_and_max_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ult_swap_and_max_thm (e e_1 : IntW 8) :
@@ -100,8 +100,8 @@ theorem ult_swap_and_max_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ult_swap_and_max_logical_thm (e e_1 : IntW 8) :
@@ -109,8 +109,8 @@ theorem ult_swap_and_max_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ult_swap_and_max_commute_thm (e e_1 : IntW 8) :
@@ -118,8 +118,8 @@ theorem ult_swap_and_max_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ult_swap_and_max_commute_logical_thm (e e_1 : IntW 8) :
@@ -127,8 +127,8 @@ theorem ult_swap_and_max_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sgt_and_min_thm (e e_1 : IntW 9) :
@@ -136,8 +136,8 @@ theorem sgt_and_min_thm (e e_1 : IntW 9) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sgt_and_min_logical_thm (e e_1 : IntW 9) :
@@ -145,8 +145,8 @@ theorem sgt_and_min_logical_thm (e e_1 : IntW 9) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sgt_and_min_commute_thm (e e_1 : IntW 8) :
@@ -154,8 +154,8 @@ theorem sgt_and_min_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sgt_and_min_commute_logical_thm (e e_1 : IntW 8) :
@@ -163,8 +163,8 @@ theorem sgt_and_min_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sgt_swap_and_min_thm (e e_1 : IntW 8) :
@@ -172,8 +172,8 @@ theorem sgt_swap_and_min_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sgt_swap_and_min_logical_thm (e e_1 : IntW 8) :
@@ -181,8 +181,8 @@ theorem sgt_swap_and_min_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sgt_swap_and_min_commute_thm (e e_1 : IntW 8) :
@@ -190,8 +190,8 @@ theorem sgt_swap_and_min_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sgt_swap_and_min_commute_logical_thm (e e_1 : IntW 8) :
@@ -199,8 +199,8 @@ theorem sgt_swap_and_min_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ugt_and_min_thm (e e_1 : IntW 8) :
@@ -208,8 +208,8 @@ theorem ugt_and_min_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ugt_and_min_logical_thm (e e_1 : IntW 8) :
@@ -217,8 +217,8 @@ theorem ugt_and_min_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ugt_and_min_commute_thm (e e_1 : IntW 8) :
@@ -226,8 +226,8 @@ theorem ugt_and_min_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ugt_and_min_commute_logical_thm (e e_1 : IntW 8) :
@@ -235,8 +235,8 @@ theorem ugt_and_min_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ugt_swap_and_min_thm (e e_1 : IntW 8) :
@@ -244,8 +244,8 @@ theorem ugt_swap_and_min_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ugt_swap_and_min_logical_thm (e e_1 : IntW 8) :
@@ -253,8 +253,8 @@ theorem ugt_swap_and_min_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ugt_swap_and_min_commute_thm (e e_1 : IntW 8) :
@@ -262,8 +262,8 @@ theorem ugt_swap_and_min_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ugt_swap_and_min_commute_logical_thm (e e_1 : IntW 8) :
@@ -271,8 +271,8 @@ theorem ugt_swap_and_min_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sge_or_not_max_thm (e e_1 : IntW 8) :
@@ -280,8 +280,8 @@ theorem sge_or_not_max_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sge_or_not_max_logical_thm (e e_1 : IntW 8) :
@@ -289,8 +289,8 @@ theorem sge_or_not_max_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sge_or_not_max_commute_thm (e e_1 : IntW 8) :
@@ -298,8 +298,8 @@ theorem sge_or_not_max_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sge_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
@@ -307,8 +307,8 @@ theorem sge_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sge_swap_or_not_max_thm (e e_1 : IntW 8) :
@@ -316,8 +316,8 @@ theorem sge_swap_or_not_max_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sge_swap_or_not_max_logical_thm (e e_1 : IntW 8) :
@@ -325,8 +325,8 @@ theorem sge_swap_or_not_max_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sge_swap_or_not_max_commute_thm (e e_1 : IntW 8) :
@@ -334,8 +334,8 @@ theorem sge_swap_or_not_max_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sge_swap_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
@@ -343,8 +343,8 @@ theorem sge_swap_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem uge_or_not_max_thm (e e_1 : IntW 8) :
@@ -352,8 +352,8 @@ theorem uge_or_not_max_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem uge_or_not_max_logical_thm (e e_1 : IntW 8) :
@@ -361,8 +361,8 @@ theorem uge_or_not_max_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem uge_or_not_max_commute_thm (e e_1 : IntW 8) :
@@ -370,8 +370,8 @@ theorem uge_or_not_max_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem uge_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
@@ -379,8 +379,8 @@ theorem uge_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem uge_swap_or_not_max_thm (e e_1 : IntW 8) :
@@ -388,8 +388,8 @@ theorem uge_swap_or_not_max_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem uge_swap_or_not_max_logical_thm (e e_1 : IntW 8) :
@@ -397,8 +397,8 @@ theorem uge_swap_or_not_max_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem uge_swap_or_not_max_commute_thm (e e_1 : IntW 8) :
@@ -406,8 +406,8 @@ theorem uge_swap_or_not_max_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem uge_swap_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
@@ -415,8 +415,8 @@ theorem uge_swap_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sle_or_not_min_thm (e e_1 : IntW 8) :
@@ -424,8 +424,8 @@ theorem sle_or_not_min_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sle_or_not_min_logical_thm (e e_1 : IntW 8) :
@@ -433,8 +433,8 @@ theorem sle_or_not_min_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sle_or_not_min_commute_thm (e e_1 : IntW 8) :
@@ -442,8 +442,8 @@ theorem sle_or_not_min_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sle_or_not_min_commute_logical_thm (e e_1 : IntW 8) :
@@ -451,8 +451,8 @@ theorem sle_or_not_min_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sle_swap_or_not_min_thm (e e_1 : IntW 8) :
@@ -460,8 +460,8 @@ theorem sle_swap_or_not_min_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sle_swap_or_not_min_logical_thm (e e_1 : IntW 8) :
@@ -469,8 +469,8 @@ theorem sle_swap_or_not_min_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sle_swap_or_not_min_commute_thm (e e_1 : IntW 8) :
@@ -478,8 +478,8 @@ theorem sle_swap_or_not_min_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sle_swap_or_not_min_commute_logical_thm (e e_1 : IntW 8) :
@@ -487,8 +487,8 @@ theorem sle_swap_or_not_min_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ule_or_not_min_thm (e e_1 : IntW 427) :
@@ -496,8 +496,8 @@ theorem ule_or_not_min_thm (e e_1 : IntW 427) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ule_or_not_min_logical_thm (e e_1 : IntW 427) :
@@ -505,8 +505,8 @@ theorem ule_or_not_min_logical_thm (e e_1 : IntW 427) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ule_or_not_min_commute_thm (e e_1 : IntW 8) :
@@ -514,8 +514,8 @@ theorem ule_or_not_min_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ule_or_not_min_commute_logical_thm (e e_1 : IntW 8) :
@@ -523,8 +523,8 @@ theorem ule_or_not_min_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ule_swap_or_not_min_thm (e e_1 : IntW 8) :
@@ -532,8 +532,8 @@ theorem ule_swap_or_not_min_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ule_swap_or_not_min_logical_thm (e e_1 : IntW 8) :
@@ -541,8 +541,8 @@ theorem ule_swap_or_not_min_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ule_swap_or_not_min_commute_thm (e e_1 : IntW 8) :
@@ -550,8 +550,8 @@ theorem ule_swap_or_not_min_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ule_swap_or_not_min_commute_logical_thm (e e_1 : IntW 8) :
@@ -559,8 +559,8 @@ theorem ule_swap_or_not_min_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sge_and_max_thm (e e_1 : IntW 8) :
@@ -569,8 +569,8 @@ theorem sge_and_max_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sge_and_max_logical_thm (e e_1 : IntW 8) :
@@ -579,8 +579,8 @@ theorem sge_and_max_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sge_and_max_logical_samesign_thm (e e_1 : IntW 8) :
@@ -589,8 +589,8 @@ theorem sge_and_max_logical_samesign_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sge_and_max_commute_thm (e e_1 : IntW 8) :
@@ -599,8 +599,8 @@ theorem sge_and_max_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sge_and_max_commute_logical_thm (e e_1 : IntW 8) :
@@ -609,8 +609,8 @@ theorem sge_and_max_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sge_swap_and_max_thm (e e_1 : IntW 8) :
@@ -619,8 +619,8 @@ theorem sge_swap_and_max_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sge_swap_and_max_logical_thm (e e_1 : IntW 8) :
@@ -629,8 +629,8 @@ theorem sge_swap_and_max_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sge_swap_and_max_commute_thm (e e_1 : IntW 8) :
@@ -639,8 +639,8 @@ theorem sge_swap_and_max_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sge_swap_and_max_commute_logical_thm (e e_1 : IntW 8) :
@@ -649,8 +649,8 @@ theorem sge_swap_and_max_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem uge_and_max_thm (e e_1 : IntW 8) :
@@ -659,8 +659,8 @@ theorem uge_and_max_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem uge_and_max_logical_thm (e e_1 : IntW 8) :
@@ -669,8 +669,8 @@ theorem uge_and_max_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem uge_and_max_commute_thm (e e_1 : IntW 8) :
@@ -679,8 +679,8 @@ theorem uge_and_max_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem uge_and_max_commute_logical_thm (e e_1 : IntW 8) :
@@ -689,8 +689,8 @@ theorem uge_and_max_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem uge_swap_and_max_thm (e e_1 : IntW 8) :
@@ -699,8 +699,8 @@ theorem uge_swap_and_max_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem uge_swap_and_max_logical_thm (e e_1 : IntW 8) :
@@ -709,8 +709,8 @@ theorem uge_swap_and_max_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem uge_swap_and_max_commute_thm (e e_1 : IntW 8) :
@@ -719,8 +719,8 @@ theorem uge_swap_and_max_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem uge_swap_and_max_commute_logical_thm (e e_1 : IntW 8) :
@@ -729,8 +729,8 @@ theorem uge_swap_and_max_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sle_and_min_thm (e e_1 : IntW 8) :
@@ -739,8 +739,8 @@ theorem sle_and_min_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sle_and_min_logical_thm (e e_1 : IntW 8) :
@@ -749,8 +749,8 @@ theorem sle_and_min_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sle_and_min_commute_thm (e e_1 : IntW 8) :
@@ -759,8 +759,8 @@ theorem sle_and_min_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sle_and_min_commute_logical_thm (e e_1 : IntW 8) :
@@ -769,8 +769,8 @@ theorem sle_and_min_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sle_swap_and_min_thm (e e_1 : IntW 8) :
@@ -779,8 +779,8 @@ theorem sle_swap_and_min_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sle_swap_and_min_logical_thm (e e_1 : IntW 8) :
@@ -789,8 +789,8 @@ theorem sle_swap_and_min_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sle_swap_and_min_commute_thm (e e_1 : IntW 8) :
@@ -799,8 +799,8 @@ theorem sle_swap_and_min_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sle_swap_and_min_commute_logical_thm (e e_1 : IntW 8) :
@@ -809,8 +809,8 @@ theorem sle_swap_and_min_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ule_and_min_thm (e e_1 : IntW 8) :
@@ -819,8 +819,8 @@ theorem ule_and_min_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ule_and_min_logical_thm (e e_1 : IntW 8) :
@@ -829,8 +829,8 @@ theorem ule_and_min_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ule_and_min_commute_thm (e e_1 : IntW 8) :
@@ -839,8 +839,8 @@ theorem ule_and_min_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ule_and_min_commute_logical_thm (e e_1 : IntW 8) :
@@ -849,8 +849,8 @@ theorem ule_and_min_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ule_swap_and_min_thm (e e_1 : IntW 8) :
@@ -859,8 +859,8 @@ theorem ule_swap_and_min_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ule_swap_and_min_logical_thm (e e_1 : IntW 8) :
@@ -869,8 +869,8 @@ theorem ule_swap_and_min_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ule_swap_and_min_commute_thm (e e_1 : IntW 8) :
@@ -879,8 +879,8 @@ theorem ule_swap_and_min_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ule_swap_and_min_commute_logical_thm (e e_1 : IntW 8) :
@@ -889,8 +889,8 @@ theorem ule_swap_and_min_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sge_or_max_thm (e e_1 : IntW 8) :
@@ -898,8 +898,8 @@ theorem sge_or_max_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sge_or_max_logical_thm (e e_1 : IntW 8) :
@@ -908,8 +908,8 @@ theorem sge_or_max_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sge_or_max_commute_thm (e e_1 : IntW 8) :
@@ -917,8 +917,8 @@ theorem sge_or_max_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sge_swap_or_max_thm (e e_1 : IntW 8) :
@@ -926,8 +926,8 @@ theorem sge_swap_or_max_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sge_swap_or_max_logical_thm (e e_1 : IntW 8) :
@@ -936,8 +936,8 @@ theorem sge_swap_or_max_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sge_swap_or_max_commute_thm (e e_1 : IntW 8) :
@@ -945,8 +945,8 @@ theorem sge_swap_or_max_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem uge_or_max_thm (e e_1 : IntW 8) :
@@ -955,8 +955,8 @@ theorem uge_or_max_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem uge_or_max_logical_thm (e e_1 : IntW 8) :
@@ -965,8 +965,8 @@ theorem uge_or_max_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem uge_or_max_commute_thm (e e_1 : IntW 8) :
@@ -975,8 +975,8 @@ theorem uge_or_max_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem uge_swap_or_max_thm (e e_1 : IntW 8) :
@@ -984,8 +984,8 @@ theorem uge_swap_or_max_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem uge_swap_or_max_logical_thm (e e_1 : IntW 8) :
@@ -994,8 +994,8 @@ theorem uge_swap_or_max_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem uge_swap_or_max_commute_thm (e e_1 : IntW 8) :
@@ -1004,8 +1004,8 @@ theorem uge_swap_or_max_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sle_or_min_thm (e e_1 : IntW 8) :
@@ -1014,8 +1014,8 @@ theorem sle_or_min_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sle_or_min_logical_thm (e e_1 : IntW 8) :
@@ -1024,8 +1024,8 @@ theorem sle_or_min_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sle_or_min_commute_thm (e e_1 : IntW 8) :
@@ -1034,8 +1034,8 @@ theorem sle_or_min_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sle_swap_or_min_thm (e e_1 : IntW 8) :
@@ -1044,8 +1044,8 @@ theorem sle_swap_or_min_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sle_swap_or_min_logical_thm (e e_1 : IntW 8) :
@@ -1054,8 +1054,8 @@ theorem sle_swap_or_min_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sle_swap_or_min_commute_thm (e e_1 : IntW 8) :
@@ -1064,8 +1064,8 @@ theorem sle_swap_or_min_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ule_or_min_thm (e e_1 : IntW 8) :
@@ -1073,8 +1073,8 @@ theorem ule_or_min_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ule_or_min_logical_thm (e e_1 : IntW 8) :
@@ -1083,8 +1083,8 @@ theorem ule_or_min_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ule_or_min_commute_thm (e e_1 : IntW 8) :
@@ -1092,8 +1092,8 @@ theorem ule_or_min_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ule_swap_or_min_thm (e e_1 : IntW 8) :
@@ -1101,8 +1101,8 @@ theorem ule_swap_or_min_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ule_swap_or_min_logical_thm (e e_1 : IntW 8) :
@@ -1111,8 +1111,8 @@ theorem ule_swap_or_min_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ule_swap_or_min_commute_thm (e e_1 : IntW 8) :
@@ -1120,8 +1120,8 @@ theorem ule_swap_or_min_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem slt_and_not_max_thm (e e_1 : IntW 8) :
@@ -1130,8 +1130,8 @@ theorem slt_and_not_max_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem slt_and_not_max_logical_thm (e e_1 : IntW 8) :
@@ -1140,8 +1140,8 @@ theorem slt_and_not_max_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem slt_and_not_max_commute_thm (e e_1 : IntW 8) :
@@ -1150,8 +1150,8 @@ theorem slt_and_not_max_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem slt_swap_and_not_max_thm (e e_1 : IntW 8) :
@@ -1159,8 +1159,8 @@ theorem slt_swap_and_not_max_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem slt_swap_and_not_max_logical_thm (e e_1 : IntW 8) :
@@ -1169,8 +1169,8 @@ theorem slt_swap_and_not_max_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem slt_swap_and_not_max_commute_thm (e e_1 : IntW 8) :
@@ -1179,8 +1179,8 @@ theorem slt_swap_and_not_max_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ult_and_not_max_thm (e e_1 : IntW 8) :
@@ -1189,8 +1189,8 @@ theorem ult_and_not_max_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ult_and_not_max_logical_thm (e e_1 : IntW 8) :
@@ -1199,8 +1199,8 @@ theorem ult_and_not_max_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ult_and_not_max_commute_thm (e e_1 : IntW 8) :
@@ -1209,8 +1209,8 @@ theorem ult_and_not_max_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ult_swap_and_not_max_thm (e e_1 : IntW 8) :
@@ -1218,8 +1218,8 @@ theorem ult_swap_and_not_max_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ult_swap_and_not_max_logical_thm (e e_1 : IntW 8) :
@@ -1228,8 +1228,8 @@ theorem ult_swap_and_not_max_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ult_swap_and_not_max_commute_thm (e e_1 : IntW 8) :
@@ -1238,8 +1238,8 @@ theorem ult_swap_and_not_max_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sgt_and_not_min_thm (e e_1 : IntW 8) :
@@ -1248,8 +1248,8 @@ theorem sgt_and_not_min_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sgt_and_not_min_logical_thm (e e_1 : IntW 8) :
@@ -1258,8 +1258,8 @@ theorem sgt_and_not_min_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sgt_and_not_min_commute_thm (e e_1 : IntW 8) :
@@ -1268,8 +1268,8 @@ theorem sgt_and_not_min_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sgt_swap_and_not_min_thm (e e_1 : IntW 8) :
@@ -1278,8 +1278,8 @@ theorem sgt_swap_and_not_min_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sgt_swap_and_not_min_logical_thm (e e_1 : IntW 8) :
@@ -1288,8 +1288,8 @@ theorem sgt_swap_and_not_min_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sgt_swap_and_not_min_commute_thm (e e_1 : IntW 8) :
@@ -1298,8 +1298,8 @@ theorem sgt_swap_and_not_min_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ugt_and_not_min_thm (e e_1 : IntW 8) :
@@ -1307,8 +1307,8 @@ theorem ugt_and_not_min_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ugt_and_not_min_logical_thm (e e_1 : IntW 8) :
@@ -1317,8 +1317,8 @@ theorem ugt_and_not_min_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ugt_and_not_min_commute_thm (e e_1 : IntW 8) :
@@ -1326,8 +1326,8 @@ theorem ugt_and_not_min_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ugt_swap_and_not_min_thm (e e_1 : IntW 8) :
@@ -1335,8 +1335,8 @@ theorem ugt_swap_and_not_min_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ugt_swap_and_not_min_logical_thm (e e_1 : IntW 8) :
@@ -1345,8 +1345,8 @@ theorem ugt_swap_and_not_min_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ugt_swap_and_not_min_commute_thm (e e_1 : IntW 8) :
@@ -1354,8 +1354,8 @@ theorem ugt_swap_and_not_min_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem slt_or_not_max_thm (e e_1 : IntW 8) :
@@ -1364,8 +1364,8 @@ theorem slt_or_not_max_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem slt_or_not_max_logical_thm (e e_1 : IntW 8) :
@@ -1374,8 +1374,8 @@ theorem slt_or_not_max_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem slt_or_not_max_commute_thm (e e_1 : IntW 8) :
@@ -1384,8 +1384,8 @@ theorem slt_or_not_max_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem slt_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
@@ -1394,8 +1394,8 @@ theorem slt_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem slt_swap_or_not_max_thm (e e_1 : IntW 8) :
@@ -1404,8 +1404,8 @@ theorem slt_swap_or_not_max_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem slt_swap_or_not_max_logical_thm (e e_1 : IntW 8) :
@@ -1414,8 +1414,8 @@ theorem slt_swap_or_not_max_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem slt_swap_or_not_max_commute_thm (e e_1 : IntW 8) :
@@ -1424,8 +1424,8 @@ theorem slt_swap_or_not_max_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem slt_swap_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
@@ -1434,8 +1434,8 @@ theorem slt_swap_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ult_or_not_max_thm (e e_1 : IntW 8) :
@@ -1444,8 +1444,8 @@ theorem ult_or_not_max_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ult_or_not_max_logical_thm (e e_1 : IntW 8) :
@@ -1454,8 +1454,8 @@ theorem ult_or_not_max_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ult_or_not_max_commute_thm (e e_1 : IntW 8) :
@@ -1464,8 +1464,8 @@ theorem ult_or_not_max_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ult_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
@@ -1474,8 +1474,8 @@ theorem ult_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ult_swap_or_not_max_thm (e e_1 : IntW 8) :
@@ -1484,8 +1484,8 @@ theorem ult_swap_or_not_max_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ult_swap_or_not_max_logical_thm (e e_1 : IntW 8) :
@@ -1494,8 +1494,8 @@ theorem ult_swap_or_not_max_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ult_swap_or_not_max_commute_thm (e e_1 : IntW 8) :
@@ -1504,8 +1504,8 @@ theorem ult_swap_or_not_max_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ult_swap_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
@@ -1514,8 +1514,8 @@ theorem ult_swap_or_not_max_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sgt_or_not_min_thm (e e_1 : IntW 8) :
@@ -1524,8 +1524,8 @@ theorem sgt_or_not_min_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sgt_or_not_min_logical_thm (e e_1 : IntW 8) :
@@ -1534,8 +1534,8 @@ theorem sgt_or_not_min_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sgt_or_not_min_commute_thm (e e_1 : IntW 8) :
@@ -1544,8 +1544,8 @@ theorem sgt_or_not_min_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sgt_or_not_min_commute_logical_thm (e e_1 : IntW 8) :
@@ -1554,8 +1554,8 @@ theorem sgt_or_not_min_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sgt_swap_or_not_min_thm (e e_1 : IntW 8) :
@@ -1564,8 +1564,8 @@ theorem sgt_swap_or_not_min_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sgt_swap_or_not_min_logical_thm (e e_1 : IntW 8) :
@@ -1574,8 +1574,8 @@ theorem sgt_swap_or_not_min_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sgt_swap_or_not_min_commute_thm (e e_1 : IntW 8) :
@@ -1584,8 +1584,8 @@ theorem sgt_swap_or_not_min_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sgt_swap_or_not_min_commute_logical_thm (e e_1 : IntW 8) :
@@ -1594,8 +1594,8 @@ theorem sgt_swap_or_not_min_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ugt_or_not_min_thm (e e_1 : IntW 8) :
@@ -1604,8 +1604,8 @@ theorem ugt_or_not_min_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ugt_or_not_min_logical_thm (e e_1 : IntW 8) :
@@ -1614,8 +1614,8 @@ theorem ugt_or_not_min_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ugt_or_not_min_commute_thm (e e_1 : IntW 8) :
@@ -1624,8 +1624,8 @@ theorem ugt_or_not_min_commute_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ugt_or_not_min_commute_logical_thm (e e_1 : IntW 8) :
@@ -1634,8 +1634,8 @@ theorem ugt_or_not_min_commute_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ugt_swap_or_not_min_thm (e e_1 : IntW 8) :
@@ -1644,8 +1644,8 @@ theorem ugt_swap_or_not_min_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ugt_swap_or_not_min_logical_thm (e e_1 : IntW 8) :
@@ -1654,8 +1654,8 @@ theorem ugt_swap_or_not_min_logical_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ugt_swap_or_not_min_commute_thm (e e_1 : IntW 823) :
@@ -1664,8 +1664,8 @@ theorem ugt_swap_or_not_min_commute_thm (e e_1 : IntW 823) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ugt_swap_or_not_min_commute_logical_thm (e e_1 : IntW 823) :
@@ -1674,7 +1674,7 @@ theorem ugt_swap_or_not_min_commute_logical_thm (e e_1 : IntW 823) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

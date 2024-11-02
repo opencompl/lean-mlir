@@ -11,8 +11,8 @@ theorem icmp_ugt_32_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_ule_64_thm (e : IntW 128) :
@@ -21,8 +21,8 @@ theorem icmp_ule_64_thm (e : IntW 128) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_ugt_16_thm (e : IntW 64) :
@@ -31,8 +31,8 @@ theorem icmp_ugt_16_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_ult_8_thm (e : IntW 64) :
@@ -41,8 +41,8 @@ theorem icmp_ult_8_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem fold_icmp_shl_nuw_c1_thm (e : IntW 32) :
@@ -53,8 +53,8 @@ theorem fold_icmp_shl_nuw_c1_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem fold_icmp_shl_nuw_c2_thm (e : IntW 32) :
@@ -63,8 +63,8 @@ theorem fold_icmp_shl_nuw_c2_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem fold_icmp_shl_nuw_c2_non_pow2_thm (e : IntW 32) :
@@ -73,8 +73,8 @@ theorem fold_icmp_shl_nuw_c2_non_pow2_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem fold_icmp_shl_nuw_c2_div_non_pow2_thm (e : IntW 32) :
@@ -83,8 +83,8 @@ theorem fold_icmp_shl_nuw_c2_div_non_pow2_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem fold_icmp_shl_nuw_c3_thm (e : IntW 32) :
@@ -93,8 +93,8 @@ theorem fold_icmp_shl_nuw_c3_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem fold_icmp_shl_nuw_c2_indivisible_thm (e : IntW 32) :
@@ -103,8 +103,8 @@ theorem fold_icmp_shl_nuw_c2_indivisible_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem fold_icmp_shl_nuw_c2_precondition1_thm (e : IntW 32) :
@@ -112,8 +112,8 @@ theorem fold_icmp_shl_nuw_c2_precondition1_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem fold_icmp_shl_nuw_c2_precondition2_thm (e : IntW 32) :
@@ -121,8 +121,8 @@ theorem fold_icmp_shl_nuw_c2_precondition2_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem fold_icmp_shl_nuw_c2_precondition3_thm (e : IntW 32) :
@@ -130,7 +130,7 @@ theorem fold_icmp_shl_nuw_c2_precondition3_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

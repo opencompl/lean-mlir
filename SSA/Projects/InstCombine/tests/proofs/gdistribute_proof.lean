@@ -9,16 +9,16 @@ theorem factorize_thm (e : IntW 32) : LLVM.and (LLVM.or e (const? 32 1)) (LLVM.o
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem factorize2_thm (e : IntW 32) : sub (mul (const? 32 3) e) (mul (const? 32 2) e) ⊑ e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem factorize3_thm (e e_1 e_2 : IntW 32) :
@@ -26,24 +26,24 @@ theorem factorize3_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem factorize4_thm (e e_1 : IntW 32) : sub (mul (shl e_1 (const? 32 1)) e) (mul e e_1) ⊑ mul e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem factorize5_thm (e e_1 : IntW 32) : sub (mul (mul e_1 (const? 32 2)) e) (mul e e_1) ⊑ mul e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem expand_thm (e : IntW 32) :
@@ -51,7 +51,7 @@ theorem expand_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

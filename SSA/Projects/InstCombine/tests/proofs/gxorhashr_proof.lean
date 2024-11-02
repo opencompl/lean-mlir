@@ -11,8 +11,8 @@ theorem testi8i8_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem testi16i8_thm (e : IntW 16) :
@@ -21,8 +21,8 @@ theorem testi16i8_thm (e : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem testi64i32_thm (e : IntW 64) :
@@ -31,8 +31,8 @@ theorem testi64i32_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem testi128i128_thm (e : IntW 128) :
@@ -41,7 +41,7 @@ theorem testi128i128_thm (e : IntW 128) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

@@ -11,8 +11,8 @@ theorem p0_ult_65536_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem p1_ugt_thm (e e_1 : IntW 32) :
@@ -21,8 +21,8 @@ theorem p1_ugt_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem p2_slt_65536_thm (e e_1 : IntW 32) :
@@ -31,8 +31,8 @@ theorem p2_slt_65536_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem p3_sgt_thm (e e_1 : IntW 32) :
@@ -41,8 +41,8 @@ theorem p3_sgt_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem p13_commutativity0_thm (e e_1 : IntW 32) :
@@ -51,8 +51,8 @@ theorem p13_commutativity0_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem p14_commutativity1_thm (e : IntW 32) :
@@ -61,8 +61,8 @@ theorem p14_commutativity1_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem p15_commutativity2_thm (e : IntW 32) :
@@ -71,8 +71,8 @@ theorem p15_commutativity2_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem t22_sign_check_thm (e e_1 : IntW 32) :
@@ -81,8 +81,8 @@ theorem t22_sign_check_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem t22_sign_check2_thm (e e_1 : IntW 32) :
@@ -91,7 +91,7 @@ theorem t22_sign_check2_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

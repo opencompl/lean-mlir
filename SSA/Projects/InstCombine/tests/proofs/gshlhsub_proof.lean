@@ -9,16 +9,16 @@ theorem shl_sub_i32_thm (e : IntW 32) : shl (const? 32 1) (sub (const? 32 31) e)
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem shl_sub_i8_thm (e : IntW 8) : shl (const? 8 1) (sub (const? 8 7) e) ⊑ lshr (const? 8 (-128)) e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem shl_sub_i64_thm (e : IntW 64) :
@@ -26,8 +26,8 @@ theorem shl_sub_i64_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem shl_bad_sub_i32_thm (e : IntW 32) :
@@ -36,8 +36,8 @@ theorem shl_bad_sub_i32_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem shl_bad_sub2_i32_thm (e : IntW 32) :
@@ -46,8 +46,8 @@ theorem shl_bad_sub2_i32_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bad_shl2_sub_i32_thm (e : IntW 32) :
@@ -56,8 +56,8 @@ theorem bad_shl2_sub_i32_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem shl_bad_sub_i8_thm (e : IntW 8) :
@@ -66,8 +66,8 @@ theorem shl_bad_sub_i8_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem shl_bad_sub_i64_thm (e : IntW 64) :
@@ -76,8 +76,8 @@ theorem shl_bad_sub_i64_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem shl_const_op1_sub_const_op0_thm (e : IntW 32) :
@@ -85,7 +85,7 @@ theorem shl_const_op1_sub_const_op0_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

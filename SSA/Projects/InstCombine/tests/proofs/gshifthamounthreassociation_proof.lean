@@ -10,8 +10,8 @@ theorem t0_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem t6_shl_thm (e e_1 : IntW 32) :
@@ -21,8 +21,8 @@ theorem t6_shl_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem t7_ashr_thm (e e_1 : IntW 32) :
@@ -30,8 +30,8 @@ theorem t7_ashr_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem t8_lshr_exact_flag_preservation_thm (e e_1 : IntW 32) :
@@ -39,8 +39,8 @@ theorem t8_lshr_exact_flag_preservation_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem t9_ashr_exact_flag_preservation_thm (e e_1 : IntW 32) :
@@ -48,8 +48,8 @@ theorem t9_ashr_exact_flag_preservation_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem t10_shl_nuw_flag_preservation_thm (e e_1 : IntW 32) :
@@ -59,8 +59,8 @@ theorem t10_shl_nuw_flag_preservation_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem t11_shl_nsw_flag_preservation_thm (e e_1 : IntW 32) :
@@ -70,7 +70,7 @@ theorem t11_shl_nsw_flag_preservation_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

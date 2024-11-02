@@ -12,8 +12,8 @@ theorem a_or_b_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem a_or_b_const_thm (e e_1 e_2 : IntW 32) :
@@ -23,8 +23,8 @@ theorem a_or_b_const_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem a_or_b_const2_thm (e e_1 e_2 e_3 : IntW 32) :
@@ -34,7 +34,7 @@ theorem a_or_b_const2_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

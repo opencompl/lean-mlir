@@ -9,32 +9,32 @@ theorem t0_thm (e : IntW 64) : sub (const? 64 0) (lshr e (const? 64 63)) ⊑ ash
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem t0_exact_thm (e : IntW 64) : sub (const? 64 0) (lshr e (const? 64 63)) ⊑ ashr e (const? 64 63) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem t2_thm (e : IntW 64) : sub (const? 64 0) (ashr e (const? 64 63)) ⊑ lshr e (const? 64 63) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem t3_exact_thm (e : IntW 64) : sub (const? 64 0) (ashr e (const? 64 63)) ⊑ lshr e (const? 64 63) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem n9_thm (e : IntW 64) :
@@ -43,8 +43,8 @@ theorem n9_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem n10_thm (e : IntW 64) :
@@ -52,7 +52,7 @@ theorem n10_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

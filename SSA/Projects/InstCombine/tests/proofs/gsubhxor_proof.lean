@@ -10,8 +10,8 @@ theorem low_mask_nsw_nuw_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem arbitrary_mask_sub_i8_thm (e : IntW 8) :
@@ -20,8 +20,8 @@ theorem arbitrary_mask_sub_i8_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem not_masked_sub_i8_thm (e : IntW 8) :
@@ -30,8 +30,8 @@ theorem not_masked_sub_i8_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_add_thm (e : IntW 32) :
@@ -40,7 +40,7 @@ theorem xor_add_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

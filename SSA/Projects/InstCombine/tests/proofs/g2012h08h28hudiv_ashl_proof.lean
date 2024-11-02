@@ -10,8 +10,8 @@ theorem udiv400_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sdiv400_yes_thm (e : IntW 32) :
@@ -19,8 +19,8 @@ theorem sdiv400_yes_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem udiv_i80_thm (e : IntW 80) :
@@ -28,7 +28,7 @@ theorem udiv_i80_thm (e : IntW 80) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

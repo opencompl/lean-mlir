@@ -9,8 +9,8 @@ theorem test5_thm (e : IntW 32) : trunc 32 (lshr (zext 128 e) (const? 128 16)) �
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test6_thm (e : IntW 64) :
@@ -18,8 +18,8 @@ theorem test6_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_mul_sign_bits_thm (e e_1 : IntW 8) :
@@ -28,8 +28,8 @@ theorem ashr_mul_sign_bits_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_mul_thm (e e_1 : IntW 8) :
@@ -38,8 +38,8 @@ theorem ashr_mul_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_ashr_thm (e : IntW 32) :
@@ -48,8 +48,8 @@ theorem trunc_ashr_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test7_thm (e : IntW 64) :
@@ -57,8 +57,8 @@ theorem test7_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test8_thm (e e_1 : IntW 32) :
@@ -67,16 +67,16 @@ theorem test8_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test9_thm (e : IntW 32) : trunc 8 (LLVM.and e (const? 32 42)) ⊑ LLVM.and (trunc 8 e) (const? 8 42) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test11_thm (e e_1 : IntW 32) :
@@ -85,8 +85,8 @@ theorem test11_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test12_thm (e e_1 : IntW 32) :
@@ -95,8 +95,8 @@ theorem test12_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test13_thm (e e_1 : IntW 32) :
@@ -105,16 +105,16 @@ theorem test13_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_shl_31_i32_i64_thm (e : IntW 64) : trunc 32 (shl e (const? 64 31)) ⊑ shl (trunc 32 e) (const? 32 31) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_shl_nsw_31_i32_i64_thm (e : IntW 64) :
@@ -122,8 +122,8 @@ theorem trunc_shl_nsw_31_i32_i64_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_shl_nuw_31_i32_i64_thm (e : IntW 64) :
@@ -131,8 +131,8 @@ theorem trunc_shl_nuw_31_i32_i64_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_shl_nsw_nuw_31_i32_i64_thm (e : IntW 64) :
@@ -140,64 +140,64 @@ theorem trunc_shl_nsw_nuw_31_i32_i64_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_shl_15_i16_i64_thm (e : IntW 64) : trunc 16 (shl e (const? 64 15)) ⊑ shl (trunc 16 e) (const? 16 15) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_shl_15_i16_i32_thm (e : IntW 32) : trunc 16 (shl e (const? 32 15)) ⊑ shl (trunc 16 e) (const? 16 15) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_shl_7_i8_i64_thm (e : IntW 64) : trunc 8 (shl e (const? 64 7)) ⊑ shl (trunc 8 e) (const? 8 7) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_shl_1_i32_i64_thm (e : IntW 64) : trunc 32 (shl e (const? 64 1)) ⊑ shl (trunc 32 e) (const? 32 1) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_shl_16_i32_i64_thm (e : IntW 64) : trunc 32 (shl e (const? 64 16)) ⊑ shl (trunc 32 e) (const? 32 16) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_shl_33_i32_i64_thm (e : IntW 64) : trunc 32 (shl e (const? 64 33)) ⊑ const? 32 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_shl_32_i32_i64_thm (e : IntW 64) : trunc 32 (shl e (const? 64 32)) ⊑ const? 32 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_shl_lshr_infloop_thm (e : IntW 64) :
@@ -206,8 +206,8 @@ theorem trunc_shl_lshr_infloop_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_shl_ashr_infloop_thm (e : IntW 64) :
@@ -216,8 +216,8 @@ theorem trunc_shl_ashr_infloop_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_shl_shl_infloop_thm (e : IntW 64) :
@@ -225,8 +225,8 @@ theorem trunc_shl_shl_infloop_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_shl_lshr_var_thm (e e_1 : IntW 64) :
@@ -234,8 +234,8 @@ theorem trunc_shl_lshr_var_thm (e e_1 : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_shl_ashr_var_thm (e e_1 : IntW 64) :
@@ -243,8 +243,8 @@ theorem trunc_shl_ashr_var_thm (e e_1 : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_shl_shl_var_thm (e e_1 : IntW 64) :
@@ -252,8 +252,8 @@ theorem trunc_shl_shl_var_thm (e e_1 : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR44545_thm (e e_1 : IntW 32) :
@@ -266,7 +266,7 @@ theorem PR44545_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

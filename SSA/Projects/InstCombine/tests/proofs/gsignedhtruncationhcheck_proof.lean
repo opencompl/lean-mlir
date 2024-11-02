@@ -11,8 +11,8 @@ theorem positive_with_signbit_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem positive_with_signbit_logical_thm (e : IntW 32) :
@@ -22,8 +22,8 @@ theorem positive_with_signbit_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem positive_with_mask_thm (e : IntW 32) :
@@ -33,8 +33,8 @@ theorem positive_with_mask_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem positive_with_mask_logical_thm (e : IntW 32) :
@@ -44,8 +44,8 @@ theorem positive_with_mask_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem positive_with_icmp_thm (e : IntW 32) :
@@ -54,8 +54,8 @@ theorem positive_with_icmp_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem positive_with_icmp_logical_thm (e : IntW 32) :
@@ -65,8 +65,8 @@ theorem positive_with_icmp_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem positive_with_aggressive_icmp_thm (e : IntW 32) :
@@ -75,8 +75,8 @@ theorem positive_with_aggressive_icmp_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem positive_with_aggressive_icmp_logical_thm (e : IntW 32) :
@@ -86,8 +86,8 @@ theorem positive_with_aggressive_icmp_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem positive_with_extra_and_thm (e : IntW 1) (e_1 : IntW 32) :
@@ -97,8 +97,8 @@ theorem positive_with_extra_and_thm (e : IntW 1) (e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem positive_with_extra_and_logical_thm (e : IntW 1) (e_1 : IntW 32) :
@@ -108,8 +108,8 @@ theorem positive_with_extra_and_logical_thm (e : IntW 1) (e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem positive_trunc_signbit_thm (e : IntW 32) :
@@ -119,8 +119,8 @@ theorem positive_trunc_signbit_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem positive_trunc_signbit_logical_thm (e : IntW 32) :
@@ -130,8 +130,8 @@ theorem positive_trunc_signbit_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem positive_trunc_base_thm (e : IntW 32) :
@@ -141,8 +141,8 @@ theorem positive_trunc_base_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem positive_trunc_base_logical_thm (e : IntW 32) :
@@ -152,8 +152,8 @@ theorem positive_trunc_base_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem positive_different_trunc_both_thm (e : IntW 32) :
@@ -164,8 +164,8 @@ theorem positive_different_trunc_both_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem positive_different_trunc_both_logical_thm (e : IntW 32) :
@@ -176,8 +176,8 @@ theorem positive_different_trunc_both_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem negative_trunc_not_arg_thm (e e_1 : IntW 32) :
@@ -188,8 +188,8 @@ theorem negative_trunc_not_arg_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem negative_trunc_not_arg_logical_thm (e e_1 : IntW 32) :
@@ -200,8 +200,8 @@ theorem negative_trunc_not_arg_logical_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem negative_with_nonuniform_bad_mask_logical_thm (e : IntW 32) :
@@ -212,8 +212,8 @@ theorem negative_with_nonuniform_bad_mask_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem negative_with_uniform_bad_mask_logical_thm (e : IntW 32) :
@@ -224,8 +224,8 @@ theorem negative_with_uniform_bad_mask_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem negative_with_wrong_mask_logical_thm (e : IntW 32) :
@@ -236,8 +236,8 @@ theorem negative_with_wrong_mask_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem negative_not_less_than_thm (e : IntW 32) :
@@ -246,8 +246,8 @@ theorem negative_not_less_than_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem negative_not_less_than_logical_thm (e : IntW 32) :
@@ -257,8 +257,8 @@ theorem negative_not_less_than_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem negative_not_power_of_two_thm (e : IntW 32) :
@@ -267,8 +267,8 @@ theorem negative_not_power_of_two_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem negative_not_power_of_two_logical_thm (e : IntW 32) :
@@ -278,8 +278,8 @@ theorem negative_not_power_of_two_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem negative_not_next_power_of_two_thm (e : IntW 32) :
@@ -288,8 +288,8 @@ theorem negative_not_next_power_of_two_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem negative_not_next_power_of_two_logical_thm (e : IntW 32) :
@@ -299,8 +299,8 @@ theorem negative_not_next_power_of_two_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem two_signed_truncation_checks_thm (e : IntW 32) :
@@ -310,8 +310,8 @@ theorem two_signed_truncation_checks_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem two_signed_truncation_checks_logical_thm (e : IntW 32) :
@@ -321,7 +321,7 @@ theorem two_signed_truncation_checks_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

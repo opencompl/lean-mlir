@@ -9,7 +9,7 @@ theorem test_thm : zext 32 (icmp IntPredicate.eq (const? 32 1) (const? 32 2)) ‚ä
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

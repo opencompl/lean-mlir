@@ -12,8 +12,8 @@ theorem add_umin_constant_limit_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_umin_simplify_thm (e : IntW 32) :
@@ -23,8 +23,8 @@ theorem add_umin_simplify_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_umin_simplify2_thm (e : IntW 32) :
@@ -34,8 +34,8 @@ theorem add_umin_simplify2_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_umax_simplify_thm (e : IntW 37) :
@@ -45,8 +45,8 @@ theorem add_umax_simplify_thm (e : IntW 37) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_umax_simplify2_thm (e : IntW 32) :
@@ -56,8 +56,8 @@ theorem add_umax_simplify2_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_smin_simplify_thm (e : IntW 32) :
@@ -67,8 +67,8 @@ theorem add_smin_simplify_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_smin_simplify2_thm (e : IntW 32) :
@@ -78,8 +78,8 @@ theorem add_smin_simplify2_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_smax_simplify_thm (e : IntW 8) :
@@ -89,8 +89,8 @@ theorem add_smax_simplify_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_smax_simplify2_thm (e : IntW 8) :
@@ -100,8 +100,8 @@ theorem add_smax_simplify2_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem twoway_clamp_lt_thm (e : IntW 32) :
@@ -112,7 +112,7 @@ theorem twoway_clamp_lt_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

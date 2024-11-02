@@ -9,8 +9,8 @@ theorem test1_thm (e : IntW 23) : LLVM.or e (LLVM.xor (const? 23 (-1)) e) ⊑ co
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test2_thm (e e_1 : IntW 39) :
@@ -21,16 +21,16 @@ theorem test2_thm (e e_1 : IntW 39) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test4_thm (e : IntW 1023) : LLVM.or e (LLVM.xor (const? 1023 (-1)) e) ⊑ const? 1023 (-1) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test5_thm (e e_1 : IntW 399) :
@@ -42,7 +42,7 @@ theorem test5_thm (e e_1 : IntW 399) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

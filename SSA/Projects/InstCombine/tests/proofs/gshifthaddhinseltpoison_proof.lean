@@ -10,8 +10,8 @@ theorem shl_C1_add_A_C2_i32_thm (e : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_C1_add_A_C2_i32_thm (e : IntW 32) :
@@ -19,8 +19,8 @@ theorem ashr_C1_add_A_C2_i32_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem lshr_C1_add_A_C2_i32_thm (e : IntW 32) :
@@ -29,7 +29,7 @@ theorem lshr_C1_add_A_C2_i32_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

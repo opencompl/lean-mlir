@@ -10,8 +10,8 @@ theorem neg_mask1_lshr_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sub_mask1_lshr_thm (e : IntW 8) :
@@ -20,8 +20,8 @@ theorem sub_mask1_lshr_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sub_mask1_trunc_lshr_thm (e : IntW 64) :
@@ -30,8 +30,8 @@ theorem sub_mask1_trunc_lshr_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sub_sext_mask1_trunc_lshr_thm (e : IntW 64) :
@@ -42,8 +42,8 @@ theorem sub_sext_mask1_trunc_lshr_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sub_zext_trunc_lshr_thm (e : IntW 64) :
@@ -53,8 +53,8 @@ theorem sub_zext_trunc_lshr_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem neg_mask2_lshr_thm (e : IntW 8) :
@@ -63,8 +63,8 @@ theorem neg_mask2_lshr_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem neg_signbit_thm (e : IntW 8) :
@@ -72,8 +72,8 @@ theorem neg_signbit_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem neg_not_signbit1_thm (e : IntW 8) :
@@ -81,8 +81,8 @@ theorem neg_not_signbit1_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem neg_not_signbit2_thm (e : IntW 8) :
@@ -91,8 +91,8 @@ theorem neg_not_signbit2_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem neg_not_signbit3_thm (e : IntW 8) :
@@ -101,8 +101,8 @@ theorem neg_not_signbit3_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem neg_mask_thm (e : IntW 16) (e_1 : IntW 32) :
@@ -113,8 +113,8 @@ theorem neg_mask_thm (e : IntW 16) (e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem neg_mask_const_thm (e : IntW 16) :
@@ -125,7 +125,7 @@ theorem neg_mask_const_thm (e : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

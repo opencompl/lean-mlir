@@ -11,8 +11,8 @@ theorem test_nuw_and_unsigned_pred_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_nsw_and_signed_pred_thm (e : IntW 64) :
@@ -21,8 +21,8 @@ theorem test_nsw_and_signed_pred_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_nuw_nsw_and_unsigned_pred_thm (e : IntW 64) :
@@ -31,8 +31,8 @@ theorem test_nuw_nsw_and_unsigned_pred_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_nuw_nsw_and_signed_pred_thm (e : IntW 64) :
@@ -41,8 +41,8 @@ theorem test_nuw_nsw_and_signed_pred_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_negative_nuw_and_signed_pred_thm (e : IntW 64) :
@@ -51,8 +51,8 @@ theorem test_negative_nuw_and_signed_pred_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_negative_nsw_and_unsigned_pred_thm (e : IntW 64) :
@@ -61,8 +61,8 @@ theorem test_negative_nsw_and_unsigned_pred_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_negative_combined_sub_unsigned_overflow_thm (e : IntW 64) :
@@ -70,8 +70,8 @@ theorem test_negative_combined_sub_unsigned_overflow_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_negative_combined_sub_signed_overflow_thm (e : IntW 8) :
@@ -79,8 +79,8 @@ theorem test_negative_combined_sub_signed_overflow_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_sub_0_Y_eq_0_thm (e : IntW 8) :
@@ -88,8 +88,8 @@ theorem test_sub_0_Y_eq_0_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_sub_0_Y_ne_0_thm (e : IntW 8) :
@@ -97,8 +97,8 @@ theorem test_sub_0_Y_ne_0_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_sub_4_Y_ne_4_thm (e : IntW 8) :
@@ -106,8 +106,8 @@ theorem test_sub_4_Y_ne_4_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_sub_127_Y_eq_127_thm (e : IntW 8) :
@@ -115,8 +115,8 @@ theorem test_sub_127_Y_eq_127_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_sub_255_Y_eq_255_thm (e : IntW 8) :
@@ -124,8 +124,8 @@ theorem test_sub_255_Y_eq_255_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem neg_sgt_42_thm (e : IntW 32) :
@@ -134,8 +134,8 @@ theorem neg_sgt_42_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem neg_slt_42_thm (e : IntW 128) :
@@ -144,8 +144,8 @@ theorem neg_slt_42_thm (e : IntW 128) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem neg_slt_n1_thm (e : IntW 8) :
@@ -154,8 +154,8 @@ theorem neg_slt_n1_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem neg_slt_0_thm (e : IntW 8) :
@@ -164,8 +164,8 @@ theorem neg_slt_0_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem neg_slt_1_thm (e : IntW 8) :
@@ -173,8 +173,8 @@ theorem neg_slt_1_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem neg_sgt_n1_thm (e : IntW 8) :
@@ -183,8 +183,8 @@ theorem neg_sgt_n1_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem neg_sgt_0_thm (e : IntW 8) :
@@ -192,8 +192,8 @@ theorem neg_sgt_0_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem neg_sgt_1_thm (e : IntW 8) :
@@ -202,8 +202,8 @@ theorem neg_sgt_1_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem neg_nsw_slt_n1_thm (e : IntW 8) :
@@ -212,8 +212,8 @@ theorem neg_nsw_slt_n1_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem neg_nsw_slt_0_thm (e : IntW 8) :
@@ -222,8 +222,8 @@ theorem neg_nsw_slt_0_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem neg_nsw_slt_1_thm (e : IntW 8) :
@@ -232,8 +232,8 @@ theorem neg_nsw_slt_1_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem neg_nsw_sgt_n1_thm (e : IntW 8) :
@@ -242,8 +242,8 @@ theorem neg_nsw_sgt_n1_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem neg_nsw_sgt_0_thm (e : IntW 8) :
@@ -252,8 +252,8 @@ theorem neg_nsw_sgt_0_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem neg_nsw_sgt_1_thm (e : IntW 8) :
@@ -262,8 +262,8 @@ theorem neg_nsw_sgt_1_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR60818_ne_thm (e : IntW 32) :
@@ -272,8 +272,8 @@ theorem PR60818_ne_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR60818_eq_thm (e : IntW 32) :
@@ -282,8 +282,8 @@ theorem PR60818_eq_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR60818_eq_commuted_thm (e : IntW 32) :
@@ -292,8 +292,8 @@ theorem PR60818_eq_commuted_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR60818_sgt_thm (e : IntW 32) :
@@ -301,7 +301,7 @@ theorem PR60818_sgt_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

@@ -10,8 +10,8 @@ theorem unsigned_sign_bit_extract_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem signed_sign_bit_extract_thm (e : IntW 32) :
@@ -19,8 +19,8 @@ theorem signed_sign_bit_extract_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem unsigned_sign_bit_extract_with_trunc_thm (e : IntW 64) :
@@ -28,8 +28,8 @@ theorem unsigned_sign_bit_extract_with_trunc_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem signed_sign_bit_extract_trunc_thm (e : IntW 64) :
@@ -37,7 +37,7 @@ theorem signed_sign_bit_extract_trunc_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

@@ -9,8 +9,8 @@ theorem add_shl_same_amount_thm (e e_1 e_2 : IntW 6) : add (shl e_2 e_1) (shl e 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_shl_same_amount_nuw_thm (e e_1 e_2 : IntW 64) :
@@ -20,8 +20,8 @@ theorem add_shl_same_amount_nuw_thm (e e_1 e_2 : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_shl_same_amount_partial_nsw1_thm (e e_1 e_2 : IntW 6) :
@@ -30,8 +30,8 @@ theorem add_shl_same_amount_partial_nsw1_thm (e e_1 e_2 : IntW 6) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_shl_same_amount_partial_nsw2_thm (e e_1 e_2 : IntW 6) :
@@ -40,8 +40,8 @@ theorem add_shl_same_amount_partial_nsw2_thm (e e_1 e_2 : IntW 6) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_shl_same_amount_partial_nuw1_thm (e e_1 e_2 : IntW 6) :
@@ -50,8 +50,8 @@ theorem add_shl_same_amount_partial_nuw1_thm (e e_1 e_2 : IntW 6) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_shl_same_amount_partial_nuw2_thm (e e_1 e_2 : IntW 6) :
@@ -60,16 +60,16 @@ theorem add_shl_same_amount_partial_nuw2_thm (e e_1 e_2 : IntW 6) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sub_shl_same_amount_thm (e e_1 e_2 : IntW 6) : sub (shl e_2 e_1) (shl e e_1) ⊑ shl (sub e_2 e) e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sub_shl_same_amount_nuw_thm (e e_1 e_2 : IntW 64) :
@@ -79,8 +79,8 @@ theorem sub_shl_same_amount_nuw_thm (e e_1 e_2 : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sub_shl_same_amount_partial_nsw1_thm (e e_1 e_2 : IntW 6) :
@@ -89,8 +89,8 @@ theorem sub_shl_same_amount_partial_nsw1_thm (e e_1 e_2 : IntW 6) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sub_shl_same_amount_partial_nsw2_thm (e e_1 e_2 : IntW 6) :
@@ -99,8 +99,8 @@ theorem sub_shl_same_amount_partial_nsw2_thm (e e_1 e_2 : IntW 6) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sub_shl_same_amount_partial_nuw1_thm (e e_1 e_2 : IntW 6) :
@@ -109,8 +109,8 @@ theorem sub_shl_same_amount_partial_nuw1_thm (e e_1 e_2 : IntW 6) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sub_shl_same_amount_partial_nuw2_thm (e e_1 e_2 : IntW 6) :
@@ -119,15 +119,15 @@ theorem sub_shl_same_amount_partial_nuw2_thm (e e_1 e_2 : IntW 6) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem add_shl_same_amount_constants_thm (e : IntW 8) : add (shl (const? 8 4) e) (shl (const? 8 3) e) ⊑ shl (const? 8 7) e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

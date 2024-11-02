@@ -11,8 +11,8 @@ theorem test_eq_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_ne_thm (e : IntW 32) :
@@ -21,8 +21,8 @@ theorem test_ne_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_nuw_dropped_thm (e : IntW 32) :
@@ -32,8 +32,8 @@ theorem test_nuw_dropped_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_nsw_dropped_thm (e : IntW 32) :
@@ -43,8 +43,8 @@ theorem test_nsw_dropped_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem neg_test_icmp_non_equality_thm (e : IntW 32) :
@@ -53,7 +53,7 @@ theorem neg_test_icmp_non_equality_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

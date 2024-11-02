@@ -12,8 +12,8 @@ theorem src_is_mask_zext_thm (e : IntW 8) (e_1 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_is_mask_zext_fail_not_mask_thm (e : IntW 8) (e_1 : IntW 16) :
@@ -24,8 +24,8 @@ theorem src_is_mask_zext_fail_not_mask_thm (e : IntW 8) (e_1 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_is_mask_sext_thm (e : IntW 16) (e_1 : IntW 8) :
@@ -36,8 +36,8 @@ theorem src_is_mask_sext_thm (e : IntW 16) (e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_is_mask_and_thm (e e_1 e_2 : IntW 8) :
@@ -48,8 +48,8 @@ theorem src_is_mask_and_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_is_mask_and_fail_mixed_thm (e e_1 e_2 : IntW 8) :
@@ -61,8 +61,8 @@ theorem src_is_mask_and_fail_mixed_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_is_mask_or_thm (e e_1 : IntW 8) :
@@ -72,8 +72,8 @@ theorem src_is_mask_or_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_is_mask_xor_thm (e e_1 : IntW 8) :
@@ -83,8 +83,8 @@ theorem src_is_mask_xor_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_is_mask_xor_fail_notmask_thm (e e_1 : IntW 8) :
@@ -96,8 +96,8 @@ theorem src_is_mask_xor_fail_notmask_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_is_mask_select_thm (e e_1 : IntW 8) (e_2 : IntW 1) :
@@ -109,8 +109,8 @@ theorem src_is_mask_select_thm (e e_1 : IntW 8) (e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_is_mask_shl_lshr_thm (e e_1 : IntW 8) :
@@ -120,8 +120,8 @@ theorem src_is_mask_shl_lshr_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_is_mask_shl_lshr_fail_not_allones_thm (e e_1 : IntW 8) :
@@ -132,8 +132,8 @@ theorem src_is_mask_shl_lshr_fail_not_allones_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_is_mask_lshr_thm (e e_1 : IntW 8) (e_2 : IntW 1) (e_3 : IntW 8) :
@@ -145,8 +145,8 @@ theorem src_is_mask_lshr_thm (e e_1 : IntW 8) (e_2 : IntW 1) (e_3 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_is_mask_ashr_thm (e e_1 : IntW 8) (e_2 : IntW 1) (e_3 : IntW 8) :
@@ -159,8 +159,8 @@ theorem src_is_mask_ashr_thm (e e_1 : IntW 8) (e_2 : IntW 1) (e_3 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_is_mask_p2_m1_thm (e e_1 : IntW 8) :
@@ -170,8 +170,8 @@ theorem src_is_mask_p2_m1_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_is_notmask_sext_thm (e : IntW 8) (e_1 : IntW 16) :
@@ -181,8 +181,8 @@ theorem src_is_notmask_sext_thm (e : IntW 8) (e_1 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_is_notmask_x_xor_neg_x_thm (e : IntW 8) (e_1 : IntW 1) (e_2 : IntW 8) :
@@ -194,8 +194,8 @@ theorem src_is_notmask_x_xor_neg_x_thm (e : IntW 8) (e_1 : IntW 1) (e_2 : IntW 8
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_is_notmask_x_xor_neg_x_inv_thm (e e_1 : IntW 8) (e_2 : IntW 1) :
@@ -207,8 +207,8 @@ theorem src_is_notmask_x_xor_neg_x_inv_thm (e e_1 : IntW 8) (e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_is_notmask_lshr_shl_thm (e e_1 : IntW 8) :
@@ -220,8 +220,8 @@ theorem src_is_notmask_lshr_shl_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_is_notmask_lshr_shl_fail_mismatch_shifts_thm (e e_1 e_2 : IntW 8) :
@@ -233,8 +233,8 @@ theorem src_is_notmask_lshr_shl_fail_mismatch_shifts_thm (e e_1 e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_is_notmask_ashr_thm (e : IntW 16) (e_1 : IntW 8) (e_2 : IntW 16) :
@@ -245,8 +245,8 @@ theorem src_is_notmask_ashr_thm (e : IntW 16) (e_1 : IntW 8) (e_2 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_is_notmask_neg_p2_fail_not_invertable_thm (e e_1 : IntW 8) :
@@ -256,8 +256,8 @@ theorem src_is_notmask_neg_p2_fail_not_invertable_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_is_mask_const_slt_thm (e : IntW 8) :
@@ -266,8 +266,8 @@ theorem src_is_mask_const_slt_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_is_mask_const_sgt_thm (e : IntW 8) :
@@ -276,8 +276,8 @@ theorem src_is_mask_const_sgt_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_is_mask_const_sle_thm (e : IntW 8) :
@@ -286,8 +286,8 @@ theorem src_is_mask_const_sle_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_is_mask_const_sge_thm (e : IntW 8) :
@@ -296,8 +296,8 @@ theorem src_is_mask_const_sge_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_x_and_nmask_eq_thm (e e_1 : IntW 8) (e_2 : IntW 1) :
@@ -308,8 +308,8 @@ theorem src_x_and_nmask_eq_thm (e e_1 : IntW 8) (e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_x_and_nmask_ne_thm (e : IntW 8) (e_1 : IntW 1) (e_2 : IntW 8) :
@@ -320,8 +320,8 @@ theorem src_x_and_nmask_ne_thm (e : IntW 8) (e_1 : IntW 1) (e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_x_and_nmask_ult_thm (e : IntW 8) (e_1 : IntW 1) (e_2 : IntW 8) :
@@ -332,8 +332,8 @@ theorem src_x_and_nmask_ult_thm (e : IntW 8) (e_1 : IntW 1) (e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_x_and_nmask_uge_thm (e : IntW 8) (e_1 : IntW 1) (e_2 : IntW 8) :
@@ -344,8 +344,8 @@ theorem src_x_and_nmask_uge_thm (e : IntW 8) (e_1 : IntW 1) (e_2 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_x_and_nmask_slt_thm (e e_1 : IntW 8) :
@@ -354,8 +354,8 @@ theorem src_x_and_nmask_slt_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_x_and_nmask_sge_thm (e e_1 : IntW 8) :
@@ -364,8 +364,8 @@ theorem src_x_and_nmask_sge_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_x_and_nmask_slt_fail_maybe_z_thm (e : IntW 8) (e_1 : IntW 1) (e_2 : IntW 8) :
@@ -377,8 +377,8 @@ theorem src_x_and_nmask_slt_fail_maybe_z_thm (e : IntW 8) (e_1 : IntW 1) (e_2 : 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_x_and_nmask_sge_fail_maybe_z_thm (e : IntW 8) (e_1 : IntW 1) (e_2 : IntW 8) :
@@ -390,8 +390,8 @@ theorem src_x_and_nmask_sge_fail_maybe_z_thm (e : IntW 8) (e_1 : IntW 1) (e_2 : 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem src_x_or_mask_ne_thm (e e_1 : IntW 8) (e_2 : IntW 1) :
@@ -401,7 +401,7 @@ theorem src_x_or_mask_ne_thm (e e_1 : IntW 8) (e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

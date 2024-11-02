@@ -11,8 +11,8 @@ theorem eq_basic_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ne_basic_equal_5_thm (e e_1 : IntW 8) :
@@ -21,8 +21,8 @@ theorem ne_basic_equal_5_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem eq_basic_equal_minus_1_thm (e e_1 : IntW 8) :
@@ -31,8 +31,8 @@ theorem eq_basic_equal_minus_1_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ne_basic_equal_minus_7_thm (e e_1 : IntW 8) :
@@ -41,8 +41,8 @@ theorem ne_basic_equal_minus_7_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem eq_commuted_thm (e e_1 : IntW 8) :
@@ -51,8 +51,8 @@ theorem eq_commuted_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ne_commuted_equal_minus_1_thm (e e_1 : IntW 8) :
@@ -62,7 +62,7 @@ theorem ne_commuted_equal_minus_1_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

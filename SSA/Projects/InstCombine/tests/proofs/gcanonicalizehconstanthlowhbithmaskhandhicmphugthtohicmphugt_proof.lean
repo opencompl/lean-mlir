@@ -9,8 +9,8 @@ theorem c0_thm (e : IntW 8) : icmp IntPredicate.ugt (LLVM.and e (const? 8 3)) e 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem cv2_thm (e e_1 : IntW 8) :
@@ -18,7 +18,7 @@ theorem cv2_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

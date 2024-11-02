@@ -9,7 +9,7 @@ theorem test1_thm (e : IntW 177) : mul e (shl (const? 177 1) (const? 177 155)) â
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

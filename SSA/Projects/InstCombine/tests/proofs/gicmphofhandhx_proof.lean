@@ -10,8 +10,8 @@ theorem icmp_ult_x_y_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_ult_x_y_2_thm (e e_1 : IntW 8) :
@@ -20,8 +20,8 @@ theorem icmp_ult_x_y_2_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_uge_x_y_2_thm (e e_1 : IntW 8) :
@@ -30,8 +30,8 @@ theorem icmp_uge_x_y_2_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_sle_x_negy_thm (e e_1 : IntW 8) :
@@ -39,8 +39,8 @@ theorem icmp_sle_x_negy_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_eq_x_invertable_y_todo_thm (e : IntW 1) (e_1 : IntW 8) :
@@ -49,8 +49,8 @@ theorem icmp_eq_x_invertable_y_todo_thm (e : IntW 1) (e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_eq_x_invertable_y_thm (e e_1 : IntW 8) :
@@ -59,8 +59,8 @@ theorem icmp_eq_x_invertable_y_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_eq_x_invertable_y2_todo_thm (e : IntW 8) (e_1 : IntW 1) :
@@ -69,8 +69,8 @@ theorem icmp_eq_x_invertable_y2_todo_thm (e : IntW 8) (e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem icmp_eq_x_invertable_y2_thm (e e_1 : IntW 8) :
@@ -79,7 +79,7 @@ theorem icmp_eq_x_invertable_y2_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

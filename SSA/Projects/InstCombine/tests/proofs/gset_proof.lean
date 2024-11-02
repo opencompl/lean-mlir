@@ -9,96 +9,96 @@ theorem test3_thm (e : IntW 32) : icmp IntPredicate.slt e e ⊑ const? 1 0 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test4_thm (e : IntW 32) : icmp IntPredicate.sgt e e ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test5_thm (e : IntW 32) : icmp IntPredicate.sle e e ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test6_thm (e : IntW 32) : icmp IntPredicate.sge e e ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test7_thm (e : IntW 32) : icmp IntPredicate.uge e (const? 32 0) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test8_thm (e : IntW 32) : icmp IntPredicate.ult e (const? 32 0) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test9_thm (e : IntW 1) : icmp IntPredicate.ult e (const? 1 0) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test10_thm (e : IntW 1) : icmp IntPredicate.ugt e (const? 1 1) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test11_thm (e : IntW 1) : icmp IntPredicate.ule e (const? 1 1) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test12_thm (e : IntW 1) : icmp IntPredicate.uge e (const? 1 0) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test13_thm (e e_1 : IntW 1) : icmp IntPredicate.uge e_1 e ⊑ LLVM.or e_1 (LLVM.xor e (const? 1 1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test14_thm (e e_1 : IntW 1) : icmp IntPredicate.eq e_1 e ⊑ LLVM.xor (LLVM.xor e_1 e) (const? 1 1) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bool_eq0_thm (e : IntW 64) :
@@ -108,8 +108,8 @@ theorem bool_eq0_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem bool_eq0_logical_thm (e : IntW 64) :
@@ -119,8 +119,8 @@ theorem bool_eq0_logical_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_of_icmps_thm (e : IntW 64) :
@@ -129,8 +129,8 @@ theorem xor_of_icmps_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_of_icmps_commute_thm (e : IntW 64) :
@@ -139,8 +139,8 @@ theorem xor_of_icmps_commute_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_of_icmps_to_ne_thm (e : IntW 64) :
@@ -149,8 +149,8 @@ theorem xor_of_icmps_to_ne_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_of_icmps_to_ne_commute_thm (e : IntW 64) :
@@ -159,8 +159,8 @@ theorem xor_of_icmps_to_ne_commute_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_of_icmps_neg_to_ne_thm (e : IntW 64) :
@@ -169,8 +169,8 @@ theorem xor_of_icmps_neg_to_ne_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem xor_of_icmps_to_eq_thm (e : IntW 8) :
@@ -179,8 +179,8 @@ theorem xor_of_icmps_to_eq_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR2844_thm (e : IntW 32) :
@@ -191,8 +191,8 @@ theorem PR2844_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem PR2844_logical_thm (e : IntW 32) :
@@ -203,24 +203,24 @@ theorem PR2844_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test16_thm (e : IntW 32) : icmp IntPredicate.eq (LLVM.and e (const? 32 5)) (const? 32 8) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test17_thm (e : IntW 8) : icmp IntPredicate.eq (LLVM.or e (const? 8 1)) (const? 8 2) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test19_thm (e e_1 : IntW 1) :
@@ -228,8 +228,8 @@ theorem test19_thm (e e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test20_thm (e : IntW 32) :
@@ -237,8 +237,8 @@ theorem test20_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test21_thm (e : IntW 32) :
@@ -247,8 +247,8 @@ theorem test21_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test22_thm (e e_1 : IntW 32) :
@@ -258,8 +258,8 @@ theorem test22_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test22_logical_thm (e e_1 : IntW 32) :
@@ -269,8 +269,8 @@ theorem test22_logical_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test23_thm (e : IntW 32) :
@@ -279,8 +279,8 @@ theorem test23_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test24_thm (e : IntW 32) :
@@ -289,15 +289,15 @@ theorem test24_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test25_thm (e : IntW 32) : icmp IntPredicate.ugt (LLVM.and e (const? 32 2)) (const? 32 2) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

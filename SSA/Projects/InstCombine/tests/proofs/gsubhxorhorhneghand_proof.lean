@@ -10,8 +10,8 @@ theorem sub_to_and_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sub_to_and_or_commuted_thm (e e_1 : IntW 32) :
@@ -19,8 +19,8 @@ theorem sub_to_and_or_commuted_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sub_to_and_and_commuted_thm (e e_1 : IntW 32) :
@@ -28,7 +28,7 @@ theorem sub_to_and_and_commuted_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

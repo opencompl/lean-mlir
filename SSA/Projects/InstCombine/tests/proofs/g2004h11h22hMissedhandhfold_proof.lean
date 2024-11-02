@@ -9,7 +9,7 @@ theorem test21_thm (e : IntW 8) : LLVM.and (ashr e (const? 8 7)) (const? 8 1) ‚ä
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

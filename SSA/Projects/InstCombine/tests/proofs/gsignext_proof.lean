@@ -11,8 +11,8 @@ theorem sextinreg_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sextinreg_alt_thm (e : IntW 32) :
@@ -21,8 +21,8 @@ theorem sextinreg_alt_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sext_thm (e : IntW 16) :
@@ -30,8 +30,8 @@ theorem sext_thm (e : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sextinreg2_thm (e : IntW 32) :
@@ -40,16 +40,16 @@ theorem sextinreg2_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test6_thm (e : IntW 16) : ashr (shl (zext 32 e) (const? 32 16)) (const? 32 16) ⊑ sext 32 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ashr_thm (e : IntW 32) :
@@ -57,7 +57,7 @@ theorem ashr_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

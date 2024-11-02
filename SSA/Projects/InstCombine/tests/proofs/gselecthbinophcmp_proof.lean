@@ -11,8 +11,8 @@ theorem select_xor_icmp_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem select_xor_icmp2_thm (e e_1 e_2 : IntW 32) :
@@ -21,8 +21,8 @@ theorem select_xor_icmp2_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem select_xor_icmp_meta_thm (e e_1 e_2 : IntW 32) :
@@ -31,8 +31,8 @@ theorem select_xor_icmp_meta_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem select_mul_icmp_thm (e e_1 e_2 : IntW 32) :
@@ -41,8 +41,8 @@ theorem select_mul_icmp_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem select_add_icmp_thm (e e_1 e_2 : IntW 32) :
@@ -51,8 +51,8 @@ theorem select_add_icmp_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem select_or_icmp_thm (e e_1 e_2 : IntW 32) :
@@ -61,8 +61,8 @@ theorem select_or_icmp_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem select_and_icmp_thm (e e_1 e_2 : IntW 32) :
@@ -71,8 +71,8 @@ theorem select_and_icmp_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem select_xor_inv_icmp_thm (e e_1 e_2 : IntW 32) :
@@ -81,8 +81,8 @@ theorem select_xor_inv_icmp_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem select_sub_icmp_thm (e e_1 e_2 : IntW 32) :
@@ -91,8 +91,8 @@ theorem select_sub_icmp_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem select_lshr_icmp_thm (e e_1 e_2 : IntW 32) :
@@ -101,8 +101,8 @@ theorem select_lshr_icmp_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem select_udiv_icmp_thm (e e_1 e_2 : IntW 32) :
@@ -111,8 +111,8 @@ theorem select_udiv_icmp_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem select_xor_icmp_bad_3_thm (e e_1 e_2 : IntW 32) :
@@ -121,8 +121,8 @@ theorem select_xor_icmp_bad_3_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem select_xor_icmp_bad_5_thm (e e_1 e_2 : IntW 32) :
@@ -131,8 +131,8 @@ theorem select_xor_icmp_bad_5_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem select_xor_icmp_bad_6_thm (e e_1 e_2 : IntW 32) :
@@ -141,8 +141,8 @@ theorem select_xor_icmp_bad_6_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem select_mul_icmp_bad_thm (e e_1 e_2 : IntW 32) :
@@ -151,8 +151,8 @@ theorem select_mul_icmp_bad_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem select_add_icmp_bad_thm (e e_1 e_2 : IntW 32) :
@@ -161,8 +161,8 @@ theorem select_add_icmp_bad_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem select_and_icmp_zero_thm (e e_1 e_2 : IntW 32) :
@@ -171,8 +171,8 @@ theorem select_and_icmp_zero_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem select_or_icmp_bad_thm (e e_1 e_2 : IntW 32) :
@@ -181,8 +181,8 @@ theorem select_or_icmp_bad_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem select_lshr_icmp_const_thm (e : IntW 32) :
@@ -190,8 +190,8 @@ theorem select_lshr_icmp_const_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem select_lshr_icmp_const_reordered_thm (e : IntW 32) :
@@ -199,8 +199,8 @@ theorem select_lshr_icmp_const_reordered_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem select_exact_lshr_icmp_const_thm (e : IntW 32) :
@@ -208,8 +208,8 @@ theorem select_exact_lshr_icmp_const_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem select_sub_icmp_bad_thm (e e_1 e_2 : IntW 32) :
@@ -218,8 +218,8 @@ theorem select_sub_icmp_bad_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem select_sub_icmp_bad_2_thm (e e_1 e_2 : IntW 32) :
@@ -228,8 +228,8 @@ theorem select_sub_icmp_bad_2_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem select_shl_icmp_bad_thm (e e_1 e_2 : IntW 32) :
@@ -238,8 +238,8 @@ theorem select_shl_icmp_bad_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem select_lshr_icmp_bad_thm (e e_1 e_2 : IntW 32) :
@@ -248,8 +248,8 @@ theorem select_lshr_icmp_bad_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem select_ashr_icmp_bad_thm (e e_1 e_2 : IntW 32) :
@@ -258,8 +258,8 @@ theorem select_ashr_icmp_bad_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem select_replace_one_use_thm (e e_1 : IntW 32) :
@@ -268,8 +268,8 @@ theorem select_replace_one_use_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem select_replace_nested_thm (e e_1 e_2 : IntW 32) :
@@ -278,8 +278,8 @@ theorem select_replace_nested_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem select_replace_nested_no_simplify_thm (e e_1 e_2 : IntW 32) :
@@ -288,15 +288,15 @@ theorem select_replace_nested_no_simplify_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem select_replace_udiv_non_speculatable_thm (e e_1 : IntW 32) : select (icmp IntPredicate.eq e_1 (const? 32 0)) (LLVM.udiv e e_1) e ⊑ e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

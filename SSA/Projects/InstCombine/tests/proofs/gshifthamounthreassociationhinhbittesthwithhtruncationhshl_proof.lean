@@ -13,8 +13,8 @@ theorem t0_const_after_fold_lshr_shl_ne_thm (e : IntW 64) (e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem t10_constants_thm (e : IntW 64) (e_1 : IntW 32) :
@@ -23,8 +23,8 @@ theorem t10_constants_thm (e : IntW 64) (e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem n14_trunc_of_lshr_thm (e e_1 : IntW 32) (e_2 : IntW 64) :
@@ -37,8 +37,8 @@ theorem n14_trunc_of_lshr_thm (e e_1 : IntW 32) (e_2 : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem n15_variable_shamts_thm (e e_1 : IntW 32) (e_2 e_3 : IntW 64) :
@@ -47,7 +47,7 @@ theorem n15_variable_shamts_thm (e e_1 : IntW 32) (e_2 e_3 : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

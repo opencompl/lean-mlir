@@ -10,8 +10,8 @@ theorem eq_smin1_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem eq_smin2_thm (e e_1 : IntW 32) :
@@ -19,8 +19,8 @@ theorem eq_smin2_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem eq_smin3_thm (e e_1 : IntW 32) :
@@ -30,8 +30,8 @@ theorem eq_smin3_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem eq_smin4_thm (e e_1 : IntW 32) :
@@ -41,8 +41,8 @@ theorem eq_smin4_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sge_smin1_thm (e e_1 : IntW 32) :
@@ -50,8 +50,8 @@ theorem sge_smin1_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sge_smin2_thm (e e_1 : IntW 32) :
@@ -59,8 +59,8 @@ theorem sge_smin2_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sge_smin3_thm (e e_1 : IntW 32) :
@@ -70,8 +70,8 @@ theorem sge_smin3_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sge_smin4_thm (e e_1 : IntW 32) :
@@ -81,8 +81,8 @@ theorem sge_smin4_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ne_smin1_thm (e e_1 : IntW 32) :
@@ -90,8 +90,8 @@ theorem ne_smin1_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ne_smin2_thm (e e_1 : IntW 32) :
@@ -99,8 +99,8 @@ theorem ne_smin2_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ne_smin3_thm (e e_1 : IntW 32) :
@@ -110,8 +110,8 @@ theorem ne_smin3_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem ne_smin4_thm (e e_1 : IntW 32) :
@@ -121,8 +121,8 @@ theorem ne_smin4_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem slt_smin1_thm (e e_1 : IntW 32) :
@@ -130,8 +130,8 @@ theorem slt_smin1_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem slt_smin2_thm (e e_1 : IntW 32) :
@@ -139,8 +139,8 @@ theorem slt_smin2_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem slt_smin3_thm (e e_1 : IntW 32) :
@@ -150,8 +150,8 @@ theorem slt_smin3_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem slt_smin4_thm (e e_1 : IntW 32) :
@@ -161,8 +161,8 @@ theorem slt_smin4_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sle_smin1_thm (e e_1 : IntW 32) :
@@ -170,8 +170,8 @@ theorem sle_smin1_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sle_smin2_thm (e e_1 : IntW 32) :
@@ -179,8 +179,8 @@ theorem sle_smin2_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sle_smin3_thm (e e_1 : IntW 32) :
@@ -190,8 +190,8 @@ theorem sle_smin3_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sle_smin4_thm (e e_1 : IntW 32) :
@@ -201,8 +201,8 @@ theorem sle_smin4_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sgt_smin1_thm (e e_1 : IntW 32) :
@@ -210,8 +210,8 @@ theorem sgt_smin1_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sgt_smin2_thm (e e_1 : IntW 32) :
@@ -219,8 +219,8 @@ theorem sgt_smin2_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sgt_smin3_thm (e e_1 : IntW 32) :
@@ -230,8 +230,8 @@ theorem sgt_smin3_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem sgt_smin4_thm (e e_1 : IntW 32) :
@@ -241,7 +241,7 @@ theorem sgt_smin4_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

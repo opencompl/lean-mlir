@@ -11,8 +11,8 @@ theorem trunc_lshr_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_lshr_exact_mask_thm (e : IntW 8) :
@@ -20,8 +20,8 @@ theorem trunc_lshr_exact_mask_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem or_trunc_lshr_thm (e : IntW 8) :
@@ -30,8 +30,8 @@ theorem or_trunc_lshr_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem or_trunc_lshr_more_thm (e : IntW 8) :
@@ -40,7 +40,7 @@ theorem or_trunc_lshr_more_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

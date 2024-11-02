@@ -9,8 +9,8 @@ theorem test1_thm (e : IntW 33) : urem e (const? 33 4096) ⊑ LLVM.and e (const?
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test2_thm (e : IntW 49) :
@@ -18,8 +18,8 @@ theorem test2_thm (e : IntW 49) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test3_thm (e : IntW 1) (e_1 : IntW 59) :
@@ -28,7 +28,7 @@ theorem test3_thm (e : IntW 1) (e_1 : IntW 59) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 

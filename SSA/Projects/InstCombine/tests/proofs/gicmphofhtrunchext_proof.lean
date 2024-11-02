@@ -10,8 +10,8 @@ theorem trunc_unsigned_nuw_thm (e e_1 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_unsigned_nsw_thm (e e_1 : IntW 16) :
@@ -19,8 +19,8 @@ theorem trunc_unsigned_nsw_thm (e e_1 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_unsigned_both_thm (e e_1 : IntW 16) :
@@ -28,8 +28,8 @@ theorem trunc_unsigned_both_thm (e e_1 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_signed_nsw_thm (e e_1 : IntW 16) :
@@ -37,8 +37,8 @@ theorem trunc_signed_nsw_thm (e e_1 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_signed_both_thm (e e_1 : IntW 16) :
@@ -46,8 +46,8 @@ theorem trunc_signed_both_thm (e e_1 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_equality_nuw_thm (e e_1 : IntW 16) :
@@ -55,8 +55,8 @@ theorem trunc_equality_nuw_thm (e e_1 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_equality_nsw_thm (e e_1 : IntW 16) :
@@ -64,8 +64,8 @@ theorem trunc_equality_nsw_thm (e e_1 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_equality_both_thm (e e_1 : IntW 16) :
@@ -73,8 +73,8 @@ theorem trunc_equality_both_thm (e e_1 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_unsigned_nuw_zext_thm (e : IntW 8) (e_1 : IntW 32) :
@@ -82,8 +82,8 @@ theorem trunc_unsigned_nuw_zext_thm (e : IntW 8) (e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_unsigned_nsw_zext_thm (e : IntW 8) (e_1 : IntW 32) :
@@ -91,8 +91,8 @@ theorem trunc_unsigned_nsw_zext_thm (e : IntW 8) (e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_unsigned_nsw_sext_thm (e : IntW 8) (e_1 : IntW 32) :
@@ -100,8 +100,8 @@ theorem trunc_unsigned_nsw_sext_thm (e : IntW 8) (e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_signed_nsw_sext_thm (e : IntW 8) (e_1 : IntW 32) :
@@ -109,8 +109,8 @@ theorem trunc_signed_nsw_sext_thm (e : IntW 8) (e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_signed_nsw_zext_thm (e : IntW 8) (e_1 : IntW 32) :
@@ -118,8 +118,8 @@ theorem trunc_signed_nsw_zext_thm (e : IntW 8) (e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_equality_nuw_zext_thm (e : IntW 8) (e_1 : IntW 32) :
@@ -127,8 +127,8 @@ theorem trunc_equality_nuw_zext_thm (e : IntW 8) (e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_equality_nsw_zext_thm (e : IntW 8) (e_1 : IntW 32) :
@@ -136,8 +136,8 @@ theorem trunc_equality_nsw_zext_thm (e : IntW 8) (e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_equality_nsw_sext_thm (e : IntW 8) (e_1 : IntW 32) :
@@ -145,8 +145,8 @@ theorem trunc_equality_nsw_sext_thm (e : IntW 8) (e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem trunc_equality_both_sext_thm (e : IntW 8) (e_1 : IntW 32) :
@@ -154,8 +154,8 @@ theorem trunc_equality_both_sext_thm (e : IntW 8) (e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_eq1_thm (e : IntW 16) (e_1 : IntW 32) :
@@ -163,8 +163,8 @@ theorem test_eq1_thm (e : IntW 16) (e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_eq2_thm (e : IntW 32) (e_1 : IntW 16) :
@@ -172,8 +172,8 @@ theorem test_eq2_thm (e : IntW 32) (e_1 : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_ult_thm (e : IntW 16) (e_1 : IntW 32) :
@@ -181,8 +181,8 @@ theorem test_ult_thm (e : IntW 16) (e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_slt_thm (e : IntW 16) (e_1 : IntW 32) :
@@ -190,8 +190,8 @@ theorem test_slt_thm (e : IntW 16) (e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_ult_nuw_thm (e : IntW 16) (e_1 : IntW 32) :
@@ -199,8 +199,8 @@ theorem test_ult_nuw_thm (e : IntW 16) (e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
 theorem test_slt_nuw_thm (e : IntW 16) (e_1 : IntW 32) :
@@ -208,7 +208,7 @@ theorem test_slt_nuw_thm (e : IntW 16) (e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
-    all_goals sorry
+    sorry
+    
 
 
