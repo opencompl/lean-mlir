@@ -450,30 +450,6 @@ theorem shiftLeft_and_distrib' {x y : BitVec w} {n m : Nat} :
     x <<< n &&& y <<< (m + n) = (x &&& y <<< m) <<< n := by
   simp [BitVec.shiftLeft_and_distrib, BitVec.shiftLeft_add]
 
-theorem msb_neg {x : BitVec w} :
-    (-x).msb = (~~~x + 1#w).msb := by
-  rw [neg_eq_not_add]
-
-theorem getLsbD_neg {i : Nat} {x : BitVec w} :
-    getLsbD (-x) i = getLsbD (~~~x + 1#w) i := by
-  rw [neg_eq_not_add]
-
-theorem getMsbD_neg {i : Nat} {x : BitVec w} :
-    getMsbD (-x) i = getMsbD (~~~x + 1#w) i := by
-  rw [neg_eq_not_add]
-
-theorem getLsbD_abs {i : Nat} {x : BitVec w} :
-   getLsbD x.abs i = getLsbD (if x.msb = true then -x else x) i := by
-  simp [BitVec.abs]
-
-theorem getMsbD_abs {i : Nat} {x : BitVec w} :
-    getMsbD (x.abs) i = getMsbD (if x.msb = true then -x else x) i := by
-  simp [BitVec.abs]
-
-theorem msb_abs {w : Nat} {x : BitVec w} :
-    (x.abs).msb = (if x.msb = true then -x else x).msb := by
-  simp [BitVec.abs]
-
 @[simp]
 theorem sdiv_allOnes {w : ℕ} {x : BitVec w} :
     x.sdiv (BitVec.allOnes w) = -x := by
