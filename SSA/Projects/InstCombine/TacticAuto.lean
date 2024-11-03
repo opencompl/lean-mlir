@@ -223,3 +223,17 @@ macro "bv_compare'": tactic =>
         bv_decide -- replace this with bv_compare to evaluate performance
       )
    )
+
+macro "simp_alive_split": tactic =>
+  `(tactic|
+      (
+        repeat(all_goals split; all_goals simp only [BitVec.Refinement.some_some, BitVec.Refinement.refl])
+      )
+   )
+
+macro "simp_alive_benchmark": tactic =>
+  `(tactic|
+      (
+        all_goals try bv_decide -- replace this with bv_compare to evaluate performance
+      )
+   )
