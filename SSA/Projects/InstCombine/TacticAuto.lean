@@ -109,7 +109,8 @@ macro "simp_alive_ops" : tactic =>
             simp_llvm,
             BitVec.ofInt_neg_one,
             (BitVec.ofInt_ofNat),
-            pure_bind
+            pure_bind,
+            bind_if_then_none_eq_if_bind, bind_if_else_none_eq_if_bind
           ]
       )
   )

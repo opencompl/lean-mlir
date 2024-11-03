@@ -12,7 +12,7 @@ import SSA.Projects.InstCombine.LLVM.SimpSet
 namespace LLVM
 
 
-def IntW w := Option <| BitVec w
+abbrev IntW w := Option <| BitVec w
 
 /--
 The ‘and’ instruction returns the bitwise logical and of its two operands.

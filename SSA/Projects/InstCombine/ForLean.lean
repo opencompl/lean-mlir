@@ -528,3 +528,13 @@ end Bool
 
 theorem Option.some_bind'' (x : α) (f : α → Option β) : some x >>= f = f x := by
   simp
+
+@[simp]
+theorem bind_if_then_none_eq_if_bind (h : Prop) [Decidable h] (x : Option α) :
+    (if h then none else x) >>= f = if h then none else x >>= f := by
+  split <;> simp
+
+@[simp]
+theorem bind_if_else_none_eq_if_bind (h : Prop) [Decidable h] (x : Option α) :
+    (if h then x else none) >>= f = if h then x >>= f else none := by
+  split <;> simp
