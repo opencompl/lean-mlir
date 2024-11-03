@@ -228,7 +228,14 @@ macro "bv_compare'": tactic =>
 macro "simp_alive_split": tactic =>
   `(tactic|
       (
-        repeat(all_goals split; all_goals simp only [BitVec.Refinement.some_some, BitVec.Refinement.refl])
+        all_goals try intros
+        repeat(
+          all_goals try simp only [BitVec.Refinement.some_some, BitVec.Refinement.refl,
+            BitVec.Refinement.none_left]
+          any_goals split
+          all_goals try simp only [BitVec.Refinement.some_some, BitVec.Refinement.refl,
+            BitVec.Refinement.none_left]
+        )
       )
    )
 
