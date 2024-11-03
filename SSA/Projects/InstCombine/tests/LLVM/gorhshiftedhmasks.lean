@@ -13,6 +13,8 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gorhshiftedhmasks_statements
 
+#exit
+
 def or_and_shifts1_before := [llvm|
 {
 ^0(%arg14 : i32):
@@ -423,5 +425,3 @@ theorem shl_mul_mask_wrong_mul_const_proof : shl_mul_mask_wrong_mul_const_before
   ---BEGIN shl_mul_mask_wrong_mul_const
   all_goals (try extract_goal ; sorry)
   ---END shl_mul_mask_wrong_mul_const
-
-
