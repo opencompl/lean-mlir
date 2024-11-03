@@ -216,6 +216,26 @@ macro "alive_auto": tactic =>
       )
    )
 
+def revertBitVecW (g : MVarId) : MetaM (Array FVarId × MVarId) := do
+  let type ← g.getType
+  let (_, fvars) ← type.forEachWhere Expr.isFVar collector |>.run {}
+  g.revert fvars.toArray
+where
+  collector (e : Expr) : StateT (Std.HashSet FVarId) MetaM Unit := do
+    let fvarId := e.fvarId!
+    let typ ← fvarId.getType
+    dbg_trace f!"dbg_trace: fvarid"
+    match_expr typ with
+    | BitVec _ =>
+      modify fun s => s.insert fvarId
+    | _ => return ()
+
+elab "revert_bvw" : tactic => do
+  let g ← getMainGoal
+  withMainContext do
+    let (_, g') ← revertBitVecW g
+    replaceMainGoal [g']
+
 macro "bv_compare'": tactic =>
   `(tactic|
       (
@@ -240,6 +260,7 @@ macro "simp_alive_split": tactic =>
 macro "simp_alive_benchmark": tactic =>
   `(tactic|
       (
-        all_goals bv_compare
+        revert_bvw
+        bv_compare
       )
    )
