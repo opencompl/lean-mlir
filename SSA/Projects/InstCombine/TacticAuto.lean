@@ -230,9 +230,11 @@ macro "simp_alive_split": tactic =>
       (
         all_goals try intros
         repeat(
-          all_goals try simp only [BitVec.Refinement.some_some, BitVec.Refinement.refl]
+          all_goals try simp only [BitVec.Refinement.some_some, BitVec.Refinement.refl,
+            BitVec.Refinement.none_left]
           any_goals split
-          all_goals try simp only [BitVec.Refinement.some_some, BitVec.Refinement.refl]
+          all_goals try simp only [BitVec.Refinement.some_some, BitVec.Refinement.refl,
+            BitVec.Refinement.none_left]
         )
       )
    )
