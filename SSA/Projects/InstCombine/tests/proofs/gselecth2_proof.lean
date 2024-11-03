@@ -4,13 +4,17 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
 open LLVM
 
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+
 section gselecth2_proof
 theorem ashr_exact_poison_constant_fold_thm (e : IntW 8) (e_1 : IntW 1) :
   ashr (select e_1 e (const? 8 42)) (const? 8 3) ⊑ select e_1 (ashr e (const? 8 3)) (const? 8 5) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -19,7 +23,8 @@ theorem ashr_exact_thm (e : IntW 8) (e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -29,7 +34,8 @@ theorem shl_nsw_nuw_poison_constant_fold_thm (e : IntW 8) (e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -39,7 +45,8 @@ theorem shl_nsw_nuw_thm (e : IntW 8) (e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -49,7 +56,8 @@ theorem add_nsw_poison_constant_fold_thm (e : IntW 8) (e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -59,7 +67,8 @@ theorem add_nsw_thm (e : IntW 8) (e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 

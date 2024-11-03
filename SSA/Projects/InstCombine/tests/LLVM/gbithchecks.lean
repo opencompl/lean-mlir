@@ -13,6 +13,8 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gbithchecks_statements
 
+#exit
+
 def main1_before := [llvm|
 {
 ^0(%arg159 : i32):
@@ -3005,5 +3007,3 @@ theorem only_one_masked_proof : only_one_masked_before ⊑ only_one_masked_after
   ---BEGIN only_one_masked
   all_goals (try extract_goal ; sorry)
   ---END only_one_masked
-
-

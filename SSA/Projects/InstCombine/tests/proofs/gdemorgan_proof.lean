@@ -4,6 +4,9 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
 open LLVM
 
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+
 section gdemorgan_proof
 theorem demorgan_or_apint1_thm (e e_1 : IntW 43) :
   LLVM.or (LLVM.xor e_1 (const? 43 (-1))) (LLVM.xor e (const? 43 (-1))) ⊑
@@ -11,7 +14,8 @@ theorem demorgan_or_apint1_thm (e e_1 : IntW 43) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -21,7 +25,8 @@ theorem demorgan_or_apint2_thm (e e_1 : IntW 129) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -31,7 +36,8 @@ theorem demorgan_and_apint1_thm (e e_1 : IntW 477) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -41,7 +47,8 @@ theorem demorgan_and_apint2_thm (e e_1 : IntW 129) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -51,7 +58,8 @@ theorem demorgan_and_apint3_thm (e e_1 : IntW 65) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -61,7 +69,8 @@ theorem demorgan_and_apint4_thm (e e_1 : IntW 66) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -71,7 +80,8 @@ theorem demorgan_and_apint5_thm (e e_1 : IntW 47) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -81,7 +91,8 @@ theorem test3_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -90,7 +101,8 @@ theorem test4_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -100,7 +112,8 @@ theorem test5_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -110,7 +123,8 @@ theorem test3_apint_thm (e e_1 : IntW 47) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -119,7 +133,8 @@ theorem test4_apint_thm (e : IntW 61) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -129,7 +144,8 @@ theorem test5_apint_thm (e e_1 : IntW 71) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -139,7 +155,8 @@ theorem demorgan_nand_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -149,7 +166,8 @@ theorem demorgan_nand_apint1_thm (e e_1 : IntW 7) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -159,7 +177,8 @@ theorem demorgan_nand_apint2_thm (e e_1 : IntW 117) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -169,7 +188,8 @@ theorem demorgan_nor_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -180,7 +200,8 @@ theorem demorgan_nor_use2a_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -190,7 +211,8 @@ theorem demorgan_nor_use2b_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -202,7 +224,8 @@ theorem demorgan_nor_use2c_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -214,7 +237,8 @@ theorem demorgan_nor_use2ab_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -230,7 +254,8 @@ theorem demorgan_nor_use2ac_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -246,7 +271,8 @@ theorem demorgan_nor_use2bc_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -256,7 +282,8 @@ theorem demorganize_constant2_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -266,7 +293,8 @@ theorem demorgan_or_zext_thm (e e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -276,7 +304,8 @@ theorem demorgan_and_zext_thm (e e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -287,7 +316,8 @@ theorem PR28476_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -300,7 +330,8 @@ theorem PR28476_logical_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -310,7 +341,8 @@ theorem demorgan_plus_and_to_xor_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -320,7 +352,8 @@ theorem PR45984_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 

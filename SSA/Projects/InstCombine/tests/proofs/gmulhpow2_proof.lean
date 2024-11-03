@@ -4,13 +4,17 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
 open LLVM
 
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+
 section gmulhpow2_proof
 theorem mul_selectp2_x_thm (e : IntW 8) (e_1 : IntW 1) :
   mul (select e_1 (const? 8 2) (const? 8 4)) e ⊑ shl e (select e_1 (const? 8 1) (const? 8 2)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -20,7 +24,8 @@ theorem mul_selectp2_x_propegate_nuw_thm (e : IntW 8) (e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -29,7 +34,8 @@ theorem mul_selectp2_x_non_const_thm (e e_1 : IntW 8) (e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -39,7 +45,8 @@ theorem mul_x_selectp2_thm (e : IntW 1) (e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -48,7 +55,8 @@ theorem shl_add_log_may_cause_poison_pr62175_with_nuw_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -57,7 +65,8 @@ theorem shl_add_log_may_cause_poison_pr62175_with_nsw_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 

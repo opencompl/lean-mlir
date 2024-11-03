@@ -4,6 +4,9 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
 open LLVM
 
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+
 section gsinkhnothintohand_proof
 theorem t0_thm (e e_1 e_2 e_3 : IntW 32) :
   LLVM.xor (LLVM.and (icmp IntPredicate.eq e_3 e_2) (icmp IntPredicate.eq e_1 e)) (const? 1 1) ⊑
@@ -11,7 +14,8 @@ theorem t0_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 

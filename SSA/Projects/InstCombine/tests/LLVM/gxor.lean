@@ -5,6 +5,8 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open LLVM
 open BitVec
 
+#exit
+
 open MLIR AST
 open Ctxt (Var)
 
@@ -1644,5 +1646,3 @@ theorem select_or_disjoint_or_proof : select_or_disjoint_or_before ⊑ select_or
   ---BEGIN select_or_disjoint_or
   all_goals (try extract_goal ; sorry)
   ---END select_or_disjoint_or
-
-

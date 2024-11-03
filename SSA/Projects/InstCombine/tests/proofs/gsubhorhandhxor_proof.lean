@@ -4,12 +4,16 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
 open LLVM
 
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+
 section gsubhorhandhxor_proof
 theorem sub_to_xor_thm (e e_1 : IntW 32) : sub (LLVM.or e_1 e) (LLVM.and e_1 e) ⊑ LLVM.xor e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -17,7 +21,8 @@ theorem sub_to_xor_or_commuted_thm (e e_1 : IntW 32) : sub (LLVM.or e_1 e) (LLVM
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -25,7 +30,8 @@ theorem sub_to_xor_and_commuted_thm (e e_1 : IntW 32) : sub (LLVM.or e_1 e) (LLV
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 

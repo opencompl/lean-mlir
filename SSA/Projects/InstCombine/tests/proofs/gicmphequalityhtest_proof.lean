@@ -4,6 +4,9 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
 open LLVM
 
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+
 section gicmphequalityhtest_proof
 theorem icmp_equality_test_thm (e e_1 e_2 : IntW 64) :
   select (icmp IntPredicate.eq e_2 e_1) (icmp IntPredicate.eq e e_1)
@@ -12,7 +15,8 @@ theorem icmp_equality_test_thm (e e_1 e_2 : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -24,7 +28,8 @@ theorem icmp_equality_test_constant_thm (e e_1 : IntW 42) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -36,7 +41,8 @@ theorem icmp_equality_test_constant_samesign_thm (e e_1 : IntW 42) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -48,7 +54,8 @@ theorem icmp_equality_test_swift_optional_pointers_thm (e e_1 : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -59,7 +66,8 @@ theorem icmp_equality_test_commute_icmp1_thm (e e_1 e_2 : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -70,7 +78,8 @@ theorem icmp_equality_test_commute_icmp2_thm (e e_1 e_2 : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -81,7 +90,8 @@ theorem icmp_equality_test_commute_select1_thm (e e_1 e_2 : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -92,7 +102,8 @@ theorem icmp_equality_test_commute_select2_thm (e e_1 e_2 : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -104,7 +115,8 @@ theorem icmp_equality_test_wrong_and_thm (e e_1 e_2 : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 

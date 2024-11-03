@@ -4,12 +4,16 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
 open LLVM
 
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+
 section ghighhbithsignmask_proof
 theorem t0_thm (e : IntW 64) : sub (const? 64 0) (lshr e (const? 64 63)) âŠ‘ ashr e (const? 64 63) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -17,7 +21,8 @@ theorem t0_exact_thm (e : IntW 64) : sub (const? 64 0) (lshr e (const? 64 63)) â
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -25,7 +30,8 @@ theorem t2_thm (e : IntW 64) : sub (const? 64 0) (ashr e (const? 64 63)) âŠ‘ lsh
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -33,7 +39,8 @@ theorem t3_exact_thm (e : IntW 64) : sub (const? 64 0) (ashr e (const? 64 63)) â
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -43,7 +50,8 @@ theorem n9_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -52,7 +60,8 @@ theorem n10_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 

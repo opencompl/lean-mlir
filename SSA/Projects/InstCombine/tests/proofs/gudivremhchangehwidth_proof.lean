@@ -4,12 +4,16 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
 open LLVM
 
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+
 section gudivremhchangehwidth_proof
 theorem udiv_i8_thm (e e_1 : IntW 8) : trunc 8 (LLVM.udiv (zext 32 e_1) (zext 32 e)) ⊑ LLVM.udiv e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -17,7 +21,8 @@ theorem urem_i8_thm (e e_1 : IntW 8) : trunc 8 (urem (zext 32 e_1) (zext 32 e)) 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -25,7 +30,8 @@ theorem udiv_i32_thm (e e_1 : IntW 8) : LLVM.udiv (zext 32 e_1) (zext 32 e) ⊑ 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -36,7 +42,8 @@ theorem udiv_i32_multiuse_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -44,7 +51,8 @@ theorem udiv_illegal_type_thm (e e_1 : IntW 9) : LLVM.udiv (zext 32 e_1) (zext 3
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -52,7 +60,8 @@ theorem urem_i32_thm (e e_1 : IntW 8) : urem (zext 32 e_1) (zext 32 e) ⊑ zext 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -63,7 +72,8 @@ theorem urem_i32_multiuse_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -71,7 +81,8 @@ theorem urem_illegal_type_thm (e e_1 : IntW 9) : urem (zext 32 e_1) (zext 32 e) 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -79,7 +90,8 @@ theorem udiv_i32_c_thm (e : IntW 8) : LLVM.udiv (zext 32 e) (const? 32 10) ⊑ z
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -89,7 +101,8 @@ theorem udiv_i32_c_multiuse_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -97,7 +110,8 @@ theorem udiv_illegal_type_c_thm (e : IntW 9) : LLVM.udiv (zext 32 e) (const? 32 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -105,7 +119,8 @@ theorem urem_i32_c_thm (e : IntW 8) : urem (zext 32 e) (const? 32 10) ⊑ zext 3
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -115,7 +130,8 @@ theorem urem_i32_c_multiuse_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -123,7 +139,8 @@ theorem urem_illegal_type_c_thm (e : IntW 9) : urem (zext 32 e) (const? 32 10) �
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -131,7 +148,8 @@ theorem udiv_c_i32_thm (e : IntW 8) : LLVM.udiv (const? 32 10) (zext 32 e) ⊑ z
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -139,7 +157,8 @@ theorem urem_c_i32_thm (e : IntW 8) : urem (const? 32 10) (zext 32 e) ⊑ zext 3
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 

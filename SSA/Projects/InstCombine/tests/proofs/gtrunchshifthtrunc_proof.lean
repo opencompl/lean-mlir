@@ -4,12 +4,16 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
 open LLVM
 
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+
 section gtrunchshifthtrunc_proof
 theorem trunc_lshr_trunc_thm (e : IntW 64) : trunc 8 (lshr (trunc 32 e) (const? 32 8)) ⊑ trunc 8 (lshr e (const? 64 8)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -17,7 +21,8 @@ theorem trunc_ashr_trunc_thm (e : IntW 64) : trunc 8 (ashr (trunc 32 e) (const? 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -25,7 +30,8 @@ theorem trunc_ashr_trunc_exact_thm (e : IntW 64) : trunc 8 (ashr (trunc 32 e) (c
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 

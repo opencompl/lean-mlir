@@ -4,6 +4,9 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
 open LLVM
 
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+
 section gfoldhahorhbhzero_proof
 theorem a_or_b_thm (e e_1 : IntW 32) :
   LLVM.or (LLVM.and (icmp IntPredicate.eq e_1 (const? 32 0)) (icmp IntPredicate.ne e (const? 32 0)))
@@ -12,7 +15,8 @@ theorem a_or_b_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -23,7 +27,8 @@ theorem a_or_b_const_thm (e e_1 e_2 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -34,7 +39,8 @@ theorem a_or_b_const2_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 

@@ -4,6 +4,9 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
 open LLVM
 
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+
 section ginstcombinehverifyhknownhbits_proof
 theorem pr110631_thm (e : IntW 32) (e_1 : IntW 64) :
   trunc 16
@@ -12,7 +15,8 @@ theorem pr110631_thm (e : IntW 32) (e_1 : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 

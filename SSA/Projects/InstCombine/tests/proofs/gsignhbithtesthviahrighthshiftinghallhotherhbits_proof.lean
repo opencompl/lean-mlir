@@ -4,13 +4,17 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
 open LLVM
 
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+
 section gsignhbithtesthviahrighthshiftinghallhotherhbits_proof
 theorem unsigned_sign_bit_extract_thm (e : IntW 32) :
   icmp IntPredicate.ne (lshr e (const? 32 31)) (const? 32 0) ⊑ icmp IntPredicate.slt e (const? 32 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -19,7 +23,8 @@ theorem signed_sign_bit_extract_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -28,7 +33,8 @@ theorem unsigned_sign_bit_extract_with_trunc_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -37,7 +43,8 @@ theorem signed_sign_bit_extract_trunc_thm (e : IntW 64) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 

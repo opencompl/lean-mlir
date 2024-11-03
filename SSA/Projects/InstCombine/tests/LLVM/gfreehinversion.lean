@@ -13,6 +13,8 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gfreehinversion_statements
 
+#exit
+
 def xor_1_before := [llvm|
 {
 ^0(%arg137 : i8, %arg138 : i1, %arg139 : i8, %arg140 : i8):
@@ -396,5 +398,3 @@ theorem lshr_not_nneg2_proof : lshr_not_nneg2_before ⊑ lshr_not_nneg2_after :=
   ---BEGIN lshr_not_nneg2
   all_goals (try extract_goal ; sorry)
   ---END lshr_not_nneg2
-
-

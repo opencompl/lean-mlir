@@ -4,13 +4,17 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
 open LLVM
 
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+
 section gassochcasthassoc_proof
 theorem XorZextXor_thm (e : IntW 3) :
   LLVM.xor (zext 5 (LLVM.xor e (const? 3 3))) (const? 5 12) ⊑ LLVM.xor (zext 5 e) (const? 5 15) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -19,7 +23,8 @@ theorem OrZextOr_thm (e : IntW 3) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -28,7 +33,8 @@ theorem AndZextAnd_thm (e : IntW 3) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -38,7 +44,8 @@ theorem zext_nneg_thm (e : IntW 16) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 

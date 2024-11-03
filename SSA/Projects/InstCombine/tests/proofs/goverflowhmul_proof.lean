@@ -4,6 +4,9 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
 open LLVM
 
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+
 section goverflowhmul_proof
 theorem pr4917_3_thm (e e_1 : IntW 32) :
   select (icmp IntPredicate.ugt (mul (zext 64 e_1) (zext 64 e)) (const? 64 4294967295)) (mul (zext 64 e_1) (zext 64 e))
@@ -14,7 +17,8 @@ theorem pr4917_3_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -24,7 +28,8 @@ theorem mul_may_overflow_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 

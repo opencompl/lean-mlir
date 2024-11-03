@@ -4,6 +4,9 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
 open LLVM
 
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+
 section gapinthandhorhand_proof
 theorem test1_thm (e e_1 : IntW 17) :
   LLVM.and (LLVM.or (LLVM.and e_1 (const? 17 7)) (LLVM.and e (const? 17 8))) (const? 17 7) ⊑
@@ -11,7 +14,8 @@ theorem test1_thm (e e_1 : IntW 17) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -20,7 +24,8 @@ theorem test3_thm (e e_1 : IntW 49) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -29,7 +34,8 @@ theorem test4_thm (e e_1 : IntW 67) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -37,7 +43,8 @@ theorem or_test1_thm (e : IntW 231) : LLVM.or (LLVM.and e (const? 231 1)) (const
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -45,7 +52,8 @@ theorem or_test2_thm (e : IntW 7) : LLVM.or (shl e (const? 7 6)) (const? 7 (-64)
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 

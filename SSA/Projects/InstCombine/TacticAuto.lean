@@ -8,7 +8,7 @@ import SSA.Experimental.Bits.Fast.Tactic
 import SSA.Experimental.Bits.AutoStructs.Tactic
 import SSA.Experimental.Bits.AutoStructs.ForLean
 import Std.Tactic.BVDecide
--- import Leanwuzla
+import Leanwuzla
 
 open Lean
 open Lean.Elab.Tactic
@@ -219,7 +219,21 @@ macro "alive_auto": tactic =>
 macro "bv_compare'": tactic =>
   `(tactic|
       (
-        -- bv_compare -- for evaluating performance
-        bv_decide -- replace this with bv_compare to evaluate performance
+        try bv_compare
+        try bv_decide
+      )
+   )
+
+macro "simp_alive_split": tactic =>
+  `(tactic|
+      (
+        repeat(all_goals split; all_goals simp only [BitVec.Refinement.some_some, BitVec.Refinement.refl])
+      )
+   )
+
+macro "simp_alive_benchmark": tactic =>
+  `(tactic|
+      (
+        all_goals try bv_compare'
       )
    )

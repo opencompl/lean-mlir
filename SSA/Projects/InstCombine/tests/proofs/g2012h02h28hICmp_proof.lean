@@ -4,6 +4,9 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
 open LLVM
 
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+
 section g2012h02h28hICmp_proof
 theorem f1_logical_thm (e : IntW 32) :
   select (icmp IntPredicate.ne (trunc 8 e) (const? 8 0))
@@ -13,7 +16,8 @@ theorem f1_logical_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 

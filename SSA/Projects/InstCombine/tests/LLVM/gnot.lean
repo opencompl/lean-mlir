@@ -5,6 +5,8 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open LLVM
 open BitVec
 
+#exit
+
 open MLIR AST
 open Ctxt (Var)
 
@@ -860,5 +862,3 @@ theorem test_invert_demorgan_logical_and_proof : test_invert_demorgan_logical_an
   ---BEGIN test_invert_demorgan_logical_and
   all_goals (try extract_goal ; sorry)
   ---END test_invert_demorgan_logical_and
-
-

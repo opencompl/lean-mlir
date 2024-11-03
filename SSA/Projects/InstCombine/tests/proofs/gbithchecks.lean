@@ -13,6 +13,8 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gbithchecks_statements
 
+#exit
+
 def main1_before := [llvm|
 {
 ^0(%arg159 : i32):
@@ -46,7 +48,7 @@ theorem main1_proof : main1_before ⊑ main1_after := by
   simp_alive_peephole
   intros
   ---BEGIN main1
-  apply main1_thm
+  all_goals (try extract_goal ; sorry)
   ---END main1
 
 
@@ -85,7 +87,7 @@ theorem main1_logical_proof : main1_logical_before ⊑ main1_logical_after := by
   simp_alive_peephole
   intros
   ---BEGIN main1_logical
-  apply main1_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main1_logical
 
 
@@ -121,7 +123,7 @@ theorem main2_proof : main2_before ⊑ main2_after := by
   simp_alive_peephole
   intros
   ---BEGIN main2
-  apply main2_thm
+  all_goals (try extract_goal ; sorry)
   ---END main2
 
 
@@ -158,7 +160,7 @@ theorem main2_logical_proof : main2_logical_before ⊑ main2_logical_after := by
   simp_alive_peephole
   intros
   ---BEGIN main2_logical
-  apply main2_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main2_logical
 
 
@@ -196,7 +198,7 @@ theorem main3_proof : main3_before ⊑ main3_after := by
   simp_alive_peephole
   intros
   ---BEGIN main3
-  apply main3_thm
+  all_goals (try extract_goal ; sorry)
   ---END main3
 
 
@@ -235,7 +237,7 @@ theorem main3_logical_proof : main3_logical_before ⊑ main3_logical_after := by
   simp_alive_peephole
   intros
   ---BEGIN main3_logical
-  apply main3_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main3_logical
 
 
@@ -273,7 +275,7 @@ theorem main3b_proof : main3b_before ⊑ main3b_after := by
   simp_alive_peephole
   intros
   ---BEGIN main3b
-  apply main3b_thm
+  all_goals (try extract_goal ; sorry)
   ---END main3b
 
 
@@ -312,7 +314,7 @@ theorem main3b_logical_proof : main3b_logical_before ⊑ main3b_logical_after :=
   simp_alive_peephole
   intros
   ---BEGIN main3b_logical
-  apply main3b_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main3b_logical
 
 
@@ -348,7 +350,7 @@ theorem main3e_like_proof : main3e_like_before ⊑ main3e_like_after := by
   simp_alive_peephole
   intros
   ---BEGIN main3e_like
-  apply main3e_like_thm
+  all_goals (try extract_goal ; sorry)
   ---END main3e_like
 
 
@@ -388,7 +390,7 @@ theorem main3e_like_logical_proof : main3e_like_logical_before ⊑ main3e_like_l
   simp_alive_peephole
   intros
   ---BEGIN main3e_like_logical
-  apply main3e_like_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main3e_like_logical
 
 
@@ -426,7 +428,7 @@ theorem main3c_proof : main3c_before ⊑ main3c_after := by
   simp_alive_peephole
   intros
   ---BEGIN main3c
-  apply main3c_thm
+  all_goals (try extract_goal ; sorry)
   ---END main3c
 
 
@@ -465,7 +467,7 @@ theorem main3c_logical_proof : main3c_logical_before ⊑ main3c_logical_after :=
   simp_alive_peephole
   intros
   ---BEGIN main3c_logical
-  apply main3c_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main3c_logical
 
 
@@ -503,7 +505,7 @@ theorem main3d_proof : main3d_before ⊑ main3d_after := by
   simp_alive_peephole
   intros
   ---BEGIN main3d
-  apply main3d_thm
+  all_goals (try extract_goal ; sorry)
   ---END main3d
 
 
@@ -542,7 +544,7 @@ theorem main3d_logical_proof : main3d_logical_before ⊑ main3d_logical_after :=
   simp_alive_peephole
   intros
   ---BEGIN main3d_logical
-  apply main3d_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main3d_logical
 
 
@@ -578,7 +580,7 @@ theorem main3f_like_proof : main3f_like_before ⊑ main3f_like_after := by
   simp_alive_peephole
   intros
   ---BEGIN main3f_like
-  apply main3f_like_thm
+  all_goals (try extract_goal ; sorry)
   ---END main3f_like
 
 
@@ -618,7 +620,7 @@ theorem main3f_like_logical_proof : main3f_like_logical_before ⊑ main3f_like_l
   simp_alive_peephole
   intros
   ---BEGIN main3f_like_logical
-  apply main3f_like_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main3f_like_logical
 
 
@@ -655,7 +657,7 @@ theorem main4_proof : main4_before ⊑ main4_after := by
   simp_alive_peephole
   intros
   ---BEGIN main4
-  apply main4_thm
+  all_goals (try extract_goal ; sorry)
   ---END main4
 
 
@@ -693,7 +695,7 @@ theorem main4_logical_proof : main4_logical_before ⊑ main4_logical_after := by
   simp_alive_peephole
   intros
   ---BEGIN main4_logical
-  apply main4_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main4_logical
 
 
@@ -730,7 +732,7 @@ theorem main4b_proof : main4b_before ⊑ main4b_after := by
   simp_alive_peephole
   intros
   ---BEGIN main4b
-  apply main4b_thm
+  all_goals (try extract_goal ; sorry)
   ---END main4b
 
 
@@ -768,7 +770,7 @@ theorem main4b_logical_proof : main4b_logical_before ⊑ main4b_logical_after :=
   simp_alive_peephole
   intros
   ---BEGIN main4b_logical
-  apply main4b_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main4b_logical
 
 
@@ -803,7 +805,7 @@ theorem main4e_like_proof : main4e_like_before ⊑ main4e_like_after := by
   simp_alive_peephole
   intros
   ---BEGIN main4e_like
-  apply main4e_like_thm
+  all_goals (try extract_goal ; sorry)
   ---END main4e_like
 
 
@@ -842,7 +844,7 @@ theorem main4e_like_logical_proof : main4e_like_logical_before ⊑ main4e_like_l
   simp_alive_peephole
   intros
   ---BEGIN main4e_like_logical
-  apply main4e_like_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main4e_like_logical
 
 
@@ -879,7 +881,7 @@ theorem main4c_proof : main4c_before ⊑ main4c_after := by
   simp_alive_peephole
   intros
   ---BEGIN main4c
-  apply main4c_thm
+  all_goals (try extract_goal ; sorry)
   ---END main4c
 
 
@@ -917,7 +919,7 @@ theorem main4c_logical_proof : main4c_logical_before ⊑ main4c_logical_after :=
   simp_alive_peephole
   intros
   ---BEGIN main4c_logical
-  apply main4c_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main4c_logical
 
 
@@ -954,7 +956,7 @@ theorem main4d_proof : main4d_before ⊑ main4d_after := by
   simp_alive_peephole
   intros
   ---BEGIN main4d
-  apply main4d_thm
+  all_goals (try extract_goal ; sorry)
   ---END main4d
 
 
@@ -992,7 +994,7 @@ theorem main4d_logical_proof : main4d_logical_before ⊑ main4d_logical_after :=
   simp_alive_peephole
   intros
   ---BEGIN main4d_logical
-  apply main4d_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main4d_logical
 
 
@@ -1027,7 +1029,7 @@ theorem main4f_like_proof : main4f_like_before ⊑ main4f_like_after := by
   simp_alive_peephole
   intros
   ---BEGIN main4f_like
-  apply main4f_like_thm
+  all_goals (try extract_goal ; sorry)
   ---END main4f_like
 
 
@@ -1066,7 +1068,7 @@ theorem main4f_like_logical_proof : main4f_like_logical_before ⊑ main4f_like_l
   simp_alive_peephole
   intros
   ---BEGIN main4f_like_logical
-  apply main4f_like_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main4f_like_logical
 
 
@@ -1103,7 +1105,7 @@ theorem main5_like_proof : main5_like_before ⊑ main5_like_after := by
   simp_alive_peephole
   intros
   ---BEGIN main5_like
-  apply main5_like_thm
+  all_goals (try extract_goal ; sorry)
   ---END main5_like
 
 
@@ -1144,7 +1146,7 @@ theorem main5_like_logical_proof : main5_like_logical_before ⊑ main5_like_logi
   simp_alive_peephole
   intros
   ---BEGIN main5_like_logical
-  apply main5_like_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main5_like_logical
 
 
@@ -1179,7 +1181,7 @@ theorem main5e_like_proof : main5e_like_before ⊑ main5e_like_after := by
   simp_alive_peephole
   intros
   ---BEGIN main5e_like
-  apply main5e_like_thm
+  all_goals (try extract_goal ; sorry)
   ---END main5e_like
 
 
@@ -1218,7 +1220,7 @@ theorem main5e_like_logical_proof : main5e_like_logical_before ⊑ main5e_like_l
   simp_alive_peephole
   intros
   ---BEGIN main5e_like_logical
-  apply main5e_like_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main5e_like_logical
 
 
@@ -1255,7 +1257,7 @@ theorem main5c_like_proof : main5c_like_before ⊑ main5c_like_after := by
   simp_alive_peephole
   intros
   ---BEGIN main5c_like
-  apply main5c_like_thm
+  all_goals (try extract_goal ; sorry)
   ---END main5c_like
 
 
@@ -1296,7 +1298,7 @@ theorem main5c_like_logical_proof : main5c_like_logical_before ⊑ main5c_like_l
   simp_alive_peephole
   intros
   ---BEGIN main5c_like_logical
-  apply main5c_like_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main5c_like_logical
 
 
@@ -1331,7 +1333,7 @@ theorem main5f_like_proof : main5f_like_before ⊑ main5f_like_after := by
   simp_alive_peephole
   intros
   ---BEGIN main5f_like
-  apply main5f_like_thm
+  all_goals (try extract_goal ; sorry)
   ---END main5f_like
 
 
@@ -1370,7 +1372,7 @@ theorem main5f_like_logical_proof : main5f_like_logical_before ⊑ main5f_like_l
   simp_alive_peephole
   intros
   ---BEGIN main5f_like_logical
-  apply main5f_like_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main5f_like_logical
 
 
@@ -1410,7 +1412,7 @@ theorem main6_proof : main6_before ⊑ main6_after := by
   simp_alive_peephole
   intros
   ---BEGIN main6
-  apply main6_thm
+  all_goals (try extract_goal ; sorry)
   ---END main6
 
 
@@ -1451,7 +1453,7 @@ theorem main6_logical_proof : main6_logical_before ⊑ main6_logical_after := by
   simp_alive_peephole
   intros
   ---BEGIN main6_logical
-  apply main6_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main6_logical
 
 
@@ -1490,7 +1492,7 @@ theorem main6b_proof : main6b_before ⊑ main6b_after := by
   simp_alive_peephole
   intros
   ---BEGIN main6b
-  apply main6b_thm
+  all_goals (try extract_goal ; sorry)
   ---END main6b
 
 
@@ -1530,7 +1532,7 @@ theorem main6b_logical_proof : main6b_logical_before ⊑ main6b_logical_after :=
   simp_alive_peephole
   intros
   ---BEGIN main6b_logical
-  apply main6b_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main6b_logical
 
 
@@ -1570,7 +1572,7 @@ theorem main6c_proof : main6c_before ⊑ main6c_after := by
   simp_alive_peephole
   intros
   ---BEGIN main6c
-  apply main6c_thm
+  all_goals (try extract_goal ; sorry)
   ---END main6c
 
 
@@ -1611,7 +1613,7 @@ theorem main6c_logical_proof : main6c_logical_before ⊑ main6c_logical_after :=
   simp_alive_peephole
   intros
   ---BEGIN main6c_logical
-  apply main6c_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main6c_logical
 
 
@@ -1650,7 +1652,7 @@ theorem main6d_proof : main6d_before ⊑ main6d_after := by
   simp_alive_peephole
   intros
   ---BEGIN main6d
-  apply main6d_thm
+  all_goals (try extract_goal ; sorry)
   ---END main6d
 
 
@@ -1690,7 +1692,7 @@ theorem main6d_logical_proof : main6d_logical_before ⊑ main6d_logical_after :=
   simp_alive_peephole
   intros
   ---BEGIN main6d_logical
-  apply main6d_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main6d_logical
 
 
@@ -1725,7 +1727,7 @@ theorem main7a_proof : main7a_before ⊑ main7a_after := by
   simp_alive_peephole
   intros
   ---BEGIN main7a
-  apply main7a_thm
+  all_goals (try extract_goal ; sorry)
   ---END main7a
 
 
@@ -1764,7 +1766,7 @@ theorem main7a_logical_proof : main7a_logical_before ⊑ main7a_logical_after :=
   simp_alive_peephole
   intros
   ---BEGIN main7a_logical
-  apply main7a_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main7a_logical
 
 
@@ -1803,7 +1805,7 @@ theorem main7b_proof : main7b_before ⊑ main7b_after := by
   simp_alive_peephole
   intros
   ---BEGIN main7b
-  apply main7b_thm
+  all_goals (try extract_goal ; sorry)
   ---END main7b
 
 
@@ -1842,7 +1844,7 @@ theorem main7b_logical_proof : main7b_logical_before ⊑ main7b_logical_after :=
   simp_alive_peephole
   intros
   ---BEGIN main7b_logical
-  apply main7b_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main7b_logical
 
 
@@ -1881,7 +1883,7 @@ theorem main7c_proof : main7c_before ⊑ main7c_after := by
   simp_alive_peephole
   intros
   ---BEGIN main7c
-  apply main7c_thm
+  all_goals (try extract_goal ; sorry)
   ---END main7c
 
 
@@ -1920,7 +1922,7 @@ theorem main7c_logical_proof : main7c_logical_before ⊑ main7c_logical_after :=
   simp_alive_peephole
   intros
   ---BEGIN main7c_logical
-  apply main7c_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main7c_logical
 
 
@@ -1959,7 +1961,7 @@ theorem main7d_proof : main7d_before ⊑ main7d_after := by
   simp_alive_peephole
   intros
   ---BEGIN main7d
-  apply main7d_thm
+  all_goals (try extract_goal ; sorry)
   ---END main7d
 
 
@@ -2002,7 +2004,7 @@ theorem main7d_logical_proof : main7d_logical_before ⊑ main7d_logical_after :=
   simp_alive_peephole
   intros
   ---BEGIN main7d_logical
-  apply main7d_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main7d_logical
 
 
@@ -2041,7 +2043,7 @@ theorem main7e_proof : main7e_before ⊑ main7e_after := by
   simp_alive_peephole
   intros
   ---BEGIN main7e
-  apply main7e_thm
+  all_goals (try extract_goal ; sorry)
   ---END main7e
 
 
@@ -2084,7 +2086,7 @@ theorem main7e_logical_proof : main7e_logical_before ⊑ main7e_logical_after :=
   simp_alive_peephole
   intros
   ---BEGIN main7e_logical
-  apply main7e_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main7e_logical
 
 
@@ -2123,7 +2125,7 @@ theorem main7f_proof : main7f_before ⊑ main7f_after := by
   simp_alive_peephole
   intros
   ---BEGIN main7f
-  apply main7f_thm
+  all_goals (try extract_goal ; sorry)
   ---END main7f
 
 
@@ -2166,7 +2168,7 @@ theorem main7f_logical_proof : main7f_logical_before ⊑ main7f_logical_after :=
   simp_alive_peephole
   intros
   ---BEGIN main7f_logical
-  apply main7f_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main7f_logical
 
 
@@ -2205,7 +2207,7 @@ theorem main7g_proof : main7g_before ⊑ main7g_after := by
   simp_alive_peephole
   intros
   ---BEGIN main7g
-  apply main7g_thm
+  all_goals (try extract_goal ; sorry)
   ---END main7g
 
 
@@ -2248,7 +2250,7 @@ theorem main7g_logical_proof : main7g_logical_before ⊑ main7g_logical_after :=
   simp_alive_peephole
   intros
   ---BEGIN main7g_logical
-  apply main7g_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main7g_logical
 
 
@@ -2289,7 +2291,7 @@ theorem main8_proof : main8_before ⊑ main8_after := by
   simp_alive_peephole
   intros
   ---BEGIN main8
-  apply main8_thm
+  all_goals (try extract_goal ; sorry)
   ---END main8
 
 
@@ -2331,7 +2333,7 @@ theorem main8_logical_proof : main8_logical_before ⊑ main8_logical_after := by
   simp_alive_peephole
   intros
   ---BEGIN main8_logical
-  apply main8_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main8_logical
 
 
@@ -2371,7 +2373,7 @@ theorem main9_proof : main9_before ⊑ main9_after := by
   simp_alive_peephole
   intros
   ---BEGIN main9
-  apply main9_thm
+  all_goals (try extract_goal ; sorry)
   ---END main9
 
 
@@ -2412,7 +2414,7 @@ theorem main9_logical_proof : main9_logical_before ⊑ main9_logical_after := by
   simp_alive_peephole
   intros
   ---BEGIN main9_logical
-  apply main9_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main9_logical
 
 
@@ -2453,7 +2455,7 @@ theorem main10_proof : main10_before ⊑ main10_after := by
   simp_alive_peephole
   intros
   ---BEGIN main10
-  apply main10_thm
+  all_goals (try extract_goal ; sorry)
   ---END main10
 
 
@@ -2495,7 +2497,7 @@ theorem main10_logical_proof : main10_logical_before ⊑ main10_logical_after :=
   simp_alive_peephole
   intros
   ---BEGIN main10_logical
-  apply main10_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main10_logical
 
 
@@ -2535,7 +2537,7 @@ theorem main11_proof : main11_before ⊑ main11_after := by
   simp_alive_peephole
   intros
   ---BEGIN main11
-  apply main11_thm
+  all_goals (try extract_goal ; sorry)
   ---END main11
 
 
@@ -2576,7 +2578,7 @@ theorem main11_logical_proof : main11_logical_before ⊑ main11_logical_after :=
   simp_alive_peephole
   intros
   ---BEGIN main11_logical
-  apply main11_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main11_logical
 
 
@@ -2616,7 +2618,7 @@ theorem main12_proof : main12_before ⊑ main12_after := by
   simp_alive_peephole
   intros
   ---BEGIN main12
-  apply main12_thm
+  all_goals (try extract_goal ; sorry)
   ---END main12
 
 
@@ -2657,7 +2659,7 @@ theorem main12_logical_proof : main12_logical_before ⊑ main12_logical_after :=
   simp_alive_peephole
   intros
   ---BEGIN main12_logical
-  apply main12_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main12_logical
 
 
@@ -2696,7 +2698,7 @@ theorem main13_proof : main13_before ⊑ main13_after := by
   simp_alive_peephole
   intros
   ---BEGIN main13
-  apply main13_thm
+  all_goals (try extract_goal ; sorry)
   ---END main13
 
 
@@ -2736,7 +2738,7 @@ theorem main13_logical_proof : main13_logical_before ⊑ main13_logical_after :=
   simp_alive_peephole
   intros
   ---BEGIN main13_logical
-  apply main13_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main13_logical
 
 
@@ -2776,7 +2778,7 @@ theorem main14_proof : main14_before ⊑ main14_after := by
   simp_alive_peephole
   intros
   ---BEGIN main14
-  apply main14_thm
+  all_goals (try extract_goal ; sorry)
   ---END main14
 
 
@@ -2817,7 +2819,7 @@ theorem main14_logical_proof : main14_logical_before ⊑ main14_logical_after :=
   simp_alive_peephole
   intros
   ---BEGIN main14_logical
-  apply main14_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main14_logical
 
 
@@ -2856,7 +2858,7 @@ theorem main15_proof : main15_before ⊑ main15_after := by
   simp_alive_peephole
   intros
   ---BEGIN main15
-  apply main15_thm
+  all_goals (try extract_goal ; sorry)
   ---END main15
 
 
@@ -2896,7 +2898,7 @@ theorem main15_logical_proof : main15_logical_before ⊑ main15_logical_after :=
   simp_alive_peephole
   intros
   ---BEGIN main15_logical
-  apply main15_logical_thm
+  all_goals (try extract_goal ; sorry)
   ---END main15_logical
 
 
@@ -2934,7 +2936,7 @@ theorem no_masks_with_logical_or_proof : no_masks_with_logical_or_before ⊑ no_
   simp_alive_peephole
   intros
   ---BEGIN no_masks_with_logical_or
-  apply no_masks_with_logical_or_thm
+  all_goals (try extract_goal ; sorry)
   ---END no_masks_with_logical_or
 
 
@@ -2972,7 +2974,7 @@ theorem no_masks_with_logical_or2_proof : no_masks_with_logical_or2_before ⊑ n
   simp_alive_peephole
   intros
   ---BEGIN no_masks_with_logical_or2
-  apply no_masks_with_logical_or2_thm
+  all_goals (try extract_goal ; sorry)
   ---END no_masks_with_logical_or2
 
 
@@ -3003,7 +3005,5 @@ theorem only_one_masked_proof : only_one_masked_before ⊑ only_one_masked_after
   simp_alive_peephole
   intros
   ---BEGIN only_one_masked
-  apply only_one_masked_thm
+  all_goals (try extract_goal ; sorry)
   ---END only_one_masked
-
-
