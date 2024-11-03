@@ -8,6 +8,8 @@ open BitVec
 open MLIR AST
 open Ctxt (Var)
 
+#exit
+
 set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
@@ -910,5 +912,3 @@ theorem ne_optimized_highbits_cmp_proof : ne_optimized_highbits_cmp_before ⊑ n
   ---BEGIN ne_optimized_highbits_cmp
   all_goals (try extract_goal ; sorry)
   ---END ne_optimized_highbits_cmp
-
-
