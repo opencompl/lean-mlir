@@ -219,8 +219,8 @@ macro "alive_auto": tactic =>
 macro "bv_compare'": tactic =>
   `(tactic|
       (
-        -- bv_compare -- for evaluating performance
-        bv_decide -- replace this with bv_compare to evaluate performance
+        try bv_compare
+        try bv_decide
       )
    )
 
