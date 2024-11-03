@@ -21,10 +21,2447 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: dec
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
 ⚠ [886/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-✖ [890/892] Building Leanwuzla
-trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././.lake/packages/leanwuzla/././Leanwuzla.lean -R ././.lake/packages/leanwuzla/./. -o ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.olean -i ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.ilean -c ././.lake/packages/leanwuzla/.lake/build/ir/Leanwuzla.c --json
-error: ././.lake/packages/leanwuzla/././Leanwuzla.lean:117:8: invalid dotted identifier notation, unknown identifier `Std.Tactic.BVDecide.BVBinOp.sdiv` from expected type
-  BVBinOp
-error: Lean exited with code 1
-Some required builds logged failures:
-- Leanwuzla
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gnegatedhbitmask_proof.lean:17:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gnegatedhbitmask_proof.lean:11:8: error: (kernel) declaration has metavariables 'neg_mask1_lshr_thm'
+[bv] [0.023109] Normalizing goal
+  [Meta.synthInstance] [0.001933] ✅️ Decidable
+        ((if 3#8 ≥ ↑8 then none else some (0#8 - (x✝ >>> 3#8 &&& 1#8))) ⊑
+          if 4#8 ≥ ↑8 then none else if 7#8 ≥ ↑8 then none else some ((x✝ <<< 4#8).sshiftRight (7#8).toNat))
+    [Meta.check] [0.001081] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if 3#8 ≥ ↑8 then none else some (0#8 - (x✝ >>> 3#8 &&& 1#8)))
+          (if 4#8 ≥ ↑8 then none else if 7#8 ≥ ↑8 then none else some ((x✝ <<< 4#8).sshiftRight (7#8).toNat))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ :
+        ¬(if 3#8 ≥ ↑8 then none else some (0#8 - (x✝ >>> 3#8 &&& 1#8))) ⊑
+            if 4#8 ≥ ↑8 then none else if 7#8 ≥ ↑8 then none else some ((x✝ <<< 4#8).sshiftRight (7#8).toNat)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ : ¬some (~~~(x✝ >>> 3 &&& 1#8) + 1#8) ⊑ some ((x✝ <<< 4).sshiftRight 7)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gnegatedhbitmask_proof.lean:28:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gnegatedhbitmask_proof.lean:21:8: error: (kernel) declaration has metavariables 'sub_mask1_lshr_thm'
+[bv] [0.039498] Normalizing goal
+  [Meta.synthInstance] [0.001960] ✅️ Decidable
+        ((if 1#8 ≥ ↑8 then none else some (10#8 - (x✝ >>> 1#8 &&& 1#8))) ⊑
+          if 6#8 ≥ ↑8 then none
+          else
+            if 7#8 ≥ ↑8 then none
+            else
+              if
+                  True ∧
+                    ((x✝ <<< 6#8).sshiftRight (7#8).toNat).msb = (10#8).msb ∧
+                      ((x✝ <<< 6#8).sshiftRight (7#8).toNat + 10#8).msb ≠
+                        ((x✝ <<< 6#8).sshiftRight (7#8).toNat).msb then
+                none
+              else some ((x✝ <<< 6#8).sshiftRight (7#8).toNat + 10#8))
+    [Meta.check] [0.001138] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if 1#8 ≥ ↑8 then none else some (10#8 - (x✝ >>> 1#8 &&& 1#8)))
+          (if 6#8 ≥ ↑8 then none
+          else
+            if 7#8 ≥ ↑8 then none
+            else
+              if
+                  True ∧
+                    ((x✝ <<< 6#8).sshiftRight (7#8).toNat).msb = (10#8).msb ∧
+                      ((x✝ <<< 6#8).sshiftRight (7#8).toNat + 10#8).msb ≠
+                        ((x✝ <<< 6#8).sshiftRight (7#8).toNat).msb then
+                none
+              else some ((x✝ <<< 6#8).sshiftRight (7#8).toNat + 10#8))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ :
+        ¬(if 1#8 ≥ ↑8 then none else some (10#8 - (x✝ >>> 1#8 &&& 1#8))) ⊑
+            if 6#8 ≥ ↑8 then none
+            else
+              if 7#8 ≥ ↑8 then none
+              else
+                if
+                    True ∧
+                      ((x✝ <<< 6#8).sshiftRight (7#8).toNat).msb = (10#8).msb ∧
+                        ((x✝ <<< 6#8).sshiftRight (7#8).toNat + 10#8).msb ≠
+                          ((x✝ <<< 6#8).sshiftRight (7#8).toNat).msb then
+                  none
+                else some ((x✝ <<< 6#8).sshiftRight (7#8).toNat + 10#8)
+      ⊢ False
+  [Meta.isDefEq] [0.001325] ✅️ ?h₁ =?= Eq.trans
+        (congrArg (And True)
+          (Eq.trans
+            (congr
+              (congrArg And
+                (Eq.trans
+                  (congr (congrArg Eq (BitVec.msb_eq_getLsbD_last ((x✝ <<< 6).sshiftRight 7)))
+                    (BitVec.msb_eq_getLsbD_last 10#8))
+                  (Std.Tactic.BVDecide.Normalize.Bool.eq_false_to_beq (((x✝ <<< 6).sshiftRight 7).getLsbD 7))))
+              (Eq.trans
+                (congr (congrArg Ne (BitVec.msb_eq_getLsbD_last ((x✝ <<< 6).sshiftRight 7 + 10#8)))
+                  (BitVec.msb_eq_getLsbD_last ((x✝ <<< 6).sshiftRight 7)))
+                (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq (((x✝ <<< 6).sshiftRight 7 + 10#8).getLsbD 7)
+                  (((x✝ <<< 6).sshiftRight 7).getLsbD 7))))
+            (Std.Tactic.BVDecide.Normalize.Bool.and_to_and (!((x✝ <<< 6).sshiftRight 7).getLsbD 7)
+              !((x✝ <<< 6).sshiftRight 7 + 10#8).getLsbD 7 == ((x✝ <<< 6).sshiftRight 7).getLsbD 7)))
+        (true_and
+          ((!((x✝ <<< 6).sshiftRight 7).getLsbD 7 &&
+              !((x✝ <<< 6).sshiftRight 7 + 10#8).getLsbD 7 == ((x✝ <<< 6).sshiftRight 7).getLsbD 7) =
+            true))
+    [Meta.isDefEq.assign] [0.001322] ✅️ ?h₁ := Eq.trans
+          (congrArg (And True)
+            (Eq.trans
+              (congr
+                (congrArg And
+                  (Eq.trans
+                    (congr (congrArg Eq (BitVec.msb_eq_getLsbD_last ((x✝ <<< 6).sshiftRight 7)))
+                      (BitVec.msb_eq_getLsbD_last 10#8))
+                    (Std.Tactic.BVDecide.Normalize.Bool.eq_false_to_beq (((x✝ <<< 6).sshiftRight 7).getLsbD 7))))
+                (Eq.trans
+                  (congr (congrArg Ne (BitVec.msb_eq_getLsbD_last ((x✝ <<< 6).sshiftRight 7 + 10#8)))
+                    (BitVec.msb_eq_getLsbD_last ((x✝ <<< 6).sshiftRight 7)))
+                  (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq (((x✝ <<< 6).sshiftRight 7 + 10#8).getLsbD 7)
+                    (((x✝ <<< 6).sshiftRight 7).getLsbD 7))))
+              (Std.Tactic.BVDecide.Normalize.Bool.and_to_and (!((x✝ <<< 6).sshiftRight 7).getLsbD 7)
+                !((x✝ <<< 6).sshiftRight 7 + 10#8).getLsbD 7 == ((x✝ <<< 6).sshiftRight 7).getLsbD 7)))
+          (true_and
+            ((!((x✝ <<< 6).sshiftRight 7).getLsbD 7 &&
+                !((x✝ <<< 6).sshiftRight 7 + 10#8).getLsbD 7 == ((x✝ <<< 6).sshiftRight 7).getLsbD 7) =
+              true))
+      [Meta.isDefEq.assign.checkTypes] [0.001294] ✅️ (?h₁ : (True ∧
+              ((x✝ <<< 6#8).sshiftRight (7#8).toNat).msb = (10#8).msb ∧
+                ((x✝ <<< 6#8).sshiftRight (7#8).toNat + 10#8).msb ≠ ((x✝ <<< 6#8).sshiftRight (7#8).toNat).msb) =
+            ((!((x✝ <<< 6).sshiftRight 7).getLsbD 7 &&
+                !((x✝ <<< 6).sshiftRight 7 + 10#8).getLsbD 7 == ((x✝ <<< 6).sshiftRight 7).getLsbD 7) =
+              true)) := (Eq.trans
+            (congrArg (And True)
+              (Eq.trans
+                (congr
+                  (congrArg And
+                    (Eq.trans
+                      (congr (congrArg Eq (BitVec.msb_eq_getLsbD_last ((x✝ <<< 6).sshiftRight 7)))
+                        (BitVec.msb_eq_getLsbD_last 10#8))
+                      (Std.Tactic.BVDecide.Normalize.Bool.eq_false_to_beq (((x✝ <<< 6).sshiftRight 7).getLsbD 7))))
+                  (Eq.trans
+                    (congr (congrArg Ne (BitVec.msb_eq_getLsbD_last ((x✝ <<< 6).sshiftRight 7 + 10#8)))
+                      (BitVec.msb_eq_getLsbD_last ((x✝ <<< 6).sshiftRight 7)))
+                    (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq (((x✝ <<< 6).sshiftRight 7 + 10#8).getLsbD 7)
+                      (((x✝ <<< 6).sshiftRight 7).getLsbD 7))))
+                (Std.Tactic.BVDecide.Normalize.Bool.and_to_and (!((x✝ <<< 6).sshiftRight 7).getLsbD 7)
+                  !((x✝ <<< 6).sshiftRight 7 + 10#8).getLsbD 7 == ((x✝ <<< 6).sshiftRight 7).getLsbD 7)))
+            (true_and
+              ((!((x✝ <<< 6).sshiftRight 7).getLsbD 7 &&
+                  !((x✝ <<< 6).sshiftRight 7 + 10#8).getLsbD 7 == ((x✝ <<< 6).sshiftRight 7).getLsbD 7) =
+                true)) : (True ∧
+              ((x✝ <<< 6).sshiftRight 7).msb = (10#8).msb ∧
+                ((x✝ <<< 6).sshiftRight 7 + 10#8).msb ≠ ((x✝ <<< 6).sshiftRight 7).msb) =
+            ((!((x✝ <<< 6).sshiftRight 7).getLsbD 7 &&
+                !((x✝ <<< 6).sshiftRight 7 + 10#8).getLsbD 7 == ((x✝ <<< 6).sshiftRight 7).getLsbD 7) =
+              true))
+        [Meta.isDefEq] [0.001289] ✅️ (True ∧
+                ((x✝ <<< 6#8).sshiftRight (7#8).toNat).msb = (10#8).msb ∧
+                  ((x✝ <<< 6#8).sshiftRight (7#8).toNat + 10#8).msb ≠ ((x✝ <<< 6#8).sshiftRight (7#8).toNat).msb) =
+              ((!((x✝ <<< 6).sshiftRight 7).getLsbD 7 &&
+                  !((x✝ <<< 6).sshiftRight 7 + 10#8).getLsbD 7 == ((x✝ <<< 6).sshiftRight 7).getLsbD 7) =
+                true) =?= (True ∧
+                ((x✝ <<< 6).sshiftRight 7).msb = (10#8).msb ∧
+                  ((x✝ <<< 6).sshiftRight 7 + 10#8).msb ≠ ((x✝ <<< 6).sshiftRight 7).msb) =
+              ((!((x✝ <<< 6).sshiftRight 7).getLsbD 7 &&
+                  !((x✝ <<< 6).sshiftRight 7 + 10#8).getLsbD 7 == ((x✝ <<< 6).sshiftRight 7).getLsbD 7) =
+                true)
+          [Meta.isDefEq] [0.001264] ✅️ True ∧
+                ((x✝ <<< 6#8).sshiftRight (7#8).toNat).msb = (10#8).msb ∧
+                  ((x✝ <<< 6#8).sshiftRight (7#8).toNat + 10#8).msb ≠
+                    ((x✝ <<< 6#8).sshiftRight
+                        (7#8).toNat).msb =?= True ∧
+                ((x✝ <<< 6).sshiftRight 7).msb = (10#8).msb ∧
+                  ((x✝ <<< 6).sshiftRight 7 + 10#8).msb ≠ ((x✝ <<< 6).sshiftRight 7).msb
+            [Meta.isDefEq] [0.001243] ✅️ ((x✝ <<< 6#8).sshiftRight (7#8).toNat).msb = (10#8).msb ∧
+                  ((x✝ <<< 6#8).sshiftRight (7#8).toNat + 10#8).msb ≠
+                    ((x✝ <<< 6#8).sshiftRight
+                        (7#8).toNat).msb =?= ((x✝ <<< 6).sshiftRight 7).msb = (10#8).msb ∧
+                  ((x✝ <<< 6).sshiftRight 7 + 10#8).msb ≠ ((x✝ <<< 6).sshiftRight 7).msb
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ :
+        ¬some (11#8 + ~~~(x✝ >>> 1 &&& 1#8)) ⊑
+            if
+                (!((x✝ <<< 6).sshiftRight 7).getLsbD 7 &&
+                    !((x✝ <<< 6).sshiftRight 7 + 10#8).getLsbD 7 == ((x✝ <<< 6).sshiftRight 7).getLsbD 7) =
+                  true then
+              none
+            else some ((x✝ <<< 6).sshiftRight 7 + 10#8)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gnegatedhbitmask_proof.lean:39:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gnegatedhbitmask_proof.lean:32:8: error: (kernel) declaration has metavariables 'sub_mask1_trunc_lshr_thm'
+[bv] [0.050374] Normalizing goal
+  [Meta.synthInstance] [0.002474] ✅️ Decidable
+        ((if 15#64 ≥ ↑64 then none else some (10#8 - (BitVec.truncate 8 (x✝ >>> 15#64) &&& 1#8))) ⊑
+          if 48#64 ≥ ↑64 then none
+          else
+            if 63#64 ≥ ↑64 then none
+            else
+              if
+                  True ∧
+                    (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat)).msb = (10#8).msb ∧
+                      (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat) + 10#8).msb ≠
+                        (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat)).msb then
+                none
+              else some (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat) + 10#8))
+    [Meta.check] [0.001827] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if 15#64 ≥ ↑64 then none else some (10#8 - (BitVec.truncate 8 (x✝ >>> 15#64) &&& 1#8)))
+          (if 48#64 ≥ ↑64 then none
+          else
+            if 63#64 ≥ ↑64 then none
+            else
+              if
+                  True ∧
+                    (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat)).msb = (10#8).msb ∧
+                      (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat) + 10#8).msb ≠
+                        (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat)).msb then
+                none
+              else some (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat) + 10#8))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬(if 15#64 ≥ ↑64 then none else some (10#8 - (BitVec.truncate 8 (x✝ >>> 15#64) &&& 1#8))) ⊑
+            if 48#64 ≥ ↑64 then none
+            else
+              if 63#64 ≥ ↑64 then none
+              else
+                if
+                    True ∧
+                      (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat)).msb = (10#8).msb ∧
+                        (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat) + 10#8).msb ≠
+                          (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat)).msb then
+                  none
+                else some (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat) + 10#8)
+      ⊢ False
+  [Meta.isDefEq] [0.001402] ✅️ ?h₁ =?= Eq.trans
+        (congrArg (And True)
+          (Eq.trans
+            (congr
+              (congrArg And
+                (Eq.trans
+                  (congr (congrArg Eq (BitVec.msb_eq_getLsbD_last (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63))))
+                    (BitVec.msb_eq_getLsbD_last 10#8))
+                  (Std.Tactic.BVDecide.Normalize.Bool.eq_false_to_beq
+                    ((BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7))))
+              (Eq.trans
+                (congr
+                  (congrArg Ne (BitVec.msb_eq_getLsbD_last (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8)))
+                  (BitVec.msb_eq_getLsbD_last (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63))))
+                (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                  ((BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).getLsbD 7)
+                  ((BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7))))
+            (Std.Tactic.BVDecide.Normalize.Bool.and_to_and
+              (!(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7)
+              !(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).getLsbD 7 ==
+                  (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7)))
+        (true_and
+          ((!(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7 &&
+              !(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).getLsbD 7 ==
+                  (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7) =
+            true))
+    [Meta.isDefEq.assign] [0.001399] ✅️ ?h₁ := Eq.trans
+          (congrArg (And True)
+            (Eq.trans
+              (congr
+                (congrArg And
+                  (Eq.trans
+                    (congr (congrArg Eq (BitVec.msb_eq_getLsbD_last (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63))))
+                      (BitVec.msb_eq_getLsbD_last 10#8))
+                    (Std.Tactic.BVDecide.Normalize.Bool.eq_false_to_beq
+                      ((BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7))))
+                (Eq.trans
+                  (congr
+                    (congrArg Ne (BitVec.msb_eq_getLsbD_last (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8)))
+                    (BitVec.msb_eq_getLsbD_last (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63))))
+                  (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                    ((BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).getLsbD 7)
+                    ((BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7))))
+              (Std.Tactic.BVDecide.Normalize.Bool.and_to_and
+                (!(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7)
+                !(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).getLsbD 7 ==
+                    (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7)))
+          (true_and
+            ((!(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7 &&
+                !(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).getLsbD 7 ==
+                    (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7) =
+              true))
+      [Meta.isDefEq.assign.checkTypes] [0.001375] ✅️ (?h₁ : (True ∧
+              (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat)).msb = (10#8).msb ∧
+                (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat) + 10#8).msb ≠
+                  (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat)).msb) =
+            ((!(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7 &&
+                !(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).getLsbD 7 ==
+                    (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7) =
+              true)) := (Eq.trans
+            (congrArg (And True)
+              (Eq.trans
+                (congr
+                  (congrArg And
+                    (Eq.trans
+                      (congr
+                        (congrArg Eq (BitVec.msb_eq_getLsbD_last (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63))))
+                        (BitVec.msb_eq_getLsbD_last 10#8))
+                      (Std.Tactic.BVDecide.Normalize.Bool.eq_false_to_beq
+                        ((BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7))))
+                  (Eq.trans
+                    (congr
+                      (congrArg Ne
+                        (BitVec.msb_eq_getLsbD_last (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8)))
+                      (BitVec.msb_eq_getLsbD_last (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63))))
+                    (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                      ((BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).getLsbD 7)
+                      ((BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7))))
+                (Std.Tactic.BVDecide.Normalize.Bool.and_to_and
+                  (!(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7)
+                  !(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).getLsbD 7 ==
+                      (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7)))
+            (true_and
+              ((!(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7 &&
+                  !(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).getLsbD 7 ==
+                      (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7) =
+                true)) : (True ∧
+              (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).msb = (10#8).msb ∧
+                (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).msb ≠
+                  (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).msb) =
+            ((!(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7 &&
+                !(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).getLsbD 7 ==
+                    (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7) =
+              true))
+        [Meta.isDefEq] [0.001371] ✅️ (True ∧
+                (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat)).msb = (10#8).msb ∧
+                  (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat) + 10#8).msb ≠
+                    (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat)).msb) =
+              ((!(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7 &&
+                  !(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).getLsbD 7 ==
+                      (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7) =
+                true) =?= (True ∧
+                (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).msb = (10#8).msb ∧
+                  (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).msb ≠
+                    (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).msb) =
+              ((!(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7 &&
+                  !(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).getLsbD 7 ==
+                      (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7) =
+                true)
+          [Meta.isDefEq] [0.001345] ✅️ True ∧
+                (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat)).msb = (10#8).msb ∧
+                  (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat) + 10#8).msb ≠
+                    (BitVec.truncate 8
+                        ((x✝ <<< 48#64).sshiftRight
+                          (63#64).toNat)).msb =?= True ∧
+                (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).msb = (10#8).msb ∧
+                  (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).msb ≠
+                    (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).msb
+            [Meta.isDefEq] [0.001322] ✅️ (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat)).msb =
+                    (10#8).msb ∧
+                  (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat) + 10#8).msb ≠
+                    (BitVec.truncate 8
+                        ((x✝ <<< 48#64).sshiftRight
+                          (63#64).toNat)).msb =?= (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).msb = (10#8).msb ∧
+                  (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).msb ≠
+                    (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).msb
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬some (11#8 + ~~~(BitVec.zeroExtend 8 (x✝ >>> 15) &&& 1#8)) ⊑
+            if
+                (!(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7 &&
+                    !(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).getLsbD 7 ==
+                        (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7) =
+                  true then
+              none
+            else some (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8)
+      ⊢ False
+  [Meta.isDefEq] [0.001063] ❌️ ?a ==
+        ?a =?= (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).getLsbD 7 ==
+        (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gnegatedhbitmask_proof.lean:52:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gnegatedhbitmask_proof.lean:43:8: error: (kernel) declaration has metavariables 'sub_sext_mask1_trunc_lshr_thm'
+[bv] [0.061421] Normalizing goal
+  [Meta.synthInstance] [0.002175] ✅️ Decidable
+        ((if 15#64 ≥ ↑64 then none
+          else some (10#32 - BitVec.signExtend 32 (BitVec.truncate 8 (x✝ >>> 15#64) &&& 1#8))) ⊑
+          if 48#64 ≥ ↑64 then none
+          else
+            if 63#64 ≥ ↑64 then none
+            else
+              if
+                  True ∧
+                    (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat)).msb = (10#8).msb ∧
+                      (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat) + 10#8).msb ≠
+                        (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat)).msb then
+                none
+              else some (BitVec.zeroExtend 32 (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat) + 10#8)))
+    [Meta.check] [0.001474] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if 15#64 ≥ ↑64 then none else some (10#32 - BitVec.signExtend 32 (BitVec.truncate 8 (x✝ >>> 15#64) &&& 1#8)))
+          (if 48#64 ≥ ↑64 then none
+          else
+            if 63#64 ≥ ↑64 then none
+            else
+              if
+                  True ∧
+                    (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat)).msb = (10#8).msb ∧
+                      (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat) + 10#8).msb ≠
+                        (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat)).msb then
+                none
+              else some (BitVec.zeroExtend 32 (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat) + 10#8)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬(if 15#64 ≥ ↑64 then none
+            else some (10#32 - BitVec.signExtend 32 (BitVec.truncate 8 (x✝ >>> 15#64) &&& 1#8))) ⊑
+            if 48#64 ≥ ↑64 then none
+            else
+              if 63#64 ≥ ↑64 then none
+              else
+                if
+                    True ∧
+                      (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat)).msb = (10#8).msb ∧
+                        (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat) + 10#8).msb ≠
+                          (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat)).msb then
+                  none
+                else some (BitVec.zeroExtend 32 (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat) + 10#8))
+      ⊢ False
+  [Meta.isDefEq] [0.001191] ❌️ ?a ==
+        ?a =?= (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).getLsbD 7 ==
+        (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7
+  [Meta.isDefEq] [0.002248] ✅️ ?h₁ =?= Eq.trans
+        (congrArg (And True)
+          (Eq.trans
+            (congr
+              (congrArg And
+                (Eq.trans
+                  (congr (congrArg Eq (BitVec.msb_eq_getLsbD_last (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63))))
+                    (BitVec.msb_eq_getLsbD_last 10#8))
+                  (Std.Tactic.BVDecide.Normalize.Bool.eq_false_to_beq
+                    ((BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7))))
+              (Eq.trans
+                (congr
+                  (congrArg Ne (BitVec.msb_eq_getLsbD_last (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8)))
+                  (BitVec.msb_eq_getLsbD_last (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63))))
+                (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                  ((BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).getLsbD 7)
+                  ((BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7))))
+            (Std.Tactic.BVDecide.Normalize.Bool.and_to_and
+              (!(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7)
+              !(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).getLsbD 7 ==
+                  (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7)))
+        (true_and
+          ((!(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7 &&
+              !(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).getLsbD 7 ==
+                  (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7) =
+            true))
+    [Meta.isDefEq.assign] [0.002244] ✅️ ?h₁ := Eq.trans
+          (congrArg (And True)
+            (Eq.trans
+              (congr
+                (congrArg And
+                  (Eq.trans
+                    (congr (congrArg Eq (BitVec.msb_eq_getLsbD_last (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63))))
+                      (BitVec.msb_eq_getLsbD_last 10#8))
+                    (Std.Tactic.BVDecide.Normalize.Bool.eq_false_to_beq
+                      ((BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7))))
+                (Eq.trans
+                  (congr
+                    (congrArg Ne (BitVec.msb_eq_getLsbD_last (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8)))
+                    (BitVec.msb_eq_getLsbD_last (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63))))
+                  (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                    ((BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).getLsbD 7)
+                    ((BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7))))
+              (Std.Tactic.BVDecide.Normalize.Bool.and_to_and
+                (!(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7)
+                !(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).getLsbD 7 ==
+                    (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7)))
+          (true_and
+            ((!(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7 &&
+                !(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).getLsbD 7 ==
+                    (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7) =
+              true))
+      [Meta.isDefEq.assign.checkTypes] [0.002212] ✅️ (?h₁ : (True ∧
+              (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat)).msb = (10#8).msb ∧
+                (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat) + 10#8).msb ≠
+                  (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat)).msb) =
+            ((!(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7 &&
+                !(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).getLsbD 7 ==
+                    (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7) =
+              true)) := (Eq.trans
+            (congrArg (And True)
+              (Eq.trans
+                (congr
+                  (congrArg And
+                    (Eq.trans
+                      (congr
+                        (congrArg Eq (BitVec.msb_eq_getLsbD_last (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63))))
+                        (BitVec.msb_eq_getLsbD_last 10#8))
+                      (Std.Tactic.BVDecide.Normalize.Bool.eq_false_to_beq
+                        ((BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7))))
+                  (Eq.trans
+                    (congr
+                      (congrArg Ne
+                        (BitVec.msb_eq_getLsbD_last (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8)))
+                      (BitVec.msb_eq_getLsbD_last (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63))))
+                    (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                      ((BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).getLsbD 7)
+                      ((BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7))))
+                (Std.Tactic.BVDecide.Normalize.Bool.and_to_and
+                  (!(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7)
+                  !(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).getLsbD 7 ==
+                      (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7)))
+            (true_and
+              ((!(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7 &&
+                  !(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).getLsbD 7 ==
+                      (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7) =
+                true)) : (True ∧
+              (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).msb = (10#8).msb ∧
+                (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).msb ≠
+                  (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).msb) =
+            ((!(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7 &&
+                !(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).getLsbD 7 ==
+                    (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7) =
+              true))
+        [Meta.isDefEq] [0.002208] ✅️ (True ∧
+                (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat)).msb = (10#8).msb ∧
+                  (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat) + 10#8).msb ≠
+                    (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat)).msb) =
+              ((!(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7 &&
+                  !(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).getLsbD 7 ==
+                      (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7) =
+                true) =?= (True ∧
+                (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).msb = (10#8).msb ∧
+                  (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).msb ≠
+                    (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).msb) =
+              ((!(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7 &&
+                  !(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).getLsbD 7 ==
+                      (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7) =
+                true)
+          [Meta.isDefEq] [0.002171] ✅️ True ∧
+                (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat)).msb = (10#8).msb ∧
+                  (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat) + 10#8).msb ≠
+                    (BitVec.truncate 8
+                        ((x✝ <<< 48#64).sshiftRight
+                          (63#64).toNat)).msb =?= True ∧
+                (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).msb = (10#8).msb ∧
+                  (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).msb ≠
+                    (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).msb
+            [Meta.isDefEq] [0.002145] ✅️ (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat)).msb =
+                    (10#8).msb ∧
+                  (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat) + 10#8).msb ≠
+                    (BitVec.truncate 8
+                        ((x✝ <<< 48#64).sshiftRight
+                          (63#64).toNat)).msb =?= (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).msb = (10#8).msb ∧
+                  (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).msb ≠
+                    (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).msb
+              [Meta.isDefEq] [0.001224] ✅️ (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat) + 10#8).msb ≠
+                    (BitVec.truncate 8
+                        ((x✝ <<< 48#64).sshiftRight
+                          (63#64).toNat)).msb =?= (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).msb ≠
+                    (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).msb
+                [Meta.isDefEq.delta] [0.001198] ✅️ (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat) +
+                          10#8).msb ≠
+                      (BitVec.truncate 8
+                          ((x✝ <<< 48#64).sshiftRight
+                            (63#64).toNat)).msb =?= (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).msb ≠
+                      (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).msb
+                  [Meta.isDefEq] [0.001127] ✅️ (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat) +
+                          10#8).msb =?= (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).msb
+                    [Meta.isDefEq.delta] [0.001108] ✅️ (BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat) +
+                            10#8).msb =?= (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).msb
+                      [Meta.isDefEq] [0.001097] ✅️ BitVec.truncate 8 ((x✝ <<< 48#64).sshiftRight (63#64).toNat) +
+                            10#8 =?= BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬some (11#32 + ~~~BitVec.signExtend 32 (BitVec.zeroExtend 8 (x✝ >>> 15) &&& 1#8)) ⊑
+            if
+                (!(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7 &&
+                    !(BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8).getLsbD 7 ==
+                        (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63)).getLsbD 7) =
+                  true then
+              none
+            else some (BitVec.zeroExtend 32 (BitVec.zeroExtend 8 ((x✝ <<< 48).sshiftRight 63) + 10#8))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gnegatedhbitmask_proof.lean:64:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gnegatedhbitmask_proof.lean:56:8: error: (kernel) declaration has metavariables 'sub_zext_trunc_lshr_thm'
+[bv] [0.038527] Normalizing goal
+  [Meta.synthInstance] [0.001662] ✅️ Decidable
+        ((if 15#64 ≥ ↑64 then none else some (10#32 - BitVec.zeroExtend 32 (BitVec.truncate 1 (x✝ >>> 15#64)))) ⊑
+          if 16#32 ≥ ↑32 then none
+          else
+            if 31#32 ≥ ↑32 then none
+            else
+              if
+                  True ∧
+                    ((BitVec.truncate 32 x✝ <<< 16#32).sshiftRight (31#32).toNat).msb = (10#32).msb ∧
+                      ((BitVec.truncate 32 x✝ <<< 16#32).sshiftRight (31#32).toNat + 10#32).msb ≠
+                        ((BitVec.truncate 32 x✝ <<< 16#32).sshiftRight (31#32).toNat).msb then
+                none
+              else some ((BitVec.truncate 32 x✝ <<< 16#32).sshiftRight (31#32).toNat + 10#32))
+    [Meta.check] [0.001061] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if 15#64 ≥ ↑64 then none else some (10#32 - BitVec.zeroExtend 32 (BitVec.truncate 1 (x✝ >>> 15#64))))
+          (if 16#32 ≥ ↑32 then none
+          else
+            if 31#32 ≥ ↑32 then none
+            else
+              if
+                  True ∧
+                    ((BitVec.truncate 32 x✝ <<< 16#32).sshiftRight (31#32).toNat).msb = (10#32).msb ∧
+                      ((BitVec.truncate 32 x✝ <<< 16#32).sshiftRight (31#32).toNat + 10#32).msb ≠
+                        ((BitVec.truncate 32 x✝ <<< 16#32).sshiftRight (31#32).toNat).msb then
+                none
+              else some ((BitVec.truncate 32 x✝ <<< 16#32).sshiftRight (31#32).toNat + 10#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬(if 15#64 ≥ ↑64 then none else some (10#32 - BitVec.zeroExtend 32 (BitVec.truncate 1 (x✝ >>> 15#64)))) ⊑
+            if 16#32 ≥ ↑32 then none
+            else
+              if 31#32 ≥ ↑32 then none
+              else
+                if
+                    True ∧
+                      ((BitVec.truncate 32 x✝ <<< 16#32).sshiftRight (31#32).toNat).msb = (10#32).msb ∧
+                        ((BitVec.truncate 32 x✝ <<< 16#32).sshiftRight (31#32).toNat + 10#32).msb ≠
+                          ((BitVec.truncate 32 x✝ <<< 16#32).sshiftRight (31#32).toNat).msb then
+                  none
+                else some ((BitVec.truncate 32 x✝ <<< 16#32).sshiftRight (31#32).toNat + 10#32)
+      ⊢ False
+  [Meta.isDefEq] [0.001165] ✅️ ?h₁ =?= Eq.trans
+        (congrArg (And True)
+          (Eq.trans
+            (congr
+              (congrArg And
+                (Eq.trans
+                  (congr (congrArg Eq (BitVec.msb_eq_getLsbD_last ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31)))
+                    (BitVec.msb_eq_getLsbD_last 10#32))
+                  (Std.Tactic.BVDecide.Normalize.Bool.eq_false_to_beq
+                    (((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).getLsbD 31))))
+              (Eq.trans
+                (congr
+                  (congrArg Ne (BitVec.msb_eq_getLsbD_last ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31 + 10#32)))
+                  (BitVec.msb_eq_getLsbD_last ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31)))
+                (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                  (((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31 + 10#32).getLsbD 31)
+                  (((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).getLsbD 31))))
+            (Std.Tactic.BVDecide.Normalize.Bool.and_to_and
+              (!((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).getLsbD 31)
+              !((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31 + 10#32).getLsbD 31 ==
+                  ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).getLsbD 31)))
+        (true_and
+          ((!((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).getLsbD 31 &&
+              !((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31 + 10#32).getLsbD 31 ==
+                  ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).getLsbD 31) =
+            true))
+    [Meta.isDefEq.assign] [0.001163] ✅️ ?h₁ := Eq.trans
+          (congrArg (And True)
+            (Eq.trans
+              (congr
+                (congrArg And
+                  (Eq.trans
+                    (congr (congrArg Eq (BitVec.msb_eq_getLsbD_last ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31)))
+                      (BitVec.msb_eq_getLsbD_last 10#32))
+                    (Std.Tactic.BVDecide.Normalize.Bool.eq_false_to_beq
+                      (((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).getLsbD 31))))
+                (Eq.trans
+                  (congr
+                    (congrArg Ne (BitVec.msb_eq_getLsbD_last ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31 + 10#32)))
+                    (BitVec.msb_eq_getLsbD_last ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31)))
+                  (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                    (((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31 + 10#32).getLsbD 31)
+                    (((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).getLsbD 31))))
+              (Std.Tactic.BVDecide.Normalize.Bool.and_to_and
+                (!((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).getLsbD 31)
+                !((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31 + 10#32).getLsbD 31 ==
+                    ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).getLsbD 31)))
+          (true_and
+            ((!((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).getLsbD 31 &&
+                !((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31 + 10#32).getLsbD 31 ==
+                    ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).getLsbD 31) =
+              true))
+      [Meta.isDefEq.assign.checkTypes] [0.001143] ✅️ (?h₁ : (True ∧
+              ((BitVec.truncate 32 x✝ <<< 16#32).sshiftRight (31#32).toNat).msb = (10#32).msb ∧
+                ((BitVec.truncate 32 x✝ <<< 16#32).sshiftRight (31#32).toNat + 10#32).msb ≠
+                  ((BitVec.truncate 32 x✝ <<< 16#32).sshiftRight (31#32).toNat).msb) =
+            ((!((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).getLsbD 31 &&
+                !((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31 + 10#32).getLsbD 31 ==
+                    ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).getLsbD 31) =
+              true)) := (Eq.trans
+            (congrArg (And True)
+              (Eq.trans
+                (congr
+                  (congrArg And
+                    (Eq.trans
+                      (congr
+                        (congrArg Eq (BitVec.msb_eq_getLsbD_last ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31)))
+                        (BitVec.msb_eq_getLsbD_last 10#32))
+                      (Std.Tactic.BVDecide.Normalize.Bool.eq_false_to_beq
+                        (((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).getLsbD 31))))
+                  (Eq.trans
+                    (congr
+                      (congrArg Ne
+                        (BitVec.msb_eq_getLsbD_last ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31 + 10#32)))
+                      (BitVec.msb_eq_getLsbD_last ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31)))
+                    (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                      (((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31 + 10#32).getLsbD 31)
+                      (((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).getLsbD 31))))
+                (Std.Tactic.BVDecide.Normalize.Bool.and_to_and
+                  (!((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).getLsbD 31)
+                  !((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31 + 10#32).getLsbD 31 ==
+                      ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).getLsbD 31)))
+            (true_and
+              ((!((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).getLsbD 31 &&
+                  !((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31 + 10#32).getLsbD 31 ==
+                      ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).getLsbD 31) =
+                true)) : (True ∧
+              ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).msb = (10#32).msb ∧
+                ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31 + 10#32).msb ≠
+                  ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).msb) =
+            ((!((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).getLsbD 31 &&
+                !((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31 + 10#32).getLsbD 31 ==
+                    ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).getLsbD 31) =
+              true))
+        [Meta.isDefEq] [0.001140] ✅️ (True ∧
+                ((BitVec.truncate 32 x✝ <<< 16#32).sshiftRight (31#32).toNat).msb = (10#32).msb ∧
+                  ((BitVec.truncate 32 x✝ <<< 16#32).sshiftRight (31#32).toNat + 10#32).msb ≠
+                    ((BitVec.truncate 32 x✝ <<< 16#32).sshiftRight (31#32).toNat).msb) =
+              ((!((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).getLsbD 31 &&
+                  !((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31 + 10#32).getLsbD 31 ==
+                      ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).getLsbD 31) =
+                true) =?= (True ∧
+                ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).msb = (10#32).msb ∧
+                  ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31 + 10#32).msb ≠
+                    ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).msb) =
+              ((!((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).getLsbD 31 &&
+                  !((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31 + 10#32).getLsbD 31 ==
+                      ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).getLsbD 31) =
+                true)
+          [Meta.isDefEq] [0.001121] ✅️ True ∧
+                ((BitVec.truncate 32 x✝ <<< 16#32).sshiftRight (31#32).toNat).msb = (10#32).msb ∧
+                  ((BitVec.truncate 32 x✝ <<< 16#32).sshiftRight (31#32).toNat + 10#32).msb ≠
+                    ((BitVec.truncate 32 x✝ <<< 16#32).sshiftRight
+                        (31#32).toNat).msb =?= True ∧
+                ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).msb = (10#32).msb ∧
+                  ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31 + 10#32).msb ≠
+                    ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).msb
+            [Meta.isDefEq] [0.001105] ✅️ ((BitVec.truncate 32 x✝ <<< 16#32).sshiftRight (31#32).toNat).msb =
+                    (10#32).msb ∧
+                  ((BitVec.truncate 32 x✝ <<< 16#32).sshiftRight (31#32).toNat + 10#32).msb ≠
+                    ((BitVec.truncate 32 x✝ <<< 16#32).sshiftRight
+                        (31#32).toNat).msb =?= ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).msb = (10#32).msb ∧
+                  ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31 + 10#32).msb ≠
+                    ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).msb
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬some (11#32 + ~~~BitVec.zeroExtend 32 (BitVec.zeroExtend 1 (x✝ >>> 15))) ⊑
+            if
+                (!((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).getLsbD 31 &&
+                    !((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31 + 10#32).getLsbD 31 ==
+                        ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31).getLsbD 31) =
+                  true then
+              none
+            else some ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 31 + 10#32)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gnegatedhbitmask_proof.lean:75:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gnegatedhbitmask_proof.lean:68:8: error: (kernel) declaration has metavariables 'neg_mask2_lshr_thm'
+[bv] [0.034930] Normalizing goal
+  [Meta.synthInstance] [0.001388] ✅️ Decidable
+        ((if 3#8 ≥ ↑8 then none else some (0#8 - (x✝ >>> 3#8 &&& 2#8))) ⊑
+          if 3#8 ≥ ↑8 then none
+          else
+            if
+                True ∧
+                  (BitVec.signExtend (8 + 1) 0#8 - BitVec.signExtend (8 + 1) (x✝ >>> 3#8 &&& 2#8)).msb ≠
+                    (BitVec.signExtend (8 + 1) 0#8 - BitVec.signExtend (8 + 1) (x✝ >>> 3#8 &&& 2#8)).getMsbD 1 then
+              none
+            else some (0#8 - (x✝ >>> 3#8 &&& 2#8)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ :
+        ¬(if 3#8 ≥ ↑8 then none else some (0#8 - (x✝ >>> 3#8 &&& 2#8))) ⊑
+            if 3#8 ≥ ↑8 then none
+            else
+              if
+                  True ∧
+                    (BitVec.signExtend (8 + 1) 0#8 - BitVec.signExtend (8 + 1) (x✝ >>> 3#8 &&& 2#8)).msb ≠
+                      (BitVec.signExtend (8 + 1) 0#8 - BitVec.signExtend (8 + 1) (x✝ >>> 3#8 &&& 2#8)).getMsbD 1 then
+                none
+              else some (0#8 - (x✝ >>> 3#8 &&& 2#8))
+      ⊢ False
+  [Meta.isDefEq] [0.002251] ✅️ ?h₁ =?= Eq.trans
+        (congrArg (And True)
+          (Eq.trans
+            (congr
+              (congrArg Ne
+                (Eq.trans
+                  (congrArg BitVec.msb
+                    (Eq.trans (BitVec.sub_toAdd (0#9) (BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8)))
+                      (Eq.trans
+                        (congrArg (HAdd.hAdd 0#9) (BitVec.neg_eq_not_add (BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8))))
+                        (BitVec.zero_add (~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9)))))
+                  (BitVec.msb_eq_getLsbD_last (~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9))))
+              (congrArg (fun x => x.getMsbD 1)
+                (Eq.trans (BitVec.sub_toAdd (0#9) (BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8)))
+                  (Eq.trans (congrArg (HAdd.hAdd 0#9) (BitVec.neg_eq_not_add (BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8))))
+                    (BitVec.zero_add (~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9))))))
+            (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq ((~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9).getLsbD 8)
+              ((~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9).getMsbD 1))))
+        (true_and
+          ((!(~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9).getLsbD 8 ==
+                (~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9).getMsbD 1) =
+            true))
+    [Meta.isDefEq.assign] [0.002248] ✅️ ?h₁ := Eq.trans
+          (congrArg (And True)
+            (Eq.trans
+              (congr
+                (congrArg Ne
+                  (Eq.trans
+                    (congrArg BitVec.msb
+                      (Eq.trans (BitVec.sub_toAdd (0#9) (BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8)))
+                        (Eq.trans
+                          (congrArg (HAdd.hAdd 0#9) (BitVec.neg_eq_not_add (BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8))))
+                          (BitVec.zero_add (~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9)))))
+                    (BitVec.msb_eq_getLsbD_last (~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9))))
+                (congrArg (fun x => x.getMsbD 1)
+                  (Eq.trans (BitVec.sub_toAdd (0#9) (BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8)))
+                    (Eq.trans
+                      (congrArg (HAdd.hAdd 0#9) (BitVec.neg_eq_not_add (BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8))))
+                      (BitVec.zero_add (~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9))))))
+              (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                ((~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9).getLsbD 8)
+                ((~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9).getMsbD 1))))
+          (true_and
+            ((!(~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9).getLsbD 8 ==
+                  (~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9).getMsbD 1) =
+              true))
+      [Meta.isDefEq.assign.checkTypes] [0.002226] ✅️ (?h₁ : (True ∧
+              (BitVec.signExtend (8 + 1) 0#8 - BitVec.signExtend (8 + 1) (x✝ >>> 3#8 &&& 2#8)).msb ≠
+                (BitVec.signExtend (8 + 1) 0#8 - BitVec.signExtend (8 + 1) (x✝ >>> 3#8 &&& 2#8)).getMsbD 1) =
+            ((!(~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9).getLsbD 8 ==
+                  (~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9).getMsbD 1) =
+              true)) := (Eq.trans
+            (congrArg (And True)
+              (Eq.trans
+                (congr
+                  (congrArg Ne
+                    (Eq.trans
+                      (congrArg BitVec.msb
+                        (Eq.trans (BitVec.sub_toAdd (0#9) (BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8)))
+                          (Eq.trans
+                            (congrArg (HAdd.hAdd 0#9) (BitVec.neg_eq_not_add (BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8))))
+                            (BitVec.zero_add (~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9)))))
+                      (BitVec.msb_eq_getLsbD_last (~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9))))
+                  (congrArg (fun x => x.getMsbD 1)
+                    (Eq.trans (BitVec.sub_toAdd (0#9) (BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8)))
+                      (Eq.trans
+                        (congrArg (HAdd.hAdd 0#9) (BitVec.neg_eq_not_add (BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8))))
+                        (BitVec.zero_add (~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9))))))
+                (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                  ((~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9).getLsbD 8)
+                  ((~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9).getMsbD 1))))
+            (true_and
+              ((!(~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9).getLsbD 8 ==
+                    (~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9).getMsbD 1) =
+                true)) : (True ∧
+              (0#9 - BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8)).msb ≠
+                (0#9 - BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8)).getMsbD 1) =
+            ((!(~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9).getLsbD 8 ==
+                  (~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9).getMsbD 1) =
+              true))
+        [Meta.isDefEq] [0.002223] ✅️ (True ∧
+                (BitVec.signExtend (8 + 1) 0#8 - BitVec.signExtend (8 + 1) (x✝ >>> 3#8 &&& 2#8)).msb ≠
+                  (BitVec.signExtend (8 + 1) 0#8 - BitVec.signExtend (8 + 1) (x✝ >>> 3#8 &&& 2#8)).getMsbD 1) =
+              ((!(~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9).getLsbD 8 ==
+                    (~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9).getMsbD 1) =
+                true) =?= (True ∧
+                (0#9 - BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8)).msb ≠
+                  (0#9 - BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8)).getMsbD 1) =
+              ((!(~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9).getLsbD 8 ==
+                    (~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9).getMsbD 1) =
+                true)
+          [Meta.isDefEq] [0.002203] ✅️ True ∧
+                (BitVec.signExtend (8 + 1) 0#8 - BitVec.signExtend (8 + 1) (x✝ >>> 3#8 &&& 2#8)).msb ≠
+                  (BitVec.signExtend (8 + 1) 0#8 - BitVec.signExtend (8 + 1) (x✝ >>> 3#8 &&& 2#8)).getMsbD
+                    1 =?= True ∧
+                (0#9 - BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8)).msb ≠
+                  (0#9 - BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8)).getMsbD 1
+            [Meta.isDefEq] [0.002187] ✅️ (BitVec.signExtend (8 + 1) 0#8 -
+                      BitVec.signExtend (8 + 1) (x✝ >>> 3#8 &&& 2#8)).msb ≠
+                  (BitVec.signExtend (8 + 1) 0#8 - BitVec.signExtend (8 + 1) (x✝ >>> 3#8 &&& 2#8)).getMsbD
+                    1 =?= (0#9 - BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8)).msb ≠
+                  (0#9 - BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8)).getMsbD 1
+              [Meta.isDefEq.delta] [0.002171] ✅️ (BitVec.signExtend (8 + 1) 0#8 -
+                        BitVec.signExtend (8 + 1) (x✝ >>> 3#8 &&& 2#8)).msb ≠
+                    (BitVec.signExtend (8 + 1) 0#8 - BitVec.signExtend (8 + 1) (x✝ >>> 3#8 &&& 2#8)).getMsbD
+                      1 =?= (0#9 - BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8)).msb ≠
+                    (0#9 - BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8)).getMsbD 1
+                [Meta.isDefEq] [0.002112] ✅️ (BitVec.signExtend (8 + 1) 0#8 -
+                        BitVec.signExtend (8 + 1)
+                          (x✝ >>> 3#8 &&& 2#8)).msb =?= (0#9 - BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8)).msb
+                  [Meta.isDefEq.delta] [0.002102] ✅️ (BitVec.signExtend (8 + 1) 0#8 -
+                          BitVec.signExtend (8 + 1)
+                            (x✝ >>> 3#8 &&& 2#8)).msb =?= (0#9 - BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8)).msb
+                    [Meta.isDefEq] [0.002078] ✅️ BitVec.signExtend (8 + 1) 0#8 -
+                          BitVec.signExtend (8 + 1)
+                            (x✝ >>> 3#8 &&& 2#8) =?= 0#9 - BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8)
+                      [Meta.isDefEq] [0.002053] ✅️ instHSub.1 (BitVec.signExtend (8 + 1) 0#8)
+                            (BitVec.signExtend (8 + 1)
+                              (x✝ >>> 3#8 &&& 2#8)) =?= instHSub.1 (0#9) (BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8))
+                        [Meta.isDefEq] [0.001992] ✅️ Sub.sub (BitVec.signExtend (8 + 1) 0#8)
+                              (BitVec.signExtend (8 + 1)
+                                (x✝ >>> 3#8 &&& 2#8)) =?= Sub.sub (0#9) (BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8))
+                          [Meta.isDefEq] [0.001958] ✅️ BitVec.instSub.1 (BitVec.signExtend (8 + 1) 0#8)
+                                (BitVec.signExtend (8 + 1)
+                                  (x✝ >>> 3#8 &&&
+                                    2#8)) =?= BitVec.instSub.1 (0#9) (BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8))
+                            [Meta.isDefEq] [0.001919] ✅️ (BitVec.signExtend (8 + 1) 0#8).sub
+                                  (BitVec.signExtend (8 + 1)
+                                    (x✝ >>> 3#8 &&& 2#8)) =?= (0#9).sub (BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8))
+                              [Meta.isDefEq.delta] [0.001908] ✅️ (BitVec.signExtend (8 + 1) 0#8).sub
+                                    (BitVec.signExtend (8 + 1)
+                                      (x✝ >>> 3#8 &&& 2#8)) =?= (0#9).sub (BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8))
+                                [Meta.isDefEq] [0.001340] ✅️ BitVec.signExtend (8 + 1) 0#8 =?= 0#9
+                                  [Meta.isDefEq] [0.001323] ✅️ BitVec.ofInt (8 + 1) (0#8).toInt =?= 0#9
+                                    [Meta.isDefEq] [0.001307] ✅️ ((0#8).toInt %
+                                              Int.ofNat (2 ^ (8 + 1))).toNat#'⋯ =?= 0#9
+                                      [Meta.isDefEq] [0.001289] ✅️ ((0#8).toInt %
+                                                Int.ofNat (2 ^ (8 + 1))).toNat#'⋯ =?= { toFin := Fin.ofNat' (2 ^ 9) 0 }
+                                        [Meta.isDefEq] [0.001272] ✅️ {
+                                              toFin :=
+                                                ⟨((0#8).toInt % Int.ofNat (2 ^ (8 + 1))).toNat,
+                                                  ⋯⟩ } =?= { toFin := Fin.ofNat' (2 ^ 9) 0 }
+                                          [Meta.isDefEq] [0.001222] ✅️ ⟨((0#8).toInt % Int.ofNat (2 ^ (8 + 1))).toNat,
+                                                ⋯⟩ =?= Fin.ofNat' (2 ^ 9) 0
+                                            [Meta.isDefEq] [0.001206] ✅️ ⟨((0#8).toInt % Int.ofNat (2 ^ (8 + 1))).toNat,
+                                                  ⋯⟩ =?= ⟨0 % 2 ^ 9, ⋯⟩
+                                              [Meta.isDefEq] [0.001106] ✅️ ((0#8).toInt %
+                                                      Int.ofNat (2 ^ (8 + 1))).toNat =?= 0 % 2 ^ 9
+                                                [Meta.isDefEq] [0.001037] ✅️ match
+                                                      (0#8).toInt % Int.ofNat (2 ^ (8 + 1)) with
+                                                    | Int.ofNat n => n
+                                                    | Int.negSucc a => 0 =?= 0 % 2 ^ 9
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ :
+        ¬some (~~~(x✝ >>> 3 &&& 2#8) + 1#8) ⊑
+            if
+                (!(~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9).getLsbD 8 ==
+                      (~~~BitVec.signExtend 9 (x✝ >>> 3 &&& 2#8) + 1#9).getMsbD 1) =
+                  true then
+              none
+            else some (~~~(x✝ >>> 3 &&& 2#8) + 1#8)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+Bitwuzla proved the goal after 0.736740ms, solving context: 0.000000ms
+LeanSAT proved the goal after 3.590060ms: rewriting 3.573390ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+Bitwuzla proved the goal after 80.757870ms, solving context: 2.000000ms
+LeanSAT proved the goal after 134.626560ms: rewriting 21.360709ms, bitblasting 0.000000ms, SAT solving 60.296570ms, LRAT trimming 45.440031ms, LRAT checking 4.276990ms
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gnegatedhbitmask_proof.lean:95:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gnegatedhbitmask_proof.lean:89:8: error: (kernel) declaration has metavariables 'neg_not_signbit1_thm'
+[bv] [0.027922] Normalizing goal
+  [Meta.synthInstance] [0.001191] ✅️ Decidable
+        ((if 7#8 ≥ ↑8 then none else some (1#32 - BitVec.zeroExtend 32 (x✝ >>> 7#8))) ⊑
+          some (BitVec.zeroExtend 32 (BitVec.ofBool (x✝ >ₛ -1#8))))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ :
+        ¬(if 7#8 ≥ ↑8 then none else some (1#32 - BitVec.zeroExtend 32 (x✝ >>> 7#8))) ⊑
+            some (BitVec.zeroExtend 32 (BitVec.ofBool (x✝ >ₛ -1#8)))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ :
+        ¬some (2#32 + ~~~BitVec.zeroExtend 32 (x✝ >>> 7)) ⊑
+            some (BitVec.zeroExtend 32 (if (!x✝.getLsbD 7) = true then 1#1 else 0#1))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gnegatedhbitmask_proof.lean:106:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gnegatedhbitmask_proof.lean:99:8: error: (kernel) declaration has metavariables 'neg_not_signbit2_thm'
+[bv] [0.039145] Normalizing goal
+  [Meta.synthInstance] [0.001322] ✅️ Decidable
+        ((if 6#8 ≥ ↑8 then none else some (0#32 - BitVec.zeroExtend 32 (x✝ >>> 6#8))) ⊑
+          if 6#8 ≥ ↑8 then none
+          else
+            if
+                True ∧
+                  (BitVec.signExtend (32 + 1) 0#32 -
+                        BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝ >>> 6#8))).msb ≠
+                    (BitVec.signExtend (32 + 1) 0#32 -
+                          BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝ >>> 6#8))).getMsbD
+                      1 then
+              none
+            else some (0#32 - BitVec.zeroExtend 32 (x✝ >>> 6#8)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ :
+        ¬(if 6#8 ≥ ↑8 then none else some (0#32 - BitVec.zeroExtend 32 (x✝ >>> 6#8))) ⊑
+            if 6#8 ≥ ↑8 then none
+            else
+              if
+                  True ∧
+                    (BitVec.signExtend (32 + 1) 0#32 -
+                          BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝ >>> 6#8))).msb ≠
+                      (BitVec.signExtend (32 + 1) 0#32 -
+                            BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝ >>> 6#8))).getMsbD
+                        1 then
+                none
+              else some (0#32 - BitVec.zeroExtend 32 (x✝ >>> 6#8))
+      ⊢ False
+  [Meta.isDefEq] [0.002076] ✅️ ?h₁ =?= Eq.trans
+        (congrArg (And True)
+          (Eq.trans
+            (congr
+              (congrArg Ne
+                (Eq.trans
+                  (congrArg BitVec.msb
+                    (Eq.trans (BitVec.sub_toAdd (0#33) (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6))))
+                      (Eq.trans
+                        (congrArg (HAdd.hAdd 0#33)
+                          (BitVec.neg_eq_not_add (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)))))
+                        (BitVec.zero_add (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33)))))
+                  (BitVec.msb_eq_getLsbD_last (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33))))
+              (congrArg (fun x => x.getMsbD 1)
+                (Eq.trans (BitVec.sub_toAdd (0#33) (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6))))
+                  (Eq.trans
+                    (congrArg (HAdd.hAdd 0#33)
+                      (BitVec.neg_eq_not_add (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)))))
+                    (BitVec.zero_add (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33))))))
+            (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+              ((~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33).getLsbD 32)
+              ((~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33).getMsbD 1))))
+        (true_and
+          ((!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33).getLsbD 32 ==
+                (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33).getMsbD 1) =
+            true))
+    [Meta.isDefEq.assign] [0.002073] ✅️ ?h₁ := Eq.trans
+          (congrArg (And True)
+            (Eq.trans
+              (congr
+                (congrArg Ne
+                  (Eq.trans
+                    (congrArg BitVec.msb
+                      (Eq.trans (BitVec.sub_toAdd (0#33) (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6))))
+                        (Eq.trans
+                          (congrArg (HAdd.hAdd 0#33)
+                            (BitVec.neg_eq_not_add (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)))))
+                          (BitVec.zero_add (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33)))))
+                    (BitVec.msb_eq_getLsbD_last (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33))))
+                (congrArg (fun x => x.getMsbD 1)
+                  (Eq.trans (BitVec.sub_toAdd (0#33) (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6))))
+                    (Eq.trans
+                      (congrArg (HAdd.hAdd 0#33)
+                        (BitVec.neg_eq_not_add (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)))))
+                      (BitVec.zero_add (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33))))))
+              (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                ((~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33).getLsbD 32)
+                ((~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33).getMsbD 1))))
+          (true_and
+            ((!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33).getLsbD 32 ==
+                  (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33).getMsbD 1) =
+              true))
+      [Meta.isDefEq.assign.checkTypes] [0.002035] ✅️ (?h₁ : (True ∧
+              (BitVec.signExtend (32 + 1) 0#32 - BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝ >>> 6#8))).msb ≠
+                (BitVec.signExtend (32 + 1) 0#32 -
+                      BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝ >>> 6#8))).getMsbD
+                  1) =
+            ((!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33).getLsbD 32 ==
+                  (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33).getMsbD 1) =
+              true)) := (Eq.trans
+            (congrArg (And True)
+              (Eq.trans
+                (congr
+                  (congrArg Ne
+                    (Eq.trans
+                      (congrArg BitVec.msb
+                        (Eq.trans (BitVec.sub_toAdd (0#33) (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6))))
+                          (Eq.trans
+                            (congrArg (HAdd.hAdd 0#33)
+                              (BitVec.neg_eq_not_add (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)))))
+                            (BitVec.zero_add (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33)))))
+                      (BitVec.msb_eq_getLsbD_last (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33))))
+                  (congrArg (fun x => x.getMsbD 1)
+                    (Eq.trans (BitVec.sub_toAdd (0#33) (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6))))
+                      (Eq.trans
+                        (congrArg (HAdd.hAdd 0#33)
+                          (BitVec.neg_eq_not_add (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)))))
+                        (BitVec.zero_add (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33))))))
+                (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                  ((~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33).getLsbD 32)
+                  ((~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33).getMsbD 1))))
+            (true_and
+              ((!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33).getLsbD 32 ==
+                    (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33).getMsbD 1) =
+                true)) : (True ∧
+              (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6))).msb ≠
+                (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6))).getMsbD 1) =
+            ((!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33).getLsbD 32 ==
+                  (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33).getMsbD 1) =
+              true))
+        [Meta.isDefEq] [0.002031] ✅️ (True ∧
+                (BitVec.signExtend (32 + 1) 0#32 - BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝ >>> 6#8))).msb ≠
+                  (BitVec.signExtend (32 + 1) 0#32 -
+                        BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝ >>> 6#8))).getMsbD
+                    1) =
+              ((!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33).getLsbD 32 ==
+                    (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33).getMsbD 1) =
+                true) =?= (True ∧
+                (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6))).msb ≠
+                  (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6))).getMsbD 1) =
+              ((!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33).getLsbD 32 ==
+                    (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33).getMsbD 1) =
+                true)
+          [Meta.isDefEq] [0.002008] ✅️ True ∧
+                (BitVec.signExtend (32 + 1) 0#32 - BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝ >>> 6#8))).msb ≠
+                  (BitVec.signExtend (32 + 1) 0#32 -
+                        BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝ >>> 6#8))).getMsbD
+                    1 =?= True ∧
+                (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6))).msb ≠
+                  (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6))).getMsbD 1
+            [Meta.isDefEq] [0.001992] ✅️ (BitVec.signExtend (32 + 1) 0#32 -
+                      BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝ >>> 6#8))).msb ≠
+                  (BitVec.signExtend (32 + 1) 0#32 -
+                        BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝ >>> 6#8))).getMsbD
+                    1 =?= (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6))).msb ≠
+                  (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6))).getMsbD 1
+              [Meta.isDefEq.delta] [0.001977] ✅️ (BitVec.signExtend (32 + 1) 0#32 -
+                        BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝ >>> 6#8))).msb ≠
+                    (BitVec.signExtend (32 + 1) 0#32 -
+                          BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝ >>> 6#8))).getMsbD
+                      1 =?= (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6))).msb ≠
+                    (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6))).getMsbD 1
+                [Meta.isDefEq] [0.001887] ✅️ (BitVec.signExtend (32 + 1) 0#32 -
+                        BitVec.signExtend (32 + 1)
+                          (BitVec.zeroExtend 32
+                            (x✝ >>> 6#8))).msb =?= (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6))).msb
+                  [Meta.isDefEq.delta] [0.001877] ✅️ (BitVec.signExtend (32 + 1) 0#32 -
+                          BitVec.signExtend (32 + 1)
+                            (BitVec.zeroExtend 32
+                              (x✝ >>> 6#8))).msb =?= (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6))).msb
+                    [Meta.isDefEq] [0.001855] ✅️ BitVec.signExtend (32 + 1) 0#32 -
+                          BitVec.signExtend (32 + 1)
+                            (BitVec.zeroExtend 32
+                              (x✝ >>> 6#8)) =?= 0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6))
+                      [Meta.isDefEq] [0.001829] ✅️ instHSub.1 (BitVec.signExtend (32 + 1) 0#32)
+                            (BitVec.signExtend (32 + 1)
+                              (BitVec.zeroExtend 32
+                                (x✝ >>>
+                                  6#8))) =?= instHSub.1 (0#33) (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)))
+                        [Meta.isDefEq] [0.001764] ✅️ Sub.sub (BitVec.signExtend (32 + 1) 0#32)
+                              (BitVec.signExtend (32 + 1)
+                                (BitVec.zeroExtend 32
+                                  (x✝ >>>
+                                    6#8))) =?= Sub.sub (0#33) (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)))
+                          [Meta.isDefEq] [0.001739] ✅️ BitVec.instSub.1 (BitVec.signExtend (32 + 1) 0#32)
+                                (BitVec.signExtend (32 + 1)
+                                  (BitVec.zeroExtend 32
+                                    (x✝ >>>
+                                      6#8))) =?= BitVec.instSub.1 (0#33)
+                                (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)))
+                            [Meta.isDefEq] [0.001695] ✅️ (BitVec.signExtend (32 + 1) 0#32).sub
+                                  (BitVec.signExtend (32 + 1)
+                                    (BitVec.zeroExtend 32
+                                      (x✝ >>>
+                                        6#8))) =?= (0#33).sub (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)))
+                              [Meta.isDefEq.delta] [0.001685] ✅️ (BitVec.signExtend (32 + 1) 0#32).sub
+                                    (BitVec.signExtend (32 + 1)
+                                      (BitVec.zeroExtend 32
+                                        (x✝ >>>
+                                          6#8))) =?= (0#33).sub (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)))
+                                [Meta.isDefEq] [0.001300] ✅️ BitVec.signExtend (32 + 1) 0#32 =?= 0#33
+                                  [Meta.isDefEq] [0.001285] ✅️ BitVec.ofInt (32 + 1) (0#32).toInt =?= 0#33
+                                    [Meta.isDefEq] [0.001268] ✅️ ((0#32).toInt %
+                                              Int.ofNat (2 ^ (32 + 1))).toNat#'⋯ =?= 0#33
+                                      [Meta.isDefEq] [0.001250] ✅️ ((0#32).toInt %
+                                                Int.ofNat
+                                                  (2 ^ (32 + 1))).toNat#'⋯ =?= { toFin := Fin.ofNat' (2 ^ 33) 0 }
+                                        [Meta.isDefEq] [0.001234] ✅️ {
+                                              toFin :=
+                                                ⟨((0#32).toInt % Int.ofNat (2 ^ (32 + 1))).toNat,
+                                                  ⋯⟩ } =?= { toFin := Fin.ofNat' (2 ^ 33) 0 }
+                                          [Meta.isDefEq] [0.001179] ✅️ ⟨((0#32).toInt % Int.ofNat (2 ^ (32 + 1))).toNat,
+                                                ⋯⟩ =?= Fin.ofNat' (2 ^ 33) 0
+                                            [Meta.isDefEq] [0.001155] ✅️ ⟨((0#32).toInt %
+                                                      Int.ofNat (2 ^ (32 + 1))).toNat,
+                                                  ⋯⟩ =?= ⟨0 % 2 ^ 33, ⋯⟩
+                                              [Meta.isDefEq] [0.001050] ✅️ ((0#32).toInt %
+                                                      Int.ofNat (2 ^ (32 + 1))).toNat =?= 0 % 2 ^ 33
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ :
+        ¬some (~~~BitVec.zeroExtend 32 (x✝ >>> 6) + 1#32) ⊑
+            if
+                (!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33).getLsbD 32 ==
+                      (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 6)) + 1#33).getMsbD 1) =
+                  true then
+              none
+            else some (~~~BitVec.zeroExtend 32 (x✝ >>> 6) + 1#32)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gnegatedhbitmask_proof.lean:117:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gnegatedhbitmask_proof.lean:110:8: error: (kernel) declaration has metavariables 'neg_not_signbit3_thm'
+[bv] [0.031956] Normalizing goal
+  [Meta.synthInstance] [0.001311] ✅️ Decidable
+        ((if 7#8 ≥ ↑8 then none else some (0#32 - BitVec.zeroExtend 32 (x✝.sshiftRight (7#8).toNat))) ⊑
+          if 7#8 ≥ ↑8 then none
+          else
+            if
+                True ∧
+                  (BitVec.signExtend (32 + 1) 0#32 -
+                        BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝.sshiftRight (7#8).toNat))).msb ≠
+                    (BitVec.signExtend (32 + 1) 0#32 -
+                          BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝.sshiftRight (7#8).toNat))).getMsbD
+                      1 then
+              none
+            else some (0#32 - BitVec.zeroExtend 32 (x✝.sshiftRight (7#8).toNat)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ :
+        ¬(if 7#8 ≥ ↑8 then none else some (0#32 - BitVec.zeroExtend 32 (x✝.sshiftRight (7#8).toNat))) ⊑
+            if 7#8 ≥ ↑8 then none
+            else
+              if
+                  True ∧
+                    (BitVec.signExtend (32 + 1) 0#32 -
+                          BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝.sshiftRight (7#8).toNat))).msb ≠
+                      (BitVec.signExtend (32 + 1) 0#32 -
+                            BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝.sshiftRight (7#8).toNat))).getMsbD
+                        1 then
+                none
+              else some (0#32 - BitVec.zeroExtend 32 (x✝.sshiftRight (7#8).toNat))
+      ⊢ False
+  [Meta.isDefEq] [0.001790] ✅️ ?h₁ =?= Eq.trans
+        (congrArg (And True)
+          (Eq.trans
+            (congr
+              (congrArg Ne
+                (Eq.trans
+                  (congrArg BitVec.msb
+                    (Eq.trans (BitVec.sub_toAdd (0#33) (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7))))
+                      (Eq.trans
+                        (congrArg (HAdd.hAdd 0#33)
+                          (BitVec.neg_eq_not_add (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)))))
+                        (BitVec.zero_add (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33)))))
+                  (BitVec.msb_eq_getLsbD_last
+                    (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33))))
+              (congrArg (fun x => x.getMsbD 1)
+                (Eq.trans (BitVec.sub_toAdd (0#33) (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7))))
+                  (Eq.trans
+                    (congrArg (HAdd.hAdd 0#33)
+                      (BitVec.neg_eq_not_add (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)))))
+                    (BitVec.zero_add (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33))))))
+            (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+              ((~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33).getLsbD 32)
+              ((~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33).getMsbD 1))))
+        (true_and
+          ((!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33).getLsbD 32 ==
+                (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33).getMsbD 1) =
+            true))
+    [Meta.isDefEq.assign] [0.001788] ✅️ ?h₁ := Eq.trans
+          (congrArg (And True)
+            (Eq.trans
+              (congr
+                (congrArg Ne
+                  (Eq.trans
+                    (congrArg BitVec.msb
+                      (Eq.trans
+                        (BitVec.sub_toAdd (0#33) (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7))))
+                        (Eq.trans
+                          (congrArg (HAdd.hAdd 0#33)
+                            (BitVec.neg_eq_not_add (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)))))
+                          (BitVec.zero_add
+                            (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33)))))
+                    (BitVec.msb_eq_getLsbD_last
+                      (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33))))
+                (congrArg (fun x => x.getMsbD 1)
+                  (Eq.trans (BitVec.sub_toAdd (0#33) (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7))))
+                    (Eq.trans
+                      (congrArg (HAdd.hAdd 0#33)
+                        (BitVec.neg_eq_not_add (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)))))
+                      (BitVec.zero_add (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33))))))
+              (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                ((~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33).getLsbD 32)
+                ((~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33).getMsbD 1))))
+          (true_and
+            ((!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33).getLsbD 32 ==
+                  (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33).getMsbD 1) =
+              true))
+      [Meta.isDefEq.assign.checkTypes] [0.001770] ✅️ (?h₁ : (True ∧
+              (BitVec.signExtend (32 + 1) 0#32 -
+                    BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝.sshiftRight (7#8).toNat))).msb ≠
+                (BitVec.signExtend (32 + 1) 0#32 -
+                      BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝.sshiftRight (7#8).toNat))).getMsbD
+                  1) =
+            ((!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33).getLsbD 32 ==
+                  (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33).getMsbD 1) =
+              true)) := (Eq.trans
+            (congrArg (And True)
+              (Eq.trans
+                (congr
+                  (congrArg Ne
+                    (Eq.trans
+                      (congrArg BitVec.msb
+                        (Eq.trans
+                          (BitVec.sub_toAdd (0#33) (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7))))
+                          (Eq.trans
+                            (congrArg (HAdd.hAdd 0#33)
+                              (BitVec.neg_eq_not_add (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)))))
+                            (BitVec.zero_add
+                              (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33)))))
+                      (BitVec.msb_eq_getLsbD_last
+                        (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33))))
+                  (congrArg (fun x => x.getMsbD 1)
+                    (Eq.trans (BitVec.sub_toAdd (0#33) (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7))))
+                      (Eq.trans
+                        (congrArg (HAdd.hAdd 0#33)
+                          (BitVec.neg_eq_not_add (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)))))
+                        (BitVec.zero_add (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33))))))
+                (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                  ((~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33).getLsbD 32)
+                  ((~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33).getMsbD 1))))
+            (true_and
+              ((!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33).getLsbD 32 ==
+                    (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33).getMsbD 1) =
+                true)) : (True ∧
+              (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7))).msb ≠
+                (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7))).getMsbD 1) =
+            ((!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33).getLsbD 32 ==
+                  (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33).getMsbD 1) =
+              true))
+        [Meta.isDefEq] [0.001767] ✅️ (True ∧
+                (BitVec.signExtend (32 + 1) 0#32 -
+                      BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝.sshiftRight (7#8).toNat))).msb ≠
+                  (BitVec.signExtend (32 + 1) 0#32 -
+                        BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝.sshiftRight (7#8).toNat))).getMsbD
+                    1) =
+              ((!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33).getLsbD 32 ==
+                    (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33).getMsbD 1) =
+                true) =?= (True ∧
+                (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7))).msb ≠
+                  (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7))).getMsbD 1) =
+              ((!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33).getLsbD 32 ==
+                    (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33).getMsbD 1) =
+                true)
+          [Meta.isDefEq] [0.001748] ✅️ True ∧
+                (BitVec.signExtend (32 + 1) 0#32 -
+                      BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝.sshiftRight (7#8).toNat))).msb ≠
+                  (BitVec.signExtend (32 + 1) 0#32 -
+                        BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝.sshiftRight (7#8).toNat))).getMsbD
+                    1 =?= True ∧
+                (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7))).msb ≠
+                  (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7))).getMsbD 1
+            [Meta.isDefEq] [0.001734] ✅️ (BitVec.signExtend (32 + 1) 0#32 -
+                      BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝.sshiftRight (7#8).toNat))).msb ≠
+                  (BitVec.signExtend (32 + 1) 0#32 -
+                        BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝.sshiftRight (7#8).toNat))).getMsbD
+                    1 =?= (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7))).msb ≠
+                  (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7))).getMsbD 1
+              [Meta.isDefEq.delta] [0.001721] ✅️ (BitVec.signExtend (32 + 1) 0#32 -
+                        BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝.sshiftRight (7#8).toNat))).msb ≠
+                    (BitVec.signExtend (32 + 1) 0#32 -
+                          BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝.sshiftRight (7#8).toNat))).getMsbD
+                      1 =?= (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7))).msb ≠
+                    (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7))).getMsbD 1
+                [Meta.isDefEq] [0.001669] ✅️ (BitVec.signExtend (32 + 1) 0#32 -
+                        BitVec.signExtend (32 + 1)
+                          (BitVec.zeroExtend 32
+                            (x✝.sshiftRight
+                              (7#8).toNat))).msb =?= (0#33 -
+                        BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7))).msb
+                  [Meta.isDefEq.delta] [0.001660] ✅️ (BitVec.signExtend (32 + 1) 0#32 -
+                          BitVec.signExtend (32 + 1)
+                            (BitVec.zeroExtend 32
+                              (x✝.sshiftRight
+                                (7#8).toNat))).msb =?= (0#33 -
+                          BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7))).msb
+                    [Meta.isDefEq] [0.001641] ✅️ BitVec.signExtend (32 + 1) 0#32 -
+                          BitVec.signExtend (32 + 1)
+                            (BitVec.zeroExtend 32
+                              (x✝.sshiftRight
+                                (7#8).toNat)) =?= 0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7))
+                      [Meta.isDefEq] [0.001617] ✅️ instHSub.1 (BitVec.signExtend (32 + 1) 0#32)
+                            (BitVec.signExtend (32 + 1)
+                              (BitVec.zeroExtend 32
+                                (x✝.sshiftRight
+                                  (7#8).toNat))) =?= instHSub.1 (0#33)
+                            (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)))
+                        [Meta.isDefEq] [0.001492] ✅️ Sub.sub (BitVec.signExtend (32 + 1) 0#32)
+                              (BitVec.signExtend (32 + 1)
+                                (BitVec.zeroExtend 32
+                                  (x✝.sshiftRight
+                                    (7#8).toNat))) =?= Sub.sub (0#33)
+                              (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)))
+                          [Meta.isDefEq] [0.001469] ✅️ BitVec.instSub.1 (BitVec.signExtend (32 + 1) 0#32)
+                                (BitVec.signExtend (32 + 1)
+                                  (BitVec.zeroExtend 32
+                                    (x✝.sshiftRight
+                                      (7#8).toNat))) =?= BitVec.instSub.1 (0#33)
+                                (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)))
+                            [Meta.isDefEq] [0.001432] ✅️ (BitVec.signExtend (32 + 1) 0#32).sub
+                                  (BitVec.signExtend (32 + 1)
+                                    (BitVec.zeroExtend 32
+                                      (x✝.sshiftRight
+                                        (7#8).toNat))) =?= (0#33).sub
+                                  (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)))
+                              [Meta.isDefEq.delta] [0.001422] ✅️ (BitVec.signExtend (32 + 1) 0#32).sub
+                                    (BitVec.signExtend (32 + 1)
+                                      (BitVec.zeroExtend 32
+                                        (x✝.sshiftRight
+                                          (7#8).toNat))) =?= (0#33).sub
+                                    (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)))
+                                [Meta.isDefEq] [0.001164] ✅️ BitVec.signExtend (32 + 1) 0#32 =?= 0#33
+                                  [Meta.isDefEq] [0.001149] ✅️ BitVec.ofInt (32 + 1) (0#32).toInt =?= 0#33
+                                    [Meta.isDefEq] [0.001133] ✅️ ((0#32).toInt %
+                                              Int.ofNat (2 ^ (32 + 1))).toNat#'⋯ =?= 0#33
+                                      [Meta.isDefEq] [0.001116] ✅️ ((0#32).toInt %
+                                                Int.ofNat
+                                                  (2 ^ (32 + 1))).toNat#'⋯ =?= { toFin := Fin.ofNat' (2 ^ 33) 0 }
+                                        [Meta.isDefEq] [0.001103] ✅️ {
+                                              toFin :=
+                                                ⟨((0#32).toInt % Int.ofNat (2 ^ (32 + 1))).toNat,
+                                                  ⋯⟩ } =?= { toFin := Fin.ofNat' (2 ^ 33) 0 }
+                                          [Meta.isDefEq] [0.001055] ✅️ ⟨((0#32).toInt % Int.ofNat (2 ^ (32 + 1))).toNat,
+                                                ⋯⟩ =?= Fin.ofNat' (2 ^ 33) 0
+                                            [Meta.isDefEq] [0.001038] ✅️ ⟨((0#32).toInt %
+                                                      Int.ofNat (2 ^ (32 + 1))).toNat,
+                                                  ⋯⟩ =?= ⟨0 % 2 ^ 33, ⋯⟩
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ :
+        ¬some (~~~BitVec.zeroExtend 32 (x✝.sshiftRight 7) + 1#32) ⊑
+            if
+                (!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33).getLsbD 32 ==
+                      (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝.sshiftRight 7)) + 1#33).getMsbD 1) =
+                  true then
+              none
+            else some (~~~BitVec.zeroExtend 32 (x✝.sshiftRight 7) + 1#32)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gnegatedhbitmask_proof.lean:130:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gnegatedhbitmask_proof.lean:121:8: error: (kernel) declaration has metavariables 'neg_mask_thm'
+[bv] [0.092286] Normalizing goal
+  [Meta.synthInstance] [0.002112] ✅️ Decidable
+        ((if
+              True ∧
+                (BitVec.signExtend (32 + 1) x✝ - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝¹)).msb ≠
+                  (BitVec.signExtend (32 + 1) x✝ - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝¹)).getMsbD 1 then
+            none
+          else
+            if 15#16 ≥ ↑16 then none
+            else
+              if
+                  True ∧
+                    (BitVec.signExtend (32 + 1) 0#32 -
+                          BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝¹ >>> 15#16))).msb ≠
+                      (BitVec.signExtend (32 + 1) 0#32 -
+                            BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝¹ >>> 15#16))).getMsbD
+                        1 then
+                none
+              else some (x✝ - BitVec.signExtend 32 x✝¹ &&& 0#32 - BitVec.zeroExtend 32 (x✝¹ >>> 15#16))) ⊑
+          match some (BitVec.ofBool (0#16 >ₛ x✝¹)) with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } =>
+            if
+                True ∧
+                  (BitVec.signExtend (32 + 1) x✝ - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝¹)).msb ≠
+                    (BitVec.signExtend (32 + 1) x✝ - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝¹)).getMsbD
+                      1 then
+              none
+            else some (x✝ - BitVec.signExtend 32 x✝¹)
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#32)
+    [Meta.check] [0.001209] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if
+              True ∧
+                (BitVec.signExtend (32 + 1) x✝ - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝¹)).msb ≠
+                  (BitVec.signExtend (32 + 1) x✝ - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝¹)).getMsbD 1 then
+            none
+          else
+            if 15#16 ≥ ↑16 then none
+            else
+              if
+                  True ∧
+                    (BitVec.signExtend (32 + 1) 0#32 -
+                          BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝¹ >>> 15#16))).msb ≠
+                      (BitVec.signExtend (32 + 1) 0#32 -
+                            BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝¹ >>> 15#16))).getMsbD
+                        1 then
+                none
+              else some (x✝ - BitVec.signExtend 32 x✝¹ &&& 0#32 - BitVec.zeroExtend 32 (x✝¹ >>> 15#16)))
+          (match some (BitVec.ofBool (0#16 >ₛ x✝¹)) with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } =>
+            if
+                True ∧
+                  (BitVec.signExtend (32 + 1) x✝ - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝¹)).msb ≠
+                    (BitVec.signExtend (32 + 1) x✝ - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝¹)).getMsbD
+                      1 then
+              none
+            else some (x✝ - BitVec.signExtend 32 x✝¹)
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#32)
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 16
+      e_1 : LLVM.IntW 32
+      x✝¹ : BitVec 16
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if
+                True ∧
+                  (BitVec.signExtend (32 + 1) x✝ - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝¹)).msb ≠
+                    (BitVec.signExtend (32 + 1) x✝ - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝¹)).getMsbD
+                      1 then
+              none
+            else
+              if 15#16 ≥ ↑16 then none
+              else
+                if
+                    True ∧
+                      (BitVec.signExtend (32 + 1) 0#32 -
+                            BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝¹ >>> 15#16))).msb ≠
+                        (BitVec.signExtend (32 + 1) 0#32 -
+                              BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝¹ >>> 15#16))).getMsbD
+                          1 then
+                  none
+                else some (x✝ - BitVec.signExtend 32 x✝¹ &&& 0#32 - BitVec.zeroExtend 32 (x✝¹ >>> 15#16))) ⊑
+            match some (BitVec.ofBool (0#16 >ₛ x✝¹)) with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } =>
+              if
+                  True ∧
+                    (BitVec.signExtend (32 + 1) x✝ - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝¹)).msb ≠
+                      (BitVec.signExtend (32 + 1) x✝ - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝¹)).getMsbD
+                        1 then
+                none
+              else some (x✝ - BitVec.signExtend 32 x✝¹)
+            | some { toFin := ⟨0, ⋯⟩ } => some 0#32
+      ⊢ False
+  [Meta.isDefEq] [0.001963] ✅️ ?h₁ =?= Eq.trans
+        (congrArg (And True)
+          (Eq.trans
+            (congr
+              (congrArg Ne
+                (Eq.trans
+                  (congrArg BitVec.msb
+                    (Eq.trans (BitVec.sub_toAdd (0#33) (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15))))
+                      (Eq.trans
+                        (congrArg (HAdd.hAdd 0#33)
+                          (BitVec.neg_eq_not_add (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)))))
+                        (BitVec.zero_add (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33)))))
+                  (BitVec.msb_eq_getLsbD_last (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33))))
+              (congrArg (fun x => x.getMsbD 1)
+                (Eq.trans (BitVec.sub_toAdd (0#33) (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15))))
+                  (Eq.trans
+                    (congrArg (HAdd.hAdd 0#33)
+                      (BitVec.neg_eq_not_add (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)))))
+                    (BitVec.zero_add (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33))))))
+            (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+              ((~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33).getLsbD 32)
+              ((~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33).getMsbD 1))))
+        (true_and
+          ((!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33).getLsbD 32 ==
+                (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33).getMsbD 1) =
+            true))
+    [Meta.isDefEq.assign] [0.001960] ✅️ ?h₁ := Eq.trans
+          (congrArg (And True)
+            (Eq.trans
+              (congr
+                (congrArg Ne
+                  (Eq.trans
+                    (congrArg BitVec.msb
+                      (Eq.trans (BitVec.sub_toAdd (0#33) (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15))))
+                        (Eq.trans
+                          (congrArg (HAdd.hAdd 0#33)
+                            (BitVec.neg_eq_not_add (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)))))
+                          (BitVec.zero_add (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33)))))
+                    (BitVec.msb_eq_getLsbD_last (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33))))
+                (congrArg (fun x => x.getMsbD 1)
+                  (Eq.trans (BitVec.sub_toAdd (0#33) (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15))))
+                    (Eq.trans
+                      (congrArg (HAdd.hAdd 0#33)
+                        (BitVec.neg_eq_not_add (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)))))
+                      (BitVec.zero_add (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33))))))
+              (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                ((~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33).getLsbD 32)
+                ((~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33).getMsbD 1))))
+          (true_and
+            ((!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33).getLsbD 32 ==
+                  (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33).getMsbD 1) =
+              true))
+      [Meta.isDefEq.assign.checkTypes] [0.001938] ✅️ (?h₁ : (True ∧
+              (BitVec.signExtend (32 + 1) 0#32 -
+                    BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝¹ >>> 15#16))).msb ≠
+                (BitVec.signExtend (32 + 1) 0#32 -
+                      BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝¹ >>> 15#16))).getMsbD
+                  1) =
+            ((!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33).getLsbD 32 ==
+                  (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33).getMsbD 1) =
+              true)) := (Eq.trans
+            (congrArg (And True)
+              (Eq.trans
+                (congr
+                  (congrArg Ne
+                    (Eq.trans
+                      (congrArg BitVec.msb
+                        (Eq.trans (BitVec.sub_toAdd (0#33) (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15))))
+                          (Eq.trans
+                            (congrArg (HAdd.hAdd 0#33)
+                              (BitVec.neg_eq_not_add (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)))))
+                            (BitVec.zero_add (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33)))))
+                      (BitVec.msb_eq_getLsbD_last
+                        (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33))))
+                  (congrArg (fun x => x.getMsbD 1)
+                    (Eq.trans (BitVec.sub_toAdd (0#33) (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15))))
+                      (Eq.trans
+                        (congrArg (HAdd.hAdd 0#33)
+                          (BitVec.neg_eq_not_add (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)))))
+                        (BitVec.zero_add (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33))))))
+                (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                  ((~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33).getLsbD 32)
+                  ((~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33).getMsbD 1))))
+            (true_and
+              ((!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33).getLsbD 32 ==
+                    (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33).getMsbD 1) =
+                true)) : (True ∧
+              (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15))).msb ≠
+                (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15))).getMsbD 1) =
+            ((!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33).getLsbD 32 ==
+                  (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33).getMsbD 1) =
+              true))
+        [Meta.isDefEq] [0.001935] ✅️ (True ∧
+                (BitVec.signExtend (32 + 1) 0#32 -
+                      BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝¹ >>> 15#16))).msb ≠
+                  (BitVec.signExtend (32 + 1) 0#32 -
+                        BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝¹ >>> 15#16))).getMsbD
+                    1) =
+              ((!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33).getLsbD 32 ==
+                    (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33).getMsbD 1) =
+                true) =?= (True ∧
+                (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15))).msb ≠
+                  (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15))).getMsbD 1) =
+              ((!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33).getLsbD 32 ==
+                    (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33).getMsbD 1) =
+                true)
+          [Meta.isDefEq] [0.001916] ✅️ True ∧
+                (BitVec.signExtend (32 + 1) 0#32 -
+                      BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝¹ >>> 15#16))).msb ≠
+                  (BitVec.signExtend (32 + 1) 0#32 -
+                        BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝¹ >>> 15#16))).getMsbD
+                    1 =?= True ∧
+                (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15))).msb ≠
+                  (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15))).getMsbD 1
+            [Meta.isDefEq] [0.001906] ✅️ (BitVec.signExtend (32 + 1) 0#32 -
+                      BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝¹ >>> 15#16))).msb ≠
+                  (BitVec.signExtend (32 + 1) 0#32 -
+                        BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝¹ >>> 15#16))).getMsbD
+                    1 =?= (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15))).msb ≠
+                  (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15))).getMsbD 1
+              [Meta.isDefEq.delta] [0.001893] ✅️ (BitVec.signExtend (32 + 1) 0#32 -
+                        BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝¹ >>> 15#16))).msb ≠
+                    (BitVec.signExtend (32 + 1) 0#32 -
+                          BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝¹ >>> 15#16))).getMsbD
+                      1 =?= (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15))).msb ≠
+                    (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15))).getMsbD 1
+                [Meta.isDefEq] [0.001856] ✅️ (BitVec.signExtend (32 + 1) 0#32 -
+                        BitVec.signExtend (32 + 1)
+                          (BitVec.zeroExtend 32
+                            (x✝¹ >>>
+                              15#16))).msb =?= (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15))).msb
+                  [Meta.isDefEq.delta] [0.001847] ✅️ (BitVec.signExtend (32 + 1) 0#32 -
+                          BitVec.signExtend (32 + 1)
+                            (BitVec.zeroExtend 32
+                              (x✝¹ >>>
+                                15#16))).msb =?= (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15))).msb
+                    [Meta.isDefEq] [0.001836] ✅️ BitVec.signExtend (32 + 1) 0#32 -
+                          BitVec.signExtend (32 + 1)
+                            (BitVec.zeroExtend 32
+                              (x✝¹ >>> 15#16)) =?= 0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15))
+                      [Meta.isDefEq] [0.001818] ✅️ instHSub.1 (BitVec.signExtend (32 + 1) 0#32)
+                            (BitVec.signExtend (32 + 1)
+                              (BitVec.zeroExtend 32
+                                (x✝¹ >>>
+                                  15#16))) =?= instHSub.1 (0#33)
+                            (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)))
+                        [Meta.isDefEq] [0.001787] ✅️ Sub.sub (BitVec.signExtend (32 + 1) 0#32)
+                              (BitVec.signExtend (32 + 1)
+                                (BitVec.zeroExtend 32
+                                  (x✝¹ >>>
+                                    15#16))) =?= Sub.sub (0#33)
+                              (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)))
+                          [Meta.isDefEq] [0.001771] ✅️ BitVec.instSub.1 (BitVec.signExtend (32 + 1) 0#32)
+                                (BitVec.signExtend (32 + 1)
+                                  (BitVec.zeroExtend 32
+                                    (x✝¹ >>>
+                                      15#16))) =?= BitVec.instSub.1 (0#33)
+                                (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)))
+                            [Meta.isDefEq] [0.001748] ✅️ (BitVec.signExtend (32 + 1) 0#32).sub
+                                  (BitVec.signExtend (32 + 1)
+                                    (BitVec.zeroExtend 32
+                                      (x✝¹ >>>
+                                        15#16))) =?= (0#33).sub
+                                  (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)))
+                              [Meta.isDefEq.delta] [0.001739] ✅️ (BitVec.signExtend (32 + 1) 0#32).sub
+                                    (BitVec.signExtend (32 + 1)
+                                      (BitVec.zeroExtend 32
+                                        (x✝¹ >>>
+                                          15#16))) =?= (0#33).sub
+                                    (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)))
+                                [Meta.isDefEq] [0.001371] ✅️ BitVec.signExtend (32 + 1) 0#32 =?= 0#33
+                                  [Meta.isDefEq] [0.001357] ✅️ BitVec.ofInt (32 + 1) (0#32).toInt =?= 0#33
+                                    [Meta.isDefEq] [0.001340] ✅️ ((0#32).toInt %
+                                              Int.ofNat (2 ^ (32 + 1))).toNat#'⋯ =?= 0#33
+                                      [Meta.isDefEq] [0.001322] ✅️ ((0#32).toInt %
+                                                Int.ofNat
+                                                  (2 ^ (32 + 1))).toNat#'⋯ =?= { toFin := Fin.ofNat' (2 ^ 33) 0 }
+                                        [Meta.isDefEq] [0.001302] ✅️ {
+                                              toFin :=
+                                                ⟨((0#32).toInt % Int.ofNat (2 ^ (32 + 1))).toNat,
+                                                  ⋯⟩ } =?= { toFin := Fin.ofNat' (2 ^ 33) 0 }
+                                          [Meta.isDefEq] [0.001217] ✅️ ⟨((0#32).toInt % Int.ofNat (2 ^ (32 + 1))).toNat,
+                                                ⋯⟩ =?= Fin.ofNat' (2 ^ 33) 0
+                                            [Meta.isDefEq] [0.001200] ✅️ ⟨((0#32).toInt %
+                                                      Int.ofNat (2 ^ (32 + 1))).toNat,
+                                                  ⋯⟩ =?= ⟨0 % 2 ^ 33, ⋯⟩
+                                              [Meta.isDefEq] [0.001105] ✅️ ((0#32).toInt %
+                                                      Int.ofNat (2 ^ (32 + 1))).toNat =?= 0 % 2 ^ 33
+                                                [Meta.isDefEq] [0.001033] ✅️ match
+                                                      (0#32).toInt % Int.ofNat (2 ^ (32 + 1)) with
+                                                    | Int.ofNat n => n
+                                                    | Int.negSucc a => 0 =?= 0 % 2 ^ 33
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 16
+      e_1 : LLVM.IntW 32
+      x✝¹ : BitVec 16
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if
+                (!(BitVec.signExtend 33 x✝ + (~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝¹) + 1#33)).getLsbD 32 ==
+                      (BitVec.signExtend 33 x✝ + (~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝¹) + 1#33)).getMsbD
+                        1) =
+                  true then
+              none
+            else
+              if
+                  (!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33).getLsbD 32 ==
+                        (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝¹ >>> 15)) + 1#33).getMsbD 1) =
+                    true then
+                none
+              else some (x✝ + (~~~BitVec.signExtend 32 x✝¹ + 1#32) &&& ~~~BitVec.zeroExtend 32 (x✝¹ >>> 15) + 1#32)) ⊑
+            match some (if (!x✝¹.getLsbD 15 == (0#16 >ᵤ x✝¹)) = true then 1#1 else 0#1) with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } =>
+              if
+                  (!(BitVec.signExtend 33 x✝ + (~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝¹) + 1#33)).getLsbD
+                          32 ==
+                        (BitVec.signExtend 33 x✝ + (~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝¹) + 1#33)).getMsbD
+                          1) =
+                    true then
+                none
+              else some (x✝ + (~~~BitVec.signExtend 32 x✝¹ + 1#32))
+            | some { toFin := ⟨0, ⋯⟩ } => some 0#32
+      ⊢ False
+  [Meta.isDefEq] [0.001007] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } =>
+        ?h_3 () =?= match some (if (!x✝¹.getLsbD 15 == (0#16 >ᵤ x✝¹)) = true then 1#1 else 0#1) with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } =>
+        if
+            (!(BitVec.signExtend 33 x✝ + (~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝¹) + 1#33)).getLsbD 32 ==
+                  (BitVec.signExtend 33 x✝ + (~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝¹) + 1#33)).getMsbD 1) =
+              true then
+          none
+        else some (x✝ + (~~~BitVec.signExtend 32 x✝¹ + 1#32))
+      | some { toFin := ⟨0, ⋯⟩ } => some 0#32
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gnegatedhbitmask_proof.lean:143:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gnegatedhbitmask_proof.lean:134:8: error: (kernel) declaration has metavariables 'neg_mask_const_thm'
+[bv] [0.096192] Normalizing goal
+  [Meta.synthInstance] [0.002088] ✅️ Decidable
+        ((if
+              True ∧
+                (BitVec.signExtend (32 + 1) 1000#32 - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝)).msb ≠
+                  (BitVec.signExtend (32 + 1) 1000#32 - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝)).getMsbD
+                    1 then
+            none
+          else
+            if 15#16 ≥ ↑16 then none
+            else
+              if
+                  True ∧
+                    (BitVec.signExtend (32 + 1) 0#32 -
+                          BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝ >>> 15#16))).msb ≠
+                      (BitVec.signExtend (32 + 1) 0#32 -
+                            BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝ >>> 15#16))).getMsbD
+                        1 then
+                none
+              else some (1000#32 - BitVec.signExtend 32 x✝ &&& 0#32 - BitVec.zeroExtend 32 (x✝ >>> 15#16))) ⊑
+          match some (BitVec.ofBool (0#16 >ₛ x✝)) with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } =>
+            if
+                True ∧
+                  (BitVec.signExtend (32 + 1) 1000#32 - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝)).msb ≠
+                    (BitVec.signExtend (32 + 1) 1000#32 - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝)).getMsbD
+                      1 then
+              none
+            else some (1000#32 - BitVec.signExtend 32 x✝)
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#32)
+    [Meta.check] [0.001162] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if
+              True ∧
+                (BitVec.signExtend (32 + 1) 1000#32 - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝)).msb ≠
+                  (BitVec.signExtend (32 + 1) 1000#32 - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝)).getMsbD
+                    1 then
+            none
+          else
+            if 15#16 ≥ ↑16 then none
+            else
+              if
+                  True ∧
+                    (BitVec.signExtend (32 + 1) 0#32 -
+                          BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝ >>> 15#16))).msb ≠
+                      (BitVec.signExtend (32 + 1) 0#32 -
+                            BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝ >>> 15#16))).getMsbD
+                        1 then
+                none
+              else some (1000#32 - BitVec.signExtend 32 x✝ &&& 0#32 - BitVec.zeroExtend 32 (x✝ >>> 15#16)))
+          (match some (BitVec.ofBool (0#16 >ₛ x✝)) with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } =>
+            if
+                True ∧
+                  (BitVec.signExtend (32 + 1) 1000#32 - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝)).msb ≠
+                    (BitVec.signExtend (32 + 1) 1000#32 - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝)).getMsbD
+                      1 then
+              none
+            else some (1000#32 - BitVec.signExtend 32 x✝)
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#32)
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 16
+      x✝ : BitVec 16
+      a✝ :
+        ¬(if
+                True ∧
+                  (BitVec.signExtend (32 + 1) 1000#32 - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝)).msb ≠
+                    (BitVec.signExtend (32 + 1) 1000#32 - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝)).getMsbD
+                      1 then
+              none
+            else
+              if 15#16 ≥ ↑16 then none
+              else
+                if
+                    True ∧
+                      (BitVec.signExtend (32 + 1) 0#32 -
+                            BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝ >>> 15#16))).msb ≠
+                        (BitVec.signExtend (32 + 1) 0#32 -
+                              BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝ >>> 15#16))).getMsbD
+                          1 then
+                  none
+                else some (1000#32 - BitVec.signExtend 32 x✝ &&& 0#32 - BitVec.zeroExtend 32 (x✝ >>> 15#16))) ⊑
+            match some (BitVec.ofBool (0#16 >ₛ x✝)) with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } =>
+              if
+                  True ∧
+                    (BitVec.signExtend (32 + 1) 1000#32 - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝)).msb ≠
+                      (BitVec.signExtend (32 + 1) 1000#32 -
+                            BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝)).getMsbD
+                        1 then
+                none
+              else some (1000#32 - BitVec.signExtend 32 x✝)
+            | some { toFin := ⟨0, ⋯⟩ } => some 0#32
+      ⊢ False
+  [Meta.isDefEq] [0.001416] ✅️ ?h₁ =?= Eq.trans
+        (congrArg (And True)
+          (Eq.trans
+            (congr
+              (congrArg Ne
+                (Eq.trans
+                  (congrArg BitVec.msb
+                    (Eq.trans (BitVec.sub_toAdd (1000#33) (BitVec.signExtend 33 (BitVec.signExtend 32 x✝)))
+                      (Eq.trans
+                        (congrArg (HAdd.hAdd 1000#33)
+                          (BitVec.neg_eq_not_add (BitVec.signExtend 33 (BitVec.signExtend 32 x✝))))
+                        (Std.Tactic.BVDecide.Normalize.BitVec.add_const_right (1000#33)
+                          (~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)) 1#33))))
+                  (BitVec.msb_eq_getLsbD_last (1001#33 + ~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)))))
+              (congrArg (fun x => x.getMsbD 1)
+                (Eq.trans (BitVec.sub_toAdd (1000#33) (BitVec.signExtend 33 (BitVec.signExtend 32 x✝)))
+                  (Eq.trans
+                    (congrArg (HAdd.hAdd 1000#33)
+                      (BitVec.neg_eq_not_add (BitVec.signExtend 33 (BitVec.signExtend 32 x✝))))
+                    (Std.Tactic.BVDecide.Normalize.BitVec.add_const_right (1000#33)
+                      (~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)) 1#33)))))
+            (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+              ((1001#33 + ~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).getLsbD 32)
+              ((1001#33 + ~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).getMsbD 1))))
+        (true_and
+          ((!(1001#33 + ~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).getLsbD 32 ==
+                (1001#33 + ~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).getMsbD 1) =
+            true))
+    [Meta.isDefEq.assign] [0.001414] ✅️ ?h₁ := Eq.trans
+          (congrArg (And True)
+            (Eq.trans
+              (congr
+                (congrArg Ne
+                  (Eq.trans
+                    (congrArg BitVec.msb
+                      (Eq.trans (BitVec.sub_toAdd (1000#33) (BitVec.signExtend 33 (BitVec.signExtend 32 x✝)))
+                        (Eq.trans
+                          (congrArg (HAdd.hAdd 1000#33)
+                            (BitVec.neg_eq_not_add (BitVec.signExtend 33 (BitVec.signExtend 32 x✝))))
+                          (Std.Tactic.BVDecide.Normalize.BitVec.add_const_right (1000#33)
+                            (~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)) 1#33))))
+                    (BitVec.msb_eq_getLsbD_last (1001#33 + ~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)))))
+                (congrArg (fun x => x.getMsbD 1)
+                  (Eq.trans (BitVec.sub_toAdd (1000#33) (BitVec.signExtend 33 (BitVec.signExtend 32 x✝)))
+                    (Eq.trans
+                      (congrArg (HAdd.hAdd 1000#33)
+                        (BitVec.neg_eq_not_add (BitVec.signExtend 33 (BitVec.signExtend 32 x✝))))
+                      (Std.Tactic.BVDecide.Normalize.BitVec.add_const_right (1000#33)
+                        (~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)) 1#33)))))
+              (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                ((1001#33 + ~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).getLsbD 32)
+                ((1001#33 + ~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).getMsbD 1))))
+          (true_and
+            ((!(1001#33 + ~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).getLsbD 32 ==
+                  (1001#33 + ~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).getMsbD 1) =
+              true))
+      [Meta.isDefEq.assign.checkTypes] [0.001396] ✅️ (?h₁ : (True ∧
+              (BitVec.signExtend (32 + 1) 1000#32 - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝)).msb ≠
+                (BitVec.signExtend (32 + 1) 1000#32 - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝)).getMsbD 1) =
+            ((!(1001#33 + ~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).getLsbD 32 ==
+                  (1001#33 + ~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).getMsbD 1) =
+              true)) := (Eq.trans
+            (congrArg (And True)
+              (Eq.trans
+                (congr
+                  (congrArg Ne
+                    (Eq.trans
+                      (congrArg BitVec.msb
+                        (Eq.trans (BitVec.sub_toAdd (1000#33) (BitVec.signExtend 33 (BitVec.signExtend 32 x✝)))
+                          (Eq.trans
+                            (congrArg (HAdd.hAdd 1000#33)
+                              (BitVec.neg_eq_not_add (BitVec.signExtend 33 (BitVec.signExtend 32 x✝))))
+                            (Std.Tactic.BVDecide.Normalize.BitVec.add_const_right (1000#33)
+                              (~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)) 1#33))))
+                      (BitVec.msb_eq_getLsbD_last (1001#33 + ~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)))))
+                  (congrArg (fun x => x.getMsbD 1)
+                    (Eq.trans (BitVec.sub_toAdd (1000#33) (BitVec.signExtend 33 (BitVec.signExtend 32 x✝)))
+                      (Eq.trans
+                        (congrArg (HAdd.hAdd 1000#33)
+                          (BitVec.neg_eq_not_add (BitVec.signExtend 33 (BitVec.signExtend 32 x✝))))
+                        (Std.Tactic.BVDecide.Normalize.BitVec.add_const_right (1000#33)
+                          (~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)) 1#33)))))
+                (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                  ((1001#33 + ~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).getLsbD 32)
+                  ((1001#33 + ~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).getMsbD 1))))
+            (true_and
+              ((!(1001#33 + ~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).getLsbD 32 ==
+                    (1001#33 + ~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).getMsbD 1) =
+                true)) : (True ∧
+              (1000#33 - BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).msb ≠
+                (1000#33 - BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).getMsbD 1) =
+            ((!(1001#33 + ~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).getLsbD 32 ==
+                  (1001#33 + ~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).getMsbD 1) =
+              true))
+        [Meta.isDefEq] [0.001393] ✅️ (True ∧
+                (BitVec.signExtend (32 + 1) 1000#32 - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝)).msb ≠
+                  (BitVec.signExtend (32 + 1) 1000#32 - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝)).getMsbD
+                    1) =
+              ((!(1001#33 + ~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).getLsbD 32 ==
+                    (1001#33 + ~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).getMsbD 1) =
+                true) =?= (True ∧
+                (1000#33 - BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).msb ≠
+                  (1000#33 - BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).getMsbD 1) =
+              ((!(1001#33 + ~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).getLsbD 32 ==
+                    (1001#33 + ~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).getMsbD 1) =
+                true)
+          [Meta.isDefEq] [0.001373] ✅️ True ∧
+                (BitVec.signExtend (32 + 1) 1000#32 - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝)).msb ≠
+                  (BitVec.signExtend (32 + 1) 1000#32 - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝)).getMsbD
+                    1 =?= True ∧
+                (1000#33 - BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).msb ≠
+                  (1000#33 - BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).getMsbD 1
+            [Meta.isDefEq] [0.001358] ✅️ (BitVec.signExtend (32 + 1) 1000#32 -
+                      BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝)).msb ≠
+                  (BitVec.signExtend (32 + 1) 1000#32 - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝)).getMsbD
+                    1 =?= (1000#33 - BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).msb ≠
+                  (1000#33 - BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).getMsbD 1
+              [Meta.isDefEq.delta] [0.001343] ✅️ (BitVec.signExtend (32 + 1) 1000#32 -
+                        BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝)).msb ≠
+                    (BitVec.signExtend (32 + 1) 1000#32 - BitVec.signExtend (32 + 1) (BitVec.signExtend 32 x✝)).getMsbD
+                      1 =?= (1000#33 - BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).msb ≠
+                    (1000#33 - BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).getMsbD 1
+                [Meta.isDefEq] [0.001294] ✅️ (BitVec.signExtend (32 + 1) 1000#32 -
+                        BitVec.signExtend (32 + 1)
+                          (BitVec.signExtend 32
+                            x✝)).msb =?= (1000#33 - BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).msb
+                  [Meta.isDefEq.delta] [0.001284] ✅️ (BitVec.signExtend (32 + 1) 1000#32 -
+                          BitVec.signExtend (32 + 1)
+                            (BitVec.signExtend 32
+                              x✝)).msb =?= (1000#33 - BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).msb
+                    [Meta.isDefEq] [0.001264] ✅️ BitVec.signExtend (32 + 1) 1000#32 -
+                          BitVec.signExtend (32 + 1)
+                            (BitVec.signExtend 32 x✝) =?= 1000#33 - BitVec.signExtend 33 (BitVec.signExtend 32 x✝)
+                      [Meta.isDefEq] [0.001240] ✅️ instHSub.1 (BitVec.signExtend (32 + 1) 1000#32)
+                            (BitVec.signExtend (32 + 1)
+                              (BitVec.signExtend 32
+                                x✝)) =?= instHSub.1 (1000#33) (BitVec.signExtend 33 (BitVec.signExtend 32 x✝))
+                        [Meta.isDefEq] [0.001187] ✅️ Sub.sub (BitVec.signExtend (32 + 1) 1000#32)
+                              (BitVec.signExtend (32 + 1)
+                                (BitVec.signExtend 32
+                                  x✝)) =?= Sub.sub (1000#33) (BitVec.signExtend 33 (BitVec.signExtend 32 x✝))
+                          [Meta.isDefEq] [0.001166] ✅️ BitVec.instSub.1 (BitVec.signExtend (32 + 1) 1000#32)
+                                (BitVec.signExtend (32 + 1)
+                                  (BitVec.signExtend 32
+                                    x✝)) =?= BitVec.instSub.1 (1000#33) (BitVec.signExtend 33 (BitVec.signExtend 32 x✝))
+                            [Meta.isDefEq] [0.001127] ✅️ (BitVec.signExtend (32 + 1) 1000#32).sub
+                                  (BitVec.signExtend (32 + 1)
+                                    (BitVec.signExtend 32
+                                      x✝)) =?= (1000#33).sub (BitVec.signExtend 33 (BitVec.signExtend 32 x✝))
+                              [Meta.isDefEq.delta] [0.001116] ✅️ (BitVec.signExtend (32 + 1) 1000#32).sub
+                                    (BitVec.signExtend (32 + 1)
+                                      (BitVec.signExtend 32
+                                        x✝)) =?= (1000#33).sub (BitVec.signExtend 33 (BitVec.signExtend 32 x✝))
+                                [Meta.isDefEq] [0.001050] ✅️ BitVec.signExtend (32 + 1) 1000#32 =?= 1000#33
+                                  [Meta.isDefEq] [0.001034] ✅️ BitVec.ofInt (32 + 1) (1000#32).toInt =?= 1000#33
+                                    [Meta.isDefEq] [0.001016] ✅️ ((1000#32).toInt %
+                                              Int.ofNat (2 ^ (32 + 1))).toNat#'⋯ =?= 1000#33
+  [Meta.isDefEq] [0.003203] ✅️ ?h₁ =?= Eq.trans
+        (congrArg (And True)
+          (Eq.trans
+            (congr
+              (congrArg Ne
+                (Eq.trans
+                  (congrArg BitVec.msb
+                    (Eq.trans (BitVec.sub_toAdd (0#33) (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15))))
+                      (Eq.trans
+                        (congrArg (HAdd.hAdd 0#33)
+                          (BitVec.neg_eq_not_add (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)))))
+                        (BitVec.zero_add (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33)))))
+                  (BitVec.msb_eq_getLsbD_last (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33))))
+              (congrArg (fun x => x.getMsbD 1)
+                (Eq.trans (BitVec.sub_toAdd (0#33) (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15))))
+                  (Eq.trans
+                    (congrArg (HAdd.hAdd 0#33)
+                      (BitVec.neg_eq_not_add (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)))))
+                    (BitVec.zero_add (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33))))))
+            (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+              ((~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33).getLsbD 32)
+              ((~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33).getMsbD 1))))
+        (true_and
+          ((!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33).getLsbD 32 ==
+                (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33).getMsbD 1) =
+            true))
+    [Meta.isDefEq.assign] [0.003201] ✅️ ?h₁ := Eq.trans
+          (congrArg (And True)
+            (Eq.trans
+              (congr
+                (congrArg Ne
+                  (Eq.trans
+                    (congrArg BitVec.msb
+                      (Eq.trans (BitVec.sub_toAdd (0#33) (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15))))
+                        (Eq.trans
+                          (congrArg (HAdd.hAdd 0#33)
+                            (BitVec.neg_eq_not_add (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)))))
+                          (BitVec.zero_add (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33)))))
+                    (BitVec.msb_eq_getLsbD_last (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33))))
+                (congrArg (fun x => x.getMsbD 1)
+                  (Eq.trans (BitVec.sub_toAdd (0#33) (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15))))
+                    (Eq.trans
+                      (congrArg (HAdd.hAdd 0#33)
+                        (BitVec.neg_eq_not_add (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)))))
+                      (BitVec.zero_add (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33))))))
+              (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                ((~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33).getLsbD 32)
+                ((~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33).getMsbD 1))))
+          (true_and
+            ((!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33).getLsbD 32 ==
+                  (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33).getMsbD 1) =
+              true))
+      [Meta.isDefEq.assign.checkTypes] [0.003180] ✅️ (?h₁ : (True ∧
+              (BitVec.signExtend (32 + 1) 0#32 - BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝ >>> 15#16))).msb ≠
+                (BitVec.signExtend (32 + 1) 0#32 -
+                      BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝ >>> 15#16))).getMsbD
+                  1) =
+            ((!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33).getLsbD 32 ==
+                  (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33).getMsbD 1) =
+              true)) := (Eq.trans
+            (congrArg (And True)
+              (Eq.trans
+                (congr
+                  (congrArg Ne
+                    (Eq.trans
+                      (congrArg BitVec.msb
+                        (Eq.trans (BitVec.sub_toAdd (0#33) (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15))))
+                          (Eq.trans
+                            (congrArg (HAdd.hAdd 0#33)
+                              (BitVec.neg_eq_not_add (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)))))
+                            (BitVec.zero_add (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33)))))
+                      (BitVec.msb_eq_getLsbD_last (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33))))
+                  (congrArg (fun x => x.getMsbD 1)
+                    (Eq.trans (BitVec.sub_toAdd (0#33) (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15))))
+                      (Eq.trans
+                        (congrArg (HAdd.hAdd 0#33)
+                          (BitVec.neg_eq_not_add (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)))))
+                        (BitVec.zero_add (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33))))))
+                (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                  ((~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33).getLsbD 32)
+                  ((~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33).getMsbD 1))))
+            (true_and
+              ((!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33).getLsbD 32 ==
+                    (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33).getMsbD 1) =
+                true)) : (True ∧
+              (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15))).msb ≠
+                (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15))).getMsbD 1) =
+            ((!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33).getLsbD 32 ==
+                  (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33).getMsbD 1) =
+              true))
+        [Meta.isDefEq] [0.003177] ✅️ (True ∧
+                (BitVec.signExtend (32 + 1) 0#32 -
+                      BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝ >>> 15#16))).msb ≠
+                  (BitVec.signExtend (32 + 1) 0#32 -
+                        BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝ >>> 15#16))).getMsbD
+                    1) =
+              ((!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33).getLsbD 32 ==
+                    (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33).getMsbD 1) =
+                true) =?= (True ∧
+                (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15))).msb ≠
+                  (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15))).getMsbD 1) =
+              ((!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33).getLsbD 32 ==
+                    (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33).getMsbD 1) =
+                true)
+          [Meta.isDefEq] [0.003155] ✅️ True ∧
+                (BitVec.signExtend (32 + 1) 0#32 -
+                      BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝ >>> 15#16))).msb ≠
+                  (BitVec.signExtend (32 + 1) 0#32 -
+                        BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝ >>> 15#16))).getMsbD
+                    1 =?= True ∧
+                (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15))).msb ≠
+                  (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15))).getMsbD 1
+            [Meta.isDefEq] [0.003145] ✅️ (BitVec.signExtend (32 + 1) 0#32 -
+                      BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝ >>> 15#16))).msb ≠
+                  (BitVec.signExtend (32 + 1) 0#32 -
+                        BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝ >>> 15#16))).getMsbD
+                    1 =?= (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15))).msb ≠
+                  (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15))).getMsbD 1
+              [Meta.isDefEq.delta] [0.003129] ✅️ (BitVec.signExtend (32 + 1) 0#32 -
+                        BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝ >>> 15#16))).msb ≠
+                    (BitVec.signExtend (32 + 1) 0#32 -
+                          BitVec.signExtend (32 + 1) (BitVec.zeroExtend 32 (x✝ >>> 15#16))).getMsbD
+                      1 =?= (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15))).msb ≠
+                    (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15))).getMsbD 1
+                [Meta.isDefEq] [0.003090] ✅️ (BitVec.signExtend (32 + 1) 0#32 -
+                        BitVec.signExtend (32 + 1)
+                          (BitVec.zeroExtend 32
+                            (x✝ >>>
+                              15#16))).msb =?= (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15))).msb
+                  [Meta.isDefEq.delta] [0.003081] ✅️ (BitVec.signExtend (32 + 1) 0#32 -
+                          BitVec.signExtend (32 + 1)
+                            (BitVec.zeroExtend 32
+                              (x✝ >>>
+                                15#16))).msb =?= (0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15))).msb
+                    [Meta.isDefEq] [0.003071] ✅️ BitVec.signExtend (32 + 1) 0#32 -
+                          BitVec.signExtend (32 + 1)
+                            (BitVec.zeroExtend 32
+                              (x✝ >>> 15#16)) =?= 0#33 - BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15))
+                      [Meta.isDefEq] [0.003051] ✅️ instHSub.1 (BitVec.signExtend (32 + 1) 0#32)
+                            (BitVec.signExtend (32 + 1)
+                              (BitVec.zeroExtend 32
+                                (x✝ >>>
+                                  15#16))) =?= instHSub.1 (0#33)
+                            (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)))
+                        [Meta.isDefEq] [0.003018] ✅️ Sub.sub (BitVec.signExtend (32 + 1) 0#32)
+                              (BitVec.signExtend (32 + 1)
+                                (BitVec.zeroExtend 32
+                                  (x✝ >>>
+                                    15#16))) =?= Sub.sub (0#33)
+                              (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)))
+                          [Meta.isDefEq] [0.002997] ✅️ BitVec.instSub.1 (BitVec.signExtend (32 + 1) 0#32)
+                                (BitVec.signExtend (32 + 1)
+                                  (BitVec.zeroExtend 32
+                                    (x✝ >>>
+                                      15#16))) =?= BitVec.instSub.1 (0#33)
+                                (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)))
+                            [Meta.isDefEq] [0.002970] ✅️ (BitVec.signExtend (32 + 1) 0#32).sub
+                                  (BitVec.signExtend (32 + 1)
+                                    (BitVec.zeroExtend 32
+                                      (x✝ >>>
+                                        15#16))) =?= (0#33).sub
+                                  (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)))
+                              [Meta.isDefEq.delta] [0.002956] ✅️ (BitVec.signExtend (32 + 1) 0#32).sub
+                                    (BitVec.signExtend (32 + 1)
+                                      (BitVec.zeroExtend 32
+                                        (x✝ >>>
+                                          15#16))) =?= (0#33).sub
+                                    (BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)))
+                                [Meta.isDefEq] [0.002285] ✅️ BitVec.signExtend (32 + 1)
+                                      (BitVec.zeroExtend 32
+                                        (x✝ >>> 15#16)) =?= BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15))
+                                  [Meta.isDefEq.delta] [0.002275] ✅️ BitVec.signExtend (32 + 1)
+                                        (BitVec.zeroExtend 32
+                                          (x✝ >>> 15#16)) =?= BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15))
+                                    [Meta.isDefEq] [0.002260] ✅️ BitVec.zeroExtend 32
+                                          (x✝ >>> 15#16) =?= BitVec.zeroExtend 32 (x✝ >>> 15)
+                                      [Meta.isDefEq] [0.002247] ✅️ BitVec.setWidth 32
+                                            (x✝ >>> 15#16) =?= BitVec.setWidth 32 (x✝ >>> 15)
+                                        [Meta.isDefEq.delta] [0.002234] ✅️ BitVec.setWidth 32
+                                              (x✝ >>> 15#16) =?= BitVec.setWidth 32 (x✝ >>> 15)
+  [Meta.isDefEq] [0.003526] ✅️ ?h₃ =?= fun a =>
+        congrArg some
+          (congr
+            (congrArg HAnd.hAnd
+              (Eq.trans (BitVec.sub_toAdd (1000#32) (BitVec.signExtend 32 x✝))
+                (Eq.trans (congrArg (HAdd.hAdd 1000#32) (BitVec.neg_eq_not_add (BitVec.signExtend 32 x✝)))
+                  (Std.Tactic.BVDecide.Normalize.BitVec.add_const_right (1000#32) (~~~BitVec.signExtend 32 x✝) 1#32))))
+            (Eq.trans (BitVec.sub_toAdd (0#32) (BitVec.zeroExtend 32 (x✝ >>> 15)))
+              (Eq.trans (congrArg (HAdd.hAdd 0#32) (BitVec.neg_eq_not_add (BitVec.zeroExtend 32 (x✝ >>> 15))))
+                (BitVec.zero_add (~~~BitVec.zeroExtend 32 (x✝ >>> 15) + 1#32)))))
+    [Meta.isDefEq.assign] [0.003523] ✅️ ?h₃ := fun a =>
+          congrArg some
+            (congr
+              (congrArg HAnd.hAnd
+                (Eq.trans (BitVec.sub_toAdd (1000#32) (BitVec.signExtend 32 x✝))
+                  (Eq.trans (congrArg (HAdd.hAdd 1000#32) (BitVec.neg_eq_not_add (BitVec.signExtend 32 x✝)))
+                    (Std.Tactic.BVDecide.Normalize.BitVec.add_const_right (1000#32) (~~~BitVec.signExtend 32 x✝)
+                      1#32))))
+              (Eq.trans (BitVec.sub_toAdd (0#32) (BitVec.zeroExtend 32 (x✝ >>> 15)))
+                (Eq.trans (congrArg (HAdd.hAdd 0#32) (BitVec.neg_eq_not_add (BitVec.zeroExtend 32 (x✝ >>> 15))))
+                  (BitVec.zero_add (~~~BitVec.zeroExtend 32 (x✝ >>> 15) + 1#32)))))
+      [Meta.isDefEq.assign.checkTypes] [0.003485] ✅️ (?h₃ : ¬(!(~~~BitVec.signExtend 33
+                              (BitVec.zeroExtend 32 (x✝ >>> 15)) +
+                          1#33).getLsbD
+                      32 ==
+                    (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33).getMsbD 1) =
+                true →
+            some (1000#32 - BitVec.signExtend 32 x✝ &&& 0#32 - BitVec.zeroExtend 32 (x✝ >>> 15#16)) =
+              some
+                (1001#32 + ~~~BitVec.signExtend 32 x✝ &&&
+                  ~~~BitVec.zeroExtend 32 (x✝ >>> 15) +
+                    1#32)) := (fun a =>
+            congrArg some
+              (congr
+                (congrArg HAnd.hAnd
+                  (Eq.trans (BitVec.sub_toAdd (1000#32) (BitVec.signExtend 32 x✝))
+                    (Eq.trans (congrArg (HAdd.hAdd 1000#32) (BitVec.neg_eq_not_add (BitVec.signExtend 32 x✝)))
+                      (Std.Tactic.BVDecide.Normalize.BitVec.add_const_right (1000#32) (~~~BitVec.signExtend 32 x✝)
+                        1#32))))
+                (Eq.trans (BitVec.sub_toAdd (0#32) (BitVec.zeroExtend 32 (x✝ >>> 15)))
+                  (Eq.trans (congrArg (HAdd.hAdd 0#32) (BitVec.neg_eq_not_add (BitVec.zeroExtend 32 (x✝ >>> 15))))
+                    (BitVec.zero_add
+                      (~~~BitVec.zeroExtend 32 (x✝ >>> 15) +
+                        1#32))))) : ¬(!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33).getLsbD 32 ==
+                    (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33).getMsbD 1) =
+                true →
+            some (1000#32 - BitVec.signExtend 32 x✝ &&& 0#32 - BitVec.zeroExtend 32 (x✝ >>> 15)) =
+              some (1000#32 + 1#32 + ~~~BitVec.signExtend 32 x✝ &&& ~~~BitVec.zeroExtend 32 (x✝ >>> 15) + 1#32))
+        [Meta.isDefEq] [0.003481] ✅️ ¬(!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33).getLsbD
+                        32 ==
+                      (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33).getMsbD 1) =
+                  true →
+              some (1000#32 - BitVec.signExtend 32 x✝ &&& 0#32 - BitVec.zeroExtend 32 (x✝ >>> 15#16)) =
+                some
+                  (1001#32 + ~~~BitVec.signExtend 32 x✝ &&&
+                    ~~~BitVec.zeroExtend 32 (x✝ >>> 15) +
+                      1#32) =?= ¬(!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33).getLsbD 32 ==
+                      (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33).getMsbD 1) =
+                  true →
+              some (1000#32 - BitVec.signExtend 32 x✝ &&& 0#32 - BitVec.zeroExtend 32 (x✝ >>> 15)) =
+                some (1000#32 + 1#32 + ~~~BitVec.signExtend 32 x✝ &&& ~~~BitVec.zeroExtend 32 (x✝ >>> 15) + 1#32)
+          [Meta.isDefEq] [0.003449] ✅️ some
+                  (1000#32 - BitVec.signExtend 32 x✝ &&& 0#32 - BitVec.zeroExtend 32 (x✝ >>> 15#16)) =
+                some
+                  (1001#32 + ~~~BitVec.signExtend 32 x✝ &&&
+                    ~~~BitVec.zeroExtend 32 (x✝ >>> 15) +
+                      1#32) =?= some (1000#32 - BitVec.signExtend 32 x✝ &&& 0#32 - BitVec.zeroExtend 32 (x✝ >>> 15)) =
+                some (1000#32 + 1#32 + ~~~BitVec.signExtend 32 x✝ &&& ~~~BitVec.zeroExtend 32 (x✝ >>> 15) + 1#32)
+            [Meta.isDefEq] [0.002958] ✅️ some
+                  (1001#32 + ~~~BitVec.signExtend 32 x✝ &&&
+                    ~~~BitVec.zeroExtend 32 (x✝ >>> 15) +
+                      1#32) =?= some
+                  (1000#32 + 1#32 + ~~~BitVec.signExtend 32 x✝ &&& ~~~BitVec.zeroExtend 32 (x✝ >>> 15) + 1#32)
+              [Meta.isDefEq] [0.002936] ✅️ 1001#32 + ~~~BitVec.signExtend 32 x✝ &&&
+                    ~~~BitVec.zeroExtend 32 (x✝ >>> 15) +
+                      1#32 =?= 1000#32 + 1#32 + ~~~BitVec.signExtend 32 x✝ &&&
+                    ~~~BitVec.zeroExtend 32 (x✝ >>> 15) + 1#32
+                [Meta.isDefEq] [0.002920] ✅️ instHAndOfAndOp.1 (1001#32 + ~~~BitVec.signExtend 32 x✝)
+                      (~~~BitVec.zeroExtend 32 (x✝ >>> 15) +
+                        1#32) =?= instHAndOfAndOp.1 (1000#32 + 1#32 + ~~~BitVec.signExtend 32 x✝)
+                      (~~~BitVec.zeroExtend 32 (x✝ >>> 15) + 1#32)
+                  [Meta.isDefEq] [0.002895] ✅️ AndOp.and (1001#32 + ~~~BitVec.signExtend 32 x✝)
+                        (~~~BitVec.zeroExtend 32 (x✝ >>> 15) +
+                          1#32) =?= AndOp.and (1000#32 + 1#32 + ~~~BitVec.signExtend 32 x✝)
+                        (~~~BitVec.zeroExtend 32 (x✝ >>> 15) + 1#32)
+                    [Meta.isDefEq] [0.002881] ✅️ BitVec.instAndOp.1 (1001#32 + ~~~BitVec.signExtend 32 x✝)
+                          (~~~BitVec.zeroExtend 32 (x✝ >>> 15) +
+                            1#32) =?= BitVec.instAndOp.1 (1000#32 + 1#32 + ~~~BitVec.signExtend 32 x✝)
+                          (~~~BitVec.zeroExtend 32 (x✝ >>> 15) + 1#32)
+                      [Meta.isDefEq] [0.002861] ✅️ (1001#32 + ~~~BitVec.signExtend 32 x✝).and
+                            (~~~BitVec.zeroExtend 32 (x✝ >>> 15) +
+                              1#32) =?= (1000#32 + 1#32 + ~~~BitVec.signExtend 32 x✝).and
+                            (~~~BitVec.zeroExtend 32 (x✝ >>> 15) + 1#32)
+                        [Meta.isDefEq.delta] [0.002852] ✅️ (1001#32 + ~~~BitVec.signExtend 32 x✝).and
+                              (~~~BitVec.zeroExtend 32 (x✝ >>> 15) +
+                                1#32) =?= (1000#32 + 1#32 + ~~~BitVec.signExtend 32 x✝).and
+                              (~~~BitVec.zeroExtend 32 (x✝ >>> 15) + 1#32)
+                          [Meta.isDefEq] [0.002845] ✅️ 1001#32 +
+                                ~~~BitVec.signExtend 32 x✝ =?= 1000#32 + 1#32 + ~~~BitVec.signExtend 32 x✝
+                            [Meta.isDefEq] [0.002743] ✅️ instHAdd.1 (1001#32)
+                                  (~~~BitVec.signExtend 32
+                                      x✝) =?= instHAdd.1 (1000#32 + 1#32) (~~~BitVec.signExtend 32 x✝)
+                              [Meta.isDefEq] [0.002707] ✅️ Add.add (1001#32)
+                                    (~~~BitVec.signExtend 32
+                                        x✝) =?= Add.add (1000#32 + 1#32) (~~~BitVec.signExtend 32 x✝)
+                                [Meta.isDefEq] [0.002553] ✅️ BitVec.instAdd.1 (1001#32)
+                                      (~~~BitVec.signExtend 32
+                                          x✝) =?= BitVec.instAdd.1 (1000#32 + 1#32) (~~~BitVec.signExtend 32 x✝)
+                                  [Meta.isDefEq] [0.002495] ✅️ (1001#32).add
+                                        (~~~BitVec.signExtend 32
+                                            x✝) =?= (1000#32 + 1#32).add (~~~BitVec.signExtend 32 x✝)
+                                    [Meta.isDefEq.delta] [0.002483] ✅️ (1001#32).add
+                                          (~~~BitVec.signExtend 32
+                                              x✝) =?= (1000#32 + 1#32).add (~~~BitVec.signExtend 32 x✝)
+                                      [Meta.isDefEq] [0.002452] ✅️ 1001#32 =?= 1000#32 + 1#32
+                                        [Meta.isDefEq] [0.002398] ✅️ {
+                                              toFin := Fin.ofNat' (2 ^ 32) 1001 } =?= 1000#32 + 1#32
+                                          [Meta.isDefEq] [0.002384] ✅️ {
+                                                toFin := Fin.ofNat' (2 ^ 32) 1001 } =?= instHAdd.1 1000#32 1#32
+                                            [Meta.isDefEq] [0.002366] ✅️ {
+                                                  toFin := Fin.ofNat' (2 ^ 32) 1001 } =?= Add.add 1000#32 1#32
+                                              [Meta.isDefEq] [0.002357] ✅️ {
+                                                    toFin :=
+                                                      Fin.ofNat' (2 ^ 32) 1001 } =?= BitVec.instAdd.1 1000#32 1#32
+                                                [Meta.isDefEq] [0.002346] ✅️ {
+                                                      toFin := Fin.ofNat' (2 ^ 32) 1001 } =?= (1000#32).add 1#32
+                                                  [Meta.isDefEq] [0.002330] ✅️ {
+                                                        toFin :=
+                                                          Fin.ofNat' (2 ^ 32)
+                                                            1001 } =?= BitVec.ofNat 32 ((1000#32).toNat + (1#32).toNat)
+                                                    [Meta.isDefEq] [0.002316] ✅️ {
+                                                          toFin :=
+                                                            Fin.ofNat' (2 ^ 32)
+                                                              1001 } =?= {
+                                                          toFin :=
+                                                            Fin.ofNat' (2 ^ 32) ((1000#32).toNat + (1#32).toNat) }
+                                                      [Meta.isDefEq] [0.002301] ✅️ Fin.ofNat' (2 ^ 32)
+                                                            1001 =?= Fin.ofNat' (2 ^ 32)
+                                                            ((1000#32).toNat + (1#32).toNat)
+                                                        [Meta.isDefEq.delta] [0.002288] ✅️ Fin.ofNat' (2 ^ 32)
+                                                              1001 =?= Fin.ofNat' (2 ^ 32)
+                                                              ((1000#32).toNat + (1#32).toNat)
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 16
+      x✝ : BitVec 16
+      a✝ :
+        ¬(if
+                (!(1001#33 + ~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).getLsbD 32 ==
+                      (1001#33 + ~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).getMsbD 1) =
+                  true then
+              none
+            else
+              if
+                  (!(~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33).getLsbD 32 ==
+                        (~~~BitVec.signExtend 33 (BitVec.zeroExtend 32 (x✝ >>> 15)) + 1#33).getMsbD 1) =
+                    true then
+                none
+              else some (1001#32 + ~~~BitVec.signExtend 32 x✝ &&& ~~~BitVec.zeroExtend 32 (x✝ >>> 15) + 1#32)) ⊑
+            match some (if (!x✝.getLsbD 15 == (0#16 >ᵤ x✝)) = true then 1#1 else 0#1) with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } =>
+              if
+                  (!(1001#33 + ~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).getLsbD 32 ==
+                        (1001#33 + ~~~BitVec.signExtend 33 (BitVec.signExtend 32 x✝)).getMsbD 1) =
+                    true then
+                none
+              else some (1001#32 + ~~~BitVec.signExtend 32 x✝)
+            | some { toFin := ⟨0, ⋯⟩ } => some 0#32
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint

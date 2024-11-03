@@ -21,10 +21,9 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: dec
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
 ⚠ [886/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-✖ [890/892] Building Leanwuzla
-trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././.lake/packages/leanwuzla/././Leanwuzla.lean -R ././.lake/packages/leanwuzla/./. -o ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.olean -i ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.ilean -c ././.lake/packages/leanwuzla/.lake/build/ir/Leanwuzla.c --json
-error: ././.lake/packages/leanwuzla/././Leanwuzla.lean:117:8: invalid dotted identifier notation, unknown identifier `Std.Tactic.BVDecide.BVBinOp.sdiv` from expected type
-  BVBinOp
-error: Lean exited with code 1
-Some required builds logged failures:
-- Leanwuzla
+Bitwuzla proved the goal after 195.125379ms, solving context: 2.000000ms
+LeanSAT proved the goal after 283.993149ms: rewriting 24.366570ms, bitblasting 2.358460ms, SAT solving 112.657099ms, LRAT trimming 51.032560ms, LRAT checking 77.395490ms
+Bitwuzla proved the goal after 79.039069ms, solving context: 2.000000ms
+LeanSAT proved the goal after 142.984839ms: rewriting 16.893560ms, bitblasting 0.000000ms, SAT solving 107.339759ms, LRAT trimming 2.956640ms, LRAT checking 11.498269ms
+Bitwuzla proved the goal after 75.030170ms, solving context: 0.000000ms
+LeanSAT proved the goal after 148.367559ms: rewriting 17.156400ms, bitblasting 0.000000ms, SAT solving 108.369129ms, LRAT trimming 4.464920ms, LRAT checking 13.171980ms

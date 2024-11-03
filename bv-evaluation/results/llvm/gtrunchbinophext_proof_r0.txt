@@ -1,9 +1,4 @@
-⚠ [874/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
-⚠ [878/892] Replayed SSA.Experimental.Bits.Fast.Tactic
-warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
-⚠ [879/892] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+⚠ [676/892] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
@@ -14,17 +9,407 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaratio
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
-⚠ [885/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+⚠ [878/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [881/892] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [887/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
-⚠ [886/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+⚠ [888/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-✖ [890/892] Building Leanwuzla
-trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././.lake/packages/leanwuzla/././Leanwuzla.lean -R ././.lake/packages/leanwuzla/./. -o ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.olean -i ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.ilean -c ././.lake/packages/leanwuzla/.lake/build/ir/Leanwuzla.c --json
-error: ././.lake/packages/leanwuzla/././Leanwuzla.lean:117:8: invalid dotted identifier notation, unknown identifier `Std.Tactic.BVDecide.BVBinOp.sdiv` from expected type
-  BVBinOp
-error: Lean exited with code 1
-Some required builds logged failures:
-- Leanwuzla
+Bitwuzla proved the goal after 79.398591ms, solving context: 0.000000ms
+LeanSAT proved the goal after 82.505369ms: rewriting 17.621840ms, bitblasting 0.000000ms, SAT solving 57.443719ms, LRAT trimming 0.000000ms, LRAT checking 6.402300ms
+Bitwuzla proved the goal after 80.581990ms, solving context: 0.000000ms
+LeanSAT proved the goal after 83.459090ms: rewriting 18.810720ms, bitblasting 0.000000ms, SAT solving 60.191691ms, LRAT trimming 0.000000ms, LRAT checking 1.354419ms
+Bitwuzla proved the goal after 78.865249ms, solving context: 2.000000ms
+LeanSAT proved the goal after 79.298709ms: rewriting 13.141420ms, bitblasting 0.000000ms, SAT solving 62.028639ms, LRAT trimming 0.000000ms, LRAT checking 1.377301ms
+Bitwuzla proved the goal after 85.566190ms, solving context: 2.000000ms
+LeanSAT proved the goal after 77.489939ms: rewriting 17.209859ms, bitblasting 0.000000ms, SAT solving 56.829710ms, LRAT trimming 0.000000ms, LRAT checking 1.839260ms
+Bitwuzla proved the goal after 80.583219ms, solving context: 0.000000ms
+LeanSAT proved the goal after 78.819600ms: rewriting 17.766840ms, bitblasting 0.000000ms, SAT solving 55.326560ms, LRAT trimming 0.000000ms, LRAT checking 2.125490ms
+Bitwuzla proved the goal after 82.151530ms, solving context: 4.000000ms
+LeanSAT proved the goal after 90.378850ms: rewriting 18.758620ms, bitblasting 0.000000ms, SAT solving 63.562880ms, LRAT trimming 0.000000ms, LRAT checking 4.427920ms
+Bitwuzla proved the goal after 82.332449ms, solving context: 2.000000ms
+LeanSAT proved the goal after 125.646360ms: rewriting 11.828000ms, bitblasting 0.000000ms, SAT solving 106.681110ms, LRAT trimming 0.000000ms, LRAT checking 3.559480ms
+Bitwuzla proved the goal after 74.608540ms, solving context: 0.000000ms
+LeanSAT proved the goal after 80.630430ms: rewriting 12.312040ms, bitblasting 0.000000ms, SAT solving 57.491350ms, LRAT trimming 0.000000ms, LRAT checking 7.299171ms
+Bitwuzla proved the goal after 86.537920ms, solving context: 0.000000ms
+LeanSAT proved the goal after 97.770009ms: rewriting 23.020850ms, bitblasting 0.000000ms, SAT solving 56.782440ms, LRAT trimming 0.000000ms, LRAT checking 16.745180ms
+Bitwuzla proved the goal after 79.156490ms, solving context: 0.000000ms
+LeanSAT proved the goal after 85.275660ms: rewriting 21.652780ms, bitblasting 0.000000ms, SAT solving 56.404530ms, LRAT trimming 0.000000ms, LRAT checking 3.929630ms
+Bitwuzla proved the goal after 66.733570ms, solving context: 2.000000ms
+LeanSAT proved the goal after 380.048168ms: rewriting 10.577260ms, bitblasting 16.943810ms, SAT solving 259.548559ms, LRAT trimming 8.526539ms, LRAT checking 36.304620ms
+Bitwuzla proved the goal after 68.204129ms, solving context: 1.000000ms
+LeanSAT proved the goal after 298.185749ms: rewriting 10.810990ms, bitblasting 3.577110ms, SAT solving 257.500079ms, LRAT trimming 1.174250ms, LRAT checking 12.754830ms
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunchbinophext_proof.lean:132:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunchbinophext_proof.lean:125:8: error: (kernel) declaration has metavariables 'narrow_zext_ashr_keep_trunc_thm'
+[bv] [0.041023] Normalizing goal
+  [Meta.synthInstance] [0.001560] ✅️ Decidable
+        ((if
+              True ∧
+                (BitVec.signExtend 32 x✝).msb = (BitVec.signExtend 32 x✝¹).msb ∧
+                  (BitVec.signExtend 32 x✝ + BitVec.signExtend 32 x✝¹).msb ≠ (BitVec.signExtend 32 x✝).msb then
+            none
+          else
+            if 1#32 ≥ ↑32 then none
+            else
+              some
+                (BitVec.truncate 8 ((BitVec.signExtend 32 x✝ + BitVec.signExtend 32 x✝¹).sshiftRight (1#32).toNat))) ⊑
+          if
+              True ∧
+                (BitVec.signExtend 16 x✝).msb = (BitVec.signExtend 16 x✝¹).msb ∧
+                  (BitVec.signExtend 16 x✝ + BitVec.signExtend 16 x✝¹).msb ≠ (BitVec.signExtend 16 x✝).msb then
+            none
+          else
+            if 1#16 ≥ ↑16 then none
+            else some (BitVec.truncate 8 ((BitVec.signExtend 16 x✝ + BitVec.signExtend 16 x✝¹) >>> 1#16)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 8
+      x✝¹ x✝ : BitVec 8
+      a✝ :
+        ¬(if
+                True ∧
+                  (BitVec.signExtend 32 x✝).msb = (BitVec.signExtend 32 x✝¹).msb ∧
+                    (BitVec.signExtend 32 x✝ + BitVec.signExtend 32 x✝¹).msb ≠ (BitVec.signExtend 32 x✝).msb then
+              none
+            else
+              if 1#32 ≥ ↑32 then none
+              else
+                some
+                  (BitVec.truncate 8 ((BitVec.signExtend 32 x✝ + BitVec.signExtend 32 x✝¹).sshiftRight (1#32).toNat))) ⊑
+            if
+                True ∧
+                  (BitVec.signExtend 16 x✝).msb = (BitVec.signExtend 16 x✝¹).msb ∧
+                    (BitVec.signExtend 16 x✝ + BitVec.signExtend 16 x✝¹).msb ≠ (BitVec.signExtend 16 x✝).msb then
+              none
+            else
+              if 1#16 ≥ ↑16 then none
+              else some (BitVec.truncate 8 ((BitVec.signExtend 16 x✝ + BitVec.signExtend 16 x✝¹) >>> 1#16))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 8
+      x✝¹ x✝ : BitVec 8
+      a✝ :
+        ¬(if
+                ((BitVec.signExtend 32 x✝).getLsbD 31 == (BitVec.signExtend 32 x✝¹).getLsbD 31 &&
+                    !(BitVec.signExtend 32 x✝ + BitVec.signExtend 32 x✝¹).getLsbD 31 ==
+                        (BitVec.signExtend 32 x✝).getLsbD 31) =
+                  true then
+              none
+            else some (BitVec.zeroExtend 8 ((BitVec.signExtend 32 x✝ + BitVec.signExtend 32 x✝¹).sshiftRight 1))) ⊑
+            if
+                ((BitVec.signExtend 16 x✝).getLsbD 15 == (BitVec.signExtend 16 x✝¹).getLsbD 15 &&
+                    !(BitVec.signExtend 16 x✝ + BitVec.signExtend 16 x✝¹).getLsbD 15 ==
+                        (BitVec.signExtend 16 x✝).getLsbD 15) =
+                  true then
+              none
+            else some (BitVec.zeroExtend 8 ((BitVec.signExtend 16 x✝ + BitVec.signExtend 16 x✝¹) >>> 1))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunchbinophext_proof.lean:143:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunchbinophext_proof.lean:136:8: error: (kernel) declaration has metavariables 'narrow_zext_ashr_keep_trunc2_thm'
+[bv] [0.051485] Normalizing goal
+  [Meta.synthInstance] [0.001741] ✅️ Decidable
+        ((if
+              True ∧
+                (BitVec.signExtend 64 x✝).msb = (BitVec.signExtend 64 x✝¹).msb ∧
+                  (BitVec.signExtend 64 x✝ + BitVec.signExtend 64 x✝¹).msb ≠ (BitVec.signExtend 64 x✝).msb then
+            none
+          else
+            if 1#64 ≥ ↑64 then none
+            else
+              some
+                (BitVec.truncate 8 ((BitVec.signExtend 64 x✝ + BitVec.signExtend 64 x✝¹).sshiftRight (1#64).toNat))) ⊑
+          if
+              True ∧
+                (BitVec.zeroExtend 16 x✝).msb = (BitVec.zeroExtend 16 x✝¹).msb ∧
+                  (BitVec.zeroExtend 16 x✝ + BitVec.zeroExtend 16 x✝¹).msb ≠ (BitVec.zeroExtend 16 x✝).msb then
+            none
+          else
+            if
+                True ∧
+                  (BitVec.zeroExtend 16 x✝ + BitVec.zeroExtend 16 x✝¹ < BitVec.zeroExtend 16 x✝ ∨
+                    BitVec.zeroExtend 16 x✝ + BitVec.zeroExtend 16 x✝¹ < BitVec.zeroExtend 16 x✝¹) then
+              none
+            else
+              if 1#16 ≥ ↑16 then none
+              else some (BitVec.truncate 8 ((BitVec.zeroExtend 16 x✝ + BitVec.zeroExtend 16 x✝¹) >>> 1#16)))
+    [Meta.check] [0.001112] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if
+              True ∧
+                (BitVec.signExtend 64 x✝).msb = (BitVec.signExtend 64 x✝¹).msb ∧
+                  (BitVec.signExtend 64 x✝ + BitVec.signExtend 64 x✝¹).msb ≠ (BitVec.signExtend 64 x✝).msb then
+            none
+          else
+            if 1#64 ≥ ↑64 then none
+            else
+              some (BitVec.truncate 8 ((BitVec.signExtend 64 x✝ + BitVec.signExtend 64 x✝¹).sshiftRight (1#64).toNat)))
+          (if
+              True ∧
+                (BitVec.zeroExtend 16 x✝).msb = (BitVec.zeroExtend 16 x✝¹).msb ∧
+                  (BitVec.zeroExtend 16 x✝ + BitVec.zeroExtend 16 x✝¹).msb ≠ (BitVec.zeroExtend 16 x✝).msb then
+            none
+          else
+            if
+                True ∧
+                  (BitVec.zeroExtend 16 x✝ + BitVec.zeroExtend 16 x✝¹ < BitVec.zeroExtend 16 x✝ ∨
+                    BitVec.zeroExtend 16 x✝ + BitVec.zeroExtend 16 x✝¹ < BitVec.zeroExtend 16 x✝¹) then
+              none
+            else
+              if 1#16 ≥ ↑16 then none
+              else some (BitVec.truncate 8 ((BitVec.zeroExtend 16 x✝ + BitVec.zeroExtend 16 x✝¹) >>> 1#16)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 9
+      x✝¹ x✝ : BitVec 9
+      a✝ :
+        ¬(if
+                True ∧
+                  (BitVec.signExtend 64 x✝).msb = (BitVec.signExtend 64 x✝¹).msb ∧
+                    (BitVec.signExtend 64 x✝ + BitVec.signExtend 64 x✝¹).msb ≠ (BitVec.signExtend 64 x✝).msb then
+              none
+            else
+              if 1#64 ≥ ↑64 then none
+              else
+                some
+                  (BitVec.truncate 8 ((BitVec.signExtend 64 x✝ + BitVec.signExtend 64 x✝¹).sshiftRight (1#64).toNat))) ⊑
+            if
+                True ∧
+                  (BitVec.zeroExtend 16 x✝).msb = (BitVec.zeroExtend 16 x✝¹).msb ∧
+                    (BitVec.zeroExtend 16 x✝ + BitVec.zeroExtend 16 x✝¹).msb ≠ (BitVec.zeroExtend 16 x✝).msb then
+              none
+            else
+              if
+                  True ∧
+                    (BitVec.zeroExtend 16 x✝ + BitVec.zeroExtend 16 x✝¹ < BitVec.zeroExtend 16 x✝ ∨
+                      BitVec.zeroExtend 16 x✝ + BitVec.zeroExtend 16 x✝¹ < BitVec.zeroExtend 16 x✝¹) then
+                none
+              else
+                if 1#16 ≥ ↑16 then none
+                else some (BitVec.truncate 8 ((BitVec.zeroExtend 16 x✝ + BitVec.zeroExtend 16 x✝¹) >>> 1#16))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 9
+      x✝¹ x✝ : BitVec 9
+      a✝ :
+        ¬(if
+                ((BitVec.signExtend 64 x✝).getLsbD 63 == (BitVec.signExtend 64 x✝¹).getLsbD 63 &&
+                    !(BitVec.signExtend 64 x✝ + BitVec.signExtend 64 x✝¹).getLsbD 63 ==
+                        (BitVec.signExtend 64 x✝).getLsbD 63) =
+                  true then
+              none
+            else some (BitVec.zeroExtend 8 ((BitVec.signExtend 64 x✝ + BitVec.signExtend 64 x✝¹).sshiftRight 1))) ⊑
+            if
+                ((BitVec.zeroExtend 16 x✝).getLsbD 15 == (BitVec.zeroExtend 16 x✝¹).getLsbD 15 &&
+                    !(BitVec.zeroExtend 16 x✝ + BitVec.zeroExtend 16 x✝¹).getLsbD 15 ==
+                        (BitVec.zeroExtend 16 x✝).getLsbD 15) =
+                  true then
+              none
+            else
+              if
+                  (!((!BitVec.zeroExtend 16 x✝ >ᵤ BitVec.zeroExtend 16 x✝ + BitVec.zeroExtend 16 x✝¹) &&
+                        !BitVec.zeroExtend 16 x✝¹ >ᵤ BitVec.zeroExtend 16 x✝ + BitVec.zeroExtend 16 x✝¹)) =
+                    true then
+                none
+              else some (BitVec.zeroExtend 8 ((BitVec.zeroExtend 16 x✝ + BitVec.zeroExtend 16 x✝¹) >>> 1))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunchbinophext_proof.lean:154:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunchbinophext_proof.lean:147:8: error: (kernel) declaration has metavariables 'narrow_zext_ashr_keep_trunc3_thm'
+[bv] [0.051623] Normalizing goal
+  [Meta.synthInstance] [0.001768] ✅️ Decidable
+        ((if
+              True ∧
+                (BitVec.signExtend 64 x✝).msb = (BitVec.signExtend 64 x✝¹).msb ∧
+                  (BitVec.signExtend 64 x✝ + BitVec.signExtend 64 x✝¹).msb ≠ (BitVec.signExtend 64 x✝).msb then
+            none
+          else
+            if 1#64 ≥ ↑64 then none
+            else
+              some
+                (BitVec.truncate 7 ((BitVec.signExtend 64 x✝ + BitVec.signExtend 64 x✝¹).sshiftRight (1#64).toNat))) ⊑
+          if
+              True ∧
+                (BitVec.zeroExtend 14 x✝).msb = (BitVec.zeroExtend 14 x✝¹).msb ∧
+                  (BitVec.zeroExtend 14 x✝ + BitVec.zeroExtend 14 x✝¹).msb ≠ (BitVec.zeroExtend 14 x✝).msb then
+            none
+          else
+            if
+                True ∧
+                  (BitVec.zeroExtend 14 x✝ + BitVec.zeroExtend 14 x✝¹ < BitVec.zeroExtend 14 x✝ ∨
+                    BitVec.zeroExtend 14 x✝ + BitVec.zeroExtend 14 x✝¹ < BitVec.zeroExtend 14 x✝¹) then
+              none
+            else
+              if 1#14 ≥ ↑14 then none
+              else some (BitVec.truncate 7 ((BitVec.zeroExtend 14 x✝ + BitVec.zeroExtend 14 x✝¹) >>> 1#14)))
+    [Meta.check] [0.001122] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if
+              True ∧
+                (BitVec.signExtend 64 x✝).msb = (BitVec.signExtend 64 x✝¹).msb ∧
+                  (BitVec.signExtend 64 x✝ + BitVec.signExtend 64 x✝¹).msb ≠ (BitVec.signExtend 64 x✝).msb then
+            none
+          else
+            if 1#64 ≥ ↑64 then none
+            else
+              some (BitVec.truncate 7 ((BitVec.signExtend 64 x✝ + BitVec.signExtend 64 x✝¹).sshiftRight (1#64).toNat)))
+          (if
+              True ∧
+                (BitVec.zeroExtend 14 x✝).msb = (BitVec.zeroExtend 14 x✝¹).msb ∧
+                  (BitVec.zeroExtend 14 x✝ + BitVec.zeroExtend 14 x✝¹).msb ≠ (BitVec.zeroExtend 14 x✝).msb then
+            none
+          else
+            if
+                True ∧
+                  (BitVec.zeroExtend 14 x✝ + BitVec.zeroExtend 14 x✝¹ < BitVec.zeroExtend 14 x✝ ∨
+                    BitVec.zeroExtend 14 x✝ + BitVec.zeroExtend 14 x✝¹ < BitVec.zeroExtend 14 x✝¹) then
+              none
+            else
+              if 1#14 ≥ ↑14 then none
+              else some (BitVec.truncate 7 ((BitVec.zeroExtend 14 x✝ + BitVec.zeroExtend 14 x✝¹) >>> 1#14)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 8
+      x✝¹ x✝ : BitVec 8
+      a✝ :
+        ¬(if
+                True ∧
+                  (BitVec.signExtend 64 x✝).msb = (BitVec.signExtend 64 x✝¹).msb ∧
+                    (BitVec.signExtend 64 x✝ + BitVec.signExtend 64 x✝¹).msb ≠ (BitVec.signExtend 64 x✝).msb then
+              none
+            else
+              if 1#64 ≥ ↑64 then none
+              else
+                some
+                  (BitVec.truncate 7 ((BitVec.signExtend 64 x✝ + BitVec.signExtend 64 x✝¹).sshiftRight (1#64).toNat))) ⊑
+            if
+                True ∧
+                  (BitVec.zeroExtend 14 x✝).msb = (BitVec.zeroExtend 14 x✝¹).msb ∧
+                    (BitVec.zeroExtend 14 x✝ + BitVec.zeroExtend 14 x✝¹).msb ≠ (BitVec.zeroExtend 14 x✝).msb then
+              none
+            else
+              if
+                  True ∧
+                    (BitVec.zeroExtend 14 x✝ + BitVec.zeroExtend 14 x✝¹ < BitVec.zeroExtend 14 x✝ ∨
+                      BitVec.zeroExtend 14 x✝ + BitVec.zeroExtend 14 x✝¹ < BitVec.zeroExtend 14 x✝¹) then
+                none
+              else
+                if 1#14 ≥ ↑14 then none
+                else some (BitVec.truncate 7 ((BitVec.zeroExtend 14 x✝ + BitVec.zeroExtend 14 x✝¹) >>> 1#14))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 8
+      x✝¹ x✝ : BitVec 8
+      a✝ :
+        ¬(if
+                ((BitVec.signExtend 64 x✝).getLsbD 63 == (BitVec.signExtend 64 x✝¹).getLsbD 63 &&
+                    !(BitVec.signExtend 64 x✝ + BitVec.signExtend 64 x✝¹).getLsbD 63 ==
+                        (BitVec.signExtend 64 x✝).getLsbD 63) =
+                  true then
+              none
+            else some (BitVec.zeroExtend 7 ((BitVec.signExtend 64 x✝ + BitVec.signExtend 64 x✝¹).sshiftRight 1))) ⊑
+            if
+                ((BitVec.zeroExtend 14 x✝).getLsbD 13 == (BitVec.zeroExtend 14 x✝¹).getLsbD 13 &&
+                    !(BitVec.zeroExtend 14 x✝ + BitVec.zeroExtend 14 x✝¹).getLsbD 13 ==
+                        (BitVec.zeroExtend 14 x✝).getLsbD 13) =
+                  true then
+              none
+            else
+              if
+                  (!((!BitVec.zeroExtend 14 x✝ >ᵤ BitVec.zeroExtend 14 x✝ + BitVec.zeroExtend 14 x✝¹) &&
+                        !BitVec.zeroExtend 14 x✝¹ >ᵤ BitVec.zeroExtend 14 x✝ + BitVec.zeroExtend 14 x✝¹)) =
+                    true then
+                none
+              else some (BitVec.zeroExtend 7 ((BitVec.zeroExtend 14 x✝ + BitVec.zeroExtend 14 x✝¹) >>> 1))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunchbinophext_proof.lean:165:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunchbinophext_proof.lean:158:8: error: (kernel) declaration has metavariables 'dont_narrow_zext_ashr_keep_trunc_thm'
+[bv] [0.030203] Normalizing goal
+  [Meta.synthInstance] [0.001307] ✅️ Decidable
+        ((if
+              True ∧
+                (BitVec.signExtend 16 x✝).msb = (BitVec.signExtend 16 x✝¹).msb ∧
+                  (BitVec.signExtend 16 x✝ + BitVec.signExtend 16 x✝¹).msb ≠ (BitVec.signExtend 16 x✝).msb then
+            none
+          else
+            if 1#16 ≥ ↑16 then none
+            else
+              some
+                (BitVec.truncate 8 ((BitVec.signExtend 16 x✝ + BitVec.signExtend 16 x✝¹).sshiftRight (1#16).toNat))) ⊑
+          if
+              True ∧
+                (BitVec.signExtend 16 x✝).msb = (BitVec.signExtend 16 x✝¹).msb ∧
+                  (BitVec.signExtend 16 x✝ + BitVec.signExtend 16 x✝¹).msb ≠ (BitVec.signExtend 16 x✝).msb then
+            none
+          else
+            if 1#16 ≥ ↑16 then none
+            else some (BitVec.truncate 8 ((BitVec.signExtend 16 x✝ + BitVec.signExtend 16 x✝¹) >>> 1#16)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 8
+      x✝¹ x✝ : BitVec 8
+      a✝ :
+        ¬(if
+                True ∧
+                  (BitVec.signExtend 16 x✝).msb = (BitVec.signExtend 16 x✝¹).msb ∧
+                    (BitVec.signExtend 16 x✝ + BitVec.signExtend 16 x✝¹).msb ≠ (BitVec.signExtend 16 x✝).msb then
+              none
+            else
+              if 1#16 ≥ ↑16 then none
+              else
+                some
+                  (BitVec.truncate 8 ((BitVec.signExtend 16 x✝ + BitVec.signExtend 16 x✝¹).sshiftRight (1#16).toNat))) ⊑
+            if
+                True ∧
+                  (BitVec.signExtend 16 x✝).msb = (BitVec.signExtend 16 x✝¹).msb ∧
+                    (BitVec.signExtend 16 x✝ + BitVec.signExtend 16 x✝¹).msb ≠ (BitVec.signExtend 16 x✝).msb then
+              none
+            else
+              if 1#16 ≥ ↑16 then none
+              else some (BitVec.truncate 8 ((BitVec.signExtend 16 x✝ + BitVec.signExtend 16 x✝¹) >>> 1#16))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 8
+      x✝¹ x✝ : BitVec 8
+      a✝ :
+        ¬(if
+                ((BitVec.signExtend 16 x✝).getLsbD 15 == (BitVec.signExtend 16 x✝¹).getLsbD 15 &&
+                    !(BitVec.signExtend 16 x✝ + BitVec.signExtend 16 x✝¹).getLsbD 15 ==
+                        (BitVec.signExtend 16 x✝).getLsbD 15) =
+                  true then
+              none
+            else some (BitVec.zeroExtend 8 ((BitVec.signExtend 16 x✝ + BitVec.signExtend 16 x✝¹).sshiftRight 1))) ⊑
+            if
+                ((BitVec.signExtend 16 x✝).getLsbD 15 == (BitVec.signExtend 16 x✝¹).getLsbD 15 &&
+                    !(BitVec.signExtend 16 x✝ + BitVec.signExtend 16 x✝¹).getLsbD 15 ==
+                        (BitVec.signExtend 16 x✝).getLsbD 15) =
+                  true then
+              none
+            else some (BitVec.zeroExtend 8 ((BitVec.signExtend 16 x✝ + BitVec.signExtend 16 x✝¹) >>> 1))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint

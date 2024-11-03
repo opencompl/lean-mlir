@@ -1,9 +1,4 @@
-⚠ [874/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
-⚠ [878/892] Replayed SSA.Experimental.Bits.Fast.Tactic
-warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
-⚠ [879/892] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+⚠ [676/892] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
@@ -14,17 +9,1994 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaratio
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
-⚠ [885/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+⚠ [839/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
-⚠ [886/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+⚠ [883/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [886/892] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [888/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-✖ [890/892] Building Leanwuzla
-trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././.lake/packages/leanwuzla/././Leanwuzla.lean -R ././.lake/packages/leanwuzla/./. -o ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.olean -i ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.ilean -c ././.lake/packages/leanwuzla/.lake/build/ir/Leanwuzla.c --json
-error: ././.lake/packages/leanwuzla/././Leanwuzla.lean:117:8: invalid dotted identifier notation, unknown identifier `Std.Tactic.BVDecide.BVBinOp.sdiv` from expected type
-  BVBinOp
-error: Lean exited with code 1
-Some required builds logged failures:
-- Leanwuzla
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:17:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:11:8: error: (kernel) declaration has metavariables 'lshr_exact_thm'
+[bv] [0.013702] Normalizing goal
+  [Meta.synthInstance] [0.001624] ✅️ Decidable
+        ((if 2#8 ≥ ↑8 then none else if 2#8 ≥ ↑8 then none else some ((x✝ <<< 2#8 + 4#8) >>> 2#8)) ⊑
+          some (x✝ + 1#8 &&& 63#8))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ :
+        ¬(if 2#8 ≥ ↑8 then none else if 2#8 ≥ ↑8 then none else some ((x✝ <<< 2#8 + 4#8) >>> 2#8)) ⊑
+            some (x✝ + 1#8 &&& 63#8)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ : ¬some ((x✝ <<< 2 + 4#8) >>> 2) ⊑ some (x✝ + 1#8 &&& 63#8)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+Bitwuzla proved the goal after 0.954200ms, solving context: 0.000000ms
+LeanSAT proved the goal after 4.502510ms: rewriting 4.484740ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+Bitwuzla proved the goal after 0.635670ms, solving context: 0.000000ms
+LeanSAT proved the goal after 4.543770ms: rewriting 4.528480ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+Bitwuzla proved the goal after 0.709280ms, solving context: 0.000000ms
+LeanSAT proved the goal after 3.981820ms: rewriting 3.967610ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+Bitwuzla proved the goal after 90.449330ms, solving context: 0.000000ms
+LeanSAT proved the goal after 96.027450ms: rewriting 29.514540ms, bitblasting 0.000000ms, SAT solving 55.726820ms, LRAT trimming 0.000000ms, LRAT checking 4.241520ms
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:36:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:31:8: error: (kernel) declaration has metavariables 'bool_zext_thm'
+[bv] [0.007607] Normalizing goal
+  [Meta.synthInstance] [0.001035] ✅️ Decidable
+        ((if 15#16 ≥ ↑16 then none else some (BitVec.signExtend 16 x✝ >>> 15#16)) ⊑ some (BitVec.zeroExtend 16 x✝))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 1
+      x✝ : BitVec 1
+      a✝ : ¬(if 15#16 ≥ ↑16 then none else some (BitVec.signExtend 16 x✝ >>> 15#16)) ⊑ some (BitVec.zeroExtend 16 x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 1
+      x✝ : BitVec 1
+      a✝ : ¬some (BitVec.signExtend 16 x✝ >>> 15) ⊑ some (BitVec.zeroExtend 16 x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:45:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:40:8: error: (kernel) declaration has metavariables 'smear_sign_and_widen_thm'
+[bv] [0.011712] Normalizing goal
+  [Meta.synthInstance] [0.001291] ✅️ Decidable
+        ((if 24#32 ≥ ↑32 then none else some (BitVec.signExtend 32 x✝ >>> 24#32)) ⊑
+          if 7#8 ≥ ↑8 then none else some (BitVec.zeroExtend 32 (x✝.sshiftRight (7#8).toNat)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ :
+        ¬(if 24#32 ≥ ↑32 then none else some (BitVec.signExtend 32 x✝ >>> 24#32)) ⊑
+            if 7#8 ≥ ↑8 then none else some (BitVec.zeroExtend 32 (x✝.sshiftRight (7#8).toNat))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ : ¬some (BitVec.signExtend 32 x✝ >>> 24) ⊑ some (BitVec.zeroExtend 32 (x✝.sshiftRight 7))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:54:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:49:8: error: (kernel) declaration has metavariables 'fake_sext_thm'
+[bv] [0.012532] Normalizing goal
+  [Meta.synthInstance] [0.001425] ✅️ Decidable
+        ((if 17#18 ≥ ↑18 then none else some (BitVec.signExtend 18 x✝ >>> 17#18)) ⊑
+          if 2#3 ≥ ↑3 then none else some (BitVec.zeroExtend 18 (x✝ >>> 2#3)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 3
+      x✝ : BitVec 3
+      a✝ :
+        ¬(if 17#18 ≥ ↑18 then none else some (BitVec.signExtend 18 x✝ >>> 17#18)) ⊑
+            if 2#3 ≥ ↑3 then none else some (BitVec.zeroExtend 18 (x✝ >>> 2#3))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 3
+      x✝ : BitVec 3
+      a✝ : ¬some (BitVec.signExtend 18 x✝ >>> 17) ⊑ some (BitVec.zeroExtend 18 (x✝ >>> 2))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:64:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:58:8: error: (kernel) declaration has metavariables 'mul_splat_fold_thm'
+[bv] [0.032210] Normalizing goal
+  [Meta.synthInstance] [0.001691] ✅️ Decidable
+        ((if
+              True ∧
+                BitVec.zeroExtend (2 * 32) x✝ * BitVec.zeroExtend (2 * 32) 65537#32 ≥
+                  BitVec.twoPow (2 * 32) (32 - 1) <<< 1 then
+            none
+          else if 16#32 ≥ ↑32 then none else some ((x✝ * 65537#32) >>> 16#32)) ⊑
+          some x✝)
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if
+                True ∧
+                  BitVec.zeroExtend (2 * 32) x✝ * BitVec.zeroExtend (2 * 32) 65537#32 ≥
+                    BitVec.twoPow (2 * 32) (32 - 1) <<< 1 then
+              none
+            else if 16#32 ≥ ↑32 then none else some ((x✝ * 65537#32) >>> 16#32)) ⊑
+            some x✝
+      ⊢ False
+  [Meta.isDefEq] [0.001667] ✅️ ?h₁ =?= Eq.trans
+        (congrArg (And True)
+          (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+            (Eq.trans
+              (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 64 31 <<< 1)
+                (BitVec.zeroExtend 64 x✝ * 65537#64))
+              (Eq.trans
+                (Eq.trans
+                  (congrArg Not
+                    (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult (BitVec.zeroExtend 64 x✝ * 65537#64)
+                      (BitVec.twoPow 64 31 <<< 1)))
+                  (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                    (BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 x✝ * 65537#64) true))
+                (congrArg (fun x => (!x) = true)
+                  (beq_true (BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 x✝ * 65537#64)))))))
+        (true_and ((!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 x✝ * 65537#64) = true))
+    [Meta.isDefEq.assign] [0.001664] ✅️ ?h₁ := Eq.trans
+          (congrArg (And True)
+            (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+              (Eq.trans
+                (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 64 31 <<< 1)
+                  (BitVec.zeroExtend 64 x✝ * 65537#64))
+                (Eq.trans
+                  (Eq.trans
+                    (congrArg Not
+                      (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult (BitVec.zeroExtend 64 x✝ * 65537#64)
+                        (BitVec.twoPow 64 31 <<< 1)))
+                    (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                      (BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 x✝ * 65537#64) true))
+                  (congrArg (fun x => (!x) = true)
+                    (beq_true (BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 x✝ * 65537#64)))))))
+          (true_and ((!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 x✝ * 65537#64) = true))
+      [Meta.isDefEq.assign.checkTypes] [0.001649] ✅️ (?h₁ : (True ∧
+              BitVec.zeroExtend (2 * 32) x✝ * BitVec.zeroExtend (2 * 32) 65537#32 ≥
+                BitVec.twoPow (2 * 32) (32 - 1) <<< 1) =
+            ((!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 x✝ * 65537#64) =
+              true)) := (Eq.trans
+            (congrArg (And True)
+              (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+                (Eq.trans
+                  (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 64 31 <<< 1)
+                    (BitVec.zeroExtend 64 x✝ * 65537#64))
+                  (Eq.trans
+                    (Eq.trans
+                      (congrArg Not
+                        (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult (BitVec.zeroExtend 64 x✝ * 65537#64)
+                          (BitVec.twoPow 64 31 <<< 1)))
+                      (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                        (BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 x✝ * 65537#64) true))
+                    (congrArg (fun x => (!x) = true)
+                      (beq_true (BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 x✝ * 65537#64)))))))
+            (true_and
+              ((!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 x✝ * 65537#64) =
+                true)) : (True ∧ BitVec.zeroExtend 64 x✝ * 65537#64 ≥ BitVec.twoPow 64 31 <<< 1) =
+            ((!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 x✝ * 65537#64) = true))
+        [Meta.isDefEq] [0.001645] ✅️ (True ∧
+                BitVec.zeroExtend (2 * 32) x✝ * BitVec.zeroExtend (2 * 32) 65537#32 ≥
+                  BitVec.twoPow (2 * 32) (32 - 1) <<< 1) =
+              ((!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 x✝ * 65537#64) =
+                true) =?= (True ∧ BitVec.zeroExtend 64 x✝ * 65537#64 ≥ BitVec.twoPow 64 31 <<< 1) =
+              ((!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 x✝ * 65537#64) = true)
+          [Meta.isDefEq] [0.001622] ✅️ True ∧
+                BitVec.zeroExtend (2 * 32) x✝ * BitVec.zeroExtend (2 * 32) 65537#32 ≥
+                  BitVec.twoPow (2 * 32) (32 - 1) <<<
+                    1 =?= True ∧ BitVec.zeroExtend 64 x✝ * 65537#64 ≥ BitVec.twoPow 64 31 <<< 1
+            [Meta.isDefEq] [0.001606] ✅️ BitVec.zeroExtend (2 * 32) x✝ * BitVec.zeroExtend (2 * 32) 65537#32 ≥
+                  BitVec.twoPow (2 * 32) (32 - 1) <<<
+                    1 =?= BitVec.zeroExtend 64 x✝ * 65537#64 ≥ BitVec.twoPow 64 31 <<< 1
+              [Meta.isDefEq.delta] [0.001586] ✅️ BitVec.zeroExtend (2 * 32) x✝ * BitVec.zeroExtend (2 * 32) 65537#32 ≥
+                    BitVec.twoPow (2 * 32) (32 - 1) <<<
+                      1 =?= BitVec.zeroExtend 64 x✝ * 65537#64 ≥ BitVec.twoPow 64 31 <<< 1
+                [Meta.isDefEq] [0.001048] ✅️ BitVec.zeroExtend (2 * 32) x✝ *
+                      BitVec.zeroExtend (2 * 32) 65537#32 =?= BitVec.zeroExtend 64 x✝ * 65537#64
+                  [Meta.isDefEq] [0.001001] ✅️ instHMul.1 (BitVec.zeroExtend (2 * 32) x✝)
+                        (BitVec.zeroExtend (2 * 32) 65537#32) =?= instHMul.1 (BitVec.zeroExtend 64 x✝) 65537#64
+  [Meta.appBuilder] [0.002391] ✅️ f: HShiftRight.hShiftRight, xs: [x✝ * 65537#32, 16]
+    [Meta.synthInstance] [0.002313] ✅️ HShiftRight (BitVec 32) ℕ (BitVec 32)
+      [Meta.synthInstance] [0.002127] ✅️ apply @BitVec.instHShiftRightNat to HShiftRight (BitVec 32) ℕ (BitVec 32)
+        [Meta.synthInstance.tryResolve] [0.002098] ✅️ HShiftRight (BitVec 32) ℕ
+              (BitVec 32) ≟ HShiftRight (BitVec 32) ℕ (BitVec 32)
+          [Meta.isDefEq] [0.001949] ✅️ ?m.27232 =?= BitVec.instHShiftRightNat
+            [Meta.isDefEq.assign] [0.001946] ✅️ ?m.27232 := BitVec.instHShiftRightNat
+              [Meta.isDefEq.assign.checkTypes] [0.001937] ✅️ (?m.27232 : HShiftRight (BitVec 32) ℕ
+                    (BitVec 32)) := (BitVec.instHShiftRightNat : HShiftRight (BitVec 32) ℕ (BitVec 32))
+                [Meta.isDefEq] [0.001932] ✅️ HShiftRight (BitVec 32) ℕ
+                      (BitVec 32) =?= HShiftRight (BitVec 32) ℕ (BitVec 32)
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if (!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 x✝ * 65537#64) = true then none
+            else some ((x✝ * 65537#32) >>> 16)) ⊑
+            some x✝
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:75:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:75:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:68:8: error: (kernel) declaration has metavariables 'shl_add_lshr_flag_preservation_thm'
+[bv] [0.087706] Normalizing goal
+  [Meta.synthInstance] [0.001640] ✅️ Decidable
+        ((if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+          else
+            if x✝¹ ≥ ↑32 then none
+            else
+              if True ∧ (x✝ <<< x✝¹).msb = x✝².msb ∧ (x✝ <<< x✝¹ + x✝²).msb ≠ (x✝ <<< x✝¹).msb then none
+              else
+                if True ∧ (x✝ <<< x✝¹ + x✝² < x✝ <<< x✝¹ ∨ x✝ <<< x✝¹ + x✝² < x✝²) then none
+                else if x✝¹ ≥ ↑32 then none else some ((x✝ <<< x✝¹ + x✝²) >>> x✝¹)) ⊑
+          if x✝¹ ≥ ↑32 then none
+          else
+            if True ∧ (x✝² >>> x✝¹).msb = x✝.msb ∧ (x✝² >>> x✝¹ + x✝).msb ≠ (x✝² >>> x✝¹).msb then none
+            else
+              if True ∧ (x✝² >>> x✝¹ + x✝ < x✝² >>> x✝¹ ∨ x✝² >>> x✝¹ + x✝ < x✝) then none else some (x✝² >>> x✝¹ + x✝))
+    [Meta.check] [0.001075] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+          else
+            if x✝¹ ≥ ↑32 then none
+            else
+              if True ∧ (x✝ <<< x✝¹).msb = x✝².msb ∧ (x✝ <<< x✝¹ + x✝²).msb ≠ (x✝ <<< x✝¹).msb then none
+              else
+                if True ∧ (x✝ <<< x✝¹ + x✝² < x✝ <<< x✝¹ ∨ x✝ <<< x✝¹ + x✝² < x✝²) then none
+                else if x✝¹ ≥ ↑32 then none else some ((x✝ <<< x✝¹ + x✝²) >>> x✝¹))
+          (if x✝¹ ≥ ↑32 then none
+          else
+            if True ∧ (x✝² >>> x✝¹).msb = x✝.msb ∧ (x✝² >>> x✝¹ + x✝).msb ≠ (x✝² >>> x✝¹).msb then none
+            else
+              if True ∧ (x✝² >>> x✝¹ + x✝ < x✝² >>> x✝¹ ∨ x✝² >>> x✝¹ + x✝ < x✝) then none else some (x✝² >>> x✝¹ + x✝))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+            else
+              if x✝¹ ≥ ↑32 then none
+              else
+                if True ∧ (x✝ <<< x✝¹).msb = x✝².msb ∧ (x✝ <<< x✝¹ + x✝²).msb ≠ (x✝ <<< x✝¹).msb then none
+                else
+                  if True ∧ (x✝ <<< x✝¹ + x✝² < x✝ <<< x✝¹ ∨ x✝ <<< x✝¹ + x✝² < x✝²) then none
+                  else if x✝¹ ≥ ↑32 then none else some ((x✝ <<< x✝¹ + x✝²) >>> x✝¹)) ⊑
+            if x✝¹ ≥ ↑32 then none
+            else
+              if True ∧ (x✝² >>> x✝¹).msb = x✝.msb ∧ (x✝² >>> x✝¹ + x✝).msb ≠ (x✝² >>> x✝¹).msb then none
+              else
+                if True ∧ (x✝² >>> x✝¹ + x✝ < x✝² >>> x✝¹ ∨ x✝² >>> x✝¹ + x✝ < x✝) then none
+                else some (x✝² >>> x✝¹ + x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if (x✝ <<< x✝¹ >>> x✝¹ == x✝) = true then none
+            else
+              if (!32#32 >ᵤ x✝¹) = true then none
+              else
+                if
+                    ((x✝ <<< x✝¹).getLsbD 31 == x✝².getLsbD 31 &&
+                        !(x✝ <<< x✝¹ + x✝²).getLsbD 31 == (x✝ <<< x✝¹).getLsbD 31) =
+                      true then
+                  none
+                else
+                  if (!((!x✝ <<< x✝¹ >ᵤ x✝ <<< x✝¹ + x✝²) && !x✝² >ᵤ x✝ <<< x✝¹ + x✝²)) = true then none
+                  else if (!32#32 >ᵤ x✝¹) = true then none else some ((x✝ <<< x✝¹ + x✝²) >>> x✝¹)) ⊑
+            if (!32#32 >ᵤ x✝¹) = true then none
+            else
+              if
+                  ((x✝² >>> x✝¹).getLsbD 31 == x✝.getLsbD 31 &&
+                      !(x✝² >>> x✝¹ + x✝).getLsbD 31 == (x✝² >>> x✝¹).getLsbD 31) =
+                    true then
+                none
+              else
+                if (!((!x✝² >>> x✝¹ >ᵤ x✝² >>> x✝¹ + x✝) && !x✝ >ᵤ x✝² >>> x✝¹ + x✝)) = true then none
+                else some (x✝² >>> x✝¹ + x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:86:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:86:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:79:8: error: (kernel) declaration has metavariables 'shl_add_lshr_thm'
+[bv] [0.046032] Normalizing goal
+  [Meta.synthInstance] [0.001262] ✅️ Decidable
+        ((if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+          else
+            if x✝¹ ≥ ↑32 then none
+            else
+              if True ∧ (x✝ <<< x✝¹ + x✝² < x✝ <<< x✝¹ ∨ x✝ <<< x✝¹ + x✝² < x✝²) then none
+              else if x✝¹ ≥ ↑32 then none else some ((x✝ <<< x✝¹ + x✝²) >>> x✝¹)) ⊑
+          if x✝¹ ≥ ↑32 then none
+          else
+            if True ∧ (x✝² >>> x✝¹ + x✝ < x✝² >>> x✝¹ ∨ x✝² >>> x✝¹ + x✝ < x✝) then none else some (x✝² >>> x✝¹ + x✝))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+            else
+              if x✝¹ ≥ ↑32 then none
+              else
+                if True ∧ (x✝ <<< x✝¹ + x✝² < x✝ <<< x✝¹ ∨ x✝ <<< x✝¹ + x✝² < x✝²) then none
+                else if x✝¹ ≥ ↑32 then none else some ((x✝ <<< x✝¹ + x✝²) >>> x✝¹)) ⊑
+            if x✝¹ ≥ ↑32 then none
+            else
+              if True ∧ (x✝² >>> x✝¹ + x✝ < x✝² >>> x✝¹ ∨ x✝² >>> x✝¹ + x✝ < x✝) then none else some (x✝² >>> x✝¹ + x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if (x✝ <<< x✝¹ >>> x✝¹ == x✝) = true then none
+            else
+              if (!32#32 >ᵤ x✝¹) = true then none
+              else
+                if (!((!x✝ <<< x✝¹ >ᵤ x✝ <<< x✝¹ + x✝²) && !x✝² >ᵤ x✝ <<< x✝¹ + x✝²)) = true then none
+                else if (!32#32 >ᵤ x✝¹) = true then none else some ((x✝ <<< x✝¹ + x✝²) >>> x✝¹)) ⊑
+            if (!32#32 >ᵤ x✝¹) = true then none
+            else
+              if (!((!x✝² >>> x✝¹ >ᵤ x✝² >>> x✝¹ + x✝) && !x✝ >ᵤ x✝² >>> x✝¹ + x✝)) = true then none
+              else some (x✝² >>> x✝¹ + x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:97:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:90:8: error: (kernel) declaration has metavariables 'shl_add_lshr_comm_thm'
+[bv] [0.061994] Normalizing goal
+  [Meta.synthInstance] [0.004056] ✅️ Decidable
+        ((if True ∧ x✝¹ <<< x✝² >>> x✝² = x✝¹ then none
+          else
+            if x✝² ≥ ↑32 then none
+            else
+              if True ∧ (x✝ * x✝ + x✝¹ <<< x✝² < x✝ * x✝ ∨ x✝ * x✝ + x✝¹ <<< x✝² < x✝¹ <<< x✝²) then none
+              else if x✝² ≥ ↑32 then none else some ((x✝ * x✝ + x✝¹ <<< x✝²) >>> x✝²)) ⊑
+          if x✝² ≥ ↑32 then none
+          else
+            if True ∧ ((x✝ * x✝) >>> x✝² + x✝¹ < (x✝ * x✝) >>> x✝² ∨ (x✝ * x✝) >>> x✝² + x✝¹ < x✝¹) then none
+            else some ((x✝ * x✝) >>> x✝² + x✝¹))
+    [Meta.synthInstance] [0.002540] ✅️ apply @instDecidableEqBitVec to DecidableEq (BitVec 32)
+      [Meta.synthInstance.tryResolve] [0.002445] ✅️ Decidable (a = b) ≟ Decidable (a = b)
+        [Meta.isDefEq] [0.002366] ✅️ Decidable (a = b) =?= Decidable (?m.104453 a b = ?m.104454 a b)
+          [Meta.isDefEq] [0.002339] ✅️ a = b =?= ?m.104453 a b = ?m.104454 a b
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if True ∧ x✝¹ <<< x✝² >>> x✝² = x✝¹ then none
+            else
+              if x✝² ≥ ↑32 then none
+              else
+                if True ∧ (x✝ * x✝ + x✝¹ <<< x✝² < x✝ * x✝ ∨ x✝ * x✝ + x✝¹ <<< x✝² < x✝¹ <<< x✝²) then none
+                else if x✝² ≥ ↑32 then none else some ((x✝ * x✝ + x✝¹ <<< x✝²) >>> x✝²)) ⊑
+            if x✝² ≥ ↑32 then none
+            else
+              if True ∧ ((x✝ * x✝) >>> x✝² + x✝¹ < (x✝ * x✝) >>> x✝² ∨ (x✝ * x✝) >>> x✝² + x✝¹ < x✝¹) then none
+              else some ((x✝ * x✝) >>> x✝² + x✝¹)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if (x✝¹ <<< x✝² >>> x✝² == x✝¹) = true then none
+            else
+              if (!32#32 >ᵤ x✝²) = true then none
+              else
+                if (!((!x✝ * x✝ >ᵤ x✝ * x✝ + x✝¹ <<< x✝²) && !x✝¹ <<< x✝² >ᵤ x✝ * x✝ + x✝¹ <<< x✝²)) = true then none
+                else if (!32#32 >ᵤ x✝²) = true then none else some ((x✝ * x✝ + x✝¹ <<< x✝²) >>> x✝²)) ⊑
+            if (!32#32 >ᵤ x✝²) = true then none
+            else
+              if (!((!(x✝ * x✝) >>> x✝² >ᵤ (x✝ * x✝) >>> x✝² + x✝¹) && !x✝¹ >ᵤ (x✝ * x✝) >>> x✝² + x✝¹)) = true then
+                none
+              else some ((x✝ * x✝) >>> x✝² + x✝¹)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:108:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:108:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:101:8: error: (kernel) declaration has metavariables 'shl_sub_lshr_thm'
+[bv] [0.080230] Normalizing goal
+  [Meta.synthInstance] [0.001606] ✅️ Decidable
+        ((if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+          else
+            if x✝¹ ≥ ↑32 then none
+            else
+              if
+                  True ∧
+                    (BitVec.signExtend (32 + 1) (x✝ <<< x✝¹) - BitVec.signExtend (32 + 1) x✝²).msb ≠
+                      (BitVec.signExtend (32 + 1) (x✝ <<< x✝¹) - BitVec.signExtend (32 + 1) x✝²).getMsbD 1 then
+                none
+              else
+                if True ∧ x✝ <<< x✝¹ < x✝² then none
+                else if x✝¹ ≥ ↑32 then none else some ((x✝ <<< x✝¹ - x✝²) >>> x✝¹)) ⊑
+          if x✝¹ ≥ ↑32 then none
+          else
+            if
+                True ∧
+                  (BitVec.signExtend (32 + 1) x✝ - BitVec.signExtend (32 + 1) (x✝² >>> x✝¹)).msb ≠
+                    (BitVec.signExtend (32 + 1) x✝ - BitVec.signExtend (32 + 1) (x✝² >>> x✝¹)).getMsbD 1 then
+              none
+            else if True ∧ x✝ < x✝² >>> x✝¹ then none else some (x✝ - x✝² >>> x✝¹))
+    [Meta.check] [0.001044] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+          else
+            if x✝¹ ≥ ↑32 then none
+            else
+              if
+                  True ∧
+                    (BitVec.signExtend (32 + 1) (x✝ <<< x✝¹) - BitVec.signExtend (32 + 1) x✝²).msb ≠
+                      (BitVec.signExtend (32 + 1) (x✝ <<< x✝¹) - BitVec.signExtend (32 + 1) x✝²).getMsbD 1 then
+                none
+              else
+                if True ∧ x✝ <<< x✝¹ < x✝² then none else if x✝¹ ≥ ↑32 then none else some ((x✝ <<< x✝¹ - x✝²) >>> x✝¹))
+          (if x✝¹ ≥ ↑32 then none
+          else
+            if
+                True ∧
+                  (BitVec.signExtend (32 + 1) x✝ - BitVec.signExtend (32 + 1) (x✝² >>> x✝¹)).msb ≠
+                    (BitVec.signExtend (32 + 1) x✝ - BitVec.signExtend (32 + 1) (x✝² >>> x✝¹)).getMsbD 1 then
+              none
+            else if True ∧ x✝ < x✝² >>> x✝¹ then none else some (x✝ - x✝² >>> x✝¹))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+            else
+              if x✝¹ ≥ ↑32 then none
+              else
+                if
+                    True ∧
+                      (BitVec.signExtend (32 + 1) (x✝ <<< x✝¹) - BitVec.signExtend (32 + 1) x✝²).msb ≠
+                        (BitVec.signExtend (32 + 1) (x✝ <<< x✝¹) - BitVec.signExtend (32 + 1) x✝²).getMsbD 1 then
+                  none
+                else
+                  if True ∧ x✝ <<< x✝¹ < x✝² then none
+                  else if x✝¹ ≥ ↑32 then none else some ((x✝ <<< x✝¹ - x✝²) >>> x✝¹)) ⊑
+            if x✝¹ ≥ ↑32 then none
+            else
+              if
+                  True ∧
+                    (BitVec.signExtend (32 + 1) x✝ - BitVec.signExtend (32 + 1) (x✝² >>> x✝¹)).msb ≠
+                      (BitVec.signExtend (32 + 1) x✝ - BitVec.signExtend (32 + 1) (x✝² >>> x✝¹)).getMsbD 1 then
+                none
+              else if True ∧ x✝ < x✝² >>> x✝¹ then none else some (x✝ - x✝² >>> x✝¹)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if (x✝ <<< x✝¹ >>> x✝¹ == x✝) = true then none
+            else
+              if (!32#32 >ᵤ x✝¹) = true then none
+              else
+                if
+                    (!(BitVec.signExtend 33 (x✝ <<< x✝¹) + (~~~BitVec.signExtend 33 x✝² + 1#33)).getLsbD 32 ==
+                          (BitVec.signExtend 33 (x✝ <<< x✝¹) + (~~~BitVec.signExtend 33 x✝² + 1#33)).getMsbD 1) =
+                      true then
+                  none
+                else
+                  if (x✝² >ᵤ x✝ <<< x✝¹) = true then none
+                  else if (!32#32 >ᵤ x✝¹) = true then none else some ((x✝ <<< x✝¹ + (~~~x✝² + 1#32)) >>> x✝¹)) ⊑
+            if (!32#32 >ᵤ x✝¹) = true then none
+            else
+              if
+                  (!(BitVec.signExtend 33 x✝ + (~~~BitVec.signExtend 33 (x✝² >>> x✝¹) + 1#33)).getLsbD 32 ==
+                        (BitVec.signExtend 33 x✝ + (~~~BitVec.signExtend 33 (x✝² >>> x✝¹) + 1#33)).getMsbD 1) =
+                    true then
+                none
+              else if (x✝² >>> x✝¹ >ᵤ x✝) = true then none else some (x✝ + (~~~(x✝² >>> x✝¹) + 1#32))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:119:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:112:8: error: (kernel) declaration has metavariables 'shl_sub_lshr_reverse_thm'
+[bv] [0.104547] Normalizing goal
+  [Meta.synthInstance] [0.001817] ✅️ Decidable
+        ((if True ∧ x✝¹ <<< x✝² >>> x✝² = x✝¹ then none
+          else
+            if x✝² ≥ ↑32 then none
+            else
+              if
+                  True ∧
+                    (BitVec.signExtend (32 + 1) x✝ - BitVec.signExtend (32 + 1) (x✝¹ <<< x✝²)).msb ≠
+                      (BitVec.signExtend (32 + 1) x✝ - BitVec.signExtend (32 + 1) (x✝¹ <<< x✝²)).getMsbD 1 then
+                none
+              else
+                if True ∧ x✝ < x✝¹ <<< x✝² then none
+                else if x✝² ≥ ↑32 then none else some ((x✝ - x✝¹ <<< x✝²) >>> x✝²)) ⊑
+          if x✝² ≥ ↑32 then none
+          else
+            if
+                True ∧
+                  (BitVec.signExtend (32 + 1) (x✝ >>> x✝²) - BitVec.signExtend (32 + 1) x✝¹).msb ≠
+                    (BitVec.signExtend (32 + 1) (x✝ >>> x✝²) - BitVec.signExtend (32 + 1) x✝¹).getMsbD 1 then
+              none
+            else if True ∧ x✝ >>> x✝² < x✝¹ then none else some (x✝ >>> x✝² - x✝¹))
+    [Meta.check] [0.001137] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if True ∧ x✝¹ <<< x✝² >>> x✝² = x✝¹ then none
+          else
+            if x✝² ≥ ↑32 then none
+            else
+              if
+                  True ∧
+                    (BitVec.signExtend (32 + 1) x✝ - BitVec.signExtend (32 + 1) (x✝¹ <<< x✝²)).msb ≠
+                      (BitVec.signExtend (32 + 1) x✝ - BitVec.signExtend (32 + 1) (x✝¹ <<< x✝²)).getMsbD 1 then
+                none
+              else
+                if True ∧ x✝ < x✝¹ <<< x✝² then none else if x✝² ≥ ↑32 then none else some ((x✝ - x✝¹ <<< x✝²) >>> x✝²))
+          (if x✝² ≥ ↑32 then none
+          else
+            if
+                True ∧
+                  (BitVec.signExtend (32 + 1) (x✝ >>> x✝²) - BitVec.signExtend (32 + 1) x✝¹).msb ≠
+                    (BitVec.signExtend (32 + 1) (x✝ >>> x✝²) - BitVec.signExtend (32 + 1) x✝¹).getMsbD 1 then
+              none
+            else if True ∧ x✝ >>> x✝² < x✝¹ then none else some (x✝ >>> x✝² - x✝¹))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if True ∧ x✝¹ <<< x✝² >>> x✝² = x✝¹ then none
+            else
+              if x✝² ≥ ↑32 then none
+              else
+                if
+                    True ∧
+                      (BitVec.signExtend (32 + 1) x✝ - BitVec.signExtend (32 + 1) (x✝¹ <<< x✝²)).msb ≠
+                        (BitVec.signExtend (32 + 1) x✝ - BitVec.signExtend (32 + 1) (x✝¹ <<< x✝²)).getMsbD 1 then
+                  none
+                else
+                  if True ∧ x✝ < x✝¹ <<< x✝² then none
+                  else if x✝² ≥ ↑32 then none else some ((x✝ - x✝¹ <<< x✝²) >>> x✝²)) ⊑
+            if x✝² ≥ ↑32 then none
+            else
+              if
+                  True ∧
+                    (BitVec.signExtend (32 + 1) (x✝ >>> x✝²) - BitVec.signExtend (32 + 1) x✝¹).msb ≠
+                      (BitVec.signExtend (32 + 1) (x✝ >>> x✝²) - BitVec.signExtend (32 + 1) x✝¹).getMsbD 1 then
+                none
+              else if True ∧ x✝ >>> x✝² < x✝¹ then none else some (x✝ >>> x✝² - x✝¹)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if (x✝¹ <<< x✝² >>> x✝² == x✝¹) = true then none
+            else
+              if (!32#32 >ᵤ x✝²) = true then none
+              else
+                if
+                    (!(BitVec.signExtend 33 x✝ + (~~~BitVec.signExtend 33 (x✝¹ <<< x✝²) + 1#33)).getLsbD 32 ==
+                          (BitVec.signExtend 33 x✝ + (~~~BitVec.signExtend 33 (x✝¹ <<< x✝²) + 1#33)).getMsbD 1) =
+                      true then
+                  none
+                else
+                  if (x✝¹ <<< x✝² >ᵤ x✝) = true then none
+                  else if (!32#32 >ᵤ x✝²) = true then none else some ((x✝ + (~~~(x✝¹ <<< x✝²) + 1#32)) >>> x✝²)) ⊑
+            if (!32#32 >ᵤ x✝²) = true then none
+            else
+              if
+                  (!(BitVec.signExtend 33 (x✝ >>> x✝²) + (~~~BitVec.signExtend 33 x✝¹ + 1#33)).getLsbD 32 ==
+                        (BitVec.signExtend 33 (x✝ >>> x✝²) + (~~~BitVec.signExtend 33 x✝¹ + 1#33)).getMsbD 1) =
+                    true then
+                none
+              else if (x✝¹ >ᵤ x✝ >>> x✝²) = true then none else some (x✝ >>> x✝² + (~~~x✝¹ + 1#32))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:130:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:123:8: error: (kernel) declaration has metavariables 'shl_sub_lshr_reverse_no_nsw_thm'
+[bv] [0.082944] Normalizing goal
+  [Meta.synthInstance] [0.002331] ✅️ Decidable
+        ((if True ∧ x✝¹ <<< x✝² >>> x✝² = x✝¹ then none
+          else
+            if x✝² ≥ ↑32 then none
+            else
+              if True ∧ x✝ < x✝¹ <<< x✝² then none else if x✝² ≥ ↑32 then none else some ((x✝ - x✝¹ <<< x✝²) >>> x✝²)) ⊑
+          if x✝² ≥ ↑32 then none else if True ∧ x✝ >>> x✝² < x✝¹ then none else some (x✝ >>> x✝² - x✝¹))
+    [Meta.check] [0.001257] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if True ∧ x✝¹ <<< x✝² >>> x✝² = x✝¹ then none
+          else
+            if x✝² ≥ ↑32 then none
+            else
+              if True ∧ x✝ < x✝¹ <<< x✝² then none else if x✝² ≥ ↑32 then none else some ((x✝ - x✝¹ <<< x✝²) >>> x✝²))
+          (if x✝² ≥ ↑32 then none else if True ∧ x✝ >>> x✝² < x✝¹ then none else some (x✝ >>> x✝² - x✝¹))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if True ∧ x✝¹ <<< x✝² >>> x✝² = x✝¹ then none
+            else
+              if x✝² ≥ ↑32 then none
+              else
+                if True ∧ x✝ < x✝¹ <<< x✝² then none
+                else if x✝² ≥ ↑32 then none else some ((x✝ - x✝¹ <<< x✝²) >>> x✝²)) ⊑
+            if x✝² ≥ ↑32 then none else if True ∧ x✝ >>> x✝² < x✝¹ then none else some (x✝ >>> x✝² - x✝¹)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if (x✝¹ <<< x✝² >>> x✝² == x✝¹) = true then none
+            else
+              if (!32#32 >ᵤ x✝²) = true then none
+              else
+                if (x✝¹ <<< x✝² >ᵤ x✝) = true then none
+                else if (!32#32 >ᵤ x✝²) = true then none else some ((x✝ + (~~~(x✝¹ <<< x✝²) + 1#32)) >>> x✝²)) ⊑
+            if (!32#32 >ᵤ x✝²) = true then none
+            else if (x✝¹ >ᵤ x✝ >>> x✝²) = true then none else some (x✝ >>> x✝² + (~~~x✝¹ + 1#32))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:141:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:134:8: error: (kernel) declaration has metavariables 'shl_sub_lshr_reverse_nsw_on_op1_thm'
+[bv] [0.086421] Normalizing goal
+  [Meta.synthInstance] [0.002312] ✅️ Decidable
+        ((if True ∧ (x✝¹ <<< x✝²).sshiftRight x✝².toNat = x✝¹ then none
+          else
+            if True ∧ x✝¹ <<< x✝² >>> x✝² = x✝¹ then none
+            else
+              if x✝² ≥ ↑32 then none
+              else
+                if True ∧ x✝ < x✝¹ <<< x✝² then none
+                else if x✝² ≥ ↑32 then none else some ((x✝ - x✝¹ <<< x✝²) >>> x✝²)) ⊑
+          if x✝² ≥ ↑32 then none else if True ∧ x✝ >>> x✝² < x✝¹ then none else some (x✝ >>> x✝² - x✝¹))
+    [Meta.check] [0.001313] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if True ∧ (x✝¹ <<< x✝²).sshiftRight x✝².toNat = x✝¹ then none
+          else
+            if True ∧ x✝¹ <<< x✝² >>> x✝² = x✝¹ then none
+            else
+              if x✝² ≥ ↑32 then none
+              else
+                if True ∧ x✝ < x✝¹ <<< x✝² then none else if x✝² ≥ ↑32 then none else some ((x✝ - x✝¹ <<< x✝²) >>> x✝²))
+          (if x✝² ≥ ↑32 then none else if True ∧ x✝ >>> x✝² < x✝¹ then none else some (x✝ >>> x✝² - x✝¹))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if True ∧ (x✝¹ <<< x✝²).sshiftRight x✝².toNat = x✝¹ then none
+            else
+              if True ∧ x✝¹ <<< x✝² >>> x✝² = x✝¹ then none
+              else
+                if x✝² ≥ ↑32 then none
+                else
+                  if True ∧ x✝ < x✝¹ <<< x✝² then none
+                  else if x✝² ≥ ↑32 then none else some ((x✝ - x✝¹ <<< x✝²) >>> x✝²)) ⊑
+            if x✝² ≥ ↑32 then none else if True ∧ x✝ >>> x✝² < x✝¹ then none else some (x✝ >>> x✝² - x✝¹)
+      ⊢ False
+  [Meta.isDefEq] [0.001087] ❌️ ?a == ?a =?= (x✝¹ <<< x✝²).sshiftRight x✝².toNat == x✝¹
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if ((x✝¹ <<< x✝²).sshiftRight x✝².toNat == x✝¹) = true then none
+            else
+              if (x✝¹ <<< x✝² >>> x✝² == x✝¹) = true then none
+              else
+                if (!32#32 >ᵤ x✝²) = true then none
+                else
+                  if (x✝¹ <<< x✝² >ᵤ x✝) = true then none
+                  else if (!32#32 >ᵤ x✝²) = true then none else some ((x✝ + (~~~(x✝¹ <<< x✝²) + 1#32)) >>> x✝²)) ⊑
+            if (!32#32 >ᵤ x✝²) = true then none
+            else if (x✝¹ >ᵤ x✝ >>> x✝²) = true then none else some (x✝ >>> x✝² + (~~~x✝¹ + 1#32))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:151:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:151:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:145:8: error: (kernel) declaration has metavariables 'shl_or_lshr_thm'
+[bv] [0.034103] Normalizing goal
+  [Meta.synthInstance] [0.001780] ✅️ Decidable
+        ((if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+          else if x✝¹ ≥ ↑32 then none else if x✝¹ ≥ ↑32 then none else some ((x✝ <<< x✝¹ ||| x✝²) >>> x✝¹)) ⊑
+          if x✝¹ ≥ ↑32 then none else some (x✝² >>> x✝¹ ||| x✝))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+            else if x✝¹ ≥ ↑32 then none else if x✝¹ ≥ ↑32 then none else some ((x✝ <<< x✝¹ ||| x✝²) >>> x✝¹)) ⊑
+            if x✝¹ ≥ ↑32 then none else some (x✝² >>> x✝¹ ||| x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if (x✝ <<< x✝¹ >>> x✝¹ == x✝) = true then none
+            else
+              if (!32#32 >ᵤ x✝¹) = true then none
+              else if (!32#32 >ᵤ x✝¹) = true then none else some ((x✝ <<< x✝¹ ||| x✝²) >>> x✝¹)) ⊑
+            if (!32#32 >ᵤ x✝¹) = true then none else some (x✝² >>> x✝¹ ||| x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:161:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:161:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:155:8: error: (kernel) declaration has metavariables 'shl_or_disjoint_lshr_thm'
+[bv] [0.029382] Normalizing goal
+  [Meta.synthInstance] [0.001082] ✅️ Decidable
+        ((if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+          else if x✝¹ ≥ ↑32 then none else if x✝¹ ≥ ↑32 then none else some ((x✝ <<< x✝¹ ||| x✝²) >>> x✝¹)) ⊑
+          if x✝¹ ≥ ↑32 then none else some (x✝² >>> x✝¹ ||| x✝))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+            else if x✝¹ ≥ ↑32 then none else if x✝¹ ≥ ↑32 then none else some ((x✝ <<< x✝¹ ||| x✝²) >>> x✝¹)) ⊑
+            if x✝¹ ≥ ↑32 then none else some (x✝² >>> x✝¹ ||| x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if (x✝ <<< x✝¹ >>> x✝¹ == x✝) = true then none
+            else
+              if (!32#32 >ᵤ x✝¹) = true then none
+              else if (!32#32 >ᵤ x✝¹) = true then none else some ((x✝ <<< x✝¹ ||| x✝²) >>> x✝¹)) ⊑
+            if (!32#32 >ᵤ x✝¹) = true then none else some (x✝² >>> x✝¹ ||| x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:171:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:165:8: error: (kernel) declaration has metavariables 'shl_or_lshr_comm_thm'
+[bv] [0.029992] Normalizing goal
+  [Meta.synthInstance] [0.001215] ✅️ Decidable
+        ((if True ∧ x✝¹ <<< x✝² >>> x✝² = x✝¹ then none
+          else if x✝² ≥ ↑32 then none else if x✝² ≥ ↑32 then none else some ((x✝ ||| x✝¹ <<< x✝²) >>> x✝²)) ⊑
+          if x✝² ≥ ↑32 then none else some (x✝ >>> x✝² ||| x✝¹))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if True ∧ x✝¹ <<< x✝² >>> x✝² = x✝¹ then none
+            else if x✝² ≥ ↑32 then none else if x✝² ≥ ↑32 then none else some ((x✝ ||| x✝¹ <<< x✝²) >>> x✝²)) ⊑
+            if x✝² ≥ ↑32 then none else some (x✝ >>> x✝² ||| x✝¹)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if (x✝¹ <<< x✝² >>> x✝² == x✝¹) = true then none
+            else
+              if (!32#32 >ᵤ x✝²) = true then none
+              else if (!32#32 >ᵤ x✝²) = true then none else some ((x✝ ||| x✝¹ <<< x✝²) >>> x✝²)) ⊑
+            if (!32#32 >ᵤ x✝²) = true then none else some (x✝ >>> x✝² ||| x✝¹)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:181:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:175:8: error: (kernel) declaration has metavariables 'shl_or_disjoint_lshr_comm_thm'
+[bv] [0.030265] Normalizing goal
+  [Meta.synthInstance] [0.001259] ✅️ Decidable
+        ((if True ∧ x✝¹ <<< x✝² >>> x✝² = x✝¹ then none
+          else if x✝² ≥ ↑32 then none else if x✝² ≥ ↑32 then none else some ((x✝ ||| x✝¹ <<< x✝²) >>> x✝²)) ⊑
+          if x✝² ≥ ↑32 then none else some (x✝ >>> x✝² ||| x✝¹))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if True ∧ x✝¹ <<< x✝² >>> x✝² = x✝¹ then none
+            else if x✝² ≥ ↑32 then none else if x✝² ≥ ↑32 then none else some ((x✝ ||| x✝¹ <<< x✝²) >>> x✝²)) ⊑
+            if x✝² ≥ ↑32 then none else some (x✝ >>> x✝² ||| x✝¹)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if (x✝¹ <<< x✝² >>> x✝² == x✝¹) = true then none
+            else
+              if (!32#32 >ᵤ x✝²) = true then none
+              else if (!32#32 >ᵤ x✝²) = true then none else some ((x✝ ||| x✝¹ <<< x✝²) >>> x✝²)) ⊑
+            if (!32#32 >ᵤ x✝²) = true then none else some (x✝ >>> x✝² ||| x✝¹)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:191:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:191:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:185:8: error: (kernel) declaration has metavariables 'shl_xor_lshr_thm'
+[bv] [0.029007] Normalizing goal
+  [Meta.synthInstance] [0.001041] ✅️ Decidable
+        ((if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+          else if x✝¹ ≥ ↑32 then none else if x✝¹ ≥ ↑32 then none else some ((x✝ <<< x✝¹ ^^^ x✝²) >>> x✝¹)) ⊑
+          if x✝¹ ≥ ↑32 then none else some (x✝² >>> x✝¹ ^^^ x✝))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+            else if x✝¹ ≥ ↑32 then none else if x✝¹ ≥ ↑32 then none else some ((x✝ <<< x✝¹ ^^^ x✝²) >>> x✝¹)) ⊑
+            if x✝¹ ≥ ↑32 then none else some (x✝² >>> x✝¹ ^^^ x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if (x✝ <<< x✝¹ >>> x✝¹ == x✝) = true then none
+            else
+              if (!32#32 >ᵤ x✝¹) = true then none
+              else if (!32#32 >ᵤ x✝¹) = true then none else some ((x✝ <<< x✝¹ ^^^ x✝²) >>> x✝¹)) ⊑
+            if (!32#32 >ᵤ x✝¹) = true then none else some (x✝² >>> x✝¹ ^^^ x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:201:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:195:8: error: (kernel) declaration has metavariables 'shl_xor_lshr_comm_thm'
+[bv] [0.029783] Normalizing goal
+  [Meta.synthInstance] [0.001216] ✅️ Decidable
+        ((if True ∧ x✝¹ <<< x✝² >>> x✝² = x✝¹ then none
+          else if x✝² ≥ ↑32 then none else if x✝² ≥ ↑32 then none else some ((x✝ ^^^ x✝¹ <<< x✝²) >>> x✝²)) ⊑
+          if x✝² ≥ ↑32 then none else some (x✝ >>> x✝² ^^^ x✝¹))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if True ∧ x✝¹ <<< x✝² >>> x✝² = x✝¹ then none
+            else if x✝² ≥ ↑32 then none else if x✝² ≥ ↑32 then none else some ((x✝ ^^^ x✝¹ <<< x✝²) >>> x✝²)) ⊑
+            if x✝² ≥ ↑32 then none else some (x✝ >>> x✝² ^^^ x✝¹)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if (x✝¹ <<< x✝² >>> x✝² == x✝¹) = true then none
+            else
+              if (!32#32 >ᵤ x✝²) = true then none
+              else if (!32#32 >ᵤ x✝²) = true then none else some ((x✝ ^^^ x✝¹ <<< x✝²) >>> x✝²)) ⊑
+            if (!32#32 >ᵤ x✝²) = true then none else some (x✝ >>> x✝² ^^^ x✝¹)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:211:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:211:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:205:8: error: (kernel) declaration has metavariables 'shl_and_lshr_thm'
+[bv] [0.033063] Normalizing goal
+  [Meta.synthInstance] [0.001755] ✅️ Decidable
+        ((if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+          else if x✝¹ ≥ ↑32 then none else if x✝¹ ≥ ↑32 then none else some ((x✝ <<< x✝¹ &&& x✝²) >>> x✝¹)) ⊑
+          if x✝¹ ≥ ↑32 then none else some (x✝² >>> x✝¹ &&& x✝))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+            else if x✝¹ ≥ ↑32 then none else if x✝¹ ≥ ↑32 then none else some ((x✝ <<< x✝¹ &&& x✝²) >>> x✝¹)) ⊑
+            if x✝¹ ≥ ↑32 then none else some (x✝² >>> x✝¹ &&& x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if (x✝ <<< x✝¹ >>> x✝¹ == x✝) = true then none
+            else
+              if (!32#32 >ᵤ x✝¹) = true then none
+              else if (!32#32 >ᵤ x✝¹) = true then none else some ((x✝ <<< x✝¹ &&& x✝²) >>> x✝¹)) ⊑
+            if (!32#32 >ᵤ x✝¹) = true then none else some (x✝² >>> x✝¹ &&& x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:221:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:215:8: error: (kernel) declaration has metavariables 'shl_and_lshr_comm_thm'
+[bv] [0.029843] Normalizing goal
+  [Meta.synthInstance] [0.001184] ✅️ Decidable
+        ((if True ∧ x✝¹ <<< x✝² >>> x✝² = x✝¹ then none
+          else if x✝² ≥ ↑32 then none else if x✝² ≥ ↑32 then none else some ((x✝ &&& x✝¹ <<< x✝²) >>> x✝²)) ⊑
+          if x✝² ≥ ↑32 then none else some (x✝ >>> x✝² &&& x✝¹))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if True ∧ x✝¹ <<< x✝² >>> x✝² = x✝¹ then none
+            else if x✝² ≥ ↑32 then none else if x✝² ≥ ↑32 then none else some ((x✝ &&& x✝¹ <<< x✝²) >>> x✝²)) ⊑
+            if x✝² ≥ ↑32 then none else some (x✝ >>> x✝² &&& x✝¹)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if (x✝¹ <<< x✝² >>> x✝² == x✝¹) = true then none
+            else
+              if (!32#32 >ᵤ x✝²) = true then none
+              else if (!32#32 >ᵤ x✝²) = true then none else some ((x✝ &&& x✝¹ <<< x✝²) >>> x✝²)) ⊑
+            if (!32#32 >ᵤ x✝²) = true then none else some (x✝ >>> x✝² &&& x✝¹)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:231:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:231:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:225:8: error: (kernel) declaration has metavariables 'shl_lshr_and_exact_thm'
+[bv] [0.029015] Normalizing goal
+  [Meta.synthInstance] [0.001023] ✅️ Decidable
+        ((if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+          else if x✝¹ ≥ ↑32 then none else if x✝¹ ≥ ↑32 then none else some ((x✝ <<< x✝¹ &&& x✝²) >>> x✝¹)) ⊑
+          if x✝¹ ≥ ↑32 then none else some (x✝² >>> x✝¹ &&& x✝))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+            else if x✝¹ ≥ ↑32 then none else if x✝¹ ≥ ↑32 then none else some ((x✝ <<< x✝¹ &&& x✝²) >>> x✝¹)) ⊑
+            if x✝¹ ≥ ↑32 then none else some (x✝² >>> x✝¹ &&& x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if (x✝ <<< x✝¹ >>> x✝¹ == x✝) = true then none
+            else
+              if (!32#32 >ᵤ x✝¹) = true then none
+              else if (!32#32 >ᵤ x✝¹) = true then none else some ((x✝ <<< x✝¹ &&& x✝²) >>> x✝¹)) ⊑
+            if (!32#32 >ᵤ x✝¹) = true then none else some (x✝² >>> x✝¹ &&& x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:242:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:235:8: error: (kernel) declaration has metavariables 'mul_splat_fold_no_nuw_thm'
+[bv] [0.042203] Normalizing goal
+  [Meta.synthInstance] [0.001626] ✅️ Decidable
+        ((if
+              True ∧
+                (BitVec.signExtend (2 * 32) x✝ * BitVec.signExtend (2 * 32) 65537#32 <
+                    BitVec.signExtend (2 * 32) (BitVec.twoPow 32 (32 - 1)) ∨
+                  BitVec.signExtend (2 * 32) x✝ * BitVec.signExtend (2 * 32) 65537#32 ≥
+                    BitVec.twoPow (2 * 32) (32 - 1)) then
+            none
+          else if 16#32 ≥ ↑32 then none else some ((x✝ * 65537#32) >>> 16#32)) ⊑
+          if 16#32 ≥ ↑32 then none
+          else
+            if True ∧ x✝.msb = (x✝ >>> 16#32).msb ∧ (x✝ + x✝ >>> 16#32).msb ≠ x✝.msb then none
+            else some (x✝ + x✝ >>> 16#32))
+    [Meta.check] [0.001006] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if
+              True ∧
+                (BitVec.signExtend (2 * 32) x✝ * BitVec.signExtend (2 * 32) 65537#32 <
+                    BitVec.signExtend (2 * 32) (BitVec.twoPow 32 (32 - 1)) ∨
+                  BitVec.signExtend (2 * 32) x✝ * BitVec.signExtend (2 * 32) 65537#32 ≥
+                    BitVec.twoPow (2 * 32) (32 - 1)) then
+            none
+          else if 16#32 ≥ ↑32 then none else some ((x✝ * 65537#32) >>> 16#32))
+          (if 16#32 ≥ ↑32 then none
+          else
+            if True ∧ x✝.msb = (x✝ >>> 16#32).msb ∧ (x✝ + x✝ >>> 16#32).msb ≠ x✝.msb then none
+            else some (x✝ + x✝ >>> 16#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if
+                True ∧
+                  (BitVec.signExtend (2 * 32) x✝ * BitVec.signExtend (2 * 32) 65537#32 <
+                      BitVec.signExtend (2 * 32) (BitVec.twoPow 32 (32 - 1)) ∨
+                    BitVec.signExtend (2 * 32) x✝ * BitVec.signExtend (2 * 32) 65537#32 ≥
+                      BitVec.twoPow (2 * 32) (32 - 1)) then
+              none
+            else if 16#32 ≥ ↑32 then none else some ((x✝ * 65537#32) >>> 16#32)) ⊑
+            if 16#32 ≥ ↑32 then none
+            else
+              if True ∧ x✝.msb = (x✝ >>> 16#32).msb ∧ (x✝ + x✝ >>> 16#32).msb ≠ x✝.msb then none
+              else some (x✝ + x✝ >>> 16#32)
+      ⊢ False
+  [Meta.isDefEq] [0.001682] ✅️ ?h₁ =?= Eq.trans
+        (congrArg (And True)
+          (Eq.trans
+            (Eq.trans
+              (congr
+                (congrArg Or
+                  (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult (BitVec.signExtend 64 x✝ * 65537#64)
+                    (BitVec.signExtend 64 (BitVec.twoPow 32 31))))
+                (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+                  (Eq.trans
+                    (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 64 31)
+                      (BitVec.signExtend 64 x✝ * 65537#64))
+                    (Eq.trans
+                      (Eq.trans
+                        (congrArg Not
+                          (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult (BitVec.signExtend 64 x✝ * 65537#64)
+                            (BitVec.twoPow 64 31)))
+                        (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                          (BitVec.twoPow 64 31 >ᵤ BitVec.signExtend 64 x✝ * 65537#64) true))
+                      (congrArg (fun x => (!x) = true)
+                        (beq_true (BitVec.twoPow 64 31 >ᵤ BitVec.signExtend 64 x✝ * 65537#64)))))))
+              (Std.Tactic.BVDecide.Normalize.Bool.or_to_or
+                (BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ BitVec.signExtend 64 x✝ * 65537#64)
+                !BitVec.twoPow 64 31 >ᵤ BitVec.signExtend 64 x✝ * 65537#64))
+            (congrArg (fun x => x = true)
+              (Eq.trans
+                (Std.Tactic.BVDecide.Normalize.Bool.or_elim
+                  (BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ BitVec.signExtend 64 x✝ * 65537#64)
+                  !BitVec.twoPow 64 31 >ᵤ BitVec.signExtend 64 x✝ * 65537#64)
+                (congrArg
+                  (fun x => !((!BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ BitVec.signExtend 64 x✝ * 65537#64) && x))
+                  (Bool.not_not (BitVec.twoPow 64 31 >ᵤ BitVec.signExtend 64 x✝ * 65537#64)))))))
+        (true_and
+          ((!((!BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ BitVec.signExtend 64 x✝ * 65537#64) &&
+                BitVec.twoPow 64 31 >ᵤ BitVec.signExtend 64 x✝ * 65537#64)) =
+            true))
+    [Meta.isDefEq.assign] [0.001679] ✅️ ?h₁ := Eq.trans
+          (congrArg (And True)
+            (Eq.trans
+              (Eq.trans
+                (congr
+                  (congrArg Or
+                    (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult (BitVec.signExtend 64 x✝ * 65537#64)
+                      (BitVec.signExtend 64 (BitVec.twoPow 32 31))))
+                  (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+                    (Eq.trans
+                      (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 64 31)
+                        (BitVec.signExtend 64 x✝ * 65537#64))
+                      (Eq.trans
+                        (Eq.trans
+                          (congrArg Not
+                            (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult (BitVec.signExtend 64 x✝ * 65537#64)
+                              (BitVec.twoPow 64 31)))
+                          (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                            (BitVec.twoPow 64 31 >ᵤ BitVec.signExtend 64 x✝ * 65537#64) true))
+                        (congrArg (fun x => (!x) = true)
+                          (beq_true (BitVec.twoPow 64 31 >ᵤ BitVec.signExtend 64 x✝ * 65537#64)))))))
+                (Std.Tactic.BVDecide.Normalize.Bool.or_to_or
+                  (BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ BitVec.signExtend 64 x✝ * 65537#64)
+                  !BitVec.twoPow 64 31 >ᵤ BitVec.signExtend 64 x✝ * 65537#64))
+              (congrArg (fun x => x = true)
+                (Eq.trans
+                  (Std.Tactic.BVDecide.Normalize.Bool.or_elim
+                    (BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ BitVec.signExtend 64 x✝ * 65537#64)
+                    !BitVec.twoPow 64 31 >ᵤ BitVec.signExtend 64 x✝ * 65537#64)
+                  (congrArg
+                    (fun x =>
+                      !((!BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ BitVec.signExtend 64 x✝ * 65537#64) && x))
+                    (Bool.not_not (BitVec.twoPow 64 31 >ᵤ BitVec.signExtend 64 x✝ * 65537#64)))))))
+          (true_and
+            ((!((!BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ BitVec.signExtend 64 x✝ * 65537#64) &&
+                  BitVec.twoPow 64 31 >ᵤ BitVec.signExtend 64 x✝ * 65537#64)) =
+              true))
+      [Meta.isDefEq.assign.checkTypes] [0.001651] ✅️ (?h₁ : (True ∧
+              (BitVec.signExtend (2 * 32) x✝ * BitVec.signExtend (2 * 32) 65537#32 <
+                  BitVec.signExtend (2 * 32) (BitVec.twoPow 32 (32 - 1)) ∨
+                BitVec.signExtend (2 * 32) x✝ * BitVec.signExtend (2 * 32) 65537#32 ≥
+                  BitVec.twoPow (2 * 32) (32 - 1))) =
+            ((!((!BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ BitVec.signExtend 64 x✝ * 65537#64) &&
+                  BitVec.twoPow 64 31 >ᵤ BitVec.signExtend 64 x✝ * 65537#64)) =
+              true)) := (Eq.trans
+            (congrArg (And True)
+              (Eq.trans
+                (Eq.trans
+                  (congr
+                    (congrArg Or
+                      (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult (BitVec.signExtend 64 x✝ * 65537#64)
+                        (BitVec.signExtend 64 (BitVec.twoPow 32 31))))
+                    (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+                      (Eq.trans
+                        (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 64 31)
+                          (BitVec.signExtend 64 x✝ * 65537#64))
+                        (Eq.trans
+                          (Eq.trans
+                            (congrArg Not
+                              (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult (BitVec.signExtend 64 x✝ * 65537#64)
+                                (BitVec.twoPow 64 31)))
+                            (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                              (BitVec.twoPow 64 31 >ᵤ BitVec.signExtend 64 x✝ * 65537#64) true))
+                          (congrArg (fun x => (!x) = true)
+                            (beq_true (BitVec.twoPow 64 31 >ᵤ BitVec.signExtend 64 x✝ * 65537#64)))))))
+                  (Std.Tactic.BVDecide.Normalize.Bool.or_to_or
+                    (BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ BitVec.signExtend 64 x✝ * 65537#64)
+                    !BitVec.twoPow 64 31 >ᵤ BitVec.signExtend 64 x✝ * 65537#64))
+                (congrArg (fun x => x = true)
+                  (Eq.trans
+                    (Std.Tactic.BVDecide.Normalize.Bool.or_elim
+                      (BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ BitVec.signExtend 64 x✝ * 65537#64)
+                      !BitVec.twoPow 64 31 >ᵤ BitVec.signExtend 64 x✝ * 65537#64)
+                    (congrArg
+                      (fun x =>
+                        !((!BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ BitVec.signExtend 64 x✝ * 65537#64) && x))
+                      (Bool.not_not (BitVec.twoPow 64 31 >ᵤ BitVec.signExtend 64 x✝ * 65537#64)))))))
+            (true_and
+              ((!((!BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ BitVec.signExtend 64 x✝ * 65537#64) &&
+                    BitVec.twoPow 64 31 >ᵤ BitVec.signExtend 64 x✝ * 65537#64)) =
+                true)) : (True ∧
+              (BitVec.signExtend 64 x✝ * 65537#64 < BitVec.signExtend 64 (BitVec.twoPow 32 31) ∨
+                BitVec.signExtend 64 x✝ * 65537#64 ≥ BitVec.twoPow 64 31)) =
+            ((!((!BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ BitVec.signExtend 64 x✝ * 65537#64) &&
+                  BitVec.twoPow 64 31 >ᵤ BitVec.signExtend 64 x✝ * 65537#64)) =
+              true))
+        [Meta.isDefEq] [0.001648] ✅️ (True ∧
+                (BitVec.signExtend (2 * 32) x✝ * BitVec.signExtend (2 * 32) 65537#32 <
+                    BitVec.signExtend (2 * 32) (BitVec.twoPow 32 (32 - 1)) ∨
+                  BitVec.signExtend (2 * 32) x✝ * BitVec.signExtend (2 * 32) 65537#32 ≥
+                    BitVec.twoPow (2 * 32) (32 - 1))) =
+              ((!((!BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ BitVec.signExtend 64 x✝ * 65537#64) &&
+                    BitVec.twoPow 64 31 >ᵤ BitVec.signExtend 64 x✝ * 65537#64)) =
+                true) =?= (True ∧
+                (BitVec.signExtend 64 x✝ * 65537#64 < BitVec.signExtend 64 (BitVec.twoPow 32 31) ∨
+                  BitVec.signExtend 64 x✝ * 65537#64 ≥ BitVec.twoPow 64 31)) =
+              ((!((!BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ BitVec.signExtend 64 x✝ * 65537#64) &&
+                    BitVec.twoPow 64 31 >ᵤ BitVec.signExtend 64 x✝ * 65537#64)) =
+                true)
+          [Meta.isDefEq] [0.001629] ✅️ True ∧
+                (BitVec.signExtend (2 * 32) x✝ * BitVec.signExtend (2 * 32) 65537#32 <
+                    BitVec.signExtend (2 * 32) (BitVec.twoPow 32 (32 - 1)) ∨
+                  BitVec.signExtend (2 * 32) x✝ * BitVec.signExtend (2 * 32) 65537#32 ≥
+                    BitVec.twoPow (2 * 32)
+                      (32 -
+                        1)) =?= True ∧
+                (BitVec.signExtend 64 x✝ * 65537#64 < BitVec.signExtend 64 (BitVec.twoPow 32 31) ∨
+                  BitVec.signExtend 64 x✝ * 65537#64 ≥ BitVec.twoPow 64 31)
+            [Meta.isDefEq] [0.001613] ✅️ BitVec.signExtend (2 * 32) x✝ * BitVec.signExtend (2 * 32) 65537#32 <
+                    BitVec.signExtend (2 * 32) (BitVec.twoPow 32 (32 - 1)) ∨
+                  BitVec.signExtend (2 * 32) x✝ * BitVec.signExtend (2 * 32) 65537#32 ≥
+                    BitVec.twoPow (2 * 32)
+                      (32 -
+                        1) =?= BitVec.signExtend 64 x✝ * 65537#64 < BitVec.signExtend 64 (BitVec.twoPow 32 31) ∨
+                  BitVec.signExtend 64 x✝ * 65537#64 ≥ BitVec.twoPow 64 31
+              [Meta.isDefEq] [0.001500] ✅️ BitVec.signExtend (2 * 32) x✝ * BitVec.signExtend (2 * 32) 65537#32 <
+                    BitVec.signExtend (2 * 32)
+                      (BitVec.twoPow 32
+                        (32 - 1)) =?= BitVec.signExtend 64 x✝ * 65537#64 < BitVec.signExtend 64 (BitVec.twoPow 32 31)
+                [Meta.isDefEq] [0.001479] ✅️ instLTBitVec.1
+                      (BitVec.signExtend (2 * 32) x✝ * BitVec.signExtend (2 * 32) 65537#32)
+                      (BitVec.signExtend (2 * 32)
+                        (BitVec.twoPow 32
+                          (32 -
+                            1))) =?= instLTBitVec.1 (BitVec.signExtend 64 x✝ * 65537#64)
+                      (BitVec.signExtend 64 (BitVec.twoPow 32 31))
+                  [Meta.isDefEq] [0.001428] ✅️ (BitVec.signExtend (2 * 32) x✝ *
+                            BitVec.signExtend (2 * 32) 65537#32).toNat <
+                        (BitVec.signExtend (2 * 32)
+                            (BitVec.twoPow 32
+                              (32 -
+                                1))).toNat =?= (BitVec.signExtend 64 x✝ * 65537#64).toNat <
+                        (BitVec.signExtend 64 (BitVec.twoPow 32 31)).toNat
+                    [Meta.isDefEq] [0.001414] ✅️ instLTNat.1
+                          (BitVec.signExtend (2 * 32) x✝ * BitVec.signExtend (2 * 32) 65537#32).toNat
+                          (BitVec.signExtend (2 * 32)
+                              (BitVec.twoPow 32
+                                (32 -
+                                  1))).toNat =?= instLTNat.1 (BitVec.signExtend 64 x✝ * 65537#64).toNat
+                          (BitVec.signExtend 64 (BitVec.twoPow 32 31)).toNat
+                      [Meta.isDefEq] [0.001383] ✅️ (BitVec.signExtend (2 * 32) x✝ *
+                                  BitVec.signExtend (2 * 32) 65537#32).toNat.lt
+                            (BitVec.signExtend (2 * 32)
+                                (BitVec.twoPow 32
+                                  (32 -
+                                    1))).toNat =?= (BitVec.signExtend 64 x✝ * 65537#64).toNat.lt
+                            (BitVec.signExtend 64 (BitVec.twoPow 32 31)).toNat
+                        [Meta.isDefEq.delta] [0.001346] ✅️ (BitVec.signExtend (2 * 32) x✝ *
+                                    BitVec.signExtend (2 * 32) 65537#32).toNat.lt
+                              (BitVec.signExtend (2 * 32)
+                                  (BitVec.twoPow 32
+                                    (32 -
+                                      1))).toNat =?= (BitVec.signExtend 64 x✝ * 65537#64).toNat.lt
+                              (BitVec.signExtend 64 (BitVec.twoPow 32 31)).toNat
+                          [Meta.isDefEq] [0.001249] ✅️ (BitVec.signExtend (2 * 32) x✝ *
+                                  BitVec.signExtend (2 * 32)
+                                    65537#32).toNat =?= (BitVec.signExtend 64 x✝ * 65537#64).toNat
+                            [Meta.isDefEq.delta] [0.001236] ✅️ (BitVec.signExtend (2 * 32) x✝ *
+                                    BitVec.signExtend (2 * 32)
+                                      65537#32).toNat =?= (BitVec.signExtend 64 x✝ * 65537#64).toNat
+                              [Meta.isDefEq] [0.001216] ✅️ BitVec.signExtend (2 * 32) x✝ *
+                                    BitVec.signExtend (2 * 32) 65537#32 =?= BitVec.signExtend 64 x✝ * 65537#64
+                                [Meta.isDefEq] [0.001190] ✅️ instHMul.1 (BitVec.signExtend (2 * 32) x✝)
+                                      (BitVec.signExtend (2 * 32)
+                                        65537#32) =?= instHMul.1 (BitVec.signExtend 64 x✝) 65537#64
+                                  [Meta.isDefEq] [0.001134] ✅️ Mul.mul (BitVec.signExtend (2 * 32) x✝)
+                                        (BitVec.signExtend (2 * 32)
+                                          65537#32) =?= Mul.mul (BitVec.signExtend 64 x✝) 65537#64
+                                    [Meta.isDefEq] [0.001115] ✅️ BitVec.instMul.1 (BitVec.signExtend (2 * 32) x✝)
+                                          (BitVec.signExtend (2 * 32)
+                                            65537#32) =?= BitVec.instMul.1 (BitVec.signExtend 64 x✝) 65537#64
+                                      [Meta.isDefEq] [0.001069] ✅️ (BitVec.signExtend (2 * 32) x✝).mul
+                                            (BitVec.signExtend (2 * 32)
+                                              65537#32) =?= (BitVec.signExtend 64 x✝).mul 65537#64
+                                        [Meta.isDefEq.delta] [0.001056] ✅️ (BitVec.signExtend (2 * 32) x✝).mul
+                                              (BitVec.signExtend (2 * 32)
+                                                65537#32) =?= (BitVec.signExtend 64 x✝).mul 65537#64
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if
+                (!((!BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ BitVec.signExtend 64 x✝ * 65537#64) &&
+                      BitVec.twoPow 64 31 >ᵤ BitVec.signExtend 64 x✝ * 65537#64)) =
+                  true then
+              none
+            else some ((x✝ * 65537#32) >>> 16)) ⊑
+            if (x✝.getLsbD 31 == (x✝ >>> 16).getLsbD 31 && !(x✝ + x✝ >>> 16).getLsbD 31 == x✝.getLsbD 31) = true then
+              none
+            else some (x✝ + x✝ >>> 16)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:252:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:246:8: error: (kernel) declaration has metavariables 'mul_splat_fold_too_narrow_thm'
+[bv] [0.023888] Normalizing goal
+  [Meta.synthInstance] [0.001252] ✅️ Decidable
+        ((if
+              True ∧
+                BitVec.zeroExtend (2 * 2) x✝ * BitVec.zeroExtend (2 * 2) 2#2 ≥ BitVec.twoPow (2 * 2) (2 - 1) <<< 1 then
+            none
+          else if 1#2 ≥ ↑2 then none else some ((x✝ * 2#2) >>> 1#2)) ⊑
+          some x✝)
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 2
+      x✝ : BitVec 2
+      a✝ :
+        ¬(if
+                True ∧
+                  BitVec.zeroExtend (2 * 2) x✝ * BitVec.zeroExtend (2 * 2) 2#2 ≥
+                    BitVec.twoPow (2 * 2) (2 - 1) <<< 1 then
+              none
+            else if 1#2 ≥ ↑2 then none else some ((x✝ * 2#2) >>> 1#2)) ⊑
+            some x✝
+      ⊢ False
+  [Meta.isDefEq] [0.001055] ✅️ ?h₁ =?= Eq.trans
+        (congrArg (And True)
+          (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+            (Eq.trans
+              (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 4 1 <<< 1) (BitVec.zeroExtend 4 x✝ * 2#4))
+              (Eq.trans
+                (Eq.trans
+                  (congrArg Not
+                    (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult (BitVec.zeroExtend 4 x✝ * 2#4)
+                      (BitVec.twoPow 4 1 <<< 1)))
+                  (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                    (BitVec.twoPow 4 1 <<< 1 >ᵤ BitVec.zeroExtend 4 x✝ * 2#4) true))
+                (congrArg (fun x => (!x) = true)
+                  (beq_true (BitVec.twoPow 4 1 <<< 1 >ᵤ BitVec.zeroExtend 4 x✝ * 2#4)))))))
+        (true_and ((!BitVec.twoPow 4 1 <<< 1 >ᵤ BitVec.zeroExtend 4 x✝ * 2#4) = true))
+    [Meta.isDefEq.assign] [0.001052] ✅️ ?h₁ := Eq.trans
+          (congrArg (And True)
+            (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+              (Eq.trans
+                (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 4 1 <<< 1) (BitVec.zeroExtend 4 x✝ * 2#4))
+                (Eq.trans
+                  (Eq.trans
+                    (congrArg Not
+                      (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult (BitVec.zeroExtend 4 x✝ * 2#4)
+                        (BitVec.twoPow 4 1 <<< 1)))
+                    (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                      (BitVec.twoPow 4 1 <<< 1 >ᵤ BitVec.zeroExtend 4 x✝ * 2#4) true))
+                  (congrArg (fun x => (!x) = true)
+                    (beq_true (BitVec.twoPow 4 1 <<< 1 >ᵤ BitVec.zeroExtend 4 x✝ * 2#4)))))))
+          (true_and ((!BitVec.twoPow 4 1 <<< 1 >ᵤ BitVec.zeroExtend 4 x✝ * 2#4) = true))
+      [Meta.isDefEq.assign.checkTypes] [0.001039] ✅️ (?h₁ : (True ∧
+              BitVec.zeroExtend (2 * 2) x✝ * BitVec.zeroExtend (2 * 2) 2#2 ≥ BitVec.twoPow (2 * 2) (2 - 1) <<< 1) =
+            ((!BitVec.twoPow 4 1 <<< 1 >ᵤ BitVec.zeroExtend 4 x✝ * 2#4) =
+              true)) := (Eq.trans
+            (congrArg (And True)
+              (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+                (Eq.trans
+                  (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 4 1 <<< 1) (BitVec.zeroExtend 4 x✝ * 2#4))
+                  (Eq.trans
+                    (Eq.trans
+                      (congrArg Not
+                        (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult (BitVec.zeroExtend 4 x✝ * 2#4)
+                          (BitVec.twoPow 4 1 <<< 1)))
+                      (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                        (BitVec.twoPow 4 1 <<< 1 >ᵤ BitVec.zeroExtend 4 x✝ * 2#4) true))
+                    (congrArg (fun x => (!x) = true)
+                      (beq_true (BitVec.twoPow 4 1 <<< 1 >ᵤ BitVec.zeroExtend 4 x✝ * 2#4)))))))
+            (true_and
+              ((!BitVec.twoPow 4 1 <<< 1 >ᵤ BitVec.zeroExtend 4 x✝ * 2#4) =
+                true)) : (True ∧ BitVec.zeroExtend 4 x✝ * 2#4 ≥ BitVec.twoPow 4 1 <<< 1) =
+            ((!BitVec.twoPow 4 1 <<< 1 >ᵤ BitVec.zeroExtend 4 x✝ * 2#4) = true))
+        [Meta.isDefEq] [0.001035] ✅️ (True ∧
+                BitVec.zeroExtend (2 * 2) x✝ * BitVec.zeroExtend (2 * 2) 2#2 ≥ BitVec.twoPow (2 * 2) (2 - 1) <<< 1) =
+              ((!BitVec.twoPow 4 1 <<< 1 >ᵤ BitVec.zeroExtend 4 x✝ * 2#4) =
+                true) =?= (True ∧ BitVec.zeroExtend 4 x✝ * 2#4 ≥ BitVec.twoPow 4 1 <<< 1) =
+              ((!BitVec.twoPow 4 1 <<< 1 >ᵤ BitVec.zeroExtend 4 x✝ * 2#4) = true)
+          [Meta.isDefEq] [0.001015] ✅️ True ∧
+                BitVec.zeroExtend (2 * 2) x✝ * BitVec.zeroExtend (2 * 2) 2#2 ≥
+                  BitVec.twoPow (2 * 2) (2 - 1) <<< 1 =?= True ∧ BitVec.zeroExtend 4 x✝ * 2#4 ≥ BitVec.twoPow 4 1 <<< 1
+            [Meta.isDefEq] [0.001004] ✅️ BitVec.zeroExtend (2 * 2) x✝ * BitVec.zeroExtend (2 * 2) 2#2 ≥
+                  BitVec.twoPow (2 * 2) (2 - 1) <<< 1 =?= BitVec.zeroExtend 4 x✝ * 2#4 ≥ BitVec.twoPow 4 1 <<< 1
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 2
+      x✝ : BitVec 2
+      a✝ :
+        ¬(if (!BitVec.twoPow 4 1 <<< 1 >ᵤ BitVec.zeroExtend 4 x✝ * 2#4) = true then none else some ((x✝ * 2#2) >>> 1)) ⊑
+            some x✝
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:262:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:256:8: error: (kernel) declaration has metavariables 'negative_and_odd_thm'
+[bv] [0.043925] Normalizing goal
+  [Meta.synthInstance] [0.002390] ✅️ Decidable
+        (((Option.map (fun div => x✝ - div * 2#32)
+                (if (2#32 == 0 || 32 != 1 && x✝ == BitVec.intMin 32 && 2#32 == -1) = true then none
+                else some (x✝.sdiv 2#32))).bind
+            fun x' => if 31#32 ≥ ↑32 then none else some (x' >>> 31#32)) ⊑
+          if 31#32 ≥ ↑32 then none else some (x✝ >>> 31#32 &&& x✝))
+    [Meta.check] [0.001465] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          ((Option.map (fun div => x✝ - div * 2#32)
+                (if (2#32 == 0 || 32 != 1 && x✝ == BitVec.intMin 32 && 2#32 == -1) = true then none
+                else some (x✝.sdiv 2#32))).bind
+            fun x' => if 31#32 ≥ ↑32 then none else some (x' >>> 31#32))
+          (if 31#32 ≥ ↑32 then none else some (x✝ >>> 31#32 &&& x✝))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬((Option.map (fun div => x✝ - div * 2#32)
+                  (if (2#32 == 0 || 32 != 1 && x✝ == BitVec.intMin 32 && 2#32 == -1) = true then none
+                  else some (x✝.sdiv 2#32))).bind
+              fun x' => if 31#32 ≥ ↑32 then none else some (x' >>> 31#32)) ⊑
+            if 31#32 ≥ ↑32 then none else some (x✝ >>> 31#32 &&& x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬((Option.map (fun div => x✝ + (~~~(div * 2#32) + 1#32))
+                  (some (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 2#32) + 1#32 else x✝ / 2#32))).bind
+              fun a => some (a >>> 31)) ⊑
+            some (x✝ >>> 31 &&& x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:272:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:266:8: error: (kernel) declaration has metavariables 'trunc_sandwich_thm'
+[bv] [0.013092] Normalizing goal
+  [Meta.synthInstance] [0.001188] ✅️ Decidable
+        ((if 28#32 ≥ ↑32 then none
+          else if 2#12 ≥ ↑12 then none else some (BitVec.truncate 12 (x✝ >>> 28#32) >>> 2#12)) ⊑
+          if 30#32 ≥ ↑32 then none else some (BitVec.truncate 12 (x✝ >>> 30#32)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if 28#32 ≥ ↑32 then none
+            else if 2#12 ≥ ↑12 then none else some (BitVec.truncate 12 (x✝ >>> 28#32) >>> 2#12)) ⊑
+            if 30#32 ≥ ↑32 then none else some (BitVec.truncate 12 (x✝ >>> 30#32))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ : ¬some (BitVec.zeroExtend 12 (x✝ >>> 28) >>> 2) ⊑ some (BitVec.zeroExtend 12 (x✝ >>> 30))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:282:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:276:8: error: (kernel) declaration has metavariables 'trunc_sandwich_min_shift1_thm'
+[bv] [0.013008] Normalizing goal
+  [Meta.synthInstance] [0.001167] ✅️ Decidable
+        ((if 20#32 ≥ ↑32 then none
+          else if 1#12 ≥ ↑12 then none else some (BitVec.truncate 12 (x✝ >>> 20#32) >>> 1#12)) ⊑
+          if 21#32 ≥ ↑32 then none else some (BitVec.truncate 12 (x✝ >>> 21#32)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if 20#32 ≥ ↑32 then none
+            else if 1#12 ≥ ↑12 then none else some (BitVec.truncate 12 (x✝ >>> 20#32) >>> 1#12)) ⊑
+            if 21#32 ≥ ↑32 then none else some (BitVec.truncate 12 (x✝ >>> 21#32))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ : ¬some (BitVec.zeroExtend 12 (x✝ >>> 20) >>> 1) ⊑ some (BitVec.zeroExtend 12 (x✝ >>> 21))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:293:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:286:8: error: (kernel) declaration has metavariables 'trunc_sandwich_small_shift1_thm'
+[bv] [0.015174] Normalizing goal
+  [Meta.synthInstance] [0.001276] ✅️ Decidable
+        ((if 19#32 ≥ ↑32 then none
+          else if 1#12 ≥ ↑12 then none else some (BitVec.truncate 12 (x✝ >>> 19#32) >>> 1#12)) ⊑
+          if 20#32 ≥ ↑32 then none else some (BitVec.truncate 12 (x✝ >>> 20#32) &&& 2047#12))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if 19#32 ≥ ↑32 then none
+            else if 1#12 ≥ ↑12 then none else some (BitVec.truncate 12 (x✝ >>> 19#32) >>> 1#12)) ⊑
+            if 20#32 ≥ ↑32 then none else some (BitVec.truncate 12 (x✝ >>> 20#32) &&& 2047#12)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ : ¬some (BitVec.zeroExtend 12 (x✝ >>> 19) >>> 1) ⊑ some (BitVec.zeroExtend 12 (x✝ >>> 20) &&& 2047#12)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:303:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:297:8: error: (kernel) declaration has metavariables 'trunc_sandwich_max_sum_shift_thm'
+[bv] [0.013154] Normalizing goal
+  [Meta.synthInstance] [0.001188] ✅️ Decidable
+        ((if 20#32 ≥ ↑32 then none
+          else if 11#12 ≥ ↑12 then none else some (BitVec.truncate 12 (x✝ >>> 20#32) >>> 11#12)) ⊑
+          if 31#32 ≥ ↑32 then none else some (BitVec.truncate 12 (x✝ >>> 31#32)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if 20#32 ≥ ↑32 then none
+            else if 11#12 ≥ ↑12 then none else some (BitVec.truncate 12 (x✝ >>> 20#32) >>> 11#12)) ⊑
+            if 31#32 ≥ ↑32 then none else some (BitVec.truncate 12 (x✝ >>> 31#32))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ : ¬some (BitVec.zeroExtend 12 (x✝ >>> 20) >>> 11) ⊑ some (BitVec.zeroExtend 12 (x✝ >>> 31))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:313:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:307:8: error: (kernel) declaration has metavariables 'trunc_sandwich_max_sum_shift2_thm'
+[bv] [0.012997] Normalizing goal
+  [Meta.synthInstance] [0.001179] ✅️ Decidable
+        ((if 30#32 ≥ ↑32 then none
+          else if 1#12 ≥ ↑12 then none else some (BitVec.truncate 12 (x✝ >>> 30#32) >>> 1#12)) ⊑
+          if 31#32 ≥ ↑32 then none else some (BitVec.truncate 12 (x✝ >>> 31#32)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if 30#32 ≥ ↑32 then none
+            else if 1#12 ≥ ↑12 then none else some (BitVec.truncate 12 (x✝ >>> 30#32) >>> 1#12)) ⊑
+            if 31#32 ≥ ↑32 then none else some (BitVec.truncate 12 (x✝ >>> 31#32))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ : ¬some (BitVec.zeroExtend 12 (x✝ >>> 30) >>> 1) ⊑ some (BitVec.zeroExtend 12 (x✝ >>> 31))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:322:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:317:8: error: (kernel) declaration has metavariables 'trunc_sandwich_big_sum_shift1_thm'
+[bv] [0.009957] Normalizing goal
+  [Meta.synthInstance] [0.001088] ✅️ Decidable
+        ((if 21#32 ≥ ↑32 then none
+          else if 11#12 ≥ ↑12 then none else some (BitVec.truncate 12 (x✝ >>> 21#32) >>> 11#12)) ⊑
+          some 0#12)
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if 21#32 ≥ ↑32 then none
+            else if 11#12 ≥ ↑12 then none else some (BitVec.truncate 12 (x✝ >>> 21#32) >>> 11#12)) ⊑
+            some 0#12
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ : ¬some (BitVec.zeroExtend 12 (x✝ >>> 21) >>> 11) ⊑ some 0#12
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:331:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:326:8: error: (kernel) declaration has metavariables 'trunc_sandwich_big_sum_shift2_thm'
+[bv] [0.009980] Normalizing goal
+  [Meta.synthInstance] [0.001117] ✅️ Decidable
+        ((if 31#32 ≥ ↑32 then none
+          else if 1#12 ≥ ↑12 then none else some (BitVec.truncate 12 (x✝ >>> 31#32) >>> 1#12)) ⊑
+          some 0#12)
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if 31#32 ≥ ↑32 then none
+            else if 1#12 ≥ ↑12 then none else some (BitVec.truncate 12 (x✝ >>> 31#32) >>> 1#12)) ⊑
+            some 0#12
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ : ¬some (BitVec.zeroExtend 12 (x✝ >>> 31) >>> 1) ⊑ some 0#12
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:340:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:335:8: error: (kernel) declaration has metavariables 'lshr_sext_i1_to_i16_thm'
+[bv] [0.021419] Normalizing goal
+  [Meta.synthInstance] [0.001435] ✅️ Decidable
+        ((if 4#16 ≥ ↑16 then none else some (BitVec.signExtend 16 x✝ >>> 4#16)) ⊑
+          match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => some 4095#16
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#16)
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 1
+      x✝ : BitVec 1
+      a✝ :
+        ¬(if 4#16 ≥ ↑16 then none else some (BitVec.signExtend 16 x✝ >>> 4#16)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some 4095#16
+            | some { toFin := ⟨0, ⋯⟩ } => some 0#16
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 1
+      x✝ : BitVec 1
+      a✝ :
+        ¬some (BitVec.signExtend 16 x✝ >>> 4) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some 4095#16
+            | some { toFin := ⟨0, ⋯⟩ } => some 0#16
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:350:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:344:8: error: (kernel) declaration has metavariables 'lshr_sext_i1_to_i128_thm'
+[bv] [0.021460] Normalizing goal
+  [Meta.synthInstance] [0.001432] ✅️ Decidable
+        ((if 42#128 ≥ ↑128 then none else some (BitVec.signExtend 128 x✝ >>> 42#128)) ⊑
+          match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => some 77371252455336267181195263#128
+          | some { toFin := ⟨0, ⋯⟩ } => some 0#128)
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 1
+      x✝ : BitVec 1
+      a✝ :
+        ¬(if 42#128 ≥ ↑128 then none else some (BitVec.signExtend 128 x✝ >>> 42#128)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some 77371252455336267181195263#128
+            | some { toFin := ⟨0, ⋯⟩ } => some 0#128
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 1
+      x✝ : BitVec 1
+      a✝ :
+        ¬some (BitVec.signExtend 128 x✝ >>> 42) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some 77371252455336267181195263#128
+            | some { toFin := ⟨0, ⋯⟩ } => some 0#128
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:359:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:354:8: error: (kernel) declaration has metavariables 'icmp_ule_thm'
+[bv] [0.017371] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 32
+      x✝¹ x✝ : BitVec 32
+      a✝ : ¬(if x✝¹ ≥ ↑32 then none else some (BitVec.ofBool (x✝ ≥ᵤ x✝ >>> x✝¹))) ⊑ some 1#1
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 32
+      x✝¹ x✝ : BitVec 32
+      a✝ : ¬(if (!32#32 >ᵤ x✝¹) = true then none else some (if (!x✝ >>> x✝¹ >ᵤ x✝) = true then 1#1 else 0#1)) ⊑ some 1#1
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:368:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:363:8: error: (kernel) declaration has metavariables 'icmp_ugt_thm'
+[bv] [0.016596] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 32
+      x✝¹ x✝ : BitVec 32
+      a✝ : ¬(if x✝¹ ≥ ↑32 then none else some (BitVec.ofBool (x✝ >>> x✝¹ >ᵤ x✝))) ⊑ some 0#1
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 32
+      x✝¹ x✝ : BitVec 32
+      a✝ : ¬(if (!32#32 >ᵤ x✝¹) = true then none else some (if (x✝ >>> x✝¹ >ᵤ x✝) = true then 1#1 else 0#1)) ⊑ some 0#1
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:378:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:372:8: error: (kernel) declaration has metavariables 'not_signbit_thm'
+[bv] [0.019157] Normalizing goal
+  [Meta.synthInstance] [0.001037] ✅️ Decidable
+        ((if 7#8 ≥ ↑8 then none else some ((x✝ ^^^ -1#8) >>> 7#8)) ⊑
+          some (BitVec.zeroExtend 8 (BitVec.ofBool (x✝ >ₛ -1#8))))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ :
+        ¬(if 7#8 ≥ ↑8 then none else some ((x✝ ^^^ -1#8) >>> 7#8)) ⊑
+            some (BitVec.zeroExtend 8 (BitVec.ofBool (x✝ >ₛ -1#8)))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ : ¬some ((x✝ ^^^ 255#8) >>> 7) ⊑ some (BitVec.zeroExtend 8 (if (!x✝.getLsbD 7) = true then 1#1 else 0#1))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:388:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:382:8: error: (kernel) declaration has metavariables 'not_signbit_alt_xor_thm'
+[bv] [0.018832] Normalizing goal
+  [Meta.synthInstance] [0.001044] ✅️ Decidable
+        ((if 7#8 ≥ ↑8 then none else some ((x✝ ^^^ 254#8) >>> 7#8)) ⊑
+          some (BitVec.zeroExtend 8 (BitVec.ofBool (x✝ >ₛ -1#8))))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ :
+        ¬(if 7#8 ≥ ↑8 then none else some ((x✝ ^^^ 254#8) >>> 7#8)) ⊑
+            some (BitVec.zeroExtend 8 (BitVec.ofBool (x✝ >ₛ -1#8)))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ : ¬some ((x✝ ^^^ 254#8) >>> 7) ⊑ some (BitVec.zeroExtend 8 (if (!x✝.getLsbD 7) = true then 1#1 else 0#1))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:399:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:392:8: error: (kernel) declaration has metavariables 'not_signbit_zext_thm'
+[bv] [0.019881] Normalizing goal
+  [Meta.synthInstance] [0.001003] ✅️ Decidable
+        ((if 15#16 ≥ ↑16 then none else some (BitVec.zeroExtend 32 ((x✝ ^^^ -1#16) >>> 15#16))) ⊑
+          some (BitVec.zeroExtend 32 (BitVec.ofBool (x✝ >ₛ -1#16))))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 16
+      x✝ : BitVec 16
+      a✝ :
+        ¬(if 15#16 ≥ ↑16 then none else some (BitVec.zeroExtend 32 ((x✝ ^^^ -1#16) >>> 15#16))) ⊑
+            some (BitVec.zeroExtend 32 (BitVec.ofBool (x✝ >ₛ -1#16)))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 16
+      x✝ : BitVec 16
+      a✝ :
+        ¬some (BitVec.zeroExtend 32 ((x✝ ^^^ 65535#16) >>> 15)) ⊑
+            some (BitVec.zeroExtend 32 (if (!x✝.getLsbD 15) = true then 1#1 else 0#1))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:410:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:403:8: error: (kernel) declaration has metavariables 'not_signbit_trunc_thm'
+[bv] [0.019906] Normalizing goal
+  [Meta.synthInstance] [0.001001] ✅️ Decidable
+        ((if 15#16 ≥ ↑16 then none else some (BitVec.truncate 8 ((x✝ ^^^ -1#16) >>> 15#16))) ⊑
+          some (BitVec.zeroExtend 8 (BitVec.ofBool (x✝ >ₛ -1#16))))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 16
+      x✝ : BitVec 16
+      a✝ :
+        ¬(if 15#16 ≥ ↑16 then none else some (BitVec.truncate 8 ((x✝ ^^^ -1#16) >>> 15#16))) ⊑
+            some (BitVec.zeroExtend 8 (BitVec.ofBool (x✝ >ₛ -1#16)))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 16
+      x✝ : BitVec 16
+      a✝ :
+        ¬some (BitVec.zeroExtend 8 ((x✝ ^^^ 65535#16) >>> 15)) ⊑
+            some (BitVec.zeroExtend 8 (if (!x✝.getLsbD 15) = true then 1#1 else 0#1))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:420:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:414:8: error: (kernel) declaration has metavariables 'bool_add_lshr_thm'
+[bv] [0.010326] Normalizing goal
+  [Meta.synthInstance] [0.001049] ✅️ Decidable
+        ((if 1#2 ≥ ↑2 then none else some ((BitVec.zeroExtend 2 x✝ + BitVec.zeroExtend 2 x✝¹) >>> 1#2)) ⊑
+          some (BitVec.zeroExtend 2 (x✝ &&& x✝¹)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 1
+      x✝¹ x✝ : BitVec 1
+      a✝ :
+        ¬(if 1#2 ≥ ↑2 then none else some ((BitVec.zeroExtend 2 x✝ + BitVec.zeroExtend 2 x✝¹) >>> 1#2)) ⊑
+            some (BitVec.zeroExtend 2 (x✝ &&& x✝¹))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 1
+      x✝¹ x✝ : BitVec 1
+      a✝ : ¬some ((BitVec.zeroExtend 2 x✝ + BitVec.zeroExtend 2 x✝¹) >>> 1) ⊑ some (BitVec.zeroExtend 2 (x✝ &&& x✝¹))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:431:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:424:8: error: (kernel) declaration has metavariables 'not_bool_add_lshr_thm'
+[bv] [0.022133] Normalizing goal
+  [Meta.synthInstance] [0.001791] ✅️ Decidable
+        ((if 2#4 ≥ ↑4 then none else some ((BitVec.zeroExtend 4 x✝ + BitVec.zeroExtend 4 x✝¹) >>> 2#4)) ⊑
+          some (BitVec.zeroExtend 4 (BitVec.ofBool (x✝¹ >ᵤ x✝ ^^^ -1#2))))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 2
+      x✝¹ x✝ : BitVec 2
+      a✝ :
+        ¬(if 2#4 ≥ ↑4 then none else some ((BitVec.zeroExtend 4 x✝ + BitVec.zeroExtend 4 x✝¹) >>> 2#4)) ⊑
+            some (BitVec.zeroExtend 4 (BitVec.ofBool (x✝¹ >ᵤ x✝ ^^^ -1#2)))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 2
+      x✝¹ x✝ : BitVec 2
+      a✝ :
+        ¬some ((BitVec.zeroExtend 4 x✝ + BitVec.zeroExtend 4 x✝¹) >>> 2) ⊑
+            some (BitVec.zeroExtend 4 (if (x✝¹ >ᵤ x✝ ^^^ 3#2) = true then 1#1 else 0#1))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:442:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshr_proof.lean:435:8: error: (kernel) declaration has metavariables 'bool_add_ashr_thm'
+[bv] [0.017563] Normalizing goal
+  [Meta.synthInstance] [0.001093] ✅️ Decidable
+        ((if 1#2 ≥ ↑2 then none
+          else some ((BitVec.zeroExtend 2 x✝ + BitVec.zeroExtend 2 x✝¹).sshiftRight (1#2).toNat)) ⊑
+          if
+              True ∧
+                (BitVec.zeroExtend 2 x✝ + BitVec.zeroExtend 2 x✝¹ < BitVec.zeroExtend 2 x✝ ∨
+                  BitVec.zeroExtend 2 x✝ + BitVec.zeroExtend 2 x✝¹ < BitVec.zeroExtend 2 x✝¹) then
+            none
+          else
+            if 1#2 ≥ ↑2 then none
+            else some ((BitVec.zeroExtend 2 x✝ + BitVec.zeroExtend 2 x✝¹).sshiftRight (1#2).toNat))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 1
+      x✝¹ x✝ : BitVec 1
+      a✝ :
+        ¬(if 1#2 ≥ ↑2 then none
+            else some ((BitVec.zeroExtend 2 x✝ + BitVec.zeroExtend 2 x✝¹).sshiftRight (1#2).toNat)) ⊑
+            if
+                True ∧
+                  (BitVec.zeroExtend 2 x✝ + BitVec.zeroExtend 2 x✝¹ < BitVec.zeroExtend 2 x✝ ∨
+                    BitVec.zeroExtend 2 x✝ + BitVec.zeroExtend 2 x✝¹ < BitVec.zeroExtend 2 x✝¹) then
+              none
+            else
+              if 1#2 ≥ ↑2 then none
+              else some ((BitVec.zeroExtend 2 x✝ + BitVec.zeroExtend 2 x✝¹).sshiftRight (1#2).toNat)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 1
+      x✝¹ x✝ : BitVec 1
+      a✝ :
+        ¬some ((BitVec.zeroExtend 2 x✝ + BitVec.zeroExtend 2 x✝¹).sshiftRight 1) ⊑
+            if
+                (!((!BitVec.zeroExtend 2 x✝ >ᵤ BitVec.zeroExtend 2 x✝ + BitVec.zeroExtend 2 x✝¹) &&
+                      !BitVec.zeroExtend 2 x✝¹ >ᵤ BitVec.zeroExtend 2 x✝ + BitVec.zeroExtend 2 x✝¹)) =
+                  true then
+              none
+            else some ((BitVec.zeroExtend 2 x✝ + BitVec.zeroExtend 2 x✝¹).sshiftRight 1)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint

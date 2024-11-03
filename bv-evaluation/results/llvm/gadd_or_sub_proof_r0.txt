@@ -1,9 +1,4 @@
-⚠ [874/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
-⚠ [878/892] Replayed SSA.Experimental.Bits.Fast.Tactic
-warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
-⚠ [879/892] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+⚠ [676/892] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
@@ -14,17 +9,236 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaratio
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
-⚠ [885/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+⚠ [880/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [883/892] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [887/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
-⚠ [886/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+⚠ [888/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-✖ [890/892] Building Leanwuzla
-trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././.lake/packages/leanwuzla/././Leanwuzla.lean -R ././.lake/packages/leanwuzla/./. -o ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.olean -i ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.ilean -c ././.lake/packages/leanwuzla/.lake/build/ir/Leanwuzla.c --json
-error: ././.lake/packages/leanwuzla/././Leanwuzla.lean:117:8: invalid dotted identifier notation, unknown identifier `Std.Tactic.BVDecide.BVBinOp.sdiv` from expected type
-  BVBinOp
-error: Lean exited with code 1
-Some required builds logged failures:
-- Leanwuzla
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gadd_or_sub_proof.lean:17:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gadd_or_sub_proof.lean:11:8: error: (kernel) declaration has metavariables 'add_or_sub_comb_i32_commuted1_nuw_thm'
+[bv] [0.023139] Normalizing goal
+  [Meta.synthInstance] [0.001147] ✅️ Decidable
+        ((if True ∧ ((0#32 - x✝ ||| x✝) + x✝ < 0#32 - x✝ ||| x✝ ∨ (0#32 - x✝ ||| x✝) + x✝ < x✝) then none
+          else some ((0#32 - x✝ ||| x✝) + x✝)) ⊑
+          some x✝)
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if True ∧ ((0#32 - x✝ ||| x✝) + x✝ < 0#32 - x✝ ||| x✝ ∨ (0#32 - x✝ ||| x✝) + x✝ < x✝) then none
+            else some ((0#32 - x✝ ||| x✝) + x✝)) ⊑
+            some x✝
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if (!((!~~~x✝ + 1#32 ||| x✝ >ᵤ (~~~x✝ + 1#32 ||| x✝) + x✝) && !x✝ >ᵤ (~~~x✝ + 1#32 ||| x✝) + x✝)) = true then
+              none
+            else some ((~~~x✝ + 1#32 ||| x✝) + x✝)) ⊑
+            some x✝
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gadd_or_sub_proof.lean:28:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gadd_or_sub_proof.lean:21:8: error: (kernel) declaration has metavariables 'add_or_sub_comb_i8_commuted2_nsw_thm'
+[bv] [0.046685] Normalizing goal
+  [Meta.synthInstance] [0.001510] ✅️ Decidable
+        ((if
+              True ∧
+                (x✝ * x✝).msb = (0#8 - x✝ * x✝ ||| x✝ * x✝).msb ∧
+                  (x✝ * x✝ + (0#8 - x✝ * x✝ ||| x✝ * x✝)).msb ≠ (x✝ * x✝).msb then
+            none
+          else some (x✝ * x✝ + (0#8 - x✝ * x✝ ||| x✝ * x✝))) ⊑
+          if True ∧ (x✝ * x✝).msb = (-1#8).msb ∧ (x✝ * x✝ + -1#8).msb ≠ (x✝ * x✝).msb then none
+          else some (x✝ * x✝ + -1#8 &&& x✝ * x✝))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ :
+        ¬(if
+                True ∧
+                  (x✝ * x✝).msb = (0#8 - x✝ * x✝ ||| x✝ * x✝).msb ∧
+                    (x✝ * x✝ + (0#8 - x✝ * x✝ ||| x✝ * x✝)).msb ≠ (x✝ * x✝).msb then
+              none
+            else some (x✝ * x✝ + (0#8 - x✝ * x✝ ||| x✝ * x✝))) ⊑
+            if True ∧ (x✝ * x✝).msb = (-1#8).msb ∧ (x✝ * x✝ + -1#8).msb ≠ (x✝ * x✝).msb then none
+            else some (x✝ * x✝ + -1#8 &&& x✝ * x✝)
+      ⊢ False
+  [Meta.isDefEq] [0.001586] ✅️ ?h₁ =?= Eq.trans
+        (congrArg (And True)
+          (Eq.trans
+            (congr
+              (congrArg And
+                (congr (congrArg Eq (BitVec.msb_eq_getLsbD_last (x✝ * x✝))) (BitVec.msb_eq_getLsbD_last 255#8)))
+              (Eq.trans
+                (congr (congrArg Ne (BitVec.msb_eq_getLsbD_last (x✝ * x✝ + 255#8)))
+                  (BitVec.msb_eq_getLsbD_last (x✝ * x✝)))
+                (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq ((x✝ * x✝ + 255#8).getLsbD 7) ((x✝ * x✝).getLsbD 7))))
+            (Std.Tactic.BVDecide.Normalize.Bool.and_to_and ((x✝ * x✝).getLsbD 7)
+              !(x✝ * x✝ + 255#8).getLsbD 7 == (x✝ * x✝).getLsbD 7)))
+        (true_and (((x✝ * x✝).getLsbD 7 && !(x✝ * x✝ + 255#8).getLsbD 7 == (x✝ * x✝).getLsbD 7) = true))
+    [Meta.isDefEq.assign] [0.001583] ✅️ ?h₁ := Eq.trans
+          (congrArg (And True)
+            (Eq.trans
+              (congr
+                (congrArg And
+                  (congr (congrArg Eq (BitVec.msb_eq_getLsbD_last (x✝ * x✝))) (BitVec.msb_eq_getLsbD_last 255#8)))
+                (Eq.trans
+                  (congr (congrArg Ne (BitVec.msb_eq_getLsbD_last (x✝ * x✝ + 255#8)))
+                    (BitVec.msb_eq_getLsbD_last (x✝ * x✝)))
+                  (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq ((x✝ * x✝ + 255#8).getLsbD 7) ((x✝ * x✝).getLsbD 7))))
+              (Std.Tactic.BVDecide.Normalize.Bool.and_to_and ((x✝ * x✝).getLsbD 7)
+                !(x✝ * x✝ + 255#8).getLsbD 7 == (x✝ * x✝).getLsbD 7)))
+          (true_and (((x✝ * x✝).getLsbD 7 && !(x✝ * x✝ + 255#8).getLsbD 7 == (x✝ * x✝).getLsbD 7) = true))
+      [Meta.isDefEq.assign.checkTypes] [0.001564] ✅️ (?h₁ : (True ∧
+              (x✝ * x✝).msb = (-1#8).msb ∧ (x✝ * x✝ + -1#8).msb ≠ (x✝ * x✝).msb) =
+            (((x✝ * x✝).getLsbD 7 && !(x✝ * x✝ + 255#8).getLsbD 7 == (x✝ * x✝).getLsbD 7) =
+              true)) := (Eq.trans
+            (congrArg (And True)
+              (Eq.trans
+                (congr
+                  (congrArg And
+                    (congr (congrArg Eq (BitVec.msb_eq_getLsbD_last (x✝ * x✝))) (BitVec.msb_eq_getLsbD_last 255#8)))
+                  (Eq.trans
+                    (congr (congrArg Ne (BitVec.msb_eq_getLsbD_last (x✝ * x✝ + 255#8)))
+                      (BitVec.msb_eq_getLsbD_last (x✝ * x✝)))
+                    (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq ((x✝ * x✝ + 255#8).getLsbD 7) ((x✝ * x✝).getLsbD 7))))
+                (Std.Tactic.BVDecide.Normalize.Bool.and_to_and ((x✝ * x✝).getLsbD 7)
+                  !(x✝ * x✝ + 255#8).getLsbD 7 == (x✝ * x✝).getLsbD 7)))
+            (true_and
+              (((x✝ * x✝).getLsbD 7 && !(x✝ * x✝ + 255#8).getLsbD 7 == (x✝ * x✝).getLsbD 7) =
+                true)) : (True ∧ (x✝ * x✝).msb = (255#8).msb ∧ (x✝ * x✝ + 255#8).msb ≠ (x✝ * x✝).msb) =
+            (((x✝ * x✝).getLsbD 7 && !(x✝ * x✝ + 255#8).getLsbD 7 == (x✝ * x✝).getLsbD 7) = true))
+        [Meta.isDefEq] [0.001561] ✅️ (True ∧ (x✝ * x✝).msb = (-1#8).msb ∧ (x✝ * x✝ + -1#8).msb ≠ (x✝ * x✝).msb) =
+              (((x✝ * x✝).getLsbD 7 && !(x✝ * x✝ + 255#8).getLsbD 7 == (x✝ * x✝).getLsbD 7) =
+                true) =?= (True ∧ (x✝ * x✝).msb = (255#8).msb ∧ (x✝ * x✝ + 255#8).msb ≠ (x✝ * x✝).msb) =
+              (((x✝ * x✝).getLsbD 7 && !(x✝ * x✝ + 255#8).getLsbD 7 == (x✝ * x✝).getLsbD 7) = true)
+          [Meta.isDefEq] [0.001540] ✅️ True ∧
+                (x✝ * x✝).msb = (-1#8).msb ∧
+                  (x✝ * x✝ + -1#8).msb ≠
+                    (x✝ * x✝).msb =?= True ∧ (x✝ * x✝).msb = (255#8).msb ∧ (x✝ * x✝ + 255#8).msb ≠ (x✝ * x✝).msb
+            [Meta.isDefEq] [0.001523] ✅️ (x✝ * x✝).msb = (-1#8).msb ∧
+                  (x✝ * x✝ + -1#8).msb ≠
+                    (x✝ * x✝).msb =?= (x✝ * x✝).msb = (255#8).msb ∧ (x✝ * x✝ + 255#8).msb ≠ (x✝ * x✝).msb
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ :
+        ¬(if
+                ((x✝ * x✝).getLsbD 7 == (~~~(x✝ * x✝) + 1#8 ||| x✝ * x✝).getLsbD 7 &&
+                    !(x✝ * x✝ + (~~~(x✝ * x✝) + 1#8 ||| x✝ * x✝)).getLsbD 7 == (x✝ * x✝).getLsbD 7) =
+                  true then
+              none
+            else some (x✝ * x✝ + (~~~(x✝ * x✝) + 1#8 ||| x✝ * x✝))) ⊑
+            if ((x✝ * x✝).getLsbD 7 && !(x✝ * x✝ + 255#8).getLsbD 7 == (x✝ * x✝).getLsbD 7) = true then none
+            else some (x✝ * x✝ + 255#8 &&& x✝ * x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gadd_or_sub_proof.lean:38:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gadd_or_sub_proof.lean:32:8: error: (kernel) declaration has metavariables 'add_or_sub_comb_i128_commuted3_nuw_nsw_thm'
+[bv] [0.063150] Normalizing goal
+  [Meta.synthInstance] [0.002315] ✅️ Decidable
+        ((if
+              True ∧
+                (x✝ * x✝ ||| 0#128 - x✝ * x✝).msb = (x✝ * x✝).msb ∧
+                  ((x✝ * x✝ ||| 0#128 - x✝ * x✝) + x✝ * x✝).msb ≠ (x✝ * x✝ ||| 0#128 - x✝ * x✝).msb then
+            none
+          else
+            if
+                True ∧
+                  ((x✝ * x✝ ||| 0#128 - x✝ * x✝) + x✝ * x✝ < x✝ * x✝ ||| 0#128 - x✝ * x✝ ∨
+                    (x✝ * x✝ ||| 0#128 - x✝ * x✝) + x✝ * x✝ < x✝ * x✝) then
+              none
+            else some ((x✝ * x✝ ||| 0#128 - x✝ * x✝) + x✝ * x✝)) ⊑
+          some (x✝ * x✝))
+    [Meta.check] [0.001248] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if
+              True ∧
+                (x✝ * x✝ ||| 0#128 - x✝ * x✝).msb = (x✝ * x✝).msb ∧
+                  ((x✝ * x✝ ||| 0#128 - x✝ * x✝) + x✝ * x✝).msb ≠ (x✝ * x✝ ||| 0#128 - x✝ * x✝).msb then
+            none
+          else
+            if
+                True ∧
+                  ((x✝ * x✝ ||| 0#128 - x✝ * x✝) + x✝ * x✝ < x✝ * x✝ ||| 0#128 - x✝ * x✝ ∨
+                    (x✝ * x✝ ||| 0#128 - x✝ * x✝) + x✝ * x✝ < x✝ * x✝) then
+              none
+            else some ((x✝ * x✝ ||| 0#128 - x✝ * x✝) + x✝ * x✝))
+          (some (x✝ * x✝))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 128
+      x✝ : BitVec 128
+      a✝ :
+        ¬(if
+                True ∧
+                  (x✝ * x✝ ||| 0#128 - x✝ * x✝).msb = (x✝ * x✝).msb ∧
+                    ((x✝ * x✝ ||| 0#128 - x✝ * x✝) + x✝ * x✝).msb ≠ (x✝ * x✝ ||| 0#128 - x✝ * x✝).msb then
+              none
+            else
+              if
+                  True ∧
+                    ((x✝ * x✝ ||| 0#128 - x✝ * x✝) + x✝ * x✝ < x✝ * x✝ ||| 0#128 - x✝ * x✝ ∨
+                      (x✝ * x✝ ||| 0#128 - x✝ * x✝) + x✝ * x✝ < x✝ * x✝) then
+                none
+              else some ((x✝ * x✝ ||| 0#128 - x✝ * x✝) + x✝ * x✝)) ⊑
+            some (x✝ * x✝)
+      ⊢ False
+  [Meta.appBuilder] [0.001010] ✅️ f: HAdd.hAdd, xs: [~~~(x✝ * x✝), 1#128]
+  [Meta.isDefEq] [0.001064] ❌️ ?a ==
+        ?a =?= ((x✝ * x✝ ||| ~~~(x✝ * x✝) + 1#128) + x✝ * x✝).getLsbD 127 ==
+        (x✝ * x✝ ||| ~~~(x✝ * x✝) + 1#128).getLsbD 127
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 128
+      x✝ : BitVec 128
+      a✝ :
+        ¬(if
+                ((x✝ * x✝ ||| ~~~(x✝ * x✝) + 1#128).getLsbD 127 == (x✝ * x✝).getLsbD 127 &&
+                    !((x✝ * x✝ ||| ~~~(x✝ * x✝) + 1#128) + x✝ * x✝).getLsbD 127 ==
+                        (x✝ * x✝ ||| ~~~(x✝ * x✝) + 1#128).getLsbD 127) =
+                  true then
+              none
+            else
+              if
+                  (!((!x✝ * x✝ ||| ~~~(x✝ * x✝) + 1#128 >ᵤ (x✝ * x✝ ||| ~~~(x✝ * x✝) + 1#128) + x✝ * x✝) &&
+                        !x✝ * x✝ >ᵤ (x✝ * x✝ ||| ~~~(x✝ * x✝) + 1#128) + x✝ * x✝)) =
+                    true then
+                none
+              else some ((x✝ * x✝ ||| ~~~(x✝ * x✝) + 1#128) + x✝ * x✝)) ⊑
+            some (x✝ * x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+Bitwuzla proved the goal after 245.994480ms, solving context: 87.000000ms
+LeanSAT proved the goal after 9807.349258ms: rewriting 22.911150ms, bitblasting 122.071110ms, SAT solving 8129.907925ms, LRAT trimming 786.609776ms, LRAT checking 205.163450ms
+Bitwuzla proved the goal after 76.595749ms, solving context: 0.000000ms
+LeanSAT proved the goal after 327.102429ms: rewriting 17.909930ms, bitblasting 0.000000ms, SAT solving 305.763809ms, LRAT trimming 0.000000ms, LRAT checking 2.028570ms
+Bitwuzla proved the goal after 75.436070ms, solving context: 0.000000ms
+LeanSAT proved the goal after 76.027590ms: rewriting 17.934580ms, bitblasting 0.000000ms, SAT solving 55.121350ms, LRAT trimming 0.000000ms, LRAT checking 1.617110ms
+Bitwuzla proved the goal after 75.372070ms, solving context: 0.000000ms
+LeanSAT proved the goal after 76.233259ms: rewriting 17.986129ms, bitblasting 0.000000ms, SAT solving 55.147350ms, LRAT trimming 0.000000ms, LRAT checking 1.692450ms
+Bitwuzla proved the goal after 75.964369ms, solving context: 0.000000ms
+LeanSAT proved the goal after 76.444100ms: rewriting 17.899160ms, bitblasting 0.000000ms, SAT solving 55.159960ms, LRAT trimming 0.000000ms, LRAT checking 1.895620ms

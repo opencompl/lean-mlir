@@ -1,9 +1,4 @@
-⚠ [874/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
-⚠ [878/892] Replayed SSA.Experimental.Bits.Fast.Tactic
-warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
-⚠ [879/892] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+⚠ [676/892] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
@@ -14,17 +9,126 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaratio
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
-⚠ [885/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+⚠ [878/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [881/892] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [887/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
-⚠ [886/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+⚠ [888/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-✖ [890/892] Building Leanwuzla
-trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././.lake/packages/leanwuzla/././Leanwuzla.lean -R ././.lake/packages/leanwuzla/./. -o ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.olean -i ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.ilean -c ././.lake/packages/leanwuzla/.lake/build/ir/Leanwuzla.c --json
-error: ././.lake/packages/leanwuzla/././Leanwuzla.lean:117:8: invalid dotted identifier notation, unknown identifier `Std.Tactic.BVDecide.BVBinOp.sdiv` from expected type
-  BVBinOp
-error: Lean exited with code 1
-Some required builds logged failures:
-- Leanwuzla
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsignext_proof.lean:18:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsignext_proof.lean:11:8: error: (kernel) declaration has metavariables 'sextinreg_thm'
+[bv] [0.017016] Normalizing goal
+  [Meta.synthInstance] [0.001926] ✅️ Decidable
+        (some ((x✝ &&& 65535#32 ^^^ 4294934528#32) + 32768#32) ⊑
+          if 16#32 ≥ ↑32 then none else if 16#32 ≥ ↑32 then none else some ((x✝ <<< 16#32).sshiftRight (16#32).toNat))
+    [Meta.check] [0.001015] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (some ((x✝ &&& 65535#32 ^^^ 4294934528#32) + 32768#32))
+          (if 16#32 ≥ ↑32 then none else if 16#32 ≥ ↑32 then none else some ((x✝ <<< 16#32).sshiftRight (16#32).toNat))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬some ((x✝ &&& 65535#32 ^^^ 4294934528#32) + 32768#32) ⊑
+            if 16#32 ≥ ↑32 then none else if 16#32 ≥ ↑32 then none else some ((x✝ <<< 16#32).sshiftRight (16#32).toNat)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ : ¬some ((x✝ &&& 65535#32 ^^^ 4294934528#32) + 32768#32) ⊑ some ((x✝ <<< 16).sshiftRight 16)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsignext_proof.lean:29:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsignext_proof.lean:22:8: error: (kernel) declaration has metavariables 'sextinreg_alt_thm'
+[bv] [0.012488] Normalizing goal
+  [Meta.synthInstance] [0.001485] ✅️ Decidable
+        (some ((x✝ &&& 65535#32 ^^^ 32768#32) + 4294934528#32) ⊑
+          if 16#32 ≥ ↑32 then none else if 16#32 ≥ ↑32 then none else some ((x✝ <<< 16#32).sshiftRight (16#32).toNat))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬some ((x✝ &&& 65535#32 ^^^ 32768#32) + 4294934528#32) ⊑
+            if 16#32 ≥ ↑32 then none else if 16#32 ≥ ↑32 then none else some ((x✝ <<< 16#32).sshiftRight (16#32).toNat)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ : ¬some ((x✝ &&& 65535#32 ^^^ 32768#32) + 4294934528#32) ⊑ some ((x✝ <<< 16).sshiftRight 16)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+Bitwuzla proved the goal after 75.512790ms, solving context: 1.000000ms
+LeanSAT proved the goal after 88.614489ms: rewriting 18.525320ms, bitblasting 0.000000ms, SAT solving 59.921219ms, LRAT trimming 1.452070ms, LRAT checking 4.086410ms
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsignext_proof.lean:50:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsignext_proof.lean:43:8: error: (kernel) declaration has metavariables 'sextinreg2_thm'
+[bv] [0.014602] Normalizing goal
+  [Meta.synthInstance] [0.001501] ✅️ Decidable
+        (some ((x✝ &&& 255#32 ^^^ 128#32) + 4294967168#32) ⊑
+          if 24#32 ≥ ↑32 then none else if 24#32 ≥ ↑32 then none else some ((x✝ <<< 24#32).sshiftRight (24#32).toNat))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬some ((x✝ &&& 255#32 ^^^ 128#32) + 4294967168#32) ⊑
+            if 24#32 ≥ ↑32 then none else if 24#32 ≥ ↑32 then none else some ((x✝ <<< 24#32).sshiftRight (24#32).toNat)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ : ¬some ((x✝ &&& 255#32 ^^^ 128#32) + 4294967168#32) ⊑ some ((x✝ <<< 24).sshiftRight 24)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsignext_proof.lean:59:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsignext_proof.lean:54:8: error: (kernel) declaration has metavariables 'test6_thm'
+[bv] [0.008857] Normalizing goal
+  [Meta.synthInstance] [0.001184] ✅️ Decidable
+        ((if 16#32 ≥ ↑32 then none
+          else if 16#32 ≥ ↑32 then none else some ((BitVec.zeroExtend 32 x✝ <<< 16#32).sshiftRight (16#32).toNat)) ⊑
+          some (BitVec.signExtend 32 x✝))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 16
+      x✝ : BitVec 16
+      a✝ :
+        ¬(if 16#32 ≥ ↑32 then none
+            else if 16#32 ≥ ↑32 then none else some ((BitVec.zeroExtend 32 x✝ <<< 16#32).sshiftRight (16#32).toNat)) ⊑
+            some (BitVec.signExtend 32 x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 16
+      x✝ : BitVec 16
+      a✝ : ¬some ((BitVec.zeroExtend 32 x✝ <<< 16).sshiftRight 16) ⊑ some (BitVec.signExtend 32 x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+Bitwuzla proved the goal after 0.909840ms, solving context: 0.000000ms
+LeanSAT proved the goal after 4.800190ms: rewriting 4.781330ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+Bitwuzla proved the goal after 94.244430ms, solving context: 0.000000ms
+LeanSAT proved the goal after 109.485779ms: rewriting 26.997300ms, bitblasting 0.000000ms, SAT solving 60.217889ms, LRAT trimming 6.491490ms, LRAT checking 10.179850ms

@@ -1,9 +1,4 @@
-⚠ [874/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
-⚠ [878/892] Replayed SSA.Experimental.Bits.Fast.Tactic
-warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
-⚠ [879/892] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+⚠ [676/892] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
@@ -14,17 +9,159 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaratio
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
-⚠ [885/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+⚠ [877/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
-⚠ [886/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+⚠ [884/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [887/892] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [888/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-✖ [890/892] Building Leanwuzla
-trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././.lake/packages/leanwuzla/././Leanwuzla.lean -R ././.lake/packages/leanwuzla/./. -o ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.olean -i ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.ilean -c ././.lake/packages/leanwuzla/.lake/build/ir/Leanwuzla.c --json
-error: ././.lake/packages/leanwuzla/././Leanwuzla.lean:117:8: invalid dotted identifier notation, unknown identifier `Std.Tactic.BVDecide.BVBinOp.sdiv` from expected type
-  BVBinOp
-error: Lean exited with code 1
-Some required builds logged failures:
-- Leanwuzla
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/g2011h03h08hSRemMinusOneBadOpt_proof.lean:17:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/g2011h03h08hSRemMinusOneBadOpt_proof.lean:11:8: error: (kernel) declaration has metavariables 'test_thm'
+[bv] [0.053997] Normalizing goal
+  [Meta.synthInstance] [0.001426] ✅️ Decidable
+        (Option.map (fun div => BitVec.truncate 32 (x✝ ||| 4294967294#64) - div * -1#32)
+            (if
+                (-1#32 == 0 ||
+                    32 != 1 && BitVec.truncate 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32 && -1#32 == -1) =
+                  true then
+              none
+            else some ((BitVec.truncate 32 (x✝ ||| 4294967294#64)).sdiv (-1#32))) ⊑
+          some 0#32)
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬Option.map (fun div => BitVec.truncate 32 (x✝ ||| 4294967294#64) - div * -1#32)
+              (if
+                  (-1#32 == 0 ||
+                      32 != 1 && BitVec.truncate 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32 && -1#32 == -1) =
+                    true then
+                none
+              else some ((BitVec.truncate 32 (x✝ ||| 4294967294#64)).sdiv (-1#32))) ⊑
+            some 0#32
+      ⊢ False
+  [Meta.isDefEq] [0.002474] ✅️ ?h₁ =?= congrArg (fun x => x = true)
+        (Eq.trans
+          (Eq.trans
+            (congrArg false.or
+              (Eq.trans
+                (congr
+                  (congrArg Bool.and (Bool.true_and (BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32)))
+                  (beq_self_eq_true' 4294967295#32))
+                (Bool.and_true (BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32))))
+            (Std.Tactic.BVDecide.Normalize.Bool.or_elim false
+              (BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32)))
+          (Eq.trans
+            (congrArg not
+              (Eq.trans
+                (congrArg (fun x => x && !BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32)
+                  Bool.not_false)
+                (Bool.true_and !BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32)))
+            (Bool.not_not (BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32))))
+    [Meta.isDefEq.assign] [0.002471] ✅️ ?h₁ := congrArg (fun x => x = true)
+          (Eq.trans
+            (Eq.trans
+              (congrArg false.or
+                (Eq.trans
+                  (congr
+                    (congrArg Bool.and
+                      (Bool.true_and (BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32)))
+                    (beq_self_eq_true' 4294967295#32))
+                  (Bool.and_true (BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32))))
+              (Std.Tactic.BVDecide.Normalize.Bool.or_elim false
+                (BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32)))
+            (Eq.trans
+              (congrArg not
+                (Eq.trans
+                  (congrArg (fun x => x && !BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32)
+                    Bool.not_false)
+                  (Bool.true_and !BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32)))
+              (Bool.not_not (BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32))))
+      [Meta.isDefEq.assign.checkTypes] [0.002448] ✅️ (?h₁ : ((-1#32 == 0 ||
+                32 != 1 && BitVec.truncate 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32 && -1#32 == -1) =
+              true) =
+            ((BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32) =
+              true)) := (congrArg (fun x => x = true)
+            (Eq.trans
+              (Eq.trans
+                (congrArg false.or
+                  (Eq.trans
+                    (congr
+                      (congrArg Bool.and
+                        (Bool.true_and (BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32)))
+                      (beq_self_eq_true' 4294967295#32))
+                    (Bool.and_true (BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32))))
+                (Std.Tactic.BVDecide.Normalize.Bool.or_elim false
+                  (BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32)))
+              (Eq.trans
+                (congrArg not
+                  (Eq.trans
+                    (congrArg (fun x => x && !BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32)
+                      Bool.not_false)
+                    (Bool.true_and !BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32)))
+                (Bool.not_not
+                  (BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) ==
+                    BitVec.intMin
+                      32)))) : ((false ||
+                true && BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32 &&
+                  4294967295#32 == 4294967295#32) =
+              true) =
+            ((BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32) = true))
+        [Meta.isDefEq] [0.002444] ✅️ ((-1#32 == 0 ||
+                  32 != 1 && BitVec.truncate 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32 && -1#32 == -1) =
+                true) =
+              ((BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32) =
+                true) =?= ((false ||
+                  true && BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32 &&
+                    4294967295#32 == 4294967295#32) =
+                true) =
+              ((BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32) = true)
+          [Meta.isDefEq] [0.002419] ✅️ (-1#32 == 0 ||
+                  32 != 1 && BitVec.truncate 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32 && -1#32 == -1) =
+                true =?= (false ||
+                  true && BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32 &&
+                    4294967295#32 == 4294967295#32) =
+                true
+            [Meta.isDefEq] [0.002399] ✅️ -1#32 == 0 ||
+                  32 != 1 && BitVec.truncate 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32 &&
+                    -1#32 ==
+                      -1 =?= false ||
+                  true && BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32 &&
+                    4294967295#32 == 4294967295#32
+              [Meta.isDefEq.delta] [0.002379] ✅️ -1#32 == 0 ||
+                    32 != 1 && BitVec.truncate 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32 &&
+                      -1#32 ==
+                        -1 =?= false ||
+                    true && BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32 &&
+                      4294967295#32 == 4294967295#32
+                [Meta.isDefEq] [0.001393] ✅️ 32 != 1 && BitVec.truncate 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32 &&
+                      -1#32 ==
+                        -1 =?= true && BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32 &&
+                      4294967295#32 == 4294967295#32
+                  [Meta.isDefEq.delta] [0.001374] ✅️ 32 != 1 &&
+                          BitVec.truncate 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32 &&
+                        -1#32 ==
+                          -1 =?= true && BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32 &&
+                        4294967295#32 == 4294967295#32
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬Option.map (fun div => BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) + (~~~(div * 4294967295#32) + 1#32))
+              (if (BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) == BitVec.intMin 32) = true then none
+              else some (~~~BitVec.zeroExtend 32 (x✝ ||| 4294967294#64) + 1#32)) ⊑
+            some 0#32
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint

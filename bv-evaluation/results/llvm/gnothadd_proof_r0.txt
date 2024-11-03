@@ -21,10 +21,453 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: dec
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
 ⚠ [886/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-✖ [890/892] Building Leanwuzla
-trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././.lake/packages/leanwuzla/././Leanwuzla.lean -R ././.lake/packages/leanwuzla/./. -o ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.olean -i ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.ilean -c ././.lake/packages/leanwuzla/.lake/build/ir/Leanwuzla.c --json
-error: ././.lake/packages/leanwuzla/././Leanwuzla.lean:117:8: invalid dotted identifier notation, unknown identifier `Std.Tactic.BVDecide.BVBinOp.sdiv` from expected type
-  BVBinOp
-error: Lean exited with code 1
-Some required builds logged failures:
-- Leanwuzla
+Bitwuzla proved the goal after 98.077020ms, solving context: 0.000000ms
+LeanSAT proved the goal after 106.711540ms: rewriting 29.117940ms, bitblasting 0.000000ms, SAT solving 58.864800ms, LRAT trimming 6.354470ms, LRAT checking 9.018510ms
+Bitwuzla proved the goal after 84.633370ms, solving context: 1.000000ms
+LeanSAT proved the goal after 99.120381ms: rewriting 18.154880ms, bitblasting 0.000000ms, SAT solving 58.186120ms, LRAT trimming 5.894011ms, LRAT checking 13.835971ms
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gnothadd_proof.lean:38:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gnothadd_proof.lean:31:8: error: (kernel) declaration has metavariables 'basic_preserve_nsw_thm'
+[bv] [0.092111] Normalizing goal
+  [Meta.synthInstance] [0.004553] ✅️ Decidable
+        ((if True ∧ (x✝ ^^^ -1#8).msb = x✝¹.msb ∧ ((x✝ ^^^ -1#8) + x✝¹).msb ≠ (x✝ ^^^ -1#8).msb then none
+          else some ((x✝ ^^^ -1#8) + x✝¹ ^^^ -1#8)) ⊑
+          if
+              True ∧
+                (BitVec.signExtend (8 + 1) x✝ - BitVec.signExtend (8 + 1) x✝¹).msb ≠
+                  (BitVec.signExtend (8 + 1) x✝ - BitVec.signExtend (8 + 1) x✝¹).getMsbD 1 then
+            none
+          else some (x✝ - x✝¹))
+    [Meta.synthInstance] [0.002503] ✅️ apply @BitVec.Refinement.instDecidableRelOptionOfDecidableEq to Decidable
+          ((if True ∧ (x✝ ^^^ -1#8).msb = x✝¹.msb ∧ ((x✝ ^^^ -1#8) + x✝¹).msb ≠ (x✝ ^^^ -1#8).msb then none
+            else some ((x✝ ^^^ -1#8) + x✝¹ ^^^ -1#8)) ⊑
+            if
+                True ∧
+                  (BitVec.signExtend (8 + 1) x✝ - BitVec.signExtend (8 + 1) x✝¹).msb ≠
+                    (BitVec.signExtend (8 + 1) x✝ - BitVec.signExtend (8 + 1) x✝¹).getMsbD 1 then
+              none
+            else some (x✝ - x✝¹))
+      [Meta.whnf] [0.002044] Non-easy whnf: DecidableRel BitVec.Refinement
+    [Meta.check] [0.001374] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if True ∧ (x✝ ^^^ -1#8).msb = x✝¹.msb ∧ ((x✝ ^^^ -1#8) + x✝¹).msb ≠ (x✝ ^^^ -1#8).msb then none
+          else some ((x✝ ^^^ -1#8) + x✝¹ ^^^ -1#8))
+          (if
+              True ∧
+                (BitVec.signExtend (8 + 1) x✝ - BitVec.signExtend (8 + 1) x✝¹).msb ≠
+                  (BitVec.signExtend (8 + 1) x✝ - BitVec.signExtend (8 + 1) x✝¹).getMsbD 1 then
+            none
+          else some (x✝ - x✝¹))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 8
+      x✝¹ x✝ : BitVec 8
+      a✝ :
+        ¬(if True ∧ (x✝ ^^^ -1#8).msb = x✝¹.msb ∧ ((x✝ ^^^ -1#8) + x✝¹).msb ≠ (x✝ ^^^ -1#8).msb then none
+            else some ((x✝ ^^^ -1#8) + x✝¹ ^^^ -1#8)) ⊑
+            if
+                True ∧
+                  (BitVec.signExtend (8 + 1) x✝ - BitVec.signExtend (8 + 1) x✝¹).msb ≠
+                    (BitVec.signExtend (8 + 1) x✝ - BitVec.signExtend (8 + 1) x✝¹).getMsbD 1 then
+              none
+            else some (x✝ - x✝¹)
+      ⊢ False
+  [Meta.isDefEq] [0.001142] ❌️ ?a == ?a =?= ((x✝ ^^^ 255#8) + x✝¹).getLsbD 7 == (x✝ ^^^ 255#8).getLsbD 7
+  [Meta.isDefEq] [0.002570] ✅️ ?h₁ =?= Eq.trans
+        (congrArg (And True)
+          (Eq.trans
+            (congr
+              (congrArg And
+                (Eq.trans
+                  (congr (congrArg Eq (BitVec.msb_eq_getLsbD_last (x✝ ^^^ 255#8))) (BitVec.msb_eq_getLsbD_last x✝¹))
+                  (Std.Tactic.BVDecide.Normalize.Bool.eq_to_beq ((x✝ ^^^ 255#8).getLsbD 7) (x✝¹.getLsbD 7))))
+              (Eq.trans
+                (congr (congrArg Ne (BitVec.msb_eq_getLsbD_last ((x✝ ^^^ 255#8) + x✝¹)))
+                  (BitVec.msb_eq_getLsbD_last (x✝ ^^^ 255#8)))
+                (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq (((x✝ ^^^ 255#8) + x✝¹).getLsbD 7)
+                  ((x✝ ^^^ 255#8).getLsbD 7))))
+            (Std.Tactic.BVDecide.Normalize.Bool.and_to_and ((x✝ ^^^ 255#8).getLsbD 7 == x✝¹.getLsbD 7)
+              !((x✝ ^^^ 255#8) + x✝¹).getLsbD 7 == (x✝ ^^^ 255#8).getLsbD 7)))
+        (true_and
+          (((x✝ ^^^ 255#8).getLsbD 7 == x✝¹.getLsbD 7 &&
+              !((x✝ ^^^ 255#8) + x✝¹).getLsbD 7 == (x✝ ^^^ 255#8).getLsbD 7) =
+            true))
+    [Meta.isDefEq.assign] [0.002566] ✅️ ?h₁ := Eq.trans
+          (congrArg (And True)
+            (Eq.trans
+              (congr
+                (congrArg And
+                  (Eq.trans
+                    (congr (congrArg Eq (BitVec.msb_eq_getLsbD_last (x✝ ^^^ 255#8))) (BitVec.msb_eq_getLsbD_last x✝¹))
+                    (Std.Tactic.BVDecide.Normalize.Bool.eq_to_beq ((x✝ ^^^ 255#8).getLsbD 7) (x✝¹.getLsbD 7))))
+                (Eq.trans
+                  (congr (congrArg Ne (BitVec.msb_eq_getLsbD_last ((x✝ ^^^ 255#8) + x✝¹)))
+                    (BitVec.msb_eq_getLsbD_last (x✝ ^^^ 255#8)))
+                  (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq (((x✝ ^^^ 255#8) + x✝¹).getLsbD 7)
+                    ((x✝ ^^^ 255#8).getLsbD 7))))
+              (Std.Tactic.BVDecide.Normalize.Bool.and_to_and ((x✝ ^^^ 255#8).getLsbD 7 == x✝¹.getLsbD 7)
+                !((x✝ ^^^ 255#8) + x✝¹).getLsbD 7 == (x✝ ^^^ 255#8).getLsbD 7)))
+          (true_and
+            (((x✝ ^^^ 255#8).getLsbD 7 == x✝¹.getLsbD 7 &&
+                !((x✝ ^^^ 255#8) + x✝¹).getLsbD 7 == (x✝ ^^^ 255#8).getLsbD 7) =
+              true))
+      [Meta.isDefEq.assign.checkTypes] [0.002535] ✅️ (?h₁ : (True ∧
+              (x✝ ^^^ -1#8).msb = x✝¹.msb ∧ ((x✝ ^^^ -1#8) + x✝¹).msb ≠ (x✝ ^^^ -1#8).msb) =
+            (((x✝ ^^^ 255#8).getLsbD 7 == x✝¹.getLsbD 7 &&
+                !((x✝ ^^^ 255#8) + x✝¹).getLsbD 7 == (x✝ ^^^ 255#8).getLsbD 7) =
+              true)) := (Eq.trans
+            (congrArg (And True)
+              (Eq.trans
+                (congr
+                  (congrArg And
+                    (Eq.trans
+                      (congr (congrArg Eq (BitVec.msb_eq_getLsbD_last (x✝ ^^^ 255#8))) (BitVec.msb_eq_getLsbD_last x✝¹))
+                      (Std.Tactic.BVDecide.Normalize.Bool.eq_to_beq ((x✝ ^^^ 255#8).getLsbD 7) (x✝¹.getLsbD 7))))
+                  (Eq.trans
+                    (congr (congrArg Ne (BitVec.msb_eq_getLsbD_last ((x✝ ^^^ 255#8) + x✝¹)))
+                      (BitVec.msb_eq_getLsbD_last (x✝ ^^^ 255#8)))
+                    (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq (((x✝ ^^^ 255#8) + x✝¹).getLsbD 7)
+                      ((x✝ ^^^ 255#8).getLsbD 7))))
+                (Std.Tactic.BVDecide.Normalize.Bool.and_to_and ((x✝ ^^^ 255#8).getLsbD 7 == x✝¹.getLsbD 7)
+                  !((x✝ ^^^ 255#8) + x✝¹).getLsbD 7 == (x✝ ^^^ 255#8).getLsbD 7)))
+            (true_and
+              (((x✝ ^^^ 255#8).getLsbD 7 == x✝¹.getLsbD 7 &&
+                  !((x✝ ^^^ 255#8) + x✝¹).getLsbD 7 == (x✝ ^^^ 255#8).getLsbD 7) =
+                true)) : (True ∧ (x✝ ^^^ 255#8).msb = x✝¹.msb ∧ ((x✝ ^^^ 255#8) + x✝¹).msb ≠ (x✝ ^^^ 255#8).msb) =
+            (((x✝ ^^^ 255#8).getLsbD 7 == x✝¹.getLsbD 7 &&
+                !((x✝ ^^^ 255#8) + x✝¹).getLsbD 7 == (x✝ ^^^ 255#8).getLsbD 7) =
+              true))
+        [Meta.isDefEq] [0.002531] ✅️ (True ∧
+                (x✝ ^^^ -1#8).msb = x✝¹.msb ∧ ((x✝ ^^^ -1#8) + x✝¹).msb ≠ (x✝ ^^^ -1#8).msb) =
+              (((x✝ ^^^ 255#8).getLsbD 7 == x✝¹.getLsbD 7 &&
+                  !((x✝ ^^^ 255#8) + x✝¹).getLsbD 7 == (x✝ ^^^ 255#8).getLsbD 7) =
+                true) =?= (True ∧ (x✝ ^^^ 255#8).msb = x✝¹.msb ∧ ((x✝ ^^^ 255#8) + x✝¹).msb ≠ (x✝ ^^^ 255#8).msb) =
+              (((x✝ ^^^ 255#8).getLsbD 7 == x✝¹.getLsbD 7 &&
+                  !((x✝ ^^^ 255#8) + x✝¹).getLsbD 7 == (x✝ ^^^ 255#8).getLsbD 7) =
+                true)
+          [Meta.isDefEq] [0.002503] ✅️ True ∧
+                (x✝ ^^^ -1#8).msb = x✝¹.msb ∧
+                  ((x✝ ^^^ -1#8) + x✝¹).msb ≠
+                    (x✝ ^^^
+                        -1#8).msb =?= True ∧
+                (x✝ ^^^ 255#8).msb = x✝¹.msb ∧ ((x✝ ^^^ 255#8) + x✝¹).msb ≠ (x✝ ^^^ 255#8).msb
+            [Meta.isDefEq] [0.002483] ✅️ (x✝ ^^^ -1#8).msb = x✝¹.msb ∧
+                  ((x✝ ^^^ -1#8) + x✝¹).msb ≠
+                    (x✝ ^^^ -1#8).msb =?= (x✝ ^^^ 255#8).msb = x✝¹.msb ∧ ((x✝ ^^^ 255#8) + x✝¹).msb ≠ (x✝ ^^^ 255#8).msb
+              [Meta.isDefEq] [0.001308] ✅️ (x✝ ^^^ -1#8).msb = x✝¹.msb =?= (x✝ ^^^ 255#8).msb = x✝¹.msb
+                [Meta.isDefEq] [0.001287] ✅️ (x✝ ^^^ -1#8).msb =?= (x✝ ^^^ 255#8).msb
+                  [Meta.isDefEq.delta] [0.001270] ✅️ (x✝ ^^^ -1#8).msb =?= (x✝ ^^^ 255#8).msb
+                    [Meta.isDefEq] [0.001246] ✅️ x✝ ^^^ -1#8 =?= x✝ ^^^ 255#8
+                      [Meta.isDefEq] [0.001210] ✅️ instHXorOfXor.1 x✝ (-1#8) =?= instHXorOfXor.1 x✝ 255#8
+                        [Meta.isDefEq] [0.001122] ✅️ Xor.xor x✝ (-1#8) =?= Xor.xor x✝ 255#8
+                          [Meta.isDefEq] [0.001087] ✅️ BitVec.instXor.1 x✝ (-1#8) =?= BitVec.instXor.1 x✝ 255#8
+                            [Meta.isDefEq] [0.001016] ✅️ x✝.xor (-1#8) =?= x✝.xor 255#8
+              [Meta.isDefEq] [0.001160] ✅️ ((x✝ ^^^ -1#8) + x✝¹).msb ≠
+                    (x✝ ^^^ -1#8).msb =?= ((x✝ ^^^ 255#8) + x✝¹).msb ≠ (x✝ ^^^ 255#8).msb
+                [Meta.isDefEq.delta] [0.001110] ✅️ ((x✝ ^^^ -1#8) + x✝¹).msb ≠
+                      (x✝ ^^^ -1#8).msb =?= ((x✝ ^^^ 255#8) + x✝¹).msb ≠ (x✝ ^^^ 255#8).msb
+                  [Meta.isDefEq] [0.001031] ✅️ ((x✝ ^^^ -1#8) + x✝¹).msb =?= ((x✝ ^^^ 255#8) + x✝¹).msb
+                    [Meta.isDefEq.delta] [0.001014] ✅️ ((x✝ ^^^ -1#8) + x✝¹).msb =?= ((x✝ ^^^ 255#8) + x✝¹).msb
+                      [Meta.isDefEq] [0.001002] ✅️ (x✝ ^^^ -1#8) + x✝¹ =?= (x✝ ^^^ 255#8) + x✝¹
+  [Meta.isDefEq] [0.001430] ✅️ ?h₃ =?= fun a => Eq.refl (some ((x✝ ^^^ 255#8) + x✝¹ ^^^ 255#8))
+    [Meta.isDefEq.assign] [0.001425] ✅️ ?h₃ := fun a => Eq.refl (some ((x✝ ^^^ 255#8) + x✝¹ ^^^ 255#8))
+      [Meta.isDefEq.assign.checkTypes] [0.001288] ✅️ (?h₃ : ¬((x✝ ^^^ 255#8).getLsbD 7 == x✝¹.getLsbD 7 &&
+                  !((x✝ ^^^ 255#8) + x✝¹).getLsbD 7 == (x✝ ^^^ 255#8).getLsbD 7) =
+                true →
+            some ((x✝ ^^^ -1#8) + x✝¹ ^^^ -1#8) =
+              some
+                ((x✝ ^^^ 255#8) + x✝¹ ^^^
+                  255#8)) := (fun a =>
+            Eq.refl
+              (some
+                ((x✝ ^^^ 255#8) + x✝¹ ^^^
+                  255#8)) : ¬((x✝ ^^^ 255#8).getLsbD 7 == x✝¹.getLsbD 7 &&
+                  !((x✝ ^^^ 255#8) + x✝¹).getLsbD 7 == (x✝ ^^^ 255#8).getLsbD 7) =
+                true →
+            some ((x✝ ^^^ 255#8) + x✝¹ ^^^ 255#8) = some ((x✝ ^^^ 255#8) + x✝¹ ^^^ 255#8))
+        [Meta.isDefEq] [0.001282] ✅️ ¬((x✝ ^^^ 255#8).getLsbD 7 == x✝¹.getLsbD 7 &&
+                    !((x✝ ^^^ 255#8) + x✝¹).getLsbD 7 == (x✝ ^^^ 255#8).getLsbD 7) =
+                  true →
+              some ((x✝ ^^^ -1#8) + x✝¹ ^^^ -1#8) =
+                some
+                  ((x✝ ^^^ 255#8) + x✝¹ ^^^
+                    255#8) =?= ¬((x✝ ^^^ 255#8).getLsbD 7 == x✝¹.getLsbD 7 &&
+                    !((x✝ ^^^ 255#8) + x✝¹).getLsbD 7 == (x✝ ^^^ 255#8).getLsbD 7) =
+                  true →
+              some ((x✝ ^^^ 255#8) + x✝¹ ^^^ 255#8) = some ((x✝ ^^^ 255#8) + x✝¹ ^^^ 255#8)
+          [Meta.isDefEq] [0.001227] ✅️ some ((x✝ ^^^ -1#8) + x✝¹ ^^^ -1#8) =
+                some
+                  ((x✝ ^^^ 255#8) + x✝¹ ^^^
+                    255#8) =?= some ((x✝ ^^^ 255#8) + x✝¹ ^^^ 255#8) = some ((x✝ ^^^ 255#8) + x✝¹ ^^^ 255#8)
+            [Meta.isDefEq] [0.001197] ✅️ some ((x✝ ^^^ -1#8) + x✝¹ ^^^ -1#8) =?= some ((x✝ ^^^ 255#8) + x✝¹ ^^^ 255#8)
+              [Meta.isDefEq] [0.001163] ✅️ (x✝ ^^^ -1#8) + x✝¹ ^^^ -1#8 =?= (x✝ ^^^ 255#8) + x✝¹ ^^^ 255#8
+                [Meta.isDefEq] [0.001129] ✅️ instHXorOfXor.1 ((x✝ ^^^ -1#8) + x✝¹)
+                      (-1#8) =?= instHXorOfXor.1 ((x✝ ^^^ 255#8) + x✝¹) 255#8
+                  [Meta.isDefEq] [0.001082] ✅️ Xor.xor ((x✝ ^^^ -1#8) + x✝¹)
+                        (-1#8) =?= Xor.xor ((x✝ ^^^ 255#8) + x✝¹) 255#8
+                    [Meta.isDefEq] [0.001051] ✅️ BitVec.instXor.1 ((x✝ ^^^ -1#8) + x✝¹)
+                          (-1#8) =?= BitVec.instXor.1 ((x✝ ^^^ 255#8) + x✝¹) 255#8
+                      [Meta.isDefEq] [0.001008] ✅️ ((x✝ ^^^ -1#8) + x✝¹).xor (-1#8) =?= ((x✝ ^^^ 255#8) + x✝¹).xor 255#8
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 8
+      x✝¹ x✝ : BitVec 8
+      a✝ :
+        ¬(if
+                ((x✝ ^^^ 255#8).getLsbD 7 == x✝¹.getLsbD 7 &&
+                    !((x✝ ^^^ 255#8) + x✝¹).getLsbD 7 == (x✝ ^^^ 255#8).getLsbD 7) =
+                  true then
+              none
+            else some ((x✝ ^^^ 255#8) + x✝¹ ^^^ 255#8)) ⊑
+            if
+                (!(BitVec.signExtend 9 x✝ + (~~~BitVec.signExtend 9 x✝¹ + 1#9)).getLsbD 8 ==
+                      (BitVec.signExtend 9 x✝ + (~~~BitVec.signExtend 9 x✝¹ + 1#9)).getMsbD 1) =
+                  true then
+              none
+            else some (x✝ + (~~~x✝¹ + 1#8))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gnothadd_proof.lean:49:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gnothadd_proof.lean:42:8: error: (kernel) declaration has metavariables 'basic_preserve_nuw_thm'
+[bv] [0.031408] Normalizing goal
+  [Meta.synthInstance] [0.001264] ✅️ Decidable
+        ((if True ∧ ((x✝ ^^^ -1#8) + x✝¹ < x✝ ^^^ -1#8 ∨ (x✝ ^^^ -1#8) + x✝¹ < x✝¹) then none
+          else some ((x✝ ^^^ -1#8) + x✝¹ ^^^ -1#8)) ⊑
+          if True ∧ x✝ < x✝¹ then none else some (x✝ - x✝¹))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 8
+      x✝¹ x✝ : BitVec 8
+      a✝ :
+        ¬(if True ∧ ((x✝ ^^^ -1#8) + x✝¹ < x✝ ^^^ -1#8 ∨ (x✝ ^^^ -1#8) + x✝¹ < x✝¹) then none
+            else some ((x✝ ^^^ -1#8) + x✝¹ ^^^ -1#8)) ⊑
+            if True ∧ x✝ < x✝¹ then none else some (x✝ - x✝¹)
+      ⊢ False
+  [Meta.isDefEq] [0.001609] ✅️ ?h₁ =?= Eq.trans
+        (congrArg (And True)
+          (Eq.trans
+            (Eq.trans
+              (congr (congrArg Or (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult ((x✝ ^^^ 255#8) + x✝¹) (x✝ ^^^ 255#8)))
+                (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult ((x✝ ^^^ 255#8) + x✝¹) x✝¹))
+              (Std.Tactic.BVDecide.Normalize.Bool.or_to_or (x✝ ^^^ 255#8 >ᵤ (x✝ ^^^ 255#8) + x✝¹)
+                (x✝¹ >ᵤ (x✝ ^^^ 255#8) + x✝¹)))
+            (congrArg (fun x => x = true)
+              (Std.Tactic.BVDecide.Normalize.Bool.or_elim (x✝ ^^^ 255#8 >ᵤ (x✝ ^^^ 255#8) + x✝¹)
+                (x✝¹ >ᵤ (x✝ ^^^ 255#8) + x✝¹)))))
+        (true_and ((!((!x✝ ^^^ 255#8 >ᵤ (x✝ ^^^ 255#8) + x✝¹) && !x✝¹ >ᵤ (x✝ ^^^ 255#8) + x✝¹)) = true))
+    [Meta.isDefEq.assign] [0.001606] ✅️ ?h₁ := Eq.trans
+          (congrArg (And True)
+            (Eq.trans
+              (Eq.trans
+                (congr (congrArg Or (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult ((x✝ ^^^ 255#8) + x✝¹) (x✝ ^^^ 255#8)))
+                  (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult ((x✝ ^^^ 255#8) + x✝¹) x✝¹))
+                (Std.Tactic.BVDecide.Normalize.Bool.or_to_or (x✝ ^^^ 255#8 >ᵤ (x✝ ^^^ 255#8) + x✝¹)
+                  (x✝¹ >ᵤ (x✝ ^^^ 255#8) + x✝¹)))
+              (congrArg (fun x => x = true)
+                (Std.Tactic.BVDecide.Normalize.Bool.or_elim (x✝ ^^^ 255#8 >ᵤ (x✝ ^^^ 255#8) + x✝¹)
+                  (x✝¹ >ᵤ (x✝ ^^^ 255#8) + x✝¹)))))
+          (true_and ((!((!x✝ ^^^ 255#8 >ᵤ (x✝ ^^^ 255#8) + x✝¹) && !x✝¹ >ᵤ (x✝ ^^^ 255#8) + x✝¹)) = true))
+      [Meta.isDefEq.assign.checkTypes] [0.001591] ✅️ (?h₁ : (True ∧
+              ((x✝ ^^^ -1#8) + x✝¹ < x✝ ^^^ -1#8 ∨ (x✝ ^^^ -1#8) + x✝¹ < x✝¹)) =
+            ((!((!x✝ ^^^ 255#8 >ᵤ (x✝ ^^^ 255#8) + x✝¹) && !x✝¹ >ᵤ (x✝ ^^^ 255#8) + x✝¹)) =
+              true)) := (Eq.trans
+            (congrArg (And True)
+              (Eq.trans
+                (Eq.trans
+                  (congr
+                    (congrArg Or (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult ((x✝ ^^^ 255#8) + x✝¹) (x✝ ^^^ 255#8)))
+                    (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult ((x✝ ^^^ 255#8) + x✝¹) x✝¹))
+                  (Std.Tactic.BVDecide.Normalize.Bool.or_to_or (x✝ ^^^ 255#8 >ᵤ (x✝ ^^^ 255#8) + x✝¹)
+                    (x✝¹ >ᵤ (x✝ ^^^ 255#8) + x✝¹)))
+                (congrArg (fun x => x = true)
+                  (Std.Tactic.BVDecide.Normalize.Bool.or_elim (x✝ ^^^ 255#8 >ᵤ (x✝ ^^^ 255#8) + x✝¹)
+                    (x✝¹ >ᵤ (x✝ ^^^ 255#8) + x✝¹)))))
+            (true_and
+              ((!((!x✝ ^^^ 255#8 >ᵤ (x✝ ^^^ 255#8) + x✝¹) && !x✝¹ >ᵤ (x✝ ^^^ 255#8) + x✝¹)) =
+                true)) : (True ∧ ((x✝ ^^^ 255#8) + x✝¹ < x✝ ^^^ 255#8 ∨ (x✝ ^^^ 255#8) + x✝¹ < x✝¹)) =
+            ((!((!x✝ ^^^ 255#8 >ᵤ (x✝ ^^^ 255#8) + x✝¹) && !x✝¹ >ᵤ (x✝ ^^^ 255#8) + x✝¹)) = true))
+        [Meta.isDefEq] [0.001588] ✅️ (True ∧ ((x✝ ^^^ -1#8) + x✝¹ < x✝ ^^^ -1#8 ∨ (x✝ ^^^ -1#8) + x✝¹ < x✝¹)) =
+              ((!((!x✝ ^^^ 255#8 >ᵤ (x✝ ^^^ 255#8) + x✝¹) && !x✝¹ >ᵤ (x✝ ^^^ 255#8) + x✝¹)) =
+                true) =?= (True ∧ ((x✝ ^^^ 255#8) + x✝¹ < x✝ ^^^ 255#8 ∨ (x✝ ^^^ 255#8) + x✝¹ < x✝¹)) =
+              ((!((!x✝ ^^^ 255#8 >ᵤ (x✝ ^^^ 255#8) + x✝¹) && !x✝¹ >ᵤ (x✝ ^^^ 255#8) + x✝¹)) = true)
+          [Meta.isDefEq] [0.001567] ✅️ True ∧
+                ((x✝ ^^^ -1#8) + x✝¹ < x✝ ^^^ -1#8 ∨
+                  (x✝ ^^^ -1#8) + x✝¹ <
+                    x✝¹) =?= True ∧ ((x✝ ^^^ 255#8) + x✝¹ < x✝ ^^^ 255#8 ∨ (x✝ ^^^ 255#8) + x✝¹ < x✝¹)
+            [Meta.isDefEq] [0.001552] ✅️ (x✝ ^^^ -1#8) + x✝¹ < x✝ ^^^ -1#8 ∨
+                  (x✝ ^^^ -1#8) + x✝¹ < x✝¹ =?= (x✝ ^^^ 255#8) + x✝¹ < x✝ ^^^ 255#8 ∨ (x✝ ^^^ 255#8) + x✝¹ < x✝¹
+              [Meta.isDefEq] [0.001448] ✅️ (x✝ ^^^ -1#8) + x✝¹ < x✝ ^^^ -1#8 =?= (x✝ ^^^ 255#8) + x✝¹ < x✝ ^^^ 255#8
+                [Meta.isDefEq] [0.001426] ✅️ instLTBitVec.1 ((x✝ ^^^ -1#8) + x✝¹)
+                      (x✝ ^^^ -1#8) =?= instLTBitVec.1 ((x✝ ^^^ 255#8) + x✝¹) (x✝ ^^^ 255#8)
+                  [Meta.isDefEq] [0.001364] ✅️ ((x✝ ^^^ -1#8) + x✝¹).toNat <
+                        (x✝ ^^^ -1#8).toNat =?= ((x✝ ^^^ 255#8) + x✝¹).toNat < (x✝ ^^^ 255#8).toNat
+                    [Meta.isDefEq] [0.001350] ✅️ instLTNat.1 ((x✝ ^^^ -1#8) + x✝¹).toNat
+                          (x✝ ^^^ -1#8).toNat =?= instLTNat.1 ((x✝ ^^^ 255#8) + x✝¹).toNat (x✝ ^^^ 255#8).toNat
+                      [Meta.isDefEq] [0.001316] ✅️ ((x✝ ^^^ -1#8) + x✝¹).toNat.lt
+                            (x✝ ^^^ -1#8).toNat =?= ((x✝ ^^^ 255#8) + x✝¹).toNat.lt (x✝ ^^^ 255#8).toNat
+                        [Meta.isDefEq.delta] [0.001304] ✅️ ((x✝ ^^^ -1#8) + x✝¹).toNat.lt
+                              (x✝ ^^^ -1#8).toNat =?= ((x✝ ^^^ 255#8) + x✝¹).toNat.lt (x✝ ^^^ 255#8).toNat
+                          [Meta.isDefEq] [0.001261] ✅️ ((x✝ ^^^ -1#8) + x✝¹).toNat =?= ((x✝ ^^^ 255#8) + x✝¹).toNat
+                            [Meta.isDefEq.delta] [0.001248] ✅️ ((x✝ ^^^ -1#8) +
+                                    x✝¹).toNat =?= ((x✝ ^^^ 255#8) + x✝¹).toNat
+                              [Meta.isDefEq] [0.001229] ✅️ (x✝ ^^^ -1#8) + x✝¹ =?= (x✝ ^^^ 255#8) + x✝¹
+                                [Meta.isDefEq] [0.001093] ✅️ instHAdd.1 (x✝ ^^^ -1#8)
+                                      x✝¹ =?= instHAdd.1 (x✝ ^^^ 255#8) x✝¹
+                                  [Meta.isDefEq] [0.001050] ✅️ Add.add (x✝ ^^^ -1#8) x✝¹ =?= Add.add (x✝ ^^^ 255#8) x✝¹
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 8
+      x✝¹ x✝ : BitVec 8
+      a✝ :
+        ¬(if (!((!x✝ ^^^ 255#8 >ᵤ (x✝ ^^^ 255#8) + x✝¹) && !x✝¹ >ᵤ (x✝ ^^^ 255#8) + x✝¹)) = true then none
+            else some ((x✝ ^^^ 255#8) + x✝¹ ^^^ 255#8)) ⊑
+            if (x✝¹ >ᵤ x✝) = true then none else some (x✝ + (~~~x✝¹ + 1#8))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gnothadd_proof.lean:60:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gnothadd_proof.lean:53:8: error: (kernel) declaration has metavariables 'basic_preserve_nuw_nsw_thm'
+[bv] [0.067229] Normalizing goal
+  [Meta.synthInstance] [0.001613] ✅️ Decidable
+        ((if True ∧ (x✝ ^^^ -1#8).msb = x✝¹.msb ∧ ((x✝ ^^^ -1#8) + x✝¹).msb ≠ (x✝ ^^^ -1#8).msb then none
+          else
+            if True ∧ ((x✝ ^^^ -1#8) + x✝¹ < x✝ ^^^ -1#8 ∨ (x✝ ^^^ -1#8) + x✝¹ < x✝¹) then none
+            else some ((x✝ ^^^ -1#8) + x✝¹ ^^^ -1#8)) ⊑
+          if
+              True ∧
+                (BitVec.signExtend (8 + 1) x✝ - BitVec.signExtend (8 + 1) x✝¹).msb ≠
+                  (BitVec.signExtend (8 + 1) x✝ - BitVec.signExtend (8 + 1) x✝¹).getMsbD 1 then
+            none
+          else if True ∧ x✝ < x✝¹ then none else some (x✝ - x✝¹))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 8
+      x✝¹ x✝ : BitVec 8
+      a✝ :
+        ¬(if True ∧ (x✝ ^^^ -1#8).msb = x✝¹.msb ∧ ((x✝ ^^^ -1#8) + x✝¹).msb ≠ (x✝ ^^^ -1#8).msb then none
+            else
+              if True ∧ ((x✝ ^^^ -1#8) + x✝¹ < x✝ ^^^ -1#8 ∨ (x✝ ^^^ -1#8) + x✝¹ < x✝¹) then none
+              else some ((x✝ ^^^ -1#8) + x✝¹ ^^^ -1#8)) ⊑
+            if
+                True ∧
+                  (BitVec.signExtend (8 + 1) x✝ - BitVec.signExtend (8 + 1) x✝¹).msb ≠
+                    (BitVec.signExtend (8 + 1) x✝ - BitVec.signExtend (8 + 1) x✝¹).getMsbD 1 then
+              none
+            else if True ∧ x✝ < x✝¹ then none else some (x✝ - x✝¹)
+      ⊢ False
+  [Meta.isDefEq] [0.001741] ✅️ ?h₁ =?= Eq.trans
+        (congrArg (And True)
+          (Eq.trans
+            (congr
+              (congrArg And
+                (Eq.trans
+                  (congr (congrArg Eq (BitVec.msb_eq_getLsbD_last (x✝ ^^^ 255#8))) (BitVec.msb_eq_getLsbD_last x✝¹))
+                  (Std.Tactic.BVDecide.Normalize.Bool.eq_to_beq ((x✝ ^^^ 255#8).getLsbD 7) (x✝¹.getLsbD 7))))
+              (Eq.trans
+                (congr (congrArg Ne (BitVec.msb_eq_getLsbD_last ((x✝ ^^^ 255#8) + x✝¹)))
+                  (BitVec.msb_eq_getLsbD_last (x✝ ^^^ 255#8)))
+                (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq (((x✝ ^^^ 255#8) + x✝¹).getLsbD 7)
+                  ((x✝ ^^^ 255#8).getLsbD 7))))
+            (Std.Tactic.BVDecide.Normalize.Bool.and_to_and ((x✝ ^^^ 255#8).getLsbD 7 == x✝¹.getLsbD 7)
+              !((x✝ ^^^ 255#8) + x✝¹).getLsbD 7 == (x✝ ^^^ 255#8).getLsbD 7)))
+        (true_and
+          (((x✝ ^^^ 255#8).getLsbD 7 == x✝¹.getLsbD 7 &&
+              !((x✝ ^^^ 255#8) + x✝¹).getLsbD 7 == (x✝ ^^^ 255#8).getLsbD 7) =
+            true))
+    [Meta.isDefEq.assign] [0.001739] ✅️ ?h₁ := Eq.trans
+          (congrArg (And True)
+            (Eq.trans
+              (congr
+                (congrArg And
+                  (Eq.trans
+                    (congr (congrArg Eq (BitVec.msb_eq_getLsbD_last (x✝ ^^^ 255#8))) (BitVec.msb_eq_getLsbD_last x✝¹))
+                    (Std.Tactic.BVDecide.Normalize.Bool.eq_to_beq ((x✝ ^^^ 255#8).getLsbD 7) (x✝¹.getLsbD 7))))
+                (Eq.trans
+                  (congr (congrArg Ne (BitVec.msb_eq_getLsbD_last ((x✝ ^^^ 255#8) + x✝¹)))
+                    (BitVec.msb_eq_getLsbD_last (x✝ ^^^ 255#8)))
+                  (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq (((x✝ ^^^ 255#8) + x✝¹).getLsbD 7)
+                    ((x✝ ^^^ 255#8).getLsbD 7))))
+              (Std.Tactic.BVDecide.Normalize.Bool.and_to_and ((x✝ ^^^ 255#8).getLsbD 7 == x✝¹.getLsbD 7)
+                !((x✝ ^^^ 255#8) + x✝¹).getLsbD 7 == (x✝ ^^^ 255#8).getLsbD 7)))
+          (true_and
+            (((x✝ ^^^ 255#8).getLsbD 7 == x✝¹.getLsbD 7 &&
+                !((x✝ ^^^ 255#8) + x✝¹).getLsbD 7 == (x✝ ^^^ 255#8).getLsbD 7) =
+              true))
+      [Meta.isDefEq.assign.checkTypes] [0.001719] ✅️ (?h₁ : (True ∧
+              (x✝ ^^^ -1#8).msb = x✝¹.msb ∧ ((x✝ ^^^ -1#8) + x✝¹).msb ≠ (x✝ ^^^ -1#8).msb) =
+            (((x✝ ^^^ 255#8).getLsbD 7 == x✝¹.getLsbD 7 &&
+                !((x✝ ^^^ 255#8) + x✝¹).getLsbD 7 == (x✝ ^^^ 255#8).getLsbD 7) =
+              true)) := (Eq.trans
+            (congrArg (And True)
+              (Eq.trans
+                (congr
+                  (congrArg And
+                    (Eq.trans
+                      (congr (congrArg Eq (BitVec.msb_eq_getLsbD_last (x✝ ^^^ 255#8))) (BitVec.msb_eq_getLsbD_last x✝¹))
+                      (Std.Tactic.BVDecide.Normalize.Bool.eq_to_beq ((x✝ ^^^ 255#8).getLsbD 7) (x✝¹.getLsbD 7))))
+                  (Eq.trans
+                    (congr (congrArg Ne (BitVec.msb_eq_getLsbD_last ((x✝ ^^^ 255#8) + x✝¹)))
+                      (BitVec.msb_eq_getLsbD_last (x✝ ^^^ 255#8)))
+                    (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq (((x✝ ^^^ 255#8) + x✝¹).getLsbD 7)
+                      ((x✝ ^^^ 255#8).getLsbD 7))))
+                (Std.Tactic.BVDecide.Normalize.Bool.and_to_and ((x✝ ^^^ 255#8).getLsbD 7 == x✝¹.getLsbD 7)
+                  !((x✝ ^^^ 255#8) + x✝¹).getLsbD 7 == (x✝ ^^^ 255#8).getLsbD 7)))
+            (true_and
+              (((x✝ ^^^ 255#8).getLsbD 7 == x✝¹.getLsbD 7 &&
+                  !((x✝ ^^^ 255#8) + x✝¹).getLsbD 7 == (x✝ ^^^ 255#8).getLsbD 7) =
+                true)) : (True ∧ (x✝ ^^^ 255#8).msb = x✝¹.msb ∧ ((x✝ ^^^ 255#8) + x✝¹).msb ≠ (x✝ ^^^ 255#8).msb) =
+            (((x✝ ^^^ 255#8).getLsbD 7 == x✝¹.getLsbD 7 &&
+                !((x✝ ^^^ 255#8) + x✝¹).getLsbD 7 == (x✝ ^^^ 255#8).getLsbD 7) =
+              true))
+        [Meta.isDefEq] [0.001715] ✅️ (True ∧
+                (x✝ ^^^ -1#8).msb = x✝¹.msb ∧ ((x✝ ^^^ -1#8) + x✝¹).msb ≠ (x✝ ^^^ -1#8).msb) =
+              (((x✝ ^^^ 255#8).getLsbD 7 == x✝¹.getLsbD 7 &&
+                  !((x✝ ^^^ 255#8) + x✝¹).getLsbD 7 == (x✝ ^^^ 255#8).getLsbD 7) =
+                true) =?= (True ∧ (x✝ ^^^ 255#8).msb = x✝¹.msb ∧ ((x✝ ^^^ 255#8) + x✝¹).msb ≠ (x✝ ^^^ 255#8).msb) =
+              (((x✝ ^^^ 255#8).getLsbD 7 == x✝¹.getLsbD 7 &&
+                  !((x✝ ^^^ 255#8) + x✝¹).getLsbD 7 == (x✝ ^^^ 255#8).getLsbD 7) =
+                true)
+          [Meta.isDefEq] [0.001695] ✅️ True ∧
+                (x✝ ^^^ -1#8).msb = x✝¹.msb ∧
+                  ((x✝ ^^^ -1#8) + x✝¹).msb ≠
+                    (x✝ ^^^
+                        -1#8).msb =?= True ∧
+                (x✝ ^^^ 255#8).msb = x✝¹.msb ∧ ((x✝ ^^^ 255#8) + x✝¹).msb ≠ (x✝ ^^^ 255#8).msb
+            [Meta.isDefEq] [0.001678] ✅️ (x✝ ^^^ -1#8).msb = x✝¹.msb ∧
+                  ((x✝ ^^^ -1#8) + x✝¹).msb ≠
+                    (x✝ ^^^ -1#8).msb =?= (x✝ ^^^ 255#8).msb = x✝¹.msb ∧ ((x✝ ^^^ 255#8) + x✝¹).msb ≠ (x✝ ^^^ 255#8).msb
+  [Meta.isDefEq] [0.005674] ✅️ ?x < ?y =?= x✝ < x✝¹
+    [Meta.isDefEq] [0.005568] ✅️ ?x =?= x✝
+      [Meta.isDefEq.assign] [0.005565] ✅️ ?x := x✝
+        [Meta.isDefEq.assign.checkTypes] [0.005559] ✅️ (?x : BitVec ?w) := (x✝ : BitVec 8)
+          [Meta.isDefEq] [0.005551] ✅️ BitVec ?w =?= BitVec 8
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 8
+      x✝¹ x✝ : BitVec 8
+      a✝ :
+        ¬(if
+                ((x✝ ^^^ 255#8).getLsbD 7 == x✝¹.getLsbD 7 &&
+                    !((x✝ ^^^ 255#8) + x✝¹).getLsbD 7 == (x✝ ^^^ 255#8).getLsbD 7) =
+                  true then
+              none
+            else
+              if (!((!x✝ ^^^ 255#8 >ᵤ (x✝ ^^^ 255#8) + x✝¹) && !x✝¹ >ᵤ (x✝ ^^^ 255#8) + x✝¹)) = true then none
+              else some ((x✝ ^^^ 255#8) + x✝¹ ^^^ 255#8)) ⊑
+            if
+                (!(BitVec.signExtend 9 x✝ + (~~~BitVec.signExtend 9 x✝¹ + 1#9)).getLsbD 8 ==
+                      (BitVec.signExtend 9 x✝ + (~~~BitVec.signExtend 9 x✝¹ + 1#9)).getMsbD 1) =
+                  true then
+              none
+            else if (x✝¹ >ᵤ x✝) = true then none else some (x✝ + (~~~x✝¹ + 1#8))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint

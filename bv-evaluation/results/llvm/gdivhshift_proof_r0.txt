@@ -21,10 +21,2567 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: dec
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
 ⚠ [886/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-✖ [890/892] Building Leanwuzla
-trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././.lake/packages/leanwuzla/././Leanwuzla.lean -R ././.lake/packages/leanwuzla/./. -o ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.olean -i ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.ilean -c ././.lake/packages/leanwuzla/.lake/build/ir/Leanwuzla.c --json
-error: ././.lake/packages/leanwuzla/././Leanwuzla.lean:117:8: invalid dotted identifier notation, unknown identifier `Std.Tactic.BVDecide.BVBinOp.sdiv` from expected type
-  BVBinOp
-error: Lean exited with code 1
-Some required builds logged failures:
-- Leanwuzla
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:17:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:11:8: error: (kernel) declaration has metavariables 't1_thm'
+[bv] [0.091720] Normalizing goal
+  [Meta.synthInstance] [0.001830] ✅️ Decidable
+        ((if x✝¹ ≥ ↑32 then none
+          else
+            if
+                (2#32 <<< x✝¹ == 0 || 32 != 1 && BitVec.zeroExtend 32 x✝ == BitVec.intMin 32 && 2#32 <<< x✝¹ == -1) =
+                  true then
+              none
+            else some ((BitVec.zeroExtend 32 x✝).sdiv (2#32 <<< x✝¹))) ⊑
+          if x✝¹ + 1#32 ≥ ↑32 then none else some (BitVec.zeroExtend 32 x✝ >>> (x✝¹ + 1#32)))
+    [Meta.check] [0.001095] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if x✝¹ ≥ ↑32 then none
+          else
+            if
+                (2#32 <<< x✝¹ == 0 || 32 != 1 && BitVec.zeroExtend 32 x✝ == BitVec.intMin 32 && 2#32 <<< x✝¹ == -1) =
+                  true then
+              none
+            else some ((BitVec.zeroExtend 32 x✝).sdiv (2#32 <<< x✝¹)))
+          (if x✝¹ + 1#32 ≥ ↑32 then none else some (BitVec.zeroExtend 32 x✝ >>> (x✝¹ + 1#32)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 16
+      x✝¹ : BitVec 32
+      x✝ : BitVec 16
+      a✝ :
+        ¬(if x✝¹ ≥ ↑32 then none
+            else
+              if
+                  (2#32 <<< x✝¹ == 0 || 32 != 1 && BitVec.zeroExtend 32 x✝ == BitVec.intMin 32 && 2#32 <<< x✝¹ == -1) =
+                    true then
+                none
+              else some ((BitVec.zeroExtend 32 x✝).sdiv (2#32 <<< x✝¹))) ⊑
+            if x✝¹ + 1#32 ≥ ↑32 then none else some (BitVec.zeroExtend 32 x✝ >>> (x✝¹ + 1#32))
+      ⊢ False
+  [Meta.isDefEq] [0.001905] ✅️ ?h₁ =?= congrArg (fun x => x = true)
+        (Eq.trans
+          (congrArg (fun x => 2#32 <<< x✝¹ == 0#32 || x && 2#32 <<< x✝¹ == 4294967295#32)
+            (Bool.true_and (BitVec.zeroExtend 32 x✝ == BitVec.intMin 32)))
+          (Std.Tactic.BVDecide.Normalize.Bool.or_elim (2#32 <<< x✝¹ == 0#32)
+            (BitVec.zeroExtend 32 x✝ == BitVec.intMin 32 && 2#32 <<< x✝¹ == 4294967295#32)))
+    [Meta.isDefEq.assign] [0.001901] ✅️ ?h₁ := congrArg (fun x => x = true)
+          (Eq.trans
+            (congrArg (fun x => 2#32 <<< x✝¹ == 0#32 || x && 2#32 <<< x✝¹ == 4294967295#32)
+              (Bool.true_and (BitVec.zeroExtend 32 x✝ == BitVec.intMin 32)))
+            (Std.Tactic.BVDecide.Normalize.Bool.or_elim (2#32 <<< x✝¹ == 0#32)
+              (BitVec.zeroExtend 32 x✝ == BitVec.intMin 32 && 2#32 <<< x✝¹ == 4294967295#32)))
+      [Meta.isDefEq.assign.checkTypes] [0.001885] ✅️ (?h₁ : ((2#32 <<< x✝¹ == 0 ||
+                32 != 1 && BitVec.zeroExtend 32 x✝ == BitVec.intMin 32 && 2#32 <<< x✝¹ == -1) =
+              true) =
+            ((!(!2#32 <<< x✝¹ == 0#32 &&
+                  !(BitVec.zeroExtend 32 x✝ == BitVec.intMin 32 && 2#32 <<< x✝¹ == 4294967295#32))) =
+              true)) := (congrArg (fun x => x = true)
+            (Eq.trans
+              (congrArg (fun x => 2#32 <<< x✝¹ == 0#32 || x && 2#32 <<< x✝¹ == 4294967295#32)
+                (Bool.true_and (BitVec.zeroExtend 32 x✝ == BitVec.intMin 32)))
+              (Std.Tactic.BVDecide.Normalize.Bool.or_elim (2#32 <<< x✝¹ == 0#32)
+                (BitVec.zeroExtend 32 x✝ == BitVec.intMin 32 &&
+                  2#32 <<< x✝¹ ==
+                    4294967295#32))) : ((2#32 <<< x✝¹ == 0#32 ||
+                true && BitVec.zeroExtend 32 x✝ == BitVec.intMin 32 && 2#32 <<< x✝¹ == 4294967295#32) =
+              true) =
+            ((!(!2#32 <<< x✝¹ == 0#32 &&
+                  !(BitVec.zeroExtend 32 x✝ == BitVec.intMin 32 && 2#32 <<< x✝¹ == 4294967295#32))) =
+              true))
+        [Meta.isDefEq] [0.001880] ✅️ ((2#32 <<< x✝¹ == 0 ||
+                  32 != 1 && BitVec.zeroExtend 32 x✝ == BitVec.intMin 32 && 2#32 <<< x✝¹ == -1) =
+                true) =
+              ((!(!2#32 <<< x✝¹ == 0#32 &&
+                    !(BitVec.zeroExtend 32 x✝ == BitVec.intMin 32 && 2#32 <<< x✝¹ == 4294967295#32))) =
+                true) =?= ((2#32 <<< x✝¹ == 0#32 ||
+                  true && BitVec.zeroExtend 32 x✝ == BitVec.intMin 32 && 2#32 <<< x✝¹ == 4294967295#32) =
+                true) =
+              ((!(!2#32 <<< x✝¹ == 0#32 &&
+                    !(BitVec.zeroExtend 32 x✝ == BitVec.intMin 32 && 2#32 <<< x✝¹ == 4294967295#32))) =
+                true)
+          [Meta.isDefEq] [0.001856] ✅️ (2#32 <<< x✝¹ == 0 ||
+                  32 != 1 && BitVec.zeroExtend 32 x✝ == BitVec.intMin 32 && 2#32 <<< x✝¹ == -1) =
+                true =?= (2#32 <<< x✝¹ == 0#32 ||
+                  true && BitVec.zeroExtend 32 x✝ == BitVec.intMin 32 && 2#32 <<< x✝¹ == 4294967295#32) =
+                true
+            [Meta.isDefEq] [0.001838] ✅️ 2#32 <<< x✝¹ == 0 ||
+                  32 != 1 && BitVec.zeroExtend 32 x✝ == BitVec.intMin 32 &&
+                    2#32 <<< x✝¹ ==
+                      -1 =?= 2#32 <<< x✝¹ == 0#32 ||
+                  true && BitVec.zeroExtend 32 x✝ == BitVec.intMin 32 && 2#32 <<< x✝¹ == 4294967295#32
+              [Meta.isDefEq.delta] [0.001815] ✅️ 2#32 <<< x✝¹ == 0 ||
+                    32 != 1 && BitVec.zeroExtend 32 x✝ == BitVec.intMin 32 &&
+                      2#32 <<< x✝¹ ==
+                        -1 =?= 2#32 <<< x✝¹ == 0#32 ||
+                    true && BitVec.zeroExtend 32 x✝ == BitVec.intMin 32 && 2#32 <<< x✝¹ == 4294967295#32
+                [Meta.isDefEq] [0.001416] ✅️ 32 != 1 && BitVec.zeroExtend 32 x✝ == BitVec.intMin 32 &&
+                      2#32 <<< x✝¹ ==
+                        -1 =?= true && BitVec.zeroExtend 32 x✝ == BitVec.intMin 32 && 2#32 <<< x✝¹ == 4294967295#32
+                  [Meta.isDefEq.delta] [0.001396] ✅️ 32 != 1 && BitVec.zeroExtend 32 x✝ == BitVec.intMin 32 &&
+                        2#32 <<< x✝¹ ==
+                          -1 =?= true && BitVec.zeroExtend 32 x✝ == BitVec.intMin 32 && 2#32 <<< x✝¹ == 4294967295#32
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 16
+      x✝¹ : BitVec 32
+      x✝ : BitVec 16
+      a✝ :
+        ¬(if (!32#32 >ᵤ x✝¹) = true then none
+            else
+              if
+                  (!(!2#32 <<< x✝¹ == 0#32 &&
+                        !(BitVec.zeroExtend 32 x✝ == BitVec.intMin 32 && 2#32 <<< x✝¹ == 4294967295#32))) =
+                    true then
+                none
+              else
+                some
+                  (if (BitVec.zeroExtend 32 x✝).getLsbD 31 = true then
+                    if (2#32 <<< x✝¹).getLsbD 31 = true then
+                      (~~~BitVec.zeroExtend 32 x✝ + 1#32) / (~~~(2#32 <<< x✝¹) + 1#32)
+                    else ~~~((~~~BitVec.zeroExtend 32 x✝ + 1#32) / 2#32 <<< x✝¹) + 1#32
+                  else
+                    if (2#32 <<< x✝¹).getLsbD 31 = true then
+                      ~~~(BitVec.zeroExtend 32 x✝ / (~~~(2#32 <<< x✝¹) + 1#32)) + 1#32
+                    else BitVec.zeroExtend 32 x✝ / 2#32 <<< x✝¹)) ⊑
+            if (!32#32 >ᵤ x✝¹ + 1#32) = true then none else some (BitVec.zeroExtend 32 x✝ >>> (x✝¹ + 1#32))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:27:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:21:8: error: (kernel) declaration has metavariables 't2_thm'
+[bv] [0.035268] Normalizing goal
+  [Meta.synthInstance] [0.001455] ✅️ Decidable
+        ((if x✝¹ ≥ ↑32 then none
+          else
+            if BitVec.zeroExtend 64 (1#32 <<< x✝¹) = 0 then none else some (x✝ / BitVec.zeroExtend 64 (1#32 <<< x✝¹))) ⊑
+          if BitVec.zeroExtend 64 x✝¹ ≥ ↑64 then none else some (x✝ >>> BitVec.zeroExtend 64 x✝¹))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 64
+      x✝¹ : BitVec 32
+      x✝ : BitVec 64
+      a✝ :
+        ¬(if x✝¹ ≥ ↑32 then none
+            else
+              if BitVec.zeroExtend 64 (1#32 <<< x✝¹) = 0 then none
+              else some (x✝ / BitVec.zeroExtend 64 (1#32 <<< x✝¹))) ⊑
+            if BitVec.zeroExtend 64 x✝¹ ≥ ↑64 then none else some (x✝ >>> BitVec.zeroExtend 64 x✝¹)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 64
+      x✝¹ : BitVec 32
+      x✝ : BitVec 64
+      a✝ :
+        ¬(if (!32#32 >ᵤ x✝¹) = true then none
+            else
+              if (BitVec.zeroExtend 64 (1#32 <<< x✝¹) == 0#64) = true then none
+              else some (x✝ / BitVec.zeroExtend 64 (1#32 <<< x✝¹))) ⊑
+            if (!64#64 >ᵤ BitVec.zeroExtend 64 x✝¹) = true then none else some (x✝ >>> BitVec.zeroExtend 64 x✝¹)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:37:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:31:8: error: (kernel) declaration has metavariables 't3_thm'
+[bv] [0.041220] Normalizing goal
+  [Meta.synthInstance] [0.001678] ✅️ Decidable
+        ((if x✝¹ ≥ ↑32 then none
+          else
+            if BitVec.zeroExtend 64 (4#32 <<< x✝¹) = 0 then none else some (x✝ / BitVec.zeroExtend 64 (4#32 <<< x✝¹))) ⊑
+          if BitVec.zeroExtend 64 (x✝¹ + 2#32) ≥ ↑64 then none else some (x✝ >>> BitVec.zeroExtend 64 (x✝¹ + 2#32)))
+    [Meta.check] [0.001005] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if x✝¹ ≥ ↑32 then none
+          else
+            if BitVec.zeroExtend 64 (4#32 <<< x✝¹) = 0 then none else some (x✝ / BitVec.zeroExtend 64 (4#32 <<< x✝¹)))
+          (if BitVec.zeroExtend 64 (x✝¹ + 2#32) ≥ ↑64 then none else some (x✝ >>> BitVec.zeroExtend 64 (x✝¹ + 2#32)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 64
+      x✝¹ : BitVec 32
+      x✝ : BitVec 64
+      a✝ :
+        ¬(if x✝¹ ≥ ↑32 then none
+            else
+              if BitVec.zeroExtend 64 (4#32 <<< x✝¹) = 0 then none
+              else some (x✝ / BitVec.zeroExtend 64 (4#32 <<< x✝¹))) ⊑
+            if BitVec.zeroExtend 64 (x✝¹ + 2#32) ≥ ↑64 then none else some (x✝ >>> BitVec.zeroExtend 64 (x✝¹ + 2#32))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 64
+      x✝¹ : BitVec 32
+      x✝ : BitVec 64
+      a✝ :
+        ¬(if (!32#32 >ᵤ x✝¹) = true then none
+            else
+              if (BitVec.zeroExtend 64 (4#32 <<< x✝¹) == 0#64) = true then none
+              else some (x✝ / BitVec.zeroExtend 64 (4#32 <<< x✝¹))) ⊑
+            if (!64#64 >ᵤ BitVec.zeroExtend 64 (x✝¹ + 2#32)) = true then none
+            else some (x✝ >>> BitVec.zeroExtend 64 (x✝¹ + 2#32))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:48:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:48:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:41:8: error: (kernel) declaration has metavariables 't5_thm'
+[bv] [0.142761] Normalizing goal
+  [Meta.synthInstance] [0.003193] ✅️ Decidable
+        ((Option.bind
+            (match some x✝¹ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } =>
+              match some x✝² with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 32#32
+              | some { toFin := ⟨0, ⋯⟩ } => some 64#32
+            | some { toFin := ⟨0, ⋯⟩ } => if x✝ ≥ ↑32 then none else some (1#32 <<< x✝))
+            fun y' => if y' = 0 then none else some (x✝ / y')) ⊑
+          Option.bind
+            (match some x✝¹ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } =>
+              match some x✝² with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 5#32
+              | some { toFin := ⟨0, ⋯⟩ } => some 6#32
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝)
+            fun y' => if y' ≥ ↑32 then none else some (x✝ >>> y'))
+    [Meta.check] [0.002241] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (Option.bind
+            (match some x✝¹ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } =>
+              match some x✝² with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 32#32
+              | some { toFin := ⟨0, ⋯⟩ } => some 64#32
+            | some { toFin := ⟨0, ⋯⟩ } => if x✝ ≥ ↑32 then none else some (1#32 <<< x✝))
+            fun y' => if y' = 0 then none else some (x✝ / y'))
+          (Option.bind
+            (match some x✝¹ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } =>
+              match some x✝² with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 5#32
+              | some { toFin := ⟨0, ⋯⟩ } => some 6#32
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝)
+            fun y' => if y' ≥ ↑32 then none else some (x✝ >>> y'))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 1
+      e_2 : LLVM.IntW 32
+      x✝² x✝¹ : BitVec 1
+      x✝ : BitVec 32
+      a✝ :
+        ¬(Option.bind
+              (match some x✝¹ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } =>
+                match some x✝² with
+                | none => none
+                | some { toFin := ⟨1, ⋯⟩ } => some 32#32
+                | some { toFin := ⟨0, ⋯⟩ } => some 64#32
+              | some { toFin := ⟨0, ⋯⟩ } => if x✝ ≥ ↑32 then none else some (1#32 <<< x✝))
+              fun y' => if y' = 0 then none else some (x✝ / y')) ⊑
+            Option.bind
+              (match some x✝¹ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } =>
+                match some x✝² with
+                | none => none
+                | some { toFin := ⟨1, ⋯⟩ } => some 5#32
+                | some { toFin := ⟨0, ⋯⟩ } => some 6#32
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝)
+              fun y' => if y' ≥ ↑32 then none else some (x✝ >>> y')
+      ⊢ False
+  [Meta.isDefEq] [0.001108] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } =>
+        match some x✝² with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some 32#32
+        | some { toFin := ⟨0, ⋯⟩ } => some 64#32
+      | some { toFin := ⟨0, ⋯⟩ } => if x✝ ≥ ↑32 then none else some (1#32 <<< x✝)
+  [Meta.isDefEq] [0.001199] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } =>
+        match some x✝² with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some 32#32
+        | some { toFin := ⟨0, ⋯⟩ } => some 64#32
+      | some { toFin := ⟨0, ⋯⟩ } => if x✝ ≥ ↑32 then none else some (1#32 <<< x✝)
+  [Meta.isDefEq] [0.001183] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } =>
+        match some x✝² with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some 32#32
+        | some { toFin := ⟨0, ⋯⟩ } => some 64#32
+      | some { toFin := ⟨0, ⋯⟩ } => if x✝ ≥ ↑32 then none else some (1#32 <<< x✝)
+  [Meta.isDefEq] [0.001089] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝² with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 32#32
+      | some { toFin := ⟨0, ⋯⟩ } => some 64#32
+  [Meta.isDefEq] [0.001236] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝² with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 32#32
+      | some { toFin := ⟨0, ⋯⟩ } => some 64#32
+  [Meta.isDefEq] [0.001183] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝² with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 32#32
+      | some { toFin := ⟨0, ⋯⟩ } => some 64#32
+  [Meta.isDefEq] [0.001121] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } =>
+        match some x✝² with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some 32#32
+        | some { toFin := ⟨0, ⋯⟩ } => some 64#32
+      | some { toFin := ⟨0, ⋯⟩ } => if (!32#32 >ᵤ x✝) = true then none else some (1#32 <<< x✝)
+  [Meta.isDefEq] [0.001213] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } =>
+        match some x✝² with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some 32#32
+        | some { toFin := ⟨0, ⋯⟩ } => some 64#32
+      | some { toFin := ⟨0, ⋯⟩ } => if (!32#32 >ᵤ x✝) = true then none else some (1#32 <<< x✝)
+  [Meta.isDefEq] [0.001202] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } =>
+        match some x✝² with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some 32#32
+        | some { toFin := ⟨0, ⋯⟩ } => some 64#32
+      | some { toFin := ⟨0, ⋯⟩ } => if (!32#32 >ᵤ x✝) = true then none else some (1#32 <<< x✝)
+  [Meta.isDefEq] [0.001115] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } =>
+        match some x✝² with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some 5#32
+        | some { toFin := ⟨0, ⋯⟩ } => some 6#32
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝
+  [Meta.isDefEq] [0.001228] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } =>
+        match some x✝² with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some 5#32
+        | some { toFin := ⟨0, ⋯⟩ } => some 6#32
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝
+  [Meta.isDefEq] [0.001182] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } =>
+        match some x✝² with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some 5#32
+        | some { toFin := ⟨0, ⋯⟩ } => some 6#32
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝
+  [Meta.isDefEq] [0.001057] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝² with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 5#32
+      | some { toFin := ⟨0, ⋯⟩ } => some 6#32
+  [Meta.isDefEq] [0.001168] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝² with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 5#32
+      | some { toFin := ⟨0, ⋯⟩ } => some 6#32
+  [Meta.isDefEq] [0.001206] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝² with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 5#32
+      | some { toFin := ⟨0, ⋯⟩ } => some 6#32
+  [Meta.isDefEq] [0.001094] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } =>
+        match some x✝² with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some 32#32
+        | some { toFin := ⟨0, ⋯⟩ } => some 64#32
+      | some { toFin := ⟨0, ⋯⟩ } => if (!32#32 >ᵤ x✝) = true then none else some (1#32 <<< x✝)
+  [Meta.isDefEq] [0.001225] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } =>
+        match some x✝² with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some 32#32
+        | some { toFin := ⟨0, ⋯⟩ } => some 64#32
+      | some { toFin := ⟨0, ⋯⟩ } => if (!32#32 >ᵤ x✝) = true then none else some (1#32 <<< x✝)
+  [Meta.isDefEq] [0.001174] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } =>
+        match some x✝² with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some 32#32
+        | some { toFin := ⟨0, ⋯⟩ } => some 64#32
+      | some { toFin := ⟨0, ⋯⟩ } => if (!32#32 >ᵤ x✝) = true then none else some (1#32 <<< x✝)
+  [Meta.isDefEq] [0.001083] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝² with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 32#32
+      | some { toFin := ⟨0, ⋯⟩ } => some 64#32
+  [Meta.isDefEq] [0.001226] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝² with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 32#32
+      | some { toFin := ⟨0, ⋯⟩ } => some 64#32
+  [Meta.isDefEq] [0.001159] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝² with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 32#32
+      | some { toFin := ⟨0, ⋯⟩ } => some 64#32
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 1
+      e_2 : LLVM.IntW 32
+      x✝² x✝¹ : BitVec 1
+      x✝ : BitVec 32
+      a✝ :
+        ¬(Option.bind
+              (match some x✝¹ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } =>
+                match some x✝² with
+                | none => none
+                | some { toFin := ⟨1, ⋯⟩ } => some 32#32
+                | some { toFin := ⟨0, ⋯⟩ } => some 64#32
+              | some { toFin := ⟨0, ⋯⟩ } => if (!32#32 >ᵤ x✝) = true then none else some (1#32 <<< x✝))
+              fun a => if (a == 0#32) = true then none else some (x✝ / a)) ⊑
+            Option.bind
+              (match some x✝¹ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } =>
+                match some x✝² with
+                | none => none
+                | some { toFin := ⟨1, ⋯⟩ } => some 5#32
+                | some { toFin := ⟨0, ⋯⟩ } => some 6#32
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝)
+              fun a => if (!32#32 >ᵤ a) = true then none else some (x✝ >>> a)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:58:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:52:8: error: (kernel) declaration has metavariables 't7_thm'
+[bv] [0.071424] Normalizing goal
+  [Meta.synthInstance] [0.001432] ✅️ Decidable
+        ((if True ∧ (x✝ <<< 2#32).sshiftRight (2#32).toNat = x✝ then none
+          else
+            if 2#32 ≥ ↑32 then none
+            else
+              if (x✝ == 0 || 32 != 1 && x✝ <<< 2#32 == BitVec.intMin 32 && x✝ == -1) = true then none
+              else some ((x✝ <<< 2#32).sdiv x✝)) ⊑
+          some 4#32)
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if True ∧ (x✝ <<< 2#32).sshiftRight (2#32).toNat = x✝ then none
+            else
+              if 2#32 ≥ ↑32 then none
+              else
+                if (x✝ == 0 || 32 != 1 && x✝ <<< 2#32 == BitVec.intMin 32 && x✝ == -1) = true then none
+                else some ((x✝ <<< 2#32).sdiv x✝)) ⊑
+            some 4#32
+      ⊢ False
+  [Meta.isDefEq] [0.005531] ✅️ ?h₁ =?= congrArg (fun x => x = true)
+        (Eq.trans
+          (congrArg (fun x => x✝ == 0#32 || x && x✝ == 4294967295#32) (Bool.true_and (x✝ <<< 2 == BitVec.intMin 32)))
+          (Std.Tactic.BVDecide.Normalize.Bool.or_elim (x✝ == 0#32)
+            (x✝ <<< 2 == BitVec.intMin 32 && x✝ == 4294967295#32)))
+    [Meta.isDefEq.assign] [0.005528] ✅️ ?h₁ := congrArg (fun x => x = true)
+          (Eq.trans
+            (congrArg (fun x => x✝ == 0#32 || x && x✝ == 4294967295#32) (Bool.true_and (x✝ <<< 2 == BitVec.intMin 32)))
+            (Std.Tactic.BVDecide.Normalize.Bool.or_elim (x✝ == 0#32)
+              (x✝ <<< 2 == BitVec.intMin 32 && x✝ == 4294967295#32)))
+      [Meta.isDefEq.assign.checkTypes] [0.005516] ✅️ (?h₁ : ((x✝ == 0 ||
+                32 != 1 && x✝ <<< 2#32 == BitVec.intMin 32 && x✝ == -1) =
+              true) =
+            ((!(!x✝ == 0#32 && !(x✝ <<< 2 == BitVec.intMin 32 && x✝ == 4294967295#32))) =
+              true)) := (congrArg (fun x => x = true)
+            (Eq.trans
+              (congrArg (fun x => x✝ == 0#32 || x && x✝ == 4294967295#32)
+                (Bool.true_and (x✝ <<< 2 == BitVec.intMin 32)))
+              (Std.Tactic.BVDecide.Normalize.Bool.or_elim (x✝ == 0#32)
+                (x✝ <<< 2 == BitVec.intMin 32 &&
+                  x✝ ==
+                    4294967295#32))) : ((x✝ == 0#32 || true && x✝ <<< 2 == BitVec.intMin 32 && x✝ == 4294967295#32) =
+              true) =
+            ((!(!x✝ == 0#32 && !(x✝ <<< 2 == BitVec.intMin 32 && x✝ == 4294967295#32))) = true))
+        [Meta.isDefEq] [0.005512] ✅️ ((x✝ == 0 || 32 != 1 && x✝ <<< 2#32 == BitVec.intMin 32 && x✝ == -1) = true) =
+              ((!(!x✝ == 0#32 && !(x✝ <<< 2 == BitVec.intMin 32 && x✝ == 4294967295#32))) =
+                true) =?= ((x✝ == 0#32 || true && x✝ <<< 2 == BitVec.intMin 32 && x✝ == 4294967295#32) = true) =
+              ((!(!x✝ == 0#32 && !(x✝ <<< 2 == BitVec.intMin 32 && x✝ == 4294967295#32))) = true)
+          [Meta.isDefEq] [0.005491] ✅️ (x✝ == 0 || 32 != 1 && x✝ <<< 2#32 == BitVec.intMin 32 && x✝ == -1) =
+                true =?= (x✝ == 0#32 || true && x✝ <<< 2 == BitVec.intMin 32 && x✝ == 4294967295#32) = true
+            [Meta.isDefEq] [0.005471] ✅️ x✝ == 0 ||
+                  32 != 1 && x✝ <<< 2#32 == BitVec.intMin 32 &&
+                    x✝ == -1 =?= x✝ == 0#32 || true && x✝ <<< 2 == BitVec.intMin 32 && x✝ == 4294967295#32
+              [Meta.isDefEq.delta] [0.005457] ✅️ x✝ == 0 ||
+                    32 != 1 && x✝ <<< 2#32 == BitVec.intMin 32 &&
+                      x✝ == -1 =?= x✝ == 0#32 || true && x✝ <<< 2 == BitVec.intMin 32 && x✝ == 4294967295#32
+                [Meta.isDefEq] [0.005227] ✅️ 32 != 1 && x✝ <<< 2#32 == BitVec.intMin 32 &&
+                      x✝ == -1 =?= true && x✝ <<< 2 == BitVec.intMin 32 && x✝ == 4294967295#32
+                  [Meta.isDefEq.delta] [0.005215] ✅️ 32 != 1 && x✝ <<< 2#32 == BitVec.intMin 32 &&
+                        x✝ == -1 =?= true && x✝ <<< 2 == BitVec.intMin 32 && x✝ == 4294967295#32
+                    [Meta.isDefEq] [0.004682] ✅️ x✝ == -1 =?= x✝ == 4294967295#32
+                      [Meta.isDefEq] [0.004667] ✅️ instBEqOfDecidableEq.1 x✝
+                            (-1) =?= instBEqOfDecidableEq.1 x✝ 4294967295#32
+                        [Meta.isDefEq] [0.004616] ✅️ Decidable.decide
+                              (x✝ = -1) =?= Decidable.decide (x✝ = 4294967295#32)
+                          [Meta.isDefEq.delta] [0.004596] ✅️ Decidable.decide
+                                (x✝ = -1) =?= Decidable.decide (x✝ = 4294967295#32)
+                            [Meta.isDefEq] [0.002617] ✅️ x✝ = -1 =?= x✝ = 4294967295#32
+                              [Meta.isDefEq] [0.002599] ✅️ -1 =?= 4294967295#32
+                                [Meta.isDefEq] [0.002551] ✅️ -1 =?= { toFin := Fin.ofNat' (2 ^ 32) 4294967295 }
+                                  [Meta.isDefEq] [0.002539] ✅️ BitVec.instNeg.1
+                                        1 =?= { toFin := Fin.ofNat' (2 ^ 32) 4294967295 }
+                                    [Meta.isDefEq] [0.002506] ✅️ BitVec.neg
+                                          1 =?= { toFin := Fin.ofNat' (2 ^ 32) 4294967295 }
+                                      [Meta.isDefEq] [0.002490] ✅️ BitVec.ofNat 32
+                                            (2 ^ 32 - BitVec.toNat 1) =?= { toFin := Fin.ofNat' (2 ^ 32) 4294967295 }
+                                        [Meta.isDefEq] [0.002477] ✅️ {
+                                              toFin :=
+                                                Fin.ofNat' (2 ^ 32)
+                                                  (2 ^ 32 -
+                                                    BitVec.toNat 1) } =?= { toFin := Fin.ofNat' (2 ^ 32) 4294967295 }
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if ((x✝ <<< 2).sshiftRight 2 == x✝) = true then none
+            else
+              if (!(!x✝ == 0#32 && !(x✝ <<< 2 == BitVec.intMin 32 && x✝ == 4294967295#32))) = true then none
+              else
+                some
+                  (if (x✝ <<< 2).getLsbD 31 = true then
+                    if x✝.getLsbD 31 = true then (~~~(x✝ <<< 2) + 1#32) / (~~~x✝ + 1#32)
+                    else ~~~((~~~(x✝ <<< 2) + 1#32) / x✝) + 1#32
+                  else if x✝.getLsbD 31 = true then ~~~(x✝ <<< 2 / (~~~x✝ + 1#32)) + 1#32 else x✝ <<< 2 / x✝)) ⊑
+            some 4#32
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:69:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:62:8: error: (kernel) declaration has metavariables 't10_thm'
+[bv] [0.147586] Normalizing goal
+  [Meta.synthInstance] [0.002393] ✅️ Decidable
+        ((if True ∧ (x✝ <<< x✝¹).sshiftRight x✝¹.toNat = x✝ then none
+          else
+            if x✝¹ ≥ ↑32 then none
+            else
+              if (x✝ == 0 || 32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ == -1) = true then none
+              else some ((x✝ <<< x✝¹).sdiv x✝)) ⊑
+          if True ∧ (1#32 <<< x✝¹).sshiftRight x✝¹.toNat = 1#32 then none
+          else if True ∧ 1#32 <<< x✝¹ >>> x✝¹ = 1#32 then none else if x✝¹ ≥ ↑32 then none else some (1#32 <<< x✝¹))
+    [Meta.check] [0.001452] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if True ∧ (x✝ <<< x✝¹).sshiftRight x✝¹.toNat = x✝ then none
+          else
+            if x✝¹ ≥ ↑32 then none
+            else
+              if (x✝ == 0 || 32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ == -1) = true then none
+              else some ((x✝ <<< x✝¹).sdiv x✝))
+          (if True ∧ (1#32 <<< x✝¹).sshiftRight x✝¹.toNat = 1#32 then none
+          else if True ∧ 1#32 <<< x✝¹ >>> x✝¹ = 1#32 then none else if x✝¹ ≥ ↑32 then none else some (1#32 <<< x✝¹))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 32
+      x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if True ∧ (x✝ <<< x✝¹).sshiftRight x✝¹.toNat = x✝ then none
+            else
+              if x✝¹ ≥ ↑32 then none
+              else
+                if (x✝ == 0 || 32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ == -1) = true then none
+                else some ((x✝ <<< x✝¹).sdiv x✝)) ⊑
+            if True ∧ (1#32 <<< x✝¹).sshiftRight x✝¹.toNat = 1#32 then none
+            else if True ∧ 1#32 <<< x✝¹ >>> x✝¹ = 1#32 then none else if x✝¹ ≥ ↑32 then none else some (1#32 <<< x✝¹)
+      ⊢ False
+  [Meta.isDefEq] [0.006062] ✅️ ?h₁ =?= congrArg (fun x => x = true)
+        (Eq.trans
+          (congrArg (fun x => x✝ == 0#32 || x && x✝ == 4294967295#32) (Bool.true_and (x✝ <<< x✝¹ == BitVec.intMin 32)))
+          (Std.Tactic.BVDecide.Normalize.Bool.or_elim (x✝ == 0#32)
+            (x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ == 4294967295#32)))
+    [Meta.isDefEq.assign] [0.006058] ✅️ ?h₁ := congrArg (fun x => x = true)
+          (Eq.trans
+            (congrArg (fun x => x✝ == 0#32 || x && x✝ == 4294967295#32)
+              (Bool.true_and (x✝ <<< x✝¹ == BitVec.intMin 32)))
+            (Std.Tactic.BVDecide.Normalize.Bool.or_elim (x✝ == 0#32)
+              (x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ == 4294967295#32)))
+      [Meta.isDefEq.assign.checkTypes] [0.006040] ✅️ (?h₁ : ((x✝ == 0 ||
+                32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ == -1) =
+              true) =
+            ((!(!x✝ == 0#32 && !(x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ == 4294967295#32))) =
+              true)) := (congrArg (fun x => x = true)
+            (Eq.trans
+              (congrArg (fun x => x✝ == 0#32 || x && x✝ == 4294967295#32)
+                (Bool.true_and (x✝ <<< x✝¹ == BitVec.intMin 32)))
+              (Std.Tactic.BVDecide.Normalize.Bool.or_elim (x✝ == 0#32)
+                (x✝ <<< x✝¹ == BitVec.intMin 32 &&
+                  x✝ ==
+                    4294967295#32))) : ((x✝ == 0#32 || true && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ == 4294967295#32) =
+              true) =
+            ((!(!x✝ == 0#32 && !(x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ == 4294967295#32))) = true))
+        [Meta.isDefEq] [0.006035] ✅️ ((x✝ == 0 || 32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ == -1) = true) =
+              ((!(!x✝ == 0#32 && !(x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ == 4294967295#32))) =
+                true) =?= ((x✝ == 0#32 || true && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ == 4294967295#32) = true) =
+              ((!(!x✝ == 0#32 && !(x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ == 4294967295#32))) = true)
+          [Meta.isDefEq] [0.006003] ✅️ (x✝ == 0 || 32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ == -1) =
+                true =?= (x✝ == 0#32 || true && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ == 4294967295#32) = true
+            [Meta.isDefEq] [0.005978] ✅️ x✝ == 0 ||
+                  32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 &&
+                    x✝ == -1 =?= x✝ == 0#32 || true && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ == 4294967295#32
+              [Meta.isDefEq.delta] [0.005957] ✅️ x✝ == 0 ||
+                    32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 &&
+                      x✝ == -1 =?= x✝ == 0#32 || true && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ == 4294967295#32
+                [Meta.isDefEq] [0.005593] ✅️ 32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 &&
+                      x✝ == -1 =?= true && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ == 4294967295#32
+                  [Meta.isDefEq.delta] [0.005573] ✅️ 32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 &&
+                        x✝ == -1 =?= true && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ == 4294967295#32
+                    [Meta.isDefEq] [0.002241] ✅️ 32 != 1 &&
+                          x✝ <<< x✝¹ == BitVec.intMin 32 =?= true && x✝ <<< x✝¹ == BitVec.intMin 32
+                      [Meta.isDefEq.delta] [0.002223] ✅️ 32 != 1 &&
+                            x✝ <<< x✝¹ == BitVec.intMin 32 =?= true && x✝ <<< x✝¹ == BitVec.intMin 32
+                        [Meta.isDefEq] [0.002208] ✅️ 32 != 1 =?= true
+                          [Meta.isDefEq] [0.002175] ✅️ !32 == 1 =?= true
+                            [Meta.isDefEq] [0.002154] ✅️ match 32 == 1 with
+                                | true => false
+                                | false => true =?= true
+                              [Meta.whnf] [0.002115] Non-easy whnf: (fun motive c h_1 h_2 =>
+                                      Bool.casesOn c (h_2 ()) (h_1 ()))
+                                    (fun x => Bool) (32 == 1) h_1 h_2
+                                [Meta.whnf] [0.002095] Non-easy whnf: 32 == 1
+                                  [Meta.whnf] [0.002085] Non-easy whnf: instBEqOfDecidableEq.1 32 1
+                                    [Meta.whnf] [0.001888] Non-easy whnf: instBEqOfDecidableEq
+                                      [Meta.whnf] [0.001871] Non-easy whnf: {
+                                            beq := fun a b => Decidable.decide (a = b) }
+                    [Meta.isDefEq] [0.003307] ✅️ x✝ == -1 =?= x✝ == 4294967295#32
+                      [Meta.isDefEq] [0.003274] ✅️ instBEqOfDecidableEq.1 x✝
+                            (-1) =?= instBEqOfDecidableEq.1 x✝ 4294967295#32
+                        [Meta.isDefEq] [0.003225] ✅️ Decidable.decide
+                              (x✝ = -1) =?= Decidable.decide (x✝ = 4294967295#32)
+                          [Meta.isDefEq.delta] [0.003205] ✅️ Decidable.decide
+                                (x✝ = -1) =?= Decidable.decide (x✝ = 4294967295#32)
+                            [Meta.isDefEq] [0.003089] ✅️ x✝ = -1 =?= x✝ = 4294967295#32
+                              [Meta.isDefEq] [0.003061] ✅️ -1 =?= 4294967295#32
+                                [Meta.isDefEq] [0.002997] ✅️ -1 =?= { toFin := Fin.ofNat' (2 ^ 32) 4294967295 }
+                                  [Meta.isDefEq] [0.002976] ✅️ BitVec.instNeg.1
+                                        1 =?= { toFin := Fin.ofNat' (2 ^ 32) 4294967295 }
+  [Meta.appBuilder] [0.004903] ✅️ f: HAdd.hAdd, xs: [~~~(x✝ <<< x✝¹), 1#32]
+    [Meta.synthInstance] [0.004807] ✅️ HAdd (BitVec 32) (BitVec 32) (BitVec 32)
+      [Meta.synthInstance] [0.002045] ✅️ apply @BitVec.instAdd to Add (BitVec 32)
+        [Meta.synthInstance.tryResolve] [0.002004] ✅️ Add (BitVec 32) ≟ Add (BitVec 32)
+          [Meta.isDefEq] [0.001916] ✅️ ?m.81393 =?= BitVec.instAdd
+            [Meta.isDefEq.assign] [0.001910] ✅️ ?m.81393 := BitVec.instAdd
+              [Meta.isDefEq.assign.checkTypes] [0.001894] ✅️ (?m.81393 : Add
+                    (BitVec 32)) := (BitVec.instAdd : Add (BitVec 32))
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 32
+      x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if ((x✝ <<< x✝¹).sshiftRight x✝¹.toNat == x✝) = true then none
+            else
+              if (!32#32 >ᵤ x✝¹) = true then none
+              else
+                if (!(!x✝ == 0#32 && !(x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ == 4294967295#32))) = true then none
+                else
+                  some
+                    (if (x✝ <<< x✝¹).getLsbD 31 = true then
+                      if x✝.getLsbD 31 = true then (~~~(x✝ <<< x✝¹) + 1#32) / (~~~x✝ + 1#32)
+                      else ~~~((~~~(x✝ <<< x✝¹) + 1#32) / x✝) + 1#32
+                    else if x✝.getLsbD 31 = true then ~~~(x✝ <<< x✝¹ / (~~~x✝ + 1#32)) + 1#32 else x✝ <<< x✝¹ / x✝)) ⊑
+            if ((1#32 <<< x✝¹).sshiftRight x✝¹.toNat == 1#32) = true then none
+            else
+              if (1#32 <<< x✝¹ >>> x✝¹ == 1#32) = true then none
+              else if (!32#32 >ᵤ x✝¹) = true then none else some (1#32 <<< x✝¹)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:79:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:73:8: error: (kernel) declaration has metavariables 't12_thm'
+[bv] [0.025633] Normalizing goal
+  [Meta.synthInstance] [0.001258] ✅️ Decidable
+        ((if True ∧ x✝ <<< 2#32 >>> 2#32 = x✝ then none
+          else if 2#32 ≥ ↑32 then none else if x✝ = 0 then none else some (x✝ <<< 2#32 / x✝)) ⊑
+          some 4#32)
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if True ∧ x✝ <<< 2#32 >>> 2#32 = x✝ then none
+            else if 2#32 ≥ ↑32 then none else if x✝ = 0 then none else some (x✝ <<< 2#32 / x✝)) ⊑
+            some 4#32
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if (x✝ <<< 2 >>> 2 == x✝) = true then none else if (x✝ == 0#32) = true then none else some (x✝ <<< 2 / x✝)) ⊑
+            some 4#32
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:90:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:83:8: error: (kernel) declaration has metavariables 't15_thm'
+[bv] [0.057302] Normalizing goal
+  [Meta.synthInstance] [0.001721] ✅️ Decidable
+        ((if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+          else if x✝¹ ≥ ↑32 then none else if x✝ = 0 then none else some (x✝ <<< x✝¹ / x✝)) ⊑
+          if True ∧ 1#32 <<< x✝¹ >>> x✝¹ = 1#32 then none else if x✝¹ ≥ ↑32 then none else some (1#32 <<< x✝¹))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 32
+      x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+            else if x✝¹ ≥ ↑32 then none else if x✝ = 0 then none else some (x✝ <<< x✝¹ / x✝)) ⊑
+            if True ∧ 1#32 <<< x✝¹ >>> x✝¹ = 1#32 then none else if x✝¹ ≥ ↑32 then none else some (1#32 <<< x✝¹)
+      ⊢ False
+  [Meta.isDefEq] [0.002187] ✅️ if ?b then ?x
+      else ?y =?= if True ∧ 1#32 <<< x✝¹ >>> x✝¹ = 1#32 then none else if x✝¹ ≥ ↑32 then none else some (1#32 <<< x✝¹)
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 32
+      x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if (x✝ <<< x✝¹ >>> x✝¹ == x✝) = true then none
+            else
+              if (!32#32 >ᵤ x✝¹) = true then none else if (x✝ == 0#32) = true then none else some (x✝ <<< x✝¹ / x✝)) ⊑
+            if (1#32 <<< x✝¹ >>> x✝¹ == 1#32) = true then none
+            else if (!32#32 >ᵤ x✝¹) = true then none else some (1#32 <<< x✝¹)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:101:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:101:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:94:8: error: (kernel) declaration has metavariables 'sdiv_mul_shl_nsw_thm'
+[bv] [0.213315] Normalizing goal
+  [Meta.synthInstance] [0.003018] ✅️ Decidable
+        ((if
+              True ∧
+                (BitVec.signExtend (2 * 5) x✝ * BitVec.signExtend (2 * 5) x✝¹ <
+                    BitVec.signExtend (2 * 5) (BitVec.twoPow 5 (5 - 1)) ∨
+                  BitVec.signExtend (2 * 5) x✝ * BitVec.signExtend (2 * 5) x✝¹ ≥ BitVec.twoPow (2 * 5) (5 - 1)) then
+            none
+          else
+            if True ∧ (x✝ <<< x✝²).sshiftRight x✝².toNat = x✝ then none
+            else
+              if x✝² ≥ ↑5 then none
+              else
+                if (x✝ <<< x✝² == 0 || 5 != 1 && x✝ * x✝¹ == BitVec.intMin 5 && x✝ <<< x✝² == -1) = true then none
+                else some ((x✝ * x✝¹).sdiv (x✝ <<< x✝²))) ⊑
+          if True ∧ 1#5 <<< x✝² >>> x✝² = 1#5 then none
+          else
+            if x✝² ≥ ↑5 then none
+            else
+              if (1#5 <<< x✝² == 0 || 5 != 1 && x✝¹ == BitVec.intMin 5 && 1#5 <<< x✝² == -1) = true then none
+              else some (x✝¹.sdiv (1#5 <<< x✝²)))
+    [Meta.check] [0.002094] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if
+              True ∧
+                (BitVec.signExtend (2 * 5) x✝ * BitVec.signExtend (2 * 5) x✝¹ <
+                    BitVec.signExtend (2 * 5) (BitVec.twoPow 5 (5 - 1)) ∨
+                  BitVec.signExtend (2 * 5) x✝ * BitVec.signExtend (2 * 5) x✝¹ ≥ BitVec.twoPow (2 * 5) (5 - 1)) then
+            none
+          else
+            if True ∧ (x✝ <<< x✝²).sshiftRight x✝².toNat = x✝ then none
+            else
+              if x✝² ≥ ↑5 then none
+              else
+                if (x✝ <<< x✝² == 0 || 5 != 1 && x✝ * x✝¹ == BitVec.intMin 5 && x✝ <<< x✝² == -1) = true then none
+                else some ((x✝ * x✝¹).sdiv (x✝ <<< x✝²)))
+          (if True ∧ 1#5 <<< x✝² >>> x✝² = 1#5 then none
+          else
+            if x✝² ≥ ↑5 then none
+            else
+              if (1#5 <<< x✝² == 0 || 5 != 1 && x✝¹ == BitVec.intMin 5 && 1#5 <<< x✝² == -1) = true then none
+              else some (x✝¹.sdiv (1#5 <<< x✝²)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 5
+      x✝² x✝¹ x✝ : BitVec 5
+      a✝ :
+        ¬(if
+                True ∧
+                  (BitVec.signExtend (2 * 5) x✝ * BitVec.signExtend (2 * 5) x✝¹ <
+                      BitVec.signExtend (2 * 5) (BitVec.twoPow 5 (5 - 1)) ∨
+                    BitVec.signExtend (2 * 5) x✝ * BitVec.signExtend (2 * 5) x✝¹ ≥ BitVec.twoPow (2 * 5) (5 - 1)) then
+              none
+            else
+              if True ∧ (x✝ <<< x✝²).sshiftRight x✝².toNat = x✝ then none
+              else
+                if x✝² ≥ ↑5 then none
+                else
+                  if (x✝ <<< x✝² == 0 || 5 != 1 && x✝ * x✝¹ == BitVec.intMin 5 && x✝ <<< x✝² == -1) = true then none
+                  else some ((x✝ * x✝¹).sdiv (x✝ <<< x✝²))) ⊑
+            if True ∧ 1#5 <<< x✝² >>> x✝² = 1#5 then none
+            else
+              if x✝² ≥ ↑5 then none
+              else
+                if (1#5 <<< x✝² == 0 || 5 != 1 && x✝¹ == BitVec.intMin 5 && 1#5 <<< x✝² == -1) = true then none
+                else some (x✝¹.sdiv (1#5 <<< x✝²))
+      ⊢ False
+  [Meta.isDefEq] [0.003482] ✅️ ?h₁ =?= congrArg (fun x => x = true)
+        (Eq.trans
+          (congrArg (fun x => x✝ <<< x✝² == 0#5 || x && x✝ <<< x✝² == 31#5)
+            (Bool.true_and (x✝ * x✝¹ == BitVec.intMin 5)))
+          (Std.Tactic.BVDecide.Normalize.Bool.or_elim (x✝ <<< x✝² == 0#5)
+            (x✝ * x✝¹ == BitVec.intMin 5 && x✝ <<< x✝² == 31#5)))
+    [Meta.isDefEq.assign] [0.003477] ✅️ ?h₁ := congrArg (fun x => x = true)
+          (Eq.trans
+            (congrArg (fun x => x✝ <<< x✝² == 0#5 || x && x✝ <<< x✝² == 31#5)
+              (Bool.true_and (x✝ * x✝¹ == BitVec.intMin 5)))
+            (Std.Tactic.BVDecide.Normalize.Bool.or_elim (x✝ <<< x✝² == 0#5)
+              (x✝ * x✝¹ == BitVec.intMin 5 && x✝ <<< x✝² == 31#5)))
+      [Meta.isDefEq.assign.checkTypes] [0.003458] ✅️ (?h₁ : ((x✝ <<< x✝² == 0 ||
+                5 != 1 && x✝ * x✝¹ == BitVec.intMin 5 && x✝ <<< x✝² == -1) =
+              true) =
+            ((!(!x✝ <<< x✝² == 0#5 && !(x✝ * x✝¹ == BitVec.intMin 5 && x✝ <<< x✝² == 31#5))) =
+              true)) := (congrArg (fun x => x = true)
+            (Eq.trans
+              (congrArg (fun x => x✝ <<< x✝² == 0#5 || x && x✝ <<< x✝² == 31#5)
+                (Bool.true_and (x✝ * x✝¹ == BitVec.intMin 5)))
+              (Std.Tactic.BVDecide.Normalize.Bool.or_elim (x✝ <<< x✝² == 0#5)
+                (x✝ * x✝¹ == BitVec.intMin 5 &&
+                  x✝ <<< x✝² ==
+                    31#5))) : ((x✝ <<< x✝² == 0#5 || true && x✝ * x✝¹ == BitVec.intMin 5 && x✝ <<< x✝² == 31#5) =
+              true) =
+            ((!(!x✝ <<< x✝² == 0#5 && !(x✝ * x✝¹ == BitVec.intMin 5 && x✝ <<< x✝² == 31#5))) = true))
+        [Meta.isDefEq] [0.003453] ✅️ ((x✝ <<< x✝² == 0 || 5 != 1 && x✝ * x✝¹ == BitVec.intMin 5 && x✝ <<< x✝² == -1) =
+                true) =
+              ((!(!x✝ <<< x✝² == 0#5 && !(x✝ * x✝¹ == BitVec.intMin 5 && x✝ <<< x✝² == 31#5))) =
+                true) =?= ((x✝ <<< x✝² == 0#5 || true && x✝ * x✝¹ == BitVec.intMin 5 && x✝ <<< x✝² == 31#5) = true) =
+              ((!(!x✝ <<< x✝² == 0#5 && !(x✝ * x✝¹ == BitVec.intMin 5 && x✝ <<< x✝² == 31#5))) = true)
+          [Meta.isDefEq] [0.003420] ✅️ (x✝ <<< x✝² == 0 || 5 != 1 && x✝ * x✝¹ == BitVec.intMin 5 && x✝ <<< x✝² == -1) =
+                true =?= (x✝ <<< x✝² == 0#5 || true && x✝ * x✝¹ == BitVec.intMin 5 && x✝ <<< x✝² == 31#5) = true
+            [Meta.isDefEq] [0.003378] ✅️ x✝ <<< x✝² == 0 ||
+                  5 != 1 && x✝ * x✝¹ == BitVec.intMin 5 &&
+                    x✝ <<< x✝² == -1 =?= x✝ <<< x✝² == 0#5 || true && x✝ * x✝¹ == BitVec.intMin 5 && x✝ <<< x✝² == 31#5
+              [Meta.isDefEq.delta] [0.003355] ✅️ x✝ <<< x✝² == 0 ||
+                    5 != 1 && x✝ * x✝¹ == BitVec.intMin 5 &&
+                      x✝ <<< x✝² ==
+                        -1 =?= x✝ <<< x✝² == 0#5 || true && x✝ * x✝¹ == BitVec.intMin 5 && x✝ <<< x✝² == 31#5
+                [Meta.isDefEq] [0.002908] ✅️ 5 != 1 && x✝ * x✝¹ == BitVec.intMin 5 &&
+                      x✝ <<< x✝² == -1 =?= true && x✝ * x✝¹ == BitVec.intMin 5 && x✝ <<< x✝² == 31#5
+                  [Meta.isDefEq.delta] [0.002887] ✅️ 5 != 1 && x✝ * x✝¹ == BitVec.intMin 5 &&
+                        x✝ <<< x✝² == -1 =?= true && x✝ * x✝¹ == BitVec.intMin 5 && x✝ <<< x✝² == 31#5
+                    [Meta.isDefEq] [0.002508] ✅️ x✝ <<< x✝² == -1 =?= x✝ <<< x✝² == 31#5
+                      [Meta.isDefEq] [0.002478] ✅️ instBEqOfDecidableEq.1 (x✝ <<< x✝²)
+                            (-1) =?= instBEqOfDecidableEq.1 (x✝ <<< x✝²) 31#5
+                        [Meta.isDefEq] [0.002432] ✅️ Decidable.decide
+                              (x✝ <<< x✝² = -1) =?= Decidable.decide (x✝ <<< x✝² = 31#5)
+                          [Meta.isDefEq.delta] [0.002413] ✅️ Decidable.decide
+                                (x✝ <<< x✝² = -1) =?= Decidable.decide (x✝ <<< x✝² = 31#5)
+                            [Meta.isDefEq] [0.002343] ✅️ x✝ <<< x✝² = -1 =?= x✝ <<< x✝² = 31#5
+                              [Meta.isDefEq] [0.002318] ✅️ -1 =?= 31#5
+                                [Meta.isDefEq] [0.002256] ✅️ -1 =?= { toFin := Fin.ofNat' (2 ^ 5) 31 }
+                                  [Meta.isDefEq] [0.002226] ✅️ BitVec.instNeg.1 1 =?= { toFin := Fin.ofNat' (2 ^ 5) 31 }
+                                    [Meta.isDefEq] [0.002176] ✅️ BitVec.neg 1 =?= { toFin := Fin.ofNat' (2 ^ 5) 31 }
+                                      [Meta.isDefEq] [0.002155] ✅️ BitVec.ofNat 5
+                                            (2 ^ 5 - BitVec.toNat 1) =?= { toFin := Fin.ofNat' (2 ^ 5) 31 }
+                                        [Meta.isDefEq] [0.002138] ✅️ {
+                                              toFin :=
+                                                Fin.ofNat' (2 ^ 5)
+                                                  (2 ^ 5 - BitVec.toNat 1) } =?= { toFin := Fin.ofNat' (2 ^ 5) 31 }
+                                          [Meta.isDefEq] [0.002092] ✅️ Fin.ofNat' (2 ^ 5)
+                                                (2 ^ 5 - BitVec.toNat 1) =?= Fin.ofNat' (2 ^ 5) 31
+                                            [Meta.isDefEq.delta] [0.002073] ✅️ Fin.ofNat' (2 ^ 5)
+                                                  (2 ^ 5 - BitVec.toNat 1) =?= Fin.ofNat' (2 ^ 5) 31
+                                              [Meta.isDefEq] [0.002024] ✅️ 2 ^ 5 - BitVec.toNat 1 =?= 31
+  [Meta.appBuilder] [0.001018] ✅️ f: HAdd.hAdd, xs: [~~~(x✝ * x✝¹), 1#5]
+  [Meta.isDefEq] [0.001089] ✅️ ?h₁ =?= congrArg (fun x => x = true)
+        (Eq.trans
+          (congrArg (fun x => 1#5 <<< x✝² == 0#5 || x && 1#5 <<< x✝² == 31#5) (Bool.true_and (x✝¹ == BitVec.intMin 5)))
+          (Std.Tactic.BVDecide.Normalize.Bool.or_elim (1#5 <<< x✝² == 0#5)
+            (x✝¹ == BitVec.intMin 5 && 1#5 <<< x✝² == 31#5)))
+    [Meta.isDefEq.assign] [0.001085] ✅️ ?h₁ := congrArg (fun x => x = true)
+          (Eq.trans
+            (congrArg (fun x => 1#5 <<< x✝² == 0#5 || x && 1#5 <<< x✝² == 31#5)
+              (Bool.true_and (x✝¹ == BitVec.intMin 5)))
+            (Std.Tactic.BVDecide.Normalize.Bool.or_elim (1#5 <<< x✝² == 0#5)
+              (x✝¹ == BitVec.intMin 5 && 1#5 <<< x✝² == 31#5)))
+      [Meta.isDefEq.assign.checkTypes] [0.001066] ✅️ (?h₁ : ((1#5 <<< x✝² == 0 ||
+                5 != 1 && x✝¹ == BitVec.intMin 5 && 1#5 <<< x✝² == -1) =
+              true) =
+            ((!(!1#5 <<< x✝² == 0#5 && !(x✝¹ == BitVec.intMin 5 && 1#5 <<< x✝² == 31#5))) =
+              true)) := (congrArg (fun x => x = true)
+            (Eq.trans
+              (congrArg (fun x => 1#5 <<< x✝² == 0#5 || x && 1#5 <<< x✝² == 31#5)
+                (Bool.true_and (x✝¹ == BitVec.intMin 5)))
+              (Std.Tactic.BVDecide.Normalize.Bool.or_elim (1#5 <<< x✝² == 0#5)
+                (x✝¹ == BitVec.intMin 5 &&
+                  1#5 <<< x✝² ==
+                    31#5))) : ((1#5 <<< x✝² == 0#5 || true && x✝¹ == BitVec.intMin 5 && 1#5 <<< x✝² == 31#5) = true) =
+            ((!(!1#5 <<< x✝² == 0#5 && !(x✝¹ == BitVec.intMin 5 && 1#5 <<< x✝² == 31#5))) = true))
+        [Meta.isDefEq] [0.001061] ✅️ ((1#5 <<< x✝² == 0 || 5 != 1 && x✝¹ == BitVec.intMin 5 && 1#5 <<< x✝² == -1) =
+                true) =
+              ((!(!1#5 <<< x✝² == 0#5 && !(x✝¹ == BitVec.intMin 5 && 1#5 <<< x✝² == 31#5))) =
+                true) =?= ((1#5 <<< x✝² == 0#5 || true && x✝¹ == BitVec.intMin 5 && 1#5 <<< x✝² == 31#5) = true) =
+              ((!(!1#5 <<< x✝² == 0#5 && !(x✝¹ == BitVec.intMin 5 && 1#5 <<< x✝² == 31#5))) = true)
+          [Meta.isDefEq] [0.001029] ✅️ (1#5 <<< x✝² == 0 || 5 != 1 && x✝¹ == BitVec.intMin 5 && 1#5 <<< x✝² == -1) =
+                true =?= (1#5 <<< x✝² == 0#5 || true && x✝¹ == BitVec.intMin 5 && 1#5 <<< x✝² == 31#5) = true
+            [Meta.isDefEq] [0.001003] ✅️ 1#5 <<< x✝² == 0 ||
+                  5 != 1 && x✝¹ == BitVec.intMin 5 &&
+                    1#5 <<< x✝² == -1 =?= 1#5 <<< x✝² == 0#5 || true && x✝¹ == BitVec.intMin 5 && 1#5 <<< x✝² == 31#5
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 5
+      x✝² x✝¹ x✝ : BitVec 5
+      a✝ :
+        ¬(if
+                (!((!BitVec.signExtend 10 (BitVec.twoPow 5 4) >ᵤ BitVec.signExtend 10 x✝ * BitVec.signExtend 10 x✝¹) &&
+                      BitVec.twoPow 10 4 >ᵤ BitVec.signExtend 10 x✝ * BitVec.signExtend 10 x✝¹)) =
+                  true then
+              none
+            else
+              if ((x✝ <<< x✝²).sshiftRight x✝².toNat == x✝) = true then none
+              else
+                if (!5#5 >ᵤ x✝²) = true then none
+                else
+                  if (!(!x✝ <<< x✝² == 0#5 && !(x✝ * x✝¹ == BitVec.intMin 5 && x✝ <<< x✝² == 31#5))) = true then none
+                  else
+                    some
+                      (if (x✝ * x✝¹).getLsbD 4 = true then
+                        if (x✝ <<< x✝²).getLsbD 4 = true then (~~~(x✝ * x✝¹) + 1#5) / (~~~(x✝ <<< x✝²) + 1#5)
+                        else ~~~((~~~(x✝ * x✝¹) + 1#5) / x✝ <<< x✝²) + 1#5
+                      else
+                        if (x✝ <<< x✝²).getLsbD 4 = true then ~~~(x✝ * x✝¹ / (~~~(x✝ <<< x✝²) + 1#5)) + 1#5
+                        else x✝ * x✝¹ / x✝ <<< x✝²)) ⊑
+            if (1#5 <<< x✝² >>> x✝² == 1#5) = true then none
+            else
+              if (!5#5 >ᵤ x✝²) = true then none
+              else
+                if (!(!1#5 <<< x✝² == 0#5 && !(x✝¹ == BitVec.intMin 5 && 1#5 <<< x✝² == 31#5))) = true then none
+                else
+                  some
+                    (if x✝¹.getLsbD 4 = true then
+                      if (1#5 <<< x✝²).getLsbD 4 = true then (~~~x✝¹ + 1#5) / (~~~(1#5 <<< x✝²) + 1#5)
+                      else ~~~((~~~x✝¹ + 1#5) / 1#5 <<< x✝²) + 1#5
+                    else
+                      if (1#5 <<< x✝²).getLsbD 4 = true then ~~~(x✝¹ / (~~~(1#5 <<< x✝²) + 1#5)) + 1#5
+                      else x✝¹ / 1#5 <<< x✝²)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:112:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:112:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:105:8: error: (kernel) declaration has metavariables 'sdiv_mul_shl_nsw_exact_commute1_thm'
+[bv] [0.132508] Normalizing goal
+  [Meta.synthInstance] [0.001832] ✅️ Decidable
+        ((if
+              True ∧
+                (BitVec.signExtend (2 * 5) x✝ * BitVec.signExtend (2 * 5) x✝¹ <
+                    BitVec.signExtend (2 * 5) (BitVec.twoPow 5 (5 - 1)) ∨
+                  BitVec.signExtend (2 * 5) x✝ * BitVec.signExtend (2 * 5) x✝¹ ≥ BitVec.twoPow (2 * 5) (5 - 1)) then
+            none
+          else
+            if True ∧ (x✝¹ <<< x✝²).sshiftRight x✝².toNat = x✝¹ then none
+            else
+              if x✝² ≥ ↑5 then none
+              else
+                if (x✝¹ <<< x✝² == 0 || 5 != 1 && x✝ * x✝¹ == BitVec.intMin 5 && x✝¹ <<< x✝² == -1) = true then none
+                else some ((x✝ * x✝¹).sdiv (x✝¹ <<< x✝²))) ⊑
+          if True ∧ 1#5 <<< x✝² >>> x✝² = 1#5 then none
+          else
+            if x✝² ≥ ↑5 then none
+            else
+              if (1#5 <<< x✝² == 0 || 5 != 1 && x✝ == BitVec.intMin 5 && 1#5 <<< x✝² == -1) = true then none
+              else some (x✝.sdiv (1#5 <<< x✝²)))
+    [Meta.check] [0.001261] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if
+              True ∧
+                (BitVec.signExtend (2 * 5) x✝ * BitVec.signExtend (2 * 5) x✝¹ <
+                    BitVec.signExtend (2 * 5) (BitVec.twoPow 5 (5 - 1)) ∨
+                  BitVec.signExtend (2 * 5) x✝ * BitVec.signExtend (2 * 5) x✝¹ ≥ BitVec.twoPow (2 * 5) (5 - 1)) then
+            none
+          else
+            if True ∧ (x✝¹ <<< x✝²).sshiftRight x✝².toNat = x✝¹ then none
+            else
+              if x✝² ≥ ↑5 then none
+              else
+                if (x✝¹ <<< x✝² == 0 || 5 != 1 && x✝ * x✝¹ == BitVec.intMin 5 && x✝¹ <<< x✝² == -1) = true then none
+                else some ((x✝ * x✝¹).sdiv (x✝¹ <<< x✝²)))
+          (if True ∧ 1#5 <<< x✝² >>> x✝² = 1#5 then none
+          else
+            if x✝² ≥ ↑5 then none
+            else
+              if (1#5 <<< x✝² == 0 || 5 != 1 && x✝ == BitVec.intMin 5 && 1#5 <<< x✝² == -1) = true then none
+              else some (x✝.sdiv (1#5 <<< x✝²)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 5
+      x✝² x✝¹ x✝ : BitVec 5
+      a✝ :
+        ¬(if
+                True ∧
+                  (BitVec.signExtend (2 * 5) x✝ * BitVec.signExtend (2 * 5) x✝¹ <
+                      BitVec.signExtend (2 * 5) (BitVec.twoPow 5 (5 - 1)) ∨
+                    BitVec.signExtend (2 * 5) x✝ * BitVec.signExtend (2 * 5) x✝¹ ≥ BitVec.twoPow (2 * 5) (5 - 1)) then
+              none
+            else
+              if True ∧ (x✝¹ <<< x✝²).sshiftRight x✝².toNat = x✝¹ then none
+              else
+                if x✝² ≥ ↑5 then none
+                else
+                  if (x✝¹ <<< x✝² == 0 || 5 != 1 && x✝ * x✝¹ == BitVec.intMin 5 && x✝¹ <<< x✝² == -1) = true then none
+                  else some ((x✝ * x✝¹).sdiv (x✝¹ <<< x✝²))) ⊑
+            if True ∧ 1#5 <<< x✝² >>> x✝² = 1#5 then none
+            else
+              if x✝² ≥ ↑5 then none
+              else
+                if (1#5 <<< x✝² == 0 || 5 != 1 && x✝ == BitVec.intMin 5 && 1#5 <<< x✝² == -1) = true then none
+                else some (x✝.sdiv (1#5 <<< x✝²))
+      ⊢ False
+  [Meta.isDefEq] [0.001411] ✅️ ?h₁ =?= congrArg (fun x => x = true)
+        (Eq.trans
+          (congrArg (fun x => x✝¹ <<< x✝² == 0#5 || x && x✝¹ <<< x✝² == 31#5)
+            (Bool.true_and (x✝ * x✝¹ == BitVec.intMin 5)))
+          (Std.Tactic.BVDecide.Normalize.Bool.or_elim (x✝¹ <<< x✝² == 0#5)
+            (x✝ * x✝¹ == BitVec.intMin 5 && x✝¹ <<< x✝² == 31#5)))
+    [Meta.isDefEq.assign] [0.001409] ✅️ ?h₁ := congrArg (fun x => x = true)
+          (Eq.trans
+            (congrArg (fun x => x✝¹ <<< x✝² == 0#5 || x && x✝¹ <<< x✝² == 31#5)
+              (Bool.true_and (x✝ * x✝¹ == BitVec.intMin 5)))
+            (Std.Tactic.BVDecide.Normalize.Bool.or_elim (x✝¹ <<< x✝² == 0#5)
+              (x✝ * x✝¹ == BitVec.intMin 5 && x✝¹ <<< x✝² == 31#5)))
+      [Meta.isDefEq.assign.checkTypes] [0.001396] ✅️ (?h₁ : ((x✝¹ <<< x✝² == 0 ||
+                5 != 1 && x✝ * x✝¹ == BitVec.intMin 5 && x✝¹ <<< x✝² == -1) =
+              true) =
+            ((!(!x✝¹ <<< x✝² == 0#5 && !(x✝ * x✝¹ == BitVec.intMin 5 && x✝¹ <<< x✝² == 31#5))) =
+              true)) := (congrArg (fun x => x = true)
+            (Eq.trans
+              (congrArg (fun x => x✝¹ <<< x✝² == 0#5 || x && x✝¹ <<< x✝² == 31#5)
+                (Bool.true_and (x✝ * x✝¹ == BitVec.intMin 5)))
+              (Std.Tactic.BVDecide.Normalize.Bool.or_elim (x✝¹ <<< x✝² == 0#5)
+                (x✝ * x✝¹ == BitVec.intMin 5 &&
+                  x✝¹ <<< x✝² ==
+                    31#5))) : ((x✝¹ <<< x✝² == 0#5 || true && x✝ * x✝¹ == BitVec.intMin 5 && x✝¹ <<< x✝² == 31#5) =
+              true) =
+            ((!(!x✝¹ <<< x✝² == 0#5 && !(x✝ * x✝¹ == BitVec.intMin 5 && x✝¹ <<< x✝² == 31#5))) = true))
+        [Meta.isDefEq] [0.001393] ✅️ ((x✝¹ <<< x✝² == 0 || 5 != 1 && x✝ * x✝¹ == BitVec.intMin 5 && x✝¹ <<< x✝² == -1) =
+                true) =
+              ((!(!x✝¹ <<< x✝² == 0#5 && !(x✝ * x✝¹ == BitVec.intMin 5 && x✝¹ <<< x✝² == 31#5))) =
+                true) =?= ((x✝¹ <<< x✝² == 0#5 || true && x✝ * x✝¹ == BitVec.intMin 5 && x✝¹ <<< x✝² == 31#5) = true) =
+              ((!(!x✝¹ <<< x✝² == 0#5 && !(x✝ * x✝¹ == BitVec.intMin 5 && x✝¹ <<< x✝² == 31#5))) = true)
+          [Meta.isDefEq] [0.001376] ✅️ (x✝¹ <<< x✝² == 0 ||
+                  5 != 1 && x✝ * x✝¹ == BitVec.intMin 5 && x✝¹ <<< x✝² == -1) =
+                true =?= (x✝¹ <<< x✝² == 0#5 || true && x✝ * x✝¹ == BitVec.intMin 5 && x✝¹ <<< x✝² == 31#5) = true
+            [Meta.isDefEq] [0.001362] ✅️ x✝¹ <<< x✝² == 0 ||
+                  5 != 1 && x✝ * x✝¹ == BitVec.intMin 5 &&
+                    x✝¹ <<< x✝² ==
+                      -1 =?= x✝¹ <<< x✝² == 0#5 || true && x✝ * x✝¹ == BitVec.intMin 5 && x✝¹ <<< x✝² == 31#5
+              [Meta.isDefEq.delta] [0.001331] ✅️ x✝¹ <<< x✝² == 0 ||
+                    5 != 1 && x✝ * x✝¹ == BitVec.intMin 5 &&
+                      x✝¹ <<< x✝² ==
+                        -1 =?= x✝¹ <<< x✝² == 0#5 || true && x✝ * x✝¹ == BitVec.intMin 5 && x✝¹ <<< x✝² == 31#5
+                [Meta.isDefEq] [0.001049] ✅️ 5 != 1 && x✝ * x✝¹ == BitVec.intMin 5 &&
+                      x✝¹ <<< x✝² == -1 =?= true && x✝ * x✝¹ == BitVec.intMin 5 && x✝¹ <<< x✝² == 31#5
+                  [Meta.isDefEq.delta] [0.001036] ✅️ 5 != 1 && x✝ * x✝¹ == BitVec.intMin 5 &&
+                        x✝¹ <<< x✝² == -1 =?= true && x✝ * x✝¹ == BitVec.intMin 5 && x✝¹ <<< x✝² == 31#5
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 5
+      x✝² x✝¹ x✝ : BitVec 5
+      a✝ :
+        ¬(if
+                (!((!BitVec.signExtend 10 (BitVec.twoPow 5 4) >ᵤ BitVec.signExtend 10 x✝ * BitVec.signExtend 10 x✝¹) &&
+                      BitVec.twoPow 10 4 >ᵤ BitVec.signExtend 10 x✝ * BitVec.signExtend 10 x✝¹)) =
+                  true then
+              none
+            else
+              if ((x✝¹ <<< x✝²).sshiftRight x✝².toNat == x✝¹) = true then none
+              else
+                if (!5#5 >ᵤ x✝²) = true then none
+                else
+                  if (!(!x✝¹ <<< x✝² == 0#5 && !(x✝ * x✝¹ == BitVec.intMin 5 && x✝¹ <<< x✝² == 31#5))) = true then none
+                  else
+                    some
+                      (if (x✝ * x✝¹).getLsbD 4 = true then
+                        if (x✝¹ <<< x✝²).getLsbD 4 = true then (~~~(x✝ * x✝¹) + 1#5) / (~~~(x✝¹ <<< x✝²) + 1#5)
+                        else ~~~((~~~(x✝ * x✝¹) + 1#5) / x✝¹ <<< x✝²) + 1#5
+                      else
+                        if (x✝¹ <<< x✝²).getLsbD 4 = true then ~~~(x✝ * x✝¹ / (~~~(x✝¹ <<< x✝²) + 1#5)) + 1#5
+                        else x✝ * x✝¹ / x✝¹ <<< x✝²)) ⊑
+            if (1#5 <<< x✝² >>> x✝² == 1#5) = true then none
+            else
+              if (!5#5 >ᵤ x✝²) = true then none
+              else
+                if (!(!1#5 <<< x✝² == 0#5 && !(x✝ == BitVec.intMin 5 && 1#5 <<< x✝² == 31#5))) = true then none
+                else
+                  some
+                    (if x✝.getLsbD 4 = true then
+                      if (1#5 <<< x✝²).getLsbD 4 = true then (~~~x✝ + 1#5) / (~~~(1#5 <<< x✝²) + 1#5)
+                      else ~~~((~~~x✝ + 1#5) / 1#5 <<< x✝²) + 1#5
+                    else
+                      if (1#5 <<< x✝²).getLsbD 4 = true then ~~~(x✝ / (~~~(1#5 <<< x✝²) + 1#5)) + 1#5
+                      else x✝ / 1#5 <<< x✝²)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:123:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:123:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:116:8: error: (kernel) declaration has metavariables 'udiv_mul_shl_nuw_thm'
+[bv] [0.078697] Normalizing goal
+  [Meta.synthInstance] [0.002702] ✅️ Decidable
+        ((if
+              True ∧
+                BitVec.zeroExtend (2 * 5) x✝ * BitVec.zeroExtend (2 * 5) x✝¹ ≥ BitVec.twoPow (2 * 5) (5 - 1) <<< 1 then
+            none
+          else
+            if True ∧ x✝ <<< x✝² >>> x✝² = x✝ then none
+            else if x✝² ≥ ↑5 then none else if x✝ <<< x✝² = 0 then none else some (x✝ * x✝¹ / x✝ <<< x✝²)) ⊑
+          if x✝² ≥ ↑5 then none else some (x✝¹ >>> x✝²))
+    [Meta.check] [0.001797] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if
+              True ∧
+                BitVec.zeroExtend (2 * 5) x✝ * BitVec.zeroExtend (2 * 5) x✝¹ ≥ BitVec.twoPow (2 * 5) (5 - 1) <<< 1 then
+            none
+          else
+            if True ∧ x✝ <<< x✝² >>> x✝² = x✝ then none
+            else if x✝² ≥ ↑5 then none else if x✝ <<< x✝² = 0 then none else some (x✝ * x✝¹ / x✝ <<< x✝²))
+          (if x✝² ≥ ↑5 then none else some (x✝¹ >>> x✝²))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 5
+      x✝² x✝¹ x✝ : BitVec 5
+      a✝ :
+        ¬(if
+                True ∧
+                  BitVec.zeroExtend (2 * 5) x✝ * BitVec.zeroExtend (2 * 5) x✝¹ ≥
+                    BitVec.twoPow (2 * 5) (5 - 1) <<< 1 then
+              none
+            else
+              if True ∧ x✝ <<< x✝² >>> x✝² = x✝ then none
+              else if x✝² ≥ ↑5 then none else if x✝ <<< x✝² = 0 then none else some (x✝ * x✝¹ / x✝ <<< x✝²)) ⊑
+            if x✝² ≥ ↑5 then none else some (x✝¹ >>> x✝²)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 5
+      x✝² x✝¹ x✝ : BitVec 5
+      a✝ :
+        ¬(if (!BitVec.twoPow 10 4 <<< 1 >ᵤ BitVec.zeroExtend 10 x✝ * BitVec.zeroExtend 10 x✝¹) = true then none
+            else
+              if (x✝ <<< x✝² >>> x✝² == x✝) = true then none
+              else
+                if (!5#5 >ᵤ x✝²) = true then none
+                else if (x✝ <<< x✝² == 0#5) = true then none else some (x✝ * x✝¹ / x✝ <<< x✝²)) ⊑
+            if (!5#5 >ᵤ x✝²) = true then none else some (x✝¹ >>> x✝²)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:134:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:134:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:127:8: error: (kernel) declaration has metavariables 'udiv_mul_shl_nuw_exact_commute1_thm'
+[bv] [0.079351] Normalizing goal
+  [Meta.synthInstance] [0.002716] ✅️ Decidable
+        ((if
+              True ∧
+                BitVec.zeroExtend (2 * 5) x✝ * BitVec.zeroExtend (2 * 5) x✝¹ ≥ BitVec.twoPow (2 * 5) (5 - 1) <<< 1 then
+            none
+          else
+            if True ∧ x✝¹ <<< x✝² >>> x✝² = x✝¹ then none
+            else if x✝² ≥ ↑5 then none else if x✝¹ <<< x✝² = 0 then none else some (x✝ * x✝¹ / x✝¹ <<< x✝²)) ⊑
+          if x✝² ≥ ↑5 then none else some (x✝ >>> x✝²))
+    [Meta.check] [0.001794] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if
+              True ∧
+                BitVec.zeroExtend (2 * 5) x✝ * BitVec.zeroExtend (2 * 5) x✝¹ ≥ BitVec.twoPow (2 * 5) (5 - 1) <<< 1 then
+            none
+          else
+            if True ∧ x✝¹ <<< x✝² >>> x✝² = x✝¹ then none
+            else if x✝² ≥ ↑5 then none else if x✝¹ <<< x✝² = 0 then none else some (x✝ * x✝¹ / x✝¹ <<< x✝²))
+          (if x✝² ≥ ↑5 then none else some (x✝ >>> x✝²))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 5
+      x✝² x✝¹ x✝ : BitVec 5
+      a✝ :
+        ¬(if
+                True ∧
+                  BitVec.zeroExtend (2 * 5) x✝ * BitVec.zeroExtend (2 * 5) x✝¹ ≥
+                    BitVec.twoPow (2 * 5) (5 - 1) <<< 1 then
+              none
+            else
+              if True ∧ x✝¹ <<< x✝² >>> x✝² = x✝¹ then none
+              else if x✝² ≥ ↑5 then none else if x✝¹ <<< x✝² = 0 then none else some (x✝ * x✝¹ / x✝¹ <<< x✝²)) ⊑
+            if x✝² ≥ ↑5 then none else some (x✝ >>> x✝²)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 5
+      x✝² x✝¹ x✝ : BitVec 5
+      a✝ :
+        ¬(if (!BitVec.twoPow 10 4 <<< 1 >ᵤ BitVec.zeroExtend 10 x✝ * BitVec.zeroExtend 10 x✝¹) = true then none
+            else
+              if (x✝¹ <<< x✝² >>> x✝² == x✝¹) = true then none
+              else
+                if (!5#5 >ᵤ x✝²) = true then none
+                else if (x✝¹ <<< x✝² == 0#5) = true then none else some (x✝ * x✝¹ / x✝¹ <<< x✝²)) ⊑
+            if (!5#5 >ᵤ x✝²) = true then none else some (x✝ >>> x✝²)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:145:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:145:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:138:8: error: (kernel) declaration has metavariables 'udiv_shl_mul_nuw_thm'
+[bv] [0.061683] Normalizing goal
+  [Meta.synthInstance] [0.001647] ✅️ Decidable
+        ((if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+          else
+            if x✝¹ ≥ ↑5 then none
+            else
+              if
+                  True ∧
+                    BitVec.zeroExtend (2 * 5) x✝ * BitVec.zeroExtend (2 * 5) x✝² ≥
+                      BitVec.twoPow (2 * 5) (5 - 1) <<< 1 then
+                none
+              else if x✝ * x✝² = 0 then none else some (x✝ <<< x✝¹ / (x✝ * x✝²))) ⊑
+          if True ∧ 1#5 <<< x✝¹ >>> x✝¹ = 1#5 then none
+          else if x✝¹ ≥ ↑5 then none else if x✝² = 0 then none else some (1#5 <<< x✝¹ / x✝²))
+    [Meta.check] [0.001100] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+          else
+            if x✝¹ ≥ ↑5 then none
+            else
+              if
+                  True ∧
+                    BitVec.zeroExtend (2 * 5) x✝ * BitVec.zeroExtend (2 * 5) x✝² ≥
+                      BitVec.twoPow (2 * 5) (5 - 1) <<< 1 then
+                none
+              else if x✝ * x✝² = 0 then none else some (x✝ <<< x✝¹ / (x✝ * x✝²)))
+          (if True ∧ 1#5 <<< x✝¹ >>> x✝¹ = 1#5 then none
+          else if x✝¹ ≥ ↑5 then none else if x✝² = 0 then none else some (1#5 <<< x✝¹ / x✝²))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 5
+      x✝² x✝¹ x✝ : BitVec 5
+      a✝ :
+        ¬(if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+            else
+              if x✝¹ ≥ ↑5 then none
+              else
+                if
+                    True ∧
+                      BitVec.zeroExtend (2 * 5) x✝ * BitVec.zeroExtend (2 * 5) x✝² ≥
+                        BitVec.twoPow (2 * 5) (5 - 1) <<< 1 then
+                  none
+                else if x✝ * x✝² = 0 then none else some (x✝ <<< x✝¹ / (x✝ * x✝²))) ⊑
+            if True ∧ 1#5 <<< x✝¹ >>> x✝¹ = 1#5 then none
+            else if x✝¹ ≥ ↑5 then none else if x✝² = 0 then none else some (1#5 <<< x✝¹ / x✝²)
+      ⊢ False
+  [Meta.isDefEq] [0.001697] ✅️ ?h₁ =?= Eq.trans
+        (congrArg (And True)
+          (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+            (Eq.trans
+              (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 10 4 <<< 1)
+                (BitVec.zeroExtend 10 x✝ * BitVec.zeroExtend 10 x✝²))
+              (Eq.trans
+                (Eq.trans
+                  (congrArg Not
+                    (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult (BitVec.zeroExtend 10 x✝ * BitVec.zeroExtend 10 x✝²)
+                      (BitVec.twoPow 10 4 <<< 1)))
+                  (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                    (BitVec.twoPow 10 4 <<< 1 >ᵤ BitVec.zeroExtend 10 x✝ * BitVec.zeroExtend 10 x✝²) true))
+                (congrArg (fun x => (!x) = true)
+                  (beq_true (BitVec.twoPow 10 4 <<< 1 >ᵤ BitVec.zeroExtend 10 x✝ * BitVec.zeroExtend 10 x✝²)))))))
+        (true_and ((!BitVec.twoPow 10 4 <<< 1 >ᵤ BitVec.zeroExtend 10 x✝ * BitVec.zeroExtend 10 x✝²) = true))
+    [Meta.isDefEq.assign] [0.001694] ✅️ ?h₁ := Eq.trans
+          (congrArg (And True)
+            (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+              (Eq.trans
+                (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 10 4 <<< 1)
+                  (BitVec.zeroExtend 10 x✝ * BitVec.zeroExtend 10 x✝²))
+                (Eq.trans
+                  (Eq.trans
+                    (congrArg Not
+                      (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult (BitVec.zeroExtend 10 x✝ * BitVec.zeroExtend 10 x✝²)
+                        (BitVec.twoPow 10 4 <<< 1)))
+                    (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                      (BitVec.twoPow 10 4 <<< 1 >ᵤ BitVec.zeroExtend 10 x✝ * BitVec.zeroExtend 10 x✝²) true))
+                  (congrArg (fun x => (!x) = true)
+                    (beq_true (BitVec.twoPow 10 4 <<< 1 >ᵤ BitVec.zeroExtend 10 x✝ * BitVec.zeroExtend 10 x✝²)))))))
+          (true_and ((!BitVec.twoPow 10 4 <<< 1 >ᵤ BitVec.zeroExtend 10 x✝ * BitVec.zeroExtend 10 x✝²) = true))
+      [Meta.isDefEq.assign.checkTypes] [0.001679] ✅️ (?h₁ : (True ∧
+              BitVec.zeroExtend (2 * 5) x✝ * BitVec.zeroExtend (2 * 5) x✝² ≥ BitVec.twoPow (2 * 5) (5 - 1) <<< 1) =
+            ((!BitVec.twoPow 10 4 <<< 1 >ᵤ BitVec.zeroExtend 10 x✝ * BitVec.zeroExtend 10 x✝²) =
+              true)) := (Eq.trans
+            (congrArg (And True)
+              (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+                (Eq.trans
+                  (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 10 4 <<< 1)
+                    (BitVec.zeroExtend 10 x✝ * BitVec.zeroExtend 10 x✝²))
+                  (Eq.trans
+                    (Eq.trans
+                      (congrArg Not
+                        (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult
+                          (BitVec.zeroExtend 10 x✝ * BitVec.zeroExtend 10 x✝²) (BitVec.twoPow 10 4 <<< 1)))
+                      (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                        (BitVec.twoPow 10 4 <<< 1 >ᵤ BitVec.zeroExtend 10 x✝ * BitVec.zeroExtend 10 x✝²) true))
+                    (congrArg (fun x => (!x) = true)
+                      (beq_true (BitVec.twoPow 10 4 <<< 1 >ᵤ BitVec.zeroExtend 10 x✝ * BitVec.zeroExtend 10 x✝²)))))))
+            (true_and
+              ((!BitVec.twoPow 10 4 <<< 1 >ᵤ BitVec.zeroExtend 10 x✝ * BitVec.zeroExtend 10 x✝²) =
+                true)) : (True ∧ BitVec.zeroExtend 10 x✝ * BitVec.zeroExtend 10 x✝² ≥ BitVec.twoPow 10 4 <<< 1) =
+            ((!BitVec.twoPow 10 4 <<< 1 >ᵤ BitVec.zeroExtend 10 x✝ * BitVec.zeroExtend 10 x✝²) = true))
+        [Meta.isDefEq] [0.001676] ✅️ (True ∧
+                BitVec.zeroExtend (2 * 5) x✝ * BitVec.zeroExtend (2 * 5) x✝² ≥ BitVec.twoPow (2 * 5) (5 - 1) <<< 1) =
+              ((!BitVec.twoPow 10 4 <<< 1 >ᵤ BitVec.zeroExtend 10 x✝ * BitVec.zeroExtend 10 x✝²) =
+                true) =?= (True ∧ BitVec.zeroExtend 10 x✝ * BitVec.zeroExtend 10 x✝² ≥ BitVec.twoPow 10 4 <<< 1) =
+              ((!BitVec.twoPow 10 4 <<< 1 >ᵤ BitVec.zeroExtend 10 x✝ * BitVec.zeroExtend 10 x✝²) = true)
+          [Meta.isDefEq] [0.001650] ✅️ True ∧
+                BitVec.zeroExtend (2 * 5) x✝ * BitVec.zeroExtend (2 * 5) x✝² ≥
+                  BitVec.twoPow (2 * 5) (5 - 1) <<<
+                    1 =?= True ∧ BitVec.zeroExtend 10 x✝ * BitVec.zeroExtend 10 x✝² ≥ BitVec.twoPow 10 4 <<< 1
+            [Meta.isDefEq] [0.001635] ✅️ BitVec.zeroExtend (2 * 5) x✝ * BitVec.zeroExtend (2 * 5) x✝² ≥
+                  BitVec.twoPow (2 * 5) (5 - 1) <<<
+                    1 =?= BitVec.zeroExtend 10 x✝ * BitVec.zeroExtend 10 x✝² ≥ BitVec.twoPow 10 4 <<< 1
+              [Meta.isDefEq.delta] [0.001618] ✅️ BitVec.zeroExtend (2 * 5) x✝ * BitVec.zeroExtend (2 * 5) x✝² ≥
+                    BitVec.twoPow (2 * 5) (5 - 1) <<<
+                      1 =?= BitVec.zeroExtend 10 x✝ * BitVec.zeroExtend 10 x✝² ≥ BitVec.twoPow 10 4 <<< 1
+                [Meta.isDefEq] [0.001244] ✅️ BitVec.zeroExtend (2 * 5) x✝ *
+                      BitVec.zeroExtend (2 * 5) x✝² =?= BitVec.zeroExtend 10 x✝ * BitVec.zeroExtend 10 x✝²
+                  [Meta.isDefEq] [0.001223] ✅️ instHMul.1 (BitVec.zeroExtend (2 * 5) x✝)
+                        (BitVec.zeroExtend (2 * 5)
+                          x✝²) =?= instHMul.1 (BitVec.zeroExtend 10 x✝) (BitVec.zeroExtend 10 x✝²)
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 5
+      x✝² x✝¹ x✝ : BitVec 5
+      a✝ :
+        ¬(if (x✝ <<< x✝¹ >>> x✝¹ == x✝) = true then none
+            else
+              if (!5#5 >ᵤ x✝¹) = true then none
+              else
+                if (!BitVec.twoPow 10 4 <<< 1 >ᵤ BitVec.zeroExtend 10 x✝ * BitVec.zeroExtend 10 x✝²) = true then none
+                else if (x✝ * x✝² == 0#5) = true then none else some (x✝ <<< x✝¹ / (x✝ * x✝²))) ⊑
+            if (1#5 <<< x✝¹ >>> x✝¹ == 1#5) = true then none
+            else if (!5#5 >ᵤ x✝¹) = true then none else if (x✝² == 0#5) = true then none else some (1#5 <<< x✝¹ / x✝²)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:156:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:156:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:149:8: error: (kernel) declaration has metavariables 'udiv_shl_mul_nuw_swap_thm'
+[bv] [0.060633] Normalizing goal
+  [Meta.synthInstance] [0.001644] ✅️ Decidable
+        ((if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+          else
+            if x✝¹ ≥ ↑5 then none
+            else
+              if
+                  True ∧
+                    BitVec.zeroExtend (2 * 5) x✝² * BitVec.zeroExtend (2 * 5) x✝ ≥
+                      BitVec.twoPow (2 * 5) (5 - 1) <<< 1 then
+                none
+              else if x✝² * x✝ = 0 then none else some (x✝ <<< x✝¹ / (x✝² * x✝))) ⊑
+          if True ∧ 1#5 <<< x✝¹ >>> x✝¹ = 1#5 then none
+          else if x✝¹ ≥ ↑5 then none else if x✝² = 0 then none else some (1#5 <<< x✝¹ / x✝²))
+    [Meta.check] [0.001086] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+          else
+            if x✝¹ ≥ ↑5 then none
+            else
+              if
+                  True ∧
+                    BitVec.zeroExtend (2 * 5) x✝² * BitVec.zeroExtend (2 * 5) x✝ ≥
+                      BitVec.twoPow (2 * 5) (5 - 1) <<< 1 then
+                none
+              else if x✝² * x✝ = 0 then none else some (x✝ <<< x✝¹ / (x✝² * x✝)))
+          (if True ∧ 1#5 <<< x✝¹ >>> x✝¹ = 1#5 then none
+          else if x✝¹ ≥ ↑5 then none else if x✝² = 0 then none else some (1#5 <<< x✝¹ / x✝²))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 5
+      x✝² x✝¹ x✝ : BitVec 5
+      a✝ :
+        ¬(if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+            else
+              if x✝¹ ≥ ↑5 then none
+              else
+                if
+                    True ∧
+                      BitVec.zeroExtend (2 * 5) x✝² * BitVec.zeroExtend (2 * 5) x✝ ≥
+                        BitVec.twoPow (2 * 5) (5 - 1) <<< 1 then
+                  none
+                else if x✝² * x✝ = 0 then none else some (x✝ <<< x✝¹ / (x✝² * x✝))) ⊑
+            if True ∧ 1#5 <<< x✝¹ >>> x✝¹ = 1#5 then none
+            else if x✝¹ ≥ ↑5 then none else if x✝² = 0 then none else some (1#5 <<< x✝¹ / x✝²)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 5
+      x✝² x✝¹ x✝ : BitVec 5
+      a✝ :
+        ¬(if (x✝ <<< x✝¹ >>> x✝¹ == x✝) = true then none
+            else
+              if (!5#5 >ᵤ x✝¹) = true then none
+              else
+                if (!BitVec.twoPow 10 4 <<< 1 >ᵤ BitVec.zeroExtend 10 x✝² * BitVec.zeroExtend 10 x✝) = true then none
+                else if (x✝² * x✝ == 0#5) = true then none else some (x✝ <<< x✝¹ / (x✝² * x✝))) ⊑
+            if (1#5 <<< x✝¹ >>> x✝¹ == 1#5) = true then none
+            else if (!5#5 >ᵤ x✝¹) = true then none else if (x✝² == 0#5) = true then none else some (1#5 <<< x✝¹ / x✝²)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:167:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:167:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:160:8: error: (kernel) declaration has metavariables 'udiv_shl_mul_nuw_exact_thm'
+[bv] [0.059019] Normalizing goal
+  [Meta.synthInstance] [0.001620] ✅️ Decidable
+        ((if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+          else
+            if x✝¹ ≥ ↑5 then none
+            else
+              if
+                  True ∧
+                    BitVec.zeroExtend (2 * 5) x✝ * BitVec.zeroExtend (2 * 5) x✝² ≥
+                      BitVec.twoPow (2 * 5) (5 - 1) <<< 1 then
+                none
+              else if x✝ * x✝² = 0 then none else some (x✝ <<< x✝¹ / (x✝ * x✝²))) ⊑
+          if True ∧ 1#5 <<< x✝¹ >>> x✝¹ = 1#5 then none
+          else if x✝¹ ≥ ↑5 then none else if x✝² = 0 then none else some (1#5 <<< x✝¹ / x✝²))
+    [Meta.check] [0.001061] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+          else
+            if x✝¹ ≥ ↑5 then none
+            else
+              if
+                  True ∧
+                    BitVec.zeroExtend (2 * 5) x✝ * BitVec.zeroExtend (2 * 5) x✝² ≥
+                      BitVec.twoPow (2 * 5) (5 - 1) <<< 1 then
+                none
+              else if x✝ * x✝² = 0 then none else some (x✝ <<< x✝¹ / (x✝ * x✝²)))
+          (if True ∧ 1#5 <<< x✝¹ >>> x✝¹ = 1#5 then none
+          else if x✝¹ ≥ ↑5 then none else if x✝² = 0 then none else some (1#5 <<< x✝¹ / x✝²))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 5
+      x✝² x✝¹ x✝ : BitVec 5
+      a✝ :
+        ¬(if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+            else
+              if x✝¹ ≥ ↑5 then none
+              else
+                if
+                    True ∧
+                      BitVec.zeroExtend (2 * 5) x✝ * BitVec.zeroExtend (2 * 5) x✝² ≥
+                        BitVec.twoPow (2 * 5) (5 - 1) <<< 1 then
+                  none
+                else if x✝ * x✝² = 0 then none else some (x✝ <<< x✝¹ / (x✝ * x✝²))) ⊑
+            if True ∧ 1#5 <<< x✝¹ >>> x✝¹ = 1#5 then none
+            else if x✝¹ ≥ ↑5 then none else if x✝² = 0 then none else some (1#5 <<< x✝¹ / x✝²)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 5
+      x✝² x✝¹ x✝ : BitVec 5
+      a✝ :
+        ¬(if (x✝ <<< x✝¹ >>> x✝¹ == x✝) = true then none
+            else
+              if (!5#5 >ᵤ x✝¹) = true then none
+              else
+                if (!BitVec.twoPow 10 4 <<< 1 >ᵤ BitVec.zeroExtend 10 x✝ * BitVec.zeroExtend 10 x✝²) = true then none
+                else if (x✝ * x✝² == 0#5) = true then none else some (x✝ <<< x✝¹ / (x✝ * x✝²))) ⊑
+            if (1#5 <<< x✝¹ >>> x✝¹ == 1#5) = true then none
+            else if (!5#5 >ᵤ x✝¹) = true then none else if (x✝² == 0#5) = true then none else some (1#5 <<< x✝¹ / x✝²)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:177:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:177:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:171:8: error: (kernel) declaration has metavariables 'udiv_lshr_mul_nuw_thm'
+[bv] [0.039152] Normalizing goal
+  [Meta.synthInstance] [0.001390] ✅️ Decidable
+        ((if
+              True ∧
+                BitVec.zeroExtend (2 * 8) x✝ * BitVec.zeroExtend (2 * 8) x✝¹ ≥ BitVec.twoPow (2 * 8) (8 - 1) <<< 1 then
+            none
+          else if x✝² ≥ ↑8 then none else if x✝ = 0 then none else some ((x✝ * x✝¹) >>> x✝² / x✝)) ⊑
+          if x✝² ≥ ↑8 then none else some (x✝¹ >>> x✝²))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 8
+      x✝² x✝¹ x✝ : BitVec 8
+      a✝ :
+        ¬(if
+                True ∧
+                  BitVec.zeroExtend (2 * 8) x✝ * BitVec.zeroExtend (2 * 8) x✝¹ ≥
+                    BitVec.twoPow (2 * 8) (8 - 1) <<< 1 then
+              none
+            else if x✝² ≥ ↑8 then none else if x✝ = 0 then none else some ((x✝ * x✝¹) >>> x✝² / x✝)) ⊑
+            if x✝² ≥ ↑8 then none else some (x✝¹ >>> x✝²)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 8
+      x✝² x✝¹ x✝ : BitVec 8
+      a✝ :
+        ¬(if (!BitVec.twoPow 16 7 <<< 1 >ᵤ BitVec.zeroExtend 16 x✝ * BitVec.zeroExtend 16 x✝¹) = true then none
+            else
+              if (!8#8 >ᵤ x✝²) = true then none
+              else if (x✝ == 0#8) = true then none else some ((x✝ * x✝¹) >>> x✝² / x✝)) ⊑
+            if (!8#8 >ᵤ x✝²) = true then none else some (x✝¹ >>> x✝²)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:188:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:188:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:181:8: error: (kernel) declaration has metavariables 'sdiv_shl_shl_nsw2_nuw_thm'
+[bv] [0.118345] Normalizing goal
+  [Meta.synthInstance] [0.001391] ✅️ Decidable
+        ((if True ∧ (x✝ <<< x✝¹).sshiftRight x✝¹.toNat = x✝ then none
+          else
+            if x✝¹ ≥ ↑8 then none
+            else
+              if True ∧ (x✝² <<< x✝¹).sshiftRight x✝¹.toNat = x✝² then none
+              else
+                if True ∧ x✝² <<< x✝¹ >>> x✝¹ = x✝² then none
+                else
+                  if x✝¹ ≥ ↑8 then none
+                  else
+                    if (x✝² <<< x✝¹ == 0 || 8 != 1 && x✝ <<< x✝¹ == BitVec.intMin 8 && x✝² <<< x✝¹ == -1) = true then
+                      none
+                    else some ((x✝ <<< x✝¹).sdiv (x✝² <<< x✝¹))) ⊑
+          if (x✝² == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && x✝² == -1) = true then none else some (x✝.sdiv x✝²))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 8
+      x✝² x✝¹ x✝ : BitVec 8
+      a✝ :
+        ¬(if True ∧ (x✝ <<< x✝¹).sshiftRight x✝¹.toNat = x✝ then none
+            else
+              if x✝¹ ≥ ↑8 then none
+              else
+                if True ∧ (x✝² <<< x✝¹).sshiftRight x✝¹.toNat = x✝² then none
+                else
+                  if True ∧ x✝² <<< x✝¹ >>> x✝¹ = x✝² then none
+                  else
+                    if x✝¹ ≥ ↑8 then none
+                    else
+                      if (x✝² <<< x✝¹ == 0 || 8 != 1 && x✝ <<< x✝¹ == BitVec.intMin 8 && x✝² <<< x✝¹ == -1) = true then
+                        none
+                      else some ((x✝ <<< x✝¹).sdiv (x✝² <<< x✝¹))) ⊑
+            if (x✝² == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && x✝² == -1) = true then none else some (x✝.sdiv x✝²)
+      ⊢ False
+  [Meta.isDefEq] [0.001303] ✅️ ?h₁ =?= congrArg (fun x => x = true)
+        (Eq.trans
+          (congrArg (fun x => x✝² <<< x✝¹ == 0#8 || x && x✝² <<< x✝¹ == 255#8)
+            (Bool.true_and (x✝ <<< x✝¹ == BitVec.intMin 8)))
+          (Std.Tactic.BVDecide.Normalize.Bool.or_elim (x✝² <<< x✝¹ == 0#8)
+            (x✝ <<< x✝¹ == BitVec.intMin 8 && x✝² <<< x✝¹ == 255#8)))
+    [Meta.isDefEq.assign] [0.001301] ✅️ ?h₁ := congrArg (fun x => x = true)
+          (Eq.trans
+            (congrArg (fun x => x✝² <<< x✝¹ == 0#8 || x && x✝² <<< x✝¹ == 255#8)
+              (Bool.true_and (x✝ <<< x✝¹ == BitVec.intMin 8)))
+            (Std.Tactic.BVDecide.Normalize.Bool.or_elim (x✝² <<< x✝¹ == 0#8)
+              (x✝ <<< x✝¹ == BitVec.intMin 8 && x✝² <<< x✝¹ == 255#8)))
+      [Meta.isDefEq.assign.checkTypes] [0.001288] ✅️ (?h₁ : ((x✝² <<< x✝¹ == 0 ||
+                8 != 1 && x✝ <<< x✝¹ == BitVec.intMin 8 && x✝² <<< x✝¹ == -1) =
+              true) =
+            ((!(!x✝² <<< x✝¹ == 0#8 && !(x✝ <<< x✝¹ == BitVec.intMin 8 && x✝² <<< x✝¹ == 255#8))) =
+              true)) := (congrArg (fun x => x = true)
+            (Eq.trans
+              (congrArg (fun x => x✝² <<< x✝¹ == 0#8 || x && x✝² <<< x✝¹ == 255#8)
+                (Bool.true_and (x✝ <<< x✝¹ == BitVec.intMin 8)))
+              (Std.Tactic.BVDecide.Normalize.Bool.or_elim (x✝² <<< x✝¹ == 0#8)
+                (x✝ <<< x✝¹ == BitVec.intMin 8 &&
+                  x✝² <<< x✝¹ ==
+                    255#8))) : ((x✝² <<< x✝¹ == 0#8 || true && x✝ <<< x✝¹ == BitVec.intMin 8 && x✝² <<< x✝¹ == 255#8) =
+              true) =
+            ((!(!x✝² <<< x✝¹ == 0#8 && !(x✝ <<< x✝¹ == BitVec.intMin 8 && x✝² <<< x✝¹ == 255#8))) = true))
+        [Meta.isDefEq] [0.001285] ✅️ ((x✝² <<< x✝¹ == 0 ||
+                  8 != 1 && x✝ <<< x✝¹ == BitVec.intMin 8 && x✝² <<< x✝¹ == -1) =
+                true) =
+              ((!(!x✝² <<< x✝¹ == 0#8 && !(x✝ <<< x✝¹ == BitVec.intMin 8 && x✝² <<< x✝¹ == 255#8))) =
+                true) =?= ((x✝² <<< x✝¹ == 0#8 || true && x✝ <<< x✝¹ == BitVec.intMin 8 && x✝² <<< x✝¹ == 255#8) =
+                true) =
+              ((!(!x✝² <<< x✝¹ == 0#8 && !(x✝ <<< x✝¹ == BitVec.intMin 8 && x✝² <<< x✝¹ == 255#8))) = true)
+          [Meta.isDefEq] [0.001267] ✅️ (x✝² <<< x✝¹ == 0 ||
+                  8 != 1 && x✝ <<< x✝¹ == BitVec.intMin 8 && x✝² <<< x✝¹ == -1) =
+                true =?= (x✝² <<< x✝¹ == 0#8 || true && x✝ <<< x✝¹ == BitVec.intMin 8 && x✝² <<< x✝¹ == 255#8) = true
+            [Meta.isDefEq] [0.001254] ✅️ x✝² <<< x✝¹ == 0 ||
+                  8 != 1 && x✝ <<< x✝¹ == BitVec.intMin 8 &&
+                    x✝² <<< x✝¹ ==
+                      -1 =?= x✝² <<< x✝¹ == 0#8 || true && x✝ <<< x✝¹ == BitVec.intMin 8 && x✝² <<< x✝¹ == 255#8
+              [Meta.isDefEq.delta] [0.001241] ✅️ x✝² <<< x✝¹ == 0 ||
+                    8 != 1 && x✝ <<< x✝¹ == BitVec.intMin 8 &&
+                      x✝² <<< x✝¹ ==
+                        -1 =?= x✝² <<< x✝¹ == 0#8 || true && x✝ <<< x✝¹ == BitVec.intMin 8 && x✝² <<< x✝¹ == 255#8
+                [Meta.isDefEq] [0.001007] ✅️ 8 != 1 && x✝ <<< x✝¹ == BitVec.intMin 8 &&
+                      x✝² <<< x✝¹ == -1 =?= true && x✝ <<< x✝¹ == BitVec.intMin 8 && x✝² <<< x✝¹ == 255#8
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 8
+      x✝² x✝¹ x✝ : BitVec 8
+      a✝ :
+        ¬(if ((x✝ <<< x✝¹).sshiftRight x✝¹.toNat == x✝) = true then none
+            else
+              if (!8#8 >ᵤ x✝¹) = true then none
+              else
+                if ((x✝² <<< x✝¹).sshiftRight x✝¹.toNat == x✝²) = true then none
+                else
+                  if (x✝² <<< x✝¹ >>> x✝¹ == x✝²) = true then none
+                  else
+                    if (!8#8 >ᵤ x✝¹) = true then none
+                    else
+                      if
+                          (!(!x✝² <<< x✝¹ == 0#8 && !(x✝ <<< x✝¹ == BitVec.intMin 8 && x✝² <<< x✝¹ == 255#8))) =
+                            true then
+                        none
+                      else
+                        some
+                          (if (x✝ <<< x✝¹).getLsbD 7 = true then
+                            if (x✝² <<< x✝¹).getLsbD 7 = true then (~~~(x✝ <<< x✝¹) + 1#8) / (~~~(x✝² <<< x✝¹) + 1#8)
+                            else ~~~((~~~(x✝ <<< x✝¹) + 1#8) / x✝² <<< x✝¹) + 1#8
+                          else
+                            if (x✝² <<< x✝¹).getLsbD 7 = true then ~~~(x✝ <<< x✝¹ / (~~~(x✝² <<< x✝¹) + 1#8)) + 1#8
+                            else x✝ <<< x✝¹ / x✝² <<< x✝¹)) ⊑
+            if (!(!x✝² == 0#8 && !(x✝ == BitVec.intMin 8 && x✝² == 255#8))) = true then none
+            else
+              some
+                (if x✝.getLsbD 7 = true then
+                  if x✝².getLsbD 7 = true then (~~~x✝ + 1#8) / (~~~x✝² + 1#8) else ~~~((~~~x✝ + 1#8) / x✝²) + 1#8
+                else if x✝².getLsbD 7 = true then ~~~(x✝ / (~~~x✝² + 1#8)) + 1#8 else x✝ / x✝²)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:199:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:199:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:192:8: error: (kernel) declaration has metavariables 'udiv_shl_shl_nuw_nsw2_thm'
+[bv] [0.049470] Normalizing goal
+  [Meta.synthInstance] [0.001233] ✅️ Decidable
+        ((if True ∧ (x✝ <<< x✝¹).sshiftRight x✝¹.toNat = x✝ then none
+          else
+            if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+            else
+              if x✝¹ ≥ ↑8 then none
+              else
+                if True ∧ (x✝² <<< x✝¹).sshiftRight x✝¹.toNat = x✝² then none
+                else if x✝¹ ≥ ↑8 then none else if x✝² <<< x✝¹ = 0 then none else some (x✝ <<< x✝¹ / x✝² <<< x✝¹)) ⊑
+          if x✝² = 0 then none else some (x✝ / x✝²))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 8
+      x✝² x✝¹ x✝ : BitVec 8
+      a✝ :
+        ¬(if True ∧ (x✝ <<< x✝¹).sshiftRight x✝¹.toNat = x✝ then none
+            else
+              if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+              else
+                if x✝¹ ≥ ↑8 then none
+                else
+                  if True ∧ (x✝² <<< x✝¹).sshiftRight x✝¹.toNat = x✝² then none
+                  else if x✝¹ ≥ ↑8 then none else if x✝² <<< x✝¹ = 0 then none else some (x✝ <<< x✝¹ / x✝² <<< x✝¹)) ⊑
+            if x✝² = 0 then none else some (x✝ / x✝²)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 8
+      x✝² x✝¹ x✝ : BitVec 8
+      a✝ :
+        ¬(if ((x✝ <<< x✝¹).sshiftRight x✝¹.toNat == x✝) = true then none
+            else
+              if (x✝ <<< x✝¹ >>> x✝¹ == x✝) = true then none
+              else
+                if (!8#8 >ᵤ x✝¹) = true then none
+                else
+                  if ((x✝² <<< x✝¹).sshiftRight x✝¹.toNat == x✝²) = true then none
+                  else
+                    if (!8#8 >ᵤ x✝¹) = true then none
+                    else if (x✝² <<< x✝¹ == 0#8) = true then none else some (x✝ <<< x✝¹ / x✝² <<< x✝¹)) ⊑
+            if (x✝² == 0#8) = true then none else some (x✝ / x✝²)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:211:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:203:8: error: (kernel) declaration has metavariables 'sdiv_shl_pair_const_thm'
+[bv] [0.070395] Normalizing goal
+  [Meta.synthInstance] [0.001420] ✅️ Decidable
+        ((if True ∧ (x✝ <<< 2#32).sshiftRight (2#32).toNat = x✝ then none
+          else
+            if 2#32 ≥ ↑32 then none
+            else
+              if True ∧ (x✝ <<< 1#32).sshiftRight (1#32).toNat = x✝ then none
+              else
+                if 1#32 ≥ ↑32 then none
+                else
+                  if (x✝ <<< 1#32 == 0 || 32 != 1 && x✝ <<< 2#32 == BitVec.intMin 32 && x✝ <<< 1#32 == -1) = true then
+                    none
+                  else some ((x✝ <<< 2#32).sdiv (x✝ <<< 1#32))) ⊑
+          some 2#32)
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if True ∧ (x✝ <<< 2#32).sshiftRight (2#32).toNat = x✝ then none
+            else
+              if 2#32 ≥ ↑32 then none
+              else
+                if True ∧ (x✝ <<< 1#32).sshiftRight (1#32).toNat = x✝ then none
+                else
+                  if 1#32 ≥ ↑32 then none
+                  else
+                    if (x✝ <<< 1#32 == 0 || 32 != 1 && x✝ <<< 2#32 == BitVec.intMin 32 && x✝ <<< 1#32 == -1) = true then
+                      none
+                    else some ((x✝ <<< 2#32).sdiv (x✝ <<< 1#32))) ⊑
+            some 2#32
+      ⊢ False
+  [Meta.isDefEq] [0.001686] ✅️ ?h₁ =?= congrArg (fun x => x = true)
+        (Eq.trans
+          (congrArg (fun x => x✝ <<< 1 == 0#32 || x && x✝ <<< 1 == 4294967295#32)
+            (Bool.true_and (x✝ <<< 2 == BitVec.intMin 32)))
+          (Std.Tactic.BVDecide.Normalize.Bool.or_elim (x✝ <<< 1 == 0#32)
+            (x✝ <<< 2 == BitVec.intMin 32 && x✝ <<< 1 == 4294967295#32)))
+    [Meta.isDefEq.assign] [0.001684] ✅️ ?h₁ := congrArg (fun x => x = true)
+          (Eq.trans
+            (congrArg (fun x => x✝ <<< 1 == 0#32 || x && x✝ <<< 1 == 4294967295#32)
+              (Bool.true_and (x✝ <<< 2 == BitVec.intMin 32)))
+            (Std.Tactic.BVDecide.Normalize.Bool.or_elim (x✝ <<< 1 == 0#32)
+              (x✝ <<< 2 == BitVec.intMin 32 && x✝ <<< 1 == 4294967295#32)))
+      [Meta.isDefEq.assign.checkTypes] [0.001671] ✅️ (?h₁ : ((x✝ <<< 1#32 == 0 ||
+                32 != 1 && x✝ <<< 2#32 == BitVec.intMin 32 && x✝ <<< 1#32 == -1) =
+              true) =
+            ((!(!x✝ <<< 1 == 0#32 && !(x✝ <<< 2 == BitVec.intMin 32 && x✝ <<< 1 == 4294967295#32))) =
+              true)) := (congrArg (fun x => x = true)
+            (Eq.trans
+              (congrArg (fun x => x✝ <<< 1 == 0#32 || x && x✝ <<< 1 == 4294967295#32)
+                (Bool.true_and (x✝ <<< 2 == BitVec.intMin 32)))
+              (Std.Tactic.BVDecide.Normalize.Bool.or_elim (x✝ <<< 1 == 0#32)
+                (x✝ <<< 2 == BitVec.intMin 32 &&
+                  x✝ <<< 1 ==
+                    4294967295#32))) : ((x✝ <<< 1 == 0#32 ||
+                true && x✝ <<< 2 == BitVec.intMin 32 && x✝ <<< 1 == 4294967295#32) =
+              true) =
+            ((!(!x✝ <<< 1 == 0#32 && !(x✝ <<< 2 == BitVec.intMin 32 && x✝ <<< 1 == 4294967295#32))) = true))
+        [Meta.isDefEq] [0.001668] ✅️ ((x✝ <<< 1#32 == 0 ||
+                  32 != 1 && x✝ <<< 2#32 == BitVec.intMin 32 && x✝ <<< 1#32 == -1) =
+                true) =
+              ((!(!x✝ <<< 1 == 0#32 && !(x✝ <<< 2 == BitVec.intMin 32 && x✝ <<< 1 == 4294967295#32))) =
+                true) =?= ((x✝ <<< 1 == 0#32 || true && x✝ <<< 2 == BitVec.intMin 32 && x✝ <<< 1 == 4294967295#32) =
+                true) =
+              ((!(!x✝ <<< 1 == 0#32 && !(x✝ <<< 2 == BitVec.intMin 32 && x✝ <<< 1 == 4294967295#32))) = true)
+          [Meta.isDefEq] [0.001651] ✅️ (x✝ <<< 1#32 == 0 ||
+                  32 != 1 && x✝ <<< 2#32 == BitVec.intMin 32 && x✝ <<< 1#32 == -1) =
+                true =?= (x✝ <<< 1 == 0#32 || true && x✝ <<< 2 == BitVec.intMin 32 && x✝ <<< 1 == 4294967295#32) = true
+            [Meta.isDefEq] [0.001636] ✅️ x✝ <<< 1#32 == 0 ||
+                  32 != 1 && x✝ <<< 2#32 == BitVec.intMin 32 &&
+                    x✝ <<< 1#32 ==
+                      -1 =?= x✝ <<< 1 == 0#32 || true && x✝ <<< 2 == BitVec.intMin 32 && x✝ <<< 1 == 4294967295#32
+              [Meta.isDefEq.delta] [0.001624] ✅️ x✝ <<< 1#32 == 0 ||
+                    32 != 1 && x✝ <<< 2#32 == BitVec.intMin 32 &&
+                      x✝ <<< 1#32 ==
+                        -1 =?= x✝ <<< 1 == 0#32 || true && x✝ <<< 2 == BitVec.intMin 32 && x✝ <<< 1 == 4294967295#32
+                [Meta.isDefEq] [0.001254] ✅️ 32 != 1 && x✝ <<< 2#32 == BitVec.intMin 32 &&
+                      x✝ <<< 1#32 == -1 =?= true && x✝ <<< 2 == BitVec.intMin 32 && x✝ <<< 1 == 4294967295#32
+                  [Meta.isDefEq.delta] [0.001241] ✅️ 32 != 1 && x✝ <<< 2#32 == BitVec.intMin 32 &&
+                        x✝ <<< 1#32 == -1 =?= true && x✝ <<< 2 == BitVec.intMin 32 && x✝ <<< 1 == 4294967295#32
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if ((x✝ <<< 2).sshiftRight 2 == x✝) = true then none
+            else
+              if ((x✝ <<< 1).sshiftRight 1 == x✝) = true then none
+              else
+                if (!(!x✝ <<< 1 == 0#32 && !(x✝ <<< 2 == BitVec.intMin 32 && x✝ <<< 1 == 4294967295#32))) = true then
+                  none
+                else
+                  some
+                    (if (x✝ <<< 2).getLsbD 31 = true then
+                      if (x✝ <<< 1).getLsbD 31 = true then (~~~(x✝ <<< 2) + 1#32) / (~~~(x✝ <<< 1) + 1#32)
+                      else ~~~((~~~(x✝ <<< 2) + 1#32) / x✝ <<< 1) + 1#32
+                    else
+                      if (x✝ <<< 1).getLsbD 31 = true then ~~~(x✝ <<< 2 / (~~~(x✝ <<< 1) + 1#32)) + 1#32
+                      else x✝ <<< 2 / x✝ <<< 1)) ⊑
+            some 2#32
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:223:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:215:8: error: (kernel) declaration has metavariables 'udiv_shl_pair_const_thm'
+[bv] [0.035066] Normalizing goal
+  [Meta.synthInstance] [0.001373] ✅️ Decidable
+        ((if True ∧ x✝ <<< 2#32 >>> 2#32 = x✝ then none
+          else
+            if 2#32 ≥ ↑32 then none
+            else
+              if True ∧ x✝ <<< 1#32 >>> 1#32 = x✝ then none
+              else if 1#32 ≥ ↑32 then none else if x✝ <<< 1#32 = 0 then none else some (x✝ <<< 2#32 / x✝ <<< 1#32)) ⊑
+          some 2#32)
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if True ∧ x✝ <<< 2#32 >>> 2#32 = x✝ then none
+            else
+              if 2#32 ≥ ↑32 then none
+              else
+                if True ∧ x✝ <<< 1#32 >>> 1#32 = x✝ then none
+                else if 1#32 ≥ ↑32 then none else if x✝ <<< 1#32 = 0 then none else some (x✝ <<< 2#32 / x✝ <<< 1#32)) ⊑
+            some 2#32
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if (x✝ <<< 2 >>> 2 == x✝) = true then none
+            else
+              if (x✝ <<< 1 >>> 1 == x✝) = true then none
+              else if (x✝ <<< 1 == 0#32) = true then none else some (x✝ <<< 2 / x✝ <<< 1)) ⊑
+            some 2#32
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:234:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:234:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:227:8: error: (kernel) declaration has metavariables 'sdiv_shl_pair1_thm'
+[bv] [0.106702] Normalizing goal
+  [Meta.synthInstance] [0.001524] ✅️ Decidable
+        ((if True ∧ (x✝ <<< x✝¹).sshiftRight x✝¹.toNat = x✝ then none
+          else
+            if x✝¹ ≥ ↑32 then none
+            else
+              if True ∧ (x✝ <<< x✝²).sshiftRight x✝².toNat = x✝ then none
+              else
+                if True ∧ x✝ <<< x✝² >>> x✝² = x✝ then none
+                else
+                  if x✝² ≥ ↑32 then none
+                  else
+                    if (x✝ <<< x✝² == 0 || 32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == -1) = true then
+                      none
+                    else some ((x✝ <<< x✝¹).sdiv (x✝ <<< x✝²))) ⊑
+          if True ∧ (1#32 <<< x✝¹).sshiftRight x✝¹.toNat = 1#32 then none
+          else
+            if True ∧ 1#32 <<< x✝¹ >>> x✝¹ = 1#32 then none
+            else if x✝¹ ≥ ↑32 then none else if x✝² ≥ ↑32 then none else some (1#32 <<< x✝¹ >>> x✝²))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if True ∧ (x✝ <<< x✝¹).sshiftRight x✝¹.toNat = x✝ then none
+            else
+              if x✝¹ ≥ ↑32 then none
+              else
+                if True ∧ (x✝ <<< x✝²).sshiftRight x✝².toNat = x✝ then none
+                else
+                  if True ∧ x✝ <<< x✝² >>> x✝² = x✝ then none
+                  else
+                    if x✝² ≥ ↑32 then none
+                    else
+                      if (x✝ <<< x✝² == 0 || 32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == -1) = true then
+                        none
+                      else some ((x✝ <<< x✝¹).sdiv (x✝ <<< x✝²))) ⊑
+            if True ∧ (1#32 <<< x✝¹).sshiftRight x✝¹.toNat = 1#32 then none
+            else
+              if True ∧ 1#32 <<< x✝¹ >>> x✝¹ = 1#32 then none
+              else if x✝¹ ≥ ↑32 then none else if x✝² ≥ ↑32 then none else some (1#32 <<< x✝¹ >>> x✝²)
+      ⊢ False
+  [Meta.isDefEq] [0.001131] ✅️ ?h₁ =?= congrArg (fun x => x = true)
+        (Eq.trans
+          (congrArg (fun x => x✝ <<< x✝² == 0#32 || x && x✝ <<< x✝² == 4294967295#32)
+            (Bool.true_and (x✝ <<< x✝¹ == BitVec.intMin 32)))
+          (Std.Tactic.BVDecide.Normalize.Bool.or_elim (x✝ <<< x✝² == 0#32)
+            (x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32)))
+    [Meta.isDefEq.assign] [0.001128] ✅️ ?h₁ := congrArg (fun x => x = true)
+          (Eq.trans
+            (congrArg (fun x => x✝ <<< x✝² == 0#32 || x && x✝ <<< x✝² == 4294967295#32)
+              (Bool.true_and (x✝ <<< x✝¹ == BitVec.intMin 32)))
+            (Std.Tactic.BVDecide.Normalize.Bool.or_elim (x✝ <<< x✝² == 0#32)
+              (x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32)))
+      [Meta.isDefEq.assign.checkTypes] [0.001116] ✅️ (?h₁ : ((x✝ <<< x✝² == 0 ||
+                32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == -1) =
+              true) =
+            ((!(!x✝ <<< x✝² == 0#32 && !(x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32))) =
+              true)) := (congrArg (fun x => x = true)
+            (Eq.trans
+              (congrArg (fun x => x✝ <<< x✝² == 0#32 || x && x✝ <<< x✝² == 4294967295#32)
+                (Bool.true_and (x✝ <<< x✝¹ == BitVec.intMin 32)))
+              (Std.Tactic.BVDecide.Normalize.Bool.or_elim (x✝ <<< x✝² == 0#32)
+                (x✝ <<< x✝¹ == BitVec.intMin 32 &&
+                  x✝ <<< x✝² ==
+                    4294967295#32))) : ((x✝ <<< x✝² == 0#32 ||
+                true && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32) =
+              true) =
+            ((!(!x✝ <<< x✝² == 0#32 && !(x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32))) = true))
+        [Meta.isDefEq] [0.001113] ✅️ ((x✝ <<< x✝² == 0 ||
+                  32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == -1) =
+                true) =
+              ((!(!x✝ <<< x✝² == 0#32 && !(x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32))) =
+                true) =?= ((x✝ <<< x✝² == 0#32 ||
+                  true && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32) =
+                true) =
+              ((!(!x✝ <<< x✝² == 0#32 && !(x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32))) = true)
+          [Meta.isDefEq] [0.001075] ✅️ (x✝ <<< x✝² == 0 ||
+                  32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == -1) =
+                true =?= (x✝ <<< x✝² == 0#32 || true && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32) =
+                true
+            [Meta.isDefEq] [0.001061] ✅️ x✝ <<< x✝² == 0 ||
+                  32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 &&
+                    x✝ <<< x✝² ==
+                      -1 =?= x✝ <<< x✝² == 0#32 || true && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32
+              [Meta.isDefEq.delta] [0.001046] ✅️ x✝ <<< x✝² == 0 ||
+                    32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 &&
+                      x✝ <<< x✝² ==
+                        -1 =?= x✝ <<< x✝² == 0#32 ||
+                    true && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if ((x✝ <<< x✝¹).sshiftRight x✝¹.toNat == x✝) = true then none
+            else
+              if (!32#32 >ᵤ x✝¹) = true then none
+              else
+                if ((x✝ <<< x✝²).sshiftRight x✝².toNat == x✝) = true then none
+                else
+                  if (x✝ <<< x✝² >>> x✝² == x✝) = true then none
+                  else
+                    if (!32#32 >ᵤ x✝²) = true then none
+                    else
+                      if
+                          (!(!x✝ <<< x✝² == 0#32 && !(x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32))) =
+                            true then
+                        none
+                      else
+                        some
+                          (if (x✝ <<< x✝¹).getLsbD 31 = true then
+                            if (x✝ <<< x✝²).getLsbD 31 = true then (~~~(x✝ <<< x✝¹) + 1#32) / (~~~(x✝ <<< x✝²) + 1#32)
+                            else ~~~((~~~(x✝ <<< x✝¹) + 1#32) / x✝ <<< x✝²) + 1#32
+                          else
+                            if (x✝ <<< x✝²).getLsbD 31 = true then ~~~(x✝ <<< x✝¹ / (~~~(x✝ <<< x✝²) + 1#32)) + 1#32
+                            else x✝ <<< x✝¹ / x✝ <<< x✝²)) ⊑
+            if ((1#32 <<< x✝¹).sshiftRight x✝¹.toNat == 1#32) = true then none
+            else
+              if (1#32 <<< x✝¹ >>> x✝¹ == 1#32) = true then none
+              else
+                if (!32#32 >ᵤ x✝¹) = true then none
+                else if (!32#32 >ᵤ x✝²) = true then none else some (1#32 <<< x✝¹ >>> x✝²)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:245:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:245:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:238:8: error: (kernel) declaration has metavariables 'sdiv_shl_pair2_thm'
+[bv] [0.103959] Normalizing goal
+  [Meta.synthInstance] [0.001560] ✅️ Decidable
+        ((if True ∧ (x✝ <<< x✝¹).sshiftRight x✝¹.toNat = x✝ then none
+          else
+            if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+            else
+              if x✝¹ ≥ ↑32 then none
+              else
+                if True ∧ (x✝ <<< x✝²).sshiftRight x✝².toNat = x✝ then none
+                else
+                  if x✝² ≥ ↑32 then none
+                  else
+                    if (x✝ <<< x✝² == 0 || 32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == -1) = true then
+                      none
+                    else some ((x✝ <<< x✝¹).sdiv (x✝ <<< x✝²))) ⊑
+          if True ∧ (1#32 <<< x✝¹).sshiftRight x✝¹.toNat = 1#32 then none
+          else
+            if True ∧ 1#32 <<< x✝¹ >>> x✝¹ = 1#32 then none
+            else if x✝¹ ≥ ↑32 then none else if x✝² ≥ ↑32 then none else some (1#32 <<< x✝¹ >>> x✝²))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if True ∧ (x✝ <<< x✝¹).sshiftRight x✝¹.toNat = x✝ then none
+            else
+              if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+              else
+                if x✝¹ ≥ ↑32 then none
+                else
+                  if True ∧ (x✝ <<< x✝²).sshiftRight x✝².toNat = x✝ then none
+                  else
+                    if x✝² ≥ ↑32 then none
+                    else
+                      if (x✝ <<< x✝² == 0 || 32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == -1) = true then
+                        none
+                      else some ((x✝ <<< x✝¹).sdiv (x✝ <<< x✝²))) ⊑
+            if True ∧ (1#32 <<< x✝¹).sshiftRight x✝¹.toNat = 1#32 then none
+            else
+              if True ∧ 1#32 <<< x✝¹ >>> x✝¹ = 1#32 then none
+              else if x✝¹ ≥ ↑32 then none else if x✝² ≥ ↑32 then none else some (1#32 <<< x✝¹ >>> x✝²)
+      ⊢ False
+  [Meta.isDefEq] [0.001157] ✅️ ?h₁ =?= congrArg (fun x => x = true)
+        (Eq.trans
+          (congrArg (fun x => x✝ <<< x✝² == 0#32 || x && x✝ <<< x✝² == 4294967295#32)
+            (Bool.true_and (x✝ <<< x✝¹ == BitVec.intMin 32)))
+          (Std.Tactic.BVDecide.Normalize.Bool.or_elim (x✝ <<< x✝² == 0#32)
+            (x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32)))
+    [Meta.isDefEq.assign] [0.001154] ✅️ ?h₁ := congrArg (fun x => x = true)
+          (Eq.trans
+            (congrArg (fun x => x✝ <<< x✝² == 0#32 || x && x✝ <<< x✝² == 4294967295#32)
+              (Bool.true_and (x✝ <<< x✝¹ == BitVec.intMin 32)))
+            (Std.Tactic.BVDecide.Normalize.Bool.or_elim (x✝ <<< x✝² == 0#32)
+              (x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32)))
+      [Meta.isDefEq.assign.checkTypes] [0.001142] ✅️ (?h₁ : ((x✝ <<< x✝² == 0 ||
+                32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == -1) =
+              true) =
+            ((!(!x✝ <<< x✝² == 0#32 && !(x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32))) =
+              true)) := (congrArg (fun x => x = true)
+            (Eq.trans
+              (congrArg (fun x => x✝ <<< x✝² == 0#32 || x && x✝ <<< x✝² == 4294967295#32)
+                (Bool.true_and (x✝ <<< x✝¹ == BitVec.intMin 32)))
+              (Std.Tactic.BVDecide.Normalize.Bool.or_elim (x✝ <<< x✝² == 0#32)
+                (x✝ <<< x✝¹ == BitVec.intMin 32 &&
+                  x✝ <<< x✝² ==
+                    4294967295#32))) : ((x✝ <<< x✝² == 0#32 ||
+                true && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32) =
+              true) =
+            ((!(!x✝ <<< x✝² == 0#32 && !(x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32))) = true))
+        [Meta.isDefEq] [0.001139] ✅️ ((x✝ <<< x✝² == 0 ||
+                  32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == -1) =
+                true) =
+              ((!(!x✝ <<< x✝² == 0#32 && !(x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32))) =
+                true) =?= ((x✝ <<< x✝² == 0#32 ||
+                  true && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32) =
+                true) =
+              ((!(!x✝ <<< x✝² == 0#32 && !(x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32))) = true)
+          [Meta.isDefEq] [0.001121] ✅️ (x✝ <<< x✝² == 0 ||
+                  32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == -1) =
+                true =?= (x✝ <<< x✝² == 0#32 || true && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32) =
+                true
+            [Meta.isDefEq] [0.001107] ✅️ x✝ <<< x✝² == 0 ||
+                  32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 &&
+                    x✝ <<< x✝² ==
+                      -1 =?= x✝ <<< x✝² == 0#32 || true && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32
+              [Meta.isDefEq.delta] [0.001092] ✅️ x✝ <<< x✝² == 0 ||
+                    32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 &&
+                      x✝ <<< x✝² ==
+                        -1 =?= x✝ <<< x✝² == 0#32 ||
+                    true && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if ((x✝ <<< x✝¹).sshiftRight x✝¹.toNat == x✝) = true then none
+            else
+              if (x✝ <<< x✝¹ >>> x✝¹ == x✝) = true then none
+              else
+                if (!32#32 >ᵤ x✝¹) = true then none
+                else
+                  if ((x✝ <<< x✝²).sshiftRight x✝².toNat == x✝) = true then none
+                  else
+                    if (!32#32 >ᵤ x✝²) = true then none
+                    else
+                      if
+                          (!(!x✝ <<< x✝² == 0#32 && !(x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32))) =
+                            true then
+                        none
+                      else
+                        some
+                          (if (x✝ <<< x✝¹).getLsbD 31 = true then
+                            if (x✝ <<< x✝²).getLsbD 31 = true then (~~~(x✝ <<< x✝¹) + 1#32) / (~~~(x✝ <<< x✝²) + 1#32)
+                            else ~~~((~~~(x✝ <<< x✝¹) + 1#32) / x✝ <<< x✝²) + 1#32
+                          else
+                            if (x✝ <<< x✝²).getLsbD 31 = true then ~~~(x✝ <<< x✝¹ / (~~~(x✝ <<< x✝²) + 1#32)) + 1#32
+                            else x✝ <<< x✝¹ / x✝ <<< x✝²)) ⊑
+            if ((1#32 <<< x✝¹).sshiftRight x✝¹.toNat == 1#32) = true then none
+            else
+              if (1#32 <<< x✝¹ >>> x✝¹ == 1#32) = true then none
+              else
+                if (!32#32 >ᵤ x✝¹) = true then none
+                else if (!32#32 >ᵤ x✝²) = true then none else some (1#32 <<< x✝¹ >>> x✝²)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:256:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:256:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:249:8: error: (kernel) declaration has metavariables 'sdiv_shl_pair3_thm'
+[bv] [0.091432] Normalizing goal
+  [Meta.synthInstance] [0.001419] ✅️ Decidable
+        ((if True ∧ (x✝ <<< x✝¹).sshiftRight x✝¹.toNat = x✝ then none
+          else
+            if x✝¹ ≥ ↑32 then none
+            else
+              if True ∧ (x✝ <<< x✝²).sshiftRight x✝².toNat = x✝ then none
+              else
+                if x✝² ≥ ↑32 then none
+                else
+                  if (x✝ <<< x✝² == 0 || 32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == -1) = true then none
+                  else some ((x✝ <<< x✝¹).sdiv (x✝ <<< x✝²))) ⊑
+          if True ∧ 1#32 <<< x✝¹ >>> x✝¹ = 1#32 then none
+          else if x✝¹ ≥ ↑32 then none else if x✝² ≥ ↑32 then none else some (1#32 <<< x✝¹ >>> x✝²))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if True ∧ (x✝ <<< x✝¹).sshiftRight x✝¹.toNat = x✝ then none
+            else
+              if x✝¹ ≥ ↑32 then none
+              else
+                if True ∧ (x✝ <<< x✝²).sshiftRight x✝².toNat = x✝ then none
+                else
+                  if x✝² ≥ ↑32 then none
+                  else
+                    if (x✝ <<< x✝² == 0 || 32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == -1) = true then
+                      none
+                    else some ((x✝ <<< x✝¹).sdiv (x✝ <<< x✝²))) ⊑
+            if True ∧ 1#32 <<< x✝¹ >>> x✝¹ = 1#32 then none
+            else if x✝¹ ≥ ↑32 then none else if x✝² ≥ ↑32 then none else some (1#32 <<< x✝¹ >>> x✝²)
+      ⊢ False
+  [Meta.isDefEq] [0.001144] ✅️ ?h₁ =?= congrArg (fun x => x = true)
+        (Eq.trans
+          (congrArg (fun x => x✝ <<< x✝² == 0#32 || x && x✝ <<< x✝² == 4294967295#32)
+            (Bool.true_and (x✝ <<< x✝¹ == BitVec.intMin 32)))
+          (Std.Tactic.BVDecide.Normalize.Bool.or_elim (x✝ <<< x✝² == 0#32)
+            (x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32)))
+    [Meta.isDefEq.assign] [0.001142] ✅️ ?h₁ := congrArg (fun x => x = true)
+          (Eq.trans
+            (congrArg (fun x => x✝ <<< x✝² == 0#32 || x && x✝ <<< x✝² == 4294967295#32)
+              (Bool.true_and (x✝ <<< x✝¹ == BitVec.intMin 32)))
+            (Std.Tactic.BVDecide.Normalize.Bool.or_elim (x✝ <<< x✝² == 0#32)
+              (x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32)))
+      [Meta.isDefEq.assign.checkTypes] [0.001130] ✅️ (?h₁ : ((x✝ <<< x✝² == 0 ||
+                32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == -1) =
+              true) =
+            ((!(!x✝ <<< x✝² == 0#32 && !(x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32))) =
+              true)) := (congrArg (fun x => x = true)
+            (Eq.trans
+              (congrArg (fun x => x✝ <<< x✝² == 0#32 || x && x✝ <<< x✝² == 4294967295#32)
+                (Bool.true_and (x✝ <<< x✝¹ == BitVec.intMin 32)))
+              (Std.Tactic.BVDecide.Normalize.Bool.or_elim (x✝ <<< x✝² == 0#32)
+                (x✝ <<< x✝¹ == BitVec.intMin 32 &&
+                  x✝ <<< x✝² ==
+                    4294967295#32))) : ((x✝ <<< x✝² == 0#32 ||
+                true && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32) =
+              true) =
+            ((!(!x✝ <<< x✝² == 0#32 && !(x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32))) = true))
+        [Meta.isDefEq] [0.001127] ✅️ ((x✝ <<< x✝² == 0 ||
+                  32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == -1) =
+                true) =
+              ((!(!x✝ <<< x✝² == 0#32 && !(x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32))) =
+                true) =?= ((x✝ <<< x✝² == 0#32 ||
+                  true && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32) =
+                true) =
+              ((!(!x✝ <<< x✝² == 0#32 && !(x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32))) = true)
+          [Meta.isDefEq] [0.001109] ✅️ (x✝ <<< x✝² == 0 ||
+                  32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == -1) =
+                true =?= (x✝ <<< x✝² == 0#32 || true && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32) =
+                true
+            [Meta.isDefEq] [0.001095] ✅️ x✝ <<< x✝² == 0 ||
+                  32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 &&
+                    x✝ <<< x✝² ==
+                      -1 =?= x✝ <<< x✝² == 0#32 || true && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32
+              [Meta.isDefEq.delta] [0.001080] ✅️ x✝ <<< x✝² == 0 ||
+                    32 != 1 && x✝ <<< x✝¹ == BitVec.intMin 32 &&
+                      x✝ <<< x✝² ==
+                        -1 =?= x✝ <<< x✝² == 0#32 ||
+                    true && x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if ((x✝ <<< x✝¹).sshiftRight x✝¹.toNat == x✝) = true then none
+            else
+              if (!32#32 >ᵤ x✝¹) = true then none
+              else
+                if ((x✝ <<< x✝²).sshiftRight x✝².toNat == x✝) = true then none
+                else
+                  if (!32#32 >ᵤ x✝²) = true then none
+                  else
+                    if
+                        (!(!x✝ <<< x✝² == 0#32 && !(x✝ <<< x✝¹ == BitVec.intMin 32 && x✝ <<< x✝² == 4294967295#32))) =
+                          true then
+                      none
+                    else
+                      some
+                        (if (x✝ <<< x✝¹).getLsbD 31 = true then
+                          if (x✝ <<< x✝²).getLsbD 31 = true then (~~~(x✝ <<< x✝¹) + 1#32) / (~~~(x✝ <<< x✝²) + 1#32)
+                          else ~~~((~~~(x✝ <<< x✝¹) + 1#32) / x✝ <<< x✝²) + 1#32
+                        else
+                          if (x✝ <<< x✝²).getLsbD 31 = true then ~~~(x✝ <<< x✝¹ / (~~~(x✝ <<< x✝²) + 1#32)) + 1#32
+                          else x✝ <<< x✝¹ / x✝ <<< x✝²)) ⊑
+            if (1#32 <<< x✝¹ >>> x✝¹ == 1#32) = true then none
+            else
+              if (!32#32 >ᵤ x✝¹) = true then none
+              else if (!32#32 >ᵤ x✝²) = true then none else some (1#32 <<< x✝¹ >>> x✝²)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:267:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:267:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:260:8: error: (kernel) declaration has metavariables 'udiv_shl_pair1_thm'
+[bv] [0.055387] Normalizing goal
+  [Meta.synthInstance] [0.001326] ✅️ Decidable
+        ((if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+          else
+            if x✝¹ ≥ ↑32 then none
+            else
+              if True ∧ x✝ <<< x✝² >>> x✝² = x✝ then none
+              else if x✝² ≥ ↑32 then none else if x✝ <<< x✝² = 0 then none else some (x✝ <<< x✝¹ / x✝ <<< x✝²)) ⊑
+          if True ∧ 1#32 <<< x✝¹ >>> x✝¹ = 1#32 then none
+          else if x✝¹ ≥ ↑32 then none else if x✝² ≥ ↑32 then none else some (1#32 <<< x✝¹ >>> x✝²))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+            else
+              if x✝¹ ≥ ↑32 then none
+              else
+                if True ∧ x✝ <<< x✝² >>> x✝² = x✝ then none
+                else if x✝² ≥ ↑32 then none else if x✝ <<< x✝² = 0 then none else some (x✝ <<< x✝¹ / x✝ <<< x✝²)) ⊑
+            if True ∧ 1#32 <<< x✝¹ >>> x✝¹ = 1#32 then none
+            else if x✝¹ ≥ ↑32 then none else if x✝² ≥ ↑32 then none else some (1#32 <<< x✝¹ >>> x✝²)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if (x✝ <<< x✝¹ >>> x✝¹ == x✝) = true then none
+            else
+              if (!32#32 >ᵤ x✝¹) = true then none
+              else
+                if (x✝ <<< x✝² >>> x✝² == x✝) = true then none
+                else
+                  if (!32#32 >ᵤ x✝²) = true then none
+                  else if (x✝ <<< x✝² == 0#32) = true then none else some (x✝ <<< x✝¹ / x✝ <<< x✝²)) ⊑
+            if (1#32 <<< x✝¹ >>> x✝¹ == 1#32) = true then none
+            else
+              if (!32#32 >ᵤ x✝¹) = true then none
+              else if (!32#32 >ᵤ x✝²) = true then none else some (1#32 <<< x✝¹ >>> x✝²)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:278:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:278:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:271:8: error: (kernel) declaration has metavariables 'udiv_shl_pair2_thm'
+[bv] [0.067093] Normalizing goal
+  [Meta.synthInstance] [0.001487] ✅️ Decidable
+        ((if True ∧ (x✝ <<< x✝¹).sshiftRight x✝¹.toNat = x✝ then none
+          else
+            if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+            else
+              if x✝¹ ≥ ↑32 then none
+              else
+                if True ∧ x✝ <<< x✝² >>> x✝² = x✝ then none
+                else if x✝² ≥ ↑32 then none else if x✝ <<< x✝² = 0 then none else some (x✝ <<< x✝¹ / x✝ <<< x✝²)) ⊑
+          if True ∧ (1#32 <<< x✝¹).sshiftRight x✝¹.toNat = 1#32 then none
+          else
+            if True ∧ 1#32 <<< x✝¹ >>> x✝¹ = 1#32 then none
+            else if x✝¹ ≥ ↑32 then none else if x✝² ≥ ↑32 then none else some (1#32 <<< x✝¹ >>> x✝²))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if True ∧ (x✝ <<< x✝¹).sshiftRight x✝¹.toNat = x✝ then none
+            else
+              if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+              else
+                if x✝¹ ≥ ↑32 then none
+                else
+                  if True ∧ x✝ <<< x✝² >>> x✝² = x✝ then none
+                  else if x✝² ≥ ↑32 then none else if x✝ <<< x✝² = 0 then none else some (x✝ <<< x✝¹ / x✝ <<< x✝²)) ⊑
+            if True ∧ (1#32 <<< x✝¹).sshiftRight x✝¹.toNat = 1#32 then none
+            else
+              if True ∧ 1#32 <<< x✝¹ >>> x✝¹ = 1#32 then none
+              else if x✝¹ ≥ ↑32 then none else if x✝² ≥ ↑32 then none else some (1#32 <<< x✝¹ >>> x✝²)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if ((x✝ <<< x✝¹).sshiftRight x✝¹.toNat == x✝) = true then none
+            else
+              if (x✝ <<< x✝¹ >>> x✝¹ == x✝) = true then none
+              else
+                if (!32#32 >ᵤ x✝¹) = true then none
+                else
+                  if (x✝ <<< x✝² >>> x✝² == x✝) = true then none
+                  else
+                    if (!32#32 >ᵤ x✝²) = true then none
+                    else if (x✝ <<< x✝² == 0#32) = true then none else some (x✝ <<< x✝¹ / x✝ <<< x✝²)) ⊑
+            if ((1#32 <<< x✝¹).sshiftRight x✝¹.toNat == 1#32) = true then none
+            else
+              if (1#32 <<< x✝¹ >>> x✝¹ == 1#32) = true then none
+              else
+                if (!32#32 >ᵤ x✝¹) = true then none
+                else if (!32#32 >ᵤ x✝²) = true then none else some (1#32 <<< x✝¹ >>> x✝²)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:289:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:289:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gdivhshift_proof.lean:282:8: error: (kernel) declaration has metavariables 'udiv_shl_pair3_thm'
+[bv] [0.060897] Normalizing goal
+  [Meta.synthInstance] [0.001390] ✅️ Decidable
+        ((if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+          else
+            if x✝¹ ≥ ↑32 then none
+            else
+              if True ∧ (x✝ <<< x✝²).sshiftRight x✝².toNat = x✝ then none
+              else
+                if True ∧ x✝ <<< x✝² >>> x✝² = x✝ then none
+                else if x✝² ≥ ↑32 then none else if x✝ <<< x✝² = 0 then none else some (x✝ <<< x✝¹ / x✝ <<< x✝²)) ⊑
+          if True ∧ 1#32 <<< x✝¹ >>> x✝¹ = 1#32 then none
+          else if x✝¹ ≥ ↑32 then none else if x✝² ≥ ↑32 then none else some (1#32 <<< x✝¹ >>> x✝²))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if True ∧ x✝ <<< x✝¹ >>> x✝¹ = x✝ then none
+            else
+              if x✝¹ ≥ ↑32 then none
+              else
+                if True ∧ (x✝ <<< x✝²).sshiftRight x✝².toNat = x✝ then none
+                else
+                  if True ∧ x✝ <<< x✝² >>> x✝² = x✝ then none
+                  else if x✝² ≥ ↑32 then none else if x✝ <<< x✝² = 0 then none else some (x✝ <<< x✝¹ / x✝ <<< x✝²)) ⊑
+            if True ∧ 1#32 <<< x✝¹ >>> x✝¹ = 1#32 then none
+            else if x✝¹ ≥ ↑32 then none else if x✝² ≥ ↑32 then none else some (1#32 <<< x✝¹ >>> x✝²)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 e_2 : LLVM.IntW 32
+      x✝² x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if (x✝ <<< x✝¹ >>> x✝¹ == x✝) = true then none
+            else
+              if (!32#32 >ᵤ x✝¹) = true then none
+              else
+                if ((x✝ <<< x✝²).sshiftRight x✝².toNat == x✝) = true then none
+                else
+                  if (x✝ <<< x✝² >>> x✝² == x✝) = true then none
+                  else
+                    if (!32#32 >ᵤ x✝²) = true then none
+                    else if (x✝ <<< x✝² == 0#32) = true then none else some (x✝ <<< x✝¹ / x✝ <<< x✝²)) ⊑
+            if (1#32 <<< x✝¹ >>> x✝¹ == 1#32) = true then none
+            else
+              if (!32#32 >ᵤ x✝¹) = true then none
+              else if (!32#32 >ᵤ x✝²) = true then none else some (1#32 <<< x✝¹ >>> x✝²)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint

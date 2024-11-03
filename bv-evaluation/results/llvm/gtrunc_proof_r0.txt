@@ -1,9 +1,4 @@
-⚠ [874/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
-⚠ [878/892] Replayed SSA.Experimental.Bits.Fast.Tactic
-warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
-⚠ [879/892] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+⚠ [676/892] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
@@ -14,17 +9,1039 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaratio
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
-⚠ [885/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+⚠ [878/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [881/892] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [887/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
-⚠ [886/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+⚠ [888/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-✖ [890/892] Building Leanwuzla
-trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././.lake/packages/leanwuzla/././Leanwuzla.lean -R ././.lake/packages/leanwuzla/./. -o ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.olean -i ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.ilean -c ././.lake/packages/leanwuzla/.lake/build/ir/Leanwuzla.c --json
-error: ././.lake/packages/leanwuzla/././Leanwuzla.lean:117:8: invalid dotted identifier notation, unknown identifier `Std.Tactic.BVDecide.BVBinOp.sdiv` from expected type
-  BVBinOp
-error: Lean exited with code 1
-Some required builds logged failures:
-- Leanwuzla
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:16:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:11:8: error: (kernel) declaration has metavariables 'test5_thm'
+[bv] [0.018586] Normalizing goal
+  [Meta.synthInstance] [0.001949] ✅️ Decidable
+        ((if 16#128 ≥ ↑128 then none else some (BitVec.truncate 32 (BitVec.zeroExtend 128 x✝ >>> 16#128))) ⊑
+          if 16#32 ≥ ↑32 then none else some (x✝ >>> 16#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if 16#128 ≥ ↑128 then none else some (BitVec.truncate 32 (BitVec.zeroExtend 128 x✝ >>> 16#128))) ⊑
+            if 16#32 ≥ ↑32 then none else some (x✝ >>> 16#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ : ¬some (BitVec.zeroExtend 32 (BitVec.zeroExtend 128 x✝ >>> 16)) ⊑ some (x✝ >>> 16)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:26:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:20:8: error: (kernel) declaration has metavariables 'test6_thm'
+[bv] [0.019110] Normalizing goal
+  [Meta.synthInstance] [0.001833] ✅️ Decidable
+        ((if 32#128 ≥ ↑128 then none else some (BitVec.truncate 32 (BitVec.zeroExtend 128 x✝ >>> 32#128))) ⊑
+          if 32#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝ >>> 32#64)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬(if 32#128 ≥ ↑128 then none else some (BitVec.truncate 32 (BitVec.zeroExtend 128 x✝ >>> 32#128))) ⊑
+            if 32#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝ >>> 32#64))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ : ¬some (BitVec.zeroExtend 32 (BitVec.zeroExtend 128 x✝ >>> 32)) ⊑ some (BitVec.zeroExtend 32 (x✝ >>> 32))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:37:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:30:8: error: (kernel) declaration has metavariables 'ashr_mul_sign_bits_thm'
+[bv] [0.029568] Normalizing goal
+  [Meta.synthInstance] [0.001767] ✅️ Decidable
+        ((if 3#32 ≥ ↑32 then none
+          else
+            some (BitVec.truncate 16 ((BitVec.signExtend 32 x✝ * BitVec.signExtend 32 x✝¹).sshiftRight (3#32).toNat))) ⊑
+          if
+              True ∧
+                (BitVec.signExtend (2 * 16) (BitVec.signExtend 16 x✝) *
+                      BitVec.signExtend (2 * 16) (BitVec.signExtend 16 x✝¹) <
+                    BitVec.signExtend (2 * 16) (BitVec.twoPow 16 (16 - 1)) ∨
+                  BitVec.signExtend (2 * 16) (BitVec.signExtend 16 x✝) *
+                      BitVec.signExtend (2 * 16) (BitVec.signExtend 16 x✝¹) ≥
+                    BitVec.twoPow (2 * 16) (16 - 1)) then
+            none
+          else
+            if 3#16 ≥ ↑16 then none
+            else some ((BitVec.signExtend 16 x✝ * BitVec.signExtend 16 x✝¹).sshiftRight (3#16).toNat))
+    [Meta.check] [0.001025] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if 3#32 ≥ ↑32 then none
+          else
+            some (BitVec.truncate 16 ((BitVec.signExtend 32 x✝ * BitVec.signExtend 32 x✝¹).sshiftRight (3#32).toNat)))
+          (if
+              True ∧
+                (BitVec.signExtend (2 * 16) (BitVec.signExtend 16 x✝) *
+                      BitVec.signExtend (2 * 16) (BitVec.signExtend 16 x✝¹) <
+                    BitVec.signExtend (2 * 16) (BitVec.twoPow 16 (16 - 1)) ∨
+                  BitVec.signExtend (2 * 16) (BitVec.signExtend 16 x✝) *
+                      BitVec.signExtend (2 * 16) (BitVec.signExtend 16 x✝¹) ≥
+                    BitVec.twoPow (2 * 16) (16 - 1)) then
+            none
+          else
+            if 3#16 ≥ ↑16 then none
+            else some ((BitVec.signExtend 16 x✝ * BitVec.signExtend 16 x✝¹).sshiftRight (3#16).toNat))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 8
+      x✝¹ x✝ : BitVec 8
+      a✝ :
+        ¬(if 3#32 ≥ ↑32 then none
+            else
+              some
+                (BitVec.truncate 16 ((BitVec.signExtend 32 x✝ * BitVec.signExtend 32 x✝¹).sshiftRight (3#32).toNat))) ⊑
+            if
+                True ∧
+                  (BitVec.signExtend (2 * 16) (BitVec.signExtend 16 x✝) *
+                        BitVec.signExtend (2 * 16) (BitVec.signExtend 16 x✝¹) <
+                      BitVec.signExtend (2 * 16) (BitVec.twoPow 16 (16 - 1)) ∨
+                    BitVec.signExtend (2 * 16) (BitVec.signExtend 16 x✝) *
+                        BitVec.signExtend (2 * 16) (BitVec.signExtend 16 x✝¹) ≥
+                      BitVec.twoPow (2 * 16) (16 - 1)) then
+              none
+            else
+              if 3#16 ≥ ↑16 then none
+              else some ((BitVec.signExtend 16 x✝ * BitVec.signExtend 16 x✝¹).sshiftRight (3#16).toNat)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 8
+      x✝¹ x✝ : BitVec 8
+      a✝ :
+        ¬some (BitVec.zeroExtend 16 ((BitVec.signExtend 32 x✝ * BitVec.signExtend 32 x✝¹).sshiftRight 3)) ⊑
+            if
+                (!((!BitVec.signExtend 32 (BitVec.twoPow 16 15) >ᵤ
+                          BitVec.signExtend 32 (BitVec.signExtend 16 x✝) *
+                            BitVec.signExtend 32 (BitVec.signExtend 16 x✝¹)) &&
+                      BitVec.twoPow 32 15 >ᵤ
+                        BitVec.signExtend 32 (BitVec.signExtend 16 x✝) *
+                          BitVec.signExtend 32 (BitVec.signExtend 16 x✝¹))) =
+                  true then
+              none
+            else some ((BitVec.signExtend 16 x✝ * BitVec.signExtend 16 x✝¹).sshiftRight 3)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:48:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:41:8: error: (kernel) declaration has metavariables 'ashr_mul_thm'
+[bv] [0.028138] Normalizing goal
+  [Meta.synthInstance] [0.001657] ✅️ Decidable
+        ((if 8#20 ≥ ↑20 then none
+          else
+            some (BitVec.truncate 16 ((BitVec.signExtend 20 x✝ * BitVec.signExtend 20 x✝¹).sshiftRight (8#20).toNat))) ⊑
+          if
+              True ∧
+                (BitVec.signExtend (2 * 16) (BitVec.signExtend 16 x✝) *
+                      BitVec.signExtend (2 * 16) (BitVec.signExtend 16 x✝¹) <
+                    BitVec.signExtend (2 * 16) (BitVec.twoPow 16 (16 - 1)) ∨
+                  BitVec.signExtend (2 * 16) (BitVec.signExtend 16 x✝) *
+                      BitVec.signExtend (2 * 16) (BitVec.signExtend 16 x✝¹) ≥
+                    BitVec.twoPow (2 * 16) (16 - 1)) then
+            none
+          else
+            if 8#16 ≥ ↑16 then none
+            else some ((BitVec.signExtend 16 x✝ * BitVec.signExtend 16 x✝¹).sshiftRight (8#16).toNat))
+    [Meta.check] [0.001022] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if 8#20 ≥ ↑20 then none
+          else
+            some (BitVec.truncate 16 ((BitVec.signExtend 20 x✝ * BitVec.signExtend 20 x✝¹).sshiftRight (8#20).toNat)))
+          (if
+              True ∧
+                (BitVec.signExtend (2 * 16) (BitVec.signExtend 16 x✝) *
+                      BitVec.signExtend (2 * 16) (BitVec.signExtend 16 x✝¹) <
+                    BitVec.signExtend (2 * 16) (BitVec.twoPow 16 (16 - 1)) ∨
+                  BitVec.signExtend (2 * 16) (BitVec.signExtend 16 x✝) *
+                      BitVec.signExtend (2 * 16) (BitVec.signExtend 16 x✝¹) ≥
+                    BitVec.twoPow (2 * 16) (16 - 1)) then
+            none
+          else
+            if 8#16 ≥ ↑16 then none
+            else some ((BitVec.signExtend 16 x✝ * BitVec.signExtend 16 x✝¹).sshiftRight (8#16).toNat))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 8
+      x✝¹ x✝ : BitVec 8
+      a✝ :
+        ¬(if 8#20 ≥ ↑20 then none
+            else
+              some
+                (BitVec.truncate 16 ((BitVec.signExtend 20 x✝ * BitVec.signExtend 20 x✝¹).sshiftRight (8#20).toNat))) ⊑
+            if
+                True ∧
+                  (BitVec.signExtend (2 * 16) (BitVec.signExtend 16 x✝) *
+                        BitVec.signExtend (2 * 16) (BitVec.signExtend 16 x✝¹) <
+                      BitVec.signExtend (2 * 16) (BitVec.twoPow 16 (16 - 1)) ∨
+                    BitVec.signExtend (2 * 16) (BitVec.signExtend 16 x✝) *
+                        BitVec.signExtend (2 * 16) (BitVec.signExtend 16 x✝¹) ≥
+                      BitVec.twoPow (2 * 16) (16 - 1)) then
+              none
+            else
+              if 8#16 ≥ ↑16 then none
+              else some ((BitVec.signExtend 16 x✝ * BitVec.signExtend 16 x✝¹).sshiftRight (8#16).toNat)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 8
+      x✝¹ x✝ : BitVec 8
+      a✝ :
+        ¬some (BitVec.zeroExtend 16 ((BitVec.signExtend 20 x✝ * BitVec.signExtend 20 x✝¹).sshiftRight 8)) ⊑
+            if
+                (!((!BitVec.signExtend 32 (BitVec.twoPow 16 15) >ᵤ
+                          BitVec.signExtend 32 (BitVec.signExtend 16 x✝) *
+                            BitVec.signExtend 32 (BitVec.signExtend 16 x✝¹)) &&
+                      BitVec.twoPow 32 15 >ᵤ
+                        BitVec.signExtend 32 (BitVec.signExtend 16 x✝) *
+                          BitVec.signExtend 32 (BitVec.signExtend 16 x✝¹))) =
+                  true then
+              none
+            else some ((BitVec.signExtend 16 x✝ * BitVec.signExtend 16 x✝¹).sshiftRight 8)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:59:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:52:8: error: (kernel) declaration has metavariables 'trunc_ashr_thm'
+[bv] [0.011813] Normalizing goal
+  [Meta.synthInstance] [0.001198] ✅️ Decidable
+        ((if 8#36 ≥ ↑36 then none
+          else some (BitVec.truncate 32 ((BitVec.zeroExtend 36 x✝ ||| 66571993088#36).sshiftRight (8#36).toNat))) ⊑
+          if 8#32 ≥ ↑32 then none else some (x✝ >>> 8#32 ||| 4286578688#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if 8#36 ≥ ↑36 then none
+            else some (BitVec.truncate 32 ((BitVec.zeroExtend 36 x✝ ||| 66571993088#36).sshiftRight (8#36).toNat))) ⊑
+            if 8#32 ≥ ↑32 then none else some (x✝ >>> 8#32 ||| 4286578688#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬some (BitVec.zeroExtend 32 ((BitVec.zeroExtend 36 x✝ ||| 66571993088#36).sshiftRight 8)) ⊑
+            some (x✝ >>> 8 ||| 4286578688#32)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:69:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:63:8: error: (kernel) declaration has metavariables 'test7_thm'
+[bv] [0.011511] Normalizing goal
+  [Meta.synthInstance] [0.001103] ✅️ Decidable
+        ((if 32#128 ≥ ↑128 then none else some (BitVec.truncate 92 (BitVec.zeroExtend 128 x✝ >>> 32#128))) ⊑
+          if 32#64 ≥ ↑64 then none else some (BitVec.zeroExtend 92 (x✝ >>> 32#64)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬(if 32#128 ≥ ↑128 then none else some (BitVec.truncate 92 (BitVec.zeroExtend 128 x✝ >>> 32#128))) ⊑
+            if 32#64 ≥ ↑64 then none else some (BitVec.zeroExtend 92 (x✝ >>> 32#64))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ : ¬some (BitVec.zeroExtend 92 (BitVec.zeroExtend 128 x✝ >>> 32)) ⊑ some (BitVec.zeroExtend 92 (x✝ >>> 32))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:80:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:80:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:73:8: error: (kernel) declaration has metavariables 'test8_thm'
+[bv] [0.025295] Normalizing goal
+  [Meta.synthInstance] [0.001226] ✅️ Decidable
+        ((if 32#128 ≥ ↑128 then none
+          else some (BitVec.truncate 64 (BitVec.zeroExtend 128 x✝ <<< 32#128 ||| BitVec.zeroExtend 128 x✝¹))) ⊑
+          if True ∧ BitVec.zeroExtend 64 x✝ <<< 32#64 >>> 32#64 = BitVec.zeroExtend 64 x✝ then none
+          else if 32#64 ≥ ↑64 then none else some (BitVec.zeroExtend 64 x✝ <<< 32#64 ||| BitVec.zeroExtend 64 x✝¹))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 32
+      x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if 32#128 ≥ ↑128 then none
+            else some (BitVec.truncate 64 (BitVec.zeroExtend 128 x✝ <<< 32#128 ||| BitVec.zeroExtend 128 x✝¹))) ⊑
+            if True ∧ BitVec.zeroExtend 64 x✝ <<< 32#64 >>> 32#64 = BitVec.zeroExtend 64 x✝ then none
+            else if 32#64 ≥ ↑64 then none else some (BitVec.zeroExtend 64 x✝ <<< 32#64 ||| BitVec.zeroExtend 64 x✝¹)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 32
+      x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬some (BitVec.zeroExtend 64 (BitVec.zeroExtend 128 x✝ <<< 32 ||| BitVec.zeroExtend 128 x✝¹)) ⊑
+            if (BitVec.zeroExtend 64 x✝ <<< 32 >>> 32 == BitVec.zeroExtend 64 x✝) = true then none
+            else some (BitVec.zeroExtend 64 x✝ <<< 32 ||| BitVec.zeroExtend 64 x✝¹)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+Bitwuzla proved the goal after 99.681979ms, solving context: 2.000000ms
+LeanSAT proved the goal after 82.628490ms: rewriting 11.702160ms, bitblasting 0.000000ms, SAT solving 57.358820ms, LRAT trimming 0.000000ms, LRAT checking 12.402830ms
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:100:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:93:8: error: (kernel) declaration has metavariables 'test11_thm'
+[bv] [0.047518] Normalizing goal
+  [Meta.synthInstance] [0.001583] ✅️ Decidable
+        ((if BitVec.zeroExtend 128 x✝¹ &&& 31#128 ≥ ↑128 then none
+          else some (BitVec.truncate 64 (BitVec.zeroExtend 128 x✝ <<< (BitVec.zeroExtend 128 x✝¹ &&& 31#128)))) ⊑
+          if
+              True ∧
+                (BitVec.zeroExtend 64 x✝ <<< BitVec.zeroExtend 64 (x✝¹ &&& 31#32)).sshiftRight
+                    (BitVec.zeroExtend 64 (x✝¹ &&& 31#32)).toNat =
+                  BitVec.zeroExtend 64 x✝ then
+            none
+          else
+            if
+                True ∧
+                  BitVec.zeroExtend 64 x✝ <<< BitVec.zeroExtend 64 (x✝¹ &&& 31#32) >>>
+                      BitVec.zeroExtend 64 (x✝¹ &&& 31#32) =
+                    BitVec.zeroExtend 64 x✝ then
+              none
+            else
+              if BitVec.zeroExtend 64 (x✝¹ &&& 31#32) ≥ ↑64 then none
+              else some (BitVec.zeroExtend 64 x✝ <<< BitVec.zeroExtend 64 (x✝¹ &&& 31#32)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 32
+      x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if BitVec.zeroExtend 128 x✝¹ &&& 31#128 ≥ ↑128 then none
+            else some (BitVec.truncate 64 (BitVec.zeroExtend 128 x✝ <<< (BitVec.zeroExtend 128 x✝¹ &&& 31#128)))) ⊑
+            if
+                True ∧
+                  (BitVec.zeroExtend 64 x✝ <<< BitVec.zeroExtend 64 (x✝¹ &&& 31#32)).sshiftRight
+                      (BitVec.zeroExtend 64 (x✝¹ &&& 31#32)).toNat =
+                    BitVec.zeroExtend 64 x✝ then
+              none
+            else
+              if
+                  True ∧
+                    BitVec.zeroExtend 64 x✝ <<< BitVec.zeroExtend 64 (x✝¹ &&& 31#32) >>>
+                        BitVec.zeroExtend 64 (x✝¹ &&& 31#32) =
+                      BitVec.zeroExtend 64 x✝ then
+                none
+              else
+                if BitVec.zeroExtend 64 (x✝¹ &&& 31#32) ≥ ↑64 then none
+                else some (BitVec.zeroExtend 64 x✝ <<< BitVec.zeroExtend 64 (x✝¹ &&& 31#32))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 32
+      x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if (!128#128 >ᵤ BitVec.zeroExtend 128 x✝¹ &&& 31#128) = true then none
+            else some (BitVec.zeroExtend 64 (BitVec.zeroExtend 128 x✝ <<< (BitVec.zeroExtend 128 x✝¹ &&& 31#128)))) ⊑
+            if
+                ((BitVec.zeroExtend 64 x✝ <<< BitVec.zeroExtend 64 (x✝¹ &&& 31#32)).sshiftRight
+                      (BitVec.zeroExtend 64 (x✝¹ &&& 31#32)).toNat ==
+                    BitVec.zeroExtend 64 x✝) =
+                  true then
+              none
+            else
+              if
+                  (BitVec.zeroExtend 64 x✝ <<< BitVec.zeroExtend 64 (x✝¹ &&& 31#32) >>>
+                        BitVec.zeroExtend 64 (x✝¹ &&& 31#32) ==
+                      BitVec.zeroExtend 64 x✝) =
+                    true then
+                none
+              else
+                if (!64#64 >ᵤ BitVec.zeroExtend 64 (x✝¹ &&& 31#32)) = true then none
+                else some (BitVec.zeroExtend 64 x✝ <<< BitVec.zeroExtend 64 (x✝¹ &&& 31#32))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:111:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:104:8: error: (kernel) declaration has metavariables 'test12_thm'
+[bv] [0.045241] Normalizing goal
+  [Meta.synthInstance] [0.002156] ✅️ Decidable
+        ((if BitVec.zeroExtend 128 x✝¹ &&& 31#128 ≥ ↑128 then none
+          else some (BitVec.truncate 64 (BitVec.zeroExtend 128 x✝ >>> (BitVec.zeroExtend 128 x✝¹ &&& 31#128)))) ⊑
+          if BitVec.zeroExtend 64 (x✝¹ &&& 31#32) ≥ ↑64 then none
+          else some (BitVec.zeroExtend 64 x✝ >>> BitVec.zeroExtend 64 (x✝¹ &&& 31#32)))
+    [Meta.check] [0.001196] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if BitVec.zeroExtend 128 x✝¹ &&& 31#128 ≥ ↑128 then none
+          else some (BitVec.truncate 64 (BitVec.zeroExtend 128 x✝ >>> (BitVec.zeroExtend 128 x✝¹ &&& 31#128))))
+          (if BitVec.zeroExtend 64 (x✝¹ &&& 31#32) ≥ ↑64 then none
+          else some (BitVec.zeroExtend 64 x✝ >>> BitVec.zeroExtend 64 (x✝¹ &&& 31#32)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 32
+      x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if BitVec.zeroExtend 128 x✝¹ &&& 31#128 ≥ ↑128 then none
+            else some (BitVec.truncate 64 (BitVec.zeroExtend 128 x✝ >>> (BitVec.zeroExtend 128 x✝¹ &&& 31#128)))) ⊑
+            if BitVec.zeroExtend 64 (x✝¹ &&& 31#32) ≥ ↑64 then none
+            else some (BitVec.zeroExtend 64 x✝ >>> BitVec.zeroExtend 64 (x✝¹ &&& 31#32))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 32
+      x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if (!128#128 >ᵤ BitVec.zeroExtend 128 x✝¹ &&& 31#128) = true then none
+            else some (BitVec.zeroExtend 64 (BitVec.zeroExtend 128 x✝ >>> (BitVec.zeroExtend 128 x✝¹ &&& 31#128)))) ⊑
+            if (!64#64 >ᵤ BitVec.zeroExtend 64 (x✝¹ &&& 31#32)) = true then none
+            else some (BitVec.zeroExtend 64 x✝ >>> BitVec.zeroExtend 64 (x✝¹ &&& 31#32))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:122:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:115:8: error: (kernel) declaration has metavariables 'test13_thm'
+[bv] [0.041646] Normalizing goal
+  [Meta.synthInstance] [0.002063] ✅️ Decidable
+        ((if BitVec.zeroExtend 128 x✝¹ &&& 31#128 ≥ ↑128 then none
+          else
+            some
+              (BitVec.truncate 64
+                ((BitVec.signExtend 128 x✝).sshiftRight (BitVec.zeroExtend 128 x✝¹ &&& 31#128).toNat))) ⊑
+          if BitVec.zeroExtend 64 (x✝¹ &&& 31#32) ≥ ↑64 then none
+          else some ((BitVec.signExtend 64 x✝).sshiftRight (BitVec.zeroExtend 64 (x✝¹ &&& 31#32)).toNat))
+    [Meta.check] [0.001107] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if BitVec.zeroExtend 128 x✝¹ &&& 31#128 ≥ ↑128 then none
+          else
+            some
+              (BitVec.truncate 64
+                ((BitVec.signExtend 128 x✝).sshiftRight (BitVec.zeroExtend 128 x✝¹ &&& 31#128).toNat)))
+          (if BitVec.zeroExtend 64 (x✝¹ &&& 31#32) ≥ ↑64 then none
+          else some ((BitVec.signExtend 64 x✝).sshiftRight (BitVec.zeroExtend 64 (x✝¹ &&& 31#32)).toNat))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 32
+      x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if BitVec.zeroExtend 128 x✝¹ &&& 31#128 ≥ ↑128 then none
+            else
+              some
+                (BitVec.truncate 64
+                  ((BitVec.signExtend 128 x✝).sshiftRight (BitVec.zeroExtend 128 x✝¹ &&& 31#128).toNat))) ⊑
+            if BitVec.zeroExtend 64 (x✝¹ &&& 31#32) ≥ ↑64 then none
+            else some ((BitVec.signExtend 64 x✝).sshiftRight (BitVec.zeroExtend 64 (x✝¹ &&& 31#32)).toNat)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 32
+      x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(if (!128#128 >ᵤ BitVec.zeroExtend 128 x✝¹ &&& 31#128) = true then none
+            else
+              some
+                (BitVec.zeroExtend 64
+                  ((BitVec.signExtend 128 x✝).sshiftRight (BitVec.zeroExtend 128 x✝¹ &&& 31#128).toNat))) ⊑
+            if (!64#64 >ᵤ BitVec.zeroExtend 64 (x✝¹ &&& 31#32)) = true then none
+            else some ((BitVec.signExtend 64 x✝).sshiftRight (BitVec.zeroExtend 64 (x✝¹ &&& 31#32)).toNat)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:131:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:126:8: error: (kernel) declaration has metavariables 'trunc_shl_31_i32_i64_thm'
+[bv] [0.017888] Normalizing goal
+  [Meta.synthInstance] [0.001914] ✅️ Decidable
+        ((if 31#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝ <<< 31#64))) ⊑
+          if 31#32 ≥ ↑32 then none else some (BitVec.truncate 32 x✝ <<< 31#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬(if 31#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝ <<< 31#64))) ⊑
+            if 31#32 ≥ ↑32 then none else some (BitVec.truncate 32 x✝ <<< 31#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ : ¬some (BitVec.zeroExtend 32 (x✝ <<< 31)) ⊑ some (BitVec.zeroExtend 32 x✝ <<< 31)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:141:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:135:8: error: (kernel) declaration has metavariables 'trunc_shl_nsw_31_i32_i64_thm'
+[bv] [0.021429] Normalizing goal
+  [Meta.synthInstance] [0.001234] ✅️ Decidable
+        ((if True ∧ (x✝ <<< 31#64).sshiftRight (31#64).toNat = x✝ then none
+          else if 31#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝ <<< 31#64))) ⊑
+          if 31#32 ≥ ↑32 then none else some (BitVec.truncate 32 x✝ <<< 31#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬(if True ∧ (x✝ <<< 31#64).sshiftRight (31#64).toNat = x✝ then none
+            else if 31#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝ <<< 31#64))) ⊑
+            if 31#32 ≥ ↑32 then none else some (BitVec.truncate 32 x✝ <<< 31#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬(if ((x✝ <<< 31).sshiftRight 31 == x✝) = true then none else some (BitVec.zeroExtend 32 (x✝ <<< 31))) ⊑
+            some (BitVec.zeroExtend 32 x✝ <<< 31)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:151:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:145:8: error: (kernel) declaration has metavariables 'trunc_shl_nuw_31_i32_i64_thm'
+[bv] [0.022193] Normalizing goal
+  [Meta.synthInstance] [0.001268] ✅️ Decidable
+        ((if True ∧ x✝ <<< 31#64 >>> 31#64 = x✝ then none
+          else if 31#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝ <<< 31#64))) ⊑
+          if 31#32 ≥ ↑32 then none else some (BitVec.truncate 32 x✝ <<< 31#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬(if True ∧ x✝ <<< 31#64 >>> 31#64 = x✝ then none
+            else if 31#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝ <<< 31#64))) ⊑
+            if 31#32 ≥ ↑32 then none else some (BitVec.truncate 32 x✝ <<< 31#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬(if (x✝ <<< 31 >>> 31 == x✝) = true then none else some (BitVec.zeroExtend 32 (x✝ <<< 31))) ⊑
+            some (BitVec.zeroExtend 32 x✝ <<< 31)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:161:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:155:8: error: (kernel) declaration has metavariables 'trunc_shl_nsw_nuw_31_i32_i64_thm'
+[bv] [0.028473] Normalizing goal
+  [Meta.synthInstance] [0.001374] ✅️ Decidable
+        ((if True ∧ (x✝ <<< 31#64).sshiftRight (31#64).toNat = x✝ then none
+          else
+            if True ∧ x✝ <<< 31#64 >>> 31#64 = x✝ then none
+            else if 31#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝ <<< 31#64))) ⊑
+          if 31#32 ≥ ↑32 then none else some (BitVec.truncate 32 x✝ <<< 31#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬(if True ∧ (x✝ <<< 31#64).sshiftRight (31#64).toNat = x✝ then none
+            else
+              if True ∧ x✝ <<< 31#64 >>> 31#64 = x✝ then none
+              else if 31#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝ <<< 31#64))) ⊑
+            if 31#32 ≥ ↑32 then none else some (BitVec.truncate 32 x✝ <<< 31#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬(if ((x✝ <<< 31).sshiftRight 31 == x✝) = true then none
+            else if (x✝ <<< 31 >>> 31 == x✝) = true then none else some (BitVec.zeroExtend 32 (x✝ <<< 31))) ⊑
+            some (BitVec.zeroExtend 32 x✝ <<< 31)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:170:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:165:8: error: (kernel) declaration has metavariables 'trunc_shl_15_i16_i64_thm'
+[bv] [0.010890] Normalizing goal
+  [Meta.synthInstance] [0.001134] ✅️ Decidable
+        ((if 15#64 ≥ ↑64 then none else some (BitVec.truncate 16 (x✝ <<< 15#64))) ⊑
+          if 15#16 ≥ ↑16 then none else some (BitVec.truncate 16 x✝ <<< 15#16))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬(if 15#64 ≥ ↑64 then none else some (BitVec.truncate 16 (x✝ <<< 15#64))) ⊑
+            if 15#16 ≥ ↑16 then none else some (BitVec.truncate 16 x✝ <<< 15#16)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ : ¬some (BitVec.zeroExtend 16 (x✝ <<< 15)) ⊑ some (BitVec.zeroExtend 16 x✝ <<< 15)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:179:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:174:8: error: (kernel) declaration has metavariables 'trunc_shl_15_i16_i32_thm'
+[bv] [0.010863] Normalizing goal
+  [Meta.synthInstance] [0.001126] ✅️ Decidable
+        ((if 15#32 ≥ ↑32 then none else some (BitVec.truncate 16 (x✝ <<< 15#32))) ⊑
+          if 15#16 ≥ ↑16 then none else some (BitVec.truncate 16 x✝ <<< 15#16))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if 15#32 ≥ ↑32 then none else some (BitVec.truncate 16 (x✝ <<< 15#32))) ⊑
+            if 15#16 ≥ ↑16 then none else some (BitVec.truncate 16 x✝ <<< 15#16)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ : ¬some (BitVec.zeroExtend 16 (x✝ <<< 15)) ⊑ some (BitVec.zeroExtend 16 x✝ <<< 15)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:188:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:183:8: error: (kernel) declaration has metavariables 'trunc_shl_7_i8_i64_thm'
+[bv] [0.010970] Normalizing goal
+  [Meta.synthInstance] [0.001131] ✅️ Decidable
+        ((if 7#64 ≥ ↑64 then none else some (BitVec.truncate 8 (x✝ <<< 7#64))) ⊑
+          if 7#8 ≥ ↑8 then none else some (BitVec.truncate 8 x✝ <<< 7#8))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬(if 7#64 ≥ ↑64 then none else some (BitVec.truncate 8 (x✝ <<< 7#64))) ⊑
+            if 7#8 ≥ ↑8 then none else some (BitVec.truncate 8 x✝ <<< 7#8)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ : ¬some (BitVec.zeroExtend 8 (x✝ <<< 7)) ⊑ some (BitVec.zeroExtend 8 x✝ <<< 7)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:197:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:192:8: error: (kernel) declaration has metavariables 'trunc_shl_1_i32_i64_thm'
+[bv] [0.012499] Normalizing goal
+  [Meta.synthInstance] [0.001137] ✅️ Decidable
+        ((if 1#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝ <<< 1#64))) ⊑
+          if 1#32 ≥ ↑32 then none else some (BitVec.truncate 32 x✝ <<< 1#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬(if 1#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝ <<< 1#64))) ⊑
+            if 1#32 ≥ ↑32 then none else some (BitVec.truncate 32 x✝ <<< 1#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ : ¬some (BitVec.zeroExtend 32 (x✝ <<< 1)) ⊑ some (BitVec.zeroExtend 32 x✝ <<< 1)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:206:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:201:8: error: (kernel) declaration has metavariables 'trunc_shl_16_i32_i64_thm'
+[bv] [0.010910] Normalizing goal
+  [Meta.synthInstance] [0.001142] ✅️ Decidable
+        ((if 16#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝ <<< 16#64))) ⊑
+          if 16#32 ≥ ↑32 then none else some (BitVec.truncate 32 x✝ <<< 16#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬(if 16#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝ <<< 16#64))) ⊑
+            if 16#32 ≥ ↑32 then none else some (BitVec.truncate 32 x✝ <<< 16#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ : ¬some (BitVec.zeroExtend 32 (x✝ <<< 16)) ⊑ some (BitVec.zeroExtend 32 x✝ <<< 16)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:215:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:210:8: error: (kernel) declaration has metavariables 'trunc_shl_33_i32_i64_thm'
+[bv] [0.007585] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ : ¬(if 33#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝ <<< 33#64))) ⊑ some 0#32
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ : ¬some (BitVec.zeroExtend 32 (x✝ <<< 33)) ⊑ some 0#32
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:224:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:219:8: error: (kernel) declaration has metavariables 'trunc_shl_32_i32_i64_thm'
+[bv] [0.007408] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ : ¬(if 32#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝ <<< 32#64))) ⊑ some 0#32
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ : ¬some (BitVec.zeroExtend 32 (x✝ <<< 32)) ⊑ some 0#32
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:235:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:228:8: error: (kernel) declaration has metavariables 'trunc_shl_lshr_infloop_thm'
+[bv] [0.015610] Normalizing goal
+  [Meta.synthInstance] [0.001300] ✅️ Decidable
+        ((if 1#64 ≥ ↑64 then none else if 2#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝ >>> 1#64 <<< 2#64))) ⊑
+          if 1#32 ≥ ↑32 then none else some (BitVec.truncate 32 x✝ <<< 1#32 &&& 4294967292#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬(if 1#64 ≥ ↑64 then none else if 2#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝ >>> 1#64 <<< 2#64))) ⊑
+            if 1#32 ≥ ↑32 then none else some (BitVec.truncate 32 x✝ <<< 1#32 &&& 4294967292#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ : ¬some (BitVec.zeroExtend 32 (x✝ >>> 1 <<< 2)) ⊑ some (BitVec.zeroExtend 32 x✝ <<< 1 &&& 4294967292#32)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:246:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:239:8: error: (kernel) declaration has metavariables 'trunc_shl_ashr_infloop_thm'
+[bv] [0.024608] Normalizing goal
+  [Meta.synthInstance] [0.002102] ✅️ Decidable
+        ((if 3#64 ≥ ↑64 then none
+          else if 2#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝.sshiftRight (3#64).toNat <<< 2#64))) ⊑
+          if 1#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝ >>> 1#64) &&& 4294967292#32))
+    [Meta.check] [0.001148] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if 3#64 ≥ ↑64 then none
+          else if 2#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝.sshiftRight (3#64).toNat <<< 2#64)))
+          (if 1#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝ >>> 1#64) &&& 4294967292#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬(if 3#64 ≥ ↑64 then none
+            else if 2#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝.sshiftRight (3#64).toNat <<< 2#64))) ⊑
+            if 1#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝ >>> 1#64) &&& 4294967292#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬some (BitVec.zeroExtend 32 (x✝.sshiftRight 3 <<< 2)) ⊑ some (BitVec.zeroExtend 32 (x✝ >>> 1) &&& 4294967292#32)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:256:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:250:8: error: (kernel) declaration has metavariables 'trunc_shl_shl_infloop_thm'
+[bv] [0.013394] Normalizing goal
+  [Meta.synthInstance] [0.001217] ✅️ Decidable
+        ((if 1#64 ≥ ↑64 then none else if 2#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝ <<< 1#64 <<< 2#64))) ⊑
+          if 3#32 ≥ ↑32 then none else some (BitVec.truncate 32 x✝ <<< 3#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬(if 1#64 ≥ ↑64 then none else if 2#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝ <<< 1#64 <<< 2#64))) ⊑
+            if 3#32 ≥ ↑32 then none else some (BitVec.truncate 32 x✝ <<< 3#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ : ¬some (BitVec.zeroExtend 32 (x✝ <<< 1 <<< 2)) ⊑ some (BitVec.zeroExtend 32 x✝ <<< 3)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:266:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:260:8: error: (kernel) declaration has metavariables 'trunc_shl_lshr_var_thm'
+[bv] [0.025501] Normalizing goal
+  [Meta.synthInstance] [0.001291] ✅️ Decidable
+        ((if x✝¹ ≥ ↑64 then none else if 2#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝ >>> x✝¹ <<< 2#64))) ⊑
+          if x✝¹ ≥ ↑64 then none else if 2#32 ≥ ↑32 then none else some (BitVec.truncate 32 (x✝ >>> x✝¹) <<< 2#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 64
+      x✝¹ x✝ : BitVec 64
+      a✝ :
+        ¬(if x✝¹ ≥ ↑64 then none else if 2#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝ >>> x✝¹ <<< 2#64))) ⊑
+            if x✝¹ ≥ ↑64 then none else if 2#32 ≥ ↑32 then none else some (BitVec.truncate 32 (x✝ >>> x✝¹) <<< 2#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 64
+      x✝¹ x✝ : BitVec 64
+      a✝ :
+        ¬(if (!64#64 >ᵤ x✝¹) = true then none else some (BitVec.zeroExtend 32 (x✝ >>> x✝¹ <<< 2))) ⊑
+            if (!64#64 >ᵤ x✝¹) = true then none else some (BitVec.zeroExtend 32 (x✝ >>> x✝¹) <<< 2)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:276:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:270:8: error: (kernel) declaration has metavariables 'trunc_shl_ashr_var_thm'
+[bv] [0.024584] Normalizing goal
+  [Meta.synthInstance] [0.001252] ✅️ Decidable
+        ((if x✝¹ ≥ ↑64 then none
+          else if 2#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝.sshiftRight x✝¹.toNat <<< 2#64))) ⊑
+          if x✝¹ ≥ ↑64 then none
+          else if 2#32 ≥ ↑32 then none else some (BitVec.truncate 32 (x✝.sshiftRight x✝¹.toNat) <<< 2#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 64
+      x✝¹ x✝ : BitVec 64
+      a✝ :
+        ¬(if x✝¹ ≥ ↑64 then none
+            else if 2#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝.sshiftRight x✝¹.toNat <<< 2#64))) ⊑
+            if x✝¹ ≥ ↑64 then none
+            else if 2#32 ≥ ↑32 then none else some (BitVec.truncate 32 (x✝.sshiftRight x✝¹.toNat) <<< 2#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 64
+      x✝¹ x✝ : BitVec 64
+      a✝ :
+        ¬(if (!64#64 >ᵤ x✝¹) = true then none else some (BitVec.zeroExtend 32 (x✝.sshiftRight x✝¹.toNat <<< 2))) ⊑
+            if (!64#64 >ᵤ x✝¹) = true then none else some (BitVec.zeroExtend 32 (x✝.sshiftRight x✝¹.toNat) <<< 2)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:286:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:280:8: error: (kernel) declaration has metavariables 'trunc_shl_shl_var_thm'
+[bv] [0.024538] Normalizing goal
+  [Meta.synthInstance] [0.001181] ✅️ Decidable
+        ((if x✝¹ ≥ ↑64 then none else if 2#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝ <<< x✝¹ <<< 2#64))) ⊑
+          if x✝¹ ≥ ↑64 then none else if 2#32 ≥ ↑32 then none else some (BitVec.truncate 32 (x✝ <<< x✝¹) <<< 2#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 64
+      x✝¹ x✝ : BitVec 64
+      a✝ :
+        ¬(if x✝¹ ≥ ↑64 then none else if 2#64 ≥ ↑64 then none else some (BitVec.truncate 32 (x✝ <<< x✝¹ <<< 2#64))) ⊑
+            if x✝¹ ≥ ↑64 then none else if 2#32 ≥ ↑32 then none else some (BitVec.truncate 32 (x✝ <<< x✝¹) <<< 2#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 64
+      x✝¹ x✝ : BitVec 64
+      a✝ :
+        ¬(if (!64#64 >ᵤ x✝¹) = true then none else some (BitVec.zeroExtend 32 (x✝ <<< x✝¹ <<< 2))) ⊑
+            if (!64#64 >ᵤ x✝¹) = true then none else some (BitVec.zeroExtend 32 (x✝ <<< x✝¹) <<< 2)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:301:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:301:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:290:8: error: (kernel) declaration has metavariables 'PR44545_thm'
+[bv] [0.098456] Normalizing goal
+  [Meta.synthInstance] [0.002009] ✅️ Decidable
+        ((Option.bind
+            (match some (BitVec.ofBool (x✝ == 0#32)) with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some 0#32
+            | some { toFin := ⟨0, ⋯⟩ } =>
+              if True ∧ x✝¹.msb = (1#32).msb ∧ (x✝¹ + 1#32).msb ≠ x✝¹.msb then none
+              else if True ∧ (x✝¹ + 1#32 < x✝¹ ∨ x✝¹ + 1#32 < 1#32) then none else some (x✝¹ + 1#32))
+            fun x =>
+            if
+                True ∧
+                  (BitVec.truncate 16 x).msb = (-1#16).msb ∧
+                    (BitVec.truncate 16 x + -1#16).msb ≠ (BitVec.truncate 16 x).msb then
+              none
+            else some (BitVec.truncate 16 x + -1#16)) ⊑
+          match some (BitVec.ofBool (x✝ == 0#32)) with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => some (-1#16)
+          | some { toFin := ⟨0, ⋯⟩ } => some (BitVec.truncate 16 x✝¹))
+    [Meta.check] [0.001163] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (Option.bind
+            (match some (BitVec.ofBool (x✝ == 0#32)) with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some 0#32
+            | some { toFin := ⟨0, ⋯⟩ } =>
+              if True ∧ x✝¹.msb = (1#32).msb ∧ (x✝¹ + 1#32).msb ≠ x✝¹.msb then none
+              else if True ∧ (x✝¹ + 1#32 < x✝¹ ∨ x✝¹ + 1#32 < 1#32) then none else some (x✝¹ + 1#32))
+            fun x =>
+            if
+                True ∧
+                  (BitVec.truncate 16 x).msb = (-1#16).msb ∧
+                    (BitVec.truncate 16 x + -1#16).msb ≠ (BitVec.truncate 16 x).msb then
+              none
+            else some (BitVec.truncate 16 x + -1#16))
+          (match some (BitVec.ofBool (x✝ == 0#32)) with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => some (-1#16)
+          | some { toFin := ⟨0, ⋯⟩ } => some (BitVec.truncate 16 x✝¹))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 32
+      x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(Option.bind
+              (match some (BitVec.ofBool (x✝ == 0#32)) with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 0#32
+              | some { toFin := ⟨0, ⋯⟩ } =>
+                if True ∧ x✝¹.msb = (1#32).msb ∧ (x✝¹ + 1#32).msb ≠ x✝¹.msb then none
+                else if True ∧ (x✝¹ + 1#32 < x✝¹ ∨ x✝¹ + 1#32 < 1#32) then none else some (x✝¹ + 1#32))
+              fun x =>
+              if
+                  True ∧
+                    (BitVec.truncate 16 x).msb = (-1#16).msb ∧
+                      (BitVec.truncate 16 x + -1#16).msb ≠ (BitVec.truncate 16 x).msb then
+                none
+              else some (BitVec.truncate 16 x + -1#16)) ⊑
+            match some (BitVec.ofBool (x✝ == 0#32)) with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (-1#16)
+            | some { toFin := ⟨0, ⋯⟩ } => some (BitVec.truncate 16 x✝¹)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 32
+      x✝¹ x✝ : BitVec 32
+      a✝ :
+        ¬(Option.bind
+              (match some (if (x✝ == 0#32) = true then 1#1 else 0#1) with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 0#32
+              | some { toFin := ⟨0, ⋯⟩ } =>
+                if (!x✝¹.getLsbD 31 && !(x✝¹ + 1#32).getLsbD 31 == x✝¹.getLsbD 31) = true then none
+                else if (!((!x✝¹ >ᵤ x✝¹ + 1#32) && !1#32 >ᵤ x✝¹ + 1#32)) = true then none else some (x✝¹ + 1#32))
+              fun a =>
+              if
+                  ((BitVec.zeroExtend 16 a).getLsbD 15 &&
+                      !(BitVec.zeroExtend 16 a + 65535#16).getLsbD 15 == (BitVec.zeroExtend 16 a).getLsbD 15) =
+                    true then
+                none
+              else some (BitVec.zeroExtend 16 a + 65535#16)) ⊑
+            match some (if (x✝ == 0#32) = true then 1#1 else 0#1) with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some 65535#16
+            | some { toFin := ⟨0, ⋯⟩ } => some (BitVec.zeroExtend 16 x✝¹)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+Bitwuzla proved the goal after 81.789529ms, solving context: 0.000000ms
+LeanSAT proved the goal after 71.281370ms: rewriting 11.907200ms, bitblasting 0.000000ms, SAT solving 56.102300ms, LRAT trimming 0.000000ms, LRAT checking 1.958320ms
+Bitwuzla proved the goal after 69.318250ms, solving context: 0.000000ms
+LeanSAT proved the goal after 70.495730ms: rewriting 12.085510ms, bitblasting 0.000000ms, SAT solving 56.086380ms, LRAT trimming 0.000000ms, LRAT checking 1.094010ms
+Bitwuzla proved the goal after 69.504340ms, solving context: 0.000000ms
+LeanSAT proved the goal after 70.748690ms: rewriting 12.008860ms, bitblasting 0.000000ms, SAT solving 56.372980ms, LRAT trimming 0.000000ms, LRAT checking 1.111190ms
+Bitwuzla provided a counter example after 76.820220ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 74.981050ms: rewriting 15.876820 SAT solving 55.986120ms
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:335:8: error: (kernel) declaration has metavariables 'trunc_nuw_xor_thm'
+Bitwuzla provided a counter example after 76.308310ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 77.151420ms: rewriting 18.715350 SAT solving 55.111460ms
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunc_proof.lean:344:8: error: (kernel) declaration has metavariables 'trunc_nsw_xor_thm'

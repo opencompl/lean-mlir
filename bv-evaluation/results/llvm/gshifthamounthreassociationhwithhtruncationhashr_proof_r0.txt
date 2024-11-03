@@ -1,9 +1,4 @@
-⚠ [874/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
-⚠ [878/892] Replayed SSA.Experimental.Bits.Fast.Tactic
-warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
-⚠ [879/892] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+⚠ [676/892] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
@@ -14,17 +9,103 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaratio
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
-⚠ [885/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+⚠ [868/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
-⚠ [886/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+⚠ [883/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [886/892] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [888/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-✖ [890/892] Building Leanwuzla
-trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././.lake/packages/leanwuzla/././Leanwuzla.lean -R ././.lake/packages/leanwuzla/./. -o ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.olean -i ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.ilean -c ././.lake/packages/leanwuzla/.lake/build/ir/Leanwuzla.c --json
-error: ././.lake/packages/leanwuzla/././Leanwuzla.lean:117:8: invalid dotted identifier notation, unknown identifier `Std.Tactic.BVDecide.BVBinOp.sdiv` from expected type
-  BVBinOp
-error: Lean exited with code 1
-Some required builds logged failures:
-- Leanwuzla
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshifthamounthreassociationhwithhtruncationhashr_proof.lean:16:4: error: tactic 'simp' failed, nested error:
+maximum recursion depth has been reached
+use `set_option maxRecDepth <num>` to increase limit
+use `set_option diagnostics true` to get diagnostic information
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshifthamounthreassociationhwithhtruncationhashr_proof.lean:16:4: error: tactic 'simp' failed, nested error:
+maximum recursion depth has been reached
+use `set_option maxRecDepth <num>` to increase limit
+use `set_option diagnostics true` to get diagnostic information
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshifthamounthreassociationhwithhtruncationhashr_proof.lean:16:4: error: tactic 'simp' failed, nested error:
+maximum recursion depth has been reached
+use `set_option maxRecDepth <num>` to increase limit
+use `set_option diagnostics true` to get diagnostic information
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshifthamounthreassociationhwithhtruncationhashr_proof.lean:18:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshifthamounthreassociationhwithhtruncationhashr_proof.lean:18:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshifthamounthreassociationhwithhtruncationhashr_proof.lean:11:8: error: (kernel) declaration has metavariables 't0_thm'
+[bv] [0.069416] Normalizing goal
+  [Meta.synthInstance] [0.001446] ✅️ Decidable
+        ((do
+            let x ← some x✝
+            let x_1 ← some x✝¹
+            let x_2 ← some (BitVec.zeroExtend 32 (32#16 - x_1))
+            if x_2 ≥ ↑32 then none
+              else do
+                let x ← some (x.sshiftRight x_2.toNat)
+                let x' ← some (BitVec.truncate 16 x)
+                let x ← some x✝¹
+                if x + -1#16 ≥ ↑16 then none else some (x'.sshiftRight (x + -1#16).toNat)) ⊑
+          do
+          let x ← some x✝
+          if 31#32 ≥ ↑32 then none
+            else do
+              let x' ← some (x.sshiftRight (31#32).toNat)
+              some (BitVec.truncate 16 x'))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 16
+      e_1 : LLVM.IntW 32
+      x✝¹ : BitVec 16
+      x✝ : BitVec 32
+      a✝ :
+        ¬(do
+              let x ← some x✝
+              let x_1 ← some x✝¹
+              let x_2 ← some (BitVec.zeroExtend 32 (32#16 - x_1))
+              if x_2 ≥ ↑32 then none
+                else do
+                  let x ← some (x.sshiftRight x_2.toNat)
+                  let x' ← some (BitVec.truncate 16 x)
+                  let x ← some x✝¹
+                  if x + -1#16 ≥ ↑16 then none else some (x'.sshiftRight (x + -1#16).toNat)) ⊑
+            do
+            let x ← some x✝
+            if 31#32 ≥ ↑32 then none
+              else do
+                let x' ← some (x.sshiftRight (31#32).toNat)
+                some (BitVec.truncate 16 x')
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 16
+      e_1 : LLVM.IntW 32
+      x✝¹ : BitVec 16
+      x✝ : BitVec 32
+      a✝ :
+        ¬(do
+              let x ← some x✝
+              let x_1 ← some x✝¹
+              let x_2 ← some (BitVec.zeroExtend 32 (33#16 + ~~~x_1))
+              if (!32#32 >ᵤ x_2) = true then none
+                else do
+                  let x ← some (x.sshiftRight x_2.toNat)
+                  let x' ← some (BitVec.zeroExtend 16 x)
+                  let x ← some x✝¹
+                  if (!16#16 >ᵤ x + 65535#16) = true then none else some (x'.sshiftRight (x + 65535#16).toNat)) ⊑
+            do
+            let x ← some x✝
+            let x' ← some (x.sshiftRight 31)
+            some (BitVec.zeroExtend 16 x')
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint

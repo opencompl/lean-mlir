@@ -1,9 +1,4 @@
-⚠ [874/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
-⚠ [878/892] Replayed SSA.Experimental.Bits.Fast.Tactic
-warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
-⚠ [879/892] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+⚠ [676/892] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
@@ -14,17 +9,317 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaratio
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
-⚠ [885/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+⚠ [878/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [881/892] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [887/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
-⚠ [886/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+⚠ [888/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-✖ [890/892] Building Leanwuzla
-trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././.lake/packages/leanwuzla/././Leanwuzla.lean -R ././.lake/packages/leanwuzla/./. -o ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.olean -i ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.ilean -c ././.lake/packages/leanwuzla/.lake/build/ir/Leanwuzla.c --json
-error: ././.lake/packages/leanwuzla/././Leanwuzla.lean:117:8: invalid dotted identifier notation, unknown identifier `Std.Tactic.BVDecide.BVBinOp.sdiv` from expected type
-  BVBinOp
-error: Lean exited with code 1
-Some required builds logged failures:
-- Leanwuzla
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gapinthrem2_proof.lean:17:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gapinthrem2_proof.lean:11:8: error: (kernel) declaration has metavariables 'test1_thm'
+[bv] [0.008943] Normalizing goal
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 333
+      x✝ : BitVec 333
+      a✝ : ¬(if 70368744177664#333 = 0 then none else some (x✝ % 70368744177664#333)) ⊑ some (x✝ &&& 70368744177663#333)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 333
+      x✝ : BitVec 333
+      a✝ : ¬some (x✝ % 70368744177664#333) ⊑ some (x✝ &&& 70368744177663#333)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gapinthrem2_proof.lean:26:4: warning: exponent 499 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gapinthrem2_proof.lean:26:4: error: tactic 'simp' failed, nested error:
+maximum recursion depth has been reached
+use `set_option maxRecDepth <num>` to increase limit
+use `set_option diagnostics true` to get diagnostic information
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gapinthrem2_proof.lean:26:4: error: tactic 'simp' failed, nested error:
+maximum recursion depth has been reached
+use `set_option maxRecDepth <num>` to increase limit
+use `set_option diagnostics true` to get diagnostic information
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gapinthrem2_proof.lean:28:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gapinthrem2_proof.lean:28:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gapinthrem2_proof.lean:21:8: error: (kernel) declaration has metavariables 'test2_thm'
+[bv] [0.029342] Normalizing goal
+  [Meta.synthInstance] [0.001142] ✅️ Decidable
+        ((do
+            let x' ← some x✝
+            if 111#499 ≥ ↑499 then none
+              else do
+                let y' ← some (4096#499 <<< 111#499)
+                if y' = 0 then none else some (x' % y')) ⊑
+          do
+          let x' ← some x✝
+          some (x' &&& 10633823966279326983230456482242756607#499))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 499
+      x✝ : BitVec 499
+      a✝ :
+        ¬(do
+              let x' ← some x✝
+              if 111#499 ≥ ↑499 then none
+                else do
+                  let y' ← some (4096#499 <<< 111#499)
+                  if y' = 0 then none else some (x' % y')) ⊑
+            do
+            let x' ← some x✝
+            some (x' &&& 10633823966279326983230456482242756607#499)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 499
+      x✝ : BitVec 499
+      a✝ :
+        ¬(do
+              let x' ← some x✝
+              let y' ← some 10633823966279326983230456482242756608#499
+              if (y' == 0#499) = true then none else some (x' % y')) ⊑
+            do
+            let x' ← some x✝
+            some (x' &&& 10633823966279326983230456482242756607#499)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gapinthrem2_proof.lean:39:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gapinthrem2_proof.lean:32:8: error: (kernel) declaration has metavariables 'test3_thm'
+[bv] [0.091099] Normalizing goal
+  [Meta.synthInstance] [0.002505] ✅️ Decidable
+        ((Option.bind
+            (match some x✝¹ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some 70368744177664#599
+            | some { toFin := ⟨0, ⋯⟩ } => some 4096#599)
+            fun y' => if y' = 0 then none else some (x✝ % y')) ⊑
+          Option.bind
+            (match some x✝¹ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some 70368744177663#599
+            | some { toFin := ⟨0, ⋯⟩ } => some 4095#599)
+            fun y' => some (x✝ &&& y'))
+    [Meta.check] [0.001509] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (Option.bind
+            (match some x✝¹ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some 70368744177664#599
+            | some { toFin := ⟨0, ⋯⟩ } => some 4096#599)
+            fun y' => if y' = 0 then none else some (x✝ % y'))
+          (Option.bind
+            (match some x✝¹ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some 70368744177663#599
+            | some { toFin := ⟨0, ⋯⟩ } => some 4095#599)
+            fun y' => some (x✝ &&& y'))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 1
+      e_1 : LLVM.IntW 599
+      x✝¹ : BitVec 1
+      x✝ : BitVec 599
+      a✝ :
+        ¬(Option.bind
+              (match some x✝¹ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 70368744177664#599
+              | some { toFin := ⟨0, ⋯⟩ } => some 4096#599)
+              fun y' => if y' = 0 then none else some (x✝ % y')) ⊑
+            Option.bind
+              (match some x✝¹ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 70368744177663#599
+              | some { toFin := ⟨0, ⋯⟩ } => some 4095#599)
+              fun y' => some (x✝ &&& y')
+      ⊢ False
+  [Meta.isDefEq] [0.001122] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 70368744177664#599
+      | some { toFin := ⟨0, ⋯⟩ } => some 4096#599
+  [Meta.isDefEq] [0.001262] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 70368744177664#599
+      | some { toFin := ⟨0, ⋯⟩ } => some 4096#599
+  [Meta.isDefEq] [0.001103] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 70368744177663#599
+      | some { toFin := ⟨0, ⋯⟩ } => some 4095#599
+  [Meta.isDefEq] [0.001240] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 70368744177663#599
+      | some { toFin := ⟨0, ⋯⟩ } => some 4095#599
+  [Meta.isDefEq] [0.001097] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 70368744177664#599
+      | some { toFin := ⟨0, ⋯⟩ } => some 4096#599
+  [Meta.isDefEq] [0.001252] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 70368744177664#599
+      | some { toFin := ⟨0, ⋯⟩ } => some 4096#599
+  [Meta.isDefEq] [0.001198] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 70368744177664#599
+      | some { toFin := ⟨0, ⋯⟩ } => some 4096#599
+  [Meta.isDefEq] [0.002172] ✅️ if ?b then ?x else ?y =?= if (a == 0#599) = true then none else some (x✝ % a)
+  [Meta.isDefEq] [0.001114] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 70368744177663#599
+      | some { toFin := ⟨0, ⋯⟩ } => some 4095#599
+  [Meta.isDefEq] [0.001232] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 70368744177663#599
+      | some { toFin := ⟨0, ⋯⟩ } => some 4095#599
+  [Meta.isDefEq] [0.001150] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 70368744177663#599
+      | some { toFin := ⟨0, ⋯⟩ } => some 4095#599
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 1
+      e_1 : LLVM.IntW 599
+      x✝¹ : BitVec 1
+      x✝ : BitVec 599
+      a✝ :
+        ¬(Option.bind
+              (match some x✝¹ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 70368744177664#599
+              | some { toFin := ⟨0, ⋯⟩ } => some 4096#599)
+              fun a => if (a == 0#599) = true then none else some (x✝ % a)) ⊑
+            Option.bind
+              (match some x✝¹ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 70368744177663#599
+              | some { toFin := ⟨0, ⋯⟩ } => some 4095#599)
+              fun y' => some (x✝ &&& y')
+      ⊢ False
+  [Meta.isDefEq] [0.001093] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 70368744177664#599
+      | some { toFin := ⟨0, ⋯⟩ } => some 4096#599
+  [Meta.isDefEq] [0.001253] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 70368744177664#599
+      | some { toFin := ⟨0, ⋯⟩ } => some 4096#599
+  [Meta.isDefEq] [0.001204] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 70368744177664#599
+      | some { toFin := ⟨0, ⋯⟩ } => some 4096#599
+  [Meta.isDefEq] [0.001121] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 70368744177663#599
+      | some { toFin := ⟨0, ⋯⟩ } => some 4095#599
+  [Meta.isDefEq] [0.001238] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 70368744177663#599
+      | some { toFin := ⟨0, ⋯⟩ } => some 4095#599
+  [Meta.isDefEq] [0.001188] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 70368744177663#599
+      | some { toFin := ⟨0, ⋯⟩ } => some 4095#599
+  [Meta.isDefEq] [0.001110] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 70368744177664#599
+      | some { toFin := ⟨0, ⋯⟩ } => some 4096#599
+  [Meta.isDefEq] [0.001155] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 70368744177664#599
+      | some { toFin := ⟨0, ⋯⟩ } => some 4096#599
+  [Meta.isDefEq] [0.001028] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 70368744177664#599
+      | some { toFin := ⟨0, ⋯⟩ } => some 4096#599
+  [Meta.isDefEq] [0.001046] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 70368744177663#599
+      | some { toFin := ⟨0, ⋯⟩ } => some 4095#599
+  [Meta.isDefEq] [0.001182] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 70368744177663#599
+      | some { toFin := ⟨0, ⋯⟩ } => some 4095#599
+  [Meta.Tactic.bv] Pipeline reached a fixpoint

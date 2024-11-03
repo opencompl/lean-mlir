@@ -1,9 +1,4 @@
-⚠ [874/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
-⚠ [878/892] Replayed SSA.Experimental.Bits.Fast.Tactic
-warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
-⚠ [879/892] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+⚠ [875/892] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
@@ -14,17 +9,2649 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaratio
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
-⚠ [885/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+⚠ [879/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [882/892] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [887/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
-⚠ [886/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+⚠ [888/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-✖ [890/892] Building Leanwuzla
-trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././.lake/packages/leanwuzla/././Leanwuzla.lean -R ././.lake/packages/leanwuzla/./. -o ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.olean -i ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.ilean -c ././.lake/packages/leanwuzla/.lake/build/ir/Leanwuzla.c --json
-error: ././.lake/packages/leanwuzla/././Leanwuzla.lean:117:8: invalid dotted identifier notation, unknown identifier `Std.Tactic.BVDecide.BVBinOp.sdiv` from expected type
-  BVBinOp
-error: Lean exited with code 1
-Some required builds logged failures:
-- Leanwuzla
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:18:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:11:8: error: (kernel) declaration has metavariables 'match_unsigned_thm'
+[bv] [0.047151] Normalizing goal
+  [Meta.synthInstance] [0.002051] ✅️ Decidable
+        ((if 299#64 = 0 then none
+          else
+            if 299#64 = 0 then none
+            else if 64#64 = 0 then none else some (x✝ % 299#64 + x✝ / 299#64 % 64#64 * 299#64)) ⊑
+          if 19136#64 = 0 then none else some (x✝ % 19136#64))
+    [Meta.check] [0.001057] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if 299#64 = 0 then none
+          else
+            if 299#64 = 0 then none else if 64#64 = 0 then none else some (x✝ % 299#64 + x✝ / 299#64 % 64#64 * 299#64))
+          (if 19136#64 = 0 then none else some (x✝ % 19136#64))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬(if 299#64 = 0 then none
+            else
+              if 299#64 = 0 then none
+              else if 64#64 = 0 then none else some (x✝ % 299#64 + x✝ / 299#64 % 64#64 * 299#64)) ⊑
+            if 19136#64 = 0 then none else some (x✝ % 19136#64)
+      ⊢ False
+  [Meta.isDefEq] [0.002446] ❌️ ?a == ?a =?= 299#64 == 0#64
+    [Meta.isDefEq.onFailure] [0.001964] ❌️ ?a == ?a =?= 299#64 == 0#64
+      [Meta.synthInstance] [0.001933] 💥️ BEq ?α
+        [Meta.synthInstance] [0.001816] new goal BEq ?α
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ : ¬some (x✝ % 299#64 + x✝ / 299#64 % 64#64 * 299#64) ⊑ some (x✝ % 19136#64)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:29:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:22:8: error: (kernel) declaration has metavariables 'match_andAsRem_lshrAsDiv_shlAsMul_thm'
+[bv] [0.017111] Normalizing goal
+  [Meta.synthInstance] [0.001413] ✅️ Decidable
+        ((if 6#64 ≥ ↑64 then none
+          else
+            if 9#64 = 0 then none
+            else if 6#64 ≥ ↑64 then none else some ((x✝ &&& 63#64) + (x✝ >>> 6#64 % 9#64) <<< 6#64)) ⊑
+          if 576#64 = 0 then none else some (x✝ % 576#64))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬(if 6#64 ≥ ↑64 then none
+            else
+              if 9#64 = 0 then none
+              else if 6#64 ≥ ↑64 then none else some ((x✝ &&& 63#64) + (x✝ >>> 6#64 % 9#64) <<< 6#64)) ⊑
+            if 576#64 = 0 then none else some (x✝ % 576#64)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ : ¬some ((x✝ &&& 63#64) + (x✝ >>> 6 % 9#64) <<< 6) ⊑ some (x✝ % 576#64)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:41:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:33:8: error: (kernel) declaration has metavariables 'match_signed_thm'
+[bv] [0.172509] Normalizing goal
+  [Meta.synthInstance] [0.001801] ✅️ Decidable
+        (((Option.map (fun div => x✝ - div * 299#64)
+                (if (299#64 == 0 || 64 != 1 && x✝ == BitVec.intMin 64 && 299#64 == -1) = true then none
+                else some (x✝.sdiv 299#64))).bind
+            fun x =>
+            if (299#64 == 0 || 64 != 1 && x✝ == BitVec.intMin 64 && 299#64 == -1) = true then none
+            else
+              (Option.map (fun div => x✝.sdiv 299#64 - div * 64#64)
+                    (if (64#64 == 0 || 64 != 1 && x✝.sdiv 299#64 == BitVec.intMin 64 && 64#64 == -1) = true then none
+                    else some ((x✝.sdiv 299#64).sdiv 64#64))).bind
+                fun x_1 =>
+                if (19136#64 == 0 || 64 != 1 && x✝ == BitVec.intMin 64 && 19136#64 == -1) = true then none
+                else
+                  (Option.map (fun div => x✝.sdiv 19136#64 - div * 9#64)
+                        (if (9#64 == 0 || 64 != 1 && x✝.sdiv 19136#64 == BitVec.intMin 64 && 9#64 == -1) = true then
+                          none
+                        else some ((x✝.sdiv 19136#64).sdiv 9#64))).bind
+                    fun x_2 => some (x + x_1 * 299#64 + x_2 * 19136#64)) ⊑
+          Option.map (fun div => x✝ - div * 172224#64)
+            (if (172224#64 == 0 || 64 != 1 && x✝ == BitVec.intMin 64 && 172224#64 == -1) = true then none
+            else some (x✝.sdiv 172224#64)))
+    [Meta.check] [0.001185] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          ((Option.map (fun div => x✝ - div * 299#64)
+                (if (299#64 == 0 || 64 != 1 && x✝ == BitVec.intMin 64 && 299#64 == -1) = true then none
+                else some (x✝.sdiv 299#64))).bind
+            fun x =>
+            if (299#64 == 0 || 64 != 1 && x✝ == BitVec.intMin 64 && 299#64 == -1) = true then none
+            else
+              (Option.map (fun div => x✝.sdiv 299#64 - div * 64#64)
+                    (if (64#64 == 0 || 64 != 1 && x✝.sdiv 299#64 == BitVec.intMin 64 && 64#64 == -1) = true then none
+                    else some ((x✝.sdiv 299#64).sdiv 64#64))).bind
+                fun x_1 =>
+                if (19136#64 == 0 || 64 != 1 && x✝ == BitVec.intMin 64 && 19136#64 == -1) = true then none
+                else
+                  (Option.map (fun div => x✝.sdiv 19136#64 - div * 9#64)
+                        (if (9#64 == 0 || 64 != 1 && x✝.sdiv 19136#64 == BitVec.intMin 64 && 9#64 == -1) = true then
+                          none
+                        else some ((x✝.sdiv 19136#64).sdiv 9#64))).bind
+                    fun x_2 => some (x + x_1 * 299#64 + x_2 * 19136#64))
+          (Option.map (fun div => x✝ - div * 172224#64)
+            (if (172224#64 == 0 || 64 != 1 && x✝ == BitVec.intMin 64 && 172224#64 == -1) = true then none
+            else some (x✝.sdiv 172224#64)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬((Option.map (fun div => x✝ - div * 299#64)
+                  (if (299#64 == 0 || 64 != 1 && x✝ == BitVec.intMin 64 && 299#64 == -1) = true then none
+                  else some (x✝.sdiv 299#64))).bind
+              fun x =>
+              if (299#64 == 0 || 64 != 1 && x✝ == BitVec.intMin 64 && 299#64 == -1) = true then none
+              else
+                (Option.map (fun div => x✝.sdiv 299#64 - div * 64#64)
+                      (if (64#64 == 0 || 64 != 1 && x✝.sdiv 299#64 == BitVec.intMin 64 && 64#64 == -1) = true then none
+                      else some ((x✝.sdiv 299#64).sdiv 64#64))).bind
+                  fun x_1 =>
+                  if (19136#64 == 0 || 64 != 1 && x✝ == BitVec.intMin 64 && 19136#64 == -1) = true then none
+                  else
+                    (Option.map (fun div => x✝.sdiv 19136#64 - div * 9#64)
+                          (if (9#64 == 0 || 64 != 1 && x✝.sdiv 19136#64 == BitVec.intMin 64 && 9#64 == -1) = true then
+                            none
+                          else some ((x✝.sdiv 19136#64).sdiv 9#64))).bind
+                      fun x_2 => some (x + x_1 * 299#64 + x_2 * 19136#64)) ⊑
+            Option.map (fun div => x✝ - div * 172224#64)
+              (if (172224#64 == 0 || 64 != 1 && x✝ == BitVec.intMin 64 && 172224#64 == -1) = true then none
+              else some (x✝.sdiv 172224#64))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬((Option.map (fun div => x✝ + (~~~(div * 299#64) + 1#64))
+                  (some (if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64))).bind
+              fun a =>
+              (Option.map
+                    (fun div =>
+                      (if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) +
+                        (~~~(div * 64#64) + 1#64))
+                    (some
+                      (if
+                          (if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64).getLsbD
+                              63 =
+                            true then
+                        ~~~(((~~~if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) +
+                                1#64) /
+                              64#64) +
+                          1#64
+                      else
+                        (if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) /
+                          64#64))).bind
+                fun a_1 =>
+                (Option.map
+                      (fun div =>
+                        (if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 19136#64) + 1#64 else x✝ / 19136#64) +
+                          (~~~(div * 9#64) + 1#64))
+                      (some
+                        (if
+                            (if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 19136#64) + 1#64
+                                  else x✝ / 19136#64).getLsbD
+                                63 =
+                              true then
+                          ~~~(((~~~if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 19136#64) + 1#64
+                                    else x✝ / 19136#64) +
+                                  1#64) /
+                                9#64) +
+                            1#64
+                        else
+                          (if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 19136#64) + 1#64 else x✝ / 19136#64) /
+                            9#64))).bind
+                  fun a_2 => some (a + a_1 * 299#64 + a_2 * 19136#64)) ⊑
+            Option.map (fun div => x✝ + (~~~(div * 172224#64) + 1#64))
+              (some (if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 172224#64) + 1#64 else x✝ / 172224#64))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:54:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:45:8: error: (kernel) declaration has metavariables 'not_match_inconsistent_signs_thm'
+[bv] [0.089148] Normalizing goal
+  [Meta.synthInstance] [0.002517] ✅️ Decidable
+        ((if 299#64 = 0 then none
+          else
+            if (299#64 == 0 || 64 != 1 && x✝ == BitVec.intMin 64 && 299#64 == -1) = true then none
+            else if 64#64 = 0 then none else some (x✝ % 299#64 + x✝.sdiv 299#64 % 64#64 * 299#64)) ⊑
+          if 299#64 = 0 then none
+          else
+            if (299#64 == 0 || 64 != 1 && x✝ == BitVec.intMin 64 && 299#64 == -1) = true then none
+            else
+              if
+                  True ∧
+                    (BitVec.signExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64) * BitVec.signExtend (2 * 64) 299#64 <
+                        BitVec.signExtend (2 * 64) (BitVec.twoPow 64 (64 - 1)) ∨
+                      BitVec.signExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64) * BitVec.signExtend (2 * 64) 299#64 ≥
+                        BitVec.twoPow (2 * 64) (64 - 1)) then
+                none
+              else
+                if
+                    True ∧
+                      BitVec.zeroExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64) * BitVec.zeroExtend (2 * 64) 299#64 ≥
+                        BitVec.twoPow (2 * 64) (64 - 1) <<< 1 then
+                  none
+                else
+                  if
+                      True ∧
+                        (x✝ % 299#64).msb = ((x✝.sdiv 299#64 &&& 63#64) * 299#64).msb ∧
+                          (x✝ % 299#64 + (x✝.sdiv 299#64 &&& 63#64) * 299#64).msb ≠ (x✝ % 299#64).msb then
+                    none
+                  else
+                    if
+                        True ∧
+                          (x✝ % 299#64 + (x✝.sdiv 299#64 &&& 63#64) * 299#64 < x✝ % 299#64 ∨
+                            x✝ % 299#64 + (x✝.sdiv 299#64 &&& 63#64) * 299#64 <
+                              (x✝.sdiv 299#64 &&& 63#64) * 299#64) then
+                      none
+                    else some (x✝ % 299#64 + (x✝.sdiv 299#64 &&& 63#64) * 299#64))
+    [Meta.check] [0.001683] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if 299#64 = 0 then none
+          else
+            if (299#64 == 0 || 64 != 1 && x✝ == BitVec.intMin 64 && 299#64 == -1) = true then none
+            else if 64#64 = 0 then none else some (x✝ % 299#64 + x✝.sdiv 299#64 % 64#64 * 299#64))
+          (if 299#64 = 0 then none
+          else
+            if (299#64 == 0 || 64 != 1 && x✝ == BitVec.intMin 64 && 299#64 == -1) = true then none
+            else
+              if
+                  True ∧
+                    (BitVec.signExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64) * BitVec.signExtend (2 * 64) 299#64 <
+                        BitVec.signExtend (2 * 64) (BitVec.twoPow 64 (64 - 1)) ∨
+                      BitVec.signExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64) * BitVec.signExtend (2 * 64) 299#64 ≥
+                        BitVec.twoPow (2 * 64) (64 - 1)) then
+                none
+              else
+                if
+                    True ∧
+                      BitVec.zeroExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64) * BitVec.zeroExtend (2 * 64) 299#64 ≥
+                        BitVec.twoPow (2 * 64) (64 - 1) <<< 1 then
+                  none
+                else
+                  if
+                      True ∧
+                        (x✝ % 299#64).msb = ((x✝.sdiv 299#64 &&& 63#64) * 299#64).msb ∧
+                          (x✝ % 299#64 + (x✝.sdiv 299#64 &&& 63#64) * 299#64).msb ≠ (x✝ % 299#64).msb then
+                    none
+                  else
+                    if
+                        True ∧
+                          (x✝ % 299#64 + (x✝.sdiv 299#64 &&& 63#64) * 299#64 < x✝ % 299#64 ∨
+                            x✝ % 299#64 + (x✝.sdiv 299#64 &&& 63#64) * 299#64 <
+                              (x✝.sdiv 299#64 &&& 63#64) * 299#64) then
+                      none
+                    else some (x✝ % 299#64 + (x✝.sdiv 299#64 &&& 63#64) * 299#64))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬(if 299#64 = 0 then none
+            else
+              if (299#64 == 0 || 64 != 1 && x✝ == BitVec.intMin 64 && 299#64 == -1) = true then none
+              else if 64#64 = 0 then none else some (x✝ % 299#64 + x✝.sdiv 299#64 % 64#64 * 299#64)) ⊑
+            if 299#64 = 0 then none
+            else
+              if (299#64 == 0 || 64 != 1 && x✝ == BitVec.intMin 64 && 299#64 == -1) = true then none
+              else
+                if
+                    True ∧
+                      (BitVec.signExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64) * BitVec.signExtend (2 * 64) 299#64 <
+                          BitVec.signExtend (2 * 64) (BitVec.twoPow 64 (64 - 1)) ∨
+                        BitVec.signExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64) * BitVec.signExtend (2 * 64) 299#64 ≥
+                          BitVec.twoPow (2 * 64) (64 - 1)) then
+                  none
+                else
+                  if
+                      True ∧
+                        BitVec.zeroExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64) * BitVec.zeroExtend (2 * 64) 299#64 ≥
+                          BitVec.twoPow (2 * 64) (64 - 1) <<< 1 then
+                    none
+                  else
+                    if
+                        True ∧
+                          (x✝ % 299#64).msb = ((x✝.sdiv 299#64 &&& 63#64) * 299#64).msb ∧
+                            (x✝ % 299#64 + (x✝.sdiv 299#64 &&& 63#64) * 299#64).msb ≠ (x✝ % 299#64).msb then
+                      none
+                    else
+                      if
+                          True ∧
+                            (x✝ % 299#64 + (x✝.sdiv 299#64 &&& 63#64) * 299#64 < x✝ % 299#64 ∨
+                              x✝ % 299#64 + (x✝.sdiv 299#64 &&& 63#64) * 299#64 <
+                                (x✝.sdiv 299#64 &&& 63#64) * 299#64) then
+                        none
+                      else some (x✝ % 299#64 + (x✝.sdiv 299#64 &&& 63#64) * 299#64)
+      ⊢ False
+  [Meta.isDefEq] [0.001859] ✅️ ?h₁ =?= Eq.trans
+        (congrArg (And True)
+          (Eq.trans
+            (Eq.trans
+              (congr
+                (congrArg Or
+                  (Eq.trans
+                    (congrArg
+                      (fun x =>
+                        BitVec.signExtend 128 (x &&& 63#64) * 299#128 < BitVec.signExtend 128 (BitVec.twoPow 64 63))
+                      (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.sdiv_udiv x✝ 299#64)
+                        (ite_congr (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last x✝))
+                          (fun a =>
+                            Eq.trans
+                              (ite_cond_eq_false (-x✝ / -299#64) (-(-x✝ / 299#64))
+                                (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 299#64))
+                                  (eq_false' fun h => Bool.noConfusion h)))
+                              (Eq.trans (congrArg (fun x => -(x / 299#64)) (BitVec.neg_eq_not_add x✝))
+                                (BitVec.neg_eq_not_add ((~~~x✝ + 1#64) / 299#64))))
+                          fun a =>
+                          ite_cond_eq_false (-(x✝ / -299#64)) (x✝ / 299#64)
+                            (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 299#64))
+                              (eq_false' fun h => Bool.noConfusion h)))))
+                    (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult
+                      (BitVec.signExtend 128
+                          ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                            63#64) *
+                        299#128)
+                      (BitVec.signExtend 128 (BitVec.twoPow 64 63)))))
+                (Eq.trans
+                  (Eq.trans
+                    (congrArg (fun x => BitVec.signExtend 128 (x &&& 63#64) * 299#128 ≥ BitVec.twoPow 128 63)
+                      (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.sdiv_udiv x✝ 299#64)
+                        (ite_congr (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last x✝))
+                          (fun a =>
+                            Eq.trans
+                              (ite_cond_eq_false (-x✝ / -299#64) (-(-x✝ / 299#64))
+                                (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 299#64))
+                                  (eq_false' fun h => Bool.noConfusion h)))
+                              (Eq.trans (congrArg (fun x => -(x / 299#64)) (BitVec.neg_eq_not_add x✝))
+                                (BitVec.neg_eq_not_add ((~~~x✝ + 1#64) / 299#64))))
+                          fun a =>
+                          ite_cond_eq_false (-(x✝ / -299#64)) (x✝ / 299#64)
+                            (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 299#64))
+                              (eq_false' fun h => Bool.noConfusion h)))))
+                    Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2)
+                  (Eq.trans
+                    (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 128 63)
+                      (BitVec.signExtend 128
+                          ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                            63#64) *
+                        299#128))
+                    (Eq.trans
+                      (Eq.trans
+                        (congrArg Not
+                          (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult
+                            (BitVec.signExtend 128
+                                ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                                  63#64) *
+                              299#128)
+                            (BitVec.twoPow 128 63)))
+                        (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                          (BitVec.twoPow 128 63 >ᵤ
+                            BitVec.signExtend 128
+                                ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                                  63#64) *
+                              299#128)
+                          true))
+                      (congrArg (fun x => (!x) = true)
+                        (beq_true
+                          (BitVec.twoPow 128 63 >ᵤ
+                            BitVec.signExtend 128
+                                ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                                  63#64) *
+                              299#128)))))))
+              (Std.Tactic.BVDecide.Normalize.Bool.or_to_or
+                (BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                  BitVec.signExtend 128
+                      ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&& 63#64) *
+                    299#128)
+                !BitVec.twoPow 128 63 >ᵤ
+                    BitVec.signExtend 128
+                        ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                          63#64) *
+                      299#128))
+            (congrArg (fun x => x = true)
+              (Eq.trans
+                (Std.Tactic.BVDecide.Normalize.Bool.or_elim
+                  (BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                    BitVec.signExtend 128
+                        ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                          63#64) *
+                      299#128)
+                  !BitVec.twoPow 128 63 >ᵤ
+                      BitVec.signExtend 128
+                          ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                            63#64) *
+                        299#128)
+                (congrArg
+                  (fun x =>
+                    !((!BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                            BitVec.signExtend 128
+                                ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                                  63#64) *
+                              299#128) &&
+                        x))
+                  (Bool.not_not
+                    (BitVec.twoPow 128 63 >ᵤ
+                      BitVec.signExtend 128
+                          ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                            63#64) *
+                        299#128)))))))
+        (true_and
+          ((!((!BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                    BitVec.signExtend 128
+                        ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                          63#64) *
+                      299#128) &&
+                BitVec.twoPow 128 63 >ᵤ
+                  BitVec.signExtend 128
+                      ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&& 63#64) *
+                    299#128)) =
+            true))
+    [Meta.isDefEq.assign] [0.001857] ✅️ ?h₁ := Eq.trans
+          (congrArg (And True)
+            (Eq.trans
+              (Eq.trans
+                (congr
+                  (congrArg Or
+                    (Eq.trans
+                      (congrArg
+                        (fun x =>
+                          BitVec.signExtend 128 (x &&& 63#64) * 299#128 < BitVec.signExtend 128 (BitVec.twoPow 64 63))
+                        (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.sdiv_udiv x✝ 299#64)
+                          (ite_congr (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last x✝))
+                            (fun a =>
+                              Eq.trans
+                                (ite_cond_eq_false (-x✝ / -299#64) (-(-x✝ / 299#64))
+                                  (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 299#64))
+                                    (eq_false' fun h => Bool.noConfusion h)))
+                                (Eq.trans (congrArg (fun x => -(x / 299#64)) (BitVec.neg_eq_not_add x✝))
+                                  (BitVec.neg_eq_not_add ((~~~x✝ + 1#64) / 299#64))))
+                            fun a =>
+                            ite_cond_eq_false (-(x✝ / -299#64)) (x✝ / 299#64)
+                              (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 299#64))
+                                (eq_false' fun h => Bool.noConfusion h)))))
+                      (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult
+                        (BitVec.signExtend 128
+                            ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                              63#64) *
+                          299#128)
+                        (BitVec.signExtend 128 (BitVec.twoPow 64 63)))))
+                  (Eq.trans
+                    (Eq.trans
+                      (congrArg (fun x => BitVec.signExtend 128 (x &&& 63#64) * 299#128 ≥ BitVec.twoPow 128 63)
+                        (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.sdiv_udiv x✝ 299#64)
+                          (ite_congr (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last x✝))
+                            (fun a =>
+                              Eq.trans
+                                (ite_cond_eq_false (-x✝ / -299#64) (-(-x✝ / 299#64))
+                                  (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 299#64))
+                                    (eq_false' fun h => Bool.noConfusion h)))
+                                (Eq.trans (congrArg (fun x => -(x / 299#64)) (BitVec.neg_eq_not_add x✝))
+                                  (BitVec.neg_eq_not_add ((~~~x✝ + 1#64) / 299#64))))
+                            fun a =>
+                            ite_cond_eq_false (-(x✝ / -299#64)) (x✝ / 299#64)
+                              (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 299#64))
+                                (eq_false' fun h => Bool.noConfusion h)))))
+                      Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2)
+                    (Eq.trans
+                      (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 128 63)
+                        (BitVec.signExtend 128
+                            ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                              63#64) *
+                          299#128))
+                      (Eq.trans
+                        (Eq.trans
+                          (congrArg Not
+                            (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult
+                              (BitVec.signExtend 128
+                                  ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64
+                                    else x✝ / 299#64) &&&
+                                    63#64) *
+                                299#128)
+                              (BitVec.twoPow 128 63)))
+                          (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                            (BitVec.twoPow 128 63 >ᵤ
+                              BitVec.signExtend 128
+                                  ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64
+                                    else x✝ / 299#64) &&&
+                                    63#64) *
+                                299#128)
+                            true))
+                        (congrArg (fun x => (!x) = true)
+                          (beq_true
+                            (BitVec.twoPow 128 63 >ᵤ
+                              BitVec.signExtend 128
+                                  ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64
+                                    else x✝ / 299#64) &&&
+                                    63#64) *
+                                299#128)))))))
+                (Std.Tactic.BVDecide.Normalize.Bool.or_to_or
+                  (BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                    BitVec.signExtend 128
+                        ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                          63#64) *
+                      299#128)
+                  !BitVec.twoPow 128 63 >ᵤ
+                      BitVec.signExtend 128
+                          ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                            63#64) *
+                        299#128))
+              (congrArg (fun x => x = true)
+                (Eq.trans
+                  (Std.Tactic.BVDecide.Normalize.Bool.or_elim
+                    (BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                      BitVec.signExtend 128
+                          ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                            63#64) *
+                        299#128)
+                    !BitVec.twoPow 128 63 >ᵤ
+                        BitVec.signExtend 128
+                            ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                              63#64) *
+                          299#128)
+                  (congrArg
+                    (fun x =>
+                      !((!BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                              BitVec.signExtend 128
+                                  ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64
+                                    else x✝ / 299#64) &&&
+                                    63#64) *
+                                299#128) &&
+                          x))
+                    (Bool.not_not
+                      (BitVec.twoPow 128 63 >ᵤ
+                        BitVec.signExtend 128
+                            ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                              63#64) *
+                          299#128)))))))
+          (true_and
+            ((!((!BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                      BitVec.signExtend 128
+                          ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                            63#64) *
+                        299#128) &&
+                  BitVec.twoPow 128 63 >ᵤ
+                    BitVec.signExtend 128
+                        ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                          63#64) *
+                      299#128)) =
+              true))
+      [Meta.isDefEq.assign.checkTypes] [0.001810] ✅️ (?h₁ : (True ∧
+              (BitVec.signExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64) * BitVec.signExtend (2 * 64) 299#64 <
+                  BitVec.signExtend (2 * 64) (BitVec.twoPow 64 (64 - 1)) ∨
+                BitVec.signExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64) * BitVec.signExtend (2 * 64) 299#64 ≥
+                  BitVec.twoPow (2 * 64) (64 - 1))) =
+            ((!((!BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                      BitVec.signExtend 128
+                          ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                            63#64) *
+                        299#128) &&
+                  BitVec.twoPow 128 63 >ᵤ
+                    BitVec.signExtend 128
+                        ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                          63#64) *
+                      299#128)) =
+              true)) := (Eq.trans
+            (congrArg (And True)
+              (Eq.trans
+                (Eq.trans
+                  (congr
+                    (congrArg Or
+                      (Eq.trans
+                        (congrArg
+                          (fun x =>
+                            BitVec.signExtend 128 (x &&& 63#64) * 299#128 < BitVec.signExtend 128 (BitVec.twoPow 64 63))
+                          (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.sdiv_udiv x✝ 299#64)
+                            (ite_congr (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last x✝))
+                              (fun a =>
+                                Eq.trans
+                                  (ite_cond_eq_false (-x✝ / -299#64) (-(-x✝ / 299#64))
+                                    (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 299#64))
+                                      (eq_false' fun h => Bool.noConfusion h)))
+                                  (Eq.trans (congrArg (fun x => -(x / 299#64)) (BitVec.neg_eq_not_add x✝))
+                                    (BitVec.neg_eq_not_add ((~~~x✝ + 1#64) / 299#64))))
+                              fun a =>
+                              ite_cond_eq_false (-(x✝ / -299#64)) (x✝ / 299#64)
+                                (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 299#64))
+                                  (eq_false' fun h => Bool.noConfusion h)))))
+                        (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult
+                          (BitVec.signExtend 128
+                              ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                                63#64) *
+                            299#128)
+                          (BitVec.signExtend 128 (BitVec.twoPow 64 63)))))
+                    (Eq.trans
+                      (Eq.trans
+                        (congrArg (fun x => BitVec.signExtend 128 (x &&& 63#64) * 299#128 ≥ BitVec.twoPow 128 63)
+                          (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.sdiv_udiv x✝ 299#64)
+                            (ite_congr (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last x✝))
+                              (fun a =>
+                                Eq.trans
+                                  (ite_cond_eq_false (-x✝ / -299#64) (-(-x✝ / 299#64))
+                                    (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 299#64))
+                                      (eq_false' fun h => Bool.noConfusion h)))
+                                  (Eq.trans (congrArg (fun x => -(x / 299#64)) (BitVec.neg_eq_not_add x✝))
+                                    (BitVec.neg_eq_not_add ((~~~x✝ + 1#64) / 299#64))))
+                              fun a =>
+                              ite_cond_eq_false (-(x✝ / -299#64)) (x✝ / 299#64)
+                                (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 299#64))
+                                  (eq_false' fun h => Bool.noConfusion h)))))
+                        Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2)
+                      (Eq.trans
+                        (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 128 63)
+                          (BitVec.signExtend 128
+                              ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                                63#64) *
+                            299#128))
+                        (Eq.trans
+                          (Eq.trans
+                            (congrArg Not
+                              (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult
+                                (BitVec.signExtend 128
+                                    ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64
+                                      else x✝ / 299#64) &&&
+                                      63#64) *
+                                  299#128)
+                                (BitVec.twoPow 128 63)))
+                            (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                              (BitVec.twoPow 128 63 >ᵤ
+                                BitVec.signExtend 128
+                                    ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64
+                                      else x✝ / 299#64) &&&
+                                      63#64) *
+                                  299#128)
+                              true))
+                          (congrArg (fun x => (!x) = true)
+                            (beq_true
+                              (BitVec.twoPow 128 63 >ᵤ
+                                BitVec.signExtend 128
+                                    ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64
+                                      else x✝ / 299#64) &&&
+                                      63#64) *
+                                  299#128)))))))
+                  (Std.Tactic.BVDecide.Normalize.Bool.or_to_or
+                    (BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                      BitVec.signExtend 128
+                          ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                            63#64) *
+                        299#128)
+                    !BitVec.twoPow 128 63 >ᵤ
+                        BitVec.signExtend 128
+                            ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                              63#64) *
+                          299#128))
+                (congrArg (fun x => x = true)
+                  (Eq.trans
+                    (Std.Tactic.BVDecide.Normalize.Bool.or_elim
+                      (BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                        BitVec.signExtend 128
+                            ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                              63#64) *
+                          299#128)
+                      !BitVec.twoPow 128 63 >ᵤ
+                          BitVec.signExtend 128
+                              ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                                63#64) *
+                            299#128)
+                    (congrArg
+                      (fun x =>
+                        !((!BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                                BitVec.signExtend 128
+                                    ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64
+                                      else x✝ / 299#64) &&&
+                                      63#64) *
+                                  299#128) &&
+                            x))
+                      (Bool.not_not
+                        (BitVec.twoPow 128 63 >ᵤ
+                          BitVec.signExtend 128
+                              ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                                63#64) *
+                            299#128)))))))
+            (true_and
+              ((!((!BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                        BitVec.signExtend 128
+                            ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                              63#64) *
+                          299#128) &&
+                    BitVec.twoPow 128 63 >ᵤ
+                      BitVec.signExtend 128
+                          ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                            63#64) *
+                        299#128)) =
+                true)) : (True ∧
+              (BitVec.signExtend 128 (x✝.sdiv 299#64 &&& 63#64) * 299#128 <
+                  BitVec.signExtend 128 (BitVec.twoPow 64 63) ∨
+                BitVec.signExtend 128 (x✝.sdiv 299#64 &&& 63#64) * 299#128 ≥ BitVec.twoPow 128 63)) =
+            ((!((!BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                      BitVec.signExtend 128
+                          ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                            63#64) *
+                        299#128) &&
+                  BitVec.twoPow 128 63 >ᵤ
+                    BitVec.signExtend 128
+                        ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                          63#64) *
+                      299#128)) =
+              true))
+        [Meta.isDefEq] [0.001807] ✅️ (True ∧
+                (BitVec.signExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64) * BitVec.signExtend (2 * 64) 299#64 <
+                    BitVec.signExtend (2 * 64) (BitVec.twoPow 64 (64 - 1)) ∨
+                  BitVec.signExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64) * BitVec.signExtend (2 * 64) 299#64 ≥
+                    BitVec.twoPow (2 * 64) (64 - 1))) =
+              ((!((!BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                        BitVec.signExtend 128
+                            ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                              63#64) *
+                          299#128) &&
+                    BitVec.twoPow 128 63 >ᵤ
+                      BitVec.signExtend 128
+                          ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                            63#64) *
+                        299#128)) =
+                true) =?= (True ∧
+                (BitVec.signExtend 128 (x✝.sdiv 299#64 &&& 63#64) * 299#128 <
+                    BitVec.signExtend 128 (BitVec.twoPow 64 63) ∨
+                  BitVec.signExtend 128 (x✝.sdiv 299#64 &&& 63#64) * 299#128 ≥ BitVec.twoPow 128 63)) =
+              ((!((!BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                        BitVec.signExtend 128
+                            ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                              63#64) *
+                          299#128) &&
+                    BitVec.twoPow 128 63 >ᵤ
+                      BitVec.signExtend 128
+                          ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                            63#64) *
+                        299#128)) =
+                true)
+          [Meta.isDefEq] [0.001787] ✅️ True ∧
+                (BitVec.signExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64) * BitVec.signExtend (2 * 64) 299#64 <
+                    BitVec.signExtend (2 * 64) (BitVec.twoPow 64 (64 - 1)) ∨
+                  BitVec.signExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64) * BitVec.signExtend (2 * 64) 299#64 ≥
+                    BitVec.twoPow (2 * 64)
+                      (64 -
+                        1)) =?= True ∧
+                (BitVec.signExtend 128 (x✝.sdiv 299#64 &&& 63#64) * 299#128 <
+                    BitVec.signExtend 128 (BitVec.twoPow 64 63) ∨
+                  BitVec.signExtend 128 (x✝.sdiv 299#64 &&& 63#64) * 299#128 ≥ BitVec.twoPow 128 63)
+            [Meta.isDefEq] [0.001772] ✅️ BitVec.signExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64) *
+                      BitVec.signExtend (2 * 64) 299#64 <
+                    BitVec.signExtend (2 * 64) (BitVec.twoPow 64 (64 - 1)) ∨
+                  BitVec.signExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64) * BitVec.signExtend (2 * 64) 299#64 ≥
+                    BitVec.twoPow (2 * 64)
+                      (64 -
+                        1) =?= BitVec.signExtend 128 (x✝.sdiv 299#64 &&& 63#64) * 299#128 <
+                    BitVec.signExtend 128 (BitVec.twoPow 64 63) ∨
+                  BitVec.signExtend 128 (x✝.sdiv 299#64 &&& 63#64) * 299#128 ≥ BitVec.twoPow 128 63
+              [Meta.isDefEq] [0.001650] ✅️ BitVec.signExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64) *
+                      BitVec.signExtend (2 * 64) 299#64 <
+                    BitVec.signExtend (2 * 64)
+                      (BitVec.twoPow 64
+                        (64 -
+                          1)) =?= BitVec.signExtend 128 (x✝.sdiv 299#64 &&& 63#64) * 299#128 <
+                    BitVec.signExtend 128 (BitVec.twoPow 64 63)
+                [Meta.isDefEq] [0.001629] ✅️ instLTBitVec.1
+                      (BitVec.signExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64) * BitVec.signExtend (2 * 64) 299#64)
+                      (BitVec.signExtend (2 * 64)
+                        (BitVec.twoPow 64
+                          (64 -
+                            1))) =?= instLTBitVec.1 (BitVec.signExtend 128 (x✝.sdiv 299#64 &&& 63#64) * 299#128)
+                      (BitVec.signExtend 128 (BitVec.twoPow 64 63))
+                  [Meta.isDefEq] [0.001574] ✅️ (BitVec.signExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64) *
+                            BitVec.signExtend (2 * 64) 299#64).toNat <
+                        (BitVec.signExtend (2 * 64)
+                            (BitVec.twoPow 64
+                              (64 -
+                                1))).toNat =?= (BitVec.signExtend 128 (x✝.sdiv 299#64 &&& 63#64) * 299#128).toNat <
+                        (BitVec.signExtend 128 (BitVec.twoPow 64 63)).toNat
+                    [Meta.isDefEq] [0.001559] ✅️ instLTNat.1
+                          (BitVec.signExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64) *
+                              BitVec.signExtend (2 * 64) 299#64).toNat
+                          (BitVec.signExtend (2 * 64)
+                              (BitVec.twoPow 64
+                                (64 -
+                                  1))).toNat =?= instLTNat.1
+                          (BitVec.signExtend 128 (x✝.sdiv 299#64 &&& 63#64) * 299#128).toNat
+                          (BitVec.signExtend 128 (BitVec.twoPow 64 63)).toNat
+                      [Meta.isDefEq] [0.001529] ✅️ (BitVec.signExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64) *
+                                  BitVec.signExtend (2 * 64) 299#64).toNat.lt
+                            (BitVec.signExtend (2 * 64)
+                                (BitVec.twoPow 64
+                                  (64 -
+                                    1))).toNat =?= (BitVec.signExtend 128 (x✝.sdiv 299#64 &&& 63#64) * 299#128).toNat.lt
+                            (BitVec.signExtend 128 (BitVec.twoPow 64 63)).toNat
+                        [Meta.isDefEq.delta] [0.001518] ✅️ (BitVec.signExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64) *
+                                    BitVec.signExtend (2 * 64) 299#64).toNat.lt
+                              (BitVec.signExtend (2 * 64)
+                                  (BitVec.twoPow 64
+                                    (64 -
+                                      1))).toNat =?= (BitVec.signExtend 128 (x✝.sdiv 299#64 &&& 63#64) *
+                                    299#128).toNat.lt
+                              (BitVec.signExtend 128 (BitVec.twoPow 64 63)).toNat
+                          [Meta.isDefEq] [0.001419] ✅️ (BitVec.signExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64) *
+                                  BitVec.signExtend (2 * 64)
+                                    299#64).toNat =?= (BitVec.signExtend 128 (x✝.sdiv 299#64 &&& 63#64) * 299#128).toNat
+                            [Meta.isDefEq.delta] [0.001407] ✅️ (BitVec.signExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64) *
+                                    BitVec.signExtend (2 * 64)
+                                      299#64).toNat =?= (BitVec.signExtend 128 (x✝.sdiv 299#64 &&& 63#64) *
+                                    299#128).toNat
+                              [Meta.isDefEq] [0.001386] ✅️ BitVec.signExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64) *
+                                    BitVec.signExtend (2 * 64)
+                                      299#64 =?= BitVec.signExtend 128 (x✝.sdiv 299#64 &&& 63#64) * 299#128
+                                [Meta.isDefEq] [0.001361] ✅️ instHMul.1
+                                      (BitVec.signExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64))
+                                      (BitVec.signExtend (2 * 64)
+                                        299#64) =?= instHMul.1 (BitVec.signExtend 128 (x✝.sdiv 299#64 &&& 63#64))
+                                      299#128
+                                  [Meta.isDefEq] [0.001310] ✅️ Mul.mul
+                                        (BitVec.signExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64))
+                                        (BitVec.signExtend (2 * 64)
+                                          299#64) =?= Mul.mul (BitVec.signExtend 128 (x✝.sdiv 299#64 &&& 63#64)) 299#128
+                                    [Meta.isDefEq] [0.001290] ✅️ BitVec.instMul.1
+                                          (BitVec.signExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64))
+                                          (BitVec.signExtend (2 * 64)
+                                            299#64) =?= BitVec.instMul.1
+                                          (BitVec.signExtend 128 (x✝.sdiv 299#64 &&& 63#64)) 299#128
+                                      [Meta.isDefEq] [0.001251] ✅️ (BitVec.signExtend (2 * 64)
+                                                (x✝.sdiv 299#64 &&& 63#64)).mul
+                                            (BitVec.signExtend (2 * 64)
+                                              299#64) =?= (BitVec.signExtend 128 (x✝.sdiv 299#64 &&& 63#64)).mul 299#128
+                                        [Meta.isDefEq.delta] [0.001241] ✅️ (BitVec.signExtend (2 * 64)
+                                                  (x✝.sdiv 299#64 &&& 63#64)).mul
+                                              (BitVec.signExtend (2 * 64)
+                                                299#64) =?= (BitVec.signExtend 128 (x✝.sdiv 299#64 &&& 63#64)).mul
+                                              299#128
+                                          [Meta.isDefEq] [0.001165] ✅️ BitVec.signExtend (2 * 64) 299#64 =?= 299#128
+                                            [Meta.isDefEq] [0.001149] ✅️ BitVec.ofInt (2 * 64)
+                                                  (299#64).toInt =?= 299#128
+                                              [Meta.isDefEq] [0.001134] ✅️ ((299#64).toInt %
+                                                        Int.ofNat (2 ^ (2 * 64))).toNat#'⋯ =?= 299#128
+                                                [Meta.isDefEq] [0.001117] ✅️ ((299#64).toInt %
+                                                          Int.ofNat
+                                                            (2 ^
+                                                              (2 *
+                                                                64))).toNat#'⋯ =?= { toFin := Fin.ofNat' (2 ^ 128) 299 }
+                                                  [Meta.isDefEq] [0.001105] ✅️ {
+                                                        toFin :=
+                                                          ⟨((299#64).toInt % Int.ofNat (2 ^ (2 * 64))).toNat,
+                                                            ⋯⟩ } =?= { toFin := Fin.ofNat' (2 ^ 128) 299 }
+                                                    [Meta.isDefEq] [0.001052] ✅️ ⟨((299#64).toInt %
+                                                              Int.ofNat (2 ^ (2 * 64))).toNat,
+                                                          ⋯⟩ =?= Fin.ofNat' (2 ^ 128) 299
+                                                      [Meta.isDefEq] [0.001033] ✅️ ⟨((299#64).toInt %
+                                                                Int.ofNat (2 ^ (2 * 64))).toNat,
+                                                            ⋯⟩ =?= ⟨299 % 2 ^ 128, ⋯⟩
+  [Meta.isDefEq] [0.001081] ✅️ ?h₁ =?= Eq.trans
+        (congrArg (And True)
+          (Eq.trans
+            (Eq.trans
+              (congrArg (fun x => BitVec.zeroExtend 128 (x &&& 63#64) * 299#128 ≥ BitVec.twoPow 128 63 <<< 1)
+                (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.sdiv_udiv x✝ 299#64)
+                  (ite_congr (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last x✝))
+                    (fun a =>
+                      Eq.trans
+                        (ite_cond_eq_false (-x✝ / -299#64) (-(-x✝ / 299#64))
+                          (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 299#64))
+                            (eq_false' fun h => Bool.noConfusion h)))
+                        (Eq.trans (congrArg (fun x => -(x / 299#64)) (BitVec.neg_eq_not_add x✝))
+                          (BitVec.neg_eq_not_add ((~~~x✝ + 1#64) / 299#64))))
+                    fun a =>
+                    ite_cond_eq_false (-(x✝ / -299#64)) (x✝ / 299#64)
+                      (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 299#64))
+                        (eq_false' fun h => Bool.noConfusion h)))))
+              Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2)
+            (Eq.trans
+              (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 128 63 <<< 1)
+                (BitVec.zeroExtend 128
+                    ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&& 63#64) *
+                  299#128))
+              (Eq.trans
+                (Eq.trans
+                  (congrArg Not
+                    (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult
+                      (BitVec.zeroExtend 128
+                          ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                            63#64) *
+                        299#128)
+                      (BitVec.twoPow 128 63 <<< 1)))
+                  (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                    (BitVec.twoPow 128 63 <<< 1 >ᵤ
+                      BitVec.zeroExtend 128
+                          ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                            63#64) *
+                        299#128)
+                    true))
+                (congrArg (fun x => (!x) = true)
+                  (beq_true
+                    (BitVec.twoPow 128 63 <<< 1 >ᵤ
+                      BitVec.zeroExtend 128
+                          ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                            63#64) *
+                        299#128)))))))
+        (true_and
+          ((!BitVec.twoPow 128 63 <<< 1 >ᵤ
+                BitVec.zeroExtend 128
+                    ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&& 63#64) *
+                  299#128) =
+            true))
+    [Meta.isDefEq.assign] [0.001079] ✅️ ?h₁ := Eq.trans
+          (congrArg (And True)
+            (Eq.trans
+              (Eq.trans
+                (congrArg (fun x => BitVec.zeroExtend 128 (x &&& 63#64) * 299#128 ≥ BitVec.twoPow 128 63 <<< 1)
+                  (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.sdiv_udiv x✝ 299#64)
+                    (ite_congr (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last x✝))
+                      (fun a =>
+                        Eq.trans
+                          (ite_cond_eq_false (-x✝ / -299#64) (-(-x✝ / 299#64))
+                            (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 299#64))
+                              (eq_false' fun h => Bool.noConfusion h)))
+                          (Eq.trans (congrArg (fun x => -(x / 299#64)) (BitVec.neg_eq_not_add x✝))
+                            (BitVec.neg_eq_not_add ((~~~x✝ + 1#64) / 299#64))))
+                      fun a =>
+                      ite_cond_eq_false (-(x✝ / -299#64)) (x✝ / 299#64)
+                        (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 299#64))
+                          (eq_false' fun h => Bool.noConfusion h)))))
+                Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2)
+              (Eq.trans
+                (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 128 63 <<< 1)
+                  (BitVec.zeroExtend 128
+                      ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&& 63#64) *
+                    299#128))
+                (Eq.trans
+                  (Eq.trans
+                    (congrArg Not
+                      (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult
+                        (BitVec.zeroExtend 128
+                            ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                              63#64) *
+                          299#128)
+                        (BitVec.twoPow 128 63 <<< 1)))
+                    (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                      (BitVec.twoPow 128 63 <<< 1 >ᵤ
+                        BitVec.zeroExtend 128
+                            ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                              63#64) *
+                          299#128)
+                      true))
+                  (congrArg (fun x => (!x) = true)
+                    (beq_true
+                      (BitVec.twoPow 128 63 <<< 1 >ᵤ
+                        BitVec.zeroExtend 128
+                            ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                              63#64) *
+                          299#128)))))))
+          (true_and
+            ((!BitVec.twoPow 128 63 <<< 1 >ᵤ
+                  BitVec.zeroExtend 128
+                      ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&& 63#64) *
+                    299#128) =
+              true))
+      [Meta.isDefEq.assign.checkTypes] [0.001038] ✅️ (?h₁ : (True ∧
+              BitVec.zeroExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64) * BitVec.zeroExtend (2 * 64) 299#64 ≥
+                BitVec.twoPow (2 * 64) (64 - 1) <<< 1) =
+            ((!BitVec.twoPow 128 63 <<< 1 >ᵤ
+                  BitVec.zeroExtend 128
+                      ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&& 63#64) *
+                    299#128) =
+              true)) := (Eq.trans
+            (congrArg (And True)
+              (Eq.trans
+                (Eq.trans
+                  (congrArg (fun x => BitVec.zeroExtend 128 (x &&& 63#64) * 299#128 ≥ BitVec.twoPow 128 63 <<< 1)
+                    (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.sdiv_udiv x✝ 299#64)
+                      (ite_congr (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last x✝))
+                        (fun a =>
+                          Eq.trans
+                            (ite_cond_eq_false (-x✝ / -299#64) (-(-x✝ / 299#64))
+                              (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 299#64))
+                                (eq_false' fun h => Bool.noConfusion h)))
+                            (Eq.trans (congrArg (fun x => -(x / 299#64)) (BitVec.neg_eq_not_add x✝))
+                              (BitVec.neg_eq_not_add ((~~~x✝ + 1#64) / 299#64))))
+                        fun a =>
+                        ite_cond_eq_false (-(x✝ / -299#64)) (x✝ / 299#64)
+                          (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 299#64))
+                            (eq_false' fun h => Bool.noConfusion h)))))
+                  Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2)
+                (Eq.trans
+                  (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 128 63 <<< 1)
+                    (BitVec.zeroExtend 128
+                        ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                          63#64) *
+                      299#128))
+                  (Eq.trans
+                    (Eq.trans
+                      (congrArg Not
+                        (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult
+                          (BitVec.zeroExtend 128
+                              ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                                63#64) *
+                            299#128)
+                          (BitVec.twoPow 128 63 <<< 1)))
+                      (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                        (BitVec.twoPow 128 63 <<< 1 >ᵤ
+                          BitVec.zeroExtend 128
+                              ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                                63#64) *
+                            299#128)
+                        true))
+                    (congrArg (fun x => (!x) = true)
+                      (beq_true
+                        (BitVec.twoPow 128 63 <<< 1 >ᵤ
+                          BitVec.zeroExtend 128
+                              ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                                63#64) *
+                            299#128)))))))
+            (true_and
+              ((!BitVec.twoPow 128 63 <<< 1 >ᵤ
+                    BitVec.zeroExtend 128
+                        ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                          63#64) *
+                      299#128) =
+                true)) : (True ∧
+              BitVec.zeroExtend 128 (x✝.sdiv 299#64 &&& 63#64) * 299#128 ≥ BitVec.twoPow 128 63 <<< 1) =
+            ((!BitVec.twoPow 128 63 <<< 1 >ᵤ
+                  BitVec.zeroExtend 128
+                      ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&& 63#64) *
+                    299#128) =
+              true))
+        [Meta.isDefEq] [0.001034] ✅️ (True ∧
+                BitVec.zeroExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64) * BitVec.zeroExtend (2 * 64) 299#64 ≥
+                  BitVec.twoPow (2 * 64) (64 - 1) <<< 1) =
+              ((!BitVec.twoPow 128 63 <<< 1 >ᵤ
+                    BitVec.zeroExtend 128
+                        ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                          63#64) *
+                      299#128) =
+                true) =?= (True ∧
+                BitVec.zeroExtend 128 (x✝.sdiv 299#64 &&& 63#64) * 299#128 ≥ BitVec.twoPow 128 63 <<< 1) =
+              ((!BitVec.twoPow 128 63 <<< 1 >ᵤ
+                    BitVec.zeroExtend 128
+                        ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                          63#64) *
+                      299#128) =
+                true)
+          [Meta.isDefEq] [0.001010] ✅️ True ∧
+                BitVec.zeroExtend (2 * 64) (x✝.sdiv 299#64 &&& 63#64) * BitVec.zeroExtend (2 * 64) 299#64 ≥
+                  BitVec.twoPow (2 * 64) (64 - 1) <<<
+                    1 =?= True ∧ BitVec.zeroExtend 128 (x✝.sdiv 299#64 &&& 63#64) * 299#128 ≥ BitVec.twoPow 128 63 <<< 1
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬some
+              (x✝ % 299#64 +
+                (if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) % 64#64 * 299#64) ⊑
+            if
+                (!((!BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                          BitVec.signExtend 128
+                              ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                                63#64) *
+                            299#128) &&
+                      BitVec.twoPow 128 63 >ᵤ
+                        BitVec.signExtend 128
+                            ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                              63#64) *
+                          299#128)) =
+                  true then
+              none
+            else
+              if
+                  (!BitVec.twoPow 128 63 <<< 1 >ᵤ
+                        BitVec.zeroExtend 128
+                            ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                              63#64) *
+                          299#128) =
+                    true then
+                none
+              else
+                if
+                    ((x✝ % 299#64).getLsbD 63 ==
+                          (((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                                  63#64) *
+                                299#64).getLsbD
+                            63 &&
+                        !(x✝ % 299#64 +
+                                  ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64
+                                      else x✝ / 299#64) &&&
+                                      63#64) *
+                                    299#64).getLsbD
+                              63 ==
+                            (x✝ % 299#64).getLsbD 63) =
+                      true then
+                  none
+                else
+                  if
+                      (!((!x✝ % 299#64 >ᵤ
+                                x✝ % 299#64 +
+                                  ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64
+                                      else x✝ / 299#64) &&&
+                                      63#64) *
+                                    299#64) &&
+                            !((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                                    63#64) *
+                                  299#64 >ᵤ
+                                x✝ % 299#64 +
+                                  ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64
+                                      else x✝ / 299#64) &&&
+                                      63#64) *
+                                    299#64)) =
+                        true then
+                    none
+                  else
+                    some
+                      (x✝ % 299#64 +
+                        ((if x✝.getLsbD 63 = true then ~~~((~~~x✝ + 1#64) / 299#64) + 1#64 else x✝ / 299#64) &&&
+                            63#64) *
+                          299#64)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:67:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:58:8: error: (kernel) declaration has metavariables 'not_match_inconsistent_values_thm'
+[bv] [0.110849] Normalizing goal
+  [Meta.synthInstance] [0.003635] ✅️ Decidable
+        ((if 299#64 = 0 then none
+          else
+            if 29#64 = 0 then none else if 64#64 = 0 then none else some (x✝ % 299#64 + x✝ / 29#64 % 64#64 * 299#64)) ⊑
+          if 299#64 = 0 then none
+          else
+            if 29#64 = 0 then none
+            else
+              if
+                  True ∧
+                    (BitVec.signExtend (2 * 64) (x✝ / 29#64 &&& 63#64) * BitVec.signExtend (2 * 64) 299#64 <
+                        BitVec.signExtend (2 * 64) (BitVec.twoPow 64 (64 - 1)) ∨
+                      BitVec.signExtend (2 * 64) (x✝ / 29#64 &&& 63#64) * BitVec.signExtend (2 * 64) 299#64 ≥
+                        BitVec.twoPow (2 * 64) (64 - 1)) then
+                none
+              else
+                if
+                    True ∧
+                      BitVec.zeroExtend (2 * 64) (x✝ / 29#64 &&& 63#64) * BitVec.zeroExtend (2 * 64) 299#64 ≥
+                        BitVec.twoPow (2 * 64) (64 - 1) <<< 1 then
+                  none
+                else
+                  if
+                      True ∧
+                        (x✝ % 299#64).msb = ((x✝ / 29#64 &&& 63#64) * 299#64).msb ∧
+                          (x✝ % 299#64 + (x✝ / 29#64 &&& 63#64) * 299#64).msb ≠ (x✝ % 299#64).msb then
+                    none
+                  else
+                    if
+                        True ∧
+                          (x✝ % 299#64 + (x✝ / 29#64 &&& 63#64) * 299#64 < x✝ % 299#64 ∨
+                            x✝ % 299#64 + (x✝ / 29#64 &&& 63#64) * 299#64 < (x✝ / 29#64 &&& 63#64) * 299#64) then
+                      none
+                    else some (x✝ % 299#64 + (x✝ / 29#64 &&& 63#64) * 299#64))
+    [Meta.check] [0.002609] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if 299#64 = 0 then none
+          else if 29#64 = 0 then none else if 64#64 = 0 then none else some (x✝ % 299#64 + x✝ / 29#64 % 64#64 * 299#64))
+          (if 299#64 = 0 then none
+          else
+            if 29#64 = 0 then none
+            else
+              if
+                  True ∧
+                    (BitVec.signExtend (2 * 64) (x✝ / 29#64 &&& 63#64) * BitVec.signExtend (2 * 64) 299#64 <
+                        BitVec.signExtend (2 * 64) (BitVec.twoPow 64 (64 - 1)) ∨
+                      BitVec.signExtend (2 * 64) (x✝ / 29#64 &&& 63#64) * BitVec.signExtend (2 * 64) 299#64 ≥
+                        BitVec.twoPow (2 * 64) (64 - 1)) then
+                none
+              else
+                if
+                    True ∧
+                      BitVec.zeroExtend (2 * 64) (x✝ / 29#64 &&& 63#64) * BitVec.zeroExtend (2 * 64) 299#64 ≥
+                        BitVec.twoPow (2 * 64) (64 - 1) <<< 1 then
+                  none
+                else
+                  if
+                      True ∧
+                        (x✝ % 299#64).msb = ((x✝ / 29#64 &&& 63#64) * 299#64).msb ∧
+                          (x✝ % 299#64 + (x✝ / 29#64 &&& 63#64) * 299#64).msb ≠ (x✝ % 299#64).msb then
+                    none
+                  else
+                    if
+                        True ∧
+                          (x✝ % 299#64 + (x✝ / 29#64 &&& 63#64) * 299#64 < x✝ % 299#64 ∨
+                            x✝ % 299#64 + (x✝ / 29#64 &&& 63#64) * 299#64 < (x✝ / 29#64 &&& 63#64) * 299#64) then
+                      none
+                    else some (x✝ % 299#64 + (x✝ / 29#64 &&& 63#64) * 299#64))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬(if 299#64 = 0 then none
+            else
+              if 29#64 = 0 then none
+              else if 64#64 = 0 then none else some (x✝ % 299#64 + x✝ / 29#64 % 64#64 * 299#64)) ⊑
+            if 299#64 = 0 then none
+            else
+              if 29#64 = 0 then none
+              else
+                if
+                    True ∧
+                      (BitVec.signExtend (2 * 64) (x✝ / 29#64 &&& 63#64) * BitVec.signExtend (2 * 64) 299#64 <
+                          BitVec.signExtend (2 * 64) (BitVec.twoPow 64 (64 - 1)) ∨
+                        BitVec.signExtend (2 * 64) (x✝ / 29#64 &&& 63#64) * BitVec.signExtend (2 * 64) 299#64 ≥
+                          BitVec.twoPow (2 * 64) (64 - 1)) then
+                  none
+                else
+                  if
+                      True ∧
+                        BitVec.zeroExtend (2 * 64) (x✝ / 29#64 &&& 63#64) * BitVec.zeroExtend (2 * 64) 299#64 ≥
+                          BitVec.twoPow (2 * 64) (64 - 1) <<< 1 then
+                    none
+                  else
+                    if
+                        True ∧
+                          (x✝ % 299#64).msb = ((x✝ / 29#64 &&& 63#64) * 299#64).msb ∧
+                            (x✝ % 299#64 + (x✝ / 29#64 &&& 63#64) * 299#64).msb ≠ (x✝ % 299#64).msb then
+                      none
+                    else
+                      if
+                          True ∧
+                            (x✝ % 299#64 + (x✝ / 29#64 &&& 63#64) * 299#64 < x✝ % 299#64 ∨
+                              x✝ % 299#64 + (x✝ / 29#64 &&& 63#64) * 299#64 < (x✝ / 29#64 &&& 63#64) * 299#64) then
+                        none
+                      else some (x✝ % 299#64 + (x✝ / 29#64 &&& 63#64) * 299#64)
+      ⊢ False
+  [Meta.isDefEq] [0.001172] ❌️ ?a == ?a =?= 299#64 == 0#64
+  [Meta.isDefEq] [0.001845] ✅️ ?h₁ =?= Eq.trans
+        (congrArg (And True)
+          (Eq.trans
+            (Eq.trans
+              (congr
+                (congrArg Or
+                  (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult (BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128)
+                    (BitVec.signExtend 128 (BitVec.twoPow 64 63))))
+                (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+                  (Eq.trans
+                    (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 128 63)
+                      (BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128))
+                    (Eq.trans
+                      (Eq.trans
+                        (congrArg Not
+                          (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult
+                            (BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) (BitVec.twoPow 128 63)))
+                        (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                          (BitVec.twoPow 128 63 >ᵤ BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) true))
+                      (congrArg (fun x => (!x) = true)
+                        (beq_true (BitVec.twoPow 128 63 >ᵤ BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128)))))))
+              (Std.Tactic.BVDecide.Normalize.Bool.or_to_or
+                (BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128)
+                !BitVec.twoPow 128 63 >ᵤ BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128))
+            (congrArg (fun x => x = true)
+              (Eq.trans
+                (Std.Tactic.BVDecide.Normalize.Bool.or_elim
+                  (BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                    BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128)
+                  !BitVec.twoPow 128 63 >ᵤ BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128)
+                (congrArg
+                  (fun x =>
+                    !((!BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                            BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) &&
+                        x))
+                  (Bool.not_not (BitVec.twoPow 128 63 >ᵤ BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128)))))))
+        (true_and
+          ((!((!BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                    BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) &&
+                BitVec.twoPow 128 63 >ᵤ BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128)) =
+            true))
+    [Meta.isDefEq.assign] [0.001842] ✅️ ?h₁ := Eq.trans
+          (congrArg (And True)
+            (Eq.trans
+              (Eq.trans
+                (congr
+                  (congrArg Or
+                    (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult
+                      (BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128)
+                      (BitVec.signExtend 128 (BitVec.twoPow 64 63))))
+                  (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+                    (Eq.trans
+                      (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 128 63)
+                        (BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128))
+                      (Eq.trans
+                        (Eq.trans
+                          (congrArg Not
+                            (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult
+                              (BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) (BitVec.twoPow 128 63)))
+                          (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                            (BitVec.twoPow 128 63 >ᵤ BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) true))
+                        (congrArg (fun x => (!x) = true)
+                          (beq_true
+                            (BitVec.twoPow 128 63 >ᵤ BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128)))))))
+                (Std.Tactic.BVDecide.Normalize.Bool.or_to_or
+                  (BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                    BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128)
+                  !BitVec.twoPow 128 63 >ᵤ BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128))
+              (congrArg (fun x => x = true)
+                (Eq.trans
+                  (Std.Tactic.BVDecide.Normalize.Bool.or_elim
+                    (BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                      BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128)
+                    !BitVec.twoPow 128 63 >ᵤ BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128)
+                  (congrArg
+                    (fun x =>
+                      !((!BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                              BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) &&
+                          x))
+                    (Bool.not_not (BitVec.twoPow 128 63 >ᵤ BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128)))))))
+          (true_and
+            ((!((!BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                      BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) &&
+                  BitVec.twoPow 128 63 >ᵤ BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128)) =
+              true))
+      [Meta.isDefEq.assign.checkTypes] [0.001810] ✅️ (?h₁ : (True ∧
+              (BitVec.signExtend (2 * 64) (x✝ / 29#64 &&& 63#64) * BitVec.signExtend (2 * 64) 299#64 <
+                  BitVec.signExtend (2 * 64) (BitVec.twoPow 64 (64 - 1)) ∨
+                BitVec.signExtend (2 * 64) (x✝ / 29#64 &&& 63#64) * BitVec.signExtend (2 * 64) 299#64 ≥
+                  BitVec.twoPow (2 * 64) (64 - 1))) =
+            ((!((!BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                      BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) &&
+                  BitVec.twoPow 128 63 >ᵤ BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128)) =
+              true)) := (Eq.trans
+            (congrArg (And True)
+              (Eq.trans
+                (Eq.trans
+                  (congr
+                    (congrArg Or
+                      (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult
+                        (BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128)
+                        (BitVec.signExtend 128 (BitVec.twoPow 64 63))))
+                    (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+                      (Eq.trans
+                        (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 128 63)
+                          (BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128))
+                        (Eq.trans
+                          (Eq.trans
+                            (congrArg Not
+                              (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult
+                                (BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) (BitVec.twoPow 128 63)))
+                            (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                              (BitVec.twoPow 128 63 >ᵤ BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) true))
+                          (congrArg (fun x => (!x) = true)
+                            (beq_true
+                              (BitVec.twoPow 128 63 >ᵤ BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128)))))))
+                  (Std.Tactic.BVDecide.Normalize.Bool.or_to_or
+                    (BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                      BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128)
+                    !BitVec.twoPow 128 63 >ᵤ BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128))
+                (congrArg (fun x => x = true)
+                  (Eq.trans
+                    (Std.Tactic.BVDecide.Normalize.Bool.or_elim
+                      (BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                        BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128)
+                      !BitVec.twoPow 128 63 >ᵤ BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128)
+                    (congrArg
+                      (fun x =>
+                        !((!BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                                BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) &&
+                            x))
+                      (Bool.not_not
+                        (BitVec.twoPow 128 63 >ᵤ BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128)))))))
+            (true_and
+              ((!((!BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                        BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) &&
+                    BitVec.twoPow 128 63 >ᵤ BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128)) =
+                true)) : (True ∧
+              (BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128 < BitVec.signExtend 128 (BitVec.twoPow 64 63) ∨
+                BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128 ≥ BitVec.twoPow 128 63)) =
+            ((!((!BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                      BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) &&
+                  BitVec.twoPow 128 63 >ᵤ BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128)) =
+              true))
+        [Meta.isDefEq] [0.001806] ✅️ (True ∧
+                (BitVec.signExtend (2 * 64) (x✝ / 29#64 &&& 63#64) * BitVec.signExtend (2 * 64) 299#64 <
+                    BitVec.signExtend (2 * 64) (BitVec.twoPow 64 (64 - 1)) ∨
+                  BitVec.signExtend (2 * 64) (x✝ / 29#64 &&& 63#64) * BitVec.signExtend (2 * 64) 299#64 ≥
+                    BitVec.twoPow (2 * 64) (64 - 1))) =
+              ((!((!BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                        BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) &&
+                    BitVec.twoPow 128 63 >ᵤ BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128)) =
+                true) =?= (True ∧
+                (BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128 < BitVec.signExtend 128 (BitVec.twoPow 64 63) ∨
+                  BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128 ≥ BitVec.twoPow 128 63)) =
+              ((!((!BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                        BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) &&
+                    BitVec.twoPow 128 63 >ᵤ BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128)) =
+                true)
+          [Meta.isDefEq] [0.001782] ✅️ True ∧
+                (BitVec.signExtend (2 * 64) (x✝ / 29#64 &&& 63#64) * BitVec.signExtend (2 * 64) 299#64 <
+                    BitVec.signExtend (2 * 64) (BitVec.twoPow 64 (64 - 1)) ∨
+                  BitVec.signExtend (2 * 64) (x✝ / 29#64 &&& 63#64) * BitVec.signExtend (2 * 64) 299#64 ≥
+                    BitVec.twoPow (2 * 64)
+                      (64 -
+                        1)) =?= True ∧
+                (BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128 < BitVec.signExtend 128 (BitVec.twoPow 64 63) ∨
+                  BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128 ≥ BitVec.twoPow 128 63)
+            [Meta.isDefEq] [0.001765] ✅️ BitVec.signExtend (2 * 64) (x✝ / 29#64 &&& 63#64) *
+                      BitVec.signExtend (2 * 64) 299#64 <
+                    BitVec.signExtend (2 * 64) (BitVec.twoPow 64 (64 - 1)) ∨
+                  BitVec.signExtend (2 * 64) (x✝ / 29#64 &&& 63#64) * BitVec.signExtend (2 * 64) 299#64 ≥
+                    BitVec.twoPow (2 * 64)
+                      (64 -
+                        1) =?= BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128 <
+                    BitVec.signExtend 128 (BitVec.twoPow 64 63) ∨
+                  BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128 ≥ BitVec.twoPow 128 63
+              [Meta.isDefEq] [0.001650] ✅️ BitVec.signExtend (2 * 64) (x✝ / 29#64 &&& 63#64) *
+                      BitVec.signExtend (2 * 64) 299#64 <
+                    BitVec.signExtend (2 * 64)
+                      (BitVec.twoPow 64
+                        (64 -
+                          1)) =?= BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128 <
+                    BitVec.signExtend 128 (BitVec.twoPow 64 63)
+                [Meta.isDefEq] [0.001627] ✅️ instLTBitVec.1
+                      (BitVec.signExtend (2 * 64) (x✝ / 29#64 &&& 63#64) * BitVec.signExtend (2 * 64) 299#64)
+                      (BitVec.signExtend (2 * 64)
+                        (BitVec.twoPow 64
+                          (64 -
+                            1))) =?= instLTBitVec.1 (BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128)
+                      (BitVec.signExtend 128 (BitVec.twoPow 64 63))
+                  [Meta.isDefEq] [0.001572] ✅️ (BitVec.signExtend (2 * 64) (x✝ / 29#64 &&& 63#64) *
+                            BitVec.signExtend (2 * 64) 299#64).toNat <
+                        (BitVec.signExtend (2 * 64)
+                            (BitVec.twoPow 64
+                              (64 -
+                                1))).toNat =?= (BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128).toNat <
+                        (BitVec.signExtend 128 (BitVec.twoPow 64 63)).toNat
+                    [Meta.isDefEq] [0.001558] ✅️ instLTNat.1
+                          (BitVec.signExtend (2 * 64) (x✝ / 29#64 &&& 63#64) * BitVec.signExtend (2 * 64) 299#64).toNat
+                          (BitVec.signExtend (2 * 64)
+                              (BitVec.twoPow 64
+                                (64 -
+                                  1))).toNat =?= instLTNat.1
+                          (BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128).toNat
+                          (BitVec.signExtend 128 (BitVec.twoPow 64 63)).toNat
+                      [Meta.isDefEq] [0.001521] ✅️ (BitVec.signExtend (2 * 64) (x✝ / 29#64 &&& 63#64) *
+                                  BitVec.signExtend (2 * 64) 299#64).toNat.lt
+                            (BitVec.signExtend (2 * 64)
+                                (BitVec.twoPow 64
+                                  (64 -
+                                    1))).toNat =?= (BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128).toNat.lt
+                            (BitVec.signExtend 128 (BitVec.twoPow 64 63)).toNat
+                        [Meta.isDefEq.delta] [0.001510] ✅️ (BitVec.signExtend (2 * 64) (x✝ / 29#64 &&& 63#64) *
+                                    BitVec.signExtend (2 * 64) 299#64).toNat.lt
+                              (BitVec.signExtend (2 * 64)
+                                  (BitVec.twoPow 64
+                                    (64 -
+                                      1))).toNat =?= (BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128).toNat.lt
+                              (BitVec.signExtend 128 (BitVec.twoPow 64 63)).toNat
+                          [Meta.isDefEq] [0.001415] ✅️ (BitVec.signExtend (2 * 64) (x✝ / 29#64 &&& 63#64) *
+                                  BitVec.signExtend (2 * 64)
+                                    299#64).toNat =?= (BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128).toNat
+                            [Meta.isDefEq.delta] [0.001403] ✅️ (BitVec.signExtend (2 * 64) (x✝ / 29#64 &&& 63#64) *
+                                    BitVec.signExtend (2 * 64)
+                                      299#64).toNat =?= (BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128).toNat
+                              [Meta.isDefEq] [0.001384] ✅️ BitVec.signExtend (2 * 64) (x✝ / 29#64 &&& 63#64) *
+                                    BitVec.signExtend (2 * 64)
+                                      299#64 =?= BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128
+                                [Meta.isDefEq] [0.001358] ✅️ instHMul.1
+                                      (BitVec.signExtend (2 * 64) (x✝ / 29#64 &&& 63#64))
+                                      (BitVec.signExtend (2 * 64)
+                                        299#64) =?= instHMul.1 (BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64)) 299#128
+                                  [Meta.isDefEq] [0.001306] ✅️ Mul.mul
+                                        (BitVec.signExtend (2 * 64) (x✝ / 29#64 &&& 63#64))
+                                        (BitVec.signExtend (2 * 64)
+                                          299#64) =?= Mul.mul (BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64)) 299#128
+                                    [Meta.isDefEq] [0.001286] ✅️ BitVec.instMul.1
+                                          (BitVec.signExtend (2 * 64) (x✝ / 29#64 &&& 63#64))
+                                          (BitVec.signExtend (2 * 64)
+                                            299#64) =?= BitVec.instMul.1 (BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64))
+                                          299#128
+                                      [Meta.isDefEq] [0.001239] ✅️ (BitVec.signExtend (2 * 64)
+                                                (x✝ / 29#64 &&& 63#64)).mul
+                                            (BitVec.signExtend (2 * 64)
+                                              299#64) =?= (BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64)).mul 299#128
+                                        [Meta.isDefEq.delta] [0.001229] ✅️ (BitVec.signExtend (2 * 64)
+                                                  (x✝ / 29#64 &&& 63#64)).mul
+                                              (BitVec.signExtend (2 * 64)
+                                                299#64) =?= (BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64)).mul 299#128
+                                          [Meta.isDefEq] [0.001125] ✅️ BitVec.signExtend (2 * 64) 299#64 =?= 299#128
+                                            [Meta.isDefEq] [0.001106] ✅️ BitVec.ofInt (2 * 64)
+                                                  (299#64).toInt =?= 299#128
+                                              [Meta.isDefEq] [0.001092] ✅️ ((299#64).toInt %
+                                                        Int.ofNat (2 ^ (2 * 64))).toNat#'⋯ =?= 299#128
+                                                [Meta.isDefEq] [0.001076] ✅️ ((299#64).toInt %
+                                                          Int.ofNat
+                                                            (2 ^
+                                                              (2 *
+                                                                64))).toNat#'⋯ =?= { toFin := Fin.ofNat' (2 ^ 128) 299 }
+                                                  [Meta.isDefEq] [0.001063] ✅️ {
+                                                        toFin :=
+                                                          ⟨((299#64).toInt % Int.ofNat (2 ^ (2 * 64))).toNat,
+                                                            ⋯⟩ } =?= { toFin := Fin.ofNat' (2 ^ 128) 299 }
+                                                    [Meta.isDefEq] [0.001025] ✅️ ⟨((299#64).toInt %
+                                                              Int.ofNat (2 ^ (2 * 64))).toNat,
+                                                          ⋯⟩ =?= Fin.ofNat' (2 ^ 128) 299
+                                                      [Meta.isDefEq] [0.001007] ✅️ ⟨((299#64).toInt %
+                                                                Int.ofNat (2 ^ (2 * 64))).toNat,
+                                                            ⋯⟩ =?= ⟨299 % 2 ^ 128, ⋯⟩
+  [Meta.isDefEq] [0.001825] ✅️ ?h₁ =?= Eq.trans
+        (congrArg (And True)
+          (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+            (Eq.trans
+              (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 128 63 <<< 1)
+                (BitVec.zeroExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128))
+              (Eq.trans
+                (Eq.trans
+                  (congrArg Not
+                    (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult
+                      (BitVec.zeroExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) (BitVec.twoPow 128 63 <<< 1)))
+                  (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                    (BitVec.twoPow 128 63 <<< 1 >ᵤ BitVec.zeroExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) true))
+                (congrArg (fun x => (!x) = true)
+                  (beq_true (BitVec.twoPow 128 63 <<< 1 >ᵤ BitVec.zeroExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128)))))))
+        (true_and ((!BitVec.twoPow 128 63 <<< 1 >ᵤ BitVec.zeroExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) = true))
+    [Meta.isDefEq.assign] [0.001821] ✅️ ?h₁ := Eq.trans
+          (congrArg (And True)
+            (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+              (Eq.trans
+                (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 128 63 <<< 1)
+                  (BitVec.zeroExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128))
+                (Eq.trans
+                  (Eq.trans
+                    (congrArg Not
+                      (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult
+                        (BitVec.zeroExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) (BitVec.twoPow 128 63 <<< 1)))
+                    (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                      (BitVec.twoPow 128 63 <<< 1 >ᵤ BitVec.zeroExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) true))
+                  (congrArg (fun x => (!x) = true)
+                    (beq_true
+                      (BitVec.twoPow 128 63 <<< 1 >ᵤ BitVec.zeroExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128)))))))
+          (true_and ((!BitVec.twoPow 128 63 <<< 1 >ᵤ BitVec.zeroExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) = true))
+      [Meta.isDefEq.assign.checkTypes] [0.001800] ✅️ (?h₁ : (True ∧
+              BitVec.zeroExtend (2 * 64) (x✝ / 29#64 &&& 63#64) * BitVec.zeroExtend (2 * 64) 299#64 ≥
+                BitVec.twoPow (2 * 64) (64 - 1) <<< 1) =
+            ((!BitVec.twoPow 128 63 <<< 1 >ᵤ BitVec.zeroExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) =
+              true)) := (Eq.trans
+            (congrArg (And True)
+              (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+                (Eq.trans
+                  (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 128 63 <<< 1)
+                    (BitVec.zeroExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128))
+                  (Eq.trans
+                    (Eq.trans
+                      (congrArg Not
+                        (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult
+                          (BitVec.zeroExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) (BitVec.twoPow 128 63 <<< 1)))
+                      (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                        (BitVec.twoPow 128 63 <<< 1 >ᵤ BitVec.zeroExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) true))
+                    (congrArg (fun x => (!x) = true)
+                      (beq_true
+                        (BitVec.twoPow 128 63 <<< 1 >ᵤ BitVec.zeroExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128)))))))
+            (true_and
+              ((!BitVec.twoPow 128 63 <<< 1 >ᵤ BitVec.zeroExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) =
+                true)) : (True ∧ BitVec.zeroExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128 ≥ BitVec.twoPow 128 63 <<< 1) =
+            ((!BitVec.twoPow 128 63 <<< 1 >ᵤ BitVec.zeroExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) = true))
+        [Meta.isDefEq] [0.001795] ✅️ (True ∧
+                BitVec.zeroExtend (2 * 64) (x✝ / 29#64 &&& 63#64) * BitVec.zeroExtend (2 * 64) 299#64 ≥
+                  BitVec.twoPow (2 * 64) (64 - 1) <<< 1) =
+              ((!BitVec.twoPow 128 63 <<< 1 >ᵤ BitVec.zeroExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) =
+                true) =?= (True ∧ BitVec.zeroExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128 ≥ BitVec.twoPow 128 63 <<< 1) =
+              ((!BitVec.twoPow 128 63 <<< 1 >ᵤ BitVec.zeroExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) = true)
+          [Meta.isDefEq] [0.001760] ✅️ True ∧
+                BitVec.zeroExtend (2 * 64) (x✝ / 29#64 &&& 63#64) * BitVec.zeroExtend (2 * 64) 299#64 ≥
+                  BitVec.twoPow (2 * 64) (64 - 1) <<<
+                    1 =?= True ∧ BitVec.zeroExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128 ≥ BitVec.twoPow 128 63 <<< 1
+            [Meta.isDefEq] [0.001741] ✅️ BitVec.zeroExtend (2 * 64) (x✝ / 29#64 &&& 63#64) *
+                    BitVec.zeroExtend (2 * 64) 299#64 ≥
+                  BitVec.twoPow (2 * 64) (64 - 1) <<<
+                    1 =?= BitVec.zeroExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128 ≥ BitVec.twoPow 128 63 <<< 1
+              [Meta.isDefEq.delta] [0.001709] ✅️ BitVec.zeroExtend (2 * 64) (x✝ / 29#64 &&& 63#64) *
+                      BitVec.zeroExtend (2 * 64) 299#64 ≥
+                    BitVec.twoPow (2 * 64) (64 - 1) <<<
+                      1 =?= BitVec.zeroExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128 ≥ BitVec.twoPow 128 63 <<< 1
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 64
+      x✝ : BitVec 64
+      a✝ :
+        ¬some (x✝ % 299#64 + x✝ / 29#64 % 64#64 * 299#64) ⊑
+            if
+                (!((!BitVec.signExtend 128 (BitVec.twoPow 64 63) >ᵤ
+                          BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) &&
+                      BitVec.twoPow 128 63 >ᵤ BitVec.signExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128)) =
+                  true then
+              none
+            else
+              if (!BitVec.twoPow 128 63 <<< 1 >ᵤ BitVec.zeroExtend 128 (x✝ / 29#64 &&& 63#64) * 299#128) = true then
+                none
+              else
+                if
+                    ((x✝ % 299#64).getLsbD 63 == ((x✝ / 29#64 &&& 63#64) * 299#64).getLsbD 63 &&
+                        !(x✝ % 299#64 + (x✝ / 29#64 &&& 63#64) * 299#64).getLsbD 63 == (x✝ % 299#64).getLsbD 63) =
+                      true then
+                  none
+                else
+                  if
+                      (!((!x✝ % 299#64 >ᵤ x✝ % 299#64 + (x✝ / 29#64 &&& 63#64) * 299#64) &&
+                            !(x✝ / 29#64 &&& 63#64) * 299#64 >ᵤ x✝ % 299#64 + (x✝ / 29#64 &&& 63#64) * 299#64)) =
+                        true then
+                    none
+                  else some (x✝ % 299#64 + (x✝ / 29#64 &&& 63#64) * 299#64)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:78:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:71:8: error: (kernel) declaration has metavariables 'fold_add_udiv_urem_thm'
+[bv] [0.031750] Normalizing goal
+  [Meta.synthInstance] [0.001651] ✅️ Decidable
+        ((if 10#32 = 0 then none
+          else if 4#32 ≥ ↑32 then none else if 10#32 = 0 then none else some ((x✝ / 10#32) <<< 4#32 + x✝ % 10#32)) ⊑
+          if 10#32 = 0 then none
+          else
+            if
+                True ∧
+                  BitVec.zeroExtend (2 * 32) (x✝ / 10#32) * BitVec.zeroExtend (2 * 32) 6#32 ≥
+                    BitVec.twoPow (2 * 32) (32 - 1) <<< 1 then
+              none
+            else some (x✝ / 10#32 * 6#32 + x✝))
+    [Meta.check] [0.001052] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if 10#32 = 0 then none
+          else if 4#32 ≥ ↑32 then none else if 10#32 = 0 then none else some ((x✝ / 10#32) <<< 4#32 + x✝ % 10#32))
+          (if 10#32 = 0 then none
+          else
+            if
+                True ∧
+                  BitVec.zeroExtend (2 * 32) (x✝ / 10#32) * BitVec.zeroExtend (2 * 32) 6#32 ≥
+                    BitVec.twoPow (2 * 32) (32 - 1) <<< 1 then
+              none
+            else some (x✝ / 10#32 * 6#32 + x✝))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if 10#32 = 0 then none
+            else if 4#32 ≥ ↑32 then none else if 10#32 = 0 then none else some ((x✝ / 10#32) <<< 4#32 + x✝ % 10#32)) ⊑
+            if 10#32 = 0 then none
+            else
+              if
+                  True ∧
+                    BitVec.zeroExtend (2 * 32) (x✝ / 10#32) * BitVec.zeroExtend (2 * 32) 6#32 ≥
+                      BitVec.twoPow (2 * 32) (32 - 1) <<< 1 then
+                none
+              else some (x✝ / 10#32 * 6#32 + x✝)
+      ⊢ False
+  [Meta.isDefEq] [0.001338] ✅️ ?h₁ =?= Eq.trans
+        (congrArg (And True)
+          (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+            (Eq.trans
+              (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 64 31 <<< 1)
+                (BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64))
+              (Eq.trans
+                (Eq.trans
+                  (congrArg Not
+                    (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult (BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64)
+                      (BitVec.twoPow 64 31 <<< 1)))
+                  (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                    (BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) true))
+                (congrArg (fun x => (!x) = true)
+                  (beq_true (BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64)))))))
+        (true_and ((!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) = true))
+    [Meta.isDefEq.assign] [0.001335] ✅️ ?h₁ := Eq.trans
+          (congrArg (And True)
+            (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+              (Eq.trans
+                (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 64 31 <<< 1)
+                  (BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64))
+                (Eq.trans
+                  (Eq.trans
+                    (congrArg Not
+                      (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult (BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64)
+                        (BitVec.twoPow 64 31 <<< 1)))
+                    (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                      (BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) true))
+                  (congrArg (fun x => (!x) = true)
+                    (beq_true (BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64)))))))
+          (true_and ((!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) = true))
+      [Meta.isDefEq.assign.checkTypes] [0.001322] ✅️ (?h₁ : (True ∧
+              BitVec.zeroExtend (2 * 32) (x✝ / 10#32) * BitVec.zeroExtend (2 * 32) 6#32 ≥
+                BitVec.twoPow (2 * 32) (32 - 1) <<< 1) =
+            ((!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) =
+              true)) := (Eq.trans
+            (congrArg (And True)
+              (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+                (Eq.trans
+                  (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 64 31 <<< 1)
+                    (BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64))
+                  (Eq.trans
+                    (Eq.trans
+                      (congrArg Not
+                        (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult (BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64)
+                          (BitVec.twoPow 64 31 <<< 1)))
+                      (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                        (BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) true))
+                    (congrArg (fun x => (!x) = true)
+                      (beq_true (BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64)))))))
+            (true_and
+              ((!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) =
+                true)) : (True ∧ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64 ≥ BitVec.twoPow 64 31 <<< 1) =
+            ((!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) = true))
+        [Meta.isDefEq] [0.001319] ✅️ (True ∧
+                BitVec.zeroExtend (2 * 32) (x✝ / 10#32) * BitVec.zeroExtend (2 * 32) 6#32 ≥
+                  BitVec.twoPow (2 * 32) (32 - 1) <<< 1) =
+              ((!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) =
+                true) =?= (True ∧ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64 ≥ BitVec.twoPow 64 31 <<< 1) =
+              ((!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) = true)
+          [Meta.isDefEq] [0.001299] ✅️ True ∧
+                BitVec.zeroExtend (2 * 32) (x✝ / 10#32) * BitVec.zeroExtend (2 * 32) 6#32 ≥
+                  BitVec.twoPow (2 * 32) (32 - 1) <<<
+                    1 =?= True ∧ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64 ≥ BitVec.twoPow 64 31 <<< 1
+            [Meta.isDefEq] [0.001285] ✅️ BitVec.zeroExtend (2 * 32) (x✝ / 10#32) * BitVec.zeroExtend (2 * 32) 6#32 ≥
+                  BitVec.twoPow (2 * 32) (32 - 1) <<<
+                    1 =?= BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64 ≥ BitVec.twoPow 64 31 <<< 1
+              [Meta.isDefEq.delta] [0.001260] ✅️ BitVec.zeroExtend (2 * 32) (x✝ / 10#32) *
+                      BitVec.zeroExtend (2 * 32) 6#32 ≥
+                    BitVec.twoPow (2 * 32) (32 - 1) <<<
+                      1 =?= BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64 ≥ BitVec.twoPow 64 31 <<< 1
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬some ((x✝ / 10#32) <<< 4 + x✝ % 10#32) ⊑
+            if (!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) = true then none
+            else some (x✝ / 10#32 * 6#32 + x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:89:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:82:8: error: (kernel) declaration has metavariables 'fold_add_sdiv_srem_thm'
+[bv] [0.067087] Normalizing goal
+  [Meta.synthInstance] [0.001974] ✅️ Decidable
+        ((if (10#32 == 0 || 32 != 1 && x✝ == BitVec.intMin 32 && 10#32 == -1) = true then none
+          else
+            if 4#32 ≥ ↑32 then none
+            else
+              (Option.map (fun div => x✝ - div * 10#32)
+                    (if (10#32 == 0 || 32 != 1 && x✝ == BitVec.intMin 32 && 10#32 == -1) = true then none
+                    else some (x✝.sdiv 10#32))).bind
+                fun y' => some (x✝.sdiv 10#32 <<< 4#32 + y')) ⊑
+          if (10#32 == 0 || 32 != 1 && x✝ == BitVec.intMin 32 && 10#32 == -1) = true then none
+          else
+            if
+                True ∧
+                  (BitVec.signExtend (2 * 32) (x✝.sdiv 10#32) * BitVec.signExtend (2 * 32) 6#32 <
+                      BitVec.signExtend (2 * 32) (BitVec.twoPow 32 (32 - 1)) ∨
+                    BitVec.signExtend (2 * 32) (x✝.sdiv 10#32) * BitVec.signExtend (2 * 32) 6#32 ≥
+                      BitVec.twoPow (2 * 32) (32 - 1)) then
+              none
+            else some (x✝.sdiv 10#32 * 6#32 + x✝))
+    [Meta.check] [0.001305] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if (10#32 == 0 || 32 != 1 && x✝ == BitVec.intMin 32 && 10#32 == -1) = true then none
+          else
+            if 4#32 ≥ ↑32 then none
+            else
+              (Option.map (fun div => x✝ - div * 10#32)
+                    (if (10#32 == 0 || 32 != 1 && x✝ == BitVec.intMin 32 && 10#32 == -1) = true then none
+                    else some (x✝.sdiv 10#32))).bind
+                fun y' => some (x✝.sdiv 10#32 <<< 4#32 + y'))
+          (if (10#32 == 0 || 32 != 1 && x✝ == BitVec.intMin 32 && 10#32 == -1) = true then none
+          else
+            if
+                True ∧
+                  (BitVec.signExtend (2 * 32) (x✝.sdiv 10#32) * BitVec.signExtend (2 * 32) 6#32 <
+                      BitVec.signExtend (2 * 32) (BitVec.twoPow 32 (32 - 1)) ∨
+                    BitVec.signExtend (2 * 32) (x✝.sdiv 10#32) * BitVec.signExtend (2 * 32) 6#32 ≥
+                      BitVec.twoPow (2 * 32) (32 - 1)) then
+              none
+            else some (x✝.sdiv 10#32 * 6#32 + x✝))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if (10#32 == 0 || 32 != 1 && x✝ == BitVec.intMin 32 && 10#32 == -1) = true then none
+            else
+              if 4#32 ≥ ↑32 then none
+              else
+                (Option.map (fun div => x✝ - div * 10#32)
+                      (if (10#32 == 0 || 32 != 1 && x✝ == BitVec.intMin 32 && 10#32 == -1) = true then none
+                      else some (x✝.sdiv 10#32))).bind
+                  fun y' => some (x✝.sdiv 10#32 <<< 4#32 + y')) ⊑
+            if (10#32 == 0 || 32 != 1 && x✝ == BitVec.intMin 32 && 10#32 == -1) = true then none
+            else
+              if
+                  True ∧
+                    (BitVec.signExtend (2 * 32) (x✝.sdiv 10#32) * BitVec.signExtend (2 * 32) 6#32 <
+                        BitVec.signExtend (2 * 32) (BitVec.twoPow 32 (32 - 1)) ∨
+                      BitVec.signExtend (2 * 32) (x✝.sdiv 10#32) * BitVec.signExtend (2 * 32) 6#32 ≥
+                        BitVec.twoPow (2 * 32) (32 - 1)) then
+                none
+              else some (x✝.sdiv 10#32 * 6#32 + x✝)
+      ⊢ False
+  [Meta.isDefEq] [0.001771] ✅️ ?h₁ =?= Eq.trans
+        (congrArg (And True)
+          (Eq.trans
+            (Eq.trans
+              (congr
+                (congrArg Or
+                  (Eq.trans
+                    (congrArg (fun x => BitVec.signExtend 64 x * 6#64 < BitVec.signExtend 64 (BitVec.twoPow 32 31))
+                      (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.sdiv_udiv x✝ 10#32)
+                        (ite_congr (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last x✝))
+                          (fun a =>
+                            Eq.trans
+                              (ite_cond_eq_false (-x✝ / -10#32) (-(-x✝ / 10#32))
+                                (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 10#32))
+                                  (eq_false' fun h => Bool.noConfusion h)))
+                              (Eq.trans (congrArg (fun x => -(x / 10#32)) (BitVec.neg_eq_not_add x✝))
+                                (BitVec.neg_eq_not_add ((~~~x✝ + 1#32) / 10#32))))
+                          fun a =>
+                          ite_cond_eq_false (-(x✝ / -10#32)) (x✝ / 10#32)
+                            (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 10#32))
+                              (eq_false' fun h => Bool.noConfusion h)))))
+                    (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult
+                      (BitVec.signExtend 64
+                          (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                        6#64)
+                      (BitVec.signExtend 64 (BitVec.twoPow 32 31)))))
+                (Eq.trans
+                  (Eq.trans
+                    (congrArg (fun x => BitVec.signExtend 64 x * 6#64 ≥ BitVec.twoPow 64 31)
+                      (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.sdiv_udiv x✝ 10#32)
+                        (ite_congr (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last x✝))
+                          (fun a =>
+                            Eq.trans
+                              (ite_cond_eq_false (-x✝ / -10#32) (-(-x✝ / 10#32))
+                                (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 10#32))
+                                  (eq_false' fun h => Bool.noConfusion h)))
+                              (Eq.trans (congrArg (fun x => -(x / 10#32)) (BitVec.neg_eq_not_add x✝))
+                                (BitVec.neg_eq_not_add ((~~~x✝ + 1#32) / 10#32))))
+                          fun a =>
+                          ite_cond_eq_false (-(x✝ / -10#32)) (x✝ / 10#32)
+                            (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 10#32))
+                              (eq_false' fun h => Bool.noConfusion h)))))
+                    Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2)
+                  (Eq.trans
+                    (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 64 31)
+                      (BitVec.signExtend 64
+                          (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                        6#64))
+                    (Eq.trans
+                      (Eq.trans
+                        (congrArg Not
+                          (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult
+                            (BitVec.signExtend 64
+                                (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                              6#64)
+                            (BitVec.twoPow 64 31)))
+                        (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                          (BitVec.twoPow 64 31 >ᵤ
+                            BitVec.signExtend 64
+                                (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                              6#64)
+                          true))
+                      (congrArg (fun x => (!x) = true)
+                        (beq_true
+                          (BitVec.twoPow 64 31 >ᵤ
+                            BitVec.signExtend 64
+                                (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                              6#64)))))))
+              (Std.Tactic.BVDecide.Normalize.Bool.or_to_or
+                (BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ
+                  BitVec.signExtend 64
+                      (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                    6#64)
+                !BitVec.twoPow 64 31 >ᵤ
+                    BitVec.signExtend 64
+                        (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                      6#64))
+            (congrArg (fun x => x = true)
+              (Eq.trans
+                (Std.Tactic.BVDecide.Normalize.Bool.or_elim
+                  (BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ
+                    BitVec.signExtend 64
+                        (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                      6#64)
+                  !BitVec.twoPow 64 31 >ᵤ
+                      BitVec.signExtend 64
+                          (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                        6#64)
+                (congrArg
+                  (fun x =>
+                    !((!BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ
+                            BitVec.signExtend 64
+                                (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                              6#64) &&
+                        x))
+                  (Bool.not_not
+                    (BitVec.twoPow 64 31 >ᵤ
+                      BitVec.signExtend 64
+                          (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                        6#64)))))))
+        (true_and
+          ((!((!BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ
+                    BitVec.signExtend 64
+                        (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                      6#64) &&
+                BitVec.twoPow 64 31 >ᵤ
+                  BitVec.signExtend 64
+                      (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                    6#64)) =
+            true))
+    [Meta.isDefEq.assign] [0.001769] ✅️ ?h₁ := Eq.trans
+          (congrArg (And True)
+            (Eq.trans
+              (Eq.trans
+                (congr
+                  (congrArg Or
+                    (Eq.trans
+                      (congrArg (fun x => BitVec.signExtend 64 x * 6#64 < BitVec.signExtend 64 (BitVec.twoPow 32 31))
+                        (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.sdiv_udiv x✝ 10#32)
+                          (ite_congr (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last x✝))
+                            (fun a =>
+                              Eq.trans
+                                (ite_cond_eq_false (-x✝ / -10#32) (-(-x✝ / 10#32))
+                                  (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 10#32))
+                                    (eq_false' fun h => Bool.noConfusion h)))
+                                (Eq.trans (congrArg (fun x => -(x / 10#32)) (BitVec.neg_eq_not_add x✝))
+                                  (BitVec.neg_eq_not_add ((~~~x✝ + 1#32) / 10#32))))
+                            fun a =>
+                            ite_cond_eq_false (-(x✝ / -10#32)) (x✝ / 10#32)
+                              (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 10#32))
+                                (eq_false' fun h => Bool.noConfusion h)))))
+                      (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult
+                        (BitVec.signExtend 64
+                            (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                          6#64)
+                        (BitVec.signExtend 64 (BitVec.twoPow 32 31)))))
+                  (Eq.trans
+                    (Eq.trans
+                      (congrArg (fun x => BitVec.signExtend 64 x * 6#64 ≥ BitVec.twoPow 64 31)
+                        (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.sdiv_udiv x✝ 10#32)
+                          (ite_congr (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last x✝))
+                            (fun a =>
+                              Eq.trans
+                                (ite_cond_eq_false (-x✝ / -10#32) (-(-x✝ / 10#32))
+                                  (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 10#32))
+                                    (eq_false' fun h => Bool.noConfusion h)))
+                                (Eq.trans (congrArg (fun x => -(x / 10#32)) (BitVec.neg_eq_not_add x✝))
+                                  (BitVec.neg_eq_not_add ((~~~x✝ + 1#32) / 10#32))))
+                            fun a =>
+                            ite_cond_eq_false (-(x✝ / -10#32)) (x✝ / 10#32)
+                              (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 10#32))
+                                (eq_false' fun h => Bool.noConfusion h)))))
+                      Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2)
+                    (Eq.trans
+                      (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 64 31)
+                        (BitVec.signExtend 64
+                            (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                          6#64))
+                      (Eq.trans
+                        (Eq.trans
+                          (congrArg Not
+                            (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult
+                              (BitVec.signExtend 64
+                                  (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                                6#64)
+                              (BitVec.twoPow 64 31)))
+                          (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                            (BitVec.twoPow 64 31 >ᵤ
+                              BitVec.signExtend 64
+                                  (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                                6#64)
+                            true))
+                        (congrArg (fun x => (!x) = true)
+                          (beq_true
+                            (BitVec.twoPow 64 31 >ᵤ
+                              BitVec.signExtend 64
+                                  (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                                6#64)))))))
+                (Std.Tactic.BVDecide.Normalize.Bool.or_to_or
+                  (BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ
+                    BitVec.signExtend 64
+                        (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                      6#64)
+                  !BitVec.twoPow 64 31 >ᵤ
+                      BitVec.signExtend 64
+                          (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                        6#64))
+              (congrArg (fun x => x = true)
+                (Eq.trans
+                  (Std.Tactic.BVDecide.Normalize.Bool.or_elim
+                    (BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ
+                      BitVec.signExtend 64
+                          (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                        6#64)
+                    !BitVec.twoPow 64 31 >ᵤ
+                        BitVec.signExtend 64
+                            (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                          6#64)
+                  (congrArg
+                    (fun x =>
+                      !((!BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ
+                              BitVec.signExtend 64
+                                  (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                                6#64) &&
+                          x))
+                    (Bool.not_not
+                      (BitVec.twoPow 64 31 >ᵤ
+                        BitVec.signExtend 64
+                            (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                          6#64)))))))
+          (true_and
+            ((!((!BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ
+                      BitVec.signExtend 64
+                          (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                        6#64) &&
+                  BitVec.twoPow 64 31 >ᵤ
+                    BitVec.signExtend 64
+                        (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                      6#64)) =
+              true))
+      [Meta.isDefEq.assign.checkTypes] [0.001715] ✅️ (?h₁ : (True ∧
+              (BitVec.signExtend (2 * 32) (x✝.sdiv 10#32) * BitVec.signExtend (2 * 32) 6#32 <
+                  BitVec.signExtend (2 * 32) (BitVec.twoPow 32 (32 - 1)) ∨
+                BitVec.signExtend (2 * 32) (x✝.sdiv 10#32) * BitVec.signExtend (2 * 32) 6#32 ≥
+                  BitVec.twoPow (2 * 32) (32 - 1))) =
+            ((!((!BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ
+                      BitVec.signExtend 64
+                          (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                        6#64) &&
+                  BitVec.twoPow 64 31 >ᵤ
+                    BitVec.signExtend 64
+                        (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                      6#64)) =
+              true)) := (Eq.trans
+            (congrArg (And True)
+              (Eq.trans
+                (Eq.trans
+                  (congr
+                    (congrArg Or
+                      (Eq.trans
+                        (congrArg (fun x => BitVec.signExtend 64 x * 6#64 < BitVec.signExtend 64 (BitVec.twoPow 32 31))
+                          (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.sdiv_udiv x✝ 10#32)
+                            (ite_congr (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last x✝))
+                              (fun a =>
+                                Eq.trans
+                                  (ite_cond_eq_false (-x✝ / -10#32) (-(-x✝ / 10#32))
+                                    (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 10#32))
+                                      (eq_false' fun h => Bool.noConfusion h)))
+                                  (Eq.trans (congrArg (fun x => -(x / 10#32)) (BitVec.neg_eq_not_add x✝))
+                                    (BitVec.neg_eq_not_add ((~~~x✝ + 1#32) / 10#32))))
+                              fun a =>
+                              ite_cond_eq_false (-(x✝ / -10#32)) (x✝ / 10#32)
+                                (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 10#32))
+                                  (eq_false' fun h => Bool.noConfusion h)))))
+                        (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult
+                          (BitVec.signExtend 64
+                              (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                            6#64)
+                          (BitVec.signExtend 64 (BitVec.twoPow 32 31)))))
+                    (Eq.trans
+                      (Eq.trans
+                        (congrArg (fun x => BitVec.signExtend 64 x * 6#64 ≥ BitVec.twoPow 64 31)
+                          (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.sdiv_udiv x✝ 10#32)
+                            (ite_congr (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last x✝))
+                              (fun a =>
+                                Eq.trans
+                                  (ite_cond_eq_false (-x✝ / -10#32) (-(-x✝ / 10#32))
+                                    (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 10#32))
+                                      (eq_false' fun h => Bool.noConfusion h)))
+                                  (Eq.trans (congrArg (fun x => -(x / 10#32)) (BitVec.neg_eq_not_add x✝))
+                                    (BitVec.neg_eq_not_add ((~~~x✝ + 1#32) / 10#32))))
+                              fun a =>
+                              ite_cond_eq_false (-(x✝ / -10#32)) (x✝ / 10#32)
+                                (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 10#32))
+                                  (eq_false' fun h => Bool.noConfusion h)))))
+                        Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2)
+                      (Eq.trans
+                        (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 64 31)
+                          (BitVec.signExtend 64
+                              (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                            6#64))
+                        (Eq.trans
+                          (Eq.trans
+                            (congrArg Not
+                              (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult
+                                (BitVec.signExtend 64
+                                    (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                                  6#64)
+                                (BitVec.twoPow 64 31)))
+                            (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                              (BitVec.twoPow 64 31 >ᵤ
+                                BitVec.signExtend 64
+                                    (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                                  6#64)
+                              true))
+                          (congrArg (fun x => (!x) = true)
+                            (beq_true
+                              (BitVec.twoPow 64 31 >ᵤ
+                                BitVec.signExtend 64
+                                    (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                                  6#64)))))))
+                  (Std.Tactic.BVDecide.Normalize.Bool.or_to_or
+                    (BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ
+                      BitVec.signExtend 64
+                          (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                        6#64)
+                    !BitVec.twoPow 64 31 >ᵤ
+                        BitVec.signExtend 64
+                            (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                          6#64))
+                (congrArg (fun x => x = true)
+                  (Eq.trans
+                    (Std.Tactic.BVDecide.Normalize.Bool.or_elim
+                      (BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ
+                        BitVec.signExtend 64
+                            (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                          6#64)
+                      !BitVec.twoPow 64 31 >ᵤ
+                          BitVec.signExtend 64
+                              (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                            6#64)
+                    (congrArg
+                      (fun x =>
+                        !((!BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ
+                                BitVec.signExtend 64
+                                    (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                                  6#64) &&
+                            x))
+                      (Bool.not_not
+                        (BitVec.twoPow 64 31 >ᵤ
+                          BitVec.signExtend 64
+                              (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                            6#64)))))))
+            (true_and
+              ((!((!BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ
+                        BitVec.signExtend 64
+                            (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                          6#64) &&
+                    BitVec.twoPow 64 31 >ᵤ
+                      BitVec.signExtend 64
+                          (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                        6#64)) =
+                true)) : (True ∧
+              (BitVec.signExtend 64 (x✝.sdiv 10#32) * 6#64 < BitVec.signExtend 64 (BitVec.twoPow 32 31) ∨
+                BitVec.signExtend 64 (x✝.sdiv 10#32) * 6#64 ≥ BitVec.twoPow 64 31)) =
+            ((!((!BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ
+                      BitVec.signExtend 64
+                          (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                        6#64) &&
+                  BitVec.twoPow 64 31 >ᵤ
+                    BitVec.signExtend 64
+                        (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                      6#64)) =
+              true))
+        [Meta.isDefEq] [0.001712] ✅️ (True ∧
+                (BitVec.signExtend (2 * 32) (x✝.sdiv 10#32) * BitVec.signExtend (2 * 32) 6#32 <
+                    BitVec.signExtend (2 * 32) (BitVec.twoPow 32 (32 - 1)) ∨
+                  BitVec.signExtend (2 * 32) (x✝.sdiv 10#32) * BitVec.signExtend (2 * 32) 6#32 ≥
+                    BitVec.twoPow (2 * 32) (32 - 1))) =
+              ((!((!BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ
+                        BitVec.signExtend 64
+                            (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                          6#64) &&
+                    BitVec.twoPow 64 31 >ᵤ
+                      BitVec.signExtend 64
+                          (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                        6#64)) =
+                true) =?= (True ∧
+                (BitVec.signExtend 64 (x✝.sdiv 10#32) * 6#64 < BitVec.signExtend 64 (BitVec.twoPow 32 31) ∨
+                  BitVec.signExtend 64 (x✝.sdiv 10#32) * 6#64 ≥ BitVec.twoPow 64 31)) =
+              ((!((!BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ
+                        BitVec.signExtend 64
+                            (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                          6#64) &&
+                    BitVec.twoPow 64 31 >ᵤ
+                      BitVec.signExtend 64
+                          (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                        6#64)) =
+                true)
+          [Meta.isDefEq] [0.001693] ✅️ True ∧
+                (BitVec.signExtend (2 * 32) (x✝.sdiv 10#32) * BitVec.signExtend (2 * 32) 6#32 <
+                    BitVec.signExtend (2 * 32) (BitVec.twoPow 32 (32 - 1)) ∨
+                  BitVec.signExtend (2 * 32) (x✝.sdiv 10#32) * BitVec.signExtend (2 * 32) 6#32 ≥
+                    BitVec.twoPow (2 * 32)
+                      (32 -
+                        1)) =?= True ∧
+                (BitVec.signExtend 64 (x✝.sdiv 10#32) * 6#64 < BitVec.signExtend 64 (BitVec.twoPow 32 31) ∨
+                  BitVec.signExtend 64 (x✝.sdiv 10#32) * 6#64 ≥ BitVec.twoPow 64 31)
+            [Meta.isDefEq] [0.001676] ✅️ BitVec.signExtend (2 * 32) (x✝.sdiv 10#32) * BitVec.signExtend (2 * 32) 6#32 <
+                    BitVec.signExtend (2 * 32) (BitVec.twoPow 32 (32 - 1)) ∨
+                  BitVec.signExtend (2 * 32) (x✝.sdiv 10#32) * BitVec.signExtend (2 * 32) 6#32 ≥
+                    BitVec.twoPow (2 * 32)
+                      (32 -
+                        1) =?= BitVec.signExtend 64 (x✝.sdiv 10#32) * 6#64 <
+                    BitVec.signExtend 64 (BitVec.twoPow 32 31) ∨
+                  BitVec.signExtend 64 (x✝.sdiv 10#32) * 6#64 ≥ BitVec.twoPow 64 31
+              [Meta.isDefEq] [0.001562] ✅️ BitVec.signExtend (2 * 32) (x✝.sdiv 10#32) *
+                      BitVec.signExtend (2 * 32) 6#32 <
+                    BitVec.signExtend (2 * 32)
+                      (BitVec.twoPow 32
+                        (32 -
+                          1)) =?= BitVec.signExtend 64 (x✝.sdiv 10#32) * 6#64 <
+                    BitVec.signExtend 64 (BitVec.twoPow 32 31)
+                [Meta.isDefEq] [0.001540] ✅️ instLTBitVec.1
+                      (BitVec.signExtend (2 * 32) (x✝.sdiv 10#32) * BitVec.signExtend (2 * 32) 6#32)
+                      (BitVec.signExtend (2 * 32)
+                        (BitVec.twoPow 32
+                          (32 -
+                            1))) =?= instLTBitVec.1 (BitVec.signExtend 64 (x✝.sdiv 10#32) * 6#64)
+                      (BitVec.signExtend 64 (BitVec.twoPow 32 31))
+                  [Meta.isDefEq] [0.001492] ✅️ (BitVec.signExtend (2 * 32) (x✝.sdiv 10#32) *
+                            BitVec.signExtend (2 * 32) 6#32).toNat <
+                        (BitVec.signExtend (2 * 32)
+                            (BitVec.twoPow 32
+                              (32 -
+                                1))).toNat =?= (BitVec.signExtend 64 (x✝.sdiv 10#32) * 6#64).toNat <
+                        (BitVec.signExtend 64 (BitVec.twoPow 32 31)).toNat
+                    [Meta.isDefEq] [0.001479] ✅️ instLTNat.1
+                          (BitVec.signExtend (2 * 32) (x✝.sdiv 10#32) * BitVec.signExtend (2 * 32) 6#32).toNat
+                          (BitVec.signExtend (2 * 32)
+                              (BitVec.twoPow 32
+                                (32 -
+                                  1))).toNat =?= instLTNat.1 (BitVec.signExtend 64 (x✝.sdiv 10#32) * 6#64).toNat
+                          (BitVec.signExtend 64 (BitVec.twoPow 32 31)).toNat
+                      [Meta.isDefEq] [0.001448] ✅️ (BitVec.signExtend (2 * 32) (x✝.sdiv 10#32) *
+                                  BitVec.signExtend (2 * 32) 6#32).toNat.lt
+                            (BitVec.signExtend (2 * 32)
+                                (BitVec.twoPow 32
+                                  (32 -
+                                    1))).toNat =?= (BitVec.signExtend 64 (x✝.sdiv 10#32) * 6#64).toNat.lt
+                            (BitVec.signExtend 64 (BitVec.twoPow 32 31)).toNat
+                        [Meta.isDefEq.delta] [0.001437] ✅️ (BitVec.signExtend (2 * 32) (x✝.sdiv 10#32) *
+                                    BitVec.signExtend (2 * 32) 6#32).toNat.lt
+                              (BitVec.signExtend (2 * 32)
+                                  (BitVec.twoPow 32
+                                    (32 -
+                                      1))).toNat =?= (BitVec.signExtend 64 (x✝.sdiv 10#32) * 6#64).toNat.lt
+                              (BitVec.signExtend 64 (BitVec.twoPow 32 31)).toNat
+                          [Meta.isDefEq] [0.001345] ✅️ (BitVec.signExtend (2 * 32) (x✝.sdiv 10#32) *
+                                  BitVec.signExtend (2 * 32)
+                                    6#32).toNat =?= (BitVec.signExtend 64 (x✝.sdiv 10#32) * 6#64).toNat
+                            [Meta.isDefEq.delta] [0.001334] ✅️ (BitVec.signExtend (2 * 32) (x✝.sdiv 10#32) *
+                                    BitVec.signExtend (2 * 32)
+                                      6#32).toNat =?= (BitVec.signExtend 64 (x✝.sdiv 10#32) * 6#64).toNat
+                              [Meta.isDefEq] [0.001317] ✅️ BitVec.signExtend (2 * 32) (x✝.sdiv 10#32) *
+                                    BitVec.signExtend (2 * 32) 6#32 =?= BitVec.signExtend 64 (x✝.sdiv 10#32) * 6#64
+                                [Meta.isDefEq] [0.001293] ✅️ instHMul.1 (BitVec.signExtend (2 * 32) (x✝.sdiv 10#32))
+                                      (BitVec.signExtend (2 * 32)
+                                        6#32) =?= instHMul.1 (BitVec.signExtend 64 (x✝.sdiv 10#32)) 6#64
+                                  [Meta.isDefEq] [0.001245] ✅️ Mul.mul (BitVec.signExtend (2 * 32) (x✝.sdiv 10#32))
+                                        (BitVec.signExtend (2 * 32)
+                                          6#32) =?= Mul.mul (BitVec.signExtend 64 (x✝.sdiv 10#32)) 6#64
+                                    [Meta.isDefEq] [0.001226] ✅️ BitVec.instMul.1
+                                          (BitVec.signExtend (2 * 32) (x✝.sdiv 10#32))
+                                          (BitVec.signExtend (2 * 32)
+                                            6#32) =?= BitVec.instMul.1 (BitVec.signExtend 64 (x✝.sdiv 10#32)) 6#64
+                                      [Meta.isDefEq] [0.001182] ✅️ (BitVec.signExtend (2 * 32) (x✝.sdiv 10#32)).mul
+                                            (BitVec.signExtend (2 * 32)
+                                              6#32) =?= (BitVec.signExtend 64 (x✝.sdiv 10#32)).mul 6#64
+                                        [Meta.isDefEq.delta] [0.001172] ✅️ (BitVec.signExtend (2 * 32)
+                                                  (x✝.sdiv 10#32)).mul
+                                              (BitVec.signExtend (2 * 32)
+                                                6#32) =?= (BitVec.signExtend 64 (x✝.sdiv 10#32)).mul 6#64
+                                          [Meta.isDefEq] [0.001100] ✅️ BitVec.signExtend (2 * 32) 6#32 =?= 6#64
+                                            [Meta.isDefEq] [0.001087] ✅️ BitVec.ofInt (2 * 32) (6#32).toInt =?= 6#64
+                                              [Meta.isDefEq] [0.001073] ✅️ ((6#32).toInt %
+                                                        Int.ofNat (2 ^ (2 * 32))).toNat#'⋯ =?= 6#64
+                                                [Meta.isDefEq] [0.001056] ✅️ ((6#32).toInt %
+                                                          Int.ofNat
+                                                            (2 ^
+                                                              (2 * 32))).toNat#'⋯ =?= { toFin := Fin.ofNat' (2 ^ 64) 6 }
+                                                  [Meta.isDefEq] [0.001043] ✅️ {
+                                                        toFin :=
+                                                          ⟨((6#32).toInt % Int.ofNat (2 ^ (2 * 32))).toNat,
+                                                            ⋯⟩ } =?= { toFin := Fin.ofNat' (2 ^ 64) 6 }
+                                                    [Meta.isDefEq] [0.001011] ✅️ ⟨((6#32).toInt %
+                                                              Int.ofNat (2 ^ (2 * 32))).toNat,
+                                                          ⋯⟩ =?= Fin.ofNat' (2 ^ 64) 6
+  [Meta.isDefEq] [0.002882] ✅️ if ?b then ?x
+      else ?y =?= if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬((Option.map (fun div => x✝ + (~~~(div * 10#32) + 1#32))
+                  (some (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32))).bind
+              fun a =>
+              some ((if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) <<< 4 + a)) ⊑
+            if
+                (!((!BitVec.signExtend 64 (BitVec.twoPow 32 31) >ᵤ
+                          BitVec.signExtend 64
+                              (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                            6#64) &&
+                      BitVec.twoPow 64 31 >ᵤ
+                        BitVec.signExtend 64
+                            (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) *
+                          6#64)) =
+                  true then
+              none
+            else some ((if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 10#32) + 1#32 else x✝ / 10#32) * 6#32 + x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:100:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:93:8: error: (kernel) declaration has metavariables 'fold_add_udiv_urem_to_mul_thm'
+[bv] [0.011063] Normalizing goal
+  [Meta.synthInstance] [0.001143] ✅️ Decidable
+        ((if 7#32 = 0 then none else if 7#32 = 0 then none else some (x✝ / 7#32 * 21#32 + x✝ % 7#32 * 3#32)) ⊑
+          some (x✝ * 3#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if 7#32 = 0 then none else if 7#32 = 0 then none else some (x✝ / 7#32 * 21#32 + x✝ % 7#32 * 3#32)) ⊑
+            some (x✝ * 3#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ : ¬some (x✝ / 7#32 * 21#32 + x✝ % 7#32 * 3#32) ⊑ some (x✝ * 3#32)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:111:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:104:8: error: (kernel) declaration has metavariables 'fold_add_udiv_urem_commuted_thm'
+[bv] [0.031577] Normalizing goal
+  [Meta.synthInstance] [0.001679] ✅️ Decidable
+        ((if 10#32 = 0 then none
+          else if 10#32 = 0 then none else if 4#32 ≥ ↑32 then none else some (x✝ % 10#32 + (x✝ / 10#32) <<< 4#32)) ⊑
+          if 10#32 = 0 then none
+          else
+            if
+                True ∧
+                  BitVec.zeroExtend (2 * 32) (x✝ / 10#32) * BitVec.zeroExtend (2 * 32) 6#32 ≥
+                    BitVec.twoPow (2 * 32) (32 - 1) <<< 1 then
+              none
+            else some (x✝ / 10#32 * 6#32 + x✝))
+    [Meta.check] [0.001060] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if 10#32 = 0 then none
+          else if 10#32 = 0 then none else if 4#32 ≥ ↑32 then none else some (x✝ % 10#32 + (x✝ / 10#32) <<< 4#32))
+          (if 10#32 = 0 then none
+          else
+            if
+                True ∧
+                  BitVec.zeroExtend (2 * 32) (x✝ / 10#32) * BitVec.zeroExtend (2 * 32) 6#32 ≥
+                    BitVec.twoPow (2 * 32) (32 - 1) <<< 1 then
+              none
+            else some (x✝ / 10#32 * 6#32 + x✝))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if 10#32 = 0 then none
+            else if 10#32 = 0 then none else if 4#32 ≥ ↑32 then none else some (x✝ % 10#32 + (x✝ / 10#32) <<< 4#32)) ⊑
+            if 10#32 = 0 then none
+            else
+              if
+                  True ∧
+                    BitVec.zeroExtend (2 * 32) (x✝ / 10#32) * BitVec.zeroExtend (2 * 32) 6#32 ≥
+                      BitVec.twoPow (2 * 32) (32 - 1) <<< 1 then
+                none
+              else some (x✝ / 10#32 * 6#32 + x✝)
+      ⊢ False
+  [Meta.isDefEq] [0.001375] ✅️ ?h₁ =?= Eq.trans
+        (congrArg (And True)
+          (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+            (Eq.trans
+              (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 64 31 <<< 1)
+                (BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64))
+              (Eq.trans
+                (Eq.trans
+                  (congrArg Not
+                    (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult (BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64)
+                      (BitVec.twoPow 64 31 <<< 1)))
+                  (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                    (BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) true))
+                (congrArg (fun x => (!x) = true)
+                  (beq_true (BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64)))))))
+        (true_and ((!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) = true))
+    [Meta.isDefEq.assign] [0.001372] ✅️ ?h₁ := Eq.trans
+          (congrArg (And True)
+            (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+              (Eq.trans
+                (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 64 31 <<< 1)
+                  (BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64))
+                (Eq.trans
+                  (Eq.trans
+                    (congrArg Not
+                      (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult (BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64)
+                        (BitVec.twoPow 64 31 <<< 1)))
+                    (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                      (BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) true))
+                  (congrArg (fun x => (!x) = true)
+                    (beq_true (BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64)))))))
+          (true_and ((!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) = true))
+      [Meta.isDefEq.assign.checkTypes] [0.001360] ✅️ (?h₁ : (True ∧
+              BitVec.zeroExtend (2 * 32) (x✝ / 10#32) * BitVec.zeroExtend (2 * 32) 6#32 ≥
+                BitVec.twoPow (2 * 32) (32 - 1) <<< 1) =
+            ((!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) =
+              true)) := (Eq.trans
+            (congrArg (And True)
+              (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+                (Eq.trans
+                  (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 64 31 <<< 1)
+                    (BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64))
+                  (Eq.trans
+                    (Eq.trans
+                      (congrArg Not
+                        (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult (BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64)
+                          (BitVec.twoPow 64 31 <<< 1)))
+                      (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                        (BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) true))
+                    (congrArg (fun x => (!x) = true)
+                      (beq_true (BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64)))))))
+            (true_and
+              ((!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) =
+                true)) : (True ∧ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64 ≥ BitVec.twoPow 64 31 <<< 1) =
+            ((!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) = true))
+        [Meta.isDefEq] [0.001356] ✅️ (True ∧
+                BitVec.zeroExtend (2 * 32) (x✝ / 10#32) * BitVec.zeroExtend (2 * 32) 6#32 ≥
+                  BitVec.twoPow (2 * 32) (32 - 1) <<< 1) =
+              ((!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) =
+                true) =?= (True ∧ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64 ≥ BitVec.twoPow 64 31 <<< 1) =
+              ((!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) = true)
+          [Meta.isDefEq] [0.001337] ✅️ True ∧
+                BitVec.zeroExtend (2 * 32) (x✝ / 10#32) * BitVec.zeroExtend (2 * 32) 6#32 ≥
+                  BitVec.twoPow (2 * 32) (32 - 1) <<<
+                    1 =?= True ∧ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64 ≥ BitVec.twoPow 64 31 <<< 1
+            [Meta.isDefEq] [0.001322] ✅️ BitVec.zeroExtend (2 * 32) (x✝ / 10#32) * BitVec.zeroExtend (2 * 32) 6#32 ≥
+                  BitVec.twoPow (2 * 32) (32 - 1) <<<
+                    1 =?= BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64 ≥ BitVec.twoPow 64 31 <<< 1
+              [Meta.isDefEq.delta] [0.001303] ✅️ BitVec.zeroExtend (2 * 32) (x✝ / 10#32) *
+                      BitVec.zeroExtend (2 * 32) 6#32 ≥
+                    BitVec.twoPow (2 * 32) (32 - 1) <<<
+                      1 =?= BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64 ≥ BitVec.twoPow 64 31 <<< 1
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬some (x✝ % 10#32 + (x✝ / 10#32) <<< 4) ⊑
+            if (!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) = true then none
+            else some (x✝ / 10#32 * 6#32 + x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:122:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:115:8: error: (kernel) declaration has metavariables 'fold_add_udiv_urem_or_disjoint_thm'
+[bv] [0.031627] Normalizing goal
+  [Meta.synthInstance] [0.001680] ✅️ Decidable
+        ((if 10#32 = 0 then none
+          else if 4#32 ≥ ↑32 then none else if 10#32 = 0 then none else some ((x✝ / 10#32) <<< 4#32 ||| x✝ % 10#32)) ⊑
+          if 10#32 = 0 then none
+          else
+            if
+                True ∧
+                  BitVec.zeroExtend (2 * 32) (x✝ / 10#32) * BitVec.zeroExtend (2 * 32) 6#32 ≥
+                    BitVec.twoPow (2 * 32) (32 - 1) <<< 1 then
+              none
+            else some (x✝ / 10#32 * 6#32 + x✝))
+    [Meta.check] [0.001073] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if 10#32 = 0 then none
+          else if 4#32 ≥ ↑32 then none else if 10#32 = 0 then none else some ((x✝ / 10#32) <<< 4#32 ||| x✝ % 10#32))
+          (if 10#32 = 0 then none
+          else
+            if
+                True ∧
+                  BitVec.zeroExtend (2 * 32) (x✝ / 10#32) * BitVec.zeroExtend (2 * 32) 6#32 ≥
+                    BitVec.twoPow (2 * 32) (32 - 1) <<< 1 then
+              none
+            else some (x✝ / 10#32 * 6#32 + x✝))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if 10#32 = 0 then none
+            else if 4#32 ≥ ↑32 then none else if 10#32 = 0 then none else some ((x✝ / 10#32) <<< 4#32 ||| x✝ % 10#32)) ⊑
+            if 10#32 = 0 then none
+            else
+              if
+                  True ∧
+                    BitVec.zeroExtend (2 * 32) (x✝ / 10#32) * BitVec.zeroExtend (2 * 32) 6#32 ≥
+                      BitVec.twoPow (2 * 32) (32 - 1) <<< 1 then
+                none
+              else some (x✝ / 10#32 * 6#32 + x✝)
+      ⊢ False
+  [Meta.isDefEq] [0.001442] ✅️ ?h₁ =?= Eq.trans
+        (congrArg (And True)
+          (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+            (Eq.trans
+              (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 64 31 <<< 1)
+                (BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64))
+              (Eq.trans
+                (Eq.trans
+                  (congrArg Not
+                    (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult (BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64)
+                      (BitVec.twoPow 64 31 <<< 1)))
+                  (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                    (BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) true))
+                (congrArg (fun x => (!x) = true)
+                  (beq_true (BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64)))))))
+        (true_and ((!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) = true))
+    [Meta.isDefEq.assign] [0.001440] ✅️ ?h₁ := Eq.trans
+          (congrArg (And True)
+            (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+              (Eq.trans
+                (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 64 31 <<< 1)
+                  (BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64))
+                (Eq.trans
+                  (Eq.trans
+                    (congrArg Not
+                      (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult (BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64)
+                        (BitVec.twoPow 64 31 <<< 1)))
+                    (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                      (BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) true))
+                  (congrArg (fun x => (!x) = true)
+                    (beq_true (BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64)))))))
+          (true_and ((!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) = true))
+      [Meta.isDefEq.assign.checkTypes] [0.001426] ✅️ (?h₁ : (True ∧
+              BitVec.zeroExtend (2 * 32) (x✝ / 10#32) * BitVec.zeroExtend (2 * 32) 6#32 ≥
+                BitVec.twoPow (2 * 32) (32 - 1) <<< 1) =
+            ((!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) =
+              true)) := (Eq.trans
+            (congrArg (And True)
+              (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+                (Eq.trans
+                  (Std.Tactic.BVDecide.Normalize.BitVec.le_ult (BitVec.twoPow 64 31 <<< 1)
+                    (BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64))
+                  (Eq.trans
+                    (Eq.trans
+                      (congrArg Not
+                        (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult (BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64)
+                          (BitVec.twoPow 64 31 <<< 1)))
+                      (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
+                        (BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) true))
+                    (congrArg (fun x => (!x) = true)
+                      (beq_true (BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64)))))))
+            (true_and
+              ((!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) =
+                true)) : (True ∧ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64 ≥ BitVec.twoPow 64 31 <<< 1) =
+            ((!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) = true))
+        [Meta.isDefEq] [0.001422] ✅️ (True ∧
+                BitVec.zeroExtend (2 * 32) (x✝ / 10#32) * BitVec.zeroExtend (2 * 32) 6#32 ≥
+                  BitVec.twoPow (2 * 32) (32 - 1) <<< 1) =
+              ((!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) =
+                true) =?= (True ∧ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64 ≥ BitVec.twoPow 64 31 <<< 1) =
+              ((!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) = true)
+          [Meta.isDefEq] [0.001404] ✅️ True ∧
+                BitVec.zeroExtend (2 * 32) (x✝ / 10#32) * BitVec.zeroExtend (2 * 32) 6#32 ≥
+                  BitVec.twoPow (2 * 32) (32 - 1) <<<
+                    1 =?= True ∧ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64 ≥ BitVec.twoPow 64 31 <<< 1
+            [Meta.isDefEq] [0.001389] ✅️ BitVec.zeroExtend (2 * 32) (x✝ / 10#32) * BitVec.zeroExtend (2 * 32) 6#32 ≥
+                  BitVec.twoPow (2 * 32) (32 - 1) <<<
+                    1 =?= BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64 ≥ BitVec.twoPow 64 31 <<< 1
+              [Meta.isDefEq.delta] [0.001369] ✅️ BitVec.zeroExtend (2 * 32) (x✝ / 10#32) *
+                      BitVec.zeroExtend (2 * 32) 6#32 ≥
+                    BitVec.twoPow (2 * 32) (32 - 1) <<<
+                      1 =?= BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64 ≥ BitVec.twoPow 64 31 <<< 1
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬some ((x✝ / 10#32) <<< 4 ||| x✝ % 10#32) ⊑
+            if (!BitVec.twoPow 64 31 <<< 1 >ᵤ BitVec.zeroExtend 64 (x✝ / 10#32) * 6#64) = true then none
+            else some (x✝ / 10#32 * 6#32 + x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:133:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gadd4_proof.lean:126:8: error: (kernel) declaration has metavariables 'fold_add_udiv_urem_without_noundef_thm'
+[bv] [0.013331] Normalizing goal
+  [Meta.synthInstance] [0.001221] ✅️ Decidable
+        ((if 10#32 = 0 then none
+          else if 4#32 ≥ ↑32 then none else if 10#32 = 0 then none else some ((x✝ / 10#32) <<< 4#32 + x✝ % 10#32)) ⊑
+          if 10#32 = 0 then none
+          else if 4#32 ≥ ↑32 then none else if 10#32 = 0 then none else some ((x✝ / 10#32) <<< 4#32 ||| x✝ % 10#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if 10#32 = 0 then none
+            else if 4#32 ≥ ↑32 then none else if 10#32 = 0 then none else some ((x✝ / 10#32) <<< 4#32 + x✝ % 10#32)) ⊑
+            if 10#32 = 0 then none
+            else if 4#32 ≥ ↑32 then none else if 10#32 = 0 then none else some ((x✝ / 10#32) <<< 4#32 ||| x✝ % 10#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ : ¬some ((x✝ / 10#32) <<< 4 + x✝ % 10#32) ⊑ some ((x✝ / 10#32) <<< 4 ||| x✝ % 10#32)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint

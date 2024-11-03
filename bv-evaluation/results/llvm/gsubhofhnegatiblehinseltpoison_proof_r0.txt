@@ -1,9 +1,4 @@
-⚠ [874/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
-⚠ [878/892] Replayed SSA.Experimental.Bits.Fast.Tactic
-warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
-⚠ [879/892] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+⚠ [676/892] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
@@ -14,17 +9,522 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaratio
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
-⚠ [885/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+⚠ [879/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [882/892] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [887/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
-⚠ [886/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+⚠ [888/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-✖ [890/892] Building Leanwuzla
-trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././.lake/packages/leanwuzla/././Leanwuzla.lean -R ././.lake/packages/leanwuzla/./. -o ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.olean -i ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.ilean -c ././.lake/packages/leanwuzla/.lake/build/ir/Leanwuzla.c --json
-error: ././.lake/packages/leanwuzla/././Leanwuzla.lean:117:8: invalid dotted identifier notation, unknown identifier `Std.Tactic.BVDecide.BVBinOp.sdiv` from expected type
-  BVBinOp
-error: Lean exited with code 1
-Some required builds logged failures:
-- Leanwuzla
+Bitwuzla proved the goal after 3.710950ms, solving context: 0.000000ms
+LeanSAT proved the goal after 3.087890ms: rewriting 3.059380ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:25:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:20:8: error: (kernel) declaration has metavariables 't2_thm'
+[bv] [0.026678] Normalizing goal
+  [Meta.synthInstance] [0.001104] ✅️ Decidable
+        ((if x✝¹ ≥ ↑8 then none else some (x✝ - 214#8 <<< x✝¹)) ⊑ if x✝¹ ≥ ↑8 then none else some (42#8 <<< x✝¹ + x✝))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 8
+      x✝¹ x✝ : BitVec 8
+      a✝ : ¬(if x✝¹ ≥ ↑8 then none else some (x✝ - 214#8 <<< x✝¹)) ⊑ if x✝¹ ≥ ↑8 then none else some (42#8 <<< x✝¹ + x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 8
+      x✝¹ x✝ : BitVec 8
+      a✝ :
+        ¬(if (!8#8 >ᵤ x✝¹) = true then none else some (x✝ + (~~~(214#8 <<< x✝¹) + 1#8))) ⊑
+            if (!8#8 >ᵤ x✝¹) = true then none else some (42#8 <<< x✝¹ + x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:35:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:29:8: error: (kernel) declaration has metavariables 't4_thm'
+[bv] [0.084147] Normalizing goal
+  [Meta.synthInstance] [0.002300] ✅️ Decidable
+        ((Option.bind
+            (match some x✝¹ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some 214#8
+            | some { toFin := ⟨0, ⋯⟩ } => some 44#8)
+            fun y' => some (x✝ - y')) ⊑
+          Option.bind
+            (match some x✝¹ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some 42#8
+            | some { toFin := ⟨0, ⋯⟩ } => some 212#8)
+            fun a => some (a + x✝))
+    [Meta.check] [0.001295] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (Option.bind
+            (match some x✝¹ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some 214#8
+            | some { toFin := ⟨0, ⋯⟩ } => some 44#8)
+            fun y' => some (x✝ - y'))
+          (Option.bind
+            (match some x✝¹ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some 42#8
+            | some { toFin := ⟨0, ⋯⟩ } => some 212#8)
+            fun a => some (a + x✝))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 1
+      e_1 : LLVM.IntW 8
+      x✝¹ : BitVec 1
+      x✝ : BitVec 8
+      a✝ :
+        ¬(Option.bind
+              (match some x✝¹ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 214#8
+              | some { toFin := ⟨0, ⋯⟩ } => some 44#8)
+              fun y' => some (x✝ - y')) ⊑
+            Option.bind
+              (match some x✝¹ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 42#8
+              | some { toFin := ⟨0, ⋯⟩ } => some 212#8)
+              fun a => some (a + x✝)
+      ⊢ False
+  [Meta.isDefEq] [0.001086] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 214#8
+      | some { toFin := ⟨0, ⋯⟩ } => some 44#8
+  [Meta.isDefEq] [0.001224] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 214#8
+      | some { toFin := ⟨0, ⋯⟩ } => some 44#8
+  [Meta.isDefEq] [0.001195] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 214#8
+      | some { toFin := ⟨0, ⋯⟩ } => some 44#8
+  [Meta.isDefEq] [0.001070] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 42#8
+      | some { toFin := ⟨0, ⋯⟩ } => some 212#8
+  [Meta.isDefEq] [0.001219] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 42#8
+      | some { toFin := ⟨0, ⋯⟩ } => some 212#8
+  [Meta.isDefEq] [0.001184] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 42#8
+      | some { toFin := ⟨0, ⋯⟩ } => some 212#8
+  [Meta.isDefEq] [0.001008] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 214#8
+      | some { toFin := ⟨0, ⋯⟩ } => some 44#8
+  [Meta.isDefEq] [0.001166] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 214#8
+      | some { toFin := ⟨0, ⋯⟩ } => some 44#8
+  [Meta.isDefEq] [0.001183] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 214#8
+      | some { toFin := ⟨0, ⋯⟩ } => some 44#8
+  [Meta.isDefEq] [0.001040] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 42#8
+      | some { toFin := ⟨0, ⋯⟩ } => some 212#8
+  [Meta.isDefEq] [0.001100] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 42#8
+      | some { toFin := ⟨0, ⋯⟩ } => some 212#8
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 1
+      e_1 : LLVM.IntW 8
+      x✝¹ : BitVec 1
+      x✝ : BitVec 8
+      a✝ :
+        ¬(Option.bind
+              (match some x✝¹ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 214#8
+              | some { toFin := ⟨0, ⋯⟩ } => some 44#8)
+              fun a => some (x✝ + (~~~a + 1#8))) ⊑
+            Option.bind
+              (match some x✝¹ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 42#8
+              | some { toFin := ⟨0, ⋯⟩ } => some 212#8)
+              fun a => some (a + x✝)
+      ⊢ False
+  [Meta.isDefEq] [0.001085] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 214#8
+      | some { toFin := ⟨0, ⋯⟩ } => some 44#8
+  [Meta.isDefEq] [0.001225] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 214#8
+      | some { toFin := ⟨0, ⋯⟩ } => some 44#8
+  [Meta.isDefEq] [0.001100] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 214#8
+      | some { toFin := ⟨0, ⋯⟩ } => some 44#8
+  [Meta.isDefEq] [0.001079] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 42#8
+      | some { toFin := ⟨0, ⋯⟩ } => some 212#8
+  [Meta.isDefEq] [0.001211] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 42#8
+      | some { toFin := ⟨0, ⋯⟩ } => some 212#8
+  [Meta.isDefEq] [0.001151] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 42#8
+      | some { toFin := ⟨0, ⋯⟩ } => some 212#8
+  [Meta.isDefEq] [0.001091] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 214#8
+      | some { toFin := ⟨0, ⋯⟩ } => some 44#8
+  [Meta.isDefEq] [0.001266] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 214#8
+      | some { toFin := ⟨0, ⋯⟩ } => some 44#8
+  [Meta.isDefEq] [0.001206] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 214#8
+      | some { toFin := ⟨0, ⋯⟩ } => some 44#8
+  [Meta.isDefEq] [0.001067] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 42#8
+      | some { toFin := ⟨0, ⋯⟩ } => some 212#8
+  [Meta.isDefEq] [0.001225] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 42#8
+      | some { toFin := ⟨0, ⋯⟩ } => some 212#8
+  [Meta.isDefEq] [0.001183] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 42#8
+      | some { toFin := ⟨0, ⋯⟩ } => some 212#8
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:46:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:46:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:39:8: error: (kernel) declaration has metavariables 't7_thm'
+[bv] [0.083235] Normalizing goal
+  [Meta.synthInstance] [0.001472] ✅️ Decidable
+        ((Option.bind
+            (match some x✝¹ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some 0#8
+            | some { toFin := ⟨0, ⋯⟩ } => if x✝² ≥ ↑8 then none else some (1#8 <<< x✝²))
+            fun y' => some (x✝ - y')) ⊑
+          Option.bind
+            (match some x✝¹ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some 0#8
+            | some { toFin := ⟨0, ⋯⟩ } =>
+              if True ∧ ((-1#8) <<< x✝²).sshiftRight x✝².toNat = -1#8 then none
+              else if x✝² ≥ ↑8 then none else some ((-1#8) <<< x✝²))
+            fun a => some (a + x✝))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 8
+      e_1 : LLVM.IntW 1
+      e_2 : LLVM.IntW 8
+      x✝² : BitVec 8
+      x✝¹ : BitVec 1
+      x✝ : BitVec 8
+      a✝ :
+        ¬(Option.bind
+              (match some x✝¹ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 0#8
+              | some { toFin := ⟨0, ⋯⟩ } => if x✝² ≥ ↑8 then none else some (1#8 <<< x✝²))
+              fun y' => some (x✝ - y')) ⊑
+            Option.bind
+              (match some x✝¹ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 0#8
+              | some { toFin := ⟨0, ⋯⟩ } =>
+                if True ∧ ((-1#8) <<< x✝²).sshiftRight x✝².toNat = -1#8 then none
+                else if x✝² ≥ ↑8 then none else some ((-1#8) <<< x✝²))
+              fun a => some (a + x✝)
+      ⊢ False
+  [Meta.isDefEq] [0.002550] ✅️ ?h₁ =?= Eq.trans
+        (congrArg (And True)
+          (Std.Tactic.BVDecide.Normalize.BitVec.eq_to_beq ((255#8 <<< x✝²).sshiftRight x✝².toNat) 255#8))
+        (true_and (((255#8 <<< x✝²).sshiftRight x✝².toNat == 255#8) = true))
+    [Meta.isDefEq.assign] [0.002547] ✅️ ?h₁ := Eq.trans
+          (congrArg (And True)
+            (Std.Tactic.BVDecide.Normalize.BitVec.eq_to_beq ((255#8 <<< x✝²).sshiftRight x✝².toNat) 255#8))
+          (true_and (((255#8 <<< x✝²).sshiftRight x✝².toNat == 255#8) = true))
+      [Meta.isDefEq.assign.checkTypes] [0.002537] ✅️ (?h₁ : (True ∧ ((-1#8) <<< x✝²).sshiftRight x✝².toNat = -1#8) =
+            (((255#8 <<< x✝²).sshiftRight x✝².toNat == 255#8) =
+              true)) := (Eq.trans
+            (congrArg (And True)
+              (Std.Tactic.BVDecide.Normalize.BitVec.eq_to_beq ((255#8 <<< x✝²).sshiftRight x✝².toNat) 255#8))
+            (true_and
+              (((255#8 <<< x✝²).sshiftRight x✝².toNat == 255#8) =
+                true)) : (True ∧ (255#8 <<< x✝²).sshiftRight x✝².toNat = 255#8) =
+            (((255#8 <<< x✝²).sshiftRight x✝².toNat == 255#8) = true))
+        [Meta.isDefEq] [0.002533] ✅️ (True ∧ ((-1#8) <<< x✝²).sshiftRight x✝².toNat = -1#8) =
+              (((255#8 <<< x✝²).sshiftRight x✝².toNat == 255#8) =
+                true) =?= (True ∧ (255#8 <<< x✝²).sshiftRight x✝².toNat = 255#8) =
+              (((255#8 <<< x✝²).sshiftRight x✝².toNat == 255#8) = true)
+          [Meta.isDefEq] [0.002514] ✅️ True ∧
+                ((-1#8) <<< x✝²).sshiftRight x✝².toNat = -1#8 =?= True ∧ (255#8 <<< x✝²).sshiftRight x✝².toNat = 255#8
+            [Meta.isDefEq] [0.002499] ✅️ ((-1#8) <<< x✝²).sshiftRight x✝².toNat =
+                  -1#8 =?= (255#8 <<< x✝²).sshiftRight x✝².toNat = 255#8
+              [Meta.isDefEq] [0.002476] ✅️ ((-1#8) <<< x✝²).sshiftRight
+                    x✝².toNat =?= (255#8 <<< x✝²).sshiftRight x✝².toNat
+                [Meta.isDefEq.delta] [0.002465] ✅️ ((-1#8) <<< x✝²).sshiftRight
+                      x✝².toNat =?= (255#8 <<< x✝²).sshiftRight x✝².toNat
+                  [Meta.isDefEq] [0.002440] ✅️ (-1#8) <<< x✝² =?= 255#8 <<< x✝²
+                    [Meta.isDefEq] [0.002414] ✅️ BitVec.instHShiftLeft.1 (-1#8)
+                          x✝² =?= BitVec.instHShiftLeft.1 (255#8) x✝²
+                      [Meta.isDefEq] [0.002332] ✅️ (-1#8) <<< x✝².toNat =?= 255#8 <<< x✝².toNat
+                        [Meta.isDefEq] [0.002314] ✅️ BitVec.instHShiftLeftNat.1 (-1#8)
+                              x✝².toNat =?= BitVec.instHShiftLeftNat.1 (255#8) x✝².toNat
+                          [Meta.isDefEq] [0.002278] ✅️ (-1#8).shiftLeft x✝².toNat =?= (255#8).shiftLeft x✝².toNat
+                            [Meta.isDefEq.delta] [0.002269] ✅️ (-1#8).shiftLeft
+                                  x✝².toNat =?= (255#8).shiftLeft x✝².toNat
+                              [Meta.isDefEq] [0.002245] ✅️ -1#8 =?= 255#8
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 8
+      e_1 : LLVM.IntW 1
+      e_2 : LLVM.IntW 8
+      x✝² : BitVec 8
+      x✝¹ : BitVec 1
+      x✝ : BitVec 8
+      a✝ :
+        ¬(Option.bind
+              (match some x✝¹ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 0#8
+              | some { toFin := ⟨0, ⋯⟩ } => if (!8#8 >ᵤ x✝²) = true then none else some (1#8 <<< x✝²))
+              fun a => some (x✝ + (~~~a + 1#8))) ⊑
+            Option.bind
+              (match some x✝¹ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 0#8
+              | some { toFin := ⟨0, ⋯⟩ } =>
+                if ((255#8 <<< x✝²).sshiftRight x✝².toNat == 255#8) = true then none
+                else if (!8#8 >ᵤ x✝²) = true then none else some (255#8 <<< x✝²))
+              fun a => some (a + x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+Bitwuzla proved the goal after 106.567309ms, solving context: 1.000000ms
+LeanSAT proved the goal after 315.455789ms: rewriting 28.423530ms, bitblasting 2.110690ms, SAT solving 117.292200ms, LRAT trimming 89.559209ms, LRAT checking 63.570750ms
+Bitwuzla proved the goal after 122.742539ms, solving context: 0.000000ms
+LeanSAT proved the goal after 278.110789ms: rewriting 32.531740ms, bitblasting 4.130320ms, SAT solving 57.263250ms, LRAT trimming 59.962470ms, LRAT checking 86.997519ms
+Bitwuzla proved the goal after 78.869469ms, solving context: 0.000000ms
+LeanSAT proved the goal after 131.556470ms: rewriting 21.636880ms, bitblasting 0.000000ms, SAT solving 57.940050ms, LRAT trimming 2.615470ms, LRAT checking 38.157710ms
+Bitwuzla proved the goal after 82.897000ms, solving context: 2.000000ms
+LeanSAT proved the goal after 304.768289ms: rewriting 21.360989ms, bitblasting 0.000000ms, SAT solving 60.398340ms, LRAT trimming 189.657029ms, LRAT checking 20.419131ms
+Bitwuzla proved the goal after 82.154120ms, solving context: 0.000000ms
+LeanSAT proved the goal after 84.412479ms: rewriting 20.158440ms, bitblasting 0.000000ms, SAT solving 58.803820ms, LRAT trimming 0.000000ms, LRAT checking 3.378320ms
+Bitwuzla proved the goal after 78.727570ms, solving context: 0.000000ms
+LeanSAT proved the goal after 89.469079ms: rewriting 20.221030ms, bitblasting 0.000000ms, SAT solving 61.048999ms, LRAT trimming 1.217680ms, LRAT checking 3.533160ms
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:110:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:104:8: error: (kernel) declaration has metavariables 't20_thm'
+[bv] [0.029176] Normalizing goal
+  [Meta.synthInstance] [0.001145] ✅️ Decidable
+        ((if x✝¹ ≥ ↑16 then none else some (x✝ - BitVec.truncate 8 (65494#16 <<< x✝¹))) ⊑
+          if x✝¹ ≥ ↑16 then none else some (x✝ + BitVec.truncate 8 (42#16 <<< x✝¹)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 16
+      e_1 : LLVM.IntW 8
+      x✝¹ : BitVec 16
+      x✝ : BitVec 8
+      a✝ :
+        ¬(if x✝¹ ≥ ↑16 then none else some (x✝ - BitVec.truncate 8 (65494#16 <<< x✝¹))) ⊑
+            if x✝¹ ≥ ↑16 then none else some (x✝ + BitVec.truncate 8 (42#16 <<< x✝¹))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 16
+      e_1 : LLVM.IntW 8
+      x✝¹ : BitVec 16
+      x✝ : BitVec 8
+      a✝ :
+        ¬(if (!16#16 >ᵤ x✝¹) = true then none else some (x✝ + (~~~BitVec.zeroExtend 8 (65494#16 <<< x✝¹) + 1#8))) ⊑
+            if (!16#16 >ᵤ x✝¹) = true then none else some (x✝ + BitVec.zeroExtend 8 (42#16 <<< x✝¹))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+Bitwuzla proved the goal after 75.337869ms, solving context: 2.000000ms
+LeanSAT proved the goal after 77.158720ms: rewriting 16.328590ms, bitblasting 0.000000ms, SAT solving 54.685680ms, LRAT trimming 2.197820ms, LRAT checking 2.318980ms
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:131:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:124:8: error: (kernel) declaration has metavariables 'negate_shl_xor_thm'
+[bv] [0.028313] Normalizing goal
+  [Meta.synthInstance] [0.001257] ✅️ Decidable
+        ((if x✝¹ ≥ ↑4 then none else some (0#4 - (x✝ ^^^ 5#4) <<< x✝¹)) ⊑
+          if x✝¹ ≥ ↑4 then none else some (((x✝ ^^^ 10#4) + 1#4) <<< x✝¹))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 4
+      x✝¹ x✝ : BitVec 4
+      a✝ :
+        ¬(if x✝¹ ≥ ↑4 then none else some (0#4 - (x✝ ^^^ 5#4) <<< x✝¹)) ⊑
+            if x✝¹ ≥ ↑4 then none else some (((x✝ ^^^ 10#4) + 1#4) <<< x✝¹)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 4
+      x✝¹ x✝ : BitVec 4
+      a✝ :
+        ¬(if (!4#4 >ᵤ x✝¹) = true then none else some (~~~((x✝ ^^^ 5#4) <<< x✝¹) + 1#4)) ⊑
+            if (!4#4 >ᵤ x✝¹) = true then none else some (((x✝ ^^^ 10#4) + 1#4) <<< x✝¹)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:141:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatiblehinseltpoison_proof.lean:135:8: error: (kernel) declaration has metavariables 'negate_sdiv_thm'
+[bv] [0.044343] Normalizing goal
+  [Meta.synthInstance] [0.001102] ✅️ Decidable
+        ((if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
+          else some (x✝ - x✝¹.sdiv 42#8)) ⊑
+          if (214#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 214#8 == -1) = true then none
+          else some (x✝¹.sdiv 214#8 + x✝))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 8
+      x✝¹ x✝ : BitVec 8
+      a✝ :
+        ¬(if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
+            else some (x✝ - x✝¹.sdiv 42#8)) ⊑
+            if (214#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 214#8 == -1) = true then none
+            else some (x✝¹.sdiv 214#8 + x✝)
+      ⊢ False
+  [Meta.appBuilder] [0.002510] ✅️ f: HAdd.hAdd, xs: [~~~if x✝¹.getLsbD 7 = true then ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8
+         else x✝¹ / 42#8,
+       1#8]
+    [Meta.synthInstance] [0.002448] ✅️ HAdd (BitVec 8) (BitVec 8) (BitVec 8)
+      [Meta.synthInstance] [0.002082] ✅️ apply @instHAdd to HAdd (BitVec 8) (BitVec 8) (BitVec 8)
+        [Meta.synthInstance.tryResolve] [0.001937] ✅️ HAdd (BitVec 8) (BitVec 8)
+              (BitVec 8) ≟ HAdd (BitVec 8) (BitVec 8) (BitVec 8)
+          [Meta.isDefEq] [0.001836] ✅️ HAdd (BitVec 8) (BitVec 8) ?m.77863 =?= HAdd ?m.77866 ?m.77866 ?m.77866
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 8
+      x✝¹ x✝ : BitVec 8
+      a✝ :
+        ¬some (x✝ + ((~~~if x✝¹.getLsbD 7 = true then ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8 else x✝¹ / 42#8) + 1#8)) ⊑
+            some ((if x✝¹.getLsbD 7 = true then (~~~x✝¹ + 1#8) / 42#8 else ~~~(x✝¹ / 42#8) + 1#8) + x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+Bitwuzla proved the goal after 0.661870ms, solving context: 0.000000ms
+LeanSAT proved the goal after 2.963470ms: rewriting 2.947630ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+Bitwuzla proved the goal after 77.277949ms, solving context: 0.000000ms
+LeanSAT proved the goal after 96.547080ms: rewriting 21.179110ms, bitblasting 0.000000ms, SAT solving 55.491850ms, LRAT trimming 10.463350ms, LRAT checking 6.184970ms
+Bitwuzla proved the goal after 0.921630ms, solving context: 0.000000ms
+LeanSAT proved the goal after 4.473720ms: rewriting 4.453510ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+Bitwuzla proved the goal after 92.299269ms, solving context: 2.000000ms
+LeanSAT proved the goal after 101.704030ms: rewriting 35.974170ms, bitblasting 0.000000ms, SAT solving 57.336200ms, LRAT trimming 1.389520ms, LRAT checking 5.460220ms
+Bitwuzla proved the goal after 79.232960ms, solving context: 2.000000ms
+LeanSAT proved the goal after 84.386650ms: rewriting 17.255490ms, bitblasting 0.000000ms, SAT solving 58.717650ms, LRAT trimming 4.090180ms, LRAT checking 3.276080ms
+Bitwuzla proved the goal after 77.709750ms, solving context: 0.000000ms
+LeanSAT proved the goal after 81.362990ms: rewriting 16.848140ms, bitblasting 0.000000ms, SAT solving 56.222720ms, LRAT trimming 0.000000ms, LRAT checking 4.766280ms
+Bitwuzla proved the goal after 0.647180ms, solving context: 0.000000ms
+LeanSAT proved the goal after 2.758890ms: rewriting 2.741830ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+Bitwuzla proved the goal after 81.469239ms, solving context: 1.000000ms
+LeanSAT proved the goal after 90.840010ms: rewriting 23.850890ms, bitblasting 0.000000ms, SAT solving 54.292510ms, LRAT trimming 3.282870ms, LRAT checking 5.378200ms
+Bitwuzla proved the goal after 79.513120ms, solving context: 0.000000ms
+LeanSAT proved the goal after 82.629229ms: rewriting 20.120309ms, bitblasting 0.000000ms, SAT solving 56.089240ms, LRAT trimming 1.048360ms, LRAT checking 3.030000ms
+Bitwuzla proved the goal after 732.099346ms, solving context: 624.000000ms
+LeanSAT proved the goal after 953.240866ms: rewriting 26.627740ms, bitblasting 0.000000ms, SAT solving 357.959689ms, LRAT trimming 330.944738ms, LRAT checking 229.005449ms

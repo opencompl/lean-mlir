@@ -1,9 +1,4 @@
-⚠ [874/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
-⚠ [878/892] Replayed SSA.Experimental.Bits.Fast.Tactic
-warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
-⚠ [879/892] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+⚠ [676/892] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
@@ -14,17 +9,311 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaratio
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
-⚠ [885/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+⚠ [878/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [881/892] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [887/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
-⚠ [886/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+⚠ [888/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-✖ [890/892] Building Leanwuzla
-trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././.lake/packages/leanwuzla/././Leanwuzla.lean -R ././.lake/packages/leanwuzla/./. -o ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.olean -i ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.ilean -c ././.lake/packages/leanwuzla/.lake/build/ir/Leanwuzla.c --json
-error: ././.lake/packages/leanwuzla/././Leanwuzla.lean:117:8: invalid dotted identifier notation, unknown identifier `Std.Tactic.BVDecide.BVBinOp.sdiv` from expected type
-  BVBinOp
-error: Lean exited with code 1
-Some required builds logged failures:
-- Leanwuzla
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gpartallyhredundanthlefthshifthinputhmaskinghafterhtruncationhvarianthd_proof.lean:16:4: error: tactic 'simp' failed, nested error:
+maximum recursion depth has been reached
+use `set_option maxRecDepth <num>` to increase limit
+use `set_option diagnostics true` to get diagnostic information
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gpartallyhredundanthlefthshifthinputhmaskinghafterhtruncationhvarianthd_proof.lean:18:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gpartallyhredundanthlefthshifthinputhmaskinghafterhtruncationhvarianthd_proof.lean:18:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gpartallyhredundanthlefthshifthinputhmaskinghafterhtruncationhvarianthd_proof.lean:11:8: error: (kernel) declaration has metavariables 'PR51351_thm'
+[bv] [0.167366] Normalizing goal
+  [Meta.synthInstance] [0.001529] ✅️ Decidable
+        (((some x✝).bind fun x =>
+            if BitVec.zeroExtend 64 x ≥ ↑64 then none
+            else
+              (some x✝).bind fun x_1 =>
+                if BitVec.zeroExtend 64 x_1 ≥ ↑64 then none
+                else
+                  (some x✝).bind fun x_2 =>
+                    if x_2 + 4294967263#32 ≥ ↑32 then none
+                    else
+                      some
+                        (BitVec.truncate 32
+                            (((-1#64) <<< BitVec.zeroExtend 64 x).sshiftRight (BitVec.zeroExtend 64 x_1).toNat &&&
+                              x✝¹) <<<
+                          (x_2 + 4294967263#32))) ⊑
+          (some x✝).bind fun x =>
+            if x + 4294967263#32 ≥ ↑32 then none else some (BitVec.truncate 32 x✝¹ <<< (x + 4294967263#32)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 64
+      e_1 : LLVM.IntW 32
+      x✝¹ : BitVec 64
+      x✝ : BitVec 32
+      a✝ :
+        ¬((some x✝).bind fun x =>
+              if BitVec.zeroExtend 64 x ≥ ↑64 then none
+              else
+                (some x✝).bind fun x_1 =>
+                  if BitVec.zeroExtend 64 x_1 ≥ ↑64 then none
+                  else
+                    (some x✝).bind fun x_2 =>
+                      if x_2 + 4294967263#32 ≥ ↑32 then none
+                      else
+                        some
+                          (BitVec.truncate 32
+                              (((-1#64) <<< BitVec.zeroExtend 64 x).sshiftRight (BitVec.zeroExtend 64 x_1).toNat &&&
+                                x✝¹) <<<
+                            (x_2 + 4294967263#32))) ⊑
+            (some x✝).bind fun x =>
+              if x + 4294967263#32 ≥ ↑32 then none else some (BitVec.truncate 32 x✝¹ <<< (x + 4294967263#32))
+      ⊢ False
+  [Meta.isDefEq] [0.006897] ✅️ ?h₃ =?= fun a_1 =>
+        Eq.refl
+          (some
+            (BitVec.zeroExtend 32
+                ((18446744073709551615#64 <<< BitVec.zeroExtend 64 a✝⁷).sshiftRight (BitVec.zeroExtend 64 a✝⁴).toNat &&&
+                  x✝¹) <<<
+              (a + 4294967263#32)))
+    [Meta.isDefEq.assign] [0.006894] ✅️ ?h₃ := fun a_1 =>
+          Eq.refl
+            (some
+              (BitVec.zeroExtend 32
+                  ((18446744073709551615#64 <<< BitVec.zeroExtend 64 a✝⁷).sshiftRight
+                      (BitVec.zeroExtend 64 a✝⁴).toNat &&&
+                    x✝¹) <<<
+                (a + 4294967263#32)))
+      [Meta.isDefEq.assign.checkTypes] [0.006868] ✅️ (?h₃ : ¬(!32#32 >ᵤ a + 4294967263#32) = true →
+            some
+                (BitVec.truncate 32
+                    (((-1#64) <<< BitVec.zeroExtend 64 a✝⁷).sshiftRight (BitVec.zeroExtend 64 a✝⁴).toNat &&& x✝¹) <<<
+                  (a + 4294967263#32)) =
+              some
+                (BitVec.zeroExtend 32
+                    ((18446744073709551615#64 <<< BitVec.zeroExtend 64 a✝⁷).sshiftRight
+                        (BitVec.zeroExtend 64 a✝⁴).toNat &&&
+                      x✝¹) <<<
+                  (a +
+                    4294967263#32))) := (fun a_1 =>
+            Eq.refl
+              (some
+                (BitVec.zeroExtend 32
+                    ((18446744073709551615#64 <<< BitVec.zeroExtend 64 a✝⁷).sshiftRight
+                        (BitVec.zeroExtend 64 a✝⁴).toNat &&&
+                      x✝¹) <<<
+                  (a +
+                    4294967263#32))) : ¬(!32#32 >ᵤ a + 4294967263#32) = true →
+            some
+                (BitVec.zeroExtend 32
+                    ((18446744073709551615#64 <<< BitVec.zeroExtend 64 a✝⁷).sshiftRight
+                        (BitVec.zeroExtend 64 a✝⁴).toNat &&&
+                      x✝¹) <<<
+                  (a + 4294967263#32)) =
+              some
+                (BitVec.zeroExtend 32
+                    ((18446744073709551615#64 <<< BitVec.zeroExtend 64 a✝⁷).sshiftRight
+                        (BitVec.zeroExtend 64 a✝⁴).toNat &&&
+                      x✝¹) <<<
+                  (a + 4294967263#32)))
+        [Meta.isDefEq] [0.006865] ✅️ ¬(!32#32 >ᵤ a + 4294967263#32) = true →
+              some
+                  (BitVec.truncate 32
+                      (((-1#64) <<< BitVec.zeroExtend 64 a✝⁷).sshiftRight (BitVec.zeroExtend 64 a✝⁴).toNat &&& x✝¹) <<<
+                    (a + 4294967263#32)) =
+                some
+                  (BitVec.zeroExtend 32
+                      ((18446744073709551615#64 <<< BitVec.zeroExtend 64 a✝⁷).sshiftRight
+                          (BitVec.zeroExtend 64 a✝⁴).toNat &&&
+                        x✝¹) <<<
+                    (a +
+                      4294967263#32)) =?= ¬(!32#32 >ᵤ a + 4294967263#32) = true →
+              some
+                  (BitVec.zeroExtend 32
+                      ((18446744073709551615#64 <<< BitVec.zeroExtend 64 a✝⁷).sshiftRight
+                          (BitVec.zeroExtend 64 a✝⁴).toNat &&&
+                        x✝¹) <<<
+                    (a + 4294967263#32)) =
+                some
+                  (BitVec.zeroExtend 32
+                      ((18446744073709551615#64 <<< BitVec.zeroExtend 64 a✝⁷).sshiftRight
+                          (BitVec.zeroExtend 64 a✝⁴).toNat &&&
+                        x✝¹) <<<
+                    (a + 4294967263#32))
+          [Meta.isDefEq] [0.006836] ✅️ some
+                  (BitVec.truncate 32
+                      (((-1#64) <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight (BitVec.zeroExtend 64 a✝⁵).toNat &&& x✝¹) <<<
+                    (a + 4294967263#32)) =
+                some
+                  (BitVec.zeroExtend 32
+                      ((18446744073709551615#64 <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight
+                          (BitVec.zeroExtend 64 a✝⁵).toNat &&&
+                        x✝¹) <<<
+                    (a +
+                      4294967263#32)) =?= some
+                  (BitVec.zeroExtend 32
+                      ((18446744073709551615#64 <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight
+                          (BitVec.zeroExtend 64 a✝⁵).toNat &&&
+                        x✝¹) <<<
+                    (a + 4294967263#32)) =
+                some
+                  (BitVec.zeroExtend 32
+                      ((18446744073709551615#64 <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight
+                          (BitVec.zeroExtend 64 a✝⁵).toNat &&&
+                        x✝¹) <<<
+                    (a + 4294967263#32))
+            [Meta.isDefEq] [0.006805] ✅️ some
+                  (BitVec.truncate 32
+                      (((-1#64) <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight (BitVec.zeroExtend 64 a✝⁵).toNat &&& x✝¹) <<<
+                    (a +
+                      4294967263#32)) =?= some
+                  (BitVec.zeroExtend 32
+                      ((18446744073709551615#64 <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight
+                          (BitVec.zeroExtend 64 a✝⁵).toNat &&&
+                        x✝¹) <<<
+                    (a + 4294967263#32))
+              [Meta.isDefEq] [0.006785] ✅️ BitVec.truncate 32
+                      (((-1#64) <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight (BitVec.zeroExtend 64 a✝⁵).toNat &&& x✝¹) <<<
+                    (a +
+                      4294967263#32) =?= BitVec.zeroExtend 32
+                      ((18446744073709551615#64 <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight
+                          (BitVec.zeroExtend 64 a✝⁵).toNat &&&
+                        x✝¹) <<<
+                    (a + 4294967263#32)
+                [Meta.isDefEq] [0.006740] ✅️ BitVec.instHShiftLeft.1
+                      (BitVec.truncate 32
+                        (((-1#64) <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight (BitVec.zeroExtend 64 a✝⁵).toNat &&& x✝¹))
+                      (a +
+                        4294967263#32) =?= BitVec.instHShiftLeft.1
+                      (BitVec.zeroExtend 32
+                        ((18446744073709551615#64 <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight
+                            (BitVec.zeroExtend 64 a✝⁵).toNat &&&
+                          x✝¹))
+                      (a + 4294967263#32)
+                  [Meta.isDefEq] [0.006676] ✅️ BitVec.truncate 32
+                          (((-1#64) <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight (BitVec.zeroExtend 64 a✝⁵).toNat &&&
+                            x✝¹) <<<
+                        (a +
+                            4294967263#32).toNat =?= BitVec.zeroExtend 32
+                          ((18446744073709551615#64 <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight
+                              (BitVec.zeroExtend 64 a✝⁵).toNat &&&
+                            x✝¹) <<<
+                        (a + 4294967263#32).toNat
+                    [Meta.isDefEq] [0.006658] ✅️ BitVec.instHShiftLeftNat.1
+                          (BitVec.truncate 32
+                            (((-1#64) <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight (BitVec.zeroExtend 64 a✝⁵).toNat &&&
+                              x✝¹))
+                          (a +
+                              4294967263#32).toNat =?= BitVec.instHShiftLeftNat.1
+                          (BitVec.zeroExtend 32
+                            ((18446744073709551615#64 <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight
+                                (BitVec.zeroExtend 64 a✝⁵).toNat &&&
+                              x✝¹))
+                          (a + 4294967263#32).toNat
+                      [Meta.isDefEq] [0.006622] ✅️ (BitVec.truncate 32
+                                (((-1#64) <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight (BitVec.zeroExtend 64 a✝⁵).toNat &&&
+                                  x✝¹)).shiftLeft
+                            (a +
+                                4294967263#32).toNat =?= (BitVec.zeroExtend 32
+                                ((18446744073709551615#64 <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight
+                                    (BitVec.zeroExtend 64 a✝⁵).toNat &&&
+                                  x✝¹)).shiftLeft
+                            (a + 4294967263#32).toNat
+                        [Meta.isDefEq.delta] [0.006612] ✅️ (BitVec.truncate 32
+                                  (((-1#64) <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight
+                                      (BitVec.zeroExtend 64 a✝⁵).toNat &&&
+                                    x✝¹)).shiftLeft
+                              (a +
+                                  4294967263#32).toNat =?= (BitVec.zeroExtend 32
+                                  ((18446744073709551615#64 <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight
+                                      (BitVec.zeroExtend 64 a✝⁵).toNat &&&
+                                    x✝¹)).shiftLeft
+                              (a + 4294967263#32).toNat
+                          [Meta.isDefEq] [0.006586] ✅️ BitVec.truncate 32
+                                (((-1#64) <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight (BitVec.zeroExtend 64 a✝⁵).toNat &&&
+                                  x✝¹) =?= BitVec.zeroExtend 32
+                                ((18446744073709551615#64 <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight
+                                    (BitVec.zeroExtend 64 a✝⁵).toNat &&&
+                                  x✝¹)
+                            [Meta.isDefEq] [0.006572] ✅️ BitVec.setWidth 32
+                                  (((-1#64) <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight
+                                      (BitVec.zeroExtend 64 a✝⁵).toNat &&&
+                                    x✝¹) =?= BitVec.setWidth 32
+                                  ((18446744073709551615#64 <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight
+                                      (BitVec.zeroExtend 64 a✝⁵).toNat &&&
+                                    x✝¹)
+                              [Meta.isDefEq.delta] [0.006563] ✅️ BitVec.setWidth 32
+                                    (((-1#64) <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight
+                                        (BitVec.zeroExtend 64 a✝⁵).toNat &&&
+                                      x✝¹) =?= BitVec.setWidth 32
+                                    ((18446744073709551615#64 <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight
+                                        (BitVec.zeroExtend 64 a✝⁵).toNat &&&
+                                      x✝¹)
+                                [Meta.isDefEq] [0.006546] ✅️ ((-1#64) <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight
+                                        (BitVec.zeroExtend 64 a✝⁵).toNat &&&
+                                      x✝¹ =?= (18446744073709551615#64 <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight
+                                        (BitVec.zeroExtend 64 a✝⁵).toNat &&&
+                                      x✝¹
+                                  [Meta.isDefEq] [0.006524] ✅️ instHAndOfAndOp.1
+                                        (((-1#64) <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight
+                                          (BitVec.zeroExtend 64 a✝⁵).toNat)
+                                        x✝¹ =?= instHAndOfAndOp.1
+                                        ((18446744073709551615#64 <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight
+                                          (BitVec.zeroExtend 64 a✝⁵).toNat)
+                                        x✝¹
+                                    [Meta.isDefEq] [0.006443] ✅️ AndOp.and
+                                          (((-1#64) <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight
+                                            (BitVec.zeroExtend 64 a✝⁵).toNat)
+                                          x✝¹ =?= AndOp.and
+                                          ((18446744073709551615#64 <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight
+                                            (BitVec.zeroExtend 64 a✝⁵).toNat)
+                                          x✝¹
+                                      [Meta.isDefEq] [0.002772] ✅️ BitVec.instAndOp.1
+                                            (((-1#64) <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight
+                                              (BitVec.zeroExtend 64 a✝⁵).toNat)
+                                            x✝¹ =?= BitVec.instAndOp.1
+                                            ((18446744073709551615#64 <<< BitVec.zeroExtend 64 a✝⁸).sshiftRight
+                                              (BitVec.zeroExtend 64 a✝⁵).toNat)
+                                            x✝¹
+  [Meta.isDefEq] [0.001657] ✅️ ?h₂ =?= fun a => Eq.refl none
+    [Meta.isDefEq.assign] [0.001655] ✅️ ?h₂ := fun a => Eq.refl none
+      [Meta.isDefEq.assign.checkTypes] [0.001642] ✅️ (?h₂ : (!32#32 >ᵤ a + 4294967263#32) = true →
+            none = none) := (fun a => Eq.refl none : (!32#32 >ᵤ a + 4294967263#32) = true → none = none)
+        [Meta.isDefEq] [0.001636] ✅️ (!32#32 >ᵤ a + 4294967263#32) = true →
+              none = none =?= (!32#32 >ᵤ a + 4294967263#32) = true → none = none
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 64
+      e_1 : LLVM.IntW 32
+      x✝¹ : BitVec 64
+      x✝ : BitVec 32
+      a✝ :
+        ¬((some x✝).bind fun a =>
+              if (!64#64 >ᵤ BitVec.zeroExtend 64 a) = true then none
+              else
+                (some x✝).bind fun a_1 =>
+                  if (!64#64 >ᵤ BitVec.zeroExtend 64 a_1) = true then none
+                  else
+                    (some x✝).bind fun a_2 =>
+                      if (!32#32 >ᵤ a_2 + 4294967263#32) = true then none
+                      else
+                        some
+                          (BitVec.zeroExtend 32
+                              ((18446744073709551615#64 <<< BitVec.zeroExtend 64 a).sshiftRight
+                                  (BitVec.zeroExtend 64 a_1).toNat &&&
+                                x✝¹) <<<
+                            (a_2 + 4294967263#32))) ⊑
+            (some x✝).bind fun a =>
+              if (!32#32 >ᵤ a + 4294967263#32) = true then none
+              else some (BitVec.zeroExtend 32 x✝¹ <<< (a + 4294967263#32))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint

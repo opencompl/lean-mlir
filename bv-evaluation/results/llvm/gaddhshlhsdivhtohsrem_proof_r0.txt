@@ -1,9 +1,4 @@
-⚠ [874/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
-⚠ [878/892] Replayed SSA.Experimental.Bits.Fast.Tactic
-warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
-⚠ [879/892] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+⚠ [676/892] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
@@ -14,17 +9,611 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaratio
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
-⚠ [885/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+⚠ [878/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [881/892] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [887/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
-⚠ [886/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+⚠ [888/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-✖ [890/892] Building Leanwuzla
-trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././.lake/packages/leanwuzla/././Leanwuzla.lean -R ././.lake/packages/leanwuzla/./. -o ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.olean -i ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.ilean -c ././.lake/packages/leanwuzla/.lake/build/ir/Leanwuzla.c --json
-error: ././.lake/packages/leanwuzla/././Leanwuzla.lean:117:8: invalid dotted identifier notation, unknown identifier `Std.Tactic.BVDecide.BVBinOp.sdiv` from expected type
-  BVBinOp
-error: Lean exited with code 1
-Some required builds logged failures:
-- Leanwuzla
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gaddhshlhsdivhtohsrem_proof.lean:17:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gaddhshlhsdivhtohsrem_proof.lean:11:8: error: (kernel) declaration has metavariables 'addhshlhsdivhscalar0_thm'
+[bv] [0.068981] Normalizing goal
+  [Meta.synthInstance] [0.001940] ✅️ Decidable
+        ((if (252#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 252#8 == -1) = true then none
+          else if 2#8 ≥ ↑8 then none else some (x✝.sdiv 252#8 <<< 2#8 + x✝)) ⊑
+          Option.map (fun div => x✝ - div * 4#8)
+            (if (4#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 4#8 == -1) = true then none else some (x✝.sdiv 4#8)))
+    [Meta.check] [0.001286] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if (252#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 252#8 == -1) = true then none
+          else if 2#8 ≥ ↑8 then none else some (x✝.sdiv 252#8 <<< 2#8 + x✝))
+          (Option.map (fun div => x✝ - div * 4#8)
+            (if (4#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 4#8 == -1) = true then none else some (x✝.sdiv 4#8)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ :
+        ¬(if (252#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 252#8 == -1) = true then none
+            else if 2#8 ≥ ↑8 then none else some (x✝.sdiv 252#8 <<< 2#8 + x✝)) ⊑
+            Option.map (fun div => x✝ - div * 4#8)
+              (if (4#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 4#8 == -1) = true then none else some (x✝.sdiv 4#8))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ :
+        ¬some ((if x✝.getLsbD 7 = true then (~~~x✝ + 1#8) / 4#8 else ~~~(x✝ / 4#8) + 1#8) <<< 2 + x✝) ⊑
+            Option.map (fun div => x✝ + (~~~(div * 4#8) + 1#8))
+              (some (if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 4#8) + 1#8 else x✝ / 4#8))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gaddhshlhsdivhtohsrem_proof.lean:27:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gaddhshlhsdivhtohsrem_proof.lean:21:8: error: (kernel) declaration has metavariables 'addhshlhsdivhscalar1_thm'
+[bv] [0.076062] Normalizing goal
+  [Meta.synthInstance] [0.002496] ✅️ Decidable
+        ((if (192#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 192#8 == -1) = true then none
+          else if 6#8 ≥ ↑8 then none else some (x✝.sdiv 192#8 <<< 6#8 + x✝)) ⊑
+          Option.map (fun div => x✝ - div * 64#8)
+            (if (64#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 64#8 == -1) = true then none else some (x✝.sdiv 64#8)))
+    [Meta.check] [0.001534] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if (192#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 192#8 == -1) = true then none
+          else if 6#8 ≥ ↑8 then none else some (x✝.sdiv 192#8 <<< 6#8 + x✝))
+          (Option.map (fun div => x✝ - div * 64#8)
+            (if (64#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 64#8 == -1) = true then none else some (x✝.sdiv 64#8)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ :
+        ¬(if (192#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 192#8 == -1) = true then none
+            else if 6#8 ≥ ↑8 then none else some (x✝.sdiv 192#8 <<< 6#8 + x✝)) ⊑
+            Option.map (fun div => x✝ - div * 64#8)
+              (if (64#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 64#8 == -1) = true then none
+              else some (x✝.sdiv 64#8))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ :
+        ¬some ((if x✝.getLsbD 7 = true then (~~~x✝ + 1#8) / 64#8 else ~~~(x✝ / 64#8) + 1#8) <<< 6 + x✝) ⊑
+            Option.map (fun div => x✝ + (~~~(div * 64#8) + 1#8))
+              (some (if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 64#8) + 1#8 else x✝ / 64#8))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gaddhshlhsdivhtohsrem_proof.lean:37:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gaddhshlhsdivhtohsrem_proof.lean:31:8: error: (kernel) declaration has metavariables 'addhshlhsdivhscalar2_thm'
+[bv] [0.078208] Normalizing goal
+  [Meta.synthInstance] [0.001661] ✅️ Decidable
+        ((if (3221225472#32 == 0 || 32 != 1 && x✝ == BitVec.intMin 32 && 3221225472#32 == -1) = true then none
+          else if 30#32 ≥ ↑32 then none else some (x✝.sdiv 3221225472#32 <<< 30#32 + x✝)) ⊑
+          Option.map (fun div => x✝ - div * 1073741824#32)
+            (if (1073741824#32 == 0 || 32 != 1 && x✝ == BitVec.intMin 32 && 1073741824#32 == -1) = true then none
+            else some (x✝.sdiv 1073741824#32)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if (3221225472#32 == 0 || 32 != 1 && x✝ == BitVec.intMin 32 && 3221225472#32 == -1) = true then none
+            else if 30#32 ≥ ↑32 then none else some (x✝.sdiv 3221225472#32 <<< 30#32 + x✝)) ⊑
+            Option.map (fun div => x✝ - div * 1073741824#32)
+              (if (1073741824#32 == 0 || 32 != 1 && x✝ == BitVec.intMin 32 && 1073741824#32 == -1) = true then none
+              else some (x✝.sdiv 1073741824#32))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬some
+              ((if x✝.getLsbD 31 = true then (~~~x✝ + 1#32) / 1073741824#32 else ~~~(x✝ / 1073741824#32) + 1#32) <<<
+                  30 +
+                x✝) ⊑
+            Option.map (fun div => x✝ + (~~~(div * 1073741824#32) + 1#32))
+              (some (if x✝.getLsbD 31 = true then ~~~((~~~x✝ + 1#32) / 1073741824#32) + 1#32 else x✝ / 1073741824#32))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gaddhshlhsdivhtohsrem_proof.lean:48:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gaddhshlhsdivhtohsrem_proof.lean:41:8: error: (kernel) declaration has metavariables 'addhshlhsdivhnegative0_thm'
+[bv] [0.053977] Normalizing goal
+  [Meta.synthInstance] [0.001356] ✅️ Decidable
+        ((if (4#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 4#8 == -1) = true then none
+          else if 2#8 ≥ ↑8 then none else some (x✝.sdiv 4#8 <<< 2#8 + x✝)) ⊑
+          if (4#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 4#8 == -1) = true then none
+          else
+            if True ∧ (x✝.sdiv 4#8 <<< 2#8).sshiftRight (2#8).toNat = x✝.sdiv 4#8 then none
+            else if 2#8 ≥ ↑8 then none else some (x✝.sdiv 4#8 <<< 2#8 + x✝))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ :
+        ¬(if (4#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 4#8 == -1) = true then none
+            else if 2#8 ≥ ↑8 then none else some (x✝.sdiv 4#8 <<< 2#8 + x✝)) ⊑
+            if (4#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 4#8 == -1) = true then none
+            else
+              if True ∧ (x✝.sdiv 4#8 <<< 2#8).sshiftRight (2#8).toNat = x✝.sdiv 4#8 then none
+              else if 2#8 ≥ ↑8 then none else some (x✝.sdiv 4#8 <<< 2#8 + x✝)
+      ⊢ False
+  [Meta.isDefEq] [0.005875] ✅️ ?h₃ =?= fun a =>
+        Eq.trans
+          (ite_cond_eq_false none (some (x✝.sdiv 4#8 <<< 2#8 + x✝))
+            (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+              (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 2#8)
+                (Eq.trans (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 2#8 8#8) (eq_self true)))
+                  Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2))))
+          (congrArg (fun x => some (x <<< 2#8 + x✝))
+            (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.sdiv_udiv x✝ 4#8)
+              (ite_congr (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last x✝))
+                (fun a =>
+                  Eq.trans
+                    (ite_cond_eq_false (-x✝ / -4#8) (-(-x✝ / 4#8))
+                      (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 4#8))
+                        (eq_false' fun h => Bool.noConfusion h)))
+                    (Eq.trans (congrArg (fun x => -(x / 4#8)) (BitVec.neg_eq_not_add x✝))
+                      (BitVec.neg_eq_not_add ((~~~x✝ + 1#8) / 4#8))))
+                fun a =>
+                ite_cond_eq_false (-(x✝ / -4#8)) (x✝ / 4#8)
+                  (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 4#8))
+                    (eq_false' fun h => Bool.noConfusion h)))))
+    [Meta.isDefEq.assign] [0.005872] ✅️ ?h₃ := fun a =>
+          Eq.trans
+            (ite_cond_eq_false none (some (x✝.sdiv 4#8 <<< 2#8 + x✝))
+              (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+                (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 2#8)
+                  (Eq.trans
+                    (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 2#8 8#8) (eq_self true)))
+                    Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2))))
+            (congrArg (fun x => some (x <<< 2#8 + x✝))
+              (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.sdiv_udiv x✝ 4#8)
+                (ite_congr (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last x✝))
+                  (fun a =>
+                    Eq.trans
+                      (ite_cond_eq_false (-x✝ / -4#8) (-(-x✝ / 4#8))
+                        (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 4#8))
+                          (eq_false' fun h => Bool.noConfusion h)))
+                      (Eq.trans (congrArg (fun x => -(x / 4#8)) (BitVec.neg_eq_not_add x✝))
+                        (BitVec.neg_eq_not_add ((~~~x✝ + 1#8) / 4#8))))
+                  fun a =>
+                  ite_cond_eq_false (-(x✝ / -4#8)) (x✝ / 4#8)
+                    (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 4#8))
+                      (eq_false' fun h => Bool.noConfusion h)))))
+      [Meta.isDefEq.assign.checkTypes] [0.005830] ✅️ (?h₃ : ¬(((if x✝.getLsbD 7 = true then
+                          ~~~((~~~x✝ + 1#8) / 4#8) + 1#8
+                        else x✝ / 4#8) <<<
+                        2).sshiftRight
+                    2 ==
+                  if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 4#8) + 1#8 else x✝ / 4#8) =
+                true →
+            (if 2#8 ≥ ↑8 then none else some (x✝.sdiv 4#8 <<< 2#8 + x✝)) =
+              some
+                ((if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 4#8) + 1#8 else x✝ / 4#8) <<< 2 +
+                  x✝)) := (fun a =>
+            Eq.trans
+              (ite_cond_eq_false none (some (x✝.sdiv 4#8 <<< 2#8 + x✝))
+                (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+                  (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 2#8)
+                    (Eq.trans
+                      (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 2#8 8#8) (eq_self true)))
+                      Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2))))
+              (congrArg (fun x => some (x <<< 2#8 + x✝))
+                (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.sdiv_udiv x✝ 4#8)
+                  (ite_congr (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last x✝))
+                    (fun a =>
+                      Eq.trans
+                        (ite_cond_eq_false (-x✝ / -4#8) (-(-x✝ / 4#8))
+                          (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 4#8))
+                            (eq_false' fun h => Bool.noConfusion h)))
+                        (Eq.trans (congrArg (fun x => -(x / 4#8)) (BitVec.neg_eq_not_add x✝))
+                          (BitVec.neg_eq_not_add ((~~~x✝ + 1#8) / 4#8))))
+                    fun a =>
+                    ite_cond_eq_false (-(x✝ / -4#8)) (x✝ / 4#8)
+                      (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 4#8))
+                        (eq_false' fun h =>
+                          Bool.noConfusion
+                            h))))) : ¬(((if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 4#8) + 1#8 else x✝ / 4#8) <<<
+                        2).sshiftRight
+                    2 ==
+                  if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 4#8) + 1#8 else x✝ / 4#8) =
+                true →
+            (if 2#8 ≥ ↑8 then none else some (x✝.sdiv 4#8 <<< 2#8 + x✝)) =
+              some ((if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 4#8) + 1#8 else x✝ / 4#8) <<< 2#8 + x✝))
+        [Meta.isDefEq] [0.005825] ✅️ ¬(((if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 4#8) + 1#8 else x✝ / 4#8) <<<
+                          2).sshiftRight
+                      2 ==
+                    if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 4#8) + 1#8 else x✝ / 4#8) =
+                  true →
+              (if 2#8 ≥ ↑8 then none else some (x✝.sdiv 4#8 <<< 2#8 + x✝)) =
+                some
+                  ((if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 4#8) + 1#8 else x✝ / 4#8) <<< 2 +
+                    x✝) =?= ¬(((if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 4#8) + 1#8 else x✝ / 4#8) <<<
+                          2).sshiftRight
+                      2 ==
+                    if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 4#8) + 1#8 else x✝ / 4#8) =
+                  true →
+              (if 2#8 ≥ ↑8 then none else some (x✝.sdiv 4#8 <<< 2#8 + x✝)) =
+                some ((if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 4#8) + 1#8 else x✝ / 4#8) <<< 2#8 + x✝)
+          [Meta.isDefEq] [0.005795] ✅️ (if 2#8 ≥ ↑8 then none else some (x✝.sdiv 4#8 <<< 2#8 + x✝)) =
+                some
+                  ((if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 4#8) + 1#8 else x✝ / 4#8) <<< 2 +
+                    x✝) =?= (if 2#8 ≥ ↑8 then none else some (x✝.sdiv 4#8 <<< 2#8 + x✝)) =
+                some ((if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 4#8) + 1#8 else x✝ / 4#8) <<< 2#8 + x✝)
+            [Meta.isDefEq] [0.005773] ✅️ some
+                  ((if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 4#8) + 1#8 else x✝ / 4#8) <<< 2 +
+                    x✝) =?= some
+                  ((if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 4#8) + 1#8 else x✝ / 4#8) <<< 2#8 + x✝)
+              [Meta.isDefEq] [0.005750] ✅️ (if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 4#8) + 1#8
+                      else x✝ / 4#8) <<<
+                      2 +
+                    x✝ =?= (if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 4#8) + 1#8 else x✝ / 4#8) <<< 2#8 + x✝
+                [Meta.isDefEq] [0.005635] ✅️ instHAdd.1
+                      ((if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 4#8) + 1#8 else x✝ / 4#8) <<< 2)
+                      x✝ =?= instHAdd.1
+                      ((if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 4#8) + 1#8 else x✝ / 4#8) <<< 2#8) x✝
+                  [Meta.isDefEq] [0.005579] ✅️ Add.add
+                        ((if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 4#8) + 1#8 else x✝ / 4#8) <<< 2)
+                        x✝ =?= Add.add
+                        ((if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 4#8) + 1#8 else x✝ / 4#8) <<< 2#8) x✝
+                    [Meta.isDefEq] [0.005095] ❌️ BitVec.instAdd =?= instAddNat
+                      [Meta.isDefEq] [0.005041] ❌️ { add := BitVec.add } =?= instAddNat
+                        [Meta.isDefEq] [0.001769] ❌️ { add := BitVec.add } =?= { add := Nat.add }
+                          [Meta.isDefEq] [0.001690] ❌️ BitVec.add =?= Nat.add
+                            [Meta.isDefEq.onFailure] [0.001649] ❌️ BitVec.add =?= Nat.add
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ :
+        ¬some ((if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 4#8) + 1#8 else x✝ / 4#8) <<< 2 + x✝) ⊑
+            if
+                (((if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 4#8) + 1#8 else x✝ / 4#8) <<< 2).sshiftRight 2 ==
+                    if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 4#8) + 1#8 else x✝ / 4#8) =
+                  true then
+              none
+            else some ((if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 4#8) + 1#8 else x✝ / 4#8) <<< 2 + x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gaddhshlhsdivhtohsrem_proof.lean:58:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gaddhshlhsdivhtohsrem_proof.lean:52:8: error: (kernel) declaration has metavariables 'addhshlhsdivhnegative1_thm'
+[bv] [0.143729] Normalizing goal
+  [Meta.synthInstance] [0.002121] ✅️ Decidable
+        ((if (-1#32 == 0 || 32 != 1 && x✝ == BitVec.intMin 32 && -1#32 == -1) = true then none
+          else if 1#32 ≥ ↑32 then none else some (x✝.sdiv (-1#32) <<< 1#32 + x✝)) ⊑
+          some (0#32 - x✝))
+    [Meta.check] [0.001141] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (if (-1#32 == 0 || 32 != 1 && x✝ == BitVec.intMin 32 && -1#32 == -1) = true then none
+          else if 1#32 ≥ ↑32 then none else some (x✝.sdiv (-1#32) <<< 1#32 + x✝))
+          (some (0#32 - x✝))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if (-1#32 == 0 || 32 != 1 && x✝ == BitVec.intMin 32 && -1#32 == -1) = true then none
+            else if 1#32 ≥ ↑32 then none else some (x✝.sdiv (-1#32) <<< 1#32 + x✝)) ⊑
+            some (0#32 - x✝)
+      ⊢ False
+  [Meta.isDefEq] [0.003103] ✅️ ?h₁ =?= congrArg (fun x => x = true)
+        (Eq.trans
+          (Eq.trans
+            (congrArg false.or
+              (Eq.trans
+                (congr (congrArg Bool.and (Bool.true_and (x✝ == BitVec.intMin 32))) (beq_self_eq_true' 4294967295#32))
+                (Bool.and_true (x✝ == BitVec.intMin 32))))
+            (Std.Tactic.BVDecide.Normalize.Bool.or_elim false (x✝ == BitVec.intMin 32)))
+          (Eq.trans
+            (congrArg not
+              (Eq.trans (congrArg (fun x => x && !x✝ == BitVec.intMin 32) Bool.not_false)
+                (Bool.true_and !x✝ == BitVec.intMin 32)))
+            (Bool.not_not (x✝ == BitVec.intMin 32))))
+    [Meta.isDefEq.assign] [0.003099] ✅️ ?h₁ := congrArg (fun x => x = true)
+          (Eq.trans
+            (Eq.trans
+              (congrArg false.or
+                (Eq.trans
+                  (congr (congrArg Bool.and (Bool.true_and (x✝ == BitVec.intMin 32))) (beq_self_eq_true' 4294967295#32))
+                  (Bool.and_true (x✝ == BitVec.intMin 32))))
+              (Std.Tactic.BVDecide.Normalize.Bool.or_elim false (x✝ == BitVec.intMin 32)))
+            (Eq.trans
+              (congrArg not
+                (Eq.trans (congrArg (fun x => x && !x✝ == BitVec.intMin 32) Bool.not_false)
+                  (Bool.true_and !x✝ == BitVec.intMin 32)))
+              (Bool.not_not (x✝ == BitVec.intMin 32))))
+      [Meta.isDefEq.assign.checkTypes] [0.003075] ✅️ (?h₁ : ((-1#32 == 0 ||
+                32 != 1 && x✝ == BitVec.intMin 32 && -1#32 == -1) =
+              true) =
+            ((x✝ == BitVec.intMin 32) =
+              true)) := (congrArg (fun x => x = true)
+            (Eq.trans
+              (Eq.trans
+                (congrArg false.or
+                  (Eq.trans
+                    (congr (congrArg Bool.and (Bool.true_and (x✝ == BitVec.intMin 32)))
+                      (beq_self_eq_true' 4294967295#32))
+                    (Bool.and_true (x✝ == BitVec.intMin 32))))
+                (Std.Tactic.BVDecide.Normalize.Bool.or_elim false (x✝ == BitVec.intMin 32)))
+              (Eq.trans
+                (congrArg not
+                  (Eq.trans (congrArg (fun x => x && !x✝ == BitVec.intMin 32) Bool.not_false)
+                    (Bool.true_and !x✝ == BitVec.intMin 32)))
+                (Bool.not_not
+                  (x✝ ==
+                    BitVec.intMin
+                      32)))) : ((false || true && x✝ == BitVec.intMin 32 && 4294967295#32 == 4294967295#32) = true) =
+            ((x✝ == BitVec.intMin 32) = true))
+        [Meta.isDefEq] [0.003069] ✅️ ((-1#32 == 0 || 32 != 1 && x✝ == BitVec.intMin 32 && -1#32 == -1) = true) =
+              ((x✝ == BitVec.intMin 32) =
+                true) =?= ((false || true && x✝ == BitVec.intMin 32 && 4294967295#32 == 4294967295#32) = true) =
+              ((x✝ == BitVec.intMin 32) = true)
+          [Meta.isDefEq] [0.003039] ✅️ (-1#32 == 0 || 32 != 1 && x✝ == BitVec.intMin 32 && -1#32 == -1) =
+                true =?= (false || true && x✝ == BitVec.intMin 32 && 4294967295#32 == 4294967295#32) = true
+            [Meta.isDefEq] [0.003015] ✅️ -1#32 == 0 ||
+                  32 != 1 && x✝ == BitVec.intMin 32 &&
+                    -1#32 == -1 =?= false || true && x✝ == BitVec.intMin 32 && 4294967295#32 == 4294967295#32
+              [Meta.isDefEq.delta] [0.002993] ✅️ -1#32 == 0 ||
+                    32 != 1 && x✝ == BitVec.intMin 32 &&
+                      -1#32 == -1 =?= false || true && x✝ == BitVec.intMin 32 && 4294967295#32 == 4294967295#32
+                [Meta.isDefEq] [0.001313] ✅️ -1#32 == 0 =?= false
+                  [Meta.isDefEq] [0.001292] ✅️ instBEqOfDecidableEq.1 (-1#32) 0 =?= false
+                    [Meta.isDefEq] [0.001240] ✅️ Decidable.decide (-1#32 = 0) =?= false
+                      [Meta.isDefEq] [0.001214] ✅️ Decidable.casesOn (instDecidableEqBitVec (-1#32) 0) (fun x => false)
+                            fun x => true =?= false
+                        [Meta.whnf] [0.001169] Non-easy whnf: instDecidableEqBitVec (-1#32) 0
+                          [Meta.whnf] [0.001160] Non-easy whnf: (-1#32).decEq 0
+                            [Meta.whnf] [0.001129] Non-easy whnf: match -1#32, 0 with
+                                | { toFin := n }, { toFin := m } => if h : n = m then isTrue ⋯ else isFalse ⋯
+                [Meta.isDefEq] [0.001659] ✅️ 32 != 1 && x✝ == BitVec.intMin 32 &&
+                      -1#32 == -1 =?= true && x✝ == BitVec.intMin 32 && 4294967295#32 == 4294967295#32
+                  [Meta.isDefEq.delta] [0.001634] ✅️ 32 != 1 && x✝ == BitVec.intMin 32 &&
+                        -1#32 == -1 =?= true && x✝ == BitVec.intMin 32 && 4294967295#32 == 4294967295#32
+                    [Meta.isDefEq] [0.001277] ✅️ -1#32 == -1 =?= 4294967295#32 == 4294967295#32
+                      [Meta.isDefEq] [0.001245] ✅️ instBEqOfDecidableEq.1 (-1#32)
+                            (-1) =?= instBEqOfDecidableEq.1 4294967295#32 4294967295#32
+                        [Meta.isDefEq] [0.001197] ✅️ Decidable.decide
+                              (-1#32 = -1) =?= Decidable.decide (4294967295#32 = 4294967295#32)
+                          [Meta.isDefEq.delta] [0.001175] ✅️ Decidable.decide
+                                (-1#32 = -1) =?= Decidable.decide (4294967295#32 = 4294967295#32)
+                            [Meta.isDefEq] [0.001013] ✅️ -1#32 = -1 =?= 4294967295#32 = 4294967295#32
+  [Meta.isDefEq] [0.004996] ❌️ ?a + ?a =?= ~~~x✝ + 1#32
+    [Meta.isDefEq] [0.002626] ❌️ instHAdd =?= instHAdd
+      [Meta.isDefEq] [0.002376] ❌️ { hAdd := fun a b => Add.add a b } =?= { hAdd := fun a b => Add.add a b }
+        [Meta.isDefEq] [0.002161] ❌️ fun a b => Add.add a b =?= fun a b => Add.add a b
+    [Meta.isDefEq] [0.002120] ✅️ ?a =?= ~~~x✝
+      [Meta.isDefEq.assign] [0.002110] ✅️ ?a := ~~~x✝
+        [Meta.isDefEq.assign.checkTypes] [0.002092] ✅️ (?a : BitVec ?w) := (~~~x✝ : BitVec 32)
+          [Meta.isDefEq] [0.002085] ✅️ BitVec ?w =?= BitVec 32
+  [Meta.isDefEq] [0.002178] ✅️ ?h₂ =?= fun a =>
+        Eq.trans
+          (ite_cond_eq_true (-x✝ / -4294967295#32) (-(-x✝ / 4294967295#32))
+            (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 4294967295#32)) (eq_self true)))
+          (Eq.trans (congrArg (fun x => x / 1#32) (BitVec.neg_eq_not_add x✝)) BitVec.udiv_one)
+    [Meta.isDefEq.assign] [0.002172] ✅️ ?h₂ := fun a =>
+          Eq.trans
+            (ite_cond_eq_true (-x✝ / -4294967295#32) (-(-x✝ / 4294967295#32))
+              (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 4294967295#32)) (eq_self true)))
+            (Eq.trans (congrArg (fun x => x / 1#32) (BitVec.neg_eq_not_add x✝)) BitVec.udiv_one)
+      [Meta.isDefEq.assign.checkTypes] [0.002140] ✅️ (?h₂ : x✝.getLsbD 31 = true →
+            (if (4294967295#32).msb = true then -x✝ / -4294967295#32 else -(-x✝ / 4294967295#32)) =
+              ~~~x✝ +
+                1#32) := (fun a =>
+            Eq.trans
+              (ite_cond_eq_true (-x✝ / -4294967295#32) (-(-x✝ / 4294967295#32))
+                (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 4294967295#32)) (eq_self true)))
+              (Eq.trans (congrArg (fun x => x / 1#32) (BitVec.neg_eq_not_add x✝))
+                BitVec.udiv_one) : x✝.getLsbD 31 = true →
+            (if (4294967295#32).msb = true then -x✝ / -4294967295#32 else -(-x✝ / 4294967295#32)) = ~~~x✝ + 1#32)
+  [Meta.appBuilder] [0.005149] ✅️ f: HAdd.hAdd, xs: [~~~x✝, 1#32]
+    [Meta.synthInstance] [0.005061] ✅️ HAdd (BitVec 32) (BitVec 32) (BitVec 32)
+      [Meta.synthInstance] [0.002483] ✅️ apply @instHAdd to HAdd (BitVec 32) (BitVec 32) (BitVec 32)
+  [Meta.synthInstance] [0.002602] ✅️ Decidable (x✝.getLsbD 31 = true)
+    [Meta.check] [0.002264] ✅️ instDecidableEqBool (x✝.getLsbD 31) true
+  [Meta.isDefEq] [0.009627] ✅️ ?h₃ =?= fun a =>
+        Eq.trans
+          (ite_cond_eq_false none (some (x✝.sdiv (-1#32) <<< 1#32 + x✝))
+            (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+              (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 32#32 1#32)
+                (Eq.trans
+                  (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 1#32 32#32) (eq_self true)))
+                  Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2))))
+          (congrArg (fun x => some (x <<< 1#32 + x✝))
+            (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.sdiv_udiv x✝ 4294967295#32)
+              (Eq.trans
+                (ite_congr (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last x✝))
+                  (fun a =>
+                    Eq.trans
+                      (ite_cond_eq_true (-x✝ / -4294967295#32) (-(-x✝ / 4294967295#32))
+                        (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 4294967295#32))
+                          (eq_self true)))
+                      (Eq.trans (congrArg (fun x => x / 1#32) (BitVec.neg_eq_not_add x✝)) BitVec.udiv_one))
+                  fun a =>
+                  Eq.trans
+                    (ite_cond_eq_true (-(x✝ / -4294967295#32)) (x✝ / 4294967295#32)
+                      (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 4294967295#32))
+                        (eq_self true)))
+                    (Eq.trans (congrArg Neg.neg BitVec.udiv_one) (BitVec.neg_eq_not_add x✝)))
+                (ite_self (~~~x✝ + 1#32)))))
+    [Meta.isDefEq.assign] [0.009621] ✅️ ?h₃ := fun a =>
+          Eq.trans
+            (ite_cond_eq_false none (some (x✝.sdiv (-1#32) <<< 1#32 + x✝))
+              (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+                (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 32#32 1#32)
+                  (Eq.trans
+                    (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 1#32 32#32) (eq_self true)))
+                    Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2))))
+            (congrArg (fun x => some (x <<< 1#32 + x✝))
+              (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.sdiv_udiv x✝ 4294967295#32)
+                (Eq.trans
+                  (ite_congr (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last x✝))
+                    (fun a =>
+                      Eq.trans
+                        (ite_cond_eq_true (-x✝ / -4294967295#32) (-(-x✝ / 4294967295#32))
+                          (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 4294967295#32))
+                            (eq_self true)))
+                        (Eq.trans (congrArg (fun x => x / 1#32) (BitVec.neg_eq_not_add x✝)) BitVec.udiv_one))
+                    fun a =>
+                    Eq.trans
+                      (ite_cond_eq_true (-(x✝ / -4294967295#32)) (x✝ / 4294967295#32)
+                        (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 4294967295#32))
+                          (eq_self true)))
+                      (Eq.trans (congrArg Neg.neg BitVec.udiv_one) (BitVec.neg_eq_not_add x✝)))
+                  (ite_self (~~~x✝ + 1#32)))))
+      [Meta.isDefEq.assign.checkTypes] [0.009530] ✅️ (?h₃ : ¬(x✝ == BitVec.intMin 32) = true →
+            (if 1#32 ≥ ↑32 then none else some (x✝.sdiv (-1#32) <<< 1#32 + x✝)) =
+              some
+                ((~~~x✝ + 1#32) <<< 1 +
+                  x✝)) := (fun a =>
+            Eq.trans
+              (ite_cond_eq_false none (some (x✝.sdiv (-1#32) <<< 1#32 + x✝))
+                (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
+                  (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 32#32 1#32)
+                    (Eq.trans
+                      (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 1#32 32#32) (eq_self true)))
+                      Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2))))
+              (congrArg (fun x => some (x <<< 1#32 + x✝))
+                (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.sdiv_udiv x✝ 4294967295#32)
+                  (Eq.trans
+                    (ite_congr (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last x✝))
+                      (fun a =>
+                        Eq.trans
+                          (ite_cond_eq_true (-x✝ / -4294967295#32) (-(-x✝ / 4294967295#32))
+                            (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 4294967295#32))
+                              (eq_self true)))
+                          (Eq.trans (congrArg (fun x => x / 1#32) (BitVec.neg_eq_not_add x✝)) BitVec.udiv_one))
+                      fun a =>
+                      Eq.trans
+                        (ite_cond_eq_true (-(x✝ / -4294967295#32)) (x✝ / 4294967295#32)
+                          (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 4294967295#32))
+                            (eq_self true)))
+                        (Eq.trans (congrArg Neg.neg BitVec.udiv_one) (BitVec.neg_eq_not_add x✝)))
+                    (ite_self
+                      (~~~x✝ +
+                        1#32))))) : ¬(x✝ == BitVec.intMin 32) = true →
+            (if 1#32 ≥ ↑32 then none else some (x✝.sdiv (-1#32) <<< 1#32 + x✝)) = some ((~~~x✝ + 1#32) <<< 1#32 + x✝))
+        [Meta.isDefEq] [0.009525] ✅️ ¬(x✝ == BitVec.intMin 32) = true →
+              (if 1#32 ≥ ↑32 then none else some (x✝.sdiv (-1#32) <<< 1#32 + x✝)) =
+                some
+                  ((~~~x✝ + 1#32) <<< 1 +
+                    x✝) =?= ¬(x✝ == BitVec.intMin 32) = true →
+              (if 1#32 ≥ ↑32 then none else some (x✝.sdiv (-1#32) <<< 1#32 + x✝)) = some ((~~~x✝ + 1#32) <<< 1#32 + x✝)
+          [Meta.isDefEq] [0.009487] ✅️ (if 1#32 ≥ ↑32 then none else some (x✝.sdiv (-1#32) <<< 1#32 + x✝)) =
+                some
+                  ((~~~x✝ + 1#32) <<< 1 +
+                    x✝) =?= (if 1#32 ≥ ↑32 then none else some (x✝.sdiv (-1#32) <<< 1#32 + x✝)) =
+                some ((~~~x✝ + 1#32) <<< 1#32 + x✝)
+            [Meta.isDefEq] [0.009460] ✅️ some ((~~~x✝ + 1#32) <<< 1 + x✝) =?= some ((~~~x✝ + 1#32) <<< 1#32 + x✝)
+              [Meta.isDefEq] [0.009433] ✅️ (~~~x✝ + 1#32) <<< 1 + x✝ =?= (~~~x✝ + 1#32) <<< 1#32 + x✝
+                [Meta.isDefEq] [0.009310] ✅️ instHAdd.1 ((~~~x✝ + 1#32) <<< 1)
+                      x✝ =?= instHAdd.1 ((~~~x✝ + 1#32) <<< 1#32) x✝
+                  [Meta.isDefEq] [0.009245] ✅️ Add.add ((~~~x✝ + 1#32) <<< 1)
+                        x✝ =?= Add.add ((~~~x✝ + 1#32) <<< 1#32) x✝
+                    [Meta.isDefEq] [0.006520] ❌️ BitVec.instAdd =?= instAddNat
+                      [Meta.isDefEq] [0.004344] ❌️ { add := BitVec.add } =?= instAddNat
+                        [Meta.isDefEq] [0.002327] ❌️ { add := BitVec.add } =?= { add := Nat.add }
+                          [Meta.isDefEq] [0.002230] ❌️ BitVec.add =?= Nat.add
+                            [Meta.isDefEq.onFailure] [0.002174] ❌️ BitVec.add =?= Nat.add
+                    [Meta.isDefEq] [0.002673] ✅️ BitVec.instAdd.1 ((~~~x✝ + 1#32) <<< 1)
+                          x✝ =?= BitVec.instAdd.1 ((~~~x✝ + 1#32) <<< 1#32) x✝
+                      [Meta.isDefEq] [0.002617] ✅️ ((~~~x✝ + 1#32) <<< 1).add x✝ =?= ((~~~x✝ + 1#32) <<< 1#32).add x✝
+                        [Meta.isDefEq.delta] [0.002600] ✅️ ((~~~x✝ + 1#32) <<< 1).add
+                              x✝ =?= ((~~~x✝ + 1#32) <<< 1#32).add x✝
+                          [Meta.isDefEq] [0.002552] ✅️ (~~~x✝ + 1#32) <<< 1 =?= (~~~x✝ + 1#32) <<< 1#32
+                            [Meta.isDefEq] [0.002480] ✅️ BitVec.instHShiftLeftNat.1 (~~~x✝ + 1#32)
+                                  1 =?= BitVec.instHShiftLeft.1 (~~~x✝ + 1#32) 1#32
+                              [Meta.whnf] [0.002008] Non-easy whnf: HShiftLeft (BitVec 32) ℕ (BitVec 32)
+  [Meta.synthInstance] [0.002318] ✅️ Decidable ((x✝ == BitVec.intMin 32) = true)
+  [Meta.appBuilder] [0.002339] ✅️ f: Subsingleton.elim, xs: [h✝, h]
+    [Meta.isDefEq] [0.002047] ✅️ ?α =?= Decidable c✝
+      [Meta.isDefEq.assign] [0.002040] ✅️ ?α := Decidable c✝
+        [Meta.isDefEq.assign.checkTypes] [0.002027] ✅️ (?α : Sort ?u.65128) := (Decidable c✝ : Type)
+  [Meta.isDefEq] [0.004444] ❌️ ?a + (~~~?a + 1#?w) =?= 0#32 + (~~~x✝ + 1#32)
+    [Meta.isDefEq] [0.002217] ❌️ instHAdd =?= instHAdd
+      [Meta.isDefEq] [0.002146] ❌️ { hAdd := fun a b => Add.add a b } =?= { hAdd := fun a b => Add.add a b }
+    [Meta.isDefEq] [0.002080] ❌️ ~~~0#32 + 1#32 =?= ~~~x✝ + 1#32
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ : ¬(if (x✝ == BitVec.intMin 32) = true then none else some ((~~~x✝ + 1#32) <<< 1 + x✝)) ⊑ some (~~~x✝ + 1#32)
+      ⊢ False
+  [Meta.isDefEq] [0.006558] ❌️ ?a == ?a =?= x✝ == BitVec.intMin 32
+    [Meta.isDefEq.onFailure] [0.006131] ❌️ ?a == ?a =?= x✝ == BitVec.intMin 32
+      [Meta.synthInstance] [0.006089] 💥️ BEq ?α
+        [Meta.synthInstance] [0.002070] 💥️ apply Nat.Linear.instBEqPolyCnstr to BEq ?α
+          [Meta.synthInstance.tryResolve] [0.002035] 💥️ BEq ?α ≟ BEq Nat.Linear.PolyCnstr
+            [Meta.isDefEq] [0.002026] 💥️ BEq ?α =?= BEq Nat.Linear.PolyCnstr
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gaddhshlhsdivhtohsrem_proof.lean:69:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gaddhshlhsdivhtohsrem_proof.lean:62:8: error: (kernel) declaration has metavariables 'addhshlhsdivhnegative2_thm'
+[bv] [0.057614] Normalizing goal
+  [Meta.synthInstance] [0.001542] ✅️ Decidable
+        ((if (2147483648#32 == 0 || 32 != 1 && x✝ == BitVec.intMin 32 && 2147483648#32 == -1) = true then none
+          else if 31#32 ≥ ↑32 then none else some (x✝.sdiv 2147483648#32 <<< 31#32 + x✝)) ⊑
+          Option.bind
+            (match some (BitVec.ofBool (x✝ == 2147483648#32)) with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some 2147483648#32
+            | some { toFin := ⟨0, ⋯⟩ } => some 0#32)
+            fun x' => some (x' + x✝))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬(if (2147483648#32 == 0 || 32 != 1 && x✝ == BitVec.intMin 32 && 2147483648#32 == -1) = true then none
+            else if 31#32 ≥ ↑32 then none else some (x✝.sdiv 2147483648#32 <<< 31#32 + x✝)) ⊑
+            Option.bind
+              (match some (BitVec.ofBool (x✝ == 2147483648#32)) with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 2147483648#32
+              | some { toFin := ⟨0, ⋯⟩ } => some 0#32)
+              fun x' => some (x' + x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      x✝ : BitVec 32
+      a✝ :
+        ¬some
+              ((if x✝.getLsbD 31 = true then (~~~x✝ + 1#32) / 2147483648#32 else ~~~(x✝ / 2147483648#32) + 1#32) <<<
+                  31 +
+                x✝) ⊑
+            Option.bind
+              (match some (if (x✝ == 2147483648#32) = true then 1#1 else 0#1) with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 2147483648#32
+              | some { toFin := ⟨0, ⋯⟩ } => some 0#32)
+              fun a => some (a + x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint

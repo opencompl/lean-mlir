@@ -1,9 +1,4 @@
-⚠ [874/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
-⚠ [878/892] Replayed SSA.Experimental.Bits.Fast.Tactic
-warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
-⚠ [879/892] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+⚠ [676/892] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
@@ -14,17 +9,115 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaratio
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
-⚠ [885/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+⚠ [877/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
-⚠ [886/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+⚠ [884/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [887/892] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
+⚠ [888/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-✖ [890/892] Building Leanwuzla
-trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/lc985/.elan/toolchains/leanprover--lean4---nightly-2024-10-28/bin/lean ././.lake/packages/leanwuzla/././Leanwuzla.lean -R ././.lake/packages/leanwuzla/./. -o ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.olean -i ././.lake/packages/leanwuzla/.lake/build/lib/Leanwuzla.ilean -c ././.lake/packages/leanwuzla/.lake/build/ir/Leanwuzla.c --json
-error: ././.lake/packages/leanwuzla/././Leanwuzla.lean:117:8: invalid dotted identifier notation, unknown identifier `Std.Tactic.BVDecide.BVBinOp.sdiv` from expected type
-  BVBinOp
-error: Lean exited with code 1
-Some required builds logged failures:
-- Leanwuzla
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunchdemand_proof.lean:18:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunchdemand_proof.lean:11:8: error: (kernel) declaration has metavariables 'trunc_lshr_thm'
+[bv] [0.045458] Normalizing goal
+  [Meta.synthInstance] [0.001783] ✅️ Decidable
+        ((if 2#8 ≥ ↑8 then none else some (BitVec.truncate 6 (x✝ >>> 2#8) &&& 14#6)) ⊑
+          if 2#6 ≥ ↑6 then none else some (BitVec.truncate 6 x✝ >>> 2#6 &&& 14#6))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ :
+        ¬(if 2#8 ≥ ↑8 then none else some (BitVec.truncate 6 (x✝ >>> 2#8) &&& 14#6)) ⊑
+            if 2#6 ≥ ↑6 then none else some (BitVec.truncate 6 x✝ >>> 2#6 &&& 14#6)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ : ¬some (BitVec.zeroExtend 6 (x✝ >>> 2) &&& 14#6) ⊑ some (BitVec.zeroExtend 6 x✝ >>> 2 &&& 14#6)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunchdemand_proof.lean:28:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunchdemand_proof.lean:22:8: error: (kernel) declaration has metavariables 'trunc_lshr_exact_mask_thm'
+[bv] [0.017030] Normalizing goal
+  [Meta.synthInstance] [0.001486] ✅️ Decidable
+        ((if 2#8 ≥ ↑8 then none else some (BitVec.truncate 6 (x✝ >>> 2#8) &&& 15#6)) ⊑
+          if 2#6 ≥ ↑6 then none else some (BitVec.truncate 6 x✝ >>> 2#6))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ :
+        ¬(if 2#8 ≥ ↑8 then none else some (BitVec.truncate 6 (x✝ >>> 2#8) &&& 15#6)) ⊑
+            if 2#6 ≥ ↑6 then none else some (BitVec.truncate 6 x✝ >>> 2#6)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ : ¬some (BitVec.zeroExtend 6 (x✝ >>> 2) &&& 15#6) ⊑ some (BitVec.zeroExtend 6 x✝ >>> 2)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunchdemand_proof.lean:39:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunchdemand_proof.lean:32:8: error: (kernel) declaration has metavariables 'or_trunc_lshr_thm'
+[bv] [0.020080] Normalizing goal
+  [Meta.synthInstance] [0.001819] ✅️ Decidable
+        ((if 1#8 ≥ ↑8 then none else some (BitVec.truncate 6 (x✝ >>> 1#8) ||| 32#6)) ⊑
+          if 1#6 ≥ ↑6 then none else some (BitVec.truncate 6 x✝ >>> 1#6 ||| 32#6))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ :
+        ¬(if 1#8 ≥ ↑8 then none else some (BitVec.truncate 6 (x✝ >>> 1#8) ||| 32#6)) ⊑
+            if 1#6 ≥ ↑6 then none else some (BitVec.truncate 6 x✝ >>> 1#6 ||| 32#6)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ : ¬some (BitVec.zeroExtend 6 (x✝ >>> 1) ||| 32#6) ⊑ some (BitVec.zeroExtend 6 x✝ >>> 1 ||| 32#6)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunchdemand_proof.lean:50:4: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gtrunchdemand_proof.lean:43:8: error: (kernel) declaration has metavariables 'or_trunc_lshr_more_thm'
+[bv] [0.013095] Normalizing goal
+  [Meta.synthInstance] [0.001281] ✅️ Decidable
+        ((if 4#8 ≥ ↑8 then none else some (BitVec.truncate 6 (x✝ >>> 4#8) ||| 60#6)) ⊑
+          if 4#6 ≥ ↑6 then none else some (BitVec.truncate 6 x✝ >>> 4#6 ||| 60#6))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ :
+        ¬(if 4#8 ≥ ↑8 then none else some (BitVec.truncate 6 (x✝ >>> 4#8) ||| 60#6)) ⊑
+            if 4#6 ≥ ↑6 then none else some (BitVec.truncate 6 x✝ >>> 4#6 ||| 60#6)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 8
+      x✝ : BitVec 8
+      a✝ : ¬some (BitVec.zeroExtend 6 (x✝ >>> 4) ||| 60#6) ⊑ some (BitVec.zeroExtend 6 x✝ >>> 4 ||| 60#6)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
