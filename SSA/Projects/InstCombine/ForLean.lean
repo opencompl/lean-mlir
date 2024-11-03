@@ -518,31 +518,35 @@ theorem msb_concat {w : Nat} {b : Bool} {x : BitVec w} :
   · simp [h₀, show w = 0 by omega]
 
 @[simp]
-theorem getMsbD_rotateLeft {m n w : Nat} {x : BitVec w} :
-    (x.rotateLeft m).getMsbD n = (decide (n < w) && x.getMsbD ((w + n - m) % w)) := by
-  simp only [rotateLeft, getMsbD_eq_getLsbD]
-  rw [getLsbD_rotateLeftAux_of_le]
-  by_cases h₀ : n < w
-  · have h₁ : 0 < w := by omega
-    have h₂ : (n + m) % w < w := by simp [Nat.mod_lt, h₁]
-    simp [h₀, h₂]
-    -- w - m % w + w - 1 - n = w - 1 - (n + m) % w
-    by_cases h₃ : 0 < m
-    · by_cases h₄ : m < w
-      · simp [h₃, h₄, show m % w = m by simp [Nat.mod_eq_of_lt, h₃, h₄]]
-        by_cases h₅ : (w + n - m) < w
-        · simp [Nat.mod_eq_of_lt, h₅]
-          congr
-          ac_nf
-          sorry
-        ·
-
-          sorry
-      ·
-        sorry
-    ·
-      sorry
+theorem msb_rotateLeft {m w : Nat} {x : BitVec w} :
+    (x.rotateLeft m).msb = x.getMsbD (m % w) := by
+  simp only [getMsbD_eq_getLsbD, getLsbD_shiftLeft, BitVec.msb]
+  by_cases h₀ : 0 < w
   · simp [h₀]
+    by_cases h₁ : (m % w < w) <;> by_cases h₂ : (w - 1 < (m % w))
+    · simp_all [h₁, h₂]
+      have h₃ : m % w ≥ w:= by omega
+      omega
+    · simp [h₁, h₂]
+    · have h₃ : (m % w) < w := by
+        simp [Nat.mod_lt, h₀]
+      contradiction
+    · simp_all [h₁, h₂]
+      by_cases h₃ : (w - 1 < m % w)
+      · simp[h₃, show m % w < w by omega]
+        congr
+        omega
+        omega
+        omega
+      · simp[h₃]
+        intro h₄
+        omega
+  · simp [h₀, show w = 0 by omega]
+
+@[simp]
+theorem getMsbD_rotateLeft {m n w : Nat} {x : BitVec w} :
+    (x.rotateLeft m).getMsbD n = (decide (n < w) && x.getMsbD ((w - m + n) % w)) := by
+  sorry
 
 
 end BitVec
