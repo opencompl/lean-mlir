@@ -2628,7 +2628,23 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Sym/Sym2.lean:637:8: `Sym2.other_invol'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [867/892] Replayed Mathlib.Algebra.BigOperators.Group.Finset
+⚠ [872/892] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
+⚠ [878/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [881/892] Replayed Mathlib.Algebra.BigOperators.Group.Finset
 warning: ././.lake/packages/mathlib/././Mathlib/Algebra/BigOperators/Group/Finset.lean:438:8: `Equiv.Perm.prod_comp'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -2674,30 +2690,14 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Algebra/BigOperators/Group/Finset.lean:2131:8: `Multiset.count_sum'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [874/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+⚠ [884/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
-⚠ [878/892] Replayed SSA.Experimental.Bits.Fast.Tactic
+⚠ [887/892] Replayed SSA.Experimental.Bits.Fast.Tactic
 warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
-⚠ [879/892] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
-⚠ [885/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
-warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
 ⚠ [888/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-Bitwuzla proved the goal after 84.801960ms, solving context: 0.000000ms
-LeanSAT proved the goal after 359.157049ms: rewriting 30.774640ms, bitblasting 0.000000ms, SAT solving 163.273740ms, LRAT trimming 111.380339ms, LRAT checking 40.373750ms
-Bitwuzla proved the goal after 91.926330ms, solving context: 0.000000ms
-LeanSAT proved the goal after 90.643739ms: rewriting 23.807539ms, bitblasting 0.000000ms, SAT solving 58.707739ms, LRAT trimming 0.000000ms, LRAT checking 6.620960ms
+Bitwuzla proved the goal after 80.977350ms, solving context: 0.000000ms
+LeanSAT proved the goal after 296.324868ms: rewriting 28.071910ms, bitblasting 0.000000ms, SAT solving 162.974209ms, LRAT trimming 57.895849ms, LRAT checking 26.073020ms
+Bitwuzla proved the goal after 80.697260ms, solving context: 0.000000ms
+LeanSAT proved the goal after 85.372570ms: rewriting 18.397190ms, bitblasting 0.000000ms, SAT solving 61.201540ms, LRAT trimming 0.000000ms, LRAT checking 1.877750ms

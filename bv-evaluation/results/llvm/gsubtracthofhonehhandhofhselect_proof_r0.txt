@@ -2697,10 +2697,9 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: dec
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
 ⚠ [888/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-✔ [891/892] Built SSA.Projects.InstCombine.TacticAuto
 /home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsubtracthofhonehhandhofhselect_proof.lean:11:8: warning: declaration uses 'sorry'
-[bv] [0.062273] Normalizing goal
-  [Meta.synthInstance] [0.001602] ✅️ Decidable
+[bv] [0.061425] Normalizing goal
+  [Meta.synthInstance] [0.001752] ✅️ Decidable
         ((Option.bind
             (match some x✝ with
             | none => none
@@ -2729,6 +2728,13 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8
             | some { toFin := ⟨1, ⋯⟩ } => some 0#8
             | some { toFin := ⟨0, ⋯⟩ } => some (x✝² - x✝¹)
       ⊢ False
+  [Meta.isDefEq] [0.001002] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some x✝¹
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝²
   [Meta.Tactic.bv] Rerunning pipeline on:
       case h
       e e_1 : LLVM.IntW 8
@@ -2747,87 +2753,17 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8
             | some { toFin := ⟨1, ⋯⟩ } => some 0#8
             | some { toFin := ⟨0, ⋯⟩ } => some (x✝² + (~~~x✝¹ + 1#8))
       ⊢ False
-  [Meta.isDefEq] [0.001095] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+  [Meta.isDefEq] [0.001004] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
       | none => ?h_1 ()
       | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
       | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
       | none => none
       | some { toFin := ⟨1, ⋯⟩ } => some x✝¹
       | some { toFin := ⟨0, ⋯⟩ } => some x✝²
-  [Meta.isDefEq] [0.001140] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
-      | none => ?h_1 ()
-      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
-      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some x✝¹
-      | some { toFin := ⟨0, ⋯⟩ } => some x✝²
-  [Meta.isDefEq] [0.001043] ❌️ match none with
-      | none => ?h_1 ()
-      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
-      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some 0#8
-      | some { toFin := ⟨0, ⋯⟩ } => some (x✝² + (~~~x✝¹ + 1#8))
-  [Meta.isDefEq] [0.001223] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
-      | none => ?h_1 ()
-      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
-      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some 0#8
-      | some { toFin := ⟨0, ⋯⟩ } => some (x✝² + (~~~x✝¹ + 1#8))
-  [Meta.isDefEq] [0.001184] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
-      | none => ?h_1 ()
-      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
-      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some 0#8
-      | some { toFin := ⟨0, ⋯⟩ } => some (x✝² + (~~~x✝¹ + 1#8))
-  [Meta.isDefEq] [0.001055] ❌️ match none with
-      | none => ?h_1 ()
-      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
-      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some x✝¹
-      | some { toFin := ⟨0, ⋯⟩ } => some x✝²
-  [Meta.isDefEq] [0.001194] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
-      | none => ?h_1 ()
-      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
-      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some x✝¹
-      | some { toFin := ⟨0, ⋯⟩ } => some x✝²
-  [Meta.isDefEq] [0.001148] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
-      | none => ?h_1 ()
-      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
-      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some x✝¹
-      | some { toFin := ⟨0, ⋯⟩ } => some x✝²
-  [Meta.isDefEq] [0.001105] ❌️ match none with
-      | none => ?h_1 ()
-      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
-      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some 0#8
-      | some { toFin := ⟨0, ⋯⟩ } => some (x✝² + (~~~x✝¹ + 1#8))
-  [Meta.isDefEq] [0.001221] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
-      | none => ?h_1 ()
-      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
-      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some 0#8
-      | some { toFin := ⟨0, ⋯⟩ } => some (x✝² + (~~~x✝¹ + 1#8))
-  [Meta.isDefEq] [0.001188] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
-      | none => ?h_1 ()
-      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
-      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
-      | none => none
-      | some { toFin := ⟨1, ⋯⟩ } => some 0#8
-      | some { toFin := ⟨0, ⋯⟩ } => some (x✝² + (~~~x✝¹ + 1#8))
   [Meta.Tactic.bv] Pipeline reached a fixpoint
 /home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsubtracthofhonehhandhofhselect_proof.lean:21:8: warning: declaration uses 'sorry'
-[bv] [0.053093] Normalizing goal
-  [Meta.synthInstance] [0.003100] ✅️ Decidable
+[bv] [0.073786] Normalizing goal
+  [Meta.synthInstance] [0.001404] ✅️ Decidable
         ((Option.bind
             (match some x✝ with
             | none => none
@@ -2838,18 +2774,6 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8
           | none => none
           | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ - x✝²)
           | some { toFin := ⟨0, ⋯⟩ } => some 0#8)
-    [Meta.synthInstance] [0.001958] ✅️ apply @BitVec.Refinement.instDecidableRelOptionOfDecidableEq to Decidable
-          ((Option.bind
-              (match some x✝ with
-              | none => none
-              | some { toFin := ⟨1, ⋯⟩ } => some x✝¹
-              | some { toFin := ⟨0, ⋯⟩ } => some x✝²)
-              fun x' => some (x' - x✝²)) ⊑
-            match some x✝ with
-            | none => none
-            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ - x✝²)
-            | some { toFin := ⟨0, ⋯⟩ } => some 0#8)
-      [Meta.synthInstance] [0.001780] new goal DecidableEq (BitVec 8)
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       e e_1 : LLVM.IntW 8
@@ -2868,6 +2792,83 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8
             | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ - x✝²)
             | some { toFin := ⟨0, ⋯⟩ } => some 0#8
       ⊢ False
+  [Meta.isDefEq] [0.001027] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ - x✝²)
+      | some { toFin := ⟨0, ⋯⟩ } => some 0#8
+  [Meta.isDefEq] [0.001133] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ - x✝²)
+      | some { toFin := ⟨0, ⋯⟩ } => some 0#8
+  [Meta.isDefEq] [0.001058] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ + (~~~x✝² + 1#8))
+      | some { toFin := ⟨0, ⋯⟩ } => some 0#8
+  [Meta.isDefEq] [0.001226] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ + (~~~x✝² + 1#8))
+      | some { toFin := ⟨0, ⋯⟩ } => some 0#8
+  [Meta.isDefEq] [0.001232] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ + (~~~x✝² + 1#8))
+      | some { toFin := ⟨0, ⋯⟩ } => some 0#8
+  [Meta.isDefEq] [0.001061] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some x✝¹
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝²
+  [Meta.isDefEq] [0.001118] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some x✝¹
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝²
+  [Meta.isDefEq] [0.001130] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some x✝¹
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝²
+  [Meta.isDefEq] [0.001056] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ + (~~~x✝² + 1#8))
+      | some { toFin := ⟨0, ⋯⟩ } => some 0#8
+  [Meta.isDefEq] [0.001200] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ + (~~~x✝² + 1#8))
+      | some { toFin := ⟨0, ⋯⟩ } => some 0#8
+  [Meta.isDefEq] [0.001165] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ + (~~~x✝² + 1#8))
+      | some { toFin := ⟨0, ⋯⟩ } => some 0#8
   [Meta.Tactic.bv] Rerunning pipeline on:
       case h
       e e_1 : LLVM.IntW 8
@@ -2886,4 +2887,74 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8
             | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ + (~~~x✝² + 1#8))
             | some { toFin := ⟨0, ⋯⟩ } => some 0#8
       ⊢ False
+  [Meta.isDefEq] [0.001062] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some x✝¹
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝²
+  [Meta.isDefEq] [0.001167] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some x✝¹
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝²
+  [Meta.isDefEq] [0.001156] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some x✝¹
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝²
+  [Meta.isDefEq] [0.001186] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ + (~~~x✝² + 1#8))
+      | some { toFin := ⟨0, ⋯⟩ } => some 0#8
+  [Meta.isDefEq] [0.001049] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ + (~~~x✝² + 1#8))
+      | some { toFin := ⟨0, ⋯⟩ } => some 0#8
+  [Meta.isDefEq] [0.001057] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some x✝¹
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝²
+  [Meta.isDefEq] [0.001194] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some x✝¹
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝²
+  [Meta.isDefEq] [0.001146] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some x✝¹
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝²
+  [Meta.isDefEq] [0.001137] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ + (~~~x✝² + 1#8))
+      | some { toFin := ⟨0, ⋯⟩ } => some 0#8
+  [Meta.isDefEq] [0.001081] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ + (~~~x✝² + 1#8))
+      | some { toFin := ⟨0, ⋯⟩ } => some 0#8
   [Meta.Tactic.bv] Pipeline reached a fixpoint

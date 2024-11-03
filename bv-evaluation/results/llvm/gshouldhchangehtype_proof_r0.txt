@@ -2685,16 +2685,77 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Algebra/BigOperators/Group/Finset.lean:2131:8: `Multiset.count_sum'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [878/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
-⚠ [881/892] Replayed SSA.Experimental.Bits.Fast.Tactic
-warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
-⚠ [887/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+⚠ [882/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
+⚠ [884/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [887/892] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
 ⚠ [888/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshouldhchangehtype_proof.lean:2:0: error: failed to read file '././.lake/build/lib/SSA/Projects/InstCombine/TacticAuto.olean', invalid header
+Bitwuzla proved the goal after 75.655870ms, solving context: 1.000000ms
+LeanSAT proved the goal after 84.871999ms: rewriting 23.002520ms, bitblasting 0.000000ms, SAT solving 55.136739ms, LRAT trimming 0.000000ms, LRAT checking 2.161809ms
+Bitwuzla proved the goal after 69.617400ms, solving context: 1.000000ms
+LeanSAT proved the goal after 76.432119ms: rewriting 12.345010ms, bitblasting 0.000000ms, SAT solving 60.931949ms, LRAT trimming 0.000000ms, LRAT checking 1.552660ms
+Bitwuzla proved the goal after 69.812290ms, solving context: 0.000000ms
+LeanSAT proved the goal after 72.579460ms: rewriting 12.519410ms, bitblasting 0.000000ms, SAT solving 55.753070ms, LRAT trimming 0.000000ms, LRAT checking 1.592020ms
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshouldhchangehtype_proof.lean:38:8: warning: declaration uses 'sorry'
+[bv] [0.034565] Normalizing goal
+  [Meta.synthInstance] [0.001432] ✅️ Decidable
+        (some (BitVec.truncate 9 (BitVec.zeroExtend 64 x✝ + BitVec.zeroExtend 64 x✝¹)) ⊑
+          if
+              True ∧
+                (BitVec.zeroExtend 64 x✝).msb = (BitVec.zeroExtend 64 x✝¹).msb ∧
+                  (BitVec.zeroExtend 64 x✝ + BitVec.zeroExtend 64 x✝¹).msb ≠ (BitVec.zeroExtend 64 x✝).msb then
+            none
+          else
+            if
+                True ∧
+                  (BitVec.zeroExtend 64 x✝ + BitVec.zeroExtend 64 x✝¹ < BitVec.zeroExtend 64 x✝ ∨
+                    BitVec.zeroExtend 64 x✝ + BitVec.zeroExtend 64 x✝¹ < BitVec.zeroExtend 64 x✝¹) then
+              none
+            else some (BitVec.truncate 9 (BitVec.zeroExtend 64 x✝ + BitVec.zeroExtend 64 x✝¹)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 9
+      x✝¹ x✝ : BitVec 9
+      a✝ :
+        ¬some (BitVec.truncate 9 (BitVec.zeroExtend 64 x✝ + BitVec.zeroExtend 64 x✝¹)) ⊑
+            if
+                True ∧
+                  (BitVec.zeroExtend 64 x✝).msb = (BitVec.zeroExtend 64 x✝¹).msb ∧
+                    (BitVec.zeroExtend 64 x✝ + BitVec.zeroExtend 64 x✝¹).msb ≠ (BitVec.zeroExtend 64 x✝).msb then
+              none
+            else
+              if
+                  True ∧
+                    (BitVec.zeroExtend 64 x✝ + BitVec.zeroExtend 64 x✝¹ < BitVec.zeroExtend 64 x✝ ∨
+                      BitVec.zeroExtend 64 x✝ + BitVec.zeroExtend 64 x✝¹ < BitVec.zeroExtend 64 x✝¹) then
+                none
+              else some (BitVec.truncate 9 (BitVec.zeroExtend 64 x✝ + BitVec.zeroExtend 64 x✝¹))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 9
+      x✝¹ x✝ : BitVec 9
+      a✝ :
+        ¬some (BitVec.zeroExtend 9 (BitVec.zeroExtend 64 x✝ + BitVec.zeroExtend 64 x✝¹)) ⊑
+            if
+                ((BitVec.zeroExtend 64 x✝).getLsbD 63 == (BitVec.zeroExtend 64 x✝¹).getLsbD 63 &&
+                    !(BitVec.zeroExtend 64 x✝ + BitVec.zeroExtend 64 x✝¹).getLsbD 63 ==
+                        (BitVec.zeroExtend 64 x✝).getLsbD 63) =
+                  true then
+              none
+            else
+              if
+                  (!((!BitVec.zeroExtend 64 x✝ >ᵤ BitVec.zeroExtend 64 x✝ + BitVec.zeroExtend 64 x✝¹) &&
+                        !BitVec.zeroExtend 64 x✝¹ >ᵤ BitVec.zeroExtend 64 x✝ + BitVec.zeroExtend 64 x✝¹)) =
+                    true then
+                none
+              else some (BitVec.zeroExtend 9 (BitVec.zeroExtend 64 x✝ + BitVec.zeroExtend 64 x✝¹))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint

@@ -2709,8 +2709,8 @@ use `set_option diagnostics true` to get diagnostic information
 maximum recursion depth has been reached
 use `set_option maxRecDepth <num>` to increase limit
 use `set_option diagnostics true` to get diagnostic information
-[bv] [0.057877] Normalizing goal
-  [Meta.synthInstance] [0.001425] ✅️ Decidable
+[bv] [0.084491] Normalizing goal
+  [Meta.synthInstance] [0.001391] ✅️ Decidable
         ((do
             let x ← some x✝
             let x_1 ← some x✝¹

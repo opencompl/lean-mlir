@@ -1608,7 +1608,58 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaratio
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
-⚠ [695/892] Replayed Mathlib.Order.Interval.Set.UnorderedInterval
+⚠ [695/892] Replayed Mathlib.Algebra.Group.Int
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Int.lean:115:6: `Int.eq_one_or_neg_one_of_mul_eq_one'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Int.lean:128:6: `Int.eq_one_or_neg_one_of_mul_eq_neg_one'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Int.lean:210:6: `Int.even_pow'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [697/892] Replayed Mathlib.Data.Nat.Cast.Basic
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Cast/Basic.lean:67:6: `nsmul_eq_mul'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Cast/Basic.lean:98:8: `ext_nat'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Cast/Basic.lean:113:8: `eq_natCast'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Cast/Basic.lean:117:8: `map_natCast'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Cast/Basic.lean:124:8: `map_ofNat'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [698/892] Replayed Mathlib.Algebra.Ring.Parity
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Ring/Parity.lean:119:14: `odd_add_self_one'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Ring/Parity.lean:121:14: `odd_add_one_self'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Ring/Parity.lean:223:6: `Nat.even_or_odd'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Ring/Parity.lean:226:6: `Nat.even_xor_odd'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Ring/Parity.lean:244:6: `Nat.even_add'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Ring/Parity.lean:253:6: `Nat.even_sub'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Ring/Parity.lean:276:6: `Nat.odd_add'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Ring/Parity.lean:286:6: `Nat.odd_sub'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [702/892] Replayed Mathlib.Order.Interval.Set.UnorderedInterval
 warning: ././.lake/packages/mathlib/././Mathlib/Order/Interval/Set/UnorderedInterval.lean:82:6: `Set.Icc_subset_uIcc'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -1624,7 +1675,18 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Order/Interval/Set/UnorderedInterval.lean:279:6: `Set.eq_of_mem_uIoc_of_mem_uIoc'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [697/892] Replayed Mathlib.Data.List.Basic
+⚠ [706/892] Replayed Mathlib.Algebra.GroupWithZero.Divisibility
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/GroupWithZero/Divisibility.lean:142:8: `dvd_antisymm'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/GroupWithZero/Divisibility.lean:152:8: `eq_of_forall_dvd'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [708/892] Replayed Mathlib.Algebra.GroupWithZero.WithZero
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/GroupWithZero/WithZero.lean:132:6: `WithZero.map'_map'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [710/892] Replayed Mathlib.Data.List.Basic
 warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Basic.lean:218:8: `List.replicate_succ'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -1703,58 +1765,54 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Basic.lean:2141:8: `List.zipRight_eq_zipRight'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [699/892] Replayed Mathlib.Algebra.Group.Int
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Int.lean:115:6: `Int.eq_one_or_neg_one_of_mul_eq_one'` is missing a doc-string, please add one.
+⚠ [711/892] Replayed Mathlib.Data.List.Forall2
+warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Forall2.lean:108:8: `List.left_unique_forall₂'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Int.lean:128:6: `Int.eq_one_or_neg_one_of_mul_eq_neg_one'` is missing a doc-string, please add one.
+warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Forall2.lean:116:8: `List.right_unique_forall₂'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Int.lean:210:6: `Int.even_pow'` is missing a doc-string, please add one.
+⚠ [712/892] Replayed Mathlib.Data.List.Lattice
+warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Lattice.lean:111:8: `List.inter_nil'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [700/892] Replayed Mathlib.Data.Nat.Cast.Basic
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Cast/Basic.lean:67:6: `nsmul_eq_mul'` is missing a doc-string, please add one.
+⚠ [715/892] Replayed Mathlib.Data.List.Pairwise
+warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Pairwise.lean:53:46: `List.pairwise_map'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Cast/Basic.lean:98:8: `ext_nat'` is missing a doc-string, please add one.
+⚠ [718/892] Replayed Mathlib.Data.List.Lex
+warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Lex.lean:158:9: `List.LT'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Cast/Basic.lean:113:8: `eq_natCast'` is missing a doc-string, please add one.
+warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Lex.lean:168:9: `List.LE'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Cast/Basic.lean:117:8: `map_natCast'` is missing a doc-string, please add one.
+⚠ [719/892] Replayed Mathlib.Data.List.Chain
+warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Chain.lean:204:8: `List.chain'_map_of_chain'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Cast/Basic.lean:124:8: `map_ofNat'` is missing a doc-string, please add one.
+warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Chain.lean:208:8: `List.Pairwise.chain'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [701/892] Replayed Mathlib.Algebra.Ring.Parity
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Ring/Parity.lean:119:14: `odd_add_self_one'` is missing a doc-string, please add one.
+warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Chain.lean:235:8: `List.Chain'.cons'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Ring/Parity.lean:121:14: `odd_add_one_self'` is missing a doc-string, please add one.
+warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Chain.lean:239:8: `List.chain'_cons'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Ring/Parity.lean:223:6: `Nat.even_or_odd'` is missing a doc-string, please add one.
+⚠ [720/892] Replayed Mathlib.Data.List.Join
+warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Join.lean:137:8: `List.drop_take_succ_join_eq_get'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Ring/Parity.lean:226:6: `Nat.even_xor_odd'` is missing a doc-string, please add one.
+⚠ [723/892] Replayed Mathlib.Algebra.Order.Ring.Basic
+warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/Ring/Basic.lean:81:6: `pow_add_pow_le'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Ring/Parity.lean:244:6: `Nat.even_add'` is missing a doc-string, please add one.
+⚠ [727/892] Replayed Mathlib.Data.List.Zip
+warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Zip.lean:122:8: `List.get?_zipWith'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Ring/Parity.lean:253:6: `Nat.even_sub'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Ring/Parity.lean:276:6: `Nat.odd_add'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Ring/Parity.lean:286:6: `Nat.odd_sub'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [702/892] Replayed Mathlib.Algebra.Ring.Int
+⚠ [728/892] Replayed Mathlib.Algebra.Ring.Int
 warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Ring/Int.lean:113:6: `Int.even_or_odd'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -1776,7 +1834,7 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Ring/Int.lean:160:6: `Int.odd_sub'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [707/892] Replayed Mathlib.Data.Set.Lattice
+⚠ [730/892] Replayed Mathlib.Data.Set.Lattice
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Set/Lattice.lean:288:8: `Set.iUnion_mono''` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -1813,7 +1871,7 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Set/Lattice.lean:1451:8: `Set.iInter_iInter_eq'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [708/892] Replayed Mathlib.Order.ConditionallyCompleteLattice.Basic
+⚠ [731/892] Replayed Mathlib.Order.ConditionallyCompleteLattice.Basic
 warning: ././.lake/packages/mathlib/././Mathlib/Order/ConditionallyCompleteLattice/Basic.lean:84:8: `WithTop.coe_sInf'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -1856,18 +1914,18 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Order/ConditionallyCompleteLattice/Basic.lean:830:8: `csSup_le_csSup'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [710/892] Replayed Mathlib.Data.Set.Pairwise.Basic
+⚠ [732/892] Replayed Mathlib.Data.Set.Pairwise.Basic
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Set/Pairwise/Basic.lean:73:8: `Set.Pairwise.mono'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Set/Pairwise/Basic.lean:311:8: `Set.PairwiseDisjoint.elim'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [711/892] Replayed Mathlib.Order.Antichain
+⚠ [733/892] Replayed Mathlib.Order.Antichain
 warning: ././.lake/packages/mathlib/././Mathlib/Order/Antichain.lean:56:18: `IsAntichain.eq'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [712/892] Replayed Mathlib.Order.Interval.Set.OrdConnected
+⚠ [734/892] Replayed Mathlib.Order.Interval.Set.OrdConnected
 warning: ././.lake/packages/mathlib/././Mathlib/Order/Interval/Set/OrdConnected.lean:130:9: `Set.OrdConnected.inter'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -1877,7 +1935,7 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Order/Interval/Set/OrdConnected.lean:162:9: `Set.ordConnected_pi'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [715/892] Replayed Mathlib.Data.Rat.Defs
+⚠ [737/892] Replayed Mathlib.Data.Rat.Defs
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Rat/Defs.lean:111:8: `Rat.normalize_eq_mk'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -1905,14 +1963,14 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Rat/Defs.lean:249:6: `Rat.div_def'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [718/892] Replayed Mathlib.Data.NNRat.Defs
+⚠ [740/892] Replayed Mathlib.Data.NNRat.Defs
 warning: ././.lake/packages/mathlib/././Mathlib/Data/NNRat/Defs.lean:265:8: `Rat.toNNRat_lt_toNNRat_iff'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Data/NNRat/Defs.lean:287:8: `Rat.le_toNNRat_iff_coe_le'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [721/892] Replayed Mathlib.Data.Int.Cast.Lemmas
+⚠ [742/892] Replayed Mathlib.Data.Int.Cast.Lemmas
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Int/Cast/Lemmas.lean:107:6: `zsmul_eq_mul'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -1922,14 +1980,7 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Int/Cast/Lemmas.lean:354:8: `RingHom.eq_intCast'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [723/892] Replayed Mathlib.Algebra.GroupWithZero.Divisibility
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/GroupWithZero/Divisibility.lean:142:8: `dvd_antisymm'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/GroupWithZero/Divisibility.lean:152:8: `eq_of_forall_dvd'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [724/892] Replayed Mathlib.Data.Rat.Lemmas
+⚠ [743/892] Replayed Mathlib.Data.Rat.Lemmas
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Rat/Lemmas.lean:132:8: `Rat.mul_num_den'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -1939,22 +1990,18 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Rat/Lemmas.lean:165:8: `Rat.substr_num_den'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [729/892] Replayed Mathlib.Tactic.Ring.Basic
+⚠ [748/892] Replayed Mathlib.Tactic.Ring.Basic
 warning: ././.lake/packages/mathlib/././Mathlib/Tactic/Ring/Basic.lean:942:8: `Mathlib.Tactic.Ring.atom_pf'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [731/892] Replayed Mathlib.Algebra.GroupWithZero.WithZero
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/GroupWithZero/WithZero.lean:132:6: `WithZero.map'_map'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [732/892] Replayed Mathlib.Algebra.Order.GroupWithZero.Canonical
+⚠ [750/892] Replayed Mathlib.Algebra.Order.GroupWithZero.Canonical
 warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/GroupWithZero/Canonical.lean:69:14: `zero_le'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/GroupWithZero/Canonical.lean:73:8: `not_lt_zero'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [735/892] Replayed Mathlib.Data.PNat.Basic
+⚠ [753/892] Replayed Mathlib.Data.PNat.Basic
 warning: ././.lake/packages/mathlib/././Mathlib/Data/PNat/Basic.lean:293:8: `PNat.mod_add_div'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -1964,7 +2011,7 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Data/PNat/Basic.lean:329:8: `PNat.dvd_iff'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [738/892] Replayed Mathlib.Data.Fin.Basic
+⚠ [756/892] Replayed Mathlib.Data.Fin.Basic
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Fin/Basic.lean:102:6: `Fin.size_positive'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -2010,11 +2057,11 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Fin/Basic.lean:1538:18: `Fin.zero_mul'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [741/892] Replayed Mathlib.Data.Int.GCD
+⚠ [758/892] Replayed Mathlib.Data.Int.GCD
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Int/GCD.lean:278:8: `Int.exists_gcd_one'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [742/892] Replayed Mathlib.Data.Nat.ModEq
+⚠ [759/892] Replayed Mathlib.Data.Nat.ModEq
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/ModEq.lean:95:18: `Nat.ModEq.mul_left'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -2039,25 +2086,14 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/ModEq.lean:258:6: `Nat.ModEq.cancel_right_div_gcd'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [743/892] Replayed Mathlib.Data.List.Forall2
-warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Forall2.lean:108:8: `List.left_unique_forall₂'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Forall2.lean:116:8: `List.right_unique_forall₂'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [745/892] Replayed Mathlib.Data.List.Lattice
-warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Lattice.lean:111:8: `List.inter_nil'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [746/892] Replayed Mathlib.Data.List.Dedup
+⚠ [761/892] Replayed Mathlib.Data.List.Dedup
 warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Dedup.lean:33:8: `List.dedup_cons_of_mem'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Dedup.lean:36:8: `List.dedup_cons_of_not_mem'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [750/892] Replayed Mathlib.Data.Multiset.Basic
+⚠ [763/892] Replayed Mathlib.Data.Multiset.Basic
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Multiset/Basic.lean:51:8: `Multiset.quot_mk_to_coe'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -2094,18 +2130,14 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Multiset/Basic.lean:2578:6: `Multiset.filter_attach'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [752/892] Replayed Mathlib.Data.List.Pairwise
-warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Pairwise.lean:53:46: `List.pairwise_map'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [754/892] Replayed Mathlib.Data.Multiset.Dedup
+⚠ [766/892] Replayed Mathlib.Data.Multiset.Dedup
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Multiset/Dedup.lean:56:8: `Multiset.dedup_subset'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Multiset/Dedup.lean:60:8: `Multiset.subset_dedup'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [757/892] Replayed Mathlib.Data.Finset.Basic
+⚠ [768/892] Replayed Mathlib.Data.Finset.Basic
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Finset/Basic.lean:185:14: `Finset.forall_mem_not_eq'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -2145,27 +2177,7 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Finset/Basic.lean:3059:8: `Finset.pairwise_cons'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [759/892] Replayed Mathlib.Data.List.Lex
-warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Lex.lean:158:9: `List.LT'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Lex.lean:168:9: `List.LE'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [760/892] Replayed Mathlib.Data.List.Chain
-warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Chain.lean:204:8: `List.chain'_map_of_chain'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Chain.lean:208:8: `List.Pairwise.chain'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Chain.lean:235:8: `List.Chain'.cons'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Chain.lean:239:8: `List.chain'_cons'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [762/892] Replayed Mathlib.Data.List.Rotate
+⚠ [770/892] Replayed Mathlib.Data.List.Rotate
 warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Rotate.lean:52:8: `List.length_rotate'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -2181,25 +2193,21 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Rotate.lean:416:8: `List.isRotated_singleton_iff'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [763/892] Replayed Mathlib.Data.List.Join
-warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Join.lean:137:8: `List.drop_take_succ_join_eq_get'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [764/892] Replayed Mathlib.Algebra.BigOperators.Group.List
+⚠ [771/892] Replayed Mathlib.Algebra.BigOperators.Group.List
 warning: ././.lake/packages/mathlib/././Mathlib/Algebra/BigOperators/Group/List.lean:539:8: `List.alternatingProd_cons_cons'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Algebra/BigOperators/Group/List.lean:553:8: `List.alternatingProd_cons'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [765/892] Replayed Mathlib.Algebra.BigOperators.Group.Multiset
+⚠ [772/892] Replayed Mathlib.Algebra.BigOperators.Group.Multiset
 warning: ././.lake/packages/mathlib/././Mathlib/Algebra/BigOperators/Group/Multiset.lean:137:8: `Multiset.prod_hom'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Algebra/BigOperators/Group/Multiset.lean:261:8: `Multiset.prod_map_inv'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [768/892] Replayed Mathlib.Data.Finset.Image
+⚠ [775/892] Replayed Mathlib.Data.Finset.Image
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Finset/Image.lean:83:8: `Finset.mem_map'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -2218,7 +2226,7 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Finset/Image.lean:498:8: `Finset.mem_range_iff_mem_finset_range_of_mod_eq'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [769/892] Replayed Mathlib.Data.Fin.Tuple.Basic
+⚠ [776/892] Replayed Mathlib.Data.Fin.Tuple.Basic
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Fin/Tuple/Basic.lean:853:8: `Fin.insertNth_zero'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -2228,11 +2236,11 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Fin/Tuple/Basic.lean:1013:8: `Fin.find_min'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [770/892] Replayed Mathlib.Data.List.OfFn
+⚠ [777/892] Replayed Mathlib.Data.List.OfFn
 warning: ././.lake/packages/mathlib/././Mathlib/Data/List/OfFn.lean:74:8: `List.ofFn_succ'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [772/892] Replayed Mathlib.Data.Fintype.Basic
+⚠ [779/892] Replayed Mathlib.Data.Fintype.Basic
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Fintype/Basic.lean:293:8: `Finset.insert_inj_on'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -2242,7 +2250,7 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Fintype/Basic.lean:831:8: `Fin.univ_image_get'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [778/892] Replayed Mathlib.Data.Fintype.Card
+⚠ [785/892] Replayed Mathlib.Data.Fintype.Card
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Fintype/Card.lean:128:8: `Fintype.card_of_finset'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -2252,29 +2260,25 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Fintype/Card.lean:310:8: `Fintype.card_subtype_eq'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [785/892] Replayed Mathlib.Data.Finset.Piecewise
+⚠ [792/892] Replayed Mathlib.Data.Finset.Piecewise
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Finset/Piecewise.lean:157:6: `Finset.piecewise_le_piecewise'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Finset/Piecewise.lean:170:6: `Finset.piecewise_mem_Icc'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [789/892] Replayed Mathlib.Data.Vector.Basic
+⚠ [794/892] Replayed Mathlib.Data.Vector.Basic
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Vector/Basic.lean:581:8: `Mathlib.Vector.prod_set'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [804/892] Replayed Mathlib.Algebra.Order.Ring.Basic
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/Ring/Basic.lean:81:6: `pow_add_pow_le'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [805/892] Replayed Mathlib.Order.Cover
+⚠ [809/892] Replayed Mathlib.Order.Cover
 warning: ././.lake/packages/mathlib/././Mathlib/Order/Cover.lean:97:6: `WCovBy.of_le_of_le'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Order/Cover.lean:253:8: `CovBy.ne'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [806/892] Replayed Mathlib.Algebra.Group.Support
+⚠ [810/892] Replayed Mathlib.Algebra.Group.Support
 warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Support.lean:52:8: `Function.mulSupport_subset_iff'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -2290,7 +2294,7 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Support.lean:226:8: `Function.mulSupport_inv'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [809/892] Replayed Mathlib.Data.Nat.Factorial.Basic
+⚠ [813/892] Replayed Mathlib.Data.Nat.Factorial.Basic
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Factorial/Basic.lean:114:8: `Nat.factorial_inj'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -2303,18 +2307,18 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Factorial/Basic.lean:391:8: `Nat.pow_sub_lt_descFactorial'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [813/892] Replayed Mathlib.Tactic.Positivity.Core
+⚠ [817/892] Replayed Mathlib.Tactic.Positivity.Core
 warning: ././.lake/packages/mathlib/././Mathlib/Tactic/Positivity/Core.lean:28:6: `ne_of_ne_of_eq'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Tactic/Positivity/Core.lean:122:6: `Mathlib.Meta.Positivity.lt_of_le_of_ne'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [823/892] Replayed Mathlib.Algebra.CharZero.Lemmas
+⚠ [826/892] Replayed Mathlib.Algebra.CharZero.Lemmas
 warning: ././.lake/packages/mathlib/././Mathlib/Algebra/CharZero/Lemmas.lean:100:8: `nat_mul_inj'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [825/892] Replayed Mathlib.Algebra.Order.Ring.Abs
+⚠ [827/892] Replayed Mathlib.Algebra.Order.Ring.Abs
 warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/Ring/Abs.lean:100:6: `sq_lt_sq'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -2327,7 +2331,7 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/Ring/Abs.lean:119:6: `abs_le_of_sq_le_sq'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [826/892] Replayed Mathlib.Algebra.Order.Field.Basic
+⚠ [828/892] Replayed Mathlib.Algebra.Order.Field.Basic
 warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/Field/Basic.lean:34:8: `lt_div_iff'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -2367,7 +2371,7 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/Field/Basic.lean:513:8: `lt_div_iff_of_neg'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [840/892] Replayed Mathlib.Data.Finset.Lattice
+⚠ [842/892] Replayed Mathlib.Data.Finset.Lattice
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Finset/Lattice.lean:706:8: `Finset.coe_sup'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -2422,7 +2426,7 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Finset/Lattice.lean:1219:8: `Finset.sup_singleton'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [841/892] Replayed Mathlib.Data.Set.Sigma
+⚠ [843/892] Replayed Mathlib.Data.Set.Sigma
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Set/Sigma.lean:124:8: `biSup_sigma'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -2435,7 +2439,7 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Set/Sigma.lean:150:8: `Set.biInter_sigma'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [844/892] Replayed Mathlib.Data.Finset.Sigma
+⚠ [846/892] Replayed Mathlib.Data.Finset.Sigma
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Finset/Sigma.lean:107:8: `biSup_finsetSigma'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -2448,15 +2452,15 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Finset/Sigma.lean:131:8: `Set.biInter_finsetSigma'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [845/892] Replayed Mathlib.Data.Fintype.Sigma
+⚠ [847/892] Replayed Mathlib.Data.Fintype.Sigma
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Fintype/Sigma.lean:27:6: `Set.biUnion_finsetSigma_univ'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [849/892] Replayed Mathlib.Data.Sym.Basic
+⚠ [851/892] Replayed Mathlib.Data.Sym.Basic
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Sym/Basic.lean:307:9: `Sym.inhabitedSym'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [852/892] Replayed Mathlib.Algebra.Group.Indicator
+⚠ [853/892] Replayed Mathlib.Algebra.Group.Indicator
 warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Indicator.lean:103:8: `Set.mulIndicator_eq_one'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -2481,7 +2485,7 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Indicator.lean:403:8: `Set.mulIndicator_diff'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [853/892] Replayed Mathlib.Data.Finset.Max
+⚠ [854/892] Replayed Mathlib.Data.Finset.Max
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Finset/Max.lean:190:8: `Finset.le_min'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -2527,7 +2531,7 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Finset/Max.lean:351:8: `Finset.coe_min'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [855/892] Replayed Mathlib.Data.Nat.Choose.Basic
+⚠ [856/892] Replayed Mathlib.Data.Nat.Choose.Basic
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Choose/Basic.lean:60:8: `Nat.choose_succ_succ'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -2537,7 +2541,7 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Choose/Basic.lean:247:8: `Nat.choose_eq_asc_factorial_div_factorial'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [856/892] Replayed Mathlib.Data.List.Sublists
+⚠ [857/892] Replayed Mathlib.Data.List.Sublists
 warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Sublists.lean:71:8: `List.mem_sublists'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -2560,10 +2564,6 @@ warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Sublists.lean:356:8: `
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Sublists.lean:390:8: `List.revzip_sublists'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [857/892] Replayed Mathlib.Data.List.Zip
-warning: ././.lake/packages/mathlib/././Mathlib/Data/List/Zip.lean:122:8: `List.get?_zipWith'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
 ⚠ [858/892] Replayed Mathlib.Data.Multiset.Powerset
@@ -2697,3 +2697,2294 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: dec
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
 ⚠ [888/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:11:8: warning: declaration uses 'sorry'
+[bv] [0.065866] Normalizing goal
+  [Meta.synthInstance] [0.001957] ✅️ Decidable
+        ((Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 4294901760#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+            fun x' => if 8#32 ≥ ↑32 then none else some (x' <<< 8#32)) ⊑
+          match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32 &&& 4278190080#32)
+          | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 4294901760#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun x' => if 8#32 ≥ ↑32 then none else some (x' <<< 8#32)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32 &&& 4278190080#32)
+            | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32)
+      ⊢ False
+  [Meta.isDefEq] [0.001081] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 4294901760#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001043] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 4294901760#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001007] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32 &&& 4278190080#32)
+      | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32)
+  [Meta.isDefEq] [0.001066] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32 &&& 4278190080#32)
+      | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32)
+  [Meta.isDefEq] [0.001023] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32 &&& 4278190080#32)
+      | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32)
+  [Meta.isDefEq] [0.001067] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ <<< 8 &&& 4278190080#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ <<< 8)
+  [Meta.isDefEq] [0.001067] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ <<< 8 &&& 4278190080#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ <<< 8)
+  [Meta.isDefEq] [0.001120] ✅️ ?x.bind ?f =?= Option.bind
+        (match some x✝ with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 4294901760#32)
+        | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+        fun a => some (a <<< 8)
+  [Meta.isDefEq] [0.001067] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 4294901760#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001059] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 4294901760#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 4294901760#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun a => some (a <<< 8)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ <<< 8 &&& 4278190080#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ <<< 8)
+      ⊢ False
+  [Meta.isDefEq] [0.001083] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 4294901760#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001036] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 4294901760#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001073] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ <<< 8 &&& 4278190080#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ <<< 8)
+  [Meta.isDefEq] [0.001050] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ <<< 8 &&& 4278190080#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ <<< 8)
+  [Meta.isDefEq] [0.001059] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 4294901760#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:22:8: warning: declaration uses 'sorry'
+[bv] [0.067240] Normalizing goal
+  [Meta.synthInstance] [0.002940] ✅️ Decidable
+        ((Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 2147418112#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+            fun x' => if 8#32 ≥ ↑32 then none else some (x' <<< 8#32)) ⊑
+          match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32 &&& 4278190080#32)
+          | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32))
+    [Meta.check] [0.001539] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 2147418112#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+            fun x' => if 8#32 ≥ ↑32 then none else some (x' <<< 8#32))
+          (match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32 &&& 4278190080#32)
+          | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 2147418112#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun x' => if 8#32 ≥ ↑32 then none else some (x' <<< 8#32)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32 &&& 4278190080#32)
+            | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32)
+      ⊢ False
+  [Meta.isDefEq] [0.001132] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001257] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001138] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001075] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ <<< 8 &&& 4278190080#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ <<< 8)
+  [Meta.isDefEq] [0.001047] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ <<< 8 &&& 4278190080#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ <<< 8)
+  [Meta.isDefEq] [0.001094] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001043] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001077] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ <<< 8 &&& 4278190080#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ <<< 8)
+  [Meta.isDefEq] [0.001071] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ <<< 8 &&& 4278190080#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ <<< 8)
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 2147418112#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun a => some (a <<< 8)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ <<< 8 &&& 4278190080#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ <<< 8)
+      ⊢ False
+  [Meta.isDefEq] [0.001099] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001064] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001091] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ <<< 8 &&& 4278190080#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ <<< 8)
+  [Meta.isDefEq] [0.001045] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ <<< 8 &&& 4278190080#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ <<< 8)
+  [Meta.isDefEq] [0.001056] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001065] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001036] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ <<< 8 &&& 4278190080#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ <<< 8)
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:33:8: warning: declaration uses 'sorry'
+[bv] [0.054586] Normalizing goal
+  [Meta.synthInstance] [0.002312] ✅️ Decidable
+        ((Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 4294901760#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+            fun x' => if 8#32 ≥ ↑32 then none else some (x' <<< 8#32)) ⊑
+          match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32 ||| 4278190080#32)
+          | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32))
+    [Meta.check] [0.001163] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 4294901760#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+            fun x' => if 8#32 ≥ ↑32 then none else some (x' <<< 8#32))
+          (match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32 ||| 4278190080#32)
+          | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 4294901760#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun x' => if 8#32 ≥ ↑32 then none else some (x' <<< 8#32)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32 ||| 4278190080#32)
+            | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 4294901760#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun a => some (a <<< 8)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ <<< 8 ||| 4278190080#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ <<< 8)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:44:8: warning: declaration uses 'sorry'
+[bv] [0.072440] Normalizing goal
+  [Meta.synthInstance] [0.002829] ✅️ Decidable
+        ((Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+            fun x' => if 8#32 ≥ ↑32 then none else some (x' <<< 8#32)) ⊑
+          match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32 ||| 4278190080#32)
+          | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32))
+    [Meta.check] [0.001477] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+            fun x' => if 8#32 ≥ ↑32 then none else some (x' <<< 8#32))
+          (match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32 ||| 4278190080#32)
+          | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun x' => if 8#32 ≥ ↑32 then none else some (x' <<< 8#32)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32 ||| 4278190080#32)
+            | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32)
+      ⊢ False
+  [Meta.isDefEq] [0.001084] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001148] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001074] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32 ||| 4278190080#32)
+      | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32)
+  [Meta.isDefEq] [0.001160] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32 ||| 4278190080#32)
+      | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32)
+  [Meta.isDefEq] [0.001152] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32 ||| 4278190080#32)
+      | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32)
+  [Meta.isDefEq] [0.001126] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ <<< 8 ||| 4278190080#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ <<< 8)
+  [Meta.isDefEq] [0.001200] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ <<< 8 ||| 4278190080#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ <<< 8)
+  [Meta.isDefEq] [0.001212] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ <<< 8 ||| 4278190080#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ <<< 8)
+  [Meta.isDefEq] [0.001067] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001205] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001182] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001059] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ <<< 8 ||| 4278190080#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ <<< 8)
+  [Meta.isDefEq] [0.001066] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ <<< 8 ||| 4278190080#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ <<< 8)
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun a => some (a <<< 8)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ <<< 8 ||| 4278190080#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ <<< 8)
+      ⊢ False
+  [Meta.isDefEq] [0.001055] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001091] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001167] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001094] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ <<< 8 ||| 4278190080#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ <<< 8)
+  [Meta.isDefEq] [0.001145] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ <<< 8 ||| 4278190080#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ <<< 8)
+  [Meta.isDefEq] [0.001170] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ <<< 8 ||| 4278190080#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ <<< 8)
+  [Meta.isDefEq] [0.001069] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001198] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001188] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001063] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ <<< 8 ||| 4278190080#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ <<< 8)
+  [Meta.isDefEq] [0.001187] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ <<< 8 ||| 4278190080#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ <<< 8)
+  [Meta.isDefEq] [0.001156] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ <<< 8 ||| 4278190080#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ <<< 8)
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:55:8: warning: declaration uses 'sorry'
+[bv] [0.044733] Normalizing goal
+  [Meta.synthInstance] [0.001681] ✅️ Decidable
+        ((Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 4294901760#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+            fun x' => if 8#32 ≥ ↑32 then none else some (x' <<< 8#32)) ⊑
+          match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32 ^^^ 4278190080#32)
+          | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 4294901760#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun x' => if 8#32 ≥ ↑32 then none else some (x' <<< 8#32)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32 ^^^ 4278190080#32)
+            | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 4294901760#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun a => some (a <<< 8)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ <<< 8 ^^^ 4278190080#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ <<< 8)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:66:8: warning: declaration uses 'sorry'
+[bv] [0.045718] Normalizing goal
+  [Meta.synthInstance] [0.002118] ✅️ Decidable
+        ((Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 2147418112#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+            fun x' => if 8#32 ≥ ↑32 then none else some (x' <<< 8#32)) ⊑
+          match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32 ^^^ 4278190080#32)
+          | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32))
+    [Meta.check] [0.001115] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 2147418112#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+            fun x' => if 8#32 ≥ ↑32 then none else some (x' <<< 8#32))
+          (match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32 ^^^ 4278190080#32)
+          | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 2147418112#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun x' => if 8#32 ≥ ↑32 then none else some (x' <<< 8#32)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32 ^^^ 4278190080#32)
+            | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 2147418112#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun a => some (a <<< 8)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ <<< 8 ^^^ 4278190080#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ <<< 8)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:77:8: warning: declaration uses 'sorry'
+[bv] [0.046422] Normalizing goal
+  [Meta.synthInstance] [0.001997] ✅️ Decidable
+        ((Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ + 4294901760#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+            fun x' => if 8#32 ≥ ↑32 then none else some (x' <<< 8#32)) ⊑
+          match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32 + 4278190080#32)
+          | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ + 4294901760#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun x' => if 8#32 ≥ ↑32 then none else some (x' <<< 8#32)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32 + 4278190080#32)
+            | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ + 4294901760#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun a => some (a <<< 8)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ <<< 8 + 4278190080#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ <<< 8)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:88:8: warning: declaration uses 'sorry'
+[bv] [0.057969] Normalizing goal
+  [Meta.synthInstance] [0.002161] ✅️ Decidable
+        ((Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ + 2147418112#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+            fun x' => if 8#32 ≥ ↑32 then none else some (x' <<< 8#32)) ⊑
+          match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32 + 4278190080#32)
+          | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32))
+    [Meta.check] [0.001103] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ + 2147418112#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+            fun x' => if 8#32 ≥ ↑32 then none else some (x' <<< 8#32))
+          (match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32 + 4278190080#32)
+          | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ + 2147418112#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun x' => if 8#32 ≥ ↑32 then none else some (x' <<< 8#32)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32 + 4278190080#32)
+            | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ <<< 8#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ + 2147418112#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun a => some (a <<< 8)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ <<< 8 + 4278190080#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ <<< 8)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:99:8: warning: declaration uses 'sorry'
+[bv] [0.045600] Normalizing goal
+  [Meta.synthInstance] [0.001689] ✅️ Decidable
+        ((Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 4294901760#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+            fun x' => if 8#32 ≥ ↑32 then none else some (x' >>> 8#32)) ⊑
+          match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32 &&& 16776960#32)
+          | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 4294901760#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun x' => if 8#32 ≥ ↑32 then none else some (x' >>> 8#32)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32 &&& 16776960#32)
+            | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 4294901760#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun a => some (a >>> 8)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 &&& 16776960#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:110:8: warning: declaration uses 'sorry'
+[bv] [0.045998] Normalizing goal
+  [Meta.synthInstance] [0.001729] ✅️ Decidable
+        ((Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 2147418112#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+            fun x' => if 8#32 ≥ ↑32 then none else some (x' >>> 8#32)) ⊑
+          match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32 &&& 8388352#32)
+          | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 2147418112#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun x' => if 8#32 ≥ ↑32 then none else some (x' >>> 8#32)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32 &&& 8388352#32)
+            | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 2147418112#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun a => some (a >>> 8)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 &&& 8388352#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:121:8: warning: declaration uses 'sorry'
+[bv] [0.075152] Normalizing goal
+  [Meta.synthInstance] [0.002715] ✅️ Decidable
+        ((Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 4294901760#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+            fun x' => if 8#32 ≥ ↑32 then none else some (x' >>> 8#32)) ⊑
+          match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32 ||| 16776960#32)
+          | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32))
+    [Meta.check] [0.001422] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 4294901760#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+            fun x' => if 8#32 ≥ ↑32 then none else some (x' >>> 8#32))
+          (match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32 ||| 16776960#32)
+          | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 4294901760#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun x' => if 8#32 ≥ ↑32 then none else some (x' >>> 8#32)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32 ||| 16776960#32)
+            | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32)
+      ⊢ False
+  [Meta.isDefEq] [0.001106] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 4294901760#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001179] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 4294901760#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001169] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 4294901760#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.appBuilder] [0.002659] ✅️ f: HShiftRight.hShiftRight, xs: [a, 8]
+    [Meta.synthInstance] [0.002557] ✅️ HShiftRight (BitVec 32) ℕ (BitVec 32)
+      [Meta.synthInstance] [0.002300] ✅️ apply @BitVec.instHShiftRightNat to HShiftRight (BitVec 32) ℕ (BitVec 32)
+        [Meta.synthInstance.tryResolve] [0.002238] ✅️ HShiftRight (BitVec 32) ℕ
+              (BitVec 32) ≟ HShiftRight (BitVec 32) ℕ (BitVec 32)
+          [Meta.isDefEq] [0.002164] ✅️ HShiftRight (BitVec 32) ℕ
+                ?m.130120 =?= HShiftRight (BitVec ?m.130123) ℕ (BitVec ?m.130123)
+            [Meta.isDefEq] [0.002030] ✅️ ?m.130120 =?= BitVec 32
+              [Meta.isDefEq.assign] [0.002025] ✅️ ?m.130120 := BitVec 32
+                [Meta.isDefEq.assign.checkTypes] [0.002018] ✅️ (?m.130120 : outParam
+                      (Type ?u.130115)) := (BitVec 32 : Type)
+                  [Meta.isDefEq] [0.002012] ✅️ outParam (Type ?u.130115) =?= Type
+                    [Meta.isDefEq] [0.001983] ✅️ Type ?u.130115 =?= Type
+                      [Meta.isLevelDefEq] [0.001973] ✅️ ?u.130115 =?= 0
+  [Meta.isDefEq] [0.001113] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32 ||| 16776960#32)
+      | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32)
+  [Meta.isDefEq] [0.001137] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32 ||| 16776960#32)
+      | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32)
+  [Meta.isDefEq] [0.001179] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32 ||| 16776960#32)
+      | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32)
+  [Meta.isDefEq] [0.001084] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ||| 16776960#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001170] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ||| 16776960#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001173] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ||| 16776960#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001031] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 4294901760#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001185] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 4294901760#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001123] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 4294901760#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001054] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ||| 16776960#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001174] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ||| 16776960#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001191] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ||| 16776960#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 4294901760#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun a => some (a >>> 8)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ||| 16776960#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+      ⊢ False
+  [Meta.isDefEq] [0.001039] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 4294901760#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001202] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 4294901760#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001181] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 4294901760#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001135] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ||| 16776960#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001206] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ||| 16776960#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001147] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ||| 16776960#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001038] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 4294901760#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001182] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 4294901760#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001161] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 4294901760#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001059] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ||| 16776960#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001146] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ||| 16776960#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001196] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ||| 16776960#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:132:8: warning: declaration uses 'sorry'
+[bv] [0.073673] Normalizing goal
+  [Meta.synthInstance] [0.002801] ✅️ Decidable
+        ((Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+            fun x' => if 8#32 ≥ ↑32 then none else some (x' >>> 8#32)) ⊑
+          match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32 ||| 8388352#32)
+          | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32))
+    [Meta.check] [0.001480] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+            fun x' => if 8#32 ≥ ↑32 then none else some (x' >>> 8#32))
+          (match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32 ||| 8388352#32)
+          | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun x' => if 8#32 ≥ ↑32 then none else some (x' >>> 8#32)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32 ||| 8388352#32)
+            | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32)
+      ⊢ False
+  [Meta.isDefEq] [0.001062] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001182] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001112] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001085] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32 ||| 8388352#32)
+      | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32)
+  [Meta.isDefEq] [0.001142] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32 ||| 8388352#32)
+      | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32)
+  [Meta.isDefEq] [0.001126] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32 ||| 8388352#32)
+      | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32)
+  [Meta.isDefEq] [0.001066] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ||| 8388352#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001147] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ||| 8388352#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001150] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ||| 8388352#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001034] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001149] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001130] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001033] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ||| 8388352#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001175] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ||| 8388352#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001131] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ||| 8388352#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun a => some (a >>> 8)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ||| 8388352#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+      ⊢ False
+  [Meta.isDefEq] [0.001030] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001145] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001129] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001039] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ||| 8388352#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001182] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ||| 8388352#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001131] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ||| 8388352#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001038] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001164] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001121] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001034] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ||| 8388352#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001170] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ||| 8388352#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001128] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ||| 8388352#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:143:8: warning: declaration uses 'sorry'
+[bv] [0.063900] Normalizing goal
+  [Meta.synthInstance] [0.001632] ✅️ Decidable
+        ((Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 4294901760#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+            fun x' => if 8#32 ≥ ↑32 then none else some (x' >>> 8#32)) ⊑
+          match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32 ^^^ 16776960#32)
+          | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 4294901760#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun x' => if 8#32 ≥ ↑32 then none else some (x' >>> 8#32)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32 ^^^ 16776960#32)
+            | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32)
+      ⊢ False
+  [Meta.appBuilder] [0.002345] ✅️ f: HShiftRight.hShiftRight, xs: [a, 8]
+    [Meta.synthInstance] [0.002286] ✅️ HShiftRight (BitVec 32) ℕ (BitVec 32)
+      [Meta.synthInstance] [0.002128] ✅️ apply @BitVec.instHShiftRightNat to HShiftRight (BitVec 32) ℕ (BitVec 32)
+        [Meta.synthInstance.tryResolve] [0.002105] ✅️ HShiftRight (BitVec 32) ℕ
+              (BitVec 32) ≟ HShiftRight (BitVec 32) ℕ (BitVec 32)
+          [Meta.isDefEq] [0.002049] ✅️ HShiftRight (BitVec 32) ℕ
+                ?m.153815 =?= HShiftRight (BitVec ?m.153818) ℕ (BitVec ?m.153818)
+            [Meta.isDefEq] [0.001973] ✅️ ?m.153815 =?= BitVec 32
+              [Meta.isDefEq.assign] [0.001970] ✅️ ?m.153815 := BitVec 32
+                [Meta.isDefEq.assign.checkTypes] [0.001964] ✅️ (?m.153815 : outParam
+                      (Type ?u.153810)) := (BitVec 32 : Type)
+  [Meta.isDefEq] [0.001012] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ^^^ 16776960#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001157] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ^^^ 16776960#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001028] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 4294901760#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001161] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 4294901760#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001159] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 4294901760#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001046] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ^^^ 16776960#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001190] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ^^^ 16776960#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001182] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ^^^ 16776960#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 4294901760#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun a => some (a >>> 8)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ^^^ 16776960#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+      ⊢ False
+  [Meta.isDefEq] [0.001075] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 4294901760#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001215] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 4294901760#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001194] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 4294901760#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001084] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ^^^ 16776960#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001103] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ^^^ 16776960#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001158] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ^^^ 16776960#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001073] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 4294901760#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001209] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 4294901760#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001108] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 4294901760#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001050] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ^^^ 16776960#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001213] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ^^^ 16776960#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001183] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ^^^ 16776960#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:154:8: warning: declaration uses 'sorry'
+[bv] [0.057056] Normalizing goal
+  [Meta.synthInstance] [0.001879] ✅️ Decidable
+        ((Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 2147418112#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+            fun x' => if 8#32 ≥ ↑32 then none else some (x' >>> 8#32)) ⊑
+          match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32 ^^^ 8388352#32)
+          | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 2147418112#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun x' => if 8#32 ≥ ↑32 then none else some (x' >>> 8#32)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32 ^^^ 8388352#32)
+            | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹ >>> 8#32)
+      ⊢ False
+  [Meta.isDefEq] [0.001828] ✅️ ?x.bind ?f =?= Option.bind
+        (match some x✝ with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 2147418112#32)
+        | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+        fun x' => if 8#32 ≥ ↑32 then none else some (x' >>> 8#32)
+    [Meta.isDefEq] [0.001703] ✅️ ?x =?= match some x✝ with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 2147418112#32)
+        | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+      [Meta.isDefEq.assign] [0.001700] ✅️ ?x := match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 2147418112#32)
+          | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+        [Meta.isDefEq.assign.checkTypes] [0.001688] ✅️ (?x : Option (BitVec 32)) := (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 2147418112#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝¹ : LLVM.IntW 32)
+  [Meta.isDefEq] [0.001150] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001071] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001078] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ^^^ 8388352#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001188] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ^^^ 8388352#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001164] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ^^^ 8388352#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001053] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001178] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001155] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001001] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ^^^ 8388352#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 2147418112#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun a => some (a >>> 8)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ^^^ 8388352#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+      ⊢ False
+  [Meta.isDefEq] [0.001054] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ^^^ 8388352#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001192] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ^^^ 8388352#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.isDefEq] [0.001151] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ >>> 8 ^^^ 8388352#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹ >>> 8)
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:165:8: warning: declaration uses 'sorry'
+[bv] [0.042866] Normalizing goal
+  [Meta.synthInstance] [0.001614] ✅️ Decidable
+        ((Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 4294901760#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+            fun x' => if 8#32 ≥ ↑32 then none else some (x'.sshiftRight (8#32).toNat)) ⊑
+          match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } =>
+            if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat &&& 4294967040#32)
+          | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 4294901760#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun x' => if 8#32 ≥ ↑32 then none else some (x'.sshiftRight (8#32).toNat)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } =>
+              if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat &&& 4294967040#32)
+            | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 4294901760#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun a => some (a.sshiftRight 8)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹.sshiftRight 8 &&& 4294967040#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹.sshiftRight 8)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:176:8: warning: declaration uses 'sorry'
+[bv] [0.043350] Normalizing goal
+  [Meta.synthInstance] [0.001647] ✅️ Decidable
+        ((Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 2147418112#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+            fun x' => if 8#32 ≥ ↑32 then none else some (x'.sshiftRight (8#32).toNat)) ⊑
+          match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat &&& 8388352#32)
+          | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 2147418112#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun x' => if 8#32 ≥ ↑32 then none else some (x'.sshiftRight (8#32).toNat)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } =>
+              if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat &&& 8388352#32)
+            | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ &&& 2147418112#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun a => some (a.sshiftRight 8)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹.sshiftRight 8 &&& 8388352#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹.sshiftRight 8)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:187:8: warning: declaration uses 'sorry'
+[bv] [0.043123] Normalizing goal
+  [Meta.synthInstance] [0.001944] ✅️ Decidable
+        ((Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 4294901760#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+            fun x' => if 8#32 ≥ ↑32 then none else some (x'.sshiftRight (8#32).toNat)) ⊑
+          match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } =>
+            if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat ||| 4294967040#32)
+          | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 4294901760#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun x' => if 8#32 ≥ ↑32 then none else some (x'.sshiftRight (8#32).toNat)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } =>
+              if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat ||| 4294967040#32)
+            | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 4294901760#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun a => some (a.sshiftRight 8)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹.sshiftRight 8 ||| 4294967040#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹.sshiftRight 8)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:198:8: warning: declaration uses 'sorry'
+[bv] [0.041490] Normalizing goal
+  [Meta.synthInstance] [0.001584] ✅️ Decidable
+        ((Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+            fun x' => if 8#32 ≥ ↑32 then none else some (x'.sshiftRight (8#32).toNat)) ⊑
+          match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat ||| 8388352#32)
+          | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun x' => if 8#32 ≥ ↑32 then none else some (x'.sshiftRight (8#32).toNat)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } =>
+              if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat ||| 8388352#32)
+            | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ||| 2147418112#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun a => some (a.sshiftRight 8)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹.sshiftRight 8 ||| 8388352#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹.sshiftRight 8)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:209:8: warning: declaration uses 'sorry'
+[bv] [0.049162] Normalizing goal
+  [Meta.synthInstance] [0.002109] ✅️ Decidable
+        ((Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 4294901760#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+            fun x' => if 8#32 ≥ ↑32 then none else some (x'.sshiftRight (8#32).toNat)) ⊑
+          match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } =>
+            if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat ^^^ 4294967040#32)
+          | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat))
+    [Meta.check] [0.001249] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 4294901760#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+            fun x' => if 8#32 ≥ ↑32 then none else some (x'.sshiftRight (8#32).toNat))
+          (match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } =>
+            if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat ^^^ 4294967040#32)
+          | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 4294901760#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun x' => if 8#32 ≥ ↑32 then none else some (x'.sshiftRight (8#32).toNat)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } =>
+              if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat ^^^ 4294967040#32)
+            | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat)
+      ⊢ False
+  [Meta.isDefEq] [0.002506] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 4294901760#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+    [Meta.isDefEq] [0.002124] ❌️ ?h_1 () =?= match some x✝ with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 4294901760#32)
+        | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+      [Meta.whnf] [0.002054] Non-easy whnf: match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 4294901760#32)
+          | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+        [Meta.whnf] [0.001933] Non-easy whnf: (fun motive c? h_1 h_2 h_3 =>
+                Option.casesOn c? (h_1 ()) fun val =>
+                  BitVec.casesOn val fun toFin =>
+                    Fin.casesOn toFin fun val isLt =>
+                      Nat.casesOn (motive := fun x => (isLt : x < 2 ^ 1) → motive (some { toFin := ⟨x, isLt⟩ })) val
+                        (fun isLt => h_3 ())
+                        (fun n isLt =>
+                          Nat.casesOn (motive := fun x =>
+                            (isLt : x.succ < 2 ^ 1) → motive (some { toFin := ⟨x.succ, isLt⟩ })) n (fun isLt => h_2 ())
+                            (fun n isLt => ⋯.elim) isLt)
+                        isLt)
+              (fun c? => LLVM.IntW 32) (some x✝) h_1 h_2 h_3
+  [Meta.isDefEq] [0.001077] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat ^^^ 4294967040#32)
+      | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat)
+  [Meta.isDefEq] [0.001042] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹.sshiftRight 8 ^^^ 4294967040#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹.sshiftRight 8)
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 4294901760#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun a => some (a.sshiftRight 8)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹.sshiftRight 8 ^^^ 4294967040#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹.sshiftRight 8)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gpullhconditionalhbinophthroughhshift_proof.lean:220:8: warning: declaration uses 'sorry'
+[bv] [0.060026] Normalizing goal
+  [Meta.synthInstance] [0.002802] ✅️ Decidable
+        ((Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 2147418112#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+            fun x' => if 8#32 ≥ ↑32 then none else some (x'.sshiftRight (8#32).toNat)) ⊑
+          match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat ^^^ 8388352#32)
+          | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat))
+    [Meta.check] [0.001435] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 2147418112#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+            fun x' => if 8#32 ≥ ↑32 then none else some (x'.sshiftRight (8#32).toNat))
+          (match some x✝ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat ^^^ 8388352#32)
+          | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 2147418112#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun x' => if 8#32 ≥ ↑32 then none else some (x'.sshiftRight (8#32).toNat)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } =>
+              if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat ^^^ 8388352#32)
+            | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat)
+      ⊢ False
+  [Meta.isDefEq] [0.001133] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001221] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001233] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001134] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat ^^^ 8388352#32)
+      | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat)
+  [Meta.isDefEq] [0.001246] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat ^^^ 8388352#32)
+      | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat)
+  [Meta.isDefEq] [0.001193] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat ^^^ 8388352#32)
+      | some { toFin := ⟨0, ⋯⟩ } => if 8#32 ≥ ↑32 then none else some (x✝¹.sshiftRight (8#32).toNat)
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 32
+      e_1 : LLVM.IntW 1
+      x✝¹ : BitVec 32
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 2147418112#32)
+              | some { toFin := ⟨0, ⋯⟩ } => some x✝¹)
+              fun a => some (a.sshiftRight 8)) ⊑
+            match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹.sshiftRight 8 ^^^ 8388352#32)
+            | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹.sshiftRight 8)
+      ⊢ False
+  [Meta.isDefEq] [0.001174] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001106] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001080] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹.sshiftRight 8 ^^^ 8388352#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹.sshiftRight 8)
+  [Meta.isDefEq] [0.001259] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹.sshiftRight 8 ^^^ 8388352#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹.sshiftRight 8)
+  [Meta.isDefEq] [0.001158] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹.sshiftRight 8 ^^^ 8388352#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹.sshiftRight 8)
+  [Meta.isDefEq] [0.001093] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001231] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001184] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹ ^^^ 2147418112#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some x✝¹
+  [Meta.isDefEq] [0.001114] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some (x✝¹.sshiftRight 8 ^^^ 8388352#32)
+      | some { toFin := ⟨0, ⋯⟩ } => some (x✝¹.sshiftRight 8)
+  [Meta.Tactic.bv] Pipeline reached a fixpoint

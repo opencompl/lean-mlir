@@ -1608,23 +1608,7 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaratio
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
-⚠ [694/892] Replayed Mathlib.Order.Interval.Set.UnorderedInterval
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Interval/Set/UnorderedInterval.lean:82:6: `Set.Icc_subset_uIcc'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Interval/Set/UnorderedInterval.lean:103:6: `Set.uIcc_subset_uIcc_iff_le'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Interval/Set/UnorderedInterval.lean:140:6: `Set.eq_of_mem_uIcc_of_mem_uIcc'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Interval/Set/UnorderedInterval.lean:271:6: `Set.Ioc_subset_uIoc'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Interval/Set/UnorderedInterval.lean:279:6: `Set.eq_of_mem_uIoc_of_mem_uIoc'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [696/892] Replayed Mathlib.Algebra.Group.Int
+⚠ [695/892] Replayed Mathlib.Algebra.Group.Int
 warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Int.lean:115:6: `Int.eq_one_or_neg_one_of_mul_eq_one'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -1634,7 +1618,7 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Int.lean:210:6: `Int.even_pow'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [698/892] Replayed Mathlib.Data.Nat.Cast.Basic
+⚠ [697/892] Replayed Mathlib.Data.Nat.Cast.Basic
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Cast/Basic.lean:67:6: `nsmul_eq_mul'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -1650,7 +1634,7 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Cast/Basic.lean:124:8: `map_ofNat'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [699/892] Replayed Mathlib.Algebra.Ring.Parity
+⚠ [698/892] Replayed Mathlib.Algebra.Ring.Parity
 warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Ring/Parity.lean:119:14: `odd_add_self_one'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -1675,7 +1659,7 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Ring/Parity.lean:286:6: `Nat.odd_sub'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [700/892] Replayed Mathlib.Algebra.Ring.Int
+⚠ [699/892] Replayed Mathlib.Algebra.Ring.Int
 warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Ring/Int.lean:113:6: `Int.even_or_odd'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -1697,7 +1681,7 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Ring/Int.lean:160:6: `Int.odd_sub'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [705/892] Replayed Mathlib.Data.Set.Lattice
+⚠ [704/892] Replayed Mathlib.Data.Set.Lattice
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Set/Lattice.lean:288:8: `Set.iUnion_mono''` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -1734,7 +1718,7 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Data/Set/Lattice.lean:1451:8: `Set.iInter_iInter_eq'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [706/892] Replayed Mathlib.Order.ConditionallyCompleteLattice.Basic
+⚠ [705/892] Replayed Mathlib.Order.ConditionallyCompleteLattice.Basic
 warning: ././.lake/packages/mathlib/././Mathlib/Order/ConditionallyCompleteLattice/Basic.lean:84:8: `WithTop.coe_sInf'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
@@ -1775,6 +1759,22 @@ warning: ././.lake/packages/mathlib/././Mathlib/Order/ConditionallyCompleteLatti
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Order/ConditionallyCompleteLattice/Basic.lean:830:8: `csSup_le_csSup'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [706/892] Replayed Mathlib.Order.Interval.Set.UnorderedInterval
+warning: ././.lake/packages/mathlib/././Mathlib/Order/Interval/Set/UnorderedInterval.lean:82:6: `Set.Icc_subset_uIcc'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Order/Interval/Set/UnorderedInterval.lean:103:6: `Set.uIcc_subset_uIcc_iff_le'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Order/Interval/Set/UnorderedInterval.lean:140:6: `Set.eq_of_mem_uIcc_of_mem_uIcc'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Order/Interval/Set/UnorderedInterval.lean:271:6: `Set.Ioc_subset_uIoc'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Order/Interval/Set/UnorderedInterval.lean:279:6: `Set.eq_of_mem_uIoc_of_mem_uIoc'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
 ⚠ [708/892] Replayed Mathlib.Data.Set.Pairwise.Basic
@@ -2698,8 +2698,8 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: dec
 ⚠ [888/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
 /home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsignmaskhofhsexthvshofhshlhofhzext_proof.lean:11:8: warning: declaration uses 'sorry'
-[bv] [0.014811] Normalizing goal
-  [Meta.synthInstance] [0.001495] ✅️ Decidable
+[bv] [0.009953] Normalizing goal
+  [Meta.synthInstance] [0.001045] ✅️ Decidable
         ((if 16#32 ≥ ↑32 then none else some (BitVec.zeroExtend 32 x✝ <<< 16#32 &&& 2147483648#32)) ⊑
           some (BitVec.signExtend 32 x✝ &&& 2147483648#32))
   [Meta.Tactic.bv] Running preprocessing pipeline on:
@@ -2718,8 +2718,8 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
 /home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsignmaskhofhsexthvshofhshlhofhzext_proof.lean:22:8: warning: declaration uses 'sorry'
-[bv] [0.009874] Normalizing goal
-  [Meta.synthInstance] [0.001124] ✅️ Decidable
+[bv] [0.014291] Normalizing goal
+  [Meta.synthInstance] [0.001524] ✅️ Decidable
         ((if 24#32 ≥ ↑32 then none else some (BitVec.zeroExtend 32 x✝ <<< 24#32 &&& 2147483648#32)) ⊑
           some (BitVec.signExtend 32 x✝ &&& 2147483648#32))
   [Meta.Tactic.bv] Running preprocessing pipeline on:
@@ -2738,8 +2738,8 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
 /home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsignmaskhofhsexthvshofhshlhofhzext_proof.lean:33:8: warning: declaration uses 'sorry'
-[bv] [0.009209] Normalizing goal
-  [Meta.synthInstance] [0.001047] ✅️ Decidable
+[bv] [0.057491] Normalizing goal
+  [Meta.synthInstance] [0.001306] ✅️ Decidable
         ((if 15#32 ≥ ↑32 then none else some (BitVec.zeroExtend 32 x✝ <<< 15#32 &&& 2147483648#32)) ⊑ some 0#32)
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
@@ -2747,6 +2747,8 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8
       x✝ : BitVec 16
       a✝ : ¬(if 15#32 ≥ ↑32 then none else some (BitVec.zeroExtend 32 x✝ <<< 15#32 &&& 2147483648#32)) ⊑ some 0#32
       ⊢ False
+  [Meta.isDefEq] [0.016223] ❌️ ?x &&& ?x =?= BitVec.zeroExtend 32 x✝ <<< 15 &&& 2147483648#32
+    [Meta.isDefEq.onFailure] [0.016054] ❌️ ?x &&& ?x =?= BitVec.zeroExtend 32 x✝ <<< 15 &&& 2147483648#32
   [Meta.Tactic.bv] Rerunning pipeline on:
       case h
       e : LLVM.IntW 16
@@ -2755,11 +2757,23 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8
       ⊢ False
   [Meta.Tactic.bv] Pipeline reached a fixpoint
 /home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsignmaskhofhsexthvshofhshlhofhzext_proof.lean:43:8: warning: declaration uses 'sorry'
-[bv] [0.027084] Normalizing goal
-  [Meta.synthInstance] [0.001152] ✅️ Decidable
+[bv] [0.048246] Normalizing goal
+  [Meta.synthInstance] [0.003545] ✅️ Decidable
         ((if 16#32 ≥ ↑32 then none else some (BitVec.zeroExtend 32 x✝ <<< 16#32 &&& 3221225472#32)) ⊑
           if True ∧ BitVec.zeroExtend 32 x✝ <<< 16#32 >>> 16#32 = BitVec.zeroExtend 32 x✝ then none
           else if 16#32 ≥ ↑32 then none else some (BitVec.zeroExtend 32 x✝ <<< 16#32 &&& 3221225472#32))
+    [Meta.synthInstance.resume] [0.002004] propagating DecidableEq
+          (BitVec
+            32) to subgoal DecidableEq
+          (BitVec
+            32) of Decidable
+          ((if 16#32 ≥ ↑32 then none else some (BitVec.zeroExtend 32 x✝ <<< 16#32 &&& 3221225472#32)) ⊑
+            if True ∧ BitVec.zeroExtend 32 x✝ <<< 16#32 >>> 16#32 = BitVec.zeroExtend 32 x✝ then none
+            else if 16#32 ≥ ↑32 then none else some (BitVec.zeroExtend 32 x✝ <<< 16#32 &&& 3221225472#32))
+      [Meta.synthInstance.answer] [0.001982] ✅️ Decidable
+            ((if 16#32 ≥ ↑32 then none else some (BitVec.zeroExtend 32 x✝ <<< 16#32 &&& 3221225472#32)) ⊑
+              if True ∧ BitVec.zeroExtend 32 x✝ <<< 16#32 >>> 16#32 = BitVec.zeroExtend 32 x✝ then none
+              else if 16#32 ≥ ↑32 then none else some (BitVec.zeroExtend 32 x✝ <<< 16#32 &&& 3221225472#32))
   [Meta.Tactic.bv] Running preprocessing pipeline on:
       case h
       e : LLVM.IntW 16
@@ -2769,10 +2783,62 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8
             if True ∧ BitVec.zeroExtend 32 x✝ <<< 16#32 >>> 16#32 = BitVec.zeroExtend 32 x✝ then none
             else if 16#32 ≥ ↑32 then none else some (BitVec.zeroExtend 32 x✝ <<< 16#32 &&& 3221225472#32)
       ⊢ False
-  [Meta.isDefEq] [0.005907] ❌️ ?a == ?a =?= BitVec.zeroExtend 32 x✝ <<< 16 >>> 16 == BitVec.zeroExtend 32 x✝
-    [Meta.isDefEq.onFailure] [0.005602] ❌️ ?a == ?a =?= BitVec.zeroExtend 32 x✝ <<< 16 >>> 16 == BitVec.zeroExtend 32 x✝
-      [Meta.synthInstance] [0.005579] 💥️ BEq ?α
-        [Meta.synthInstance] [0.005493] new goal BEq ?α
+  [Meta.isDefEq] [0.008311] ❌️ ?x &&& ?x =?= BitVec.zeroExtend 32 x✝ <<< 16 &&& 3221225472#32
+    [Meta.isDefEq.onFailure] [0.008117] ❌️ ?x &&& ?x =?= BitVec.zeroExtend 32 x✝ <<< 16 &&& 3221225472#32
+  [Meta.isDefEq] [0.002381] ✅️ ?h₁ =?= Eq.trans
+        (congrArg (And True)
+          (Std.Tactic.BVDecide.Normalize.BitVec.eq_to_beq (BitVec.zeroExtend 32 x✝ <<< 16 >>> 16)
+            (BitVec.zeroExtend 32 x✝)))
+        (true_and ((BitVec.zeroExtend 32 x✝ <<< 16 >>> 16 == BitVec.zeroExtend 32 x✝) = true))
+    [Meta.isDefEq.assign] [0.002378] ✅️ ?h₁ := Eq.trans
+          (congrArg (And True)
+            (Std.Tactic.BVDecide.Normalize.BitVec.eq_to_beq (BitVec.zeroExtend 32 x✝ <<< 16 >>> 16)
+              (BitVec.zeroExtend 32 x✝)))
+          (true_and ((BitVec.zeroExtend 32 x✝ <<< 16 >>> 16 == BitVec.zeroExtend 32 x✝) = true))
+      [Meta.isDefEq.assign.checkTypes] [0.002364] ✅️ (?h₁ : (True ∧
+              BitVec.zeroExtend 32 x✝ <<< 16#32 >>> 16#32 = BitVec.zeroExtend 32 x✝) =
+            ((BitVec.zeroExtend 32 x✝ <<< 16 >>> 16 == BitVec.zeroExtend 32 x✝) =
+              true)) := (Eq.trans
+            (congrArg (And True)
+              (Std.Tactic.BVDecide.Normalize.BitVec.eq_to_beq (BitVec.zeroExtend 32 x✝ <<< 16 >>> 16)
+                (BitVec.zeroExtend 32 x✝)))
+            (true_and
+              ((BitVec.zeroExtend 32 x✝ <<< 16 >>> 16 == BitVec.zeroExtend 32 x✝) =
+                true)) : (True ∧ BitVec.zeroExtend 32 x✝ <<< 16 >>> 16 = BitVec.zeroExtend 32 x✝) =
+            ((BitVec.zeroExtend 32 x✝ <<< 16 >>> 16 == BitVec.zeroExtend 32 x✝) = true))
+        [Meta.isDefEq] [0.002360] ✅️ (True ∧ BitVec.zeroExtend 32 x✝ <<< 16#32 >>> 16#32 = BitVec.zeroExtend 32 x✝) =
+              ((BitVec.zeroExtend 32 x✝ <<< 16 >>> 16 == BitVec.zeroExtend 32 x✝) =
+                true) =?= (True ∧ BitVec.zeroExtend 32 x✝ <<< 16 >>> 16 = BitVec.zeroExtend 32 x✝) =
+              ((BitVec.zeroExtend 32 x✝ <<< 16 >>> 16 == BitVec.zeroExtend 32 x✝) = true)
+          [Meta.isDefEq] [0.002334] ✅️ True ∧
+                BitVec.zeroExtend 32 x✝ <<< 16#32 >>> 16#32 =
+                  BitVec.zeroExtend 32 x✝ =?= True ∧ BitVec.zeroExtend 32 x✝ <<< 16 >>> 16 = BitVec.zeroExtend 32 x✝
+            [Meta.isDefEq] [0.002315] ✅️ BitVec.zeroExtend 32 x✝ <<< 16#32 >>> 16#32 =
+                  BitVec.zeroExtend 32 x✝ =?= BitVec.zeroExtend 32 x✝ <<< 16 >>> 16 = BitVec.zeroExtend 32 x✝
+              [Meta.isDefEq] [0.002294] ✅️ BitVec.zeroExtend 32 x✝ <<< 16#32 >>>
+                    16#32 =?= BitVec.zeroExtend 32 x✝ <<< 16 >>> 16
+                [Meta.isDefEq] [0.002260] ✅️ BitVec.instHShiftRight.1 (BitVec.zeroExtend 32 x✝ <<< 16#32)
+                      16#32 =?= BitVec.instHShiftRightNat.1 (BitVec.zeroExtend 32 x✝ <<< 16) 16
+                  [Meta.isDefEq] [0.002155] ✅️ BitVec.zeroExtend 32 x✝ <<< 16#32 >>>
+                        (16#32).toNat =?= (BitVec.zeroExtend 32 x✝ <<< 16).ushiftRight 16
+                    [Meta.isDefEq] [0.002119] ✅️ (BitVec.zeroExtend 32 x✝ <<< 16#32).ushiftRight
+                          (16#32).toNat =?= (BitVec.zeroExtend 32 x✝ <<< 16).ushiftRight 16
+                      [Meta.isDefEq.delta] [0.002105] ✅️ (BitVec.zeroExtend 32 x✝ <<< 16#32).ushiftRight
+                            (16#32).toNat =?= (BitVec.zeroExtend 32 x✝ <<< 16).ushiftRight 16
+                        [Meta.isDefEq] [0.002067] ✅️ BitVec.zeroExtend 32 x✝ <<<
+                              16#32 =?= BitVec.zeroExtend 32 x✝ <<< 16
+                          [Meta.isDefEq] [0.002036] ✅️ BitVec.instHShiftLeft.1 (BitVec.zeroExtend 32 x✝)
+                                16#32 =?= BitVec.instHShiftLeftNat.1 (BitVec.zeroExtend 32 x✝) 16
+                            [Meta.isDefEq] [0.001965] ✅️ BitVec.zeroExtend 32 x✝ <<<
+                                  (16#32).toNat =?= (BitVec.zeroExtend 32 x✝).shiftLeft 16
+                              [Meta.isDefEq] [0.001935] ✅️ (BitVec.zeroExtend 32 x✝).shiftLeft
+                                    (16#32).toNat =?= (BitVec.zeroExtend 32 x✝).shiftLeft 16
+                                [Meta.isDefEq.delta] [0.001922] ✅️ (BitVec.zeroExtend 32 x✝).shiftLeft
+                                      (16#32).toNat =?= (BitVec.zeroExtend 32 x✝).shiftLeft 16
+                                  [Meta.isDefEq] [0.001893] ✅️ (16#32).toNat =?= 16
+                                    [Meta.isDefEq] [0.001846] ✅️ ↑(16#32).toFin =?= 16
+                                      [Meta.isDefEq] [0.001816] ✅️ (16#32).toFin.1 =?= 16
+                                        [Meta.whnf] [0.001695] Non-easy whnf: (16#32).toFin
   [Meta.Tactic.bv] Rerunning pipeline on:
       case h
       e : LLVM.IntW 16

@@ -2697,4 +2697,611 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: dec
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
 ⚠ [886/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatible_proof.lean:2:0: error: failed to read file '././.lake/build/lib/SSA/Projects/InstCombine/TacticAuto.olean', invalid header
+Bitwuzla proved the goal after 3.416520ms, solving context: 0.000000ms
+LeanSAT proved the goal after 2.878660ms: rewriting 2.852800ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatible_proof.lean:20:8: warning: declaration uses 'sorry'
+[bv] [0.025118] Normalizing goal
+  [Meta.synthInstance] [0.001045] ✅️ Decidable
+        ((if x✝¹ ≥ ↑8 then none else some (x✝ - 214#8 <<< x✝¹)) ⊑ if x✝¹ ≥ ↑8 then none else some (42#8 <<< x✝¹ + x✝))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 8
+      x✝¹ x✝ : BitVec 8
+      a✝ : ¬(if x✝¹ ≥ ↑8 then none else some (x✝ - 214#8 <<< x✝¹)) ⊑ if x✝¹ ≥ ↑8 then none else some (42#8 <<< x✝¹ + x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 8
+      x✝¹ x✝ : BitVec 8
+      a✝ :
+        ¬(if (!8#8 >ᵤ x✝¹) = true then none else some (x✝ + (~~~(214#8 <<< x✝¹) + 1#8))) ⊑
+            if (!8#8 >ᵤ x✝¹) = true then none else some (42#8 <<< x✝¹ + x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatible_proof.lean:29:8: warning: declaration uses 'sorry'
+[bv] [0.064062] Normalizing goal
+  [Meta.synthInstance] [0.001616] ✅️ Decidable
+        ((Option.bind
+            (match some x✝¹ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some 214#8
+            | some { toFin := ⟨0, ⋯⟩ } => some 44#8)
+            fun y' => some (x✝ - y')) ⊑
+          Option.bind
+            (match some x✝¹ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some 42#8
+            | some { toFin := ⟨0, ⋯⟩ } => some 212#8)
+            fun a => some (a + x✝))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 1
+      e_1 : LLVM.IntW 8
+      x✝¹ : BitVec 1
+      x✝ : BitVec 8
+      a✝ :
+        ¬(Option.bind
+              (match some x✝¹ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 214#8
+              | some { toFin := ⟨0, ⋯⟩ } => some 44#8)
+              fun y' => some (x✝ - y')) ⊑
+            Option.bind
+              (match some x✝¹ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 42#8
+              | some { toFin := ⟨0, ⋯⟩ } => some 212#8)
+              fun a => some (a + x✝)
+      ⊢ False
+  [Meta.isDefEq] [0.001010] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 42#8
+      | some { toFin := ⟨0, ⋯⟩ } => some 212#8
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 1
+      e_1 : LLVM.IntW 8
+      x✝¹ : BitVec 1
+      x✝ : BitVec 8
+      a✝ :
+        ¬(Option.bind
+              (match some x✝¹ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 214#8
+              | some { toFin := ⟨0, ⋯⟩ } => some 44#8)
+              fun a => some (x✝ + (~~~a + 1#8))) ⊑
+            Option.bind
+              (match some x✝¹ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 42#8
+              | some { toFin := ⟨0, ⋯⟩ } => some 212#8)
+              fun a => some (a + x✝)
+      ⊢ False
+  [Meta.isDefEq] [0.001108] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 214#8
+      | some { toFin := ⟨0, ⋯⟩ } => some 44#8
+  [Meta.isDefEq] [0.001084] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 214#8
+      | some { toFin := ⟨0, ⋯⟩ } => some 44#8
+  [Meta.isDefEq] [0.001019] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 214#8
+      | some { toFin := ⟨0, ⋯⟩ } => some 44#8
+  [Meta.isDefEq] [0.001016] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 214#8
+      | some { toFin := ⟨0, ⋯⟩ } => some 44#8
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatible_proof.lean:39:8: warning: declaration uses 'sorry'
+[bv] [0.135627] Normalizing goal
+  [Meta.synthInstance] [0.002161] ✅️ Decidable
+        ((Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some 2#32
+            | some { toFin := ⟨0, ⋯⟩ } => some 4294967294#32)
+            fun x' =>
+            Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 2#32
+              | some { toFin := ⟨0, ⋯⟩ } => some 4294967294#32)
+              fun x =>
+              if
+                  True ∧
+                    (BitVec.signExtend (32 + 1) 0#32 - BitVec.signExtend (32 + 1) x).msb ≠
+                      (BitVec.signExtend (32 + 1) 0#32 - BitVec.signExtend (32 + 1) x).getMsbD 1 then
+                none
+              else some (x' &&& 0#32 - x)) ⊑
+          some 2#32)
+    [Meta.check] [0.001268] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
+          (Option.bind
+            (match some x✝ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some 2#32
+            | some { toFin := ⟨0, ⋯⟩ } => some 4294967294#32)
+            fun x' =>
+            Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 2#32
+              | some { toFin := ⟨0, ⋯⟩ } => some 4294967294#32)
+              fun x =>
+              if
+                  True ∧
+                    (BitVec.signExtend (32 + 1) 0#32 - BitVec.signExtend (32 + 1) x).msb ≠
+                      (BitVec.signExtend (32 + 1) 0#32 - BitVec.signExtend (32 + 1) x).getMsbD 1 then
+                none
+              else some (x' &&& 0#32 - x))
+          (some 2#32)
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 1
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 2#32
+              | some { toFin := ⟨0, ⋯⟩ } => some 4294967294#32)
+              fun x' =>
+              Option.bind
+                (match some x✝ with
+                | none => none
+                | some { toFin := ⟨1, ⋯⟩ } => some 2#32
+                | some { toFin := ⟨0, ⋯⟩ } => some 4294967294#32)
+                fun x =>
+                if
+                    True ∧
+                      (BitVec.signExtend (32 + 1) 0#32 - BitVec.signExtend (32 + 1) x).msb ≠
+                        (BitVec.signExtend (32 + 1) 0#32 - BitVec.signExtend (32 + 1) x).getMsbD 1 then
+                  none
+                else some (x' &&& 0#32 - x)) ⊑
+            some 2#32
+      ⊢ False
+  [Meta.isDefEq] [0.001077] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 2#32
+      | some { toFin := ⟨0, ⋯⟩ } => some 4294967294#32
+  [Meta.isDefEq] [0.001034] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 2#32
+      | some { toFin := ⟨0, ⋯⟩ } => some 4294967294#32
+  [Meta.isDefEq] [0.002474] ✅️ ?h₁ =?= Eq.trans
+        (congrArg (And True)
+          (Eq.trans
+            (congr
+              (congrArg Ne
+                (Eq.trans
+                  (congrArg BitVec.msb
+                    (Eq.trans (BitVec.sub_toAdd (0#33) (BitVec.signExtend 33 a))
+                      (Eq.trans (congrArg (HAdd.hAdd 0#33) (BitVec.neg_eq_not_add (BitVec.signExtend 33 a)))
+                        (BitVec.zero_add (~~~BitVec.signExtend 33 a + 1#33)))))
+                  (BitVec.msb_eq_getLsbD_last (~~~BitVec.signExtend 33 a + 1#33))))
+              (congrArg (fun x => x.getMsbD 1)
+                (Eq.trans (BitVec.sub_toAdd (0#33) (BitVec.signExtend 33 a))
+                  (Eq.trans (congrArg (HAdd.hAdd 0#33) (BitVec.neg_eq_not_add (BitVec.signExtend 33 a)))
+                    (BitVec.zero_add (~~~BitVec.signExtend 33 a + 1#33))))))
+            (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq ((~~~BitVec.signExtend 33 a + 1#33).getLsbD 32)
+              ((~~~BitVec.signExtend 33 a + 1#33).getMsbD 1))))
+        (true_and
+          ((!(~~~BitVec.signExtend 33 a + 1#33).getLsbD 32 == (~~~BitVec.signExtend 33 a + 1#33).getMsbD 1) = true))
+    [Meta.isDefEq.assign] [0.002469] ✅️ ?h₁ := Eq.trans
+          (congrArg (And True)
+            (Eq.trans
+              (congr
+                (congrArg Ne
+                  (Eq.trans
+                    (congrArg BitVec.msb
+                      (Eq.trans (BitVec.sub_toAdd (0#33) (BitVec.signExtend 33 a))
+                        (Eq.trans (congrArg (HAdd.hAdd 0#33) (BitVec.neg_eq_not_add (BitVec.signExtend 33 a)))
+                          (BitVec.zero_add (~~~BitVec.signExtend 33 a + 1#33)))))
+                    (BitVec.msb_eq_getLsbD_last (~~~BitVec.signExtend 33 a + 1#33))))
+                (congrArg (fun x => x.getMsbD 1)
+                  (Eq.trans (BitVec.sub_toAdd (0#33) (BitVec.signExtend 33 a))
+                    (Eq.trans (congrArg (HAdd.hAdd 0#33) (BitVec.neg_eq_not_add (BitVec.signExtend 33 a)))
+                      (BitVec.zero_add (~~~BitVec.signExtend 33 a + 1#33))))))
+              (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq ((~~~BitVec.signExtend 33 a + 1#33).getLsbD 32)
+                ((~~~BitVec.signExtend 33 a + 1#33).getMsbD 1))))
+          (true_and
+            ((!(~~~BitVec.signExtend 33 a + 1#33).getLsbD 32 == (~~~BitVec.signExtend 33 a + 1#33).getMsbD 1) = true))
+      [Meta.isDefEq.assign.checkTypes] [0.002446] ✅️ (?h₁ : (True ∧
+              (BitVec.signExtend (32 + 1) 0#32 - BitVec.signExtend (32 + 1) a).msb ≠
+                (BitVec.signExtend (32 + 1) 0#32 - BitVec.signExtend (32 + 1) a).getMsbD 1) =
+            ((!(~~~BitVec.signExtend 33 a + 1#33).getLsbD 32 == (~~~BitVec.signExtend 33 a + 1#33).getMsbD 1) =
+              true)) := (Eq.trans
+            (congrArg (And True)
+              (Eq.trans
+                (congr
+                  (congrArg Ne
+                    (Eq.trans
+                      (congrArg BitVec.msb
+                        (Eq.trans (BitVec.sub_toAdd (0#33) (BitVec.signExtend 33 a))
+                          (Eq.trans (congrArg (HAdd.hAdd 0#33) (BitVec.neg_eq_not_add (BitVec.signExtend 33 a)))
+                            (BitVec.zero_add (~~~BitVec.signExtend 33 a + 1#33)))))
+                      (BitVec.msb_eq_getLsbD_last (~~~BitVec.signExtend 33 a + 1#33))))
+                  (congrArg (fun x => x.getMsbD 1)
+                    (Eq.trans (BitVec.sub_toAdd (0#33) (BitVec.signExtend 33 a))
+                      (Eq.trans (congrArg (HAdd.hAdd 0#33) (BitVec.neg_eq_not_add (BitVec.signExtend 33 a)))
+                        (BitVec.zero_add (~~~BitVec.signExtend 33 a + 1#33))))))
+                (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq ((~~~BitVec.signExtend 33 a + 1#33).getLsbD 32)
+                  ((~~~BitVec.signExtend 33 a + 1#33).getMsbD 1))))
+            (true_and
+              ((!(~~~BitVec.signExtend 33 a + 1#33).getLsbD 32 == (~~~BitVec.signExtend 33 a + 1#33).getMsbD 1) =
+                true)) : (True ∧ (0#33 - BitVec.signExtend 33 a).msb ≠ (0#33 - BitVec.signExtend 33 a).getMsbD 1) =
+            ((!(~~~BitVec.signExtend 33 a + 1#33).getLsbD 32 == (~~~BitVec.signExtend 33 a + 1#33).getMsbD 1) = true))
+        [Meta.isDefEq] [0.002441] ✅️ (True ∧
+                (BitVec.signExtend (32 + 1) 0#32 - BitVec.signExtend (32 + 1) a).msb ≠
+                  (BitVec.signExtend (32 + 1) 0#32 - BitVec.signExtend (32 + 1) a).getMsbD 1) =
+              ((!(~~~BitVec.signExtend 33 a + 1#33).getLsbD 32 == (~~~BitVec.signExtend 33 a + 1#33).getMsbD 1) =
+                true) =?= (True ∧ (0#33 - BitVec.signExtend 33 a).msb ≠ (0#33 - BitVec.signExtend 33 a).getMsbD 1) =
+              ((!(~~~BitVec.signExtend 33 a + 1#33).getLsbD 32 == (~~~BitVec.signExtend 33 a + 1#33).getMsbD 1) = true)
+          [Meta.isDefEq] [0.002409] ✅️ True ∧
+                (BitVec.signExtend (32 + 1) 0#32 - BitVec.signExtend (32 + 1) a).msb ≠
+                  (BitVec.signExtend (32 + 1) 0#32 - BitVec.signExtend (32 + 1) a).getMsbD
+                    1 =?= True ∧ (0#33 - BitVec.signExtend 33 a).msb ≠ (0#33 - BitVec.signExtend 33 a).getMsbD 1
+            [Meta.isDefEq] [0.002385] ✅️ (BitVec.signExtend (32 + 1) 0#32 - BitVec.signExtend (32 + 1) a).msb ≠
+                  (BitVec.signExtend (32 + 1) 0#32 - BitVec.signExtend (32 + 1) a).getMsbD
+                    1 =?= (0#33 - BitVec.signExtend 33 a).msb ≠ (0#33 - BitVec.signExtend 33 a).getMsbD 1
+              [Meta.isDefEq.delta] [0.002363] ✅️ (BitVec.signExtend (32 + 1) 0#32 - BitVec.signExtend (32 + 1) a).msb ≠
+                    (BitVec.signExtend (32 + 1) 0#32 - BitVec.signExtend (32 + 1) a).getMsbD
+                      1 =?= (0#33 - BitVec.signExtend 33 a).msb ≠ (0#33 - BitVec.signExtend 33 a).getMsbD 1
+                [Meta.isDefEq] [0.002254] ✅️ (BitVec.signExtend (32 + 1) 0#32 -
+                        BitVec.signExtend (32 + 1) a).msb =?= (0#33 - BitVec.signExtend 33 a).msb
+                  [Meta.isDefEq.delta] [0.002239] ✅️ (BitVec.signExtend (32 + 1) 0#32 -
+                          BitVec.signExtend (32 + 1) a).msb =?= (0#33 - BitVec.signExtend 33 a).msb
+                    [Meta.isDefEq] [0.002207] ✅️ BitVec.signExtend (32 + 1) 0#32 -
+                          BitVec.signExtend (32 + 1) a =?= 0#33 - BitVec.signExtend 33 a
+                      [Meta.isDefEq] [0.002170] ✅️ instHSub.1 (BitVec.signExtend (32 + 1) 0#32)
+                            (BitVec.signExtend (32 + 1) a) =?= instHSub.1 (0#33) (BitVec.signExtend 33 a)
+                        [Meta.isDefEq] [0.002095] ✅️ Sub.sub (BitVec.signExtend (32 + 1) 0#32)
+                              (BitVec.signExtend (32 + 1) a) =?= Sub.sub (0#33) (BitVec.signExtend 33 a)
+                          [Meta.isDefEq] [0.002062] ✅️ BitVec.instSub.1 (BitVec.signExtend (32 + 1) 0#32)
+                                (BitVec.signExtend (32 + 1) a) =?= BitVec.instSub.1 (0#33) (BitVec.signExtend 33 a)
+                            [Meta.isDefEq] [0.002006] ✅️ (BitVec.signExtend (32 + 1) 0#32).sub
+                                  (BitVec.signExtend (32 + 1) a) =?= (0#33).sub (BitVec.signExtend 33 a)
+                              [Meta.isDefEq.delta] [0.001990] ✅️ (BitVec.signExtend (32 + 1) 0#32).sub
+                                    (BitVec.signExtend (32 + 1) a) =?= (0#33).sub (BitVec.signExtend 33 a)
+                                [Meta.isDefEq] [0.001888] ✅️ BitVec.signExtend (32 + 1) 0#32 =?= 0#33
+                                  [Meta.isDefEq] [0.001864] ✅️ BitVec.ofInt (32 + 1) (0#32).toInt =?= 0#33
+                                    [Meta.isDefEq] [0.001842] ✅️ ((0#32).toInt %
+                                              Int.ofNat (2 ^ (32 + 1))).toNat#'⋯ =?= 0#33
+                                      [Meta.isDefEq] [0.001786] ✅️ ((0#32).toInt %
+                                                Int.ofNat
+                                                  (2 ^ (32 + 1))).toNat#'⋯ =?= { toFin := Fin.ofNat' (2 ^ 33) 0 }
+                                        [Meta.isDefEq] [0.001765] ✅️ {
+                                              toFin :=
+                                                ⟨((0#32).toInt % Int.ofNat (2 ^ (32 + 1))).toNat,
+                                                  ⋯⟩ } =?= { toFin := Fin.ofNat' (2 ^ 33) 0 }
+                                          [Meta.isDefEq] [0.001693] ✅️ ⟨((0#32).toInt % Int.ofNat (2 ^ (32 + 1))).toNat,
+                                                ⋯⟩ =?= Fin.ofNat' (2 ^ 33) 0
+                                            [Meta.isDefEq] [0.001671] ✅️ ⟨((0#32).toInt %
+                                                      Int.ofNat (2 ^ (32 + 1))).toNat,
+                                                  ⋯⟩ =?= ⟨0 % 2 ^ 33, ⋯⟩
+                                              [Meta.isDefEq] [0.001527] ✅️ ((0#32).toInt %
+                                                      Int.ofNat (2 ^ (32 + 1))).toNat =?= 0 % 2 ^ 33
+                                                [Meta.isDefEq] [0.001429] ✅️ match
+                                                      (0#32).toInt % Int.ofNat (2 ^ (32 + 1)) with
+                                                    | Int.ofNat n => n
+                                                    | Int.negSucc a => 0 =?= 0 % 2 ^ 33
+  [Meta.isDefEq] [0.001005] ❌️ match none with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 2#32
+      | some { toFin := ⟨0, ⋯⟩ } => some 4294967294#32
+  [Meta.isDefEq] [0.001103] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 2#32
+      | some { toFin := ⟨0, ⋯⟩ } => some 4294967294#32
+  [Meta.isDefEq] [0.001036] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 2#32
+      | some { toFin := ⟨0, ⋯⟩ } => some 4294967294#32
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 1
+      x✝ : BitVec 1
+      a✝ :
+        ¬(Option.bind
+              (match some x✝ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 2#32
+              | some { toFin := ⟨0, ⋯⟩ } => some 4294967294#32)
+              fun a =>
+              Option.bind
+                (match some x✝ with
+                | none => none
+                | some { toFin := ⟨1, ⋯⟩ } => some 2#32
+                | some { toFin := ⟨0, ⋯⟩ } => some 4294967294#32)
+                fun a_1 =>
+                if
+                    (!(~~~BitVec.signExtend 33 a_1 + 1#33).getLsbD 32 ==
+                          (~~~BitVec.signExtend 33 a_1 + 1#33).getMsbD 1) =
+                      true then
+                  none
+                else some (a &&& ~~~a_1 + 1#32)) ⊑
+            some 2#32
+      ⊢ False
+  [Meta.isDefEq] [0.001063] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 2#32
+      | some { toFin := ⟨0, ⋯⟩ } => some 4294967294#32
+  [Meta.isDefEq] [0.001023] ❌️ match some { toFin := ⟨0, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 2#32
+      | some { toFin := ⟨0, ⋯⟩ } => some 4294967294#32
+  [Meta.isDefEq] [0.001835] ✅️ ?h₃ =?= fun a_1 => Eq.refl (some (a✝² &&& ~~~a + 1#32))
+    [Meta.isDefEq.assign] [0.001832] ✅️ ?h₃ := fun a_1 => Eq.refl (some (a✝² &&& ~~~a + 1#32))
+      [Meta.isDefEq.assign.checkTypes] [0.001807] ✅️ (?h₃ : ¬(!(~~~BitVec.signExtend 33 a + 1#33).getLsbD 32 ==
+                    (~~~BitVec.signExtend 33 a + 1#33).getMsbD 1) =
+                true →
+            some (a✝² &&& ~~~a + 1#32) =
+              some
+                (a✝² &&&
+                  ~~~a +
+                    1#32)) := (fun a_1 =>
+            Eq.refl
+              (some
+                (a✝² &&&
+                  ~~~a +
+                    1#32)) : ¬(!(~~~BitVec.signExtend 33 a + 1#33).getLsbD 32 ==
+                    (~~~BitVec.signExtend 33 a + 1#33).getMsbD 1) =
+                true →
+            some (a✝² &&& ~~~a + 1#32) = some (a✝² &&& ~~~a + 1#32))
+        [Meta.isDefEq] [0.001804] ✅️ ¬(!(~~~BitVec.signExtend 33 a + 1#33).getLsbD 32 ==
+                      (~~~BitVec.signExtend 33 a + 1#33).getMsbD 1) =
+                  true →
+              some (a✝² &&& ~~~a + 1#32) =
+                some
+                  (a✝² &&&
+                    ~~~a +
+                      1#32) =?= ¬(!(~~~BitVec.signExtend 33 a + 1#33).getLsbD 32 ==
+                      (~~~BitVec.signExtend 33 a + 1#33).getMsbD 1) =
+                  true →
+              some (a✝² &&& ~~~a + 1#32) = some (a✝² &&& ~~~a + 1#32)
+          [Meta.isDefEq] [0.001764] ✅️ ¬(!(~~~BitVec.signExtend 33 a + 1#33).getLsbD 32 ==
+                      (~~~BitVec.signExtend 33 a + 1#33).getMsbD 1) =
+                  true =?= ¬(!(~~~BitVec.signExtend 33 a + 1#33).getLsbD 32 ==
+                      (~~~BitVec.signExtend 33 a + 1#33).getMsbD 1) =
+                  true
+            [Meta.isDefEq.delta] [0.001745] ✅️ ¬(!(~~~BitVec.signExtend 33 a + 1#33).getLsbD 32 ==
+                        (~~~BitVec.signExtend 33 a + 1#33).getMsbD 1) =
+                    true =?= ¬(!(~~~BitVec.signExtend 33 a + 1#33).getLsbD 32 ==
+                        (~~~BitVec.signExtend 33 a + 1#33).getMsbD 1) =
+                    true
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatible_proof.lean:51:8: warning: declaration uses 'sorry'
+[bv] [0.097409] Normalizing goal
+  [Meta.synthInstance] [0.001493] ✅️ Decidable
+        ((Option.bind
+            (match some x✝¹ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some 0#8
+            | some { toFin := ⟨0, ⋯⟩ } => if x✝² ≥ ↑8 then none else some (1#8 <<< x✝²))
+            fun y' => some (x✝ - y')) ⊑
+          Option.bind
+            (match some x✝¹ with
+            | none => none
+            | some { toFin := ⟨1, ⋯⟩ } => some 0#8
+            | some { toFin := ⟨0, ⋯⟩ } =>
+              if True ∧ ((-1#8) <<< x✝²).sshiftRight x✝².toNat = -1#8 then none
+              else if x✝² ≥ ↑8 then none else some ((-1#8) <<< x✝²))
+            fun a => some (a + x✝))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 8
+      e_1 : LLVM.IntW 1
+      e_2 : LLVM.IntW 8
+      x✝² : BitVec 8
+      x✝¹ : BitVec 1
+      x✝ : BitVec 8
+      a✝ :
+        ¬(Option.bind
+              (match some x✝¹ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 0#8
+              | some { toFin := ⟨0, ⋯⟩ } => if x✝² ≥ ↑8 then none else some (1#8 <<< x✝²))
+              fun y' => some (x✝ - y')) ⊑
+            Option.bind
+              (match some x✝¹ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 0#8
+              | some { toFin := ⟨0, ⋯⟩ } =>
+                if True ∧ ((-1#8) <<< x✝²).sshiftRight x✝².toNat = -1#8 then none
+                else if x✝² ≥ ↑8 then none else some ((-1#8) <<< x✝²))
+              fun a => some (a + x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 8
+      e_1 : LLVM.IntW 1
+      e_2 : LLVM.IntW 8
+      x✝² : BitVec 8
+      x✝¹ : BitVec 1
+      x✝ : BitVec 8
+      a✝ :
+        ¬(Option.bind
+              (match some x✝¹ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 0#8
+              | some { toFin := ⟨0, ⋯⟩ } => if (!8#8 >ᵤ x✝²) = true then none else some (1#8 <<< x✝²))
+              fun a => some (x✝ + (~~~a + 1#8))) ⊑
+            Option.bind
+              (match some x✝¹ with
+              | none => none
+              | some { toFin := ⟨1, ⋯⟩ } => some 0#8
+              | some { toFin := ⟨0, ⋯⟩ } =>
+                if ((255#8 <<< x✝²).sshiftRight x✝².toNat == 255#8) = true then none
+                else if (!8#8 >ᵤ x✝²) = true then none else some (255#8 <<< x✝²))
+              fun a => some (a + x✝)
+      ⊢ False
+  [Meta.isDefEq] [0.009954] ❌️ match some { toFin := ⟨1, ⋯⟩ } with
+      | none => ?h_1 ()
+      | some { toFin := ⟨1, ⋯⟩ } => ?h_2 ()
+      | some { toFin := ⟨0, ⋯⟩ } => ?h_3 () =?= match some x✝¹ with
+      | none => none
+      | some { toFin := ⟨1, ⋯⟩ } => some 0#8
+      | some { toFin := ⟨0, ⋯⟩ } =>
+        if ((255#8 <<< x✝²).sshiftRight x✝².toNat == 255#8) = true then none
+        else if (!8#8 >ᵤ x✝²) = true then none else some (255#8 <<< x✝²)
+    [Meta.isDefEq] [0.009350] ❌️ ?h_2 () =?= match some x✝¹ with
+        | none => none
+        | some { toFin := ⟨1, ⋯⟩ } => some 0#8
+        | some { toFin := ⟨0, ⋯⟩ } =>
+          if ((255#8 <<< x✝²).sshiftRight x✝².toNat == 255#8) = true then none
+          else if (!8#8 >ᵤ x✝²) = true then none else some (255#8 <<< x✝²)
+      [Meta.whnf] [0.009282] Non-easy whnf: match some x✝¹ with
+          | none => none
+          | some { toFin := ⟨1, ⋯⟩ } => some 0#8
+          | some { toFin := ⟨0, ⋯⟩ } =>
+            if ((255#8 <<< x✝²).sshiftRight x✝².toNat == 255#8) = true then none
+            else if (!8#8 >ᵤ x✝²) = true then none else some (255#8 <<< x✝²)
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+Bitwuzla proved the goal after 116.269660ms, solving context: 0.000000ms
+LeanSAT proved the goal after 249.899669ms: rewriting 36.973589ms, bitblasting 0.000000ms, SAT solving 111.235700ms, LRAT trimming 32.076280ms, LRAT checking 53.816880ms
+Bitwuzla proved the goal after 78.973610ms, solving context: 0.000000ms
+LeanSAT proved the goal after 135.878210ms: rewriting 20.712030ms, bitblasting 0.000000ms, SAT solving 108.754640ms, LRAT trimming 1.341470ms, LRAT checking 3.979470ms
+Bitwuzla proved the goal after 80.916970ms, solving context: 0.000000ms
+LeanSAT proved the goal after 83.921650ms: rewriting 19.917990ms, bitblasting 0.000000ms, SAT solving 56.769460ms, LRAT trimming 0.000000ms, LRAT checking 3.360600ms
+Bitwuzla proved the goal after 78.616230ms, solving context: 0.000000ms
+LeanSAT proved the goal after 167.931119ms: rewriting 21.426280ms, bitblasting 0.000000ms, SAT solving 118.984589ms, LRAT trimming 6.867380ms, LRAT checking 17.434470ms
+Bitwuzla proved the goal after 81.227699ms, solving context: 2.000000ms
+LeanSAT proved the goal after 86.257420ms: rewriting 19.825150ms, bitblasting 0.000000ms, SAT solving 58.985480ms, LRAT trimming 1.002780ms, LRAT checking 3.458640ms
+Bitwuzla proved the goal after 79.085640ms, solving context: 0.000000ms
+LeanSAT proved the goal after 85.601850ms: rewriting 20.272980ms, bitblasting 0.000000ms, SAT solving 59.286280ms, LRAT trimming 1.387440ms, LRAT checking 3.550490ms
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatible_proof.lean:116:8: warning: declaration uses 'sorry'
+[bv] [0.028886] Normalizing goal
+  [Meta.synthInstance] [0.001098] ✅️ Decidable
+        ((if x✝¹ ≥ ↑16 then none else some (x✝ - BitVec.truncate 8 (65494#16 <<< x✝¹))) ⊑
+          if x✝¹ ≥ ↑16 then none else some (x✝ + BitVec.truncate 8 (42#16 <<< x✝¹)))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e : LLVM.IntW 16
+      e_1 : LLVM.IntW 8
+      x✝¹ : BitVec 16
+      x✝ : BitVec 8
+      a✝ :
+        ¬(if x✝¹ ≥ ↑16 then none else some (x✝ - BitVec.truncate 8 (65494#16 <<< x✝¹))) ⊑
+            if x✝¹ ≥ ↑16 then none else some (x✝ + BitVec.truncate 8 (42#16 <<< x✝¹))
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e : LLVM.IntW 16
+      e_1 : LLVM.IntW 8
+      x✝¹ : BitVec 16
+      x✝ : BitVec 8
+      a✝ :
+        ¬(if (!16#16 >ᵤ x✝¹) = true then none else some (x✝ + (~~~BitVec.zeroExtend 8 (65494#16 <<< x✝¹) + 1#8))) ⊑
+            if (!16#16 >ᵤ x✝¹) = true then none else some (x✝ + BitVec.zeroExtend 8 (42#16 <<< x✝¹))
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+Bitwuzla proved the goal after 79.616950ms, solving context: 0.000000ms
+LeanSAT proved the goal after 78.642750ms: rewriting 16.307520ms, bitblasting 0.000000ms, SAT solving 56.835710ms, LRAT trimming 0.000000ms, LRAT checking 1.989750ms
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatible_proof.lean:136:8: warning: declaration uses 'sorry'
+[bv] [0.026878] Normalizing goal
+  [Meta.synthInstance] [0.001262] ✅️ Decidable
+        ((if x✝¹ ≥ ↑4 then none else some (0#4 - (x✝ ^^^ 5#4) <<< x✝¹)) ⊑
+          if x✝¹ ≥ ↑4 then none else some (((x✝ ^^^ 10#4) + 1#4) <<< x✝¹))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 4
+      x✝¹ x✝ : BitVec 4
+      a✝ :
+        ¬(if x✝¹ ≥ ↑4 then none else some (0#4 - (x✝ ^^^ 5#4) <<< x✝¹)) ⊑
+            if x✝¹ ≥ ↑4 then none else some (((x✝ ^^^ 10#4) + 1#4) <<< x✝¹)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 4
+      x✝¹ x✝ : BitVec 4
+      a✝ :
+        ¬(if (!4#4 >ᵤ x✝¹) = true then none else some (~~~((x✝ ^^^ 5#4) <<< x✝¹) + 1#4)) ⊑
+            if (!4#4 >ᵤ x✝¹) = true then none else some (((x✝ ^^^ 10#4) + 1#4) <<< x✝¹)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatible_proof.lean:147:8: warning: declaration uses 'sorry'
+[bv] [0.042214] Normalizing goal
+  [Meta.synthInstance] [0.001133] ✅️ Decidable
+        ((if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
+          else some (x✝ - x✝¹.sdiv 42#8)) ⊑
+          if (214#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 214#8 == -1) = true then none
+          else some (x✝¹.sdiv 214#8 + x✝))
+  [Meta.Tactic.bv] Running preprocessing pipeline on:
+      case h
+      e e_1 : LLVM.IntW 8
+      x✝¹ x✝ : BitVec 8
+      a✝ :
+        ¬(if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
+            else some (x✝ - x✝¹.sdiv 42#8)) ⊑
+            if (214#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 214#8 == -1) = true then none
+            else some (x✝¹.sdiv 214#8 + x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Rerunning pipeline on:
+      case h
+      e e_1 : LLVM.IntW 8
+      x✝¹ x✝ : BitVec 8
+      a✝ :
+        ¬some (x✝ + ((~~~if x✝¹.getLsbD 7 = true then ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8 else x✝¹ / 42#8) + 1#8)) ⊑
+            some ((if x✝¹.getLsbD 7 = true then (~~~x✝¹ + 1#8) / 42#8 else ~~~(x✝¹ / 42#8) + 1#8) + x✝)
+      ⊢ False
+  [Meta.Tactic.bv] Pipeline reached a fixpoint
+Bitwuzla proved the goal after 0.708160ms, solving context: 0.000000ms
+LeanSAT proved the goal after 3.079330ms: rewriting 3.062390ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+Bitwuzla proved the goal after 77.496040ms, solving context: 1.000000ms
+LeanSAT proved the goal after 136.709069ms: rewriting 21.210230ms, bitblasting 0.000000ms, SAT solving 106.187129ms, LRAT trimming 3.016000ms, LRAT checking 4.104990ms
+Bitwuzla proved the goal after 0.950160ms, solving context: 0.000000ms
+LeanSAT proved the goal after 3.163460ms: rewriting 3.139040ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+Bitwuzla proved the goal after 77.952899ms, solving context: 2.000000ms
+LeanSAT proved the goal after 85.974970ms: rewriting 21.982650ms, bitblasting 0.000000ms, SAT solving 56.952070ms, LRAT trimming 1.035520ms, LRAT checking 4.698210ms
+Bitwuzla proved the goal after 75.944430ms, solving context: 0.000000ms
+LeanSAT proved the goal after 78.598049ms: rewriting 17.384520ms, bitblasting 0.000000ms, SAT solving 55.675639ms, LRAT trimming 1.008180ms, LRAT checking 3.424430ms
+Bitwuzla proved the goal after 75.808309ms, solving context: 0.000000ms
+LeanSAT proved the goal after 85.079010ms: rewriting 17.104420ms, bitblasting 0.000000ms, SAT solving 62.159720ms, LRAT trimming 0.000000ms, LRAT checking 3.494560ms
+Bitwuzla proved the goal after 0.661240ms, solving context: 0.000000ms
+LeanSAT proved the goal after 2.749620ms: rewriting 2.732220ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+Bitwuzla proved the goal after 79.351020ms, solving context: 0.000000ms
+LeanSAT proved the goal after 88.913099ms: rewriting 23.442940ms, bitblasting 0.000000ms, SAT solving 54.977229ms, LRAT trimming 2.027210ms, LRAT checking 7.170050ms
+Bitwuzla provided a counter example after 84.979079ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 75.695330ms: rewriting 19.156020 SAT solving 55.636080ms
+/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsubhofhnegatible_proof.lean:203:8: error: (kernel) declaration has metavariables 'negation_of_increment_via_or_disjoint_thm'
+Bitwuzla proved the goal after 76.998940ms, solving context: 2.000000ms
+LeanSAT proved the goal after 80.115389ms: rewriting 19.489780ms, bitblasting 0.000000ms, SAT solving 55.371480ms, LRAT trimming 1.025750ms, LRAT checking 3.074689ms
+Bitwuzla proved the goal after 731.996648ms, solving context: 647.000000ms
+LeanSAT proved the goal after 798.076318ms: rewriting 21.729640ms, bitblasting 0.000000ms, SAT solving 355.558299ms, LRAT trimming 199.660939ms, LRAT checking 217.059710ms
