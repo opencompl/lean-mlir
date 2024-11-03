@@ -1,1791 +1,0 @@
-⚠ [676/892] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
-⚠ [881/892] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
-warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
-⚠ [884/892] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
-⚠ [887/892] Replayed SSA.Experimental.Bits.Fast.Tactic
-warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
-⚠ [888/892] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
-warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhbo_proof.lean:18:4: error: None of the hypotheses are in the supported BitVec fragment.
-There are two potential fixes for this:
-1. If you are using custom BitVec constructs simplify them to built-in ones.
-2. If your problem is using only built-in ones it might currently be out of reach.
-   Consider expressing it in terms of different operations that are better supported.
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhbo_proof.lean:18:4: error: None of the hypotheses are in the supported BitVec fragment.
-There are two potential fixes for this:
-1. If you are using custom BitVec constructs simplify them to built-in ones.
-2. If your problem is using only built-in ones it might currently be out of reach.
-   Consider expressing it in terms of different operations that are better supported.
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhbo_proof.lean:11:8: error: (kernel) declaration has metavariables 'lshr_add_thm'
-[bv] [0.077265] Normalizing goal
-  [Meta.synthInstance] [0.002183] ✅️ Decidable
-        ((if 5#8 ≥ ↑8 then none
-          else
-            (Option.map (fun div => x✝¹ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝¹.sdiv 42#8))).bind
-              fun x => if 5#8 ≥ ↑8 then none else some ((x✝ >>> 5#8 + x) <<< 5#8)) ⊑
-          (Option.map (fun div => x✝¹ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝¹.sdiv 42#8))).bind
-            fun x => if 5#8 ≥ ↑8 then none else some (x✝ + x <<< 5#8 &&& 224#8))
-    [Meta.check] [0.001399] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
-          (if 5#8 ≥ ↑8 then none
-          else
-            (Option.map (fun div => x✝¹ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝¹.sdiv 42#8))).bind
-              fun x => if 5#8 ≥ ↑8 then none else some ((x✝ >>> 5#8 + x) <<< 5#8))
-          ((Option.map (fun div => x✝¹ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝¹.sdiv 42#8))).bind
-            fun x => if 5#8 ≥ ↑8 then none else some (x✝ + x <<< 5#8 &&& 224#8))
-  [Meta.Tactic.bv] Running preprocessing pipeline on:
-      case h
-      e e_1 : LLVM.IntW 8
-      x✝¹ x✝ : BitVec 8
-      a✝ :
-        ¬(if 5#8 ≥ ↑8 then none
-            else
-              (Option.map (fun div => x✝¹ - div * 42#8)
-                    (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                    else some (x✝¹.sdiv 42#8))).bind
-                fun x => if 5#8 ≥ ↑8 then none else some ((x✝ >>> 5#8 + x) <<< 5#8)) ⊑
-            (Option.map (fun div => x✝¹ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝¹.sdiv 42#8))).bind
-              fun x => if 5#8 ≥ ↑8 then none else some (x✝ + x <<< 5#8 &&& 224#8)
-      ⊢ False
-  [Meta.isDefEq] [0.002560] ❌️ ?a == ?a =?= 42#8 == 0#8
-    [Meta.isDefEq.onFailure] [0.002219] ❌️ ?a == ?a =?= 42#8 == 0#8
-      [Meta.synthInstance] [0.002195] 💥️ BEq ?α
-        [Meta.synthInstance] [0.001276] new goal BEq ?α
-  [Meta.appBuilder] [0.001095] ✅️ f: eq_false', xs: [fun h => Bool.noConfusion h]
-    [Meta.isDefEq] [0.001054] ✅️ ?p → False =?= false = true → Bool.noConfusionType False false true
-      [Meta.isDefEq] [0.001031] ✅️ False =?= Bool.noConfusionType False false true
-  [Meta.isDefEq] [0.002127] ✅️ ?hf =?= fun a a_1 =>
-        ite_cond_eq_false none (some ((x✝ >>> 5#8 + a) <<< 5#8))
-          (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-            (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 5#8)
-              (Eq.trans (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 5#8 8#8) (eq_self true)))
-                Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2)))
-    [Meta.isDefEq.assign] [0.002123] ✅️ ?hf := fun a a_1 =>
-          ite_cond_eq_false none (some ((x✝ >>> 5#8 + a) <<< 5#8))
-            (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-              (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 5#8)
-                (Eq.trans (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 5#8 8#8) (eq_self true)))
-                  Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2)))
-      [Meta.isDefEq.assign.checkTypes] [0.002084] ✅️ (?hf : ∀
-            a ∈
-              Option.map (fun div => x✝¹ + (~~~(div * 42#8) + 1#8))
-                (some (if x✝¹.getLsbD 7 = true then ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8 else x✝¹ / 42#8)),
-            (if 5#8 ≥ ↑8 then none else some ((x✝ >>> 5#8 + a) <<< 5#8)) =
-              some
-                ((x✝ >>> 5 + a) <<<
-                  5)) := (fun a a_1 =>
-            ite_cond_eq_false none (some ((x✝ >>> 5#8 + a) <<< 5#8))
-              (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-                (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 5#8)
-                  (Eq.trans
-                    (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 5#8 8#8) (eq_self true)))
-                    Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2))) : ∀
-            a ∈
-              Option.map (fun div => x✝¹ + (~~~(div * 42#8) + 1#8))
-                (some (if x✝¹.getLsbD 7 = true then ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8 else x✝¹ / 42#8)),
-            (if 5#8 ≥ ↑8 then none else some ((x✝ >>> 5#8 + a) <<< 5#8)) = some ((x✝ >>> 5#8 + a) <<< 5#8))
-        [Meta.isDefEq] [0.002079] ✅️ ∀
-              a ∈
-                Option.map (fun div => x✝¹ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝¹.getLsbD 7 = true then ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8 else x✝¹ / 42#8)),
-              (if 5#8 ≥ ↑8 then none else some ((x✝ >>> 5#8 + a) <<< 5#8)) =
-                some
-                  ((x✝ >>> 5 + a) <<<
-                    5) =?= ∀
-              a ∈
-                Option.map (fun div => x✝¹ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝¹.getLsbD 7 = true then ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8 else x✝¹ / 42#8)),
-              (if 5#8 ≥ ↑8 then none else some ((x✝ >>> 5#8 + a) <<< 5#8)) = some ((x✝ >>> 5#8 + a) <<< 5#8)
-          [Meta.isDefEq] [0.002036] ✅️ (if 5#8 ≥ ↑8 then none else some ((x✝ >>> 5#8 + a) <<< 5#8)) =
-                some
-                  ((x✝ >>> 5 + a) <<<
-                    5) =?= (if 5#8 ≥ ↑8 then none else some ((x✝ >>> 5#8 + a) <<< 5#8)) =
-                some ((x✝ >>> 5#8 + a) <<< 5#8)
-            [Meta.isDefEq] [0.001993] ✅️ some ((x✝ >>> 5 + a) <<< 5) =?= some ((x✝ >>> 5#8 + a) <<< 5#8)
-              [Meta.isDefEq] [0.001967] ✅️ (x✝ >>> 5 + a) <<< 5 =?= (x✝ >>> 5#8 + a) <<< 5#8
-                [Meta.isDefEq] [0.001944] ✅️ BitVec.instHShiftLeftNat.1 (x✝ >>> 5 + a)
-                      5 =?= BitVec.instHShiftLeft.1 (x✝ >>> 5#8 + a) 5#8
-                  [Meta.isDefEq] [0.001880] ✅️ (x✝ >>> 5 + a).shiftLeft 5 =?= (x✝ >>> 5#8 + a) <<< (5#8).toNat
-                    [Meta.isDefEq] [0.001853] ✅️ (x✝ >>> 5 + a).shiftLeft 5 =?= (x✝ >>> 5#8 + a).shiftLeft (5#8).toNat
-                      [Meta.isDefEq.delta] [0.001844] ✅️ (x✝ >>> 5 + a).shiftLeft
-                            5 =?= (x✝ >>> 5#8 + a).shiftLeft (5#8).toNat
-                        [Meta.isDefEq] [0.001812] ✅️ x✝ >>> 5 + a =?= x✝ >>> 5#8 + a
-                          [Meta.isDefEq] [0.001694] ✅️ instHAdd.1 (x✝ >>> 5) a =?= instHAdd.1 (x✝ >>> 5#8) a
-                            [Meta.isDefEq] [0.001640] ✅️ Add.add (x✝ >>> 5) a =?= Add.add (x✝ >>> 5#8) a
-                              [Meta.isDefEq] [0.001124] ❌️ BitVec.instAdd =?= instAddNat
-  [Meta.Tactic.bv] Rerunning pipeline on:
-      case h
-      e e_1 : LLVM.IntW 8
-      x✝¹ x✝ : BitVec 8
-      a✝ :
-        ¬((Option.map (fun div => x✝¹ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝¹.getLsbD 7 = true then ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8 else x✝¹ / 42#8))).bind
-              fun a => some ((x✝ >>> 5 + a) <<< 5)) ⊑
-            (Option.map (fun div => x✝¹ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝¹.getLsbD 7 = true then ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8 else x✝¹ / 42#8))).bind
-              fun a => some (x✝ + a <<< 5 &&& 224#8)
-      ⊢ False
-  [Meta.Tactic.bv] Pipeline reached a fixpoint
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhbo_proof.lean:30:4: error: None of the hypotheses are in the supported BitVec fragment.
-There are two potential fixes for this:
-1. If you are using custom BitVec constructs simplify them to built-in ones.
-2. If your problem is using only built-in ones it might currently be out of reach.
-   Consider expressing it in terms of different operations that are better supported.
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhbo_proof.lean:22:8: error: (kernel) declaration has metavariables 'lshr_sub_thm'
-[bv] [0.124385] Normalizing goal
-  [Meta.synthInstance] [0.002689] ✅️ Decidable
-        (((Option.map (fun div => x✝ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝.sdiv 42#8))).bind
-            fun x => if 3#8 ≥ ↑8 then none else if 3#8 ≥ ↑8 then none else some ((x - x✝¹ >>> 3#8) <<< 3#8)) ⊑
-          (Option.map (fun div => x✝ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝.sdiv 42#8))).bind
-            fun x =>
-            if 3#8 ≥ ↑8 then none
-            else
-              if
-                  True ∧
-                    (BitVec.signExtend (8 + 1) x - BitVec.signExtend (8 + 1) (x✝¹ >>> 3#8)).msb ≠
-                      (BitVec.signExtend (8 + 1) x - BitVec.signExtend (8 + 1) (x✝¹ >>> 3#8)).getMsbD 1 then
-                none
-              else if 3#8 ≥ ↑8 then none else some ((x - x✝¹ >>> 3#8) <<< 3#8))
-    [Meta.check] [0.001972] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
-          ((Option.map (fun div => x✝ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝.sdiv 42#8))).bind
-            fun x => if 3#8 ≥ ↑8 then none else if 3#8 ≥ ↑8 then none else some ((x - x✝¹ >>> 3#8) <<< 3#8))
-          ((Option.map (fun div => x✝ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝.sdiv 42#8))).bind
-            fun x =>
-            if 3#8 ≥ ↑8 then none
-            else
-              if
-                  True ∧
-                    (BitVec.signExtend (8 + 1) x - BitVec.signExtend (8 + 1) (x✝¹ >>> 3#8)).msb ≠
-                      (BitVec.signExtend (8 + 1) x - BitVec.signExtend (8 + 1) (x✝¹ >>> 3#8)).getMsbD 1 then
-                none
-              else if 3#8 ≥ ↑8 then none else some ((x - x✝¹ >>> 3#8) <<< 3#8))
-  [Meta.Tactic.bv] Running preprocessing pipeline on:
-      case h
-      e e_1 : LLVM.IntW 8
-      x✝¹ x✝ : BitVec 8
-      a✝ :
-        ¬((Option.map (fun div => x✝ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝.sdiv 42#8))).bind
-              fun x => if 3#8 ≥ ↑8 then none else if 3#8 ≥ ↑8 then none else some ((x - x✝¹ >>> 3#8) <<< 3#8)) ⊑
-            (Option.map (fun div => x✝ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝.sdiv 42#8))).bind
-              fun x =>
-              if 3#8 ≥ ↑8 then none
-              else
-                if
-                    True ∧
-                      (BitVec.signExtend (8 + 1) x - BitVec.signExtend (8 + 1) (x✝¹ >>> 3#8)).msb ≠
-                        (BitVec.signExtend (8 + 1) x - BitVec.signExtend (8 + 1) (x✝¹ >>> 3#8)).getMsbD 1 then
-                  none
-                else if 3#8 ≥ ↑8 then none else some ((x - x✝¹ >>> 3#8) <<< 3#8)
-      ⊢ False
-  [Meta.isDefEq] [0.001033] ✅️ ?h₁ =?= Eq.trans
-        (congrArg (And True)
-          (Eq.trans
-            (congr
-              (congrArg Ne
-                (Eq.trans
-                  (congrArg BitVec.msb
-                    (Eq.trans (BitVec.sub_toAdd (BitVec.signExtend 9 a) (BitVec.signExtend 9 (x✝¹ >>> 3)))
-                      (congrArg (HAdd.hAdd (BitVec.signExtend 9 a))
-                        (BitVec.neg_eq_not_add (BitVec.signExtend 9 (x✝¹ >>> 3))))))
-                  (BitVec.msb_eq_getLsbD_last (BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 3) + 1#9)))))
-              (congrArg (fun x => x.getMsbD 1)
-                (Eq.trans (BitVec.sub_toAdd (BitVec.signExtend 9 a) (BitVec.signExtend 9 (x✝¹ >>> 3)))
-                  (congrArg (HAdd.hAdd (BitVec.signExtend 9 a))
-                    (BitVec.neg_eq_not_add (BitVec.signExtend 9 (x✝¹ >>> 3)))))))
-            (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
-              ((BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 3) + 1#9)).getLsbD 8)
-              ((BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 3) + 1#9)).getMsbD 1))))
-        (true_and
-          ((!(BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 3) + 1#9)).getLsbD 8 ==
-                (BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 3) + 1#9)).getMsbD 1) =
-            true))
-    [Meta.isDefEq.assign] [0.001025] ✅️ ?h₁ := Eq.trans
-          (congrArg (And True)
-            (Eq.trans
-              (congr
-                (congrArg Ne
-                  (Eq.trans
-                    (congrArg BitVec.msb
-                      (Eq.trans (BitVec.sub_toAdd (BitVec.signExtend 9 a) (BitVec.signExtend 9 (x✝¹ >>> 3)))
-                        (congrArg (HAdd.hAdd (BitVec.signExtend 9 a))
-                          (BitVec.neg_eq_not_add (BitVec.signExtend 9 (x✝¹ >>> 3))))))
-                    (BitVec.msb_eq_getLsbD_last (BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 3) + 1#9)))))
-                (congrArg (fun x => x.getMsbD 1)
-                  (Eq.trans (BitVec.sub_toAdd (BitVec.signExtend 9 a) (BitVec.signExtend 9 (x✝¹ >>> 3)))
-                    (congrArg (HAdd.hAdd (BitVec.signExtend 9 a))
-                      (BitVec.neg_eq_not_add (BitVec.signExtend 9 (x✝¹ >>> 3)))))))
-              (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
-                ((BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 3) + 1#9)).getLsbD 8)
-                ((BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 3) + 1#9)).getMsbD 1))))
-          (true_and
-            ((!(BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 3) + 1#9)).getLsbD 8 ==
-                  (BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 3) + 1#9)).getMsbD 1) =
-              true))
-  [Meta.Tactic.bv] Rerunning pipeline on:
-      case h
-      e e_1 : LLVM.IntW 8
-      x✝¹ x✝ : BitVec 8
-      a✝ :
-        ¬((Option.map (fun div => x✝ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 42#8) + 1#8 else x✝ / 42#8))).bind
-              fun a => some ((a + (~~~(x✝¹ >>> 3) + 1#8)) <<< 3)) ⊑
-            (Option.map (fun div => x✝ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 42#8) + 1#8 else x✝ / 42#8))).bind
-              fun a =>
-              if
-                  (!(BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 3) + 1#9)).getLsbD 8 ==
-                        (BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 3) + 1#9)).getMsbD 1) =
-                    true then
-                none
-              else some ((a + (~~~(x✝¹ >>> 3) + 1#8)) <<< 3)
-      ⊢ False
-  [Meta.Tactic.bv] Pipeline reached a fixpoint
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhbo_proof.lean:41:4: error: None of the hypotheses are in the supported BitVec fragment.
-There are two potential fixes for this:
-1. If you are using custom BitVec constructs simplify them to built-in ones.
-2. If your problem is using only built-in ones it might currently be out of reach.
-   Consider expressing it in terms of different operations that are better supported.
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhbo_proof.lean:41:4: error: None of the hypotheses are in the supported BitVec fragment.
-There are two potential fixes for this:
-1. If you are using custom BitVec constructs simplify them to built-in ones.
-2. If your problem is using only built-in ones it might currently be out of reach.
-   Consider expressing it in terms of different operations that are better supported.
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhbo_proof.lean:34:8: error: (kernel) declaration has metavariables 'lshr_and_thm'
-[bv] [0.175357] Normalizing goal
-  [Meta.isDefEq] [0.001670] ✅️ ?p =?= (if 6#8 ≥ ↑8 then none
-        else
-          (Option.map (fun div => x✝¹ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝¹.sdiv 42#8))).bind
-            fun x => if 6#8 ≥ ↑8 then none else some ((x✝ >>> 6#8 &&& x) <<< 6#8)) ⊑
-        (Option.map (fun div => x✝¹ - div * 42#8)
-              (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-              else some (x✝¹.sdiv 42#8))).bind
-          fun x => if 6#8 ≥ ↑8 then none else some (x✝ &&& x <<< 6#8)
-    [Meta.isDefEq.assign] [0.001663] ✅️ ?p := (if 6#8 ≥ ↑8 then none
-          else
-            (Option.map (fun div => x✝¹ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝¹.sdiv 42#8))).bind
-              fun x => if 6#8 ≥ ↑8 then none else some ((x✝ >>> 6#8 &&& x) <<< 6#8)) ⊑
-          (Option.map (fun div => x✝¹ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝¹.sdiv 42#8))).bind
-            fun x => if 6#8 ≥ ↑8 then none else some (x✝ &&& x <<< 6#8)
-  [Meta.synthInstance] [0.001673] ✅️ Decidable
-        ((if 6#8 ≥ ↑8 then none
-          else
-            (Option.map (fun div => x✝¹ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝¹.sdiv 42#8))).bind
-              fun x => if 6#8 ≥ ↑8 then none else some ((x✝ >>> 6#8 &&& x) <<< 6#8)) ⊑
-          (Option.map (fun div => x✝¹ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝¹.sdiv 42#8))).bind
-            fun x => if 6#8 ≥ ↑8 then none else some (x✝ &&& x <<< 6#8))
-    [Meta.check] [0.001011] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
-          (if 6#8 ≥ ↑8 then none
-          else
-            (Option.map (fun div => x✝¹ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝¹.sdiv 42#8))).bind
-              fun x => if 6#8 ≥ ↑8 then none else some ((x✝ >>> 6#8 &&& x) <<< 6#8))
-          ((Option.map (fun div => x✝¹ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝¹.sdiv 42#8))).bind
-            fun x => if 6#8 ≥ ↑8 then none else some (x✝ &&& x <<< 6#8))
-  [Meta.Tactic.bv] Running preprocessing pipeline on:
-      case h
-      e e_1 : LLVM.IntW 8
-      x✝¹ x✝ : BitVec 8
-      a✝ :
-        ¬(if 6#8 ≥ ↑8 then none
-            else
-              (Option.map (fun div => x✝¹ - div * 42#8)
-                    (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                    else some (x✝¹.sdiv 42#8))).bind
-                fun x => if 6#8 ≥ ↑8 then none else some ((x✝ >>> 6#8 &&& x) <<< 6#8)) ⊑
-            (Option.map (fun div => x✝¹ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝¹.sdiv 42#8))).bind
-              fun x => if 6#8 ≥ ↑8 then none else some (x✝ &&& x <<< 6#8)
-      ⊢ False
-  [Meta.appBuilder] [0.003910] ✅️ f: Complement.complement, xs: [div * 42#8]
-    [Meta.synthInstance] [0.002050] ✅️ Complement (BitVec 8)
-      [Meta.whnf] [0.001789] Non-easy whnf: Complement (BitVec 8)
-  [Meta.appBuilder] [0.007561] ✅️ f: HAdd.hAdd, xs: [~~~(div * 42#8), 1#8]
-    [Meta.isDefEq] [0.001839] ✅️ ?β =?= BitVec 8
-      [Meta.isDefEq.assign] [0.001833] ✅️ ?β := BitVec 8
-    [Meta.synthInstance] [0.005635] ✅️ HAdd (BitVec 8) (BitVec 8) (BitVec 8)
-      [Meta.synthInstance] [0.005243] ✅️ apply @instHAdd to HAdd (BitVec 8) (BitVec 8) (BitVec 8)
-        [Meta.synthInstance.tryResolve] [0.005122] ✅️ HAdd (BitVec 8) (BitVec 8)
-              (BitVec 8) ≟ HAdd (BitVec 8) (BitVec 8) (BitVec 8)
-          [Meta.isDefEq] [0.001341] ✅️ HAdd (BitVec 8) (BitVec 8) ?m.47578 =?= HAdd ?m.47581 ?m.47581 ?m.47581
-          [Meta.isDefEq] [0.001828] ✅️ ?m.47579 =?= instHAdd
-            [Meta.isDefEq.assign] [0.001825] ✅️ ?m.47579 := instHAdd
-              [Meta.isDefEq.assign.checkTypes] [0.001804] ✅️ (?m.47579 : HAdd (BitVec 8) (BitVec 8)
-                    (BitVec 8)) := (instHAdd : HAdd (BitVec 8) (BitVec 8) (BitVec 8))
-                [Meta.isDefEq] [0.001797] ✅️ HAdd (BitVec 8) (BitVec 8)
-                      (BitVec 8) =?= HAdd (BitVec 8) (BitVec 8) (BitVec 8)
-  [Meta.isDefEq] [0.004194] ❌️ ?a + ?a =?= ~~~(div * 42#8) + 1#8
-    [Meta.isDefEq] [0.002069] ❌️ instHAdd =?= instHAdd
-      [Meta.isDefEq] [0.001974] ❌️ { hAdd := fun a b => Add.add a b } =?= { hAdd := fun a b => Add.add a b }
-        [Meta.isDefEq.onFailure] [0.001846] ❌️ { hAdd := fun a b => Add.add a b } =?= { hAdd := fun a b => Add.add a b }
-    [Meta.isDefEq] [0.001908] ❌️ ~~~(div * 42#8) =?= 1#8
-      [Meta.isDefEq] [0.001896] ❌️ ~~~(div * 42#8) =?= 1#8
-  [Meta.appBuilder] [0.002170] ✅️ f: funext, xs: [fun div =>
-         Eq.trans (BitVec.sub_toAdd x✝¹ (div * 42#8)) (congrArg (HAdd.hAdd x✝¹) (BitVec.neg_eq_not_add (div * 42#8)))]
-  [Meta.isDefEq] [0.002763] ❌️ ?a == ?a =?= 42#8 == 0#8
-    [Meta.isDefEq] [0.002078] ✅️ ?inst✝ =?= instBEqOfDecidableEq
-      [Meta.isDefEq.assign] [0.002075] ✅️ ?inst✝ := instBEqOfDecidableEq
-        [Meta.isDefEq.assign.checkTypes] [0.002068] ✅️ (?inst✝ : BEq
-              (BitVec 8)) := (instBEqOfDecidableEq : BEq (BitVec 8))
-          [Meta.isDefEq] [0.002064] ✅️ BEq (BitVec 8) =?= BEq (BitVec 8)
-  [Meta.appBuilder] [0.002173] ✅️ f: eq_false', xs: [fun h => Bool.noConfusion h]
-    [Meta.isDefEq] [0.002113] ✅️ ?p → False =?= false = true → Bool.noConfusionType False false true
-      [Meta.isDefEq] [0.002080] ✅️ False =?= Bool.noConfusionType False false true
-  [Meta.appBuilder] [0.002831] ✅️ f: HAdd.hAdd, xs: [~~~x✝¹, 1#8]
-    [Meta.isDefEq] [0.001891] ✅️ ?β =?= BitVec 8
-      [Meta.isDefEq.assign] [0.001872] ✅️ ?β := BitVec 8
-  [Meta.isDefEq] [0.002317] ❌️ ~~~?a + ?a =?= ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8
-  [Meta.isDefEq] [0.002073] ✅️ ?hx =?= congr
-        (congrArg Option.map
-          (funext fun div =>
-            Eq.trans (BitVec.sub_toAdd x✝¹ (div * 42#8))
-              (congrArg (HAdd.hAdd x✝¹) (BitVec.neg_eq_not_add (div * 42#8)))))
-        (Eq.trans
-          (ite_cond_eq_false none (some (x✝¹.sdiv 42#8))
-            (Eq.trans
-              (congrArg (fun x => x = true)
-                (Eq.trans
-                  (Eq.trans
-                    (congrArg false.or
-                      (Eq.trans (congrArg (fun x => x && false) (Bool.true_and (x✝¹ == BitVec.intMin 8)))
-                        (Bool.and_false (x✝¹ == BitVec.intMin 8))))
-                    (Std.Tactic.BVDecide.Normalize.Bool.or_elim false false))
-                  (Eq.trans
-                    (congrArg not
-                      (Eq.trans (congr (congrArg Bool.and Bool.not_false) Bool.not_false) (Bool.and_self true)))
-                    Bool.not_true)))
-              (eq_false' fun h => Bool.noConfusion h)))
-          (congrArg some
-            (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.sdiv_udiv x✝¹ 42#8)
-              (ite_congr (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last x✝¹))
-                (fun a =>
-                  Eq.trans
-                    (ite_cond_eq_false (-x✝¹ / -42#8) (-(-x✝¹ / 42#8))
-                      (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 42#8))
-                        (eq_false' fun h => Bool.noConfusion h)))
-                    (Eq.trans (congrArg (fun x => -(x / 42#8)) (BitVec.neg_eq_not_add x✝¹))
-                      (BitVec.neg_eq_not_add ((~~~x✝¹ + 1#8) / 42#8))))
-                fun a =>
-                ite_cond_eq_false (-(x✝¹ / -42#8)) (x✝¹ / 42#8)
-                  (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 42#8))
-                    (eq_false' fun h => Bool.noConfusion h))))))
-    [Meta.isDefEq.assign] [0.002066] ✅️ ?hx := congr
-          (congrArg Option.map
-            (funext fun div =>
-              Eq.trans (BitVec.sub_toAdd x✝¹ (div * 42#8))
-                (congrArg (HAdd.hAdd x✝¹) (BitVec.neg_eq_not_add (div * 42#8)))))
-          (Eq.trans
-            (ite_cond_eq_false none (some (x✝¹.sdiv 42#8))
-              (Eq.trans
-                (congrArg (fun x => x = true)
-                  (Eq.trans
-                    (Eq.trans
-                      (congrArg false.or
-                        (Eq.trans (congrArg (fun x => x && false) (Bool.true_and (x✝¹ == BitVec.intMin 8)))
-                          (Bool.and_false (x✝¹ == BitVec.intMin 8))))
-                      (Std.Tactic.BVDecide.Normalize.Bool.or_elim false false))
-                    (Eq.trans
-                      (congrArg not
-                        (Eq.trans (congr (congrArg Bool.and Bool.not_false) Bool.not_false) (Bool.and_self true)))
-                      Bool.not_true)))
-                (eq_false' fun h => Bool.noConfusion h)))
-            (congrArg some
-              (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.sdiv_udiv x✝¹ 42#8)
-                (ite_congr (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last x✝¹))
-                  (fun a =>
-                    Eq.trans
-                      (ite_cond_eq_false (-x✝¹ / -42#8) (-(-x✝¹ / 42#8))
-                        (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 42#8))
-                          (eq_false' fun h => Bool.noConfusion h)))
-                      (Eq.trans (congrArg (fun x => -(x / 42#8)) (BitVec.neg_eq_not_add x✝¹))
-                        (BitVec.neg_eq_not_add ((~~~x✝¹ + 1#8) / 42#8))))
-                  fun a =>
-                  ite_cond_eq_false (-(x✝¹ / -42#8)) (x✝¹ / 42#8)
-                    (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 42#8))
-                      (eq_false' fun h => Bool.noConfusion h))))))
-  [Meta.isDefEq] [0.019963] ✅️ ?hf =?= fun a a_1 =>
-        ite_cond_eq_false none (some ((x✝ >>> 6#8 &&& a) <<< 6#8))
-          (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-            (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 6#8)
-              (Eq.trans (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 6#8 8#8) (eq_self true)))
-                Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2)))
-    [Meta.isDefEq.assign] [0.019957] ✅️ ?hf := fun a a_1 =>
-          ite_cond_eq_false none (some ((x✝ >>> 6#8 &&& a) <<< 6#8))
-            (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-              (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 6#8)
-                (Eq.trans (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 6#8 8#8) (eq_self true)))
-                  Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2)))
-      [Meta.isDefEq.assign.checkTypes] [0.019891] ✅️ (?hf : ∀
-            a ∈
-              Option.map (fun div => x✝¹ + (~~~(div * 42#8) + 1#8))
-                (some (if x✝¹.getLsbD 7 = true then ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8 else x✝¹ / 42#8)),
-            (if 6#8 ≥ ↑8 then none else some ((x✝ >>> 6#8 &&& a) <<< 6#8)) =
-              some
-                ((x✝ >>> 6 &&& a) <<<
-                  6)) := (fun a a_1 =>
-            ite_cond_eq_false none (some ((x✝ >>> 6#8 &&& a) <<< 6#8))
-              (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-                (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 6#8)
-                  (Eq.trans
-                    (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 6#8 8#8) (eq_self true)))
-                    Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2))) : ∀
-            a ∈
-              Option.map (fun div => x✝¹ + (~~~(div * 42#8) + 1#8))
-                (some (if x✝¹.getLsbD 7 = true then ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8 else x✝¹ / 42#8)),
-            (if 6#8 ≥ ↑8 then none else some ((x✝ >>> 6#8 &&& a) <<< 6#8)) = some ((x✝ >>> 6#8 &&& a) <<< 6#8))
-        [Meta.isDefEq] [0.019883] ✅️ ∀
-              a ∈
-                Option.map (fun div => x✝¹ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝¹.getLsbD 7 = true then ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8 else x✝¹ / 42#8)),
-              (if 6#8 ≥ ↑8 then none else some ((x✝ >>> 6#8 &&& a) <<< 6#8)) =
-                some
-                  ((x✝ >>> 6 &&& a) <<<
-                    6) =?= ∀
-              a ∈
-                Option.map (fun div => x✝¹ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝¹.getLsbD 7 = true then ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8 else x✝¹ / 42#8)),
-              (if 6#8 ≥ ↑8 then none else some ((x✝ >>> 6#8 &&& a) <<< 6#8)) = some ((x✝ >>> 6#8 &&& a) <<< 6#8)
-          [Meta.isDefEq] [0.019803] ✅️ (if 6#8 ≥ ↑8 then none else some ((x✝ >>> 6#8 &&& a) <<< 6#8)) =
-                some
-                  ((x✝ >>> 6 &&& a) <<<
-                    6) =?= (if 6#8 ≥ ↑8 then none else some ((x✝ >>> 6#8 &&& a) <<< 6#8)) =
-                some ((x✝ >>> 6#8 &&& a) <<< 6#8)
-            [Meta.isDefEq] [0.017812] ✅️ some ((x✝ >>> 6 &&& a) <<< 6) =?= some ((x✝ >>> 6#8 &&& a) <<< 6#8)
-              [Meta.isDefEq] [0.017759] ✅️ (x✝ >>> 6 &&& a) <<< 6 =?= (x✝ >>> 6#8 &&& a) <<< 6#8
-                [Meta.isDefEq] [0.017706] ✅️ BitVec.instHShiftLeftNat.1 (x✝ >>> 6 &&& a)
-                      6 =?= BitVec.instHShiftLeft.1 (x✝ >>> 6#8 &&& a) 6#8
-                  [Meta.isDefEq] [0.017601] ✅️ (x✝ >>> 6 &&& a).shiftLeft 6 =?= (x✝ >>> 6#8 &&& a) <<< (6#8).toNat
-                    [Meta.isDefEq] [0.017559] ✅️ (x✝ >>> 6 &&& a).shiftLeft
-                          6 =?= (x✝ >>> 6#8 &&& a).shiftLeft (6#8).toNat
-                      [Meta.isDefEq.delta] [0.017543] ✅️ (x✝ >>> 6 &&& a).shiftLeft
-                            6 =?= (x✝ >>> 6#8 &&& a).shiftLeft (6#8).toNat
-                        [Meta.isDefEq] [0.017491] ✅️ x✝ >>> 6 &&& a =?= x✝ >>> 6#8 &&& a
-                          [Meta.isDefEq] [0.015517] ✅️ instHAndOfAndOp.1 (x✝ >>> 6)
-                                a =?= instHAndOfAndOp.1 (x✝ >>> 6#8) a
-                            [Meta.isDefEq] [0.014142] ✅️ AndOp.and (x✝ >>> 6) a =?= AndOp.and (x✝ >>> 6#8) a
-                              [Meta.isDefEq] [0.014105] ✅️ BitVec.instAndOp.1 (x✝ >>> 6)
-                                    a =?= BitVec.instAndOp.1 (x✝ >>> 6#8) a
-                                [Meta.whnf] [0.001847] Non-easy whnf: AndOp (BitVec 8)
-                                [Meta.isDefEq] [0.010260] ✅️ (x✝ >>> 6).and a =?= (x✝ >>> 6#8).and a
-                                  [Meta.isDefEq.delta] [0.010238] ✅️ (x✝ >>> 6).and a =?= (x✝ >>> 6#8).and a
-                                    [Meta.isDefEq] [0.010190] ✅️ x✝ >>> 6 =?= x✝ >>> 6#8
-                                      [Meta.isDefEq] [0.010127] ✅️ BitVec.instHShiftRightNat.1 x✝
-                                            6 =?= BitVec.instHShiftRight.1 x✝ 6#8
-                                        [Meta.isDefEq] [0.009995] ✅️ x✝.ushiftRight 6 =?= x✝ >>> (6#8).toNat
-                                          [Meta.isDefEq] [0.009944] ✅️ x✝.ushiftRight 6 =?= x✝.ushiftRight (6#8).toNat
-                                            [Meta.isDefEq.delta] [0.007985] ✅️ x✝.ushiftRight
-                                                  6 =?= x✝.ushiftRight (6#8).toNat
-                                              [Meta.isDefEq] [0.007933] ✅️ 6 =?= (6#8).toNat
-                                                [Meta.whnf] [0.001959] Non-easy whnf: instOfNatNat 6
-                                                  [Meta.whnf] [0.001941] Non-easy whnf: { ofNat := 6 }
-                                                [Meta.isDefEq] [0.005898] ✅️ 6 =?= ↑(6#8).toFin
-                                                  [Meta.isDefEq] [0.005845] ✅️ 6 =?= (6#8).toFin.1
-                                                    [Meta.whnf] [0.005664] Non-easy whnf: (6#8).toFin
-  [Meta.isDefEq] [0.002131] ✅️ ?x.bind
-        ?f =?= (Option.map (fun div => x✝¹ + (~~~(div * 42#8) + 1#8))
-            (some (if x✝¹.getLsbD 7 = true then ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8 else x✝¹ / 42#8))).bind
-        fun a => some ((x✝ >>> 6 &&& a) <<< 6)
-    [Meta.isDefEq] [0.001917] ✅️ ?α =?= BitVec 8
-      [Meta.isDefEq.assign] [0.001911] ✅️ ?α := BitVec 8
-        [Meta.isDefEq.assign.checkTypes] [0.001901] ✅️ (?α : Type ?u.48404) := (BitVec 8 : Type)
-  [Meta.isDefEq] [0.003794] ✅️ ?hx =?= congr
-        (congrArg Option.map
-          (funext fun div =>
-            Eq.trans (BitVec.sub_toAdd x✝¹ (div * 42#8))
-              (congrArg (HAdd.hAdd x✝¹) (BitVec.neg_eq_not_add (div * 42#8)))))
-        (Eq.trans
-          (ite_cond_eq_false none (some (x✝¹.sdiv 42#8))
-            (Eq.trans
-              (congrArg (fun x => x = true)
-                (Eq.trans
-                  (Eq.trans
-                    (congrArg false.or
-                      (Eq.trans (congrArg (fun x => x && false) (Bool.true_and (x✝¹ == BitVec.intMin 8)))
-                        (Bool.and_false (x✝¹ == BitVec.intMin 8))))
-                    (Std.Tactic.BVDecide.Normalize.Bool.or_elim false false))
-                  (Eq.trans
-                    (congrArg not
-                      (Eq.trans (congr (congrArg Bool.and Bool.not_false) Bool.not_false) (Bool.and_self true)))
-                    Bool.not_true)))
-              (eq_false' fun h => Bool.noConfusion h)))
-          (congrArg some
-            (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.sdiv_udiv x✝¹ 42#8)
-              (ite_congr (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last x✝¹))
-                (fun a =>
-                  Eq.trans
-                    (ite_cond_eq_false (-x✝¹ / -42#8) (-(-x✝¹ / 42#8))
-                      (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 42#8))
-                        (eq_false' fun h => Bool.noConfusion h)))
-                    (Eq.trans (congrArg (fun x => -(x / 42#8)) (BitVec.neg_eq_not_add x✝¹))
-                      (BitVec.neg_eq_not_add ((~~~x✝¹ + 1#8) / 42#8))))
-                fun a =>
-                ite_cond_eq_false (-(x✝¹ / -42#8)) (x✝¹ / 42#8)
-                  (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 42#8))
-                    (eq_false' fun h => Bool.noConfusion h))))))
-    [Meta.isDefEq.assign] [0.003788] ✅️ ?hx := congr
-          (congrArg Option.map
-            (funext fun div =>
-              Eq.trans (BitVec.sub_toAdd x✝¹ (div * 42#8))
-                (congrArg (HAdd.hAdd x✝¹) (BitVec.neg_eq_not_add (div * 42#8)))))
-          (Eq.trans
-            (ite_cond_eq_false none (some (x✝¹.sdiv 42#8))
-              (Eq.trans
-                (congrArg (fun x => x = true)
-                  (Eq.trans
-                    (Eq.trans
-                      (congrArg false.or
-                        (Eq.trans (congrArg (fun x => x && false) (Bool.true_and (x✝¹ == BitVec.intMin 8)))
-                          (Bool.and_false (x✝¹ == BitVec.intMin 8))))
-                      (Std.Tactic.BVDecide.Normalize.Bool.or_elim false false))
-                    (Eq.trans
-                      (congrArg not
-                        (Eq.trans (congr (congrArg Bool.and Bool.not_false) Bool.not_false) (Bool.and_self true)))
-                      Bool.not_true)))
-                (eq_false' fun h => Bool.noConfusion h)))
-            (congrArg some
-              (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.sdiv_udiv x✝¹ 42#8)
-                (ite_congr (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last x✝¹))
-                  (fun a =>
-                    Eq.trans
-                      (ite_cond_eq_false (-x✝¹ / -42#8) (-(-x✝¹ / 42#8))
-                        (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 42#8))
-                          (eq_false' fun h => Bool.noConfusion h)))
-                      (Eq.trans (congrArg (fun x => -(x / 42#8)) (BitVec.neg_eq_not_add x✝¹))
-                        (BitVec.neg_eq_not_add ((~~~x✝¹ + 1#8) / 42#8))))
-                  fun a =>
-                  ite_cond_eq_false (-(x✝¹ / -42#8)) (x✝¹ / 42#8)
-                    (Eq.trans (congrArg (fun x => x = true) (BitVec.msb_eq_getLsbD_last 42#8))
-                      (eq_false' fun h => Bool.noConfusion h))))))
-  [Meta.appBuilder] [0.004588] ✅️ f: HShiftLeft.hShiftLeft, xs: [a, 6]
-    [Meta.synthInstance] [0.004487] ✅️ HShiftLeft (BitVec 8) ℕ (BitVec 8)
-      [Meta.synthInstance] [0.004218] ✅️ apply @BitVec.instHShiftLeftNat to HShiftLeft (BitVec 8) ℕ (BitVec 8)
-        [Meta.synthInstance.tryResolve] [0.004175] ✅️ HShiftLeft (BitVec 8) ℕ
-              (BitVec 8) ≟ HShiftLeft (BitVec 8) ℕ (BitVec 8)
-          [Meta.isDefEq] [0.002127] ✅️ HShiftLeft (BitVec 8) ℕ
-                ?m.48457 =?= HShiftLeft (BitVec ?m.48460) ℕ (BitVec ?m.48460)
-  [Meta.isDefEq] [0.002165] ❌️ ?x &&& ?x =?= x✝ &&& a <<< 6
-    [Meta.isDefEq] [0.002034] ✅️ ?x =?= x✝
-      [Meta.isDefEq.assign] [0.002028] ✅️ ?x := x✝
-        [Meta.isDefEq.assign.checkTypes] [0.002019] ✅️ (?x : BitVec ?w) := (x✝ : BitVec 8)
-          [Meta.isDefEq] [0.002013] ✅️ BitVec ?w =?= BitVec 8
-  [Meta.isDefEq] [0.003685] ❌️ ?x &&& ?x =?= x✝ &&& a <<< 6
-    [Meta.isDefEq] [0.003535] ✅️ ?x =?= x✝
-      [Meta.isDefEq.assign] [0.003529] ✅️ ?x := x✝
-        [Meta.isDefEq.assign.checkTypes] [0.003521] ✅️ (?x : BitVec ?w) := (x✝ : BitVec 8)
-          [Meta.isDefEq] [0.003515] ✅️ BitVec ?w =?= BitVec 8
-  [Meta.isDefEq] [0.005739] ✅️ ?hf =?= fun a a_1 =>
-        ite_cond_eq_false none (some (x✝ &&& a <<< 6#8))
-          (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-            (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 6#8)
-              (Eq.trans (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 6#8 8#8) (eq_self true)))
-                Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2)))
-    [Meta.isDefEq.assign] [0.005734] ✅️ ?hf := fun a a_1 =>
-          ite_cond_eq_false none (some (x✝ &&& a <<< 6#8))
-            (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-              (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 6#8)
-                (Eq.trans (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 6#8 8#8) (eq_self true)))
-                  Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2)))
-      [Meta.isDefEq.assign.checkTypes] [0.005673] ✅️ (?hf : ∀
-            a ∈
-              Option.map (fun div => x✝¹ + (~~~(div * 42#8) + 1#8))
-                (some (if x✝¹.getLsbD 7 = true then ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8 else x✝¹ / 42#8)),
-            (if 6#8 ≥ ↑8 then none else some (x✝ &&& a <<< 6#8)) =
-              some
-                (x✝ &&&
-                  a <<<
-                    6)) := (fun a a_1 =>
-            ite_cond_eq_false none (some (x✝ &&& a <<< 6#8))
-              (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-                (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 6#8)
-                  (Eq.trans
-                    (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 6#8 8#8) (eq_self true)))
-                    Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2))) : ∀
-            a ∈
-              Option.map (fun div => x✝¹ + (~~~(div * 42#8) + 1#8))
-                (some (if x✝¹.getLsbD 7 = true then ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8 else x✝¹ / 42#8)),
-            (if 6#8 ≥ ↑8 then none else some (x✝ &&& a <<< 6#8)) = some (x✝ &&& a <<< 6#8))
-        [Meta.isDefEq] [0.005667] ✅️ ∀
-              a ∈
-                Option.map (fun div => x✝¹ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝¹.getLsbD 7 = true then ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8 else x✝¹ / 42#8)),
-              (if 6#8 ≥ ↑8 then none else some (x✝ &&& a <<< 6#8)) =
-                some
-                  (x✝ &&&
-                    a <<<
-                      6) =?= ∀
-              a ∈
-                Option.map (fun div => x✝¹ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝¹.getLsbD 7 = true then ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8 else x✝¹ / 42#8)),
-              (if 6#8 ≥ ↑8 then none else some (x✝ &&& a <<< 6#8)) = some (x✝ &&& a <<< 6#8)
-          [Meta.isDefEq] [0.005594] ✅️ (if 6#8 ≥ ↑8 then none else some (x✝ &&& a <<< 6#8)) =
-                some (x✝ &&& a <<< 6) =?= (if 6#8 ≥ ↑8 then none else some (x✝ &&& a <<< 6#8)) = some (x✝ &&& a <<< 6#8)
-            [Meta.isDefEq] [0.005557] ✅️ some (x✝ &&& a <<< 6) =?= some (x✝ &&& a <<< 6#8)
-              [Meta.isDefEq] [0.005531] ✅️ x✝ &&& a <<< 6 =?= x✝ &&& a <<< 6#8
-                [Meta.isDefEq] [0.005491] ✅️ instHAndOfAndOp.1 x✝ (a <<< 6) =?= instHAndOfAndOp.1 x✝ (a <<< 6#8)
-                  [Meta.isDefEq] [0.005438] ✅️ AndOp.and x✝ (a <<< 6) =?= AndOp.and x✝ (a <<< 6#8)
-                    [Meta.isDefEq] [0.005408] ✅️ BitVec.instAndOp.1 x✝ (a <<< 6) =?= BitVec.instAndOp.1 x✝ (a <<< 6#8)
-                      [Meta.isDefEq] [0.005362] ✅️ x✝.and (a <<< 6) =?= x✝.and (a <<< 6#8)
-                        [Meta.isDefEq.delta] [0.005345] ✅️ x✝.and (a <<< 6) =?= x✝.and (a <<< 6#8)
-                          [Meta.isDefEq] [0.005330] ✅️ a <<< 6 =?= a <<< 6#8
-                            [Meta.isDefEq] [0.005298] ✅️ BitVec.instHShiftLeftNat.1 a
-                                  6 =?= BitVec.instHShiftLeft.1 a 6#8
-                              [Meta.whnf] [0.001856] Non-easy whnf: BitVec.instHShiftLeftNat
-                              [Meta.isDefEq] [0.003392] ✅️ a.shiftLeft 6 =?= a <<< (6#8).toNat
-                                [Meta.isDefEq] [0.003359] ✅️ a.shiftLeft 6 =?= a.shiftLeft (6#8).toNat
-                                  [Meta.isDefEq.delta] [0.003343] ✅️ a.shiftLeft 6 =?= a.shiftLeft (6#8).toNat
-                                    [Meta.isDefEq] [0.001471] ✅️ 6 =?= (6#8).toNat
-                                      [Meta.isDefEq] [0.001413] ✅️ 6 =?= ↑(6#8).toFin
-                                        [Meta.isDefEq] [0.001376] ✅️ 6 =?= (6#8).toFin.1
-                                          [Meta.isDefEq] [0.001322] ✅️ 6 =?= 6 % 2 ^ 8
-  [Meta.Tactic.bv] Rerunning pipeline on:
-      case h
-      e e_1 : LLVM.IntW 8
-      x✝¹ x✝ : BitVec 8
-      a✝ :
-        ¬((Option.map (fun div => x✝¹ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝¹.getLsbD 7 = true then ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8 else x✝¹ / 42#8))).bind
-              fun a => some ((x✝ >>> 6 &&& a) <<< 6)) ⊑
-            (Option.map (fun div => x✝¹ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝¹.getLsbD 7 = true then ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8 else x✝¹ / 42#8))).bind
-              fun a => some (x✝ &&& a <<< 6)
-      ⊢ False
-  [Meta.isDefEq] [0.004319] ❌️ ?a + ?a =?= ~~~x✝¹ + 1#8
-    [Meta.isDefEq] [0.004098] ❌️ instHAdd =?= instHAdd
-      [Meta.isDefEq] [0.004018] ❌️ { hAdd := fun a b => Add.add a b } =?= { hAdd := fun a b => Add.add a b }
-        [Meta.isDefEq] [0.003957] ❌️ fun a b => Add.add a b =?= fun a b => Add.add a b
-  [Meta.Tactic.bv] Pipeline reached a fixpoint
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhbo_proof.lean:52:4: error: None of the hypotheses are in the supported BitVec fragment.
-There are two potential fixes for this:
-1. If you are using custom BitVec constructs simplify them to built-in ones.
-2. If your problem is using only built-in ones it might currently be out of reach.
-   Consider expressing it in terms of different operations that are better supported.
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhbo_proof.lean:45:8: error: (kernel) declaration has metavariables 'lshr_or_thm'
-[bv] [0.063469] Normalizing goal
-  [Meta.synthInstance] [0.001703] ✅️ Decidable
-        (((Option.map (fun div => x✝ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝.sdiv 42#8))).bind
-            fun x => if 4#8 ≥ ↑8 then none else if 4#8 ≥ ↑8 then none else some ((x ||| x✝¹ >>> 4#8) <<< 4#8)) ⊑
-          (Option.map (fun div => x✝ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝.sdiv 42#8))).bind
-            fun x => if 4#8 ≥ ↑8 then none else some (x✝¹ &&& 240#8 ||| x <<< 4#8))
-    [Meta.check] [0.001057] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
-          ((Option.map (fun div => x✝ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝.sdiv 42#8))).bind
-            fun x => if 4#8 ≥ ↑8 then none else if 4#8 ≥ ↑8 then none else some ((x ||| x✝¹ >>> 4#8) <<< 4#8))
-          ((Option.map (fun div => x✝ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝.sdiv 42#8))).bind
-            fun x => if 4#8 ≥ ↑8 then none else some (x✝¹ &&& 240#8 ||| x <<< 4#8))
-  [Meta.Tactic.bv] Running preprocessing pipeline on:
-      case h
-      e e_1 : LLVM.IntW 8
-      x✝¹ x✝ : BitVec 8
-      a✝ :
-        ¬((Option.map (fun div => x✝ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝.sdiv 42#8))).bind
-              fun x => if 4#8 ≥ ↑8 then none else if 4#8 ≥ ↑8 then none else some ((x ||| x✝¹ >>> 4#8) <<< 4#8)) ⊑
-            (Option.map (fun div => x✝ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝.sdiv 42#8))).bind
-              fun x => if 4#8 ≥ ↑8 then none else some (x✝¹ &&& 240#8 ||| x <<< 4#8)
-      ⊢ False
-  [Meta.Tactic.bv] Rerunning pipeline on:
-      case h
-      e e_1 : LLVM.IntW 8
-      x✝¹ x✝ : BitVec 8
-      a✝ :
-        ¬((Option.map (fun div => x✝ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 42#8) + 1#8 else x✝ / 42#8))).bind
-              fun a => some ((a ||| x✝¹ >>> 4) <<< 4)) ⊑
-            (Option.map (fun div => x✝ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 42#8) + 1#8 else x✝ / 42#8))).bind
-              fun a => some (x✝¹ &&& 240#8 ||| a <<< 4)
-      ⊢ False
-  [Meta.Tactic.bv] Pipeline reached a fixpoint
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhbo_proof.lean:63:4: error: None of the hypotheses are in the supported BitVec fragment.
-There are two potential fixes for this:
-1. If you are using custom BitVec constructs simplify them to built-in ones.
-2. If your problem is using only built-in ones it might currently be out of reach.
-   Consider expressing it in terms of different operations that are better supported.
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhbo_proof.lean:63:4: error: None of the hypotheses are in the supported BitVec fragment.
-There are two potential fixes for this:
-1. If you are using custom BitVec constructs simplify them to built-in ones.
-2. If your problem is using only built-in ones it might currently be out of reach.
-   Consider expressing it in terms of different operations that are better supported.
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhbo_proof.lean:56:8: error: (kernel) declaration has metavariables 'lshr_xor_thm'
-[bv] [0.075965] Normalizing goal
-  [Meta.synthInstance] [0.001801] ✅️ Decidable
-        ((if 3#8 ≥ ↑8 then none
-          else
-            (Option.map (fun div => x✝¹ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝¹.sdiv 42#8))).bind
-              fun x => if 3#8 ≥ ↑8 then none else some ((x✝ >>> 3#8 ^^^ x) <<< 3#8)) ⊑
-          (Option.map (fun div => x✝¹ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝¹.sdiv 42#8))).bind
-            fun x => if 3#8 ≥ ↑8 then none else some (x✝ &&& 248#8 ^^^ x <<< 3#8))
-    [Meta.check] [0.001229] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
-          (if 3#8 ≥ ↑8 then none
-          else
-            (Option.map (fun div => x✝¹ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝¹.sdiv 42#8))).bind
-              fun x => if 3#8 ≥ ↑8 then none else some ((x✝ >>> 3#8 ^^^ x) <<< 3#8))
-          ((Option.map (fun div => x✝¹ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝¹.sdiv 42#8))).bind
-            fun x => if 3#8 ≥ ↑8 then none else some (x✝ &&& 248#8 ^^^ x <<< 3#8))
-  [Meta.Tactic.bv] Running preprocessing pipeline on:
-      case h
-      e e_1 : LLVM.IntW 8
-      x✝¹ x✝ : BitVec 8
-      a✝ :
-        ¬(if 3#8 ≥ ↑8 then none
-            else
-              (Option.map (fun div => x✝¹ - div * 42#8)
-                    (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                    else some (x✝¹.sdiv 42#8))).bind
-                fun x => if 3#8 ≥ ↑8 then none else some ((x✝ >>> 3#8 ^^^ x) <<< 3#8)) ⊑
-            (Option.map (fun div => x✝¹ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝¹.sdiv 42#8))).bind
-              fun x => if 3#8 ≥ ↑8 then none else some (x✝ &&& 248#8 ^^^ x <<< 3#8)
-      ⊢ False
-  [Meta.appBuilder] [0.002682] ✅️ f: HAdd.hAdd, xs: [~~~(div * 42#8), 1#8]
-    [Meta.synthInstance] [0.002593] ✅️ HAdd (BitVec 8) (BitVec 8) (BitVec 8)
-      [Meta.synthInstance] [0.002130] ✅️ apply @instHAdd to HAdd (BitVec 8) (BitVec 8) (BitVec 8)
-        [Meta.synthInstance.tryResolve] [0.002069] ✅️ HAdd (BitVec 8) (BitVec 8)
-              (BitVec 8) ≟ HAdd (BitVec 8) (BitVec 8) (BitVec 8)
-          [Meta.isDefEq] [0.001994] ✅️ HAdd (BitVec 8) (BitVec 8) ?m.78537 =?= HAdd ?m.78540 ?m.78540 ?m.78540
-  [Meta.Tactic.bv] Rerunning pipeline on:
-      case h
-      e e_1 : LLVM.IntW 8
-      x✝¹ x✝ : BitVec 8
-      a✝ :
-        ¬((Option.map (fun div => x✝¹ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝¹.getLsbD 7 = true then ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8 else x✝¹ / 42#8))).bind
-              fun a => some ((x✝ >>> 3 ^^^ a) <<< 3)) ⊑
-            (Option.map (fun div => x✝¹ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝¹.getLsbD 7 = true then ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8 else x✝¹ / 42#8))).bind
-              fun a => some (x✝ &&& 248#8 ^^^ a <<< 3)
-      ⊢ False
-  [Meta.Tactic.bv] Pipeline reached a fixpoint
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhbo_proof.lean:74:4: error: None of the hypotheses are in the supported BitVec fragment.
-There are two potential fixes for this:
-1. If you are using custom BitVec constructs simplify them to built-in ones.
-2. If your problem is using only built-in ones it might currently be out of reach.
-   Consider expressing it in terms of different operations that are better supported.
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhbo_proof.lean:67:8: error: (kernel) declaration has metavariables 'lshr_and_add_thm'
-[bv] [0.091671] Normalizing goal
-  [Meta.synthInstance] [0.001734] ✅️ Decidable
-        (((Option.map (fun div => x✝ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝.sdiv 42#8))).bind
-            fun x =>
-            if 3#8 ≥ ↑8 then none else if 3#8 ≥ ↑8 then none else some ((x + (x✝¹ >>> 3#8 &&& 12#8)) <<< 3#8)) ⊑
-          (Option.map (fun div => x✝ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝.sdiv 42#8))).bind
-            fun x => if 3#8 ≥ ↑8 then none else some ((x✝¹ &&& 96#8) + x <<< 3#8))
-    [Meta.check] [0.001140] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
-          ((Option.map (fun div => x✝ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝.sdiv 42#8))).bind
-            fun x => if 3#8 ≥ ↑8 then none else if 3#8 ≥ ↑8 then none else some ((x + (x✝¹ >>> 3#8 &&& 12#8)) <<< 3#8))
-          ((Option.map (fun div => x✝ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝.sdiv 42#8))).bind
-            fun x => if 3#8 ≥ ↑8 then none else some ((x✝¹ &&& 96#8) + x <<< 3#8))
-  [Meta.Tactic.bv] Running preprocessing pipeline on:
-      case h
-      e e_1 : LLVM.IntW 8
-      x✝¹ x✝ : BitVec 8
-      a✝ :
-        ¬((Option.map (fun div => x✝ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝.sdiv 42#8))).bind
-              fun x =>
-              if 3#8 ≥ ↑8 then none else if 3#8 ≥ ↑8 then none else some ((x + (x✝¹ >>> 3#8 &&& 12#8)) <<< 3#8)) ⊑
-            (Option.map (fun div => x✝ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝.sdiv 42#8))).bind
-              fun x => if 3#8 ≥ ↑8 then none else some ((x✝¹ &&& 96#8) + x <<< 3#8)
-      ⊢ False
-  [Meta.isDefEq] [0.003607] ✅️ ?hf =?= fun a a_1 =>
-        Eq.trans
-          (ite_cond_eq_false none (if 3#8 ≥ ↑8 then none else some ((a + (x✝¹ >>> 3#8 &&& 12#8)) <<< 3#8))
-            (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-              (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 3#8)
-                (Eq.trans (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 3#8 8#8) (eq_self true)))
-                  Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2))))
-          (ite_cond_eq_false none (some ((a + (x✝¹ >>> 3#8 &&& 12#8)) <<< 3#8))
-            (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-              (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 3#8)
-                (Eq.trans (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 3#8 8#8) (eq_self true)))
-                  Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2))))
-    [Meta.isDefEq.assign] [0.003602] ✅️ ?hf := fun a a_1 =>
-          Eq.trans
-            (ite_cond_eq_false none (if 3#8 ≥ ↑8 then none else some ((a + (x✝¹ >>> 3#8 &&& 12#8)) <<< 3#8))
-              (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-                (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 3#8)
-                  (Eq.trans
-                    (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 3#8 8#8) (eq_self true)))
-                    Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2))))
-            (ite_cond_eq_false none (some ((a + (x✝¹ >>> 3#8 &&& 12#8)) <<< 3#8))
-              (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-                (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 3#8)
-                  (Eq.trans
-                    (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 3#8 8#8) (eq_self true)))
-                    Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2))))
-      [Meta.isDefEq.assign.checkTypes] [0.003536] ✅️ (?hf : ∀
-            a ∈
-              Option.map (fun div => x✝ + (~~~(div * 42#8) + 1#8))
-                (some (if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 42#8) + 1#8 else x✝ / 42#8)),
-            (if 3#8 ≥ ↑8 then none else if 3#8 ≥ ↑8 then none else some ((a + (x✝¹ >>> 3#8 &&& 12#8)) <<< 3#8)) =
-              some
-                ((a + (x✝¹ >>> 3 &&& 12#8)) <<<
-                  3)) := (fun a a_1 =>
-            Eq.trans
-              (ite_cond_eq_false none (if 3#8 ≥ ↑8 then none else some ((a + (x✝¹ >>> 3#8 &&& 12#8)) <<< 3#8))
-                (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-                  (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 3#8)
-                    (Eq.trans
-                      (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 3#8 8#8) (eq_self true)))
-                      Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2))))
-              (ite_cond_eq_false none (some ((a + (x✝¹ >>> 3#8 &&& 12#8)) <<< 3#8))
-                (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-                  (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 3#8)
-                    (Eq.trans
-                      (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 3#8 8#8) (eq_self true)))
-                      Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2)))) : ∀
-            a ∈
-              Option.map (fun div => x✝ + (~~~(div * 42#8) + 1#8))
-                (some (if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 42#8) + 1#8 else x✝ / 42#8)),
-            (if 3#8 ≥ ↑8 then none else if 3#8 ≥ ↑8 then none else some ((a + (x✝¹ >>> 3#8 &&& 12#8)) <<< 3#8)) =
-              some ((a + (x✝¹ >>> 3#8 &&& 12#8)) <<< 3#8))
-        [Meta.isDefEq] [0.003531] ✅️ ∀
-              a ∈
-                Option.map (fun div => x✝ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 42#8) + 1#8 else x✝ / 42#8)),
-              (if 3#8 ≥ ↑8 then none else if 3#8 ≥ ↑8 then none else some ((a + (x✝¹ >>> 3#8 &&& 12#8)) <<< 3#8)) =
-                some
-                  ((a + (x✝¹ >>> 3 &&& 12#8)) <<<
-                    3) =?= ∀
-              a ∈
-                Option.map (fun div => x✝ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 42#8) + 1#8 else x✝ / 42#8)),
-              (if 3#8 ≥ ↑8 then none else if 3#8 ≥ ↑8 then none else some ((a + (x✝¹ >>> 3#8 &&& 12#8)) <<< 3#8)) =
-                some ((a + (x✝¹ >>> 3#8 &&& 12#8)) <<< 3#8)
-          [Meta.isDefEq] [0.003455] ✅️ (if 3#8 ≥ ↑8 then none
-                else if 3#8 ≥ ↑8 then none else some ((a + (x✝¹ >>> 3#8 &&& 12#8)) <<< 3#8)) =
-                some
-                  ((a + (x✝¹ >>> 3 &&& 12#8)) <<<
-                    3) =?= (if 3#8 ≥ ↑8 then none
-                else if 3#8 ≥ ↑8 then none else some ((a + (x✝¹ >>> 3#8 &&& 12#8)) <<< 3#8)) =
-                some ((a + (x✝¹ >>> 3#8 &&& 12#8)) <<< 3#8)
-            [Meta.isDefEq] [0.003420] ✅️ some
-                  ((a + (x✝¹ >>> 3 &&& 12#8)) <<< 3) =?= some ((a + (x✝¹ >>> 3#8 &&& 12#8)) <<< 3#8)
-              [Meta.isDefEq] [0.003385] ✅️ (a + (x✝¹ >>> 3 &&& 12#8)) <<< 3 =?= (a + (x✝¹ >>> 3#8 &&& 12#8)) <<< 3#8
-                [Meta.isDefEq] [0.003347] ✅️ BitVec.instHShiftLeftNat.1 (a + (x✝¹ >>> 3 &&& 12#8))
-                      3 =?= BitVec.instHShiftLeft.1 (a + (x✝¹ >>> 3#8 &&& 12#8)) 3#8
-                  [Meta.isDefEq] [0.003267] ✅️ (a + (x✝¹ >>> 3 &&& 12#8)).shiftLeft
-                        3 =?= (a + (x✝¹ >>> 3#8 &&& 12#8)) <<< (3#8).toNat
-                    [Meta.isDefEq] [0.003226] ✅️ (a + (x✝¹ >>> 3 &&& 12#8)).shiftLeft
-                          3 =?= (a + (x✝¹ >>> 3#8 &&& 12#8)).shiftLeft (3#8).toNat
-                      [Meta.isDefEq.delta] [0.003211] ✅️ (a + (x✝¹ >>> 3 &&& 12#8)).shiftLeft
-                            3 =?= (a + (x✝¹ >>> 3#8 &&& 12#8)).shiftLeft (3#8).toNat
-                        [Meta.isDefEq] [0.003171] ✅️ a + (x✝¹ >>> 3 &&& 12#8) =?= a + (x✝¹ >>> 3#8 &&& 12#8)
-                          [Meta.isDefEq] [0.002975] ✅️ instHAdd.1 a
-                                (x✝¹ >>> 3 &&& 12#8) =?= instHAdd.1 a (x✝¹ >>> 3#8 &&& 12#8)
-                            [Meta.isDefEq] [0.002888] ✅️ Add.add a
-                                  (x✝¹ >>> 3 &&& 12#8) =?= Add.add a (x✝¹ >>> 3#8 &&& 12#8)
-                              [Meta.isDefEq] [0.002234] ❌️ BitVec.instAdd =?= instAddNat
-  [Meta.Tactic.bv] Rerunning pipeline on:
-      case h
-      e e_1 : LLVM.IntW 8
-      x✝¹ x✝ : BitVec 8
-      a✝ :
-        ¬((Option.map (fun div => x✝ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 42#8) + 1#8 else x✝ / 42#8))).bind
-              fun a => some ((a + (x✝¹ >>> 3 &&& 12#8)) <<< 3)) ⊑
-            (Option.map (fun div => x✝ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 42#8) + 1#8 else x✝ / 42#8))).bind
-              fun a => some ((x✝¹ &&& 96#8) + a <<< 3)
-      ⊢ False
-  [Meta.Tactic.bv] Pipeline reached a fixpoint
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhbo_proof.lean:88:4: error: None of the hypotheses are in the supported BitVec fragment.
-There are two potential fixes for this:
-1. If you are using custom BitVec constructs simplify them to built-in ones.
-2. If your problem is using only built-in ones it might currently be out of reach.
-   Consider expressing it in terms of different operations that are better supported.
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhbo_proof.lean:78:8: error: (kernel) declaration has metavariables 'lshr_and_sub_thm'
-[bv] [0.135502] Normalizing goal
-  [Meta.synthInstance] [0.001964] ✅️ Decidable
-        (((Option.map (fun div => x✝ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝.sdiv 42#8))).bind
-            fun x =>
-            if 2#8 ≥ ↑8 then none else if 2#8 ≥ ↑8 then none else some ((x - (x✝¹ >>> 2#8 &&& 13#8)) <<< 2#8)) ⊑
-          (Option.map (fun div => x✝ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝.sdiv 42#8))).bind
-            fun x =>
-            if 2#8 ≥ ↑8 then none
-            else
-              if
-                  True ∧
-                    (BitVec.signExtend (8 + 1) x - BitVec.signExtend (8 + 1) (x✝¹ >>> 2#8 &&& 13#8)).msb ≠
-                      (BitVec.signExtend (8 + 1) x - BitVec.signExtend (8 + 1) (x✝¹ >>> 2#8 &&& 13#8)).getMsbD 1 then
-                none
-              else if 2#8 ≥ ↑8 then none else some ((x - (x✝¹ >>> 2#8 &&& 13#8)) <<< 2#8))
-    [Meta.check] [0.001357] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
-          ((Option.map (fun div => x✝ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝.sdiv 42#8))).bind
-            fun x => if 2#8 ≥ ↑8 then none else if 2#8 ≥ ↑8 then none else some ((x - (x✝¹ >>> 2#8 &&& 13#8)) <<< 2#8))
-          ((Option.map (fun div => x✝ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝.sdiv 42#8))).bind
-            fun x =>
-            if 2#8 ≥ ↑8 then none
-            else
-              if
-                  True ∧
-                    (BitVec.signExtend (8 + 1) x - BitVec.signExtend (8 + 1) (x✝¹ >>> 2#8 &&& 13#8)).msb ≠
-                      (BitVec.signExtend (8 + 1) x - BitVec.signExtend (8 + 1) (x✝¹ >>> 2#8 &&& 13#8)).getMsbD 1 then
-                none
-              else if 2#8 ≥ ↑8 then none else some ((x - (x✝¹ >>> 2#8 &&& 13#8)) <<< 2#8))
-  [Meta.Tactic.bv] Running preprocessing pipeline on:
-      case h
-      e e_1 : LLVM.IntW 8
-      x✝¹ x✝ : BitVec 8
-      a✝ :
-        ¬((Option.map (fun div => x✝ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝.sdiv 42#8))).bind
-              fun x =>
-              if 2#8 ≥ ↑8 then none else if 2#8 ≥ ↑8 then none else some ((x - (x✝¹ >>> 2#8 &&& 13#8)) <<< 2#8)) ⊑
-            (Option.map (fun div => x✝ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝.sdiv 42#8))).bind
-              fun x =>
-              if 2#8 ≥ ↑8 then none
-              else
-                if
-                    True ∧
-                      (BitVec.signExtend (8 + 1) x - BitVec.signExtend (8 + 1) (x✝¹ >>> 2#8 &&& 13#8)).msb ≠
-                        (BitVec.signExtend (8 + 1) x - BitVec.signExtend (8 + 1) (x✝¹ >>> 2#8 &&& 13#8)).getMsbD 1 then
-                  none
-                else if 2#8 ≥ ↑8 then none else some ((x - (x✝¹ >>> 2#8 &&& 13#8)) <<< 2#8)
-      ⊢ False
-  [Meta.isDefEq] [0.001393] ✅️ ?h₁ =?= Eq.trans
-        (congrArg (And True)
-          (Eq.trans
-            (congr
-              (congrArg Ne
-                (Eq.trans
-                  (congrArg BitVec.msb
-                    (Eq.trans (BitVec.sub_toAdd (BitVec.signExtend 9 a) (BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8)))
-                      (congrArg (HAdd.hAdd (BitVec.signExtend 9 a))
-                        (BitVec.neg_eq_not_add (BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8))))))
-                  (BitVec.msb_eq_getLsbD_last
-                    (BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8) + 1#9)))))
-              (congrArg (fun x => x.getMsbD 1)
-                (Eq.trans (BitVec.sub_toAdd (BitVec.signExtend 9 a) (BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8)))
-                  (congrArg (HAdd.hAdd (BitVec.signExtend 9 a))
-                    (BitVec.neg_eq_not_add (BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8)))))))
-            (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
-              ((BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8) + 1#9)).getLsbD 8)
-              ((BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8) + 1#9)).getMsbD 1))))
-        (true_and
-          ((!(BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8) + 1#9)).getLsbD 8 ==
-                (BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8) + 1#9)).getMsbD 1) =
-            true))
-    [Meta.isDefEq.assign] [0.001388] ✅️ ?h₁ := Eq.trans
-          (congrArg (And True)
-            (Eq.trans
-              (congr
-                (congrArg Ne
-                  (Eq.trans
-                    (congrArg BitVec.msb
-                      (Eq.trans (BitVec.sub_toAdd (BitVec.signExtend 9 a) (BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8)))
-                        (congrArg (HAdd.hAdd (BitVec.signExtend 9 a))
-                          (BitVec.neg_eq_not_add (BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8))))))
-                    (BitVec.msb_eq_getLsbD_last
-                      (BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8) + 1#9)))))
-                (congrArg (fun x => x.getMsbD 1)
-                  (Eq.trans (BitVec.sub_toAdd (BitVec.signExtend 9 a) (BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8)))
-                    (congrArg (HAdd.hAdd (BitVec.signExtend 9 a))
-                      (BitVec.neg_eq_not_add (BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8)))))))
-              (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
-                ((BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8) + 1#9)).getLsbD 8)
-                ((BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8) + 1#9)).getMsbD 1))))
-          (true_and
-            ((!(BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8) + 1#9)).getLsbD 8 ==
-                  (BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8) + 1#9)).getMsbD 1) =
-              true))
-      [Meta.isDefEq.assign.checkTypes] [0.001361] ✅️ (?h₁ : (True ∧
-              (BitVec.signExtend (8 + 1) a - BitVec.signExtend (8 + 1) (x✝¹ >>> 2#8 &&& 13#8)).msb ≠
-                (BitVec.signExtend (8 + 1) a - BitVec.signExtend (8 + 1) (x✝¹ >>> 2#8 &&& 13#8)).getMsbD 1) =
-            ((!(BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8) + 1#9)).getLsbD 8 ==
-                  (BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8) + 1#9)).getMsbD 1) =
-              true)) := (Eq.trans
-            (congrArg (And True)
-              (Eq.trans
-                (congr
-                  (congrArg Ne
-                    (Eq.trans
-                      (congrArg BitVec.msb
-                        (Eq.trans (BitVec.sub_toAdd (BitVec.signExtend 9 a) (BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8)))
-                          (congrArg (HAdd.hAdd (BitVec.signExtend 9 a))
-                            (BitVec.neg_eq_not_add (BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8))))))
-                      (BitVec.msb_eq_getLsbD_last
-                        (BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8) + 1#9)))))
-                  (congrArg (fun x => x.getMsbD 1)
-                    (Eq.trans (BitVec.sub_toAdd (BitVec.signExtend 9 a) (BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8)))
-                      (congrArg (HAdd.hAdd (BitVec.signExtend 9 a))
-                        (BitVec.neg_eq_not_add (BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8)))))))
-                (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq
-                  ((BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8) + 1#9)).getLsbD 8)
-                  ((BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8) + 1#9)).getMsbD 1))))
-            (true_and
-              ((!(BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8) + 1#9)).getLsbD 8 ==
-                    (BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8) + 1#9)).getMsbD 1) =
-                true)) : (True ∧
-              (BitVec.signExtend 9 a - BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8)).msb ≠
-                (BitVec.signExtend 9 a - BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8)).getMsbD 1) =
-            ((!(BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8) + 1#9)).getLsbD 8 ==
-                  (BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8) + 1#9)).getMsbD 1) =
-              true))
-        [Meta.isDefEq] [0.001357] ✅️ (True ∧
-                (BitVec.signExtend (8 + 1) a - BitVec.signExtend (8 + 1) (x✝¹ >>> 2#8 &&& 13#8)).msb ≠
-                  (BitVec.signExtend (8 + 1) a - BitVec.signExtend (8 + 1) (x✝¹ >>> 2#8 &&& 13#8)).getMsbD 1) =
-              ((!(BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8) + 1#9)).getLsbD 8 ==
-                    (BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8) + 1#9)).getMsbD 1) =
-                true) =?= (True ∧
-                (BitVec.signExtend 9 a - BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8)).msb ≠
-                  (BitVec.signExtend 9 a - BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8)).getMsbD 1) =
-              ((!(BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8) + 1#9)).getLsbD 8 ==
-                    (BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8) + 1#9)).getMsbD 1) =
-                true)
-          [Meta.isDefEq] [0.001326] ✅️ True ∧
-                (BitVec.signExtend (8 + 1) a - BitVec.signExtend (8 + 1) (x✝¹ >>> 2#8 &&& 13#8)).msb ≠
-                  (BitVec.signExtend (8 + 1) a - BitVec.signExtend (8 + 1) (x✝¹ >>> 2#8 &&& 13#8)).getMsbD
-                    1 =?= True ∧
-                (BitVec.signExtend 9 a - BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8)).msb ≠
-                  (BitVec.signExtend 9 a - BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8)).getMsbD 1
-            [Meta.isDefEq] [0.001303] ✅️ (BitVec.signExtend (8 + 1) a -
-                      BitVec.signExtend (8 + 1) (x✝¹ >>> 2#8 &&& 13#8)).msb ≠
-                  (BitVec.signExtend (8 + 1) a - BitVec.signExtend (8 + 1) (x✝¹ >>> 2#8 &&& 13#8)).getMsbD
-                    1 =?= (BitVec.signExtend 9 a - BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8)).msb ≠
-                  (BitVec.signExtend 9 a - BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8)).getMsbD 1
-              [Meta.isDefEq.delta] [0.001281] ✅️ (BitVec.signExtend (8 + 1) a -
-                        BitVec.signExtend (8 + 1) (x✝¹ >>> 2#8 &&& 13#8)).msb ≠
-                    (BitVec.signExtend (8 + 1) a - BitVec.signExtend (8 + 1) (x✝¹ >>> 2#8 &&& 13#8)).getMsbD
-                      1 =?= (BitVec.signExtend 9 a - BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8)).msb ≠
-                    (BitVec.signExtend 9 a - BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8)).getMsbD 1
-                [Meta.isDefEq] [0.001183] ✅️ (BitVec.signExtend (8 + 1) a -
-                        BitVec.signExtend (8 + 1)
-                          (x✝¹ >>> 2#8 &&&
-                            13#8)).msb =?= (BitVec.signExtend 9 a - BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8)).msb
-                  [Meta.isDefEq.delta] [0.001166] ✅️ (BitVec.signExtend (8 + 1) a -
-                          BitVec.signExtend (8 + 1)
-                            (x✝¹ >>> 2#8 &&&
-                              13#8)).msb =?= (BitVec.signExtend 9 a - BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8)).msb
-                    [Meta.isDefEq] [0.001131] ✅️ BitVec.signExtend (8 + 1) a -
-                          BitVec.signExtend (8 + 1)
-                            (x✝¹ >>> 2#8 &&& 13#8) =?= BitVec.signExtend 9 a - BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8)
-                      [Meta.isDefEq] [0.001092] ✅️ instHSub.1 (BitVec.signExtend (8 + 1) a)
-                            (BitVec.signExtend (8 + 1)
-                              (x✝¹ >>> 2#8 &&&
-                                13#8)) =?= instHSub.1 (BitVec.signExtend 9 a) (BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8))
-                        [Meta.isDefEq] [0.001008] ✅️ Sub.sub (BitVec.signExtend (8 + 1) a)
-                              (BitVec.signExtend (8 + 1)
-                                (x✝¹ >>> 2#8 &&&
-                                  13#8)) =?= Sub.sub (BitVec.signExtend 9 a) (BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8))
-  [Meta.Tactic.bv] Rerunning pipeline on:
-      case h
-      e e_1 : LLVM.IntW 8
-      x✝¹ x✝ : BitVec 8
-      a✝ :
-        ¬((Option.map (fun div => x✝ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 42#8) + 1#8 else x✝ / 42#8))).bind
-              fun a => some ((a + (~~~(x✝¹ >>> 2 &&& 13#8) + 1#8)) <<< 2)) ⊑
-            (Option.map (fun div => x✝ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 42#8) + 1#8 else x✝ / 42#8))).bind
-              fun a =>
-              if
-                  (!(BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8) + 1#9)).getLsbD 8 ==
-                        (BitVec.signExtend 9 a + (~~~BitVec.signExtend 9 (x✝¹ >>> 2 &&& 13#8) + 1#9)).getMsbD 1) =
-                    true then
-                none
-              else some ((a + (~~~(x✝¹ >>> 2 &&& 13#8) + 1#8)) <<< 2)
-      ⊢ False
-  [Meta.Tactic.bv] Pipeline reached a fixpoint
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhbo_proof.lean:99:4: error: None of the hypotheses are in the supported BitVec fragment.
-There are two potential fixes for this:
-1. If you are using custom BitVec constructs simplify them to built-in ones.
-2. If your problem is using only built-in ones it might currently be out of reach.
-   Consider expressing it in terms of different operations that are better supported.
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhbo_proof.lean:99:4: error: None of the hypotheses are in the supported BitVec fragment.
-There are two potential fixes for this:
-1. If you are using custom BitVec constructs simplify them to built-in ones.
-2. If your problem is using only built-in ones it might currently be out of reach.
-   Consider expressing it in terms of different operations that are better supported.
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhbo_proof.lean:92:8: error: (kernel) declaration has metavariables 'lshr_and_and_thm'
-[bv] [0.115411] Normalizing goal
-  [Meta.synthInstance] [0.002535] ✅️ Decidable
-        ((if 2#8 ≥ ↑8 then none
-          else
-            (Option.map (fun div => x✝¹ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝¹.sdiv 42#8))).bind
-              fun x => if 2#8 ≥ ↑8 then none else some ((x✝ >>> 2#8 &&& 13#8 &&& x) <<< 2#8)) ⊑
-          (Option.map (fun div => x✝¹ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝¹.sdiv 42#8))).bind
-            fun x => if 2#8 ≥ ↑8 then none else some (x✝ &&& 52#8 &&& x <<< 2#8))
-    [Meta.check] [0.001718] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
-          (if 2#8 ≥ ↑8 then none
-          else
-            (Option.map (fun div => x✝¹ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝¹.sdiv 42#8))).bind
-              fun x => if 2#8 ≥ ↑8 then none else some ((x✝ >>> 2#8 &&& 13#8 &&& x) <<< 2#8))
-          ((Option.map (fun div => x✝¹ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝¹.sdiv 42#8))).bind
-            fun x => if 2#8 ≥ ↑8 then none else some (x✝ &&& 52#8 &&& x <<< 2#8))
-  [Meta.Tactic.bv] Running preprocessing pipeline on:
-      case h
-      e e_1 : LLVM.IntW 8
-      x✝¹ x✝ : BitVec 8
-      a✝ :
-        ¬(if 2#8 ≥ ↑8 then none
-            else
-              (Option.map (fun div => x✝¹ - div * 42#8)
-                    (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                    else some (x✝¹.sdiv 42#8))).bind
-                fun x => if 2#8 ≥ ↑8 then none else some ((x✝ >>> 2#8 &&& 13#8 &&& x) <<< 2#8)) ⊑
-            (Option.map (fun div => x✝¹ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝¹.sdiv 42#8))).bind
-              fun x => if 2#8 ≥ ↑8 then none else some (x✝ &&& 52#8 &&& x <<< 2#8)
-      ⊢ False
-  [Meta.appBuilder] [0.001997] ✅️ f: Complement.complement, xs: [div * 42#8]
-    [Meta.synthInstance] [0.001918] ✅️ Complement (BitVec 8)
-      [Meta.whnf] [0.001648] Non-easy whnf: Complement (BitVec 8)
-  [Meta.appBuilder] [0.002863] ✅️ f: HAdd.hAdd, xs: [~~~(div * 42#8), 1#8]
-    [Meta.synthInstance] [0.002752] ✅️ HAdd (BitVec 8) (BitVec 8) (BitVec 8)
-      [Meta.synthInstance] [0.002218] ✅️ apply @instHAdd to HAdd (BitVec 8) (BitVec 8) (BitVec 8)
-        [Meta.synthInstance.tryResolve] [0.002112] ✅️ HAdd (BitVec 8) (BitVec 8)
-              (BitVec 8) ≟ HAdd (BitVec 8) (BitVec 8) (BitVec 8)
-          [Meta.isDefEq] [0.001945] ✅️ ?m.128810 =?= instHAdd
-            [Meta.isDefEq.assign] [0.001940] ✅️ ?m.128810 := instHAdd
-              [Meta.isDefEq.assign.checkTypes] [0.001918] ✅️ (?m.128810 : HAdd (BitVec 8) (BitVec 8)
-                    (BitVec 8)) := (instHAdd : HAdd (BitVec 8) (BitVec 8) (BitVec 8))
-                [Meta.isDefEq] [0.001905] ✅️ HAdd (BitVec 8) (BitVec 8)
-                      (BitVec 8) =?= HAdd (BitVec 8) (BitVec 8) (BitVec 8)
-  [Meta.isDefEq] [0.002285] ❌️ ?a + ?a =?= ~~~(div * 42#8) + 1#8
-    [Meta.isDefEq] [0.002126] ❌️ instHAdd =?= instHAdd
-      [Meta.isDefEq] [0.002018] ❌️ { hAdd := fun a b => Add.add a b } =?= { hAdd := fun a b => Add.add a b }
-  [Meta.appBuilder] [0.003536] ✅️ f: eq_false', xs: [fun h => Bool.noConfusion h]
-    [Meta.isDefEq] [0.003483] ✅️ ?p → False =?= false = true → Bool.noConfusionType False false true
-      [Meta.isDefEq] [0.003453] ✅️ False =?= Bool.noConfusionType False false true
-        [Meta.isDefEq] [0.003390] ✅️ False =?= Bool.casesOn false (Bool.casesOn true (False → False) False)
-              (Bool.casesOn true False (False → False))
-  [Meta.isDefEq] [0.004518] ✅️ ?hf =?= fun a a_1 =>
-        ite_cond_eq_false none (some ((x✝ >>> 2#8 &&& 13#8 &&& a) <<< 2#8))
-          (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-            (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 2#8)
-              (Eq.trans (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 2#8 8#8) (eq_self true)))
-                Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2)))
-    [Meta.isDefEq.assign] [0.004514] ✅️ ?hf := fun a a_1 =>
-          ite_cond_eq_false none (some ((x✝ >>> 2#8 &&& 13#8 &&& a) <<< 2#8))
-            (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-              (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 2#8)
-                (Eq.trans (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 2#8 8#8) (eq_self true)))
-                  Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2)))
-      [Meta.isDefEq.assign.checkTypes] [0.004475] ✅️ (?hf : ∀
-            a ∈
-              Option.map (fun div => x✝¹ + (~~~(div * 42#8) + 1#8))
-                (some (if x✝¹.getLsbD 7 = true then ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8 else x✝¹ / 42#8)),
-            (if 2#8 ≥ ↑8 then none else some ((x✝ >>> 2#8 &&& 13#8 &&& a) <<< 2#8)) =
-              some
-                ((x✝ >>> 2 &&& 13#8 &&& a) <<<
-                  2)) := (fun a a_1 =>
-            ite_cond_eq_false none (some ((x✝ >>> 2#8 &&& 13#8 &&& a) <<< 2#8))
-              (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-                (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 2#8)
-                  (Eq.trans
-                    (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 2#8 8#8) (eq_self true)))
-                    Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2))) : ∀
-            a ∈
-              Option.map (fun div => x✝¹ + (~~~(div * 42#8) + 1#8))
-                (some (if x✝¹.getLsbD 7 = true then ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8 else x✝¹ / 42#8)),
-            (if 2#8 ≥ ↑8 then none else some ((x✝ >>> 2#8 &&& 13#8 &&& a) <<< 2#8)) =
-              some ((x✝ >>> 2#8 &&& 13#8 &&& a) <<< 2#8))
-        [Meta.isDefEq] [0.004470] ✅️ ∀
-              a ∈
-                Option.map (fun div => x✝¹ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝¹.getLsbD 7 = true then ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8 else x✝¹ / 42#8)),
-              (if 2#8 ≥ ↑8 then none else some ((x✝ >>> 2#8 &&& 13#8 &&& a) <<< 2#8)) =
-                some
-                  ((x✝ >>> 2 &&& 13#8 &&& a) <<<
-                    2) =?= ∀
-              a ∈
-                Option.map (fun div => x✝¹ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝¹.getLsbD 7 = true then ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8 else x✝¹ / 42#8)),
-              (if 2#8 ≥ ↑8 then none else some ((x✝ >>> 2#8 &&& 13#8 &&& a) <<< 2#8)) =
-                some ((x✝ >>> 2#8 &&& 13#8 &&& a) <<< 2#8)
-          [Meta.isDefEq] [0.004427] ✅️ (if 2#8 ≥ ↑8 then none else some ((x✝ >>> 2#8 &&& 13#8 &&& a) <<< 2#8)) =
-                some
-                  ((x✝ >>> 2 &&& 13#8 &&& a) <<<
-                    2) =?= (if 2#8 ≥ ↑8 then none else some ((x✝ >>> 2#8 &&& 13#8 &&& a) <<< 2#8)) =
-                some ((x✝ >>> 2#8 &&& 13#8 &&& a) <<< 2#8)
-            [Meta.isDefEq] [0.004382] ✅️ some
-                  ((x✝ >>> 2 &&& 13#8 &&& a) <<< 2) =?= some ((x✝ >>> 2#8 &&& 13#8 &&& a) <<< 2#8)
-              [Meta.isDefEq] [0.004356] ✅️ (x✝ >>> 2 &&& 13#8 &&& a) <<< 2 =?= (x✝ >>> 2#8 &&& 13#8 &&& a) <<< 2#8
-                [Meta.isDefEq] [0.004332] ✅️ BitVec.instHShiftLeftNat.1 (x✝ >>> 2 &&& 13#8 &&& a)
-                      2 =?= BitVec.instHShiftLeft.1 (x✝ >>> 2#8 &&& 13#8 &&& a) 2#8
-                  [Meta.isDefEq] [0.002558] ✅️ (x✝ >>> 2 &&& 13#8 &&& a).shiftLeft
-                        2 =?= (x✝ >>> 2#8 &&& 13#8 &&& a) <<< (2#8).toNat
-                    [Meta.isDefEq] [0.002525] ✅️ (x✝ >>> 2 &&& 13#8 &&& a).shiftLeft
-                          2 =?= (x✝ >>> 2#8 &&& 13#8 &&& a).shiftLeft (2#8).toNat
-                      [Meta.isDefEq.delta] [0.002514] ✅️ (x✝ >>> 2 &&& 13#8 &&& a).shiftLeft
-                            2 =?= (x✝ >>> 2#8 &&& 13#8 &&& a).shiftLeft (2#8).toNat
-                        [Meta.isDefEq] [0.002473] ✅️ x✝ >>> 2 &&& 13#8 &&& a =?= x✝ >>> 2#8 &&& 13#8 &&& a
-                          [Meta.isDefEq] [0.002443] ✅️ instHAndOfAndOp.1 (x✝ >>> 2 &&& 13#8)
-                                a =?= instHAndOfAndOp.1 (x✝ >>> 2#8 &&& 13#8) a
-                            [Meta.isDefEq] [0.002376] ✅️ AndOp.and (x✝ >>> 2 &&& 13#8)
-                                  a =?= AndOp.and (x✝ >>> 2#8 &&& 13#8) a
-                              [Meta.isDefEq] [0.002352] ✅️ BitVec.instAndOp.1 (x✝ >>> 2 &&& 13#8)
-                                    a =?= BitVec.instAndOp.1 (x✝ >>> 2#8 &&& 13#8) a
-                                [Meta.isDefEq] [0.002303] ✅️ (x✝ >>> 2 &&& 13#8).and a =?= (x✝ >>> 2#8 &&& 13#8).and a
-                                  [Meta.isDefEq.delta] [0.002292] ✅️ (x✝ >>> 2 &&& 13#8).and
-                                        a =?= (x✝ >>> 2#8 &&& 13#8).and a
-                                    [Meta.isDefEq] [0.002264] ✅️ x✝ >>> 2 &&& 13#8 =?= x✝ >>> 2#8 &&& 13#8
-                                      [Meta.isDefEq] [0.002248] ✅️ instHAndOfAndOp.1 (x✝ >>> 2)
-                                            13#8 =?= instHAndOfAndOp.1 (x✝ >>> 2#8) 13#8
-                                        [Meta.isDefEq] [0.002225] ✅️ AndOp.and (x✝ >>> 2)
-                                              13#8 =?= AndOp.and (x✝ >>> 2#8) 13#8
-                                          [Meta.isDefEq] [0.002210] ✅️ BitVec.instAndOp.1 (x✝ >>> 2)
-                                                13#8 =?= BitVec.instAndOp.1 (x✝ >>> 2#8) 13#8
-                                            [Meta.isDefEq] [0.002191] ✅️ (x✝ >>> 2).and 13#8 =?= (x✝ >>> 2#8).and 13#8
-                                              [Meta.isDefEq.delta] [0.002176] ✅️ (x✝ >>> 2).and
-                                                    13#8 =?= (x✝ >>> 2#8).and 13#8
-                                                [Meta.isDefEq] [0.002164] ✅️ x✝ >>> 2 =?= x✝ >>> 2#8
-                                                  [Meta.isDefEq] [0.002140] ✅️ BitVec.instHShiftRightNat.1 x✝
-                                                        2 =?= BitVec.instHShiftRight.1 x✝ 2#8
-  [Meta.Tactic.bv] Rerunning pipeline on:
-      case h
-      e e_1 : LLVM.IntW 8
-      x✝¹ x✝ : BitVec 8
-      a✝ :
-        ¬((Option.map (fun div => x✝¹ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝¹.getLsbD 7 = true then ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8 else x✝¹ / 42#8))).bind
-              fun a => some ((x✝ >>> 2 &&& 13#8 &&& a) <<< 2)) ⊑
-            (Option.map (fun div => x✝¹ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝¹.getLsbD 7 = true then ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8 else x✝¹ / 42#8))).bind
-              fun a => some (x✝ &&& 52#8 &&& a <<< 2)
-      ⊢ False
-  [Meta.Tactic.bv] Pipeline reached a fixpoint
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhbo_proof.lean:110:4: error: None of the hypotheses are in the supported BitVec fragment.
-There are two potential fixes for this:
-1. If you are using custom BitVec constructs simplify them to built-in ones.
-2. If your problem is using only built-in ones it might currently be out of reach.
-   Consider expressing it in terms of different operations that are better supported.
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhbo_proof.lean:103:8: error: (kernel) declaration has metavariables 'lshr_and_or_thm'
-[bv] [0.096237] Normalizing goal
-  [Meta.synthInstance] [0.006438] ✅️ Decidable
-        (((Option.map (fun div => x✝ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝.sdiv 42#8))).bind
-            fun x =>
-            if 2#8 ≥ ↑8 then none else if 2#8 ≥ ↑8 then none else some ((x ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8)) ⊑
-          (Option.map (fun div => x✝ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝.sdiv 42#8))).bind
-            fun x => if 2#8 ≥ ↑8 then none else some (x✝¹ &&& 52#8 ||| x <<< 2#8))
-    [Meta.synthInstance] [0.004195] ✅️ apply @BitVec.Refinement.instDecidableRelOptionOfDecidableEq to Decidable
-          (((Option.map (fun div => x✝ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝.sdiv 42#8))).bind
-              fun x =>
-              if 2#8 ≥ ↑8 then none else if 2#8 ≥ ↑8 then none else some ((x ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8)) ⊑
-            (Option.map (fun div => x✝ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝.sdiv 42#8))).bind
-              fun x => if 2#8 ≥ ↑8 then none else some (x✝¹ &&& 52#8 ||| x <<< 2#8))
-      [Meta.whnf] [0.001736] Non-easy whnf: DecidableRel BitVec.Refinement
-    [Meta.check] [0.001642] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
-          ((Option.map (fun div => x✝ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝.sdiv 42#8))).bind
-            fun x => if 2#8 ≥ ↑8 then none else if 2#8 ≥ ↑8 then none else some ((x ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8))
-          ((Option.map (fun div => x✝ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝.sdiv 42#8))).bind
-            fun x => if 2#8 ≥ ↑8 then none else some (x✝¹ &&& 52#8 ||| x <<< 2#8))
-  [Meta.Tactic.bv] Running preprocessing pipeline on:
-      case h
-      e e_1 : LLVM.IntW 8
-      x✝¹ x✝ : BitVec 8
-      a✝ :
-        ¬((Option.map (fun div => x✝ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝.sdiv 42#8))).bind
-              fun x =>
-              if 2#8 ≥ ↑8 then none else if 2#8 ≥ ↑8 then none else some ((x ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8)) ⊑
-            (Option.map (fun div => x✝ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝.sdiv 42#8))).bind
-              fun x => if 2#8 ≥ ↑8 then none else some (x✝¹ &&& 52#8 ||| x <<< 2#8)
-      ⊢ False
-  [Meta.isDefEq] [0.001512] ✅️ ?hf =?= fun a a_1 =>
-        Eq.trans
-          (ite_cond_eq_false none (if 2#8 ≥ ↑8 then none else some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8))
-            (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-              (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 2#8)
-                (Eq.trans (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 2#8 8#8) (eq_self true)))
-                  Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2))))
-          (ite_cond_eq_false none (some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8))
-            (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-              (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 2#8)
-                (Eq.trans (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 2#8 8#8) (eq_self true)))
-                  Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2))))
-    [Meta.isDefEq.assign] [0.001506] ✅️ ?hf := fun a a_1 =>
-          Eq.trans
-            (ite_cond_eq_false none (if 2#8 ≥ ↑8 then none else some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8))
-              (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-                (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 2#8)
-                  (Eq.trans
-                    (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 2#8 8#8) (eq_self true)))
-                    Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2))))
-            (ite_cond_eq_false none (some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8))
-              (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-                (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 2#8)
-                  (Eq.trans
-                    (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 2#8 8#8) (eq_self true)))
-                    Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2))))
-      [Meta.isDefEq.assign.checkTypes] [0.001445] ✅️ (?hf : ∀
-            a ∈
-              Option.map (fun div => x✝ + (~~~(div * 42#8) + 1#8))
-                (some (if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 42#8) + 1#8 else x✝ / 42#8)),
-            (if 2#8 ≥ ↑8 then none else if 2#8 ≥ ↑8 then none else some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8)) =
-              some
-                ((a ||| x✝¹ >>> 2 &&& 13#8) <<<
-                  2)) := (fun a a_1 =>
-            Eq.trans
-              (ite_cond_eq_false none (if 2#8 ≥ ↑8 then none else some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8))
-                (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-                  (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 2#8)
-                    (Eq.trans
-                      (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 2#8 8#8) (eq_self true)))
-                      Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2))))
-              (ite_cond_eq_false none (some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8))
-                (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-                  (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 2#8)
-                    (Eq.trans
-                      (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 2#8 8#8) (eq_self true)))
-                      Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2)))) : ∀
-            a ∈
-              Option.map (fun div => x✝ + (~~~(div * 42#8) + 1#8))
-                (some (if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 42#8) + 1#8 else x✝ / 42#8)),
-            (if 2#8 ≥ ↑8 then none else if 2#8 ≥ ↑8 then none else some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8)) =
-              some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8))
-        [Meta.isDefEq] [0.001440] ✅️ ∀
-              a ∈
-                Option.map (fun div => x✝ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 42#8) + 1#8 else x✝ / 42#8)),
-              (if 2#8 ≥ ↑8 then none else if 2#8 ≥ ↑8 then none else some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8)) =
-                some
-                  ((a ||| x✝¹ >>> 2 &&& 13#8) <<<
-                    2) =?= ∀
-              a ∈
-                Option.map (fun div => x✝ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 42#8) + 1#8 else x✝ / 42#8)),
-              (if 2#8 ≥ ↑8 then none else if 2#8 ≥ ↑8 then none else some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8)) =
-                some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8)
-          [Meta.isDefEq] [0.001369] ✅️ (if 2#8 ≥ ↑8 then none
-                else if 2#8 ≥ ↑8 then none else some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8)) =
-                some
-                  ((a ||| x✝¹ >>> 2 &&& 13#8) <<<
-                    2) =?= (if 2#8 ≥ ↑8 then none
-                else if 2#8 ≥ ↑8 then none else some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8)) =
-                some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8)
-            [Meta.isDefEq] [0.001334] ✅️ some
-                  ((a ||| x✝¹ >>> 2 &&& 13#8) <<< 2) =?= some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8)
-              [Meta.isDefEq] [0.001299] ✅️ (a ||| x✝¹ >>> 2 &&& 13#8) <<< 2 =?= (a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8
-                [Meta.isDefEq] [0.001264] ✅️ BitVec.instHShiftLeftNat.1 (a ||| x✝¹ >>> 2 &&& 13#8)
-                      2 =?= BitVec.instHShiftLeft.1 (a ||| x✝¹ >>> 2#8 &&& 13#8) 2#8
-                  [Meta.isDefEq] [0.001174] ✅️ (a ||| x✝¹ >>> 2 &&& 13#8).shiftLeft
-                        2 =?= (a ||| x✝¹ >>> 2#8 &&& 13#8) <<< (2#8).toNat
-                    [Meta.isDefEq] [0.001134] ✅️ (a ||| x✝¹ >>> 2 &&& 13#8).shiftLeft
-                          2 =?= (a ||| x✝¹ >>> 2#8 &&& 13#8).shiftLeft (2#8).toNat
-                      [Meta.isDefEq.delta] [0.001118] ✅️ (a ||| x✝¹ >>> 2 &&& 13#8).shiftLeft
-                            2 =?= (a ||| x✝¹ >>> 2#8 &&& 13#8).shiftLeft (2#8).toNat
-                        [Meta.isDefEq] [0.001069] ✅️ a ||| x✝¹ >>> 2 &&& 13#8 =?= a ||| x✝¹ >>> 2#8 &&& 13#8
-                          [Meta.isDefEq] [0.001025] ✅️ instHOrOfOrOp.1 a
-                                (x✝¹ >>> 2 &&& 13#8) =?= instHOrOfOrOp.1 a (x✝¹ >>> 2#8 &&& 13#8)
-  [Meta.Tactic.bv] Rerunning pipeline on:
-      case h
-      e e_1 : LLVM.IntW 8
-      x✝¹ x✝ : BitVec 8
-      a✝ :
-        ¬((Option.map (fun div => x✝ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 42#8) + 1#8 else x✝ / 42#8))).bind
-              fun a => some ((a ||| x✝¹ >>> 2 &&& 13#8) <<< 2)) ⊑
-            (Option.map (fun div => x✝ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 42#8) + 1#8 else x✝ / 42#8))).bind
-              fun a => some (x✝¹ &&& 52#8 ||| a <<< 2)
-      ⊢ False
-  [Meta.Tactic.bv] Pipeline reached a fixpoint
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhbo_proof.lean:121:4: error: None of the hypotheses are in the supported BitVec fragment.
-There are two potential fixes for this:
-1. If you are using custom BitVec constructs simplify them to built-in ones.
-2. If your problem is using only built-in ones it might currently be out of reach.
-   Consider expressing it in terms of different operations that are better supported.
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhbo_proof.lean:114:8: error: (kernel) declaration has metavariables 'lshr_and_or_disjoint_thm'
-[bv] [0.091331] Normalizing goal
-  [Meta.synthInstance] [0.002922] ✅️ Decidable
-        (((Option.map (fun div => x✝ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝.sdiv 42#8))).bind
-            fun x =>
-            if 2#8 ≥ ↑8 then none else if 2#8 ≥ ↑8 then none else some ((x ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8)) ⊑
-          (Option.map (fun div => x✝ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝.sdiv 42#8))).bind
-            fun x => if 2#8 ≥ ↑8 then none else some (x✝¹ &&& 52#8 ||| x <<< 2#8))
-    [Meta.check] [0.001891] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
-          ((Option.map (fun div => x✝ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝.sdiv 42#8))).bind
-            fun x => if 2#8 ≥ ↑8 then none else if 2#8 ≥ ↑8 then none else some ((x ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8))
-          ((Option.map (fun div => x✝ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝.sdiv 42#8))).bind
-            fun x => if 2#8 ≥ ↑8 then none else some (x✝¹ &&& 52#8 ||| x <<< 2#8))
-  [Meta.Tactic.bv] Running preprocessing pipeline on:
-      case h
-      e e_1 : LLVM.IntW 8
-      x✝¹ x✝ : BitVec 8
-      a✝ :
-        ¬((Option.map (fun div => x✝ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝.sdiv 42#8))).bind
-              fun x =>
-              if 2#8 ≥ ↑8 then none else if 2#8 ≥ ↑8 then none else some ((x ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8)) ⊑
-            (Option.map (fun div => x✝ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝.sdiv 42#8))).bind
-              fun x => if 2#8 ≥ ↑8 then none else some (x✝¹ &&& 52#8 ||| x <<< 2#8)
-      ⊢ False
-  [Meta.isDefEq] [0.001573] ✅️ ?hf =?= fun a a_1 =>
-        Eq.trans
-          (ite_cond_eq_false none (if 2#8 ≥ ↑8 then none else some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8))
-            (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-              (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 2#8)
-                (Eq.trans (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 2#8 8#8) (eq_self true)))
-                  Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2))))
-          (ite_cond_eq_false none (some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8))
-            (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-              (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 2#8)
-                (Eq.trans (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 2#8 8#8) (eq_self true)))
-                  Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2))))
-    [Meta.isDefEq.assign] [0.001568] ✅️ ?hf := fun a a_1 =>
-          Eq.trans
-            (ite_cond_eq_false none (if 2#8 ≥ ↑8 then none else some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8))
-              (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-                (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 2#8)
-                  (Eq.trans
-                    (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 2#8 8#8) (eq_self true)))
-                    Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2))))
-            (ite_cond_eq_false none (some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8))
-              (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-                (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 2#8)
-                  (Eq.trans
-                    (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 2#8 8#8) (eq_self true)))
-                    Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2))))
-      [Meta.isDefEq.assign.checkTypes] [0.001506] ✅️ (?hf : ∀
-            a ∈
-              Option.map (fun div => x✝ + (~~~(div * 42#8) + 1#8))
-                (some (if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 42#8) + 1#8 else x✝ / 42#8)),
-            (if 2#8 ≥ ↑8 then none else if 2#8 ≥ ↑8 then none else some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8)) =
-              some
-                ((a ||| x✝¹ >>> 2 &&& 13#8) <<<
-                  2)) := (fun a a_1 =>
-            Eq.trans
-              (ite_cond_eq_false none (if 2#8 ≥ ↑8 then none else some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8))
-                (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-                  (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 2#8)
-                    (Eq.trans
-                      (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 2#8 8#8) (eq_self true)))
-                      Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2))))
-              (ite_cond_eq_false none (some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8))
-                (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-                  (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 2#8)
-                    (Eq.trans
-                      (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 2#8 8#8) (eq_self true)))
-                      Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2)))) : ∀
-            a ∈
-              Option.map (fun div => x✝ + (~~~(div * 42#8) + 1#8))
-                (some (if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 42#8) + 1#8 else x✝ / 42#8)),
-            (if 2#8 ≥ ↑8 then none else if 2#8 ≥ ↑8 then none else some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8)) =
-              some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8))
-        [Meta.isDefEq] [0.001501] ✅️ ∀
-              a ∈
-                Option.map (fun div => x✝ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 42#8) + 1#8 else x✝ / 42#8)),
-              (if 2#8 ≥ ↑8 then none else if 2#8 ≥ ↑8 then none else some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8)) =
-                some
-                  ((a ||| x✝¹ >>> 2 &&& 13#8) <<<
-                    2) =?= ∀
-              a ∈
-                Option.map (fun div => x✝ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 42#8) + 1#8 else x✝ / 42#8)),
-              (if 2#8 ≥ ↑8 then none else if 2#8 ≥ ↑8 then none else some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8)) =
-                some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8)
-          [Meta.isDefEq] [0.001426] ✅️ (if 2#8 ≥ ↑8 then none
-                else if 2#8 ≥ ↑8 then none else some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8)) =
-                some
-                  ((a ||| x✝¹ >>> 2 &&& 13#8) <<<
-                    2) =?= (if 2#8 ≥ ↑8 then none
-                else if 2#8 ≥ ↑8 then none else some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8)) =
-                some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8)
-            [Meta.isDefEq] [0.001389] ✅️ some
-                  ((a ||| x✝¹ >>> 2 &&& 13#8) <<< 2) =?= some ((a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8)
-              [Meta.isDefEq] [0.001352] ✅️ (a ||| x✝¹ >>> 2 &&& 13#8) <<< 2 =?= (a ||| x✝¹ >>> 2#8 &&& 13#8) <<< 2#8
-                [Meta.isDefEq] [0.001311] ✅️ BitVec.instHShiftLeftNat.1 (a ||| x✝¹ >>> 2 &&& 13#8)
-                      2 =?= BitVec.instHShiftLeft.1 (a ||| x✝¹ >>> 2#8 &&& 13#8) 2#8
-                  [Meta.isDefEq] [0.001209] ✅️ (a ||| x✝¹ >>> 2 &&& 13#8).shiftLeft
-                        2 =?= (a ||| x✝¹ >>> 2#8 &&& 13#8) <<< (2#8).toNat
-                    [Meta.isDefEq] [0.001166] ✅️ (a ||| x✝¹ >>> 2 &&& 13#8).shiftLeft
-                          2 =?= (a ||| x✝¹ >>> 2#8 &&& 13#8).shiftLeft (2#8).toNat
-                      [Meta.isDefEq.delta] [0.001150] ✅️ (a ||| x✝¹ >>> 2 &&& 13#8).shiftLeft
-                            2 =?= (a ||| x✝¹ >>> 2#8 &&& 13#8).shiftLeft (2#8).toNat
-                        [Meta.isDefEq] [0.001098] ✅️ a ||| x✝¹ >>> 2 &&& 13#8 =?= a ||| x✝¹ >>> 2#8 &&& 13#8
-                          [Meta.isDefEq] [0.001054] ✅️ instHOrOfOrOp.1 a
-                                (x✝¹ >>> 2 &&& 13#8) =?= instHOrOfOrOp.1 a (x✝¹ >>> 2#8 &&& 13#8)
-  [Meta.Tactic.bv] Rerunning pipeline on:
-      case h
-      e e_1 : LLVM.IntW 8
-      x✝¹ x✝ : BitVec 8
-      a✝ :
-        ¬((Option.map (fun div => x✝ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 42#8) + 1#8 else x✝ / 42#8))).bind
-              fun a => some ((a ||| x✝¹ >>> 2 &&& 13#8) <<< 2)) ⊑
-            (Option.map (fun div => x✝ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 42#8) + 1#8 else x✝ / 42#8))).bind
-              fun a => some (x✝¹ &&& 52#8 ||| a <<< 2)
-      ⊢ False
-  [Meta.Tactic.bv] Pipeline reached a fixpoint
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhbo_proof.lean:132:4: error: None of the hypotheses are in the supported BitVec fragment.
-There are two potential fixes for this:
-1. If you are using custom BitVec constructs simplify them to built-in ones.
-2. If your problem is using only built-in ones it might currently be out of reach.
-   Consider expressing it in terms of different operations that are better supported.
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhbo_proof.lean:125:8: error: (kernel) declaration has metavariables 'ashr_and_or_disjoint_thm'
-[bv] [0.052954] Normalizing goal
-  [Meta.synthInstance] [0.001665] ✅️ Decidable
-        (((Option.map (fun div => x✝ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝.sdiv 42#8))).bind
-            fun x =>
-            if 2#8 ≥ ↑8 then none
-            else if 2#8 ≥ ↑8 then none else some ((x ||| x✝¹.sshiftRight (2#8).toNat &&& 13#8) <<< 2#8)) ⊑
-          (Option.map (fun div => x✝ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝.sdiv 42#8))).bind
-            fun x => if 2#8 ≥ ↑8 then none else some (x✝¹ &&& 52#8 ||| x <<< 2#8))
-    [Meta.check] [0.001044] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
-          ((Option.map (fun div => x✝ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝.sdiv 42#8))).bind
-            fun x =>
-            if 2#8 ≥ ↑8 then none
-            else if 2#8 ≥ ↑8 then none else some ((x ||| x✝¹.sshiftRight (2#8).toNat &&& 13#8) <<< 2#8))
-          ((Option.map (fun div => x✝ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝.sdiv 42#8))).bind
-            fun x => if 2#8 ≥ ↑8 then none else some (x✝¹ &&& 52#8 ||| x <<< 2#8))
-  [Meta.Tactic.bv] Running preprocessing pipeline on:
-      case h
-      e e_1 : LLVM.IntW 8
-      x✝¹ x✝ : BitVec 8
-      a✝ :
-        ¬((Option.map (fun div => x✝ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝.sdiv 42#8))).bind
-              fun x =>
-              if 2#8 ≥ ↑8 then none
-              else if 2#8 ≥ ↑8 then none else some ((x ||| x✝¹.sshiftRight (2#8).toNat &&& 13#8) <<< 2#8)) ⊑
-            (Option.map (fun div => x✝ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝.sdiv 42#8))).bind
-              fun x => if 2#8 ≥ ↑8 then none else some (x✝¹ &&& 52#8 ||| x <<< 2#8)
-      ⊢ False
-  [Meta.Tactic.bv] Rerunning pipeline on:
-      case h
-      e e_1 : LLVM.IntW 8
-      x✝¹ x✝ : BitVec 8
-      a✝ :
-        ¬((Option.map (fun div => x✝ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 42#8) + 1#8 else x✝ / 42#8))).bind
-              fun a => some ((a ||| x✝¹.sshiftRight 2 &&& 13#8) <<< 2)) ⊑
-            (Option.map (fun div => x✝ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝.getLsbD 7 = true then ~~~((~~~x✝ + 1#8) / 42#8) + 1#8 else x✝ / 42#8))).bind
-              fun a => some (x✝¹ &&& 52#8 ||| a <<< 2)
-      ⊢ False
-  [Meta.Tactic.bv] Pipeline reached a fixpoint
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhbo_proof.lean:143:4: error: None of the hypotheses are in the supported BitVec fragment.
-There are two potential fixes for this:
-1. If you are using custom BitVec constructs simplify them to built-in ones.
-2. If your problem is using only built-in ones it might currently be out of reach.
-   Consider expressing it in terms of different operations that are better supported.
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhbo_proof.lean:143:4: error: None of the hypotheses are in the supported BitVec fragment.
-There are two potential fixes for this:
-1. If you are using custom BitVec constructs simplify them to built-in ones.
-2. If your problem is using only built-in ones it might currently be out of reach.
-   Consider expressing it in terms of different operations that are better supported.
-/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhbo_proof.lean:136:8: error: (kernel) declaration has metavariables 'lshr_and_xor_thm'
-[bv] [0.055407] Normalizing goal
-  [Meta.synthInstance] [0.001614] ✅️ Decidable
-        ((if 2#8 ≥ ↑8 then none
-          else
-            (Option.map (fun div => x✝¹ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝¹.sdiv 42#8))).bind
-              fun x => if 2#8 ≥ ↑8 then none else some ((x✝ >>> 2#8 &&& 13#8 ^^^ x) <<< 2#8)) ⊑
-          (Option.map (fun div => x✝¹ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝¹.sdiv 42#8))).bind
-            fun x => if 2#8 ≥ ↑8 then none else some (x✝ &&& 52#8 ^^^ x <<< 2#8))
-    [Meta.check] [0.001081] ✅️ BitVec.Refinement.instDecidableRelOptionOfDecidableEq
-          (if 2#8 ≥ ↑8 then none
-          else
-            (Option.map (fun div => x✝¹ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝¹.sdiv 42#8))).bind
-              fun x => if 2#8 ≥ ↑8 then none else some ((x✝ >>> 2#8 &&& 13#8 ^^^ x) <<< 2#8))
-          ((Option.map (fun div => x✝¹ - div * 42#8)
-                (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                else some (x✝¹.sdiv 42#8))).bind
-            fun x => if 2#8 ≥ ↑8 then none else some (x✝ &&& 52#8 ^^^ x <<< 2#8))
-  [Meta.Tactic.bv] Running preprocessing pipeline on:
-      case h
-      e e_1 : LLVM.IntW 8
-      x✝¹ x✝ : BitVec 8
-      a✝ :
-        ¬(if 2#8 ≥ ↑8 then none
-            else
-              (Option.map (fun div => x✝¹ - div * 42#8)
-                    (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                    else some (x✝¹.sdiv 42#8))).bind
-                fun x => if 2#8 ≥ ↑8 then none else some ((x✝ >>> 2#8 &&& 13#8 ^^^ x) <<< 2#8)) ⊑
-            (Option.map (fun div => x✝¹ - div * 42#8)
-                  (if (42#8 == 0 || 8 != 1 && x✝¹ == BitVec.intMin 8 && 42#8 == -1) = true then none
-                  else some (x✝¹.sdiv 42#8))).bind
-              fun x => if 2#8 ≥ ↑8 then none else some (x✝ &&& 52#8 ^^^ x <<< 2#8)
-      ⊢ False
-  [Meta.isDefEq] [0.001167] ✅️ if ?b then ?x
-      else
-        ?y =?= if x✝¹.msb = true then if (42#8).msb = true then -x✝¹ / -42#8 else -(-x✝¹ / 42#8)
-      else if (42#8).msb = true then -(x✝¹ / -42#8) else x✝¹ / 42#8
-    [Meta.isDefEq] [0.001045] ✅️ ?α =?= BitVec 8
-      [Meta.isDefEq.assign] [0.001042] ✅️ ?α := BitVec 8
-        [Meta.isDefEq.assign.checkTypes] [0.001038] ✅️ (?α : Sort ?u.190751) := (BitVec 8 : Type)
-          [Meta.isDefEq] [0.001033] ✅️ Sort ?u.190751 =?= Type
-            [Meta.isLevelDefEq] [0.001028] ✅️ ?u.190751 =?= 1
-  [Meta.isDefEq] [0.001013] ✅️ ?hf =?= fun a a_1 =>
-        ite_cond_eq_false none (some ((x✝ >>> 2#8 &&& 13#8 ^^^ a) <<< 2#8))
-          (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-            (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 2#8)
-              (Eq.trans (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 2#8 8#8) (eq_self true)))
-                Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2)))
-    [Meta.isDefEq.assign] [0.001008] ✅️ ?hf := fun a a_1 =>
-          ite_cond_eq_false none (some ((x✝ >>> 2#8 &&& 13#8 ^^^ a) <<< 2#8))
-            (Eq.trans Std.Tactic.BVDecide.Normalize.BitVec._auxLemma.2
-              (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.le_ult 8#8 2#8)
-                (Eq.trans (congrArg Not (Eq.trans (Std.Tactic.BVDecide.Normalize.BitVec.lt_ult 2#8 8#8) (eq_self true)))
-                  Std.Tactic.BVDecide.Normalize.Prop._auxLemma.2)))
-  [Meta.Tactic.bv] Rerunning pipeline on:
-      case h
-      e e_1 : LLVM.IntW 8
-      x✝¹ x✝ : BitVec 8
-      a✝ :
-        ¬((Option.map (fun div => x✝¹ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝¹.getLsbD 7 = true then ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8 else x✝¹ / 42#8))).bind
-              fun a => some ((x✝ >>> 2 &&& 13#8 ^^^ a) <<< 2)) ⊑
-            (Option.map (fun div => x✝¹ + (~~~(div * 42#8) + 1#8))
-                  (some (if x✝¹.getLsbD 7 = true then ~~~((~~~x✝¹ + 1#8) / 42#8) + 1#8 else x✝¹ / 42#8))).bind
-              fun a => some (x✝ &&& 52#8 ^^^ a <<< 2)
-      ⊢ False
-  [Meta.Tactic.bv] Pipeline reached a fixpoint
-Bitwuzla proved the goal after 0.690420ms, solving context: 0.000000ms
-LeanSAT proved the goal after 2.893390ms: rewriting 2.876370ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
-Bitwuzla proved the goal after 79.358729ms, solving context: 0.000000ms
-LeanSAT proved the goal after 91.119230ms: rewriting 20.555490ms, bitblasting 0.000000ms, SAT solving 55.346300ms, LRAT trimming 3.258880ms, LRAT checking 7.606350ms
-Bitwuzla proved the goal after 0.620050ms, solving context: 0.000000ms
-LeanSAT proved the goal after 2.724590ms: rewriting 2.709060ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
-Bitwuzla proved the goal after 0.453100ms, solving context: 0.000000ms
-LeanSAT proved the goal after 2.700580ms: rewriting 2.691670ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
-Bitwuzla proved the goal after 0.508370ms, solving context: 0.000000ms
-LeanSAT proved the goal after 2.407319ms: rewriting 2.398909ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
-Bitwuzla proved the goal after 77.091309ms, solving context: 0.000000ms
-LeanSAT proved the goal after 85.940180ms: rewriting 20.710820ms, bitblasting 0.000000ms, SAT solving 54.431430ms, LRAT trimming 2.869930ms, LRAT checking 6.335180ms
