@@ -361,6 +361,7 @@ def alive_simplifyMulDivRem290 (w : Nat) :
   simp_alive_ssa
   simp_alive_undef
   simp_alive_ops
+  simp_alive_case_bash
   alive_auto
 
 /-- info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem290' depends on axioms: [propext, Classical.choice, Quot.sound] -/
@@ -412,6 +413,7 @@ def alive_simplifyAndOrXor2515 (w : Nat) :
   simp only [simp_llvm_wrap]
   simp_alive_ssa
   simp_alive_undef
+  simp_alive_case_bash
   alive_auto
 
 /-- info: 'AliveHandwritten.AndOrXor.alive_simplifyAndOrXor2515' depends on axioms:
