@@ -22,15 +22,15 @@ df = pd.read_csv('raw-data/llvm-proved-data.csv')
 df_ceg = pd.read_csv('raw-data/llvm-ceg-data.csv')
 
 
-sum_steps = np.array(df['leanSAT-rw'])+np.array(df['leanSAT-bb'])+np.array(df['leanSAT-sat'])+np.array(df['leanSAT-lrat-c'])+np.array(df['leanSAT-lrat-t'])
+sum_steps = np.sum(np.array(df['leanSAT-rw'])+np.array(df['leanSAT-bb'])+np.array(df['leanSAT-sat'])+np.array(df['leanSAT-lrat-c'])+np.array(df['leanSAT-lrat-t']))
 
 diff = np.array(df['leanSAT']-sum_steps)/np.array(df['leanSAT'])
 
-rw = np.array(df['leanSAT-rw'])/df['leanSAT']*100
-bb=np.array(df['leanSAT-bb'])/df['leanSAT']*100
-sat=np.array(df['leanSAT-sat'])/df['leanSAT']*100
-lrat_c=np.array(df['leanSAT-lrat-c'])/df['leanSAT']*100
-lrat_t=np.array(df['leanSAT-lrat-t'])/df['leanSAT']*100
+rw = np.sum(df['leanSAT-rw'])/sum_steps*100
+bb=np.sum(df['leanSAT-bb'])/sum_steps*100
+sat=np.sum(df['leanSAT-sat'])/sum_steps*100
+lrat_c=np.sum(df['leanSAT-lrat-c'])/sum_steps*100
+lrat_t=np.sum(df['leanSAT-lrat-t'])/sum_steps*100
 
 print('\n\nrw takes on average: '+str(np.mean(rw))+'%')
 print('bb takes on average: '+str(np.mean(bb))+'%')
@@ -48,11 +48,11 @@ for thm in range(10):
 print('\n\nA proof was found for '+str(len(df))+' theorems')
 
 
-ceg_sum_steps = np.array(df_ceg['leanSAT-rw'])+np.array(df_ceg['leanSAT-sat'])
+ceg_sum_steps = np.sum(np.array(df_ceg['leanSAT-rw'])+np.array(df_ceg['leanSAT-sat']))
 ceg_diff = np.array(df_ceg['leanSAT']-ceg_sum_steps)/np.array(df_ceg['leanSAT'])
 
-ceg_rw = np.array(df_ceg['leanSAT-rw'])/ceg_sum_steps*100
-ceg_sat=np.array(df_ceg['leanSAT-sat'])/ceg_sum_steps*100
+ceg_rw = np.sum(df_ceg['leanSAT-rw'])/ceg_sum_steps*100
+ceg_sat=np.sum(df_ceg['leanSAT-sat'])/ceg_sum_steps*100
 
 print('\n\nA counterexample was found for '+str(len(df_ceg))+' theorems')
 
