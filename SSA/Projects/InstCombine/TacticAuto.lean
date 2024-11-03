@@ -235,6 +235,6 @@ macro "simp_alive_split": tactic =>
 macro "simp_alive_benchmark": tactic =>
   `(tactic|
       (
-        all_goals try bv_compare'
+        all_goals bv_compare'
       )
    )
