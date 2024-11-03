@@ -219,8 +219,9 @@ macro "alive_auto": tactic =>
 macro "bv_compare'": tactic =>
   `(tactic|
       (
-        try bv_compare
-        try bv_decide
+        first
+        | bv_compare
+        | bv_decide
       )
    )
 
@@ -234,6 +235,6 @@ macro "simp_alive_split": tactic =>
 macro "simp_alive_benchmark": tactic =>
   `(tactic|
       (
-        all_goals try bv_compare'
+        all_goals bv_compare'
       )
    )
