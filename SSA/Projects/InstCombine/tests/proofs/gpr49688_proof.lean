@@ -4,6 +4,9 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
 open LLVM
 
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+
 section gpr49688_proof
 theorem f_thm (e : IntW 32) :
   select (icmp IntPredicate.slt e (const? 32 0)) (const? 1 1) (icmp IntPredicate.sgt e (ashr (const? 32 7) e)) ⊑
@@ -12,7 +15,8 @@ theorem f_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -26,7 +30,8 @@ theorem f2_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 

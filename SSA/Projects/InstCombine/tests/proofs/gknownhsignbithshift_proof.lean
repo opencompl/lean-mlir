@@ -4,6 +4,9 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
 open LLVM
 
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+
 section gknownhsignbithshift_proof
 theorem test_shift_nonnegative_thm (e : IntW 32) :
   icmp IntPredicate.sge (shl (lshr e (const? 32 2)) (const? 32 3) { «nsw» := true, «nuw» := false }) (const? 32 0) ⊑
@@ -11,7 +14,8 @@ theorem test_shift_nonnegative_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -23,7 +27,8 @@ theorem test_shift_negative_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 

@@ -4,6 +4,9 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
 open LLVM
 
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+
 section gashrhdemand_proof
 theorem srem2_ashr_mask_thm (e : IntW 32) :
   LLVM.and (ashr (LLVM.srem e (const? 32 2)) (const? 32 31)) (const? 32 2) ‚äë
@@ -11,7 +14,8 @@ theorem srem2_ashr_mask_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -22,7 +26,8 @@ theorem srem8_ashr_mask_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -30,7 +35,8 @@ theorem ashr_can_be_lshr_thm (e : IntW 32) : trunc 16 (ashr e (const? 32 16)) ‚ä
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -40,7 +46,8 @@ theorem ashr_can_be_lshr_2_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 

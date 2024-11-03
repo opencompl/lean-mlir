@@ -4,13 +4,17 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
 open LLVM
 
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+
 section g2004h11h27hSetCCForCastLargerAndConstant_proof
 theorem lt_signed_to_large_unsigned_thm (e : IntW 8) :
   icmp IntPredicate.ult (sext 32 e) (const? 32 1024) ⊑ icmp IntPredicate.sgt e (const? 8 (-1)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -18,7 +22,8 @@ theorem lt_signed_to_large_signed_thm (e : IntW 8) : icmp IntPredicate.slt (sext
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -26,7 +31,8 @@ theorem lt_signed_to_large_negative_thm (e : IntW 8) : icmp IntPredicate.slt (se
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -35,7 +41,8 @@ theorem lt_signed_to_small_unsigned_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -44,7 +51,8 @@ theorem lt_signed_to_small_signed_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -53,7 +61,8 @@ theorem lt_signed_to_small_negative_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -61,7 +70,8 @@ theorem lt_unsigned_to_large_unsigned_thm (e : IntW 8) : icmp IntPredicate.ult (
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -69,7 +79,8 @@ theorem lt_unsigned_to_large_signed_thm (e : IntW 8) : icmp IntPredicate.slt (ze
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -77,7 +88,8 @@ theorem lt_unsigned_to_large_negative_thm (e : IntW 8) : icmp IntPredicate.slt (
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -86,7 +98,8 @@ theorem lt_unsigned_to_small_unsigned_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -95,7 +108,8 @@ theorem lt_unsigned_to_small_signed_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -103,7 +117,8 @@ theorem lt_unsigned_to_small_negative_thm (e : IntW 8) : icmp IntPredicate.slt (
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -112,7 +127,8 @@ theorem gt_signed_to_large_unsigned_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -120,7 +136,8 @@ theorem gt_signed_to_large_signed_thm (e : IntW 8) : icmp IntPredicate.sgt (sext
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -128,7 +145,8 @@ theorem gt_signed_to_large_negative_thm (e : IntW 8) : icmp IntPredicate.sgt (se
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -137,7 +155,8 @@ theorem gt_signed_to_small_unsigned_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -146,7 +165,8 @@ theorem gt_signed_to_small_signed_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -155,7 +175,8 @@ theorem gt_signed_to_small_negative_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -163,7 +184,8 @@ theorem gt_unsigned_to_large_unsigned_thm (e : IntW 8) : icmp IntPredicate.ugt (
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -171,7 +193,8 @@ theorem gt_unsigned_to_large_signed_thm (e : IntW 8) : icmp IntPredicate.sgt (ze
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -179,7 +202,8 @@ theorem gt_unsigned_to_large_negative_thm (e : IntW 8) : icmp IntPredicate.sgt (
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -188,7 +212,8 @@ theorem gt_unsigned_to_small_unsigned_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -197,7 +222,8 @@ theorem gt_unsigned_to_small_signed_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -205,7 +231,8 @@ theorem gt_unsigned_to_small_negative_thm (e : IntW 8) : icmp IntPredicate.sgt (
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -214,7 +241,8 @@ theorem different_size_zext_zext_ugt_thm (e : IntW 4) (e_1 : IntW 7) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -223,7 +251,8 @@ theorem different_size_zext_zext_ult_thm (e : IntW 7) (e_1 : IntW 4) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -232,7 +261,8 @@ theorem different_size_zext_zext_eq_thm (e : IntW 7) (e_1 : IntW 4) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -241,7 +271,8 @@ theorem different_size_zext_zext_ne_commute_thm (e : IntW 4) (e_1 : IntW 7) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -250,7 +281,8 @@ theorem different_size_zext_zext_slt_thm (e : IntW 4) (e_1 : IntW 7) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -259,7 +291,8 @@ theorem different_size_zext_zext_sgt_thm (e : IntW 4) (e_1 : IntW 7) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -268,7 +301,8 @@ theorem different_size_sext_sext_sgt_thm (e : IntW 4) (e_1 : IntW 7) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -277,7 +311,8 @@ theorem different_size_sext_sext_sle_thm (e : IntW 4) (e_1 : IntW 7) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -286,7 +321,8 @@ theorem different_size_sext_sext_eq_thm (e : IntW 4) (e_1 : IntW 7) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -295,7 +331,8 @@ theorem different_size_sext_sext_ule_thm (e : IntW 4) (e_1 : IntW 7) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 

@@ -4,12 +4,16 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
 open LLVM
 
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+
 section gapinthand_proof
 theorem test0_thm (e : IntW 39) : LLVM.and e (const? 39 0) ⊑ const? 39 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -17,7 +21,8 @@ theorem test2_thm (e : IntW 15) : LLVM.and e (const? 15 (-1)) ⊑ e := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -25,7 +30,8 @@ theorem test3_thm (e : IntW 23) : LLVM.and (LLVM.and e (const? 23 127)) (const? 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -35,7 +41,8 @@ theorem test4_thm (e : IntW 37) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -43,7 +50,8 @@ theorem test7_thm (e : IntW 47) : LLVM.and (ashr e (const? 47 39)) (const? 47 25
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -51,7 +59,8 @@ theorem test8_thm (e : IntW 999) : LLVM.and e (const? 999 0) ⊑ const? 999 0 :=
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -59,7 +68,8 @@ theorem test9_thm (e : IntW 1005) : LLVM.and e (const? 1005 (-1)) ⊑ e := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -67,7 +77,8 @@ theorem test10_thm (e : IntW 123) : LLVM.and (LLVM.and e (const? 123 127)) (cons
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -77,7 +88,8 @@ theorem test11_thm (e : IntW 737) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -86,7 +98,8 @@ theorem test13_thm (e : IntW 1024) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 

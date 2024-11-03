@@ -4,13 +4,17 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
 open LLVM
 
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+
 section gcanonicalizehashrhshlhtohmasking_proof
 theorem positive_samevar_thm (e e_1 : IntW 8) :
   shl (ashr e_1 e) e ⊑ LLVM.and (shl (const? 8 (-1)) e { «nsw» := true, «nuw» := false }) e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -18,7 +22,8 @@ theorem positive_sameconst_thm (e : IntW 8) : shl (ashr e (const? 8 3)) (const? 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -27,7 +32,8 @@ theorem positive_biggerashr_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -36,7 +42,8 @@ theorem positive_biggershl_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -46,7 +53,8 @@ theorem positive_samevar_shlnuw_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -55,7 +63,8 @@ theorem positive_sameconst_shlnuw_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -65,7 +74,8 @@ theorem positive_biggerashr_shlnuw_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -75,7 +85,8 @@ theorem positive_biggershl_shlnuw_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -85,7 +96,8 @@ theorem positive_samevar_shlnsw_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -94,7 +106,8 @@ theorem positive_sameconst_shlnsw_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -104,7 +117,8 @@ theorem positive_biggerashr_shlnsw_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -114,7 +128,8 @@ theorem positive_biggershl_shlnsw_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -124,7 +139,8 @@ theorem positive_samevar_shlnuwnsw_thm (e e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -133,7 +149,8 @@ theorem positive_sameconst_shlnuwnsw_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -143,7 +160,8 @@ theorem positive_biggerashr_shlnuwnsw_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -153,7 +171,8 @@ theorem positive_biggershl_shlnuwnsw_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -161,7 +180,8 @@ theorem positive_samevar_ashrexact_thm (e e_1 : IntW 8) : shl (ashr e_1 e) e ⊑
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -169,7 +189,8 @@ theorem positive_sameconst_ashrexact_thm (e : IntW 8) : shl (ashr e (const? 8 3)
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -177,7 +198,8 @@ theorem positive_biggerashr_ashrexact_thm (e : IntW 8) : shl (ashr e (const? 8 6
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -185,7 +207,8 @@ theorem positive_biggershl_ashrexact_thm (e : IntW 8) : shl (ashr e (const? 8 3)
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -193,7 +216,8 @@ theorem positive_samevar_shlnsw_ashrexact_thm (e e_1 : IntW 8) : shl (ashr e_1 e
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -201,7 +225,8 @@ theorem positive_sameconst_shlnsw_ashrexact_thm (e : IntW 8) : shl (ashr e (cons
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -210,7 +235,8 @@ theorem positive_biggerashr_shlnsw_ashrexact_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -220,7 +246,8 @@ theorem positive_biggershl_shlnsw_ashrexact_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -228,7 +255,8 @@ theorem positive_samevar_shlnuw_ashrexact_thm (e e_1 : IntW 8) : shl (ashr e_1 e
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -236,7 +264,8 @@ theorem positive_sameconst_shlnuw_ashrexact_thm (e : IntW 8) : shl (ashr e (cons
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -245,7 +274,8 @@ theorem positive_biggerashr_shlnuw_ashrexact_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -255,7 +285,8 @@ theorem positive_biggershl_shlnuw_ashrexact_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -263,7 +294,8 @@ theorem positive_samevar_shlnuwnsw_ashrexact_thm (e e_1 : IntW 8) : shl (ashr e_
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -271,7 +303,8 @@ theorem positive_sameconst_shlnuwnsw_ashrexact_thm (e : IntW 8) : shl (ashr e (c
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -280,7 +313,8 @@ theorem positive_biggerashr_shlnuwnsw_ashrexact_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -290,7 +324,8 @@ theorem positive_biggershl_shlnuwnsw_ashrexact_thm (e : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 

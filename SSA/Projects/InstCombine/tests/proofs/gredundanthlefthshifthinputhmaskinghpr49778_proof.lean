@@ -4,6 +4,9 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
 open LLVM
 
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+
 section gredundanthlefthshifthinputhmaskinghpr49778_proof
 theorem src_thm (e : IntW 1) :
   shl (LLVM.and (LLVM.xor (shl (const? 32 (-1)) (zext 32 e)) (const? 32 (-1))) (zext 32 e)) (zext 32 e) ⊑
@@ -14,7 +17,8 @@ theorem src_thm (e : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 

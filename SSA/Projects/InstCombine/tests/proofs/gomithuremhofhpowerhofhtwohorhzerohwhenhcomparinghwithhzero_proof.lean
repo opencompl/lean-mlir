@@ -4,6 +4,9 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
 open LLVM
 
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+
 section gomithuremhofhpowerhofhtwohorhzerohwhenhcomparinghwithhzero_proof
 theorem p0_scalar_urem_by_const_thm (e : IntW 32) :
   icmp IntPredicate.eq (urem (LLVM.and e (const? 32 128)) (const? 32 6)) (const? 32 0) ⊑
@@ -11,7 +14,8 @@ theorem p0_scalar_urem_by_const_thm (e : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -21,7 +25,8 @@ theorem p1_scalar_urem_by_nonconst_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -32,7 +37,8 @@ theorem p2_scalar_shifted_urem_by_const_thm (e e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 

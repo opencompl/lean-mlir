@@ -4,6 +4,9 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
 open LLVM
 
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+
 section gzexthboolhaddhsub_proof
 theorem a_thm (e e_1 : IntW 1) :
   add (add (zext 32 e_1) (const? 32 1)) (sub (const? 32 0) (zext 32 e)) ⊑
@@ -11,7 +14,8 @@ theorem a_thm (e e_1 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -25,7 +29,8 @@ theorem PR30273_three_bools_thm (e e_1 e_2 : IntW 1) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -33,7 +38,8 @@ theorem zext_add_scalar_thm (e : IntW 1) : add (zext 32 e) (const? 32 42) ⊑ se
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -41,7 +47,8 @@ theorem zext_negate_thm (e : IntW 1) : sub (const? 64 0) (zext 64 e) ⊑ sext 64
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -49,7 +56,8 @@ theorem zext_sub_const_thm (e : IntW 1) : sub (const? 64 42) (zext 64 e) ⊑ sel
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -57,7 +65,8 @@ theorem sext_negate_thm (e : IntW 1) : sub (const? 64 0) (sext 64 e) ⊑ zext 64
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -65,7 +74,8 @@ theorem sext_sub_const_thm (e : IntW 1) : sub (const? 64 42) (sext 64 e) ⊑ sel
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -73,7 +83,8 @@ theorem sext_sub_thm (e : IntW 1) (e_1 : IntW 8) : sub e_1 (sext 8 e) ⊑ add e_
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -82,7 +93,8 @@ theorem sext_sub_nuw_thm (e : IntW 1) (e_1 : IntW 8) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -90,7 +102,8 @@ theorem sextbool_add_thm (e : IntW 32) (e_1 : IntW 1) : add (sext 32 e_1) e ⊑ 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
@@ -100,7 +113,8 @@ theorem sextbool_add_commute_thm (e : IntW 1) (e_1 : IntW 32) :
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
-    try alive_auto
+    simp_alive_split
+    simp_alive_benchmark
     all_goals sorry
 
 
