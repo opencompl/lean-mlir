@@ -1,0 +1,18 @@
+Bitwuzla proved the goal after 74.445690ms, solving context: 0.000000ms
+LeanSAT proved the goal after 73.048505ms: rewriting 12.715218ms, bitblasting 0.000000ms, SAT solving 53.707121ms, LRAT trimming 0.000000ms, LRAT checking 3.850532ms
+Bitwuzla proved the goal after 73.023097ms, solving context: 0.000000ms
+LeanSAT proved the goal after 78.295170ms: rewriting 15.390232ms, bitblasting 0.000000ms, SAT solving 57.141316ms, LRAT trimming 0.000000ms, LRAT checking 3.060832ms
+Bitwuzla proved the goal after 10.744031ms, solving context: 0.000000ms
+LeanSAT proved the goal after 10.542240ms: rewriting 10.531731ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+Bitwuzla proved the goal after 74.373866ms, solving context: 1.000000ms
+LeanSAT proved the goal after 83.925815ms: rewriting 19.029405ms, bitblasting 0.000000ms, SAT solving 57.228599ms, LRAT trimming 0.000000ms, LRAT checking 5.443867ms
+Bitwuzla proved the goal after 9.883268ms, solving context: 0.000000ms
+LeanSAT proved the goal after 9.801934ms: rewriting 9.791565ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+Bitwuzla proved the goal after 70.595990ms, solving context: 0.000000ms
+LeanSAT proved the goal after 71.636892ms: rewriting 12.066335ms, bitblasting 0.000000ms, SAT solving 53.573639ms, LRAT trimming 0.000000ms, LRAT checking 3.148507ms
+Bitwuzla proved the goal after 70.047595ms, solving context: 0.000000ms
+LeanSAT proved the goal after 74.943569ms: rewriting 16.849185ms, bitblasting 0.000000ms, SAT solving 53.395573ms, LRAT trimming 0.000000ms, LRAT checking 2.988877ms
+Bitwuzla proved the goal after 80.471203ms, solving context: 1.000000ms
+LeanSAT proved the goal after 82.628631ms: rewriting 21.734617ms, bitblasting 0.000000ms, SAT solving 53.322916ms, LRAT trimming 2.192384ms, LRAT checking 4.402974ms
+Bitwuzla proved the goal after 81.766505ms, solving context: 1.000000ms
+LeanSAT proved the goal after 91.003254ms: rewriting 25.989240ms, bitblasting 0.000000ms, SAT solving 57.148671ms, LRAT trimming 2.086205ms, LRAT checking 3.950180ms
