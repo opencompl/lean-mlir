@@ -151,8 +151,7 @@ def alive_simplifyMulDivRem805 (w : Nat) :
         have htwopow_pos : 2^w'' > 0 := Nat.pow_pos (by omega)
         rw [Nat.mod_eq_of_lt (a := 3) (by omega)]
         split
-        case h_1 c hugt => contradiction
-        case h_2 c hugt =>
+        case h_1 c hugt =>
           clear c
           have hugt :
             (1 + BitVec.toNat x) % 2 ^ Nat.succ (Nat.succ w'') < 3 := by
@@ -191,7 +190,7 @@ def alive_simplifyMulDivRem805 (w : Nat) :
                 subst heqzero
                 simp [BitVec.sdiv_zero]
           · exact intMin_neq_one (by omega)
-        case h_3 c hugt =>
+        case h_2 c hugt =>
           clear c
           simp only [toNat_add, toNat_ofNat, Nat.mod_add_mod, Nat.reducePow, Fin.zero_eta,
             Fin.isValue, ofFin_ofNat, ofNat_eq_ofNat, Option.some.injEq,
