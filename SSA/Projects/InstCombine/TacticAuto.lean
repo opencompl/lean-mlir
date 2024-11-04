@@ -203,7 +203,7 @@ macro "bv_auto": tactic =>
       )
    )
 
-macro "alive_auto": tactic =>
+macro "alive_auto'": tactic =>
   `(tactic|
       (
         simp_alive_undef
@@ -213,6 +213,13 @@ macro "alive_auto": tactic =>
           ensure_only_goal
         )
         bv_auto
+      )
+   )
+
+macro "alive_auto": tactic =>
+  `(tactic|
+      (
+        all_goals alive_auto'
       )
    )
 
