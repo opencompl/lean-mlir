@@ -5,7 +5,7 @@ import os
 
 benchmark_dir = "../SSA/Projects/InstCombine/tests/proofs/"
 res_dir = "results/llvm/"
-raw_data_dir = "raw-data/"
+raw_data_dir = "../paper-lean-bitvectors/plots/raw-data/"
 
 
 reps = 1
