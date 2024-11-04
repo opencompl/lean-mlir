@@ -226,8 +226,7 @@ macro "alive_auto": tactic =>
 macro "bv_compare'": tactic =>
   `(tactic|
       (
-        try bv_compare
-        try bv_decide
+        bv_compare
       )
    )
 
