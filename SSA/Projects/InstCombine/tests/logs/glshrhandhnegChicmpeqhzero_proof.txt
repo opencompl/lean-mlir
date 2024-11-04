@@ -1,0 +1,5 @@
+Error(Download(HttpStatus(429)), State { next_error: None, backtrace: InternalBacktrace { backtrace: None } })
+info: downloading component 'lean'
+error: could not download nonexistent lean version `leanprover/lean4:nightly-2024-11-03`
+info: caused by: could not download file from 'https://github.com//leanprover/lean4-nightly/releases/download/nightly-2024-11-03/lean-4.14.0-nightly-2024-11-03-linux.tar.zst' to '/home/lcmf3/.elan/tmp/kgehbilti7shfynb_file'
+info: caused by: http request returned an unsuccessful status code: 429
