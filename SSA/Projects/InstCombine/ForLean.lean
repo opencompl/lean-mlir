@@ -583,16 +583,13 @@ theorem msb_rotateRight {r w: Nat} {x : BitVec w} :
           by_cases h₄ : (w - r < w)
           · simp_all [Nat.mod_eq_of_lt, h₄]
           · simp_all [h₄]
-    · simp [BitVec.msb, getMsbD_rotateRight,rotateRight_mod_eq_rotateRight, h₀, h₁, show w ≤ r by omega]
-      by_cases h₃ : (w - 1 < w - r % w)
+    · simp [BitVec.msb, rotateRight, rotateRightAux, getMsbD_rotateRight, h₀, h₁, show w ≤ r by omega]
+      by_cases h₃ : (0 < r % w)
       · simp [h₃, getLsbD_eq_getMsbD]
-        by_cases h₄ : (r % w + (w - 1) < w)
-        · simp [h₄]
-          sorry
-        · simp [h₄]
-          omega
-      · simp [h₃]
-        sorry
+        by_cases h₄ : (w - r % w) < w
+        · simp [Nat.mod_eq_of_lt h₄]
+        · omega
+      · simp_all [h₃]
   · simp [BitVec.msb, getMsbD_rotateRight, show w = 0 by omega]
 
 
