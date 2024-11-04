@@ -1,0 +1,406 @@
+,locations,err-msg
+2,ch2_3LogicalArithmeticIneq.lean:26:24:,unsolved goals
+3,ch2_3LogicalArithmeticIneq.lean:31:26:,unsolved goals
+24,ch2_3LogicalArithmeticIneq.lean:136:55:,unsolved goals
+25,ch2_3LogicalArithmeticIneq.lean:141:55:,unsolved goals
+26,ch2_3LogicalArithmeticIneq.lean:146:61:,unsolved goals
+27,ch2_3LogicalArithmeticIneq.lean:151:57:,unsolved goals
+29,ch2_3LogicalArithmeticIneq.lean:161:54:,unsolved goals
+30,ch2_3LogicalArithmeticIneq.lean:166:50:,unsolved goals
+31,ch2_3LogicalArithmeticIneq.lean:171:90:,unsolved goals
+32,ch2_3LogicalArithmeticIneq.lean:179:100:,unsolved goals
+33,ch2_3LogicalArithmeticIneq.lean:184:87:,unsolved goals
+34,ch2_3LogicalArithmeticIneq.lean:189:101:,unsolved goals
+35,ch2_3LogicalArithmeticIneq.lean:194:57:,unsolved goals
+36,ch2_3LogicalArithmeticIneq.lean:199:55:,unsolved goals
+37,ch2_3LogicalArithmeticIneq.lean:204:48:,unsolved goals
+38,ch2_3LogicalArithmeticIneq.lean:209:45:,unsolved goals
+39,ch2_3LogicalArithmeticIneq.lean:214:45:,unsolved goals
+40,ch2_3LogicalArithmeticIneq.lean:219:76:,unsolved goals
+51,ch2_3LogicalArithmeticIneq.lean:280:62:,unsolved goals
+58,ch2_3LogicalArithmeticIneq.lean:342:60:,unsolved goals
+59,ch2_3LogicalArithmeticIneq.lean:347:60:,unsolved goals
+60,ch2_3LogicalArithmeticIneq.lean:352:64:,unsolved goals
+61,ch2_3LogicalArithmeticIneq.lean:357:64:,unsolved goals
+62,ch2_3LogicalArithmeticIneq.lean:365:61:,unsolved goals
+63,ch2_3LogicalArithmeticIneq.lean:370:65:,unsolved goals
+64,ch2_3LogicalArithmeticIneq.lean:375:65:,unsolved goals
+65,ch2_3LogicalArithmeticIneq.lean:383:73:,unsolved goals
+66,ch2_3LogicalArithmeticIneq.lean:388:66:,unsolved goals
+67,ch2_3LogicalArithmeticIneq.lean:393:66:,unsolved goals
+68,ch2_3LogicalArithmeticIneq.lean:401:87:,unsolved goals
+69,ch2_3LogicalArithmeticIneq.lean:406:97:,unsolved goals
+70,ch2_3LogicalArithmeticIneq.lean:411:69:,unsolved goals
+71,ch2_3LogicalArithmeticIneq.lean:416:64:,unsolved goals
+72,ch2_3LogicalArithmeticIneq.lean:421:64:,unsolved goals
+73,ch2_3LogicalArithmeticIneq.lean:426:85:,unsolved goals
+74,ch2_3LogicalArithmeticIneq.lean:431:89:,unsolved goals
+75,ch2_3LogicalArithmeticIneq.lean:436:116:,unsolved goals
+76,ch2_3LogicalArithmeticIneq.lean:443:77:,unsolved goals
+77,ch2_3LogicalArithmeticIneq.lean:448:81:,unsolved goals
+78,ch2_3LogicalArithmeticIneq.lean:453:47:,unsolved goals
+79,ch2_3LogicalArithmeticIneq.lean:458:75:,unsolved goals
+80,ch2_3LogicalArithmeticIneq.lean:463:79:,unsolved goals
+83,ch2_3LogicalArithmeticIneq.lean:26:24:,unsolved goals
+84,ch2_3LogicalArithmeticIneq.lean:31:26:,unsolved goals
+105,ch2_3LogicalArithmeticIneq.lean:136:55:,unsolved goals
+106,ch2_3LogicalArithmeticIneq.lean:141:55:,unsolved goals
+107,ch2_3LogicalArithmeticIneq.lean:146:61:,unsolved goals
+108,ch2_3LogicalArithmeticIneq.lean:151:57:,unsolved goals
+110,ch2_3LogicalArithmeticIneq.lean:161:54:,unsolved goals
+111,ch2_3LogicalArithmeticIneq.lean:166:50:,unsolved goals
+112,ch2_3LogicalArithmeticIneq.lean:171:90:,unsolved goals
+113,ch2_3LogicalArithmeticIneq.lean:179:100:,unsolved goals
+114,ch2_3LogicalArithmeticIneq.lean:184:87:,unsolved goals
+115,ch2_3LogicalArithmeticIneq.lean:189:101:,unsolved goals
+116,ch2_3LogicalArithmeticIneq.lean:194:57:,unsolved goals
+117,ch2_3LogicalArithmeticIneq.lean:199:55:,unsolved goals
+118,ch2_3LogicalArithmeticIneq.lean:204:48:,unsolved goals
+119,ch2_3LogicalArithmeticIneq.lean:209:45:,unsolved goals
+120,ch2_3LogicalArithmeticIneq.lean:214:45:,unsolved goals
+121,ch2_3LogicalArithmeticIneq.lean:219:76:,unsolved goals
+132,ch2_3LogicalArithmeticIneq.lean:280:62:,unsolved goals
+139,ch2_3LogicalArithmeticIneq.lean:342:60:,unsolved goals
+140,ch2_3LogicalArithmeticIneq.lean:347:60:,unsolved goals
+141,ch2_3LogicalArithmeticIneq.lean:352:64:,unsolved goals
+142,ch2_3LogicalArithmeticIneq.lean:357:64:,unsolved goals
+143,ch2_3LogicalArithmeticIneq.lean:365:61:,unsolved goals
+144,ch2_3LogicalArithmeticIneq.lean:370:65:,unsolved goals
+145,ch2_3LogicalArithmeticIneq.lean:375:65:,unsolved goals
+146,ch2_3LogicalArithmeticIneq.lean:383:73:,unsolved goals
+147,ch2_3LogicalArithmeticIneq.lean:388:66:,unsolved goals
+148,ch2_3LogicalArithmeticIneq.lean:393:66:,unsolved goals
+149,ch2_3LogicalArithmeticIneq.lean:401:87:,unsolved goals
+150,ch2_3LogicalArithmeticIneq.lean:406:97:,unsolved goals
+151,ch2_3LogicalArithmeticIneq.lean:411:69:,unsolved goals
+152,ch2_3LogicalArithmeticIneq.lean:416:64:,unsolved goals
+153,ch2_3LogicalArithmeticIneq.lean:421:64:,unsolved goals
+154,ch2_3LogicalArithmeticIneq.lean:426:85:,unsolved goals
+155,ch2_3LogicalArithmeticIneq.lean:431:89:,unsolved goals
+156,ch2_3LogicalArithmeticIneq.lean:436:116:,unsolved goals
+157,ch2_3LogicalArithmeticIneq.lean:443:77:,unsolved goals
+158,ch2_3LogicalArithmeticIneq.lean:448:81:,unsolved goals
+159,ch2_3LogicalArithmeticIneq.lean:453:47:,unsolved goals
+160,ch2_3LogicalArithmeticIneq.lean:458:75:,unsolved goals
+161,ch2_3LogicalArithmeticIneq.lean:463:79:,unsolved goals
+164,ch2_3LogicalArithmeticIneq.lean:26:24:,unsolved goals
+165,ch2_3LogicalArithmeticIneq.lean:31:26:,unsolved goals
+186,ch2_3LogicalArithmeticIneq.lean:136:55:,unsolved goals
+187,ch2_3LogicalArithmeticIneq.lean:141:55:,unsolved goals
+188,ch2_3LogicalArithmeticIneq.lean:146:61:,unsolved goals
+189,ch2_3LogicalArithmeticIneq.lean:151:57:,unsolved goals
+191,ch2_3LogicalArithmeticIneq.lean:161:54:,unsolved goals
+192,ch2_3LogicalArithmeticIneq.lean:166:50:,unsolved goals
+193,ch2_3LogicalArithmeticIneq.lean:171:90:,unsolved goals
+194,ch2_3LogicalArithmeticIneq.lean:179:100:,unsolved goals
+195,ch2_3LogicalArithmeticIneq.lean:184:87:,unsolved goals
+196,ch2_3LogicalArithmeticIneq.lean:189:101:,unsolved goals
+197,ch2_3LogicalArithmeticIneq.lean:194:57:,unsolved goals
+198,ch2_3LogicalArithmeticIneq.lean:199:55:,unsolved goals
+199,ch2_3LogicalArithmeticIneq.lean:204:48:,unsolved goals
+200,ch2_3LogicalArithmeticIneq.lean:209:45:,unsolved goals
+201,ch2_3LogicalArithmeticIneq.lean:214:45:,unsolved goals
+202,ch2_3LogicalArithmeticIneq.lean:219:76:,unsolved goals
+213,ch2_3LogicalArithmeticIneq.lean:280:62:,unsolved goals
+220,ch2_3LogicalArithmeticIneq.lean:342:60:,unsolved goals
+221,ch2_3LogicalArithmeticIneq.lean:347:60:,unsolved goals
+222,ch2_3LogicalArithmeticIneq.lean:352:64:,unsolved goals
+223,ch2_3LogicalArithmeticIneq.lean:357:64:,unsolved goals
+224,ch2_3LogicalArithmeticIneq.lean:365:61:,unsolved goals
+225,ch2_3LogicalArithmeticIneq.lean:370:65:,unsolved goals
+226,ch2_3LogicalArithmeticIneq.lean:375:65:,unsolved goals
+227,ch2_3LogicalArithmeticIneq.lean:383:73:,unsolved goals
+228,ch2_3LogicalArithmeticIneq.lean:388:66:,unsolved goals
+229,ch2_3LogicalArithmeticIneq.lean:393:66:,unsolved goals
+230,ch2_3LogicalArithmeticIneq.lean:401:87:,unsolved goals
+231,ch2_3LogicalArithmeticIneq.lean:406:97:,unsolved goals
+232,ch2_3LogicalArithmeticIneq.lean:411:69:,unsolved goals
+233,ch2_3LogicalArithmeticIneq.lean:416:64:,unsolved goals
+234,ch2_3LogicalArithmeticIneq.lean:421:64:,unsolved goals
+235,ch2_3LogicalArithmeticIneq.lean:426:85:,unsolved goals
+236,ch2_3LogicalArithmeticIneq.lean:431:89:,unsolved goals
+237,ch2_3LogicalArithmeticIneq.lean:436:116:,unsolved goals
+238,ch2_3LogicalArithmeticIneq.lean:443:77:,unsolved goals
+239,ch2_3LogicalArithmeticIneq.lean:448:81:,unsolved goals
+240,ch2_3LogicalArithmeticIneq.lean:453:47:,unsolved goals
+241,ch2_3LogicalArithmeticIneq.lean:458:75:,unsolved goals
+242,ch2_3LogicalArithmeticIneq.lean:463:79:,unsolved goals
+245,ch2_3LogicalArithmeticIneq.lean:26:24:,unsolved goals
+246,ch2_3LogicalArithmeticIneq.lean:31:26:,unsolved goals
+267,ch2_3LogicalArithmeticIneq.lean:136:55:,unsolved goals
+268,ch2_3LogicalArithmeticIneq.lean:141:55:,unsolved goals
+269,ch2_3LogicalArithmeticIneq.lean:146:61:,unsolved goals
+270,ch2_3LogicalArithmeticIneq.lean:151:57:,unsolved goals
+272,ch2_3LogicalArithmeticIneq.lean:161:54:,unsolved goals
+273,ch2_3LogicalArithmeticIneq.lean:166:50:,unsolved goals
+274,ch2_3LogicalArithmeticIneq.lean:171:90:,unsolved goals
+275,ch2_3LogicalArithmeticIneq.lean:179:100:,unsolved goals
+276,ch2_3LogicalArithmeticIneq.lean:184:87:,unsolved goals
+277,ch2_3LogicalArithmeticIneq.lean:189:101:,unsolved goals
+278,ch2_3LogicalArithmeticIneq.lean:194:57:,unsolved goals
+279,ch2_3LogicalArithmeticIneq.lean:199:55:,unsolved goals
+280,ch2_3LogicalArithmeticIneq.lean:204:48:,unsolved goals
+281,ch2_3LogicalArithmeticIneq.lean:209:45:,unsolved goals
+282,ch2_3LogicalArithmeticIneq.lean:214:45:,unsolved goals
+283,ch2_3LogicalArithmeticIneq.lean:219:76:,unsolved goals
+294,ch2_3LogicalArithmeticIneq.lean:280:62:,unsolved goals
+301,ch2_3LogicalArithmeticIneq.lean:342:60:,unsolved goals
+302,ch2_3LogicalArithmeticIneq.lean:347:60:,unsolved goals
+303,ch2_3LogicalArithmeticIneq.lean:352:64:,unsolved goals
+304,ch2_3LogicalArithmeticIneq.lean:357:64:,unsolved goals
+305,ch2_3LogicalArithmeticIneq.lean:365:61:,unsolved goals
+306,ch2_3LogicalArithmeticIneq.lean:370:65:,unsolved goals
+307,ch2_3LogicalArithmeticIneq.lean:375:65:,unsolved goals
+308,ch2_3LogicalArithmeticIneq.lean:383:73:,unsolved goals
+309,ch2_3LogicalArithmeticIneq.lean:388:66:,unsolved goals
+310,ch2_3LogicalArithmeticIneq.lean:393:66:,unsolved goals
+311,ch2_3LogicalArithmeticIneq.lean:401:87:,unsolved goals
+312,ch2_3LogicalArithmeticIneq.lean:406:97:,unsolved goals
+313,ch2_3LogicalArithmeticIneq.lean:411:69:,unsolved goals
+314,ch2_3LogicalArithmeticIneq.lean:416:64:,unsolved goals
+315,ch2_3LogicalArithmeticIneq.lean:421:64:,unsolved goals
+316,ch2_3LogicalArithmeticIneq.lean:426:85:,unsolved goals
+317,ch2_3LogicalArithmeticIneq.lean:431:89:,unsolved goals
+318,ch2_3LogicalArithmeticIneq.lean:436:116:,unsolved goals
+319,ch2_3LogicalArithmeticIneq.lean:443:77:,unsolved goals
+320,ch2_3LogicalArithmeticIneq.lean:448:81:,unsolved goals
+321,ch2_3LogicalArithmeticIneq.lean:453:47:,unsolved goals
+322,ch2_3LogicalArithmeticIneq.lean:458:75:,unsolved goals
+323,ch2_3LogicalArithmeticIneq.lean:463:79:,unsolved goals
+326,ch2_3LogicalArithmeticIneq.lean:26:24:,unsolved goals
+327,ch2_3LogicalArithmeticIneq.lean:31:26:,unsolved goals
+348,ch2_3LogicalArithmeticIneq.lean:136:55:,unsolved goals
+349,ch2_3LogicalArithmeticIneq.lean:141:55:,unsolved goals
+350,ch2_3LogicalArithmeticIneq.lean:146:61:,unsolved goals
+351,ch2_3LogicalArithmeticIneq.lean:151:57:,unsolved goals
+353,ch2_3LogicalArithmeticIneq.lean:161:54:,unsolved goals
+354,ch2_3LogicalArithmeticIneq.lean:166:50:,unsolved goals
+355,ch2_3LogicalArithmeticIneq.lean:171:90:,unsolved goals
+356,ch2_3LogicalArithmeticIneq.lean:179:100:,unsolved goals
+357,ch2_3LogicalArithmeticIneq.lean:184:87:,unsolved goals
+358,ch2_3LogicalArithmeticIneq.lean:189:101:,unsolved goals
+359,ch2_3LogicalArithmeticIneq.lean:194:57:,unsolved goals
+360,ch2_3LogicalArithmeticIneq.lean:199:55:,unsolved goals
+361,ch2_3LogicalArithmeticIneq.lean:204:48:,unsolved goals
+362,ch2_3LogicalArithmeticIneq.lean:209:45:,unsolved goals
+363,ch2_3LogicalArithmeticIneq.lean:214:45:,unsolved goals
+364,ch2_3LogicalArithmeticIneq.lean:219:76:,unsolved goals
+375,ch2_3LogicalArithmeticIneq.lean:280:62:,unsolved goals
+382,ch2_3LogicalArithmeticIneq.lean:342:60:,unsolved goals
+383,ch2_3LogicalArithmeticIneq.lean:347:60:,unsolved goals
+384,ch2_3LogicalArithmeticIneq.lean:352:64:,unsolved goals
+385,ch2_3LogicalArithmeticIneq.lean:357:64:,unsolved goals
+386,ch2_3LogicalArithmeticIneq.lean:365:61:,unsolved goals
+387,ch2_3LogicalArithmeticIneq.lean:370:65:,unsolved goals
+388,ch2_3LogicalArithmeticIneq.lean:375:65:,unsolved goals
+389,ch2_3LogicalArithmeticIneq.lean:383:73:,unsolved goals
+390,ch2_3LogicalArithmeticIneq.lean:388:66:,unsolved goals
+391,ch2_3LogicalArithmeticIneq.lean:393:66:,unsolved goals
+392,ch2_3LogicalArithmeticIneq.lean:401:87:,unsolved goals
+393,ch2_3LogicalArithmeticIneq.lean:406:97:,unsolved goals
+394,ch2_3LogicalArithmeticIneq.lean:411:69:,unsolved goals
+395,ch2_3LogicalArithmeticIneq.lean:416:64:,unsolved goals
+396,ch2_3LogicalArithmeticIneq.lean:421:64:,unsolved goals
+397,ch2_3LogicalArithmeticIneq.lean:426:85:,unsolved goals
+398,ch2_3LogicalArithmeticIneq.lean:431:89:,unsolved goals
+399,ch2_3LogicalArithmeticIneq.lean:436:116:,unsolved goals
+400,ch2_3LogicalArithmeticIneq.lean:443:77:,unsolved goals
+401,ch2_3LogicalArithmeticIneq.lean:448:81:,unsolved goals
+402,ch2_3LogicalArithmeticIneq.lean:453:47:,unsolved goals
+403,ch2_3LogicalArithmeticIneq.lean:458:75:,unsolved goals
+404,ch2_3LogicalArithmeticIneq.lean:463:79:,unsolved goals
+0,ch2_3LogicalArithmeticIneq.lean:16:2:,no goals to be solved
+1,ch2_3LogicalArithmeticIneq.lean:21:2:,no goals to be solved
+4,ch2_3LogicalArithmeticIneq.lean:38:2:,no goals to be solved
+5,ch2_3LogicalArithmeticIneq.lean:43:2:,no goals to be solved
+6,ch2_3LogicalArithmeticIneq.lean:48:2:,no goals to be solved
+7,ch2_3LogicalArithmeticIneq.lean:53:2:,no goals to be solved
+8,ch2_3LogicalArithmeticIneq.lean:58:2:,no goals to be solved
+9,ch2_3LogicalArithmeticIneq.lean:63:2:,no goals to be solved
+10,ch2_3LogicalArithmeticIneq.lean:68:2:,no goals to be solved
+11,ch2_3LogicalArithmeticIneq.lean:73:2:,no goals to be solved
+12,ch2_3LogicalArithmeticIneq.lean:78:2:,no goals to be solved
+13,ch2_3LogicalArithmeticIneq.lean:83:2:,no goals to be solved
+14,ch2_3LogicalArithmeticIneq.lean:88:2:,no goals to be solved
+15,ch2_3LogicalArithmeticIneq.lean:93:2:,no goals to be solved
+16,ch2_3LogicalArithmeticIneq.lean:98:2:,no goals to be solved
+17,ch2_3LogicalArithmeticIneq.lean:103:2:,no goals to be solved
+18,ch2_3LogicalArithmeticIneq.lean:108:2:,no goals to be solved
+19,ch2_3LogicalArithmeticIneq.lean:113:2:,no goals to be solved
+20,ch2_3LogicalArithmeticIneq.lean:118:2:,no goals to be solved
+21,ch2_3LogicalArithmeticIneq.lean:123:2:,no goals to be solved
+22,ch2_3LogicalArithmeticIneq.lean:128:2:,no goals to be solved
+23,ch2_3LogicalArithmeticIneq.lean:133:2:,no goals to be solved
+28,ch2_3LogicalArithmeticIneq.lean:158:2:,no goals to be solved
+81,ch2_3LogicalArithmeticIneq.lean:16:2:,no goals to be solved
+82,ch2_3LogicalArithmeticIneq.lean:21:2:,no goals to be solved
+85,ch2_3LogicalArithmeticIneq.lean:38:2:,no goals to be solved
+86,ch2_3LogicalArithmeticIneq.lean:43:2:,no goals to be solved
+87,ch2_3LogicalArithmeticIneq.lean:48:2:,no goals to be solved
+88,ch2_3LogicalArithmeticIneq.lean:53:2:,no goals to be solved
+89,ch2_3LogicalArithmeticIneq.lean:58:2:,no goals to be solved
+90,ch2_3LogicalArithmeticIneq.lean:63:2:,no goals to be solved
+91,ch2_3LogicalArithmeticIneq.lean:68:2:,no goals to be solved
+92,ch2_3LogicalArithmeticIneq.lean:73:2:,no goals to be solved
+93,ch2_3LogicalArithmeticIneq.lean:78:2:,no goals to be solved
+94,ch2_3LogicalArithmeticIneq.lean:83:2:,no goals to be solved
+95,ch2_3LogicalArithmeticIneq.lean:88:2:,no goals to be solved
+96,ch2_3LogicalArithmeticIneq.lean:93:2:,no goals to be solved
+97,ch2_3LogicalArithmeticIneq.lean:98:2:,no goals to be solved
+98,ch2_3LogicalArithmeticIneq.lean:103:2:,no goals to be solved
+99,ch2_3LogicalArithmeticIneq.lean:108:2:,no goals to be solved
+100,ch2_3LogicalArithmeticIneq.lean:113:2:,no goals to be solved
+101,ch2_3LogicalArithmeticIneq.lean:118:2:,no goals to be solved
+102,ch2_3LogicalArithmeticIneq.lean:123:2:,no goals to be solved
+103,ch2_3LogicalArithmeticIneq.lean:128:2:,no goals to be solved
+104,ch2_3LogicalArithmeticIneq.lean:133:2:,no goals to be solved
+109,ch2_3LogicalArithmeticIneq.lean:158:2:,no goals to be solved
+162,ch2_3LogicalArithmeticIneq.lean:16:2:,no goals to be solved
+163,ch2_3LogicalArithmeticIneq.lean:21:2:,no goals to be solved
+166,ch2_3LogicalArithmeticIneq.lean:38:2:,no goals to be solved
+167,ch2_3LogicalArithmeticIneq.lean:43:2:,no goals to be solved
+168,ch2_3LogicalArithmeticIneq.lean:48:2:,no goals to be solved
+169,ch2_3LogicalArithmeticIneq.lean:53:2:,no goals to be solved
+170,ch2_3LogicalArithmeticIneq.lean:58:2:,no goals to be solved
+171,ch2_3LogicalArithmeticIneq.lean:63:2:,no goals to be solved
+172,ch2_3LogicalArithmeticIneq.lean:68:2:,no goals to be solved
+173,ch2_3LogicalArithmeticIneq.lean:73:2:,no goals to be solved
+174,ch2_3LogicalArithmeticIneq.lean:78:2:,no goals to be solved
+175,ch2_3LogicalArithmeticIneq.lean:83:2:,no goals to be solved
+176,ch2_3LogicalArithmeticIneq.lean:88:2:,no goals to be solved
+177,ch2_3LogicalArithmeticIneq.lean:93:2:,no goals to be solved
+178,ch2_3LogicalArithmeticIneq.lean:98:2:,no goals to be solved
+179,ch2_3LogicalArithmeticIneq.lean:103:2:,no goals to be solved
+180,ch2_3LogicalArithmeticIneq.lean:108:2:,no goals to be solved
+181,ch2_3LogicalArithmeticIneq.lean:113:2:,no goals to be solved
+182,ch2_3LogicalArithmeticIneq.lean:118:2:,no goals to be solved
+183,ch2_3LogicalArithmeticIneq.lean:123:2:,no goals to be solved
+184,ch2_3LogicalArithmeticIneq.lean:128:2:,no goals to be solved
+185,ch2_3LogicalArithmeticIneq.lean:133:2:,no goals to be solved
+190,ch2_3LogicalArithmeticIneq.lean:158:2:,no goals to be solved
+243,ch2_3LogicalArithmeticIneq.lean:16:2:,no goals to be solved
+244,ch2_3LogicalArithmeticIneq.lean:21:2:,no goals to be solved
+247,ch2_3LogicalArithmeticIneq.lean:38:2:,no goals to be solved
+248,ch2_3LogicalArithmeticIneq.lean:43:2:,no goals to be solved
+249,ch2_3LogicalArithmeticIneq.lean:48:2:,no goals to be solved
+250,ch2_3LogicalArithmeticIneq.lean:53:2:,no goals to be solved
+251,ch2_3LogicalArithmeticIneq.lean:58:2:,no goals to be solved
+252,ch2_3LogicalArithmeticIneq.lean:63:2:,no goals to be solved
+253,ch2_3LogicalArithmeticIneq.lean:68:2:,no goals to be solved
+254,ch2_3LogicalArithmeticIneq.lean:73:2:,no goals to be solved
+255,ch2_3LogicalArithmeticIneq.lean:78:2:,no goals to be solved
+256,ch2_3LogicalArithmeticIneq.lean:83:2:,no goals to be solved
+257,ch2_3LogicalArithmeticIneq.lean:88:2:,no goals to be solved
+258,ch2_3LogicalArithmeticIneq.lean:93:2:,no goals to be solved
+259,ch2_3LogicalArithmeticIneq.lean:98:2:,no goals to be solved
+260,ch2_3LogicalArithmeticIneq.lean:103:2:,no goals to be solved
+261,ch2_3LogicalArithmeticIneq.lean:108:2:,no goals to be solved
+262,ch2_3LogicalArithmeticIneq.lean:113:2:,no goals to be solved
+263,ch2_3LogicalArithmeticIneq.lean:118:2:,no goals to be solved
+264,ch2_3LogicalArithmeticIneq.lean:123:2:,no goals to be solved
+265,ch2_3LogicalArithmeticIneq.lean:128:2:,no goals to be solved
+266,ch2_3LogicalArithmeticIneq.lean:133:2:,no goals to be solved
+271,ch2_3LogicalArithmeticIneq.lean:158:2:,no goals to be solved
+324,ch2_3LogicalArithmeticIneq.lean:16:2:,no goals to be solved
+325,ch2_3LogicalArithmeticIneq.lean:21:2:,no goals to be solved
+328,ch2_3LogicalArithmeticIneq.lean:38:2:,no goals to be solved
+329,ch2_3LogicalArithmeticIneq.lean:43:2:,no goals to be solved
+330,ch2_3LogicalArithmeticIneq.lean:48:2:,no goals to be solved
+331,ch2_3LogicalArithmeticIneq.lean:53:2:,no goals to be solved
+332,ch2_3LogicalArithmeticIneq.lean:58:2:,no goals to be solved
+333,ch2_3LogicalArithmeticIneq.lean:63:2:,no goals to be solved
+334,ch2_3LogicalArithmeticIneq.lean:68:2:,no goals to be solved
+335,ch2_3LogicalArithmeticIneq.lean:73:2:,no goals to be solved
+336,ch2_3LogicalArithmeticIneq.lean:78:2:,no goals to be solved
+337,ch2_3LogicalArithmeticIneq.lean:83:2:,no goals to be solved
+338,ch2_3LogicalArithmeticIneq.lean:88:2:,no goals to be solved
+339,ch2_3LogicalArithmeticIneq.lean:93:2:,no goals to be solved
+340,ch2_3LogicalArithmeticIneq.lean:98:2:,no goals to be solved
+341,ch2_3LogicalArithmeticIneq.lean:103:2:,no goals to be solved
+342,ch2_3LogicalArithmeticIneq.lean:108:2:,no goals to be solved
+343,ch2_3LogicalArithmeticIneq.lean:113:2:,no goals to be solved
+344,ch2_3LogicalArithmeticIneq.lean:118:2:,no goals to be solved
+345,ch2_3LogicalArithmeticIneq.lean:123:2:,no goals to be solved
+346,ch2_3LogicalArithmeticIneq.lean:128:2:,no goals to be solved
+347,ch2_3LogicalArithmeticIneq.lean:133:2:,no goals to be solved
+352,ch2_3LogicalArithmeticIneq.lean:158:2:,no goals to be solved
+41,ch2_3LogicalArithmeticIneq.lean:226:2:,None of the hypotheses are in the supported BitVec fragment.
+42,ch2_3LogicalArithmeticIneq.lean:231:2:,None of the hypotheses are in the supported BitVec fragment.
+43,ch2_3LogicalArithmeticIneq.lean:236:2:,None of the hypotheses are in the supported BitVec fragment.
+44,ch2_3LogicalArithmeticIneq.lean:241:2:,None of the hypotheses are in the supported BitVec fragment.
+45,ch2_3LogicalArithmeticIneq.lean:246:2:,None of the hypotheses are in the supported BitVec fragment.
+46,ch2_3LogicalArithmeticIneq.lean:251:2:,None of the hypotheses are in the supported BitVec fragment.
+47,ch2_3LogicalArithmeticIneq.lean:256:2:,None of the hypotheses are in the supported BitVec fragment.
+48,ch2_3LogicalArithmeticIneq.lean:261:2:,None of the hypotheses are in the supported BitVec fragment.
+49,ch2_3LogicalArithmeticIneq.lean:272:2:,None of the hypotheses are in the supported BitVec fragment.
+50,ch2_3LogicalArithmeticIneq.lean:277:2:,None of the hypotheses are in the supported BitVec fragment.
+52,ch2_3LogicalArithmeticIneq.lean:287:2:,None of the hypotheses are in the supported BitVec fragment.
+53,ch2_3LogicalArithmeticIneq.lean:299:2:,None of the hypotheses are in the supported BitVec fragment.
+54,ch2_3LogicalArithmeticIneq.lean:304:2:,None of the hypotheses are in the supported BitVec fragment.
+55,ch2_3LogicalArithmeticIneq.lean:311:2:,None of the hypotheses are in the supported BitVec fragment.
+56,ch2_3LogicalArithmeticIneq.lean:316:2:,None of the hypotheses are in the supported BitVec fragment.
+57,ch2_3LogicalArithmeticIneq.lean:321:2:,None of the hypotheses are in the supported BitVec fragment.
+122,ch2_3LogicalArithmeticIneq.lean:226:2:,None of the hypotheses are in the supported BitVec fragment.
+123,ch2_3LogicalArithmeticIneq.lean:231:2:,None of the hypotheses are in the supported BitVec fragment.
+124,ch2_3LogicalArithmeticIneq.lean:236:2:,None of the hypotheses are in the supported BitVec fragment.
+125,ch2_3LogicalArithmeticIneq.lean:241:2:,None of the hypotheses are in the supported BitVec fragment.
+126,ch2_3LogicalArithmeticIneq.lean:246:2:,None of the hypotheses are in the supported BitVec fragment.
+127,ch2_3LogicalArithmeticIneq.lean:251:2:,None of the hypotheses are in the supported BitVec fragment.
+128,ch2_3LogicalArithmeticIneq.lean:256:2:,None of the hypotheses are in the supported BitVec fragment.
+129,ch2_3LogicalArithmeticIneq.lean:261:2:,None of the hypotheses are in the supported BitVec fragment.
+130,ch2_3LogicalArithmeticIneq.lean:272:2:,None of the hypotheses are in the supported BitVec fragment.
+131,ch2_3LogicalArithmeticIneq.lean:277:2:,None of the hypotheses are in the supported BitVec fragment.
+133,ch2_3LogicalArithmeticIneq.lean:287:2:,None of the hypotheses are in the supported BitVec fragment.
+134,ch2_3LogicalArithmeticIneq.lean:299:2:,None of the hypotheses are in the supported BitVec fragment.
+135,ch2_3LogicalArithmeticIneq.lean:304:2:,None of the hypotheses are in the supported BitVec fragment.
+136,ch2_3LogicalArithmeticIneq.lean:311:2:,None of the hypotheses are in the supported BitVec fragment.
+137,ch2_3LogicalArithmeticIneq.lean:316:2:,None of the hypotheses are in the supported BitVec fragment.
+138,ch2_3LogicalArithmeticIneq.lean:321:2:,None of the hypotheses are in the supported BitVec fragment.
+203,ch2_3LogicalArithmeticIneq.lean:226:2:,None of the hypotheses are in the supported BitVec fragment.
+204,ch2_3LogicalArithmeticIneq.lean:231:2:,None of the hypotheses are in the supported BitVec fragment.
+205,ch2_3LogicalArithmeticIneq.lean:236:2:,None of the hypotheses are in the supported BitVec fragment.
+206,ch2_3LogicalArithmeticIneq.lean:241:2:,None of the hypotheses are in the supported BitVec fragment.
+207,ch2_3LogicalArithmeticIneq.lean:246:2:,None of the hypotheses are in the supported BitVec fragment.
+208,ch2_3LogicalArithmeticIneq.lean:251:2:,None of the hypotheses are in the supported BitVec fragment.
+209,ch2_3LogicalArithmeticIneq.lean:256:2:,None of the hypotheses are in the supported BitVec fragment.
+210,ch2_3LogicalArithmeticIneq.lean:261:2:,None of the hypotheses are in the supported BitVec fragment.
+211,ch2_3LogicalArithmeticIneq.lean:272:2:,None of the hypotheses are in the supported BitVec fragment.
+212,ch2_3LogicalArithmeticIneq.lean:277:2:,None of the hypotheses are in the supported BitVec fragment.
+214,ch2_3LogicalArithmeticIneq.lean:287:2:,None of the hypotheses are in the supported BitVec fragment.
+215,ch2_3LogicalArithmeticIneq.lean:299:2:,None of the hypotheses are in the supported BitVec fragment.
+216,ch2_3LogicalArithmeticIneq.lean:304:2:,None of the hypotheses are in the supported BitVec fragment.
+217,ch2_3LogicalArithmeticIneq.lean:311:2:,None of the hypotheses are in the supported BitVec fragment.
+218,ch2_3LogicalArithmeticIneq.lean:316:2:,None of the hypotheses are in the supported BitVec fragment.
+219,ch2_3LogicalArithmeticIneq.lean:321:2:,None of the hypotheses are in the supported BitVec fragment.
+284,ch2_3LogicalArithmeticIneq.lean:226:2:,None of the hypotheses are in the supported BitVec fragment.
+285,ch2_3LogicalArithmeticIneq.lean:231:2:,None of the hypotheses are in the supported BitVec fragment.
+286,ch2_3LogicalArithmeticIneq.lean:236:2:,None of the hypotheses are in the supported BitVec fragment.
+287,ch2_3LogicalArithmeticIneq.lean:241:2:,None of the hypotheses are in the supported BitVec fragment.
+288,ch2_3LogicalArithmeticIneq.lean:246:2:,None of the hypotheses are in the supported BitVec fragment.
+289,ch2_3LogicalArithmeticIneq.lean:251:2:,None of the hypotheses are in the supported BitVec fragment.
+290,ch2_3LogicalArithmeticIneq.lean:256:2:,None of the hypotheses are in the supported BitVec fragment.
+291,ch2_3LogicalArithmeticIneq.lean:261:2:,None of the hypotheses are in the supported BitVec fragment.
+292,ch2_3LogicalArithmeticIneq.lean:272:2:,None of the hypotheses are in the supported BitVec fragment.
+293,ch2_3LogicalArithmeticIneq.lean:277:2:,None of the hypotheses are in the supported BitVec fragment.
+295,ch2_3LogicalArithmeticIneq.lean:287:2:,None of the hypotheses are in the supported BitVec fragment.
+296,ch2_3LogicalArithmeticIneq.lean:299:2:,None of the hypotheses are in the supported BitVec fragment.
+297,ch2_3LogicalArithmeticIneq.lean:304:2:,None of the hypotheses are in the supported BitVec fragment.
+298,ch2_3LogicalArithmeticIneq.lean:311:2:,None of the hypotheses are in the supported BitVec fragment.
+299,ch2_3LogicalArithmeticIneq.lean:316:2:,None of the hypotheses are in the supported BitVec fragment.
+300,ch2_3LogicalArithmeticIneq.lean:321:2:,None of the hypotheses are in the supported BitVec fragment.
+365,ch2_3LogicalArithmeticIneq.lean:226:2:,None of the hypotheses are in the supported BitVec fragment.
+366,ch2_3LogicalArithmeticIneq.lean:231:2:,None of the hypotheses are in the supported BitVec fragment.
+367,ch2_3LogicalArithmeticIneq.lean:236:2:,None of the hypotheses are in the supported BitVec fragment.
+368,ch2_3LogicalArithmeticIneq.lean:241:2:,None of the hypotheses are in the supported BitVec fragment.
+369,ch2_3LogicalArithmeticIneq.lean:246:2:,None of the hypotheses are in the supported BitVec fragment.
+370,ch2_3LogicalArithmeticIneq.lean:251:2:,None of the hypotheses are in the supported BitVec fragment.
+371,ch2_3LogicalArithmeticIneq.lean:256:2:,None of the hypotheses are in the supported BitVec fragment.
+372,ch2_3LogicalArithmeticIneq.lean:261:2:,None of the hypotheses are in the supported BitVec fragment.
+373,ch2_3LogicalArithmeticIneq.lean:272:2:,None of the hypotheses are in the supported BitVec fragment.
+374,ch2_3LogicalArithmeticIneq.lean:277:2:,None of the hypotheses are in the supported BitVec fragment.
+376,ch2_3LogicalArithmeticIneq.lean:287:2:,None of the hypotheses are in the supported BitVec fragment.
+377,ch2_3LogicalArithmeticIneq.lean:299:2:,None of the hypotheses are in the supported BitVec fragment.
+378,ch2_3LogicalArithmeticIneq.lean:304:2:,None of the hypotheses are in the supported BitVec fragment.
+379,ch2_3LogicalArithmeticIneq.lean:311:2:,None of the hypotheses are in the supported BitVec fragment.
+380,ch2_3LogicalArithmeticIneq.lean:316:2:,None of the hypotheses are in the supported BitVec fragment.
+381,ch2_3LogicalArithmeticIneq.lean:321:2:,None of the hypotheses are in the supported BitVec fragment.

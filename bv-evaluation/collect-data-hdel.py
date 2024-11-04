@@ -213,7 +213,7 @@ df_err = df_err.assign(msg_count=df_err['err-msg'].map(msg_counts)).sort_values(
 
 df_err_sorted = df_err.drop(columns='msg_count')
 
-df_err_sorted.to_csv(raw_data_dir+'err-llvm.csv')
+df_err_sorted.to_csv(raw_data_dir+'err-hackersdelight.csv')
 
 
 df = pd.DataFrame({'bitwuzla':bitwuzla_times, 'leanSAT':leanSAT_tot_times,
@@ -224,5 +224,5 @@ df_ceg = pd.DataFrame({'bitwuzla':counter_bitwuzla_times, 'leanSAT':counter_lean
                     'leanSAT-rw':counter_leanSAT_rw_times, 'leanSAT-sat':counter_leanSAT_sat_times})
 
 
-df.to_csv(raw_data_dir+'llvm-proved-data.csv')
-df_ceg.to_csv(raw_data_dir+'llvm-ceg-data.csv')
+df.to_csv(raw_data_dir+'hackersdelight-proved-data.csv')
+df_ceg.to_csv(raw_data_dir+'hackersdelight-ceg-data.csv')
