@@ -5,7 +5,7 @@ import os
 
 benchmark_dir = "../SSA/Projects/InstCombine/HackersDelight/"
 res_dir = "results/HackersDelight/"
-raw_data_dir = 'raw-data/'
+raw_data_dir = '../../paper-lean-bitvectors/raw-data/'
 reps = 1
 
 bv_width = [4, 8, 16, 32, 64]
@@ -76,7 +76,6 @@ for file in os.listdir(benchmark_dir):
             l = res_file.readline()
             while l:
                 if "Bitwuzla " in l: 
-                    print(l)
                     cegb = False
                     if "counter" in l : 
                         cegb = True
