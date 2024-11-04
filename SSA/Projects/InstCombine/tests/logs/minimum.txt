@@ -207,8 +207,6 @@
 
 4: "pr71548" has unsupported operation: builtin.unregistered: llvm.fcmp
 
-4: "pr71548" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "pr71548" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 4: "pr71548" has unsupported operation: llvm.return

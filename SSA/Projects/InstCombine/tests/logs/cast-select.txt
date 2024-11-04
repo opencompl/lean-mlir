@@ -1,20 +1,25 @@
 1: "zext"
-4: "zext" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "zext" is unchanged by InstCombine
 
 1: "zext_vec"
-4: "zext_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "zext_vec" is unchanged by InstCombine
 
 1: "sext"
-4: "sext" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "sext" is unchanged by InstCombine
 
 1: "sext_vec"
-4: "sext_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "sext_vec" is unchanged by InstCombine
 
 1: "trunc"
-4: "trunc" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.trunc
+2: llvm.return
 
 1: "trunc_vec"
-4: "trunc_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "trunc_vec" is unchanged by InstCombine
 
 1: "fpext"
 4: "fpext" has unsupported operation: builtin.unregistered: llvm.fcmp

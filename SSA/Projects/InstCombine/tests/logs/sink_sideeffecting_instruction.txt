@@ -17,15 +17,11 @@
 
 4: "test" has unsupported operation: llvm.call
 
-4: "test" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test" has unsupported operation: builtin.unregistered: llvm.intr.lifetime.start
 
 4: "test" has unsupported operation: llvm.load
-
-4: "test" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "test" has unsupported operation: llvm.call
 

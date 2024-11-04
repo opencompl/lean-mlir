@@ -61,8 +61,6 @@
 1: "test9"
 4: "test9" has unsupported operation: llvm.mlir.zero
 
-4: "test9" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test9" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test9" has unsupported operation: builtin.unregistered: llvm.br
@@ -73,8 +71,6 @@
 
 1: "test10"
 4: "test10" has unsupported operation: llvm.mlir.zero
-
-4: "test10" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "test10" has unsupported operation: builtin.unregistered: llvm.cond_br
 
@@ -156,8 +152,6 @@
 
 4: "test16" has unsupported operation: llvm.store
 
-4: "test16" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test16" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test16" has unsupported operation: llvm.load
@@ -229,8 +223,6 @@
 
 1: "test22"
 4: "test22" has unsupported operation: builtin.unregistered: llvm.br
-
-4: "test22" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "test22" has unsupported operation: builtin.unregistered: llvm.cond_br
 
@@ -319,29 +311,19 @@
 1: "PR24766"
 4: "PR24766" has unsupported operation: builtin.unregistered: llvm.switch
 
-4: "PR24766" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "PR24766" has unsupported operation: builtin.unregistered: llvm.br
-
-4: "PR24766" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "PR24766" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "PR24766_no_constants"
 4: "PR24766_no_constants" has unsupported operation: builtin.unregistered: llvm.switch
 
-4: "PR24766_no_constants" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "PR24766_no_constants" has unsupported operation: builtin.unregistered: llvm.br
-
-4: "PR24766_no_constants" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "PR24766_no_constants" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "PR24766_two_constants"
 4: "PR24766_two_constants" has unsupported operation: builtin.unregistered: llvm.switch
-
-4: "PR24766_two_constants" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "PR24766_two_constants" has unsupported operation: builtin.unregistered: llvm.br
 
@@ -350,11 +332,7 @@
 1: "PR24766_two_constants_two_var"
 4: "PR24766_two_constants_two_var" has unsupported operation: builtin.unregistered: llvm.switch
 
-4: "PR24766_two_constants_two_var" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "PR24766_two_constants_two_var" has unsupported operation: builtin.unregistered: llvm.br
-
-4: "PR24766_two_constants_two_var" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "PR24766_two_constants_two_var" has unsupported operation: builtin.unregistered: llvm.br
 
@@ -382,27 +360,17 @@
 5: "dummy" is empty
 
 1: "phi_knownnonzero_eq"
-4: "phi_knownnonzero_eq" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "phi_knownnonzero_eq" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "phi_knownnonzero_eq" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "phi_knownnonzero_eq" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "phi_knownnonzero_ne"
-4: "phi_knownnonzero_ne" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "phi_knownnonzero_ne" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "phi_knownnonzero_ne" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "phi_knownnonzero_ne" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "phi_knownnonzero_eq_2"
 4: "phi_knownnonzero_eq_2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
-
-4: "phi_knownnonzero_eq_2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "phi_knownnonzero_eq_2" has unsupported operation: builtin.unregistered: llvm.cond_br
 
@@ -410,12 +378,8 @@
 
 4: "phi_knownnonzero_eq_2" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "phi_knownnonzero_eq_2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "phi_knownnonzero_ne_2"
 4: "phi_knownnonzero_ne_2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
-
-4: "phi_knownnonzero_ne_2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "phi_knownnonzero_ne_2" has unsupported operation: builtin.unregistered: llvm.cond_br
 
@@ -423,118 +387,68 @@
 
 4: "phi_knownnonzero_ne_2" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "phi_knownnonzero_ne_2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "phi_knownnonzero_eq_oricmp"
-4: "phi_knownnonzero_eq_oricmp" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "phi_knownnonzero_eq_oricmp" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "phi_knownnonzero_eq_oricmp" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "phi_knownnonzero_eq_oricmp" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "phi_knownnonzero_eq_oricmp_commuted"
-4: "phi_knownnonzero_eq_oricmp_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "phi_knownnonzero_eq_oricmp_commuted" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "phi_knownnonzero_eq_oricmp_commuted" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "phi_knownnonzero_eq_oricmp_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "phi_knownnonzero_eq_or_disjoint_icmp"
-4: "phi_knownnonzero_eq_or_disjoint_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "phi_knownnonzero_eq_or_disjoint_icmp" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "phi_knownnonzero_eq_or_disjoint_icmp" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "phi_knownnonzero_eq_or_disjoint_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "phi_knownnonzero_ne_oricmp"
-4: "phi_knownnonzero_ne_oricmp" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "phi_knownnonzero_ne_oricmp" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "phi_knownnonzero_ne_oricmp" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "phi_knownnonzero_ne_oricmp" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "phi_knownnonzero_ne_oricmp_commuted"
-4: "phi_knownnonzero_ne_oricmp_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "phi_knownnonzero_ne_oricmp_commuted" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "phi_knownnonzero_ne_oricmp_commuted" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "phi_knownnonzero_ne_oricmp_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "phi_knownnonzero_eq_multiuse_oricmp"
-4: "phi_knownnonzero_eq_multiuse_oricmp" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "phi_knownnonzero_eq_multiuse_oricmp" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "phi_knownnonzero_eq_multiuse_oricmp" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "phi_knownnonzero_eq_multiuse_oricmp" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "phi_knownnonzero_eq_multiuse_oricmp" has unsupported operation: builtin.unregistered: llvm.cond_br
-
-4: "phi_knownnonzero_eq_multiuse_oricmp" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "phi_knownnonzero_eq_multiuse_oricmp" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "phi_knownnonzero_ne_multiuse_oricmp_commuted"
-4: "phi_knownnonzero_ne_multiuse_oricmp_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "phi_knownnonzero_ne_multiuse_oricmp_commuted" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "phi_knownnonzero_ne_multiuse_oricmp_commuted" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "phi_knownnonzero_ne_multiuse_oricmp_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "phi_knownnonzero_ne_multiuse_oricmp_commuted" has unsupported operation: builtin.unregistered: llvm.cond_br
-
-4: "phi_knownnonzero_ne_multiuse_oricmp_commuted" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "phi_knownnonzero_ne_multiuse_oricmp_commuted" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "phi_knownnonzero_eq_multiuse_andicmp"
-4: "phi_knownnonzero_eq_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "phi_knownnonzero_eq_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "phi_knownnonzero_eq_multiuse_andicmp" has unsupported operation: llvm.load
 
-4: "phi_knownnonzero_eq_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "phi_knownnonzero_eq_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "phi_knownnonzero_eq_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "phi_knownnonzero_eq_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.cond_br
-
-4: "phi_knownnonzero_eq_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "phi_knownnonzero_eq_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "phi_knownnonzero_ne_multiuse_andicmp"
-4: "phi_knownnonzero_ne_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "phi_knownnonzero_ne_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "phi_knownnonzero_ne_multiuse_andicmp" has unsupported operation: llvm.load
 
-4: "phi_knownnonzero_ne_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "phi_knownnonzero_ne_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "phi_knownnonzero_ne_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "phi_knownnonzero_ne_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.cond_br
-
-4: "phi_knownnonzero_ne_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "phi_knownnonzero_ne_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.br
 
@@ -556,17 +470,11 @@
 1: "pr57488_icmp_of_phi"
 4: "pr57488_icmp_of_phi" has unsupported operation: llvm.getelementptr
 
-4: "pr57488_icmp_of_phi" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "pr57488_icmp_of_phi" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "pr57488_icmp_of_phi" has unsupported operation: llvm.getelementptr
 
 4: "pr57488_icmp_of_phi" has unsupported operation: llvm.load
-
-4: "pr57488_icmp_of_phi" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "pr57488_icmp_of_phi" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "pr57488_icmp_of_phi" has unsupported operation: builtin.unregistered: llvm.cond_br
 
@@ -614,8 +522,6 @@
 
 4: "simplify_context_instr" has unsupported operation: llvm.load
 
-4: "simplify_context_instr" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "simplify_context_instr" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "simplify_context_instr" has unsupported operation: llvm.call
@@ -623,8 +529,6 @@
 4: "simplify_context_instr" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "simplify_context_instr" has unsupported operation: llvm.getelementptr
-
-4: "simplify_context_instr" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "simplify_context_instr" has unsupported operation: builtin.unregistered: llvm.cond_br
 
@@ -668,45 +572,33 @@
 1: "cmp_eq_phi_node_can_fold_1"
 4: "cmp_eq_phi_node_can_fold_1" has unsupported operation: llvm.load
 
-4: "cmp_eq_phi_node_can_fold_1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "cmp_eq_phi_node_can_fold_1" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "cmp_eq_phi_node_can_fold_1" has unsupported operation: llvm.getelementptr
 
 4: "cmp_eq_phi_node_can_fold_1" has unsupported operation: llvm.load
 
-4: "cmp_eq_phi_node_can_fold_1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "cmp_eq_phi_node_can_fold_1" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "cmp_eq_phi_node_can_fold_2"
 4: "cmp_eq_phi_node_can_fold_2" has unsupported operation: llvm.load
 
-4: "cmp_eq_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "cmp_eq_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "cmp_eq_phi_node_can_fold_2" has unsupported operation: llvm.getelementptr
 
 4: "cmp_eq_phi_node_can_fold_2" has unsupported operation: llvm.load
 
-4: "cmp_eq_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "cmp_eq_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "cmp_eq_phi_node_can_fold_2" has unsupported operation: llvm.getelementptr
 
 4: "cmp_eq_phi_node_can_fold_2" has unsupported operation: llvm.load
-
-4: "cmp_eq_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "cmp_eq_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "cmp_eq_phi_node_can_fold_3"
 4: "cmp_eq_phi_node_can_fold_3" has unsupported operation: llvm.load
-
-4: "cmp_eq_phi_node_can_fold_3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "cmp_eq_phi_node_can_fold_3" has unsupported operation: builtin.unregistered: llvm.cond_br
 
@@ -714,37 +606,27 @@
 
 4: "cmp_eq_phi_node_can_fold_3" has unsupported operation: llvm.load
 
-4: "cmp_eq_phi_node_can_fold_3" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "cmp_eq_phi_node_can_fold_3" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "cmp_eq_phi_node_can_fold_4"
 4: "cmp_eq_phi_node_can_fold_4" has unsupported operation: llvm.load
 
-4: "cmp_eq_phi_node_can_fold_4" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "cmp_eq_phi_node_can_fold_4" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "cmp_eq_phi_node_can_fold_4" has unsupported operation: llvm.getelementptr
 
 4: "cmp_eq_phi_node_can_fold_4" has unsupported operation: llvm.load
 
-4: "cmp_eq_phi_node_can_fold_4" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "cmp_eq_phi_node_can_fold_4" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "cmp_eq_phi_node_can_fold_4" has unsupported operation: llvm.getelementptr
 
 4: "cmp_eq_phi_node_can_fold_4" has unsupported operation: llvm.load
-
-4: "cmp_eq_phi_node_can_fold_4" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "cmp_eq_phi_node_can_fold_4" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "cmp_ne_phi_node_can_fold_1"
 4: "cmp_ne_phi_node_can_fold_1" has unsupported operation: llvm.load
-
-4: "cmp_ne_phi_node_can_fold_1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "cmp_ne_phi_node_can_fold_1" has unsupported operation: builtin.unregistered: llvm.cond_br
 
@@ -752,37 +634,27 @@
 
 4: "cmp_ne_phi_node_can_fold_1" has unsupported operation: llvm.load
 
-4: "cmp_ne_phi_node_can_fold_1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "cmp_ne_phi_node_can_fold_1" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "cmp_ne_phi_node_can_fold_2"
 4: "cmp_ne_phi_node_can_fold_2" has unsupported operation: llvm.load
 
-4: "cmp_ne_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "cmp_ne_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "cmp_ne_phi_node_can_fold_2" has unsupported operation: llvm.getelementptr
 
 4: "cmp_ne_phi_node_can_fold_2" has unsupported operation: llvm.load
 
-4: "cmp_ne_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "cmp_ne_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "cmp_ne_phi_node_can_fold_2" has unsupported operation: llvm.getelementptr
 
 4: "cmp_ne_phi_node_can_fold_2" has unsupported operation: llvm.load
-
-4: "cmp_ne_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "cmp_ne_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "cmp_ne_phi_node_can_fold_3"
 4: "cmp_ne_phi_node_can_fold_3" has unsupported operation: llvm.load
-
-4: "cmp_ne_phi_node_can_fold_3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "cmp_ne_phi_node_can_fold_3" has unsupported operation: builtin.unregistered: llvm.cond_br
 
@@ -790,37 +662,27 @@
 
 4: "cmp_ne_phi_node_can_fold_3" has unsupported operation: llvm.load
 
-4: "cmp_ne_phi_node_can_fold_3" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "cmp_ne_phi_node_can_fold_3" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "cmp_ne_phi_node_can_fold_4"
 4: "cmp_ne_phi_node_can_fold_4" has unsupported operation: llvm.load
 
-4: "cmp_ne_phi_node_can_fold_4" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "cmp_ne_phi_node_can_fold_4" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "cmp_ne_phi_node_can_fold_4" has unsupported operation: llvm.getelementptr
 
 4: "cmp_ne_phi_node_can_fold_4" has unsupported operation: llvm.load
 
-4: "cmp_ne_phi_node_can_fold_4" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "cmp_ne_phi_node_can_fold_4" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "cmp_ne_phi_node_can_fold_4" has unsupported operation: llvm.getelementptr
 
 4: "cmp_ne_phi_node_can_fold_4" has unsupported operation: llvm.load
-
-4: "cmp_ne_phi_node_can_fold_4" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "cmp_ne_phi_node_can_fold_4" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "cmp_sgt_phi_node_can_fold_1"
 4: "cmp_sgt_phi_node_can_fold_1" has unsupported operation: llvm.load
-
-4: "cmp_sgt_phi_node_can_fold_1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "cmp_sgt_phi_node_can_fold_1" has unsupported operation: builtin.unregistered: llvm.cond_br
 
@@ -828,37 +690,27 @@
 
 4: "cmp_sgt_phi_node_can_fold_1" has unsupported operation: llvm.load
 
-4: "cmp_sgt_phi_node_can_fold_1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "cmp_sgt_phi_node_can_fold_1" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "cmp_sgt_phi_node_can_fold_2"
 4: "cmp_sgt_phi_node_can_fold_2" has unsupported operation: llvm.load
 
-4: "cmp_sgt_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "cmp_sgt_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "cmp_sgt_phi_node_can_fold_2" has unsupported operation: llvm.getelementptr
 
 4: "cmp_sgt_phi_node_can_fold_2" has unsupported operation: llvm.load
 
-4: "cmp_sgt_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "cmp_sgt_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "cmp_sgt_phi_node_can_fold_2" has unsupported operation: llvm.getelementptr
 
 4: "cmp_sgt_phi_node_can_fold_2" has unsupported operation: llvm.load
-
-4: "cmp_sgt_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "cmp_sgt_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "cmp_sgt_phi_node_cant_fold_1"
 4: "cmp_sgt_phi_node_cant_fold_1" has unsupported operation: llvm.load
-
-4: "cmp_sgt_phi_node_cant_fold_1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "cmp_sgt_phi_node_cant_fold_1" has unsupported operation: builtin.unregistered: llvm.cond_br
 
@@ -868,20 +720,14 @@
 
 4: "cmp_sgt_phi_node_cant_fold_1" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "cmp_sgt_phi_node_cant_fold_1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "cmp_sgt_phi_node_cant_fold_2"
 4: "cmp_sgt_phi_node_cant_fold_2" has unsupported operation: llvm.load
-
-4: "cmp_sgt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "cmp_sgt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "cmp_sgt_phi_node_cant_fold_2" has unsupported operation: llvm.getelementptr
 
 4: "cmp_sgt_phi_node_cant_fold_2" has unsupported operation: llvm.load
-
-4: "cmp_sgt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "cmp_sgt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.cond_br
 
@@ -891,12 +737,8 @@
 
 4: "cmp_sgt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "cmp_sgt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "cmp_slt_phi_node_can_fold_1"
 4: "cmp_slt_phi_node_can_fold_1" has unsupported operation: llvm.load
-
-4: "cmp_slt_phi_node_can_fold_1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "cmp_slt_phi_node_can_fold_1" has unsupported operation: builtin.unregistered: llvm.cond_br
 
@@ -905,15 +747,11 @@
 1: "cmp_slt_phi_node_can_fold_2"
 4: "cmp_slt_phi_node_can_fold_2" has unsupported operation: llvm.load
 
-4: "cmp_slt_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "cmp_slt_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "cmp_slt_phi_node_can_fold_2" has unsupported operation: llvm.getelementptr
 
 4: "cmp_slt_phi_node_can_fold_2" has unsupported operation: llvm.load
-
-4: "cmp_slt_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "cmp_slt_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.cond_br
 
@@ -921,8 +759,6 @@
 
 1: "cmp_slt_phi_node_cant_fold_1"
 4: "cmp_slt_phi_node_cant_fold_1" has unsupported operation: llvm.load
-
-4: "cmp_slt_phi_node_cant_fold_1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "cmp_slt_phi_node_cant_fold_1" has unsupported operation: builtin.unregistered: llvm.cond_br
 
@@ -932,20 +768,14 @@
 
 4: "cmp_slt_phi_node_cant_fold_1" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "cmp_slt_phi_node_cant_fold_1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "cmp_slt_phi_node_cant_fold_2"
 4: "cmp_slt_phi_node_cant_fold_2" has unsupported operation: llvm.load
-
-4: "cmp_slt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "cmp_slt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "cmp_slt_phi_node_cant_fold_2" has unsupported operation: llvm.getelementptr
 
 4: "cmp_slt_phi_node_cant_fold_2" has unsupported operation: llvm.load
-
-4: "cmp_slt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "cmp_slt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.cond_br
 
@@ -954,8 +784,6 @@
 4: "cmp_slt_phi_node_cant_fold_2" has unsupported operation: llvm.load
 
 4: "cmp_slt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.br
-
-4: "cmp_slt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "phi_op_in_loop"
 4: "phi_op_in_loop" has unsupported operation: builtin.unregistered: llvm.br

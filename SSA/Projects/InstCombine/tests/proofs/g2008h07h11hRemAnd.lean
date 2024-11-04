@@ -16,8 +16,8 @@ section g2008h07h11hRemAnd_statements
 def a_before := [llvm|
 {
 ^0(%arg1 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(1 : i32) : i32
   %2 = llvm.srem %arg1, %0 : i32
   %3 = llvm.and %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -26,14 +26,16 @@ def a_before := [llvm|
 def a_after := [llvm|
 {
 ^0(%arg1 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
   %1 = llvm.and %arg1, %0 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem a_proof : a_before ⊑ a_after := by
   unfold a_before a_after
   simp_alive_peephole
+  intros
   ---BEGIN a
   apply a_thm
   ---END a

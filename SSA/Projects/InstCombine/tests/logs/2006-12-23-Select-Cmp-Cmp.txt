@@ -1,11 +1,7 @@
 1: "mng_write_basi"
 4: "mng_write_basi" has unsupported operation: llvm.load
 
-4: "mng_write_basi" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "mng_write_basi" has unsupported operation: llvm.load
-
-4: "mng_write_basi" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "mng_write_basi" has unsupported operation: builtin.unregistered: llvm.cond_br
 

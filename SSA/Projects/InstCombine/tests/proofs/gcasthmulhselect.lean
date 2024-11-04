@@ -26,15 +26,17 @@ def mul_before := [llvm|
 def mul_after := [llvm|
 {
 ^0(%arg17 : i32, %arg18 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 255 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(255 : i32) : i32
   %1 = llvm.mul %arg17, %arg18 : i32
   %2 = llvm.and %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem mul_proof : mul_before ⊑ mul_after := by
   unfold mul_before mul_after
   simp_alive_peephole
+  intros
   ---BEGIN mul
   apply mul_thm
   ---END mul
@@ -56,16 +58,18 @@ def select1_before := [llvm|
 def select1_after := [llvm|
 {
 ^0(%arg13 : i1, %arg14 : i32, %arg15 : i32, %arg16 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 255 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(255 : i32) : i32
   %1 = llvm.add %arg14, %arg15 : i32
   %2 = "llvm.select"(%arg13, %arg16, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   %3 = llvm.and %2, %0 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem select1_proof : select1_before ⊑ select1_after := by
   unfold select1_before select1_after
   simp_alive_peephole
+  intros
   ---BEGIN select1
   apply select1_thm
   ---END select1
@@ -92,9 +96,11 @@ def select2_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem select2_proof : select2_before ⊑ select2_after := by
   unfold select2_before select2_after
   simp_alive_peephole
+  intros
   ---BEGIN select2
   apply select2_thm
   ---END select2
@@ -114,9 +120,11 @@ def foo_after := [llvm|
   "llvm.return"(%arg0) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem foo_proof : foo_before ⊑ foo_after := by
   unfold foo_before foo_after
   simp_alive_peephole
+  intros
   ---BEGIN foo
   apply foo_thm
   ---END foo

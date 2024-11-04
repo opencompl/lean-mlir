@@ -40,13 +40,9 @@
 
 4: "PR36225" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "PR36225" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "PR36225" has unsupported operation: builtin.unregistered: llvm.switch
 
 4: "PR36225" has unsupported operation: builtin.unregistered: llvm.switch
-
-4: "PR36225" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "PR36225" has unsupported operation: builtin.unregistered: llvm.cond_br
 

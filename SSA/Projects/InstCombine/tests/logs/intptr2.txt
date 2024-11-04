@@ -1,6 +1,4 @@
 1: "test1"
-4: "test1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test1" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test1" has unsupported operation: builtin.unregistered: llvm.br
@@ -14,8 +12,6 @@
 4: "test1" has unsupported operation: llvm.getelementptr
 
 4: "test1" has unsupported operation: llvm.getelementptr
-
-4: "test1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "test1" has unsupported operation: builtin.unregistered: llvm.cond_br
 

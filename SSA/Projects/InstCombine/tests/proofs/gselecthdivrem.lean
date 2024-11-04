@@ -30,9 +30,11 @@ def udiv_common_divisor_after := [llvm|
   "llvm.return"(%1) : (i5) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem udiv_common_divisor_proof : udiv_common_divisor_before ⊑ udiv_common_divisor_after := by
   unfold udiv_common_divisor_before udiv_common_divisor_after
   simp_alive_peephole
+  intros
   ---BEGIN udiv_common_divisor
   apply udiv_common_divisor_thm
   ---END udiv_common_divisor
@@ -56,9 +58,11 @@ def urem_common_divisor_after := [llvm|
   "llvm.return"(%1) : (i5) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem urem_common_divisor_proof : urem_common_divisor_before ⊑ urem_common_divisor_after := by
   unfold urem_common_divisor_before urem_common_divisor_after
   simp_alive_peephole
+  intros
   ---BEGIN urem_common_divisor
   apply urem_common_divisor_thm
   ---END urem_common_divisor
@@ -82,9 +86,11 @@ def sdiv_common_divisor_defined_cond_after := [llvm|
   "llvm.return"(%1) : (i5) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sdiv_common_divisor_defined_cond_proof : sdiv_common_divisor_defined_cond_before ⊑ sdiv_common_divisor_defined_cond_after := by
   unfold sdiv_common_divisor_defined_cond_before sdiv_common_divisor_defined_cond_after
   simp_alive_peephole
+  intros
   ---BEGIN sdiv_common_divisor_defined_cond
   apply sdiv_common_divisor_defined_cond_thm
   ---END sdiv_common_divisor_defined_cond
@@ -108,9 +114,11 @@ def srem_common_divisor_defined_cond_after := [llvm|
   "llvm.return"(%1) : (i5) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem srem_common_divisor_defined_cond_proof : srem_common_divisor_defined_cond_before ⊑ srem_common_divisor_defined_cond_after := by
   unfold srem_common_divisor_defined_cond_before srem_common_divisor_defined_cond_after
   simp_alive_peephole
+  intros
   ---BEGIN srem_common_divisor_defined_cond
   apply srem_common_divisor_defined_cond_thm
   ---END srem_common_divisor_defined_cond
@@ -134,9 +142,11 @@ def udiv_common_divisor_defined_cond_after := [llvm|
   "llvm.return"(%1) : (i5) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem udiv_common_divisor_defined_cond_proof : udiv_common_divisor_defined_cond_before ⊑ udiv_common_divisor_defined_cond_after := by
   unfold udiv_common_divisor_defined_cond_before udiv_common_divisor_defined_cond_after
   simp_alive_peephole
+  intros
   ---BEGIN udiv_common_divisor_defined_cond
   apply udiv_common_divisor_defined_cond_thm
   ---END udiv_common_divisor_defined_cond
@@ -160,9 +170,11 @@ def urem_common_divisor_defined_cond_after := [llvm|
   "llvm.return"(%1) : (i5) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem urem_common_divisor_defined_cond_proof : urem_common_divisor_defined_cond_before ⊑ urem_common_divisor_defined_cond_after := by
   unfold urem_common_divisor_defined_cond_before urem_common_divisor_defined_cond_after
   simp_alive_peephole
+  intros
   ---BEGIN urem_common_divisor_defined_cond
   apply urem_common_divisor_defined_cond_thm
   ---END urem_common_divisor_defined_cond
@@ -186,9 +198,11 @@ def sdiv_common_dividend_defined_cond_after := [llvm|
   "llvm.return"(%1) : (i5) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sdiv_common_dividend_defined_cond_proof : sdiv_common_dividend_defined_cond_before ⊑ sdiv_common_dividend_defined_cond_after := by
   unfold sdiv_common_dividend_defined_cond_before sdiv_common_dividend_defined_cond_after
   simp_alive_peephole
+  intros
   ---BEGIN sdiv_common_dividend_defined_cond
   apply sdiv_common_dividend_defined_cond_thm
   ---END sdiv_common_dividend_defined_cond
@@ -212,9 +226,11 @@ def srem_common_dividend_defined_cond_after := [llvm|
   "llvm.return"(%1) : (i5) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem srem_common_dividend_defined_cond_proof : srem_common_dividend_defined_cond_before ⊑ srem_common_dividend_defined_cond_after := by
   unfold srem_common_dividend_defined_cond_before srem_common_dividend_defined_cond_after
   simp_alive_peephole
+  intros
   ---BEGIN srem_common_dividend_defined_cond
   apply srem_common_dividend_defined_cond_thm
   ---END srem_common_dividend_defined_cond
@@ -238,9 +254,11 @@ def udiv_common_dividend_defined_cond_after := [llvm|
   "llvm.return"(%1) : (i5) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem udiv_common_dividend_defined_cond_proof : udiv_common_dividend_defined_cond_before ⊑ udiv_common_dividend_defined_cond_after := by
   unfold udiv_common_dividend_defined_cond_before udiv_common_dividend_defined_cond_after
   simp_alive_peephole
+  intros
   ---BEGIN udiv_common_dividend_defined_cond
   apply udiv_common_dividend_defined_cond_thm
   ---END udiv_common_dividend_defined_cond
@@ -264,11 +282,346 @@ def urem_common_dividend_defined_cond_after := [llvm|
   "llvm.return"(%1) : (i5) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem urem_common_dividend_defined_cond_proof : urem_common_dividend_defined_cond_before ⊑ urem_common_dividend_defined_cond_after := by
   unfold urem_common_dividend_defined_cond_before urem_common_dividend_defined_cond_after
   simp_alive_peephole
+  intros
   ---BEGIN urem_common_dividend_defined_cond
   apply urem_common_dividend_defined_cond_thm
   ---END urem_common_dividend_defined_cond
+
+
+
+def rem_euclid_1_before := [llvm|
+{
+^0(%arg12 : i32):
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.srem %arg12, %0 : i32
+  %3 = llvm.icmp "slt" %2, %1 : i32
+  %4 = llvm.add %2, %0 : i32
+  %5 = "llvm.select"(%3, %4, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+def rem_euclid_1_after := [llvm|
+{
+^0(%arg12 : i32):
+  %0 = llvm.mlir.constant(7 : i32) : i32
+  %1 = llvm.and %arg12, %0 : i32
+  "llvm.return"(%1) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem rem_euclid_1_proof : rem_euclid_1_before ⊑ rem_euclid_1_after := by
+  unfold rem_euclid_1_before rem_euclid_1_after
+  simp_alive_peephole
+  intros
+  ---BEGIN rem_euclid_1
+  apply rem_euclid_1_thm
+  ---END rem_euclid_1
+
+
+
+def rem_euclid_2_before := [llvm|
+{
+^0(%arg11 : i32):
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(-1 : i32) : i32
+  %2 = llvm.srem %arg11, %0 : i32
+  %3 = llvm.icmp "sgt" %2, %1 : i32
+  %4 = llvm.add %2, %0 : i32
+  %5 = "llvm.select"(%3, %2, %4) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+def rem_euclid_2_after := [llvm|
+{
+^0(%arg11 : i32):
+  %0 = llvm.mlir.constant(7 : i32) : i32
+  %1 = llvm.and %arg11, %0 : i32
+  "llvm.return"(%1) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem rem_euclid_2_proof : rem_euclid_2_before ⊑ rem_euclid_2_after := by
+  unfold rem_euclid_2_before rem_euclid_2_after
+  simp_alive_peephole
+  intros
+  ---BEGIN rem_euclid_2
+  apply rem_euclid_2_thm
+  ---END rem_euclid_2
+
+
+
+def rem_euclid_wrong_sign_test_before := [llvm|
+{
+^0(%arg10 : i32):
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.srem %arg10, %0 : i32
+  %3 = llvm.icmp "sgt" %2, %1 : i32
+  %4 = llvm.add %2, %0 : i32
+  %5 = "llvm.select"(%3, %4, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+def rem_euclid_wrong_sign_test_after := [llvm|
+{
+^0(%arg10 : i32):
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.srem %arg10, %0 : i32
+  %3 = llvm.icmp "sgt" %2, %1 : i32
+  %4 = llvm.add %2, %0 overflow<nsw> : i32
+  %5 = "llvm.select"(%3, %4, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem rem_euclid_wrong_sign_test_proof : rem_euclid_wrong_sign_test_before ⊑ rem_euclid_wrong_sign_test_after := by
+  unfold rem_euclid_wrong_sign_test_before rem_euclid_wrong_sign_test_after
+  simp_alive_peephole
+  intros
+  ---BEGIN rem_euclid_wrong_sign_test
+  apply rem_euclid_wrong_sign_test_thm
+  ---END rem_euclid_wrong_sign_test
+
+
+
+def rem_euclid_add_different_const_before := [llvm|
+{
+^0(%arg9 : i32):
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.mlir.constant(9 : i32) : i32
+  %3 = llvm.srem %arg9, %0 : i32
+  %4 = llvm.icmp "slt" %3, %1 : i32
+  %5 = llvm.add %3, %2 : i32
+  %6 = "llvm.select"(%4, %5, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  "llvm.return"(%6) : (i32) -> ()
+}
+]
+def rem_euclid_add_different_const_after := [llvm|
+{
+^0(%arg9 : i32):
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.mlir.constant(9 : i32) : i32
+  %3 = llvm.srem %arg9, %0 : i32
+  %4 = llvm.icmp "slt" %3, %1 : i32
+  %5 = llvm.add %3, %2 overflow<nsw> : i32
+  %6 = "llvm.select"(%4, %5, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  "llvm.return"(%6) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem rem_euclid_add_different_const_proof : rem_euclid_add_different_const_before ⊑ rem_euclid_add_different_const_after := by
+  unfold rem_euclid_add_different_const_before rem_euclid_add_different_const_after
+  simp_alive_peephole
+  intros
+  ---BEGIN rem_euclid_add_different_const
+  apply rem_euclid_add_different_const_thm
+  ---END rem_euclid_add_different_const
+
+
+
+def rem_euclid_wrong_operands_select_before := [llvm|
+{
+^0(%arg8 : i32):
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.srem %arg8, %0 : i32
+  %3 = llvm.icmp "slt" %2, %1 : i32
+  %4 = llvm.add %2, %0 : i32
+  %5 = "llvm.select"(%3, %2, %4) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+def rem_euclid_wrong_operands_select_after := [llvm|
+{
+^0(%arg8 : i32):
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.srem %arg8, %0 : i32
+  %3 = llvm.icmp "slt" %2, %1 : i32
+  %4 = llvm.add %2, %0 overflow<nsw> : i32
+  %5 = "llvm.select"(%3, %2, %4) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem rem_euclid_wrong_operands_select_proof : rem_euclid_wrong_operands_select_before ⊑ rem_euclid_wrong_operands_select_after := by
+  unfold rem_euclid_wrong_operands_select_before rem_euclid_wrong_operands_select_after
+  simp_alive_peephole
+  intros
+  ---BEGIN rem_euclid_wrong_operands_select
+  apply rem_euclid_wrong_operands_select_thm
+  ---END rem_euclid_wrong_operands_select
+
+
+
+def rem_euclid_i128_before := [llvm|
+{
+^0(%arg6 : i128):
+  %0 = llvm.mlir.constant(8 : i128) : i128
+  %1 = llvm.mlir.constant(0 : i128) : i128
+  %2 = llvm.srem %arg6, %0 : i128
+  %3 = llvm.icmp "slt" %2, %1 : i128
+  %4 = llvm.add %2, %0 : i128
+  %5 = "llvm.select"(%3, %4, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i128, i128) -> i128
+  "llvm.return"(%5) : (i128) -> ()
+}
+]
+def rem_euclid_i128_after := [llvm|
+{
+^0(%arg6 : i128):
+  %0 = llvm.mlir.constant(7 : i128) : i128
+  %1 = llvm.and %arg6, %0 : i128
+  "llvm.return"(%1) : (i128) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem rem_euclid_i128_proof : rem_euclid_i128_before ⊑ rem_euclid_i128_after := by
+  unfold rem_euclid_i128_before rem_euclid_i128_after
+  simp_alive_peephole
+  intros
+  ---BEGIN rem_euclid_i128
+  apply rem_euclid_i128_thm
+  ---END rem_euclid_i128
+
+
+
+def rem_euclid_non_const_pow2_before := [llvm|
+{
+^0(%arg4 : i8, %arg5 : i8):
+  %0 = llvm.mlir.constant(1 : i8) : i8
+  %1 = llvm.mlir.constant(0 : i8) : i8
+  %2 = llvm.shl %0, %arg4 : i8
+  %3 = llvm.srem %arg5, %2 : i8
+  %4 = llvm.icmp "slt" %3, %1 : i8
+  %5 = llvm.add %3, %2 : i8
+  %6 = "llvm.select"(%4, %5, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  "llvm.return"(%6) : (i8) -> ()
+}
+]
+def rem_euclid_non_const_pow2_after := [llvm|
+{
+^0(%arg4 : i8, %arg5 : i8):
+  %0 = llvm.mlir.constant(-1 : i8) : i8
+  %1 = llvm.shl %0, %arg4 overflow<nsw> : i8
+  %2 = llvm.xor %1, %0 : i8
+  %3 = llvm.and %arg5, %2 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem rem_euclid_non_const_pow2_proof : rem_euclid_non_const_pow2_before ⊑ rem_euclid_non_const_pow2_after := by
+  unfold rem_euclid_non_const_pow2_before rem_euclid_non_const_pow2_after
+  simp_alive_peephole
+  intros
+  ---BEGIN rem_euclid_non_const_pow2
+  apply rem_euclid_non_const_pow2_thm
+  ---END rem_euclid_non_const_pow2
+
+
+
+def rem_euclid_pow2_true_arm_folded_before := [llvm|
+{
+^0(%arg3 : i32):
+  %0 = llvm.mlir.constant(2 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.mlir.constant(1 : i32) : i32
+  %3 = llvm.srem %arg3, %0 : i32
+  %4 = llvm.icmp "slt" %3, %1 : i32
+  %5 = "llvm.select"(%4, %2, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+def rem_euclid_pow2_true_arm_folded_after := [llvm|
+{
+^0(%arg3 : i32):
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.and %arg3, %0 : i32
+  "llvm.return"(%1) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem rem_euclid_pow2_true_arm_folded_proof : rem_euclid_pow2_true_arm_folded_before ⊑ rem_euclid_pow2_true_arm_folded_after := by
+  unfold rem_euclid_pow2_true_arm_folded_before rem_euclid_pow2_true_arm_folded_after
+  simp_alive_peephole
+  intros
+  ---BEGIN rem_euclid_pow2_true_arm_folded
+  apply rem_euclid_pow2_true_arm_folded_thm
+  ---END rem_euclid_pow2_true_arm_folded
+
+
+
+def rem_euclid_pow2_false_arm_folded_before := [llvm|
+{
+^0(%arg2 : i32):
+  %0 = llvm.mlir.constant(2 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.mlir.constant(1 : i32) : i32
+  %3 = llvm.srem %arg2, %0 : i32
+  %4 = llvm.icmp "sge" %3, %1 : i32
+  %5 = "llvm.select"(%4, %3, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+def rem_euclid_pow2_false_arm_folded_after := [llvm|
+{
+^0(%arg2 : i32):
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.and %arg2, %0 : i32
+  "llvm.return"(%1) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem rem_euclid_pow2_false_arm_folded_proof : rem_euclid_pow2_false_arm_folded_before ⊑ rem_euclid_pow2_false_arm_folded_after := by
+  unfold rem_euclid_pow2_false_arm_folded_before rem_euclid_pow2_false_arm_folded_after
+  simp_alive_peephole
+  intros
+  ---BEGIN rem_euclid_pow2_false_arm_folded
+  apply rem_euclid_pow2_false_arm_folded_thm
+  ---END rem_euclid_pow2_false_arm_folded
+
+
+
+def pr89516_before := [llvm|
+{
+^0(%arg0 : i8, %arg1 : i8):
+  %0 = llvm.mlir.constant(0 : i8) : i8
+  %1 = llvm.mlir.constant(1 : i8) : i8
+  %2 = llvm.icmp "slt" %arg1, %0 : i8
+  %3 = llvm.shl %1, %arg0 overflow<nuw> : i8
+  %4 = llvm.srem %1, %3 : i8
+  %5 = llvm.add %4, %3 overflow<nuw> : i8
+  %6 = "llvm.select"(%2, %5, %4) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  "llvm.return"(%6) : (i8) -> ()
+}
+]
+def pr89516_after := [llvm|
+{
+^0(%arg0 : i8, %arg1 : i8):
+  %0 = llvm.mlir.constant(0 : i8) : i8
+  %1 = llvm.mlir.constant(1 : i8) : i8
+  %2 = llvm.icmp "slt" %arg1, %0 : i8
+  %3 = llvm.shl %1, %arg0 overflow<nuw> : i8
+  %4 = llvm.srem %1, %3 : i8
+  %5 = "llvm.select"(%2, %3, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
+  %6 = llvm.add %4, %5 overflow<nuw> : i8
+  "llvm.return"(%6) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem pr89516_proof : pr89516_before ⊑ pr89516_after := by
+  unfold pr89516_before pr89516_after
+  simp_alive_peephole
+  intros
+  ---BEGIN pr89516
+  apply pr89516_thm
+  ---END pr89516
 
 

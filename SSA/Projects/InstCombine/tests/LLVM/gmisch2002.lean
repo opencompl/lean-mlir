@@ -24,14 +24,16 @@ def cast_test_2002h08h02_before := [llvm|
 def cast_test_2002h08h02_after := [llvm|
 {
 ^0(%arg1 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 255 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(255) : i64
   %1 = llvm.and %arg1, %0 : i64
   "llvm.return"(%1) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem cast_test_2002h08h02_proof : cast_test_2002h08h02_before ⊑ cast_test_2002h08h02_after := by
   unfold cast_test_2002h08h02_before cast_test_2002h08h02_after
   simp_alive_peephole
+  intros
   ---BEGIN cast_test_2002h08h02
   all_goals (try extract_goal ; sorry)
   ---END cast_test_2002h08h02
@@ -41,8 +43,8 @@ theorem cast_test_2002h08h02_proof : cast_test_2002h08h02_before ⊑ cast_test_2
 def missed_const_prop_2002h12h05_before := [llvm|
 {
 ^0(%arg0 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(0 : i32) : i32
+  %1 = llvm.mlir.constant(1 : i32) : i32
   %2 = llvm.sub %0, %arg0 : i32
   %3 = llvm.sub %0, %1 : i32
   %4 = llvm.add %3, %1 : i32
@@ -54,13 +56,15 @@ def missed_const_prop_2002h12h05_before := [llvm|
 def missed_const_prop_2002h12h05_after := [llvm|
 {
 ^0(%arg0 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(0 : i32) : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem missed_const_prop_2002h12h05_proof : missed_const_prop_2002h12h05_before ⊑ missed_const_prop_2002h12h05_after := by
   unfold missed_const_prop_2002h12h05_before missed_const_prop_2002h12h05_after
   simp_alive_peephole
+  intros
   ---BEGIN missed_const_prop_2002h12h05
   all_goals (try extract_goal ; sorry)
   ---END missed_const_prop_2002h12h05

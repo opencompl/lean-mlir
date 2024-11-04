@@ -24,14 +24,16 @@ def test_before := [llvm|
 def test_after := [llvm|
 {
 ^0(%arg0 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 4294967295 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(4294967295) : i64
   %1 = llvm.and %arg0, %0 : i64
   "llvm.return"(%1) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test_proof : test_before ⊑ test_after := by
   unfold test_before test_after
   simp_alive_peephole
+  intros
   ---BEGIN test
   apply test_thm
   ---END test

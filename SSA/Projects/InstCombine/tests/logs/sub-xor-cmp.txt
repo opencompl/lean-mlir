@@ -65,11 +65,29 @@
 7: "xor_multi_uses" is unchanged by InstCombine
 
 1: "absdiff"
-4: "absdiff" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.icmp
+2: llvm.sext
+2: llvm.sub
+2: llvm.xor
+2: llvm.sub
+2: llvm.return
 
 1: "absdiff1"
-4: "absdiff1" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.icmp
+2: llvm.sext
+2: llvm.sub
+2: llvm.xor
+2: llvm.sub
+2: llvm.return
 
 1: "absdiff2"
-4: "absdiff2" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.icmp
+2: llvm.sext
+2: llvm.sub
+2: llvm.xor
+2: llvm.sub
+2: llvm.return
 

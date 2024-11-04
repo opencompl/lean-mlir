@@ -30,9 +30,11 @@ def narrow_sext_and_after := [llvm|
   "llvm.return"(%1) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem narrow_sext_and_proof : narrow_sext_and_before ⊑ narrow_sext_and_after := by
   unfold narrow_sext_and_before narrow_sext_and_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_sext_and
   apply narrow_sext_and_thm
   ---END narrow_sext_and
@@ -56,9 +58,11 @@ def narrow_zext_and_after := [llvm|
   "llvm.return"(%1) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem narrow_zext_and_proof : narrow_zext_and_before ⊑ narrow_zext_and_after := by
   unfold narrow_zext_and_before narrow_zext_and_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_zext_and
   apply narrow_zext_and_thm
   ---END narrow_zext_and
@@ -82,9 +86,11 @@ def narrow_sext_or_after := [llvm|
   "llvm.return"(%1) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem narrow_sext_or_proof : narrow_sext_or_before ⊑ narrow_sext_or_after := by
   unfold narrow_sext_or_before narrow_sext_or_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_sext_or
   apply narrow_sext_or_thm
   ---END narrow_sext_or
@@ -108,9 +114,11 @@ def narrow_zext_or_after := [llvm|
   "llvm.return"(%1) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem narrow_zext_or_proof : narrow_zext_or_before ⊑ narrow_zext_or_after := by
   unfold narrow_zext_or_before narrow_zext_or_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_zext_or
   apply narrow_zext_or_thm
   ---END narrow_zext_or
@@ -134,9 +142,11 @@ def narrow_sext_xor_after := [llvm|
   "llvm.return"(%1) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem narrow_sext_xor_proof : narrow_sext_xor_before ⊑ narrow_sext_xor_after := by
   unfold narrow_sext_xor_before narrow_sext_xor_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_sext_xor
   apply narrow_sext_xor_thm
   ---END narrow_sext_xor
@@ -160,9 +170,11 @@ def narrow_zext_xor_after := [llvm|
   "llvm.return"(%1) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem narrow_zext_xor_proof : narrow_zext_xor_before ⊑ narrow_zext_xor_after := by
   unfold narrow_zext_xor_before narrow_zext_xor_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_zext_xor
   apply narrow_zext_xor_thm
   ---END narrow_zext_xor
@@ -186,9 +198,11 @@ def narrow_sext_add_after := [llvm|
   "llvm.return"(%1) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem narrow_sext_add_proof : narrow_sext_add_before ⊑ narrow_sext_add_after := by
   unfold narrow_sext_add_before narrow_sext_add_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_sext_add
   apply narrow_sext_add_thm
   ---END narrow_sext_add
@@ -212,9 +226,11 @@ def narrow_zext_add_after := [llvm|
   "llvm.return"(%1) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem narrow_zext_add_proof : narrow_zext_add_before ⊑ narrow_zext_add_after := by
   unfold narrow_zext_add_before narrow_zext_add_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_zext_add
   apply narrow_zext_add_thm
   ---END narrow_zext_add
@@ -238,9 +254,11 @@ def narrow_sext_sub_after := [llvm|
   "llvm.return"(%1) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem narrow_sext_sub_proof : narrow_sext_sub_before ⊑ narrow_sext_sub_after := by
   unfold narrow_sext_sub_before narrow_sext_sub_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_sext_sub
   apply narrow_sext_sub_thm
   ---END narrow_sext_sub
@@ -264,9 +282,11 @@ def narrow_zext_sub_after := [llvm|
   "llvm.return"(%1) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem narrow_zext_sub_proof : narrow_zext_sub_before ⊑ narrow_zext_sub_after := by
   unfold narrow_zext_sub_before narrow_zext_sub_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_zext_sub
   apply narrow_zext_sub_thm
   ---END narrow_zext_sub
@@ -290,9 +310,11 @@ def narrow_sext_mul_after := [llvm|
   "llvm.return"(%1) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem narrow_sext_mul_proof : narrow_sext_mul_before ⊑ narrow_sext_mul_after := by
   unfold narrow_sext_mul_before narrow_sext_mul_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_sext_mul
   apply narrow_sext_mul_thm
   ---END narrow_sext_mul
@@ -316,9 +338,11 @@ def narrow_zext_mul_after := [llvm|
   "llvm.return"(%1) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem narrow_zext_mul_proof : narrow_zext_mul_before ⊑ narrow_zext_mul_after := by
   unfold narrow_zext_mul_before narrow_zext_mul_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_zext_mul
   apply narrow_zext_mul_thm
   ---END narrow_zext_mul
@@ -328,7 +352,7 @@ theorem narrow_zext_mul_proof : narrow_zext_mul_before ⊑ narrow_zext_mul_after
 def narrow_zext_ashr_keep_trunc_before := [llvm|
 {
 ^0(%arg8 : i8, %arg9 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
   %1 = llvm.sext %arg8 : i8 to i32
   %2 = llvm.sext %arg9 : i8 to i32
   %3 = llvm.add %1, %2 overflow<nsw> : i32
@@ -340,7 +364,7 @@ def narrow_zext_ashr_keep_trunc_before := [llvm|
 def narrow_zext_ashr_keep_trunc_after := [llvm|
 {
 ^0(%arg8 : i8, %arg9 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i16}> : () -> i16
+  %0 = llvm.mlir.constant(1 : i16) : i16
   %1 = llvm.sext %arg8 : i8 to i16
   %2 = llvm.sext %arg9 : i8 to i16
   %3 = llvm.add %1, %2 overflow<nsw> : i16
@@ -349,9 +373,11 @@ def narrow_zext_ashr_keep_trunc_after := [llvm|
   "llvm.return"(%5) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem narrow_zext_ashr_keep_trunc_proof : narrow_zext_ashr_keep_trunc_before ⊑ narrow_zext_ashr_keep_trunc_after := by
   unfold narrow_zext_ashr_keep_trunc_before narrow_zext_ashr_keep_trunc_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_zext_ashr_keep_trunc
   apply narrow_zext_ashr_keep_trunc_thm
   ---END narrow_zext_ashr_keep_trunc
@@ -361,7 +387,7 @@ theorem narrow_zext_ashr_keep_trunc_proof : narrow_zext_ashr_keep_trunc_before �
 def narrow_zext_ashr_keep_trunc2_before := [llvm|
 {
 ^0(%arg6 : i9, %arg7 : i9):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(1) : i64
   %1 = llvm.sext %arg6 : i9 to i64
   %2 = llvm.sext %arg7 : i9 to i64
   %3 = llvm.add %1, %2 overflow<nsw> : i64
@@ -373,7 +399,7 @@ def narrow_zext_ashr_keep_trunc2_before := [llvm|
 def narrow_zext_ashr_keep_trunc2_after := [llvm|
 {
 ^0(%arg6 : i9, %arg7 : i9):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i16}> : () -> i16
+  %0 = llvm.mlir.constant(1 : i16) : i16
   %1 = llvm.zext %arg6 : i9 to i16
   %2 = llvm.zext %arg7 : i9 to i16
   %3 = llvm.add %1, %2 overflow<nsw,nuw> : i16
@@ -382,9 +408,11 @@ def narrow_zext_ashr_keep_trunc2_after := [llvm|
   "llvm.return"(%5) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem narrow_zext_ashr_keep_trunc2_proof : narrow_zext_ashr_keep_trunc2_before ⊑ narrow_zext_ashr_keep_trunc2_after := by
   unfold narrow_zext_ashr_keep_trunc2_before narrow_zext_ashr_keep_trunc2_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_zext_ashr_keep_trunc2
   apply narrow_zext_ashr_keep_trunc2_thm
   ---END narrow_zext_ashr_keep_trunc2
@@ -394,7 +422,7 @@ theorem narrow_zext_ashr_keep_trunc2_proof : narrow_zext_ashr_keep_trunc2_before
 def narrow_zext_ashr_keep_trunc3_before := [llvm|
 {
 ^0(%arg4 : i8, %arg5 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(1) : i64
   %1 = llvm.sext %arg4 : i8 to i64
   %2 = llvm.sext %arg5 : i8 to i64
   %3 = llvm.add %1, %2 overflow<nsw> : i64
@@ -406,7 +434,7 @@ def narrow_zext_ashr_keep_trunc3_before := [llvm|
 def narrow_zext_ashr_keep_trunc3_after := [llvm|
 {
 ^0(%arg4 : i8, %arg5 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i14}> : () -> i14
+  %0 = llvm.mlir.constant(1 : i14) : i14
   %1 = llvm.zext %arg4 : i8 to i14
   %2 = llvm.zext %arg5 : i8 to i14
   %3 = llvm.add %1, %2 overflow<nsw,nuw> : i14
@@ -415,9 +443,11 @@ def narrow_zext_ashr_keep_trunc3_after := [llvm|
   "llvm.return"(%5) : (i7) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem narrow_zext_ashr_keep_trunc3_proof : narrow_zext_ashr_keep_trunc3_before ⊑ narrow_zext_ashr_keep_trunc3_after := by
   unfold narrow_zext_ashr_keep_trunc3_before narrow_zext_ashr_keep_trunc3_after
   simp_alive_peephole
+  intros
   ---BEGIN narrow_zext_ashr_keep_trunc3
   apply narrow_zext_ashr_keep_trunc3_thm
   ---END narrow_zext_ashr_keep_trunc3
@@ -427,7 +457,7 @@ theorem narrow_zext_ashr_keep_trunc3_proof : narrow_zext_ashr_keep_trunc3_before
 def dont_narrow_zext_ashr_keep_trunc_before := [llvm|
 {
 ^0(%arg0 : i8, %arg1 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i16}> : () -> i16
+  %0 = llvm.mlir.constant(1 : i16) : i16
   %1 = llvm.sext %arg0 : i8 to i16
   %2 = llvm.sext %arg1 : i8 to i16
   %3 = llvm.add %1, %2 overflow<nsw> : i16
@@ -439,7 +469,7 @@ def dont_narrow_zext_ashr_keep_trunc_before := [llvm|
 def dont_narrow_zext_ashr_keep_trunc_after := [llvm|
 {
 ^0(%arg0 : i8, %arg1 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i16}> : () -> i16
+  %0 = llvm.mlir.constant(1 : i16) : i16
   %1 = llvm.sext %arg0 : i8 to i16
   %2 = llvm.sext %arg1 : i8 to i16
   %3 = llvm.add %1, %2 overflow<nsw> : i16
@@ -448,9 +478,11 @@ def dont_narrow_zext_ashr_keep_trunc_after := [llvm|
   "llvm.return"(%5) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem dont_narrow_zext_ashr_keep_trunc_proof : dont_narrow_zext_ashr_keep_trunc_before ⊑ dont_narrow_zext_ashr_keep_trunc_after := by
   unfold dont_narrow_zext_ashr_keep_trunc_before dont_narrow_zext_ashr_keep_trunc_after
   simp_alive_peephole
+  intros
   ---BEGIN dont_narrow_zext_ashr_keep_trunc
   apply dont_narrow_zext_ashr_keep_trunc_thm
   ---END dont_narrow_zext_ashr_keep_trunc

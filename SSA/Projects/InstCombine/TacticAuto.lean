@@ -8,7 +8,10 @@ import SSA.Experimental.Bits.Fast.Tactic
 import SSA.Experimental.Bits.AutoStructs.Tactic
 import SSA.Experimental.Bits.AutoStructs.ForLean
 import Std.Tactic.BVDecide
--- import Leanwuzla
+import Leanwuzla
+
+open Lean
+open Lean.Elab.Tactic
 
 attribute [simp_llvm_case_bash]
   BitVec.Refinement.refl BitVec.Refinement.some_some BitVec.Refinement.none_left
@@ -38,9 +41,9 @@ into a goal about just `BitVec`s, by doing a case distinction on each `Option`.
 Then, we `simp`lify each goal, following the assumption that the `none` cases
 should generally be trivial, hopefully leaving us with just a single goal:
 the one where each option is `some`. -/
-syntax "simp_alive_case_bash" : tactic
+syntax "simp_alive_case_bash'" : tactic
 macro_rules
-  | `(tactic| simp_alive_case_bash) => `(tactic|
+  | `(tactic| simp_alive_case_bash') => `(tactic|
     first
     | fail_if_success (intro (v : Option (_)))
       -- If there is no variable to introduce, `intro` fails, so the first branch succeeds,
@@ -50,11 +53,38 @@ macro_rules
       rcases v with _|x         -- Do the case distinction
       <;> simp (config:={failIfUnchanged := false}) only [simp_llvm_case_bash]
       --  ^^^^^^^^^^^^^^^^^^^^^^^^ Simplify, in the hopes that the `none` case is trivially closed
-      <;> simp_alive_case_bash  -- Recurse, to case bash the next variable (if it exists)
+      <;> simp_alive_case_bash'  -- Recurse, to case bash the next variable (if it exists)
       <;> (try revert x)        -- Finally, revert the variable we got in the `some` case, so that
                                 --   we are left with a universally quantified goal of the form:
                                 --   `∀ (x₁ : BitVec _) ... (xₙ : BitVec _), ...`
     )
+
+def revertIntW (g : MVarId) : MetaM (Array FVarId × MVarId) := do
+  let type ← g.getType
+  let (_, fvars) ← type.forEachWhere Expr.isFVar collector |>.run {}
+  g.revert fvars.toArray
+where
+  collector (e : Expr) : StateT (Std.HashSet FVarId) MetaM Unit := do
+    let fvarId := e.fvarId!
+    let typ ← fvarId.getType
+    match_expr typ with
+    | LLVM.IntW _ =>
+      modify fun s => s.insert fvarId
+    | _ => return ()
+
+elab "revert_intw" : tactic => do
+  let g ← getMainGoal
+  let (_, g') ← revertIntW g
+  replaceMainGoal [g']
+
+syntax "simp_alive_case_bash" : tactic
+macro_rules
+  | `(tactic| simp_alive_case_bash) => `(tactic|
+    (
+      revert_intw
+      simp_alive_case_bash'
+    )
+  )
 
 
 /-- Unfold into the `undef' statements and eliminates as much as possible. -/
@@ -64,6 +94,9 @@ macro "simp_alive_undef" : tactic =>
         simp (config := {failIfUnchanged := false}) only [
             simp_llvm_option,
             BitVec.Refinement, bind_assoc,
+            Bool.false_eq_true, false_and, reduceIte,
+            (BitVec.ofInt_ofNat),
+            Option.some_bind''
           ]
       )
   )
@@ -76,7 +109,8 @@ macro "simp_alive_ops" : tactic =>
             simp_llvm,
             BitVec.ofInt_neg_one,
             (BitVec.ofInt_ofNat),
-            pure_bind
+            pure_bind,
+            bind_if_then_none_eq_if_bind, bind_if_else_none_eq_if_bind
           ]
       )
   )
@@ -151,16 +185,17 @@ macro "bv_auto": tactic =>
             simp only [← BitVec.negOne_eq_allOnes]
             ring_nf
           | of_bool_tactic
+          -- Disabled as `x &&& 4294967295#32 = x` leads to a stack overflow.
+          -- | (
+          --   simp (config := {failIfUnchanged := false}) only [(BitVec.two_mul), ←BitVec.negOne_eq_allOnes]
+          --    bv_automata
+          --  )
           | (
-              simp (config := {failIfUnchanged := false}) only [(BitVec.two_mul), ←BitVec.negOne_eq_allOnes]
-              bv_automata
-            )
-          | (
-              simp (config := {failIfUnchanged := false}) only [BitVec.two_mul, ←BitVec.negOne_eq_allOnes, ofBool_0_iff_false, ofBool_1_iff_true]
-              try rw [Bool.eq_iff_iff]
-              simp (config := {failIfUnchanged := false}) [Bool.or_eq_true_iff, Bool.and_eq_true_iff,  beq_iff_eq]
-              bv_automata'
-            )
+             simp (config := {failIfUnchanged := false}) only [BitVec.two_mul, ←BitVec.negOne_eq_allOnes, ofBool_0_iff_false, ofBool_1_iff_true]
+             try rw [Bool.eq_iff_iff]
+             simp (config := {failIfUnchanged := false}) [Bool.or_eq_true_iff, Bool.and_eq_true_iff,  beq_iff_eq]
+             bv_automata'
+           )
           |
             try split
             all_goals bv_decide
@@ -168,7 +203,7 @@ macro "bv_auto": tactic =>
       )
    )
 
-macro "alive_auto": tactic =>
+macro "alive_auto'": tactic =>
   `(tactic|
       (
         simp_alive_undef
@@ -181,10 +216,41 @@ macro "alive_auto": tactic =>
       )
    )
 
+macro "alive_auto": tactic =>
+  `(tactic|
+      (
+        all_goals alive_auto'
+      )
+   )
+
 macro "bv_compare'": tactic =>
   `(tactic|
       (
-        -- bv_compare "/usr/local/bin/bitwuzla"
-        bv_decide -- replace this with bv_compare to evaluate performance
+        bv_compare
+      )
+   )
+
+macro "simp_alive_split": tactic =>
+  `(tactic|
+      (
+        all_goals try intros
+        repeat(
+          all_goals try simp only [BitVec.Refinement.some_some, BitVec.Refinement.refl,
+            BitVec.Refinement.none_left, Option.some_bind, Option.bind_none, Option.none_bind, Option.some.injEq]
+          all_goals try simp only [BitVec.Refinement.some_some, BitVec.Refinement.refl,
+            BitVec.Refinement.none_left, Option, some_bind, Option.bind_none, Option.none_bind, Option.some.injEq] at *
+          any_goals split
+          all_goals try simp only [BitVec.Refinement.some_some, BitVec.Refinement.refl,
+            BitVec.Refinement.none_left, Option.some_bind, Option.bind_none, Option.none_bind, Option.some.injEq]
+          all_goals try simp only [BitVec.Refinement.some_some, BitVec.Refinement.refl,
+            BitVec.Refinement.none_left, Option.some_bind, Option.bind_none, Option.none_bind, Option.some.injEq] at *
+        )
+      )
+   )
+
+macro "simp_alive_benchmark": tactic =>
+  `(tactic|
+      (
+        all_goals bv_compare'
       )
    )

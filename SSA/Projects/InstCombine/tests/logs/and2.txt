@@ -18,19 +18,47 @@
 2: llvm.return
 
 1: "test7"
-4: "test7" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.and
+2: llvm.return
 
 1: "test7_logical"
-4: "test7_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "test8"
-4: "test8" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
 
 1: "test8_logical"
-4: "test8_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "test8vec"
-4: "test8vec" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "test8vec" contains vectors which are unsupported
 
 1: "test9"
 2: llvm.func
@@ -53,7 +81,11 @@
 2: llvm.return
 
 1: "and1_shl1_is_cmp_eq_0"
-4: "and1_shl1_is_cmp_eq_0" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.return
 
 1: "and1_shl1_is_cmp_eq_0_multiuse"
 2: llvm.func
@@ -64,10 +96,10 @@
 2: llvm.return
 
 1: "and1_shl1_is_cmp_eq_0_vec"
-4: "and1_shl1_is_cmp_eq_0_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "and1_shl1_is_cmp_eq_0_vec" contains vectors which are unsupported
 
 1: "and1_shl1_is_cmp_eq_0_vec_poison"
-4: "and1_shl1_is_cmp_eq_0_vec_poison" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "and1_shl1_is_cmp_eq_0_vec_poison" contains vectors which are unsupported
 
 1: "and1_lshr1_is_cmp_eq_0"
 2: llvm.func

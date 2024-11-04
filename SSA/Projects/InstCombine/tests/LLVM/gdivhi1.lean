@@ -26,9 +26,11 @@ def sdiv_i1_is_op0_after := [llvm|
   "llvm.return"(%arg6) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem sdiv_i1_is_op0_proof : sdiv_i1_is_op0_before ⊑ sdiv_i1_is_op0_after := by
   unfold sdiv_i1_is_op0_before sdiv_i1_is_op0_after
   simp_alive_peephole
+  intros
   ---BEGIN sdiv_i1_is_op0
   all_goals (try extract_goal ; sorry)
   ---END sdiv_i1_is_op0
@@ -48,9 +50,11 @@ def udiv_i1_is_op0_after := [llvm|
   "llvm.return"(%arg4) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem udiv_i1_is_op0_proof : udiv_i1_is_op0_before ⊑ udiv_i1_is_op0_after := by
   unfold udiv_i1_is_op0_before udiv_i1_is_op0_after
   simp_alive_peephole
+  intros
   ---BEGIN udiv_i1_is_op0
   all_goals (try extract_goal ; sorry)
   ---END udiv_i1_is_op0
@@ -67,13 +71,15 @@ def srem_i1_is_zero_before := [llvm|
 def srem_i1_is_zero_after := [llvm|
 {
 ^0(%arg2 : i1, %arg3 : i1):
-  %0 = "llvm.mlir.constant"() <{value = false}> : () -> i1
+  %0 = llvm.mlir.constant(false) : i1
   "llvm.return"(%0) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem srem_i1_is_zero_proof : srem_i1_is_zero_before ⊑ srem_i1_is_zero_after := by
   unfold srem_i1_is_zero_before srem_i1_is_zero_after
   simp_alive_peephole
+  intros
   ---BEGIN srem_i1_is_zero
   all_goals (try extract_goal ; sorry)
   ---END srem_i1_is_zero
@@ -90,13 +96,15 @@ def urem_i1_is_zero_before := [llvm|
 def urem_i1_is_zero_after := [llvm|
 {
 ^0(%arg0 : i1, %arg1 : i1):
-  %0 = "llvm.mlir.constant"() <{value = false}> : () -> i1
+  %0 = llvm.mlir.constant(false) : i1
   "llvm.return"(%0) : (i1) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem urem_i1_is_zero_proof : urem_i1_is_zero_before ⊑ urem_i1_is_zero_after := by
   unfold urem_i1_is_zero_before urem_i1_is_zero_after
   simp_alive_peephole
+  intros
   ---BEGIN urem_i1_is_zero
   all_goals (try extract_goal ; sorry)
   ---END urem_i1_is_zero

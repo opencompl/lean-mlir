@@ -1,9 +1,5 @@
 1: "sterix"
-4: "sterix" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "sterix" has unsupported operation: builtin.unregistered: llvm.cond_br
-
-4: "sterix" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "sterix" has unsupported operation: builtin.unregistered: llvm.br
 

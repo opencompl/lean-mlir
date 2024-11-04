@@ -6,70 +6,50 @@
 
 4: "fold_strnlen_ax_0_eqz" has unsupported operation after optimization: llvm.call
 
-4: "fold_strnlen_ax_0_eqz" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
 1: "fold_strnlen_ax_0_gtz"
 4: "fold_strnlen_ax_0_gtz" has unsupported operation after optimization: llvm.mlir.addressof
 
 4: "fold_strnlen_ax_0_gtz" has unsupported operation after optimization: llvm.call
-
-4: "fold_strnlen_ax_0_gtz" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
 
 1: "fold_strnlen_ax_1_eqz"
 4: "fold_strnlen_ax_1_eqz" has unsupported operation: llvm.mlir.addressof
 
 4: "fold_strnlen_ax_1_eqz" has unsupported operation: llvm.load
 
-4: "fold_strnlen_ax_1_eqz" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "fold_strnlen_ax_1_lt1"
 4: "fold_strnlen_ax_1_lt1" has unsupported operation: llvm.mlir.addressof
 
 4: "fold_strnlen_ax_1_lt1" has unsupported operation: llvm.load
-
-4: "fold_strnlen_ax_1_lt1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "fold_strnlen_ax_1_neqz"
 4: "fold_strnlen_ax_1_neqz" has unsupported operation: llvm.mlir.addressof
 
 4: "fold_strnlen_ax_1_neqz" has unsupported operation: llvm.load
 
-4: "fold_strnlen_ax_1_neqz" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "fold_strnlen_ax_1_gtz"
 4: "fold_strnlen_ax_1_gtz" has unsupported operation: llvm.mlir.addressof
 
 4: "fold_strnlen_ax_1_gtz" has unsupported operation: llvm.load
-
-4: "fold_strnlen_ax_1_gtz" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "fold_strnlen_ax_9_eqz"
 4: "fold_strnlen_ax_9_eqz" has unsupported operation: llvm.mlir.addressof
 
 4: "fold_strnlen_ax_9_eqz" has unsupported operation: llvm.load
 
-4: "fold_strnlen_ax_9_eqz" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "call_strnlen_ax_n_eqz"
 4: "call_strnlen_ax_n_eqz" has unsupported operation: llvm.mlir.addressof
 
 4: "call_strnlen_ax_n_eqz" has unsupported operation: llvm.call
-
-4: "call_strnlen_ax_n_eqz" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "fold_strnlen_ax_nz_eqz"
 4: "fold_strnlen_ax_nz_eqz" has unsupported operation: llvm.mlir.addressof
 
 4: "fold_strnlen_ax_nz_eqz" has unsupported operation: llvm.load
 
-4: "fold_strnlen_ax_nz_eqz" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "fold_strnlen_ax_nz_gtz"
 4: "fold_strnlen_ax_nz_gtz" has unsupported operation: llvm.mlir.addressof
 
 4: "fold_strnlen_ax_nz_gtz" has unsupported operation: llvm.load
-
-4: "fold_strnlen_ax_nz_gtz" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "fold_strnlen_a5_pi_nz_eqz"
 4: "fold_strnlen_a5_pi_nz_eqz" has unsupported operation: llvm.mlir.addressof
@@ -78,10 +58,12 @@
 
 4: "fold_strnlen_a5_pi_nz_eqz" has unsupported operation: llvm.load
 
-4: "fold_strnlen_a5_pi_nz_eqz" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "fold_strnlen_s5_pi_nz_eqz"
-4: "fold_strnlen_s5_pi_nz_eqz" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "fold_strnlen_s5_pi_nz_eqz" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_strnlen_s5_pi_nz_eqz" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_strnlen_s5_pi_nz_eqz" has unsupported operation after optimization: llvm.call
 
 1: "call_strnlen_s5_pi_n_eqz"
 4: "call_strnlen_s5_pi_n_eqz" has unsupported operation: llvm.mlir.addressof
@@ -89,6 +71,4 @@
 4: "call_strnlen_s5_pi_n_eqz" has unsupported operation: llvm.getelementptr
 
 4: "call_strnlen_s5_pi_n_eqz" has unsupported operation: llvm.call
-
-4: "call_strnlen_s5_pi_n_eqz" has unsupported operation: builtin.unregistered: llvm.icmp
 

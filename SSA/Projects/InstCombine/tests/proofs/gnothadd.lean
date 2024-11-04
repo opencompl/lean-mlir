@@ -16,7 +16,7 @@ section gnothadd_statements
 def basic_before := [llvm|
 {
 ^0(%arg25 : i8, %arg26 : i8):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(-1 : i8) : i8
   %1 = llvm.xor %arg25, %0 : i8
   %2 = llvm.add %1, %arg26 : i8
   %3 = llvm.xor %2, %0 : i8
@@ -30,9 +30,11 @@ def basic_after := [llvm|
   "llvm.return"(%0) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem basic_proof : basic_before ⊑ basic_after := by
   unfold basic_before basic_after
   simp_alive_peephole
+  intros
   ---BEGIN basic
   apply basic_thm
   ---END basic
@@ -42,7 +44,7 @@ theorem basic_proof : basic_before ⊑ basic_after := by
 def basic_com_add_before := [llvm|
 {
 ^0(%arg23 : i8, %arg24 : i8):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(-1 : i8) : i8
   %1 = llvm.xor %arg24, %0 : i8
   %2 = llvm.add %arg23, %1 : i8
   %3 = llvm.xor %2, %0 : i8
@@ -56,9 +58,11 @@ def basic_com_add_after := [llvm|
   "llvm.return"(%0) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem basic_com_add_proof : basic_com_add_before ⊑ basic_com_add_after := by
   unfold basic_com_add_before basic_com_add_after
   simp_alive_peephole
+  intros
   ---BEGIN basic_com_add
   apply basic_com_add_thm
   ---END basic_com_add
@@ -68,7 +72,7 @@ theorem basic_com_add_proof : basic_com_add_before ⊑ basic_com_add_after := by
 def basic_preserve_nsw_before := [llvm|
 {
 ^0(%arg15 : i8, %arg16 : i8):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(-1 : i8) : i8
   %1 = llvm.xor %arg15, %0 : i8
   %2 = llvm.add %1, %arg16 overflow<nsw> : i8
   %3 = llvm.xor %2, %0 : i8
@@ -82,9 +86,11 @@ def basic_preserve_nsw_after := [llvm|
   "llvm.return"(%0) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem basic_preserve_nsw_proof : basic_preserve_nsw_before ⊑ basic_preserve_nsw_after := by
   unfold basic_preserve_nsw_before basic_preserve_nsw_after
   simp_alive_peephole
+  intros
   ---BEGIN basic_preserve_nsw
   apply basic_preserve_nsw_thm
   ---END basic_preserve_nsw
@@ -94,7 +100,7 @@ theorem basic_preserve_nsw_proof : basic_preserve_nsw_before ⊑ basic_preserve_
 def basic_preserve_nuw_before := [llvm|
 {
 ^0(%arg13 : i8, %arg14 : i8):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(-1 : i8) : i8
   %1 = llvm.xor %arg13, %0 : i8
   %2 = llvm.add %1, %arg14 overflow<nuw> : i8
   %3 = llvm.xor %2, %0 : i8
@@ -108,9 +114,11 @@ def basic_preserve_nuw_after := [llvm|
   "llvm.return"(%0) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem basic_preserve_nuw_proof : basic_preserve_nuw_before ⊑ basic_preserve_nuw_after := by
   unfold basic_preserve_nuw_before basic_preserve_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN basic_preserve_nuw
   apply basic_preserve_nuw_thm
   ---END basic_preserve_nuw
@@ -120,7 +128,7 @@ theorem basic_preserve_nuw_proof : basic_preserve_nuw_before ⊑ basic_preserve_
 def basic_preserve_nuw_nsw_before := [llvm|
 {
 ^0(%arg11 : i8, %arg12 : i8):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(-1 : i8) : i8
   %1 = llvm.xor %arg11, %0 : i8
   %2 = llvm.add %1, %arg12 overflow<nsw,nuw> : i8
   %3 = llvm.xor %2, %0 : i8
@@ -134,9 +142,11 @@ def basic_preserve_nuw_nsw_after := [llvm|
   "llvm.return"(%0) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem basic_preserve_nuw_nsw_proof : basic_preserve_nuw_nsw_before ⊑ basic_preserve_nuw_nsw_after := by
   unfold basic_preserve_nuw_nsw_before basic_preserve_nuw_nsw_after
   simp_alive_peephole
+  intros
   ---BEGIN basic_preserve_nuw_nsw
   apply basic_preserve_nuw_nsw_thm
   ---END basic_preserve_nuw_nsw

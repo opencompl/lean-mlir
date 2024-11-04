@@ -16,7 +16,7 @@ section gtrunchshifthtrunc_statements
 def trunc_lshr_trunc_before := [llvm|
 {
 ^0(%arg14 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(8 : i32) : i32
   %1 = llvm.trunc %arg14 : i64 to i32
   %2 = llvm.lshr %1, %0 : i32
   %3 = llvm.trunc %2 : i32 to i8
@@ -26,15 +26,17 @@ def trunc_lshr_trunc_before := [llvm|
 def trunc_lshr_trunc_after := [llvm|
 {
 ^0(%arg14 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(8) : i64
   %1 = llvm.lshr %arg14, %0 : i64
   %2 = llvm.trunc %1 : i64 to i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem trunc_lshr_trunc_proof : trunc_lshr_trunc_before ⊑ trunc_lshr_trunc_after := by
   unfold trunc_lshr_trunc_before trunc_lshr_trunc_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_lshr_trunc
   apply trunc_lshr_trunc_thm
   ---END trunc_lshr_trunc
@@ -44,7 +46,7 @@ theorem trunc_lshr_trunc_proof : trunc_lshr_trunc_before ⊑ trunc_lshr_trunc_af
 def trunc_ashr_trunc_before := [llvm|
 {
 ^0(%arg7 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(8 : i32) : i32
   %1 = llvm.trunc %arg7 : i64 to i32
   %2 = llvm.ashr %1, %0 : i32
   %3 = llvm.trunc %2 : i32 to i8
@@ -54,15 +56,17 @@ def trunc_ashr_trunc_before := [llvm|
 def trunc_ashr_trunc_after := [llvm|
 {
 ^0(%arg7 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(8) : i64
   %1 = llvm.lshr %arg7, %0 : i64
   %2 = llvm.trunc %1 : i64 to i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem trunc_ashr_trunc_proof : trunc_ashr_trunc_before ⊑ trunc_ashr_trunc_after := by
   unfold trunc_ashr_trunc_before trunc_ashr_trunc_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_ashr_trunc
   apply trunc_ashr_trunc_thm
   ---END trunc_ashr_trunc
@@ -72,7 +76,7 @@ theorem trunc_ashr_trunc_proof : trunc_ashr_trunc_before ⊑ trunc_ashr_trunc_af
 def trunc_ashr_trunc_exact_before := [llvm|
 {
 ^0(%arg6 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(8 : i32) : i32
   %1 = llvm.trunc %arg6 : i64 to i32
   %2 = llvm.ashr %1, %0 : i32
   %3 = llvm.trunc %2 : i32 to i8
@@ -82,15 +86,17 @@ def trunc_ashr_trunc_exact_before := [llvm|
 def trunc_ashr_trunc_exact_after := [llvm|
 {
 ^0(%arg6 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(8) : i64
   %1 = llvm.lshr %arg6, %0 : i64
   %2 = llvm.trunc %1 : i64 to i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem trunc_ashr_trunc_exact_proof : trunc_ashr_trunc_exact_before ⊑ trunc_ashr_trunc_exact_after := by
   unfold trunc_ashr_trunc_exact_before trunc_ashr_trunc_exact_after
   simp_alive_peephole
+  intros
   ---BEGIN trunc_ashr_trunc_exact
   apply trunc_ashr_trunc_exact_thm
   ---END trunc_ashr_trunc_exact

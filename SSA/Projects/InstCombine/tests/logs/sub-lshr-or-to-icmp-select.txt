@@ -1,18 +1,30 @@
 1: "neg_or_lshr_i32"
-4: "neg_or_lshr_i32" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.or
+2: llvm.lshr
+2: llvm.return
 
 1: "neg_or_lshr_i32_commute"
-4: "neg_or_lshr_i32_commute" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.sub
+2: llvm.or
+2: llvm.lshr
+2: llvm.return
 
 1: "neg_or_lshr_i32_vec"
-4: "neg_or_lshr_i32_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "neg_or_lshr_i32_vec" contains vectors which are unsupported
 
 1: "neg_or_lshr_i32_vec_commute"
-4: "neg_or_lshr_i32_vec_commute" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "neg_or_lshr_i32_vec_commute" contains vectors which are unsupported
 
 1: "neg_extra_use_or_lshr_i32"
-4: "neg_extra_use_or_lshr_i32" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "neg_extra_use_or_lshr_i32" has unsupported operation: llvm.store
 
 1: "neg_or_extra_use_lshr_i32"

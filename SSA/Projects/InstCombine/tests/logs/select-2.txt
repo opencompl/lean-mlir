@@ -1,8 +1,8 @@
 1: "t1"
-4: "t1" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "t1" is unchanged by InstCombine
 
 1: "t2"
-4: "t2" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "t2" is unchanged by InstCombine
 
 1: "t3"
 4: "t3" has unsupported operation: builtin.unregistered: llvm.fcmp

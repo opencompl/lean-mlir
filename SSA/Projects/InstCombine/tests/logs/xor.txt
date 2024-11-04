@@ -57,10 +57,15 @@
 4: "test8" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "test9"
-4: "test9" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
 
 1: "test9vec"
-4: "test9vec" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "test9vec" contains vectors which are unsupported
 
 1: "test10"
 2: llvm.func
@@ -79,10 +84,15 @@
 2: llvm.return
 
 1: "test12"
-4: "test12" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
 
 1: "test12vec"
-4: "test12vec" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "test12vec" contains vectors which are unsupported
 
 1: "test18"
 2: llvm.func
@@ -131,10 +141,16 @@
 8: "fold_zext_xor_sandwich_vec" contains vectors which are unsupported
 
 1: "test23"
-4: "test23" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
 
 1: "test24"
-4: "test24" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
 
 1: "test25"
 2: llvm.func
@@ -145,7 +161,12 @@
 2: llvm.return
 
 1: "test27"
-4: "test27" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.xor
+2: llvm.xor
+2: llvm.icmp
+2: llvm.zext
+2: llvm.return
 
 1: "test28"
 2: llvm.func
@@ -405,7 +426,7 @@
 2: llvm.return
 
 1: "not_lshr_vec"
-4: "not_lshr_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "not_lshr_vec" contains vectors which are unsupported
 
 1: "not_lshr_extra_use"
 4: "not_lshr_extra_use" has unsupported operation: llvm.call
@@ -425,7 +446,7 @@
 7: "not_ashr" is unchanged by InstCombine
 
 1: "not_ashr_vec"
-4: "not_ashr_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "not_ashr_vec" contains vectors which are unsupported
 
 1: "not_ashr_extra_use"
 4: "not_ashr_extra_use" has unsupported operation: llvm.call

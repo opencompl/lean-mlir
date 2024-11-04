@@ -1,6 +1,4 @@
 1: "icmp"
-4: "icmp" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "icmp" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "fcmp"

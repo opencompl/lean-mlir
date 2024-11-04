@@ -1,24 +1,68 @@
 1: "foo"
-4: "foo" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sext
+2: llvm.and
+2: llvm.xor
+2: llvm.and
+2: llvm.or
+2: llvm.return
 
 1: "bar"
-4: "bar" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sext
+2: llvm.and
+2: llvm.xor
+2: llvm.and
+2: llvm.or
+2: llvm.return
 
 1: "goo"
-4: "goo" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.xor
+2: llvm.and
+2: llvm.or
+2: llvm.return
 
 1: "poo"
-4: "poo" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.or
+2: llvm.return
 
 1: "fold_inverted_icmp_preds"
-4: "fold_inverted_icmp_preds" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "fold_inverted_icmp_preds" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.or
+2: llvm.return
 
 1: "fold_inverted_icmp_preds_reverse"
-4: "fold_inverted_icmp_preds_reverse" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "fold_inverted_icmp_preds_reverse" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.or
+2: llvm.return
 
 1: "fold_inverted_fcmp_preds"
 4: "fold_inverted_fcmp_preds" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -26,12 +70,19 @@
 4: "fold_inverted_fcmp_preds" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "fold_inverted_icmp_vector_preds"
-4: "fold_inverted_icmp_vector_preds" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "fold_inverted_icmp_vector_preds" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "fold_inverted_icmp_vector_preds" contains vectors which are unsupported
 
 1: "par"
-4: "par" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.xor
+2: llvm.and
+2: llvm.or
+2: llvm.return
 
 1: "bitcast_select_swap0"
 4: "bitcast_select_swap0" has unsupported operation: builtin.unregistered: llvm.fptosi
@@ -238,14 +289,18 @@
 8: "vec_sel_xor_multi_use" contains vectors which are unsupported
 
 1: "allSignBits"
-4: "allSignBits" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "allSignBits" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.xor
+2: llvm.and
+2: llvm.and
+2: llvm.or
+2: llvm.return
 
 1: "allSignBits_vec"
-4: "allSignBits_vec" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "allSignBits_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "allSignBits_vec" contains vectors which are unsupported
 
 1: "fp_bitcast"
 4: "fp_bitcast" has unsupported operation: builtin.unregistered: llvm.fptosi

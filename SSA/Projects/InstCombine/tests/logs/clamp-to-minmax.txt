@@ -144,15 +144,11 @@
 4: "clamp_float_unordered_nonstrict_minmax2" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "ui32_clamp_and_cast_to_float"
-4: "ui32_clamp_and_cast_to_float" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "ui32_clamp_and_cast_to_float" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
 4: "ui32_clamp_and_cast_to_float" has unsupported operation: builtin.unregistered: llvm.uitofp
 
 1: "ui64_clamp_and_cast_to_float"
-4: "ui64_clamp_and_cast_to_float" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "ui64_clamp_and_cast_to_float" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
 4: "ui64_clamp_and_cast_to_float" has unsupported operation: builtin.unregistered: llvm.uitofp
@@ -170,8 +166,6 @@
 4: "mixed_clamp_to_i32_1" has unsupported operation: builtin.unregistered: llvm.fptosi
 
 4: "mixed_clamp_to_i32_1" has unsupported operation: builtin.unregistered: llvm.fptosi
-
-4: "mixed_clamp_to_i32_1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "mixed_clamp_to_float_2"
 4: "mixed_clamp_to_float_2" has unsupported operation: builtin.unregistered: llvm.intr.smin

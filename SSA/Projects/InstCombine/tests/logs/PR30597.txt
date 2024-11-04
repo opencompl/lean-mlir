@@ -7,8 +7,6 @@
 
 4: "dot_ref_s" has unsupported operation after optimization: llvm.inttoptr
 
-4: "dot_ref_s" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
-
 1: "function"
 4: "function" has unsupported operation: llvm.load
 

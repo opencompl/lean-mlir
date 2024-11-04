@@ -1,17 +1,22 @@
 1: "p0"
-4: "p0" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
 
 1: "p1_vec"
-4: "p1_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "p1_vec" contains vectors which are unsupported
 
 1: "p2_vec_poison0"
-4: "p2_vec_poison0" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "p2_vec_poison0" contains vectors which are unsupported
 
 1: "p2_vec_poison1"
-4: "p2_vec_poison1" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "p2_vec_poison1" contains vectors which are unsupported
 
 1: "p2_vec_poison2"
-4: "p2_vec_poison2" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "p2_vec_poison2" contains vectors which are unsupported
 
 1: "gen8"
 5: "gen8" is empty
@@ -19,10 +24,15 @@
 1: "c0"
 4: "c0" has unsupported operation: llvm.call
 
-4: "c0" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "both"
-4: "both" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.xor
+2: llvm.shl
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
 
 1: "use8"
 5: "use8" is empty
@@ -30,37 +40,46 @@
 1: "oneuse0"
 4: "oneuse0" has unsupported operation: llvm.call
 
-4: "oneuse0" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "oneuse1"
 4: "oneuse1" has unsupported operation: llvm.call
-
-4: "oneuse1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "oneuse2"
 4: "oneuse2" has unsupported operation: llvm.call
 
 4: "oneuse2" has unsupported operation: llvm.call
 
-4: "oneuse2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "n0"
-4: "n0" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
 
 1: "n1"
-4: "n1" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
 
 1: "n2_vec_nonsplat"
-4: "n2_vec_nonsplat" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "n2_vec_nonsplat" contains vectors which are unsupported
 
 1: "n3_vec_nonsplat"
-4: "n3_vec_nonsplat" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "n3_vec_nonsplat" contains vectors which are unsupported
 
 1: "n3"
-4: "n3" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
 
 1: "n4"
 4: "n4" has unsupported operation: llvm.call
-
-4: "n4" has unsupported operation: builtin.unregistered: llvm.icmp
 

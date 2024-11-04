@@ -16,8 +16,8 @@ section gmul_fold_statements
 def mul8_low_A0_B0_before := [llvm|
 {
 ^0(%arg60 : i8, %arg61 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 15 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 4 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(15 : i8) : i8
+  %1 = llvm.mlir.constant(4 : i8) : i8
   %2 = llvm.and %arg60, %0 : i8
   %3 = llvm.lshr %arg60, %1 : i8
   %4 = llvm.and %arg61, %0 : i8
@@ -38,9 +38,11 @@ def mul8_low_A0_B0_after := [llvm|
   "llvm.return"(%0) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem mul8_low_A0_B0_proof : mul8_low_A0_B0_before ⊑ mul8_low_A0_B0_after := by
   unfold mul8_low_A0_B0_before mul8_low_A0_B0_after
   simp_alive_peephole
+  intros
   ---BEGIN mul8_low_A0_B0
   all_goals (try extract_goal ; sorry)
   ---END mul8_low_A0_B0
@@ -50,8 +52,8 @@ theorem mul8_low_A0_B0_proof : mul8_low_A0_B0_before ⊑ mul8_low_A0_B0_after :=
 def mul8_low_before := [llvm|
 {
 ^0(%arg26 : i8, %arg27 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 15 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 4 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(15 : i8) : i8
+  %1 = llvm.mlir.constant(4 : i8) : i8
   %2 = llvm.and %arg26, %0 : i8
   %3 = llvm.lshr %arg26, %1 : i8
   %4 = llvm.and %arg27, %0 : i8
@@ -72,9 +74,11 @@ def mul8_low_after := [llvm|
   "llvm.return"(%0) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem mul8_low_proof : mul8_low_before ⊑ mul8_low_after := by
   unfold mul8_low_before mul8_low_after
   simp_alive_peephole
+  intros
   ---BEGIN mul8_low
   all_goals (try extract_goal ; sorry)
   ---END mul8_low
@@ -84,8 +88,8 @@ theorem mul8_low_proof : mul8_low_before ⊑ mul8_low_after := by
 def mul16_low_before := [llvm|
 {
 ^0(%arg24 : i16, %arg25 : i16):
-  %0 = "llvm.mlir.constant"() <{value = 255 : i16}> : () -> i16
-  %1 = "llvm.mlir.constant"() <{value = 8 : i16}> : () -> i16
+  %0 = llvm.mlir.constant(255 : i16) : i16
+  %1 = llvm.mlir.constant(8 : i16) : i16
   %2 = llvm.and %arg24, %0 : i16
   %3 = llvm.lshr %arg24, %1 : i16
   %4 = llvm.and %arg25, %0 : i16
@@ -106,9 +110,11 @@ def mul16_low_after := [llvm|
   "llvm.return"(%0) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem mul16_low_proof : mul16_low_before ⊑ mul16_low_after := by
   unfold mul16_low_before mul16_low_after
   simp_alive_peephole
+  intros
   ---BEGIN mul16_low
   all_goals (try extract_goal ; sorry)
   ---END mul16_low
@@ -118,8 +124,8 @@ theorem mul16_low_proof : mul16_low_before ⊑ mul16_low_after := by
 def mul32_low_before := [llvm|
 {
 ^0(%arg22 : i32, %arg23 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 65535 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 16 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(65535 : i32) : i32
+  %1 = llvm.mlir.constant(16 : i32) : i32
   %2 = llvm.and %arg22, %0 : i32
   %3 = llvm.lshr %arg22, %1 : i32
   %4 = llvm.and %arg23, %0 : i32
@@ -140,9 +146,11 @@ def mul32_low_after := [llvm|
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem mul32_low_proof : mul32_low_before ⊑ mul32_low_after := by
   unfold mul32_low_before mul32_low_after
   simp_alive_peephole
+  intros
   ---BEGIN mul32_low
   all_goals (try extract_goal ; sorry)
   ---END mul32_low
@@ -152,8 +160,8 @@ theorem mul32_low_proof : mul32_low_before ⊑ mul32_low_after := by
 def mul64_low_before := [llvm|
 {
 ^0(%arg20 : i64, %arg21 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 4294967295 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = 32 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(4294967295) : i64
+  %1 = llvm.mlir.constant(32) : i64
   %2 = llvm.and %arg20, %0 : i64
   %3 = llvm.lshr %arg20, %1 : i64
   %4 = llvm.and %arg21, %0 : i64
@@ -174,9 +182,11 @@ def mul64_low_after := [llvm|
   "llvm.return"(%0) : (i64) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem mul64_low_proof : mul64_low_before ⊑ mul64_low_after := by
   unfold mul64_low_before mul64_low_after
   simp_alive_peephole
+  intros
   ---BEGIN mul64_low
   all_goals (try extract_goal ; sorry)
   ---END mul64_low
@@ -186,8 +196,8 @@ theorem mul64_low_proof : mul64_low_before ⊑ mul64_low_after := by
 def mul128_low_before := [llvm|
 {
 ^0(%arg18 : i128, %arg19 : i128):
-  %0 = "llvm.mlir.constant"() <{value = 18446744073709551615 : i128}> : () -> i128
-  %1 = "llvm.mlir.constant"() <{value = 64 : i128}> : () -> i128
+  %0 = llvm.mlir.constant(18446744073709551615 : i128) : i128
+  %1 = llvm.mlir.constant(64 : i128) : i128
   %2 = llvm.and %arg18, %0 : i128
   %3 = llvm.lshr %arg18, %1 : i128
   %4 = llvm.and %arg19, %0 : i128
@@ -208,9 +218,11 @@ def mul128_low_after := [llvm|
   "llvm.return"(%0) : (i128) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem mul128_low_proof : mul128_low_before ⊑ mul128_low_after := by
   unfold mul128_low_before mul128_low_after
   simp_alive_peephole
+  intros
   ---BEGIN mul128_low
   all_goals (try extract_goal ; sorry)
   ---END mul128_low
@@ -220,8 +232,8 @@ theorem mul128_low_proof : mul128_low_before ⊑ mul128_low_after := by
 def mul130_low_before := [llvm|
 {
 ^0(%arg12 : i130, %arg13 : i130):
-  %0 = "llvm.mlir.constant"() <{value = 36893488147419103231 : i130}> : () -> i130
-  %1 = "llvm.mlir.constant"() <{value = 65 : i130}> : () -> i130
+  %0 = llvm.mlir.constant(36893488147419103231 : i130) : i130
+  %1 = llvm.mlir.constant(65 : i130) : i130
   %2 = llvm.and %arg12, %0 : i130
   %3 = llvm.lshr %arg12, %1 : i130
   %4 = llvm.and %arg13, %0 : i130
@@ -242,9 +254,11 @@ def mul130_low_after := [llvm|
   "llvm.return"(%0) : (i130) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem mul130_low_proof : mul130_low_before ⊑ mul130_low_after := by
   unfold mul130_low_before mul130_low_after
   simp_alive_peephole
+  intros
   ---BEGIN mul130_low
   all_goals (try extract_goal ; sorry)
   ---END mul130_low
@@ -254,8 +268,8 @@ theorem mul130_low_proof : mul130_low_before ⊑ mul130_low_after := by
 def mul9_low_before := [llvm|
 {
 ^0(%arg8 : i9, %arg9 : i9):
-  %0 = "llvm.mlir.constant"() <{value = 15 : i9}> : () -> i9
-  %1 = "llvm.mlir.constant"() <{value = 4 : i9}> : () -> i9
+  %0 = llvm.mlir.constant(15 : i9) : i9
+  %1 = llvm.mlir.constant(4 : i9) : i9
   %2 = llvm.and %arg8, %0 : i9
   %3 = llvm.lshr %arg8, %1 : i9
   %4 = llvm.and %arg9, %0 : i9
@@ -272,8 +286,8 @@ def mul9_low_before := [llvm|
 def mul9_low_after := [llvm|
 {
 ^0(%arg8 : i9, %arg9 : i9):
-  %0 = "llvm.mlir.constant"() <{value = 15 : i9}> : () -> i9
-  %1 = "llvm.mlir.constant"() <{value = 4 : i9}> : () -> i9
+  %0 = llvm.mlir.constant(15 : i9) : i9
+  %1 = llvm.mlir.constant(4 : i9) : i9
   %2 = llvm.and %arg8, %0 : i9
   %3 = llvm.lshr %arg8, %1 : i9
   %4 = llvm.and %arg9, %0 : i9
@@ -287,9 +301,11 @@ def mul9_low_after := [llvm|
   "llvm.return"(%11) : (i9) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem mul9_low_proof : mul9_low_before ⊑ mul9_low_after := by
   unfold mul9_low_before mul9_low_after
   simp_alive_peephole
+  intros
   ---BEGIN mul9_low
   all_goals (try extract_goal ; sorry)
   ---END mul9_low
@@ -299,8 +315,8 @@ theorem mul9_low_proof : mul9_low_before ⊑ mul9_low_after := by
 def mul16_low_miss_shift_amount_before := [llvm|
 {
 ^0(%arg4 : i16, %arg5 : i16):
-  %0 = "llvm.mlir.constant"() <{value = 127 : i16}> : () -> i16
-  %1 = "llvm.mlir.constant"() <{value = 8 : i16}> : () -> i16
+  %0 = llvm.mlir.constant(127 : i16) : i16
+  %1 = llvm.mlir.constant(8 : i16) : i16
   %2 = llvm.and %arg4, %0 : i16
   %3 = llvm.lshr %arg4, %1 : i16
   %4 = llvm.and %arg5, %0 : i16
@@ -317,8 +333,8 @@ def mul16_low_miss_shift_amount_before := [llvm|
 def mul16_low_miss_shift_amount_after := [llvm|
 {
 ^0(%arg4 : i16, %arg5 : i16):
-  %0 = "llvm.mlir.constant"() <{value = 127 : i16}> : () -> i16
-  %1 = "llvm.mlir.constant"() <{value = 8 : i16}> : () -> i16
+  %0 = llvm.mlir.constant(127 : i16) : i16
+  %1 = llvm.mlir.constant(8 : i16) : i16
   %2 = llvm.and %arg4, %0 : i16
   %3 = llvm.lshr %arg4, %1 : i16
   %4 = llvm.and %arg5, %0 : i16
@@ -332,9 +348,11 @@ def mul16_low_miss_shift_amount_after := [llvm|
   "llvm.return"(%11) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem mul16_low_miss_shift_amount_proof : mul16_low_miss_shift_amount_before ⊑ mul16_low_miss_shift_amount_after := by
   unfold mul16_low_miss_shift_amount_before mul16_low_miss_shift_amount_after
   simp_alive_peephole
+  intros
   ---BEGIN mul16_low_miss_shift_amount
   all_goals (try extract_goal ; sorry)
   ---END mul16_low_miss_shift_amount
@@ -344,8 +362,8 @@ theorem mul16_low_miss_shift_amount_proof : mul16_low_miss_shift_amount_before �
 def mul8_low_miss_half_width_before := [llvm|
 {
 ^0(%arg2 : i8, %arg3 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 15 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(15 : i8) : i8
+  %1 = llvm.mlir.constant(3 : i8) : i8
   %2 = llvm.and %arg2, %0 : i8
   %3 = llvm.lshr %arg2, %1 : i8
   %4 = llvm.and %arg3, %0 : i8
@@ -362,8 +380,8 @@ def mul8_low_miss_half_width_before := [llvm|
 def mul8_low_miss_half_width_after := [llvm|
 {
 ^0(%arg2 : i8, %arg3 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 15 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(15 : i8) : i8
+  %1 = llvm.mlir.constant(3 : i8) : i8
   %2 = llvm.and %arg2, %0 : i8
   %3 = llvm.lshr %arg2, %1 : i8
   %4 = llvm.and %arg3, %0 : i8
@@ -377,9 +395,11 @@ def mul8_low_miss_half_width_after := [llvm|
   "llvm.return"(%11) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem mul8_low_miss_half_width_proof : mul8_low_miss_half_width_before ⊑ mul8_low_miss_half_width_after := by
   unfold mul8_low_miss_half_width_before mul8_low_miss_half_width_after
   simp_alive_peephole
+  intros
   ---BEGIN mul8_low_miss_half_width
   all_goals (try extract_goal ; sorry)
   ---END mul8_low_miss_half_width

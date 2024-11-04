@@ -1,8 +1,6 @@
 1: "SwitchTest"
 4: "SwitchTest" has unsupported operation: builtin.unregistered: llvm.switch
 
-4: "SwitchTest" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "SwitchTest" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "SwitchTest" has unsupported operation: builtin.unregistered: llvm.br

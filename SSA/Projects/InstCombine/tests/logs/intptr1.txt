@@ -1,6 +1,4 @@
 1: "test1"
-4: "test1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test1" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test1" has unsupported operation: llvm.load
@@ -19,15 +17,11 @@
 
 4: "test1" has unsupported operation: llvm.getelementptr
 
-4: "test1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test1" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test1" has unsupported operation: llvm.return
 
 1: "test1_neg"
-4: "test1_neg" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test1_neg" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test1_neg" has unsupported operation: llvm.load
@@ -35,8 +29,6 @@
 4: "test1_neg" has unsupported operation: llvm.inttoptr
 
 4: "test1_neg" has unsupported operation: builtin.unregistered: llvm.br
-
-4: "test1_neg" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "test1_neg" has unsupported operation: builtin.unregistered: llvm.cond_br
 
@@ -50,15 +42,11 @@
 
 4: "test1_neg" has unsupported operation: llvm.getelementptr
 
-4: "test1_neg" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test1_neg" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test1_neg" has unsupported operation: llvm.return
 
 1: "test2"
-4: "test2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test2" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test2" has unsupported operation: llvm.load
@@ -77,15 +65,11 @@
 
 4: "test2" has unsupported operation: llvm.getelementptr
 
-4: "test2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test2" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test2" has unsupported operation: llvm.return
 
 1: "test3"
-4: "test3" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test3" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test3" has unsupported operation: llvm.load
@@ -104,15 +88,11 @@
 
 4: "test3" has unsupported operation: llvm.getelementptr
 
-4: "test3" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test3" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test3" has unsupported operation: llvm.return
 
 1: "test4"
-4: "test4" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test4" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test4" has unsupported operation: llvm.load
@@ -128,8 +108,6 @@
 4: "test4" has unsupported operation: llvm.getelementptr
 
 4: "test4" has unsupported operation: llvm.getelementptr
-
-4: "test4" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "test4" has unsupported operation: builtin.unregistered: llvm.cond_br
 

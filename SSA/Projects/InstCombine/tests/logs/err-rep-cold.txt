@@ -3,8 +3,6 @@
 
 4: "test1" has unsupported operation: llvm.mlir.addressof
 
-4: "test1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test1" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test1" has unsupported operation: llvm.load
@@ -21,8 +19,6 @@
 
 4: "test2" has unsupported operation: llvm.mlir.addressof
 
-4: "test2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test2" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test2" has unsupported operation: llvm.load
@@ -38,8 +34,6 @@
 4: "test3" has unsupported operation: llvm.mlir.addressof
 
 4: "test3" has unsupported operation: llvm.mlir.addressof
-
-4: "test3" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "test3" has unsupported operation: builtin.unregistered: llvm.cond_br
 

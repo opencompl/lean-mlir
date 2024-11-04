@@ -1,6 +1,4 @@
 1: "func_53"
-4: "func_53" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "func_53" has unsupported operation: llvm.call
 
 4: "func_53" has unsupported operation: llvm.return

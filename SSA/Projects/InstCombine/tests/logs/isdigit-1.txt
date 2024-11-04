@@ -14,5 +14,5 @@
 4: "test_simplify4" has unsupported operation after optimization: llvm.call
 
 1: "test_simplify5"
-4: "test_simplify5" has unsupported operation: builtin.unregistered: llvm.icmp
+4: "test_simplify5" has unsupported operation after optimization: llvm.call
 

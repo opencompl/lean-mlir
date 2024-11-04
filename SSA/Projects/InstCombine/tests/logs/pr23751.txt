@@ -3,5 +3,3 @@
 
 4: "f" has unsupported operation: llvm.load
 
-4: "f" has unsupported operation: builtin.unregistered: llvm.icmp
-

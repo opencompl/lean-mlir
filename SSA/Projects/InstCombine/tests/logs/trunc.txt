@@ -450,7 +450,16 @@
 8: "narrow_sub_vec_constant" contains vectors which are unsupported
 
 1: "PR44545"
-4: "PR44545" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.trunc
+2: llvm.add
+2: llvm.return
 
 1: "drop_nsw_trunc"
 2: llvm.func
@@ -480,17 +489,21 @@
 7: "trunc_xor" is unchanged by InstCombine
 
 1: "trunc_nuw_xor"
-4: "trunc_nuw_xor" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.xor
+2: llvm.trunc
+2: llvm.return
 
 1: "trunc_nsw_xor"
-4: "trunc_nsw_xor" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.xor
+2: llvm.trunc
+2: llvm.return
 
 1: "trunc_nuw_xor_vector"
-4: "trunc_nuw_xor_vector" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "trunc_nuw_xor_vector" contains vectors which are unsupported
 
 1: "pr95547"
-4: "pr95547" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "pr95547" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "pr95547" has unsupported operation: llvm.call

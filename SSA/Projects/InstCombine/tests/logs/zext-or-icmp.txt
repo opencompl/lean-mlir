@@ -1,12 +1,8 @@
 1: "zext_or_icmp_icmp"
-4: "zext_or_icmp_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "zext_or_icmp_icmp" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "zext_or_icmp_icmp" is unchanged by InstCombine
 
 1: "zext_or_icmp_icmp_logical"
-4: "zext_or_icmp_icmp_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "zext_or_icmp_icmp_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "zext_or_icmp_icmp_logical" is unchanged by InstCombine
 
 1: "dont_widen_undef"
 4: "dont_widen_undef" has unsupported operation: builtin.unregistered: llvm.br
@@ -18,21 +14,34 @@
 4: "knownbits_out_of_range_shift" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "zext_or_eq_ult_add"
-4: "zext_or_eq_ult_add" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.zext
+2: llvm.return
 
 1: "select_zext_or_eq_ult_add"
-4: "select_zext_or_eq_ult_add" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.zext
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "PR49475"
-4: "PR49475" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "PR49475" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "PR49475" is unchanged by InstCombine
 
 1: "PR49475_infloop"
-4: "PR49475_infloop" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "PR49475_infloop" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "PR49475_infloop" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "PR51762"
@@ -46,19 +55,13 @@
 
 4: "PR51762" has unsupported operation: llvm.load
 
-4: "PR51762" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "PR51762" has unsupported operation: llvm.load
-
-4: "PR51762" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "PR51762" has unsupported operation: llvm.load
 
 4: "PR51762" has unsupported operation: llvm.store
 
 4: "PR51762" has unsupported operation: llvm.store
-
-4: "PR51762" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "PR51762" has unsupported operation: builtin.unregistered: llvm.intr.assume
 

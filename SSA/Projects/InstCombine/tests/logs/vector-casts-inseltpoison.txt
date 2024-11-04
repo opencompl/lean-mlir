@@ -22,8 +22,6 @@
 
 4: "and_cmp_is_trunc_even_with_poison_elts" has unsupported operation: builtin.unregistered: llvm.insertelement
 
-4: "and_cmp_is_trunc_even_with_poison_elts" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "test2"
 8: "test2" contains vectors which are unsupported
 

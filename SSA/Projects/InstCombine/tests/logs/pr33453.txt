@@ -5,8 +5,6 @@
 
 4: "patatino" has unsupported operation: llvm.mlir.addressof
 
-4: "patatino" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "patatino" has unsupported operation: builtin.unregistered: llvm.uitofp
 
 1: "fabsf"

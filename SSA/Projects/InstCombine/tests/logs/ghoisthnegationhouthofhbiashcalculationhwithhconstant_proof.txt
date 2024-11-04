@@ -1,3 +1,0 @@
-thread 'main' panicked at src/elan-utils/src/utils.rs:472:32:
-called `Result::unwrap()` on an `Err` value: Error { description: "Couldn't connect to server", code: 7, extra: Some("Failed to connect to github.com port 443 after 15889 ms: Couldn't connect to server") }
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

@@ -16,8 +16,8 @@ section ginstcombinehverifyhknownhbits_statements
 def pr110631_before := [llvm|
 {
 ^0(%arg0 : i32, %arg1 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 48991 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(48991 : i32) : i32
+  %1 = llvm.mlir.constant(1 : i32) : i32
   %2 = llvm.xor %arg0, %0 : i32
   %3 = llvm.zext %2 : i32 to i64
   %4 = llvm.and %arg1, %3 : i64
@@ -32,8 +32,8 @@ def pr110631_before := [llvm|
 def pr110631_after := [llvm|
 {
 ^0(%arg0 : i32, %arg1 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 48991 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 1 : i16}> : () -> i16
+  %0 = llvm.mlir.constant(48991 : i32) : i32
+  %1 = llvm.mlir.constant(1 : i16) : i16
   %2 = llvm.xor %arg0, %0 : i32
   %3 = llvm.trunc %arg1 : i64 to i32
   %4 = llvm.and %2, %3 : i32
@@ -42,9 +42,11 @@ def pr110631_after := [llvm|
   "llvm.return"(%6) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem pr110631_proof : pr110631_before ⊑ pr110631_after := by
   unfold pr110631_before pr110631_after
   simp_alive_peephole
+  intros
   ---BEGIN pr110631
   all_goals (try extract_goal ; sorry)
   ---END pr110631

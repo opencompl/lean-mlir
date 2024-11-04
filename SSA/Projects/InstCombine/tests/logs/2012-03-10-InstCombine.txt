@@ -3,19 +3,9 @@
 
 4: "func" has unsupported operation: llvm.store
 
-4: "func" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "func" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "func" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "func" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "func" has unsupported operation: builtin.unregistered: llvm.br
-
-4: "func" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "func" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "func" has unsupported operation: builtin.unregistered: llvm.br
 
@@ -24,19 +14,9 @@
 
 4: "func_logical" has unsupported operation: llvm.store
 
-4: "func_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "func_logical" has unsupported operation: builtin.unregistered: llvm.cond_br
 
-4: "func_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "func_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "func_logical" has unsupported operation: builtin.unregistered: llvm.br
-
-4: "func_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "func_logical" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "func_logical" has unsupported operation: builtin.unregistered: llvm.br
 

@@ -1,10 +1,16 @@
 1: "f1"
-4: "f1" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "f1" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "f1" is unchanged by InstCombine
 
 1: "f1_logical"
-4: "f1_logical" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "f1_logical" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
 

@@ -183,7 +183,7 @@
 4: "rotl_select_commute" has unsupported operation: builtin.unregistered: llvm.intr.fshl
 
 1: "rotl_select_weird_type"
-4: "rotl_select_weird_type" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "rotl_select_weird_type" is unchanged by InstCombine
 
 1: "rotl_select_zext_shamt"
 4: "rotl_select_zext_shamt" has unsupported operation: builtin.unregistered: llvm.intr.fshl

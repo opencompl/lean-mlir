@@ -98,8 +98,6 @@
 1: "test_signbit_check"
 4: "test_signbit_check" has unsupported operation: builtin.unregistered: llvm.bitcast
 
-4: "test_signbit_check" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test_signbit_check" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test_signbit_check" has unsupported operation: builtin.unregistered: llvm.fneg
@@ -112,8 +110,6 @@
 
 1: "test_signbit_check_fail"
 4: "test_signbit_check_fail" has unsupported operation: builtin.unregistered: llvm.bitcast
-
-4: "test_signbit_check_fail" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "test_signbit_check_fail" has unsupported operation: builtin.unregistered: llvm.cond_br
 
@@ -131,8 +127,6 @@
 
 1: "test_signbit_check_wrong_type"
 4: "test_signbit_check_wrong_type" has unsupported operation: builtin.unregistered: llvm.bitcast
-
-4: "test_signbit_check_wrong_type" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "test_signbit_check_wrong_type" has unsupported operation: builtin.unregistered: llvm.cond_br
 

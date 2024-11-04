@@ -75,11 +75,7 @@
 4: "cttz_of_power_of_two_wrong_constant_2" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
 1: "cttz_assume"
-4: "cttz_assume" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "cttz_assume" has unsupported operation: builtin.unregistered: llvm.intr.assume
-
-4: "cttz_assume" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "cttz_assume" has unsupported operation: builtin.unregistered: llvm.intr.assume
 

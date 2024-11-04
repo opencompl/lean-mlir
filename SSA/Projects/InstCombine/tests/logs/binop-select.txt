@@ -26,18 +26,12 @@
 7: "test5" is unchanged by InstCombine
 
 1: "test_sub_deduce_true"
-4: "test_sub_deduce_true" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test_sub_deduce_true" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
 
 1: "test_sub_deduce_true_no_const_fold"
-4: "test_sub_deduce_true_no_const_fold" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test_sub_deduce_true_no_const_fold" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
 
 1: "test_sub_deduce_false"
-4: "test_sub_deduce_false" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test_sub_deduce_false" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
 
 1: "test_sub_dont_deduce_with_undef_cond_vec"
@@ -48,8 +42,6 @@
 4: "test_sub_dont_deduce_with_undef_cond_vec" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 4: "test_sub_dont_deduce_with_undef_cond_vec" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "test_sub_dont_deduce_with_undef_cond_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "test_sub_dont_deduce_with_undef_cond_vec" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
 
@@ -62,13 +54,9 @@
 
 4: "test_sub_dont_deduce_with_poison_cond_vec" has unsupported operation: builtin.unregistered: llvm.insertelement
 
-4: "test_sub_dont_deduce_with_poison_cond_vec" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test_sub_dont_deduce_with_poison_cond_vec" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
 
 1: "test_sub_deduce_with_undef_val_vec"
-4: "test_sub_deduce_with_undef_val_vec" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test_sub_deduce_with_undef_val_vec" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
 
 1: "test6"

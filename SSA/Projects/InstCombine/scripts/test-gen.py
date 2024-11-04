@@ -79,9 +79,11 @@ def {name}_before := [llvm|
 def {name}_after := [llvm|
 {s1}
 ]
+set_option debug.skipKernelTC true in
 theorem {name}_proof : {name}_before ⊑ {name}_after := by
   unfold {name}_before {name}_after
   simp_alive_peephole
+  intros
   ---BEGIN {name}
   all_goals (try extract_goal ; sorry)
   ---END {name}\n\n\n"""
@@ -215,5 +217,5 @@ def process_file(file):
     
 if __name__ == "__main__":
     remove()
-    with Pool(7) as p:
+    with Pool(32) as p:
         p.map(process_file, os.listdir(directory))

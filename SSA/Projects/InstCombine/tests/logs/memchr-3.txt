@@ -14,14 +14,10 @@
 
 4: "fold_memchr_ax_257_1" has unsupported operation: llvm.load
 
-4: "fold_memchr_ax_257_1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "fold_memchr_ax_c_1"
 4: "fold_memchr_ax_c_1" has unsupported operation: llvm.mlir.addressof
 
 4: "fold_memchr_ax_c_1" has unsupported operation: llvm.mlir.zero
 
 4: "fold_memchr_ax_c_1" has unsupported operation: llvm.load
-
-4: "fold_memchr_ax_c_1" has unsupported operation: builtin.unregistered: llvm.icmp
 

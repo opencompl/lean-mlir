@@ -10,12 +10,8 @@
 1: "p0"
 4: "p0" has unsupported operation: llvm.call
 
-4: "p0" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "p1_vec"
 4: "p1_vec" has unsupported operation: llvm.call
-
-4: "p1_vec" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "p2_vec_poison0"
 4: "p2_vec_poison0" has unsupported operation: builtin.unregistered: llvm.mlir.poison
@@ -30,8 +26,6 @@
 
 4: "p2_vec_poison0" has unsupported operation: llvm.call
 
-4: "p2_vec_poison0" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "gen8"
 5: "gen8" is empty
 
@@ -40,35 +34,25 @@
 
 4: "c0" has unsupported operation: llvm.call
 
-4: "c0" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "c1"
 4: "c1" has unsupported operation: llvm.call
 
 4: "c1" has unsupported operation: llvm.call
-
-4: "c1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "c2"
 4: "c2" has unsupported operation: llvm.call
 
 4: "c2" has unsupported operation: llvm.call
 
-4: "c2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "oneuse0"
 4: "oneuse0" has unsupported operation: llvm.call
 
 4: "oneuse0" has unsupported operation: llvm.call
 
-4: "oneuse0" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "oneuse1"
 4: "oneuse1" has unsupported operation: llvm.call
 
 4: "oneuse1" has unsupported operation: llvm.call
-
-4: "oneuse1" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "oneuse2"
 4: "oneuse2" has unsupported operation: llvm.call
@@ -77,20 +61,12 @@
 
 4: "oneuse2" has unsupported operation: llvm.call
 
-4: "oneuse2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "n0"
 4: "n0" has unsupported operation: llvm.call
-
-4: "n0" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "n1"
 4: "n1" has unsupported operation: llvm.call
 
-4: "n1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "n2"
 4: "n2" has unsupported operation: llvm.call
-
-4: "n2" has unsupported operation: builtin.unregistered: llvm.icmp
 

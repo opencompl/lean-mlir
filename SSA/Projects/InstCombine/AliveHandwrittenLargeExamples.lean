@@ -43,6 +43,7 @@ theorem alive_DivRemOfSelect (w : Nat) :
   simp_alive_meta
   simp_alive_ssa
   simp_alive_undef
+  simp_alive_case_bash
   alive_auto
 
 /--info: 'AliveHandwritten.DivRemOfSelect.alive_DivRemOfSelect' depends on
@@ -130,9 +131,6 @@ def alive_simplifyMulDivRem805 (w : Nat) :
       rw [LLVM.sdiv?_denom_zero_eq_none]
       apply Refinement.none_left
     case neg =>
-      simp only [Bool.false_eq_true, add_tsub_cancel_right, ge_iff_le, false_and, toNat_ofNat,
-        lt_add_iff_pos_left, add_pos_iff, zero_lt_one, or_true, Nat.one_mod_two_pow, _root_.or_self,
-        ↓reduceIte, Option.some_bind]
       rw [BitVec.ult_toNat]
       rw [BitVec.toNat_ofNat]
       cases w'
@@ -153,8 +151,7 @@ def alive_simplifyMulDivRem805 (w : Nat) :
         have htwopow_pos : 2^w'' > 0 := Nat.pow_pos (by omega)
         rw [Nat.mod_eq_of_lt (a := 3) (by omega)]
         split
-        case h_1 c hugt => contradiction
-        case h_2 c hugt =>
+        case h_1 c hugt =>
           clear c
           have hugt :
             (1 + BitVec.toNat x) % 2 ^ Nat.succ (Nat.succ w'') < 3 := by
@@ -163,7 +160,7 @@ def alive_simplifyMulDivRem805 (w : Nat) :
                 ofBool_false, ofNat_eq_ofNat, Nat.reducePow, Fin.mk_one, Fin.isValue, ofFin_ofNat,
                 Option.some.injEq] at hugt
               contradiction
-          rw [LLVM.sdiv?_eq_pure_of_neq_allOnes (hy := by tauto)]
+          rw [LLVM.sdiv?_eq_some_of_neq_allOnes (hy := by tauto)]
           · have hcases := Nat.cases_of_lt_mod_add hugt
               (by simp)
               (by apply BitVec.isLt)
@@ -188,12 +185,12 @@ def alive_simplifyMulDivRem805 (w : Nat) :
                   simp only [Nat.succ_eq_add_one, toNat_allOnes]
                   omega
                 subst heqallones
-                simp [BitVec.sdiv_one_allOnes]
+                simp [BitVec.sdiv_one_allOnes, BitVec.negOne_eq_allOnes]
               · have heqzero : x = 0#_ := BitVec.eq_zero_of_toNat_mod_eq_zero (by omega)
                 subst heqzero
                 simp [BitVec.sdiv_zero]
           · exact intMin_neq_one (by omega)
-        case h_3 c hugt =>
+        case h_2 c hugt =>
           clear c
           simp only [toNat_add, toNat_ofNat, Nat.mod_add_mod, Nat.reducePow, Fin.zero_eta,
             Fin.isValue, ofFin_ofNat, ofNat_eq_ofNat, Option.some.injEq,
@@ -364,6 +361,7 @@ def alive_simplifyMulDivRem290 (w : Nat) :
   simp_alive_ssa
   simp_alive_undef
   simp_alive_ops
+  simp_alive_case_bash
   alive_auto
 
 /-- info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem290' depends on axioms: [propext, Classical.choice, Quot.sound] -/
@@ -415,6 +413,7 @@ def alive_simplifyAndOrXor2515 (w : Nat) :
   simp only [simp_llvm_wrap]
   simp_alive_ssa
   simp_alive_undef
+  simp_alive_case_bash
   alive_auto
 
 /-- info: 'AliveHandwritten.AndOrXor.alive_simplifyAndOrXor2515' depends on axioms:

@@ -1,5 +1,3 @@
 1: "pr98139"
-4: "pr98139" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "pr98139" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "pr98139" is unchanged by InstCombine
 

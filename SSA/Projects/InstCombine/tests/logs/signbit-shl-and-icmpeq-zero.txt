@@ -1,20 +1,20 @@
 1: "scalar_i8_signbit_shl_and_eq"
-4: "scalar_i8_signbit_shl_and_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "scalar_i8_signbit_shl_and_eq" is unchanged by InstCombine
 
 1: "scalar_i16_signbit_shl_and_eq"
-4: "scalar_i16_signbit_shl_and_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "scalar_i16_signbit_shl_and_eq" is unchanged by InstCombine
 
 1: "scalar_i32_signbit_shl_and_eq"
-4: "scalar_i32_signbit_shl_and_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "scalar_i32_signbit_shl_and_eq" is unchanged by InstCombine
 
 1: "scalar_i64_signbit_shl_and_eq"
-4: "scalar_i64_signbit_shl_and_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "scalar_i64_signbit_shl_and_eq" is unchanged by InstCombine
 
 1: "scalar_i32_signbit_shl_and_ne"
-4: "scalar_i32_signbit_shl_and_ne" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "scalar_i32_signbit_shl_and_ne" is unchanged by InstCombine
 
 1: "vec_4xi32_signbit_shl_and_eq"
-4: "vec_4xi32_signbit_shl_and_eq" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "vec_4xi32_signbit_shl_and_eq" is unchanged by InstCombine
 
 1: "vec_4xi32_signbit_shl_and_eq_undef1"
 4: "vec_4xi32_signbit_shl_and_eq_undef1" has unsupported operation: llvm.mlir.undef
@@ -29,8 +29,6 @@
 
 4: "vec_4xi32_signbit_shl_and_eq_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
 
-4: "vec_4xi32_signbit_shl_and_eq_undef1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "vec_4xi32_signbit_shl_and_eq_undef2"
 4: "vec_4xi32_signbit_shl_and_eq_undef2" has unsupported operation: llvm.mlir.undef
 
@@ -43,8 +41,6 @@
 4: "vec_4xi32_signbit_shl_and_eq_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 4: "vec_4xi32_signbit_shl_and_eq_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
-
-4: "vec_4xi32_signbit_shl_and_eq_undef2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "vec_4xi32_signbit_shl_and_eq_undef3"
 4: "vec_4xi32_signbit_shl_and_eq_undef3" has unsupported operation: llvm.mlir.undef
@@ -69,34 +65,52 @@
 
 4: "vec_4xi32_signbit_shl_and_eq_undef3" has unsupported operation: builtin.unregistered: llvm.insertelement
 
-4: "vec_4xi32_signbit_shl_and_eq_undef3" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "scalar_i32_signbit_shl_and_eq_extra_use_shl"
 4: "scalar_i32_signbit_shl_and_eq_extra_use_shl" has unsupported operation: llvm.store
 
-4: "scalar_i32_signbit_shl_and_eq_extra_use_shl" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "scalar_i32_signbit_shl_and_eq_extra_use_and"
 4: "scalar_i32_signbit_shl_and_eq_extra_use_and" has unsupported operation: llvm.store
-
-4: "scalar_i32_signbit_shl_and_eq_extra_use_and" has unsupported operation: builtin.unregistered: llvm.icmp
 
 1: "scalar_i32_signbit_shl_and_eq_extra_use_shl_and"
 4: "scalar_i32_signbit_shl_and_eq_extra_use_shl_and" has unsupported operation: llvm.store
 
 4: "scalar_i32_signbit_shl_and_eq_extra_use_shl_and" has unsupported operation: llvm.store
 
-4: "scalar_i32_signbit_shl_and_eq_extra_use_shl_and" has unsupported operation: builtin.unregistered: llvm.icmp
-
 1: "scalar_i32_signbit_shl_and_eq_X_is_constant1"
-4: "scalar_i32_signbit_shl_and_eq_X_is_constant1" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
 
 1: "scalar_i32_signbit_shl_and_eq_X_is_constant2"
-4: "scalar_i32_signbit_shl_and_eq_X_is_constant2" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
 
 1: "scalar_i32_signbit_shl_and_slt"
-4: "scalar_i32_signbit_shl_and_slt" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
 
 1: "scalar_i32_signbit_shl_and_eq_nonzero"
-4: "scalar_i32_signbit_shl_and_eq_nonzero" has unsupported operation after optimization: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
 

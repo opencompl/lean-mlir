@@ -132,10 +132,10 @@
 2: llvm.return
 
 1: "select_logic_or_fail"
-4: "select_logic_or_fail" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "select_logic_or_fail" is unchanged by InstCombine
 
 1: "select_logic_and_fail"
-4: "select_logic_and_fail" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "select_logic_and_fail" is unchanged by InstCombine
 
 1: "smin_1"
 4: "smin_1" has unsupported operation: builtin.unregistered: llvm.intr.smax
@@ -190,8 +190,6 @@
 4: "smax_both_freely_invertable_always" has unsupported operation: builtin.unregistered: llvm.intr.smax
 
 1: "lshr_nneg"
-4: "lshr_nneg" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "lshr_nneg" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "lshr_not_nneg"

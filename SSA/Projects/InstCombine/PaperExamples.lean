@@ -30,18 +30,9 @@ theorem shift_mul:
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
-  intros A B
-  rcases A with rfl | A  <;>
-  rcases B with rfl | B  <;> (try (simp only [Bool.false_eq_true, shiftLeft_eq', false_and, ↓reduceIte, ushiftRight_eq', natCast_eq_ofNat,
-  ge_iff_le, EffectKind.return_impure_toMonad_eq, Option.pure_def, truncate_eq_setWidth, ofNat_eq_ofNat, toNat_ofNat,
-  mul_eq, Option.bind_eq_bind, Option.some_bind, Option.none_bind, Option.bind_none, Refinement.refl]; done)) ;
-  by_cases h : (BitVec.ofNat w w) ≤ B <;>
-    simp only [Bool.false_eq_true, shiftLeft_eq', false_and, ↓reduceIte, ushiftRight_eq',
-      natCast_eq_ofNat, ge_iff_le, EffectKind.return_impure_toMonad_eq, Option.pure_def,
-      truncate_eq_setWidth, ofNat_eq_ofNat, toNat_ofNat, mul_eq, Option.bind_eq_bind,
-      Option.some_bind, Refinement.refl, h]
-  simp
-  simp
+  simp_alive_case_bash
+  · simp
+  · simp
 
 /--
 info: 'AlivePaperExamples.shift_mul' depends on axioms: [propext, Classical.choice, Quot.sound]

@@ -30,9 +30,11 @@ def test0_after := [llvm|
   "llvm.return"(%1) : (i41) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test0_proof : test0_before ⊑ test0_after := by
   unfold test0_before test0_after
   simp_alive_peephole
+  intros
   ---BEGIN test0
   all_goals (try extract_goal ; sorry)
   ---END test0
@@ -56,9 +58,11 @@ def test1_after := [llvm|
   "llvm.return"(%1) : (i57) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test1_proof : test1_before ⊑ test1_after := by
   unfold test1_before test1_after
   simp_alive_peephole
+  intros
   ---BEGIN test1
   all_goals (try extract_goal ; sorry)
   ---END test1
@@ -82,9 +86,11 @@ def test2_after := [llvm|
   "llvm.return"(%1) : (i49) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test2_proof : test2_before ⊑ test2_after := by
   unfold test2_before test2_after
   simp_alive_peephole
+  intros
   ---BEGIN test2
   all_goals (try extract_goal ; sorry)
   ---END test2

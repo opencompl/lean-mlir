@@ -76,7 +76,13 @@
 2: llvm.return
 
 1: "add-shl-sdiv-negative2"
-4: "add-shl-sdiv-negative2" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.shl
+2: llvm.add
+2: llvm.return
 
 1: "add-shl-sdiv-negative3"
 7: "add-shl-sdiv-negative3" is unchanged by InstCombine

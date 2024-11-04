@@ -87,8 +87,6 @@
 2: llvm.return
 
 1: "multiuse4"
-4: "multiuse4" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "multiuse4" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "multiuse4" has unsupported operation: builtin.unregistered: llvm.br
@@ -96,8 +94,6 @@
 4: "multiuse4" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "multiuse5"
-4: "multiuse5" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "multiuse5" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "multiuse5" has unsupported operation: builtin.unregistered: llvm.br

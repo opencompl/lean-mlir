@@ -29,8 +29,6 @@
 4: "test_eq_lhsc" has unsupported operation: builtin.unregistered: llvm.unreachable
 
 1: "test_ult_rhsc_invalid_cond"
-4: "test_ult_rhsc_invalid_cond" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test_ult_rhsc_invalid_cond" has unsupported operation: builtin.unregistered: llvm.switch
 
 4: "test_ult_rhsc_invalid_cond" has unsupported operation: llvm.call
@@ -46,8 +44,6 @@
 4: "test_ult_rhsc_invalid_cond" has unsupported operation: builtin.unregistered: llvm.unreachable
 
 1: "test_ult_rhsc_fail"
-4: "test_ult_rhsc_fail" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test_ult_rhsc_fail" has unsupported operation: builtin.unregistered: llvm.switch
 
 4: "test_ult_rhsc_fail" has unsupported operation: llvm.call

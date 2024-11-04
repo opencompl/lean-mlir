@@ -16,8 +16,8 @@ section greassociatehnuw_statements
 def reassoc_add_nuw_before := [llvm|
 {
 ^0(%arg26 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 4 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 64 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(4 : i32) : i32
+  %1 = llvm.mlir.constant(64 : i32) : i32
   %2 = llvm.add %arg26, %0 overflow<nuw> : i32
   %3 = llvm.add %2, %1 overflow<nuw> : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -26,14 +26,16 @@ def reassoc_add_nuw_before := [llvm|
 def reassoc_add_nuw_after := [llvm|
 {
 ^0(%arg26 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 68 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(68 : i32) : i32
   %1 = llvm.add %arg26, %0 overflow<nuw> : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem reassoc_add_nuw_proof : reassoc_add_nuw_before ⊑ reassoc_add_nuw_after := by
   unfold reassoc_add_nuw_before reassoc_add_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN reassoc_add_nuw
   all_goals (try extract_goal ; sorry)
   ---END reassoc_add_nuw
@@ -43,8 +45,8 @@ theorem reassoc_add_nuw_proof : reassoc_add_nuw_before ⊑ reassoc_add_nuw_after
 def reassoc_sub_nuw_before := [llvm|
 {
 ^0(%arg25 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 4 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 64 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(4 : i32) : i32
+  %1 = llvm.mlir.constant(64 : i32) : i32
   %2 = llvm.sub %arg25, %0 overflow<nuw> : i32
   %3 = llvm.sub %2, %1 overflow<nuw> : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -53,14 +55,16 @@ def reassoc_sub_nuw_before := [llvm|
 def reassoc_sub_nuw_after := [llvm|
 {
 ^0(%arg25 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -68 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-68 : i32) : i32
   %1 = llvm.add %arg25, %0 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem reassoc_sub_nuw_proof : reassoc_sub_nuw_before ⊑ reassoc_sub_nuw_after := by
   unfold reassoc_sub_nuw_before reassoc_sub_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN reassoc_sub_nuw
   all_goals (try extract_goal ; sorry)
   ---END reassoc_sub_nuw
@@ -70,8 +74,8 @@ theorem reassoc_sub_nuw_proof : reassoc_sub_nuw_before ⊑ reassoc_sub_nuw_after
 def reassoc_mul_nuw_before := [llvm|
 {
 ^0(%arg24 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 4 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 65 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(4 : i32) : i32
+  %1 = llvm.mlir.constant(65 : i32) : i32
   %2 = llvm.mul %arg24, %0 overflow<nuw> : i32
   %3 = llvm.mul %2, %1 overflow<nuw> : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -80,14 +84,16 @@ def reassoc_mul_nuw_before := [llvm|
 def reassoc_mul_nuw_after := [llvm|
 {
 ^0(%arg24 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 260 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(260 : i32) : i32
   %1 = llvm.mul %arg24, %0 overflow<nuw> : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem reassoc_mul_nuw_proof : reassoc_mul_nuw_before ⊑ reassoc_mul_nuw_after := by
   unfold reassoc_mul_nuw_before reassoc_mul_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN reassoc_mul_nuw
   all_goals (try extract_goal ; sorry)
   ---END reassoc_mul_nuw
@@ -97,8 +103,8 @@ theorem reassoc_mul_nuw_proof : reassoc_mul_nuw_before ⊑ reassoc_mul_nuw_after
 def no_reassoc_add_nuw_none_before := [llvm|
 {
 ^0(%arg23 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 4 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 64 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(4 : i32) : i32
+  %1 = llvm.mlir.constant(64 : i32) : i32
   %2 = llvm.add %arg23, %0 : i32
   %3 = llvm.add %2, %1 overflow<nuw> : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -107,14 +113,16 @@ def no_reassoc_add_nuw_none_before := [llvm|
 def no_reassoc_add_nuw_none_after := [llvm|
 {
 ^0(%arg23 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 68 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(68 : i32) : i32
   %1 = llvm.add %arg23, %0 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem no_reassoc_add_nuw_none_proof : no_reassoc_add_nuw_none_before ⊑ no_reassoc_add_nuw_none_after := by
   unfold no_reassoc_add_nuw_none_before no_reassoc_add_nuw_none_after
   simp_alive_peephole
+  intros
   ---BEGIN no_reassoc_add_nuw_none
   all_goals (try extract_goal ; sorry)
   ---END no_reassoc_add_nuw_none
@@ -124,8 +132,8 @@ theorem no_reassoc_add_nuw_none_proof : no_reassoc_add_nuw_none_before ⊑ no_re
 def no_reassoc_add_none_nuw_before := [llvm|
 {
 ^0(%arg22 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 4 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 64 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(4 : i32) : i32
+  %1 = llvm.mlir.constant(64 : i32) : i32
   %2 = llvm.add %arg22, %0 overflow<nuw> : i32
   %3 = llvm.add %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -134,14 +142,16 @@ def no_reassoc_add_none_nuw_before := [llvm|
 def no_reassoc_add_none_nuw_after := [llvm|
 {
 ^0(%arg22 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 68 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(68 : i32) : i32
   %1 = llvm.add %arg22, %0 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem no_reassoc_add_none_nuw_proof : no_reassoc_add_none_nuw_before ⊑ no_reassoc_add_none_nuw_after := by
   unfold no_reassoc_add_none_nuw_before no_reassoc_add_none_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN no_reassoc_add_none_nuw
   all_goals (try extract_goal ; sorry)
   ---END no_reassoc_add_none_nuw
@@ -151,8 +161,8 @@ theorem no_reassoc_add_none_nuw_proof : no_reassoc_add_none_nuw_before ⊑ no_re
 def reassoc_x2_add_nuw_before := [llvm|
 {
 ^0(%arg20 : i32, %arg21 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 4 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(4 : i32) : i32
+  %1 = llvm.mlir.constant(8 : i32) : i32
   %2 = llvm.add %arg20, %0 overflow<nuw> : i32
   %3 = llvm.add %arg21, %1 overflow<nuw> : i32
   %4 = llvm.add %2, %3 overflow<nuw> : i32
@@ -162,15 +172,17 @@ def reassoc_x2_add_nuw_before := [llvm|
 def reassoc_x2_add_nuw_after := [llvm|
 {
 ^0(%arg20 : i32, %arg21 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 12 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(12 : i32) : i32
   %1 = llvm.add %arg20, %arg21 overflow<nuw> : i32
   %2 = llvm.add %1, %0 overflow<nuw> : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem reassoc_x2_add_nuw_proof : reassoc_x2_add_nuw_before ⊑ reassoc_x2_add_nuw_after := by
   unfold reassoc_x2_add_nuw_before reassoc_x2_add_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN reassoc_x2_add_nuw
   all_goals (try extract_goal ; sorry)
   ---END reassoc_x2_add_nuw
@@ -180,8 +192,8 @@ theorem reassoc_x2_add_nuw_proof : reassoc_x2_add_nuw_before ⊑ reassoc_x2_add_
 def reassoc_x2_mul_nuw_before := [llvm|
 {
 ^0(%arg18 : i32, %arg19 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 5 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 9 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(5 : i32) : i32
+  %1 = llvm.mlir.constant(9 : i32) : i32
   %2 = llvm.mul %arg18, %0 overflow<nuw> : i32
   %3 = llvm.mul %arg19, %1 overflow<nuw> : i32
   %4 = llvm.mul %2, %3 overflow<nuw> : i32
@@ -191,15 +203,17 @@ def reassoc_x2_mul_nuw_before := [llvm|
 def reassoc_x2_mul_nuw_after := [llvm|
 {
 ^0(%arg18 : i32, %arg19 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 45 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(45 : i32) : i32
   %1 = llvm.mul %arg18, %arg19 : i32
   %2 = llvm.mul %1, %0 overflow<nuw> : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem reassoc_x2_mul_nuw_proof : reassoc_x2_mul_nuw_before ⊑ reassoc_x2_mul_nuw_after := by
   unfold reassoc_x2_mul_nuw_before reassoc_x2_mul_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN reassoc_x2_mul_nuw
   all_goals (try extract_goal ; sorry)
   ---END reassoc_x2_mul_nuw
@@ -209,8 +223,8 @@ theorem reassoc_x2_mul_nuw_proof : reassoc_x2_mul_nuw_before ⊑ reassoc_x2_mul_
 def reassoc_x2_sub_nuw_before := [llvm|
 {
 ^0(%arg16 : i32, %arg17 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 4 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(4 : i32) : i32
+  %1 = llvm.mlir.constant(8 : i32) : i32
   %2 = llvm.sub %arg16, %0 overflow<nuw> : i32
   %3 = llvm.sub %arg17, %1 overflow<nuw> : i32
   %4 = llvm.sub %2, %3 overflow<nuw> : i32
@@ -220,15 +234,17 @@ def reassoc_x2_sub_nuw_before := [llvm|
 def reassoc_x2_sub_nuw_after := [llvm|
 {
 ^0(%arg16 : i32, %arg17 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 4 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(4 : i32) : i32
   %1 = llvm.sub %arg16, %arg17 : i32
   %2 = llvm.add %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem reassoc_x2_sub_nuw_proof : reassoc_x2_sub_nuw_before ⊑ reassoc_x2_sub_nuw_after := by
   unfold reassoc_x2_sub_nuw_before reassoc_x2_sub_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN reassoc_x2_sub_nuw
   all_goals (try extract_goal ; sorry)
   ---END reassoc_x2_sub_nuw
@@ -238,7 +254,7 @@ theorem reassoc_x2_sub_nuw_proof : reassoc_x2_sub_nuw_before ⊑ reassoc_x2_sub_
 def tryFactorization_add_nuw_mul_nuw_before := [llvm|
 {
 ^0(%arg15 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(3 : i32) : i32
   %1 = llvm.mul %arg15, %0 overflow<nuw> : i32
   %2 = llvm.add %1, %arg15 overflow<nuw> : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -247,14 +263,16 @@ def tryFactorization_add_nuw_mul_nuw_before := [llvm|
 def tryFactorization_add_nuw_mul_nuw_after := [llvm|
 {
 ^0(%arg15 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(2 : i32) : i32
   %1 = llvm.shl %arg15, %0 overflow<nuw> : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem tryFactorization_add_nuw_mul_nuw_proof : tryFactorization_add_nuw_mul_nuw_before ⊑ tryFactorization_add_nuw_mul_nuw_after := by
   unfold tryFactorization_add_nuw_mul_nuw_before tryFactorization_add_nuw_mul_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN tryFactorization_add_nuw_mul_nuw
   all_goals (try extract_goal ; sorry)
   ---END tryFactorization_add_nuw_mul_nuw
@@ -264,7 +282,7 @@ theorem tryFactorization_add_nuw_mul_nuw_proof : tryFactorization_add_nuw_mul_nu
 def tryFactorization_add_nuw_mul_nuw_int_max_before := [llvm|
 {
 ^0(%arg14 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 2147483647 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(2147483647 : i32) : i32
   %1 = llvm.mul %arg14, %0 overflow<nuw> : i32
   %2 = llvm.add %1, %arg14 overflow<nuw> : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -273,14 +291,16 @@ def tryFactorization_add_nuw_mul_nuw_int_max_before := [llvm|
 def tryFactorization_add_nuw_mul_nuw_int_max_after := [llvm|
 {
 ^0(%arg14 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 31 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(31 : i32) : i32
   %1 = llvm.shl %arg14, %0 overflow<nuw> : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem tryFactorization_add_nuw_mul_nuw_int_max_proof : tryFactorization_add_nuw_mul_nuw_int_max_before ⊑ tryFactorization_add_nuw_mul_nuw_int_max_after := by
   unfold tryFactorization_add_nuw_mul_nuw_int_max_before tryFactorization_add_nuw_mul_nuw_int_max_after
   simp_alive_peephole
+  intros
   ---BEGIN tryFactorization_add_nuw_mul_nuw_int_max
   all_goals (try extract_goal ; sorry)
   ---END tryFactorization_add_nuw_mul_nuw_int_max
@@ -290,7 +310,7 @@ theorem tryFactorization_add_nuw_mul_nuw_int_max_proof : tryFactorization_add_nu
 def tryFactorization_add_mul_nuw_before := [llvm|
 {
 ^0(%arg13 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(3 : i32) : i32
   %1 = llvm.mul %arg13, %0 : i32
   %2 = llvm.add %1, %arg13 overflow<nuw> : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -299,14 +319,16 @@ def tryFactorization_add_mul_nuw_before := [llvm|
 def tryFactorization_add_mul_nuw_after := [llvm|
 {
 ^0(%arg13 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(2 : i32) : i32
   %1 = llvm.shl %arg13, %0 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem tryFactorization_add_mul_nuw_proof : tryFactorization_add_mul_nuw_before ⊑ tryFactorization_add_mul_nuw_after := by
   unfold tryFactorization_add_mul_nuw_before tryFactorization_add_mul_nuw_after
   simp_alive_peephole
+  intros
   ---BEGIN tryFactorization_add_mul_nuw
   all_goals (try extract_goal ; sorry)
   ---END tryFactorization_add_mul_nuw
@@ -316,7 +338,7 @@ theorem tryFactorization_add_mul_nuw_proof : tryFactorization_add_mul_nuw_before
 def tryFactorization_add_nuw_mul_before := [llvm|
 {
 ^0(%arg12 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(3 : i32) : i32
   %1 = llvm.mul %arg12, %0 overflow<nuw> : i32
   %2 = llvm.add %1, %arg12 : i32
   "llvm.return"(%2) : (i32) -> ()
@@ -325,14 +347,16 @@ def tryFactorization_add_nuw_mul_before := [llvm|
 def tryFactorization_add_nuw_mul_after := [llvm|
 {
 ^0(%arg12 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(2 : i32) : i32
   %1 = llvm.shl %arg12, %0 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem tryFactorization_add_nuw_mul_proof : tryFactorization_add_nuw_mul_before ⊑ tryFactorization_add_nuw_mul_after := by
   unfold tryFactorization_add_nuw_mul_before tryFactorization_add_nuw_mul_after
   simp_alive_peephole
+  intros
   ---BEGIN tryFactorization_add_nuw_mul
   all_goals (try extract_goal ; sorry)
   ---END tryFactorization_add_nuw_mul
@@ -356,9 +380,11 @@ def tryFactorization_add_nuw_mul_nuw_mul_nuw_var_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem tryFactorization_add_nuw_mul_nuw_mul_nuw_var_proof : tryFactorization_add_nuw_mul_nuw_mul_nuw_var_before ⊑ tryFactorization_add_nuw_mul_nuw_mul_nuw_var_after := by
   unfold tryFactorization_add_nuw_mul_nuw_mul_nuw_var_before tryFactorization_add_nuw_mul_nuw_mul_nuw_var_after
   simp_alive_peephole
+  intros
   ---BEGIN tryFactorization_add_nuw_mul_nuw_mul_nuw_var
   all_goals (try extract_goal ; sorry)
   ---END tryFactorization_add_nuw_mul_nuw_mul_nuw_var
@@ -382,9 +408,11 @@ def tryFactorization_add_nuw_mul_mul_nuw_var_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem tryFactorization_add_nuw_mul_mul_nuw_var_proof : tryFactorization_add_nuw_mul_mul_nuw_var_before ⊑ tryFactorization_add_nuw_mul_mul_nuw_var_after := by
   unfold tryFactorization_add_nuw_mul_mul_nuw_var_before tryFactorization_add_nuw_mul_mul_nuw_var_after
   simp_alive_peephole
+  intros
   ---BEGIN tryFactorization_add_nuw_mul_mul_nuw_var
   all_goals (try extract_goal ; sorry)
   ---END tryFactorization_add_nuw_mul_mul_nuw_var
@@ -408,9 +436,11 @@ def tryFactorization_add_nuw_mul_nuw_mul_var_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem tryFactorization_add_nuw_mul_nuw_mul_var_proof : tryFactorization_add_nuw_mul_nuw_mul_var_before ⊑ tryFactorization_add_nuw_mul_nuw_mul_var_after := by
   unfold tryFactorization_add_nuw_mul_nuw_mul_var_before tryFactorization_add_nuw_mul_nuw_mul_var_after
   simp_alive_peephole
+  intros
   ---BEGIN tryFactorization_add_nuw_mul_nuw_mul_var
   all_goals (try extract_goal ; sorry)
   ---END tryFactorization_add_nuw_mul_nuw_mul_var
@@ -434,9 +464,11 @@ def tryFactorization_add_mul_nuw_mul_var_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem tryFactorization_add_mul_nuw_mul_var_proof : tryFactorization_add_mul_nuw_mul_var_before ⊑ tryFactorization_add_mul_nuw_mul_var_after := by
   unfold tryFactorization_add_mul_nuw_mul_var_before tryFactorization_add_mul_nuw_mul_var_after
   simp_alive_peephole
+  intros
   ---BEGIN tryFactorization_add_mul_nuw_mul_var
   all_goals (try extract_goal ; sorry)
   ---END tryFactorization_add_mul_nuw_mul_var

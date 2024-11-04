@@ -13,7 +13,15 @@
 2: llvm.return
 
 1: "PR38781"
-4: "PR38781" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.xor
+2: llvm.lshr
+2: llvm.xor
+2: llvm.and
+2: llvm.return
 
 1: "PR75692_1"
 2: llvm.func

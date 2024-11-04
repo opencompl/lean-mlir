@@ -11,8 +11,6 @@
 
 4: "test1" has unsupported operation: llvm.call
 
-4: "test1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test1" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test1" has unsupported operation: llvm.return
@@ -22,13 +20,7 @@
 
 4: "test2" has unsupported operation: llvm.call
 
-4: "test2" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "test2" has unsupported operation: builtin.unregistered: llvm.cond_br
-
-4: "test2" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "test2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "test2" has unsupported operation: builtin.unregistered: llvm.cond_br
 

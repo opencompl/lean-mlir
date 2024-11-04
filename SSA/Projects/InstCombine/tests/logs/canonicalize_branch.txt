@@ -1,51 +1,31 @@
 1: "eq"
-4: "eq" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "eq" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "ne"
-4: "ne" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "ne" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "ugt"
-4: "ugt" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "ugt" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "uge"
-4: "uge" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "uge" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "ult"
-4: "ult" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "ult" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "ule"
-4: "ule" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "ule" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "sgt"
-4: "sgt" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "sgt" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "sge"
-4: "sge" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "sge" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "slt"
-4: "slt" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "slt" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "sle"
-4: "sle" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "sle" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "f_false"

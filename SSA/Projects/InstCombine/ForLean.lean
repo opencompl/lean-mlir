@@ -426,22 +426,6 @@ theorem allOnes_sshiftRight {w n : Nat} :
   · simp [BitVec.msb_allOnes h, getLsbD_sshiftRight]
   · simp [getLsbD_sshiftRight]; omega
 
-@[simp]
-theorem zero_sshiftRight {w n : Nat} :
-  (0#w).sshiftRight n = 0#w := by
-  ext i
-  by_cases h : 0 < w
-  · simp [BitVec.msb_allOnes h, getLsbD_sshiftRight]
-  · simp [getLsbD_sshiftRight]
-
-@[simp]
-theorem zero_ushiftRight {w n : Nat} :
-    0#w >>> n = 0#w := by
-  ext i
-  by_cases h : 0 < w
-  · simp [BitVec.msb_allOnes h]
-  · simp
-
 attribute [simp] shiftLeft_ushiftRight
 
 theorem ofInt_neg_one : BitVec.ofInt w (-1) = -1#w := by
@@ -465,30 +449,6 @@ theorem ofInt_neg_one : BitVec.ofInt w (-1) = -1#w := by
 theorem shiftLeft_and_distrib' {x y : BitVec w} {n m : Nat} :
     x <<< n &&& y <<< (m + n) = (x &&& y <<< m) <<< n := by
   simp [BitVec.shiftLeft_and_distrib, BitVec.shiftLeft_add]
-
-theorem msb_neg {x : BitVec w} :
-    (-x).msb = (~~~x + 1#w).msb := by
-  rw [neg_eq_not_add]
-
-theorem getLsbD_neg {i : Nat} {x : BitVec w} :
-    getLsbD (-x) i = getLsbD (~~~x + 1#w) i := by
-  rw [neg_eq_not_add]
-
-theorem getMsbD_neg {i : Nat} {x : BitVec w} :
-    getMsbD (-x) i = getMsbD (~~~x + 1#w) i := by
-  rw [neg_eq_not_add]
-
-theorem getLsbD_abs {i : Nat} {x : BitVec w} :
-   getLsbD x.abs i = getLsbD (if x.msb = true then -x else x) i := by
-  simp [BitVec.abs]
-
-theorem getMsbD_abs {i : Nat} {x : BitVec w} :
-    getMsbD (x.abs) i = getMsbD (if x.msb = true then -x else x) i := by
-  simp [BitVec.abs]
-
-theorem msb_abs {w : Nat} {x : BitVec w} :
-    (x.abs).msb = (if x.msb = true then -x else x).msb := by
-  simp [BitVec.abs]
 
 @[simp]
 theorem getMsbD_concat {i w : Nat} {b : Bool} {x : BitVec w} :
@@ -585,6 +545,14 @@ theorem msb_rotateRight {r w: Nat} {x : BitVec w} :
       · simp_all [h₃]
   · simp [BitVec.msb, getMsbD_rotateRight, show w = 0 by omega]
 
+theorem sdiv_allOnes {w : ℕ} {x : BitVec w} :
+    x.sdiv (BitVec.allOnes w) = -x := by
+  simp only [BitVec.sdiv_eq]
+  by_cases h : w = 0
+  · subst h
+    simp [BitVec.eq_nil x]
+  · rw [BitVec.msb_allOnes (by omega)]
+    by_cases h : x.msb <;> simp [h, BitVec.neg_allOnes]
 end BitVec
 
 namespace Bool
@@ -627,3 +595,16 @@ theorem not_bne' {a b : Bool} : (!bne a b) = (a == b) := by
   <;> simp
 
 end Bool
+
+theorem Option.some_bind'' (x : α) (f : α → Option β) : some x >>= f = f x := by
+  simp
+
+@[simp]
+theorem bind_if_then_none_eq_if_bind (h : Prop) [Decidable h] (x : Option α) :
+    (if h then none else x) >>= f = if h then none else x >>= f := by
+  split <;> simp
+
+@[simp]
+theorem bind_if_else_none_eq_if_bind (h : Prop) [Decidable h] (x : Option α) :
+    (if h then x else none) >>= f = if h then x >>= f else none := by
+  split <;> simp

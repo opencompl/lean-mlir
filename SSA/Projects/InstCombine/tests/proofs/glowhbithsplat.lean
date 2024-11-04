@@ -16,7 +16,7 @@ section glowhbithsplat_statements
 def t0_before := [llvm|
 {
 ^0(%arg12 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 7 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(7 : i8) : i8
   %1 = llvm.shl %arg12, %0 : i8
   %2 = llvm.ashr %1, %0 : i8
   "llvm.return"(%2) : (i8) -> ()
@@ -25,16 +25,18 @@ def t0_before := [llvm|
 def t0_after := [llvm|
 {
 ^0(%arg12 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(1 : i8) : i8
+  %1 = llvm.mlir.constant(0 : i8) : i8
   %2 = llvm.and %arg12, %0 : i8
   %3 = llvm.sub %1, %2 overflow<nsw> : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t0_proof : t0_before ⊑ t0_after := by
   unfold t0_before t0_after
   simp_alive_peephole
+  intros
   ---BEGIN t0
   apply t0_thm
   ---END t0
@@ -44,7 +46,7 @@ theorem t0_proof : t0_before ⊑ t0_after := by
 def t1_otherbitwidth_before := [llvm|
 {
 ^0(%arg11 : i16):
-  %0 = "llvm.mlir.constant"() <{value = 15 : i16}> : () -> i16
+  %0 = llvm.mlir.constant(15 : i16) : i16
   %1 = llvm.shl %arg11, %0 : i16
   %2 = llvm.ashr %1, %0 : i16
   "llvm.return"(%2) : (i16) -> ()
@@ -53,16 +55,18 @@ def t1_otherbitwidth_before := [llvm|
 def t1_otherbitwidth_after := [llvm|
 {
 ^0(%arg11 : i16):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i16}> : () -> i16
-  %1 = "llvm.mlir.constant"() <{value = 0 : i16}> : () -> i16
+  %0 = llvm.mlir.constant(1 : i16) : i16
+  %1 = llvm.mlir.constant(0 : i16) : i16
   %2 = llvm.and %arg11, %0 : i16
   %3 = llvm.sub %1, %2 overflow<nsw> : i16
   "llvm.return"(%3) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t1_otherbitwidth_proof : t1_otherbitwidth_before ⊑ t1_otherbitwidth_after := by
   unfold t1_otherbitwidth_before t1_otherbitwidth_after
   simp_alive_peephole
+  intros
   ---BEGIN t1_otherbitwidth
   apply t1_otherbitwidth_thm
   ---END t1_otherbitwidth

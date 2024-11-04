@@ -9,5 +9,3 @@
 
 4: "func_24" has unsupported operation: llvm.load
 
-4: "func_24" has unsupported operation: builtin.unregistered: llvm.icmp
-

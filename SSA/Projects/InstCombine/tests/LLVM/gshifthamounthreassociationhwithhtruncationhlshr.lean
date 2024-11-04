@@ -16,8 +16,8 @@ section gshifthamounthreassociationhwithhtruncationhlshr_statements
 def t0_before := [llvm|
 {
 ^0(%arg18 : i32, %arg19 : i16):
-  %0 = "llvm.mlir.constant"() <{value = 32 : i16}> : () -> i16
-  %1 = "llvm.mlir.constant"() <{value = -1 : i16}> : () -> i16
+  %0 = llvm.mlir.constant(32 : i16) : i16
+  %1 = llvm.mlir.constant(-1 : i16) : i16
   %2 = llvm.sub %0, %arg19 : i16
   %3 = llvm.zext %2 : i16 to i32
   %4 = llvm.lshr %arg18, %3 : i32
@@ -30,15 +30,17 @@ def t0_before := [llvm|
 def t0_after := [llvm|
 {
 ^0(%arg18 : i32, %arg19 : i16):
-  %0 = "llvm.mlir.constant"() <{value = 31 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(31 : i32) : i32
   %1 = llvm.lshr %arg18, %0 : i32
   %2 = llvm.trunc %1 : i32 to i16
   "llvm.return"(%2) : (i16) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t0_proof : t0_before ⊑ t0_after := by
   unfold t0_before t0_after
   simp_alive_peephole
+  intros
   ---BEGIN t0
   all_goals (try extract_goal ; sorry)
   ---END t0

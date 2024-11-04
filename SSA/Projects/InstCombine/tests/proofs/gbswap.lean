@@ -16,9 +16,9 @@ section gbswap_statements
 def PR39793_bswap_u64_as_u16_trunc_before := [llvm|
 {
 ^0(%arg27 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = 255 : i64}> : () -> i64
-  %2 = "llvm.mlir.constant"() <{value = 65280 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(8) : i64
+  %1 = llvm.mlir.constant(255) : i64
+  %2 = llvm.mlir.constant(65280) : i64
   %3 = llvm.lshr %arg27, %0 : i64
   %4 = llvm.and %3, %1 : i64
   %5 = llvm.shl %arg27, %0 : i64
@@ -31,15 +31,17 @@ def PR39793_bswap_u64_as_u16_trunc_before := [llvm|
 def PR39793_bswap_u64_as_u16_trunc_after := [llvm|
 {
 ^0(%arg27 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i64}> : () -> i64
+  %0 = llvm.mlir.constant(8) : i64
   %1 = llvm.lshr %arg27, %0 : i64
   %2 = llvm.trunc %1 : i64 to i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem PR39793_bswap_u64_as_u16_trunc_proof : PR39793_bswap_u64_as_u16_trunc_before ⊑ PR39793_bswap_u64_as_u16_trunc_after := by
   unfold PR39793_bswap_u64_as_u16_trunc_before PR39793_bswap_u64_as_u16_trunc_after
   simp_alive_peephole
+  intros
   ---BEGIN PR39793_bswap_u64_as_u16_trunc
   apply PR39793_bswap_u64_as_u16_trunc_thm
   ---END PR39793_bswap_u64_as_u16_trunc
@@ -49,9 +51,9 @@ theorem PR39793_bswap_u64_as_u16_trunc_proof : PR39793_bswap_u64_as_u16_trunc_be
 def PR39793_bswap_u32_as_u16_trunc_before := [llvm|
 {
 ^0(%arg24 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 255 : i32}> : () -> i32
-  %2 = "llvm.mlir.constant"() <{value = 65280 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(255 : i32) : i32
+  %2 = llvm.mlir.constant(65280 : i32) : i32
   %3 = llvm.lshr %arg24, %0 : i32
   %4 = llvm.and %3, %1 : i32
   %5 = llvm.shl %arg24, %0 : i32
@@ -64,15 +66,17 @@ def PR39793_bswap_u32_as_u16_trunc_before := [llvm|
 def PR39793_bswap_u32_as_u16_trunc_after := [llvm|
 {
 ^0(%arg24 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(8 : i32) : i32
   %1 = llvm.lshr %arg24, %0 : i32
   %2 = llvm.trunc %1 : i32 to i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem PR39793_bswap_u32_as_u16_trunc_proof : PR39793_bswap_u32_as_u16_trunc_before ⊑ PR39793_bswap_u32_as_u16_trunc_after := by
   unfold PR39793_bswap_u32_as_u16_trunc_before PR39793_bswap_u32_as_u16_trunc_after
   simp_alive_peephole
+  intros
   ---BEGIN PR39793_bswap_u32_as_u16_trunc
   apply PR39793_bswap_u32_as_u16_trunc_thm
   ---END PR39793_bswap_u32_as_u16_trunc

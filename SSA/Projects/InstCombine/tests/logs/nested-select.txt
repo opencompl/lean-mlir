@@ -170,26 +170,49 @@
 4: "orcond.111.inv.all.conds" has unsupported operation: llvm.call
 
 1: "test_implied_true"
-4: "test_implied_true" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "test_implied_true_vec"
-4: "test_implied_true_vec" has unsupported operation: builtin.unregistered: llvm.icmp
+8: "test_implied_true_vec" contains vectors which are unsupported
 
 1: "test_implied_true_falseval"
-4: "test_implied_true_falseval" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "test_implied_false"
-4: "test_implied_false" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
 
 1: "test_imply_fail"
-4: "test_imply_fail" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "test_imply_fail" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "test_imply_fail" is unchanged by InstCombine
 
 1: "test_imply_type_mismatch"
-4: "test_imply_type_mismatch" has unsupported operation: builtin.unregistered: llvm.icmp
-
-4: "test_imply_type_mismatch" has unsupported operation: builtin.unregistered: llvm.icmp
+7: "test_imply_type_mismatch" is unchanged by InstCombine
 
 1: "test_dont_crash"
 7: "test_dont_crash" is unchanged by InstCombine

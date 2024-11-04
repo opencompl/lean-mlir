@@ -9,8 +9,6 @@
 
 4: "fu1" has unsupported operation: llvm.store
 
-4: "fu1" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "fu1" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "fu1" has unsupported operation: llvm.load
@@ -40,8 +38,6 @@
 4: "fu2" has unsupported operation: llvm.store
 
 4: "fu2" has unsupported operation: llvm.store
-
-4: "fu2" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "fu2" has unsupported operation: builtin.unregistered: llvm.cond_br
 

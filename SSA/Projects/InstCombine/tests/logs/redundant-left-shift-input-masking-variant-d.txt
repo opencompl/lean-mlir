@@ -113,8 +113,6 @@
 4: "t10_nuw_nsw" has unsupported operation: llvm.call
 
 1: "t11_assume_uge"
-4: "t11_assume_uge" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "t11_assume_uge" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 4: "t11_assume_uge" has unsupported operation: llvm.call

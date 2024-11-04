@@ -25,15 +25,17 @@ def t0_before := [llvm|
 def t0_after := [llvm|
 {
 ^0(%arg32 : i8, %arg33 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(0 : i8) : i8
   %1 = llvm.sub %0, %arg32 : i8
   %2 = "llvm.select"(%arg33, %1, %arg32) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t0_proof : t0_before ⊑ t0_after := by
   unfold t0_before t0_after
   simp_alive_peephole
+  intros
   ---BEGIN t0
   all_goals (try extract_goal ; sorry)
   ---END t0
@@ -53,15 +55,17 @@ def t1_before := [llvm|
 def t1_after := [llvm|
 {
 ^0(%arg28 : i8, %arg29 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(0 : i8) : i8
   %1 = llvm.sub %0, %arg28 : i8
   %2 = "llvm.select"(%arg29, %1, %arg28) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t1_proof : t1_before ⊑ t1_after := by
   unfold t1_before t1_after
   simp_alive_peephole
+  intros
   ---BEGIN t1
   all_goals (try extract_goal ; sorry)
   ---END t1
@@ -88,9 +92,11 @@ def t2_after := [llvm|
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t2_proof : t2_before ⊑ t2_after := by
   unfold t2_before t2_after
   simp_alive_peephole
+  intros
   ---BEGIN t2
   all_goals (try extract_goal ; sorry)
   ---END t2
@@ -115,9 +121,11 @@ def t3_after := [llvm|
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem t3_proof : t3_before ⊑ t3_after := by
   unfold t3_before t3_after
   simp_alive_peephole
+  intros
   ---BEGIN t3
   all_goals (try extract_goal ; sorry)
   ---END t3

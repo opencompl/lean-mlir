@@ -5,7 +5,7 @@ import os
 
 benchmark_dir = "../SSA/Projects/InstCombine/HackersDelight/"
 res_dir = "results/HackersDelight/"
-
+raw_data_dir = 'raw-data/'
 reps = 1
 
 bv_width = [4, 8, 16, 32, 64]
@@ -23,113 +23,208 @@ col = [
 "#fb9a99",
 "#e31a1c"]
 
+
+
 for file in os.listdir(benchmark_dir):
-    print(file)
-    if "ch2_3" not in file: # currently discard broken chapter
-        data={}
-        data['bitwuzla'] = {}
-        data['leanSAT'] = {} 
-        data['leanSAT-rw'] = {}
-        data['leanSAT-bb'] = {}
-        data['leanSAT-sat'] = {}
-        data['leanSAT-lrats'] = {}
-        data['leanSAT-lratc'] = {}
+    
 
-        for bvw in bv_width:
+    for bvw in bv_width:
+        bitwuzla_times = []
 
-            data['bitwuzla'][str(bvw)] = []
-            data['leanSAT'][str(bvw)] = []
-            data['leanSAT-rw'][str(bvw)] = []
-            data['leanSAT-bb'][str(bvw)] = []
-            data['leanSAT-sat'][str(bvw)] = []
-            data['leanSAT-lrats'][str(bvw)] = []
-            data['leanSAT-lratc'][str(bvw)] = []
+        leanSAT_tot_times = []
+        leanSAT_rw_times = []
+        leanSAT_bb_times = []
+        leanSAT_sat_times = []
+        leanSAT_lrat_t_times = []
+        leanSAT_lrat_c_times = []
 
-            bitwuzla_times_average = []
-            leanSAT_tot_times_average = []
-            leanSAT_rw_times_average = []
-            leanSAT_bb_times_average = []
-            leanSAT_sat_times_average = []
-            leanSAT_lrats_times_average = []
-            leanSAT_lratc_times_average = []
+        counter_bitwuzla_times = []
+        counter_leanSAT_tot_times = []
+        counter_leanSAT_rw_times = []
+        counter_leanSAT_sat_times = []
 
-            for r in range(reps):
-                res_file = open(res_dir+file.split(".")[0]+"_"+str(bvw)+"_r"+str(r)+".txt")
-                print(res_dir+file.split(".")[0]+"_"+str(bvw)+"_r"+str(r)+".txt")
-                lines = res_file.readlines()
-                print(len(lines))
-                thm = 0
-                for l in lines: 
-                    if "LeanSAT" in l :
-                        tot = float(l.split("ms")[0].split("r ")[1])
+        err_locations = []
+        err_msg = []
+
+
+        err_tot = 0
+
+        bitwuzla_times_average = []
+        leanSAT_tot_times_average = []
+        leanSAT_rw_times_average = []
+        leanSAT_bb_times_average = []
+        leanSAT_sat_times_average = []
+        leanSAT_lrat_t_times_average = []
+        leanSAT_lrat_c_times_average = []
+
+        counter_bitwuzla_times_average = []
+        counter_leanSAT_tot_times_average = []
+        counter_leanSAT_rw_times_average = []
+        counter_leanSAT_bb_times_average = []
+        counter_leanSAT_sat_times_average = []
+        counter_leanSAT_lrat_t_times_average = []
+        counter_leanSAT_lrat_c_times_average = []
+
+        for r in range(reps):
+            inconsistencies = 0
+
+            res_file = open(res_dir+file.split(".")[0]+"_"+str(bvw)+"_r"+str(r)+".txt")
+            # print(res_dir+file.split(".")[0]+"_r"+str(r)+".txt")
+            ls = 0
+            bw = 0
+            ceg_bw = 0
+            ceg_ls = 0
+            errs = 0
+            l = res_file.readline()
+            while l:
+                if "Bitwuzla " in l: 
+                    cegb = False
+                    if "counter" in l : 
+                        cegb = True
+                        tot = float(l.split("after ")[1].split("ms")[0])
                         if r == 0:
-                            leanSAT_tot_times_average.append([tot])
-                            leanSAT_rw_times_average.append([float(l.split("ms")[1].split("g ")[1])])
-                            leanSAT_bb_times_average.append([float(l.split("ms")[2].split("g ")[1])])
-                            leanSAT_sat_times_average.append([float(l.split("ms")[3].split("g ")[1])])
-                            leanSAT_lrats_times_average.append([float(l.split("ms")[4].split("g ")[1])])
-                            leanSAT_lratc_times_average.append([float(l.split("ms")[5].split("g ")[1])])
+                            counter_bitwuzla_times_average.append([tot])
                         else: 
-                            leanSAT_tot_times_average[thm].append(tot)
-                            leanSAT_rw_times_average[thm].append(float(l.split("ms")[1].split("g ")[1]))
-                            leanSAT_bb_times_average[thm].append(float(l.split("ms")[2].split("g ")[1]))
-                            leanSAT_sat_times_average[thm].append(float(l.split("ms")[3].split("g ")[1]))
-                            leanSAT_lrats_times_average[thm].append(float(l.split("ms")[4].split("g ")[1]))
-                            leanSAT_lratc_times_average[thm].append(float(l.split("ms")[5].split("g ")[1]))
-                        thm = thm + 1
-                    elif "Bitwuzla" in l:
+                            counter_bitwuzla_times_average[ceg_bw].append(tot)
+                            # leanSAT results will be on the next line
+                        ceg_bw += 1
+                    else:
                         tot = float(l.split("after ")[1].split("ms")[0])
                         if r == 0:
                             bitwuzla_times_average.append([tot])
                         else: 
-                            bitwuzla_times_average[thm].append(tot)
-            
-            bitwuzla_times = []
-            leanSAT_tot_times = []
-            leanSAT_rw_times = []
-            leanSAT_bb_times = []
-            leanSAT_sat_times = []
-            leanSAT_lrats_times = []
-            leanSAT_lratc_times = []
+                            bitwuzla_times_average[bw].append(tot)
+                            # leanSAT results will be on the next line
+                        bw += 1
+                    l = res_file.readline()
+                    # if testing went right the next line should contain 
+                    if "LeanSAT " in l:
+                        cegl = False
+                        if "counter example" in l: 
+                            tot = float(l.split("ms")[0].split("after ")[1])
+                            if r == 0:
+                                counter_leanSAT_tot_times_average.append([tot])
+                                counter_leanSAT_rw_times_average.append([float(l.split(" SAT")[0].split("rewriting ")[1])])
+                                counter_leanSAT_sat_times_average.append([float(l.split("ms")[1].split("solving ")[1])])
 
-            for thm in bitwuzla_times_average: 
-                bitwuzla_times.append(np.mean(thm))
-            
-            for thm in leanSAT_tot_times_average: 
-                leanSAT_tot_times.append(np.mean(thm))
+                            else: 
+                                counter_leanSAT_tot_times_average[ceg_ls].append(tot)
+                                counter_leanSAT_rw_times_average[ceg_ls].append(float(l.split(" SAT")[0].split("rewriting ")[1]))
+                                counter_leanSAT_sat_times_average[ceg_ls].append(float(l.split("ms")[1].split("solving ")[1]))
+                            ceg_ls += 1
+                            cegl=True
+                        elif "counter example" not in l:  
+                            tot = float(l.split("ms")[0].split("r ")[1])
+                            if r == 0:
+                                leanSAT_tot_times_average.append([tot])
+                                leanSAT_rw_times_average.append([float(l.split("ms")[1].split("g ")[1])])
+                                leanSAT_bb_times_average.append([float(l.split("ms")[2].split("g ")[1])])
+                                leanSAT_sat_times_average.append([float(l.split("ms")[3].split("g ")[1])])
+                                leanSAT_lrat_t_times_average.append([float(l.split("ms")[4].split("g ")[1])])
+                                leanSAT_lrat_c_times_average.append([float(l.split("ms")[5].split("g ")[1])])
 
-            for thm in leanSAT_rw_times_average: 
-                leanSAT_rw_times.append(np.mean(thm))
+                            else: 
+                                leanSAT_tot_times_average[ls].append(tot)
+                                leanSAT_rw_times_average[ls].append(float(l.split("ms")[1].split("g ")[1]))
+                                leanSAT_bb_times_average[ls].append(float(l.split("ms")[2].split("g ")[1]))
+                                leanSAT_sat_times_average[ls].append(float(l.split("ms")[3].split("g ")[1]))
+                                leanSAT_lrat_t_times_average[ls].append(float(l.split("ms")[4].split("g ")[1]))
+                                leanSAT_lrat_c_times_average[ls].append(float(l.split("ms")[5].split("g ")[1]))
+                            ls = ls + 1
+                        if cegb and not cegl: 
+                            print("bitwuzla found a counterexample, leanSAT proved a theorem in file "+file)
+                            inconsistencies+=1
+                            del counter_bitwuzla_times_average[-1]
+                            del leanSAT_tot_times_average[-1]
+                            del leanSAT_rw_times_average[-1]
+                            del leanSAT_bb_times_average[-1]
+                            del leanSAT_sat_times_average[-1]
+                            del leanSAT_lrat_t_times_average[-1]
+                            del leanSAT_lrat_c_times_average[-1]
+                        elif cegl and not cegb: 
+                            print("leanSAT found a counterexample, bitwuzla proved a theorem in file "+file)
+                            inconsistencies+=1
+                            del bitwuzla_times_average[-1]
+                            del counter_leanSAT_tot_times_average[-1]
+                            del counter_leanSAT_rw_times_average[-1]
+                            del counter_leanSAT_sat_times_average[-1]
+                    elif (("error:" in l or "PANIC" in l) and "Lean" not in l and r == 0):
+                        err_locations.append(l.split("error: ")[0].split("/")[-1][0:-1])
+                        err_msg.append((l.split("error: ")[1])[0:-1])
+                        errs = errs + 1  
+                elif (("error:" in l or "PANIC" in l) and "Lean" not in l and r == 0):
+                    err_locations.append(l.split("error: ")[0].split("/")[-1][0:-1])
+                    err_msg.append((l.split("error: ")[1])[0:-1])
+                    errs = errs + 1  
+                l = res_file.readline()
 
-            for thm in leanSAT_bb_times_average: 
-                leanSAT_bb_times.append(np.mean(thm))
-            
-            for thm in leanSAT_sat_times_average: 
-                leanSAT_sat_times.append(np.mean(thm))
 
-            for thm in leanSAT_lrats_times_average: 
-                leanSAT_lrats_times.append(np.mean(thm))
+        err_tot = err_tot + errs
 
-            for thm in leanSAT_lratc_times_average: 
-                leanSAT_lratc_times.append(np.mean(thm))
-
-            data['bitwuzla'][str(bvw)] = bitwuzla_times
-            data['leanSAT'][str(bvw)] = leanSAT_tot_times
-            data['leanSAT-rw'][str(bvw)] = leanSAT_rw_times
-            data['leanSAT-bb'][str(bvw)] = leanSAT_bb_times
-            data['leanSAT-sat'][str(bvw)] = leanSAT_sat_times
-            data['leanSAT-lrats'][str(bvw)] = leanSAT_lrats_times
-            data['leanSAT-lratc'][str(bvw)] = leanSAT_lratc_times
+        for thm in bitwuzla_times_average: 
+            bitwuzla_times.append(np.mean(thm))
         
-        rows = []
+        for thm in leanSAT_tot_times_average: 
+            leanSAT_tot_times.append(np.mean(thm))
 
-        for tool, bvws in data.items():
-            for bvw, times in bvws.items():
-                for time in times:
-                    rows.append({'tool': tool, 'bvw': bvw, 'times': time})
+        for thm in leanSAT_rw_times_average: 
+            leanSAT_rw_times.append(np.mean(thm))
+
+        for thm in leanSAT_bb_times_average: 
+            leanSAT_bb_times.append(np.mean(thm))
         
-        df =pd.DataFrame(rows)
+        for thm in leanSAT_sat_times_average: 
+            leanSAT_sat_times.append(np.mean(thm))
 
-        df.to_csv('raw-data/'+file.split(".")[0]+'.csv')
+        for thm in leanSAT_lrat_t_times_average: 
+            leanSAT_lrat_t_times.append(np.mean(thm))
+
+        for thm in leanSAT_lrat_c_times_average: 
+            leanSAT_lrat_c_times.append(np.mean(thm))
+
+        for thm in counter_bitwuzla_times_average: 
+            counter_bitwuzla_times.append(np.mean(thm))
+
+        for counter_thm in counter_leanSAT_tot_times_average: 
+            counter_leanSAT_tot_times.append(np.mean(thm))
+
+        for counter_thm in counter_leanSAT_rw_times_average: 
+            counter_leanSAT_rw_times.append(np.mean(thm))
+
+        for counter_thm in counter_leanSAT_sat_times_average: 
+            counter_leanSAT_sat_times.append(np.mean(thm))
+
+        print("\n\nwith bitwidth = "+str(bvw))
+        print("leanSAT and Bitwuzla solved: "+str(len(leanSAT_tot_times)))
+        print("leanSAT and Bitwuzla provided "+str(len(counter_leanSAT_tot_times))+" counterexamples")
+        print("There were "+str(inconsistencies)+" inconsistencies")
+        print("Errors raised: "+str(err_tot))
+
+        err_a = np.array(err_msg)
+
+        unique_elements, counts = np.unique(err_a, return_counts=True)
+
+        for id, el in enumerate(unique_elements):
+            print("error "+el+" was raised "+str(counts[id])+" times")
+
+        df_err = pd.DataFrame({'locations':err_locations, 'err-msg':err_msg})
+
+        msg_counts = df_err['err-msg'].value_counts()
+
+        df_err = df_err.assign(msg_count=df_err['err-msg'].map(msg_counts)).sort_values(by=['msg_count', 'err-msg'], ascending=[False, True])
+
+        df_err_sorted = df_err.drop(columns='msg_count')
+
+        df_err_sorted.to_csv(raw_data_dir+'err-hackersdelight.csv')
 
 
+        df = pd.DataFrame({'bitwuzla':bitwuzla_times, 'leanSAT':leanSAT_tot_times,
+                            'leanSAT-rw':leanSAT_rw_times, 'leanSAT-bb':leanSAT_bb_times, 'leanSAT-sat':leanSAT_sat_times, 
+                            'leanSAT-lrat-t':leanSAT_lrat_t_times, 'leanSAT-lrat-c':leanSAT_lrat_c_times})
+
+        df_ceg = pd.DataFrame({'bitwuzla':counter_bitwuzla_times, 'leanSAT':counter_leanSAT_tot_times,
+                            'leanSAT-rw':counter_leanSAT_rw_times, 'leanSAT-sat':counter_leanSAT_sat_times})
+
+
+        df.to_csv(raw_data_dir+'bvw'+str(bvw)+'_'+file.split('.')[0]+'_proved_data.csv')
+        df_ceg.to_csv(raw_data_dir+'bvw'+str(bvw)+'_'+file.split('.')[0]+'_ceg_data.csv')

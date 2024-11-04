@@ -16,8 +16,8 @@ section gpartallyhredundanthlefthshifthinputhmaskinghafterhtruncationhvarianthd_
 def PR51351_before := [llvm|
 {
 ^0(%arg0 : i64, %arg1 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i64}> : () -> i64
-  %1 = "llvm.mlir.constant"() <{value = -33 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-1) : i64
+  %1 = llvm.mlir.constant(-33 : i32) : i32
   %2 = llvm.zext %arg1 : i32 to i64
   %3 = llvm.shl %0, %2 : i64
   %4 = llvm.ashr %3, %2 : i64
@@ -31,16 +31,18 @@ def PR51351_before := [llvm|
 def PR51351_after := [llvm|
 {
 ^0(%arg0 : i64, %arg1 : i32):
-  %0 = "llvm.mlir.constant"() <{value = -33 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(-33 : i32) : i32
   %1 = llvm.add %arg1, %0 : i32
   %2 = llvm.trunc %arg0 : i64 to i32
   %3 = llvm.shl %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem PR51351_proof : PR51351_before ⊑ PR51351_after := by
   unfold PR51351_before PR51351_after
   simp_alive_peephole
+  intros
   ---BEGIN PR51351
   apply PR51351_thm
   ---END PR51351

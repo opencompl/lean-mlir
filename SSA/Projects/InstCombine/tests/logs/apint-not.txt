@@ -6,5 +6,9 @@
 2: llvm.return
 
 1: "test2"
-4: "test2" has unsupported operation: builtin.unregistered: llvm.icmp
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.xor
+2: llvm.return
 

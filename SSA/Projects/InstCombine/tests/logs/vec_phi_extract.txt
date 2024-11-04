@@ -1,8 +1,6 @@
 1: "f"
 4: "f" has unsupported operation: builtin.unregistered: llvm.br
 
-4: "f" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "f" has unsupported operation: llvm.getelementptr
 
 4: "f" has unsupported operation: llvm.store
@@ -13,8 +11,6 @@
 
 1: "copy"
 4: "copy" has unsupported operation: builtin.unregistered: llvm.br
-
-4: "copy" has unsupported operation: builtin.unregistered: llvm.icmp
 
 4: "copy" has unsupported operation: llvm.getelementptr
 
@@ -37,8 +33,6 @@
 
 4: "nocopy" has unsupported operation: builtin.unregistered: llvm.extractelement
 
-4: "nocopy" has unsupported operation: builtin.unregistered: llvm.icmp
-
 4: "nocopy" has unsupported operation: llvm.getelementptr
 
 4: "nocopy" has unsupported operation: llvm.store
@@ -57,6 +51,4 @@
 4: "g" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "g" has unsupported operation: builtin.unregistered: llvm.br
-
-4: "g" has unsupported operation: builtin.unregistered: llvm.icmp
 
