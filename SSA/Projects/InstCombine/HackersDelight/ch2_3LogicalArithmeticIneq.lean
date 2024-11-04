@@ -6,7 +6,7 @@ set_option linter.unreachableTactic false
 namespace HackersDelight
 
 namespace Ch2Basics
-variable {x y z : BitVec 16}
+variable {x y z : BitVec 64}
 
 /- 2–3 Inequalities among Logical and Arithmetic Expressions -/
 

@@ -5,7 +5,7 @@ import os
 
 benchmark_dir = "../SSA/Projects/InstCombine/HackersDelight/"
 res_dir = "results/HackersDelight/"
-raw_data_dir = '../../paper-lean-bitvectors/raw-data/'
+raw_data_dir = 'raw-data/'
 reps = 1
 
 bv_width = [4, 8, 16, 32, 64]
@@ -30,7 +30,7 @@ for file in os.listdir(benchmark_dir):
 
     for bvw in bv_width:
         bitwuzla_times = []
-        
+
         leanSAT_tot_times = []
         leanSAT_rw_times = []
         leanSAT_bb_times = []
@@ -226,5 +226,5 @@ for file in os.listdir(benchmark_dir):
                             'leanSAT-rw':counter_leanSAT_rw_times, 'leanSAT-sat':counter_leanSAT_sat_times})
 
 
-        df.to_csv(raw_data_dir+'bvw'+str(bvw)+'_hackersdelight-proved-data.csv')
-        df_ceg.to_csv(raw_data_dir+'bvw'+str(bvw)+'_hackersdelight-ceg-data.csv')
+        df.to_csv(raw_data_dir+'bvw'+str(bvw)+'_'+file.split('.')[0]+'_proved_data.csv')
+        df_ceg.to_csv(raw_data_dir+'bvw'+str(bvw)+'_'+file.split('.')[0]+'_ceg_data.csv')
