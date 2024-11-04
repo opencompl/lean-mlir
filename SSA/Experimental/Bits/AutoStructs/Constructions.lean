@@ -4,6 +4,7 @@ import Mathlib.Data.FinEnum
 import SSA.Experimental.Bits.AutoStructs.Basic
 import SSA.Experimental.Bits.AutoStructs.ForLean
 import SSA.Experimental.Bits.AutoStructs.FinEnum
+import Batteries.Data.Fin.Basic
 
 section sink
 
