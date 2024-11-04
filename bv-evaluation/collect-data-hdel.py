@@ -23,29 +23,31 @@ col = [
 "#fb9a99",
 "#e31a1c"]
 
-bitwuzla_times = []
-leanSAT_tot_times = []
-leanSAT_rw_times = []
-leanSAT_bb_times = []
-leanSAT_sat_times = []
-leanSAT_lrat_t_times = []
-leanSAT_lrat_c_times = []
 
-counter_bitwuzla_times = []
-counter_leanSAT_tot_times = []
-counter_leanSAT_rw_times = []
-counter_leanSAT_sat_times = []
-
-err_locations = []
-err_msg = []
-
-
-err_tot = 0
 
 for file in os.listdir(benchmark_dir):
     
 
     for bvw in bv_width:
+        bitwuzla_times = []
+        
+        leanSAT_tot_times = []
+        leanSAT_rw_times = []
+        leanSAT_bb_times = []
+        leanSAT_sat_times = []
+        leanSAT_lrat_t_times = []
+        leanSAT_lrat_c_times = []
+
+        counter_bitwuzla_times = []
+        counter_leanSAT_tot_times = []
+        counter_leanSAT_rw_times = []
+        counter_leanSAT_sat_times = []
+
+        err_locations = []
+        err_msg = []
+
+
+        err_tot = 0
 
         bitwuzla_times_average = []
         leanSAT_tot_times_average = []
@@ -192,36 +194,37 @@ for file in os.listdir(benchmark_dir):
         for counter_thm in counter_leanSAT_sat_times_average: 
             counter_leanSAT_sat_times.append(np.mean(thm))
 
-print("leanSAT and Bitwuzla solved: "+str(len(leanSAT_tot_times)))
-print("leanSAT and Bitwuzla provided "+str(len(counter_leanSAT_tot_times))+" counterexamples")
-print("There were "+str(inconsistencies)+" inconsistencies")
-print("Errors raised: "+str(err_tot))
+        print("\n\nwith bitwidth = "+str(bvw))
+        print("leanSAT and Bitwuzla solved: "+str(len(leanSAT_tot_times)))
+        print("leanSAT and Bitwuzla provided "+str(len(counter_leanSAT_tot_times))+" counterexamples")
+        print("There were "+str(inconsistencies)+" inconsistencies")
+        print("Errors raised: "+str(err_tot))
 
-err_a = np.array(err_msg)
+        err_a = np.array(err_msg)
 
-unique_elements, counts = np.unique(err_a, return_counts=True)
+        unique_elements, counts = np.unique(err_a, return_counts=True)
 
-for id, el in enumerate(unique_elements):
-    print("error "+el+" was raised "+str(counts[id])+" times")
+        for id, el in enumerate(unique_elements):
+            print("error "+el+" was raised "+str(counts[id])+" times")
 
-df_err = pd.DataFrame({'locations':err_locations, 'err-msg':err_msg})
+        df_err = pd.DataFrame({'locations':err_locations, 'err-msg':err_msg})
 
-msg_counts = df_err['err-msg'].value_counts()
+        msg_counts = df_err['err-msg'].value_counts()
 
-df_err = df_err.assign(msg_count=df_err['err-msg'].map(msg_counts)).sort_values(by=['msg_count', 'err-msg'], ascending=[False, True])
+        df_err = df_err.assign(msg_count=df_err['err-msg'].map(msg_counts)).sort_values(by=['msg_count', 'err-msg'], ascending=[False, True])
 
-df_err_sorted = df_err.drop(columns='msg_count')
+        df_err_sorted = df_err.drop(columns='msg_count')
 
-df_err_sorted.to_csv(raw_data_dir+'err-hackersdelight.csv')
-
-
-df = pd.DataFrame({'bitwuzla':bitwuzla_times, 'leanSAT':leanSAT_tot_times,
-                    'leanSAT-rw':leanSAT_rw_times, 'leanSAT-bb':leanSAT_bb_times, 'leanSAT-sat':leanSAT_sat_times, 
-                    'leanSAT-lrat-t':leanSAT_lrat_t_times, 'leanSAT-lrat-c':leanSAT_lrat_c_times})
-
-df_ceg = pd.DataFrame({'bitwuzla':counter_bitwuzla_times, 'leanSAT':counter_leanSAT_tot_times,
-                    'leanSAT-rw':counter_leanSAT_rw_times, 'leanSAT-sat':counter_leanSAT_sat_times})
+        df_err_sorted.to_csv(raw_data_dir+'err-hackersdelight.csv')
 
 
-df.to_csv(raw_data_dir+'hackersdelight-proved-data.csv')
-df_ceg.to_csv(raw_data_dir+'hackersdelight-ceg-data.csv')
+        df = pd.DataFrame({'bitwuzla':bitwuzla_times, 'leanSAT':leanSAT_tot_times,
+                            'leanSAT-rw':leanSAT_rw_times, 'leanSAT-bb':leanSAT_bb_times, 'leanSAT-sat':leanSAT_sat_times, 
+                            'leanSAT-lrat-t':leanSAT_lrat_t_times, 'leanSAT-lrat-c':leanSAT_lrat_c_times})
+
+        df_ceg = pd.DataFrame({'bitwuzla':counter_bitwuzla_times, 'leanSAT':counter_leanSAT_tot_times,
+                            'leanSAT-rw':counter_leanSAT_rw_times, 'leanSAT-sat':counter_leanSAT_sat_times})
+
+
+        df.to_csv(raw_data_dir+'bvw'+str(bvw)+'_hackersdelight-proved-data.csv')
+        df_ceg.to_csv(raw_data_dir+'bvw'+str(bvw)+'_hackersdelight-ceg-data.csv')
