@@ -5,7 +5,7 @@ import os
 
 benchmark_dir = "../SSA/Projects/InstCombine/HackersDelight/"
 res_dir = "results/HackersDelight/"
-raw_data_dir = 'raw-data/'
+raw_data_dir = '../../paper-lean-bitvectors/raw-data/HackersDelight/'
 reps = 1
 
 bv_width = [4, 8, 16, 32, 64]
@@ -102,6 +102,7 @@ for file in os.listdir(benchmark_dir):
                         cegl = False
                         if "counter example" in l: 
                             tot = float(l.split("ms")[0].split("after ")[1])
+                            print(counter_leanSAT_rw_times_average)
                             if r == 0:
                                 counter_leanSAT_tot_times_average.append([tot])
                                 counter_leanSAT_rw_times_average.append([float(l.split(" SAT")[0].split("rewriting ")[1])])
@@ -185,13 +186,14 @@ for file in os.listdir(benchmark_dir):
         for thm in counter_bitwuzla_times_average: 
             counter_bitwuzla_times.append(np.mean(thm))
 
-        for counter_thm in counter_leanSAT_tot_times_average: 
+        for thm in counter_leanSAT_tot_times_average: 
             counter_leanSAT_tot_times.append(np.mean(thm))
 
-        for counter_thm in counter_leanSAT_rw_times_average: 
+        for thm in counter_leanSAT_rw_times_average: 
             counter_leanSAT_rw_times.append(np.mean(thm))
 
-        for counter_thm in counter_leanSAT_sat_times_average: 
+        for thm in counter_leanSAT_sat_times_average: 
+            print(counter_leanSAT_sat_times_average)
             counter_leanSAT_sat_times.append(np.mean(thm))
 
         print("\n\nwith bitwidth = "+str(bvw))
