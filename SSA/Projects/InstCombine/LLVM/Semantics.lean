@@ -164,7 +164,7 @@ def mul {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := 
   let umul := ux' * uy'
   let uhbound := shbound <<< 1
 
-  if flags.nsw ∧ (smul < slbound ∨ smul ≥ shbound) then
+  if flags.nsw ∧ ((smul <ₛ slbound) ∨ (smul ≥ₛ shbound)) then
     none
   else if flags.nuw ∧ umul ≥ uhbound then
     none
