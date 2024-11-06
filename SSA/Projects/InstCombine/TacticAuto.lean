@@ -226,6 +226,7 @@ macro "alive_auto": tactic =>
 macro "bv_compare'": tactic =>
   `(tactic|
       (
+        simp (config := {failIfUnchanged := false}) only [BitVec.twoPow] at *
         bv_compare
       )
    )
