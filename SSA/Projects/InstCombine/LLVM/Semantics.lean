@@ -346,9 +346,9 @@ def shl {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := 
   let x' ← x
   let y' ← y
     -- "If the nsw keyword is present, then the shift produces a poison value if it shifts out any bits that disagree with the resultant sign bit."
-  if flags.nsw ∧ ((x' <<< y') >>>ₛ y' = x') then
+  if flags.nsw ∧ ((x' <<< y') >>>ₛ y' ≠ x') then
     none
-  else if flags.nuw ∧ ((x' <<< y') >>> y' = x') then
+  else if flags.nuw ∧ ((x' <<< y') >>> y' ≠ x') then
     none
   else
     shl? x' y'
