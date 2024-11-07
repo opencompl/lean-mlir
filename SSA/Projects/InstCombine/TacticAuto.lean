@@ -228,6 +228,7 @@ macro "bv_compare'": tactic =>
       (
         simp (config := {failIfUnchanged := false}) only [BitVec.twoPow] at *
         bv_compare
+        bv_decide
       )
    )
 
