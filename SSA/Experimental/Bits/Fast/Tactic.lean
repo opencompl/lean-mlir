@@ -79,6 +79,7 @@ theorem termNat_correct (f : Nat → BitStream) (w n : Nat) : BitStream.EqualUpT
 def quoteThm (qMapIndexToFVar : Q(Nat → BitStream)) (w : Q(Nat)) (nat: Nat) :
   Q(@BitStream.EqualUpTo $w (BitStream.ofBitVec (@BitVec.ofNat $w $nat)) (@Term.eval (termNat $nat) $qMapIndexToFVar)) := q(termNat_correct $qMapIndexToFVar $w $nat)
 
+
 /--
 Given an Expr e, return a pair e', p where e' is an expression and p is a proof that e and e' are equal on the fist w bits
 -/
@@ -98,11 +99,14 @@ partial def first_rep (w : Q(Nat)) (e : Q( BitStream)) : SimpM (Σ (x : Q(BitStr
       let length : Q(Nat) := w
       let context  ← getLCtx
       let contextLength := context.getFVarIds.size - 1
-      let lastFVar  ← context.getAt? contextLength
-      let qMapIndexToFVar : Q(Nat → BitStream) := .fvar lastFVar.fvarId
-      return ⟨
-        q(Term.eval (termNat $nat) $qMapIndexToFVar),
-        quoteThm qMapIndexToFVar length nat
+      let lastFVar := (context.getAt? contextLength)
+      match lastFVar with
+      | none => throwError m!"The bv_automata tactic expects the last variable to be a fvar, but it is not"
+      | some lastFVar => do
+        let qMapIndexToFVar : Q(Nat → BitStream) := .fvar lastFVar.fvarId
+        return ⟨
+          q(Term.eval (termNat $nat) $qMapIndexToFVar),
+          quoteThm qMapIndexToFVar length nat
       ⟩
     | ~q(BitStream.ofBitVec (BitVec.ofNat $w $b)) => do
       let .some nat := b.nat?
@@ -110,11 +114,14 @@ partial def first_rep (w : Q(Nat)) (e : Q( BitStream)) : SimpM (Σ (x : Q(BitStr
       let length : Q(Nat) := w
       let context ← getLCtx
       let contextLength := context.getFVarIds.size - 1
-      let lastFVar ← context.getAt? contextLength
-      let qMapIndexToFVar : Q(Nat → BitStream) := .fvar lastFVar.fvarId
-      return ⟨
-        q(Term.eval (termNat $nat) $qMapIndexToFVar),
-        quoteThm qMapIndexToFVar length nat
+      let lastFVar := (context.getAt? contextLength)
+      match lastFVar with
+      | none => throwError m!"The bv_automata tactic expects the last variable to be a fvar, but it is not"
+      | some lastFVar => do
+        let qMapIndexToFVar : Q(Nat → BitStream) := .fvar lastFVar.fvarId
+        return ⟨
+          q(Term.eval (termNat $nat) $qMapIndexToFVar),
+          quoteThm qMapIndexToFVar length nat
       ⟩
     | ~q(@BitStream.ofBitVec $w ($a - $b)) => do
       let ⟨ anext, aproof ⟩ ← first_rep w q(@BitStream.ofBitVec $w $a)
@@ -218,13 +225,16 @@ partial def first_rep (w : Q(Nat)) (e : Q( BitStream)) : SimpM (Σ (x : Q(BitStr
     | .app (.app (.const ``BitStream.ofBitVec []) w) (.fvar x) => do
       let context  ← getLCtx
       let contextLength := context.getFVarIds.size - 1
-      let lastFVar  ← context.getAt? contextLength
-      let qMapIndexToFVar : Q(Nat → BitStream) := .fvar lastFVar.fvarId
-      let p : Q(Nat) := quoteFVar x
-      return ⟨
-        q(Term.eval (Term.var $p) $qMapIndexToFVar),
-        .app (.app (.const ``BitStream.equal_up_to_refl []) w) (.app (.app (.const ``BitStream.ofBitVec []) w) (.fvar x))
-      ⟩
+      let lastFVar := context.getAt? contextLength
+      match lastFVar with
+      | none => throwError m!"The bv_automata tactic expects the last variable to be a fvar, but it is not"
+      | some lastFVar => do
+        let qMapIndexToFVar : Q(Nat → BitStream) := .fvar lastFVar.fvarId
+        let p : Q(Nat) := quoteFVar x
+        return ⟨
+          q(Term.eval (Term.var $p) $qMapIndexToFVar),
+          .app (.app (.const ``BitStream.equal_up_to_refl []) w) (.app (.app (.const ``BitStream.ofBitVec []) w) (.fvar x))
+        ⟩
     | ~q(Term.eval $t $f) =>
       return ⟨
         e,
