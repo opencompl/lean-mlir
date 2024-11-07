@@ -248,7 +248,7 @@ variable (x y : BitVec (w+1))
 @[simp] theorem ofBitVec_not : ofBitVec (~~~ x) = ~~~ (ofBitVec x) := by
   funext i
   simp only [ofBitVec, BitVec.getLsbD_not, BitVec.msb_not, lt_add_iff_pos_left, add_pos_iff,
-    zero_lt_one, or_true, decide_True, Bool.true_and, not_eq]
+    zero_lt_one, or_true, decide_true, Bool.true_and, not_eq]
   split <;> simp_all
 
 end Lemmas
