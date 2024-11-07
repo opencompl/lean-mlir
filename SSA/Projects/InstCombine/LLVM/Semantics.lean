@@ -317,7 +317,10 @@ We use this equation to define srem.
 -/
 @[simp_llvm]
 def srem? {w : Nat} (x y : BitVec w) : IntW w :=
-  (sdiv? x y).map (fun div => x - div * y)
+  if y == 0 || (w != 1 && x == (BitVec.intMin w) && y == -1) then
+    none
+  else
+    BitVec.srem x y
 
 @[simp_llvm_option]
 def srem {w : Nat} (x y : IntW w) : IntW w := do
