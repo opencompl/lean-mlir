@@ -28,6 +28,10 @@ counter_leanSAT_sat = []
 
 inconsistencies  = 0
 
+both_failed = 0
+ls_only_failed = 0
+bw_only_failed = 0
+
 thmTot = 0
 
 errTot = 0
@@ -37,7 +41,8 @@ ls_counter = 0
 
 err_loc_tot = []
 err_msg_tot = []
-
+bitwuzla_failed_locations = []
+leanSAT_failed_locations = []
 
 for file in os.listdir(benchmark_dir):
 
@@ -68,6 +73,7 @@ for file in os.listdir(benchmark_dir):
             err_locations = []
             err_msg = []
 
+
             res_file = open(res_dir+file.split(".")[0]+"_r"+str(r)+".txt")
             # print(res_dir+file.split(".")[0]+"_r"+str(r)+".txt")
             ls = 0
@@ -79,7 +85,12 @@ for file in os.listdir(benchmark_dir):
             while l:
                 if "Bitwuzla " in l: 
                     cegb = False
-                    if "counter" in l : 
+                    bw_failed = False
+                    if "failed" in l : 
+                        bw_failed = True
+                        if (r == 0):
+                            bitwuzla_failed_locations.append(file)
+                    elif "counter" in l : 
                         cegb = True
                         tot = float(l.split("after ")[1].split("ms")[0])
                         if r == 0:
@@ -99,8 +110,13 @@ for file in os.listdir(benchmark_dir):
                     l = res_file.readline()
                     # if testing went right the next line should contain 
                     if "LeanSAT " in l:
+                        ls_failed = False
                         cegl = False
-                        if "counter example" in l: 
+                        if "failed" in l : 
+                            ls_failed = True
+                            if (r == 0):
+                                leanSAT_failed_locations.append(file)
+                        elif "counter example" in l: 
                             tot = float(l.split("ms")[0].split("after ")[1])
                             if r == 0:
                                 counter_leanSAT_tot_times_average.append([tot])
@@ -131,6 +147,30 @@ for file in os.listdir(benchmark_dir):
                                 leanSAT_lrat_t_times_average[ls].append(float(l.split("ms")[4].split("g ")[1]))
                                 leanSAT_lrat_c_times_average[ls].append(float(l.split("ms")[5].split("g ")[1]))
                             ls = ls + 1
+                        
+                        if bw_failed and ls_failed and r ==0:
+                            both_failed+=1
+                        elif ls_failed and r ==0:
+                            ls_only_failed +=1
+                            # delete latest entry from bw results for consistency
+                            if cegb:
+                                del counter_bitwuzla_times_average[-1]
+                            else :
+                                del bitwuzla_times_average[-1]
+                        elif bw_failed and r ==0:
+                            bw_only_failed +=1
+                            if cegl : 
+                                del counter_leanSAT_tot_times_average[-1]
+                                del counter_leanSAT_rw_times_average[-1]
+                                del counter_leanSAT_sat_times_average[-1]
+                            else : 
+                                del leanSAT_tot_times_average[-1]
+                                del leanSAT_rw_times_average[-1]
+                                del leanSAT_bb_times_average[-1]
+                                del leanSAT_sat_times_average[-1]
+                                del leanSAT_lrat_t_times_average[-1]
+                                del leanSAT_lrat_c_times_average[-1]
+
                         if cegb and not cegl: 
                             print("bitwuzla found a counterexample, leanSAT proved a theorem in file "+file)
                             inconsistencies+=1
@@ -180,8 +220,13 @@ for file in os.listdir(benchmark_dir):
 
 print("leanSAT and Bitwuzla solved: "+str(len(leanSAT)))
 print("leanSAT and Bitwuzla provided "+str(len(counter_leanSAT))+" counterexamples")
+print("leanSAT and Bitwuzla both failed on "+str(both_failed)+" theorems")
+print("leanSAT failed and Bitwuzla succeeded on "+str(ls_only_failed)+" theorems")
+print("leanSAT succeeded and Bitwuzla failed on "+str(bw_only_failed)+" theorems")
 print("There were "+str(inconsistencies)+" inconsistencies")
 print("Errors raised: "+str(errTot))
+
+
 
 err_a = np.array(err_msg_tot)
 
