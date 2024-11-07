@@ -1,0 +1,1 @@
+error: Tried to read file '/home/tobiascgrosser/Projects/lean-mlir/SSA/Projects/InstCombine/tests/proofs/.gand_proof.lean.swp' containing non UTF-8 data.
