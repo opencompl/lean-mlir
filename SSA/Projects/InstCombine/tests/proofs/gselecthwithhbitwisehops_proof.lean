@@ -7,6 +7,8 @@ open LLVM
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 
+#exit
+
 section gselecthwithhbitwisehops_proof
 theorem select_icmp_eq_and_1_0_or_2_thm (e e_1 : IntW 32) :
   select (icmp IntPredicate.eq (LLVM.and e_1 (const? 32 1)) (const? 32 0)) e (LLVM.or e (const? 32 2)) ⊑
