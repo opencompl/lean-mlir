@@ -450,9 +450,10 @@ theorem shiftLeft_and_distrib' {x y : BitVec w} {n m : Nat} :
     x <<< n &&& y <<< (m + n) = (x &&& y <<< m) <<< n := by
   simp [BitVec.shiftLeft_and_distrib, BitVec.shiftLeft_add]
 
-theorem add_mod_eq_add_sub {w : Nat} {a b : Nat} (hab_ge : a + b ≥ w) (hab_lt : a + b < 2 * w) : (a + b) % w = a + b -  w := by
-    rw [Nat.mod_eq_sub_mod, Nat.mod_eq_of_lt (by omega)]
-    omega
+theorem add_mod_eq_add_sub {w : Nat} {a b : Nat} (hab_ge : a + b ≥ w) (hab_lt : a + b < 2 * w) :
+    (a + b) % w = a + b -  w := by
+  rw [Nat.mod_eq_sub_mod, Nat.mod_eq_of_lt (by omega)]
+  omega
 
 theorem getMsbD_rotateLeft {m n w : Nat} {x : BitVec w} :
     (x.rotateLeft m).getMsbD n = (decide (n < w) && x.getMsbD ((m + n) % w)) := by
@@ -461,7 +462,7 @@ theorem getMsbD_rotateLeft {m n w : Nat} {x : BitVec w} :
   · simp
   · by_cases hn : n < (w + 1)
     · simp only [hn, decide_True, Bool.true_and, add_tsub_cancel_right]
-      rw [← rotateLeft_mod_eq_rotateLeft ]
+      rw [← rotateLeft_mod_eq_rotateLeft]
       have : m % (w + 1) < w + 1 := by apply Nat.mod_lt; omega
       rw [rotateLeft_eq_rotateLeftAux_of_lt (by assumption)]
       by_cases h : w - n ≥ m % (w + 1)
@@ -513,12 +514,16 @@ theorem msb_rotateLeft {m w : Nat} {x : BitVec w} :
         omega
   · simp [h₀, show w = 0 by omega]
 
+-- the rhs of the following theorem is equivalent to:
+-- (decide (n < w) && (if (n - m < 0) then x.getMsbD (w - 1 + m - r) else x.getMsbD (n - m))
 @[simp]
 theorem getMsbD_rotateRight {w i r : Nat} {x : BitVec w} :
-    (x.rotateRight r).getMsbD i = (decide (i < w) &&
-      bif decide (w - 1 - i < w - r % w) then x.getLsbD (r % w + (w - 1 - i))
-      else decide (w - 1 - i < w) && x.getLsbD (w - 1 - i - (w - r % w))) := by
-    rw [getMsbD_eq_getLsbD, getLsbD_rotateRight]
+    (x.rotateRight m).getMsbD n = (decide (n < w) && if (n - m < 0) then x.getMsbD (w - 1 + m - r) else x.getMsbD (n - m)) := by
+  rw [getMsbD_eq_getLsbD, getMsbD_eq_getLsbD]
+  rcases w with rfl | w
+  · simp
+  · simp [getLsbD_rotateRight]
+    sorry
 
 @[simp]
 theorem msb_rotateRight {r w: Nat} {x : BitVec w} :
@@ -529,19 +534,11 @@ theorem msb_rotateRight {r w: Nat} {x : BitVec w} :
     · simp only [getMsbD_rotateRight, h₀, decide_True, tsub_zero, Nat.mod_eq_of_lt h₁,
         tsub_lt_self_iff, zero_lt_one, _root_.and_self, Bool.true_and]
       by_cases h₂ : (w - 1 < w - r)
-      · simp_all [show r = 0 by omega, getLsbD_eq_getMsbD]
+      · sorry
       · simp only [h₂, decide_False, cond_false, getMsbD_eq_getLsbD]
         by_cases h₃ : x.getLsbD (w - 1 - (w - r))
-        · simp only [h₃, Bool.true_eq, Bool.and_eq_true, decide_eq_true_eq]
-          by_cases h₄ : (w - r < w)
-          · simp [Nat.mod_eq_of_lt, h₃, h₄]
-          · simp only at h₃
-            omega
-        · simp only [h₃, Bool.false_eq, Bool.and_eq_false_imp, decide_eq_true_eq]
-          intro h₄
-          by_cases h₅ : (w - r < w)
-          · simp [Nat.mod_eq_of_lt, h₃, h₅]
-          · simp_all [Nat.mod_self]
+        · sorry
+        · sorry
     · simp only [rotateRight, rotateRightAux, getMsbD_or, getMsbD_ushiftRight, h₀, decide_True,
         zero_le, Nat.sub_eq_zero_of_le, Bool.true_and, getMsbD_shiftLeft, zero_add]
       by_cases h₃ : (0 < r % w)
