@@ -457,6 +457,12 @@ theorem getMsbD_rotateLeft {w i r : Nat} {x : BitVec w} :
       else decide (w - 1 - i < w) && x.getLsbD (w - 1 - i - r % w)) := by
     rw [getMsbD_eq_getLsbD, getLsbD_rotateLeft]
 
+-- this is an alternative I thought of for getMsbD_rotateLeft,
+-- but I cant figure out (1) whether it's correct (2) how to prove it (tried and kept
+-- getting stuck)
+theorem getMsbD_rotateLeft' {m n w : Nat} {x : BitVec w} :
+    (x.rotateLeft m).getMsbD n = (decide (n < w) && x.getMsbD ((m + n) % w)) := by sorry
+
 @[simp]
 theorem msb_rotateLeft {m w : Nat} {x : BitVec w} :
     (x.rotateLeft m).msb = x.getMsbD (m % w) := by
