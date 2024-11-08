@@ -55,7 +55,7 @@ def process_file(file_path):
     proof_file = file_path[:-5].replace("/LLVM/", "/proofs/") + "_proof.lean"
     stem_name = file_path.split("/")[-1][:-5]
     new_file_path = file_path.replace("/LLVM/", "/proofs/")
-    log_path = proof_file.replace("/proofs/", "/logs/").replace(".lean", ".txt")
+    log_path = proof_file.replace("/proofs/", "/logs/proofs/").replace(".lean", ".txt")
     result = subprocess.run(
         ["lake", "build", module_name], capture_output=True, text=True
     )
@@ -102,14 +102,11 @@ def process_file(file_path):
 
 
 def main():
-    proof_directory = "./SSA/Projects/InstCombine/tests/proofs"
-    rm_proofs = "\nrm -r " + proof_directory + "/*\n"
+    rm_proofs = "\nrm -r " + proof_path + "/*\n"
     subprocess.run(rm_proofs, shell=True)
 
-    directory = "./SSA/Projects/InstCombine/tests/LLVM"
-
     worklist = []
-    for root, _, files in os.walk(directory):
+    for root, _, files in os.walk(test_path):
         for lean_file in files:
             if lean_file.endswith(".lean"):  # Assuming the files have a .lean extension
                 file_path = os.path.join(root, lean_file)
