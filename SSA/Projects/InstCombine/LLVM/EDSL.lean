@@ -113,25 +113,17 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
         | "llvm.urem"   => pure <| Sum.inl .urem
         | "llvm.srem"   => pure <| Sum.inl .srem
         | "llvm.lshr"   => do
-          let attr? := opStx.attrs.getAttr "isExact"
-          match attr? with
-            | .none => pure <| Sum.inl .lshr
-            | .some _ => pure <| Sum.inl (MOp.BinaryOp.lshr ⟨true⟩)
+          let isExact? := opStx.attrs.getAttr "isExact"
+          pure <| Sum.inl (.lshr ⟨isExact?.isSome⟩)
         | "llvm.ashr"   => do
-          let attr? := opStx.attrs.getAttr "isExact"
-          match attr? with
-            | .none => pure <| Sum.inl .ashr
-            | .some _ => pure <| Sum.inl (MOp.BinaryOp.ashr ⟨true⟩)
+          let isExact? := opStx.attrs.getAttr "isExact"
+          pure <| Sum.inl (.ashr ⟨isExact?.isSome⟩)
         | "llvm.sdiv"   => do
-          let attr? := opStx.attrs.getAttr "isExact"
-          match attr? with
-            | .none => pure <| Sum.inl .sdiv
-            | .some _ => pure <| Sum.inl (MOp.BinaryOp.sdiv ⟨true⟩)
+          let isExact? := opStx.attrs.getAttr "isExact"
+          pure <| Sum.inl (.sdiv ⟨isExact?.isSome⟩)
         | "llvm.udiv"   => do
-          let attr? := opStx.attrs.getAttr "isExact"
-          match attr? with
-            | .none => pure <| Sum.inl .udiv
-            | .some _ => pure <| Sum.inl (MOp.BinaryOp.udiv ⟨true⟩)
+          let isExact? := opStx.attrs.getAttr "isExact"
+          pure <| Sum.inl (.udiv ⟨isExact?.isSome⟩)
         | "llvm.shl"    =>  do
           let attr? := opStx.attrs.getAttr "overflowFlags"
           match attr? with
