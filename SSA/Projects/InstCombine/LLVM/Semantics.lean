@@ -349,7 +349,7 @@ def shl {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := 
   let x' ← x
   let y' ← y
     -- "If the nsw keyword is present, then the shift produces a poison value if it shifts out any bits that disagree with the resultant sign bit."
-  if flags.nsw ∧ ((x' <<< y') >>>ₛ y' ≠ x') then
+  if flags.nsw ∧ ((x' <<< y').sshiftRight'  y' ≠ x') then
     none
   else if flags.nuw ∧ ((x' <<< y') >>> y' ≠ x') then
     none
@@ -394,7 +394,7 @@ Corresponds to `Std.BitVec.sshiftRight` in the `some` case.
 def ashr? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
   if op2 >= n
   then .none
-  else some (op1 >>>ₛ op2)
+  else some (op1.sshiftRight' op2)
 
 @[simp_llvm_option]
 def ashr {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW w := do
