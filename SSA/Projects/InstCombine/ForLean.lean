@@ -459,6 +459,8 @@ theorem sdiv_allOnes {w : ℕ} {x : BitVec w} :
     simp [BitVec.eq_nil x]
   · rw [BitVec.msb_allOnes (by omega)]
     by_cases h : x.msb <;> simp [h, BitVec.neg_allOnes]
+
+attribute [bv_normalize] BitVec.mul_add
 end BitVec
 
 namespace Bool
