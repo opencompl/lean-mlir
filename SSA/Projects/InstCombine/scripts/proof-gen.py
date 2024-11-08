@@ -51,7 +51,7 @@ def print_log(log, log_file):
 
 def process_file(file_path):
     # Run the `lake build` command and capture the output
-    module_name = file_path[2:-5].replace("/", ".")
+    module_name = file_path[:-5].replace("/", ".")
     proof_file = file_path[:-5].replace("/LLVM/", "/proofs/") + "_proof.lean"
     stem_name = file_path.split("/")[-1][:-5]
     new_file_path = file_path.replace("/LLVM/", "/proofs/")
@@ -104,6 +104,10 @@ def process_file(file_path):
 def main():
     rm_proofs = "\nrm -r " + proof_path + "/*\n"
     subprocess.run(rm_proofs, shell=True)
+    
+    rm_logs = "\nrm -r " + proof_log_path + "/*\n"
+    subprocess.run(rm_logs, shell=True)
+
 
     worklist = []
     for root, _, files in os.walk(test_path):

@@ -67,7 +67,7 @@ def parse_from_file(file_name):
 
 def remove():
     rm_tests = "\nrm -r " + test_path + "/*\n"
-    rm_logs = "\nrm -r " + log_path + "/*\n"
+    rm_logs = "\nrm -r " + llvm_log_path + "/*\n"
     subprocess.run(rm_tests, shell=True)
     subprocess.run(rm_logs, shell=True)
 
@@ -127,7 +127,7 @@ def process_file(file):
     stem = "g" + filename.split(".")[0].replace("-", "h")
     full_name = f"{llvm_test_path}/{filename}"
     run_process1 = f"opt -passes=instcombine -S {full_name}  | mlir-translate -import-llvm | mlir-opt --mlir-print-op-generic"
-    log_file = f"{log_path}/{filename}".replace(".ll", ".txt")
+    log_file = f"{llvm_log_path}/{filename}".replace(".ll", ".txt")
     log = []
     print(run_process1)
 

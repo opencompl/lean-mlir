@@ -18,16 +18,12 @@ def main():
     error_dict = dict()
     log_errors = []
     func_count = 0
-    build_error = 0
-    for log in os.listdir(log_path):
-        with open(f"{log_path}/{log}", "r") as l:
+    for log in os.listdir(llvm_log_path):
+        with open(f"{llvm_log_path}/{log}", "r") as l:
             func_success = False
             lines = l.readlines()
             if not (len(lines) > 0):
                 log_errors.append(log)
-                continue
-            elif not lines[0][0].isnumeric():
-                build_error += 1
                 continue
             for line in lines:
                 s_line = re.split('"|: |\n', line)
@@ -52,7 +48,7 @@ def main():
     llvm_test_count = len(os.listdir(llvm_test_path))
     translated_test_count = len(os.listdir(test_path))
     proof_count = len(os.listdir(proof_path)) >> 1
-
+    build_error = len(os.listdir(proof_log_path))
     grep_process = f"grep -o theorem {proof_path}/*_proof.lean | wc -l"
 
     theorem_count = subprocess.run(
