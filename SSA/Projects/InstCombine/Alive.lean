@@ -34,3 +34,5 @@ import SSA.Projects.InstCombine.PaperExamples
 import SSA.Projects.InstCombine.HackersDelight.ch2_1DeMorgan
 import SSA.Projects.InstCombine.HackersDelight.ch2_2AdditionAndLogicalOps
 import SSA.Projects.InstCombine.HackersDelight.ch2_3LogicalArithmeticIneq
+
+import SSA.Projects.InstCombine.TwoPowSimproc
