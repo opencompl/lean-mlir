@@ -5,10 +5,10 @@ from xdsl.dialects.builtin import (
     Builtin,
 )
 import os
-from enum import Enum, auto
+from enum import Enum
 
 # The path from lean-mlir to llvm-project
-llvm_path = "../llvm-project-main"
+llvm_path = "../llvm-project"
 
 if len(llvm_path) == 0:
     raise ValueError("You need to give the path to llvm in config.py")
@@ -17,6 +17,12 @@ test_path = "SSA/Projects/InstCombine/tests/LLVM"
 proof_path = "SSA/Projects/InstCombine/tests/proofs"
 log_path = "SSA/Projects/InstCombine/tests/logs"
 llvm_test_path = llvm_path + "/llvm/test/Transforms/InstCombine"
+skipped_funcs = {
+    # These 3 functions are skipped because the `noundef` tag is unsupported
+    "bools2_logical_commute3_nopoison": "noundef",
+    "logical_or_noundef_b": "noundef",
+    "logical_and_noundef": "noundef",
+}
 expensive_files = [
     "pr96012.ll",
 ]
@@ -48,13 +54,13 @@ allowed_names = {
     "llvm.zext",
     "llvm.sext",
     "llvm.trunc",
-    "llvm.icmp"
+    "llvm.icmp",
 }
 
 allowed_unregistered = {
     "llvm.select",
-    "llvm.icmp"
 }
+
 
 class Msg(Enum):
     FUNC_NAME = 1
@@ -65,6 +71,6 @@ class Msg(Enum):
     E_NOT_FOUND = 6
     E_NOT_CHANGED = 7
     E_VECTOR = 8
-    
+
     def is_error(self):
         return self.value > 2

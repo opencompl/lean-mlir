@@ -159,6 +159,9 @@ def process_file(file):
             continue
         func_name = func.sym_name
         log.append(f"{Msg.FUNC_NAME.value}: {func_name}\n")
+        if (err := skipped_funcs.get(func_name)):
+            log.append(f"{Msg.E_UNSUPPORTED.value}: {func_name} has unsupported operation: {err}\n\n")
+            continue
         
         flag = False
         for op in func.walk():
