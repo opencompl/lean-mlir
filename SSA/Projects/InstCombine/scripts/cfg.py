@@ -17,6 +17,7 @@ test_path = "SSA/Projects/InstCombine/tests/LLVM"
 proof_path = "SSA/Projects/InstCombine/tests/proofs"
 log_path = "SSA/Projects/InstCombine/tests/logs"
 llvm_test_path = llvm_path + "/llvm/test/Transforms/InstCombine"
+
 skipped_funcs = {
     # These 3 functions are skipped because the `noundef` tag is unsupported
     "bools2_logical_commute3_nopoison": "noundef",
@@ -26,6 +27,7 @@ skipped_funcs = {
 expensive_files = [
     "pr96012.ll",
 ]
+
 directory = os.fsencode(llvm_test_path)
 
 # Initialize the MLIR context and register the LLVM dialect

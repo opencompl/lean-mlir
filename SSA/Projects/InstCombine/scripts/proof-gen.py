@@ -5,6 +5,7 @@ import subprocess
 from multiprocessing import Pool
 from cfg import *
 
+
 def get_lines(msg):
     # Define the regex pattern to match error messages with line numbers
     pattern = re.compile(r"info: .+?:(\d+):\d+: (.+?)(?=warning)", flags=re.DOTALL)
@@ -14,15 +15,20 @@ def get_lines(msg):
     # Replace this with your actual implementation
     return lines_thm
 
+
 def gen_proof(thm):
-    return thm.replace("sorry\n", """by 
+    return thm.replace(
+        "sorry\n",
+        """by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry\n
-""")
+""",
+    )
+
 
 def gen_intro(stem):
     return f"""
@@ -37,9 +43,11 @@ set_option linter.unreachableTactic false
 section {stem}_proof
 """
 
+
 def print_log(log, log_file):
     with open(log_file, "a+") as l:
         l.writelines(log)
+
 
 def process_file(file_path):
     # Run the `lake build` command and capture the output
@@ -53,7 +61,7 @@ def process_file(file_path):
     )
     print(result)
     msg = result.stdout
-    if result.stderr: 
+    if result.stderr:
         print_log([result.stdout, result.stderr], log_path)
         return
     print(f"msg = {msg}")
@@ -71,11 +79,11 @@ def process_file(file_path):
     for l, n, m in named:
         if 0 <= l - 1 < len(lines):
             lines[l - 1] = f"  apply {n}_thm\n"
-    
-    for (i,line) in enumerate(lines):
+
+    for i, line in enumerate(lines):
         if line == "  all_goals (try extract_goal ; sorry)":
             lines[i] = "  done\n"
-            
+
     lines[0] = f"import SSA.Projects.InstCombine.tests.proofs.{stem_name}_proof\n"
     # Write the modified content to the new file
     with open(new_file_path, "w") as file:
@@ -97,9 +105,9 @@ def main():
     proof_directory = "./SSA/Projects/InstCombine/tests/proofs"
     rm_proofs = "\nrm -r " + proof_directory + "/*\n"
     subprocess.run(rm_proofs, shell=True)
-    
+
     directory = "./SSA/Projects/InstCombine/tests/LLVM"
-    
+
     worklist = []
     for root, _, files in os.walk(directory):
         for lean_file in files:
