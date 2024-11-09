@@ -1,0 +1,224 @@
+1: "callee"
+5: "callee" is empty
+
+1: "use"
+5: "use" is empty
+
+1: "sext_sext_add"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.ashr
+2: llvm.sext
+2: llvm.sext
+2: llvm.add
+2: llvm.return
+
+1: "sext_zext_add_mismatched_exts"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.lshr
+2: llvm.sext
+2: llvm.zext
+2: llvm.add
+2: llvm.return
+
+1: "sext_sext_add_mismatched_types"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.ashr
+2: llvm.sext
+2: llvm.sext
+2: llvm.add
+2: llvm.return
+
+1: "sext_sext_add_extra_use1"
+4: "sext_sext_add_extra_use1" has unsupported operation: llvm.call
+
+1: "sext_sext_add_extra_use2"
+4: "sext_sext_add_extra_use2" has unsupported operation: llvm.call
+
+1: "sext_sext_add_extra_use3"
+4: "sext_sext_add_extra_use3" has unsupported operation: llvm.call
+
+4: "sext_sext_add_extra_use3" has unsupported operation: llvm.call
+
+1: "test1"
+4: "test1" has unsupported operation: llvm.call
+
+4: "test1" has unsupported operation: llvm.call
+
+1: "test2"
+4: "test2" has unsupported operation: llvm.call
+
+4: "test2" has unsupported operation: llvm.call
+
+1: "test3"
+4: "test3" has unsupported operation: llvm.call
+
+4: "test3" has unsupported operation: llvm.call
+
+1: "test4"
+4: "test4" has unsupported operation: llvm.call
+
+4: "test4" has unsupported operation: llvm.call
+
+1: "test5"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.sext
+2: llvm.add
+2: llvm.return
+
+1: "sext_add_constant_extra_use"
+4: "sext_add_constant_extra_use" has unsupported operation: llvm.call
+
+1: "test5_splat"
+8: "test5_splat" contains vectors which are unsupported
+
+1: "test5_vec"
+8: "test5_vec" contains vectors which are unsupported
+
+1: "test6"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.sext
+2: llvm.add
+2: llvm.return
+
+1: "test6_splat"
+8: "test6_splat" contains vectors which are unsupported
+
+1: "test6_vec"
+8: "test6_vec" contains vectors which are unsupported
+
+1: "test6_vec2"
+8: "test6_vec2" contains vectors which are unsupported
+
+1: "test7"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.zext
+2: llvm.add
+2: llvm.return
+
+1: "test7_splat"
+8: "test7_splat" contains vectors which are unsupported
+
+1: "test7_vec"
+8: "test7_vec" contains vectors which are unsupported
+
+1: "test8"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.sext
+2: llvm.mul
+2: llvm.return
+
+1: "test8_splat"
+8: "test8_splat" contains vectors which are unsupported
+
+1: "test8_vec"
+8: "test8_vec" contains vectors which are unsupported
+
+1: "test8_vec2"
+8: "test8_vec2" contains vectors which are unsupported
+
+1: "test9"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.sext
+2: llvm.mul
+2: llvm.return
+
+1: "test9_splat"
+8: "test9_splat" contains vectors which are unsupported
+
+1: "test9_vec"
+8: "test9_vec" contains vectors which are unsupported
+
+1: "test10"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.zext
+2: llvm.mul
+2: llvm.return
+
+1: "test10_splat"
+8: "test10_splat" contains vectors which are unsupported
+
+1: "test10_vec"
+8: "test10_vec" contains vectors which are unsupported
+
+1: "test11"
+4: "test11" has unsupported operation: llvm.call
+
+4: "test11" has unsupported operation: llvm.call
+
+1: "test12"
+4: "test12" has unsupported operation: llvm.call
+
+4: "test12" has unsupported operation: llvm.call
+
+1: "test13"
+4: "test13" has unsupported operation: llvm.call
+
+4: "test13" has unsupported operation: llvm.call
+
+1: "test14"
+4: "test14" has unsupported operation: llvm.call
+
+4: "test14" has unsupported operation: llvm.call
+
+1: "test15"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.sext
+2: llvm.sub
+2: llvm.return
+
+1: "test15vec"
+8: "test15vec" contains vectors which are unsupported
+
+1: "test16"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.zext
+2: llvm.sub
+2: llvm.return
+
+1: "test16vec"
+8: "test16vec" contains vectors which are unsupported
+
+1: "test17"
+4: "test17" has unsupported operation: llvm.call
+
+4: "test17" has unsupported operation: llvm.call
+
+1: "test18"
+4: "test18" has unsupported operation: llvm.call
+
+1: "test19"
+4: "test19" has unsupported operation: llvm.call
+

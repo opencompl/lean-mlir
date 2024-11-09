@@ -1,0 +1,66 @@
+1: "func"
+9: "func" has pointer type input
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+1: "func_single_operand"
+9: "func_single_operand" has pointer type input
+
+4: "func_single_operand" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "func_single_operand" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func_single_operand" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+1: "func_pointer_different_types"
+9: "func_pointer_different_types" has pointer type input
+
+4: "func_pointer_different_types" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "func_pointer_different_types" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func_pointer_different_types" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+1: "func_integer_type_too_small"
+9: "func_integer_type_too_small" has pointer type input
+
+4: "func_integer_type_too_small" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "func_integer_type_too_small" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "func_integer_type_too_small" has unsupported operation: llvm.inttoptr
+
+4: "func_integer_type_too_small" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func_integer_type_too_small" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+1: "func_phi_not_use_in_ptr2int"
+9: "func_phi_not_use_in_ptr2int" has pointer type input
+
+4: "func_phi_not_use_in_ptr2int" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "func_phi_not_use_in_ptr2int" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "func_phi_not_use_in_ptr2int" has unsupported operation: llvm.inttoptr
+
+4: "func_phi_not_use_in_ptr2int" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "func_ptr_different_addrspace"
+9: "func_ptr_different_addrspace" has pointer type input
+
+4: "func_ptr_different_addrspace" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "func_ptr_different_addrspace" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "func_ptr_different_addrspace" has unsupported operation: llvm.inttoptr
+
+4: "func_ptr_different_addrspace" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func_ptr_different_addrspace" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+

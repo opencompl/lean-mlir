@@ -1,0 +1,24 @@
+1: "strnlen"
+9: "strnlen" has pointer type input
+
+1: "deref_strnlen_ecp_3"
+4: "deref_strnlen_ecp_3" has unsupported operation: llvm.mlir.addressof
+
+4: "deref_strnlen_ecp_3" has unsupported operation: llvm.load
+
+4: "deref_strnlen_ecp_3" has unsupported operation: llvm.call
+
+1: "deref_strnlen_ecp_nz"
+4: "deref_strnlen_ecp_nz" has unsupported operation: llvm.mlir.addressof
+
+4: "deref_strnlen_ecp_nz" has unsupported operation: llvm.load
+
+4: "deref_strnlen_ecp_nz" has unsupported operation: llvm.call
+
+1: "noderef_strnlen_ecp_n"
+4: "noderef_strnlen_ecp_n" has unsupported operation: llvm.mlir.addressof
+
+4: "noderef_strnlen_ecp_n" has unsupported operation: llvm.load
+
+4: "noderef_strnlen_ecp_n" has unsupported operation: llvm.call
+

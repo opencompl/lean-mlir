@@ -1,0 +1,374 @@
+1: "test_ui_ui_i8_add"
+4: "test_ui_ui_i8_add" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "test_ui_ui_i8_add_fail_overflow"
+4: "test_ui_ui_i8_add_fail_overflow" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "test_ui_ui_i8_add_fail_overflow" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "test_ui_ui_i8_add_fail_overflow" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_ui_ui_i8_add_C"
+4: "test_ui_ui_i8_add_C" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "test_ui_ui_i8_add_C_fail_no_repr"
+4: "test_ui_ui_i8_add_C_fail_no_repr" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "test_ui_ui_i8_add_C_fail_no_repr" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_ui_ui_i8_add_C_fail_overflow"
+4: "test_ui_ui_i8_add_C_fail_overflow" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "test_ui_ui_i8_add_C_fail_overflow" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_si_si_i8_add"
+4: "test_si_si_i8_add" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+1: "test_si_si_i8_add_fail_overflow"
+4: "test_si_si_i8_add_fail_overflow" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "test_si_si_i8_add_fail_overflow" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "test_si_si_i8_add_fail_overflow" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_ui_si_i8_add"
+4: "test_ui_si_i8_add" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "test_ui_si_i8_add_overflow"
+4: "test_ui_si_i8_add_overflow" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "test_ui_ui_i8_sub_C"
+4: "test_ui_ui_i8_sub_C" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "test_ui_ui_i8_sub_C_fail_overflow"
+4: "test_ui_ui_i8_sub_C_fail_overflow" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+1: "test_si_si_i8_sub"
+4: "test_si_si_i8_sub" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "test_si_si_i8_sub_fail_overflow"
+4: "test_si_si_i8_sub_fail_overflow" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "test_si_si_i8_sub_fail_overflow" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "test_si_si_i8_sub_fail_overflow" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "test_si_si_i8_sub_C"
+4: "test_si_si_i8_sub_C" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "test_si_si_i8_sub_C_fail_overflow"
+4: "test_si_si_i8_sub_C_fail_overflow" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "test_ui_si_i8_sub"
+4: "test_ui_si_i8_sub" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+1: "test_ui_si_i8_sub_fail_maybe_sign"
+4: "test_ui_si_i8_sub_fail_maybe_sign" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "test_ui_ui_i8_mul"
+4: "test_ui_ui_i8_mul" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "test_ui_ui_i8_mul_C"
+4: "test_ui_ui_i8_mul_C" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "test_ui_ui_i8_mul_C_fail_overlow"
+4: "test_ui_ui_i8_mul_C_fail_overlow" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "test_ui_ui_i8_mul_C_fail_overlow" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test_si_si_i8_mul"
+4: "test_si_si_i8_mul" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+1: "test_si_si_i8_mul_fail_maybe_zero"
+4: "test_si_si_i8_mul_fail_maybe_zero" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "test_si_si_i8_mul_fail_maybe_zero" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "test_si_si_i8_mul_fail_maybe_zero" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test_si_si_i8_mul_C_fail_no_repr"
+4: "test_si_si_i8_mul_C_fail_no_repr" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "test_si_si_i8_mul_C_fail_no_repr" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test_si_si_i8_mul_C_fail_overflow"
+4: "test_si_si_i8_mul_C_fail_overflow" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "test_si_si_i8_mul_C_fail_overflow" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test_ui_si_i8_mul"
+4: "test_ui_si_i8_mul" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "test_ui_si_i8_mul_fail_maybe_zero"
+4: "test_ui_si_i8_mul_fail_maybe_zero" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "test_ui_si_i8_mul_fail_signed"
+4: "test_ui_si_i8_mul_fail_signed" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "test_ui_si_i8_mul_fail_signed" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "test_ui_si_i8_mul_fail_signed" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test_ui_ui_i16_add"
+4: "test_ui_ui_i16_add" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "test_ui_ui_i16_add_fail_not_promotable"
+4: "test_ui_ui_i16_add_fail_not_promotable" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "test_ui_ui_i16_add_fail_not_promotable" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "test_ui_ui_i16_add_fail_not_promotable" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_ui_ui_i16_add_C"
+4: "test_ui_ui_i16_add_C" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "test_ui_ui_i16_add_C_fail_overflow"
+4: "test_ui_ui_i16_add_C_fail_overflow" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "test_ui_ui_i16_add_C_fail_overflow" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_si_si_i16_add"
+4: "test_si_si_i16_add" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+1: "test_si_si_i16_add_fail_no_promotion"
+4: "test_si_si_i16_add_fail_no_promotion" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "test_si_si_i16_add_fail_no_promotion" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "test_si_si_i16_add_fail_no_promotion" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_si_si_i16_add_C_overflow"
+4: "test_si_si_i16_add_C_overflow" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "test_si_si_i16_add_C_overflow" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_si_si_i16_sub"
+4: "test_si_si_i16_sub" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+1: "test_si_si_i16_sub_fail_no_promotion"
+4: "test_si_si_i16_sub_fail_no_promotion" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "test_si_si_i16_sub_fail_no_promotion" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "test_si_si_i16_sub_fail_no_promotion" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "test_ui_si_i16_sub"
+4: "test_ui_si_i16_sub" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+1: "test_ui_si_i16_sub_fail_maybe_signed"
+4: "test_ui_si_i16_sub_fail_maybe_signed" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "test_ui_si_i16_sub_fail_maybe_signed" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "test_ui_si_i16_sub_fail_maybe_signed" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "test_ui_ui_i16_mul"
+4: "test_ui_ui_i16_mul" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "test_ui_ui_i16_mul_fail_no_promotion"
+4: "test_ui_ui_i16_mul_fail_no_promotion" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "test_ui_ui_i16_mul_fail_no_promotion" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "test_ui_ui_i16_mul_fail_no_promotion" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test_si_si_i16_mul"
+4: "test_si_si_i16_mul" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+1: "test_si_si_i16_mul_fail_overflow"
+4: "test_si_si_i16_mul_fail_overflow" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "test_si_si_i16_mul_fail_overflow" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "test_si_si_i16_mul_fail_overflow" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test_si_si_i16_mul_C_fail_overflow"
+4: "test_si_si_i16_mul_C_fail_overflow" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "test_si_si_i16_mul_C_fail_overflow" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test_si_si_i16_mul_C_fail_no_promotion"
+4: "test_si_si_i16_mul_C_fail_no_promotion" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "test_si_si_i16_mul_C_fail_no_promotion" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test_ui_si_i16_mul"
+4: "test_ui_si_i16_mul" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "test_ui_ui_i12_add"
+4: "test_ui_ui_i12_add" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "test_ui_ui_i12_add_fail_overflow"
+4: "test_ui_ui_i12_add_fail_overflow" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "test_ui_ui_i12_add_fail_overflow" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "test_ui_ui_i12_add_fail_overflow" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_si_si_i12_add"
+4: "test_si_si_i12_add" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+1: "test_si_si_i12_add_fail_overflow"
+4: "test_si_si_i12_add_fail_overflow" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "test_si_si_i12_add_fail_overflow" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "test_si_si_i12_add_fail_overflow" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_si_si_i12_add_C_fail_overflow"
+4: "test_si_si_i12_add_C_fail_overflow" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "test_si_si_i12_add_C_fail_overflow" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_ui_ui_i12_sub"
+4: "test_ui_ui_i12_sub" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+1: "test_ui_ui_i12_sub_fail_overflow"
+4: "test_ui_ui_i12_sub_fail_overflow" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+1: "test_si_si_i12_sub"
+4: "test_si_si_i12_sub" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "test_si_si_i12_sub_fail_overflow"
+4: "test_si_si_i12_sub_fail_overflow" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "test_si_si_i12_sub_fail_overflow" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "test_si_si_i12_sub_fail_overflow" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "test_ui_ui_i12_mul"
+4: "test_ui_ui_i12_mul" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "test_ui_ui_i12_mul_fail_overflow"
+4: "test_ui_ui_i12_mul_fail_overflow" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "test_ui_ui_i12_mul_C"
+4: "test_ui_ui_i12_mul_C" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "test_si_si_i12_mul"
+4: "test_si_si_i12_mul" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+1: "test_si_si_i12_mul_fail_overflow"
+4: "test_si_si_i12_mul_fail_overflow" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "test_si_si_i12_mul_fail_overflow" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "test_si_si_i12_mul_fail_overflow" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test_si_si_i12_mul_fail_maybe_non_zero"
+4: "test_si_si_i12_mul_fail_maybe_non_zero" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "test_si_si_i12_mul_fail_maybe_non_zero" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "test_si_si_i12_mul_fail_maybe_non_zero" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test_si_si_i12_mul_C"
+4: "test_si_si_i12_mul_C" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "test_si_si_i12_mul_C_fail_overflow"
+4: "test_si_si_i12_mul_C_fail_overflow" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "test_si_si_i12_mul_C_fail_overflow" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test_ui_si_i12_mul_nsw"
+4: "test_ui_si_i12_mul_nsw" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "test_ui_add_with_signed_constant"
+4: "test_ui_add_with_signed_constant" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+1: "missed_nonzero_check_on_constant_for_si_fmul"
+9: "missed_nonzero_check_on_constant_for_si_fmul" has pointer type input
+
+4: "missed_nonzero_check_on_constant_for_si_fmul" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "missed_nonzero_check_on_constant_for_si_fmul" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+4: "missed_nonzero_check_on_constant_for_si_fmul" has unsupported operation: llvm.store
+
+1: "missed_nonzero_check_on_constant_for_si_fmul_vec"
+9: "missed_nonzero_check_on_constant_for_si_fmul_vec" has pointer type input
+
+4: "missed_nonzero_check_on_constant_for_si_fmul_vec" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "missed_nonzero_check_on_constant_for_si_fmul_vec" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "missed_nonzero_check_on_constant_for_si_fmul_vec" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "missed_nonzero_check_on_constant_for_si_fmul_vec" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "missed_nonzero_check_on_constant_for_si_fmul_vec" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+4: "missed_nonzero_check_on_constant_for_si_fmul_vec" has unsupported operation: llvm.store
+
+1: "negzero_check_on_constant_for_si_fmul"
+9: "negzero_check_on_constant_for_si_fmul" has pointer type input
+
+4: "negzero_check_on_constant_for_si_fmul" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "negzero_check_on_constant_for_si_fmul" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "negzero_check_on_constant_for_si_fmul" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+4: "negzero_check_on_constant_for_si_fmul" has unsupported operation: llvm.store
+
+1: "nonzero_check_on_constant_for_si_fmul_vec_w_poison"
+9: "nonzero_check_on_constant_for_si_fmul_vec_w_poison" has pointer type input
+
+4: "nonzero_check_on_constant_for_si_fmul_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "nonzero_check_on_constant_for_si_fmul_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "nonzero_check_on_constant_for_si_fmul_vec_w_poison" has unsupported operation: llvm.mlir.undef
+
+4: "nonzero_check_on_constant_for_si_fmul_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "nonzero_check_on_constant_for_si_fmul_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "nonzero_check_on_constant_for_si_fmul_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "nonzero_check_on_constant_for_si_fmul_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "nonzero_check_on_constant_for_si_fmul_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "nonzero_check_on_constant_for_si_fmul_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+4: "nonzero_check_on_constant_for_si_fmul_vec_w_poison" has unsupported operation: llvm.store
+
+1: "nonzero_check_on_constant_for_si_fmul_nz_vec_w_poison"
+9: "nonzero_check_on_constant_for_si_fmul_nz_vec_w_poison" has pointer type input
+
+4: "nonzero_check_on_constant_for_si_fmul_nz_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "nonzero_check_on_constant_for_si_fmul_nz_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "nonzero_check_on_constant_for_si_fmul_nz_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "nonzero_check_on_constant_for_si_fmul_nz_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "nonzero_check_on_constant_for_si_fmul_nz_vec_w_poison" has unsupported operation: llvm.store
+
+1: "nonzero_check_on_constant_for_si_fmul_negz_vec_w_poison"
+9: "nonzero_check_on_constant_for_si_fmul_negz_vec_w_poison" has pointer type input
+
+4: "nonzero_check_on_constant_for_si_fmul_negz_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "nonzero_check_on_constant_for_si_fmul_negz_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "nonzero_check_on_constant_for_si_fmul_negz_vec_w_poison" has unsupported operation: llvm.mlir.undef
+
+4: "nonzero_check_on_constant_for_si_fmul_negz_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "nonzero_check_on_constant_for_si_fmul_negz_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "nonzero_check_on_constant_for_si_fmul_negz_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "nonzero_check_on_constant_for_si_fmul_negz_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "nonzero_check_on_constant_for_si_fmul_negz_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "nonzero_check_on_constant_for_si_fmul_negz_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "nonzero_check_on_constant_for_si_fmul_negz_vec_w_poison" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+4: "nonzero_check_on_constant_for_si_fmul_negz_vec_w_poison" has unsupported operation: llvm.store
+

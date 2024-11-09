@@ -1,0 +1,297 @@
+1: "use6"
+5: "use6" is empty
+
+1: "use8"
+5: "use8" is empty
+
+1: "bswap_eq_i16"
+4: "bswap_eq_i16" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+1: "bswap_ne_i32"
+4: "bswap_ne_i32" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+1: "bswap_eq_v2i64"
+8: "bswap_eq_v2i64" contains vectors which are unsupported
+
+1: "ctlz_eq_bitwidth_i32"
+4: "ctlz_eq_bitwidth_i32" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctlz
+
+1: "ctlz_eq_zero_i32"
+4: "ctlz_eq_zero_i32" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctlz
+
+1: "ctlz_ne_zero_v2i32"
+8: "ctlz_ne_zero_v2i32" contains vectors which are unsupported
+
+1: "ctlz_eq_bw_minus_1_i32"
+4: "ctlz_eq_bw_minus_1_i32" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctlz
+
+1: "ctlz_ne_bw_minus_1_v2i32"
+8: "ctlz_ne_bw_minus_1_v2i32" contains vectors which are unsupported
+
+1: "ctlz_eq_other_i32"
+4: "ctlz_eq_other_i32" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctlz
+
+1: "ctlz_ne_other_v2i32"
+8: "ctlz_ne_other_v2i32" contains vectors which are unsupported
+
+1: "ctlz_eq_other_i32_multiuse"
+9: "ctlz_eq_other_i32_multiuse" has pointer type input
+
+4: "ctlz_eq_other_i32_multiuse" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+4: "ctlz_eq_other_i32_multiuse" has unsupported operation: llvm.store
+
+1: "ctlz_ne_bitwidth_v2i32"
+8: "ctlz_ne_bitwidth_v2i32" contains vectors which are unsupported
+
+1: "ctlz_ugt_zero_i32"
+4: "ctlz_ugt_zero_i32" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctlz
+
+1: "ctlz_ugt_one_i32"
+4: "ctlz_ugt_one_i32" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctlz
+
+1: "ctlz_ugt_other_i32"
+4: "ctlz_ugt_other_i32" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctlz
+
+1: "ctlz_ugt_other_multiuse_i32"
+9: "ctlz_ugt_other_multiuse_i32" has pointer type input
+
+4: "ctlz_ugt_other_multiuse_i32" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+4: "ctlz_ugt_other_multiuse_i32" has unsupported operation: llvm.store
+
+1: "ctlz_ugt_bw_minus_one_i32"
+4: "ctlz_ugt_bw_minus_one_i32" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctlz
+
+1: "ctlz_ult_one_v2i32"
+8: "ctlz_ult_one_v2i32" contains vectors which are unsupported
+
+1: "ctlz_ult_other_v2i32"
+8: "ctlz_ult_other_v2i32" contains vectors which are unsupported
+
+1: "ctlz_ult_other_multiuse_v2i32"
+9: "ctlz_ult_other_multiuse_v2i32" has pointer type input
+
+4: "ctlz_ult_other_multiuse_v2i32" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+4: "ctlz_ult_other_multiuse_v2i32" has unsupported operation: llvm.store
+
+1: "ctlz_ult_bw_minus_one_v2i32"
+8: "ctlz_ult_bw_minus_one_v2i32" contains vectors which are unsupported
+
+1: "ctlz_ult_bitwidth_v2i32"
+8: "ctlz_ult_bitwidth_v2i32" contains vectors which are unsupported
+
+1: "cttz_ne_bitwidth_i33"
+4: "cttz_ne_bitwidth_i33" has unsupported operation after optimization: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_eq_bitwidth_v2i32"
+8: "cttz_eq_bitwidth_v2i32" contains vectors which are unsupported
+
+1: "cttz_eq_zero_i33"
+4: "cttz_eq_zero_i33" has unsupported operation after optimization: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_ne_zero_v2i32"
+8: "cttz_ne_zero_v2i32" contains vectors which are unsupported
+
+1: "cttz_eq_bw_minus_1_i33"
+4: "cttz_eq_bw_minus_1_i33" has unsupported operation after optimization: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_ne_bw_minus_1_v2i32"
+8: "cttz_ne_bw_minus_1_v2i32" contains vectors which are unsupported
+
+1: "cttz_eq_other_i33"
+4: "cttz_eq_other_i33" has unsupported operation after optimization: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_ne_other_v2i32"
+8: "cttz_ne_other_v2i32" contains vectors which are unsupported
+
+1: "cttz_eq_other_i33_multiuse"
+9: "cttz_eq_other_i33_multiuse" has pointer type input
+
+4: "cttz_eq_other_i33_multiuse" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+4: "cttz_eq_other_i33_multiuse" has unsupported operation: llvm.store
+
+1: "cttz_ugt_zero_i33"
+4: "cttz_ugt_zero_i33" has unsupported operation after optimization: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_ugt_one_i33"
+4: "cttz_ugt_one_i33" has unsupported operation after optimization: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_ugt_other_i33"
+4: "cttz_ugt_other_i33" has unsupported operation after optimization: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_ugt_other_multiuse_i33"
+9: "cttz_ugt_other_multiuse_i33" has pointer type input
+
+4: "cttz_ugt_other_multiuse_i33" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+4: "cttz_ugt_other_multiuse_i33" has unsupported operation: llvm.store
+
+1: "cttz_ugt_bw_minus_one_i33"
+4: "cttz_ugt_bw_minus_one_i33" has unsupported operation after optimization: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_ult_one_v2i32"
+8: "cttz_ult_one_v2i32" contains vectors which are unsupported
+
+1: "cttz_ult_other_v2i32"
+8: "cttz_ult_other_v2i32" contains vectors which are unsupported
+
+1: "cttz_ult_other_multiuse_v2i32"
+9: "cttz_ult_other_multiuse_v2i32" has pointer type input
+
+4: "cttz_ult_other_multiuse_v2i32" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+4: "cttz_ult_other_multiuse_v2i32" has unsupported operation: llvm.store
+
+1: "cttz_ult_bw_minus_one_v2i32"
+8: "cttz_ult_bw_minus_one_v2i32" contains vectors which are unsupported
+
+1: "cttz_ult_bitwidth_v2i32"
+8: "cttz_ult_bitwidth_v2i32" contains vectors which are unsupported
+
+1: "ctpop_eq_zero_i11"
+4: "ctpop_eq_zero_i11" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctpop
+
+1: "ctpop_ne_zero_v2i32"
+8: "ctpop_ne_zero_v2i32" contains vectors which are unsupported
+
+1: "ctpop_eq_bitwidth_i8"
+4: "ctpop_eq_bitwidth_i8" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctpop
+
+1: "ctpop_ne_bitwidth_v2i32"
+8: "ctpop_ne_bitwidth_v2i32" contains vectors which are unsupported
+
+1: "ctpop_ugt_bitwidth_minus_one_i8"
+9: "ctpop_ugt_bitwidth_minus_one_i8" has pointer type input
+
+4: "ctpop_ugt_bitwidth_minus_one_i8" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "ctpop_ugt_bitwidth_minus_one_i8" has unsupported operation: llvm.store
+
+1: "ctpop_ult_bitwidth_v2i32"
+8: "ctpop_ult_bitwidth_v2i32" contains vectors which are unsupported
+
+1: "trunc_cttz_eq_other_i33_i15"
+4: "trunc_cttz_eq_other_i33_i15" has unsupported operation after optimization: builtin.unregistered: llvm.intr.cttz
+
+1: "trunc_cttz_ugt_other_i33_i15"
+4: "trunc_cttz_ugt_other_i33_i15" has unsupported operation after optimization: builtin.unregistered: llvm.intr.cttz
+
+1: "trunc_cttz_ult_other_i33_i6"
+4: "trunc_cttz_ult_other_i33_i6" has unsupported operation after optimization: builtin.unregistered: llvm.intr.cttz
+
+1: "trunc_cttz_ult_other_i33_i5"
+4: "trunc_cttz_ult_other_i33_i5" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "trunc_cttz_true_ult_other_i32_i5"
+4: "trunc_cttz_true_ult_other_i32_i5" has unsupported operation after optimization: builtin.unregistered: llvm.intr.cttz
+
+1: "trunc_cttz_false_ult_other_i32_i5"
+4: "trunc_cttz_false_ult_other_i32_i5" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "trunc_cttz_false_ult_other_i32_i6"
+4: "trunc_cttz_false_ult_other_i32_i6" has unsupported operation after optimization: builtin.unregistered: llvm.intr.cttz
+
+1: "trunc_cttz_false_ult_other_i32_i6_extra_use"
+4: "trunc_cttz_false_ult_other_i32_i6_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+4: "trunc_cttz_false_ult_other_i32_i6_extra_use" has unsupported operation: llvm.call
+
+1: "trunc_ctlz_ugt_zero_i32"
+4: "trunc_ctlz_ugt_zero_i32" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctlz
+
+1: "trunc_ctlz_ugt_one_i32"
+4: "trunc_ctlz_ugt_one_i32" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctlz
+
+1: "trunc_ctlz_ugt_other_i33_i6"
+4: "trunc_ctlz_ugt_other_i33_i6" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctlz
+
+1: "trunc_ctlz_ugt_other_i33_i5"
+4: "trunc_ctlz_ugt_other_i33_i5" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "trunc_ctlz_true_ugt_other_i32_i5"
+4: "trunc_ctlz_true_ugt_other_i32_i5" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctlz
+
+1: "trunc_ctlz_false_ugt_other_i32_i5"
+4: "trunc_ctlz_false_ugt_other_i32_i5" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "trunc_ctlz_false_ugt_other_i32_i6"
+4: "trunc_ctlz_false_ugt_other_i32_i6" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctlz
+
+1: "trunc_ctlz_false_ugt_other_i32_i6_extra_use"
+4: "trunc_ctlz_false_ugt_other_i32_i6_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+4: "trunc_ctlz_false_ugt_other_i32_i6_extra_use" has unsupported operation: llvm.call
+
+1: "trunc_ctpop_eq_zero_i11"
+4: "trunc_ctpop_eq_zero_i11" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctpop
+
+1: "trunc_ctpop_eq_bitwidth_i8"
+4: "trunc_ctpop_eq_bitwidth_i8" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctpop
+
+1: "trunc_negative_destbits_not_enough"
+4: "trunc_negative_destbits_not_enough" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "bitreverse_ne_22"
+4: "bitreverse_ne_22" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bitreverse
+
+1: "bitreverse_ult_22_fail_not_equality_pred"
+4: "bitreverse_ult_22_fail_not_equality_pred" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+1: "bitreverse_vec_eq_2_2"
+8: "bitreverse_vec_eq_2_2" contains vectors which are unsupported
+
+1: "bitreverse_vec_eq_1_2_todo_no_splat"
+4: "bitreverse_vec_eq_1_2_todo_no_splat" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+1: "umax_eq_zero"
+4: "umax_eq_zero" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umax
+
+1: "umax_eq_1_fail"
+4: "umax_eq_1_fail" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "umax_sle_zero_fail"
+4: "umax_sle_zero_fail" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "umax_ne_zero"
+4: "umax_ne_zero" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umax
+
+1: "umax_ne_zero_fail_multiuse"
+4: "umax_ne_zero_fail_multiuse" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+4: "umax_ne_zero_fail_multiuse" has unsupported operation: llvm.call
+
+1: "uadd_sat_ne_zero_fail_multiuse"
+4: "uadd_sat_ne_zero_fail_multiuse" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+4: "uadd_sat_ne_zero_fail_multiuse" has unsupported operation: llvm.call
+
+1: "ssub_sat_ne_zero"
+4: "ssub_sat_ne_zero" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "ssub_sat_ne_fail_nonzero"
+4: "ssub_sat_ne_fail_nonzero" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "ssub_sat_eq_zero"
+4: "ssub_sat_eq_zero" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "ssub_sat_sle_zero"
+4: "ssub_sat_sle_zero" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "ssub_sat_sge_zero"
+4: "ssub_sat_sge_zero" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "ssub_sat_slt_zero"
+4: "ssub_sat_slt_zero" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "ssub_sat_slt_neg1_fail"
+4: "ssub_sat_slt_neg1_fail" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "ssub_sat_sgt_zero"
+4: "ssub_sat_sgt_zero" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "ssub_sat_sgt_one_fail"
+4: "ssub_sat_sgt_one_fail" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
+

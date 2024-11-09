@@ -1,0 +1,9 @@
+1: "PR2330"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+

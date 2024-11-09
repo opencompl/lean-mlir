@@ -1,0 +1,112 @@
+1: "add-shl-sdiv-scalar0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "add-shl-sdiv-scalar1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "add-shl-sdiv-scalar2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "add-shl-sdiv-splat0"
+8: "add-shl-sdiv-splat0" contains vectors which are unsupported
+
+1: "add-shl-sdiv-splat1"
+8: "add-shl-sdiv-splat1" contains vectors which are unsupported
+
+1: "add-shl-sdiv-splat2"
+8: "add-shl-sdiv-splat2" contains vectors which are unsupported
+
+1: "use32"
+5: "use32" is empty
+
+1: "add-shl-sdiv-i32-4-use0"
+4: "add-shl-sdiv-i32-4-use0" has unsupported operation: llvm.call
+
+1: "add-shl-sdiv-i32-use1"
+4: "add-shl-sdiv-i32-use1" has unsupported operation: llvm.call
+
+1: "add-shl-sdiv-i32-use2"
+4: "add-shl-sdiv-i32-use2" has unsupported operation: llvm.call
+
+1: "add-shl-sdiv-i32-use3"
+4: "add-shl-sdiv-i32-use3" has unsupported operation: llvm.call
+
+4: "add-shl-sdiv-i32-use3" has unsupported operation: llvm.call
+
+1: "use3xi8"
+5: "use3xi8" is empty
+
+1: "add-shl-sdiv-use4"
+4: "add-shl-sdiv-use4" has unsupported operation: llvm.call
+
+1: "add-shl-sdiv-negative0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "add-shl-sdiv-negative1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "add-shl-sdiv-negative2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "add-shl-sdiv-negative3"
+7: "add-shl-sdiv-negative3" is unchanged by InstCombine
+
+1: "add-shl-sdiv-negative4"
+4: "add-shl-sdiv-negative4" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+1: "add-shl-sdiv-3xi8-undef0"
+4: "add-shl-sdiv-3xi8-undef0" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+1: "add-shl-sdiv-3xi8-undef1"
+4: "add-shl-sdiv-3xi8-undef1" has unsupported operation: llvm.mlir.undef
+
+4: "add-shl-sdiv-3xi8-undef1" has unsupported operation: llvm.mlir.undef
+
+4: "add-shl-sdiv-3xi8-undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "add-shl-sdiv-3xi8-undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "add-shl-sdiv-3xi8-undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "add-shl-sdiv-nonsplat0"
+7: "add-shl-sdiv-nonsplat0" is unchanged by InstCombine
+
+1: "add-shl-sdiv-nonsplat1"
+7: "add-shl-sdiv-nonsplat1" is unchanged by InstCombine
+

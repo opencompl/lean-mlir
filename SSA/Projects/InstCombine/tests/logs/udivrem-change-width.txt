@@ -1,0 +1,163 @@
+1: "udiv_i8"
+2: llvm.func
+2: llvm.zext
+2: llvm.zext
+2: llvm.udiv
+2: llvm.trunc
+2: llvm.return
+
+1: "udiv_i8_vec"
+8: "udiv_i8_vec" contains vectors which are unsupported
+
+1: "urem_i8"
+2: llvm.func
+2: llvm.zext
+2: llvm.zext
+2: llvm.urem
+2: llvm.trunc
+2: llvm.return
+
+1: "urem_i8_vec"
+8: "urem_i8_vec" contains vectors which are unsupported
+
+1: "udiv_i32"
+2: llvm.func
+2: llvm.zext
+2: llvm.zext
+2: llvm.udiv
+2: llvm.return
+
+1: "udiv_i32_vec"
+8: "udiv_i32_vec" contains vectors which are unsupported
+
+1: "udiv_i32_multiuse"
+2: llvm.func
+2: llvm.zext
+2: llvm.zext
+2: llvm.udiv
+2: llvm.add
+2: llvm.mul
+2: llvm.return
+
+1: "udiv_illegal_type"
+2: llvm.func
+2: llvm.zext
+2: llvm.zext
+2: llvm.udiv
+2: llvm.return
+
+1: "urem_i32"
+2: llvm.func
+2: llvm.zext
+2: llvm.zext
+2: llvm.urem
+2: llvm.return
+
+1: "urem_i32_vec"
+8: "urem_i32_vec" contains vectors which are unsupported
+
+1: "urem_i32_multiuse"
+2: llvm.func
+2: llvm.zext
+2: llvm.zext
+2: llvm.urem
+2: llvm.add
+2: llvm.mul
+2: llvm.return
+
+1: "urem_illegal_type"
+2: llvm.func
+2: llvm.zext
+2: llvm.zext
+2: llvm.urem
+2: llvm.return
+
+1: "udiv_i32_c"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.udiv
+2: llvm.return
+
+1: "udiv_i32_c_vec"
+8: "udiv_i32_c_vec" contains vectors which are unsupported
+
+1: "udiv_i32_c_multiuse"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.udiv
+2: llvm.add
+2: llvm.return
+
+1: "udiv_illegal_type_c"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.udiv
+2: llvm.return
+
+1: "urem_i32_c"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.urem
+2: llvm.return
+
+1: "urem_i32_c_vec"
+8: "urem_i32_c_vec" contains vectors which are unsupported
+
+1: "urem_i32_c_multiuse"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.urem
+2: llvm.add
+2: llvm.return
+
+1: "urem_illegal_type_c"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.urem
+2: llvm.return
+
+1: "udiv_c_i32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.udiv
+2: llvm.return
+
+1: "urem_c_i32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.urem
+2: llvm.return
+
+1: "udiv_constexpr"
+4: "udiv_constexpr" has unsupported operation: llvm.mlir.addressof
+
+4: "udiv_constexpr" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+1: "udiv_const_constexpr"
+4: "udiv_const_constexpr" has unsupported operation: llvm.mlir.addressof
+
+4: "udiv_const_constexpr" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+1: "urem_const_constexpr"
+4: "urem_const_constexpr" has unsupported operation: llvm.mlir.addressof
+
+4: "urem_const_constexpr" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+1: "udiv_constexpr_const"
+4: "udiv_constexpr_const" has unsupported operation: llvm.mlir.addressof
+
+4: "udiv_constexpr_const" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+1: "urem_constexpr_const"
+4: "urem_constexpr_const" has unsupported operation: llvm.mlir.addressof
+
+4: "urem_constexpr_const" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+

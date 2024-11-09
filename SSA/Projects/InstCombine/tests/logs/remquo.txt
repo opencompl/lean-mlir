@@ -1,0 +1,61 @@
+1: "remquo_f32"
+9: "remquo_f32" has pointer type input
+
+4: "remquo_f32" has unsupported operation: llvm.store
+
+1: "remquo_f32_quo_sign"
+9: "remquo_f32_quo_sign" has pointer type input
+
+4: "remquo_f32_quo_sign" has unsupported operation: llvm.store
+
+1: "remquo_f32_round"
+9: "remquo_f32_round" has pointer type input
+
+4: "remquo_f32_round" has unsupported operation: llvm.store
+
+1: "remquo_f64"
+9: "remquo_f64" has pointer type input
+
+4: "remquo_f64" has unsupported operation: llvm.store
+
+1: "remquo_f32_inf_x"
+9: "remquo_f32_inf_x" has pointer type input
+
+4: "remquo_f32_inf_x" has unsupported operation: llvm.call
+
+1: "remquo_f32_zero_y"
+9: "remquo_f32_zero_y" has pointer type input
+
+4: "remquo_f32_zero_y" has unsupported operation: llvm.call
+
+1: "remquo_f32_nzero_y"
+9: "remquo_f32_nzero_y" has pointer type input
+
+4: "remquo_f32_nzero_y" has unsupported operation: llvm.call
+
+1: "remquo_f32_nan_x"
+9: "remquo_f32_nan_x" has pointer type input
+
+4: "remquo_f32_nan_x" has unsupported operation: llvm.call
+
+1: "remquo_f32_nan_y"
+9: "remquo_f32_nan_y" has pointer type input
+
+4: "remquo_f32_nan_y" has unsupported operation: llvm.call
+
+1: "remquo_f32_strictfp"
+9: "remquo_f32_strictfp" has pointer type input
+
+4: "remquo_f32_strictfp" has unsupported operation: llvm.call
+
+1: "remquo_f32_zero_y_strictfp"
+9: "remquo_f32_zero_y_strictfp" has pointer type input
+
+4: "remquo_f32_zero_y_strictfp" has unsupported operation: llvm.call
+
+1: "remquof"
+9: "remquof" has pointer type input
+
+1: "remquo"
+9: "remquo" has pointer type input
+

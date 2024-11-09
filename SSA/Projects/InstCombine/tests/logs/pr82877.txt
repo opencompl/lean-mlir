@@ -1,0 +1,5 @@
+1: "func"
+4: "func" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.cond_br
+

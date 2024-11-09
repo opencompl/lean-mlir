@@ -1,0 +1,230 @@
+1: "foo"
+5: "foo" is empty
+
+1: "bar"
+5: "bar" is empty
+
+1: "baz"
+5: "baz" is empty
+
+1: "qux"
+5: "qux" is empty
+
+1: "quux"
+5: "quux" is empty
+
+1: "geni1"
+5: "geni1" is empty
+
+1: "usei32"
+5: "usei32" is empty
+
+1: "usei32i32agg"
+5: "usei32i32agg" is empty
+
+1: "test0"
+4: "test0" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test0" has unsupported operation: llvm.call
+
+4: "test0" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test0" has unsupported operation: llvm.call
+
+4: "test0" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test0" has unsupported operation: llvm.call
+
+1: "negative_test1"
+4: "negative_test1" has unsupported operation: llvm.mlir.undef
+
+4: "negative_test1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "negative_test1" has unsupported operation: llvm.call
+
+4: "negative_test1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "negative_test1" has unsupported operation: llvm.call
+
+4: "negative_test1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "negative_test1" has unsupported operation: llvm.extractvalue
+
+4: "negative_test1" has unsupported operation: llvm.extractvalue
+
+4: "negative_test1" has unsupported operation: llvm.call
+
+4: "negative_test1" has unsupported operation: llvm.insertvalue
+
+4: "negative_test1" has unsupported operation: llvm.insertvalue
+
+1: "negative_test2"
+4: "negative_test2" has unsupported operation: llvm.mlir.undef
+
+4: "negative_test2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "negative_test2" has unsupported operation: llvm.extractvalue
+
+4: "negative_test2" has unsupported operation: llvm.extractvalue
+
+4: "negative_test2" has unsupported operation: llvm.call
+
+4: "negative_test2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "negative_test2" has unsupported operation: llvm.extractvalue
+
+4: "negative_test2" has unsupported operation: llvm.extractvalue
+
+4: "negative_test2" has unsupported operation: llvm.call
+
+4: "negative_test2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "negative_test2" has unsupported operation: llvm.call
+
+4: "negative_test2" has unsupported operation: llvm.insertvalue
+
+4: "negative_test2" has unsupported operation: llvm.insertvalue
+
+1: "test3"
+4: "test3" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test3" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test3" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test3" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test3" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test3" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test3" has unsupported operation: llvm.call
+
+1: "test4"
+4: "test4" has unsupported operation: llvm.mlir.undef
+
+4: "test4" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test4" has unsupported operation: llvm.extractvalue
+
+4: "test4" has unsupported operation: llvm.extractvalue
+
+4: "test4" has unsupported operation: llvm.call
+
+4: "test4" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test4" has unsupported operation: llvm.extractvalue
+
+4: "test4" has unsupported operation: llvm.extractvalue
+
+4: "test4" has unsupported operation: llvm.call
+
+4: "test4" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test4" has unsupported operation: llvm.call
+
+4: "test4" has unsupported operation: llvm.call
+
+4: "test4" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test4" has unsupported operation: llvm.insertvalue
+
+4: "test4" has unsupported operation: llvm.insertvalue
+
+1: "test5"
+4: "test5" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test5" has unsupported operation: llvm.call
+
+4: "test5" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test5" has unsupported operation: llvm.call
+
+4: "test5" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test5" has unsupported operation: llvm.call
+
+4: "test5" has unsupported operation: llvm.call
+
+4: "test5" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "test6"
+4: "test6" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test6" has unsupported operation: llvm.call
+
+4: "test6" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test6" has unsupported operation: llvm.call
+
+4: "test6" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test6" has unsupported operation: llvm.call
+
+4: "test6" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test6" has unsupported operation: llvm.call
+
+4: "test6" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test6" has unsupported operation: llvm.call
+
+1: "negative_test7"
+4: "negative_test7" has unsupported operation: llvm.mlir.undef
+
+4: "negative_test7" has unsupported operation: llvm.extractvalue
+
+4: "negative_test7" has unsupported operation: llvm.call
+
+4: "negative_test7" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "negative_test7" has unsupported operation: llvm.extractvalue
+
+4: "negative_test7" has unsupported operation: llvm.call
+
+4: "negative_test7" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "negative_test7" has unsupported operation: llvm.extractvalue
+
+4: "negative_test7" has unsupported operation: llvm.call
+
+4: "negative_test7" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "negative_test7" has unsupported operation: llvm.call
+
+4: "negative_test7" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "negative_test7" has unsupported operation: llvm.call
+
+4: "negative_test7" has unsupported operation: llvm.insertvalue
+
+4: "negative_test7" has unsupported operation: llvm.insertvalue
+
+1: "test8"
+4: "test8" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test8" has unsupported operation: llvm.call
+
+4: "test8" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "test8" has unsupported operation: llvm.call
+
+4: "test8" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "test8" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "test8" has unsupported operation: llvm.call
+
+1: "test9"
+4: "test9" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test9" has unsupported operation: llvm.call
+
+4: "test9" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test9" has unsupported operation: llvm.call
+
+4: "test9" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test9" has unsupported operation: llvm.call
+

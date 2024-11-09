@@ -1,0 +1,187 @@
+1: "is_rem2_neg_i8"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.icmp
+2: llvm.return
+
+1: "is_rem2_pos_v2i8"
+8: "is_rem2_pos_v2i8" contains vectors which are unsupported
+
+1: "is_rem32_pos_i8"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.icmp
+2: llvm.return
+
+1: "is_rem4_neg_i16"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.icmp
+2: llvm.return
+
+1: "use"
+5: "use" is empty
+
+1: "is_rem32_neg_i32_extra_use"
+4: "is_rem32_neg_i32_extra_use" has unsupported operation: llvm.call
+
+1: "is_rem8_nonneg_i16"
+7: "is_rem8_nonneg_i16" is unchanged by InstCombine
+
+1: "is_rem3_neg_i8"
+7: "is_rem3_neg_i8" is unchanged by InstCombine
+
+1: "is_rem16_something_i8"
+7: "is_rem16_something_i8" is unchanged by InstCombine
+
+1: "icmp_div"
+4: "icmp_div" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "icmp_div" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "icmp_div2"
+4: "icmp_div2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "icmp_div2" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "icmp_div3"
+4: "icmp_div3" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "icmp_div3" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "udiv_eq_umax"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.icmp
+2: llvm.return
+
+1: "udiv_ne_umax"
+8: "udiv_ne_umax" contains vectors which are unsupported
+
+1: "udiv_eq_big"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.icmp
+2: llvm.return
+
+1: "udiv_ne_big"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.icmp
+2: llvm.return
+
+1: "udiv_eq_not_big"
+7: "udiv_eq_not_big" is unchanged by InstCombine
+
+1: "udiv_slt_umax"
+7: "udiv_slt_umax" is unchanged by InstCombine
+
+1: "udiv_eq_umax_use"
+4: "udiv_eq_umax_use" has unsupported operation: llvm.call
+
+1: "sdiv_eq_smin"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.icmp
+2: llvm.return
+
+1: "sdiv_ne_smin"
+8: "sdiv_ne_smin" contains vectors which are unsupported
+
+1: "sdiv_eq_small"
+7: "sdiv_eq_small" is unchanged by InstCombine
+
+1: "sdiv_ne_big"
+7: "sdiv_ne_big" is unchanged by InstCombine
+
+1: "sdiv_eq_not_big"
+7: "sdiv_eq_not_big" is unchanged by InstCombine
+
+1: "sdiv_ult_smin"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.icmp
+2: llvm.return
+
+1: "sdiv_eq_smin_use"
+4: "sdiv_eq_smin_use" has unsupported operation: llvm.call
+
+1: "sdiv_x_by_const_cmp_x"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.icmp
+2: llvm.return
+
+1: "udiv_x_by_const_cmp_x"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.icmp
+2: llvm.return
+
+1: "udiv_x_by_const_cmp_x_non_splat"
+8: "udiv_x_by_const_cmp_x_non_splat" contains vectors which are unsupported
+
+1: "sdiv_x_by_const_cmp_x_non_splat"
+8: "sdiv_x_by_const_cmp_x_non_splat" contains vectors which are unsupported
+
+1: "lshr_x_by_const_cmp_x"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.icmp
+2: llvm.return
+
+1: "lshr_by_const_cmp_sle_value"
+8: "lshr_by_const_cmp_sle_value" contains vectors which are unsupported
+
+1: "lshr_by_const_cmp_sle_value_non_splat"
+8: "lshr_by_const_cmp_sle_value_non_splat" contains vectors which are unsupported
+
+1: "ashr_by_const_cmp_sge_value_non_splat"
+8: "ashr_by_const_cmp_sge_value_non_splat" contains vectors which are unsupported
+
+1: "lshr_by_const_cmp_sge_value"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.icmp
+2: llvm.return
+
+1: "ashr_x_by_const_cmp_sge_x"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.icmp
+2: llvm.return
+
+1: "udiv_x_by_const_cmp_eq_value_neg"
+7: "udiv_x_by_const_cmp_eq_value_neg" is unchanged by InstCombine
+
+1: "sdiv_x_by_const_cmp_eq_value_neg"
+7: "sdiv_x_by_const_cmp_eq_value_neg" is unchanged by InstCombine
+
+1: "lshr_x_by_const_cmp_slt_value_neg"
+7: "lshr_x_by_const_cmp_slt_value_neg" is unchanged by InstCombine
+
+1: "sdiv_x_by_const_cmp_ult_value_neg"
+7: "sdiv_x_by_const_cmp_ult_value_neg" is unchanged by InstCombine
+
+1: "sdiv_x_by_const_cmp_sgt_value_neg"
+7: "sdiv_x_by_const_cmp_sgt_value_neg" is unchanged by InstCombine
+
+1: "ashr_x_by_const_cmp_sle_value_neg"
+7: "ashr_x_by_const_cmp_sle_value_neg" is unchanged by InstCombine
+

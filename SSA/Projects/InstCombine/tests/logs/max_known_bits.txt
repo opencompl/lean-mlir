@@ -1,0 +1,52 @@
+1: "foo"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.zext
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.trunc
+2: llvm.and
+2: llvm.return
+
+1: "min_max_clamp"
+4: "min_max_clamp" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "min_max_clamp" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "min_max_clamp_2"
+4: "min_max_clamp_2" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "min_max_clamp_2" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "min_max_clamp_3"
+4: "min_max_clamp_3" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "min_max_clamp_3" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "min_max_clamp_4"
+4: "min_max_clamp_4" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "min_max_clamp_4" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "min_max_clamp_intrinsic"
+4: "min_max_clamp_intrinsic" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "min_max_clamp_intrinsic" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "min_max_clamp_intrinsic_2"
+4: "min_max_clamp_intrinsic_2" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "min_max_clamp_intrinsic_2" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "min_max_clamp_intrinsic_3"
+4: "min_max_clamp_intrinsic_3" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "min_max_clamp_intrinsic_3" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "min_max_clamp_intrinsic_4"
+4: "min_max_clamp_intrinsic_4" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "min_max_clamp_intrinsic_4" has unsupported operation: builtin.unregistered: llvm.intr.smax
+

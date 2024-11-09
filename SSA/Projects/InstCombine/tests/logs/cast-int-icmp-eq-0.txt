@@ -1,0 +1,310 @@
+1: "i32_cast_cmp_eq_int_0_sitofp_float"
+4: "i32_cast_cmp_eq_int_0_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i32_cast_cmp_eq_int_0_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i32_cast_cmp_ne_int_0_sitofp_float"
+4: "i32_cast_cmp_ne_int_0_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i32_cast_cmp_ne_int_0_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i32_cast_cmp_slt_int_0_sitofp_float"
+4: "i32_cast_cmp_slt_int_0_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i32_cast_cmp_slt_int_0_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i32_cast_cmp_sgt_int_0_sitofp_float"
+4: "i32_cast_cmp_sgt_int_0_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i32_cast_cmp_sgt_int_0_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i32_cast_cmp_slt_int_1_sitofp_float"
+4: "i32_cast_cmp_slt_int_1_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i32_cast_cmp_slt_int_1_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i32_cast_cmp_sgt_int_m1_sitofp_float"
+4: "i32_cast_cmp_sgt_int_m1_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i32_cast_cmp_sgt_int_m1_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i32_cast_cmp_eq_int_0_sitofp_double"
+4: "i32_cast_cmp_eq_int_0_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i32_cast_cmp_eq_int_0_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i32_cast_cmp_ne_int_0_sitofp_double"
+4: "i32_cast_cmp_ne_int_0_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i32_cast_cmp_ne_int_0_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i32_cast_cmp_slt_int_0_sitofp_double"
+4: "i32_cast_cmp_slt_int_0_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i32_cast_cmp_slt_int_0_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i32_cast_cmp_sgt_int_0_sitofp_double"
+4: "i32_cast_cmp_sgt_int_0_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i32_cast_cmp_sgt_int_0_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i32_cast_cmp_slt_int_1_sitofp_double"
+4: "i32_cast_cmp_slt_int_1_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i32_cast_cmp_slt_int_1_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i32_cast_cmp_sgt_int_m1_sitofp_double"
+4: "i32_cast_cmp_sgt_int_m1_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i32_cast_cmp_sgt_int_m1_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i32_cast_cmp_eq_int_0_sitofp_half"
+4: "i32_cast_cmp_eq_int_0_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i32_cast_cmp_eq_int_0_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i32_cast_cmp_ne_int_0_sitofp_half"
+4: "i32_cast_cmp_ne_int_0_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i32_cast_cmp_ne_int_0_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i32_cast_cmp_slt_int_0_sitofp_half"
+4: "i32_cast_cmp_slt_int_0_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i32_cast_cmp_slt_int_0_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i32_cast_cmp_sgt_int_0_sitofp_half"
+4: "i32_cast_cmp_sgt_int_0_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i32_cast_cmp_sgt_int_0_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i32_cast_cmp_slt_int_1_sitofp_half"
+4: "i32_cast_cmp_slt_int_1_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i32_cast_cmp_slt_int_1_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i32_cast_cmp_sgt_int_m1_sitofp_half"
+4: "i32_cast_cmp_sgt_int_m1_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i32_cast_cmp_sgt_int_m1_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i64_cast_cmp_eq_int_0_sitofp_float"
+4: "i64_cast_cmp_eq_int_0_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i64_cast_cmp_eq_int_0_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i64_cast_cmp_ne_int_0_sitofp_float"
+4: "i64_cast_cmp_ne_int_0_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i64_cast_cmp_ne_int_0_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i64_cast_cmp_slt_int_0_sitofp_float"
+4: "i64_cast_cmp_slt_int_0_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i64_cast_cmp_slt_int_0_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i64_cast_cmp_sgt_int_0_sitofp_float"
+4: "i64_cast_cmp_sgt_int_0_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i64_cast_cmp_sgt_int_0_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i64_cast_cmp_slt_int_1_sitofp_float"
+4: "i64_cast_cmp_slt_int_1_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i64_cast_cmp_slt_int_1_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i64_cast_cmp_sgt_int_m1_sitofp_float"
+4: "i64_cast_cmp_sgt_int_m1_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i64_cast_cmp_sgt_int_m1_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i64_cast_cmp_eq_int_0_sitofp_double"
+4: "i64_cast_cmp_eq_int_0_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i64_cast_cmp_eq_int_0_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i64_cast_cmp_ne_int_0_sitofp_double"
+4: "i64_cast_cmp_ne_int_0_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i64_cast_cmp_ne_int_0_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i64_cast_cmp_slt_int_0_sitofp_double"
+4: "i64_cast_cmp_slt_int_0_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i64_cast_cmp_slt_int_0_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i64_cast_cmp_sgt_int_0_sitofp_double"
+4: "i64_cast_cmp_sgt_int_0_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i64_cast_cmp_sgt_int_0_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i64_cast_cmp_slt_int_1_sitofp_double"
+4: "i64_cast_cmp_slt_int_1_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i64_cast_cmp_slt_int_1_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i64_cast_cmp_sgt_int_m1_sitofp_double"
+4: "i64_cast_cmp_sgt_int_m1_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i64_cast_cmp_sgt_int_m1_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i64_cast_cmp_eq_int_0_sitofp_half"
+4: "i64_cast_cmp_eq_int_0_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i64_cast_cmp_eq_int_0_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i64_cast_cmp_ne_int_0_sitofp_half"
+4: "i64_cast_cmp_ne_int_0_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i64_cast_cmp_ne_int_0_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i64_cast_cmp_slt_int_0_sitofp_half"
+4: "i64_cast_cmp_slt_int_0_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i64_cast_cmp_slt_int_0_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i64_cast_cmp_sgt_int_0_sitofp_half"
+4: "i64_cast_cmp_sgt_int_0_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i64_cast_cmp_sgt_int_0_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i64_cast_cmp_slt_int_1_sitofp_half"
+4: "i64_cast_cmp_slt_int_1_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i64_cast_cmp_slt_int_1_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i64_cast_cmp_sgt_int_m1_sitofp_half"
+4: "i64_cast_cmp_sgt_int_m1_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i64_cast_cmp_sgt_int_m1_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i16_cast_cmp_eq_int_0_sitofp_float"
+4: "i16_cast_cmp_eq_int_0_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i16_cast_cmp_eq_int_0_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i16_cast_cmp_ne_int_0_sitofp_float"
+4: "i16_cast_cmp_ne_int_0_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i16_cast_cmp_ne_int_0_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i16_cast_cmp_slt_int_0_sitofp_float"
+4: "i16_cast_cmp_slt_int_0_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i16_cast_cmp_slt_int_0_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i16_cast_cmp_sgt_int_0_sitofp_float"
+4: "i16_cast_cmp_sgt_int_0_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i16_cast_cmp_sgt_int_0_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i16_cast_cmp_slt_int_1_sitofp_float"
+4: "i16_cast_cmp_slt_int_1_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i16_cast_cmp_slt_int_1_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i16_cast_cmp_sgt_int_m1_sitofp_float"
+4: "i16_cast_cmp_sgt_int_m1_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i16_cast_cmp_sgt_int_m1_sitofp_float" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i16_cast_cmp_eq_int_0_sitofp_double"
+4: "i16_cast_cmp_eq_int_0_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i16_cast_cmp_eq_int_0_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i16_cast_cmp_ne_int_0_sitofp_double"
+4: "i16_cast_cmp_ne_int_0_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i16_cast_cmp_ne_int_0_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i16_cast_cmp_slt_int_0_sitofp_double"
+4: "i16_cast_cmp_slt_int_0_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i16_cast_cmp_slt_int_0_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i16_cast_cmp_sgt_int_0_sitofp_double"
+4: "i16_cast_cmp_sgt_int_0_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i16_cast_cmp_sgt_int_0_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i16_cast_cmp_slt_int_1_sitofp_double"
+4: "i16_cast_cmp_slt_int_1_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i16_cast_cmp_slt_int_1_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i16_cast_cmp_sgt_int_m1_sitofp_double"
+4: "i16_cast_cmp_sgt_int_m1_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i16_cast_cmp_sgt_int_m1_sitofp_double" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i16_cast_cmp_eq_int_0_sitofp_half"
+4: "i16_cast_cmp_eq_int_0_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i16_cast_cmp_eq_int_0_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i16_cast_cmp_ne_int_0_sitofp_half"
+4: "i16_cast_cmp_ne_int_0_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i16_cast_cmp_ne_int_0_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i16_cast_cmp_slt_int_0_sitofp_half"
+4: "i16_cast_cmp_slt_int_0_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i16_cast_cmp_slt_int_0_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i16_cast_cmp_sgt_int_0_sitofp_half"
+4: "i16_cast_cmp_sgt_int_0_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i16_cast_cmp_sgt_int_0_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i16_cast_cmp_slt_int_1_sitofp_half"
+4: "i16_cast_cmp_slt_int_1_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i16_cast_cmp_slt_int_1_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i16_cast_cmp_sgt_int_m1_sitofp_half"
+4: "i16_cast_cmp_sgt_int_m1_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "i16_cast_cmp_sgt_int_m1_sitofp_half" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "i32_cast_cmp_ne_int_0_sitofp_double_vec"
+8: "i32_cast_cmp_ne_int_0_sitofp_double_vec" contains vectors which are unsupported
+
+1: "i32_cast_cmp_eq_int_0_sitofp_float_vec_poison"
+8: "i32_cast_cmp_eq_int_0_sitofp_float_vec_poison" contains vectors which are unsupported
+
+1: "i64_cast_cmp_slt_int_1_sitofp_half_vec_poison"
+8: "i64_cast_cmp_slt_int_1_sitofp_half_vec_poison" contains vectors which are unsupported
+
+1: "i16_cast_cmp_sgt_int_m1_sitofp_float_vec_poison"
+8: "i16_cast_cmp_sgt_int_m1_sitofp_float_vec_poison" contains vectors which are unsupported
+
+1: "i16_cast_cmp_sgt_int_m1_bitcast_vector_num_elements_sitofp"
+4: "i16_cast_cmp_sgt_int_m1_bitcast_vector_num_elements_sitofp" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "i16_cast_cmp_sgt_int_m1_bitcast_vector_num_elements_sitofp" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "i16_cast_cmp_sgt_int_m1_bitcast_vector_to_scalar_sitofp"
+4: "i16_cast_cmp_sgt_int_m1_bitcast_vector_to_scalar_sitofp" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "i16_cast_cmp_sgt_int_m1_bitcast_vector_to_scalar_sitofp" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "i16_cast_cmp_eq_int_0_bitcast_vector_num_elements_uitofp"
+4: "i16_cast_cmp_eq_int_0_bitcast_vector_num_elements_uitofp" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "i16_cast_cmp_eq_int_0_bitcast_vector_num_elements_uitofp" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "i16_cast_cmp_eq_int_0_bitcast_vector_to_scalar_uitofp"
+4: "i16_cast_cmp_eq_int_0_bitcast_vector_to_scalar_uitofp" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "i16_cast_cmp_eq_int_0_bitcast_vector_to_scalar_uitofp" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "PR55516"
+4: "PR55516" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "PR55516" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "PR55516_alt"
+4: "PR55516_alt" has unsupported operation: builtin.unregistered: llvm.extractelement
+

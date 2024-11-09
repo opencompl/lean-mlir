@@ -1,0 +1,28 @@
+1: "g"
+9: "g" has pointer type input
+
+1: "g_addr1"
+9: "g_addr1" has pointer type input
+
+1: "f"
+4: "f" has unsupported operation: llvm.alloca
+
+4: "f" has unsupported operation: llvm.store
+
+4: "f" has unsupported operation: builtin.unregistered: llvm.intr.invariant.start
+
+4: "f" has unsupported operation: llvm.call
+
+4: "f" has unsupported operation: llvm.load
+
+1: "f_addrspace1"
+9: "f_addrspace1" has pointer type input
+
+4: "f_addrspace1" has unsupported operation: llvm.store
+
+4: "f_addrspace1" has unsupported operation: builtin.unregistered: llvm.intr.invariant.start
+
+4: "f_addrspace1" has unsupported operation: llvm.call
+
+4: "f_addrspace1" has unsupported operation: llvm.load
+

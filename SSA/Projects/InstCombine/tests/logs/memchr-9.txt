@@ -1,0 +1,158 @@
+1: "memchr"
+9: "memchr" has pointer type input
+
+1: "fold_memchr_A_pIb_cst_cst"
+9: "fold_memchr_A_pIb_cst_cst" has pointer type input
+
+4: "fold_memchr_A_pIb_cst_cst" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_memchr_A_pIb_cst_cst" has unsupported operation: llvm.mlir.zero
+
+4: "fold_memchr_A_pIb_cst_cst" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_A_pIb_cst_cst" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_A_pIb_cst_cst" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_A_pIb_cst_cst" has unsupported operation: llvm.store
+
+4: "fold_memchr_A_pIb_cst_cst" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_A_pIb_cst_cst" has unsupported operation: llvm.store
+
+4: "fold_memchr_A_pIb_cst_cst" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_A_pIb_cst_cst" has unsupported operation: llvm.store
+
+4: "fold_memchr_A_pIb_cst_cst" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_A_pIb_cst_cst" has unsupported operation: llvm.store
+
+4: "fold_memchr_A_pIb_cst_cst" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_A_pIb_cst_cst" has unsupported operation: llvm.store
+
+4: "fold_memchr_A_pIb_cst_cst" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_A_pIb_cst_cst" has unsupported operation: llvm.store
+
+4: "fold_memchr_A_pIb_cst_cst" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_A_pIb_cst_cst" has unsupported operation: llvm.store
+
+4: "fold_memchr_A_pIb_cst_cst" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_A_pIb_cst_cst" has unsupported operation: llvm.store
+
+4: "fold_memchr_A_pIb_cst_cst" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_A_pIb_cst_cst" has unsupported operation: llvm.store
+
+4: "fold_memchr_A_pIb_cst_cst" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_A_pIb_cst_cst" has unsupported operation: llvm.store
+
+4: "fold_memchr_A_pIb_cst_cst" has unsupported operation: llvm.return
+
+1: "fold_memchr_A_pIb_cst_N"
+9: "fold_memchr_A_pIb_cst_N" has pointer type input
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.mlir.zero
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.store
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.store
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.store
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.store
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.store
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.store
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.store
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.store
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.store
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.store
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.store
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.store
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.store
+
+4: "fold_memchr_A_pIb_cst_N" has unsupported operation: llvm.return
+
+1: "call_memchr_A_pIb_xs_cst"
+9: "call_memchr_A_pIb_xs_cst" has pointer type input
+
+4: "call_memchr_A_pIb_xs_cst" has unsupported operation: llvm.mlir.addressof
+
+4: "call_memchr_A_pIb_xs_cst" has unsupported operation: llvm.getelementptr
+
+4: "call_memchr_A_pIb_xs_cst" has unsupported operation: llvm.call
+
+4: "call_memchr_A_pIb_xs_cst" has unsupported operation: llvm.store
+
+4: "call_memchr_A_pIb_xs_cst" has unsupported operation: llvm.getelementptr
+
+4: "call_memchr_A_pIb_xs_cst" has unsupported operation: llvm.call
+
+4: "call_memchr_A_pIb_xs_cst" has unsupported operation: llvm.store
+
+4: "call_memchr_A_pIb_xs_cst" has unsupported operation: llvm.getelementptr
+
+4: "call_memchr_A_pIb_xs_cst" has unsupported operation: llvm.call
+
+4: "call_memchr_A_pIb_xs_cst" has unsupported operation: llvm.store
+
+4: "call_memchr_A_pIb_xs_cst" has unsupported operation: llvm.return
+
+1: "fold_memchr_gep_gep_gep"
+4: "fold_memchr_gep_gep_gep" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_memchr_gep_gep_gep" has unsupported operation: llvm.getelementptr
+
+1: "fold_memchr_union_member"
+4: "fold_memchr_union_member" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_memchr_union_member" has unsupported operation: llvm.getelementptr
+

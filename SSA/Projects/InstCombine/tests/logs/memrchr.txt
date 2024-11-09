@@ -1,0 +1,28 @@
+1: "memrchr"
+9: "memrchr" has pointer type input
+
+1: "test1"
+9: "test1" has pointer type input
+
+4: "test1" has unsupported operation: llvm.call
+
+1: "test2"
+9: "test2" has pointer type input
+
+4: "test2" has unsupported operation: llvm.call
+
+1: "test3"
+9: "test3" has pointer type input
+
+4: "test3" has unsupported operation: llvm.call
+
+1: "test4"
+9: "test4" has pointer type input
+
+4: "test4" has unsupported operation: llvm.call
+
+1: "test5"
+9: "test5" has pointer type input
+
+4: "test5" has unsupported operation: llvm.call
+

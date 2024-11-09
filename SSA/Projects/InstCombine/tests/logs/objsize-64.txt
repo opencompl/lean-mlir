@@ -1,0 +1,39 @@
+1: "malloc"
+5: "malloc" is empty
+
+1: "_Znwm"
+5: "_Znwm" is empty
+
+1: "__gxx_personality_v0"
+5: "__gxx_personality_v0" is empty
+
+1: "__cxa_call_unexpected"
+9: "__cxa_call_unexpected" has pointer type input
+
+1: "f1"
+9: "f1" has pointer type input
+
+4: "f1" has unsupported operation: llvm.call
+
+4: "f1" has unsupported operation: llvm.store
+
+1: "f2"
+9: "f2" has pointer type input
+
+4: "f2" has unsupported operation: llvm.mlir.undef
+
+4: "f2" has unsupported operation: builtin.unregistered: llvm.invoke
+
+4: "f2" has unsupported operation: llvm.store
+
+4: "f2" has unsupported operation: builtin.unregistered: llvm.landingpad
+
+4: "f2" has unsupported operation: llvm.extractvalue
+
+4: "f2" has unsupported operation: llvm.call
+
+4: "f2" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+1: "llvm.objectsize.i64.p0"
+9: "llvm.objectsize.i64.p0" has pointer type input
+

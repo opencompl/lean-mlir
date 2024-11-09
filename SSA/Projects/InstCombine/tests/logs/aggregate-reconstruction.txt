@@ -1,0 +1,210 @@
+1: "foo"
+5: "foo" is empty
+
+1: "bar"
+5: "bar" is empty
+
+1: "baz"
+5: "baz" is empty
+
+1: "usei32"
+5: "usei32" is empty
+
+1: "usei32i32agg"
+5: "usei32i32agg" is empty
+
+1: "test0"
+4: "test0" has unsupported operation after optimization: llvm.mlir.undef
+
+4: "test0" has unsupported operation after optimization: llvm.extractvalue
+
+4: "test0" has unsupported operation after optimization: llvm.extractvalue
+
+4: "test0" has unsupported operation after optimization: llvm.insertvalue
+
+4: "test0" has unsupported operation after optimization: llvm.insertvalue
+
+1: "test1"
+4: "test1" has unsupported operation after optimization: llvm.mlir.undef
+
+4: "test1" has unsupported operation after optimization: llvm.extractvalue
+
+4: "test1" has unsupported operation after optimization: llvm.extractvalue
+
+4: "test1" has unsupported operation after optimization: llvm.insertvalue
+
+4: "test1" has unsupported operation after optimization: llvm.insertvalue
+
+1: "test2"
+4: "test2" has unsupported operation: llvm.mlir.undef
+
+4: "test2" has unsupported operation: llvm.extractvalue
+
+4: "test2" has unsupported operation: llvm.extractvalue
+
+4: "test2" has unsupported operation: llvm.extractvalue
+
+4: "test2" has unsupported operation: llvm.insertvalue
+
+4: "test2" has unsupported operation: llvm.insertvalue
+
+4: "test2" has unsupported operation: llvm.insertvalue
+
+1: "test3"
+4: "test3" has unsupported operation: llvm.mlir.undef
+
+4: "test3" has unsupported operation: llvm.extractvalue
+
+4: "test3" has unsupported operation: llvm.extractvalue
+
+4: "test3" has unsupported operation: llvm.insertvalue
+
+4: "test3" has unsupported operation: llvm.insertvalue
+
+1: "test4"
+4: "test4" has unsupported operation after optimization: llvm.mlir.undef
+
+4: "test4" has unsupported operation after optimization: llvm.extractvalue
+
+4: "test4" has unsupported operation after optimization: llvm.extractvalue
+
+4: "test4" has unsupported operation after optimization: llvm.insertvalue
+
+4: "test4" has unsupported operation after optimization: llvm.insertvalue
+
+1: "negative_test5"
+4: "negative_test5" has unsupported operation: llvm.mlir.undef
+
+4: "negative_test5" has unsupported operation: llvm.extractvalue
+
+4: "negative_test5" has unsupported operation: llvm.insertvalue
+
+4: "negative_test5" has unsupported operation: llvm.insertvalue
+
+1: "negative_test6"
+4: "negative_test6" has unsupported operation: llvm.extractvalue
+
+4: "negative_test6" has unsupported operation: llvm.insertvalue
+
+1: "negative_test7"
+4: "negative_test7" has unsupported operation: llvm.mlir.undef
+
+4: "negative_test7" has unsupported operation: llvm.extractvalue
+
+4: "negative_test7" has unsupported operation: llvm.extractvalue
+
+4: "negative_test7" has unsupported operation: llvm.insertvalue
+
+4: "negative_test7" has unsupported operation: llvm.insertvalue
+
+1: "negative_test8"
+4: "negative_test8" has unsupported operation: llvm.mlir.undef
+
+4: "negative_test8" has unsupported operation: llvm.extractvalue
+
+4: "negative_test8" has unsupported operation: llvm.extractvalue
+
+4: "negative_test8" has unsupported operation: llvm.insertvalue
+
+4: "negative_test8" has unsupported operation: llvm.insertvalue
+
+1: "negative_test9"
+4: "negative_test9" has unsupported operation: llvm.mlir.undef
+
+4: "negative_test9" has unsupported operation: llvm.extractvalue
+
+4: "negative_test9" has unsupported operation: llvm.insertvalue
+
+4: "negative_test9" has unsupported operation: llvm.insertvalue
+
+1: "negative_test10"
+4: "negative_test10" has unsupported operation: llvm.mlir.undef
+
+4: "negative_test10" has unsupported operation: llvm.extractvalue
+
+4: "negative_test10" has unsupported operation: llvm.insertvalue
+
+1: "negative_test11"
+4: "negative_test11" has unsupported operation: llvm.mlir.undef
+
+4: "negative_test11" has unsupported operation: llvm.mlir.undef
+
+4: "negative_test11" has unsupported operation: llvm.extractvalue
+
+4: "negative_test11" has unsupported operation: llvm.insertvalue
+
+4: "negative_test11" has unsupported operation: llvm.insertvalue
+
+1: "test12"
+4: "test12" has unsupported operation: llvm.mlir.undef
+
+4: "test12" has unsupported operation: llvm.extractvalue
+
+4: "test12" has unsupported operation: llvm.call
+
+4: "test12" has unsupported operation: llvm.extractvalue
+
+4: "test12" has unsupported operation: llvm.call
+
+4: "test12" has unsupported operation: llvm.insertvalue
+
+4: "test12" has unsupported operation: llvm.call
+
+1: "test13"
+4: "test13" has unsupported operation after optimization: llvm.mlir.undef
+
+4: "test13" has unsupported operation after optimization: llvm.extractvalue
+
+4: "test13" has unsupported operation after optimization: llvm.extractvalue
+
+4: "test13" has unsupported operation after optimization: llvm.insertvalue
+
+4: "test13" has unsupported operation after optimization: llvm.insertvalue
+
+4: "test13" has unsupported operation after optimization: llvm.insertvalue
+
+1: "negative_test14"
+4: "negative_test14" has unsupported operation: llvm.mlir.undef
+
+4: "negative_test14" has unsupported operation: llvm.extractvalue
+
+4: "negative_test14" has unsupported operation: llvm.extractvalue
+
+4: "negative_test14" has unsupported operation: llvm.insertvalue
+
+4: "negative_test14" has unsupported operation: llvm.insertvalue
+
+1: "negative_test15"
+4: "negative_test15" has unsupported operation: llvm.mlir.undef
+
+4: "negative_test15" has unsupported operation: llvm.extractvalue
+
+4: "negative_test15" has unsupported operation: llvm.extractvalue
+
+4: "negative_test15" has unsupported operation: llvm.insertvalue
+
+4: "negative_test15" has unsupported operation: llvm.insertvalue
+
+1: "test16"
+4: "test16" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test17"
+4: "test17" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test17" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "poison_base"
+4: "poison_base" has unsupported operation after optimization: builtin.unregistered: llvm.mlir.poison
+
+4: "poison_base" has unsupported operation after optimization: llvm.extractvalue
+
+4: "poison_base" has unsupported operation after optimization: llvm.extractvalue
+
+4: "poison_base" has unsupported operation after optimization: llvm.extractvalue
+
+4: "poison_base" has unsupported operation after optimization: llvm.insertvalue
+
+4: "poison_base" has unsupported operation after optimization: llvm.insertvalue
+
+4: "poison_base" has unsupported operation after optimization: llvm.insertvalue
+

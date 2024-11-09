@@ -1,0 +1,5 @@
+1: "a"
+4: "a" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "a" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+

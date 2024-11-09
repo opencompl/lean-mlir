@@ -1,0 +1,59 @@
+1: "t1"
+7: "t1" is unchanged by InstCombine
+
+1: "t2"
+7: "t2" is unchanged by InstCombine
+
+1: "t3"
+4: "t3" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "t3" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "ashr_exact_poison_constant_fold"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.ashr
+2: llvm.return
+
+1: "ashr_exact"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.ashr
+2: llvm.return
+
+1: "shl_nsw_nuw_poison_constant_fold"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.shl
+2: llvm.return
+
+1: "shl_nsw_nuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.shl
+2: llvm.return
+
+1: "add_nsw_poison_constant_fold"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.add
+2: llvm.return
+
+1: "add_nsw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.add
+2: llvm.return
+

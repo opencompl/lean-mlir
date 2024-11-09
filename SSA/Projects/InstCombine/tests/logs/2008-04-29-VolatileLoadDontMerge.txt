@@ -1,0 +1,13 @@
+1: "main"
+4: "main" has unsupported operation: llvm.mlir.addressof
+
+4: "main" has unsupported operation: llvm.load
+
+4: "main" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "main" has unsupported operation: llvm.store
+
+4: "main" has unsupported operation: llvm.load
+
+4: "main" has unsupported operation: builtin.unregistered: llvm.cond_br
+

@@ -1,0 +1,16 @@
+1: "fast_div_201"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.mul
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.sub
+2: llvm.lshr
+2: llvm.add
+2: llvm.lshr
+2: llvm.return
+

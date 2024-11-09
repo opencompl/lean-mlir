@@ -1,0 +1,54 @@
+1: "use8"
+5: "use8" is empty
+
+1: "use2x8"
+5: "use2x8" is empty
+
+1: "t0_basic"
+4: "t0_basic" has unsupported operation: llvm.call
+
+1: "t1_vec"
+4: "t1_vec" has unsupported operation: llvm.call
+
+1: "gen8"
+5: "gen8" is empty
+
+1: "t2_commutative"
+4: "t2_commutative" has unsupported operation: llvm.call
+
+4: "t2_commutative" has unsupported operation: llvm.call
+
+1: "t3_no_extrause"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "n4_wrong_pred0"
+4: "n4_wrong_pred0" has unsupported operation: llvm.call
+
+1: "n5_wrong_pred1"
+4: "n5_wrong_pred1" has unsupported operation: llvm.call
+
+1: "n6_wrong_pred2"
+4: "n6_wrong_pred2" has unsupported operation: llvm.call
+
+1: "n7_wrong_pred3"
+4: "n7_wrong_pred3" has unsupported operation: llvm.call
+
+1: "n8_wrong_pred4"
+4: "n8_wrong_pred4" has unsupported operation: llvm.call
+
+1: "n9_wrong_pred5"
+4: "n9_wrong_pred5" has unsupported operation: llvm.call
+
+1: "n10_wrong_pred6"
+4: "n10_wrong_pred6" has unsupported operation: llvm.call
+
+1: "n11_wrong_pred7"
+4: "n11_wrong_pred7" has unsupported operation: llvm.call
+
+1: "n12_vec_nonsplat"
+4: "n12_vec_nonsplat" has unsupported operation: llvm.call
+

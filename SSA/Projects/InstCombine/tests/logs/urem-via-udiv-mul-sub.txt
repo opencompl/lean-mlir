@@ -1,0 +1,31 @@
+1: "use8"
+5: "use8" is empty
+
+1: "use2xi8"
+5: "use2xi8" is empty
+
+1: "t0_basic"
+4: "t0_basic" has unsupported operation: llvm.call
+
+1: "t1_vector"
+4: "t1_vector" has unsupported operation: llvm.call
+
+1: "t4_extrause"
+4: "t4_extrause" has unsupported operation: llvm.call
+
+4: "t4_extrause" has unsupported operation: llvm.call
+
+1: "gen8"
+5: "gen8" is empty
+
+1: "t5_commutative"
+4: "t5_commutative" has unsupported operation: llvm.call
+
+4: "t5_commutative" has unsupported operation: llvm.call
+
+1: "n6_different_x"
+4: "n6_different_x" has unsupported operation: llvm.call
+
+1: "n6_different_y"
+4: "n6_different_y" has unsupported operation: llvm.call
+

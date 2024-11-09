@@ -1,0 +1,100 @@
+1: "f1"
+9: "f1" has pointer type input
+
+4: "f1" has unsupported operation: llvm.getelementptr
+
+4: "f1" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "f1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "f1" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "f1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "f1" has unsupported operation: llvm.store
+
+4: "f1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "f1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "f1" has unsupported operation: llvm.return
+
+1: "f2"
+9: "f2" has pointer type input
+
+4: "f2" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "f2" has unsupported operation: llvm.getelementptr
+
+4: "f2" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "f2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "f2" has unsupported operation: llvm.store
+
+4: "f2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "f2" has unsupported operation: llvm.store
+
+4: "f2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "f2" has unsupported operation: llvm.return
+
+1: "f3"
+9: "f3" has pointer type input
+
+4: "f3" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "f3" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "f3" has unsupported operation: llvm.call
+
+4: "f3" has unsupported operation: llvm.return
+
+1: "g"
+5: "g" is empty
+
+1: "assume_align_zero"
+9: "assume_align_zero" has pointer type input
+
+4: "assume_align_zero" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "assume_align_zero" has unsupported operation: llvm.load
+
+1: "assume_align_non_pow2"
+9: "assume_align_non_pow2" has pointer type input
+
+4: "assume_align_non_pow2" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "assume_align_non_pow2" has unsupported operation: llvm.load
+
+1: "fold_assume_align_pow2_of_loaded_pointer_into_align_metadata"
+9: "fold_assume_align_pow2_of_loaded_pointer_into_align_metadata" has pointer type input
+
+4: "fold_assume_align_pow2_of_loaded_pointer_into_align_metadata" has unsupported operation: llvm.load
+
+4: "fold_assume_align_pow2_of_loaded_pointer_into_align_metadata" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "dont_fold_assume_align_pow2_of_loaded_pointer_into_align_metadata_due_to_call"
+9: "dont_fold_assume_align_pow2_of_loaded_pointer_into_align_metadata_due_to_call" has pointer type input
+
+4: "dont_fold_assume_align_pow2_of_loaded_pointer_into_align_metadata_due_to_call" has unsupported operation: llvm.load
+
+4: "dont_fold_assume_align_pow2_of_loaded_pointer_into_align_metadata_due_to_call" has unsupported operation: llvm.call
+
+4: "dont_fold_assume_align_pow2_of_loaded_pointer_into_align_metadata_due_to_call" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "dont_fold_assume_align_non_pow2_of_loaded_pointer_into_align_metadata"
+9: "dont_fold_assume_align_non_pow2_of_loaded_pointer_into_align_metadata" has pointer type input
+
+4: "dont_fold_assume_align_non_pow2_of_loaded_pointer_into_align_metadata" has unsupported operation: llvm.load
+
+4: "dont_fold_assume_align_non_pow2_of_loaded_pointer_into_align_metadata" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "dont_fold_assume_align_zero_of_loaded_pointer_into_align_metadata"
+9: "dont_fold_assume_align_zero_of_loaded_pointer_into_align_metadata" has pointer type input
+
+4: "dont_fold_assume_align_zero_of_loaded_pointer_into_align_metadata" has unsupported operation: llvm.load
+
+4: "dont_fold_assume_align_zero_of_loaded_pointer_into_align_metadata" has unsupported operation: builtin.unregistered: llvm.intr.assume
+

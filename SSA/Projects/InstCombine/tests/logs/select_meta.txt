@@ -1,0 +1,129 @@
+1: "foo"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.add
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "shrink_select"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.trunc
+2: llvm.return
+
+1: "min_max_bitcast"
+9: "min_max_bitcast" has pointer type input
+
+4: "min_max_bitcast" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "min_max_bitcast" has unsupported operation: llvm.store
+
+4: "min_max_bitcast" has unsupported operation: llvm.store
+
+4: "min_max_bitcast" has unsupported operation: llvm.return
+
+1: "foo2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.add
+2: llvm.sub
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "test43"
+4: "test43" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "scalar_select_of_vectors_sext"
+8: "scalar_select_of_vectors_sext" contains vectors which are unsupported
+
+1: "t7"
+4: "t7" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "abs_nabs_x01"
+4: "abs_nabs_x01" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_nabs_x01_vec"
+4: "abs_nabs_x01_vec" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "test30"
+4: "test30" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "test70"
+4: "test70" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "test72"
+4: "test72" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "test74"
+4: "test74" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "smin1"
+4: "smin1" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "smin2"
+4: "smin2" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "smax1"
+4: "smax1" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "smax2"
+4: "smax2" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "umin1"
+4: "umin1" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umin2"
+4: "umin2" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umax1"
+4: "umax1" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "umax2"
+4: "umax2" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "not_cond"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "not_cond_vec"
+8: "not_cond_vec" contains vectors which are unsupported
+
+1: "not_cond_vec_poison"
+8: "not_cond_vec_poison" contains vectors which are unsupported
+
+1: "select_add"
+2: llvm.func
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_or"
+8: "select_or" contains vectors which are unsupported
+
+1: "select_sub"
+2: llvm.func
+2: llvm.sub
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_ashr"
+2: llvm.func
+2: llvm.ashr
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_fmul"
+4: "select_fmul" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "select_fdiv"
+4: "select_fdiv" has unsupported operation: builtin.unregistered: llvm.fdiv
+

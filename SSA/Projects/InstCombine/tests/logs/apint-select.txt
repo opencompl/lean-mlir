@@ -1,0 +1,59 @@
+1: "zext"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "sext"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "not_zext"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "not_sext"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "zext_vec"
+8: "zext_vec" contains vectors which are unsupported
+
+1: "sext_vec"
+8: "sext_vec" contains vectors which are unsupported
+
+1: "not_zext_vec"
+8: "not_zext_vec" contains vectors which are unsupported
+
+1: "not_sext_vec"
+8: "not_sext_vec" contains vectors which are unsupported
+
+1: "scalar_select_of_vectors"
+7: "scalar_select_of_vectors" is unchanged by InstCombine
+
+1: "test3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "test4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+

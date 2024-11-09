@@ -1,0 +1,53 @@
+1: "sgt_3_impliesF_eq_2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "sgt_3_impliesT_sgt_2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "sgt_x_impliesF_eq_smin_todo"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "slt_x_impliesT_ne_smin_todo"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "ult_x_impliesT_eq_umax_todo"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "ult_1_impliesF_eq_1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "ugt_x_impliesF_eq_umin_todo"
+7: "ugt_x_impliesF_eq_umin_todo" is unchanged by InstCombine
+

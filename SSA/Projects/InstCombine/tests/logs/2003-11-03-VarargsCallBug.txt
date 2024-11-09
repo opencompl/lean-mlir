@@ -1,0 +1,10 @@
+1: "foo"
+5: "foo" is empty
+
+1: "test"
+4: "test" has unsupported operation: llvm.inttoptr
+
+4: "test" has unsupported operation: llvm.call
+
+4: "test" has unsupported operation: llvm.return
+

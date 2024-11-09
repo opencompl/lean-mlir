@@ -1,0 +1,44 @@
+1: "srem2_ashr_mask"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.ashr
+2: llvm.and
+2: llvm.return
+
+1: "srem8_ashr_mask"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.ashr
+2: llvm.and
+2: llvm.return
+
+1: "srem2_ashr_mask_vector"
+8: "srem2_ashr_mask_vector" contains vectors which are unsupported
+
+1: "srem2_ashr_mask_vector_nonconstant"
+8: "srem2_ashr_mask_vector_nonconstant" contains vectors which are unsupported
+
+1: "ashr_can_be_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.return
+
+1: "ashr_can_be_lshr_2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.or
+2: llvm.shl
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.return
+

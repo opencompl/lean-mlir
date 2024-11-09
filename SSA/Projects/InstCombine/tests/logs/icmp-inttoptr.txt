@@ -1,0 +1,41 @@
+1: "use_ptr"
+9: "use_ptr" has pointer type input
+
+1: "inttoptr"
+4: "inttoptr" has unsupported operation after optimization: llvm.inttoptr
+
+4: "inttoptr" has unsupported operation after optimization: llvm.inttoptr
+
+1: "inttoptr_constant"
+4: "inttoptr_constant" has unsupported operation after optimization: llvm.inttoptr
+
+4: "inttoptr_constant" has unsupported operation after optimization: llvm.inttoptr
+
+1: "inttoptr_vector"
+8: "inttoptr_vector" contains vectors which are unsupported
+
+1: "inttoptr_vector_constant"
+8: "inttoptr_vector_constant" contains vectors which are unsupported
+
+1: "inttoptr_size_mismatch"
+4: "inttoptr_size_mismatch" has unsupported operation after optimization: llvm.inttoptr
+
+4: "inttoptr_size_mismatch" has unsupported operation after optimization: llvm.inttoptr
+
+1: "inttoptr_vector_constant_size_mismatch"
+8: "inttoptr_vector_constant_size_mismatch" contains vectors which are unsupported
+
+1: "inttoptr_oneside"
+9: "inttoptr_oneside" has pointer type input
+
+4: "inttoptr_oneside" has unsupported operation: llvm.inttoptr
+
+1: "inttoptr_used"
+4: "inttoptr_used" has unsupported operation: llvm.inttoptr
+
+4: "inttoptr_used" has unsupported operation: llvm.inttoptr
+
+4: "inttoptr_used" has unsupported operation: llvm.call
+
+4: "inttoptr_used" has unsupported operation: llvm.call
+

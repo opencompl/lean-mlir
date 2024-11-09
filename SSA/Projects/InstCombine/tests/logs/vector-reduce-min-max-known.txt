@@ -1,0 +1,66 @@
+1: "vec_reduce_umax_non_zero"
+4: "vec_reduce_umax_non_zero" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.umax
+
+1: "vec_reduce_umax_non_zero_fail"
+4: "vec_reduce_umax_non_zero_fail" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.umax
+
+1: "vec_reduce_umin_non_zero"
+8: "vec_reduce_umin_non_zero" contains vectors which are unsupported
+
+1: "vec_reduce_umin_non_zero_fail"
+4: "vec_reduce_umin_non_zero_fail" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.umin
+
+1: "vec_reduce_smax_non_zero0"
+8: "vec_reduce_smax_non_zero0" contains vectors which are unsupported
+
+1: "vec_reduce_smax_non_zero1"
+4: "vec_reduce_smax_non_zero1" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.smax
+
+1: "vec_reduce_smax_non_zero_fail"
+4: "vec_reduce_smax_non_zero_fail" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.smax
+
+1: "vec_reduce_smin_non_zero0"
+8: "vec_reduce_smin_non_zero0" contains vectors which are unsupported
+
+1: "vec_reduce_smin_non_zero1"
+4: "vec_reduce_smin_non_zero1" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.smin
+
+1: "vec_reduce_smin_non_zero_fail"
+4: "vec_reduce_smin_non_zero_fail" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.smin
+
+1: "vec_reduce_umax_known0"
+8: "vec_reduce_umax_known0" contains vectors which are unsupported
+
+1: "vec_reduce_umax_known1"
+4: "vec_reduce_umax_known1" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.umax
+
+1: "vec_reduce_umax_known_fail0"
+4: "vec_reduce_umax_known_fail0" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.umax
+
+1: "vec_reduce_umax_known_fail1"
+4: "vec_reduce_umax_known_fail1" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.umax
+
+1: "vec_reduce_umin_known0"
+8: "vec_reduce_umin_known0" contains vectors which are unsupported
+
+1: "vec_reduce_umin_known1"
+4: "vec_reduce_umin_known1" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.umin
+
+1: "vec_reduce_umin_known_fail0"
+4: "vec_reduce_umin_known_fail0" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.umin
+
+1: "vec_reduce_umin_known_fail1"
+4: "vec_reduce_umin_known_fail1" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.umin
+
+1: "vec_reduce_smax_known"
+8: "vec_reduce_smax_known" contains vectors which are unsupported
+
+1: "vec_reduce_smax_known_fail"
+4: "vec_reduce_smax_known_fail" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.umax
+
+1: "vec_reduce_smin_known"
+8: "vec_reduce_smin_known" contains vectors which are unsupported
+
+1: "vec_reduce_smin_known_fail"
+4: "vec_reduce_smin_known_fail" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.smin
+

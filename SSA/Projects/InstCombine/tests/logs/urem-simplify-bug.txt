@@ -1,0 +1,22 @@
+1: "main"
+4: "main" has unsupported operation: llvm.mlir.addressof
+
+4: "main" has unsupported operation: llvm.call
+
+4: "main" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "main" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "main" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "main" has unsupported operation: llvm.call
+
+1: "func_11"
+5: "func_11" is empty
+
+1: "printf"
+9: "printf" has pointer type input
+
+1: "puts"
+9: "puts" has pointer type input
+

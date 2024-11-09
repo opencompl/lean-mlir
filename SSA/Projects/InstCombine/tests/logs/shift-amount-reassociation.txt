@@ -1,0 +1,153 @@
+1: "t0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.lshr
+2: llvm.add
+2: llvm.lshr
+2: llvm.return
+
+1: "t1_vec_splat"
+8: "t1_vec_splat" contains vectors which are unsupported
+
+1: "t2_vec_nonsplat"
+8: "t2_vec_nonsplat" contains vectors which are unsupported
+
+1: "t3_vec_nonsplat_poison0"
+4: "t3_vec_nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "t3_vec_nonsplat_poison0" has unsupported operation: llvm.mlir.undef
+
+4: "t3_vec_nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t3_vec_nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t3_vec_nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "t4_vec_nonsplat_poison1"
+4: "t4_vec_nonsplat_poison1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "t4_vec_nonsplat_poison1" has unsupported operation: llvm.mlir.undef
+
+4: "t4_vec_nonsplat_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t4_vec_nonsplat_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t4_vec_nonsplat_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "t5_vec_nonsplat_poison1"
+4: "t5_vec_nonsplat_poison1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "t5_vec_nonsplat_poison1" has unsupported operation: llvm.mlir.undef
+
+4: "t5_vec_nonsplat_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t5_vec_nonsplat_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t5_vec_nonsplat_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "t6_shl"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.shl
+2: llvm.add
+2: llvm.shl
+2: llvm.return
+
+1: "t7_ashr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.ashr
+2: llvm.add
+2: llvm.ashr
+2: llvm.return
+
+1: "t8_lshr_exact_flag_preservation"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.lshr
+2: llvm.add
+2: llvm.lshr
+2: llvm.return
+
+1: "t9_ashr_exact_flag_preservation"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.ashr
+2: llvm.add
+2: llvm.ashr
+2: llvm.return
+
+1: "t10_shl_nuw_flag_preservation"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.shl
+2: llvm.add
+2: llvm.shl
+2: llvm.return
+
+1: "t11_shl_nsw_flag_preservation"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.shl
+2: llvm.add
+2: llvm.shl
+2: llvm.return
+
+1: "constantexpr"
+4: "constantexpr" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "constantexpr" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+4: "constantexpr" has unsupported operation after optimization: llvm.mlir.undef
+
+4: "constantexpr" has unsupported operation after optimization: llvm.alloca
+
+4: "constantexpr" has unsupported operation after optimization: llvm.load
+
+1: "n12"
+7: "n12" is unchanged by InstCombine
+
+1: "t13_vec"
+7: "t13_vec" is unchanged by InstCombine
+
+1: "n13"
+7: "n13" is unchanged by InstCombine
+
+1: "n14"
+7: "n14" is unchanged by InstCombine
+
+1: "n15"
+7: "n15" is unchanged by InstCombine
+
+1: "n16"
+7: "n16" is unchanged by InstCombine
+
+1: "n17"
+7: "n17" is unchanged by InstCombine
+
+1: "n18"
+7: "n18" is unchanged by InstCombine
+
+1: "n19"
+7: "n19" is unchanged by InstCombine
+
+1: "n20"
+7: "n20" is unchanged by InstCombine
+
+1: "pr44802"
+7: "pr44802" is unchanged by InstCombine
+

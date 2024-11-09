@@ -1,0 +1,32 @@
+1: "test1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.lshr
+2: llvm.mul
+2: llvm.or
+2: llvm.trunc
+2: llvm.return
+
+1: "test1_vec"
+8: "test1_vec" contains vectors which are unsupported
+
+1: "test1_vec_nonuniform"
+8: "test1_vec_nonuniform" contains vectors which are unsupported
+
+1: "test1_vec_undef"
+4: "test1_vec_undef" has unsupported operation: llvm.mlir.undef
+
+4: "test1_vec_undef" has unsupported operation: llvm.mlir.undef
+
+4: "test1_vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test1_vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test1_vec_undef" has unsupported operation: llvm.mlir.undef
+
+4: "test1_vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test1_vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+

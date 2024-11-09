@@ -1,0 +1,11 @@
+1: "test"
+4: "test" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test2"
+4: "test2" has unsupported operation: llvm.alloca
+
+1: "test3"
+4: "test3" has unsupported operation: llvm.return
+

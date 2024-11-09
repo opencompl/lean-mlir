@@ -1,0 +1,382 @@
+1: "is_pow2or0_negate_op"
+4: "is_pow2or0_negate_op" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2or0_negate_op_vec"
+4: "is_pow2or0_negate_op_vec" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2or0_decrement_op"
+4: "is_pow2or0_decrement_op" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2or0_decrement_op_vec"
+4: "is_pow2or0_decrement_op_vec" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2or0_negate_op"
+4: "isnot_pow2or0_negate_op" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2or0_negate_op_vec"
+4: "isnot_pow2or0_negate_op_vec" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2or0_decrement_op"
+4: "isnot_pow2or0_decrement_op" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2or0_decrement_op_vec"
+4: "isnot_pow2or0_decrement_op_vec" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2or0_negate_op_commute1"
+4: "is_pow2or0_negate_op_commute1" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2or0_negate_op_commute2"
+4: "isnot_pow2or0_negate_op_commute2" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2or0_negate_op_commute3"
+4: "isnot_pow2or0_negate_op_commute3" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "use"
+5: "use" is empty
+
+1: "is_pow2or0_negate_op_extra_use1"
+4: "is_pow2or0_negate_op_extra_use1" has unsupported operation: llvm.call
+
+4: "is_pow2or0_negate_op_extra_use1" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2or0_negate_op_extra_use2"
+4: "is_pow2or0_negate_op_extra_use2" has unsupported operation: llvm.call
+
+1: "is_pow2_ctpop"
+4: "is_pow2_ctpop" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2_non_zero_ult_2"
+4: "is_pow2_non_zero_ult_2" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "is_pow2_non_zero_ult_2" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2_non_zero_eq_1"
+4: "is_pow2_non_zero_eq_1" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "is_pow2_non_zero_eq_1" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2_non_zero_ugt_1"
+4: "is_pow2_non_zero_ugt_1" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "is_pow2_non_zero_ugt_1" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2_non_zero_ne_1"
+4: "is_pow2_non_zero_ne_1" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "is_pow2_non_zero_ne_1" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2_ctpop_logical"
+4: "is_pow2_ctpop_logical" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "use_i1"
+5: "use_i1" is empty
+
+1: "is_pow2_ctpop_extra_uses"
+4: "is_pow2_ctpop_extra_uses" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "is_pow2_ctpop_extra_uses" has unsupported operation: llvm.call
+
+4: "is_pow2_ctpop_extra_uses" has unsupported operation: llvm.call
+
+1: "is_pow2_ctpop_extra_uses_logical"
+4: "is_pow2_ctpop_extra_uses_logical" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "is_pow2_ctpop_extra_uses_logical" has unsupported operation: llvm.call
+
+4: "is_pow2_ctpop_extra_uses_logical" has unsupported operation: llvm.call
+
+1: "is_pow2_ctpop_commute_vec"
+4: "is_pow2_ctpop_commute_vec" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2_ctpop_wrong_cmp_op1"
+4: "is_pow2_ctpop_wrong_cmp_op1" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2_ctpop_wrong_cmp_op1_logical"
+4: "is_pow2_ctpop_wrong_cmp_op1_logical" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2_ctpop_wrong_cmp_op2"
+4: "is_pow2_ctpop_wrong_cmp_op2" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2_ctpop_wrong_cmp_op2_logical"
+4: "is_pow2_ctpop_wrong_cmp_op2_logical" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2_ctpop_wrong_pred1"
+4: "is_pow2_ctpop_wrong_pred1" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2_ctpop_wrong_pred1_logical"
+4: "is_pow2_ctpop_wrong_pred1_logical" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2_ctpop_wrong_pred2"
+4: "is_pow2_ctpop_wrong_pred2" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2_ctpop_wrong_pred2_logical"
+4: "is_pow2_ctpop_wrong_pred2_logical" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2_ctpop"
+4: "isnot_pow2_ctpop" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2_ctpop_logical"
+4: "isnot_pow2_ctpop_logical" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2_ctpop_extra_uses"
+4: "isnot_pow2_ctpop_extra_uses" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "isnot_pow2_ctpop_extra_uses" has unsupported operation: llvm.call
+
+4: "isnot_pow2_ctpop_extra_uses" has unsupported operation: llvm.call
+
+1: "isnot_pow2_ctpop_extra_uses_logical"
+4: "isnot_pow2_ctpop_extra_uses_logical" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "isnot_pow2_ctpop_extra_uses_logical" has unsupported operation: llvm.call
+
+4: "isnot_pow2_ctpop_extra_uses_logical" has unsupported operation: llvm.call
+
+1: "isnot_pow2_ctpop_commute_vec"
+4: "isnot_pow2_ctpop_commute_vec" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2_ctpop_wrong_cmp_op1"
+4: "isnot_pow2_ctpop_wrong_cmp_op1" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2_ctpop_wrong_cmp_op1_logical"
+4: "isnot_pow2_ctpop_wrong_cmp_op1_logical" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2_ctpop_wrong_cmp_op2"
+4: "isnot_pow2_ctpop_wrong_cmp_op2" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2_ctpop_wrong_cmp_op2_logical"
+4: "isnot_pow2_ctpop_wrong_cmp_op2_logical" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2_ctpop_wrong_pred2"
+4: "isnot_pow2_ctpop_wrong_pred2" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2_ctpop_wrong_pred2_logical"
+4: "isnot_pow2_ctpop_wrong_pred2_logical" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2_negate_op"
+4: "is_pow2_negate_op" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2_negate_op_logical"
+4: "is_pow2_negate_op_logical" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2_negate_op_vec"
+4: "is_pow2_negate_op_vec" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2_decrement_op"
+4: "is_pow2_decrement_op" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2_decrement_op_logical"
+4: "is_pow2_decrement_op_logical" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2_decrement_op_vec"
+4: "is_pow2_decrement_op_vec" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2_negate_op"
+4: "isnot_pow2_negate_op" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2_negate_op_logical"
+4: "isnot_pow2_negate_op_logical" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2_negate_op_vec"
+4: "isnot_pow2_negate_op_vec" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2_decrement_op"
+4: "isnot_pow2_decrement_op" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2_decrement_op_logical"
+4: "isnot_pow2_decrement_op_logical" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2_decrement_op_vec"
+4: "isnot_pow2_decrement_op_vec" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2or0_ctpop"
+4: "is_pow2or0_ctpop" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2or0_ctpop_swap_cmp"
+4: "is_pow2or0_ctpop_swap_cmp" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2or0_ctpop_logical"
+4: "is_pow2or0_ctpop_logical" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2or0_ctpop_commute_vec"
+4: "is_pow2or0_ctpop_commute_vec" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2or0_ctpop_extra_uses"
+4: "is_pow2or0_ctpop_extra_uses" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "is_pow2or0_ctpop_extra_uses" has unsupported operation: llvm.call
+
+4: "is_pow2or0_ctpop_extra_uses" has unsupported operation: llvm.call
+
+4: "is_pow2or0_ctpop_extra_uses" has unsupported operation: llvm.call
+
+1: "is_pow2or0_ctpop_logical_extra_uses"
+4: "is_pow2or0_ctpop_logical_extra_uses" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "is_pow2or0_ctpop_logical_extra_uses" has unsupported operation: llvm.call
+
+4: "is_pow2or0_ctpop_logical_extra_uses" has unsupported operation: llvm.call
+
+4: "is_pow2or0_ctpop_logical_extra_uses" has unsupported operation: llvm.call
+
+1: "is_pow2or0_ctpop_wrong_cmp_op1"
+4: "is_pow2or0_ctpop_wrong_cmp_op1" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2or0_ctpop_wrong_cmp_op1_logical"
+4: "is_pow2or0_ctpop_wrong_cmp_op1_logical" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2or0_ctpop_commute_vec_wrong_cmp_op1"
+4: "is_pow2or0_ctpop_commute_vec_wrong_cmp_op1" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2or0_ctpop_wrong_pred1"
+4: "is_pow2or0_ctpop_wrong_pred1" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2or0_ctpop_wrong_pred2"
+4: "is_pow2or0_ctpop_wrong_pred2" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2or0_ctpop_wrong_pred2_logical"
+4: "is_pow2or0_ctpop_wrong_pred2_logical" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2or0_ctpop_commute_vec_wrong_pred3"
+8: "is_pow2or0_ctpop_commute_vec_wrong_pred3" contains vectors which are unsupported
+
+1: "isnot_pow2nor0_ctpop"
+4: "isnot_pow2nor0_ctpop" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2nor0_ctpop_swap_cmp"
+4: "isnot_pow2nor0_ctpop_swap_cmp" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2nor0_ctpop_logical"
+4: "isnot_pow2nor0_ctpop_logical" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2nor0_ctpop_commute_vec"
+4: "isnot_pow2nor0_ctpop_commute_vec" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2nor0_ctpop_extra_uses"
+4: "isnot_pow2nor0_ctpop_extra_uses" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "isnot_pow2nor0_ctpop_extra_uses" has unsupported operation: llvm.call
+
+4: "isnot_pow2nor0_ctpop_extra_uses" has unsupported operation: llvm.call
+
+4: "isnot_pow2nor0_ctpop_extra_uses" has unsupported operation: llvm.call
+
+1: "isnot_pow2nor0_ctpop_logical_extra_uses"
+4: "isnot_pow2nor0_ctpop_logical_extra_uses" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "isnot_pow2nor0_ctpop_logical_extra_uses" has unsupported operation: llvm.call
+
+4: "isnot_pow2nor0_ctpop_logical_extra_uses" has unsupported operation: llvm.call
+
+4: "isnot_pow2nor0_ctpop_logical_extra_uses" has unsupported operation: llvm.call
+
+1: "isnot_pow2nor0_ctpop_wrong_cmp_op1"
+4: "isnot_pow2nor0_ctpop_wrong_cmp_op1" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2nor0_ctpop_wrong_cmp_op1_logical"
+4: "isnot_pow2nor0_ctpop_wrong_cmp_op1_logical" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2nor0_ctpop_commute_vec_wrong_cmp_op1"
+4: "isnot_pow2nor0_ctpop_commute_vec_wrong_cmp_op1" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2nor0_ctpop_wrong_pred1"
+4: "isnot_pow2nor0_ctpop_wrong_pred1" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2nor0_ctpop_wrong_pred2"
+4: "isnot_pow2nor0_ctpop_wrong_pred2" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2nor0_ctpop_wrong_pred2_logical"
+4: "isnot_pow2nor0_ctpop_wrong_pred2_logical" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctpop
+
+1: "isnot_pow2nor0_wrong_pred3_ctpop_commute_vec"
+8: "isnot_pow2nor0_wrong_pred3_ctpop_commute_vec" contains vectors which are unsupported
+
+1: "is_pow2_fail_pr63327"
+7: "is_pow2_fail_pr63327" is unchanged by InstCombine
+
+1: "blsmsk_is_p2_or_z"
+7: "blsmsk_is_p2_or_z" is unchanged by InstCombine
+
+1: "blsmsk_isnt_p2_or_z"
+4: "blsmsk_isnt_p2_or_z" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "blsmsk_is_p2_or_z_fail"
+4: "blsmsk_is_p2_or_z_fail" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "blsmsk_isnt_p2_or_z_fail"
+7: "blsmsk_isnt_p2_or_z_fail" is unchanged by InstCombine
+
+1: "use.i32"
+5: "use.i32" is empty
+
+1: "blsmsk_isnt_p2_or_z_fail_multiuse"
+4: "blsmsk_isnt_p2_or_z_fail_multiuse" has unsupported operation: llvm.call
+
+1: "blsmsk_isnt_p2_or_z_fail_wrong_add"
+7: "blsmsk_isnt_p2_or_z_fail_wrong_add" is unchanged by InstCombine
+
+1: "blsmsk_isnt_p2_or_z_fail_bad_xor"
+7: "blsmsk_isnt_p2_or_z_fail_bad_xor" is unchanged by InstCombine
+
+1: "blsmsk_is_p2_or_z_fail_bad_cmp"
+7: "blsmsk_is_p2_or_z_fail_bad_cmp" is unchanged by InstCombine
+
+1: "blsmsk_is_p2_or_z_ule_xy"
+4: "blsmsk_is_p2_or_z_ule_xy" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "blsmsk_is_p2_or_z_ule_yx_fail"
+7: "blsmsk_is_p2_or_z_ule_yx_fail" is unchanged by InstCombine
+
+1: "blsmsk_is_p2_or_z_uge_yx"
+4: "blsmsk_is_p2_or_z_uge_yx" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "blsmsk_is_p2_or_z_uge_xy_fail"
+7: "blsmsk_is_p2_or_z_uge_xy_fail" is unchanged by InstCombine
+
+1: "blsmsk_isnt_p2_or_z_ugt_xy"
+4: "blsmsk_isnt_p2_or_z_ugt_xy" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "blsmsk_isnt_p2_or_z_ugt_yx_fail"
+7: "blsmsk_isnt_p2_or_z_ugt_yx_fail" is unchanged by InstCombine
+
+1: "blsmsk_isnt_p2_or_z_ult_yx"
+4: "blsmsk_isnt_p2_or_z_ult_yx" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "blsmsk_isnt_p2_or_z_ult_xy_fail"
+7: "blsmsk_isnt_p2_or_z_ult_xy_fail" is unchanged by InstCombine
+
+1: "is_pow2_nz_known_bits"
+4: "is_pow2_nz_known_bits" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2_nz_known_bits_fail_multiuse"
+4: "is_pow2_nz_known_bits_fail_multiuse" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "is_pow2_nz_known_bits_fail_multiuse" has unsupported operation: llvm.call
+
+1: "not_pow2_nz_known_bits"
+4: "not_pow2_nz_known_bits" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctpop
+
+1: "not_pow2_nz_known_bits_fail_not_p2_test"
+4: "not_pow2_nz_known_bits_fail_not_p2_test" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_pow2_or_z_known_bits"
+4: "is_pow2_or_z_known_bits" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctpop
+
+1: "not_pow2_or_z_known_bits"
+8: "not_pow2_or_z_known_bits" contains vectors which are unsupported
+
+1: "not_pow2_or_z_known_bits_fail_wrong_cmp"
+4: "not_pow2_or_z_known_bits_fail_wrong_cmp" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "has_single_bit"
+4: "has_single_bit" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "has_single_bit_inv"
+4: "has_single_bit_inv" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_power2_or_zero_with_range"
+4: "is_power2_or_zero_with_range" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "is_power2_or_zero_inv_with_range"
+4: "is_power2_or_zero_inv_with_range" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+

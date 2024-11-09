@@ -1,0 +1,147 @@
+1: "use32"
+5: "use32" is empty
+
+1: "use64"
+5: "use64" is empty
+
+1: "highest_bit_test_via_lshr"
+4: "highest_bit_test_via_lshr" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_lshr" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_lshr" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_lshr" has unsupported operation: llvm.call
+
+1: "highest_bit_test_via_lshr_with_truncation"
+4: "highest_bit_test_via_lshr_with_truncation" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_lshr_with_truncation" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_lshr_with_truncation" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_lshr_with_truncation" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_lshr_with_truncation" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_lshr_with_truncation" has unsupported operation: llvm.call
+
+1: "highest_bit_test_via_ashr"
+4: "highest_bit_test_via_ashr" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_ashr" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_ashr" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_ashr" has unsupported operation: llvm.call
+
+1: "highest_bit_test_via_ashr_with_truncation"
+4: "highest_bit_test_via_ashr_with_truncation" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_ashr_with_truncation" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_ashr_with_truncation" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_ashr_with_truncation" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_ashr_with_truncation" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_ashr_with_truncation" has unsupported operation: llvm.call
+
+1: "highest_bit_test_via_lshr_ashr"
+4: "highest_bit_test_via_lshr_ashr" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_lshr_ashr" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_lshr_ashr" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_lshr_ashr" has unsupported operation: llvm.call
+
+1: "highest_bit_test_via_lshr_ashe_with_truncation"
+4: "highest_bit_test_via_lshr_ashe_with_truncation" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_lshr_ashe_with_truncation" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_lshr_ashe_with_truncation" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_lshr_ashe_with_truncation" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_lshr_ashe_with_truncation" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_lshr_ashe_with_truncation" has unsupported operation: llvm.call
+
+1: "highest_bit_test_via_ashr_lshr"
+4: "highest_bit_test_via_ashr_lshr" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_ashr_lshr" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_ashr_lshr" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_ashr_lshr" has unsupported operation: llvm.call
+
+1: "highest_bit_test_via_ashr_lshr_with_truncation"
+4: "highest_bit_test_via_ashr_lshr_with_truncation" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_ashr_lshr_with_truncation" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_ashr_lshr_with_truncation" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_ashr_lshr_with_truncation" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_ashr_lshr_with_truncation" has unsupported operation: llvm.call
+
+4: "highest_bit_test_via_ashr_lshr_with_truncation" has unsupported operation: llvm.call
+
+1: "unsigned_sign_bit_extract"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.icmp
+2: llvm.return
+
+1: "unsigned_sign_bit_extract_extrause"
+4: "unsigned_sign_bit_extract_extrause" has unsupported operation: llvm.call
+
+1: "unsigned_sign_bit_extract_extrause__ispositive"
+4: "unsigned_sign_bit_extract_extrause__ispositive" has unsupported operation: llvm.call
+
+1: "signed_sign_bit_extract"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.icmp
+2: llvm.return
+
+1: "signed_sign_bit_extract_extrause"
+4: "signed_sign_bit_extract_extrause" has unsupported operation: llvm.call
+
+1: "unsigned_sign_bit_extract_with_trunc"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "unsigned_sign_bit_extract_with_trunc_extrause"
+4: "unsigned_sign_bit_extract_with_trunc_extrause" has unsupported operation: llvm.call
+
+4: "unsigned_sign_bit_extract_with_trunc_extrause" has unsupported operation: llvm.call
+
+1: "signed_sign_bit_extract_trunc"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "signed_sign_bit_extract_trunc_extrause"
+4: "signed_sign_bit_extract_trunc_extrause" has unsupported operation: llvm.call
+
+4: "signed_sign_bit_extract_trunc_extrause" has unsupported operation: llvm.call
+

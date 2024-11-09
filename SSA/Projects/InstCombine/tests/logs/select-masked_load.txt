@@ -1,0 +1,47 @@
+1: "masked_load_and_zero_inactive_1"
+9: "masked_load_and_zero_inactive_1" has pointer type input
+
+4: "masked_load_and_zero_inactive_1" has unsupported operation: builtin.unregistered: llvm.intr.masked.load
+
+1: "masked_load_and_zero_inactive_2"
+9: "masked_load_and_zero_inactive_2" has pointer type input
+
+4: "masked_load_and_zero_inactive_2" has unsupported operation: builtin.unregistered: llvm.intr.masked.load
+
+1: "masked_load_and_zero_inactive_3"
+9: "masked_load_and_zero_inactive_3" has pointer type input
+
+4: "masked_load_and_zero_inactive_3" has unsupported operation: builtin.unregistered: llvm.intr.masked.load
+
+1: "masked_load_and_zero_inactive_4"
+9: "masked_load_and_zero_inactive_4" has pointer type input
+
+4: "masked_load_and_zero_inactive_4" has unsupported operation: builtin.unregistered: llvm.intr.masked.load
+
+1: "masked_load_and_zero_inactive_5"
+9: "masked_load_and_zero_inactive_5" has pointer type input
+
+4: "masked_load_and_zero_inactive_5" has unsupported operation: builtin.unregistered: llvm.intr.masked.load
+
+1: "masked_load_and_zero_inactive_6"
+9: "masked_load_and_zero_inactive_6" has pointer type input
+
+4: "masked_load_and_zero_inactive_6" has unsupported operation: builtin.unregistered: llvm.intr.masked.load
+
+1: "masked_load_and_zero_inactive_7"
+9: "masked_load_and_zero_inactive_7" has pointer type input
+
+4: "masked_load_and_zero_inactive_7" has unsupported operation: builtin.unregistered: llvm.intr.masked.load
+
+1: "masked_load_and_zero_inactive_8"
+9: "masked_load_and_zero_inactive_8" has pointer type input
+
+4: "masked_load_and_zero_inactive_8" has unsupported operation: builtin.unregistered: llvm.intr.masked.load
+
+1: "masked_load_and_scalar_select_cond"
+9: "masked_load_and_scalar_select_cond" has pointer type input
+
+4: "masked_load_and_scalar_select_cond" has unsupported operation: llvm.mlir.undef
+
+4: "masked_load_and_scalar_select_cond" has unsupported operation: builtin.unregistered: llvm.intr.masked.load
+

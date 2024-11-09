@@ -1,0 +1,91 @@
+1: "p0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.xor
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "p1_vec"
+8: "p1_vec" contains vectors which are unsupported
+
+1: "p2_vec_poison0"
+8: "p2_vec_poison0" contains vectors which are unsupported
+
+1: "p3_vec_poison0"
+8: "p3_vec_poison0" contains vectors which are unsupported
+
+1: "p4_vec_poison2"
+8: "p4_vec_poison2" contains vectors which are unsupported
+
+1: "gen8"
+5: "gen8" is empty
+
+1: "c0"
+4: "c0" has unsupported operation: llvm.call
+
+1: "c1"
+4: "c1" has unsupported operation: llvm.call
+
+1: "c2"
+4: "c2" has unsupported operation: llvm.call
+
+1: "use8"
+5: "use8" is empty
+
+1: "oneuse0"
+4: "oneuse0" has unsupported operation: llvm.call
+
+1: "oneuse1"
+4: "oneuse1" has unsupported operation: llvm.call
+
+1: "oneuse2"
+4: "oneuse2" has unsupported operation: llvm.call
+
+1: "oneuse3"
+4: "oneuse3" has unsupported operation: llvm.call
+
+4: "oneuse3" has unsupported operation: llvm.call
+
+1: "oneuse4"
+4: "oneuse4" has unsupported operation: llvm.call
+
+4: "oneuse4" has unsupported operation: llvm.call
+
+1: "oneuse5"
+4: "oneuse5" has unsupported operation: llvm.call
+
+4: "oneuse5" has unsupported operation: llvm.call
+
+4: "oneuse5" has unsupported operation: llvm.call
+
+1: "n0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.xor
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "n1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.xor
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "n2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.xor
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+

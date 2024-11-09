@@ -1,0 +1,259 @@
+1: "use.i8"
+5: "use.i8" is empty
+
+1: "use.i1"
+5: "use.i1" is empty
+
+1: "xor_1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.xor
+2: llvm.return
+
+1: "xor_2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.xor
+2: llvm.return
+
+1: "xor_fail"
+7: "xor_fail" is unchanged by InstCombine
+
+1: "add_1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.add
+2: llvm.xor
+2: llvm.return
+
+1: "add_2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.add
+2: llvm.xor
+2: llvm.return
+
+1: "add_fail"
+7: "add_fail" is unchanged by InstCombine
+
+1: "sub_1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.sub
+2: llvm.xor
+2: llvm.return
+
+1: "sub_2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.sub
+2: llvm.xor
+2: llvm.return
+
+1: "sub_3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.sub
+2: llvm.xor
+2: llvm.return
+
+1: "sub_fail"
+4: "sub_fail" has unsupported operation: llvm.call
+
+1: "ashr_1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.ashr
+2: llvm.xor
+2: llvm.return
+
+1: "ashr_2_fail"
+7: "ashr_2_fail" is unchanged by InstCombine
+
+1: "select_1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.return
+
+1: "select_2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.return
+
+1: "select_logic_or_fail"
+7: "select_logic_or_fail" is unchanged by InstCombine
+
+1: "select_logic_and_fail"
+7: "select_logic_and_fail" is unchanged by InstCombine
+
+1: "smin_1"
+4: "smin_1" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "smin_1_fail"
+4: "smin_1_fail" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "umin_1_fail"
+4: "umin_1_fail" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "smax_1"
+4: "smax_1" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "smax_1_fail"
+4: "smax_1_fail" has unsupported operation: llvm.call
+
+4: "smax_1_fail" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "umax_1"
+4: "umax_1" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umax_1_fail"
+4: "umax_1_fail" has unsupported operation: llvm.call
+
+4: "umax_1_fail" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "sub_both_freely_invertable_always"
+7: "sub_both_freely_invertable_always" is unchanged by InstCombine
+
+1: "add_both_freely_invertable_always"
+7: "add_both_freely_invertable_always" is unchanged by InstCombine
+
+1: "xor_both_freely_invertable_always"
+7: "xor_both_freely_invertable_always" is unchanged by InstCombine
+
+1: "ashr_both_freely_invertable_always"
+7: "ashr_both_freely_invertable_always" is unchanged by InstCombine
+
+1: "select_both_freely_invertable_always"
+7: "select_both_freely_invertable_always" is unchanged by InstCombine
+
+1: "umin_both_freely_invertable_always"
+4: "umin_both_freely_invertable_always" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umax_both_freely_invertable_always"
+4: "umax_both_freely_invertable_always" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "smin_both_freely_invertable_always"
+4: "smin_both_freely_invertable_always" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "smax_both_freely_invertable_always"
+4: "smax_both_freely_invertable_always" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "lshr_nneg"
+4: "lshr_nneg" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "lshr_not_nneg"
+7: "lshr_not_nneg" is unchanged by InstCombine
+
+1: "lshr_not_nneg2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.lshr
+2: llvm.xor
+2: llvm.return
+
+1: "test_inv_free"
+4: "test_inv_free" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_inv_free" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_inv_free" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_inv_free" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_inv_free" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "test_inv_free_i32"
+4: "test_inv_free_i32" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_inv_free_i32" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_inv_free_i32" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_inv_free_i32" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_inv_free_multiuse"
+4: "test_inv_free_multiuse" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_inv_free_multiuse" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_inv_free_multiuse" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_inv_free_multiuse" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_inv_free_multiuse" has unsupported operation: llvm.call
+
+4: "test_inv_free_multiuse" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "test_inv_free_i32_newinst"
+4: "test_inv_free_i32_newinst" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_inv_free_i32_newinst" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_inv_free_i32_newinst" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_inv_free_i32_newinst" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_inv_free_loop"
+4: "test_inv_free_loop" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_inv_free_loop" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_inv_free_loop" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_inv_free_loop" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_inv_free_loop" has unsupported operation: builtin.unregistered: llvm.cond_br
+

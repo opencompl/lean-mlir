@@ -1,0 +1,9 @@
+1: "test0"
+7: "test0" is unchanged by InstCombine
+
+1: "test1"
+7: "test1" is unchanged by InstCombine
+
+1: "test0vec"
+7: "test0vec" is unchanged by InstCombine
+

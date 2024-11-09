@@ -1,0 +1,112 @@
+1: "memrchr"
+9: "memrchr" has pointer type input
+
+1: "fold_memrchr_ax_c_0"
+4: "fold_memrchr_ax_c_0" has unsupported operation: llvm.mlir.zero
+
+1: "fold_memrchr_a12345_3_0"
+4: "fold_memrchr_a12345_3_0" has unsupported operation: llvm.mlir.zero
+
+1: "fold_memrchr_a12345_1_1"
+4: "fold_memrchr_a12345_1_1" has unsupported operation: llvm.mlir.addressof
+
+1: "fold_memrchr_a12345_5_1"
+4: "fold_memrchr_a12345_5_1" has unsupported operation: llvm.mlir.zero
+
+1: "fold_memrchr_a123123_1_1"
+4: "fold_memrchr_a123123_1_1" has unsupported operation: llvm.mlir.addressof
+
+1: "fold_memrchr_a123123_3_1"
+4: "fold_memrchr_a123123_3_1" has unsupported operation: llvm.mlir.zero
+
+1: "fold_memrchr_ax_c_1"
+4: "fold_memrchr_ax_c_1" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_memrchr_ax_c_1" has unsupported operation: llvm.mlir.zero
+
+4: "fold_memrchr_ax_c_1" has unsupported operation: llvm.load
+
+1: "fold_memrchr_a12345_5_5"
+4: "fold_memrchr_a12345_5_5" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_memrchr_a12345_5_5" has unsupported operation: llvm.getelementptr
+
+1: "fold_memrchr_a12345_5_4"
+4: "fold_memrchr_a12345_5_4" has unsupported operation: llvm.mlir.zero
+
+1: "fold_memrchr_a12345_4_5"
+4: "fold_memrchr_a12345_4_5" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_memrchr_a12345_4_5" has unsupported operation: llvm.getelementptr
+
+1: "fold_memrchr_a12345p1_1_4"
+4: "fold_memrchr_a12345p1_1_4" has unsupported operation: llvm.mlir.zero
+
+1: "fold_memrchr_a12345p1_2_4"
+4: "fold_memrchr_a12345p1_2_4" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_memrchr_a12345p1_2_4" has unsupported operation: llvm.getelementptr
+
+1: "fold_memrchr_a12345_2_5"
+4: "fold_memrchr_a12345_2_5" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_memrchr_a12345_2_5" has unsupported operation: llvm.getelementptr
+
+1: "fold_memrchr_a12345_0_n"
+4: "fold_memrchr_a12345_0_n" has unsupported operation: llvm.mlir.zero
+
+1: "fold_memrchr_a12345_3_n"
+4: "fold_memrchr_a12345_3_n" has unsupported operation: llvm.mlir.zero
+
+4: "fold_memrchr_a12345_3_n" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_memrchr_a12345_3_n" has unsupported operation: llvm.getelementptr
+
+1: "fold_memrchr_a12345_5_n"
+4: "fold_memrchr_a12345_5_n" has unsupported operation: llvm.mlir.zero
+
+4: "fold_memrchr_a12345_5_n" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_memrchr_a12345_5_n" has unsupported operation: llvm.getelementptr
+
+1: "fold_memrchr_a123123_3_5"
+4: "fold_memrchr_a123123_3_5" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_memrchr_a123123_3_5" has unsupported operation: llvm.getelementptr
+
+1: "fold_memrchr_a123123_3_6"
+4: "fold_memrchr_a123123_3_6" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_memrchr_a123123_3_6" has unsupported operation: llvm.getelementptr
+
+1: "fold_memrchr_a123123_2_6"
+4: "fold_memrchr_a123123_2_6" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_memrchr_a123123_2_6" has unsupported operation: llvm.getelementptr
+
+1: "fold_memrchr_a123123_1_6"
+4: "fold_memrchr_a123123_1_6" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_memrchr_a123123_1_6" has unsupported operation: llvm.getelementptr
+
+1: "fold_memrchr_a123123_0_6"
+4: "fold_memrchr_a123123_0_6" has unsupported operation: llvm.mlir.zero
+
+1: "fold_memrchr_a123123_0_n"
+4: "fold_memrchr_a123123_0_n" has unsupported operation: llvm.mlir.zero
+
+1: "call_memrchr_a123123_3_n"
+4: "call_memrchr_a123123_3_n" has unsupported operation: llvm.mlir.addressof
+
+4: "call_memrchr_a123123_3_n" has unsupported operation: llvm.call
+
+1: "call_memrchr_a123123_2_n"
+4: "call_memrchr_a123123_2_n" has unsupported operation: llvm.mlir.addressof
+
+4: "call_memrchr_a123123_2_n" has unsupported operation: llvm.call
+
+1: "call_memrchr_a123123_1_n"
+4: "call_memrchr_a123123_1_n" has unsupported operation: llvm.mlir.addressof
+
+4: "call_memrchr_a123123_1_n" has unsupported operation: llvm.call
+

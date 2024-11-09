@@ -1,0 +1,53 @@
+1: "factorize"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.or
+2: llvm.and
+2: llvm.return
+
+1: "factorize2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.mul
+2: llvm.sub
+2: llvm.return
+
+1: "factorize3"
+2: llvm.func
+2: llvm.or
+2: llvm.or
+2: llvm.or
+2: llvm.and
+2: llvm.return
+
+1: "factorize4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.mul
+2: llvm.mul
+2: llvm.sub
+2: llvm.return
+
+1: "factorize5"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.mul
+2: llvm.mul
+2: llvm.sub
+2: llvm.return
+
+1: "expand"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.or
+2: llvm.and
+2: llvm.return
+

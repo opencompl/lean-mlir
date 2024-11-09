@@ -1,0 +1,21 @@
+1: "vscale_SExt_i8toi32"
+4: "vscale_SExt_i8toi32" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+
+1: "vscale_SExt_i8toi32_poison"
+4: "vscale_SExt_i8toi32_poison" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+
+1: "vscale_ZExt_i8toi32"
+4: "vscale_ZExt_i8toi32" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+
+1: "vscale_ZExt_i8toi32_poison"
+4: "vscale_ZExt_i8toi32_poison" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+
+1: "vscale_ZExt_i8toi32_unknown"
+4: "vscale_ZExt_i8toi32_unknown" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+
+1: "vscale_SExt_i8toi32_unbounded"
+4: "vscale_SExt_i8toi32_unbounded" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+
+1: "vscale_ZExt_i8toi32_unbounded"
+4: "vscale_ZExt_i8toi32_unbounded" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+

@@ -1,0 +1,172 @@
+1: "fshl_i32_constant"
+4: "fshl_i32_constant" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "fshr_i42_constant"
+4: "fshr_i42_constant" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "fshl_v2i16_constant_splat"
+4: "fshl_v2i16_constant_splat" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "fshl_v2i16_constant_splat_poison0"
+4: "fshl_v2i16_constant_splat_poison0" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "fshl_v2i16_constant_splat_poison1"
+4: "fshl_v2i16_constant_splat_poison1" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "fshr_v2i17_constant_splat"
+4: "fshr_v2i17_constant_splat" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "fshr_v2i17_constant_splat_poison0"
+4: "fshr_v2i17_constant_splat_poison0" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "fshr_v2i17_constant_splat_poison1"
+4: "fshr_v2i17_constant_splat_poison1" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "fshr_v2i32_constant_nonsplat"
+4: "fshr_v2i32_constant_nonsplat" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "fshr_v2i32_constant_nonsplat_poison0"
+4: "fshr_v2i32_constant_nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "fshr_v2i32_constant_nonsplat_poison1"
+4: "fshr_v2i32_constant_nonsplat_poison1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "fshr_v2i32_constant_nonsplat_poison1" has unsupported operation: llvm.mlir.undef
+
+4: "fshr_v2i32_constant_nonsplat_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "fshr_v2i32_constant_nonsplat_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "fshr_v2i32_constant_nonsplat_poison1" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "fshl_v2i36_constant_nonsplat"
+4: "fshl_v2i36_constant_nonsplat" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "fshl_v3i36_constant_nonsplat_poison0"
+4: "fshl_v3i36_constant_nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "fshl_v3i36_constant_nonsplat_poison0" has unsupported operation: llvm.mlir.undef
+
+4: "fshl_v3i36_constant_nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "fshl_v3i36_constant_nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "fshl_v3i36_constant_nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "fshl_v3i36_constant_nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "fshl_sub_mask"
+4: "fshl_sub_mask" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "fshr_sub_mask"
+4: "fshr_sub_mask" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "fshr_sub_mask_vector"
+4: "fshr_sub_mask_vector" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "fshl_16bit"
+4: "fshl_16bit" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "fshl_commute_16bit_vec"
+4: "fshl_commute_16bit_vec" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "fshr_8bit"
+4: "fshr_8bit" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "fshr_commute_8bit"
+4: "fshr_commute_8bit" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "fshr_commute_8bit_unmasked_shl"
+4: "fshr_commute_8bit_unmasked_shl" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "fshr_select"
+4: "fshr_select" has unsupported operation: builtin.unregistered: llvm.freeze
+
+4: "fshr_select" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "fshl_select"
+4: "fshl_select" has unsupported operation: builtin.unregistered: llvm.freeze
+
+4: "fshl_select" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "fshl_select_vector"
+4: "fshl_select_vector" has unsupported operation: builtin.unregistered: llvm.freeze
+
+4: "fshl_select_vector" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "fshl_concat_i8_i24"
+9: "fshl_concat_i8_i24" has pointer type input
+
+4: "fshl_concat_i8_i24" has unsupported operation: llvm.store
+
+4: "fshl_concat_i8_i24" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "fshl_concat_i8_i8"
+9: "fshl_concat_i8_i8" has pointer type input
+
+4: "fshl_concat_i8_i8" has unsupported operation: llvm.store
+
+4: "fshl_concat_i8_i8" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "fshl_concat_i8_i8_overlap"
+9: "fshl_concat_i8_i8_overlap" has pointer type input
+
+4: "fshl_concat_i8_i8_overlap" has unsupported operation: llvm.store
+
+1: "fshl_concat_i8_i8_drop"
+9: "fshl_concat_i8_i8_drop" has pointer type input
+
+4: "fshl_concat_i8_i8_drop" has unsupported operation: llvm.store
+
+1: "fshl_concat_i8_i8_different_slot"
+9: "fshl_concat_i8_i8_different_slot" has pointer type input
+
+4: "fshl_concat_i8_i8_different_slot" has unsupported operation: llvm.store
+
+1: "fshl_concat_unknown_source"
+9: "fshl_concat_unknown_source" has pointer type input
+
+4: "fshl_concat_unknown_source" has unsupported operation: llvm.store
+
+1: "fshl_concat_vector"
+9: "fshl_concat_vector" has pointer type input
+
+4: "fshl_concat_vector" has unsupported operation: llvm.store
+
+4: "fshl_concat_vector" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "unmasked_shlop_unmasked_shift_amount"
+7: "unmasked_shlop_unmasked_shift_amount" is unchanged by InstCombine
+
+1: "unmasked_shlop_insufficient_mask_shift_amount"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.sub
+2: llvm.shl
+2: llvm.lshr
+2: llvm.or
+2: llvm.trunc
+2: llvm.return
+
+1: "unmasked_shlop_masked_shift_amount"
+4: "unmasked_shlop_masked_shift_amount" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "test_rotl_and_neg"
+4: "test_rotl_and_neg" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "test_rotl_and_neg_commuted"
+4: "test_rotl_and_neg_commuted" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "test_rotr_and_neg"
+4: "test_rotr_and_neg" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "test_fshl_and_neg"
+7: "test_fshl_and_neg" is unchanged by InstCombine
+
+1: "test_rotl_and_neg_wrong_mask"
+7: "test_rotl_and_neg_wrong_mask" is unchanged by InstCombine
+

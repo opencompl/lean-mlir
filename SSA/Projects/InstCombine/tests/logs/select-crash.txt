@@ -1,0 +1,26 @@
+1: "gimp_operation_color_balance_map"
+4: "gimp_operation_color_balance_map" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "gimp_operation_color_balance_map" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "gimp_operation_color_balance_map" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "gimp_operation_color_balance_map" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "gimp_operation_color_balance_map" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "gimp_operation_color_balance_map" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "gimp_operation_color_balance_map" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "gimp_operation_color_balance_map" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "gimp_operation_color_balance_map" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "gimp_operation_color_balance_map" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "foo"
+4: "foo" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.fadd
+

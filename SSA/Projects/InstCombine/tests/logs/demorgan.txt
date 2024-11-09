@@ -1,0 +1,298 @@
+1: "demorgan_or_apint1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.or
+2: llvm.return
+
+1: "demorgan_or_apint2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.or
+2: llvm.return
+
+1: "demorgan_and_apint1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.and
+2: llvm.return
+
+1: "demorgan_and_apint2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.and
+2: llvm.return
+
+1: "demorgan_and_apint3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.and
+2: llvm.return
+
+1: "demorgan_and_apint4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.and
+2: llvm.return
+
+1: "demorgan_and_apint5"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.and
+2: llvm.return
+
+1: "test3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "test4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "test5"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.or
+2: llvm.xor
+2: llvm.return
+
+1: "test3_apint"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "test4_apint"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "test5_apint"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.or
+2: llvm.xor
+2: llvm.return
+
+1: "demorgan_nand"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "demorgan_nand_apint1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "demorgan_nand_apint2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "demorgan_nor"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.or
+2: llvm.xor
+2: llvm.return
+
+1: "demorgan_nor_use2a"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.mul
+2: llvm.or
+2: llvm.xor
+2: llvm.sdiv
+2: llvm.return
+
+1: "demorgan_nor_use2b"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.xor
+2: llvm.or
+2: llvm.xor
+2: llvm.sdiv
+2: llvm.return
+
+1: "demorgan_nor_use2c"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.or
+2: llvm.mul
+2: llvm.xor
+2: llvm.sdiv
+2: llvm.return
+
+1: "demorgan_nor_use2ab"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.xor
+2: llvm.mul
+2: llvm.or
+2: llvm.xor
+2: llvm.sdiv
+2: llvm.sdiv
+2: llvm.return
+
+1: "demorgan_nor_use2ac"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.mul
+2: llvm.or
+2: llvm.mul
+2: llvm.xor
+2: llvm.sdiv
+2: llvm.sdiv
+2: llvm.return
+
+1: "demorgan_nor_use2bc"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.xor
+2: llvm.or
+2: llvm.mul
+2: llvm.xor
+2: llvm.sdiv
+2: llvm.sdiv
+2: llvm.return
+
+1: "demorganize_constant1"
+7: "demorganize_constant1" is unchanged by InstCombine
+
+1: "demorganize_constant2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.xor
+2: llvm.return
+
+1: "demorgan_or_zext"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.xor
+2: llvm.xor
+2: llvm.or
+2: llvm.return
+
+1: "demorgan_and_zext"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.xor
+2: llvm.xor
+2: llvm.and
+2: llvm.return
+
+1: "demorgan_or_zext_vec"
+8: "demorgan_or_zext_vec" contains vectors which are unsupported
+
+1: "demorgan_and_zext_vec"
+8: "demorgan_and_zext_vec" contains vectors which are unsupported
+
+1: "PR28476"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.zext
+2: llvm.xor
+2: llvm.return
+
+1: "PR28476_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.zext
+2: llvm.xor
+2: llvm.return
+
+1: "demorgan_plus_and_to_xor"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.xor
+2: llvm.and
+2: llvm.or
+2: llvm.xor
+2: llvm.return
+
+1: "demorgan_plus_and_to_xor_vec"
+8: "demorgan_plus_and_to_xor_vec" contains vectors which are unsupported
+
+1: "PR45984"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.or
+2: llvm.xor
+2: llvm.or
+2: llvm.return
+

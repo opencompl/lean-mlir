@@ -1,0 +1,91 @@
+1: "strtol"
+9: "strtol" has pointer type input
+
+1: "strtod"
+9: "strtod" has pointer type input
+
+1: "strtof"
+9: "strtof" has pointer type input
+
+1: "strtoul"
+9: "strtoul" has pointer type input
+
+1: "strtoll"
+9: "strtoll" has pointer type input
+
+1: "strtold"
+9: "strtold" has pointer type input
+
+1: "strtoull"
+9: "strtoull" has pointer type input
+
+1: "test_simplify1"
+9: "test_simplify1" has pointer type input
+
+4: "test_simplify1" has unsupported operation: llvm.mlir.zero
+
+4: "test_simplify1" has unsupported operation: llvm.call
+
+4: "test_simplify1" has unsupported operation: llvm.return
+
+1: "test_simplify2"
+9: "test_simplify2" has pointer type input
+
+4: "test_simplify2" has unsupported operation: llvm.mlir.zero
+
+4: "test_simplify2" has unsupported operation: llvm.call
+
+4: "test_simplify2" has unsupported operation: llvm.return
+
+1: "test_simplify3"
+9: "test_simplify3" has pointer type input
+
+4: "test_simplify3" has unsupported operation: llvm.mlir.zero
+
+4: "test_simplify3" has unsupported operation: llvm.call
+
+4: "test_simplify3" has unsupported operation: llvm.return
+
+1: "test_simplify4"
+9: "test_simplify4" has pointer type input
+
+4: "test_simplify4" has unsupported operation: llvm.mlir.zero
+
+4: "test_simplify4" has unsupported operation: llvm.call
+
+4: "test_simplify4" has unsupported operation: llvm.return
+
+1: "test_simplify5"
+9: "test_simplify5" has pointer type input
+
+4: "test_simplify5" has unsupported operation: llvm.mlir.zero
+
+4: "test_simplify5" has unsupported operation: llvm.call
+
+4: "test_simplify5" has unsupported operation: llvm.return
+
+1: "test_simplify6"
+9: "test_simplify6" has pointer type input
+
+4: "test_simplify6" has unsupported operation: llvm.mlir.zero
+
+4: "test_simplify6" has unsupported operation: llvm.call
+
+4: "test_simplify6" has unsupported operation: llvm.return
+
+1: "test_simplify7"
+9: "test_simplify7" has pointer type input
+
+4: "test_simplify7" has unsupported operation: llvm.mlir.zero
+
+4: "test_simplify7" has unsupported operation: llvm.call
+
+4: "test_simplify7" has unsupported operation: llvm.return
+
+1: "test_no_simplify1"
+9: "test_no_simplify1" has pointer type input
+
+4: "test_no_simplify1" has unsupported operation: llvm.call
+
+4: "test_no_simplify1" has unsupported operation: llvm.return
+

@@ -1,0 +1,153 @@
+1: "use"
+5: "use" is empty
+
+1: "use_f32"
+5: "use_f32" is empty
+
+1: "use_v2f16"
+5: "use_v2f16" is empty
+
+1: "use_v2i8"
+5: "use_v2i8" is empty
+
+1: "test1"
+7: "test1" is unchanged by InstCombine
+
+1: "test2"
+7: "test2" is unchanged by InstCombine
+
+1: "test3"
+7: "test3" is unchanged by InstCombine
+
+1: "test4"
+7: "test4" is unchanged by InstCombine
+
+1: "test5"
+7: "test5" is unchanged by InstCombine
+
+1: "test_sub_deduce_true"
+4: "test_sub_deduce_true" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_sub_deduce_true_no_const_fold"
+4: "test_sub_deduce_true_no_const_fold" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_sub_deduce_false"
+4: "test_sub_deduce_false" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_sub_dont_deduce_with_undef_cond_vec"
+4: "test_sub_dont_deduce_with_undef_cond_vec" has unsupported operation: llvm.mlir.undef
+
+4: "test_sub_dont_deduce_with_undef_cond_vec" has unsupported operation: llvm.mlir.undef
+
+4: "test_sub_dont_deduce_with_undef_cond_vec" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_sub_dont_deduce_with_undef_cond_vec" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_sub_dont_deduce_with_undef_cond_vec" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_sub_dont_deduce_with_poison_cond_vec"
+4: "test_sub_dont_deduce_with_poison_cond_vec" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test_sub_dont_deduce_with_poison_cond_vec" has unsupported operation: llvm.mlir.undef
+
+4: "test_sub_dont_deduce_with_poison_cond_vec" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_sub_dont_deduce_with_poison_cond_vec" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_sub_dont_deduce_with_poison_cond_vec" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_sub_deduce_with_undef_val_vec"
+4: "test_sub_deduce_with_undef_val_vec" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test6"
+7: "test6" is unchanged by InstCombine
+
+1: "test7"
+7: "test7" is unchanged by InstCombine
+
+1: "test8"
+7: "test8" is unchanged by InstCombine
+
+1: "test9"
+7: "test9" is unchanged by InstCombine
+
+1: "test10"
+7: "test10" is unchanged by InstCombine
+
+1: "test11"
+7: "test11" is unchanged by InstCombine
+
+1: "test12"
+7: "test12" is unchanged by InstCombine
+
+1: "extra_use"
+4: "extra_use" has unsupported operation: llvm.call
+
+1: "extra_use2"
+4: "extra_use2" has unsupported operation: llvm.call
+
+1: "and_sel_op0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.return
+
+1: "and_sel_op0_use"
+4: "and_sel_op0_use" has unsupported operation: llvm.call
+
+1: "mul_sel_op0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.udiv
+2: builtin.unregistered: llvm.select
+2: llvm.mul
+2: llvm.return
+
+1: "mul_sel_op0_use"
+4: "mul_sel_op0_use" has unsupported operation: llvm.call
+
+1: "sub_sel_op1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.sub
+2: llvm.return
+
+1: "sub_sel_op1_use"
+4: "sub_sel_op1_use" has unsupported operation: llvm.call
+
+1: "fadd_sel_op0"
+4: "fadd_sel_op0" has unsupported operation after optimization: builtin.unregistered: llvm.fadd
+
+1: "fadd_sel_op0_use"
+4: "fadd_sel_op0_use" has unsupported operation: llvm.call
+
+4: "fadd_sel_op0_use" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fmul_sel_op1"
+8: "fmul_sel_op1" contains vectors which are unsupported
+
+1: "fmul_sel_op1_use"
+4: "fmul_sel_op1_use" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fmul_sel_op1_use" has unsupported operation: llvm.call
+
+4: "fmul_sel_op1_use" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "ashr_sel_op1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.ashr
+2: llvm.return
+
+1: "ashr_sel_op1_use"
+4: "ashr_sel_op1_use" has unsupported operation: llvm.call
+

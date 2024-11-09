@@ -1,0 +1,60 @@
+1: "f"
+9: "f" has pointer type input
+
+4: "f" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "f" has unsupported operation: llvm.getelementptr
+
+4: "f" has unsupported operation: llvm.store
+
+4: "f" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "f" has unsupported operation: llvm.return
+
+1: "copy"
+9: "copy" has pointer type input
+
+4: "copy" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "copy" has unsupported operation: llvm.getelementptr
+
+4: "copy" has unsupported operation: llvm.store
+
+4: "copy" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "copy" has unsupported operation: llvm.return
+
+1: "nocopy"
+9: "nocopy" has pointer type input
+
+4: "nocopy" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "nocopy" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "nocopy" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "nocopy" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "nocopy" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "nocopy" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "nocopy" has unsupported operation: llvm.getelementptr
+
+4: "nocopy" has unsupported operation: llvm.store
+
+4: "nocopy" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "nocopy" has unsupported operation: llvm.return
+
+1: "g"
+4: "g" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "g" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "g" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "g" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "g" has unsupported operation: builtin.unregistered: llvm.br
+

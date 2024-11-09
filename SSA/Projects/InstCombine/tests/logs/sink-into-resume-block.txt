@@ -1,0 +1,41 @@
+1: "t0_noop"
+4: "t0_noop" has unsupported operation: llvm.call
+
+4: "t0_noop" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "t0_noop" has unsupported operation: builtin.unregistered: llvm.invoke
+
+4: "t0_noop" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "t0_noop" has unsupported operation: builtin.unregistered: llvm.landingpad
+
+4: "t0_noop" has unsupported operation: llvm.call
+
+4: "t0_noop" has unsupported operation: llvm.call
+
+4: "t0_noop" has unsupported operation: builtin.unregistered: llvm.resume
+
+4: "t0_noop" has unsupported operation: llvm.call
+
+4: "t0_noop" has unsupported operation: llvm.call
+
+4: "t0_noop" has unsupported operation: llvm.return
+
+1: "cond"
+5: "cond" is empty
+
+1: "sideeffect"
+5: "sideeffect" is empty
+
+1: "simple_throw"
+5: "simple_throw" is empty
+
+1: "destructor"
+5: "destructor" is empty
+
+1: "consume"
+5: "consume" is empty
+
+1: "__gxx_personality_v0"
+5: "__gxx_personality_v0" is empty
+

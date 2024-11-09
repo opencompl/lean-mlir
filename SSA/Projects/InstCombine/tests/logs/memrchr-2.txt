@@ -1,0 +1,28 @@
+1: "memrchr"
+9: "memrchr" has pointer type input
+
+1: "call_memrchr_a12345_c_ui32max_p1"
+4: "call_memrchr_a12345_c_ui32max_p1" has unsupported operation: llvm.mlir.addressof
+
+4: "call_memrchr_a12345_c_ui32max_p1" has unsupported operation: llvm.call
+
+1: "call_memrchr_ax1_c_ui32max_p2"
+4: "call_memrchr_ax1_c_ui32max_p2" has unsupported operation: llvm.mlir.addressof
+
+4: "call_memrchr_ax1_c_ui32max_p2" has unsupported operation: llvm.call
+
+1: "call_memrchr_ax_c_ui32max_p2"
+4: "call_memrchr_ax_c_ui32max_p2" has unsupported operation: llvm.mlir.addressof
+
+4: "call_memrchr_ax_c_ui32max_p2" has unsupported operation: llvm.call
+
+1: "call_memrchr_a12345_c_6"
+4: "call_memrchr_a12345_c_6" has unsupported operation: llvm.mlir.addressof
+
+4: "call_memrchr_a12345_c_6" has unsupported operation: llvm.call
+
+1: "call_memrchr_a12345_c_szmax"
+4: "call_memrchr_a12345_c_szmax" has unsupported operation: llvm.mlir.addressof
+
+4: "call_memrchr_a12345_c_szmax" has unsupported operation: llvm.call
+

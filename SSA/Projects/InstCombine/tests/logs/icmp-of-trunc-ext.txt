@@ -1,0 +1,259 @@
+1: "use"
+5: "use" is empty
+
+1: "icmp_trunc_x_trunc_y"
+4: "icmp_trunc_x_trunc_y" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "icmp_trunc_x_trunc_y" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "icmp_trunc_x_trunc_y_fail_from_illegal1"
+4: "icmp_trunc_x_trunc_y_fail_from_illegal1" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "icmp_trunc_x_trunc_y_fail_from_illegal1" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "icmp_trunc_x_trunc_y_illegal_trunc_to_legal_anyways"
+4: "icmp_trunc_x_trunc_y_illegal_trunc_to_legal_anyways" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "icmp_trunc_x_trunc_y_illegal_trunc_to_legal_anyways" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "icmp_trunc_x_trunc_y_2_illegal_anyways"
+4: "icmp_trunc_x_trunc_y_2_illegal_anyways" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "icmp_trunc_x_trunc_y_2_illegal_anyways" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "icmp_trunc_x_trunc_y_3"
+4: "icmp_trunc_x_trunc_y_3" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "icmp_trunc_x_trunc_y_3" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "icmp_trunc_x_trunc_y_fail_maybe_dirty_upper"
+4: "icmp_trunc_x_trunc_y_fail_maybe_dirty_upper" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "icmp_trunc_x_trunc_y_fail_maybe_dirty_upper" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "icmp_trunc_x_trunc_y_fail_maybe_dirty_upper_2"
+4: "icmp_trunc_x_trunc_y_fail_maybe_dirty_upper_2" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "icmp_trunc_x_trunc_y_fail_maybe_dirty_upper_2" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "icmp_trunc_x_trunc_y_swap0"
+4: "icmp_trunc_x_trunc_y_swap0" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "icmp_trunc_x_trunc_y_swap0" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "icmp_trunc_x_trunc_y_swap1"
+4: "icmp_trunc_x_trunc_y_swap1" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "icmp_trunc_x_trunc_y_swap1" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "icmp_trunc_x_zext_y"
+4: "icmp_trunc_x_zext_y" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "icmp_trunc_x_zext_y_2"
+4: "icmp_trunc_x_zext_y_2" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "icmp_trunc_x_zext_y_3"
+4: "icmp_trunc_x_zext_y_3" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "icmp_trunc_x_zext_y_3_fail_illegal"
+4: "icmp_trunc_x_zext_y_3_fail_illegal" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "icmp_trunc_x_zext_y_fail_multiuse"
+4: "icmp_trunc_x_zext_y_fail_multiuse" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "icmp_trunc_x_zext_y_fail_multiuse" has unsupported operation: llvm.call
+
+1: "trunc_unsigned_nuw"
+2: llvm.func
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "trunc_unsigned_nsw"
+2: llvm.func
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "trunc_unsigned_both"
+2: llvm.func
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "trunc_unsigned_either"
+7: "trunc_unsigned_either" is unchanged by InstCombine
+
+1: "trunc_signed_nuw"
+7: "trunc_signed_nuw" is unchanged by InstCombine
+
+1: "trunc_signed_nsw"
+2: llvm.func
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "trunc_signed_both"
+2: llvm.func
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "trunc_signed_either"
+7: "trunc_signed_either" is unchanged by InstCombine
+
+1: "trunc_equality_nuw"
+2: llvm.func
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "trunc_equality_nsw"
+2: llvm.func
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "trunc_equality_both"
+2: llvm.func
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "trunc_equality_either"
+7: "trunc_equality_either" is unchanged by InstCombine
+
+1: "trunc_unsigned_nuw_zext"
+2: llvm.func
+2: llvm.trunc
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "trunc_unsigned_nuw_sext"
+7: "trunc_unsigned_nuw_sext" is unchanged by InstCombine
+
+1: "trunc_unsigned_nsw_zext"
+2: llvm.func
+2: llvm.trunc
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "trunc_unsigned_nsw_sext"
+2: llvm.func
+2: llvm.trunc
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "trunc_signed_nsw_sext"
+2: llvm.func
+2: llvm.trunc
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "trunc_signed_nsw_zext"
+2: llvm.func
+2: llvm.trunc
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "trunc_signed_nuw_sext"
+7: "trunc_signed_nuw_sext" is unchanged by InstCombine
+
+1: "trunc_signed_nuw_zext"
+7: "trunc_signed_nuw_zext" is unchanged by InstCombine
+
+1: "trunc_equality_nuw_zext"
+2: llvm.func
+2: llvm.trunc
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "trunc_equality_nuw_sext"
+7: "trunc_equality_nuw_sext" is unchanged by InstCombine
+
+1: "trunc_equality_nsw_zext"
+2: llvm.func
+2: llvm.trunc
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "trunc_equality_nsw_sext"
+2: llvm.func
+2: llvm.trunc
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "trunc_equality_both_sext"
+2: llvm.func
+2: llvm.trunc
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "test_eq1"
+2: llvm.func
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "test_eq2"
+2: llvm.func
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "test_ult"
+2: llvm.func
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "test_slt"
+2: llvm.func
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "test_ult_nuw"
+2: llvm.func
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "test_slt_nuw"
+2: llvm.func
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "constexpr_trunc"
+4: "constexpr_trunc" has unsupported operation: llvm.mlir.addressof
+
+4: "constexpr_trunc" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "constexpr_trunc" has unsupported operation: llvm.mlir.addressof
+
+4: "constexpr_trunc" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+

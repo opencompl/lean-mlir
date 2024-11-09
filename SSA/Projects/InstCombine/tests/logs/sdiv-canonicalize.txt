@@ -1,0 +1,48 @@
+1: "use"
+5: "use" is empty
+
+1: "test_sdiv_canonicalize_op0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.sdiv
+2: llvm.return
+
+1: "test_sdiv_canonicalize_op0_exact"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.sdiv
+2: llvm.return
+
+1: "test_sdiv_canonicalize_op1"
+7: "test_sdiv_canonicalize_op1" is unchanged by InstCombine
+
+1: "test_sdiv_canonicalize_nonsw"
+7: "test_sdiv_canonicalize_nonsw" is unchanged by InstCombine
+
+1: "test_sdiv_canonicalize_vec"
+8: "test_sdiv_canonicalize_vec" contains vectors which are unsupported
+
+1: "test_sdiv_canonicalize_multiple_uses"
+7: "test_sdiv_canonicalize_multiple_uses" is unchanged by InstCombine
+
+1: "test_sdiv_canonicalize_constexpr"
+4: "test_sdiv_canonicalize_constexpr" has unsupported operation: llvm.mlir.addressof
+
+4: "test_sdiv_canonicalize_constexpr" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+1: "sdiv_abs_nsw"
+4: "sdiv_abs_nsw" has unsupported operation after optimization: builtin.unregistered: llvm.intr.abs
+
+1: "sdiv_abs_nsw_vec"
+8: "sdiv_abs_nsw_vec" contains vectors which are unsupported
+
+1: "sdiv_abs"
+4: "sdiv_abs" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "sdiv_abs_extra_use"
+4: "sdiv_abs_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+4: "sdiv_abs_extra_use" has unsupported operation: llvm.call
+

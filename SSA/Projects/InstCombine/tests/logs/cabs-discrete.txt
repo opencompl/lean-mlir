@@ -1,0 +1,72 @@
+1: "std_cabs"
+4: "std_cabs" has unsupported operation: llvm.call
+
+1: "std_cabsf"
+4: "std_cabsf" has unsupported operation: llvm.call
+
+1: "std_cabsl"
+4: "std_cabsl" has unsupported operation: llvm.call
+
+1: "fast_cabs"
+4: "fast_cabs" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fast_cabs" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fast_cabs" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fast_cabs" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+1: "cabs_zero_real"
+4: "cabs_zero_real" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "fast_cabs_neg_zero_real"
+4: "fast_cabs_neg_zero_real" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "cabs_zero_imag"
+4: "cabs_zero_imag" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "fast_cabsf"
+4: "fast_cabsf" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fast_cabsf" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fast_cabsf" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fast_cabsf" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+1: "cabsf_zero_real"
+4: "cabsf_zero_real" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "fast_cabsf_neg_zero_real"
+4: "fast_cabsf_neg_zero_real" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "cabsf_zero_imag"
+4: "cabsf_zero_imag" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "fast_cabsl"
+4: "fast_cabsl" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fast_cabsl" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fast_cabsl" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fast_cabsl" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+1: "cabsl_zero_real"
+4: "cabsl_zero_real" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "cabsl_zero_imag"
+4: "cabsl_zero_imag" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "fast_cabsl_neg_zero_imag"
+4: "fast_cabsl_neg_zero_imag" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "cabs"
+5: "cabs" is empty
+
+1: "cabsf"
+5: "cabsf" is empty
+
+1: "cabsl"
+5: "cabsl" is empty
+

@@ -1,0 +1,152 @@
+1: "add_select_zext"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.zext
+2: llvm.add
+2: llvm.return
+
+1: "add_select_sext"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.sext
+2: llvm.add
+2: llvm.return
+
+1: "add_select_not_zext"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.zext
+2: llvm.add
+2: llvm.return
+
+1: "add_select_not_sext"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.sext
+2: llvm.add
+2: llvm.return
+
+1: "sub_select_sext"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.sext
+2: llvm.sub
+2: llvm.return
+
+1: "sub_select_not_zext"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.zext
+2: llvm.sub
+2: llvm.return
+
+1: "sub_select_not_sext"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.sext
+2: llvm.sub
+2: llvm.return
+
+1: "mul_select_zext"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.zext
+2: llvm.mul
+2: llvm.return
+
+1: "mul_select_sext"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.sext
+2: llvm.mul
+2: llvm.return
+
+1: "select_zext_different_condition"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.zext
+2: llvm.add
+2: llvm.return
+
+1: "vector_test"
+4: "vector_test" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "vector_test" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vector_test" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "multiuse_add"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.zext
+2: llvm.add
+2: llvm.add
+2: llvm.return
+
+1: "multiuse_select"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.zext
+2: llvm.sub
+2: llvm.mul
+2: llvm.return
+
+1: "select_non_const_sides"
+2: llvm.func
+2: llvm.zext
+2: builtin.unregistered: llvm.select
+2: llvm.sub
+2: llvm.return
+
+1: "sub_select_sext_op_swapped_non_const_args"
+2: llvm.func
+2: builtin.unregistered: llvm.select
+2: llvm.sext
+2: llvm.sub
+2: llvm.return
+
+1: "sub_select_zext_op_swapped_non_const_args"
+2: llvm.func
+2: builtin.unregistered: llvm.select
+2: llvm.zext
+2: llvm.sub
+2: llvm.return
+
+1: "vectorized_add"
+8: "vectorized_add" contains vectors which are unsupported
+
+1: "pr64669"
+4: "pr64669" has unsupported operation: llvm.mlir.addressof
+
+4: "pr64669" has unsupported operation: llvm.getelementptr
+
+4: "pr64669" has unsupported operation: llvm.mlir.addressof
+

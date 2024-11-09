@@ -1,0 +1,2 @@
+3: masked_intrinsics.ll: parsing has failed
+

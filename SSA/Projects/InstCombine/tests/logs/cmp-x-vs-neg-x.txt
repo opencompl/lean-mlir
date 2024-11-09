@@ -1,0 +1,99 @@
+1: "gen8"
+5: "gen8" is empty
+
+1: "use8"
+5: "use8" is empty
+
+1: "t0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.icmp
+2: llvm.return
+
+1: "t0_commutative"
+4: "t0_commutative" has unsupported operation: llvm.call
+
+1: "t0_extrause"
+4: "t0_extrause" has unsupported operation: llvm.call
+
+1: "t1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.icmp
+2: llvm.return
+
+1: "t2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.icmp
+2: llvm.return
+
+1: "t3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.icmp
+2: llvm.return
+
+1: "t4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.icmp
+2: llvm.return
+
+1: "t5"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.icmp
+2: llvm.return
+
+1: "t6"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.icmp
+2: llvm.return
+
+1: "t7"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.icmp
+2: llvm.return
+
+1: "t8"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.icmp
+2: llvm.return
+
+1: "t9"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.icmp
+2: llvm.return
+
+1: "n10"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.icmp
+2: llvm.return
+
+1: "n11"
+7: "n11" is unchanged by InstCombine
+
+1: "n12"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.icmp
+2: llvm.return
+

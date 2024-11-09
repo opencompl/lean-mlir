@@ -1,0 +1,35 @@
+1: "test1"
+4: "test1" has unsupported operation after optimization: builtin.unregistered: llvm.uitofp
+
+4: "test1" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "test2"
+4: "test2" has unsupported operation after optimization: builtin.unregistered: llvm.uitofp
+
+4: "test2" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "test3"
+4: "test3" has unsupported operation after optimization: builtin.unregistered: llvm.uitofp
+
+4: "test3" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "test4"
+4: "test4" has unsupported operation after optimization: builtin.unregistered: llvm.uitofp
+
+4: "test4" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "test5"
+4: "test5" has unsupported operation after optimization: builtin.unregistered: llvm.uitofp
+
+4: "test5" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "test6"
+4: "test6" has unsupported operation after optimization: builtin.unregistered: llvm.uitofp
+
+4: "test6" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "test7"
+4: "test7" has unsupported operation after optimization: builtin.unregistered: llvm.uitofp
+
+4: "test7" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+

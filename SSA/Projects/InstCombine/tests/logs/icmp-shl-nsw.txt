@@ -1,0 +1,231 @@
+1: "icmp_shl_nsw_sgt"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_shl_nsw_sge0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_shl_nsw_sge1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_shl_nsw_sge1_vec"
+8: "icmp_shl_nsw_sge1_vec" contains vectors which are unsupported
+
+1: "icmp_shl_nsw_eq"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_shl_nsw_eq_vec"
+8: "icmp_shl_nsw_eq_vec" contains vectors which are unsupported
+
+1: "icmp_sgt1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_sgt2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_sgt3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_sgt4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_sgt5"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_sgt6"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_sgt7"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_sgt8"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_sgt9"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_sgt10"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_sgt11"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_sgt11_vec"
+8: "icmp_sgt11_vec" contains vectors which are unsupported
+
+1: "icmp_sle1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_sle2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_sle3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_sle4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_sle5"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_sle6"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_sle7"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_sle8"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_sle9"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_sle10"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_sle11"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_eq1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_ne1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+

@@ -1,0 +1,36 @@
+1: "test_v4i32_splatconst_pow2"
+8: "test_v4i32_splatconst_pow2" contains vectors which are unsupported
+
+1: "test_v4i32_const_pow2"
+8: "test_v4i32_const_pow2" contains vectors which are unsupported
+
+1: "test_v4i32_negconstsplat"
+8: "test_v4i32_negconstsplat" contains vectors which are unsupported
+
+1: "test_v4i32_negconst"
+8: "test_v4i32_negconst" contains vectors which are unsupported
+
+1: "test_v4i32_negconst_undef"
+4: "test_v4i32_negconst_undef" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+1: "test_v4i32_shl_splatconst_pow2"
+8: "test_v4i32_shl_splatconst_pow2" contains vectors which are unsupported
+
+1: "test_v4i32_shl_const_pow2"
+8: "test_v4i32_shl_const_pow2" contains vectors which are unsupported
+
+1: "test_v4i32_zext_shl_splatconst_pow2"
+8: "test_v4i32_zext_shl_splatconst_pow2" contains vectors which are unsupported
+
+1: "test_v4i32_zext_shl_const_pow2"
+8: "test_v4i32_zext_shl_const_pow2" contains vectors which are unsupported
+
+1: "vec_select_udiv_poison"
+4: "vec_select_udiv_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "vec_select_udiv_poison" has unsupported operation: llvm.mlir.undef
+
+4: "vec_select_udiv_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vec_select_udiv_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+

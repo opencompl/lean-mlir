@@ -1,0 +1,12 @@
+1: "visible"
+4: "visible" has unsupported operation: llvm.call
+
+4: "visible" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "visible" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "visible" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "determinant"
+5: "determinant" is empty
+

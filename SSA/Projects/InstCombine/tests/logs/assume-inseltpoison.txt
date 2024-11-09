@@ -1,0 +1,9 @@
+1: "PR40940"
+4: "PR40940" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "PR40940" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "PR40940" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "PR40940" has unsupported operation: builtin.unregistered: llvm.intr.assume
+

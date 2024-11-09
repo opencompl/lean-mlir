@@ -1,0 +1,462 @@
+1: "use"
+5: "use" is empty
+
+1: "shl_C1_add_A_C2_i32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.add
+2: llvm.shl
+2: llvm.return
+
+1: "ashr_C1_add_A_C2_i32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.add
+2: llvm.ashr
+2: llvm.return
+
+1: "lshr_C1_add_A_C2_i32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.add
+2: llvm.shl
+2: llvm.return
+
+1: "shl_C1_add_A_C2_v4i32"
+4: "shl_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shl_C1_add_A_C2_v4i32" has unsupported operation: llvm.mlir.undef
+
+4: "shl_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "ashr_C1_add_A_C2_v4i32"
+4: "ashr_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "ashr_C1_add_A_C2_v4i32" has unsupported operation: llvm.mlir.undef
+
+4: "ashr_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ashr_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ashr_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ashr_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "lshr_C1_add_A_C2_v4i32"
+4: "lshr_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "lshr_C1_add_A_C2_v4i32" has unsupported operation: llvm.mlir.undef
+
+4: "lshr_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "shl_C1_add_A_C2_v4i32_splat"
+4: "shl_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shl_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shl_C1_add_A_C2_v4i32_splat" has unsupported operation: llvm.mlir.undef
+
+4: "shl_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "ashr_C1_add_A_C2_v4i32_splat"
+4: "ashr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "ashr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "ashr_C1_add_A_C2_v4i32_splat" has unsupported operation: llvm.mlir.undef
+
+4: "ashr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ashr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ashr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ashr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ashr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ashr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "lshr_C1_add_A_C2_v4i32_splat"
+4: "lshr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "lshr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "lshr_C1_add_A_C2_v4i32_splat" has unsupported operation: llvm.mlir.undef
+
+4: "lshr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "shl_add_nuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.shl
+2: llvm.return
+
+1: "lshr_add_nuw"
+8: "lshr_add_nuw" contains vectors which are unsupported
+
+1: "ashr_add_nuw"
+9: "ashr_add_nuw" has pointer type input
+
+4: "ashr_add_nuw" has unsupported operation: llvm.store
+
+1: "shl_nuw_add_nuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.shl
+2: llvm.return
+
+1: "shl_nsw_add_nuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.shl
+2: llvm.return
+
+1: "lshr_exact_add_nuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.lshr
+2: llvm.return
+
+1: "ashr_exact_add_nuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.ashr
+2: llvm.return
+
+1: "shl_add_nsw"
+7: "shl_add_nsw" is unchanged by InstCombine
+
+1: "lshr_exact_add_positive_shift_positive"
+7: "lshr_exact_add_positive_shift_positive" is unchanged by InstCombine
+
+1: "lshr_exact_add_big_negative_offset"
+7: "lshr_exact_add_big_negative_offset" is unchanged by InstCombine
+
+1: "lshr_exact_add_negative_shift_negative"
+7: "lshr_exact_add_negative_shift_negative" is unchanged by InstCombine
+
+1: "lshr_add_negative_shift_no_exact"
+7: "lshr_add_negative_shift_no_exact" is unchanged by InstCombine
+
+1: "lshr_exact_add_negative_shift_positive"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.lshr
+2: llvm.return
+
+1: "lshr_exact_add_negative_shift_positive_extra_use"
+4: "lshr_exact_add_negative_shift_positive_extra_use" has unsupported operation: llvm.call
+
+1: "lshr_exact_add_negative_shift_positive_vec"
+8: "lshr_exact_add_negative_shift_positive_vec" contains vectors which are unsupported
+
+1: "lshr_exact_add_negative_shift_lzcnt"
+7: "lshr_exact_add_negative_shift_lzcnt" is unchanged by InstCombine
+
+1: "ashr_exact_add_negative_shift_no_trailing_zeros"
+7: "ashr_exact_add_negative_shift_no_trailing_zeros" is unchanged by InstCombine
+
+1: "ashr_exact_add_big_negative_offset"
+7: "ashr_exact_add_big_negative_offset" is unchanged by InstCombine
+
+1: "ashr_add_negative_shift_no_exact"
+7: "ashr_add_negative_shift_no_exact" is unchanged by InstCombine
+
+1: "ashr_exact_add_negative_shift_negative"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.ashr
+2: llvm.return
+
+1: "ashr_exact_add_negative_shift_negative_extra_use"
+4: "ashr_exact_add_negative_shift_negative_extra_use" has unsupported operation: llvm.call
+
+1: "ashr_exact_add_negative_shift_negative_vec"
+8: "ashr_exact_add_negative_shift_negative_vec" contains vectors which are unsupported
+
+1: "ashr_exact_add_negative_leading_ones_vec"
+7: "ashr_exact_add_negative_leading_ones_vec" is unchanged by InstCombine
+
+1: "shl_nsw_add_negative"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.shl
+2: llvm.return
+
+1: "shl_nuw_add_negative_splat_uses"
+9: "shl_nuw_add_negative_splat_uses" has pointer type input
+
+4: "shl_nuw_add_negative_splat_uses" has unsupported operation: llvm.store
+
+1: "shl_nsw_add_negative_invalid_constant"
+7: "shl_nsw_add_negative_invalid_constant" is unchanged by InstCombine
+
+1: "shl_nsw_add_positive_invalid_constant"
+7: "shl_nsw_add_positive_invalid_constant" is unchanged by InstCombine
+
+1: "shl_nsw_add_negative_invalid_constant2"
+7: "shl_nsw_add_negative_invalid_constant2" is unchanged by InstCombine
+
+1: "shl_nsw_add_negative_invalid_constant3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.shl
+2: llvm.return
+
+1: "lshr_2_add_zext_basic"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.add
+2: llvm.lshr
+2: llvm.return
+
+1: "ashr_2_add_zext_basic"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.add
+2: llvm.ashr
+2: llvm.return
+
+1: "lshr_16_add_zext_basic"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.add
+2: llvm.lshr
+2: llvm.return
+
+1: "lshr_16_add_zext_basic_multiuse"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.add
+2: llvm.lshr
+2: llvm.or
+2: llvm.return
+
+1: "lshr_16_add_known_16_leading_zeroes"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.add
+2: llvm.lshr
+2: llvm.return
+
+1: "lshr_16_add_not_known_16_leading_zeroes"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.add
+2: llvm.lshr
+2: llvm.return
+
+1: "lshr_32_add_zext_basic"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.add
+2: llvm.lshr
+2: llvm.return
+
+1: "lshr_32_add_zext_basic_multiuse"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.add
+2: llvm.lshr
+2: llvm.or
+2: llvm.return
+
+1: "lshr_31_i32_add_zext_basic"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.add
+2: llvm.lshr
+2: llvm.return
+
+1: "lshr_33_i32_add_zext_basic"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.add
+2: llvm.lshr
+2: llvm.return
+
+1: "lshr_16_to_64_add_zext_basic"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.add
+2: llvm.lshr
+2: llvm.return
+
+1: "lshr_32_add_known_32_leading_zeroes"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.add
+2: llvm.lshr
+2: llvm.return
+
+1: "lshr_32_add_not_known_32_leading_zeroes"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.add
+2: llvm.lshr
+2: llvm.return
+
+1: "ashr_16_add_zext_basic"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.add
+2: llvm.lshr
+2: llvm.return
+
+1: "ashr_32_add_zext_basic"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.add
+2: llvm.ashr
+2: llvm.return
+
+1: "ashr_16_to_64_add_zext_basic"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.add
+2: llvm.ashr
+2: llvm.return
+
+1: "lshr_32_add_zext_trunc"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.add
+2: llvm.trunc
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.add
+2: llvm.return
+
+1: "add3_i96"
+4: "add3_i96" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "add3_i96" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "add3_i96" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "add3_i96" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "add3_i96" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "add3_i96" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "add3_i96" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "add3_i96" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "add3_i96" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "add3_i96" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "shl_fold_or_disjoint_cnt"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.shl
+2: llvm.return
+
+1: "ashr_fold_or_disjoint_cnt"
+8: "ashr_fold_or_disjoint_cnt" contains vectors which are unsupported
+
+1: "lshr_fold_or_disjoint_cnt_out_of_bounds"
+8: "lshr_fold_or_disjoint_cnt_out_of_bounds" contains vectors which are unsupported
+

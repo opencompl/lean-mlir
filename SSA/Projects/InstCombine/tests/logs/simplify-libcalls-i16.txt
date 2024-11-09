@@ -1,0 +1,174 @@
+1: "sprintf"
+9: "sprintf" has pointer type input
+
+1: "foo"
+9: "foo" has pointer type input
+
+4: "foo" has unsupported operation: llvm.mlir.addressof
+
+4: "foo" has unsupported operation: llvm.call
+
+4: "foo" has unsupported operation: llvm.return
+
+1: "test1"
+4: "test1" has unsupported operation: llvm.mlir.addressof
+
+4: "test1" has unsupported operation: llvm.getelementptr
+
+4: "test1" has unsupported operation: llvm.call
+
+1: "strchr"
+9: "strchr" has pointer type input
+
+1: "test2"
+4: "test2" has unsupported operation: llvm.mlir.addressof
+
+4: "test2" has unsupported operation: llvm.getelementptr
+
+4: "test2" has unsupported operation: llvm.call
+
+1: "test3"
+4: "test3" has unsupported operation: llvm.mlir.addressof
+
+4: "test3" has unsupported operation: llvm.getelementptr
+
+4: "test3" has unsupported operation: llvm.call
+
+1: "memcmp"
+9: "memcmp" has pointer type input
+
+1: "PR2341"
+9: "PR2341" has pointer type input
+
+4: "PR2341" has unsupported operation: llvm.mlir.addressof
+
+4: "PR2341" has unsupported operation: llvm.load
+
+4: "PR2341" has unsupported operation: llvm.call
+
+1: "PR4284"
+4: "PR4284" has unsupported operation: llvm.alloca
+
+4: "PR4284" has unsupported operation: llvm.alloca
+
+4: "PR4284" has unsupported operation: llvm.store
+
+4: "PR4284" has unsupported operation: llvm.store
+
+4: "PR4284" has unsupported operation: llvm.call
+
+1: "PR4641"
+9: "PR4641" has pointer type input
+
+4: "PR4641" has unsupported operation: llvm.mlir.addressof
+
+4: "PR4641" has unsupported operation: llvm.mlir.addressof
+
+4: "PR4641" has unsupported operation: llvm.call
+
+4: "PR4641" has unsupported operation: llvm.call
+
+4: "PR4641" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+1: "fopen"
+9: "fopen" has pointer type input
+
+1: "exit"
+5: "exit" is empty
+
+1: "PR4645"
+4: "PR4645" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "PR4645" has unsupported operation: llvm.call
+
+4: "PR4645" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "PR4645" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+1: "MemCpy"
+4: "MemCpy" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "MemCpy" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "MemCpy" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "MemCpy" has unsupported operation after optimization: llvm.alloca
+
+4: "MemCpy" has unsupported operation after optimization: builtin.unregistered: llvm.intr.memcpy
+
+4: "MemCpy" has unsupported operation after optimization: builtin.unregistered: llvm.intr.memcpy
+
+4: "MemCpy" has unsupported operation after optimization: builtin.unregistered: llvm.intr.memcpy
+
+1: "strcmp"
+9: "strcmp" has pointer type input
+
+1: "test9"
+9: "test9" has pointer type input
+
+4: "test9" has unsupported operation: llvm.call
+
+4: "test9" has unsupported operation: llvm.return
+
+1: "isdigit"
+5: "isdigit" is empty
+
+1: "isascii"
+5: "isascii" is empty
+
+1: "toascii"
+5: "toascii" is empty
+
+1: "fake_isdigit"
+4: "fake_isdigit" has unsupported operation: llvm.call
+
+1: "fake_isascii"
+4: "fake_isascii" has unsupported operation: llvm.call
+
+1: "fake_toascii"
+4: "fake_toascii" has unsupported operation: llvm.call
+
+1: "pow"
+5: "pow" is empty
+
+1: "exp2"
+5: "exp2" is empty
+
+1: "fake_exp2"
+4: "fake_exp2" has unsupported operation: llvm.call
+
+1: "fake_ldexp"
+4: "fake_ldexp" has unsupported operation: llvm.call
+
+1: "fake_ldexp_16"
+4: "fake_ldexp_16" has unsupported operation: llvm.call
+
+1: "snprintf"
+9: "snprintf" has pointer type input
+
+1: "fake_snprintf"
+9: "fake_snprintf" has pointer type input
+
+4: "fake_snprintf" has unsupported operation: llvm.call
+
+1: "strlen"
+9: "strlen" has pointer type input
+
+4: "strlen" has unsupported operation: llvm.call
+
+1: "__stpncpy_chk"
+9: "__stpncpy_chk" has pointer type input
+
+1: "emit_stpncpy"
+4: "emit_stpncpy" has unsupported operation: llvm.mlir.addressof
+
+4: "emit_stpncpy" has unsupported operation: llvm.mlir.addressof
+
+4: "emit_stpncpy" has unsupported operation: llvm.call
+
+1: "ldexp"
+5: "ldexp" is empty
+
+1: "stpncpy"
+9: "stpncpy" has pointer type input
+

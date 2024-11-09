@@ -1,0 +1,576 @@
+1: "test1"
+4: "test1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test1" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "test2"
+4: "test2" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "test_vcopyq_lane_p64"
+4: "test_vcopyq_lane_p64" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test_vcopyq_lane_p64" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "test_vcopyq_lane_p64" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "widen_extract2"
+4: "widen_extract2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "widen_extract2" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "widen_extract2" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "widen_extract3"
+4: "widen_extract3" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "widen_extract3" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "widen_extract3" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "widen_extract4"
+4: "widen_extract4" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "widen_extract4" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "widen_extract4" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "pr26015"
+4: "pr26015" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "pr26015" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "pr26015" has unsupported operation: llvm.mlir.undef
+
+4: "pr26015" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr26015" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr26015" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr26015" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr26015" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr26015" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr26015" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr26015" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr26015" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "pr26015" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "pr25999"
+4: "pr25999" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "pr25999" has unsupported operation: llvm.mlir.undef
+
+4: "pr25999" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr25999" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr25999" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr25999" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr25999" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr25999" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr25999" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr25999" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr25999" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "pr25999" has unsupported operation: llvm.mlir.undef
+
+4: "pr25999" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr25999" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr25999" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr25999" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr25999" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr25999" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr25999" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr25999" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr25999" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "pr25999" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "pr25999" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "pr25999" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr25999" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "pr25999" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "pr25999_phis1"
+4: "pr25999_phis1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "pr25999_phis1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "pr25999_phis1" has unsupported operation: llvm.call
+
+4: "pr25999_phis1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "pr25999_phis1" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "pr25999_phis1" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "dummy"
+5: "dummy" is empty
+
+1: "pr25999_phis2"
+4: "pr25999_phis2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "pr25999_phis2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "pr25999_phis2" has unsupported operation: llvm.call
+
+4: "pr25999_phis2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "pr25999_phis2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "pr25999_phis2" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "pr25999_phis2" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "pr26354"
+9: "pr26354" has pointer type input
+
+4: "pr26354" has unsupported operation: llvm.mlir.undef
+
+4: "pr26354" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "pr26354" has unsupported operation: llvm.mlir.undef
+
+4: "pr26354" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr26354" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr26354" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr26354" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr26354" has unsupported operation: llvm.load
+
+4: "pr26354" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "pr26354" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "pr26354" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr26354" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "pr26354" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "pr26354" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "pr26354" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "PR30923"
+9: "PR30923" has pointer type input
+
+4: "PR30923" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "PR30923" has unsupported operation: llvm.mlir.undef
+
+4: "PR30923" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "PR30923" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "PR30923" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "PR30923" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "PR30923" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "PR30923" has unsupported operation: llvm.store
+
+4: "PR30923" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "PR30923" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "PR30923" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "PR30923" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "extractelt_insertion"
+4: "extractelt_insertion" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "extractelt_insertion" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "extractelt_insertion" has unsupported operation: llvm.mlir.undef
+
+4: "extractelt_insertion" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "extractelt_insertion" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "extractelt_insertion" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "extractelt_insertion" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "extractelt_insertion" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "extractelt_insertion" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "extractelt_insertion" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "collectShuffleElts"
+4: "collectShuffleElts" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "collectShuffleElts" has unsupported operation: llvm.mlir.undef
+
+4: "collectShuffleElts" has unsupported operation: llvm.mlir.undef
+
+4: "collectShuffleElts" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "collectShuffleElts" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "collectShuffleElts" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "collectShuffleElts" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "collectShuffleElts" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "collectShuffleElts" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "collectShuffleElts" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "collectShuffleElts" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "collectShuffleElts" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "insert_shuffle"
+4: "insert_shuffle" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "insert_shuffle_translate"
+4: "insert_shuffle_translate" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "insert_not_undef_shuffle_translate"
+4: "insert_not_undef_shuffle_translate" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "insert_not_undef_shuffle_translate_commute"
+4: "insert_not_undef_shuffle_translate_commute" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "insert_insert_shuffle_translate"
+4: "insert_insert_shuffle_translate" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_insert_shuffle_translate" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "insert_insert_shuffle_translate_commute"
+4: "insert_insert_shuffle_translate_commute" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_insert_shuffle_translate_commute" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "insert_insert_shuffle_translate_wrong_mask"
+4: "insert_insert_shuffle_translate_wrong_mask" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_insert_shuffle_translate_wrong_mask" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_insert_shuffle_translate_wrong_mask" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "use"
+5: "use" is empty
+
+1: "insert_not_undef_shuffle_translate_commute_uses"
+4: "insert_not_undef_shuffle_translate_commute_uses" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_not_undef_shuffle_translate_commute_uses" has unsupported operation: llvm.call
+
+4: "insert_not_undef_shuffle_translate_commute_uses" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "insert_not_undef_shuffle_translate_commute_lengthen"
+4: "insert_not_undef_shuffle_translate_commute_lengthen" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "insert_not_undef_shuffle_translate_commute_lengthen" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_not_undef_shuffle_translate_commute_lengthen" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "insert_nonzero_index_splat"
+4: "insert_nonzero_index_splat" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "insert_nonzero_index_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_nonzero_index_splat" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "insert_nonzero_index_splat_narrow"
+4: "insert_nonzero_index_splat_narrow" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "insert_nonzero_index_splat_narrow" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_nonzero_index_splat_narrow" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "insert_nonzero_index_splat_widen"
+4: "insert_nonzero_index_splat_widen" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "insert_nonzero_index_splat_widen" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_nonzero_index_splat_widen" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "insert_nonzero_index_splat_extra_use"
+4: "insert_nonzero_index_splat_extra_use" has unsupported operation: llvm.mlir.undef
+
+4: "insert_nonzero_index_splat_extra_use" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "insert_nonzero_index_splat_extra_use" has unsupported operation: llvm.mlir.undef
+
+4: "insert_nonzero_index_splat_extra_use" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_nonzero_index_splat_extra_use" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_nonzero_index_splat_extra_use" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_nonzero_index_splat_extra_use" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_nonzero_index_splat_extra_use" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "insert_nonzero_index_splat_extra_use" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_nonzero_index_splat_extra_use" has unsupported operation: llvm.call
+
+4: "insert_nonzero_index_splat_extra_use" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "insert_nonzero_index_splat_wrong_base"
+4: "insert_nonzero_index_splat_wrong_base" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "insert_nonzero_index_splat_wrong_base" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_nonzero_index_splat_wrong_base" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "insert_nonzero_index_splat_wrong_index"
+4: "insert_nonzero_index_splat_wrong_index" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "insert_nonzero_index_splat_wrong_index" has unsupported operation: llvm.mlir.undef
+
+4: "insert_nonzero_index_splat_wrong_index" has unsupported operation: llvm.mlir.undef
+
+4: "insert_nonzero_index_splat_wrong_index" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_nonzero_index_splat_wrong_index" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_nonzero_index_splat_wrong_index" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_nonzero_index_splat_wrong_index" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_nonzero_index_splat_wrong_index" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "insert_nonzero_index_splat_wrong_index" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_nonzero_index_splat_wrong_index" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "insert_in_splat"
+4: "insert_in_splat" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "insert_in_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_in_splat" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "insert_in_splat_extra_uses"
+4: "insert_in_splat_extra_uses" has unsupported operation: llvm.mlir.undef
+
+4: "insert_in_splat_extra_uses" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "insert_in_splat_extra_uses" has unsupported operation: llvm.mlir.undef
+
+4: "insert_in_splat_extra_uses" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_in_splat_extra_uses" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_in_splat_extra_uses" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_in_splat_extra_uses" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_in_splat_extra_uses" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "insert_in_splat_extra_uses" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_in_splat_extra_uses" has unsupported operation: llvm.call
+
+4: "insert_in_splat_extra_uses" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "insert_in_splat_extra_uses" has unsupported operation: llvm.call
+
+4: "insert_in_splat_extra_uses" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "insert_in_splat_variable_index"
+4: "insert_in_splat_variable_index" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "insert_in_splat_variable_index" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_in_splat_variable_index" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "insert_in_splat_variable_index" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "insert_in_nonsplat"
+4: "insert_in_nonsplat" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "insert_in_nonsplat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_in_nonsplat" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "insert_in_nonsplat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "insert_in_nonsplat2"
+4: "insert_in_nonsplat2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "insert_in_nonsplat2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_in_nonsplat2" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "insert_in_nonsplat2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "shuf_identity_padding"
+4: "shuf_identity_padding" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shuf_identity_padding" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "shuf_identity_padding" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "shuf_identity_extract"
+4: "shuf_identity_extract" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shuf_identity_extract" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "shuf_identity_extract" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "shuf_identity_extract_extra_use"
+4: "shuf_identity_extract_extra_use" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shuf_identity_extract_extra_use" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "shuf_identity_extract_extra_use" has unsupported operation: llvm.call
+
+4: "shuf_identity_extract_extra_use" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "shuf_identity_extract_extra_use" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "shuf_identity_padding_variable_index"
+4: "shuf_identity_padding_variable_index" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shuf_identity_padding_variable_index" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "shuf_identity_padding_variable_index" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "shuf_identity_padding_variable_index" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shuf_identity_padding_variable_index" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "shuf_identity_padding_wrong_source_vec"
+4: "shuf_identity_padding_wrong_source_vec" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shuf_identity_padding_wrong_source_vec" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "shuf_identity_padding_wrong_source_vec" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "shuf_identity_padding_wrong_source_vec" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shuf_identity_padding_wrong_source_vec" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "shuf_identity_padding_wrong_index"
+4: "shuf_identity_padding_wrong_index" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shuf_identity_padding_wrong_index" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "shuf_identity_padding_wrong_index" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "shuf_identity_padding_wrong_index" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shuf_identity_padding_wrong_index" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "insert_undemanded_element_op0"
+4: "insert_undemanded_element_op0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_undemanded_element_op0" has unsupported operation: llvm.call
+
+4: "insert_undemanded_element_op0" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "insert_undemanded_element_op1"
+4: "insert_undemanded_element_op1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_undemanded_element_op1" has unsupported operation: llvm.call
+
+4: "insert_undemanded_element_op1" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "insert_undemanded_element_unequal_length_op0"
+4: "insert_undemanded_element_unequal_length_op0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_undemanded_element_unequal_length_op0" has unsupported operation: llvm.call
+
+4: "insert_undemanded_element_unequal_length_op0" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "insert_undemanded_element_unequal_length_op1"
+4: "insert_undemanded_element_unequal_length_op1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_undemanded_element_unequal_length_op1" has unsupported operation: llvm.call
+
+4: "insert_undemanded_element_unequal_length_op1" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "insert_demanded_element_op0"
+4: "insert_demanded_element_op0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_demanded_element_op0" has unsupported operation: llvm.call
+
+4: "insert_demanded_element_op0" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "insert_demanded_element_op1"
+4: "insert_demanded_element_op1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_demanded_element_op1" has unsupported operation: llvm.call
+
+4: "insert_demanded_element_op1" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "insert_demanded_element_unequal_length_op0"
+4: "insert_demanded_element_unequal_length_op0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_demanded_element_unequal_length_op0" has unsupported operation: llvm.call
+
+4: "insert_demanded_element_unequal_length_op0" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "insert_demanded_element_unequal_length_op1"
+4: "insert_demanded_element_unequal_length_op1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_demanded_element_unequal_length_op1" has unsupported operation: llvm.call
+
+4: "insert_demanded_element_unequal_length_op1" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "splat_constant"
+4: "splat_constant" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "splat_constant" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "infloop_D151807"
+4: "infloop_D151807" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "infloop_D151807" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "infloop_D151807" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "infloop_D151807" has unsupported operation: llvm.mlir.undef
+
+4: "infloop_D151807" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "infloop_D151807" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "infloop_D151807" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "infloop_D151807" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "infloop_D151807" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "infloop_D151807" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "infloop_D151807" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "infloop_D151807" has unsupported operation: builtin.unregistered: llvm.shufflevector
+

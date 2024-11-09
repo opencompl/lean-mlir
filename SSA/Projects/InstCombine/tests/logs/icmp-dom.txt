@@ -1,0 +1,117 @@
+1: "idom_sign_bit_check_edge_dominates"
+4: "idom_sign_bit_check_edge_dominates" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "idom_sign_bit_check_edge_dominates" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "idom_sign_bit_check_edge_dominates" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "idom_sign_bit_check_edge_dominates" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "idom_sign_bit_check_edge_dominates" has unsupported operation: llvm.return
+
+1: "idom_sign_bit_check_edge_not_dominates"
+4: "idom_sign_bit_check_edge_not_dominates" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "idom_sign_bit_check_edge_not_dominates" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "idom_sign_bit_check_edge_not_dominates" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "idom_sign_bit_check_edge_not_dominates" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "idom_sign_bit_check_edge_not_dominates" has unsupported operation: llvm.return
+
+1: "idom_sign_bit_check_edge_dominates_select"
+4: "idom_sign_bit_check_edge_dominates_select" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "idom_sign_bit_check_edge_dominates_select" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "idom_sign_bit_check_edge_dominates_select" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "idom_sign_bit_check_edge_dominates_select" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "idom_sign_bit_check_edge_dominates_select" has unsupported operation: llvm.return
+
+1: "idom_zbranch"
+4: "idom_zbranch" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "idom_zbranch" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "idom_zbranch" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "idom_zbranch" has unsupported operation: llvm.return
+
+1: "idom_not_zbranch"
+4: "idom_not_zbranch" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "idom_not_zbranch" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "idom_not_zbranch" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "idom_not_zbranch" has unsupported operation: llvm.return
+
+1: "trueblock_cmp_eq"
+4: "trueblock_cmp_eq" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "trueblock_cmp_eq" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "trueblock_cmp_eq" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "trueblock_cmp_eq" has unsupported operation: llvm.return
+
+1: "trueblock_cmp_is_false"
+4: "trueblock_cmp_is_false" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "trueblock_cmp_is_false_commute"
+4: "trueblock_cmp_is_false_commute" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "trueblock_cmp_is_true"
+4: "trueblock_cmp_is_true" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "trueblock_cmp_is_true_commute"
+4: "trueblock_cmp_is_true_commute" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "falseblock_cmp_is_false"
+4: "falseblock_cmp_is_false" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "falseblock_cmp_is_false_commute"
+4: "falseblock_cmp_is_false_commute" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "falseblock_cmp_is_true"
+4: "falseblock_cmp_is_true" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "falseblock_cmp_is_true_commute"
+4: "falseblock_cmp_is_true_commute" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "PR48900"
+9: "PR48900" has pointer type input
+
+4: "PR48900" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+4: "PR48900" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "PR48900" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "PR48900_alt"
+9: "PR48900_alt" has pointer type input
+
+4: "PR48900_alt" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "PR48900_alt" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "PR48900_alt" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "and_mask1_eq"
+4: "and_mask1_eq" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "and_mask1_ne"
+4: "and_mask1_ne" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "and_mask2"
+4: "and_mask2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "and_mask3"
+4: "and_mask3" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "and_mask4"
+4: "and_mask4" has unsupported operation: builtin.unregistered: llvm.cond_br
+

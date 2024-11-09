@@ -1,0 +1,238 @@
+1: "use.i8"
+5: "use.i8" is empty
+
+1: "use.v2i4"
+5: "use.v2i4" is empty
+
+1: "use.i1"
+5: "use.i1" is empty
+
+1: "t0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.add
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "t1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.add
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "t2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.add
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "t3_commutative"
+4: "t3_commutative" has unsupported operation: llvm.call
+
+1: "t4_splat"
+8: "t4_splat" contains vectors which are unsupported
+
+1: "t5_splat_poison_0b0001"
+8: "t5_splat_poison_0b0001" contains vectors which are unsupported
+
+1: "t5_splat_poison_0b0010"
+8: "t5_splat_poison_0b0010" contains vectors which are unsupported
+
+1: "t5_splat_poison_0b0100"
+8: "t5_splat_poison_0b0100" contains vectors which are unsupported
+
+1: "t5_splat_poison_0b1000"
+8: "t5_splat_poison_0b1000" contains vectors which are unsupported
+
+1: "t6_nonsplat"
+7: "t6_nonsplat" is unchanged by InstCombine
+
+1: "t7_nonsplat_bias"
+7: "t7_nonsplat_bias" is unchanged by InstCombine
+
+1: "t8_nonsplat_masked_by_poison_0b0001"
+4: "t8_nonsplat_masked_by_poison_0b0001" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "t8_nonsplat_masked_by_poison_0b0001" has unsupported operation: llvm.mlir.undef
+
+4: "t8_nonsplat_masked_by_poison_0b0001" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t8_nonsplat_masked_by_poison_0b0001" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "t8_nonsplat_masked_by_poison_0b0010"
+4: "t8_nonsplat_masked_by_poison_0b0010" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "t8_nonsplat_masked_by_poison_0b0010" has unsupported operation: llvm.mlir.undef
+
+4: "t8_nonsplat_masked_by_poison_0b0010" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t8_nonsplat_masked_by_poison_0b0010" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "t8_nonsplat_masked_by_poison_0b0100"
+4: "t8_nonsplat_masked_by_poison_0b0100" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "t8_nonsplat_masked_by_poison_0b0100" has unsupported operation: llvm.mlir.undef
+
+4: "t8_nonsplat_masked_by_poison_0b0100" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t8_nonsplat_masked_by_poison_0b0100" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "t8_nonsplat_masked_by_poison_0b1000"
+4: "t8_nonsplat_masked_by_poison_0b1000" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "t8_nonsplat_masked_by_poison_0b1000" has unsupported operation: llvm.mlir.undef
+
+4: "t8_nonsplat_masked_by_poison_0b1000" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t8_nonsplat_masked_by_poison_0b1000" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "n9_wrong_x0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.add
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "n9_wrong_x1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.add
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "n9_wrong_x2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.add
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "n10_wrong_low_bit_mask"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.add
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "n11_wrong_high_bit_mask"
+7: "n11_wrong_high_bit_mask" is unchanged by InstCombine
+
+1: "n12_wrong_bias"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.add
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "n13_wrong_constants_alignment_is_not_power_of_two"
+7: "n13_wrong_constants_alignment_is_not_power_of_two" is unchanged by InstCombine
+
+1: "n14_wrong_comparison_constant"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.add
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "n15_wrong_comparison_predicate_and_constant"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.add
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "n16_oneuse"
+4: "n16_oneuse" has unsupported operation: llvm.call
+
+1: "t17_oneuse"
+4: "t17_oneuse" has unsupported operation: llvm.call
+
+1: "t18_replacement_0b0001"
+4: "t18_replacement_0b0001" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "t18_replacement_0b0001" has unsupported operation: llvm.mlir.undef
+
+4: "t18_replacement_0b0001" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t18_replacement_0b0001" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t18_replacement_0b0001" has unsupported operation: llvm.call
+
+1: "t18_replacement_0b0010"
+4: "t18_replacement_0b0010" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "t18_replacement_0b0010" has unsupported operation: llvm.mlir.undef
+
+4: "t18_replacement_0b0010" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t18_replacement_0b0010" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t18_replacement_0b0010" has unsupported operation: llvm.call
+
+1: "t18_replacement_0b0100"
+4: "t18_replacement_0b0100" has unsupported operation: llvm.call
+
+1: "t18_replacement_0b1000"
+4: "t18_replacement_0b1000" has unsupported operation: llvm.call
+

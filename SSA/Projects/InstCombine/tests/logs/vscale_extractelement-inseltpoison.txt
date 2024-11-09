@@ -1,0 +1,2 @@
+3: vscale_extractelement-inseltpoison.ll: parsing has failed
+

@@ -1,0 +1,31 @@
+1: "main"
+4: "main" has unsupported operation: llvm.mlir.addressof
+
+4: "main" has unsupported operation: llvm.mlir.addressof
+
+4: "main" has unsupported operation: llvm.mlir.addressof
+
+4: "main" has unsupported operation: llvm.call
+
+4: "main" has unsupported operation: llvm.call
+
+1: "fopen"
+9: "fopen" has pointer type input
+
+1: "fputs"
+9: "fputs" has pointer type input
+
+1: "main_pgso"
+4: "main_pgso" has unsupported operation: llvm.mlir.addressof
+
+4: "main_pgso" has unsupported operation: llvm.mlir.addressof
+
+4: "main_pgso" has unsupported operation: llvm.mlir.addressof
+
+4: "main_pgso" has unsupported operation: llvm.call
+
+4: "main_pgso" has unsupported operation: llvm.call
+
+1: "fwrite"
+9: "fwrite" has pointer type input
+

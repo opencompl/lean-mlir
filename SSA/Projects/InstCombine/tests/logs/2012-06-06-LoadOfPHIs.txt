@@ -1,0 +1,183 @@
+1: "func"
+9: "func" has pointer type input
+
+4: "func" has unsupported operation: llvm.alloca
+
+4: "func" has unsupported operation: llvm.alloca
+
+4: "func" has unsupported operation: llvm.alloca
+
+4: "func" has unsupported operation: llvm.store
+
+4: "func" has unsupported operation: llvm.store
+
+4: "func" has unsupported operation: llvm.store
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func" has unsupported operation: llvm.load
+
+4: "func" has unsupported operation: llvm.load
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "func" has unsupported operation: llvm.load
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func" has unsupported operation: llvm.load
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func" has unsupported operation: llvm.load
+
+4: "func" has unsupported operation: llvm.load
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "func" has unsupported operation: llvm.store
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "func" has unsupported operation: llvm.store
+
+4: "func" has unsupported operation: llvm.store
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "func" has unsupported operation: llvm.store
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "func" has unsupported operation: llvm.load
+
+4: "func" has unsupported operation: llvm.load
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "func" has unsupported operation: llvm.load
+
+4: "func" has unsupported operation: llvm.load
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "func" has unsupported operation: llvm.store
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "func" has unsupported operation: llvm.load
+
+4: "func" has unsupported operation: llvm.load
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "func" has unsupported operation: llvm.load
+
+4: "func" has unsupported operation: llvm.load
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "func" has unsupported operation: llvm.store
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func" has unsupported operation: llvm.load
+
+4: "func" has unsupported operation: llvm.load
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "func" has unsupported operation: llvm.load
+
+4: "func" has unsupported operation: llvm.load
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "func" has unsupported operation: llvm.store
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func" has unsupported operation: llvm.load
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "func" has unsupported operation: llvm.store
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "func" has unsupported operation: llvm.store
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func" has unsupported operation: llvm.return
+

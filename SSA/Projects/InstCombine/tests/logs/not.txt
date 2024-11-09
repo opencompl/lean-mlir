@@ -1,0 +1,457 @@
+1: "use1"
+5: "use1" is empty
+
+1: "use8"
+5: "use8" is empty
+
+1: "f1"
+5: "f1" is empty
+
+1: "f2"
+5: "f2" is empty
+
+1: "test1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.return
+
+1: "invert_icmp"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.xor
+2: llvm.return
+
+1: "invert_fcmp"
+4: "invert_fcmp" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "not_not_cmp"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "not_not_cmp_vector"
+8: "not_not_cmp_vector" contains vectors which are unsupported
+
+1: "not_cmp_constant"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "not_cmp_constant_vector"
+8: "not_cmp_constant_vector" contains vectors which are unsupported
+
+1: "test7"
+8: "test7" contains vectors which are unsupported
+
+1: "not_ashr_not"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.ashr
+2: llvm.xor
+2: llvm.return
+
+1: "not_ashr_const"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.xor
+2: llvm.return
+
+1: "not_ashr_const_splat"
+8: "not_ashr_const_splat" contains vectors which are unsupported
+
+1: "not_lshr_const_negative"
+7: "not_lshr_const_negative" is unchanged by InstCombine
+
+1: "not_lshr_const"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.xor
+2: llvm.return
+
+1: "not_lshr_const_splat"
+8: "not_lshr_const_splat" contains vectors which are unsupported
+
+1: "not_sub"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.xor
+2: llvm.return
+
+1: "not_sub_extra_use"
+9: "not_sub_extra_use" has pointer type input
+
+4: "not_sub_extra_use" has unsupported operation: llvm.store
+
+1: "not_sub_splat"
+8: "not_sub_splat" contains vectors which are unsupported
+
+1: "not_sub_extra_use_splat"
+9: "not_sub_extra_use_splat" has pointer type input
+
+4: "not_sub_extra_use_splat" has unsupported operation: llvm.store
+
+1: "not_sub_vec"
+8: "not_sub_vec" contains vectors which are unsupported
+
+1: "not_sub_extra_use_vec"
+9: "not_sub_extra_use_vec" has pointer type input
+
+4: "not_sub_extra_use_vec" has unsupported operation: llvm.store
+
+1: "not_add"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.xor
+2: llvm.return
+
+1: "not_add_splat"
+8: "not_add_splat" contains vectors which are unsupported
+
+1: "not_add_vec"
+8: "not_add_vec" contains vectors which are unsupported
+
+1: "not_select_cmp_cmp"
+4: "not_select_cmp_cmp" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "not_select_cmp_cmp_extra_use1"
+4: "not_select_cmp_cmp_extra_use1" has unsupported operation: llvm.call
+
+4: "not_select_cmp_cmp_extra_use1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "not_select_cmp_cmp_extra_use2"
+4: "not_select_cmp_cmp_extra_use2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "not_select_cmp_cmp_extra_use2" has unsupported operation: llvm.call
+
+1: "not_select_cmp_cmp_extra_use3"
+4: "not_select_cmp_cmp_extra_use3" has unsupported operation: llvm.call
+
+4: "not_select_cmp_cmp_extra_use3" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "not_select_cmp_cmp_extra_use3" has unsupported operation: llvm.call
+
+1: "not_select_cmp_cmp_extra_use4"
+4: "not_select_cmp_cmp_extra_use4" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "not_select_cmp_cmp_extra_use4" has unsupported operation: llvm.call
+
+1: "not_select_cmpt"
+4: "not_select_cmpt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "not_select_cmpf"
+7: "not_select_cmpf" is unchanged by InstCombine
+
+1: "not_select_cmpt_extra_use"
+4: "not_select_cmpt_extra_use" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "not_select_cmpt_extra_use" has unsupported operation: llvm.call
+
+1: "not_select_cmpf_extra_use"
+4: "not_select_cmpf_extra_use" has unsupported operation: llvm.call
+
+1: "not_or_neg"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.or
+2: llvm.xor
+2: llvm.return
+
+1: "not_or_neg_commute_vec"
+8: "not_or_neg_commute_vec" contains vectors which are unsupported
+
+1: "not_or_neg_use1"
+4: "not_or_neg_use1" has unsupported operation: llvm.call
+
+1: "not_or_neg_use2"
+4: "not_or_neg_use2" has unsupported operation: llvm.call
+
+1: "not_select_bool"
+7: "not_select_bool" is unchanged by InstCombine
+
+1: "not_select_bool_const1"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.return
+
+1: "not_select_bool_const2"
+7: "not_select_bool_const2" is unchanged by InstCombine
+
+1: "not_select_bool_const3"
+7: "not_select_bool_const3" is unchanged by InstCombine
+
+1: "not_select_bool_const4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.return
+
+1: "not_logicalAnd_not_op0"
+8: "not_logicalAnd_not_op0" contains vectors which are unsupported
+
+1: "not_logicalAnd_not_op1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.return
+
+1: "not_logicalAnd_not_op0_use1"
+4: "not_logicalAnd_not_op0_use1" has unsupported operation: llvm.call
+
+1: "not_logicalAnd_not_op0_use2"
+4: "not_logicalAnd_not_op0_use2" has unsupported operation: llvm.call
+
+1: "not_logicalOr_not_op0"
+8: "not_logicalOr_not_op0" contains vectors which are unsupported
+
+1: "not_logicalOr_not_op1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.return
+
+1: "not_logicalOr_not_op0_use1"
+4: "not_logicalOr_not_op0_use1" has unsupported operation: llvm.call
+
+1: "not_logicalOr_not_op0_use2"
+4: "not_logicalOr_not_op0_use2" has unsupported operation: llvm.call
+
+1: "bitcast_to_wide_elts_sext_bool"
+4: "bitcast_to_wide_elts_sext_bool" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "bitcast_to_narrow_elts_sext_bool"
+4: "bitcast_to_narrow_elts_sext_bool" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "bitcast_to_vec_sext_bool"
+4: "bitcast_to_vec_sext_bool" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "bitcast_to_scalar_sext_bool"
+4: "bitcast_to_scalar_sext_bool" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "bitcast_to_vec_sext_bool_use1"
+4: "bitcast_to_vec_sext_bool_use1" has unsupported operation: llvm.call
+
+4: "bitcast_to_vec_sext_bool_use1" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "bitcast_to_scalar_sext_bool_use2"
+4: "bitcast_to_scalar_sext_bool_use2" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bitcast_to_scalar_sext_bool_use2" has unsupported operation: llvm.call
+
+1: "invert_both_cmp_operands_add"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.add
+2: llvm.icmp
+2: llvm.return
+
+1: "invert_both_cmp_operands_sub"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.sub
+2: llvm.icmp
+2: llvm.return
+
+1: "invert_both_cmp_operands_complex"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.xor
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "test_sext"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sext
+2: llvm.add
+2: llvm.xor
+2: llvm.return
+
+1: "test_sext_vec"
+8: "test_sext_vec" contains vectors which are unsupported
+
+1: "test_zext_nneg"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.zext
+2: llvm.add
+2: llvm.add
+2: llvm.sub
+2: llvm.return
+
+1: "test_trunc"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.add
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.xor
+2: llvm.return
+
+1: "test_trunc_vec"
+8: "test_trunc_vec" contains vectors which are unsupported
+
+1: "test_zext"
+7: "test_zext" is unchanged by InstCombine
+
+1: "test_invert_demorgan_or"
+4: "test_invert_demorgan_or" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_invert_demorgan_or" has unsupported operation: llvm.call
+
+4: "test_invert_demorgan_or" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "test_invert_demorgan_or" has unsupported operation: llvm.call
+
+4: "test_invert_demorgan_or" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+1: "test_invert_demorgan_or2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.icmp
+2: llvm.or
+2: llvm.xor
+2: llvm.return
+
+1: "test_invert_demorgan_or3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.add
+2: llvm.icmp
+2: llvm.add
+2: llvm.icmp
+2: llvm.add
+2: llvm.icmp
+2: llvm.or
+2: llvm.or
+2: llvm.or
+2: llvm.xor
+2: llvm.return
+
+1: "test_invert_demorgan_logical_or"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.or
+2: llvm.xor
+2: llvm.return
+
+1: "test_invert_demorgan_and"
+4: "test_invert_demorgan_and" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_invert_demorgan_and" has unsupported operation: llvm.call
+
+4: "test_invert_demorgan_and" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "test_invert_demorgan_and" has unsupported operation: llvm.call
+
+4: "test_invert_demorgan_and" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+1: "test_invert_demorgan_and2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "test_invert_demorgan_and3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.add
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "test_invert_demorgan_logical_and"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.or
+2: llvm.xor
+2: llvm.return
+
+1: "test_invert_demorgan_and_multiuse"
+4: "test_invert_demorgan_and_multiuse" has unsupported operation: llvm.call
+
+4: "test_invert_demorgan_and_multiuse" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_invert_demorgan_and_multiuse" has unsupported operation: llvm.call
+
+4: "test_invert_demorgan_and_multiuse" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "test_invert_demorgan_and_multiuse" has unsupported operation: llvm.call
+
+4: "test_invert_demorgan_and_multiuse" has unsupported operation: builtin.unregistered: llvm.unreachable
+

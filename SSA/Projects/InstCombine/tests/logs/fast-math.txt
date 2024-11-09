@@ -1,0 +1,335 @@
+1: "fold"
+4: "fold" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "notfold"
+4: "notfold" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "notfold" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fold2"
+4: "fold2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fold3"
+4: "fold3" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fold3_reassoc_nsz"
+4: "fold3_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fold3_reassoc"
+4: "fold3_reassoc" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fold3_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fold4"
+4: "fold4" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fold4" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fold4_reassoc_nsz"
+4: "fold4_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fold4_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fold4_reassoc"
+4: "fold4_reassoc" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "fold4_reassoc" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "fold4_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fold5"
+4: "fold5" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fold5_reassoc_nsz"
+4: "fold5_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fold5_reassoc"
+4: "fold5_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fold5_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fold6"
+4: "fold6" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fold6_reassoc_nsz"
+4: "fold6_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fold6_reassoc"
+4: "fold6_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fold6_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fold6_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fold7"
+4: "fold7" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fold7_reassoc_nsz"
+4: "fold7_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fold7_reassoc"
+4: "fold7_reassoc" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fold7_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fold7_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fold8"
+4: "fold8" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fold8_reassoc_nsz"
+4: "fold8_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fold8_reassoc"
+4: "fold8_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fold8_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fold8_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fold8_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fsub_fadd_common_op_fneg"
+4: "fsub_fadd_common_op_fneg" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "fsub_fadd_common_op_fneg_reassoc_nsz"
+4: "fsub_fadd_common_op_fneg_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "fsub_fadd_common_op_fneg_vec"
+4: "fsub_fadd_common_op_fneg_vec" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "fsub_fadd_common_op_fneg_commute"
+4: "fsub_fadd_common_op_fneg_commute" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "fsub_fadd_common_op_fneg_commute_vec"
+4: "fsub_fadd_common_op_fneg_commute_vec" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "fsub_fsub_common_op_fneg"
+4: "fsub_fsub_common_op_fneg" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "fsub_fsub_common_op_fneg_vec"
+4: "fsub_fsub_common_op_fneg_vec" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "fold9_reassoc"
+4: "fold9_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fold9_reassoc" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fold10"
+4: "fold10" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fold10" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fold10_reassoc_nsz"
+4: "fold10_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fold10_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fold10_reassoc"
+4: "fold10_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fold10_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fold10_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fail1"
+4: "fail1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fail1" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fail2"
+4: "fail2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fail2" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "fsub_op0_fmul_const"
+4: "fsub_op0_fmul_const" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fsub_op0_fmul_const_vec"
+4: "fsub_op0_fmul_const_vec" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fsub_op1_fmul_const"
+4: "fsub_op1_fmul_const" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fsub_op1_fmul_const_vec"
+4: "fsub_op1_fmul_const_vec" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fsub_op0_fmul_const_wrong_FMF"
+4: "fsub_op0_fmul_const_wrong_FMF" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fsub_op0_fmul_const_wrong_FMF" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fold16"
+4: "fold16" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fold16" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fold16" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fneg1"
+4: "fneg1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fneg2"
+4: "fneg2" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "fneg2_vec_poison"
+4: "fneg2_vec_poison" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "fdiv1"
+4: "fdiv1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fdiv2"
+4: "fdiv2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fdiv2_vec"
+4: "fdiv2_vec" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fdiv3"
+4: "fdiv3" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fdiv3" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "fdiv4"
+4: "fdiv4" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fdiv4" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "sqrt_intrinsic_arg_squared"
+4: "sqrt_intrinsic_arg_squared" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "sqrt_intrinsic_three_args1"
+4: "sqrt_intrinsic_three_args1" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "sqrt_intrinsic_three_args1" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "sqrt_intrinsic_three_args1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "sqrt_intrinsic_three_args2"
+4: "sqrt_intrinsic_three_args2" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "sqrt_intrinsic_three_args2" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "sqrt_intrinsic_three_args2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "sqrt_intrinsic_three_args3"
+4: "sqrt_intrinsic_three_args3" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "sqrt_intrinsic_three_args3" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "sqrt_intrinsic_three_args3" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "sqrt_intrinsic_three_args4"
+4: "sqrt_intrinsic_three_args4" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "sqrt_intrinsic_three_args4" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "sqrt_intrinsic_three_args4" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "sqrt_intrinsic_three_args5"
+4: "sqrt_intrinsic_three_args5" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "sqrt_intrinsic_three_args5" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "sqrt_intrinsic_three_args5" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "sqrt_intrinsic_three_args6"
+9: "sqrt_intrinsic_three_args6" has pointer type input
+
+4: "sqrt_intrinsic_three_args6" has unsupported operation: llvm.load
+
+4: "sqrt_intrinsic_three_args6" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "sqrt_intrinsic_three_args6" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "sqrt_intrinsic_three_args6" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "sqrt_intrinsic_not_so_fast"
+4: "sqrt_intrinsic_not_so_fast" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "sqrt_intrinsic_not_so_fast" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "sqrt_intrinsic_not_so_fast" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+1: "sqrt_intrinsic_arg_4th"
+4: "sqrt_intrinsic_arg_4th" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "sqrt_intrinsic_arg_5th"
+4: "sqrt_intrinsic_arg_5th" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "sqrt_intrinsic_arg_5th" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "sqrt_intrinsic_arg_5th" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "sqrtf"
+5: "sqrtf" is empty
+
+1: "sqrt"
+5: "sqrt" is empty
+
+1: "sqrtl"
+5: "sqrtl" is empty
+
+1: "sqrt_call_squared_f32"
+4: "sqrt_call_squared_f32" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "sqrt_call_squared_f64"
+4: "sqrt_call_squared_f64" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "sqrt_call_squared_f128"
+4: "sqrt_call_squared_f128" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "fmax"
+5: "fmax" is empty
+
+1: "fmin"
+5: "fmin" is empty
+
+1: "fmaxf"
+5: "fmaxf" is empty
+
+1: "fminf"
+5: "fminf" is empty
+
+1: "fmaxl"
+5: "fmaxl" is empty
+
+1: "fminl"
+5: "fminl" is empty
+
+1: "max1"
+4: "max1" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
+
+1: "fmax_no_fmf"
+4: "fmax_no_fmf" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
+
+1: "max2"
+4: "max2" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
+
+1: "max3"
+4: "max3" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
+
+1: "max4"
+4: "max4" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
+
+1: "min1"
+4: "min1" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+1: "fmin_no_fmf"
+4: "fmin_no_fmf" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+1: "min2"
+4: "min2" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+1: "min3"
+4: "min3" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+1: "min4"
+4: "min4" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+1: "test55"
+4: "test55" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test55" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test55" has unsupported operation: builtin.unregistered: llvm.br
+

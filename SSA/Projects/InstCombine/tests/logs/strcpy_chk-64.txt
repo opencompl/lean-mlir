@@ -1,0 +1,28 @@
+1: "func"
+9: "func" has pointer type input
+
+4: "func" has unsupported operation: llvm.alloca
+
+4: "func" has unsupported operation: llvm.call
+
+4: "func" has unsupported operation: llvm.call
+
+4: "func" has unsupported operation: llvm.return
+
+1: "func_no_null_opt"
+9: "func_no_null_opt" has pointer type input
+
+4: "func_no_null_opt" has unsupported operation: llvm.alloca
+
+4: "func_no_null_opt" has unsupported operation: llvm.call
+
+4: "func_no_null_opt" has unsupported operation: llvm.call
+
+4: "func_no_null_opt" has unsupported operation: llvm.return
+
+1: "__strcpy_chk"
+9: "__strcpy_chk" has pointer type input
+
+1: "func2"
+9: "func2" has pointer type input
+

@@ -1,0 +1,180 @@
+1: "test1"
+4: "test1" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "test1" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "test2"
+4: "test2" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "test2" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "test3"
+4: "test3" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "test3" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "test4"
+4: "test4" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "test4" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "test5"
+4: "test5" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "test5" has unsupported operation after optimization: builtin.unregistered: llvm.fptosi
+
+4: "test5" has unsupported operation after optimization: builtin.unregistered: llvm.uitofp
+
+4: "test5" has unsupported operation after optimization: builtin.unregistered: llvm.fptoui
+
+1: "test6"
+4: "test6" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "test6" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "test6" has unsupported operation after optimization: builtin.unregistered: llvm.fadd
+
+4: "test6" has unsupported operation after optimization: builtin.unregistered: llvm.fptosi
+
+1: "test7"
+4: "test7" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "test7" has unsupported operation after optimization: builtin.unregistered: llvm.fptoui
+
+1: "test8"
+4: "test8" has unsupported operation after optimization: builtin.unregistered: llvm.uitofp
+
+4: "test8" has unsupported operation after optimization: builtin.unregistered: llvm.fptosi
+
+1: "test9"
+4: "test9" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "test9" has unsupported operation after optimization: builtin.unregistered: llvm.fptoui
+
+1: "test10"
+4: "test10" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "test10" has unsupported operation after optimization: builtin.unregistered: llvm.fptosi
+
+1: "test11"
+4: "test11" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "test11" has unsupported operation after optimization: builtin.unregistered: llvm.fptosi
+
+1: "test12"
+4: "test12" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "test12" has unsupported operation after optimization: builtin.unregistered: llvm.fptoui
+
+1: "test13"
+4: "test13" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "test13" has unsupported operation: builtin.unregistered: llvm.fptoui
+
+1: "test14"
+4: "test14" has unsupported operation after optimization: builtin.unregistered: llvm.uitofp
+
+4: "test14" has unsupported operation after optimization: builtin.unregistered: llvm.fptoui
+
+1: "test15"
+4: "test15" has unsupported operation after optimization: builtin.unregistered: llvm.uitofp
+
+4: "test15" has unsupported operation after optimization: builtin.unregistered: llvm.fptoui
+
+1: "test16"
+4: "test16" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "test16" has unsupported operation after optimization: builtin.unregistered: llvm.fptoui
+
+1: "test17"
+4: "test17" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "test17" has unsupported operation: builtin.unregistered: llvm.fptoui
+
+1: "test18"
+4: "test18" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "test18" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "test19"
+4: "test19" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "test19" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "masked_input"
+4: "masked_input" has unsupported operation after optimization: builtin.unregistered: llvm.uitofp
+
+4: "masked_input" has unsupported operation after optimization: builtin.unregistered: llvm.fptoui
+
+1: "max_masked_input"
+4: "max_masked_input" has unsupported operation after optimization: builtin.unregistered: llvm.uitofp
+
+4: "max_masked_input" has unsupported operation after optimization: builtin.unregistered: llvm.fptoui
+
+1: "consider_lowbits_masked_input"
+4: "consider_lowbits_masked_input" has unsupported operation after optimization: builtin.unregistered: llvm.uitofp
+
+4: "consider_lowbits_masked_input" has unsupported operation after optimization: builtin.unregistered: llvm.fptoui
+
+1: "overflow_masked_input"
+4: "overflow_masked_input" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "overflow_masked_input" has unsupported operation: builtin.unregistered: llvm.fptoui
+
+1: "low_masked_input"
+4: "low_masked_input" has unsupported operation after optimization: builtin.unregistered: llvm.uitofp
+
+4: "low_masked_input" has unsupported operation after optimization: builtin.unregistered: llvm.fptoui
+
+1: "s32_half_s11"
+4: "s32_half_s11" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "s32_half_s11" has unsupported operation after optimization: builtin.unregistered: llvm.fptosi
+
+1: "s32_half_u11"
+4: "s32_half_u11" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
+
+4: "s32_half_u11" has unsupported operation after optimization: builtin.unregistered: llvm.fptoui
+
+1: "u32_half_s11"
+4: "u32_half_s11" has unsupported operation after optimization: builtin.unregistered: llvm.uitofp
+
+4: "u32_half_s11" has unsupported operation after optimization: builtin.unregistered: llvm.fptosi
+
+1: "u32_half_u11"
+4: "u32_half_u11" has unsupported operation after optimization: builtin.unregistered: llvm.uitofp
+
+4: "u32_half_u11" has unsupported operation after optimization: builtin.unregistered: llvm.fptoui
+
+1: "s32_half_s12"
+4: "s32_half_s12" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "s32_half_s12" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "s32_half_u12"
+4: "s32_half_u12" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "s32_half_u12" has unsupported operation: builtin.unregistered: llvm.fptoui
+
+1: "u32_half_s12"
+4: "u32_half_s12" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "u32_half_s12" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "u32_half_u12"
+4: "u32_half_u12" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "u32_half_u12" has unsupported operation: builtin.unregistered: llvm.fptoui
+
+1: "i8_vec_sitofp_test1"
+8: "i8_vec_sitofp_test1" contains vectors which are unsupported
+
+1: "i8_vec_sitofp_test2"
+8: "i8_vec_sitofp_test2" contains vectors which are unsupported
+
+1: "i8_vec_sitofp_test3"
+8: "i8_vec_sitofp_test3" contains vectors which are unsupported
+
+1: "i8_vec_sitofp_test4"
+8: "i8_vec_sitofp_test4" contains vectors which are unsupported
+

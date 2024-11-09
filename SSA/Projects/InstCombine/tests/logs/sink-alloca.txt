@@ -1,0 +1,31 @@
+1: "cond"
+5: "cond" is empty
+
+1: "use_and_return"
+9: "use_and_return" has pointer type input
+
+1: "foo"
+4: "foo" has unsupported operation: llvm.call
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "foo" has unsupported operation: llvm.alloca
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.intr.stacksave
+
+4: "foo" has unsupported operation: llvm.call
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "foo" has unsupported operation: llvm.call
+
+4: "foo" has unsupported operation: llvm.store
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.intr.stackrestore
+
+4: "foo" has unsupported operation: llvm.call
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "foo" has unsupported operation: llvm.return
+

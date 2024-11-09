@@ -1,0 +1,18 @@
+1: "fdim_double"
+4: "fdim_double" has unsupported operation after optimization: llvm.call
+
+1: "fdim_float"
+4: "fdim_float" has unsupported operation after optimization: llvm.call
+
+1: "fdim_long"
+4: "fdim_long" has unsupported operation after optimization: llvm.call
+
+1: "fdim"
+5: "fdim" is empty
+
+1: "fdimf"
+5: "fdimf" is empty
+
+1: "fdiml"
+5: "fdiml" is empty
+

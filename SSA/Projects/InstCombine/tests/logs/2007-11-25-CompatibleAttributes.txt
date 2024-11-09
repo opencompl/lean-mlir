@@ -1,0 +1,12 @@
+1: "main"
+9: "main" has pointer type input
+
+4: "main" has unsupported operation: llvm.mlir.addressof
+
+4: "main" has unsupported operation: llvm.mlir.undef
+
+4: "main" has unsupported operation: llvm.call
+
+1: "printf"
+9: "printf" has pointer type input
+

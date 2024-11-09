@@ -1,0 +1,38 @@
+1: "strlen"
+9: "strlen" has pointer type input
+
+1: "fold_a5_4_i0_pI"
+4: "fold_a5_4_i0_pI" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_a5_4_i0_pI" has unsupported operation: llvm.getelementptr
+
+4: "fold_a5_4_i0_pI" has unsupported operation: llvm.call
+
+1: "fold_a5_4_i1_pI"
+4: "fold_a5_4_i1_pI" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_a5_4_i1_pI" has unsupported operation: llvm.getelementptr
+
+4: "fold_a5_4_i1_pI" has unsupported operation: llvm.call
+
+1: "fold_a5_4_i2_pI"
+4: "fold_a5_4_i2_pI" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_a5_4_i2_pI" has unsupported operation: llvm.getelementptr
+
+4: "fold_a5_4_i2_pI" has unsupported operation: llvm.call
+
+1: "fold_a5_4_i3_pI_to_0"
+4: "fold_a5_4_i3_pI_to_0" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_a5_4_i3_pI_to_0" has unsupported operation: llvm.getelementptr
+
+4: "fold_a5_4_i3_pI_to_0" has unsupported operation: llvm.call
+
+1: "fold_a5_4_i4_pI_to_0"
+4: "fold_a5_4_i4_pI_to_0" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_a5_4_i4_pI_to_0" has unsupported operation: llvm.getelementptr
+
+4: "fold_a5_4_i4_pI_to_0" has unsupported operation: llvm.call
+

@@ -1,0 +1,96 @@
+1: "p0_scalar_urem_by_const"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.urem
+2: llvm.icmp
+2: llvm.return
+
+1: "p1_scalar_urem_by_nonconst"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.or
+2: llvm.urem
+2: llvm.icmp
+2: llvm.return
+
+1: "p2_scalar_shifted_urem_by_const"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.shl
+2: llvm.urem
+2: llvm.icmp
+2: llvm.return
+
+1: "p3_scalar_shifted2_urem_by_const"
+7: "p3_scalar_shifted2_urem_by_const" is unchanged by InstCombine
+
+1: "p4_vector_urem_by_const__splat"
+8: "p4_vector_urem_by_const__splat" contains vectors which are unsupported
+
+1: "p5_vector_urem_by_const__nonsplat"
+7: "p5_vector_urem_by_const__nonsplat" is unchanged by InstCombine
+
+1: "p6_vector_urem_by_const__nonsplat_poison0"
+4: "p6_vector_urem_by_const__nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "p6_vector_urem_by_const__nonsplat_poison0" has unsupported operation: llvm.mlir.undef
+
+4: "p6_vector_urem_by_const__nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p6_vector_urem_by_const__nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p6_vector_urem_by_const__nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p6_vector_urem_by_const__nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "p7_vector_urem_by_const__nonsplat_poison2"
+4: "p7_vector_urem_by_const__nonsplat_poison2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "p7_vector_urem_by_const__nonsplat_poison2" has unsupported operation: llvm.mlir.undef
+
+4: "p7_vector_urem_by_const__nonsplat_poison2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p7_vector_urem_by_const__nonsplat_poison2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p7_vector_urem_by_const__nonsplat_poison2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p7_vector_urem_by_const__nonsplat_poison2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "p8_vector_urem_by_const__nonsplat_poison3"
+4: "p8_vector_urem_by_const__nonsplat_poison3" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "p8_vector_urem_by_const__nonsplat_poison3" has unsupported operation: llvm.mlir.undef
+
+4: "p8_vector_urem_by_const__nonsplat_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p8_vector_urem_by_const__nonsplat_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p8_vector_urem_by_const__nonsplat_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p8_vector_urem_by_const__nonsplat_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p8_vector_urem_by_const__nonsplat_poison3" has unsupported operation: llvm.mlir.undef
+
+4: "p8_vector_urem_by_const__nonsplat_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p8_vector_urem_by_const__nonsplat_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p8_vector_urem_by_const__nonsplat_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p8_vector_urem_by_const__nonsplat_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "n0_urem_of_maybe_not_power_of_two"
+7: "n0_urem_of_maybe_not_power_of_two" is unchanged by InstCombine
+
+1: "n1_urem_by_maybe_power_of_two"
+7: "n1_urem_by_maybe_power_of_two" is unchanged by InstCombine
+

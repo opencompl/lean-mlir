@@ -1,0 +1,26 @@
+1: "malloc"
+5: "malloc" is empty
+
+1: "free"
+9: "free" has pointer type input
+
+1: "test1"
+4: "test1" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "test1" has unsupported operation after optimization: llvm.call
+
+4: "test1" has unsupported operation after optimization: llvm.store
+
+4: "test1" has unsupported operation after optimization: llvm.call
+
+1: "test2"
+4: "test2" has unsupported operation: llvm.mlir.zero
+
+4: "test2" has unsupported operation: llvm.call
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test2" has unsupported operation: llvm.store
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.br
+

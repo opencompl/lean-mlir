@@ -1,0 +1,516 @@
+1: "use"
+5: "use" is empty
+
+1: "use.i8"
+5: "use.i8" is empty
+
+1: "use_vec"
+5: "use_vec" is empty
+
+1: "test1"
+4: "test1" has unsupported operation: llvm.call
+
+1: "test1_vec"
+4: "test1_vec" has unsupported operation: llvm.call
+
+1: "test1_vec_nonuniform"
+4: "test1_vec_nonuniform" has unsupported operation: llvm.call
+
+1: "test1_vec_poison"
+4: "test1_vec_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test1_vec_poison" has unsupported operation: llvm.mlir.undef
+
+4: "test1_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test1_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test1_vec_poison" has unsupported operation: llvm.call
+
+1: "test2"
+4: "test2" has unsupported operation: llvm.call
+
+1: "test2_vec"
+4: "test2_vec" has unsupported operation: llvm.call
+
+1: "test2_vec_nonuniform"
+4: "test2_vec_nonuniform" has unsupported operation: llvm.call
+
+1: "test2_vec_poison"
+4: "test2_vec_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test2_vec_poison" has unsupported operation: llvm.mlir.undef
+
+4: "test2_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test2_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test2_vec_poison" has unsupported operation: llvm.call
+
+1: "test3"
+4: "test3" has unsupported operation: llvm.call
+
+1: "test4"
+4: "test4" has unsupported operation: llvm.call
+
+1: "test5"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.return
+
+1: "test6"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.return
+
+1: "ashr_mul_sign_bits"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.sext
+2: llvm.mul
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.return
+
+1: "ashr_mul"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.sext
+2: llvm.mul
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_ashr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.or
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_ashr_vec"
+8: "trunc_ashr_vec" contains vectors which are unsupported
+
+1: "test7"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.return
+
+1: "test8"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.shl
+2: llvm.or
+2: llvm.trunc
+2: llvm.return
+
+1: "test8_vec"
+8: "test8_vec" contains vectors which are unsupported
+
+1: "test8_vec_nonuniform"
+8: "test8_vec_nonuniform" contains vectors which are unsupported
+
+1: "test8_vec_poison"
+4: "test8_vec_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test8_vec_poison" has unsupported operation: llvm.mlir.undef
+
+4: "test8_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test8_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "test9"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.trunc
+2: llvm.return
+
+1: "test10"
+7: "test10" is unchanged by InstCombine
+
+1: "test11"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.and
+2: llvm.shl
+2: llvm.trunc
+2: llvm.return
+
+1: "test11_vec"
+8: "test11_vec" contains vectors which are unsupported
+
+1: "test11_vec_nonuniform"
+8: "test11_vec_nonuniform" contains vectors which are unsupported
+
+1: "test11_vec_poison"
+4: "test11_vec_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test11_vec_poison" has unsupported operation: llvm.mlir.undef
+
+4: "test11_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test11_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "test12"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.and
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.return
+
+1: "test12_vec"
+8: "test12_vec" contains vectors which are unsupported
+
+1: "test12_vec_nonuniform"
+8: "test12_vec_nonuniform" contains vectors which are unsupported
+
+1: "test12_vec_poison"
+4: "test12_vec_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test12_vec_poison" has unsupported operation: llvm.mlir.undef
+
+4: "test12_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test12_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "test13"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.zext
+2: llvm.and
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.return
+
+1: "test13_vec"
+8: "test13_vec" contains vectors which are unsupported
+
+1: "test13_vec_nonuniform"
+8: "test13_vec_nonuniform" contains vectors which are unsupported
+
+1: "test13_vec_poison"
+4: "test13_vec_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test13_vec_poison" has unsupported operation: llvm.mlir.undef
+
+4: "test13_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test13_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "trunc_bitcast1"
+4: "trunc_bitcast1" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "trunc_bitcast2"
+4: "trunc_bitcast2" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "trunc_bitcast2" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "trunc_bitcast3"
+4: "trunc_bitcast3" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "trunc_shl_31_i32_i64"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_shl_nsw_31_i32_i64"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_shl_nuw_31_i32_i64"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_shl_nsw_nuw_31_i32_i64"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_shl_15_i16_i64"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_shl_15_i16_i32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_shl_7_i8_i64"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_shl_1_i2_i64"
+7: "trunc_shl_1_i2_i64" is unchanged by InstCombine
+
+1: "trunc_shl_1_i32_i64"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_shl_16_i32_i64"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_shl_33_i32_i64"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_shl_32_i32_i64"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_shl_16_v2i32_v2i64"
+8: "trunc_shl_16_v2i32_v2i64" contains vectors which are unsupported
+
+1: "trunc_shl_nosplat_v2i32_v2i64"
+8: "trunc_shl_nosplat_v2i32_v2i64" contains vectors which are unsupported
+
+1: "trunc_shl_31_i32_i64_multi_use"
+9: "trunc_shl_31_i32_i64_multi_use" has pointer type input
+
+4: "trunc_shl_31_i32_i64_multi_use" has unsupported operation: llvm.store
+
+4: "trunc_shl_31_i32_i64_multi_use" has unsupported operation: llvm.store
+
+4: "trunc_shl_31_i32_i64_multi_use" has unsupported operation: llvm.return
+
+1: "trunc_shl_lshr_infloop"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_shl_v2i32_v2i64_uniform"
+8: "trunc_shl_v2i32_v2i64_uniform" contains vectors which are unsupported
+
+1: "trunc_shl_v2i32_v2i64_poison"
+4: "trunc_shl_v2i32_v2i64_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "trunc_shl_v2i32_v2i64_poison" has unsupported operation: llvm.mlir.undef
+
+4: "trunc_shl_v2i32_v2i64_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "trunc_shl_v2i32_v2i64_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "trunc_shl_v2i32_v2i64_nonuniform"
+8: "trunc_shl_v2i32_v2i64_nonuniform" contains vectors which are unsupported
+
+1: "trunc_shl_v2i32_v2i64_outofrange"
+7: "trunc_shl_v2i32_v2i64_outofrange" is unchanged by InstCombine
+
+1: "trunc_shl_ashr_infloop"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.shl
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_shl_shl_infloop"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.shl
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_shl_lshr_var"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_shl_ashr_var"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.shl
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_shl_shl_var"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.shl
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_shl_v8i15_v8i32_15"
+8: "trunc_shl_v8i15_v8i32_15" contains vectors which are unsupported
+
+1: "trunc_shl_v8i16_v8i32_16"
+8: "trunc_shl_v8i16_v8i32_16" contains vectors which are unsupported
+
+1: "trunc_shl_v8i16_v8i32_17"
+8: "trunc_shl_v8i16_v8i32_17" contains vectors which are unsupported
+
+1: "trunc_shl_v8i16_v8i32_4"
+8: "trunc_shl_v8i16_v8i32_4" contains vectors which are unsupported
+
+1: "wide_shuf"
+4: "wide_shuf" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "wide_shuf" has unsupported operation: llvm.mlir.undef
+
+4: "wide_shuf" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "wide_shuf" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "wide_shuf" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "wide_shuf" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "wide_shuf" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "wide_splat1"
+4: "wide_splat1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "wide_splat1" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "wide_splat2"
+4: "wide_splat2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "wide_splat2" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "wide_splat3"
+4: "wide_splat3" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "wide_splat3" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "wide_lengthening_splat"
+4: "wide_lengthening_splat" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "wide_lengthening_splat" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "narrow_add_vec_constant"
+8: "narrow_add_vec_constant" contains vectors which are unsupported
+
+1: "narrow_mul_vec_constant"
+8: "narrow_mul_vec_constant" contains vectors which are unsupported
+
+1: "narrow_sub_vec_constant"
+8: "narrow_sub_vec_constant" contains vectors which are unsupported
+
+1: "PR44545"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.trunc
+2: llvm.add
+2: llvm.return
+
+1: "drop_nsw_trunc"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.trunc
+2: llvm.return
+
+1: "drop_nuw_trunc"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.trunc
+2: llvm.return
+
+1: "drop_both_trunc"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_xor"
+7: "trunc_xor" is unchanged by InstCombine
+
+1: "trunc_nuw_xor"
+2: llvm.func
+2: llvm.xor
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_nsw_xor"
+2: llvm.func
+2: llvm.xor
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_nuw_xor_vector"
+8: "trunc_nuw_xor_vector" contains vectors which are unsupported
+
+1: "pr95547"
+4: "pr95547" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "pr95547" has unsupported operation: llvm.call
+
+4: "pr95547" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "pr95547" has unsupported operation: llvm.return
+

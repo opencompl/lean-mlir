@@ -1,0 +1,14 @@
+1: "foo"
+9: "foo" has pointer type input
+
+1: "test"
+4: "test" has unsupported operation: llvm.mlir.addressof
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.addrspacecast
+
+4: "test" has unsupported operation: llvm.getelementptr
+
+4: "test" has unsupported operation: llvm.call
+
+4: "test" has unsupported operation: llvm.return
+

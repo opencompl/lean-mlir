@@ -1,0 +1,49 @@
+1: "use"
+5: "use" is empty
+
+1: "exp2_a_exp2_b"
+4: "exp2_a_exp2_b" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+4: "exp2_a_exp2_b" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+4: "exp2_a_exp2_b" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "exp2_a_exp2_b_multiple_uses"
+4: "exp2_a_exp2_b_multiple_uses" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+4: "exp2_a_exp2_b_multiple_uses" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "exp2_a_exp2_b_multiple_uses" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+4: "exp2_a_exp2_b_multiple_uses" has unsupported operation: llvm.call
+
+1: "exp2_a_a"
+4: "exp2_a_a" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "exp2_a_a" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+1: "exp2_a_exp2_b_multiple_uses_both"
+4: "exp2_a_exp2_b_multiple_uses_both" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+4: "exp2_a_exp2_b_multiple_uses_both" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+4: "exp2_a_exp2_b_multiple_uses_both" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "exp2_a_exp2_b_multiple_uses_both" has unsupported operation: llvm.call
+
+4: "exp2_a_exp2_b_multiple_uses_both" has unsupported operation: llvm.call
+
+1: "exp2_a_exp2_b_reassoc"
+4: "exp2_a_exp2_b_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "exp2_a_exp2_b_reassoc" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+1: "exp2_a_exp2_b_exp2_c_exp2_d"
+4: "exp2_a_exp2_b_exp2_c_exp2_d" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "exp2_a_exp2_b_exp2_c_exp2_d" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "exp2_a_exp2_b_exp2_c_exp2_d" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "exp2_a_exp2_b_exp2_c_exp2_d" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+

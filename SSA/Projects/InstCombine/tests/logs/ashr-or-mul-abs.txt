@@ -1,0 +1,27 @@
+1: "ashr_or_mul_to_abs"
+4: "ashr_or_mul_to_abs" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "ashr_or_mul_to_abs2"
+4: "ashr_or_mul_to_abs2" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "ashr_or_mul_to_abs3"
+4: "ashr_or_mul_to_abs3" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "ashr_or_mul_to_abs_vec"
+4: "ashr_or_mul_to_abs_vec" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "ashr_or_mul_to_abs_vec2"
+4: "ashr_or_mul_to_abs_vec2" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "ashr_or_mul_to_abs_vec3_poison"
+4: "ashr_or_mul_to_abs_vec3_poison" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "ashr_or_mul_to_abs_neg"
+7: "ashr_or_mul_to_abs_neg" is unchanged by InstCombine
+
+1: "ashr_or_mul_to_abs_neg2"
+7: "ashr_or_mul_to_abs_neg2" is unchanged by InstCombine
+
+1: "ashr_or_mul_to_abs_neg3"
+7: "ashr_or_mul_to_abs_neg3" is unchanged by InstCombine
+

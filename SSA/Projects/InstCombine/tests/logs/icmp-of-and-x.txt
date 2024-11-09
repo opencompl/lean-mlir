@@ -1,0 +1,114 @@
+1: "barrier"
+5: "barrier" is empty
+
+1: "use.i8"
+5: "use.i8" is empty
+
+1: "icmp_ult_x_y"
+2: llvm.func
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_ult_x_y_2"
+2: llvm.func
+2: llvm.mul
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_uge_x_y"
+8: "icmp_uge_x_y" contains vectors which are unsupported
+
+1: "icmp_uge_x_y_2"
+2: llvm.func
+2: llvm.mul
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_sge_x_negy"
+4: "icmp_sge_x_negy" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "icmp_slt_x_negy"
+4: "icmp_slt_x_negy" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "icmp_slt_x_negy" has unsupported operation: llvm.call
+
+1: "icmp_slt_x_negy_fail_maybe_zero"
+4: "icmp_slt_x_negy_fail_maybe_zero" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "icmp_slt_x_negy_fail_maybe_zero" has unsupported operation: llvm.call
+
+1: "icmp_sle_x_negy"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_sgt_x_negy"
+8: "icmp_sgt_x_negy" contains vectors which are unsupported
+
+1: "icmp_sgt_x_negy_fail_partial"
+7: "icmp_sgt_x_negy_fail_partial" is unchanged by InstCombine
+
+1: "icmp_sle_x_posy"
+8: "icmp_sle_x_posy" contains vectors which are unsupported
+
+1: "icmp_sle_x_posy_fail_partial"
+7: "icmp_sle_x_posy_fail_partial" is unchanged by InstCombine
+
+1: "icmp_sgt_x_posy"
+4: "icmp_sgt_x_posy" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "icmp_sgt_negx_y"
+8: "icmp_sgt_negx_y" contains vectors which are unsupported
+
+1: "icmp_sle_negx_y"
+4: "icmp_sle_negx_y" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "icmp_sle_negx_y_fail_maybe_zero"
+4: "icmp_sle_negx_y_fail_maybe_zero" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "icmp_eq_x_invertable_y_todo"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_eq_x_invertable_y"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_eq_x_invertable_y_fail_multiuse"
+4: "icmp_eq_x_invertable_y_fail_multiuse" has unsupported operation: llvm.call
+
+1: "icmp_eq_x_invertable_y2_todo"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_eq_x_invertable_y2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_eq_x_invertable_y_fail_immconstant"
+7: "icmp_eq_x_invertable_y_fail_immconstant" is unchanged by InstCombine
+

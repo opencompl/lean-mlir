@@ -1,0 +1,16 @@
+1: "a"
+9: "a" has pointer type input
+
+4: "a" has unsupported operation: llvm.store
+
+4: "a" has unsupported operation: llvm.call
+
+4: "a" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "a" has unsupported operation: llvm.store
+
+4: "a" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "strlen"
+9: "strlen" has pointer type input
+

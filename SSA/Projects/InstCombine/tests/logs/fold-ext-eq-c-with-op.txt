@@ -1,0 +1,15 @@
+1: "use.i8"
+5: "use.i8" is empty
+
+1: "fold_add_zext_eq_0"
+4: "fold_add_zext_eq_0" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "fold_add_sext_eq_4_6"
+8: "fold_add_sext_eq_4_6" contains vectors which are unsupported
+
+1: "fold_add_zext_eq_0_fail_multiuse_exp"
+4: "fold_add_zext_eq_0_fail_multiuse_exp" has unsupported operation: llvm.call
+
+1: "fold_add_sext_eq_4_fail_wrong_cond"
+4: "fold_add_sext_eq_4_fail_wrong_cond" has unsupported operation: llvm.call
+

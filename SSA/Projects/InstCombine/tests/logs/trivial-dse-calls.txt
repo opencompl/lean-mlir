@@ -1,0 +1,119 @@
+1: "unknown"
+5: "unknown" is empty
+
+1: "f"
+9: "f" has pointer type input
+
+1: "f2"
+9: "f2" has pointer type input
+
+1: "f3"
+9: "f3" has pointer type input
+
+1: "test_dead"
+4: "test_dead" has unsupported operation: llvm.return
+
+1: "test_lifetime"
+4: "test_lifetime" has unsupported operation: llvm.return
+
+1: "test_lifetime2"
+4: "test_lifetime2" has unsupported operation: llvm.call
+
+4: "test_lifetime2" has unsupported operation: llvm.call
+
+4: "test_lifetime2" has unsupported operation: llvm.return
+
+1: "test_dead_readwrite"
+4: "test_dead_readwrite" has unsupported operation: llvm.return
+
+1: "test_neg_read_after"
+4: "test_neg_read_after" has unsupported operation: llvm.alloca
+
+4: "test_neg_read_after" has unsupported operation: llvm.call
+
+4: "test_neg_read_after" has unsupported operation: llvm.load
+
+1: "test_neg_infinite_loop"
+4: "test_neg_infinite_loop" has unsupported operation: llvm.alloca
+
+4: "test_neg_infinite_loop" has unsupported operation: llvm.call
+
+4: "test_neg_infinite_loop" has unsupported operation: llvm.return
+
+1: "test_neg_throw"
+4: "test_neg_throw" has unsupported operation: llvm.alloca
+
+4: "test_neg_throw" has unsupported operation: llvm.call
+
+4: "test_neg_throw" has unsupported operation: llvm.return
+
+1: "test_neg_extra_write"
+4: "test_neg_extra_write" has unsupported operation: llvm.alloca
+
+4: "test_neg_extra_write" has unsupported operation: llvm.call
+
+4: "test_neg_extra_write" has unsupported operation: llvm.return
+
+1: "test_neg_unmodeled_write"
+4: "test_neg_unmodeled_write" has unsupported operation: llvm.alloca
+
+4: "test_neg_unmodeled_write" has unsupported operation: llvm.alloca
+
+4: "test_neg_unmodeled_write" has unsupported operation: llvm.call
+
+4: "test_neg_unmodeled_write" has unsupported operation: llvm.return
+
+1: "test_neg_captured_by_call"
+4: "test_neg_captured_by_call" has unsupported operation: llvm.alloca
+
+4: "test_neg_captured_by_call" has unsupported operation: llvm.alloca
+
+4: "test_neg_captured_by_call" has unsupported operation: llvm.call
+
+4: "test_neg_captured_by_call" has unsupported operation: llvm.load
+
+4: "test_neg_captured_by_call" has unsupported operation: llvm.load
+
+1: "test_neg_captured_before"
+4: "test_neg_captured_before" has unsupported operation: llvm.alloca
+
+4: "test_neg_captured_before" has unsupported operation: llvm.call
+
+4: "test_neg_captured_before" has unsupported operation: llvm.load
+
+1: "test_unreleated_read"
+4: "test_unreleated_read" has unsupported operation: llvm.return
+
+1: "test_unrelated_capture"
+4: "test_unrelated_capture" has unsupported operation: llvm.return
+
+1: "test_neg_unrelated_capture_used_via_return"
+4: "test_neg_unrelated_capture_used_via_return" has unsupported operation: llvm.alloca
+
+4: "test_neg_unrelated_capture_used_via_return" has unsupported operation: llvm.alloca
+
+4: "test_neg_unrelated_capture_used_via_return" has unsupported operation: llvm.call
+
+4: "test_neg_unrelated_capture_used_via_return" has unsupported operation: llvm.load
+
+1: "test_self_read"
+4: "test_self_read" has unsupported operation: llvm.return
+
+1: "removable_readnone"
+5: "removable_readnone" is empty
+
+1: "removable_ro"
+5: "removable_ro" is empty
+
+1: "test_readnone"
+4: "test_readnone" has unsupported operation: llvm.return
+
+1: "test_readnone_with_deopt"
+4: "test_readnone_with_deopt" has unsupported operation: llvm.return
+
+1: "test_readonly"
+4: "test_readonly" has unsupported operation: llvm.return
+
+1: "test_readonly_with_deopt"
+4: "test_readonly_with_deopt" has unsupported operation: llvm.return
+

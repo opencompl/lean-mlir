@@ -1,0 +1,61 @@
+1: "strcmp"
+9: "strcmp" has pointer type input
+
+1: "fold_strcmp_a5i0_a5i1_to_0"
+4: "fold_strcmp_a5i0_a5i1_to_0" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_strcmp_a5i0_a5i1_to_0" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_strcmp_a5i0_a5i1_to_0" has unsupported operation after optimization: llvm.call
+
+1: "call_strcmp_a5i0_a5iI"
+4: "call_strcmp_a5i0_a5iI" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strcmp_a5i0_a5iI" has unsupported operation: llvm.getelementptr
+
+4: "call_strcmp_a5i0_a5iI" has unsupported operation: llvm.call
+
+1: "call_strcmp_a5iI_a5i0"
+4: "call_strcmp_a5iI_a5i0" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strcmp_a5iI_a5i0" has unsupported operation: llvm.getelementptr
+
+4: "call_strcmp_a5iI_a5i0" has unsupported operation: llvm.call
+
+1: "fold_strcmp_a5i0_a5i1_p1_to_0"
+4: "fold_strcmp_a5i0_a5i1_p1_to_0" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_strcmp_a5i0_a5i1_p1_to_0" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_strcmp_a5i0_a5i1_p1_to_0" has unsupported operation after optimization: llvm.call
+
+1: "call_strcmp_a5i0_a5i1_pI"
+4: "call_strcmp_a5i0_a5i1_pI" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strcmp_a5i0_a5i1_pI" has unsupported operation: llvm.getelementptr
+
+4: "call_strcmp_a5i0_a5i1_pI" has unsupported operation: llvm.call
+
+1: "fold_strcmp_a5i0_p1_a5i1_to_0"
+4: "fold_strcmp_a5i0_p1_a5i1_to_0" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_strcmp_a5i0_p1_a5i1_to_0" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_strcmp_a5i0_p1_a5i1_to_0" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_strcmp_a5i0_p1_a5i1_to_0" has unsupported operation after optimization: llvm.call
+
+1: "fold_strcmp_a5i0_a5i2_to_0"
+4: "fold_strcmp_a5i0_a5i2_to_0" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_strcmp_a5i0_a5i2_to_0" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_strcmp_a5i0_a5i2_to_0" has unsupported operation after optimization: llvm.call
+
+1: "fold_strcmp_a5i2_a5i0_to_m1"
+4: "fold_strcmp_a5i2_a5i0_to_m1" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_strcmp_a5i2_a5i0_to_m1" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_strcmp_a5i2_a5i0_to_m1" has unsupported operation after optimization: llvm.call
+

@@ -1,0 +1,71 @@
+1: "combine_metadata_dominance1"
+9: "combine_metadata_dominance1" has pointer type input
+
+4: "combine_metadata_dominance1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "combine_metadata_dominance1" has unsupported operation: llvm.load
+
+4: "combine_metadata_dominance1" has unsupported operation: llvm.store
+
+4: "combine_metadata_dominance1" has unsupported operation: llvm.return
+
+1: "use"
+9: "use" has pointer type input
+
+1: "combine_metadata_dominance2"
+9: "combine_metadata_dominance2" has pointer type input
+
+4: "combine_metadata_dominance2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "combine_metadata_dominance2" has unsupported operation: llvm.load
+
+4: "combine_metadata_dominance2" has unsupported operation: llvm.store
+
+4: "combine_metadata_dominance2" has unsupported operation: llvm.return
+
+4: "combine_metadata_dominance2" has unsupported operation: llvm.return
+
+1: "combine_metadata_dominance3"
+9: "combine_metadata_dominance3" has pointer type input
+
+4: "combine_metadata_dominance3" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "combine_metadata_dominance3" has unsupported operation: llvm.load
+
+4: "combine_metadata_dominance3" has unsupported operation: llvm.store
+
+4: "combine_metadata_dominance3" has unsupported operation: llvm.return
+
+1: "combine_metadata_dominance4"
+9: "combine_metadata_dominance4" has pointer type input
+
+4: "combine_metadata_dominance4" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "combine_metadata_dominance4" has unsupported operation: llvm.load
+
+4: "combine_metadata_dominance4" has unsupported operation: llvm.store
+
+4: "combine_metadata_dominance4" has unsupported operation: llvm.return
+
+1: "combine_metadata_dominance5"
+9: "combine_metadata_dominance5" has pointer type input
+
+4: "combine_metadata_dominance5" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "combine_metadata_dominance5" has unsupported operation: llvm.load
+
+4: "combine_metadata_dominance5" has unsupported operation: llvm.store
+
+4: "combine_metadata_dominance5" has unsupported operation: llvm.return
+
+1: "combine_metadata_dominance6"
+9: "combine_metadata_dominance6" has pointer type input
+
+4: "combine_metadata_dominance6" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "combine_metadata_dominance6" has unsupported operation: llvm.load
+
+4: "combine_metadata_dominance6" has unsupported operation: llvm.store
+
+4: "combine_metadata_dominance6" has unsupported operation: llvm.return
+

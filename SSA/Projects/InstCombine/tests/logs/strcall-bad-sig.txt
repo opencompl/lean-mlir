@@ -1,0 +1,131 @@
+1: "atoi"
+9: "atoi" has pointer type input
+
+1: "atol"
+9: "atol" has pointer type input
+
+1: "atoll"
+9: "atoll" has pointer type input
+
+1: "call_bad_ato"
+9: "call_bad_ato" has pointer type input
+
+4: "call_bad_ato" has unsupported operation: llvm.mlir.addressof
+
+4: "call_bad_ato" has unsupported operation: llvm.call
+
+4: "call_bad_ato" has unsupported operation: llvm.store
+
+4: "call_bad_ato" has unsupported operation: llvm.call
+
+4: "call_bad_ato" has unsupported operation: llvm.getelementptr
+
+4: "call_bad_ato" has unsupported operation: llvm.store
+
+4: "call_bad_ato" has unsupported operation: llvm.call
+
+4: "call_bad_ato" has unsupported operation: llvm.getelementptr
+
+4: "call_bad_ato" has unsupported operation: llvm.store
+
+4: "call_bad_ato" has unsupported operation: llvm.return
+
+1: "strncasecmp"
+9: "strncasecmp" has pointer type input
+
+1: "call_bad_strncasecmp"
+4: "call_bad_strncasecmp" has unsupported operation: llvm.mlir.addressof
+
+4: "call_bad_strncasecmp" has unsupported operation: llvm.getelementptr
+
+4: "call_bad_strncasecmp" has unsupported operation: llvm.call
+
+1: "strcoll"
+9: "strcoll" has pointer type input
+
+1: "call_bad_strcoll"
+4: "call_bad_strcoll" has unsupported operation: llvm.mlir.addressof
+
+4: "call_bad_strcoll" has unsupported operation: llvm.getelementptr
+
+4: "call_bad_strcoll" has unsupported operation: llvm.call
+
+1: "strndup"
+9: "strndup" has pointer type input
+
+1: "call_bad_strndup"
+4: "call_bad_strndup" has unsupported operation: llvm.mlir.addressof
+
+4: "call_bad_strndup" has unsupported operation: llvm.call
+
+1: "strtok"
+9: "strtok" has pointer type input
+
+1: "call_bad_strtok"
+4: "call_bad_strtok" has unsupported operation: llvm.mlir.addressof
+
+4: "call_bad_strtok" has unsupported operation: llvm.getelementptr
+
+4: "call_bad_strtok" has unsupported operation: llvm.call
+
+1: "strtok_r"
+9: "strtok_r" has pointer type input
+
+1: "call_bad_strtok_r"
+4: "call_bad_strtok_r" has unsupported operation: llvm.mlir.addressof
+
+4: "call_bad_strtok_r" has unsupported operation: llvm.getelementptr
+
+4: "call_bad_strtok_r" has unsupported operation: llvm.call
+
+1: "strtol"
+9: "strtol" has pointer type input
+
+1: "strtoul"
+9: "strtoul" has pointer type input
+
+1: "strtoll"
+9: "strtoll" has pointer type input
+
+1: "strtoull"
+9: "strtoull" has pointer type input
+
+1: "call_bad_strto"
+9: "call_bad_strto" has pointer type input
+
+4: "call_bad_strto" has unsupported operation: llvm.mlir.addressof
+
+4: "call_bad_strto" has unsupported operation: llvm.mlir.zero
+
+4: "call_bad_strto" has unsupported operation: llvm.call
+
+4: "call_bad_strto" has unsupported operation: llvm.store
+
+4: "call_bad_strto" has unsupported operation: llvm.call
+
+4: "call_bad_strto" has unsupported operation: llvm.getelementptr
+
+4: "call_bad_strto" has unsupported operation: llvm.store
+
+4: "call_bad_strto" has unsupported operation: llvm.call
+
+4: "call_bad_strto" has unsupported operation: llvm.store
+
+4: "call_bad_strto" has unsupported operation: llvm.call
+
+4: "call_bad_strto" has unsupported operation: llvm.getelementptr
+
+4: "call_bad_strto" has unsupported operation: llvm.store
+
+4: "call_bad_strto" has unsupported operation: llvm.return
+
+1: "strxfrm"
+9: "strxfrm" has pointer type input
+
+1: "call_bad_strxfrm"
+4: "call_bad_strxfrm" has unsupported operation: llvm.mlir.addressof
+
+4: "call_bad_strxfrm" has unsupported operation: llvm.getelementptr
+
+4: "call_bad_strxfrm" has unsupported operation: llvm.call
+

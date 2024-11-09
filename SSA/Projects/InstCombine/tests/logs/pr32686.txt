@@ -1,0 +1,11 @@
+1: "tinkywinky"
+4: "tinkywinky" has unsupported operation: llvm.mlir.addressof
+
+4: "tinkywinky" has unsupported operation: llvm.mlir.addressof
+
+4: "tinkywinky" has unsupported operation: llvm.load
+
+4: "tinkywinky" has unsupported operation: llvm.store
+
+4: "tinkywinky" has unsupported operation: llvm.return
+

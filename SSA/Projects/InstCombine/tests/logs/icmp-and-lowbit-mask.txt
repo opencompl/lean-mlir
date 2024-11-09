@@ -1,0 +1,451 @@
+1: "use.i8"
+5: "use.i8" is empty
+
+1: "use.i16"
+5: "use.i16" is empty
+
+1: "src_is_mask_zext"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.lshr
+2: llvm.zext
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_is_mask_zext_fail_not_mask"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.lshr
+2: llvm.zext
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_is_mask_sext"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.lshr
+2: llvm.sext
+2: llvm.xor
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_is_mask_sext_fail_multiuse"
+4: "src_is_mask_sext_fail_multiuse" has unsupported operation: llvm.call
+
+1: "src_is_mask_and"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.ashr
+2: llvm.lshr
+2: llvm.and
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_is_mask_and_fail_mixed"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.ashr
+2: llvm.lshr
+2: llvm.and
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_is_mask_or"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.lshr
+2: llvm.and
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_is_mask_xor"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.add
+2: llvm.xor
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_is_mask_xor_fail_notmask"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.add
+2: llvm.xor
+2: llvm.xor
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_is_mask_select"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.add
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_is_mask_select_fail_wrong_pattern"
+7: "src_is_mask_select_fail_wrong_pattern" is unchanged by InstCombine
+
+1: "src_is_mask_shl_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.shl
+2: llvm.lshr
+2: llvm.xor
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_is_mask_shl_lshr_fail_not_allones"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.shl
+2: llvm.lshr
+2: llvm.xor
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_is_mask_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.add
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_is_mask_ashr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.add
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.ashr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_is_mask_p2_m1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.shl
+2: llvm.add
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_is_mask_umax"
+4: "src_is_mask_umax" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "src_is_mask_umin"
+4: "src_is_mask_umin" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "src_is_mask_umin_fail_mismatch"
+4: "src_is_mask_umin_fail_mismatch" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "src_is_mask_smax"
+4: "src_is_mask_smax" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "src_is_mask_smin"
+4: "src_is_mask_smin" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "src_is_mask_bitreverse_not_mask"
+4: "src_is_mask_bitreverse_not_mask" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+1: "src_is_notmask_sext"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.shl
+2: llvm.sext
+2: llvm.xor
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_is_notmask_shl"
+4: "src_is_notmask_shl" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+1: "src_is_notmask_x_xor_neg_x"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.sub
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_is_notmask_x_xor_neg_x_inv"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.sub
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_is_notmask_shl_fail_multiuse_invert"
+4: "src_is_notmask_shl_fail_multiuse_invert" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+4: "src_is_notmask_shl_fail_multiuse_invert" has unsupported operation: llvm.call
+
+1: "src_is_notmask_lshr_shl"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.lshr
+2: llvm.shl
+2: llvm.xor
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_is_notmask_lshr_shl_fail_mismatch_shifts"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.lshr
+2: llvm.shl
+2: llvm.xor
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_is_notmask_ashr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.shl
+2: llvm.sext
+2: llvm.ashr
+2: llvm.xor
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_is_notmask_neg_p2"
+4: "src_is_notmask_neg_p2" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+1: "src_is_notmask_neg_p2_fail_not_invertable"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.sub
+2: llvm.and
+2: llvm.sub
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_is_notmask_xor_fail"
+4: "src_is_notmask_xor_fail" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+1: "src_is_mask_const_slt"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_is_mask_const_sgt"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_is_mask_const_sle"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_is_mask_const_sge"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_x_and_mask_slt"
+4: "src_x_and_mask_slt" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "src_x_and_mask_sge"
+4: "src_x_and_mask_sge" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "src_x_and_mask_slt_fail_maybe_neg"
+7: "src_x_and_mask_slt_fail_maybe_neg" is unchanged by InstCombine
+
+1: "src_x_and_mask_sge_fail_maybe_neg"
+7: "src_x_and_mask_sge_fail_maybe_neg" is unchanged by InstCombine
+
+1: "src_x_and_nmask_eq"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_x_and_nmask_ne"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_x_and_nmask_ult"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_x_and_nmask_uge"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_x_and_nmask_slt"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_x_and_nmask_sge"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_x_and_nmask_slt_fail_maybe_z"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_x_and_nmask_sge_fail_maybe_z"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "src_x_or_mask_eq"
+4: "src_x_or_mask_eq" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "src_x_or_mask_ne"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
+
+1: "src_x_or_mask_ne_fail_multiuse"
+4: "src_x_or_mask_ne_fail_multiuse" has unsupported operation: llvm.call
+

@@ -1,0 +1,73 @@
+1: "use"
+5: "use" is empty
+
+1: "basic"
+9: "basic" has pointer type input
+
+4: "basic" has unsupported operation: llvm.getelementptr
+
+4: "basic" has unsupported operation: llvm.getelementptr
+
+4: "basic" has unsupported operation: llvm.getelementptr
+
+1: "partialConstant1"
+9: "partialConstant1" has pointer type input
+
+4: "partialConstant1" has unsupported operation: llvm.getelementptr
+
+1: "partialConstant2"
+9: "partialConstant2" has pointer type input
+
+4: "partialConstant2" has unsupported operation: llvm.getelementptr
+
+1: "merge"
+9: "merge" has pointer type input
+
+4: "merge" has unsupported operation: llvm.getelementptr
+
+4: "merge" has unsupported operation: llvm.getelementptr
+
+4: "merge" has unsupported operation: llvm.getelementptr
+
+1: "nested"
+9: "nested" has pointer type input
+
+4: "nested" has unsupported operation: llvm.getelementptr
+
+4: "nested" has unsupported operation: llvm.getelementptr
+
+4: "nested" has unsupported operation: llvm.getelementptr
+
+4: "nested" has unsupported operation: llvm.getelementptr
+
+4: "nested" has unsupported operation: llvm.getelementptr
+
+1: "multipleUses1"
+9: "multipleUses1" has pointer type input
+
+4: "multipleUses1" has unsupported operation: llvm.getelementptr
+
+4: "multipleUses1" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "multipleUses1" has unsupported operation: llvm.getelementptr
+
+1: "multipleUses2"
+9: "multipleUses2" has pointer type input
+
+4: "multipleUses2" has unsupported operation: llvm.mlir.addressof
+
+4: "multipleUses2" has unsupported operation: llvm.getelementptr
+
+4: "multipleUses2" has unsupported operation: llvm.getelementptr
+
+4: "multipleUses2" has unsupported operation: llvm.call
+
+1: "multipleUses3"
+9: "multipleUses3" has pointer type input
+
+4: "multipleUses3" has unsupported operation: llvm.getelementptr
+
+4: "multipleUses3" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "multipleUses3" has unsupported operation: llvm.getelementptr
+

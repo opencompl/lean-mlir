@@ -1,0 +1,20 @@
+1: "main2"
+7: "main2" is unchanged by InstCombine
+
+1: "ctime2"
+9: "ctime2" has pointer type input
+
+1: "ctime"
+9: "ctime" has pointer type input
+
+4: "ctime" has unsupported operation: llvm.call
+
+4: "ctime" has unsupported operation: llvm.inttoptr
+
+1: "main"
+4: "main" has unsupported operation: llvm.mlir.zero
+
+4: "main" has unsupported operation: llvm.call
+
+4: "main" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+

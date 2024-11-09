@@ -1,0 +1,21 @@
+1: "user"
+9: "user" has pointer type input
+
+1: "malloc"
+5: "malloc" is empty
+
+1: "free"
+9: "free" has pointer type input
+
+1: "malloc_then_free_not_needed"
+4: "malloc_then_free_not_needed" has unsupported operation: llvm.return
+
+1: "malloc_then_free_needed"
+4: "malloc_then_free_needed" has unsupported operation: llvm.call
+
+4: "malloc_then_free_needed" has unsupported operation: llvm.call
+
+4: "malloc_then_free_needed" has unsupported operation: llvm.call
+
+4: "malloc_then_free_needed" has unsupported operation: llvm.return
+

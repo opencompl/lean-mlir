@@ -1,0 +1,165 @@
+1: "memchr"
+9: "memchr" has pointer type input
+
+1: "test1"
+4: "test1" has unsupported operation: llvm.mlir.addressof
+
+4: "test1" has unsupported operation: llvm.getelementptr
+
+4: "test1" has unsupported operation: llvm.mlir.addressof
+
+4: "test1" has unsupported operation: llvm.store
+
+4: "test1" has unsupported operation: llvm.return
+
+1: "test2"
+4: "test2" has unsupported operation: llvm.mlir.zero
+
+4: "test2" has unsupported operation: llvm.mlir.addressof
+
+4: "test2" has unsupported operation: llvm.store
+
+4: "test2" has unsupported operation: llvm.return
+
+1: "test3"
+4: "test3" has unsupported operation: llvm.mlir.addressof
+
+4: "test3" has unsupported operation: llvm.getelementptr
+
+4: "test3" has unsupported operation: llvm.mlir.addressof
+
+4: "test3" has unsupported operation: llvm.store
+
+4: "test3" has unsupported operation: llvm.return
+
+1: "test4"
+4: "test4" has unsupported operation: llvm.mlir.addressof
+
+4: "test4" has unsupported operation: llvm.mlir.addressof
+
+4: "test4" has unsupported operation: llvm.call
+
+4: "test4" has unsupported operation: llvm.store
+
+4: "test4" has unsupported operation: llvm.return
+
+1: "test5"
+4: "test5" has unsupported operation: llvm.mlir.addressof
+
+4: "test5" has unsupported operation: llvm.getelementptr
+
+4: "test5" has unsupported operation: llvm.mlir.addressof
+
+4: "test5" has unsupported operation: llvm.store
+
+4: "test5" has unsupported operation: llvm.return
+
+1: "test6"
+4: "test6" has unsupported operation: llvm.mlir.addressof
+
+4: "test6" has unsupported operation: llvm.getelementptr
+
+4: "test6" has unsupported operation: llvm.mlir.addressof
+
+4: "test6" has unsupported operation: llvm.store
+
+4: "test6" has unsupported operation: llvm.return
+
+1: "test7"
+4: "test7" has unsupported operation: llvm.mlir.zero
+
+4: "test7" has unsupported operation: llvm.mlir.addressof
+
+4: "test7" has unsupported operation: llvm.store
+
+4: "test7" has unsupported operation: llvm.return
+
+1: "test8"
+4: "test8" has unsupported operation: llvm.mlir.addressof
+
+4: "test8" has unsupported operation: llvm.getelementptr
+
+4: "test8" has unsupported operation: llvm.mlir.addressof
+
+4: "test8" has unsupported operation: llvm.store
+
+4: "test8" has unsupported operation: llvm.return
+
+1: "test9"
+4: "test9" has unsupported operation: llvm.mlir.addressof
+
+4: "test9" has unsupported operation: llvm.getelementptr
+
+4: "test9" has unsupported operation: llvm.mlir.addressof
+
+4: "test9" has unsupported operation: llvm.store
+
+4: "test9" has unsupported operation: llvm.return
+
+1: "test10"
+4: "test10" has unsupported operation: llvm.mlir.zero
+
+4: "test10" has unsupported operation: llvm.mlir.addressof
+
+4: "test10" has unsupported operation: llvm.store
+
+4: "test10" has unsupported operation: llvm.return
+
+1: "test11"
+4: "test11" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test11" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "test11" has unsupported operation after optimization: llvm.call
+
+1: "test12"
+4: "test12" has unsupported operation: llvm.mlir.addressof
+
+4: "test12" has unsupported operation: llvm.mlir.zero
+
+4: "test12" has unsupported operation: llvm.call
+
+1: "test13"
+4: "test13" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test13" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "test13" has unsupported operation after optimization: llvm.call
+
+1: "test14"
+4: "test14" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test14" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "test14" has unsupported operation after optimization: llvm.call
+
+1: "test15"
+4: "test15" has unsupported operation: llvm.mlir.addressof
+
+4: "test15" has unsupported operation: llvm.mlir.zero
+
+4: "test15" has unsupported operation: llvm.call
+
+1: "pr32124"
+4: "pr32124" has unsupported operation: llvm.mlir.addressof
+
+1: "test16"
+9: "test16" has pointer type input
+
+4: "test16" has unsupported operation: llvm.call
+
+1: "test17"
+9: "test17" has pointer type input
+
+4: "test17" has unsupported operation: llvm.call
+
+1: "test18"
+9: "test18" has pointer type input
+
+4: "test18" has unsupported operation: llvm.call
+
+1: "test19"
+9: "test19" has pointer type input
+
+4: "test19" has unsupported operation: llvm.call
+

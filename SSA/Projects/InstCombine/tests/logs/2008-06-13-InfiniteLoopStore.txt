@@ -1,0 +1,13 @@
+1: "func_56"
+4: "func_56" has unsupported operation: llvm.mlir.addressof
+
+4: "func_56" has unsupported operation: llvm.store
+
+4: "func_56" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "func_56" has unsupported operation: llvm.store
+
+4: "func_56" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func_56" has unsupported operation: llvm.return
+

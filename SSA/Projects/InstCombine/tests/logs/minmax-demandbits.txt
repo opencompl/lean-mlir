@@ -1,0 +1,143 @@
+1: "and_umax_less"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.return
+
+1: "and_umax_muchless"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.return
+
+1: "and_umax_more"
+4: "and_umax_more" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "shr_umax"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.lshr
+2: llvm.return
+
+1: "t_0_1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.return
+
+1: "t_0_10"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.return
+
+1: "t_1_10"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.return
+
+1: "t_2_4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.return
+
+1: "t_2_192"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.return
+
+1: "t_2_63_or"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.or
+2: llvm.return
+
+1: "f_1_1"
+4: "f_1_1" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "f_32_32"
+4: "f_32_32" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "f_191_192"
+4: "f_191_192" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "f_10_1"
+4: "f_10_1" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "and_umin"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.return
+
+1: "or_umin"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.or
+2: llvm.return
+
+1: "or_min_31_30"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.or
+2: llvm.return
+
+1: "and_min_7_7"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.return
+
+1: "and_min_7_8"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.return
+
+1: "and_min_7_9"
+4: "and_min_7_9" has unsupported operation: builtin.unregistered: llvm.intr.umin
+

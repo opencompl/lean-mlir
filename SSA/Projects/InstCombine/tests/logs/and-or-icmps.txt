@@ -1,0 +1,1975 @@
+1: "use"
+5: "use" is empty
+
+1: "use32"
+5: "use32" is empty
+
+1: "PR1817_1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "PR1817_1_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "PR1817_2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "PR1817_2_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "PR2330"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "PR2330_logical"
+7: "PR2330_logical" is unchanged by InstCombine
+
+1: "or_eq_with_one_bit_diff_constants1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "or_eq_with_one_bit_diff_constants1_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "and_ne_with_one_bit_diff_constants1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "and_ne_with_one_bit_diff_constants1_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "or_eq_with_one_bit_diff_constants2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "or_eq_with_one_bit_diff_constants2_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "and_ne_with_one_bit_diff_constants2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "and_ne_with_one_bit_diff_constants2_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "or_eq_with_one_bit_diff_constants3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "or_eq_with_one_bit_diff_constants3_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "and_ne_with_one_bit_diff_constants3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "and_ne_with_one_bit_diff_constants3_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "or_eq_with_diff_one"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "or_eq_with_diff_one_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "and_ne_with_diff_one"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "and_ne_with_diff_one_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "or_eq_with_diff_one_signed"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "or_eq_with_diff_one_signed_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "and_ne_with_diff_one_signed"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "and_ne_with_diff_one_signed_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "or_eq_with_one_bit_diff_constants2_splatvec"
+8: "or_eq_with_one_bit_diff_constants2_splatvec" contains vectors which are unsupported
+
+1: "and_ne_with_diff_one_splatvec"
+8: "and_ne_with_diff_one_splatvec" contains vectors which are unsupported
+
+1: "simplify_before_foldAndOfICmps"
+9: "simplify_before_foldAndOfICmps" has pointer type input
+
+4: "simplify_before_foldAndOfICmps" has unsupported operation: llvm.mlir.zero
+
+4: "simplify_before_foldAndOfICmps" has unsupported operation: llvm.alloca
+
+4: "simplify_before_foldAndOfICmps" has unsupported operation: llvm.load
+
+4: "simplify_before_foldAndOfICmps" has unsupported operation: llvm.getelementptr
+
+4: "simplify_before_foldAndOfICmps" has unsupported operation: llvm.store
+
+4: "simplify_before_foldAndOfICmps" has unsupported operation: llvm.store
+
+4: "simplify_before_foldAndOfICmps" has unsupported operation: llvm.store
+
+4: "simplify_before_foldAndOfICmps" has unsupported operation: llvm.return
+
+1: "PR42691_1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "PR42691_1_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "PR42691_2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "PR42691_2_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "PR42691_3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "PR42691_3_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "PR42691_4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "PR42691_4_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "PR42691_5"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "PR42691_5_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "PR42691_6"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "PR42691_6_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "PR42691_7"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "PR42691_7_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "PR42691_8"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "PR42691_8_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "PR42691_9"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "PR42691_9_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "PR42691_10"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "PR42691_10_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "substitute_constant_and_eq_eq"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "substitute_constant_and_eq_eq_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "substitute_constant_and_eq_eq_commute"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "substitute_constant_and_eq_eq_commute_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "substitute_constant_and_eq_ugt_swap"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "substitute_constant_and_eq_ugt_swap_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "substitute_constant_and_eq_ne_vec"
+8: "substitute_constant_and_eq_ne_vec" contains vectors which are unsupported
+
+1: "substitute_constant_and_eq_ne_vec_logical"
+8: "substitute_constant_and_eq_ne_vec_logical" contains vectors which are unsupported
+
+1: "substitute_constant_and_eq_sgt_use"
+4: "substitute_constant_and_eq_sgt_use" has unsupported operation: llvm.call
+
+1: "substitute_constant_and_eq_sgt_use_logical"
+4: "substitute_constant_and_eq_sgt_use_logical" has unsupported operation: llvm.call
+
+1: "substitute_constant_and_eq_sgt_use2"
+4: "substitute_constant_and_eq_sgt_use2" has unsupported operation: llvm.call
+
+1: "substitute_constant_and_eq_sgt_use2_logical"
+4: "substitute_constant_and_eq_sgt_use2_logical" has unsupported operation: llvm.call
+
+1: "slt_and_max"
+4: "slt_and_max" has unsupported operation: llvm.call
+
+1: "slt_and_max_logical"
+4: "slt_and_max_logical" has unsupported operation: llvm.call
+
+1: "sge_and_max"
+4: "sge_and_max" has unsupported operation: llvm.call
+
+1: "sge_and_max_logical"
+4: "sge_and_max_logical" has unsupported operation: llvm.call
+
+1: "substitute_constant_and_ne_ugt_swap"
+7: "substitute_constant_and_ne_ugt_swap" is unchanged by InstCombine
+
+1: "substitute_constant_and_ne_ugt_swap_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "substitute_constant_or_ne_swap_sle"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "substitute_constant_or_ne_swap_sle_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "substitute_constant_or_ne_uge_commute"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "substitute_constant_or_ne_uge_commute_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "substitute_constant_or_ne_slt_swap_vec_undef"
+4: "substitute_constant_or_ne_slt_swap_vec_undef" has unsupported operation: llvm.mlir.undef
+
+4: "substitute_constant_or_ne_slt_swap_vec_undef" has unsupported operation: llvm.mlir.undef
+
+4: "substitute_constant_or_ne_slt_swap_vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "substitute_constant_or_ne_slt_swap_vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "substitute_constant_or_ne_slt_swap_vec_poison"
+4: "substitute_constant_or_ne_slt_swap_vec_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "substitute_constant_or_ne_slt_swap_vec_poison" has unsupported operation: llvm.mlir.undef
+
+4: "substitute_constant_or_ne_slt_swap_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "substitute_constant_or_ne_slt_swap_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "substitute_constant_or_ne_slt_swap_vec_logical"
+4: "substitute_constant_or_ne_slt_swap_vec_logical" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "substitute_constant_or_ne_slt_swap_vec_logical" has unsupported operation: llvm.mlir.undef
+
+4: "substitute_constant_or_ne_slt_swap_vec_logical" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "substitute_constant_or_ne_slt_swap_vec_logical" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "substitute_constant_or_eq_swap_ne"
+7: "substitute_constant_or_eq_swap_ne" is unchanged by InstCombine
+
+1: "substitute_constant_or_eq_swap_ne_logical"
+7: "substitute_constant_or_eq_swap_ne_logical" is unchanged by InstCombine
+
+1: "substitute_constant_or_ne_sge_use"
+4: "substitute_constant_or_ne_sge_use" has unsupported operation: llvm.call
+
+1: "substitute_constant_or_ne_sge_use_logical"
+4: "substitute_constant_or_ne_sge_use_logical" has unsupported operation: llvm.call
+
+1: "substitute_constant_or_ne_ule_use2"
+4: "substitute_constant_or_ne_ule_use2" has unsupported operation: llvm.call
+
+1: "substitute_constant_or_ne_ule_use2_logical"
+4: "substitute_constant_or_ne_ule_use2_logical" has unsupported operation: llvm.call
+
+1: "or_ranges_overlap"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.or
+2: llvm.return
+
+1: "or_ranges_adjacent"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.or
+2: llvm.return
+
+1: "or_ranges_separated"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.or
+2: llvm.return
+
+1: "or_ranges_single_elem_right"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "or_ranges_single_elem_left"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "and_ranges_overlap"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.and
+2: llvm.return
+
+1: "and_ranges_overlap_single"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.and
+2: llvm.return
+
+1: "and_ranges_no_overlap"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.and
+2: llvm.return
+
+1: "and_ranges_signed_pred"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: llvm.add
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "and_two_ranges_to_mask_and_range"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: llvm.add
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "and_two_ranges_to_mask_and_range_not_pow2_diff"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: llvm.add
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "and_two_ranges_to_mask_and_range_different_sizes"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: llvm.add
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "and_two_ranges_to_mask_and_range_no_add_on_one_range"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.and
+2: llvm.return
+
+1: "is_ascii_alphabetic"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "is_ascii_alphabetic_inverted"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "bitwise_and_bitwise_and_icmps"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.and
+2: llvm.return
+
+1: "bitwise_and_bitwise_and_icmps_comm1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.and
+2: llvm.return
+
+1: "bitwise_and_bitwise_and_icmps_comm2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.and
+2: llvm.return
+
+1: "bitwise_and_bitwise_and_icmps_comm3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.and
+2: llvm.return
+
+1: "bitwise_and_logical_and_icmps"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.return
+
+1: "bitwise_and_logical_and_icmps_comm1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.return
+
+1: "bitwise_and_logical_and_icmps_comm2"
+4: "bitwise_and_logical_and_icmps_comm2" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "bitwise_and_logical_and_icmps_comm3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.return
+
+1: "logical_and_bitwise_and_icmps"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "logical_and_bitwise_and_icmps_comm1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "logical_and_bitwise_and_icmps_comm2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "logical_and_bitwise_and_icmps_comm3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "logical_and_logical_and_icmps"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "logical_and_logical_and_icmps_comm1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "logical_and_logical_and_icmps_comm2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "logical_and_logical_and_icmps_comm3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "bitwise_or_bitwise_or_icmps"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.or
+2: llvm.return
+
+1: "bitwise_or_bitwise_or_icmps_comm1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.or
+2: llvm.return
+
+1: "bitwise_or_bitwise_or_icmps_comm2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.or
+2: llvm.return
+
+1: "bitwise_or_bitwise_or_icmps_comm3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.or
+2: llvm.return
+
+1: "bitwise_or_logical_or_icmps"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.or
+2: llvm.return
+
+1: "bitwise_or_logical_or_icmps_comm1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.or
+2: llvm.return
+
+1: "bitwise_or_logical_or_icmps_comm2"
+4: "bitwise_or_logical_or_icmps_comm2" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "bitwise_or_logical_or_icmps_comm3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.or
+2: llvm.return
+
+1: "logical_or_bitwise_or_icmps"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "logical_or_bitwise_or_icmps_comm1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "logical_or_bitwise_or_icmps_comm2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "logical_or_bitwise_or_icmps_comm3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "logical_or_logical_or_icmps"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "logical_or_logical_or_icmps_comm1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "logical_or_logical_or_icmps_comm2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "logical_or_logical_or_icmps_comm3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "bitwise_and_logical_and_masked_icmp_asymmetric"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "bitwise_and_logical_and_masked_icmp_allzeros"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "bitwise_and_logical_and_masked_icmp_allzeros_poison1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "bitwise_and_logical_and_masked_icmp_allzeros_poison2"
+7: "bitwise_and_logical_and_masked_icmp_allzeros_poison2" is unchanged by InstCombine
+
+1: "bitwise_and_logical_and_masked_icmp_allones"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "bitwise_and_logical_and_masked_icmp_allones_poison1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "bitwise_and_logical_and_masked_icmp_allones_poison2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "samesign"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.or
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "samesign_different_sign_bittest1"
+8: "samesign_different_sign_bittest1" contains vectors which are unsupported
+
+1: "samesign_different_sign_bittest2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.or
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "samesign_commute1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.or
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "samesign_commute2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.or
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "samesign_commute3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.or
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "samesign_violate_constraint1"
+7: "samesign_violate_constraint1" is unchanged by InstCombine
+
+1: "samesign_violate_constraint2"
+7: "samesign_violate_constraint2" is unchanged by InstCombine
+
+1: "samesign_mult_use"
+4: "samesign_mult_use" has unsupported operation: llvm.call
+
+4: "samesign_mult_use" has unsupported operation: llvm.call
+
+1: "samesign_mult_use2"
+4: "samesign_mult_use2" has unsupported operation: llvm.call
+
+1: "samesign_mult_use3"
+4: "samesign_mult_use3" has unsupported operation: llvm.call
+
+4: "samesign_mult_use3" has unsupported operation: llvm.call
+
+1: "samesign_wrong_cmp"
+7: "samesign_wrong_cmp" is unchanged by InstCombine
+
+1: "samesign_inverted"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.or
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "samesign_inverted_different_sign_bittest1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.or
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "samesign_inverted_different_sign_bittest2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.or
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "samesign_inverted_commute1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.or
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "samesign_inverted_commute2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.or
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "samesign_inverted_commute3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.or
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "samesign_inverted_violate_constraint1"
+7: "samesign_inverted_violate_constraint1" is unchanged by InstCombine
+
+1: "samesign_inverted_violate_constraint2"
+7: "samesign_inverted_violate_constraint2" is unchanged by InstCombine
+
+1: "samesign_inverted_mult_use"
+4: "samesign_inverted_mult_use" has unsupported operation: llvm.call
+
+4: "samesign_inverted_mult_use" has unsupported operation: llvm.call
+
+1: "samesign_inverted_mult_use2"
+4: "samesign_inverted_mult_use2" has unsupported operation: llvm.call
+
+4: "samesign_inverted_mult_use2" has unsupported operation: llvm.call
+
+1: "samesign_inverted_wrong_cmp"
+7: "samesign_inverted_wrong_cmp" is unchanged by InstCombine
+
+1: "icmp_eq_m1_and_eq_m1"
+8: "icmp_eq_m1_and_eq_m1" contains vectors which are unsupported
+
+1: "icmp_eq_m1_and_eq_poison_m1"
+8: "icmp_eq_m1_and_eq_poison_m1" contains vectors which are unsupported
+
+1: "icmp_eq_poison_and_eq_m1_m2"
+4: "icmp_eq_poison_and_eq_m1_m2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+1: "icmp_ne_m1_and_ne_m1_fail"
+4: "icmp_ne_m1_and_ne_m1_fail" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "icmp_ne_m1_and_ne_m1_fail" has unsupported operation: llvm.mlir.undef
+
+4: "icmp_ne_m1_and_ne_m1_fail" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "icmp_ne_m1_and_ne_m1_fail" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "icmp_eq_m1_or_eq_m1_fail"
+4: "icmp_eq_m1_or_eq_m1_fail" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "icmp_eq_m1_or_eq_m1_fail" has unsupported operation: llvm.mlir.undef
+
+4: "icmp_eq_m1_or_eq_m1_fail" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "icmp_eq_m1_or_eq_m1_fail" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "icmp_ne_m1_or_ne_m1"
+8: "icmp_ne_m1_or_ne_m1" contains vectors which are unsupported
+
+1: "icmp_slt_0_or_icmp_sgt_0_i32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.zext
+2: llvm.zext
+2: llvm.or
+2: llvm.return
+
+1: "icmp_slt_0_or_icmp_sgt_0_i64"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.zext
+2: llvm.zext
+2: llvm.or
+2: llvm.return
+
+1: "icmp_slt_0_or_icmp_sgt_0_i64_fail0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.lshr
+2: llvm.zext
+2: llvm.or
+2: llvm.return
+
+1: "icmp_slt_0_or_icmp_sgt_0_i64_fail1"
+7: "icmp_slt_0_or_icmp_sgt_0_i64_fail1" is unchanged by InstCombine
+
+1: "icmp_slt_0_or_icmp_sgt_0_i64_fail2"
+7: "icmp_slt_0_or_icmp_sgt_0_i64_fail2" is unchanged by InstCombine
+
+1: "icmp_slt_0_or_icmp_sgt_0_i64_fail3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.ashr
+2: llvm.zext
+2: llvm.or
+2: llvm.return
+
+1: "icmp_slt_0_or_icmp_sgt_0_i64x2"
+8: "icmp_slt_0_or_icmp_sgt_0_i64x2" contains vectors which are unsupported
+
+1: "icmp_slt_0_or_icmp_sgt_0_i64x2_fail"
+8: "icmp_slt_0_or_icmp_sgt_0_i64x2_fail" contains vectors which are unsupported
+
+1: "icmp_slt_0_and_icmp_sge_neg1_i32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.lshr
+2: llvm.and
+2: llvm.return
+
+1: "icmp_slt_0_or_icmp_sge_neg1_i32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.lshr
+2: llvm.or
+2: llvm.return
+
+1: "icmp_slt_0_or_icmp_sge_100_i32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.lshr
+2: llvm.or
+2: llvm.return
+
+1: "icmp_slt_0_and_icmp_sge_neg1_i64"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.lshr
+2: llvm.and
+2: llvm.return
+
+1: "icmp_slt_0_and_icmp_sge_neg2_i64"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.lshr
+2: llvm.and
+2: llvm.return
+
+1: "ashr_and_icmp_sge_neg1_i64"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.ashr
+2: llvm.and
+2: llvm.return
+
+1: "icmp_slt_0_and_icmp_sgt_neg1_i64"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.lshr
+2: llvm.and
+2: llvm.return
+
+1: "icmp_slt_0_and_icmp_sge_neg1_i64_fail"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.lshr
+2: llvm.and
+2: llvm.return
+
+1: "icmp_slt_0_and_icmp_sge_neg1_i32x2"
+8: "icmp_slt_0_and_icmp_sge_neg1_i32x2" contains vectors which are unsupported
+
+1: "icmp_slt_0_and_icmp_sge_neg2_i32x2"
+8: "icmp_slt_0_and_icmp_sge_neg2_i32x2" contains vectors which are unsupported
+
+1: "icmp_x_slt_0_xor_icmp_y_sgt_neg1_i32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.lshr
+2: llvm.xor
+2: llvm.return
+
+1: "icmp_slt_0_xor_icmp_sgt_neg2_i32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.lshr
+2: llvm.xor
+2: llvm.return
+
+1: "icmp_slt_0_and_icmp_sge_neg1_i32_multiuse0"
+4: "icmp_slt_0_and_icmp_sge_neg1_i32_multiuse0" has unsupported operation: llvm.call
+
+1: "icmp_slt_0_and_icmp_sge_neg2_i32_multiuse1"
+4: "icmp_slt_0_and_icmp_sge_neg2_i32_multiuse1" has unsupported operation: llvm.call
+
+1: "icmp_slt_0_and_icmp_sge_neg2_i32_multiuse2"
+4: "icmp_slt_0_and_icmp_sge_neg2_i32_multiuse2" has unsupported operation: llvm.call
+
+1: "icmp_slt_0_and_icmp_sge_neg2_i32_multiuse_fail0"
+4: "icmp_slt_0_and_icmp_sge_neg2_i32_multiuse_fail0" has unsupported operation: llvm.call
+
+4: "icmp_slt_0_and_icmp_sge_neg2_i32_multiuse_fail0" has unsupported operation: llvm.call
+
+1: "icmp_slt_0_or_icmp_eq_100_i32_multiuse_fail1"
+4: "icmp_slt_0_or_icmp_eq_100_i32_multiuse_fail1" has unsupported operation: llvm.call
+
+1: "icmp_x_slt_0_and_icmp_y_ne_neg2_i32_multiuse_fail2"
+4: "icmp_x_slt_0_and_icmp_y_ne_neg2_i32_multiuse_fail2" has unsupported operation: llvm.call
+
+1: "icmp_slt_0_or_icmp_eq_100_i32_multiuse_fail3"
+4: "icmp_slt_0_or_icmp_eq_100_i32_multiuse_fail3" has unsupported operation: llvm.call
+
+1: "icmp_slt_0_or_icmp_eq_100_i32_fail"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.lshr
+2: llvm.or
+2: llvm.return
+
+1: "icmp_slt_0_and_icmp_ne_neg2_i32_fail"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.lshr
+2: llvm.and
+2: llvm.return
+
+1: "icmp_x_slt_0_and_icmp_y_ne_neg2_i32_fail"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.lshr
+2: llvm.and
+2: llvm.return
+
+1: "icmp_x_slt_0_and_icmp_y_sgt_neg1_i32_fail"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.lshr
+2: llvm.and
+2: llvm.return
+
+1: "icmp_slt_0_xor_icmp_sge_neg2_i32_fail"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.lshr
+2: llvm.xor
+2: llvm.return
+
+1: "icmp_slt_0_or_icmp_add_1_sge_100_i32_fail"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: llvm.zext
+2: llvm.lshr
+2: llvm.or
+2: llvm.return
+
+1: "logical_and_icmps1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "logical_and_icmps2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "logical_and_icmps_vec1"
+8: "logical_and_icmps_vec1" contains vectors which are unsupported
+
+1: "logical_and_icmps_fail1"
+7: "logical_and_icmps_fail1" is unchanged by InstCombine
+
+1: "icmp_eq_or_z_or_pow2orz"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "icmp_eq_or_z_or_pow2orz_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "icmp_eq_or_z_or_pow2orz_fail_multiuse"
+4: "icmp_eq_or_z_or_pow2orz_fail_multiuse" has unsupported operation: llvm.call
+
+1: "icmp_eq_or_z_or_pow2orz_fail_logic_or"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "icmp_ne_and_z_and_pow2orz"
+8: "icmp_ne_and_z_and_pow2orz" contains vectors which are unsupported
+
+1: "icmp_ne_and_z_and_onefail"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.and
+2: llvm.return
+
+1: "icmp_ne_and_z_and_pow2orz_fail_multiuse1"
+4: "icmp_ne_and_z_and_pow2orz_fail_multiuse1" has unsupported operation: llvm.call
+
+1: "icmp_ne_and_z_and_pow2orz_fail_logic_and"
+8: "icmp_ne_and_z_and_pow2orz_fail_logic_and" contains vectors which are unsupported
+
+1: "icmp_eq_or_z_or_pow2orz_fail_not_pow2"
+7: "icmp_eq_or_z_or_pow2orz_fail_not_pow2" is unchanged by InstCombine
+
+1: "icmp_eq_or_z_or_pow2orz_fail_nonzero_const"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "icmp_ne_and_z_and_pow2orz_fail_bad_pred"
+8: "icmp_ne_and_z_and_pow2orz_fail_bad_pred" contains vectors which are unsupported
+
+1: "icmp_eq_or_z_or_pow2orz_fail_bad_pred2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "and_slt_to_mask"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "and_slt_to_mask_off_by_one"
+7: "and_slt_to_mask_off_by_one" is unchanged by InstCombine
+
+1: "and_sgt_to_mask"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "and_sgt_to_mask_off_by_one"
+7: "and_sgt_to_mask_off_by_one" is unchanged by InstCombine
+
+1: "and_ugt_to_mask"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "and_ugt_to_mask_off_by_one"
+7: "and_ugt_to_mask_off_by_one" is unchanged by InstCombine
+

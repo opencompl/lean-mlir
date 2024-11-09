@@ -1,0 +1,14 @@
+1: "test1"
+4: "test1" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bitreverse
+
+1: "test2"
+4: "test2" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bitreverse
+
+4: "test2" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bitreverse
+
+1: "test3"
+4: "test3" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bitreverse
+
+1: "add_bitreverse"
+4: "add_bitreverse" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+

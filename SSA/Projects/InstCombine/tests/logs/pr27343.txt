@@ -1,0 +1,6 @@
+1: "__isnan"
+4: "__isnan" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "icmp_shl7"
+7: "icmp_shl7" is unchanged by InstCombine
+

@@ -1,0 +1,120 @@
+1: "test1"
+2: llvm.func
+2: llvm.sub
+2: llvm.return
+
+1: "test2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.return
+
+1: "test3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.sub
+2: llvm.return
+
+1: "test4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.sub
+2: llvm.return
+
+1: "test5"
+2: llvm.func
+2: llvm.sub
+2: llvm.sub
+2: llvm.return
+
+1: "test6"
+2: llvm.func
+2: llvm.and
+2: llvm.sub
+2: llvm.return
+
+1: "test7"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.return
+
+1: "test8"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.sub
+2: llvm.return
+
+1: "test9"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.sub
+2: llvm.return
+
+1: "test11"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.icmp
+2: llvm.return
+
+1: "test12"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.sub
+2: llvm.return
+
+1: "test13"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.sub
+2: llvm.return
+
+1: "test14"
+4: "test14" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "test16"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.sub
+2: llvm.return
+
+1: "test17"
+7: "test17" is unchanged by InstCombine
+
+1: "test18"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.shl
+2: llvm.sub
+2: llvm.return
+
+1: "test19"
+2: llvm.func
+2: llvm.sub
+2: llvm.add
+2: llvm.return
+
+1: "test20"
+2: llvm.func
+2: llvm.sub
+2: llvm.icmp
+2: llvm.return
+
+1: "test21"
+2: llvm.func
+2: llvm.sub
+2: llvm.icmp
+2: llvm.return
+

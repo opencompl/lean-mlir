@@ -1,0 +1,34 @@
+1: "arg"
+5: "arg" is empty
+
+1: "func"
+9: "func" has pointer type input
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "func" has unsupported operation: llvm.getelementptr
+
+4: "func" has unsupported operation: llvm.load
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "func" has unsupported operation: llvm.call
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "func" has unsupported operation: llvm.return
+

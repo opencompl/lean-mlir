@@ -1,0 +1,21 @@
+1: "pr71330"
+4: "pr71330" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "pr71330" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "pr71330" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "pr71330" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "pr71330" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "pr71330" has unsupported operation: llvm.return
+
+4: "pr71330" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "pr71330" has unsupported operation: llvm.return
+
+4: "pr71330" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "pr71330" has unsupported operation: llvm.return
+

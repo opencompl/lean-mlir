@@ -1,0 +1,21 @@
+1: "test"
+9: "test" has pointer type input
+
+4: "test" has unsupported operation: llvm.getelementptr
+
+4: "test" has unsupported operation: llvm.getelementptr
+
+1: "test64"
+9: "test64" has pointer type input
+
+4: "test64" has unsupported operation: llvm.getelementptr
+
+4: "test64" has unsupported operation: llvm.getelementptr
+
+1: "test64_overflow"
+9: "test64_overflow" has pointer type input
+
+4: "test64_overflow" has unsupported operation: llvm.getelementptr
+
+4: "test64_overflow" has unsupported operation: llvm.getelementptr
+

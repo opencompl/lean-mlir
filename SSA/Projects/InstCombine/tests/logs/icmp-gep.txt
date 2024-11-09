@@ -1,0 +1,240 @@
+1: "getptr"
+5: "getptr" is empty
+
+1: "use"
+9: "use" has pointer type input
+
+1: "use.i1"
+5: "use.i1" is empty
+
+1: "eq_base"
+9: "eq_base" has pointer type input
+
+1: "ne_base_commute"
+4: "ne_base_commute" has unsupported operation: llvm.call
+
+1: "ne_base_inbounds"
+9: "ne_base_inbounds" has pointer type input
+
+1: "eq_base_inbounds_commute"
+4: "eq_base_inbounds_commute" has unsupported operation: llvm.call
+
+1: "slt_base"
+9: "slt_base" has pointer type input
+
+4: "slt_base" has unsupported operation: llvm.getelementptr
+
+1: "sgt_base_commute"
+4: "sgt_base_commute" has unsupported operation: llvm.call
+
+4: "sgt_base_commute" has unsupported operation: llvm.getelementptr
+
+1: "slt_base_inbounds"
+9: "slt_base_inbounds" has pointer type input
+
+4: "slt_base_inbounds" has unsupported operation: llvm.getelementptr
+
+1: "sgt_base_inbounds_commute"
+4: "sgt_base_inbounds_commute" has unsupported operation: llvm.call
+
+4: "sgt_base_inbounds_commute" has unsupported operation: llvm.getelementptr
+
+1: "ult_base"
+9: "ult_base" has pointer type input
+
+4: "ult_base" has unsupported operation: llvm.getelementptr
+
+1: "ugt_base_commute"
+4: "ugt_base_commute" has unsupported operation: llvm.call
+
+4: "ugt_base_commute" has unsupported operation: llvm.getelementptr
+
+1: "ult_base_inbounds"
+9: "ult_base_inbounds" has pointer type input
+
+1: "ugt_base_inbounds_commute"
+4: "ugt_base_inbounds_commute" has unsupported operation: llvm.call
+
+1: "ne_base_inbounds_use"
+9: "ne_base_inbounds_use" has pointer type input
+
+4: "ne_base_inbounds_use" has unsupported operation: llvm.getelementptr
+
+4: "ne_base_inbounds_use" has unsupported operation: llvm.call
+
+1: "eq_base_inbounds_commute_use"
+4: "eq_base_inbounds_commute_use" has unsupported operation: llvm.call
+
+4: "eq_base_inbounds_commute_use" has unsupported operation: llvm.getelementptr
+
+4: "eq_base_inbounds_commute_use" has unsupported operation: llvm.call
+
+1: "eq_bitcast_base"
+9: "eq_bitcast_base" has pointer type input
+
+1: "eq_bitcast_base_inbounds"
+9: "eq_bitcast_base_inbounds" has pointer type input
+
+1: "PR8882"
+4: "PR8882" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "PR8882" has unsupported operation after optimization: llvm.getelementptr
+
+4: "PR8882" has unsupported operation after optimization: llvm.getelementptr
+
+1: "test24_as1"
+4: "test24_as1" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test24_as1" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test24_as1" has unsupported operation after optimization: llvm.getelementptr
+
+1: "test71"
+9: "test71" has pointer type input
+
+1: "test71_as1"
+9: "test71_as1" has pointer type input
+
+1: "test58_d"
+5: "test58_d" is empty
+
+1: "test59"
+9: "test59" has pointer type input
+
+4: "test59" has unsupported operation: llvm.getelementptr
+
+4: "test59" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "test59" has unsupported operation: llvm.call
+
+1: "test59_as1"
+9: "test59_as1" has pointer type input
+
+4: "test59_as1" has unsupported operation: llvm.getelementptr
+
+4: "test59_as1" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "test59_as1" has unsupported operation: llvm.call
+
+1: "test60"
+9: "test60" has pointer type input
+
+1: "test_gep_ult_no_inbounds"
+9: "test_gep_ult_no_inbounds" has pointer type input
+
+4: "test_gep_ult_no_inbounds" has unsupported operation: llvm.getelementptr
+
+4: "test_gep_ult_no_inbounds" has unsupported operation: llvm.getelementptr
+
+1: "test_gep_eq_no_inbounds"
+9: "test_gep_eq_no_inbounds" has pointer type input
+
+1: "test60_as1"
+9: "test60_as1" has pointer type input
+
+1: "test60_addrspacecast"
+9: "test60_addrspacecast" has pointer type input
+
+1: "test60_addrspacecast_smaller"
+9: "test60_addrspacecast_smaller" has pointer type input
+
+1: "test60_addrspacecast_larger"
+9: "test60_addrspacecast_larger" has pointer type input
+
+1: "test61"
+9: "test61" has pointer type input
+
+4: "test61" has unsupported operation: llvm.getelementptr
+
+4: "test61" has unsupported operation: llvm.getelementptr
+
+1: "test61_as1"
+9: "test61_as1" has pointer type input
+
+4: "test61_as1" has unsupported operation: llvm.getelementptr
+
+4: "test61_as1" has unsupported operation: llvm.getelementptr
+
+1: "test60_extra_use"
+9: "test60_extra_use" has pointer type input
+
+4: "test60_extra_use" has unsupported operation: llvm.getelementptr
+
+4: "test60_extra_use" has unsupported operation: llvm.getelementptr
+
+4: "test60_extra_use" has unsupported operation: llvm.call
+
+4: "test60_extra_use" has unsupported operation: llvm.call
+
+1: "test60_extra_use_const_operands_inbounds"
+9: "test60_extra_use_const_operands_inbounds" has pointer type input
+
+4: "test60_extra_use_const_operands_inbounds" has unsupported operation: llvm.getelementptr
+
+4: "test60_extra_use_const_operands_inbounds" has unsupported operation: llvm.call
+
+1: "test60_extra_use_const_operands_no_inbounds"
+9: "test60_extra_use_const_operands_no_inbounds" has pointer type input
+
+4: "test60_extra_use_const_operands_no_inbounds" has unsupported operation: llvm.getelementptr
+
+4: "test60_extra_use_const_operands_no_inbounds" has unsupported operation: llvm.call
+
+1: "test60_extra_use_fold"
+9: "test60_extra_use_fold" has pointer type input
+
+4: "test60_extra_use_fold" has unsupported operation: llvm.getelementptr
+
+4: "test60_extra_use_fold" has unsupported operation: llvm.getelementptr
+
+4: "test60_extra_use_fold" has unsupported operation: llvm.call
+
+4: "test60_extra_use_fold" has unsupported operation: llvm.call
+
+4: "test60_extra_use_fold" has unsupported operation: llvm.call
+
+4: "test60_extra_use_fold" has unsupported operation: llvm.call
+
+4: "test60_extra_use_fold" has unsupported operation: llvm.return
+
+1: "test_scalable_same"
+9: "test_scalable_same" has pointer type input
+
+4: "test_scalable_same" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+
+4: "test_scalable_same" has unsupported operation: llvm.getelementptr
+
+4: "test_scalable_same" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+
+4: "test_scalable_same" has unsupported operation: llvm.getelementptr
+
+1: "test_scalable_x"
+9: "test_scalable_x" has pointer type input
+
+4: "test_scalable_x" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+
+1: "test_scalable_xc"
+9: "test_scalable_xc" has pointer type input
+
+4: "test_scalable_xc" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+
+1: "test_scalable_xy"
+9: "test_scalable_xy" has pointer type input
+
+4: "test_scalable_xy" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+
+4: "test_scalable_xy" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+
+1: "test_scalable_ij"
+9: "test_scalable_ij" has pointer type input
+
+4: "test_scalable_ij" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+
+4: "test_scalable_ij" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+
+1: "gep_nuw"
+9: "gep_nuw" has pointer type input
+
+1: "gep_nusw"
+9: "gep_nusw" has pointer type input
+

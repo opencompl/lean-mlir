@@ -1,0 +1,172 @@
+1: "and_signbit_shl"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.shl
+2: llvm.return
+
+1: "and_nosignbit_shl"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.shl
+2: llvm.return
+
+1: "or_signbit_shl"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.shl
+2: llvm.return
+
+1: "or_nosignbit_shl"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.shl
+2: llvm.return
+
+1: "xor_signbit_shl"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.shl
+2: llvm.return
+
+1: "xor_nosignbit_shl"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.shl
+2: llvm.return
+
+1: "add_signbit_shl"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.shl
+2: llvm.return
+
+1: "add_nosignbit_shl"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.shl
+2: llvm.return
+
+1: "and_signbit_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.lshr
+2: llvm.return
+
+1: "and_nosignbit_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.lshr
+2: llvm.return
+
+1: "or_signbit_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.lshr
+2: llvm.return
+
+1: "or_nosignbit_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.lshr
+2: llvm.return
+
+1: "xor_signbit_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.lshr
+2: llvm.return
+
+1: "xor_nosignbit_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.lshr
+2: llvm.return
+
+1: "add_signbit_lshr"
+7: "add_signbit_lshr" is unchanged by InstCombine
+
+1: "add_nosignbit_lshr"
+7: "add_nosignbit_lshr" is unchanged by InstCombine
+
+1: "and_signbit_ashr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.ashr
+2: llvm.return
+
+1: "and_nosignbit_ashr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.ashr
+2: llvm.return
+
+1: "or_signbit_ashr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.ashr
+2: llvm.return
+
+1: "or_nosignbit_ashr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.ashr
+2: llvm.return
+
+1: "xor_signbit_ashr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.ashr
+2: llvm.return
+
+1: "xor_nosignbit_ashr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.ashr
+2: llvm.return
+
+1: "add_signbit_ashr"
+7: "add_signbit_ashr" is unchanged by InstCombine
+
+1: "add_nosignbit_ashr"
+7: "add_nosignbit_ashr" is unchanged by InstCombine
+

@@ -1,0 +1,87 @@
+1: "olt_pinf"
+4: "olt_pinf" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "ole_pinf"
+4: "ole_pinf" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "ogt_pinf"
+4: "ogt_pinf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "oge_pinf"
+4: "oge_pinf" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "ult_pinf"
+4: "ult_pinf" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "ule_pinf"
+4: "ule_pinf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "ugt_pinf"
+4: "ugt_pinf" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "uge_pinf"
+4: "uge_pinf" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "olt_ninf"
+4: "olt_ninf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "ole_ninf"
+4: "ole_ninf" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "ogt_ninf"
+4: "ogt_ninf" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "oge_ninf"
+4: "oge_ninf" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "ult_ninf"
+4: "ult_ninf" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "ule_ninf"
+4: "ule_ninf" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "ugt_ninf"
+4: "ugt_ninf" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "uge_ninf"
+4: "uge_ninf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "olt_pinf_fmf"
+4: "olt_pinf_fmf" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "oge_pinf_fmf"
+4: "oge_pinf_fmf" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "olt_pinf_vec"
+4: "olt_pinf_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "oge_ninf_vec"
+4: "oge_ninf_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "ord_pinf"
+4: "ord_pinf" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "uno_pinf"
+4: "uno_pinf" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "true_pinf"
+4: "true_pinf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "false_pinf"
+4: "false_pinf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "ord_ninf"
+4: "ord_ninf" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "uno_ninf"
+4: "uno_ninf" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "true_ninf"
+4: "true_ninf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "false_ninf"
+4: "false_ninf" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "olt_one"
+4: "olt_one" has unsupported operation: builtin.unregistered: llvm.fcmp
+

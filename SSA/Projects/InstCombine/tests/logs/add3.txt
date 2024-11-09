@@ -1,0 +1,18 @@
+1: "test2"
+4: "test2" has unsupported operation: llvm.inttoptr
+
+4: "test2" has unsupported operation: llvm.store
+
+4: "test2" has unsupported operation: llvm.inttoptr
+
+4: "test2" has unsupported operation: llvm.getelementptr
+
+4: "test2" has unsupported operation: llvm.load
+
+4: "test2" has unsupported operation: llvm.call
+
+4: "test2" has unsupported operation: llvm.return
+
+1: "callee"
+5: "callee" is empty
+

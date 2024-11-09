@@ -1,0 +1,115 @@
+1: "snprintf"
+9: "snprintf" has pointer type input
+
+1: "test_not_const_fmt"
+9: "test_not_const_fmt" has pointer type input
+
+4: "test_not_const_fmt" has unsupported operation: llvm.call
+
+4: "test_not_const_fmt" has unsupported operation: llvm.return
+
+1: "test_not_const_fmt_zero_size_return_value"
+9: "test_not_const_fmt_zero_size_return_value" has pointer type input
+
+4: "test_not_const_fmt_zero_size_return_value" has unsupported operation: llvm.call
+
+4: "test_not_const_fmt_zero_size_return_value" has unsupported operation: llvm.return
+
+1: "test_not_const_size"
+9: "test_not_const_size" has pointer type input
+
+4: "test_not_const_size" has unsupported operation: llvm.mlir.addressof
+
+4: "test_not_const_size" has unsupported operation: llvm.call
+
+4: "test_not_const_size" has unsupported operation: llvm.return
+
+1: "test_return_value"
+9: "test_return_value" has pointer type input
+
+1: "test_percentage"
+9: "test_percentage" has pointer type input
+
+4: "test_percentage" has unsupported operation: llvm.mlir.addressof
+
+4: "test_percentage" has unsupported operation: llvm.call
+
+4: "test_percentage" has unsupported operation: llvm.return
+
+1: "test_null_buf_return_value"
+4: "test_null_buf_return_value" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "test_null_buf_return_value" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test_null_buf_return_value" has unsupported operation after optimization: llvm.call
+
+1: "test_percentage_return_value"
+4: "test_percentage_return_value" has unsupported operation: llvm.mlir.zero
+
+4: "test_percentage_return_value" has unsupported operation: llvm.mlir.addressof
+
+4: "test_percentage_return_value" has unsupported operation: llvm.call
+
+1: "test_correct_copy"
+9: "test_correct_copy" has pointer type input
+
+4: "test_correct_copy" has unsupported operation: llvm.store
+
+4: "test_correct_copy" has unsupported operation: llvm.return
+
+1: "test_char_zero_size"
+9: "test_char_zero_size" has pointer type input
+
+1: "test_char_small_size"
+9: "test_char_small_size" has pointer type input
+
+4: "test_char_small_size" has unsupported operation: llvm.store
+
+1: "test_char_ok_size"
+9: "test_char_ok_size" has pointer type input
+
+4: "test_char_ok_size" has unsupported operation: llvm.store
+
+4: "test_char_ok_size" has unsupported operation: llvm.getelementptr
+
+4: "test_char_ok_size" has unsupported operation: llvm.store
+
+1: "test_str_zero_size"
+9: "test_str_zero_size" has pointer type input
+
+1: "test_str_small_size"
+9: "test_str_small_size" has pointer type input
+
+4: "test_str_small_size" has unsupported operation: llvm.store
+
+1: "test_str_ok_size"
+9: "test_str_ok_size" has pointer type input
+
+4: "test_str_ok_size" has unsupported operation: llvm.store
+
+1: "test_str_ok_size_tail"
+9: "test_str_ok_size_tail" has pointer type input
+
+4: "test_str_ok_size_tail" has unsupported operation: llvm.store
+
+1: "test_str_ok_size_musttail"
+9: "test_str_ok_size_musttail" has pointer type input
+
+4: "test_str_ok_size_musttail" has unsupported operation: llvm.mlir.addressof
+
+4: "test_str_ok_size_musttail" has unsupported operation: llvm.call
+
+1: "test_str_ok_size_tail2"
+9: "test_str_ok_size_tail2" has pointer type input
+
+4: "test_str_ok_size_tail2" has unsupported operation: llvm.store
+
+1: "test_str_ok_size_musttail2"
+9: "test_str_ok_size_musttail2" has pointer type input
+
+4: "test_str_ok_size_musttail2" has unsupported operation: llvm.mlir.addressof
+
+4: "test_str_ok_size_musttail2" has unsupported operation: llvm.mlir.addressof
+
+4: "test_str_ok_size_musttail2" has unsupported operation: llvm.call
+

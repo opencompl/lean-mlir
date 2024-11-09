@@ -1,0 +1,66 @@
+1: "simple_fold"
+4: "simple_fold" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+1: "fold_mixed_signs"
+4: "fold_mixed_signs" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "fold_mixed_signs" has unsupported operation: llvm.mlir.undef
+
+4: "fold_mixed_signs" has unsupported operation: llvm.insertvalue
+
+4: "fold_mixed_signs" has unsupported operation: llvm.insertvalue
+
+4: "fold_mixed_signs" has unsupported operation: llvm.insertvalue
+
+1: "fold_on_constant_add_no_overflow"
+4: "fold_on_constant_add_no_overflow" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+1: "no_fold_on_constant_add_overflow"
+4: "no_fold_on_constant_add_overflow" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+1: "fold_simple_splat_constant"
+4: "fold_simple_splat_constant" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+1: "no_fold_splat_undef_constant"
+4: "no_fold_splat_undef_constant" has unsupported operation: llvm.mlir.undef
+
+4: "no_fold_splat_undef_constant" has unsupported operation: llvm.mlir.undef
+
+4: "no_fold_splat_undef_constant" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "no_fold_splat_undef_constant" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "no_fold_splat_undef_constant" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+1: "no_fold_splat_not_constant"
+4: "no_fold_splat_not_constant" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+1: "fold_nuwnsw"
+4: "fold_nuwnsw" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+1: "no_fold_nuw"
+4: "no_fold_nuw" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+1: "no_fold_wrapped_add"
+4: "no_fold_wrapped_add" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+1: "fold_sub_simple"
+4: "fold_sub_simple" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+1: "fold_with_distjoin_or"
+4: "fold_with_distjoin_or" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "fold_with_distjoin_or" has unsupported operation: llvm.mlir.undef
+
+4: "fold_with_distjoin_or" has unsupported operation: llvm.insertvalue
+
+4: "fold_with_distjoin_or" has unsupported operation: llvm.insertvalue
+
+4: "fold_with_distjoin_or" has unsupported operation: llvm.insertvalue
+
+1: "fold_with_disjoint_or2"
+4: "fold_with_disjoint_or2" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+1: "fold_with_or_fail"
+4: "fold_with_or_fail" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+

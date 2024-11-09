@@ -1,0 +1,42 @@
+1: "strncpy"
+9: "strncpy" has pointer type input
+
+1: "fill_with_zeros"
+9: "fill_with_zeros" has pointer type input
+
+4: "fill_with_zeros" has unsupported operation: llvm.store
+
+4: "fill_with_zeros" has unsupported operation: llvm.return
+
+1: "fill_with_zeros2"
+9: "fill_with_zeros2" has pointer type input
+
+4: "fill_with_zeros2" has unsupported operation: llvm.store
+
+4: "fill_with_zeros2" has unsupported operation: llvm.return
+
+1: "fill_with_zeros3"
+9: "fill_with_zeros3" has pointer type input
+
+4: "fill_with_zeros3" has unsupported operation: llvm.store
+
+4: "fill_with_zeros3" has unsupported operation: llvm.return
+
+1: "fill_with_zeros4"
+9: "fill_with_zeros4" has pointer type input
+
+4: "fill_with_zeros4" has unsupported operation: llvm.mlir.addressof
+
+4: "fill_with_zeros4" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "fill_with_zeros4" has unsupported operation: llvm.return
+
+1: "no_simplify"
+9: "no_simplify" has pointer type input
+
+4: "no_simplify" has unsupported operation: llvm.mlir.addressof
+
+4: "no_simplify" has unsupported operation: llvm.call
+
+4: "no_simplify" has unsupported operation: llvm.return
+

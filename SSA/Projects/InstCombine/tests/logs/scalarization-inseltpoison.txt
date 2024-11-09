@@ -1,0 +1,183 @@
+1: "extract_load"
+9: "extract_load" has pointer type input
+
+4: "extract_load" has unsupported operation: llvm.load
+
+4: "extract_load" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "extract_load_fp"
+9: "extract_load_fp" has pointer type input
+
+4: "extract_load_fp" has unsupported operation: llvm.load
+
+4: "extract_load_fp" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "extract_load_volatile"
+9: "extract_load_volatile" has pointer type input
+
+4: "extract_load_volatile" has unsupported operation: llvm.load
+
+4: "extract_load_volatile" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "extract_load_extra_use"
+9: "extract_load_extra_use" has pointer type input
+
+4: "extract_load_extra_use" has unsupported operation: llvm.load
+
+4: "extract_load_extra_use" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "extract_load_extra_use" has unsupported operation: llvm.store
+
+1: "extract_load_variable_index"
+9: "extract_load_variable_index" has pointer type input
+
+4: "extract_load_variable_index" has unsupported operation: llvm.load
+
+4: "extract_load_variable_index" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "scalarize_phi"
+9: "scalarize_phi" has pointer type input
+
+4: "scalarize_phi" has unsupported operation: llvm.load
+
+4: "scalarize_phi" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "scalarize_phi" has unsupported operation: llvm.load
+
+4: "scalarize_phi" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "scalarize_phi" has unsupported operation: llvm.store
+
+4: "scalarize_phi" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "scalarize_phi" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "scalarize_phi" has unsupported operation: llvm.return
+
+1: "extract_element_binop_splat_constant_index"
+4: "extract_element_binop_splat_constant_index" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "extract_element_binop_splat_constant_index" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "extract_element_binop_splat_with_undef_constant_index"
+4: "extract_element_binop_splat_with_undef_constant_index" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "extract_element_binop_splat_with_undef_constant_index" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "extract_element_binop_nonsplat_constant_index"
+4: "extract_element_binop_nonsplat_constant_index" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "extract_element_binop_nonsplat_constant_index" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "extract_element_binop_splat_variable_index"
+4: "extract_element_binop_splat_variable_index" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "extract_element_binop_splat_with_undef_variable_index"
+4: "extract_element_binop_splat_with_undef_variable_index" has unsupported operation: llvm.mlir.undef
+
+4: "extract_element_binop_splat_with_undef_variable_index" has unsupported operation: llvm.mlir.undef
+
+4: "extract_element_binop_splat_with_undef_variable_index" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "extract_element_binop_splat_with_undef_variable_index" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "extract_element_binop_splat_with_undef_variable_index" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "extract_element_binop_splat_with_undef_variable_index" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "extract_element_binop_splat_with_undef_variable_index" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "extract_element_binop_nonsplat_variable_index"
+4: "extract_element_binop_nonsplat_variable_index" has unsupported operation: llvm.mlir.undef
+
+4: "extract_element_binop_nonsplat_variable_index" has unsupported operation: llvm.mlir.undef
+
+4: "extract_element_binop_nonsplat_variable_index" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "extract_element_binop_nonsplat_variable_index" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "extract_element_binop_nonsplat_variable_index" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "extract_element_binop_nonsplat_variable_index" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "extract_element_binop_nonsplat_variable_index" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "extract_element_load"
+9: "extract_element_load" has pointer type input
+
+4: "extract_element_load" has unsupported operation: llvm.load
+
+4: "extract_element_load" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "extract_element_load" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "extract_element_load" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "extract_element_multi_Use_load"
+9: "extract_element_multi_Use_load" has pointer type input
+
+4: "extract_element_multi_Use_load" has unsupported operation: llvm.load
+
+4: "extract_element_multi_Use_load" has unsupported operation: llvm.store
+
+4: "extract_element_multi_Use_load" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "extract_element_multi_Use_load" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "extract_element_variable_index"
+4: "extract_element_variable_index" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "extract_element_variable_index" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "extelt_binop_insertelt"
+4: "extelt_binop_insertelt" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "extelt_binop_insertelt" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "extelt_binop_binop_insertelt"
+4: "extelt_binop_binop_insertelt" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "extelt_binop_binop_insertelt" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "extract_element_constant_vector_variable_index"
+4: "extract_element_constant_vector_variable_index" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "cheap_to_extract_icmp"
+4: "cheap_to_extract_icmp" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "cheap_to_extract_icmp" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "cheap_to_extract_fcmp"
+4: "cheap_to_extract_fcmp" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "cheap_to_extract_fcmp" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "cheap_to_extract_fcmp" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "extractelt_vector_icmp_constrhs"
+4: "extractelt_vector_icmp_constrhs" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "extractelt_vector_fcmp_constrhs"
+4: "extractelt_vector_fcmp_constrhs" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "extractelt_vector_fcmp_constrhs" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "extractelt_vector_icmp_constrhs_dynidx"
+4: "extractelt_vector_icmp_constrhs_dynidx" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "extractelt_vector_fcmp_constrhs_dynidx"
+4: "extractelt_vector_fcmp_constrhs_dynidx" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "extractelt_vector_fcmp_constrhs_dynidx" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "extractelt_vector_fcmp_not_cheap_to_scalarize_multi_use"
+4: "extractelt_vector_fcmp_not_cheap_to_scalarize_multi_use" has unsupported operation: llvm.mlir.undef
+
+4: "extractelt_vector_fcmp_not_cheap_to_scalarize_multi_use" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "extractelt_vector_fcmp_not_cheap_to_scalarize_multi_use" has unsupported operation: llvm.store
+
+4: "extractelt_vector_fcmp_not_cheap_to_scalarize_multi_use" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "extractelt_vector_fcmp_not_cheap_to_scalarize_multi_use" has unsupported operation: builtin.unregistered: llvm.extractelement
+

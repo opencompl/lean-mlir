@@ -1,0 +1,121 @@
+1: "mul_full_64_variant0"
+4: "mul_full_64_variant0" has unsupported operation: llvm.mlir.undef
+
+4: "mul_full_64_variant0" has unsupported operation: llvm.insertvalue
+
+4: "mul_full_64_variant0" has unsupported operation: llvm.insertvalue
+
+1: "mul_full_64_variant1"
+9: "mul_full_64_variant1" has pointer type input
+
+4: "mul_full_64_variant1" has unsupported operation: llvm.store
+
+1: "mul_full_64_variant2"
+9: "mul_full_64_variant2" has pointer type input
+
+4: "mul_full_64_variant2" has unsupported operation: llvm.store
+
+1: "mul_full_64_variant3"
+9: "mul_full_64_variant3" has pointer type input
+
+4: "mul_full_64_variant3" has unsupported operation: llvm.store
+
+1: "mul_full_32"
+4: "mul_full_32" has unsupported operation: llvm.mlir.undef
+
+4: "mul_full_32" has unsupported operation: llvm.insertvalue
+
+4: "mul_full_32" has unsupported operation: llvm.insertvalue
+
+1: "get_number"
+5: "get_number" is empty
+
+1: "mul_full_64_variant0_1"
+4: "mul_full_64_variant0_1" has unsupported operation: llvm.mlir.undef
+
+4: "mul_full_64_variant0_1" has unsupported operation: llvm.call
+
+4: "mul_full_64_variant0_1" has unsupported operation: llvm.call
+
+4: "mul_full_64_variant0_1" has unsupported operation: llvm.insertvalue
+
+4: "mul_full_64_variant0_1" has unsupported operation: llvm.insertvalue
+
+1: "mul_full_64_variant0_2"
+4: "mul_full_64_variant0_2" has unsupported operation: llvm.mlir.undef
+
+4: "mul_full_64_variant0_2" has unsupported operation: llvm.call
+
+4: "mul_full_64_variant0_2" has unsupported operation: llvm.call
+
+4: "mul_full_64_variant0_2" has unsupported operation: llvm.insertvalue
+
+4: "mul_full_64_variant0_2" has unsupported operation: llvm.insertvalue
+
+1: "umulh_64"
+7: "umulh_64" is unchanged by InstCombine
+
+1: "mullo"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.lshr
+2: llvm.and
+2: llvm.lshr
+2: llvm.mul
+2: llvm.mul
+2: llvm.mul
+2: llvm.and
+2: llvm.lshr
+2: llvm.add
+2: llvm.and
+2: llvm.add
+2: llvm.shl
+2: llvm.or
+2: llvm.return
+
+1: "mullo_variant3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.lshr
+2: llvm.and
+2: llvm.lshr
+2: llvm.mul
+2: llvm.mul
+2: llvm.mul
+2: llvm.add
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "eat_i64"
+5: "eat_i64" is empty
+
+1: "eat_i128"
+5: "eat_i128" is empty
+
+1: "mullo_duplicate"
+4: "mullo_duplicate" has unsupported operation: llvm.call
+
+1: "mul_full_64_duplicate"
+4: "mul_full_64_duplicate" has unsupported operation: llvm.mlir.undef
+
+4: "mul_full_64_duplicate" has unsupported operation: llvm.call
+
+4: "mul_full_64_duplicate" has unsupported operation: llvm.insertvalue
+
+4: "mul_full_64_duplicate" has unsupported operation: llvm.insertvalue
+
+1: "umulhi_64_v2"
+4: "umulhi_64_v2" has unsupported operation: llvm.call
+
+4: "umulhi_64_v2" has unsupported operation: llvm.call
+
+1: "umulhi_64_v3"
+4: "umulhi_64_v3" has unsupported operation: llvm.call
+
+4: "umulhi_64_v3" has unsupported operation: llvm.call
+

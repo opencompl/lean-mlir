@@ -1,0 +1,81 @@
+1: "test_eq"
+4: "test_eq" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_eq" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_eq" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_eq" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_slt"
+4: "test_slt" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_slt" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_slt" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_slt" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_sle"
+4: "test_sle" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_sle" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_sle" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_sle" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_ne"
+4: "test_ne" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_ne" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_ne" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_ne" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_ne_undef"
+4: "test_ne_undef" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_ne_undef" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_ne_undef" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_ne_undef" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_ne_int_vector"
+4: "test_ne_int_vector" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_ne_int_vector" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_ne_int_vector" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_ne_int_vector" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_ne_float"
+4: "test_ne_float" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_ne_float" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_ne_float" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_ne_float" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_ne_float_undef"
+4: "test_ne_float_undef" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_ne_float_undef" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_ne_float_undef" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_ne_float_undef" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_ne_float_vector"
+4: "test_ne_float_vector" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_ne_float_vector" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_ne_float_vector" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_ne_float_vector" has unsupported operation: builtin.unregistered: llvm.br
+

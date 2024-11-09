@@ -1,0 +1,72 @@
+1: "printf"
+9: "printf" has pointer type input
+
+1: "test_simplify1"
+4: "test_simplify1" has unsupported operation: llvm.return
+
+1: "test_simplify2"
+4: "test_simplify2" has unsupported operation: llvm.call
+
+4: "test_simplify2" has unsupported operation: llvm.return
+
+1: "test_simplify2b"
+4: "test_simplify2b" has unsupported operation: llvm.call
+
+4: "test_simplify2b" has unsupported operation: llvm.return
+
+1: "test_simplify3"
+4: "test_simplify3" has unsupported operation: llvm.call
+
+4: "test_simplify3" has unsupported operation: llvm.return
+
+1: "test_simplify4"
+4: "test_simplify4" has unsupported operation: llvm.mlir.addressof
+
+4: "test_simplify4" has unsupported operation: llvm.call
+
+4: "test_simplify4" has unsupported operation: llvm.return
+
+1: "test_simplify5"
+4: "test_simplify5" has unsupported operation: llvm.call
+
+4: "test_simplify5" has unsupported operation: llvm.return
+
+1: "test_simplify6"
+4: "test_simplify6" has unsupported operation: llvm.mlir.addressof
+
+4: "test_simplify6" has unsupported operation: llvm.call
+
+4: "test_simplify6" has unsupported operation: llvm.return
+
+1: "test_simplify7"
+4: "test_simplify7" has unsupported operation: llvm.mlir.addressof
+
+4: "test_simplify7" has unsupported operation: llvm.call
+
+4: "test_simplify7" has unsupported operation: llvm.return
+
+1: "test_no_simplify1"
+4: "test_no_simplify1" has unsupported operation: llvm.mlir.addressof
+
+4: "test_no_simplify1" has unsupported operation: llvm.call
+
+4: "test_no_simplify1" has unsupported operation: llvm.return
+
+1: "test_no_simplify2"
+9: "test_no_simplify2" has pointer type input
+
+4: "test_no_simplify2" has unsupported operation: llvm.call
+
+4: "test_no_simplify2" has unsupported operation: llvm.return
+
+1: "test_no_simplify3"
+4: "test_no_simplify3" has unsupported operation: llvm.mlir.addressof
+
+4: "test_no_simplify3" has unsupported operation: llvm.call
+
+1: "putchar"
+5: "putchar" is empty
+
+1: "puts"
+9: "puts" has pointer type input
+

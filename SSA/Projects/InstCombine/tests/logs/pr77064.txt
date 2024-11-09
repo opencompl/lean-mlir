@@ -1,0 +1,15 @@
+1: "main"
+9: "main" has pointer type input
+
+4: "main" has unsupported operation: llvm.call
+
+4: "main" has unsupported operation: builtin.unregistered: llvm.intr.memset
+
+4: "main" has unsupported operation: llvm.return
+
+1: "__memset_chk"
+9: "__memset_chk" has pointer type input
+
+1: "opendir"
+9: "opendir" has pointer type input
+

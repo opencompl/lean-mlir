@@ -1,0 +1,895 @@
+1: "test1"
+4: "test1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "test2"
+4: "test2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test3"
+4: "test3" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test3" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "test4"
+7: "test4" is unchanged by InstCombine
+
+1: "test5_undef"
+4: "test5_undef" has unsupported operation: llvm.mlir.undef
+
+4: "test5_undef" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test5_undef" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "test5_poison"
+4: "test5_poison" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test5_poison" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "test6"
+4: "test6" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test6" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_dead_cycle"
+4: "test_dead_cycle" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_dead_cycle" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "test_dead_UnaryOp_cycle"
+4: "test_dead_UnaryOp_cycle" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_dead_UnaryOp_cycle" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "test_dead_cycle_two_insts"
+4: "test_dead_cycle_two_insts" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_dead_cycle_two_insts" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "test_dead_cycle_intrin"
+4: "test_dead_cycle_intrin" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_dead_cycle_intrin" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+4: "test_dead_cycle_intrin" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "test8"
+9: "test8" has pointer type input
+
+4: "test8" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test8" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test8" has unsupported operation: llvm.getelementptr
+
+1: "test9"
+9: "test9" has pointer type input
+
+4: "test9" has unsupported operation: llvm.mlir.zero
+
+4: "test9" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test9" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test9" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test9" has unsupported operation: llvm.load
+
+1: "test10"
+9: "test10" has pointer type input
+
+4: "test10" has unsupported operation: llvm.mlir.zero
+
+4: "test10" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test10" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test10" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test10" has unsupported operation: llvm.load
+
+1: "test11a"
+5: "test11a" is empty
+
+1: "test11"
+4: "test11" has unsupported operation: llvm.call
+
+4: "test11" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test11" has unsupported operation: llvm.call
+
+4: "test11" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test11" has unsupported operation: llvm.call
+
+4: "test11" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test11" has unsupported operation: llvm.call
+
+1: "test12"
+9: "test12" has pointer type input
+
+4: "test12" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test12" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test12" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+1: "test13f"
+5: "test13f" is empty
+
+1: "test13"
+4: "test13" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test13" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test13" has unsupported operation: llvm.call
+
+4: "test13" has unsupported operation: llvm.return
+
+1: "test14a"
+4: "test14a" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test14a" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "test14b"
+4: "test14b" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test14b" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "test15a"
+5: "test15a" is empty
+
+1: "test15b"
+4: "test15b" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test15b" has unsupported operation: llvm.call
+
+4: "test15b" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test15b" has unsupported operation: llvm.call
+
+4: "test15b" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "test16"
+9: "test16" has pointer type input
+
+4: "test16" has unsupported operation: llvm.alloca
+
+4: "test16" has unsupported operation: llvm.alloca
+
+4: "test16" has unsupported operation: llvm.alloca
+
+4: "test16" has unsupported operation: llvm.store
+
+4: "test16" has unsupported operation: llvm.store
+
+4: "test16" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test16" has unsupported operation: llvm.load
+
+4: "test16" has unsupported operation: llvm.store
+
+4: "test16" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test16" has unsupported operation: llvm.load
+
+4: "test16" has unsupported operation: llvm.load
+
+4: "test16" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test16" has unsupported operation: llvm.load
+
+4: "test16" has unsupported operation: llvm.load
+
+4: "test16" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "ext"
+5: "ext" is empty
+
+1: "test17"
+4: "test17" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test17" has unsupported operation: llvm.call
+
+4: "test17" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "PR51435"
+9: "PR51435" has pointer type input
+
+4: "PR51435" has unsupported operation: llvm.load
+
+4: "PR51435" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "PR51435" has unsupported operation: llvm.load
+
+4: "PR51435" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test18"
+4: "test18" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test18" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test18" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test19"
+4: "test19" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test19" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test19" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test20"
+4: "test20" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test20" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test20" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test21"
+4: "test21" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test21" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test21" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test21" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "test22"
+4: "test22" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test22" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test22" has unsupported operation: llvm.return
+
+1: "test23"
+9: "test23" has pointer type input
+
+4: "test23" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test23" has unsupported operation: llvm.store
+
+4: "test23" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "test24"
+4: "test24" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test24" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test25a"
+5: "test25a" is empty
+
+1: "test25"
+4: "test25" has unsupported operation: llvm.call
+
+4: "test25" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test25" has unsupported operation: llvm.call
+
+4: "test25" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test25" has unsupported operation: llvm.call
+
+4: "test25" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test25" has unsupported operation: llvm.call
+
+1: "test25b"
+4: "test25b" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test25b" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test25b" has unsupported operation: llvm.call
+
+4: "test25b" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test25b" has unsupported operation: llvm.call
+
+4: "test25b" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test25b" has unsupported operation: llvm.call
+
+4: "test25b" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test25b" has unsupported operation: llvm.inttoptr
+
+4: "test25b" has unsupported operation: llvm.store
+
+4: "test25b" has unsupported operation: llvm.call
+
+1: "test26a"
+5: "test26a" is empty
+
+1: "test26"
+4: "test26" has unsupported operation: llvm.call
+
+4: "test26" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test26" has unsupported operation: llvm.call
+
+4: "test26" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "test26" has unsupported operation: llvm.call
+
+4: "test26" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "test26" has unsupported operation: llvm.call
+
+4: "test26" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test26" has unsupported operation: llvm.call
+
+1: "test27"
+4: "test27" has unsupported operation: llvm.mlir.undef
+
+4: "test27" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "PR24766"
+4: "PR24766" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "PR24766" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "PR24766" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "PR24766_no_constants"
+4: "PR24766_no_constants" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "PR24766_no_constants" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "PR24766_no_constants" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "PR24766_two_constants"
+4: "PR24766_two_constants" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "PR24766_two_constants" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "PR24766_two_constants" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "PR24766_two_constants_two_var"
+4: "PR24766_two_constants_two_var" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "PR24766_two_constants_two_var" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "PR24766_two_constants_two_var" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "PR24766_two_constants_two_var" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "phi_allnonzeroconstant"
+4: "phi_allnonzeroconstant" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_allnonzeroconstant" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "phi_allnonzeroconstant" has unsupported operation: llvm.call
+
+4: "phi_allnonzeroconstant" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "phi_allnonzerononconstant"
+9: "phi_allnonzerononconstant" has pointer type input
+
+4: "phi_allnonzerononconstant" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_allnonzerononconstant" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "phi_allnonzerononconstant" has unsupported operation: llvm.call
+
+4: "phi_allnonzerononconstant" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "dummy"
+5: "dummy" is empty
+
+1: "phi_knownnonzero_eq"
+9: "phi_knownnonzero_eq" has pointer type input
+
+4: "phi_knownnonzero_eq" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_knownnonzero_eq" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "phi_knownnonzero_ne"
+9: "phi_knownnonzero_ne" has pointer type input
+
+4: "phi_knownnonzero_ne" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_knownnonzero_ne" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "phi_knownnonzero_eq_2"
+9: "phi_knownnonzero_eq_2" has pointer type input
+
+4: "phi_knownnonzero_eq_2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "phi_knownnonzero_eq_2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_knownnonzero_eq_2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_knownnonzero_eq_2" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "phi_knownnonzero_ne_2"
+9: "phi_knownnonzero_ne_2" has pointer type input
+
+4: "phi_knownnonzero_ne_2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "phi_knownnonzero_ne_2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_knownnonzero_ne_2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_knownnonzero_ne_2" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "phi_knownnonzero_eq_oricmp"
+9: "phi_knownnonzero_eq_oricmp" has pointer type input
+
+4: "phi_knownnonzero_eq_oricmp" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_knownnonzero_eq_oricmp" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "phi_knownnonzero_eq_oricmp_commuted"
+9: "phi_knownnonzero_eq_oricmp_commuted" has pointer type input
+
+4: "phi_knownnonzero_eq_oricmp_commuted" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_knownnonzero_eq_oricmp_commuted" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "phi_knownnonzero_eq_or_disjoint_icmp"
+9: "phi_knownnonzero_eq_or_disjoint_icmp" has pointer type input
+
+4: "phi_knownnonzero_eq_or_disjoint_icmp" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_knownnonzero_eq_or_disjoint_icmp" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "phi_knownnonzero_ne_oricmp"
+9: "phi_knownnonzero_ne_oricmp" has pointer type input
+
+4: "phi_knownnonzero_ne_oricmp" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_knownnonzero_ne_oricmp" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "phi_knownnonzero_ne_oricmp_commuted"
+9: "phi_knownnonzero_ne_oricmp_commuted" has pointer type input
+
+4: "phi_knownnonzero_ne_oricmp_commuted" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_knownnonzero_ne_oricmp_commuted" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "phi_knownnonzero_eq_multiuse_oricmp"
+9: "phi_knownnonzero_eq_multiuse_oricmp" has pointer type input
+
+4: "phi_knownnonzero_eq_multiuse_oricmp" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_knownnonzero_eq_multiuse_oricmp" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "phi_knownnonzero_eq_multiuse_oricmp" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_knownnonzero_eq_multiuse_oricmp" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "phi_knownnonzero_ne_multiuse_oricmp_commuted"
+9: "phi_knownnonzero_ne_multiuse_oricmp_commuted" has pointer type input
+
+4: "phi_knownnonzero_ne_multiuse_oricmp_commuted" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_knownnonzero_ne_multiuse_oricmp_commuted" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "phi_knownnonzero_ne_multiuse_oricmp_commuted" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_knownnonzero_ne_multiuse_oricmp_commuted" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "phi_knownnonzero_eq_multiuse_andicmp"
+9: "phi_knownnonzero_eq_multiuse_andicmp" has pointer type input
+
+4: "phi_knownnonzero_eq_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_knownnonzero_eq_multiuse_andicmp" has unsupported operation: llvm.load
+
+4: "phi_knownnonzero_eq_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "phi_knownnonzero_eq_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_knownnonzero_eq_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "phi_knownnonzero_ne_multiuse_andicmp"
+9: "phi_knownnonzero_ne_multiuse_andicmp" has pointer type input
+
+4: "phi_knownnonzero_ne_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_knownnonzero_ne_multiuse_andicmp" has unsupported operation: llvm.load
+
+4: "phi_knownnonzero_ne_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "phi_knownnonzero_ne_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_knownnonzero_ne_multiuse_andicmp" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "main"
+4: "main" has unsupported operation: llvm.mlir.undef
+
+4: "main" has unsupported operation: llvm.mlir.undef
+
+4: "main" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "main" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "main" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "main" has unsupported operation: llvm.store
+
+4: "main" has unsupported operation: llvm.return
+
+1: "pr57488_icmp_of_phi"
+9: "pr57488_icmp_of_phi" has pointer type input
+
+4: "pr57488_icmp_of_phi" has unsupported operation: llvm.getelementptr
+
+4: "pr57488_icmp_of_phi" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "pr57488_icmp_of_phi" has unsupported operation: llvm.getelementptr
+
+4: "pr57488_icmp_of_phi" has unsupported operation: llvm.load
+
+4: "pr57488_icmp_of_phi" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "use"
+5: "use" is empty
+
+1: "get.i1"
+5: "get.i1" is empty
+
+1: "phi_op_self_simplify"
+4: "phi_op_self_simplify" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "phi_op_self_simplify" has unsupported operation: llvm.call
+
+4: "phi_op_self_simplify" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "phi_op_self_simplify_2"
+4: "phi_op_self_simplify_2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "phi_op_self_simplify_2" has unsupported operation: llvm.call
+
+4: "phi_op_self_simplify_2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_op_self_simplify_2" has unsupported operation: llvm.call
+
+4: "phi_op_self_simplify_2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "inttoptr_of_phi"
+9: "inttoptr_of_phi" has pointer type input
+
+4: "inttoptr_of_phi" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "inttoptr_of_phi" has unsupported operation: llvm.load
+
+4: "inttoptr_of_phi" has unsupported operation: llvm.inttoptr
+
+4: "inttoptr_of_phi" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "inttoptr_of_phi" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "inttoptr_of_phi" has unsupported operation: llvm.load
+
+1: "simplify_context_instr"
+9: "simplify_context_instr" has pointer type input
+
+4: "simplify_context_instr" has unsupported operation: llvm.getelementptr
+
+4: "simplify_context_instr" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "simplify_context_instr" has unsupported operation: llvm.load
+
+4: "simplify_context_instr" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "simplify_context_instr" has unsupported operation: llvm.call
+
+4: "simplify_context_instr" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "simplify_context_instr" has unsupported operation: llvm.getelementptr
+
+4: "simplify_context_instr" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "simplify_context_instr" has unsupported operation: llvm.return
+
+1: "add_two_phi_node_can_fold"
+4: "add_two_phi_node_can_fold" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "add_two_phi_node_can_fold" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "add_two_phi_node_cannt_fold"
+4: "add_two_phi_node_cannt_fold" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "add_two_phi_node_cannt_fold" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "or_two_phi_node_can_fold"
+4: "or_two_phi_node_can_fold" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "or_two_phi_node_can_fold" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "and_two_phi_node_can_fold"
+4: "and_two_phi_node_can_fold" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "and_two_phi_node_can_fold" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "mul_two_phi_node_can_fold"
+4: "mul_two_phi_node_can_fold" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "mul_two_phi_node_can_fold" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "xor_two_phi_node_can_fold"
+4: "xor_two_phi_node_can_fold" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "xor_two_phi_node_can_fold" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "sub_two_phi_node_cant_fold"
+4: "sub_two_phi_node_cant_fold" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sub_two_phi_node_cant_fold" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "cmp_eq_phi_node_can_fold_1"
+9: "cmp_eq_phi_node_can_fold_1" has pointer type input
+
+4: "cmp_eq_phi_node_can_fold_1" has unsupported operation: llvm.load
+
+4: "cmp_eq_phi_node_can_fold_1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "cmp_eq_phi_node_can_fold_1" has unsupported operation: llvm.getelementptr
+
+4: "cmp_eq_phi_node_can_fold_1" has unsupported operation: llvm.load
+
+4: "cmp_eq_phi_node_can_fold_1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "cmp_eq_phi_node_can_fold_2"
+9: "cmp_eq_phi_node_can_fold_2" has pointer type input
+
+4: "cmp_eq_phi_node_can_fold_2" has unsupported operation: llvm.load
+
+4: "cmp_eq_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "cmp_eq_phi_node_can_fold_2" has unsupported operation: llvm.getelementptr
+
+4: "cmp_eq_phi_node_can_fold_2" has unsupported operation: llvm.load
+
+4: "cmp_eq_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "cmp_eq_phi_node_can_fold_2" has unsupported operation: llvm.getelementptr
+
+4: "cmp_eq_phi_node_can_fold_2" has unsupported operation: llvm.load
+
+4: "cmp_eq_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "cmp_eq_phi_node_can_fold_3"
+9: "cmp_eq_phi_node_can_fold_3" has pointer type input
+
+4: "cmp_eq_phi_node_can_fold_3" has unsupported operation: llvm.load
+
+4: "cmp_eq_phi_node_can_fold_3" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "cmp_eq_phi_node_can_fold_3" has unsupported operation: llvm.getelementptr
+
+4: "cmp_eq_phi_node_can_fold_3" has unsupported operation: llvm.load
+
+4: "cmp_eq_phi_node_can_fold_3" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "cmp_eq_phi_node_can_fold_4"
+9: "cmp_eq_phi_node_can_fold_4" has pointer type input
+
+4: "cmp_eq_phi_node_can_fold_4" has unsupported operation: llvm.load
+
+4: "cmp_eq_phi_node_can_fold_4" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "cmp_eq_phi_node_can_fold_4" has unsupported operation: llvm.getelementptr
+
+4: "cmp_eq_phi_node_can_fold_4" has unsupported operation: llvm.load
+
+4: "cmp_eq_phi_node_can_fold_4" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "cmp_eq_phi_node_can_fold_4" has unsupported operation: llvm.getelementptr
+
+4: "cmp_eq_phi_node_can_fold_4" has unsupported operation: llvm.load
+
+4: "cmp_eq_phi_node_can_fold_4" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "cmp_ne_phi_node_can_fold_1"
+9: "cmp_ne_phi_node_can_fold_1" has pointer type input
+
+4: "cmp_ne_phi_node_can_fold_1" has unsupported operation: llvm.load
+
+4: "cmp_ne_phi_node_can_fold_1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "cmp_ne_phi_node_can_fold_1" has unsupported operation: llvm.getelementptr
+
+4: "cmp_ne_phi_node_can_fold_1" has unsupported operation: llvm.load
+
+4: "cmp_ne_phi_node_can_fold_1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "cmp_ne_phi_node_can_fold_2"
+9: "cmp_ne_phi_node_can_fold_2" has pointer type input
+
+4: "cmp_ne_phi_node_can_fold_2" has unsupported operation: llvm.load
+
+4: "cmp_ne_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "cmp_ne_phi_node_can_fold_2" has unsupported operation: llvm.getelementptr
+
+4: "cmp_ne_phi_node_can_fold_2" has unsupported operation: llvm.load
+
+4: "cmp_ne_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "cmp_ne_phi_node_can_fold_2" has unsupported operation: llvm.getelementptr
+
+4: "cmp_ne_phi_node_can_fold_2" has unsupported operation: llvm.load
+
+4: "cmp_ne_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "cmp_ne_phi_node_can_fold_3"
+9: "cmp_ne_phi_node_can_fold_3" has pointer type input
+
+4: "cmp_ne_phi_node_can_fold_3" has unsupported operation: llvm.load
+
+4: "cmp_ne_phi_node_can_fold_3" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "cmp_ne_phi_node_can_fold_3" has unsupported operation: llvm.getelementptr
+
+4: "cmp_ne_phi_node_can_fold_3" has unsupported operation: llvm.load
+
+4: "cmp_ne_phi_node_can_fold_3" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "cmp_ne_phi_node_can_fold_4"
+9: "cmp_ne_phi_node_can_fold_4" has pointer type input
+
+4: "cmp_ne_phi_node_can_fold_4" has unsupported operation: llvm.load
+
+4: "cmp_ne_phi_node_can_fold_4" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "cmp_ne_phi_node_can_fold_4" has unsupported operation: llvm.getelementptr
+
+4: "cmp_ne_phi_node_can_fold_4" has unsupported operation: llvm.load
+
+4: "cmp_ne_phi_node_can_fold_4" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "cmp_ne_phi_node_can_fold_4" has unsupported operation: llvm.getelementptr
+
+4: "cmp_ne_phi_node_can_fold_4" has unsupported operation: llvm.load
+
+4: "cmp_ne_phi_node_can_fold_4" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "cmp_sgt_phi_node_can_fold_1"
+9: "cmp_sgt_phi_node_can_fold_1" has pointer type input
+
+4: "cmp_sgt_phi_node_can_fold_1" has unsupported operation: llvm.load
+
+4: "cmp_sgt_phi_node_can_fold_1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "cmp_sgt_phi_node_can_fold_1" has unsupported operation: llvm.getelementptr
+
+4: "cmp_sgt_phi_node_can_fold_1" has unsupported operation: llvm.load
+
+4: "cmp_sgt_phi_node_can_fold_1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "cmp_sgt_phi_node_can_fold_2"
+9: "cmp_sgt_phi_node_can_fold_2" has pointer type input
+
+4: "cmp_sgt_phi_node_can_fold_2" has unsupported operation: llvm.load
+
+4: "cmp_sgt_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "cmp_sgt_phi_node_can_fold_2" has unsupported operation: llvm.getelementptr
+
+4: "cmp_sgt_phi_node_can_fold_2" has unsupported operation: llvm.load
+
+4: "cmp_sgt_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "cmp_sgt_phi_node_can_fold_2" has unsupported operation: llvm.getelementptr
+
+4: "cmp_sgt_phi_node_can_fold_2" has unsupported operation: llvm.load
+
+4: "cmp_sgt_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "cmp_sgt_phi_node_cant_fold_1"
+9: "cmp_sgt_phi_node_cant_fold_1" has pointer type input
+
+4: "cmp_sgt_phi_node_cant_fold_1" has unsupported operation: llvm.load
+
+4: "cmp_sgt_phi_node_cant_fold_1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "cmp_sgt_phi_node_cant_fold_1" has unsupported operation: llvm.getelementptr
+
+4: "cmp_sgt_phi_node_cant_fold_1" has unsupported operation: llvm.load
+
+4: "cmp_sgt_phi_node_cant_fold_1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "cmp_sgt_phi_node_cant_fold_2"
+9: "cmp_sgt_phi_node_cant_fold_2" has pointer type input
+
+4: "cmp_sgt_phi_node_cant_fold_2" has unsupported operation: llvm.load
+
+4: "cmp_sgt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "cmp_sgt_phi_node_cant_fold_2" has unsupported operation: llvm.getelementptr
+
+4: "cmp_sgt_phi_node_cant_fold_2" has unsupported operation: llvm.load
+
+4: "cmp_sgt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "cmp_sgt_phi_node_cant_fold_2" has unsupported operation: llvm.getelementptr
+
+4: "cmp_sgt_phi_node_cant_fold_2" has unsupported operation: llvm.load
+
+4: "cmp_sgt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "cmp_slt_phi_node_can_fold_1"
+9: "cmp_slt_phi_node_can_fold_1" has pointer type input
+
+4: "cmp_slt_phi_node_can_fold_1" has unsupported operation: llvm.load
+
+4: "cmp_slt_phi_node_can_fold_1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "cmp_slt_phi_node_can_fold_1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "cmp_slt_phi_node_can_fold_2"
+9: "cmp_slt_phi_node_can_fold_2" has pointer type input
+
+4: "cmp_slt_phi_node_can_fold_2" has unsupported operation: llvm.load
+
+4: "cmp_slt_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "cmp_slt_phi_node_can_fold_2" has unsupported operation: llvm.getelementptr
+
+4: "cmp_slt_phi_node_can_fold_2" has unsupported operation: llvm.load
+
+4: "cmp_slt_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "cmp_slt_phi_node_can_fold_2" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "cmp_slt_phi_node_cant_fold_1"
+9: "cmp_slt_phi_node_cant_fold_1" has pointer type input
+
+4: "cmp_slt_phi_node_cant_fold_1" has unsupported operation: llvm.load
+
+4: "cmp_slt_phi_node_cant_fold_1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "cmp_slt_phi_node_cant_fold_1" has unsupported operation: llvm.getelementptr
+
+4: "cmp_slt_phi_node_cant_fold_1" has unsupported operation: llvm.load
+
+4: "cmp_slt_phi_node_cant_fold_1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "cmp_slt_phi_node_cant_fold_2"
+9: "cmp_slt_phi_node_cant_fold_2" has pointer type input
+
+4: "cmp_slt_phi_node_cant_fold_2" has unsupported operation: llvm.load
+
+4: "cmp_slt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "cmp_slt_phi_node_cant_fold_2" has unsupported operation: llvm.getelementptr
+
+4: "cmp_slt_phi_node_cant_fold_2" has unsupported operation: llvm.load
+
+4: "cmp_slt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "cmp_slt_phi_node_cant_fold_2" has unsupported operation: llvm.getelementptr
+
+4: "cmp_slt_phi_node_cant_fold_2" has unsupported operation: llvm.load
+
+4: "cmp_slt_phi_node_cant_fold_2" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "phi_op_in_loop"
+4: "phi_op_in_loop" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "phi_op_in_loop" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_op_in_loop" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "phi_op_in_loop" has unsupported operation: llvm.call
+
+4: "phi_op_in_loop" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_dead_phi_web"
+4: "test_dead_phi_web" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_dead_phi_web" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "test_dead_phi_web" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_dead_phi_web" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_dead_phi_web" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_dead_phi_web" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_dead_phi_web" has unsupported operation: llvm.return
+

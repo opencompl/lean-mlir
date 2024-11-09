@@ -1,0 +1,8 @@
+1: "calloc"
+5: "calloc" is empty
+
+1: "PR50846"
+4: "PR50846" has unsupported operation: llvm.call
+
+4: "PR50846" has unsupported operation: llvm.return
+

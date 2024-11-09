@@ -1,0 +1,45 @@
+1: "_Znwj"
+5: "_Znwj" is empty
+
+1: "_Znaj"
+5: "_Znaj" is empty
+
+1: "_ZnwjSt11align_val_t"
+5: "_ZnwjSt11align_val_t" is empty
+
+1: "_ZnajSt11align_val_t"
+5: "_ZnajSt11align_val_t" is empty
+
+1: "_ZnwjSt11align_val_tRKSt9nothrow_t"
+9: "_ZnwjSt11align_val_tRKSt9nothrow_t" has pointer type input
+
+1: "_ZnajSt11align_val_tRKSt9nothrow_t"
+9: "_ZnajSt11align_val_tRKSt9nothrow_t" has pointer type input
+
+1: "_ZdlPvj"
+9: "_ZdlPvj" has pointer type input
+
+1: "_ZdaPvj"
+9: "_ZdaPvj" has pointer type input
+
+1: "_ZdlPvSt11align_val_t"
+9: "_ZdlPvSt11align_val_t" has pointer type input
+
+1: "_ZdaPvSt11align_val_t"
+9: "_ZdaPvSt11align_val_t" has pointer type input
+
+1: "_ZdlPvjSt11align_val_t"
+9: "_ZdlPvjSt11align_val_t" has pointer type input
+
+1: "_ZdaPvjSt11align_val_t"
+9: "_ZdaPvjSt11align_val_t" has pointer type input
+
+1: "_ZdlPvSt11align_val_tRKSt9nothrow_t"
+9: "_ZdlPvSt11align_val_tRKSt9nothrow_t" has pointer type input
+
+1: "_ZdaPvSt11align_val_tRKSt9nothrow_t"
+9: "_ZdaPvSt11align_val_tRKSt9nothrow_t" has pointer type input
+
+1: "elim_new_delete_pairs"
+4: "elim_new_delete_pairs" has unsupported operation: llvm.return
+

@@ -1,0 +1,25 @@
+1: "memcmp"
+9: "memcmp" has pointer type input
+
+1: "memcmp_4bytes_unaligned_constant_i8"
+9: "memcmp_4bytes_unaligned_constant_i8" has pointer type input
+
+4: "memcmp_4bytes_unaligned_constant_i8" has unsupported operation: llvm.mlir.addressof
+
+4: "memcmp_4bytes_unaligned_constant_i8" has unsupported operation: llvm.call
+
+1: "memcmp_4bytes_unaligned_constant_i16"
+9: "memcmp_4bytes_unaligned_constant_i16" has pointer type input
+
+4: "memcmp_4bytes_unaligned_constant_i16" has unsupported operation: llvm.mlir.addressof
+
+4: "memcmp_4bytes_unaligned_constant_i16" has unsupported operation: llvm.call
+
+1: "memcmp_3bytes_aligned_constant_i32"
+9: "memcmp_3bytes_aligned_constant_i32" has pointer type input
+
+1: "memcmp_4bytes_one_unaligned_i8"
+9: "memcmp_4bytes_one_unaligned_i8" has pointer type input
+
+4: "memcmp_4bytes_one_unaligned_i8" has unsupported operation: llvm.call
+

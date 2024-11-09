@@ -1,0 +1,20 @@
+1: "bork"
+4: "bork" has unsupported operation: llvm.mlir.addressof
+
+4: "bork" has unsupported operation: llvm.mlir.addressof
+
+4: "bork" has unsupported operation: llvm.alloca
+
+4: "bork" has unsupported operation: llvm.load
+
+4: "bork" has unsupported operation: llvm.load
+
+4: "bork" has unsupported operation: llvm.call
+
+4: "bork" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "bork" has unsupported operation: llvm.return
+
+1: "objc_msgSend_fpret"
+9: "objc_msgSend_fpret" has pointer type input
+

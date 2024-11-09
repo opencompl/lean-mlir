@@ -1,0 +1,11 @@
+1: "use.i1"
+5: "use.i1" is empty
+
+1: "use.i64"
+5: "use.i64" is empty
+
+1: "f"
+4: "f" has unsupported operation: llvm.call
+
+4: "f" has unsupported operation: llvm.call
+

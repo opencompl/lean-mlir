@@ -1,0 +1,199 @@
+1: "t0_ult_slt_128"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "t1_ult_slt_0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "t2_ult_sgt_128"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "t3_ult_sgt_neg1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "t4_ugt_slt_128"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "t5_ugt_slt_0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "t6_ugt_sgt_128"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "t7_ugt_sgt_neg1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "n8_ult_slt_129"
+7: "n8_ult_slt_129" is unchanged by InstCombine
+
+1: "n9_ult_slt_neg17"
+7: "n9_ult_slt_neg17" is unchanged by InstCombine
+
+1: "n10_ugt_slt"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "n11_uge_slt"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "n12_ule_slt"
+7: "n12_ule_slt" is unchanged by InstCombine
+
+1: "use32"
+5: "use32" is empty
+
+1: "use1"
+5: "use1" is empty
+
+1: "t10_oneuse0"
+4: "t10_oneuse0" has unsupported operation: llvm.call
+
+1: "n11_oneuse1"
+4: "n11_oneuse1" has unsupported operation: llvm.call
+
+1: "t12_oneuse2"
+4: "t12_oneuse2" has unsupported operation: llvm.call
+
+1: "n13_oneuse3"
+4: "n13_oneuse3" has unsupported operation: llvm.call
+
+1: "n14_oneuse4"
+4: "n14_oneuse4" has unsupported operation: llvm.call
+
+4: "n14_oneuse4" has unsupported operation: llvm.call
+
+1: "n15_oneuse5"
+4: "n15_oneuse5" has unsupported operation: llvm.call
+
+4: "n15_oneuse5" has unsupported operation: llvm.call
+
+1: "n16_oneuse6"
+4: "n16_oneuse6" has unsupported operation: llvm.call
+
+4: "n16_oneuse6" has unsupported operation: llvm.call
+
+1: "n17_oneuse7"
+4: "n17_oneuse7" has unsupported operation: llvm.call
+
+4: "n17_oneuse7" has unsupported operation: llvm.call
+
+4: "n17_oneuse7" has unsupported operation: llvm.call
+
+1: "n18_oneuse8"
+4: "n18_oneuse8" has unsupported operation: llvm.call
+
+4: "n18_oneuse8" has unsupported operation: llvm.call
+
+4: "n18_oneuse8" has unsupported operation: llvm.call
+
+1: "n19_oneuse9"
+4: "n19_oneuse9" has unsupported operation: llvm.call
+
+4: "n19_oneuse9" has unsupported operation: llvm.call
+
+4: "n19_oneuse9" has unsupported operation: llvm.call
+
+4: "n19_oneuse9" has unsupported operation: llvm.call
+
+1: "t20_ult_slt_vec_splat"
+8: "t20_ult_slt_vec_splat" contains vectors which are unsupported
+
+1: "t21_ult_slt_vec_nonsplat"
+8: "t21_ult_slt_vec_nonsplat" contains vectors which are unsupported
+
+1: "use2xi1"
+5: "use2xi1" is empty
+
+1: "use"
+5: "use" is empty
+
+1: "t22_uge_slt"
+4: "t22_uge_slt" has unsupported operation: llvm.call
+
+1: "t23_ult_sge"
+4: "t23_ult_sge" has unsupported operation: llvm.call
+

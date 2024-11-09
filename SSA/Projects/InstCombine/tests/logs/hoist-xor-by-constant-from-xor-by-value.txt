@@ -1,0 +1,56 @@
+1: "gen8"
+5: "gen8" is empty
+
+1: "use8"
+5: "use8" is empty
+
+1: "t0_scalar"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.return
+
+1: "t1_splatvec"
+8: "t1_splatvec" contains vectors which are unsupported
+
+1: "t2_vec"
+8: "t2_vec" contains vectors which are unsupported
+
+1: "t3_vec_undef"
+4: "t3_vec_undef" has unsupported operation: llvm.mlir.undef
+
+4: "t3_vec_undef" has unsupported operation: llvm.mlir.undef
+
+4: "t3_vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t3_vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "t4_extrause"
+4: "t4_extrause" has unsupported operation: llvm.call
+
+1: "t5_commutativity"
+4: "t5_commutativity" has unsupported operation: llvm.call
+
+1: "constantexpr"
+4: "constantexpr" has unsupported operation: llvm.mlir.addressof
+
+4: "constantexpr" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "constantexpr" has unsupported operation: llvm.mlir.addressof
+
+4: "constantexpr" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+1: "constantexpr2"
+4: "constantexpr2" has unsupported operation: llvm.mlir.addressof
+
+4: "constantexpr2" has unsupported operation: llvm.getelementptr
+
+4: "constantexpr2" has unsupported operation: llvm.mlir.addressof
+
+4: "constantexpr2" has unsupported operation: llvm.mlir.addressof
+
+4: "constantexpr2" has unsupported operation: llvm.load
+
+4: "constantexpr2" has unsupported operation: llvm.load
+

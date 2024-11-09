@@ -1,0 +1,136 @@
+1: "test_load"
+9: "test_load" has pointer type input
+
+4: "test_load" has unsupported operation: llvm.mlir.addressof
+
+4: "test_load" has unsupported operation: llvm.getelementptr
+
+4: "test_load" has unsupported operation: llvm.load
+
+4: "test_load" has unsupported operation: llvm.getelementptr
+
+4: "test_load" has unsupported operation: llvm.store
+
+4: "test_load" has unsupported operation: llvm.return
+
+1: "test_load_gep_nusw_nuw"
+9: "test_load_gep_nusw_nuw" has pointer type input
+
+4: "test_load_gep_nusw_nuw" has unsupported operation: llvm.mlir.addressof
+
+4: "test_load_gep_nusw_nuw" has unsupported operation: llvm.getelementptr
+
+4: "test_load_gep_nusw_nuw" has unsupported operation: llvm.load
+
+4: "test_load_gep_nusw_nuw" has unsupported operation: llvm.getelementptr
+
+4: "test_load_gep_nusw_nuw" has unsupported operation: llvm.store
+
+4: "test_load_gep_nusw_nuw" has unsupported operation: llvm.return
+
+1: "test_load_bitcast_chain"
+9: "test_load_bitcast_chain" has pointer type input
+
+4: "test_load_bitcast_chain" has unsupported operation: llvm.mlir.addressof
+
+4: "test_load_bitcast_chain" has unsupported operation: llvm.getelementptr
+
+4: "test_load_bitcast_chain" has unsupported operation: llvm.load
+
+4: "test_load_bitcast_chain" has unsupported operation: llvm.getelementptr
+
+4: "test_load_bitcast_chain" has unsupported operation: llvm.store
+
+4: "test_load_bitcast_chain" has unsupported operation: llvm.return
+
+1: "test_call"
+9: "test_call" has pointer type input
+
+4: "test_call" has unsupported operation: llvm.mlir.addressof
+
+4: "test_call" has unsupported operation: llvm.alloca
+
+4: "test_call" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "test_call" has unsupported operation: llvm.getelementptr
+
+4: "test_call" has unsupported operation: llvm.call
+
+4: "test_call" has unsupported operation: llvm.getelementptr
+
+4: "test_call" has unsupported operation: llvm.store
+
+4: "test_call" has unsupported operation: llvm.return
+
+1: "test_call_no_null_opt"
+9: "test_call_no_null_opt" has pointer type input
+
+4: "test_call_no_null_opt" has unsupported operation: llvm.mlir.addressof
+
+4: "test_call_no_null_opt" has unsupported operation: llvm.alloca
+
+4: "test_call_no_null_opt" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "test_call_no_null_opt" has unsupported operation: llvm.getelementptr
+
+4: "test_call_no_null_opt" has unsupported operation: llvm.call
+
+4: "test_call_no_null_opt" has unsupported operation: llvm.getelementptr
+
+4: "test_call_no_null_opt" has unsupported operation: llvm.store
+
+4: "test_call_no_null_opt" has unsupported operation: llvm.return
+
+1: "test_load_and_call"
+9: "test_load_and_call" has pointer type input
+
+4: "test_load_and_call" has unsupported operation: llvm.mlir.addressof
+
+4: "test_load_and_call" has unsupported operation: llvm.alloca
+
+4: "test_load_and_call" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "test_load_and_call" has unsupported operation: llvm.getelementptr
+
+4: "test_load_and_call" has unsupported operation: llvm.load
+
+4: "test_load_and_call" has unsupported operation: llvm.getelementptr
+
+4: "test_load_and_call" has unsupported operation: llvm.store
+
+4: "test_load_and_call" has unsupported operation: llvm.call
+
+4: "test_load_and_call" has unsupported operation: llvm.getelementptr
+
+4: "test_load_and_call" has unsupported operation: llvm.store
+
+4: "test_load_and_call" has unsupported operation: llvm.return
+
+1: "test_load_and_call_no_null_opt"
+9: "test_load_and_call_no_null_opt" has pointer type input
+
+4: "test_load_and_call_no_null_opt" has unsupported operation: llvm.mlir.addressof
+
+4: "test_load_and_call_no_null_opt" has unsupported operation: llvm.alloca
+
+4: "test_load_and_call_no_null_opt" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "test_load_and_call_no_null_opt" has unsupported operation: llvm.getelementptr
+
+4: "test_load_and_call_no_null_opt" has unsupported operation: llvm.load
+
+4: "test_load_and_call_no_null_opt" has unsupported operation: llvm.getelementptr
+
+4: "test_load_and_call_no_null_opt" has unsupported operation: llvm.store
+
+4: "test_load_and_call_no_null_opt" has unsupported operation: llvm.call
+
+4: "test_load_and_call_no_null_opt" has unsupported operation: llvm.getelementptr
+
+4: "test_load_and_call_no_null_opt" has unsupported operation: llvm.store
+
+4: "test_load_and_call_no_null_opt" has unsupported operation: llvm.return
+
+1: "foo"
+9: "foo" has pointer type input
+

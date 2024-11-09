@@ -1,0 +1,35 @@
+1: "urem_assume"
+4: "urem_assume" has unsupported operation: builtin.unregistered: llvm.freeze
+
+4: "urem_assume" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "urem_assume_without_nuw"
+4: "urem_assume_without_nuw" has unsupported operation: builtin.unregistered: llvm.freeze
+
+4: "urem_assume_without_nuw" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "urem_assume_eq"
+4: "urem_assume_eq" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "urem_assume_ne"
+4: "urem_assume_ne" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "urem_assume_with_unexpected_const"
+4: "urem_assume_with_unexpected_const" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "urem_without_assume"
+4: "urem_without_assume" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "urem_with_dominating_condition"
+4: "urem_with_dominating_condition" has unsupported operation: builtin.unregistered: llvm.freeze
+
+4: "urem_with_dominating_condition" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "urem_with_dominating_condition_false"
+4: "urem_with_dominating_condition_false" has unsupported operation: builtin.unregistered: llvm.freeze
+
+4: "urem_with_dominating_condition_false" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "urem_with_opposite_condition"
+4: "urem_with_opposite_condition" has unsupported operation: builtin.unregistered: llvm.cond_br
+

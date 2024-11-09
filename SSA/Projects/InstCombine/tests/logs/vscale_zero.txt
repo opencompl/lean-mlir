@@ -1,0 +1,6 @@
+1: "iszero"
+4: "iszero" has unsupported operation after optimization: builtin.unregistered: llvm.intr.vscale
+
+1: "iszero_range"
+4: "iszero_range" has unsupported operation after optimization: builtin.unregistered: llvm.intr.vscale
+

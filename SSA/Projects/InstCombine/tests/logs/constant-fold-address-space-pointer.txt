@@ -1,0 +1,138 @@
+1: "test_constant_fold_inttoptr_as_pointer_same_size"
+4: "test_constant_fold_inttoptr_as_pointer_same_size" has unsupported operation: llvm.mlir.addressof
+
+1: "test_constant_fold_inttoptr_as_pointer_smaller"
+4: "test_constant_fold_inttoptr_as_pointer_smaller" has unsupported operation: llvm.mlir.addressof
+
+1: "test_constant_fold_inttoptr_as_pointer_smaller_different_as"
+4: "test_constant_fold_inttoptr_as_pointer_smaller_different_as" has unsupported operation: llvm.mlir.addressof
+
+4: "test_constant_fold_inttoptr_as_pointer_smaller_different_as" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "test_constant_fold_inttoptr_as_pointer_smaller_different_as" has unsupported operation: llvm.inttoptr
+
+1: "test_constant_fold_inttoptr_as_pointer_smaller_different_size_as"
+4: "test_constant_fold_inttoptr_as_pointer_smaller_different_size_as" has unsupported operation: llvm.mlir.addressof
+
+4: "test_constant_fold_inttoptr_as_pointer_smaller_different_size_as" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "test_constant_fold_inttoptr_as_pointer_smaller_different_size_as" has unsupported operation: llvm.inttoptr
+
+1: "test_constant_fold_inttoptr_as_pointer_larger"
+4: "test_constant_fold_inttoptr_as_pointer_larger" has unsupported operation: llvm.mlir.addressof
+
+4: "test_constant_fold_inttoptr_as_pointer_larger" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "test_constant_fold_inttoptr_as_pointer_larger" has unsupported operation: llvm.inttoptr
+
+1: "const_fold_ptrtoint"
+4: "const_fold_ptrtoint" has unsupported operation after optimization: llvm.inttoptr
+
+4: "const_fold_ptrtoint" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+1: "const_fold_ptrtoint_mask"
+4: "const_fold_ptrtoint_mask" has unsupported operation after optimization: llvm.inttoptr
+
+4: "const_fold_ptrtoint_mask" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+1: "const_fold_ptrtoint_mask_small_as0"
+4: "const_fold_ptrtoint_mask_small_as0" has unsupported operation after optimization: llvm.inttoptr
+
+4: "const_fold_ptrtoint_mask_small_as0" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+1: "const_inttoptr"
+4: "const_inttoptr" has unsupported operation: llvm.inttoptr
+
+1: "const_ptrtoint"
+4: "const_ptrtoint" has unsupported operation: llvm.mlir.addressof
+
+4: "const_ptrtoint" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+1: "const_inttoptr_ptrtoint"
+7: "const_inttoptr_ptrtoint" is unchanged by InstCombine
+
+1: "constant_fold_cmp_constantexpr_inttoptr"
+4: "constant_fold_cmp_constantexpr_inttoptr" has unsupported operation after optimization: llvm.mlir.zero
+
+1: "constant_fold_inttoptr_null"
+4: "constant_fold_inttoptr_null" has unsupported operation after optimization: llvm.inttoptr
+
+4: "constant_fold_inttoptr_null" has unsupported operation after optimization: llvm.mlir.zero
+
+1: "constant_fold_ptrtoint_null"
+4: "constant_fold_ptrtoint_null" has unsupported operation: llvm.mlir.addressof
+
+4: "constant_fold_ptrtoint_null" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+1: "constant_fold_ptrtoint_null_2"
+4: "constant_fold_ptrtoint_null_2" has unsupported operation: llvm.mlir.addressof
+
+4: "constant_fold_ptrtoint_null_2" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+1: "constant_fold_ptrtoint"
+4: "constant_fold_ptrtoint" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "constant_fold_ptrtoint" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+1: "constant_fold_inttoptr"
+4: "constant_fold_inttoptr" has unsupported operation after optimization: llvm.inttoptr
+
+4: "constant_fold_inttoptr" has unsupported operation after optimization: llvm.inttoptr
+
+1: "constant_fold_bitcast_ftoi_load"
+4: "constant_fold_bitcast_ftoi_load" has unsupported operation: llvm.mlir.addressof
+
+4: "constant_fold_bitcast_ftoi_load" has unsupported operation: llvm.load
+
+1: "constant_fold_bitcast_itof_load"
+4: "constant_fold_bitcast_itof_load" has unsupported operation: llvm.mlir.addressof
+
+4: "constant_fold_bitcast_itof_load" has unsupported operation: llvm.load
+
+1: "constant_fold_bitcast_vector_as"
+4: "constant_fold_bitcast_vector_as" has unsupported operation: llvm.mlir.addressof
+
+4: "constant_fold_bitcast_vector_as" has unsupported operation: llvm.load
+
+1: "test_cast_gep_small_indices_as"
+4: "test_cast_gep_small_indices_as" has unsupported operation: llvm.mlir.addressof
+
+4: "test_cast_gep_small_indices_as" has unsupported operation: llvm.load
+
+1: "test_cast_gep_large_indices_as"
+4: "test_cast_gep_large_indices_as" has unsupported operation: llvm.mlir.addressof
+
+4: "test_cast_gep_large_indices_as" has unsupported operation: llvm.load
+
+1: "test_constant_cast_gep_struct_indices_as"
+4: "test_constant_cast_gep_struct_indices_as" has unsupported operation: llvm.mlir.addressof
+
+4: "test_constant_cast_gep_struct_indices_as" has unsupported operation: llvm.getelementptr
+
+4: "test_constant_cast_gep_struct_indices_as" has unsupported operation: llvm.load
+
+1: "test_read_data_from_global_as3"
+4: "test_read_data_from_global_as3" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test_read_data_from_global_as3" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test_read_data_from_global_as3" has unsupported operation after optimization: llvm.load
+
+1: "constant_through_array_as_ptrs"
+4: "constant_through_array_as_ptrs" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "constant_through_array_as_ptrs" has unsupported operation after optimization: llvm.load
+
+4: "constant_through_array_as_ptrs" has unsupported operation after optimization: llvm.load
+
+4: "constant_through_array_as_ptrs" has unsupported operation after optimization: llvm.load
+
+1: "canonicalize_addrspacecast"
+4: "canonicalize_addrspacecast" has unsupported operation: llvm.mlir.addressof
+
+4: "canonicalize_addrspacecast" has unsupported operation: builtin.unregistered: llvm.addrspacecast
+
+4: "canonicalize_addrspacecast" has unsupported operation: llvm.getelementptr
+
+4: "canonicalize_addrspacecast" has unsupported operation: llvm.load
+

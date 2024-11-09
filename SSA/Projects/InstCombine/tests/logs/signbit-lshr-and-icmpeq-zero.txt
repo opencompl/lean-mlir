@@ -1,0 +1,152 @@
+1: "scalar_i8_signbit_lshr_and_eq"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "scalar_i16_signbit_lshr_and_eq"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "scalar_i32_signbit_lshr_and_eq"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "scalar_i64_signbit_lshr_and_eq"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "scalar_i32_signbit_lshr_and_ne"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "vec_4xi32_signbit_lshr_and_eq"
+8: "vec_4xi32_signbit_lshr_and_eq" contains vectors which are unsupported
+
+1: "vec_4xi32_signbit_lshr_and_eq_undef1"
+4: "vec_4xi32_signbit_lshr_and_eq_undef1" has unsupported operation: llvm.mlir.undef
+
+4: "vec_4xi32_signbit_lshr_and_eq_undef1" has unsupported operation: llvm.mlir.undef
+
+4: "vec_4xi32_signbit_lshr_and_eq_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vec_4xi32_signbit_lshr_and_eq_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vec_4xi32_signbit_lshr_and_eq_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vec_4xi32_signbit_lshr_and_eq_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "vec_4xi32_signbit_lshr_and_eq_undef2"
+4: "vec_4xi32_signbit_lshr_and_eq_undef2" has unsupported operation: llvm.mlir.undef
+
+4: "vec_4xi32_signbit_lshr_and_eq_undef2" has unsupported operation: llvm.mlir.undef
+
+4: "vec_4xi32_signbit_lshr_and_eq_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vec_4xi32_signbit_lshr_and_eq_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vec_4xi32_signbit_lshr_and_eq_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vec_4xi32_signbit_lshr_and_eq_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "vec_4xi32_signbit_lshr_and_eq_undef3"
+4: "vec_4xi32_signbit_lshr_and_eq_undef3" has unsupported operation: llvm.mlir.undef
+
+4: "vec_4xi32_signbit_lshr_and_eq_undef3" has unsupported operation: llvm.mlir.undef
+
+4: "vec_4xi32_signbit_lshr_and_eq_undef3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vec_4xi32_signbit_lshr_and_eq_undef3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vec_4xi32_signbit_lshr_and_eq_undef3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vec_4xi32_signbit_lshr_and_eq_undef3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vec_4xi32_signbit_lshr_and_eq_undef3" has unsupported operation: llvm.mlir.undef
+
+4: "vec_4xi32_signbit_lshr_and_eq_undef3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vec_4xi32_signbit_lshr_and_eq_undef3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vec_4xi32_signbit_lshr_and_eq_undef3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vec_4xi32_signbit_lshr_and_eq_undef3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "scalar_i32_signbit_lshr_and_eq_extra_use_lshr"
+9: "scalar_i32_signbit_lshr_and_eq_extra_use_lshr" has pointer type input
+
+4: "scalar_i32_signbit_lshr_and_eq_extra_use_lshr" has unsupported operation: llvm.store
+
+1: "scalar_i32_signbit_lshr_and_eq_extra_use_and"
+9: "scalar_i32_signbit_lshr_and_eq_extra_use_and" has pointer type input
+
+4: "scalar_i32_signbit_lshr_and_eq_extra_use_and" has unsupported operation: llvm.store
+
+1: "scalar_i32_signbit_lshr_and_eq_extra_use_lshr_and"
+9: "scalar_i32_signbit_lshr_and_eq_extra_use_lshr_and" has pointer type input
+
+4: "scalar_i32_signbit_lshr_and_eq_extra_use_lshr_and" has unsupported operation: llvm.store
+
+4: "scalar_i32_signbit_lshr_and_eq_extra_use_lshr_and" has unsupported operation: llvm.store
+
+1: "scalar_i32_signbit_lshr_and_eq_X_is_constant1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "scalar_i32_signbit_lshr_and_eq_X_is_constant2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "scalar_i32_signbit_lshr_and_slt"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "scalar_i32_signbit_lshr_and_eq_nonzero"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+

@@ -1,0 +1,66 @@
+1: "pr48975"
+9: "pr48975" has pointer type input
+
+4: "pr48975" has unsupported operation: llvm.mlir.zero
+
+4: "pr48975" has unsupported operation: llvm.load
+
+1: "nonnull_ret"
+9: "nonnull_ret" has pointer type input
+
+4: "nonnull_ret" has unsupported operation: llvm.mlir.zero
+
+1: "nonnull_ret2"
+9: "nonnull_ret2" has pointer type input
+
+4: "nonnull_ret2" has unsupported operation: llvm.mlir.zero
+
+1: "nonnull_noundef_ret"
+9: "nonnull_noundef_ret" has pointer type input
+
+4: "nonnull_noundef_ret" has unsupported operation: llvm.mlir.zero
+
+1: "nonnull_noundef_ret2"
+9: "nonnull_noundef_ret2" has pointer type input
+
+4: "nonnull_noundef_ret2" has unsupported operation: llvm.mlir.zero
+
+1: "nonnull_call"
+9: "nonnull_call" has pointer type input
+
+4: "nonnull_call" has unsupported operation: llvm.mlir.zero
+
+4: "nonnull_call" has unsupported operation: llvm.call
+
+4: "nonnull_call" has unsupported operation: llvm.return
+
+1: "nonnull_call2"
+9: "nonnull_call2" has pointer type input
+
+4: "nonnull_call2" has unsupported operation: llvm.mlir.zero
+
+4: "nonnull_call2" has unsupported operation: llvm.call
+
+4: "nonnull_call2" has unsupported operation: llvm.return
+
+1: "nonnull_noundef_call"
+9: "nonnull_noundef_call" has pointer type input
+
+4: "nonnull_noundef_call" has unsupported operation: llvm.mlir.zero
+
+4: "nonnull_noundef_call" has unsupported operation: llvm.call
+
+4: "nonnull_noundef_call" has unsupported operation: llvm.return
+
+1: "nonnull_noundef_call2"
+9: "nonnull_noundef_call2" has pointer type input
+
+4: "nonnull_noundef_call2" has unsupported operation: llvm.mlir.zero
+
+4: "nonnull_noundef_call2" has unsupported operation: llvm.call
+
+4: "nonnull_noundef_call2" has unsupported operation: llvm.return
+
+1: "f"
+9: "f" has pointer type input
+

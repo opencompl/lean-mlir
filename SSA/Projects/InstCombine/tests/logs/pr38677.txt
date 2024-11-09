@@ -1,0 +1,9 @@
+1: "foo"
+9: "foo" has pointer type input
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "foo" has unsupported operation: llvm.store
+

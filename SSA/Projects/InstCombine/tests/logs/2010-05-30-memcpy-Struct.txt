@@ -1,0 +1,13 @@
+1: "CopyEventArg"
+9: "CopyEventArg" has pointer type input
+
+4: "CopyEventArg" has unsupported operation: llvm.call
+
+4: "CopyEventArg" has unsupported operation: llvm.return
+
+1: "sprintf"
+9: "sprintf" has pointer type input
+
+1: "strcpy"
+9: "strcpy" has pointer type input
+

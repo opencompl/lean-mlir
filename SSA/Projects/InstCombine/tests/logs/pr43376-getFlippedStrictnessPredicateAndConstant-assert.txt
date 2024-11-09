@@ -1,0 +1,9 @@
+1: "d"
+9: "d" has pointer type input
+
+4: "d" has unsupported operation: llvm.load
+
+4: "d" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "d" has unsupported operation: builtin.unregistered: llvm.br
+

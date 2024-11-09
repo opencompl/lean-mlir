@@ -1,0 +1,49 @@
+1: "test_shift_and_cmp_not_changed1"
+7: "test_shift_and_cmp_not_changed1" is unchanged by InstCombine
+
+1: "test_shift_and_cmp_not_changed2"
+7: "test_shift_and_cmp_not_changed2" is unchanged by InstCombine
+
+1: "test_shift_and_cmp_changed1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.or
+2: llvm.shl
+2: llvm.ashr
+2: llvm.icmp
+2: llvm.return
+
+1: "test_shift_and_cmp_changed1_vec"
+8: "test_shift_and_cmp_changed1_vec" contains vectors which are unsupported
+
+1: "test_shift_and_cmp_changed2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "test_shift_and_cmp_changed2_vec"
+8: "test_shift_and_cmp_changed2_vec" contains vectors which are unsupported
+
+1: "test_shift_and_cmp_changed3"
+7: "test_shift_and_cmp_changed3" is unchanged by InstCombine
+
+1: "test_shift_and_cmp_changed4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+

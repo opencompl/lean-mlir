@@ -1,0 +1,14 @@
+1: "realloc"
+9: "realloc" has pointer type input
+
+1: "malloc"
+5: "malloc" is empty
+
+1: "realloc_null_ptr"
+4: "realloc_null_ptr" has unsupported operation: llvm.call
+
+1: "realloc_unknown_ptr"
+9: "realloc_unknown_ptr" has pointer type input
+
+4: "realloc_unknown_ptr" has unsupported operation: llvm.call
+

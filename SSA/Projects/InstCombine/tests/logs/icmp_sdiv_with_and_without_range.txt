@@ -1,0 +1,10 @@
+1: "without_range"
+9: "without_range" has pointer type input
+
+4: "without_range" has unsupported operation: llvm.load
+
+1: "with_range"
+9: "with_range" has pointer type input
+
+4: "with_range" has unsupported operation: llvm.load
+

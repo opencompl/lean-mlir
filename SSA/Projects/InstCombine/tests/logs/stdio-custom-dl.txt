@@ -1,0 +1,22 @@
+1: "fputs_test_custom_dl"
+4: "fputs_test_custom_dl" has unsupported operation: llvm.mlir.addressof
+
+4: "fputs_test_custom_dl" has unsupported operation: llvm.mlir.addressof
+
+4: "fputs_test_custom_dl" has unsupported operation: llvm.mlir.addressof
+
+4: "fputs_test_custom_dl" has unsupported operation: llvm.call
+
+4: "fputs_test_custom_dl" has unsupported operation: llvm.call
+
+4: "fputs_test_custom_dl" has unsupported operation: llvm.return
+
+1: "fopen"
+9: "fopen" has pointer type input
+
+1: "fputs"
+9: "fputs" has pointer type input
+
+1: "fwrite"
+9: "fwrite" has pointer type input
+

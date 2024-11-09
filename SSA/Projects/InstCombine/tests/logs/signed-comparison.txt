@@ -1,0 +1,10 @@
+1: "scalar_zext_slt"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "vector_zext_slt"
+8: "vector_zext_slt" contains vectors which are unsupported
+

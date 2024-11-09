@@ -1,0 +1,40 @@
+1: "memchr"
+9: "memchr" has pointer type input
+
+1: "fold_memchr_a_c_5_eq_a"
+4: "fold_memchr_a_c_5_eq_a" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_memchr_a_c_5_eq_a" has unsupported operation after optimization: llvm.call
+
+1: "fold_memchr_a_c_n_eq_a"
+4: "fold_memchr_a_c_n_eq_a" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_memchr_a_c_n_eq_a" has unsupported operation after optimization: llvm.call
+
+1: "call_memchr_api_c_n_eq_a"
+4: "call_memchr_api_c_n_eq_a" has unsupported operation: llvm.mlir.addressof
+
+4: "call_memchr_api_c_n_eq_a" has unsupported operation: llvm.getelementptr
+
+4: "call_memchr_api_c_n_eq_a" has unsupported operation: llvm.call
+
+1: "fold_memchr_s_c_15_eq_s"
+9: "fold_memchr_s_c_15_eq_s" has pointer type input
+
+4: "fold_memchr_s_c_15_eq_s" has unsupported operation: llvm.load
+
+1: "fold_memchr_s_c_17_neq_s"
+9: "fold_memchr_s_c_17_neq_s" has pointer type input
+
+4: "fold_memchr_s_c_17_neq_s" has unsupported operation: llvm.load
+
+1: "fold_memchr_s_c_nz_eq_s"
+9: "fold_memchr_s_c_nz_eq_s" has pointer type input
+
+4: "fold_memchr_s_c_nz_eq_s" has unsupported operation: llvm.load
+
+1: "call_memchr_s_c_n_eq_s"
+9: "call_memchr_s_c_n_eq_s" has pointer type input
+
+4: "call_memchr_s_c_n_eq_s" has unsupported operation: llvm.call
+

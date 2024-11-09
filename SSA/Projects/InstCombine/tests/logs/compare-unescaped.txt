@@ -1,0 +1,188 @@
+1: "malloc"
+5: "malloc" is empty
+
+1: "compare_global_trivialeq"
+4: "compare_global_trivialeq" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "compare_global_trivialeq" has unsupported operation after optimization: llvm.call
+
+4: "compare_global_trivialeq" has unsupported operation after optimization: llvm.load
+
+1: "compare_global_trivialne"
+4: "compare_global_trivialne" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "compare_global_trivialne" has unsupported operation after optimization: llvm.call
+
+4: "compare_global_trivialne" has unsupported operation after optimization: llvm.load
+
+1: "f"
+5: "f" is empty
+
+1: "compare_and_call_with_deopt"
+4: "compare_and_call_with_deopt" has unsupported operation: llvm.call
+
+4: "compare_and_call_with_deopt" has unsupported operation: llvm.call
+
+1: "compare_ne_and_call_with_deopt"
+4: "compare_ne_and_call_with_deopt" has unsupported operation: llvm.call
+
+4: "compare_ne_and_call_with_deopt" has unsupported operation: llvm.call
+
+1: "compare_ne_global_maybe_null"
+4: "compare_ne_global_maybe_null" has unsupported operation: llvm.mlir.addressof
+
+4: "compare_ne_global_maybe_null" has unsupported operation: llvm.call
+
+4: "compare_ne_global_maybe_null" has unsupported operation: llvm.load
+
+4: "compare_ne_global_maybe_null" has unsupported operation: llvm.call
+
+1: "escape"
+9: "escape" has pointer type input
+
+1: "compare_and_call_after"
+4: "compare_and_call_after" has unsupported operation: llvm.mlir.addressof
+
+4: "compare_and_call_after" has unsupported operation: llvm.call
+
+4: "compare_and_call_after" has unsupported operation: llvm.load
+
+4: "compare_and_call_after" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "compare_and_call_after" has unsupported operation: llvm.call
+
+1: "compare_distinct_mallocs"
+4: "compare_distinct_mallocs" has unsupported operation after optimization: llvm.call
+
+4: "compare_distinct_mallocs" has unsupported operation after optimization: llvm.call
+
+1: "compare_samepointer_under_bitcast"
+4: "compare_samepointer_under_bitcast" has unsupported operation after optimization: llvm.call
+
+1: "compare_samepointer_escaped"
+4: "compare_samepointer_escaped" has unsupported operation: llvm.call
+
+4: "compare_samepointer_escaped" has unsupported operation: llvm.call
+
+1: "compare_ret_escape"
+9: "compare_ret_escape" has pointer type input
+
+4: "compare_ret_escape" has unsupported operation: llvm.mlir.addressof
+
+4: "compare_ret_escape" has unsupported operation: llvm.call
+
+4: "compare_ret_escape" has unsupported operation: llvm.call
+
+4: "compare_ret_escape" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "compare_ret_escape" has unsupported operation: llvm.load
+
+4: "compare_ret_escape" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "compare_distinct_pointer_escape"
+4: "compare_distinct_pointer_escape" has unsupported operation: llvm.call
+
+4: "compare_distinct_pointer_escape" has unsupported operation: llvm.call
+
+1: "hidden_inttoptr"
+5: "hidden_inttoptr" is empty
+
+1: "hidden_offset"
+9: "hidden_offset" has pointer type input
+
+1: "ptrtoint_single_cmp"
+4: "ptrtoint_single_cmp" has unsupported operation: llvm.inttoptr
+
+4: "ptrtoint_single_cmp" has unsupported operation: llvm.call
+
+1: "offset_single_cmp"
+4: "offset_single_cmp" has unsupported operation after optimization: llvm.call
+
+4: "offset_single_cmp" has unsupported operation after optimization: llvm.call
+
+4: "offset_single_cmp" has unsupported operation after optimization: llvm.getelementptr
+
+1: "witness"
+5: "witness" is empty
+
+1: "neg_consistent_fold1"
+4: "neg_consistent_fold1" has unsupported operation: llvm.inttoptr
+
+4: "neg_consistent_fold1" has unsupported operation: llvm.call
+
+4: "neg_consistent_fold1" has unsupported operation: llvm.call
+
+4: "neg_consistent_fold1" has unsupported operation: llvm.call
+
+4: "neg_consistent_fold1" has unsupported operation: llvm.return
+
+1: "neg_consistent_fold2"
+4: "neg_consistent_fold2" has unsupported operation: llvm.call
+
+4: "neg_consistent_fold2" has unsupported operation: llvm.call
+
+4: "neg_consistent_fold2" has unsupported operation: llvm.getelementptr
+
+4: "neg_consistent_fold2" has unsupported operation: llvm.call
+
+4: "neg_consistent_fold2" has unsupported operation: llvm.call
+
+4: "neg_consistent_fold2" has unsupported operation: llvm.return
+
+1: "neg_consistent_fold3"
+4: "neg_consistent_fold3" has unsupported operation: llvm.mlir.addressof
+
+4: "neg_consistent_fold3" has unsupported operation: llvm.call
+
+4: "neg_consistent_fold3" has unsupported operation: llvm.load
+
+4: "neg_consistent_fold3" has unsupported operation: llvm.call
+
+4: "neg_consistent_fold3" has unsupported operation: llvm.call
+
+4: "neg_consistent_fold3" has unsupported operation: llvm.return
+
+1: "neg_consistent_fold4"
+4: "neg_consistent_fold4" has unsupported operation: llvm.call
+
+4: "neg_consistent_fold4" has unsupported operation: llvm.return
+
+1: "unknown"
+9: "unknown" has pointer type input
+
+1: "consistent_nocapture_inttoptr"
+4: "consistent_nocapture_inttoptr" has unsupported operation: llvm.inttoptr
+
+4: "consistent_nocapture_inttoptr" has unsupported operation: llvm.call
+
+4: "consistent_nocapture_inttoptr" has unsupported operation: llvm.call
+
+1: "consistent_nocapture_offset"
+4: "consistent_nocapture_offset" has unsupported operation: llvm.call
+
+4: "consistent_nocapture_offset" has unsupported operation: llvm.call
+
+1: "consistent_nocapture_through_global"
+4: "consistent_nocapture_through_global" has unsupported operation: llvm.call
+
+4: "consistent_nocapture_through_global" has unsupported operation: llvm.call
+
+1: "two_nonnull_mallocs"
+4: "two_nonnull_mallocs" has unsupported operation after optimization: llvm.call
+
+4: "two_nonnull_mallocs" has unsupported operation after optimization: llvm.call
+
+1: "two_nonnull_mallocs2"
+4: "two_nonnull_mallocs2" has unsupported operation: llvm.call
+
+4: "two_nonnull_mallocs2" has unsupported operation: llvm.call
+
+1: "two_nonnull_mallocs_hidden"
+4: "two_nonnull_mallocs_hidden" has unsupported operation: llvm.call
+
+4: "two_nonnull_mallocs_hidden" has unsupported operation: llvm.call
+
+4: "two_nonnull_mallocs_hidden" has unsupported operation: llvm.getelementptr
+
+4: "two_nonnull_mallocs_hidden" has unsupported operation: llvm.getelementptr
+

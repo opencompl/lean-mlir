@@ -1,0 +1,26 @@
+1: "strcspn"
+9: "strcspn" has pointer type input
+
+1: "test_simplify1"
+9: "test_simplify1" has pointer type input
+
+4: "test_simplify1" has unsupported operation: llvm.call
+
+1: "test_simplify2"
+9: "test_simplify2" has pointer type input
+
+1: "test_simplify3"
+4: "test_simplify3" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test_simplify3" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test_simplify3" has unsupported operation after optimization: llvm.call
+
+1: "test_no_simplify1"
+9: "test_no_simplify1" has pointer type input
+
+4: "test_no_simplify1" has unsupported operation: llvm.call
+
+1: "strlen"
+9: "strlen" has pointer type input
+

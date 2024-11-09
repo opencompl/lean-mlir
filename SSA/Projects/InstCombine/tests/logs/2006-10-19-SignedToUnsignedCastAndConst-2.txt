@@ -1,0 +1,7 @@
+1: "eq_signed_to_small_unsigned"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+

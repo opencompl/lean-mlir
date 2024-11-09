@@ -1,0 +1,14 @@
+1: "strrchr"
+9: "strrchr" has pointer type input
+
+1: "test_nosimplify1"
+4: "test_nosimplify1" has unsupported operation: llvm.mlir.addressof
+
+4: "test_nosimplify1" has unsupported operation: llvm.mlir.addressof
+
+4: "test_nosimplify1" has unsupported operation: llvm.call
+
+4: "test_nosimplify1" has unsupported operation: llvm.store
+
+4: "test_nosimplify1" has unsupported operation: llvm.return
+

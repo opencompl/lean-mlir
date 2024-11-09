@@ -1,0 +1,61 @@
+1: "use1"
+5: "use1" is empty
+
+1: "t0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.return
+
+1: "n1"
+7: "n1" is unchanged by InstCombine
+
+1: "n2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.return
+
+1: "n3"
+7: "n3" is unchanged by InstCombine
+
+1: "n4"
+4: "n4" has unsupported operation: llvm.call
+
+1: "n5"
+4: "n5" has unsupported operation: llvm.call
+
+1: "n6"
+4: "n6" has unsupported operation: llvm.call
+
+4: "n6" has unsupported operation: llvm.call
+
+1: "t7"
+4: "t7" has unsupported operation: llvm.call
+
+1: "t8"
+4: "t8" has unsupported operation: llvm.call
+
+1: "t9"
+4: "t9" has unsupported operation: llvm.call
+
+4: "t9" has unsupported operation: llvm.call
+
+1: "n10"
+4: "n10" has unsupported operation: llvm.call
+
+1: "t11"
+4: "t11" has unsupported operation: llvm.call
+
+1: "PR59704"
+4: "PR59704" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "PR59704" has unsupported operation: builtin.unregistered: llvm.br
+

@@ -1,0 +1,163 @@
+1: "use"
+5: "use" is empty
+
+1: "test1"
+4: "test1" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctpop
+
+1: "test2"
+4: "test2" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctpop
+
+1: "test3"
+4: "test3" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "test4"
+4: "test4" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "test5"
+4: "test5" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctpop
+
+1: "test5vec"
+8: "test5vec" contains vectors which are unsupported
+
+1: "test6"
+4: "test6" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctpop
+
+1: "mask_one_bit"
+4: "mask_one_bit" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctpop
+
+1: "mask_one_bit_splat"
+9: "mask_one_bit_splat" has pointer type input
+
+4: "mask_one_bit_splat" has unsupported operation: llvm.store
+
+1: "_parity_of_not"
+4: "_parity_of_not" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "_parity_of_not_odd_type"
+4: "_parity_of_not_odd_type" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "_parity_of_not_vec"
+4: "_parity_of_not_vec" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "_parity_of_not_poison"
+4: "_parity_of_not_poison" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "_parity_of_not_poison2"
+4: "_parity_of_not_poison2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "_parity_of_not_poison2" has unsupported operation: llvm.mlir.undef
+
+4: "_parity_of_not_poison2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "_parity_of_not_poison2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "_parity_of_not_poison2" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "ctpop_add"
+4: "ctpop_add" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctpop
+
+4: "ctpop_add" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctpop
+
+1: "ctpop_add_no_common_bits"
+4: "ctpop_add_no_common_bits" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+4: "ctpop_add_no_common_bits" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "ctpop_add_no_common_bits_vec"
+4: "ctpop_add_no_common_bits_vec" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+4: "ctpop_add_no_common_bits_vec" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "ctpop_add_no_common_bits_vec_use"
+9: "ctpop_add_no_common_bits_vec_use" has pointer type input
+
+4: "ctpop_add_no_common_bits_vec_use" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "ctpop_add_no_common_bits_vec_use" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "ctpop_add_no_common_bits_vec_use" has unsupported operation: llvm.store
+
+1: "ctpop_add_no_common_bits_vec_use2"
+9: "ctpop_add_no_common_bits_vec_use2" has pointer type input
+
+4: "ctpop_add_no_common_bits_vec_use2" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "ctpop_add_no_common_bits_vec_use2" has unsupported operation: llvm.store
+
+4: "ctpop_add_no_common_bits_vec_use2" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "ctpop_rotate_left"
+4: "ctpop_rotate_left" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "ctpop_rotate_right"
+4: "ctpop_rotate_right" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "sub_ctpop"
+4: "sub_ctpop" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "sub_ctpop_wrong_cst"
+4: "sub_ctpop_wrong_cst" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "sub_ctpop_unknown"
+4: "sub_ctpop_unknown" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "sub_ctpop_vec"
+4: "sub_ctpop_vec" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "sub_ctpop_vec_extra_use"
+9: "sub_ctpop_vec_extra_use" has pointer type input
+
+4: "sub_ctpop_vec_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "sub_ctpop_vec_extra_use" has unsupported operation: llvm.store
+
+1: "zext_ctpop"
+4: "zext_ctpop" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "zext_ctpop_vec"
+4: "zext_ctpop_vec" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "zext_ctpop_extra_use"
+9: "zext_ctpop_extra_use" has pointer type input
+
+4: "zext_ctpop_extra_use" has unsupported operation: llvm.store
+
+4: "zext_ctpop_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "parity_xor"
+4: "parity_xor" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "parity_xor_trunc"
+4: "parity_xor_trunc" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "parity_xor_vec"
+4: "parity_xor_vec" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "parity_xor_wrong_cst"
+4: "parity_xor_wrong_cst" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "parity_xor_wrong_cst" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "parity_xor_extra_use"
+4: "parity_xor_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "parity_xor_extra_use" has unsupported operation: llvm.call
+
+4: "parity_xor_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "parity_xor_extra_use2"
+4: "parity_xor_extra_use2" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "parity_xor_extra_use2" has unsupported operation: llvm.call
+
+4: "parity_xor_extra_use2" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "select_ctpop_zero"
+4: "select_ctpop_zero" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "ctpop_non_zero"
+4: "ctpop_non_zero" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "ctpop_non_zero_with_existing_range_attr"
+4: "ctpop_non_zero_with_existing_range_attr" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+

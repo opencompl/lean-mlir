@@ -1,0 +1,14 @@
+1: "f"
+9: "f" has pointer type input
+
+4: "f" has unsupported operation: builtin.unregistered: llvm.intr.dbg.value
+
+4: "f" has unsupported operation: builtin.unregistered: llvm.intr.dbg.value
+
+4: "f" has unsupported operation: llvm.call
+
+4: "f" has unsupported operation: llvm.return
+
+1: "use_as_void"
+9: "use_as_void" has pointer type input
+

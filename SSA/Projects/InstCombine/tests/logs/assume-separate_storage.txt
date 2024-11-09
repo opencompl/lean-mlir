@@ -1,0 +1,21 @@
+1: "simple_folding"
+9: "simple_folding" has pointer type input
+
+4: "simple_folding" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "simple_folding" has unsupported operation: llvm.return
+
+1: "folds_removed_operands"
+9: "folds_removed_operands" has pointer type input
+
+4: "folds_removed_operands" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "handles_globals"
+9: "handles_globals" has pointer type input
+
+4: "handles_globals" has unsupported operation: llvm.mlir.addressof
+
+4: "handles_globals" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "handles_globals" has unsupported operation: llvm.return
+

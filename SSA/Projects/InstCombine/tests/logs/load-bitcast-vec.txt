@@ -1,0 +1,60 @@
+1: "matching_scalar"
+9: "matching_scalar" has pointer type input
+
+4: "matching_scalar" has unsupported operation: llvm.load
+
+1: "nonmatching_scalar"
+9: "nonmatching_scalar" has pointer type input
+
+4: "nonmatching_scalar" has unsupported operation: llvm.load
+
+1: "larger_scalar"
+9: "larger_scalar" has pointer type input
+
+4: "larger_scalar" has unsupported operation: llvm.load
+
+1: "smaller_scalar"
+9: "smaller_scalar" has pointer type input
+
+4: "smaller_scalar" has unsupported operation: llvm.load
+
+1: "smaller_scalar_less_aligned"
+9: "smaller_scalar_less_aligned" has pointer type input
+
+4: "smaller_scalar_less_aligned" has unsupported operation: llvm.load
+
+1: "matching_scalar_small_deref"
+9: "matching_scalar_small_deref" has pointer type input
+
+4: "matching_scalar_small_deref" has unsupported operation: llvm.load
+
+1: "matching_scalar_smallest_deref"
+9: "matching_scalar_smallest_deref" has pointer type input
+
+4: "matching_scalar_smallest_deref" has unsupported operation: llvm.load
+
+1: "matching_scalar_smallest_deref_or_null"
+9: "matching_scalar_smallest_deref_or_null" has pointer type input
+
+4: "matching_scalar_smallest_deref_or_null" has unsupported operation: llvm.load
+
+1: "matching_scalar_smallest_deref_addrspace"
+9: "matching_scalar_smallest_deref_addrspace" has pointer type input
+
+4: "matching_scalar_smallest_deref_addrspace" has unsupported operation: llvm.load
+
+1: "matching_scalar_smallest_deref_or_null_addrspace"
+9: "matching_scalar_smallest_deref_or_null_addrspace" has pointer type input
+
+4: "matching_scalar_smallest_deref_or_null_addrspace" has unsupported operation: llvm.load
+
+1: "matching_scalar_volatile"
+9: "matching_scalar_volatile" has pointer type input
+
+4: "matching_scalar_volatile" has unsupported operation: llvm.load
+
+1: "nonvector"
+9: "nonvector" has pointer type input
+
+4: "nonvector" has unsupported operation: llvm.load
+

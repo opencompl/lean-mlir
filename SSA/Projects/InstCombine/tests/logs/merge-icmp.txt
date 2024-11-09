@@ -1,0 +1,129 @@
+1: "use.i1"
+5: "use.i1" is empty
+
+1: "use.i8"
+5: "use.i8" is empty
+
+1: "use.i16"
+5: "use.i16" is empty
+
+1: "and_test1"
+9: "and_test1" has pointer type input
+
+4: "and_test1" has unsupported operation: llvm.load
+
+1: "and_test1_logical"
+9: "and_test1_logical" has pointer type input
+
+4: "and_test1_logical" has unsupported operation: llvm.load
+
+1: "and_test1_vector"
+9: "and_test1_vector" has pointer type input
+
+4: "and_test1_vector" has unsupported operation: llvm.load
+
+1: "and_test2"
+9: "and_test2" has pointer type input
+
+4: "and_test2" has unsupported operation: llvm.load
+
+1: "and_test2_logical"
+9: "and_test2_logical" has pointer type input
+
+4: "and_test2_logical" has unsupported operation: llvm.load
+
+1: "and_test2_vector"
+9: "and_test2_vector" has pointer type input
+
+4: "and_test2_vector" has unsupported operation: llvm.load
+
+1: "or_basic"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "or_basic_commuted"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "or_vector"
+8: "or_vector" contains vectors which are unsupported
+
+1: "or_nontrivial_mask1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "or_nontrivial_mask2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "or_extra_use1"
+4: "or_extra_use1" has unsupported operation: llvm.call
+
+1: "or_extra_use2"
+4: "or_extra_use2" has unsupported operation: llvm.call
+
+1: "or_extra_use3"
+4: "or_extra_use3" has unsupported operation: llvm.call
+
+1: "or_extra_use4"
+4: "or_extra_use4" has unsupported operation: llvm.call
+
+1: "or_wrong_pred1"
+7: "or_wrong_pred1" is unchanged by InstCombine
+
+1: "or_wrong_pred2"
+7: "or_wrong_pred2" is unchanged by InstCombine
+
+1: "or_wrong_pred3"
+7: "or_wrong_pred3" is unchanged by InstCombine
+
+1: "or_wrong_op"
+7: "or_wrong_op" is unchanged by InstCombine
+
+1: "or_wrong_const1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "or_wrong_const2"
+7: "or_wrong_const2" is unchanged by InstCombine
+

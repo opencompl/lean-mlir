@@ -1,0 +1,86 @@
+1: "_Z3fooi"
+4: "_Z3fooi" has unsupported operation: llvm.mlir.addressof
+
+4: "_Z3fooi" has unsupported operation: llvm.getelementptr
+
+4: "_Z3fooi" has unsupported operation: llvm.mlir.addressof
+
+4: "_Z3fooi" has unsupported operation: llvm.getelementptr
+
+4: "_Z3fooi" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "_Z3fooi" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "_Z3fooi" has unsupported operation: llvm.load
+
+4: "_Z3fooi" has unsupported operation: llvm.load
+
+4: "_Z3fooi" has unsupported operation: llvm.load
+
+4: "_Z3fooi" has unsupported operation: llvm.load
+
+4: "_Z3fooi" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "_Z3fooi" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "_Z3fooi" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "_Z3fooi" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "_Z3fooi" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "_Z3fooi" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "_Z3fooi" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "_Z3fooi" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "_Z3fooi" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "_Z3fooi" has unsupported operation: llvm.store
+
+4: "_Z3fooi" has unsupported operation: llvm.store
+
+4: "_Z3fooi" has unsupported operation: llvm.return
+
+1: "multi_phi"
+4: "multi_phi" has unsupported operation: llvm.mlir.addressof
+
+4: "multi_phi" has unsupported operation: llvm.getelementptr
+
+4: "multi_phi" has unsupported operation: llvm.mlir.addressof
+
+4: "multi_phi" has unsupported operation: llvm.getelementptr
+
+4: "multi_phi" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "multi_phi" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "multi_phi" has unsupported operation: llvm.load
+
+4: "multi_phi" has unsupported operation: llvm.load
+
+4: "multi_phi" has unsupported operation: llvm.load
+
+4: "multi_phi" has unsupported operation: llvm.load
+
+4: "multi_phi" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "multi_phi" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "multi_phi" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "multi_phi" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "multi_phi" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "multi_phi" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "multi_phi" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "multi_phi" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "multi_phi" has unsupported operation: llvm.store
+
+4: "multi_phi" has unsupported operation: llvm.return
+

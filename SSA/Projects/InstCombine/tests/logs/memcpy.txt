@@ -1,0 +1,24 @@
+1: "test1"
+9: "test1" has pointer type input
+
+4: "test1" has unsupported operation: llvm.return
+
+1: "test2"
+9: "test2" has pointer type input
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "test2" has unsupported operation: llvm.return
+
+1: "test3"
+9: "test3" has pointer type input
+
+4: "test3" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "test3" has unsupported operation: llvm.return
+
+1: "memcpy_to_constant"
+9: "memcpy_to_constant" has pointer type input
+
+4: "memcpy_to_constant" has unsupported operation: llvm.return
+

@@ -1,0 +1,133 @@
+1: "strlen"
+9: "strlen" has pointer type input
+
+1: "fold_strlen_a_S3_to_3"
+4: "fold_strlen_a_S3_to_3" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_strlen_a_S3_to_3" has unsupported operation after optimization: llvm.call
+
+1: "fold_strlen_a_S3_p1_to_2"
+4: "fold_strlen_a_S3_p1_to_2" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_strlen_a_S3_p1_to_2" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_strlen_a_S3_p1_to_2" has unsupported operation after optimization: llvm.call
+
+1: "fold_strlen_a_S3_p2_to_1"
+4: "fold_strlen_a_S3_p2_to_1" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_strlen_a_S3_p2_to_1" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_strlen_a_S3_p2_to_1" has unsupported operation after optimization: llvm.call
+
+1: "fold_strlen_a_S3_p3_to_0"
+4: "fold_strlen_a_S3_p3_to_0" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_strlen_a_S3_p3_to_0" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_strlen_a_S3_p3_to_0" has unsupported operation after optimization: llvm.call
+
+1: "fold_strlen_a_S3_s4_to_3"
+4: "fold_strlen_a_S3_s4_to_3" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_strlen_a_S3_s4_to_3" has unsupported operation after optimization: llvm.call
+
+1: "fold_strlen_a_S3_p2_s4_to_1"
+4: "fold_strlen_a_S3_p2_s4_to_1" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_strlen_a_S3_p2_s4_to_1" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_strlen_a_S3_p2_s4_to_1" has unsupported operation after optimization: llvm.call
+
+1: "fold_strlen_a_s3_S4_to_4"
+4: "fold_strlen_a_s3_S4_to_4" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strlen_a_s3_S4_to_4" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_a_s3_S4_to_4" has unsupported operation: llvm.store
+
+4: "fold_strlen_a_s3_S4_to_4" has unsupported operation: llvm.store
+
+4: "fold_strlen_a_s3_S4_to_4" has unsupported operation: llvm.return
+
+1: "fold_strlen_a_s3_S4_p1_to_3"
+4: "fold_strlen_a_s3_S4_p1_to_3" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strlen_a_s3_S4_p1_to_3" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_a_s3_S4_p1_to_3" has unsupported operation: llvm.store
+
+4: "fold_strlen_a_s3_S4_p1_to_3" has unsupported operation: llvm.store
+
+4: "fold_strlen_a_s3_S4_p1_to_3" has unsupported operation: llvm.return
+
+1: "fold_strlen_a_s3_i32_S4_to_4"
+4: "fold_strlen_a_s3_i32_S4_to_4" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strlen_a_s3_i32_S4_to_4" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_a_s3_i32_S4_to_4" has unsupported operation: llvm.store
+
+4: "fold_strlen_a_s3_i32_S4_to_4" has unsupported operation: llvm.store
+
+4: "fold_strlen_a_s3_i32_S4_to_4" has unsupported operation: llvm.return
+
+1: "fold_strlen_a_s3_i32_S4_p1_to_3"
+4: "fold_strlen_a_s3_i32_S4_p1_to_3" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strlen_a_s3_i32_S4_p1_to_3" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_a_s3_i32_S4_p1_to_3" has unsupported operation: llvm.store
+
+4: "fold_strlen_a_s3_i32_S4_p1_to_3" has unsupported operation: llvm.store
+
+4: "fold_strlen_a_s3_i32_S4_p1_to_3" has unsupported operation: llvm.return
+
+1: "fold_strlen_a_s3_i32_S4_p2_to_2"
+4: "fold_strlen_a_s3_i32_S4_p2_to_2" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strlen_a_s3_i32_S4_p2_to_2" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_a_s3_i32_S4_p2_to_2" has unsupported operation: llvm.store
+
+4: "fold_strlen_a_s3_i32_S4_p2_to_2" has unsupported operation: llvm.store
+
+4: "fold_strlen_a_s3_i32_S4_p2_to_2" has unsupported operation: llvm.return
+
+1: "fold_strlen_a_s3_i32_S4_p3_to_1"
+4: "fold_strlen_a_s3_i32_S4_p3_to_1" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strlen_a_s3_i32_S4_p3_to_1" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_a_s3_i32_S4_p3_to_1" has unsupported operation: llvm.store
+
+4: "fold_strlen_a_s3_i32_S4_p3_to_1" has unsupported operation: llvm.store
+
+4: "fold_strlen_a_s3_i32_S4_p3_to_1" has unsupported operation: llvm.return
+
+1: "fold_strlen_a_s3_i32_S4_p4_to_0"
+4: "fold_strlen_a_s3_i32_S4_p4_to_0" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strlen_a_s3_i32_S4_p4_to_0" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_a_s3_i32_S4_p4_to_0" has unsupported operation: llvm.store
+
+4: "fold_strlen_a_s3_i32_S4_p4_to_0" has unsupported operation: llvm.store
+
+4: "fold_strlen_a_s3_i32_S4_p4_to_0" has unsupported operation: llvm.return
+
+1: "fold_strlen_ax_s"
+4: "fold_strlen_ax_s" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strlen_ax_s" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_ax_s" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_ax_s" has unsupported operation: llvm.store
+
+4: "fold_strlen_ax_s" has unsupported operation: llvm.store
+
+4: "fold_strlen_ax_s" has unsupported operation: llvm.store
+
+4: "fold_strlen_ax_s" has unsupported operation: llvm.return
+

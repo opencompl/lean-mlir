@@ -1,0 +1,11 @@
+1: "a"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.and
+2: llvm.return
+
+1: "a_vec"
+8: "a_vec" contains vectors which are unsupported
+

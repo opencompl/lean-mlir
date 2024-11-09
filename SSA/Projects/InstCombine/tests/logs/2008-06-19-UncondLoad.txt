@@ -1,0 +1,14 @@
+1: "x"
+9: "x" has pointer type input
+
+1: "b"
+9: "b" has pointer type input
+
+4: "b" has unsupported operation: llvm.load
+
+4: "b" has unsupported operation: llvm.load
+
+4: "b" has unsupported operation: llvm.call
+
+4: "b" has unsupported operation: llvm.load
+

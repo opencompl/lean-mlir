@@ -1,0 +1,106 @@
+1: "memset"
+9: "memset" has pointer type input
+
+1: "malloc"
+5: "malloc" is empty
+
+1: "test_simplify1"
+9: "test_simplify1" has pointer type input
+
+4: "test_simplify1" has unsupported operation: builtin.unregistered: llvm.intr.memset
+
+1: "test_simplify1_tail"
+9: "test_simplify1_tail" has pointer type input
+
+4: "test_simplify1_tail" has unsupported operation: builtin.unregistered: llvm.intr.memset
+
+1: "test_simplify1_musttail"
+9: "test_simplify1_musttail" has pointer type input
+
+4: "test_simplify1_musttail" has unsupported operation: llvm.call
+
+1: "pr25892_lite"
+4: "pr25892_lite" has unsupported operation: llvm.call
+
+4: "pr25892_lite" has unsupported operation: builtin.unregistered: llvm.intr.memset
+
+1: "malloc_and_memset_intrinsic"
+4: "malloc_and_memset_intrinsic" has unsupported operation: llvm.call
+
+4: "malloc_and_memset_intrinsic" has unsupported operation: builtin.unregistered: llvm.intr.memset
+
+1: "notmalloc_memset"
+9: "notmalloc_memset" has pointer type input
+
+4: "notmalloc_memset" has unsupported operation: llvm.call
+
+4: "notmalloc_memset" has unsupported operation: builtin.unregistered: llvm.intr.memset
+
+1: "pr25892"
+4: "pr25892" has unsupported operation: llvm.mlir.zero
+
+4: "pr25892" has unsupported operation: llvm.call
+
+4: "pr25892" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "pr25892" has unsupported operation: builtin.unregistered: llvm.intr.memset
+
+4: "pr25892" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "buffer_is_modified_then_memset"
+4: "buffer_is_modified_then_memset" has unsupported operation: llvm.call
+
+4: "buffer_is_modified_then_memset" has unsupported operation: llvm.store
+
+4: "buffer_is_modified_then_memset" has unsupported operation: builtin.unregistered: llvm.intr.memset
+
+1: "memset_size_select"
+9: "memset_size_select" has pointer type input
+
+4: "memset_size_select" has unsupported operation: builtin.unregistered: llvm.intr.memset
+
+1: "memset_size_select2"
+9: "memset_size_select2" has pointer type input
+
+4: "memset_size_select2" has unsupported operation: builtin.unregistered: llvm.intr.memset
+
+1: "memset_size_select3"
+9: "memset_size_select3" has pointer type input
+
+4: "memset_size_select3" has unsupported operation: builtin.unregistered: llvm.intr.memset
+
+1: "memset_size_select4"
+9: "memset_size_select4" has pointer type input
+
+4: "memset_size_select4" has unsupported operation: builtin.unregistered: llvm.intr.memset
+
+1: "memset_size_ashr"
+9: "memset_size_ashr" has pointer type input
+
+4: "memset_size_ashr" has unsupported operation: builtin.unregistered: llvm.intr.memset
+
+1: "memset_attrs1"
+9: "memset_attrs1" has pointer type input
+
+4: "memset_attrs1" has unsupported operation: builtin.unregistered: llvm.intr.memset
+
+1: "memset_attrs2"
+9: "memset_attrs2" has pointer type input
+
+4: "memset_attrs2" has unsupported operation: builtin.unregistered: llvm.intr.memset
+
+1: "memset_attrs3"
+9: "memset_attrs3" has pointer type input
+
+4: "memset_attrs3" has unsupported operation: builtin.unregistered: llvm.intr.memset
+
+1: "memset_attrs4"
+9: "memset_attrs4" has pointer type input
+
+4: "memset_attrs4" has unsupported operation: builtin.unregistered: llvm.intr.memset
+
+1: "test_no_incompatible_attr"
+9: "test_no_incompatible_attr" has pointer type input
+
+4: "test_no_incompatible_attr" has unsupported operation: builtin.unregistered: llvm.intr.memset
+

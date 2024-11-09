@@ -1,0 +1,222 @@
+1: "constant_fold_minnum_f32"
+4: "constant_fold_minnum_f32" has unsupported operation after optimization: builtin.unregistered: llvm.intr.minnum
+
+1: "constant_fold_minnum_f32_inv"
+4: "constant_fold_minnum_f32_inv" has unsupported operation after optimization: builtin.unregistered: llvm.intr.minnum
+
+1: "constant_fold_minnum_f32_nan0"
+4: "constant_fold_minnum_f32_nan0" has unsupported operation after optimization: builtin.unregistered: llvm.intr.minnum
+
+1: "constant_fold_minnum_f32_nan1"
+4: "constant_fold_minnum_f32_nan1" has unsupported operation after optimization: builtin.unregistered: llvm.intr.minnum
+
+1: "constant_fold_minnum_f32_nan_nan"
+4: "constant_fold_minnum_f32_nan_nan" has unsupported operation after optimization: builtin.unregistered: llvm.intr.minnum
+
+1: "constant_fold_minnum_f32_p0_p0"
+4: "constant_fold_minnum_f32_p0_p0" has unsupported operation after optimization: builtin.unregistered: llvm.intr.minnum
+
+1: "constant_fold_minnum_f32_p0_n0"
+4: "constant_fold_minnum_f32_p0_n0" has unsupported operation after optimization: builtin.unregistered: llvm.intr.minnum
+
+1: "constant_fold_minnum_f32_n0_p0"
+4: "constant_fold_minnum_f32_n0_p0" has unsupported operation after optimization: builtin.unregistered: llvm.intr.minnum
+
+1: "constant_fold_minnum_f32_n0_n0"
+4: "constant_fold_minnum_f32_n0_n0" has unsupported operation after optimization: builtin.unregistered: llvm.intr.minnum
+
+1: "constant_fold_minnum_v4f32"
+8: "constant_fold_minnum_v4f32" contains vectors which are unsupported
+
+1: "constant_fold_minnum_f64"
+4: "constant_fold_minnum_f64" has unsupported operation after optimization: builtin.unregistered: llvm.intr.minnum
+
+1: "constant_fold_minnum_f64_nan0"
+4: "constant_fold_minnum_f64_nan0" has unsupported operation after optimization: builtin.unregistered: llvm.intr.minnum
+
+1: "constant_fold_minnum_f64_nan1"
+4: "constant_fold_minnum_f64_nan1" has unsupported operation after optimization: builtin.unregistered: llvm.intr.minnum
+
+1: "constant_fold_minnum_f64_nan_nan"
+4: "constant_fold_minnum_f64_nan_nan" has unsupported operation after optimization: builtin.unregistered: llvm.intr.minnum
+
+1: "canonicalize_constant_minnum_f32"
+4: "canonicalize_constant_minnum_f32" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+1: "minnum_f32_nan_val"
+4: "minnum_f32_nan_val" has unsupported operation after optimization: builtin.unregistered: llvm.intr.minnum
+
+1: "minnum_f32_val_nan"
+4: "minnum_f32_val_nan" has unsupported operation after optimization: builtin.unregistered: llvm.intr.minnum
+
+1: "minnum_f32_1_minnum_val_p0"
+4: "minnum_f32_1_minnum_val_p0" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+1: "minnum_f32_1_minnum_p0_val_fast"
+4: "minnum_f32_1_minnum_p0_val_fast" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+1: "minnum_f32_1_minnum_p0_val_fmf1"
+4: "minnum_f32_1_minnum_p0_val_fmf1" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+1: "minnum_f32_1_minnum_p0_val_fmf2"
+4: "minnum_f32_1_minnum_p0_val_fmf2" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+1: "minnum_f32_1_minnum_p0_val_fmf3"
+4: "minnum_f32_1_minnum_p0_val_fmf3" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+1: "minnum_f32_p0_minnum_val_n0"
+4: "minnum_f32_p0_minnum_val_n0" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+1: "minnum_f32_1_minnum_p0_val"
+4: "minnum_f32_1_minnum_p0_val" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+1: "minnum_f32_1_minnum_val_p0_val_v2f32"
+4: "minnum_f32_1_minnum_val_p0_val_v2f32" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+1: "minnum4"
+4: "minnum4" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+4: "minnum4" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+4: "minnum4" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+1: "minnum_x_maxnum_x_y"
+4: "minnum_x_maxnum_x_y" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
+
+4: "minnum_x_maxnum_x_y" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+1: "maxnum_x_minnum_x_y"
+4: "maxnum_x_minnum_x_y" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+4: "maxnum_x_minnum_x_y" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
+
+1: "neg_neg"
+4: "neg_neg" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
+
+4: "neg_neg" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "unary_neg_neg"
+4: "unary_neg_neg" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
+
+4: "unary_neg_neg" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "neg_neg_vec_fmf"
+4: "neg_neg_vec_fmf" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
+
+4: "neg_neg_vec_fmf" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "unary_neg_neg_vec_fmf"
+4: "unary_neg_neg_vec_fmf" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
+
+4: "unary_neg_neg_vec_fmf" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "use"
+5: "use" is empty
+
+1: "neg_neg_extra_use_x"
+4: "neg_neg_extra_use_x" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "neg_neg_extra_use_x" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
+
+4: "neg_neg_extra_use_x" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "neg_neg_extra_use_x" has unsupported operation: llvm.call
+
+1: "unary_neg_neg_extra_use_x"
+4: "unary_neg_neg_extra_use_x" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "unary_neg_neg_extra_use_x" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
+
+4: "unary_neg_neg_extra_use_x" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "unary_neg_neg_extra_use_x" has unsupported operation: llvm.call
+
+1: "neg_neg_extra_use_y"
+4: "neg_neg_extra_use_y" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "neg_neg_extra_use_y" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
+
+4: "neg_neg_extra_use_y" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "neg_neg_extra_use_y" has unsupported operation: llvm.call
+
+1: "unary_neg_neg_extra_use_y"
+4: "unary_neg_neg_extra_use_y" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "unary_neg_neg_extra_use_y" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
+
+4: "unary_neg_neg_extra_use_y" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "unary_neg_neg_extra_use_y" has unsupported operation: llvm.call
+
+1: "neg_neg_extra_use_x_and_y"
+4: "neg_neg_extra_use_x_and_y" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "neg_neg_extra_use_x_and_y" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "neg_neg_extra_use_x_and_y" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+4: "neg_neg_extra_use_x_and_y" has unsupported operation: llvm.call
+
+4: "neg_neg_extra_use_x_and_y" has unsupported operation: llvm.call
+
+1: "unary_neg_neg_extra_use_x_and_y"
+4: "unary_neg_neg_extra_use_x_and_y" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "unary_neg_neg_extra_use_x_and_y" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "unary_neg_neg_extra_use_x_and_y" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+4: "unary_neg_neg_extra_use_x_and_y" has unsupported operation: llvm.call
+
+4: "unary_neg_neg_extra_use_x_and_y" has unsupported operation: llvm.call
+
+1: "reduce_precision"
+4: "reduce_precision" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+1: "reduce_precision_fmf"
+4: "reduce_precision_fmf" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+1: "reduce_precision_multi_use_0"
+9: "reduce_precision_multi_use_0" has pointer type input
+
+4: "reduce_precision_multi_use_0" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "reduce_precision_multi_use_0" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "reduce_precision_multi_use_0" has unsupported operation: llvm.store
+
+4: "reduce_precision_multi_use_0" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+4: "reduce_precision_multi_use_0" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "reduce_precision_multi_use_1"
+9: "reduce_precision_multi_use_1" has pointer type input
+
+4: "reduce_precision_multi_use_1" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "reduce_precision_multi_use_1" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "reduce_precision_multi_use_1" has unsupported operation: llvm.store
+
+4: "reduce_precision_multi_use_1" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+4: "reduce_precision_multi_use_1" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "negated_op"
+4: "negated_op" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "negated_op" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "negated_op_fmf_commute_vec"
+4: "negated_op_fmf_commute_vec" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "negated_op_fmf_commute_vec" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "negated_op_extra_use"
+4: "negated_op_extra_use" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "negated_op_extra_use" has unsupported operation: llvm.call
+
+4: "negated_op_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+

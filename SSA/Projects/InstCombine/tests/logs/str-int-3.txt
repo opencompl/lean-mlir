@@ -1,0 +1,161 @@
+1: "atoi"
+9: "atoi" has pointer type input
+
+1: "atol"
+9: "atol" has pointer type input
+
+1: "atoll"
+9: "atoll" has pointer type input
+
+1: "strtol"
+9: "strtol" has pointer type input
+
+1: "strtoll"
+9: "strtoll" has pointer type input
+
+1: "fold_atoi_member"
+9: "fold_atoi_member" has pointer type input
+
+4: "fold_atoi_member" has unsupported operation: llvm.store
+
+4: "fold_atoi_member" has unsupported operation: llvm.getelementptr
+
+4: "fold_atoi_member" has unsupported operation: llvm.store
+
+4: "fold_atoi_member" has unsupported operation: llvm.getelementptr
+
+4: "fold_atoi_member" has unsupported operation: llvm.store
+
+4: "fold_atoi_member" has unsupported operation: llvm.getelementptr
+
+4: "fold_atoi_member" has unsupported operation: llvm.store
+
+4: "fold_atoi_member" has unsupported operation: llvm.return
+
+1: "fold_atoi_offset_out_of_bounds"
+9: "fold_atoi_offset_out_of_bounds" has pointer type input
+
+4: "fold_atoi_offset_out_of_bounds" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_atoi_offset_out_of_bounds" has unsupported operation: llvm.getelementptr
+
+4: "fold_atoi_offset_out_of_bounds" has unsupported operation: llvm.getelementptr
+
+4: "fold_atoi_offset_out_of_bounds" has unsupported operation: llvm.call
+
+4: "fold_atoi_offset_out_of_bounds" has unsupported operation: llvm.store
+
+4: "fold_atoi_offset_out_of_bounds" has unsupported operation: llvm.call
+
+4: "fold_atoi_offset_out_of_bounds" has unsupported operation: llvm.store
+
+4: "fold_atoi_offset_out_of_bounds" has unsupported operation: llvm.return
+
+1: "fold_atol_member"
+9: "fold_atol_member" has pointer type input
+
+4: "fold_atol_member" has unsupported operation: llvm.store
+
+4: "fold_atol_member" has unsupported operation: llvm.getelementptr
+
+4: "fold_atol_member" has unsupported operation: llvm.store
+
+4: "fold_atol_member" has unsupported operation: llvm.getelementptr
+
+4: "fold_atol_member" has unsupported operation: llvm.store
+
+4: "fold_atol_member" has unsupported operation: llvm.getelementptr
+
+4: "fold_atol_member" has unsupported operation: llvm.store
+
+4: "fold_atol_member" has unsupported operation: llvm.getelementptr
+
+4: "fold_atol_member" has unsupported operation: llvm.store
+
+4: "fold_atol_member" has unsupported operation: llvm.getelementptr
+
+4: "fold_atol_member" has unsupported operation: llvm.store
+
+4: "fold_atol_member" has unsupported operation: llvm.return
+
+1: "fold_atoll_member_pC"
+9: "fold_atoll_member_pC" has pointer type input
+
+4: "fold_atoll_member_pC" has unsupported operation: llvm.store
+
+4: "fold_atoll_member_pC" has unsupported operation: llvm.getelementptr
+
+4: "fold_atoll_member_pC" has unsupported operation: llvm.store
+
+4: "fold_atoll_member_pC" has unsupported operation: llvm.getelementptr
+
+4: "fold_atoll_member_pC" has unsupported operation: llvm.store
+
+4: "fold_atoll_member_pC" has unsupported operation: llvm.getelementptr
+
+4: "fold_atoll_member_pC" has unsupported operation: llvm.store
+
+4: "fold_atoll_member_pC" has unsupported operation: llvm.getelementptr
+
+4: "fold_atoll_member_pC" has unsupported operation: llvm.store
+
+4: "fold_atoll_member_pC" has unsupported operation: llvm.getelementptr
+
+4: "fold_atoll_member_pC" has unsupported operation: llvm.store
+
+4: "fold_atoll_member_pC" has unsupported operation: llvm.return
+
+1: "fold_strtol_member_pC"
+9: "fold_strtol_member_pC" has pointer type input
+
+4: "fold_strtol_member_pC" has unsupported operation: llvm.store
+
+4: "fold_strtol_member_pC" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtol_member_pC" has unsupported operation: llvm.store
+
+4: "fold_strtol_member_pC" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtol_member_pC" has unsupported operation: llvm.store
+
+4: "fold_strtol_member_pC" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtol_member_pC" has unsupported operation: llvm.store
+
+4: "fold_strtol_member_pC" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtol_member_pC" has unsupported operation: llvm.store
+
+4: "fold_strtol_member_pC" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtol_member_pC" has unsupported operation: llvm.store
+
+4: "fold_strtol_member_pC" has unsupported operation: llvm.return
+
+1: "fold_strtoll_member_pC"
+9: "fold_strtoll_member_pC" has pointer type input
+
+4: "fold_strtoll_member_pC" has unsupported operation: llvm.store
+
+4: "fold_strtoll_member_pC" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtoll_member_pC" has unsupported operation: llvm.store
+
+4: "fold_strtoll_member_pC" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtoll_member_pC" has unsupported operation: llvm.store
+
+4: "fold_strtoll_member_pC" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtoll_member_pC" has unsupported operation: llvm.store
+
+4: "fold_strtoll_member_pC" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtoll_member_pC" has unsupported operation: llvm.store
+
+4: "fold_strtoll_member_pC" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtoll_member_pC" has unsupported operation: llvm.store
+
+4: "fold_strtoll_member_pC" has unsupported operation: llvm.return
+

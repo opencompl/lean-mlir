@@ -1,0 +1,43 @@
+1: "zext"
+7: "zext" is unchanged by InstCombine
+
+1: "zext_vec"
+7: "zext_vec" is unchanged by InstCombine
+
+1: "sext"
+7: "sext" is unchanged by InstCombine
+
+1: "sext_vec"
+7: "sext_vec" is unchanged by InstCombine
+
+1: "trunc"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_vec"
+7: "trunc_vec" is unchanged by InstCombine
+
+1: "fpext"
+4: "fpext" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fpext" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "fpext_vec"
+4: "fpext_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fpext_vec" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "fptrunc"
+4: "fptrunc" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fptrunc" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "fptrunc_vec"
+4: "fptrunc_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fptrunc_vec" has unsupported operation: builtin.unregistered: llvm.fptrunc
+

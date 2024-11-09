@@ -1,0 +1,12 @@
+1: "test"
+4: "test" has unsupported operation: llvm.return
+
+1: "malloc"
+5: "malloc" is empty
+
+1: "realloc"
+9: "realloc" has pointer type input
+
+1: "free"
+9: "free" has pointer type input
+

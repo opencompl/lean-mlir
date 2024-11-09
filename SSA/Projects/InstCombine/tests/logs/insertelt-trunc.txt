@@ -1,0 +1,118 @@
+1: "use"
+5: "use" is empty
+
+1: "use_vec"
+5: "use_vec" is empty
+
+1: "insert_01_poison_v4i16"
+4: "insert_01_poison_v4i16" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "insert_01_poison_v4i16" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_01_poison_v4i16" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "insert_10_poison_v8i16"
+4: "insert_10_poison_v8i16" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "insert_10_poison_v8i16" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_10_poison_v8i16" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "insert_12_poison_v4i32"
+4: "insert_12_poison_v4i32" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "insert_12_poison_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_12_poison_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "insert_21_poison_v4i16"
+4: "insert_21_poison_v4i16" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "insert_21_poison_v4i16" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_21_poison_v4i16" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "insert_23_poison_v4i32"
+4: "insert_23_poison_v4i32" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "insert_23_poison_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_23_poison_v4i32" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "insert_32_poison_v4i16"
+4: "insert_32_poison_v4i16" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "insert_32_poison_v4i16" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_32_poison_v4i16" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "insert_01_v2i16"
+4: "insert_01_v2i16" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "insert_10_v8i16"
+4: "insert_10_v8i16" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_10_v8i16" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "insert_12_v4i32"
+4: "insert_12_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_12_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "insert_21_v4i16"
+4: "insert_21_v4i16" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_21_v4i16" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "insert_23_v4i32"
+4: "insert_23_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_23_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "insert_32_v4i16"
+4: "insert_32_v4i16" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_32_v4i16" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "insert_01_v4i16_wrong_shift1"
+4: "insert_01_v4i16_wrong_shift1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "insert_01_v4i16_wrong_shift1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_01_v4i16_wrong_shift1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "insert_01_v4i16_wrong_op"
+4: "insert_01_v4i16_wrong_op" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "insert_01_v4i16_wrong_op" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_01_v4i16_wrong_op" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "insert_67_v4i16_uses1"
+4: "insert_67_v4i16_uses1" has unsupported operation: llvm.call
+
+4: "insert_67_v4i16_uses1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_67_v4i16_uses1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "insert_76_v4i16_uses2"
+4: "insert_76_v4i16_uses2" has unsupported operation: llvm.call
+
+4: "insert_76_v4i16_uses2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_76_v4i16_uses2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "insert_67_v4i16_uses3"
+4: "insert_67_v4i16_uses3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_67_v4i16_uses3" has unsupported operation: llvm.call
+
+4: "insert_67_v4i16_uses3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "insert_01_poison_v4i16_high_first"
+4: "insert_01_poison_v4i16_high_first" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "insert_01_poison_v4i16_high_first" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_01_poison_v4i16_high_first" has unsupported operation: builtin.unregistered: llvm.bitcast
+

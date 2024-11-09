@@ -1,0 +1,140 @@
+1: "test_inbounds"
+9: "test_inbounds" has pointer type input
+
+1: "test_partial_inbounds1"
+9: "test_partial_inbounds1" has pointer type input
+
+1: "test_partial_inbounds2"
+9: "test_partial_inbounds2" has pointer type input
+
+1: "test_inbounds_nuw"
+9: "test_inbounds_nuw" has pointer type input
+
+1: "test_nuw"
+9: "test_nuw" has pointer type input
+
+1: "test_inbounds_nuw_trunc"
+9: "test_inbounds_nuw_trunc" has pointer type input
+
+1: "test_inbounds_nuw_swapped"
+9: "test_inbounds_nuw_swapped" has pointer type input
+
+1: "test_inbounds1_nuw_swapped"
+9: "test_inbounds1_nuw_swapped" has pointer type input
+
+1: "test_inbounds2_nuw_swapped"
+9: "test_inbounds2_nuw_swapped" has pointer type input
+
+1: "test_inbounds_two_gep"
+9: "test_inbounds_two_gep" has pointer type input
+
+1: "test_inbounds_nsw_two_gep"
+9: "test_inbounds_nsw_two_gep" has pointer type input
+
+1: "test_inbounds_nuw_two_gep"
+9: "test_inbounds_nuw_two_gep" has pointer type input
+
+1: "test_inbounds_nuw_multi_index"
+9: "test_inbounds_nuw_multi_index" has pointer type input
+
+1: "test23"
+9: "test23" has pointer type input
+
+1: "test23_as1"
+9: "test23_as1" has pointer type input
+
+1: "test24"
+9: "test24" has pointer type input
+
+1: "test24_as1"
+9: "test24_as1" has pointer type input
+
+1: "test24a"
+9: "test24a" has pointer type input
+
+1: "test24a_as1"
+9: "test24a_as1" has pointer type input
+
+1: "test24b"
+9: "test24b" has pointer type input
+
+1: "test25"
+9: "test25" has pointer type input
+
+1: "test25_as1"
+9: "test25_as1" has pointer type input
+
+1: "test30"
+9: "test30" has pointer type input
+
+1: "test30_as1"
+9: "test30_as1" has pointer type input
+
+1: "gep_diff_both_inbounds"
+9: "gep_diff_both_inbounds" has pointer type input
+
+1: "gep_diff_first_inbounds"
+9: "gep_diff_first_inbounds" has pointer type input
+
+1: "gep_diff_second_inbounds"
+9: "gep_diff_second_inbounds" has pointer type input
+
+1: "gep_diff_with_bitcast"
+9: "gep_diff_with_bitcast" has pointer type input
+
+1: "sub_scalable"
+9: "sub_scalable" has pointer type input
+
+4: "sub_scalable" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+
+1: "sub_scalable2"
+9: "sub_scalable2" has pointer type input
+
+4: "sub_scalable2" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+
+4: "sub_scalable2" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+
+1: "nullptrtoint_scalable_c"
+4: "nullptrtoint_scalable_c" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+
+1: "nullptrtoint_scalable_x"
+4: "nullptrtoint_scalable_x" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+
+1: "_gep_phi1"
+9: "_gep_phi1" has pointer type input
+
+4: "_gep_phi1" has unsupported operation: llvm.mlir.zero
+
+4: "_gep_phi1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "_gep_phi1" has unsupported operation: llvm.load
+
+4: "_gep_phi1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "_gep_phi1" has unsupported operation: llvm.getelementptr
+
+4: "_gep_phi1" has unsupported operation: llvm.load
+
+4: "_gep_phi1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "_gep_phi1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "_gep_phi2"
+9: "_gep_phi2" has pointer type input
+
+4: "_gep_phi2" has unsupported operation: llvm.mlir.zero
+
+4: "_gep_phi2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "_gep_phi2" has unsupported operation: llvm.load
+
+4: "_gep_phi2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "_gep_phi2" has unsupported operation: llvm.getelementptr
+
+4: "_gep_phi2" has unsupported operation: llvm.load
+
+4: "_gep_phi2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "_gep_phi2" has unsupported operation: builtin.unregistered: llvm.br
+

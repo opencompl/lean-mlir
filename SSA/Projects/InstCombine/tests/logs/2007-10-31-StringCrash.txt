@@ -1,0 +1,16 @@
+1: "__darwin_gcc3_preregister_frame_info"
+5: "__darwin_gcc3_preregister_frame_info" is empty
+
+1: "_start"
+9: "_start" has pointer type input
+
+4: "_start" has unsupported operation: llvm.mlir.addressof
+
+4: "_start" has unsupported operation: llvm.load
+
+4: "_start" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "_start" has unsupported operation: llvm.return
+
+4: "_start" has unsupported operation: llvm.return
+

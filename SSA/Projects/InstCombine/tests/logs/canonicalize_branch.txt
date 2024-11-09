@@ -1,0 +1,106 @@
+1: "eq"
+4: "eq" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "ne"
+4: "ne" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "ugt"
+4: "ugt" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "uge"
+4: "uge" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "ult"
+4: "ult" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "ule"
+4: "ule" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "sgt"
+4: "sgt" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "sge"
+4: "sge" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "slt"
+4: "slt" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "sle"
+4: "sle" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "f_false"
+4: "f_false" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "f_oeq"
+4: "f_oeq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "f_oeq" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "f_ogt"
+4: "f_ogt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "f_ogt" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "f_oge"
+4: "f_oge" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "f_oge" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "f_olt"
+4: "f_olt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "f_olt" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "f_ole"
+4: "f_ole" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "f_ole" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "f_one"
+4: "f_one" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "f_one" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "f_ord"
+4: "f_ord" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "f_ord" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "f_uno"
+4: "f_uno" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "f_uno" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "f_ueq"
+4: "f_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "f_ueq" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "f_ugt"
+4: "f_ugt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "f_ugt" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "f_uge"
+4: "f_uge" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "f_uge" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "f_ult"
+4: "f_ult" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "f_ult" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "f_ule"
+4: "f_ule" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "f_ule" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "f_une"
+4: "f_une" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "f_une" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "f_true"
+4: "f_true" has unsupported operation: builtin.unregistered: llvm.cond_br
+

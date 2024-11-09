@@ -1,0 +1,204 @@
+1: "use"
+5: "use" is empty
+
+1: "test_abs_abs_a_mul_b_i8"
+4: "test_abs_abs_a_mul_b_i8" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "test_abs_a_mul_abs_b_i8"
+4: "test_abs_a_mul_abs_b_i8" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "test_abs_abs_a_mul_b_i32"
+4: "test_abs_abs_a_mul_b_i32" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "test_abs_abs_a_mul_b_i32_abs_false_true"
+4: "test_abs_abs_a_mul_b_i32_abs_false_true" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "test_abs_abs_a_mul_b_i32_abs_true_false"
+4: "test_abs_abs_a_mul_b_i32_abs_true_false" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "test_abs_abs_a_mul_b_i32_abs_false_false"
+4: "test_abs_abs_a_mul_b_i32_abs_false_false" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "test_nsw_with_true"
+4: "test_nsw_with_true" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "test_nsw_with_false"
+4: "test_nsw_with_false" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "test_abs_abs_a_mul_b_more_one_use"
+4: "test_abs_abs_a_mul_b_more_one_use" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+4: "test_abs_abs_a_mul_b_more_one_use" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+4: "test_abs_abs_a_mul_b_more_one_use" has unsupported operation: llvm.call
+
+1: "test_abs_abs_a_mul_b_vector_i8"
+4: "test_abs_abs_a_mul_b_vector_i8" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_trailing_zeros"
+4: "abs_trailing_zeros" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_trailing_zeros_vec"
+4: "abs_trailing_zeros_vec" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_trailing_zeros_negative"
+4: "abs_trailing_zeros_negative" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_trailing_zeros_negative_vec"
+4: "abs_trailing_zeros_negative_vec" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_signbits"
+4: "abs_signbits" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_signbits_vec"
+4: "abs_signbits_vec" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_of_neg"
+4: "abs_of_neg" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_of_neg_vec"
+4: "abs_of_neg_vec" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_of_select_neg_true_val"
+4: "abs_of_select_neg_true_val" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_of_select_neg_false_val"
+4: "abs_of_select_neg_false_val" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_dom_cond_nopoison"
+4: "abs_dom_cond_nopoison" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "abs_dom_cond_poison"
+4: "abs_dom_cond_poison" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "zext_abs"
+4: "zext_abs" has unsupported operation after optimization: builtin.unregistered: llvm.intr.abs
+
+1: "lshr_abs"
+8: "lshr_abs" contains vectors which are unsupported
+
+1: "and_abs"
+4: "and_abs" has unsupported operation after optimization: builtin.unregistered: llvm.intr.abs
+
+1: "select_abs"
+8: "select_abs" contains vectors which are unsupported
+
+1: "assume_abs"
+4: "assume_abs" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "abs_assume_neg"
+4: "abs_assume_neg" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "abs_known_neg"
+4: "abs_known_neg" has unsupported operation after optimization: builtin.unregistered: llvm.intr.abs
+
+1: "abs_eq_int_min_poison"
+4: "abs_eq_int_min_poison" has unsupported operation after optimization: builtin.unregistered: llvm.intr.abs
+
+1: "abs_ne_int_min_poison"
+4: "abs_ne_int_min_poison" has unsupported operation after optimization: builtin.unregistered: llvm.intr.abs
+
+1: "abs_eq_int_min_nopoison"
+4: "abs_eq_int_min_nopoison" has unsupported operation after optimization: builtin.unregistered: llvm.intr.abs
+
+1: "abs_ne_int_min_nopoison"
+4: "abs_ne_int_min_nopoison" has unsupported operation after optimization: builtin.unregistered: llvm.intr.abs
+
+1: "abs_sext"
+4: "abs_sext" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_nsw_sext"
+4: "abs_nsw_sext" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_sext_extra_use"
+9: "abs_sext_extra_use" has pointer type input
+
+4: "abs_sext_extra_use" has unsupported operation: llvm.store
+
+4: "abs_sext_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "trunc_abs_sext"
+4: "trunc_abs_sext" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "trunc_abs_sext_vec"
+4: "trunc_abs_sext_vec" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "demand_low_bit"
+4: "demand_low_bit" has unsupported operation after optimization: builtin.unregistered: llvm.intr.abs
+
+1: "demand_low_bit_int_min_is_poison"
+8: "demand_low_bit_int_min_is_poison" contains vectors which are unsupported
+
+1: "demand_low_bits"
+4: "demand_low_bits" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "srem_by_2_int_min_is_poison"
+4: "srem_by_2_int_min_is_poison" has unsupported operation after optimization: builtin.unregistered: llvm.intr.abs
+
+1: "srem_by_2"
+9: "srem_by_2" has pointer type input
+
+4: "srem_by_2" has unsupported operation: llvm.store
+
+1: "srem_by_3"
+4: "srem_by_3" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "sub_abs_gt"
+4: "sub_abs_gt" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sub_abs_gt" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "sub_abs_sgeT"
+4: "sub_abs_sgeT" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sub_abs_sgeT" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "sub_abs_sgeT_swap"
+4: "sub_abs_sgeT_swap" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sub_abs_sgeT_swap" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "sub_abs_sgeT_false"
+4: "sub_abs_sgeT_false" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sub_abs_sgeT_false" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "sub_abs_lt"
+4: "sub_abs_lt" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sub_abs_lt" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "sub_abs_sle"
+4: "sub_abs_sle" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sub_abs_sle" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "sub_abs_sleF"
+4: "sub_abs_sleF" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sub_abs_sleF" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "sub_abs_sleT"
+4: "sub_abs_sleT" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sub_abs_sleT" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "sub_abs_lt_min_not_poison"
+4: "sub_abs_lt_min_not_poison" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sub_abs_lt_min_not_poison" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "sub_abs_wrong_pred"
+4: "sub_abs_wrong_pred" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sub_abs_wrong_pred" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+4: "sub_abs_wrong_pred" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "sub_abs_no_nsw"
+4: "sub_abs_no_nsw" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sub_abs_no_nsw" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+4: "sub_abs_no_nsw" has unsupported operation: builtin.unregistered: llvm.br
+

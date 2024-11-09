@@ -1,0 +1,173 @@
+1: "sadd_sat32"
+4: "sadd_sat32" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "sadd_sat32_mm"
+4: "sadd_sat32_mm" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "ssub_sat32"
+4: "ssub_sat32" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "ssub_sat32_mm"
+4: "ssub_sat32_mm" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "smul_sat32"
+4: "smul_sat32" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "smul_sat32" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "smul_sat32_mm"
+4: "smul_sat32_mm" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "smul_sat32_mm" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "sadd_sat16"
+4: "sadd_sat16" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "sadd_sat16_mm"
+4: "sadd_sat16_mm" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "ssub_sat16"
+4: "ssub_sat16" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "ssub_sat16_mm"
+4: "ssub_sat16_mm" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "sadd_sat8"
+4: "sadd_sat8" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "sadd_sat8_mm"
+4: "sadd_sat8_mm" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "ssub_sat8"
+4: "ssub_sat8" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "ssub_sat8_mm"
+4: "ssub_sat8_mm" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "sadd_sat64"
+4: "sadd_sat64" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "ssub_sat64"
+4: "ssub_sat64" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "sadd_sat4"
+4: "sadd_sat4" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "sadd_sat4" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "ssub_sat4"
+4: "ssub_sat4" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "ssub_sat4" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "sadd_satv4i32"
+4: "sadd_satv4i32" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "sadd_satv4i32_mm"
+4: "sadd_satv4i32_mm" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "ssub_satv4i32"
+4: "ssub_satv4i32" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "ssub_satv4i32_mm"
+4: "ssub_satv4i32_mm" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "sadd_satv4i4"
+4: "sadd_satv4i4" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "sadd_satv4i4" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "ssub_satv4i4"
+4: "ssub_satv4i4" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "ssub_satv4i4" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "sadd_sat32_extrause_1"
+4: "sadd_sat32_extrause_1" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+4: "sadd_sat32_extrause_1" has unsupported operation: llvm.call
+
+1: "sadd_sat32_extrause_2"
+4: "sadd_sat32_extrause_2" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "sadd_sat32_extrause_2" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "sadd_sat32_extrause_2" has unsupported operation: llvm.call
+
+1: "sadd_sat32_extrause_2_mm"
+4: "sadd_sat32_extrause_2_mm" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "sadd_sat32_extrause_2_mm" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "sadd_sat32_extrause_2_mm" has unsupported operation: llvm.call
+
+1: "sadd_sat32_extrause_3"
+4: "sadd_sat32_extrause_3" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "sadd_sat32_extrause_3" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "sadd_sat32_extrause_3" has unsupported operation: llvm.call
+
+1: "sadd_sat32_extrause_3_mm"
+4: "sadd_sat32_extrause_3_mm" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "sadd_sat32_extrause_3_mm" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "sadd_sat32_extrause_3_mm" has unsupported operation: llvm.call
+
+1: "sadd_sat32_trunc"
+4: "sadd_sat32_trunc" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "sadd_sat32_trunc" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "sadd_sat32_ext16"
+4: "sadd_sat32_ext16" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "sadd_sat8_ext8"
+4: "sadd_sat8_ext8" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "sadd_sat8_ext8" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "sadd_sat32_zext"
+4: "sadd_sat32_zext" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "sadd_sat32_maxmin"
+4: "sadd_sat32_maxmin" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "sadd_sat32_notrunc"
+4: "sadd_sat32_notrunc" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "ashrA"
+4: "ashrA" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "ashrB"
+4: "ashrB" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "ashrAB"
+4: "ashrAB" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "ashrA31"
+4: "ashrA31" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "ashrA31" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "ashrA33"
+4: "ashrA33" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "ashrv2i8"
+4: "ashrv2i8" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "ashrv2i8" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "ashrv2i8_s"
+4: "ashrv2i8_s" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "or"
+4: "or" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "const"
+4: "const" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "use64"
+5: "use64" is empty
+

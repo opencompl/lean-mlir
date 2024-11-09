@@ -1,0 +1,17 @@
+1: "foo"
+6: Cannot find function after optimization with sym name: "foo"
+
+1: "PR43723"
+4: "PR43723" has unsupported operation: llvm.return
+
+1: "unknown_use_of_invariant_start"
+9: "unknown_use_of_invariant_start" has pointer type input
+
+4: "unknown_use_of_invariant_start" has unsupported operation: llvm.return
+
+1: "minimal_invariant_start_use"
+4: "minimal_invariant_start_use" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+1: "llvm.objectsize.i64.p0"
+9: "llvm.objectsize.i64.p0" has pointer type input
+

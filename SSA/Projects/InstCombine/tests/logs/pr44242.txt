@@ -1,0 +1,95 @@
+1: "sitofp"
+4: "sitofp" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "sitofp" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "sitofp" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "sitofp" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sitofp" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "sitofp" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "sitofp" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "sitofp" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+1: "bitcast"
+4: "bitcast" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "bitcast" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bitcast" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "bitcast" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "bitcast" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "bitcast" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bitcast" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "bitcast" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "store_volatile"
+4: "store_volatile" has unsupported operation: llvm.mlir.addressof
+
+4: "store_volatile" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "store_volatile" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "store_volatile" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "store_volatile" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "store_volatile" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "store_volatile" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "store_volatile" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "store_volatile" has unsupported operation: llvm.store
+
+4: "store_volatile" has unsupported operation: llvm.return
+
+1: "store_address"
+4: "store_address" has unsupported operation: llvm.mlir.addressof
+
+4: "store_address" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "store_address" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "store_address" has unsupported operation: llvm.getelementptr
+
+4: "store_address" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "store_address" has unsupported operation: llvm.store
+
+4: "store_address" has unsupported operation: llvm.return
+
+1: "multiple_phis"
+4: "multiple_phis" has unsupported operation: llvm.mlir.addressof
+
+4: "multiple_phis" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "multiple_phis" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "multiple_phis" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "multiple_phis" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "multiple_phis" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "multiple_phis" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "multiple_phis" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "multiple_phis" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "multiple_phis" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "multiple_phis" has unsupported operation: llvm.store
+
+4: "multiple_phis" has unsupported operation: builtin.unregistered: llvm.br
+

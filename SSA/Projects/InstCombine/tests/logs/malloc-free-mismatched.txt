@@ -1,0 +1,18 @@
+1: "_Z6answeri"
+4: "_Z6answeri" has unsupported operation: llvm.call
+
+4: "_Z6answeri" has unsupported operation: llvm.call
+
+1: "test_alloca"
+4: "test_alloca" has unsupported operation: llvm.alloca
+
+4: "test_alloca" has unsupported operation: llvm.call
+
+4: "test_alloca" has unsupported operation: llvm.return
+
+1: "_Znam"
+5: "_Znam" is empty
+
+1: "free"
+9: "free" has pointer type input
+

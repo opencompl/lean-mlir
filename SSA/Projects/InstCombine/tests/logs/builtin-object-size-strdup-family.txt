@@ -1,0 +1,30 @@
+1: "malloc"
+5: "malloc" is empty
+
+1: "llvm.objectsize.i64.p0"
+9: "llvm.objectsize.i64.p0" has pointer type input
+
+1: "strdup"
+9: "strdup" has pointer type input
+
+1: "__strdup"
+9: "__strdup" has pointer type input
+
+1: "strndup"
+9: "strndup" has pointer type input
+
+1: "__strndup"
+9: "__strndup" has pointer type input
+
+1: "check_strdup"
+6: Cannot find function after optimization with sym name: "check_strdup"
+
+1: "check_dunder_strdup"
+6: Cannot find function after optimization with sym name: "check_dunder_strdup"
+
+1: "check_strndup"
+6: Cannot find function after optimization with sym name: "check_strndup"
+
+1: "check_dunder_strndup"
+6: Cannot find function after optimization with sym name: "check_dunder_strndup"
+

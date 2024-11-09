@@ -1,0 +1,15 @@
+1: "foo1"
+9: "foo1" has pointer type input
+
+4: "foo1" has unsupported operation: llvm.load
+
+1: "foo2"
+9: "foo2" has pointer type input
+
+4: "foo2" has unsupported operation: llvm.call
+
+4: "foo2" has unsupported operation: llvm.load
+
+1: "func1"
+9: "func1" has pointer type input
+

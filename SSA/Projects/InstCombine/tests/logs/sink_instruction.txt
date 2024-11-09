@@ -1,0 +1,157 @@
+1: "test1"
+4: "test1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "test2"
+4: "test2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test2" has unsupported operation: llvm.call
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "bar"
+5: "bar" is empty
+
+1: "test3"
+9: "test3" has pointer type input
+
+4: "test3" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "test3" has unsupported operation: llvm.getelementptr
+
+4: "test3" has unsupported operation: llvm.load
+
+4: "test3" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "foo"
+5: "foo" is empty
+
+1: "test4"
+4: "test4" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test4" has unsupported operation: llvm.call
+
+1: "test5"
+9: "test5" has pointer type input
+
+4: "test5" has unsupported operation: llvm.getelementptr
+
+4: "test5" has unsupported operation: llvm.load
+
+4: "test5" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test5" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test6"
+9: "test6" has pointer type input
+
+4: "test6" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test6" has unsupported operation: llvm.getelementptr
+
+4: "test6" has unsupported operation: llvm.load
+
+4: "test6" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "test6" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "checkd"
+5: "checkd" is empty
+
+1: "log"
+5: "log" is empty
+
+1: "test7"
+4: "test7" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test7" has unsupported operation: llvm.call
+
+4: "test7" has unsupported operation: llvm.call
+
+4: "test7" has unsupported operation: llvm.return
+
+4: "test7" has unsupported operation: llvm.return
+
+1: "abort"
+5: "abort" is empty
+
+1: "dummy"
+5: "dummy" is empty
+
+1: "test8"
+4: "test8" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test8" has unsupported operation: llvm.call
+
+4: "test8" has unsupported operation: llvm.call
+
+4: "test8" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+1: "invariant_load_metadata"
+9: "invariant_load_metadata" has pointer type input
+
+4: "invariant_load_metadata" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "invariant_load_metadata" has unsupported operation: llvm.call
+
+4: "invariant_load_metadata" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "invariant_load_metadata" has unsupported operation: llvm.load
+
+1: "invariant_load_neg"
+9: "invariant_load_neg" has pointer type input
+
+4: "invariant_load_neg" has unsupported operation: llvm.load
+
+4: "invariant_load_neg" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "invariant_load_neg" has unsupported operation: llvm.call
+
+4: "invariant_load_neg" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "invariant_load_use_in_br"
+9: "invariant_load_use_in_br" has pointer type input
+
+4: "invariant_load_use_in_br" has unsupported operation: llvm.mlir.addressof
+
+4: "invariant_load_use_in_br" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "invariant_load_use_in_br" has unsupported operation: llvm.call
+
+4: "invariant_load_use_in_br" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "invariant_load_use_in_br" has unsupported operation: llvm.load
+
+4: "invariant_load_use_in_br" has unsupported operation: llvm.call
+
+4: "invariant_load_use_in_br" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "invariant_load_use_in_br" has unsupported operation: llvm.return
+
+1: "invariant_load_metadata_call"
+9: "invariant_load_metadata_call" has pointer type input
+
+4: "invariant_load_metadata_call" has unsupported operation: llvm.mlir.addressof
+
+4: "invariant_load_metadata_call" has unsupported operation: llvm.call
+
+4: "invariant_load_metadata_call" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "invariant_load_metadata_call" has unsupported operation: llvm.call
+
+4: "invariant_load_metadata_call" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "invariant_load_metadata_call" has unsupported operation: llvm.load
+
+4: "invariant_load_metadata_call" has unsupported operation: llvm.call
+
+4: "invariant_load_metadata_call" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "invariant_load_metadata_call" has unsupported operation: llvm.return
+
+1: "fn"
+5: "fn" is empty
+

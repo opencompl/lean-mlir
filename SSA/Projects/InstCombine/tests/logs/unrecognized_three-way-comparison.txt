@@ -1,0 +1,188 @@
+1: "foo"
+5: "foo" is empty
+
+1: "compare_against_arbitrary_value"
+4: "compare_against_arbitrary_value" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "compare_against_arbitrary_value" has unsupported operation: llvm.call
+
+4: "compare_against_arbitrary_value" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "compare_against_zero"
+4: "compare_against_zero" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "compare_against_zero" has unsupported operation: llvm.call
+
+4: "compare_against_zero" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "compare_against_one"
+4: "compare_against_one" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "compare_against_one" has unsupported operation: llvm.call
+
+4: "compare_against_one" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "compare_against_two"
+4: "compare_against_two" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "compare_against_two" has unsupported operation: llvm.call
+
+4: "compare_against_two" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "compare_against_three"
+4: "compare_against_three" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "compare_against_three" has unsupported operation: llvm.call
+
+4: "compare_against_three" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "compare_against_four"
+4: "compare_against_four" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "compare_against_four" has unsupported operation: llvm.call
+
+4: "compare_against_four" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "compare_against_five"
+4: "compare_against_five" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "compare_against_five" has unsupported operation: llvm.call
+
+4: "compare_against_five" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "compare_against_six"
+4: "compare_against_six" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "compare_against_six" has unsupported operation: llvm.call
+
+4: "compare_against_six" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "compare_against_arbitrary_value_non_idiomatic_1"
+4: "compare_against_arbitrary_value_non_idiomatic_1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "compare_against_arbitrary_value_non_idiomatic_1" has unsupported operation: llvm.call
+
+4: "compare_against_arbitrary_value_non_idiomatic_1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "compare_against_zero_non_idiomatic_add"
+4: "compare_against_zero_non_idiomatic_add" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "compare_against_zero_non_idiomatic_add" has unsupported operation: llvm.call
+
+4: "compare_against_zero_non_idiomatic_add" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "compare_against_arbitrary_value_non_idiomatic_2"
+4: "compare_against_arbitrary_value_non_idiomatic_2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "compare_against_arbitrary_value_non_idiomatic_2" has unsupported operation: llvm.call
+
+4: "compare_against_arbitrary_value_non_idiomatic_2" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "compare_against_zero_non_idiomatic_or"
+4: "compare_against_zero_non_idiomatic_or" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "compare_against_zero_non_idiomatic_or" has unsupported operation: llvm.call
+
+4: "compare_against_zero_non_idiomatic_or" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "compare_against_arbitrary_value_type_mismatch"
+4: "compare_against_arbitrary_value_type_mismatch" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "compare_against_arbitrary_value_type_mismatch" has unsupported operation: llvm.call
+
+4: "compare_against_arbitrary_value_type_mismatch" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "compare_against_zero_type_mismatch_idiomatic"
+4: "compare_against_zero_type_mismatch_idiomatic" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "compare_against_zero_type_mismatch_idiomatic" has unsupported operation: llvm.call
+
+4: "compare_against_zero_type_mismatch_idiomatic" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "compare_against_zero_type_mismatch_non_idiomatic_1"
+4: "compare_against_zero_type_mismatch_non_idiomatic_1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "compare_against_zero_type_mismatch_non_idiomatic_1" has unsupported operation: llvm.call
+
+4: "compare_against_zero_type_mismatch_non_idiomatic_1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "compare_against_zero_type_mismatch_non_idiomatic_2"
+4: "compare_against_zero_type_mismatch_non_idiomatic_2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "compare_against_zero_type_mismatch_non_idiomatic_2" has unsupported operation: llvm.call
+
+4: "compare_against_zero_type_mismatch_non_idiomatic_2" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "use1"
+5: "use1" is empty
+
+1: "compare_against_fortytwo_commutatibility_0"
+4: "compare_against_fortytwo_commutatibility_0" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "compare_against_fortytwo_commutatibility_0" has unsupported operation: llvm.call
+
+4: "compare_against_fortytwo_commutatibility_0" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "compare_against_fortytwo_commutatibility_1"
+4: "compare_against_fortytwo_commutatibility_1" has unsupported operation: llvm.call
+
+4: "compare_against_fortytwo_commutatibility_1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "compare_against_fortytwo_commutatibility_1" has unsupported operation: llvm.call
+
+4: "compare_against_fortytwo_commutatibility_1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "compare_against_fortytwo_commutatibility_2"
+4: "compare_against_fortytwo_commutatibility_2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "compare_against_fortytwo_commutatibility_2" has unsupported operation: llvm.call
+
+4: "compare_against_fortytwo_commutatibility_2" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "compare_against_fortytwo_commutatibility_3"
+4: "compare_against_fortytwo_commutatibility_3" has unsupported operation: llvm.call
+
+4: "compare_against_fortytwo_commutatibility_3" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "compare_against_fortytwo_commutatibility_3" has unsupported operation: llvm.call
+
+4: "compare_against_fortytwo_commutatibility_3" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "compare_against_arbitrary_value_commutativity0"
+4: "compare_against_arbitrary_value_commutativity0" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "compare_against_arbitrary_value_commutativity0" has unsupported operation: llvm.call
+
+4: "compare_against_arbitrary_value_commutativity0" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "compare_against_arbitrary_value_commutativity1"
+4: "compare_against_arbitrary_value_commutativity1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "compare_against_arbitrary_value_commutativity1" has unsupported operation: llvm.call
+
+4: "compare_against_arbitrary_value_commutativity1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "compare_against_arbitrary_value_commutativity2"
+4: "compare_against_arbitrary_value_commutativity2" has unsupported operation: llvm.call
+
+4: "compare_against_arbitrary_value_commutativity2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "compare_against_arbitrary_value_commutativity2" has unsupported operation: llvm.call
+
+4: "compare_against_arbitrary_value_commutativity2" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "compare_against_arbitrary_value_commutativity3"
+4: "compare_against_arbitrary_value_commutativity3" has unsupported operation: llvm.call
+
+4: "compare_against_arbitrary_value_commutativity3" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "compare_against_arbitrary_value_commutativity3" has unsupported operation: llvm.call
+
+4: "compare_against_arbitrary_value_commutativity3" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "llvm.scmp.i32.i32"
+5: "llvm.scmp.i32.i32" is empty
+
+1: "llvm.scmp.i32.i64"
+5: "llvm.scmp.i32.i64" is empty
+

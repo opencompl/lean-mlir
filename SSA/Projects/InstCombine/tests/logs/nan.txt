@@ -1,0 +1,46 @@
+1: "nan_empty"
+4: "nan_empty" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "nan_empty" has unsupported operation after optimization: llvm.call
+
+1: "nan_dec"
+4: "nan_dec" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "nan_dec" has unsupported operation after optimization: llvm.call
+
+1: "nan_hex"
+4: "nan_hex" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "nan_hex" has unsupported operation after optimization: llvm.call
+
+1: "nanf_empty"
+4: "nanf_empty" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "nanf_empty" has unsupported operation after optimization: llvm.call
+
+1: "nan_poison"
+4: "nan_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "nan_poison" has unsupported operation: llvm.call
+
+1: "nan_undef"
+4: "nan_undef" has unsupported operation: llvm.mlir.undef
+
+4: "nan_undef" has unsupported operation: llvm.call
+
+1: "nan_null"
+4: "nan_null" has unsupported operation: llvm.mlir.zero
+
+4: "nan_null" has unsupported operation: llvm.call
+
+1: "nan_non_constant"
+9: "nan_non_constant" has pointer type input
+
+4: "nan_non_constant" has unsupported operation: llvm.call
+
+1: "nanf"
+9: "nanf" has pointer type input
+
+1: "nan"
+9: "nan" has pointer type input
+

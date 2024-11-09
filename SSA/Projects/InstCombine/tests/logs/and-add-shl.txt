@@ -1,0 +1,9 @@
+1: "and_add_shl"
+4: "and_add_shl" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "and_not_shl"
+4: "and_not_shl" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "and_add_shl_overlap"
+4: "and_add_shl_overlap" has unsupported operation: builtin.unregistered: llvm.intr.assume
+

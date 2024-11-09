@@ -1,0 +1,69 @@
+1: "test_ult_rhsc"
+4: "test_ult_rhsc" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "test_ult_rhsc" has unsupported operation: llvm.call
+
+4: "test_ult_rhsc" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "test_ult_rhsc" has unsupported operation: llvm.call
+
+4: "test_ult_rhsc" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "test_ult_rhsc" has unsupported operation: llvm.call
+
+4: "test_ult_rhsc" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+1: "test_eq_lhsc"
+4: "test_eq_lhsc" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "test_eq_lhsc" has unsupported operation: llvm.call
+
+4: "test_eq_lhsc" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "test_eq_lhsc" has unsupported operation: llvm.call
+
+4: "test_eq_lhsc" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "test_eq_lhsc" has unsupported operation: llvm.call
+
+4: "test_eq_lhsc" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+1: "test_ult_rhsc_invalid_cond"
+4: "test_ult_rhsc_invalid_cond" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "test_ult_rhsc_invalid_cond" has unsupported operation: llvm.call
+
+4: "test_ult_rhsc_invalid_cond" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "test_ult_rhsc_invalid_cond" has unsupported operation: llvm.call
+
+4: "test_ult_rhsc_invalid_cond" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "test_ult_rhsc_invalid_cond" has unsupported operation: llvm.call
+
+4: "test_ult_rhsc_invalid_cond" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+1: "test_ult_rhsc_fail"
+4: "test_ult_rhsc_fail" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "test_ult_rhsc_fail" has unsupported operation: llvm.call
+
+4: "test_ult_rhsc_fail" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "test_ult_rhsc_fail" has unsupported operation: llvm.call
+
+4: "test_ult_rhsc_fail" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "test_ult_rhsc_fail" has unsupported operation: llvm.call
+
+4: "test_ult_rhsc_fail" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+1: "func1"
+5: "func1" is empty
+
+1: "func2"
+5: "func2" is empty
+
+1: "func3"
+5: "func3" is empty
+

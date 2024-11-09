@@ -1,0 +1,80 @@
+1: "use"
+5: "use" is empty
+
+1: "rotl_eq_0"
+4: "rotl_eq_0" has unsupported operation after optimization: builtin.unregistered: llvm.intr.fshl
+
+1: "rotl_ne_0"
+4: "rotl_ne_0" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+4: "rotl_ne_0" has unsupported operation: llvm.call
+
+1: "rotl_eq_n1"
+4: "rotl_eq_n1" has unsupported operation after optimization: builtin.unregistered: llvm.intr.fshl
+
+1: "rotl_ne_n1"
+8: "rotl_ne_n1" contains vectors which are unsupported
+
+1: "rotl_ne_n1_poison"
+4: "rotl_ne_n1_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "rotl_ne_n1_poison" has unsupported operation: llvm.mlir.undef
+
+4: "rotl_ne_n1_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "rotl_ne_n1_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "rotl_eq_0_poison"
+4: "rotl_eq_0_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "rotl_eq_0_poison" has unsupported operation: llvm.mlir.undef
+
+4: "rotl_eq_0_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "rotl_eq_0_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "rotl_eq_1_poison"
+4: "rotl_eq_1_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "rotl_eq_1_poison" has unsupported operation: llvm.mlir.undef
+
+4: "rotl_eq_1_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "rotl_eq_1_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "rotl_eq_1_poison" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotl_sgt_0_poison"
+4: "rotl_sgt_0_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "rotl_sgt_0_poison" has unsupported operation: llvm.mlir.undef
+
+4: "rotl_sgt_0_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "rotl_sgt_0_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "rotl_sgt_0_poison" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotr_eq_0"
+4: "rotr_eq_0" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+4: "rotr_eq_0" has unsupported operation: llvm.call
+
+1: "rotr_ne_0"
+4: "rotr_ne_0" has unsupported operation after optimization: builtin.unregistered: llvm.intr.fshr
+
+1: "rotr_eq_n1"
+4: "rotr_eq_n1" has unsupported operation after optimization: builtin.unregistered: llvm.intr.fshr
+
+1: "rotr_ne_n1"
+4: "rotr_ne_n1" has unsupported operation after optimization: builtin.unregistered: llvm.intr.fshr
+
+1: "rotr_ne_1"
+4: "rotr_ne_1" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "rotr_sgt_n1"
+4: "rotr_sgt_n1" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "fshr_sgt_n1"
+4: "fshr_sgt_n1" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+

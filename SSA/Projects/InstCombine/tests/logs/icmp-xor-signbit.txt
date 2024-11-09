@@ -1,0 +1,164 @@
+1: "slt_to_ult"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "slt_to_ult_splat"
+8: "slt_to_ult_splat" contains vectors which are unsupported
+
+1: "ult_to_slt"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "ult_to_slt_splat"
+8: "ult_to_slt_splat" contains vectors which are unsupported
+
+1: "slt_to_ugt"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "slt_to_ugt_splat"
+8: "slt_to_ugt_splat" contains vectors which are unsupported
+
+1: "ult_to_sgt"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "ult_to_sgt_splat"
+8: "ult_to_sgt_splat" contains vectors which are unsupported
+
+1: "sge_to_ugt"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "sge_to_ugt_splat"
+8: "sge_to_ugt_splat" contains vectors which are unsupported
+
+1: "uge_to_sgt"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "uge_to_sgt_splat"
+8: "uge_to_sgt_splat" contains vectors which are unsupported
+
+1: "sge_to_ult"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "sge_to_ult_splat"
+8: "sge_to_ult_splat" contains vectors which are unsupported
+
+1: "uge_to_slt"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "uge_to_slt_splat"
+8: "uge_to_slt_splat" contains vectors which are unsupported
+
+1: "sgt_to_ugt_bitcasted_splat"
+4: "sgt_to_ugt_bitcasted_splat" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "sgt_to_ugt_bitcasted_splat" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "negative_simplify_splat"
+8: "negative_simplify_splat" contains vectors which are unsupported
+
+1: "slt_zero_eq_i1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.lshr
+2: llvm.icmp
+2: llvm.return
+
+1: "slt_zero_eq_i1_fail"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.ashr
+2: llvm.icmp
+2: llvm.return
+
+1: "slt_zero_eq_ne_0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.lshr
+2: llvm.icmp
+2: llvm.return
+
+1: "slt_zero_ne_ne_0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.lshr
+2: llvm.icmp
+2: llvm.return
+
+1: "slt_zero_eq_ne_0_vec"
+8: "slt_zero_eq_ne_0_vec" contains vectors which are unsupported
+
+1: "slt_zero_ne_ne_b"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.lshr
+2: llvm.icmp
+2: llvm.return
+
+1: "slt_zero_eq_ne_0_fail1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.ashr
+2: llvm.icmp
+2: llvm.return
+
+1: "slt_zero_eq_ne_0_fail2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.lshr
+2: llvm.icmp
+2: llvm.return
+

@@ -1,0 +1,139 @@
+1: "use"
+5: "use" is empty
+
+1: "test"
+9: "test" has pointer type input
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "test" has unsupported operation: llvm.store
+
+4: "test" has unsupported operation: llvm.store
+
+4: "test" has unsupported operation: llvm.return
+
+1: "splat_bitcast_operand"
+4: "splat_bitcast_operand" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "splat_bitcast_operand" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "splat_bitcast_operand" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "splat_bitcast_operand_uses"
+4: "splat_bitcast_operand_uses" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "splat_bitcast_operand_uses" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "splat_bitcast_operand_uses" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "splat_bitcast_operand_uses" has unsupported operation: llvm.call
+
+4: "splat_bitcast_operand_uses" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "splat_bitcast_operand_same_size_src_elt"
+4: "splat_bitcast_operand_same_size_src_elt" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "splat_bitcast_operand_same_size_src_elt" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "splat_bitcast_operand_same_size_src_elt" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "shuf_bitcast_operand"
+4: "shuf_bitcast_operand" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "splat_bitcast_operand_change_type"
+4: "splat_bitcast_operand_change_type" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "splat_bitcast_operand_change_type" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "splat_bitcast_operand_change_type" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "splat_bitcast_operand_change_type" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "splat_bitcast_operand_change_type" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "splat_bitcast_operand_wider_src_elt"
+4: "splat_bitcast_operand_wider_src_elt" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "splat_bitcast_operand_wider_src_elt" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "splat_bitcast_operand_wider_src_elt" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "splat_bitcast_operand_wider_src_elt_uses"
+4: "splat_bitcast_operand_wider_src_elt_uses" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "splat_bitcast_operand_wider_src_elt_uses" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "splat_bitcast_operand_wider_src_elt_uses" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "splat_bitcast_operand_wider_src_elt_uses" has unsupported operation: llvm.call
+
+4: "splat_bitcast_operand_wider_src_elt_uses" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "shuf_bitcast_operand_wider_src"
+4: "shuf_bitcast_operand_wider_src" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "shuf_bitcast_operand_cannot_widen"
+4: "shuf_bitcast_operand_cannot_widen" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shuf_bitcast_operand_cannot_widen" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shuf_bitcast_operand_cannot_widen" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "shuf_bitcast_operand_cannot_widen" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "shuf_bitcast_operand_cannot_widen" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "shuf_bitcast_operand_cannot_widen_undef"
+4: "shuf_bitcast_operand_cannot_widen_undef" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shuf_bitcast_operand_cannot_widen_undef" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shuf_bitcast_operand_cannot_widen_undef" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "shuf_bitcast_operand_cannot_widen_undef" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "shuf_bitcast_operand_cannot_widen_undef" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "shuf_bitcast_insert"
+4: "shuf_bitcast_insert" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "shuf_bitcast_inserti_use1"
+9: "shuf_bitcast_inserti_use1" has pointer type input
+
+4: "shuf_bitcast_inserti_use1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shuf_bitcast_inserti_use1" has unsupported operation: llvm.store
+
+4: "shuf_bitcast_inserti_use1" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "shuf_bitcast_insert_use2"
+9: "shuf_bitcast_insert_use2" has pointer type input
+
+4: "shuf_bitcast_insert_use2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shuf_bitcast_insert_use2" has unsupported operation: llvm.store
+
+4: "shuf_bitcast_insert_use2" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "shuf_bitcast_insert_wrong_index"
+4: "shuf_bitcast_insert_wrong_index" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shuf_bitcast_insert_wrong_index" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "shuf_bitcast_insert_wrong_index" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "shuf_bitcast_wrong_size"
+4: "shuf_bitcast_wrong_size" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shuf_bitcast_wrong_size" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shuf_bitcast_wrong_size" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "shuf_bitcast_wrong_size" has unsupported operation: builtin.unregistered: llvm.shufflevector
+

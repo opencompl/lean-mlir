@@ -1,0 +1,33 @@
+1: "reduce_umax_self"
+4: "reduce_umax_self" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "reduce_umax_sext"
+4: "reduce_umax_sext" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "reduce_umax_zext"
+4: "reduce_umax_zext" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "reduce_umax_sext_same"
+4: "reduce_umax_sext_same" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "reduce_umax_zext_long"
+4: "reduce_umax_zext_long" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "reduce_umax_zext_long_external_use"
+4: "reduce_umax_zext_long_external_use" has unsupported operation: llvm.mlir.addressof
+
+4: "reduce_umax_zext_long_external_use" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "reduce_umax_zext_long_external_use" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "reduce_umax_zext_long_external_use" has unsupported operation: llvm.store
+
+1: "reduce_umax_zext_external_use"
+4: "reduce_umax_zext_external_use" has unsupported operation: llvm.mlir.addressof
+
+4: "reduce_umax_zext_external_use" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "reduce_umax_zext_external_use" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "reduce_umax_zext_external_use" has unsupported operation: llvm.store
+

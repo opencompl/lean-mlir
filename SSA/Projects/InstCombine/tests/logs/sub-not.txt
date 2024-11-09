@@ -1,0 +1,55 @@
+1: "use"
+5: "use" is empty
+
+1: "sub_not"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.xor
+2: llvm.return
+
+1: "sub_not_extra_use"
+4: "sub_not_extra_use" has unsupported operation: llvm.call
+
+1: "sub_not_vec"
+8: "sub_not_vec" contains vectors which are unsupported
+
+1: "dec_sub"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.add
+2: llvm.return
+
+1: "dec_sub_extra_use"
+4: "dec_sub_extra_use" has unsupported operation: llvm.call
+
+1: "dec_sub_vec"
+8: "dec_sub_vec" contains vectors which are unsupported
+
+1: "sub_inc"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.sub
+2: llvm.return
+
+1: "sub_inc_extra_use"
+4: "sub_inc_extra_use" has unsupported operation: llvm.call
+
+1: "sub_inc_vec"
+8: "sub_inc_vec" contains vectors which are unsupported
+
+1: "sub_dec"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.sub
+2: llvm.return
+
+1: "sub_dec_extra_use"
+4: "sub_dec_extra_use" has unsupported operation: llvm.call
+
+1: "sub_dec_vec"
+8: "sub_dec_vec" contains vectors which are unsupported
+

@@ -1,0 +1,23 @@
+1: "func_increase_alignment"
+4: "func_increase_alignment" has unsupported operation: llvm.mlir.addressof
+
+4: "func_increase_alignment" has unsupported operation: builtin.unregistered: llvm.intr.threadlocal.address
+
+4: "func_increase_alignment" has unsupported operation: llvm.store
+
+4: "func_increase_alignment" has unsupported operation: llvm.return
+
+1: "func_add_alignment"
+4: "func_add_alignment" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "func_add_alignment" has unsupported operation after optimization: builtin.unregistered: llvm.intr.threadlocal.address
+
+4: "func_add_alignment" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+1: "func_dont_reduce_alignment"
+4: "func_dont_reduce_alignment" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "func_dont_reduce_alignment" has unsupported operation after optimization: builtin.unregistered: llvm.intr.threadlocal.address
+
+4: "func_dont_reduce_alignment" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+

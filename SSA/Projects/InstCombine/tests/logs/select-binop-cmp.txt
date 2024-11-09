@@ -1,0 +1,560 @@
+1: "use"
+5: "use" is empty
+
+1: "use2"
+5: "use2" is empty
+
+1: "use.i32"
+5: "use.i32" is empty
+
+1: "select_xor_icmp"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_xor_icmp2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_xor_icmp_meta"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_mul_icmp"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.mul
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_add_icmp"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_or_icmp"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_and_icmp"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_xor_icmp_vec"
+8: "select_xor_icmp_vec" contains vectors which are unsupported
+
+1: "select_xor_icmp_vec_use"
+4: "select_xor_icmp_vec_use" has unsupported operation: llvm.call
+
+1: "select_xor_inv_icmp"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_xor_inv_icmp2"
+4: "select_xor_inv_icmp2" has unsupported operation: llvm.call
+
+1: "select_fadd_fcmp"
+4: "select_fadd_fcmp" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "select_fadd_fcmp_poszero"
+4: "select_fadd_fcmp_poszero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "select_fadd_fcmp_2"
+4: "select_fadd_fcmp_2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fadd_fcmp_2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fadd_fcmp_2_poszero"
+4: "select_fadd_fcmp_2_poszero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fadd_fcmp_2_poszero" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fadd_fcmp_3"
+4: "select_fadd_fcmp_3" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "select_fadd_fcmp_3_poszero"
+4: "select_fadd_fcmp_3_poszero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "select_fadd_fcmp_4"
+4: "select_fadd_fcmp_4" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "select_fadd_fcmp_4_poszero"
+4: "select_fadd_fcmp_4_poszero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "select_fadd_fcmp_5"
+4: "select_fadd_fcmp_5" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fadd_fcmp_5" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fadd_fcmp_5_poszero"
+4: "select_fadd_fcmp_5_poszero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fadd_fcmp_5_poszero" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fadd_fcmp_6"
+4: "select_fadd_fcmp_6" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "select_fadd_fcmp_6_poszero"
+4: "select_fadd_fcmp_6_poszero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "select_fmul_fcmp"
+4: "select_fmul_fcmp" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "select_fsub_fcmp"
+4: "select_fsub_fcmp" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "select_fsub_fcmp_negzero"
+4: "select_fsub_fcmp_negzero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "select_fdiv_fcmp"
+4: "select_fdiv_fcmp" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "select_sub_icmp"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sub
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_sub_icmp_2"
+4: "select_sub_icmp_2" has unsupported operation: llvm.call
+
+1: "select_sub_icmp_3"
+4: "select_sub_icmp_3" has unsupported operation: llvm.call
+
+1: "select_sub_icmp_vec"
+8: "select_sub_icmp_vec" contains vectors which are unsupported
+
+1: "select_shl_icmp"
+4: "select_shl_icmp" has unsupported operation: llvm.call
+
+1: "select_lshr_icmp"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.lshr
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_ashr_icmp"
+4: "select_ashr_icmp" has unsupported operation: llvm.call
+
+1: "select_udiv_icmp"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.udiv
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_sdiv_icmp"
+4: "select_sdiv_icmp" has unsupported operation: llvm.call
+
+1: "select_xor_icmp_bad_1"
+7: "select_xor_icmp_bad_1" is unchanged by InstCombine
+
+1: "select_xor_icmp_bad_2"
+7: "select_xor_icmp_bad_2" is unchanged by InstCombine
+
+1: "select_xor_icmp_bad_3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_xor_fcmp_bad_4"
+4: "select_xor_fcmp_bad_4" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "select_xor_icmp_bad_5"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_xor_icmp_bad_6"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_xor_icmp_vec_equivalence"
+8: "select_xor_icmp_vec_equivalence" contains vectors which are unsupported
+
+1: "vec_select_no_equivalence"
+4: "vec_select_no_equivalence" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "vec_select_no_equivalence" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "select_xor_icmp_vec_undef"
+4: "select_xor_icmp_vec_undef" has unsupported operation: llvm.mlir.undef
+
+4: "select_xor_icmp_vec_undef" has unsupported operation: llvm.mlir.undef
+
+4: "select_xor_icmp_vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "select_xor_icmp_vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "select_mul_icmp_bad"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.mul
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_add_icmp_bad"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_and_icmp_zero"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_or_icmp_bad"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_lshr_icmp_const"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.lshr
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_lshr_icmp_const_reordered"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.lshr
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_exact_lshr_icmp_const"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.lshr
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_lshr_icmp_const_large_exact_range"
+7: "select_lshr_icmp_const_large_exact_range" is unchanged by InstCombine
+
+1: "select_lshr_icmp_const_different_values"
+7: "select_lshr_icmp_const_different_values" is unchanged by InstCombine
+
+1: "select_fadd_fcmp_bad"
+4: "select_fadd_fcmp_bad" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fadd_fcmp_bad" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fadd_fcmp_bad_2"
+4: "select_fadd_fcmp_bad_2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fadd_fcmp_bad_2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fadd_fcmp_bad_3"
+4: "select_fadd_fcmp_bad_3" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fadd_fcmp_bad_3" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fadd_fcmp_bad_4"
+4: "select_fadd_fcmp_bad_4" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fadd_fcmp_bad_4" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fadd_fcmp_bad_5"
+4: "select_fadd_fcmp_bad_5" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fadd_fcmp_bad_5" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fadd_fcmp_bad_6"
+4: "select_fadd_fcmp_bad_6" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fadd_fcmp_bad_6" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fadd_fcmp_bad_7"
+4: "select_fadd_fcmp_bad_7" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fadd_fcmp_bad_7" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fadd_fcmp_bad_8"
+4: "select_fadd_fcmp_bad_8" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fadd_fcmp_bad_8" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "select_fadd_fcmp_bad_8" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fadd_fcmp_bad_9"
+4: "select_fadd_fcmp_bad_9" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fadd_fcmp_bad_9" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fadd_fcmp_bad_10"
+4: "select_fadd_fcmp_bad_10" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fadd_fcmp_bad_10" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "select_fadd_fcmp_bad_10" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fadd_fcmp_bad_11"
+4: "select_fadd_fcmp_bad_11" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fadd_fcmp_bad_11" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fadd_fcmp_bad_12"
+4: "select_fadd_fcmp_bad_12" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fadd_fcmp_bad_12" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fadd_fcmp_bad_13"
+4: "select_fadd_fcmp_bad_13" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fadd_fcmp_bad_13" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fadd_fcmp_bad_14"
+4: "select_fadd_fcmp_bad_14" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fadd_fcmp_bad_14" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fmul_fcmp_bad"
+4: "select_fmul_fcmp_bad" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fmul_fcmp_bad" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "select_fmul_fcmp_bad_2"
+4: "select_fmul_fcmp_bad_2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fmul_fcmp_bad_2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "select_fmul_icmp_bad"
+4: "select_fmul_icmp_bad" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "select_fmul_icmp_bad_2"
+4: "select_fmul_icmp_bad_2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "select_fdiv_fcmp_bad"
+4: "select_fdiv_fcmp_bad" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fdiv_fcmp_bad" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "select_fdiv_fcmp_bad_2"
+4: "select_fdiv_fcmp_bad_2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fdiv_fcmp_bad_2" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "select_fsub_fcmp_bad"
+4: "select_fsub_fcmp_bad" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fsub_fcmp_bad" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "select_fsub_fcmp_bad_2"
+4: "select_fsub_fcmp_bad_2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fsub_fcmp_bad_2" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "select_sub_icmp_bad"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sub
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_sub_icmp_bad_2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sub
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_sub_icmp_bad_3"
+4: "select_sub_icmp_bad_3" has unsupported operation: llvm.call
+
+1: "select_sub_icmp_4"
+4: "select_sub_icmp_4" has unsupported operation: llvm.call
+
+1: "select_sub_icmp_bad_4"
+7: "select_sub_icmp_bad_4" is unchanged by InstCombine
+
+1: "select_sub_icmp_bad_5"
+7: "select_sub_icmp_bad_5" is unchanged by InstCombine
+
+1: "select_shl_icmp_bad"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.shl
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_lshr_icmp_bad"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.lshr
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_ashr_icmp_bad"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.ashr
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_udiv_icmp_bad"
+7: "select_udiv_icmp_bad" is unchanged by InstCombine
+
+1: "select_sdiv_icmp_bad"
+7: "select_sdiv_icmp_bad" is unchanged by InstCombine
+
+1: "select_replace_one_use"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sub
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_replace_multi_use"
+4: "select_replace_multi_use" has unsupported operation: llvm.call
+
+1: "select_replace_fold"
+4: "select_replace_fold" has unsupported operation after optimization: builtin.unregistered: llvm.intr.fshr
+
+1: "select_replace_nested"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sub
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_replace_nested_extra_use"
+4: "select_replace_nested_extra_use" has unsupported operation: llvm.call
+
+1: "select_replace_nested_no_simplify"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sub
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_replace_deeply_nested"
+7: "select_replace_deeply_nested" is unchanged by InstCombine
+
+1: "select_replace_constexpr"
+4: "select_replace_constexpr" has unsupported operation: llvm.mlir.addressof
+
+4: "select_replace_constexpr" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+1: "select_replace_undef"
+4: "select_replace_undef" has unsupported operation: llvm.mlir.undef
+
+4: "select_replace_undef" has unsupported operation: llvm.mlir.undef
+
+4: "select_replace_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "select_replace_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "select_replace_call_speculatable"
+4: "select_replace_call_speculatable" has unsupported operation: llvm.call
+
+1: "select_replace_call_speculatable_intrinsic"
+4: "select_replace_call_speculatable_intrinsic" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "select_replace_call_non_speculatable"
+4: "select_replace_call_non_speculatable" has unsupported operation: llvm.call
+
+1: "select_replace_sdiv_speculatable"
+7: "select_replace_sdiv_speculatable" is unchanged by InstCombine
+
+1: "select_replace_sdiv_non_speculatable"
+7: "select_replace_sdiv_non_speculatable" is unchanged by InstCombine
+
+1: "select_replace_udiv_speculatable"
+7: "select_replace_udiv_speculatable" is unchanged by InstCombine
+
+1: "select_replace_udiv_non_speculatable"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.udiv
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_replace_phi"
+4: "select_replace_phi" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "select_replace_phi" has unsupported operation: llvm.call
+
+4: "select_replace_phi" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "call_speculatable"
+5: "call_speculatable" is empty
+
+1: "call_non_speculatable"
+5: "call_non_speculatable" is empty
+
+1: "use_i32"
+5: "use_i32" is empty
+

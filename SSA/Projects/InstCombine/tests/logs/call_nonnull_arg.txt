@@ -1,0 +1,45 @@
+1: "dummy"
+9: "dummy" has pointer type input
+
+1: "test"
+9: "test" has pointer type input
+
+4: "test" has unsupported operation: llvm.mlir.zero
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test" has unsupported operation: llvm.call
+
+4: "test" has unsupported operation: llvm.return
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+1: "bar"
+9: "bar" has pointer type input
+
+1: "bar_without_noundef"
+9: "bar_without_noundef" has pointer type input
+
+1: "baz"
+9: "baz" has pointer type input
+
+1: "deduce_nonnull_from_another_call"
+9: "deduce_nonnull_from_another_call" has pointer type input
+
+4: "deduce_nonnull_from_another_call" has unsupported operation: llvm.call
+
+4: "deduce_nonnull_from_another_call" has unsupported operation: llvm.call
+
+4: "deduce_nonnull_from_another_call" has unsupported operation: llvm.return
+
+1: "deduce_nonnull_from_another_call2"
+9: "deduce_nonnull_from_another_call2" has pointer type input
+
+4: "deduce_nonnull_from_another_call2" has unsupported operation: llvm.call
+
+4: "deduce_nonnull_from_another_call2" has unsupported operation: llvm.call
+
+4: "deduce_nonnull_from_another_call2" has unsupported operation: llvm.return
+

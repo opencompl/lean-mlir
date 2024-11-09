@@ -1,0 +1,58 @@
+1: "trunc_little_endian"
+8: "trunc_little_endian" contains vectors which are unsupported
+
+1: "trunc_big_endian"
+4: "trunc_big_endian" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "trunc_big_endian" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "trunc_big_endian" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "use_v8i16"
+5: "use_v8i16" is empty
+
+1: "trunc_little_endian_extra_use"
+4: "trunc_little_endian_extra_use" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "trunc_little_endian_extra_use" has unsupported operation: llvm.call
+
+1: "use_v12i11"
+5: "use_v12i11" is empty
+
+1: "trunc_big_endian_extra_use"
+4: "trunc_big_endian_extra_use" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "trunc_big_endian_extra_use" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "trunc_big_endian_extra_use" has unsupported operation: llvm.call
+
+4: "trunc_big_endian_extra_use" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "wrong_cast1"
+4: "wrong_cast1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "wrong_cast1" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "wrong_cast1" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "wrong_cast2"
+4: "wrong_cast2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "wrong_cast2" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "wrong_cast2" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "wrong_cast3"
+4: "wrong_cast3" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "wrong_cast3" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "wrong_cast3" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "wrong_shuffle"
+4: "wrong_shuffle" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "wrong_shuffle" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "wrong_shuffle" has unsupported operation: builtin.unregistered: llvm.shufflevector
+

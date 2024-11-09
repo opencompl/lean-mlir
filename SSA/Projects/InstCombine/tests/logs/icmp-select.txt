@@ -1,0 +1,280 @@
+1: "use"
+5: "use" is empty
+
+1: "use.i1"
+5: "use.i1" is empty
+
+1: "icmp_select_const"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_select_var"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_select_var_commuted"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_select_var_select"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_select_var_both_fold"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_select_var_extra_use"
+4: "icmp_select_var_extra_use" has unsupported operation: llvm.call
+
+1: "icmp_select_var_both_fold_extra_use"
+4: "icmp_select_var_both_fold_extra_use" has unsupported operation: llvm.call
+
+1: "icmp_select_var_pred_ne"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_select_var_pred_ult"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_select_var_pred_uge"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_select_var_pred_uge_commuted"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_select_implied_cond"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_select_implied_cond_ne"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_select_implied_cond_swapped_select"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_select_implied_cond_swapped_select_with_inv_cond"
+4: "icmp_select_implied_cond_swapped_select_with_inv_cond" has unsupported operation: llvm.call
+
+1: "icmp_select_implied_cond_relational"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_select_implied_cond_relational_off_by_one"
+4: "icmp_select_implied_cond_relational_off_by_one" has unsupported operation: llvm.call
+
+1: "umin_seq_comparison"
+4: "umin_seq_comparison" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umin
+
+1: "select_constants_and_icmp_eq0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "select_constants_and_icmp_eq0_uses"
+4: "select_constants_and_icmp_eq0_uses" has unsupported operation: llvm.call
+
+4: "select_constants_and_icmp_eq0_uses" has unsupported operation: llvm.call
+
+4: "select_constants_and_icmp_eq0_uses" has unsupported operation: llvm.call
+
+1: "select_constants_and_icmp_eq0_vec_splat"
+8: "select_constants_and_icmp_eq0_vec_splat" contains vectors which are unsupported
+
+1: "select_constants_and_icmp_eq0_common_bit"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "select_constants_and_icmp_eq0_no_common_op1"
+7: "select_constants_and_icmp_eq0_no_common_op1" is unchanged by InstCombine
+
+1: "select_constants_and_icmp_eq0_no_common_op2"
+7: "select_constants_and_icmp_eq0_no_common_op2" is unchanged by InstCombine
+
+1: "select_constants_and_icmp_eq0_zero_tval"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "select_constants_and_icmp_eq0_zero_fval"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "select_constants_and_icmp_eq_tval"
+7: "select_constants_and_icmp_eq_tval" is unchanged by InstCombine
+
+1: "select_constants_and_icmp_eq_fval"
+7: "select_constants_and_icmp_eq_fval" is unchanged by InstCombine
+
+1: "select_constants_and_icmp_ne0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "select_constants_and_icmp_ne0_uses"
+4: "select_constants_and_icmp_ne0_uses" has unsupported operation: llvm.call
+
+4: "select_constants_and_icmp_ne0_uses" has unsupported operation: llvm.call
+
+1: "select_constants_and_icmp_ne0_all_uses"
+4: "select_constants_and_icmp_ne0_all_uses" has unsupported operation: llvm.call
+
+4: "select_constants_and_icmp_ne0_all_uses" has unsupported operation: llvm.call
+
+4: "select_constants_and_icmp_ne0_all_uses" has unsupported operation: llvm.call
+
+1: "select_constants_and_icmp_ne0_vec_splat"
+8: "select_constants_and_icmp_ne0_vec_splat" contains vectors which are unsupported
+
+1: "select_constants_and_icmp_ne0_common_bit"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "select_constants_and_icmp_ne0_no_common_op1"
+7: "select_constants_and_icmp_ne0_no_common_op1" is unchanged by InstCombine
+
+1: "select_constants_and_icmp_ne0_no_common_op2"
+7: "select_constants_and_icmp_ne0_no_common_op2" is unchanged by InstCombine
+
+1: "select_constants_and_icmp_ne0_zero_tval"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "select_constants_and_icmp_ne0_zero_fval"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "select_constants_and_icmp_ne_tval"
+7: "select_constants_and_icmp_ne_tval" is unchanged by InstCombine
+
+1: "select_constants_and_icmp_ne_fval"
+7: "select_constants_and_icmp_ne_fval" is unchanged by InstCombine
+
+1: "icmp_eq_select"
+2: llvm.func
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_slt_select"
+7: "icmp_slt_select" is unchanged by InstCombine
+

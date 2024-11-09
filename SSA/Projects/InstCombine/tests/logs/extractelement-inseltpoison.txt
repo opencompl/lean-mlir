@@ -1,0 +1,155 @@
+1: "extractelement_out_of_range"
+4: "extractelement_out_of_range" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+1: "extractelement_type_out_of_range"
+4: "extractelement_type_out_of_range" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "bitcasted_inselt_equal_num_elts"
+4: "bitcasted_inselt_equal_num_elts" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "test2"
+8: "test2" contains vectors which are unsupported
+
+1: "bitcasted_inselt_wide_source_zero_elt"
+8: "bitcasted_inselt_wide_source_zero_elt" contains vectors which are unsupported
+
+1: "bitcasted_inselt_wide_source_modulo_elt"
+8: "bitcasted_inselt_wide_source_modulo_elt" contains vectors which are unsupported
+
+1: "bitcasted_inselt_wide_source_not_modulo_elt"
+8: "bitcasted_inselt_wide_source_not_modulo_elt" contains vectors which are unsupported
+
+1: "bitcasted_inselt_wide_source_not_modulo_elt_not_half"
+8: "bitcasted_inselt_wide_source_not_modulo_elt_not_half" contains vectors which are unsupported
+
+1: "bitcasted_inselt_wide_source_not_modulo_elt_not_half_weird_types"
+8: "bitcasted_inselt_wide_source_not_modulo_elt_not_half_weird_types" contains vectors which are unsupported
+
+1: "bitcasted_inselt_wide_source_wrong_insert"
+4: "bitcasted_inselt_wide_source_wrong_insert" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bitcasted_inselt_wide_source_wrong_insert" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "use"
+5: "use" is empty
+
+1: "bitcasted_inselt_wide_source_uses"
+4: "bitcasted_inselt_wide_source_uses" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "bitcasted_inselt_wide_source_uses" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bitcasted_inselt_wide_source_uses" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bitcasted_inselt_wide_source_uses" has unsupported operation: llvm.call
+
+4: "bitcasted_inselt_wide_source_uses" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "bitcasted_inselt_to_FP"
+4: "bitcasted_inselt_to_FP" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "use_v2i128"
+5: "use_v2i128" is empty
+
+1: "use_v8f32"
+5: "use_v8f32" is empty
+
+1: "bitcasted_inselt_to_FP_uses"
+4: "bitcasted_inselt_to_FP_uses" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "bitcasted_inselt_to_FP_uses" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bitcasted_inselt_to_FP_uses" has unsupported operation: llvm.call
+
+4: "bitcasted_inselt_to_FP_uses" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bitcasted_inselt_to_FP_uses" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "bitcasted_inselt_to_FP_uses2"
+4: "bitcasted_inselt_to_FP_uses2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "bitcasted_inselt_to_FP_uses2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bitcasted_inselt_to_FP_uses2" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bitcasted_inselt_to_FP_uses2" has unsupported operation: llvm.call
+
+4: "bitcasted_inselt_to_FP_uses2" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "bitcasted_inselt_from_FP"
+4: "bitcasted_inselt_from_FP" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "use_v2f64"
+5: "use_v2f64" is empty
+
+1: "use_v8i16"
+5: "use_v8i16" is empty
+
+1: "bitcasted_inselt_from_FP_uses"
+4: "bitcasted_inselt_from_FP_uses" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "bitcasted_inselt_from_FP_uses" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bitcasted_inselt_from_FP_uses" has unsupported operation: llvm.call
+
+4: "bitcasted_inselt_from_FP_uses" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bitcasted_inselt_from_FP_uses" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "bitcasted_inselt_from_FP_uses2"
+4: "bitcasted_inselt_from_FP_uses2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "bitcasted_inselt_from_FP_uses2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bitcasted_inselt_from_FP_uses2" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bitcasted_inselt_from_FP_uses2" has unsupported operation: llvm.call
+
+4: "bitcasted_inselt_from_FP_uses2" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "bitcasted_inselt_to_and_from_FP"
+4: "bitcasted_inselt_to_and_from_FP" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "bitcasted_inselt_to_and_from_FP" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bitcasted_inselt_to_and_from_FP" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bitcasted_inselt_to_and_from_FP" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "bitcasted_inselt_to_and_from_FP_uses"
+4: "bitcasted_inselt_to_and_from_FP_uses" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "bitcasted_inselt_to_and_from_FP_uses" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bitcasted_inselt_to_and_from_FP_uses" has unsupported operation: llvm.call
+
+4: "bitcasted_inselt_to_and_from_FP_uses" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bitcasted_inselt_to_and_from_FP_uses" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "use_v4f32"
+5: "use_v4f32" is empty
+
+1: "bitcasted_inselt_to_and_from_FP_uses2"
+4: "bitcasted_inselt_to_and_from_FP_uses2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "bitcasted_inselt_to_and_from_FP_uses2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bitcasted_inselt_to_and_from_FP_uses2" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bitcasted_inselt_to_and_from_FP_uses2" has unsupported operation: llvm.call
+
+4: "bitcasted_inselt_to_and_from_FP_uses2" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "invalid_extractelement"
+9: "invalid_extractelement" has pointer type input
+
+4: "invalid_extractelement" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "invalid_extractelement" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "invalid_extractelement" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "invalid_extractelement" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "invalid_extractelement" has unsupported operation: llvm.store
+

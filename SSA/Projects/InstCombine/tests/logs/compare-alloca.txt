@@ -1,0 +1,133 @@
+1: "alloca_argument_compare"
+9: "alloca_argument_compare" has pointer type input
+
+1: "alloca_argument_compare_swapped"
+9: "alloca_argument_compare_swapped" has pointer type input
+
+1: "alloca_argument_compare_ne"
+9: "alloca_argument_compare_ne" has pointer type input
+
+1: "alloca_argument_compare_derived_ptrs"
+9: "alloca_argument_compare_derived_ptrs" has pointer type input
+
+1: "escape"
+9: "escape" has pointer type input
+
+1: "alloca_argument_compare_escaped_alloca"
+9: "alloca_argument_compare_escaped_alloca" has pointer type input
+
+4: "alloca_argument_compare_escaped_alloca" has unsupported operation: llvm.alloca
+
+4: "alloca_argument_compare_escaped_alloca" has unsupported operation: llvm.call
+
+1: "check_compares"
+5: "check_compares" is empty
+
+1: "alloca_argument_compare_two_compares"
+9: "alloca_argument_compare_two_compares" has pointer type input
+
+4: "alloca_argument_compare_two_compares" has unsupported operation: llvm.call
+
+4: "alloca_argument_compare_two_compares" has unsupported operation: llvm.return
+
+1: "alloca_argument_compare_escaped_through_store"
+9: "alloca_argument_compare_escaped_through_store" has pointer type input
+
+4: "alloca_argument_compare_escaped_through_store" has unsupported operation: llvm.alloca
+
+4: "alloca_argument_compare_escaped_through_store" has unsupported operation: llvm.getelementptr
+
+4: "alloca_argument_compare_escaped_through_store" has unsupported operation: llvm.store
+
+1: "alloca_argument_compare_benign_instrs"
+9: "alloca_argument_compare_benign_instrs" has pointer type input
+
+1: "allocator"
+5: "allocator" is empty
+
+1: "alloca_call_compare"
+4: "alloca_call_compare" has unsupported operation: llvm.call
+
+1: "hidden_inttoptr"
+5: "hidden_inttoptr" is empty
+
+1: "hidden_offset"
+9: "hidden_offset" has pointer type input
+
+1: "ptrtoint_single_cmp"
+4: "ptrtoint_single_cmp" has unsupported operation after optimization: llvm.alloca
+
+4: "ptrtoint_single_cmp" has unsupported operation after optimization: llvm.inttoptr
+
+1: "offset_single_cmp"
+4: "offset_single_cmp" has unsupported operation after optimization: llvm.alloca
+
+4: "offset_single_cmp" has unsupported operation after optimization: llvm.alloca
+
+4: "offset_single_cmp" has unsupported operation after optimization: llvm.getelementptr
+
+1: "witness"
+5: "witness" is empty
+
+1: "consistent_fold1"
+4: "consistent_fold1" has unsupported operation: llvm.call
+
+4: "consistent_fold1" has unsupported operation: llvm.call
+
+4: "consistent_fold1" has unsupported operation: llvm.return
+
+1: "consistent_fold2"
+4: "consistent_fold2" has unsupported operation: llvm.alloca
+
+4: "consistent_fold2" has unsupported operation: llvm.call
+
+4: "consistent_fold2" has unsupported operation: llvm.call
+
+4: "consistent_fold2" has unsupported operation: llvm.return
+
+1: "consistent_fold3"
+4: "consistent_fold3" has unsupported operation: llvm.call
+
+4: "consistent_fold3" has unsupported operation: llvm.call
+
+4: "consistent_fold3" has unsupported operation: llvm.return
+
+1: "neg_consistent_fold4"
+4: "neg_consistent_fold4" has unsupported operation: llvm.call
+
+4: "neg_consistent_fold4" has unsupported operation: llvm.return
+
+1: "unknown"
+9: "unknown" has pointer type input
+
+1: "consistent_nocapture_inttoptr"
+4: "consistent_nocapture_inttoptr" has unsupported operation: llvm.alloca
+
+4: "consistent_nocapture_inttoptr" has unsupported operation: llvm.call
+
+1: "consistent_nocapture_offset"
+4: "consistent_nocapture_offset" has unsupported operation: llvm.alloca
+
+4: "consistent_nocapture_offset" has unsupported operation: llvm.call
+
+1: "consistent_nocapture_through_global"
+4: "consistent_nocapture_through_global" has unsupported operation: llvm.alloca
+
+4: "consistent_nocapture_through_global" has unsupported operation: llvm.call
+
+1: "select_alloca_unrelated_ptr"
+9: "select_alloca_unrelated_ptr" has pointer type input
+
+4: "select_alloca_unrelated_ptr" has unsupported operation: llvm.alloca
+
+4: "select_alloca_unrelated_ptr" has unsupported operation: llvm.call
+
+4: "select_alloca_unrelated_ptr" has unsupported operation: llvm.return
+
+1: "alloca_offset_icmp"
+9: "alloca_offset_icmp" has pointer type input
+
+4: "alloca_offset_icmp" has unsupported operation: llvm.call
+
+4: "alloca_offset_icmp" has unsupported operation: llvm.return
+

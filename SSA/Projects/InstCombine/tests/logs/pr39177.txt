@@ -1,0 +1,17 @@
+1: "__fwrite_alias"
+9: "__fwrite_alias" has pointer type input
+
+1: "foo"
+4: "foo" has unsupported operation: llvm.mlir.addressof
+
+4: "foo" has unsupported operation: llvm.mlir.addressof
+
+4: "foo" has unsupported operation: llvm.load
+
+4: "foo" has unsupported operation: llvm.call
+
+4: "foo" has unsupported operation: llvm.return
+
+1: "fprintf"
+9: "fprintf" has pointer type input
+

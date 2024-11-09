@@ -1,0 +1,54 @@
+1: "modulo2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.add
+2: llvm.return
+
+1: "modulo2_vec"
+8: "modulo2_vec" contains vectors which are unsupported
+
+1: "modulo3"
+7: "modulo3" is unchanged by InstCombine
+
+1: "modulo3_vec"
+7: "modulo3_vec" is unchanged by InstCombine
+
+1: "modulo4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.add
+2: llvm.return
+
+1: "modulo4_vec"
+8: "modulo4_vec" contains vectors which are unsupported
+
+1: "modulo7"
+7: "modulo7" is unchanged by InstCombine
+
+1: "modulo7_vec"
+7: "modulo7_vec" is unchanged by InstCombine
+
+1: "modulo32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.add
+2: llvm.return
+
+1: "modulo32_vec"
+8: "modulo32_vec" contains vectors which are unsupported
+
+1: "modulo16_32_vec"
+7: "modulo16_32_vec" is unchanged by InstCombine
+

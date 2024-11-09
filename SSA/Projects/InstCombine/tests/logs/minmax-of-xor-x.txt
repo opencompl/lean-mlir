@@ -1,0 +1,43 @@
+1: "barrier"
+5: "barrier" is empty
+
+1: "umax_xor_Cpow2"
+8: "umax_xor_Cpow2" contains vectors which are unsupported
+
+1: "umin_xor_Cpow2"
+4: "umin_xor_Cpow2" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umin
+
+1: "smax_xor_Cpow2_pos"
+4: "smax_xor_Cpow2_pos" has unsupported operation after optimization: builtin.unregistered: llvm.intr.smax
+
+1: "smin_xor_Cpow2_pos"
+8: "smin_xor_Cpow2_pos" contains vectors which are unsupported
+
+1: "smax_xor_Cpow2_neg"
+8: "smax_xor_Cpow2_neg" contains vectors which are unsupported
+
+1: "smin_xor_Cpow2_neg"
+4: "smin_xor_Cpow2_neg" has unsupported operation after optimization: builtin.unregistered: llvm.intr.smin
+
+1: "umax_xor_pow2"
+4: "umax_xor_pow2" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umax
+
+1: "umin_xor_pow2"
+8: "umin_xor_pow2" contains vectors which are unsupported
+
+1: "smax_xor_pow2_unk"
+4: "smax_xor_pow2_unk" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "smin_xor_pow2_unk"
+4: "smin_xor_pow2_unk" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "smax_xor_pow2_neg"
+4: "smax_xor_pow2_neg" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "smax_xor_pow2_neg" has unsupported operation: llvm.call
+
+1: "smin_xor_pow2_pos"
+4: "smin_xor_pow2_pos" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "smin_xor_pow2_pos" has unsupported operation: llvm.call
+

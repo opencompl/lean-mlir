@@ -1,0 +1,132 @@
+1: "use32"
+5: "use32" is empty
+
+1: "use64"
+5: "use64" is empty
+
+1: "t0_basic"
+4: "t0_basic" has unsupported operation: llvm.call
+
+4: "t0_basic" has unsupported operation: llvm.call
+
+4: "t0_basic" has unsupported operation: llvm.call
+
+4: "t0_basic" has unsupported operation: llvm.call
+
+4: "t0_basic" has unsupported operation: llvm.call
+
+4: "t0_basic" has unsupported operation: llvm.call
+
+1: "use8xi32"
+5: "use8xi32" is empty
+
+1: "use8xi64"
+5: "use8xi64" is empty
+
+1: "t1_vec_splat"
+4: "t1_vec_splat" has unsupported operation: llvm.call
+
+4: "t1_vec_splat" has unsupported operation: llvm.call
+
+4: "t1_vec_splat" has unsupported operation: llvm.call
+
+4: "t1_vec_splat" has unsupported operation: llvm.call
+
+4: "t1_vec_splat" has unsupported operation: llvm.call
+
+4: "t1_vec_splat" has unsupported operation: llvm.call
+
+1: "t2_vec_splat_poison"
+4: "t2_vec_splat_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "t2_vec_splat_poison" has unsupported operation: llvm.mlir.undef
+
+4: "t2_vec_splat_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t2_vec_splat_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t2_vec_splat_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t2_vec_splat_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t2_vec_splat_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t2_vec_splat_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t2_vec_splat_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t2_vec_splat_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t2_vec_splat_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "t2_vec_splat_poison" has unsupported operation: llvm.mlir.undef
+
+4: "t2_vec_splat_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t2_vec_splat_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t2_vec_splat_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t2_vec_splat_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t2_vec_splat_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t2_vec_splat_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t2_vec_splat_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t2_vec_splat_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t2_vec_splat_poison" has unsupported operation: llvm.call
+
+4: "t2_vec_splat_poison" has unsupported operation: llvm.call
+
+4: "t2_vec_splat_poison" has unsupported operation: llvm.call
+
+4: "t2_vec_splat_poison" has unsupported operation: llvm.call
+
+4: "t2_vec_splat_poison" has unsupported operation: llvm.call
+
+4: "t2_vec_splat_poison" has unsupported operation: llvm.call
+
+1: "t3_vec_nonsplat"
+4: "t3_vec_nonsplat" has unsupported operation: llvm.call
+
+4: "t3_vec_nonsplat" has unsupported operation: llvm.call
+
+4: "t3_vec_nonsplat" has unsupported operation: llvm.call
+
+4: "t3_vec_nonsplat" has unsupported operation: llvm.call
+
+4: "t3_vec_nonsplat" has unsupported operation: llvm.call
+
+4: "t3_vec_nonsplat" has unsupported operation: llvm.call
+
+1: "t4_allones_trunc"
+4: "t4_allones_trunc" has unsupported operation: llvm.call
+
+4: "t4_allones_trunc" has unsupported operation: llvm.call
+
+4: "t4_allones_trunc" has unsupported operation: llvm.call
+
+4: "t4_allones_trunc" has unsupported operation: llvm.call
+
+4: "t4_allones_trunc" has unsupported operation: llvm.call
+
+4: "t4_allones_trunc" has unsupported operation: llvm.call
+
+1: "n5_extrause"
+4: "n5_extrause" has unsupported operation: llvm.call
+
+4: "n5_extrause" has unsupported operation: llvm.call
+
+4: "n5_extrause" has unsupported operation: llvm.call
+
+4: "n5_extrause" has unsupported operation: llvm.call
+
+4: "n5_extrause" has unsupported operation: llvm.call
+
+4: "n5_extrause" has unsupported operation: llvm.call
+
+4: "n5_extrause" has unsupported operation: llvm.call
+

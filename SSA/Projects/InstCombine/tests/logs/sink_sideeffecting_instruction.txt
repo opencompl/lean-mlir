@@ -1,0 +1,181 @@
+1: "foo"
+9: "foo" has pointer type input
+
+4: "foo" has unsupported operation: llvm.call
+
+4: "foo" has unsupported operation: llvm.store
+
+4: "foo" has unsupported operation: llvm.call
+
+1: "baz"
+5: "baz" is empty
+
+1: "test"
+4: "test" has unsupported operation: llvm.alloca
+
+4: "test" has unsupported operation: llvm.alloca
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.intr.lifetime.start
+
+4: "test" has unsupported operation: llvm.call
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.intr.lifetime.start
+
+4: "test" has unsupported operation: llvm.load
+
+4: "test" has unsupported operation: llvm.call
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test" has unsupported operation: llvm.call
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.intr.lifetime.end
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.intr.lifetime.end
+
+1: "unknown"
+9: "unknown" has pointer type input
+
+1: "unknown.as2"
+9: "unknown.as2" has pointer type input
+
+1: "sink_write_to_use"
+4: "sink_write_to_use" has unsupported operation: llvm.alloca
+
+4: "sink_write_to_use" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sink_write_to_use" has unsupported operation: llvm.call
+
+1: "sink_readwrite_to_use"
+4: "sink_readwrite_to_use" has unsupported operation: llvm.alloca
+
+4: "sink_readwrite_to_use" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sink_readwrite_to_use" has unsupported operation: llvm.call
+
+1: "sink_bitcast"
+4: "sink_bitcast" has unsupported operation: llvm.alloca
+
+4: "sink_bitcast" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sink_bitcast" has unsupported operation: llvm.call
+
+1: "sink_gep1"
+4: "sink_gep1" has unsupported operation: llvm.alloca
+
+4: "sink_gep1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sink_gep1" has unsupported operation: llvm.getelementptr
+
+4: "sink_gep1" has unsupported operation: llvm.call
+
+1: "sink_gep2"
+4: "sink_gep2" has unsupported operation: llvm.alloca
+
+4: "sink_gep2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sink_gep2" has unsupported operation: llvm.call
+
+1: "sink_addrspacecast"
+4: "sink_addrspacecast" has unsupported operation: llvm.alloca
+
+4: "sink_addrspacecast" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sink_addrspacecast" has unsupported operation: builtin.unregistered: llvm.addrspacecast
+
+4: "sink_addrspacecast" has unsupported operation: llvm.call
+
+1: "neg_infinite_loop"
+4: "neg_infinite_loop" has unsupported operation: llvm.alloca
+
+4: "neg_infinite_loop" has unsupported operation: llvm.call
+
+4: "neg_infinite_loop" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "neg_throw"
+4: "neg_throw" has unsupported operation: llvm.alloca
+
+4: "neg_throw" has unsupported operation: llvm.call
+
+4: "neg_throw" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "neg_unknown_write"
+4: "neg_unknown_write" has unsupported operation: llvm.alloca
+
+4: "neg_unknown_write" has unsupported operation: llvm.call
+
+4: "neg_unknown_write" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "sink_lifetime1"
+4: "sink_lifetime1" has unsupported operation: llvm.alloca
+
+4: "sink_lifetime1" has unsupported operation: builtin.unregistered: llvm.intr.lifetime.start
+
+4: "sink_lifetime1" has unsupported operation: llvm.call
+
+4: "sink_lifetime1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sink_lifetime1" has unsupported operation: builtin.unregistered: llvm.intr.lifetime.end
+
+1: "sink_lifetime2"
+4: "sink_lifetime2" has unsupported operation: llvm.alloca
+
+4: "sink_lifetime2" has unsupported operation: builtin.unregistered: llvm.intr.lifetime.start
+
+4: "sink_lifetime2" has unsupported operation: llvm.call
+
+4: "sink_lifetime2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sink_lifetime2" has unsupported operation: builtin.unregistered: llvm.intr.lifetime.end
+
+4: "sink_lifetime2" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "sink_lifetime3"
+4: "sink_lifetime3" has unsupported operation: llvm.alloca
+
+4: "sink_lifetime3" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sink_lifetime3" has unsupported operation: llvm.call
+
+1: "sink_lifetime4a"
+4: "sink_lifetime4a" has unsupported operation: llvm.alloca
+
+4: "sink_lifetime4a" has unsupported operation: builtin.unregistered: llvm.intr.lifetime.start
+
+4: "sink_lifetime4a" has unsupported operation: llvm.call
+
+4: "sink_lifetime4a" has unsupported operation: builtin.unregistered: llvm.intr.lifetime.end
+
+4: "sink_lifetime4a" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "sink_lifetime4b"
+4: "sink_lifetime4b" has unsupported operation: llvm.alloca
+
+4: "sink_lifetime4b" has unsupported operation: builtin.unregistered: llvm.intr.lifetime.start
+
+4: "sink_lifetime4b" has unsupported operation: llvm.call
+
+4: "sink_lifetime4b" has unsupported operation: builtin.unregistered: llvm.intr.lifetime.end
+
+4: "sink_lifetime4b" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "sink_atomicrmw_to_use"
+4: "sink_atomicrmw_to_use" has unsupported operation: llvm.alloca
+
+4: "sink_atomicrmw_to_use" has unsupported operation: llvm.store
+
+4: "sink_atomicrmw_to_use" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+4: "sink_atomicrmw_to_use" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "bar"
+5: "bar" is empty
+

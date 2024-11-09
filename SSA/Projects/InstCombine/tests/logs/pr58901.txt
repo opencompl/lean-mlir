@@ -1,0 +1,14 @@
+1: "f1"
+9: "f1" has pointer type input
+
+4: "f1" has unsupported operation: llvm.getelementptr
+
+4: "f1" has unsupported operation: llvm.getelementptr
+
+1: "f2"
+9: "f2" has pointer type input
+
+4: "f2" has unsupported operation: llvm.getelementptr
+
+4: "f2" has unsupported operation: llvm.getelementptr
+

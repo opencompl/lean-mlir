@@ -1,0 +1,91 @@
+1: "use"
+5: "use" is empty
+
+1: "sextinreg"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.xor
+2: llvm.add
+2: llvm.return
+
+1: "sextinreg_extra_use"
+4: "sextinreg_extra_use" has unsupported operation: llvm.call
+
+1: "sextinreg_splat"
+8: "sextinreg_splat" contains vectors which are unsupported
+
+1: "sextinreg_alt"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.xor
+2: llvm.add
+2: llvm.return
+
+1: "sextinreg_alt_splat"
+8: "sextinreg_alt_splat" contains vectors which are unsupported
+
+1: "sext"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.xor
+2: llvm.add
+2: llvm.return
+
+1: "sext_extra_use"
+4: "sext_extra_use" has unsupported operation: llvm.call
+
+1: "sext_splat"
+8: "sext_splat" contains vectors which are unsupported
+
+1: "sextinreg2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.xor
+2: llvm.add
+2: llvm.return
+
+1: "sextinreg2_splat"
+8: "sextinreg2_splat" contains vectors which are unsupported
+
+1: "test5"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.ashr
+2: llvm.return
+
+1: "test6"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.shl
+2: llvm.ashr
+2: llvm.return
+
+1: "test6_splat_vec"
+8: "test6_splat_vec" contains vectors which are unsupported
+
+1: "ashr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.xor
+2: llvm.add
+2: llvm.return
+
+1: "ashr_splat"
+8: "ashr_splat" contains vectors which are unsupported
+

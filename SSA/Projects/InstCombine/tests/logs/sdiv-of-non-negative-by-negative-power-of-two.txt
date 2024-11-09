@@ -1,0 +1,9 @@
+1: "t0"
+4: "t0" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "n1"
+4: "n1" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "n2"
+4: "n2" has unsupported operation: builtin.unregistered: llvm.intr.assume
+

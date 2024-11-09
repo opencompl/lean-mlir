@@ -1,0 +1,46 @@
+1: "_Z3fooR1s"
+9: "_Z3fooR1s" has pointer type input
+
+4: "_Z3fooR1s" has unsupported operation: llvm.load
+
+4: "_Z3fooR1s" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "_Z3fooR1s" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "_Z3fooR1s" has unsupported operation: llvm.getelementptr
+
+4: "_Z3fooR1s" has unsupported operation: llvm.load
+
+4: "_Z3fooR1s" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "_Z3fooR1s" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "_Z3fooR1s" has unsupported operation: llvm.store
+
+4: "_Z3fooR1s" has unsupported operation: llvm.getelementptr
+
+4: "_Z3fooR1s" has unsupported operation: llvm.load
+
+4: "_Z3fooR1s" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "_Z3fooR1s" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "_Z3fooR1s" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "_Z3fooR1s" has unsupported operation: llvm.store
+
+4: "_Z3fooR1s" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "_Z3fooR1s" has unsupported operation: llvm.return
+
+1: "get"
+5: "get" is empty
+
+1: "test1"
+4: "test1" has unsupported operation: llvm.call
+
+4: "test1" has unsupported operation: llvm.return
+
+1: "test3"
+4: "test3" has unsupported operation: llvm.return
+

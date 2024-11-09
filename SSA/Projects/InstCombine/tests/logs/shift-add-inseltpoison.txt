@@ -1,0 +1,125 @@
+1: "shl_C1_add_A_C2_i32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.add
+2: llvm.shl
+2: llvm.return
+
+1: "ashr_C1_add_A_C2_i32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.add
+2: llvm.ashr
+2: llvm.return
+
+1: "lshr_C1_add_A_C2_i32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.add
+2: llvm.shl
+2: llvm.return
+
+1: "shl_C1_add_A_C2_v4i32"
+4: "shl_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shl_C1_add_A_C2_v4i32" has unsupported operation: llvm.mlir.undef
+
+4: "shl_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "ashr_C1_add_A_C2_v4i32"
+4: "ashr_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "ashr_C1_add_A_C2_v4i32" has unsupported operation: llvm.mlir.undef
+
+4: "ashr_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ashr_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ashr_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ashr_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "lshr_C1_add_A_C2_v4i32"
+4: "lshr_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "lshr_C1_add_A_C2_v4i32" has unsupported operation: llvm.mlir.undef
+
+4: "lshr_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_C1_add_A_C2_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "shl_C1_add_A_C2_v4i32_splat"
+4: "shl_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shl_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shl_C1_add_A_C2_v4i32_splat" has unsupported operation: llvm.mlir.undef
+
+4: "shl_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "ashr_C1_add_A_C2_v4i32_splat"
+4: "ashr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "ashr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "ashr_C1_add_A_C2_v4i32_splat" has unsupported operation: llvm.mlir.undef
+
+4: "ashr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ashr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ashr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ashr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ashr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ashr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "lshr_C1_add_A_C2_v4i32_splat"
+4: "lshr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "lshr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "lshr_C1_add_A_C2_v4i32_splat" has unsupported operation: llvm.mlir.undef
+
+4: "lshr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_C1_add_A_C2_v4i32_splat" has unsupported operation: builtin.unregistered: llvm.shufflevector
+

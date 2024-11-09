@@ -1,0 +1,12 @@
+1: "strcmp"
+9: "strcmp" has pointer type input
+
+1: "fold_strcmp_s3_x_s4_s3"
+4: "fold_strcmp_s3_x_s4_s3" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strcmp_s3_x_s4_s3" has unsupported operation: llvm.getelementptr
+
+4: "fold_strcmp_s3_x_s4_s3" has unsupported operation: llvm.getelementptr
+
+4: "fold_strcmp_s3_x_s4_s3" has unsupported operation: llvm.call
+

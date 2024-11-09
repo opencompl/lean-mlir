@@ -1,0 +1,72 @@
+1: "use"
+5: "use" is empty
+
+1: "low_mask_nsw_nuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.sub
+2: llvm.return
+
+1: "low_mask_nsw_nuw_vec"
+8: "low_mask_nsw_nuw_vec" contains vectors which are unsupported
+
+1: "arbitrary_mask_sub_i8"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.sub
+2: llvm.return
+
+1: "arbitrary_mask_sub_high_bit_dont_care_i8"
+7: "arbitrary_mask_sub_high_bit_dont_care_i8" is unchanged by InstCombine
+
+1: "arbitrary_mask_sub_nsw_high_bit_dont_care_i8"
+7: "arbitrary_mask_sub_nsw_high_bit_dont_care_i8" is unchanged by InstCombine
+
+1: "arbitrary_mask_sub_nuw_high_bit_dont_care_i8"
+7: "arbitrary_mask_sub_nuw_high_bit_dont_care_i8" is unchanged by InstCombine
+
+1: "arbitrary_mask_sub_v2i5"
+8: "arbitrary_mask_sub_v2i5" contains vectors which are unsupported
+
+1: "not_masked_sub_i8"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.sub
+2: llvm.return
+
+1: "range_masked_sub"
+4: "range_masked_sub" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "xor_add"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.xor
+2: llvm.add
+2: llvm.return
+
+1: "xor_add_extra_use"
+4: "xor_add_extra_use" has unsupported operation: llvm.call
+
+1: "xor_add_splat"
+8: "xor_add_splat" contains vectors which are unsupported
+
+1: "xor_add_splat_undef"
+4: "xor_add_splat_undef" has unsupported operation: llvm.mlir.undef
+
+4: "xor_add_splat_undef" has unsupported operation: llvm.mlir.undef
+
+4: "xor_add_splat_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "xor_add_splat_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "xor_dominating_cond"
+4: "xor_dominating_cond" has unsupported operation: builtin.unregistered: llvm.cond_br
+

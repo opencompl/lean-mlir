@@ -1,0 +1,12 @@
+1: "bitmap_clear"
+5: "bitmap_clear" is empty
+
+1: "oof"
+4: "oof" has unsupported operation: llvm.alloca
+
+4: "oof" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "oof" has unsupported operation: llvm.call
+
+4: "oof" has unsupported operation: builtin.unregistered: llvm.br
+

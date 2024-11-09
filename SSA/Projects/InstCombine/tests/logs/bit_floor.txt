@@ -1,0 +1,40 @@
+1: "bit_floor_32"
+4: "bit_floor_32" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "bit_floor_64"
+4: "bit_floor_64" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "bit_floor_commuted_operands"
+4: "bit_floor_commuted_operands" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "bit_floor_lshr_used_twice"
+9: "bit_floor_lshr_used_twice" has pointer type input
+
+4: "bit_floor_lshr_used_twice" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+4: "bit_floor_lshr_used_twice" has unsupported operation: llvm.store
+
+1: "bit_floor_ctlz_used_twice"
+9: "bit_floor_ctlz_used_twice" has pointer type input
+
+4: "bit_floor_ctlz_used_twice" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+4: "bit_floor_ctlz_used_twice" has unsupported operation: llvm.store
+
+1: "bit_floor_sub_used_twice"
+9: "bit_floor_sub_used_twice" has pointer type input
+
+4: "bit_floor_sub_used_twice" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+4: "bit_floor_sub_used_twice" has unsupported operation: llvm.store
+
+1: "bit_floor_shl_used_twice"
+9: "bit_floor_shl_used_twice" has pointer type input
+
+4: "bit_floor_shl_used_twice" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+4: "bit_floor_shl_used_twice" has unsupported operation: llvm.store
+
+1: "bit_floor_v4i32"
+4: "bit_floor_v4i32" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+

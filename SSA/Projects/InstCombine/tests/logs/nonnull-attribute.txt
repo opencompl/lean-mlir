@@ -1,0 +1,17 @@
+1: "addrspace0"
+9: "addrspace0" has pointer type input
+
+1: "addrspace1"
+9: "addrspace1" has pointer type input
+
+1: "test"
+4: "test" has unsupported operation: llvm.mlir.addressof
+
+4: "test" has unsupported operation: llvm.mlir.addressof
+
+4: "test" has unsupported operation: llvm.call
+
+4: "test" has unsupported operation: llvm.call
+
+4: "test" has unsupported operation: llvm.return
+

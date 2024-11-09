@@ -1,0 +1,89 @@
+1: "use.i8"
+5: "use.i8" is empty
+
+1: "use.i1"
+5: "use.i1" is empty
+
+1: "src_tv_eq"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
+
+1: "src_tv_eq_multiuse_or_fail"
+4: "src_tv_eq_multiuse_or_fail" has unsupported operation: llvm.call
+
+1: "src_tv_eq_fail_tv_nonzero"
+7: "src_tv_eq_fail_tv_nonzero" is unchanged by InstCombine
+
+1: "src_fv_ne"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
+
+1: "src_fv_ne_fail_maybe_zero"
+7: "src_fv_ne_fail_maybe_zero" is unchanged by InstCombine
+
+1: "src_tv_ne"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
+
+1: "src_tv_ne_fail_cmp_nonzero"
+7: "src_tv_ne_fail_cmp_nonzero" is unchanged by InstCombine
+
+1: "src_fv_eq"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
+
+1: "src_fv_eq_fail_cant_invert"
+4: "src_fv_eq_fail_cant_invert" has unsupported operation: llvm.call
+
+1: "src_fv_eq_fail_cant_invert2"
+4: "src_fv_eq_fail_cant_invert2" has unsupported operation: llvm.call
+
+4: "src_fv_eq_fail_cant_invert2" has unsupported operation: llvm.call
+
+1: "src_fv_eq_invert2"
+4: "src_fv_eq_invert2" has unsupported operation: llvm.call
+
+1: "src_fv_eq_invert2_fail_wrong_binop"
+4: "src_fv_eq_invert2_fail_wrong_binop" has unsupported operation: llvm.call
+
+1: "src_fv_eq_invert2_fail_bad_sel"
+4: "src_fv_eq_invert2_fail_bad_sel" has unsupported operation: llvm.call
+
+4: "src_fv_eq_invert2_fail_bad_sel" has unsupported operation: llvm.call
+
+1: "src_fv_eq_invert3"
+4: "src_fv_eq_invert3" has unsupported operation: llvm.call
+
+4: "src_fv_eq_invert3" has unsupported operation: llvm.call
+
+1: "src_tv_ne_invert"
+4: "src_tv_ne_invert" has unsupported operation: llvm.call
+
+4: "src_tv_ne_invert" has unsupported operation: llvm.call
+
+4: "src_tv_ne_invert" has unsupported operation: llvm.call
+

@@ -1,0 +1,74 @@
+1: "test0"
+4: "test0" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test0" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+4: "test0" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test1"
+4: "test1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test1" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+4: "test1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test2"
+4: "test2" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "D60846_miscompile"
+9: "D60846_miscompile" has pointer type input
+
+4: "D60846_miscompile" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "D60846_miscompile" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "D60846_miscompile" has unsupported operation: llvm.store
+
+4: "D60846_miscompile" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "D60846_miscompile" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "D60846_miscompile" has unsupported operation: llvm.return
+
+1: "test_sgt_zero"
+4: "test_sgt_zero" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_sgt_zero" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "test_slt_neg_ten"
+4: "test_slt_neg_ten" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "test_slt_ten"
+4: "test_slt_ten" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_slt_ten" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "test_ugt_unknown"
+4: "test_ugt_unknown" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_ugt_unknown" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "test_sle_zero"
+4: "test_sle_zero" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_sle_zero" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "test_sge_neg_ten"
+4: "test_sge_neg_ten" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "test_sge_ten"
+4: "test_sge_ten" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_sge_ten" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "test_ule_unknown"
+4: "test_ule_unknown" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_ule_unknown" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+

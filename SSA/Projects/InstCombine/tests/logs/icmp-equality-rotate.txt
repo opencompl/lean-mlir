@@ -1,0 +1,59 @@
+1: "use.i8"
+5: "use.i8" is empty
+
+1: "cmpeq_rorr_to_rorl"
+4: "cmpeq_rorr_to_rorl" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "cmpeq_rorr_to_rorl_non_equality_fail"
+4: "cmpeq_rorr_to_rorl_non_equality_fail" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "cmpeq_rorr_to_rorl_cmp_against_wrong_val_fail"
+4: "cmpeq_rorr_to_rorl_cmp_against_wrong_val_fail" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "cmpeq_rorr_to_rorl_non_ror_fail"
+4: "cmpeq_rorr_to_rorl_non_ror_fail" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "cmpeq_rorr_to_rorl_multiuse_fail"
+4: "cmpeq_rorr_to_rorl_multiuse_fail" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+4: "cmpeq_rorr_to_rorl_multiuse_fail" has unsupported operation: llvm.call
+
+1: "cmpne_rorr_rorr"
+4: "cmpne_rorr_rorr" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "cmpne_rorrX_rorrY"
+4: "cmpne_rorrX_rorrY" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "cmpne_rorr_rorr_non_equality_fail"
+4: "cmpne_rorr_rorr_non_equality_fail" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+4: "cmpne_rorr_rorr_non_equality_fail" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "cmpne_rorr_rorl_todo_mismatch_C"
+4: "cmpne_rorr_rorl_todo_mismatch_C" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+4: "cmpne_rorr_rorl_todo_mismatch_C" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "cmpne_rorl_rorl_multiuse1_fail"
+4: "cmpne_rorl_rorl_multiuse1_fail" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+4: "cmpne_rorl_rorl_multiuse1_fail" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+4: "cmpne_rorl_rorl_multiuse1_fail" has unsupported operation: llvm.call
+
+1: "cmpeq_rorlXC_rorlYC_multiuse1"
+4: "cmpeq_rorlXC_rorlYC_multiuse1" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+4: "cmpeq_rorlXC_rorlYC_multiuse1" has unsupported operation: llvm.call
+
+4: "cmpeq_rorlXC_rorlYC_multiuse1" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "cmpeq_rorlC_rorlC_multiuse2_fail"
+4: "cmpeq_rorlC_rorlC_multiuse2_fail" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+4: "cmpeq_rorlC_rorlC_multiuse2_fail" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+4: "cmpeq_rorlC_rorlC_multiuse2_fail" has unsupported operation: llvm.call
+
+4: "cmpeq_rorlC_rorlC_multiuse2_fail" has unsupported operation: llvm.call
+

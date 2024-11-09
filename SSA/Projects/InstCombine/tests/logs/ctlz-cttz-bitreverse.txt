@@ -1,0 +1,18 @@
+1: "ctlz_true_bitreverse"
+4: "ctlz_true_bitreverse" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "ctlz_true_bitreverse_vec"
+4: "ctlz_true_bitreverse_vec" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "ctlz_false_bitreverse"
+4: "ctlz_false_bitreverse" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_true_bitreverse"
+4: "cttz_true_bitreverse" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "cttz_true_bitreverse_vec"
+4: "cttz_true_bitreverse_vec" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "cttz_false_bitreverse"
+4: "cttz_false_bitreverse" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+

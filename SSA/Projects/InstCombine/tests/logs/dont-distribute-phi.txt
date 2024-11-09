@@ -1,0 +1,25 @@
+1: "foo"
+4: "foo" has unsupported operation: llvm.mlir.undef
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "foo" has unsupported operation: llvm.call
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "foo_logical"
+4: "foo_logical" has unsupported operation: llvm.mlir.undef
+
+4: "foo_logical" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "foo_logical" has unsupported operation: llvm.call
+
+4: "foo_logical" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "foo_logical" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "bar"
+5: "bar" is empty
+

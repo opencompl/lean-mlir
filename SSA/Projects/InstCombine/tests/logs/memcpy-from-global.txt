@@ -1,0 +1,278 @@
+1: "test1"
+4: "test1" has unsupported operation: llvm.mlir.addressof
+
+4: "test1" has unsupported operation: llvm.getelementptr
+
+4: "test1" has unsupported operation: llvm.load
+
+4: "test1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test1" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test1" has unsupported operation: llvm.getelementptr
+
+4: "test1" has unsupported operation: llvm.load
+
+4: "test1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test1" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test1" has unsupported operation: llvm.getelementptr
+
+4: "test1" has unsupported operation: llvm.load
+
+4: "test1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test1" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test1" has unsupported operation: llvm.getelementptr
+
+4: "test1" has unsupported operation: llvm.load
+
+4: "test1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test1" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test2"
+4: "test2" has unsupported operation: llvm.mlir.addressof
+
+4: "test2" has unsupported operation: llvm.alloca
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "test2" has unsupported operation: llvm.call
+
+4: "test2" has unsupported operation: llvm.return
+
+1: "test2_no_null_opt"
+4: "test2_no_null_opt" has unsupported operation: llvm.mlir.addressof
+
+4: "test2_no_null_opt" has unsupported operation: llvm.alloca
+
+4: "test2_no_null_opt" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "test2_no_null_opt" has unsupported operation: llvm.call
+
+4: "test2_no_null_opt" has unsupported operation: llvm.return
+
+1: "test2_addrspacecast"
+4: "test2_addrspacecast" has unsupported operation: llvm.mlir.addressof
+
+4: "test2_addrspacecast" has unsupported operation: builtin.unregistered: llvm.addrspacecast
+
+4: "test2_addrspacecast" has unsupported operation: llvm.alloca
+
+4: "test2_addrspacecast" has unsupported operation: builtin.unregistered: llvm.addrspacecast
+
+4: "test2_addrspacecast" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "test2_addrspacecast" has unsupported operation: llvm.call
+
+4: "test2_addrspacecast" has unsupported operation: llvm.return
+
+1: "bar"
+9: "bar" has pointer type input
+
+1: "bar_as1"
+9: "bar_as1" has pointer type input
+
+1: "test3"
+4: "test3" has unsupported operation: llvm.mlir.addressof
+
+4: "test3" has unsupported operation: llvm.call
+
+4: "test3" has unsupported operation: llvm.return
+
+1: "test3_addrspacecast"
+4: "test3_addrspacecast" has unsupported operation: llvm.mlir.addressof
+
+4: "test3_addrspacecast" has unsupported operation: llvm.call
+
+4: "test3_addrspacecast" has unsupported operation: llvm.return
+
+1: "test4"
+4: "test4" has unsupported operation: llvm.mlir.addressof
+
+4: "test4" has unsupported operation: llvm.call
+
+4: "test4" has unsupported operation: llvm.return
+
+1: "test5"
+4: "test5" has unsupported operation: llvm.mlir.addressof
+
+4: "test5" has unsupported operation: llvm.call
+
+4: "test5" has unsupported operation: llvm.return
+
+1: "baz"
+9: "baz" has pointer type input
+
+1: "test6"
+4: "test6" has unsupported operation: llvm.mlir.addressof
+
+4: "test6" has unsupported operation: llvm.call
+
+4: "test6" has unsupported operation: llvm.return
+
+1: "test7"
+4: "test7" has unsupported operation: llvm.mlir.addressof
+
+4: "test7" has unsupported operation: llvm.call
+
+4: "test7" has unsupported operation: llvm.return
+
+1: "test8"
+4: "test8" has unsupported operation: llvm.mlir.addressof
+
+4: "test8" has unsupported operation: llvm.getelementptr
+
+4: "test8" has unsupported operation: llvm.alloca
+
+4: "test8" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "test8" has unsupported operation: llvm.call
+
+4: "test8" has unsupported operation: llvm.return
+
+1: "test8_addrspacecast"
+4: "test8_addrspacecast" has unsupported operation: llvm.mlir.addressof
+
+4: "test8_addrspacecast" has unsupported operation: llvm.getelementptr
+
+4: "test8_addrspacecast" has unsupported operation: builtin.unregistered: llvm.addrspacecast
+
+4: "test8_addrspacecast" has unsupported operation: llvm.alloca
+
+4: "test8_addrspacecast" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "test8_addrspacecast" has unsupported operation: llvm.call
+
+4: "test8_addrspacecast" has unsupported operation: llvm.return
+
+1: "test9"
+4: "test9" has unsupported operation: llvm.mlir.addressof
+
+4: "test9" has unsupported operation: llvm.getelementptr
+
+4: "test9" has unsupported operation: llvm.call
+
+4: "test9" has unsupported operation: llvm.return
+
+1: "test9_addrspacecast"
+4: "test9_addrspacecast" has unsupported operation: llvm.mlir.addressof
+
+4: "test9_addrspacecast" has unsupported operation: llvm.getelementptr
+
+4: "test9_addrspacecast" has unsupported operation: llvm.call
+
+4: "test9_addrspacecast" has unsupported operation: llvm.return
+
+1: "test9_small_global"
+4: "test9_small_global" has unsupported operation: llvm.mlir.addressof
+
+4: "test9_small_global" has unsupported operation: llvm.mlir.addressof
+
+4: "test9_small_global" has unsupported operation: llvm.alloca
+
+4: "test9_small_global" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "test9_small_global" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "test9_small_global" has unsupported operation: llvm.return
+
+1: "test10_same_global"
+4: "test10_same_global" has unsupported operation: llvm.mlir.addressof
+
+4: "test10_same_global" has unsupported operation: llvm.mlir.addressof
+
+4: "test10_same_global" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "test10_same_global" has unsupported operation: llvm.return
+
+1: "test11"
+4: "test11" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test11" has unsupported operation after optimization: llvm.alloca
+
+4: "test11" has unsupported operation after optimization: builtin.unregistered: llvm.intr.lifetime.start
+
+4: "test11" has unsupported operation after optimization: builtin.unregistered: llvm.intr.memcpy
+
+4: "test11" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test11" has unsupported operation after optimization: llvm.load
+
+1: "test11_volatile"
+4: "test11_volatile" has unsupported operation: llvm.mlir.addressof
+
+4: "test11_volatile" has unsupported operation: llvm.alloca
+
+4: "test11_volatile" has unsupported operation: builtin.unregistered: llvm.intr.lifetime.start
+
+4: "test11_volatile" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "test11_volatile" has unsupported operation: llvm.getelementptr
+
+4: "test11_volatile" has unsupported operation: llvm.load
+
+1: "memcpy_from_readonly_noalias"
+9: "memcpy_from_readonly_noalias" has pointer type input
+
+4: "memcpy_from_readonly_noalias" has unsupported operation: llvm.call
+
+4: "memcpy_from_readonly_noalias" has unsupported operation: llvm.return
+
+1: "memcpy_from_just_readonly"
+9: "memcpy_from_just_readonly" has pointer type input
+
+4: "memcpy_from_just_readonly" has unsupported operation: llvm.alloca
+
+4: "memcpy_from_just_readonly" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "memcpy_from_just_readonly" has unsupported operation: llvm.call
+
+4: "memcpy_from_just_readonly" has unsupported operation: llvm.return
+
+1: "volatile_memcpy"
+4: "volatile_memcpy" has unsupported operation: llvm.mlir.addressof
+
+4: "volatile_memcpy" has unsupported operation: llvm.alloca
+
+4: "volatile_memcpy" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "volatile_memcpy" has unsupported operation: llvm.call
+
+4: "volatile_memcpy" has unsupported operation: llvm.return
+
+1: "memcpy_to_nocapture_readonly"
+4: "memcpy_to_nocapture_readonly" has unsupported operation: llvm.mlir.addressof
+
+4: "memcpy_to_nocapture_readonly" has unsupported operation: llvm.call
+
+4: "memcpy_to_nocapture_readonly" has unsupported operation: llvm.return
+
+1: "memcpy_to_capturing_readonly"
+4: "memcpy_to_capturing_readonly" has unsupported operation: llvm.mlir.addressof
+
+4: "memcpy_to_capturing_readonly" has unsupported operation: llvm.alloca
+
+4: "memcpy_to_capturing_readonly" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "memcpy_to_capturing_readonly" has unsupported operation: llvm.call
+
+4: "memcpy_to_capturing_readonly" has unsupported operation: llvm.return
+
+1: "memcpy_to_aliased_nocapture_readonly"
+4: "memcpy_to_aliased_nocapture_readonly" has unsupported operation: llvm.mlir.addressof
+
+4: "memcpy_to_aliased_nocapture_readonly" has unsupported operation: llvm.alloca
+
+4: "memcpy_to_aliased_nocapture_readonly" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "memcpy_to_aliased_nocapture_readonly" has unsupported operation: llvm.call
+
+4: "memcpy_to_aliased_nocapture_readonly" has unsupported operation: llvm.return
+
+1: "two_params"
+9: "two_params" has pointer type input
+

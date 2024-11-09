@@ -1,0 +1,9 @@
+1: "test_bigalloc"
+9: "test_bigalloc" has pointer type input
+
+4: "test_bigalloc" has unsupported operation: llvm.alloca
+
+4: "test_bigalloc" has unsupported operation: llvm.store
+
+4: "test_bigalloc" has unsupported operation: llvm.return
+

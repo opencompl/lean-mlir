@@ -1,0 +1,18 @@
+1: "isdigit"
+5: "isdigit" is empty
+
+1: "test_simplify1"
+4: "test_simplify1" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify2"
+4: "test_simplify2" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify3"
+4: "test_simplify3" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify4"
+4: "test_simplify4" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify5"
+4: "test_simplify5" has unsupported operation after optimization: llvm.call
+

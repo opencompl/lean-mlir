@@ -1,0 +1,92 @@
+1: "p0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.ashr
+2: llvm.icmp
+2: llvm.return
+
+1: "pb"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.ashr
+2: llvm.icmp
+2: llvm.return
+
+1: "p1_vec_splat"
+8: "p1_vec_splat" contains vectors which are unsupported
+
+1: "p2_vec_nonsplat"
+7: "p2_vec_nonsplat" is unchanged by InstCombine
+
+1: "p3_vec_undef0"
+4: "p3_vec_undef0" has unsupported operation: llvm.mlir.undef
+
+4: "p3_vec_undef0" has unsupported operation: llvm.mlir.undef
+
+4: "p3_vec_undef0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p3_vec_undef0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p3_vec_undef0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "p4_vec_undef1"
+4: "p4_vec_undef1" has unsupported operation: llvm.mlir.undef
+
+4: "p4_vec_undef1" has unsupported operation: llvm.mlir.undef
+
+4: "p4_vec_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p4_vec_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p4_vec_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "p5_vec_undef2"
+4: "p5_vec_undef2" has unsupported operation: llvm.mlir.undef
+
+4: "p5_vec_undef2" has unsupported operation: llvm.mlir.undef
+
+4: "p5_vec_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p5_vec_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p5_vec_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "gen8"
+5: "gen8" is empty
+
+1: "c0"
+4: "c0" has unsupported operation: llvm.call
+
+1: "use8"
+5: "use8" is empty
+
+1: "n_oneuse0"
+4: "n_oneuse0" has unsupported operation: llvm.call
+
+1: "n_oneuse1"
+4: "n_oneuse1" has unsupported operation: llvm.call
+
+1: "n_oneuse2"
+4: "n_oneuse2" has unsupported operation: llvm.call
+
+4: "n_oneuse2" has unsupported operation: llvm.call
+
+1: "n0"
+7: "n0" is unchanged by InstCombine
+
+1: "n1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.lshr
+2: llvm.icmp
+2: llvm.return
+
+1: "n2"
+7: "n2" is unchanged by InstCombine
+
+1: "n3_vec_nonsplat"
+7: "n3_vec_nonsplat" is unchanged by InstCombine
+

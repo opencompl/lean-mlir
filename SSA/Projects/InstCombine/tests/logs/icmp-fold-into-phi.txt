@@ -1,0 +1,20 @@
+1: "SwitchTest"
+4: "SwitchTest" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "SwitchTest" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "SwitchTest" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "BranchTest"
+4: "BranchTest" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "BranchTest" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "BranchTest" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "BranchTest" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "BranchTest" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "BranchTest" has unsupported operation: builtin.unregistered: llvm.br
+

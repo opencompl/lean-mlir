@@ -1,0 +1,140 @@
+1: "test_negation_move_to_result"
+4: "test_negation_move_to_result" has unsupported operation: builtin.unregistered: llvm.intr.matrix.multiply
+
+4: "test_negation_move_to_result" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "test_negation_move_to_result_with_fastflags"
+4: "test_negation_move_to_result_with_fastflags" has unsupported operation: builtin.unregistered: llvm.intr.matrix.multiply
+
+4: "test_negation_move_to_result_with_fastflags" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "test_negation_move_to_result_with_nnan_flag"
+4: "test_negation_move_to_result_with_nnan_flag" has unsupported operation: builtin.unregistered: llvm.intr.matrix.multiply
+
+4: "test_negation_move_to_result_with_nnan_flag" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "test_negation_move_to_result_with_nsz_flag"
+4: "test_negation_move_to_result_with_nsz_flag" has unsupported operation: builtin.unregistered: llvm.intr.matrix.multiply
+
+4: "test_negation_move_to_result_with_nsz_flag" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "test_negation_move_to_result_with_fastflag_on_negation"
+4: "test_negation_move_to_result_with_fastflag_on_negation" has unsupported operation: builtin.unregistered: llvm.intr.matrix.multiply
+
+4: "test_negation_move_to_result_with_fastflag_on_negation" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "test_move_negation_to_second_operand"
+4: "test_move_negation_to_second_operand" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "test_move_negation_to_second_operand" has unsupported operation: builtin.unregistered: llvm.intr.matrix.multiply
+
+1: "test_move_negation_to_second_operand_with_fast_flags"
+4: "test_move_negation_to_second_operand_with_fast_flags" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "test_move_negation_to_second_operand_with_fast_flags" has unsupported operation: builtin.unregistered: llvm.intr.matrix.multiply
+
+1: "test_negation_move_to_result_from_second_operand"
+4: "test_negation_move_to_result_from_second_operand" has unsupported operation: builtin.unregistered: llvm.intr.matrix.multiply
+
+4: "test_negation_move_to_result_from_second_operand" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "test_move_negation_to_first_operand"
+4: "test_move_negation_to_first_operand" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "test_move_negation_to_first_operand" has unsupported operation: builtin.unregistered: llvm.intr.matrix.multiply
+
+1: "test_negation_not_moved"
+4: "test_negation_not_moved" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "test_negation_not_moved" has unsupported operation: builtin.unregistered: llvm.intr.matrix.multiply
+
+1: "test_negation_not_moved_second_operand"
+4: "test_negation_not_moved_second_operand" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "test_negation_not_moved_second_operand" has unsupported operation: builtin.unregistered: llvm.intr.matrix.multiply
+
+1: "test_negation_on_result"
+4: "test_negation_on_result" has unsupported operation: builtin.unregistered: llvm.intr.matrix.multiply
+
+4: "test_negation_on_result" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "test_with_two_operands_negated1"
+4: "test_with_two_operands_negated1" has unsupported operation: builtin.unregistered: llvm.intr.matrix.multiply
+
+1: "test_with_two_operands_negated2"
+4: "test_with_two_operands_negated2" has unsupported operation: builtin.unregistered: llvm.intr.matrix.multiply
+
+1: "test_with_two_operands_negated_with_fastflags"
+4: "test_with_two_operands_negated_with_fastflags" has unsupported operation: builtin.unregistered: llvm.intr.matrix.multiply
+
+1: "test_with_two_operands_negated2_commute"
+4: "test_with_two_operands_negated2_commute" has unsupported operation: builtin.unregistered: llvm.intr.matrix.multiply
+
+1: "matrix_multiply_two_operands_negated_with_same_size"
+4: "matrix_multiply_two_operands_negated_with_same_size" has unsupported operation: builtin.unregistered: llvm.intr.matrix.multiply
+
+1: "matrix_multiply_two_operands_with_multiple_uses"
+4: "matrix_multiply_two_operands_with_multiple_uses" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "matrix_multiply_two_operands_with_multiple_uses" has unsupported operation: builtin.unregistered: llvm.intr.matrix.multiply
+
+4: "matrix_multiply_two_operands_with_multiple_uses" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "matrix_multiply_two_operands_with_multiple_uses" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "matrix_multiply_two_operands_with_multiple_uses2"
+9: "matrix_multiply_two_operands_with_multiple_uses2" has pointer type input
+
+4: "matrix_multiply_two_operands_with_multiple_uses2" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "matrix_multiply_two_operands_with_multiple_uses2" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "matrix_multiply_two_operands_with_multiple_uses2" has unsupported operation: builtin.unregistered: llvm.intr.matrix.multiply
+
+4: "matrix_multiply_two_operands_with_multiple_uses2" has unsupported operation: llvm.store
+
+4: "matrix_multiply_two_operands_with_multiple_uses2" has unsupported operation: llvm.store
+
+1: "fneg_with_multiple_uses"
+4: "fneg_with_multiple_uses" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "fneg_with_multiple_uses" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fneg_with_multiple_uses" has unsupported operation: builtin.unregistered: llvm.intr.matrix.multiply
+
+4: "fneg_with_multiple_uses" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "fneg_with_multiple_uses" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fneg_with_multiple_uses_2"
+9: "fneg_with_multiple_uses_2" has pointer type input
+
+4: "fneg_with_multiple_uses_2" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fneg_with_multiple_uses_2" has unsupported operation: builtin.unregistered: llvm.intr.matrix.multiply
+
+4: "fneg_with_multiple_uses_2" has unsupported operation: llvm.store
+
+1: "chain_of_matrix_mutliplies"
+4: "chain_of_matrix_mutliplies" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "chain_of_matrix_mutliplies" has unsupported operation: builtin.unregistered: llvm.intr.matrix.multiply
+
+4: "chain_of_matrix_mutliplies" has unsupported operation: builtin.unregistered: llvm.intr.matrix.multiply
+
+1: "chain_of_matrix_mutliplies_with_two_negations"
+4: "chain_of_matrix_mutliplies_with_two_negations" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "chain_of_matrix_mutliplies_with_two_negations" has unsupported operation: builtin.unregistered: llvm.intr.matrix.multiply
+
+4: "chain_of_matrix_mutliplies_with_two_negations" has unsupported operation: builtin.unregistered: llvm.intr.matrix.multiply
+
+4: "chain_of_matrix_mutliplies_with_two_negations" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "chain_of_matrix_mutliplies_propagation"
+4: "chain_of_matrix_mutliplies_propagation" has unsupported operation: builtin.unregistered: llvm.intr.matrix.multiply
+
+4: "chain_of_matrix_mutliplies_propagation" has unsupported operation: builtin.unregistered: llvm.intr.matrix.multiply
+
+4: "chain_of_matrix_mutliplies_propagation" has unsupported operation: builtin.unregistered: llvm.fneg
+

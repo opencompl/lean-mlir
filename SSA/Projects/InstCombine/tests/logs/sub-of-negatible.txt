@@ -1,0 +1,529 @@
+1: "use4"
+5: "use4" is empty
+
+1: "use8"
+5: "use8" is empty
+
+1: "use_v2i4"
+5: "use_v2i4" is empty
+
+1: "use32gen1"
+5: "use32gen1" is empty
+
+1: "t0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.return
+
+1: "t1"
+4: "t1" has unsupported operation: llvm.call
+
+1: "t2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.sub
+2: llvm.return
+
+1: "n2"
+4: "n2" has unsupported operation: llvm.call
+
+1: "t3"
+4: "t3" has unsupported operation: llvm.call
+
+1: "n3"
+4: "n3" has unsupported operation: llvm.call
+
+4: "n3" has unsupported operation: llvm.call
+
+1: "t4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.sub
+2: llvm.return
+
+1: "select_of_constants_multi_use"
+4: "select_of_constants_multi_use" has unsupported operation: llvm.call
+
+1: "PR52261"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.sub
+2: llvm.and
+2: llvm.return
+
+1: "n4"
+4: "n4" has unsupported operation: llvm.call
+
+1: "n5"
+7: "n5" is unchanged by InstCombine
+
+1: "t6"
+4: "t6" has unsupported operation: llvm.call
+
+1: "t7"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: builtin.unregistered: llvm.select
+2: llvm.sub
+2: llvm.return
+
+1: "n8"
+4: "n8" has unsupported operation: llvm.call
+
+1: "t9"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.sub
+2: llvm.return
+
+1: "n10"
+4: "n10" has unsupported operation: llvm.call
+
+1: "neg_of_sub_from_constant"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.sub
+2: llvm.return
+
+1: "neg_of_sub_from_constant_multi_use"
+4: "neg_of_sub_from_constant_multi_use" has unsupported operation: llvm.call
+
+1: "sub_from_constant_of_sub_from_constant"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.sub
+2: llvm.return
+
+1: "sub_from_constant_of_sub_from_constant_multi_use"
+4: "sub_from_constant_of_sub_from_constant_multi_use" has unsupported operation: llvm.call
+
+1: "sub_from_variable_of_sub_from_constant"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.sub
+2: llvm.return
+
+1: "sub_from_variable_of_sub_from_constant_multi_use"
+4: "sub_from_variable_of_sub_from_constant_multi_use" has unsupported operation: llvm.call
+
+1: "t12"
+4: "t12" has unsupported operation: llvm.call
+
+4: "t12" has unsupported operation: llvm.call
+
+1: "n13"
+4: "n13" has unsupported operation: llvm.call
+
+1: "n14"
+4: "n14" has unsupported operation: llvm.call
+
+4: "n14" has unsupported operation: llvm.call
+
+4: "n14" has unsupported operation: llvm.call
+
+1: "neg_of_add_with_constant"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.sub
+2: llvm.return
+
+1: "neg_of_add_with_constant_multi_use"
+4: "neg_of_add_with_constant_multi_use" has unsupported operation: llvm.call
+
+1: "sub_from_constant_of_add_with_constant"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.sub
+2: llvm.return
+
+1: "sub_from_constant_of_add_with_constant_multi_use"
+4: "sub_from_constant_of_add_with_constant_multi_use" has unsupported operation: llvm.call
+
+1: "sub_from_variable_of_add_with_constant"
+7: "sub_from_variable_of_add_with_constant" is unchanged by InstCombine
+
+1: "sub_from_variable_of_add_with_constant_multi_use"
+4: "sub_from_variable_of_add_with_constant_multi_use" has unsupported operation: llvm.call
+
+1: "t15"
+4: "t15" has unsupported operation: llvm.call
+
+1: "n16"
+4: "n16" has unsupported operation: llvm.call
+
+4: "n16" has unsupported operation: llvm.call
+
+1: "t16"
+4: "t16" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "t16" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "t16" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "n17"
+4: "n17" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "n17" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "n17" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "n17" has unsupported operation: llvm.call
+
+1: "n19"
+4: "n19" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "n19" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "n19" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "phi_with_duplicate_incoming_basic_blocks"
+4: "phi_with_duplicate_incoming_basic_blocks" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_with_duplicate_incoming_basic_blocks" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "phi_with_duplicate_incoming_basic_blocks" has unsupported operation: llvm.call
+
+4: "phi_with_duplicate_incoming_basic_blocks" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_with_duplicate_incoming_basic_blocks" has unsupported operation: llvm.return
+
+1: "t20"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.trunc
+2: llvm.sub
+2: llvm.return
+
+1: "n21"
+4: "n21" has unsupported operation: llvm.call
+
+1: "negate_xor"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.sub
+2: llvm.return
+
+1: "negate_xor_vec"
+8: "negate_xor_vec" contains vectors which are unsupported
+
+1: "negate_xor_use"
+4: "negate_xor_use" has unsupported operation: llvm.call
+
+1: "negate_shl_xor"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.shl
+2: llvm.sub
+2: llvm.return
+
+1: "negate_shl_not_uses"
+4: "negate_shl_not_uses" has unsupported operation: llvm.call
+
+1: "negate_mul_not_uses_vec"
+4: "negate_mul_not_uses_vec" has unsupported operation: llvm.call
+
+1: "negate_sdiv"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.sub
+2: llvm.return
+
+1: "negate_sdiv_extrause"
+4: "negate_sdiv_extrause" has unsupported operation: llvm.call
+
+1: "negate_sdiv_extrause2"
+4: "negate_sdiv_extrause2" has unsupported operation: llvm.call
+
+1: "negate_ashr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.sub
+2: llvm.return
+
+1: "negate_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.sub
+2: llvm.return
+
+1: "negate_ashr_extrause"
+4: "negate_ashr_extrause" has unsupported operation: llvm.call
+
+1: "negate_lshr_extrause"
+4: "negate_lshr_extrause" has unsupported operation: llvm.call
+
+1: "negate_ashr_wrongshift"
+7: "negate_ashr_wrongshift" is unchanged by InstCombine
+
+1: "negate_lshr_wrongshift"
+7: "negate_lshr_wrongshift" is unchanged by InstCombine
+
+1: "negate_sext"
+2: llvm.func
+2: llvm.sext
+2: llvm.sub
+2: llvm.return
+
+1: "negate_zext"
+2: llvm.func
+2: llvm.zext
+2: llvm.sub
+2: llvm.return
+
+1: "negate_sext_extrause"
+4: "negate_sext_extrause" has unsupported operation: llvm.call
+
+1: "negate_zext_extrause"
+4: "negate_zext_extrause" has unsupported operation: llvm.call
+
+1: "negate_sext_wrongwidth"
+7: "negate_sext_wrongwidth" is unchanged by InstCombine
+
+1: "negate_zext_wrongwidth"
+7: "negate_zext_wrongwidth" is unchanged by InstCombine
+
+1: "negate_shufflevector_oneinput_reverse"
+4: "negate_shufflevector_oneinput_reverse" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "negate_shufflevector_oneinput_reverse" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "negate_shufflevector_oneinput_second_lane_is_undef"
+4: "negate_shufflevector_oneinput_second_lane_is_undef" has unsupported operation: llvm.mlir.undef
+
+4: "negate_shufflevector_oneinput_second_lane_is_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "negate_shufflevector_twoinputs"
+4: "negate_shufflevector_twoinputs" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "negate_shufflevector_twoinputs" has unsupported operation: llvm.mlir.undef
+
+4: "negate_shufflevector_twoinputs" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "negate_shufflevector_twoinputs" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "negate_shufflevector_twoinputs" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "negate_shufflevector_oneinput_extrause"
+4: "negate_shufflevector_oneinput_extrause" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "negate_shufflevector_oneinput_extrause" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "negate_shufflevector_oneinput_extrause" has unsupported operation: llvm.call
+
+1: "negation_of_zeroext_of_nonnegative"
+4: "negation_of_zeroext_of_nonnegative" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "negation_of_zeroext_of_positive"
+4: "negation_of_zeroext_of_positive" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "negation_of_signext_of_negative"
+4: "negation_of_signext_of_negative" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "negation_of_signext_of_nonpositive"
+4: "negation_of_signext_of_nonpositive" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "negation_of_signext_of_nonnegative__wrong_cast"
+4: "negation_of_signext_of_nonnegative__wrong_cast" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "negation_of_zeroext_of_negative_wrongcast"
+4: "negation_of_zeroext_of_negative_wrongcast" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "negation_of_increment_via_or_with_no_common_bits_set"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.or
+2: llvm.sub
+2: llvm.return
+
+1: "negation_of_increment_via_or_with_no_common_bits_set_extrause"
+4: "negation_of_increment_via_or_with_no_common_bits_set_extrause" has unsupported operation: llvm.call
+
+1: "negation_of_increment_via_or_common_bits_set"
+7: "negation_of_increment_via_or_common_bits_set" is unchanged by InstCombine
+
+1: "negation_of_increment_via_or_disjoint"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.sub
+2: llvm.return
+
+1: "add_via_or_with_no_common_bits_set"
+4: "add_via_or_with_no_common_bits_set" has unsupported operation: llvm.call
+
+1: "add_via_or_with_common_bit_maybe_set"
+4: "add_via_or_with_common_bit_maybe_set" has unsupported operation: llvm.call
+
+1: "add_via_or_with_no_common_bits_set_extrause"
+4: "add_via_or_with_no_common_bits_set_extrause" has unsupported operation: llvm.call
+
+4: "add_via_or_with_no_common_bits_set_extrause" has unsupported operation: llvm.call
+
+1: "negate_extractelement"
+4: "negate_extractelement" has unsupported operation: llvm.call
+
+4: "negate_extractelement" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "negate_extractelement_extrause"
+4: "negate_extractelement_extrause" has unsupported operation: llvm.call
+
+4: "negate_extractelement_extrause" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "negate_extractelement_extrause" has unsupported operation: llvm.call
+
+1: "negate_insertelement"
+4: "negate_insertelement" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "negate_insertelement_extrause"
+4: "negate_insertelement_extrause" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "negate_insertelement_extrause" has unsupported operation: llvm.call
+
+1: "negate_insertelement_nonnegatible_base"
+4: "negate_insertelement_nonnegatible_base" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "negate_insertelement_nonnegatible_insert"
+4: "negate_insertelement_nonnegatible_insert" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "negate_left_shift_by_constant_prefer_keeping_shl"
+4: "negate_left_shift_by_constant_prefer_keeping_shl" has unsupported operation: llvm.call
+
+1: "negate_left_shift_by_constant_prefer_keeping_shl_extrause"
+4: "negate_left_shift_by_constant_prefer_keeping_shl_extrause" has unsupported operation: llvm.call
+
+4: "negate_left_shift_by_constant_prefer_keeping_shl_extrause" has unsupported operation: llvm.call
+
+1: "negate_left_shift_by_constant"
+4: "negate_left_shift_by_constant" has unsupported operation: llvm.call
+
+1: "negate_left_shift_by_constant_extrause"
+4: "negate_left_shift_by_constant_extrause" has unsupported operation: llvm.call
+
+4: "negate_left_shift_by_constant_extrause" has unsupported operation: llvm.call
+
+1: "negate_add_with_single_negatible_operand"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.sub
+2: llvm.return
+
+1: "negate_add_with_single_negatible_operand_depth2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.mul
+2: llvm.sub
+2: llvm.return
+
+1: "negate_add_with_single_negatible_operand_extrause"
+4: "negate_add_with_single_negatible_operand_extrause" has unsupported operation: llvm.call
+
+1: "negate_add_with_single_negatible_operand_non_negation"
+7: "negate_add_with_single_negatible_operand_non_negation" is unchanged by InstCombine
+
+1: "negate_abs"
+4: "negate_abs" has unsupported operation: llvm.call
+
+4: "negate_abs" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "negate_nabs"
+4: "negate_nabs" has unsupported operation: llvm.call
+
+4: "negate_nabs" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "negate_select_of_op_vs_negated_op"
+4: "negate_select_of_op_vs_negated_op" has unsupported operation: llvm.call
+
+1: "negate_select_of_op_vs_negated_op_nsw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: builtin.unregistered: llvm.select
+2: llvm.sub
+2: llvm.return
+
+1: "negate_select_of_op_vs_negated_op_nsw_commuted"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: builtin.unregistered: llvm.select
+2: llvm.sub
+2: llvm.return
+
+1: "negate_select_of_op_vs_negated_op_nsw_xyyx"
+2: llvm.func
+2: llvm.sub
+2: llvm.sub
+2: builtin.unregistered: llvm.select
+2: llvm.sub
+2: llvm.return
+
+1: "dont_negate_ordinary_select"
+7: "dont_negate_ordinary_select" is unchanged by InstCombine
+
+1: "negate_select_of_negation_poison"
+4: "negate_select_of_negation_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "negate_select_of_negation_poison" has unsupported operation: llvm.mlir.undef
+
+4: "negate_select_of_negation_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "negate_select_of_negation_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "negate_freeze"
+4: "negate_freeze" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "negate_freeze_extrause"
+4: "negate_freeze_extrause" has unsupported operation: builtin.unregistered: llvm.freeze
+
+4: "negate_freeze_extrause" has unsupported operation: llvm.call
+
+1: "noncanonical_mul_with_constant_as_first_operand"
+4: "noncanonical_mul_with_constant_as_first_operand" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "noncanonical_mul_with_constant_as_first_operand" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "PR56601"
+4: "PR56601" has unsupported operation: llvm.mlir.addressof
+
+4: "PR56601" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "PR56601" has unsupported operation: llvm.mlir.undef
+
+4: "PR56601" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "PR56601" has unsupported operation: llvm.mlir.undef
+
+4: "PR56601" has unsupported operation: builtin.unregistered: llvm.insertelement
+

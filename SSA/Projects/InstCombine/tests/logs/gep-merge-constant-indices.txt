@@ -1,0 +1,88 @@
+1: "mergeBasic"
+9: "mergeBasic" has pointer type input
+
+4: "mergeBasic" has unsupported operation: llvm.getelementptr
+
+1: "mergeDifferentTypes"
+9: "mergeDifferentTypes" has pointer type input
+
+4: "mergeDifferentTypes" has unsupported operation: llvm.getelementptr
+
+1: "mergeReverse"
+9: "mergeReverse" has pointer type input
+
+4: "mergeReverse" has unsupported operation: llvm.getelementptr
+
+1: "zeroSum"
+9: "zeroSum" has pointer type input
+
+1: "array1"
+9: "array1" has pointer type input
+
+4: "array1" has unsupported operation: llvm.getelementptr
+
+1: "array2"
+9: "array2" has pointer type input
+
+4: "array2" has unsupported operation: llvm.getelementptr
+
+1: "struct1"
+9: "struct1" has pointer type input
+
+4: "struct1" has unsupported operation: llvm.getelementptr
+
+1: "struct2"
+9: "struct2" has pointer type input
+
+4: "struct2" has unsupported operation: llvm.getelementptr
+
+1: "structStruct"
+9: "structStruct" has pointer type input
+
+4: "structStruct" has unsupported operation: llvm.getelementptr
+
+1: "appendIndex"
+9: "appendIndex" has pointer type input
+
+4: "appendIndex" has unsupported operation: llvm.getelementptr
+
+1: "notDivisible"
+9: "notDivisible" has pointer type input
+
+4: "notDivisible" has unsupported operation: llvm.getelementptr
+
+1: "partialConstant2"
+9: "partialConstant2" has pointer type input
+
+4: "partialConstant2" has unsupported operation: llvm.getelementptr
+
+4: "partialConstant2" has unsupported operation: llvm.getelementptr
+
+1: "partialConstant3"
+9: "partialConstant3" has pointer type input
+
+4: "partialConstant3" has unsupported operation: llvm.getelementptr
+
+4: "partialConstant3" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "partialConstant3" has unsupported operation: llvm.getelementptr
+
+1: "partialConstantMemberAliasing1"
+9: "partialConstantMemberAliasing1" has pointer type input
+
+4: "partialConstantMemberAliasing1" has unsupported operation: llvm.getelementptr
+
+1: "partialConstantMemberAliasing2"
+9: "partialConstantMemberAliasing2" has pointer type input
+
+4: "partialConstantMemberAliasing2" has unsupported operation: llvm.getelementptr
+
+4: "partialConstantMemberAliasing2" has unsupported operation: llvm.getelementptr
+
+1: "partialConstantMemberAliasing3"
+9: "partialConstantMemberAliasing3" has pointer type input
+
+4: "partialConstantMemberAliasing3" has unsupported operation: llvm.getelementptr
+
+4: "partialConstantMemberAliasing3" has unsupported operation: llvm.getelementptr
+

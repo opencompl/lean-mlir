@@ -1,0 +1,32 @@
+1: "teststructextract"
+9: "teststructextract" has pointer type input
+
+4: "teststructextract" has unsupported operation: llvm.load
+
+1: "testarrayextract"
+9: "testarrayextract" has pointer type input
+
+4: "testarrayextract" has unsupported operation: llvm.load
+
+1: "teststructinsert"
+9: "teststructinsert" has pointer type input
+
+4: "teststructinsert" has unsupported operation: llvm.store
+
+4: "teststructinsert" has unsupported operation: llvm.getelementptr
+
+4: "teststructinsert" has unsupported operation: llvm.store
+
+4: "teststructinsert" has unsupported operation: llvm.return
+
+1: "testarrayinsert"
+9: "testarrayinsert" has pointer type input
+
+4: "testarrayinsert" has unsupported operation: llvm.store
+
+4: "testarrayinsert" has unsupported operation: llvm.getelementptr
+
+4: "testarrayinsert" has unsupported operation: llvm.store
+
+4: "testarrayinsert" has unsupported operation: llvm.return
+

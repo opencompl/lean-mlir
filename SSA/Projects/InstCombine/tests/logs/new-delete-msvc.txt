@@ -1,0 +1,13 @@
+1: "\01??2@YAPEAX_K@Z"
+5: "\01??2@YAPEAX_K@Z" is empty
+
+1: "\01??3@YAXPEAX@Z"
+9: "\01??3@YAXPEAX@Z" has pointer type input
+
+1: "test9"
+4: "test9" has unsupported operation: llvm.call
+
+4: "test9" has unsupported operation: llvm.call
+
+4: "test9" has unsupported operation: llvm.return
+

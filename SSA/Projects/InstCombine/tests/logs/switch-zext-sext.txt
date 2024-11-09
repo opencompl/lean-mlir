@@ -1,0 +1,12 @@
+1: "test_switch_with_zext"
+4: "test_switch_with_zext" has unsupported operation: builtin.unregistered: llvm.switch
+
+1: "test_switch_with_sext"
+4: "test_switch_with_sext" has unsupported operation: builtin.unregistered: llvm.switch
+
+1: "test_switch_with_zext_unreachable_case"
+4: "test_switch_with_zext_unreachable_case" has unsupported operation: builtin.unregistered: llvm.switch
+
+1: "test_switch_with_sext_unreachable_case"
+4: "test_switch_with_sext_unreachable_case" has unsupported operation: builtin.unregistered: llvm.switch
+

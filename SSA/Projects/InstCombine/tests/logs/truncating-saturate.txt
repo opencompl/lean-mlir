@@ -1,0 +1,226 @@
+1: "use"
+5: "use" is empty
+
+1: "use16"
+5: "use16" is empty
+
+1: "use1"
+5: "use1" is empty
+
+1: "testi16i8"
+4: "testi16i8" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "testi16i8" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "testi64i32"
+4: "testi64i32" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "testi64i32" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "testi32i16i8"
+4: "testi32i16i8" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "testi32i16i8" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "testv4i32i16i8"
+4: "testv4i32i16i8" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "testv4i32i16i8" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "testi32i32i8"
+4: "testi32i32i8" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "testi32i32i8" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "test_truncfirst"
+4: "test_truncfirst" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "test_truncfirst" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "testtrunclowhigh"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: llvm.trunc
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "testi64i32addsat"
+4: "testi64i32addsat" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "testv4i16i8"
+4: "testv4i16i8" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "testv4i16i8" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "testv4i16i8add"
+4: "testv4i16i8add" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "testi16i8_revcmp"
+4: "testi16i8_revcmp" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "testi16i8_revcmp" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "testi16i8_revselect"
+4: "testi16i8_revselect" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "testi16i8_revselect" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "testi32i8"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.ashr
+2: llvm.icmp
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "differentconsts"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.add
+2: llvm.icmp
+2: llvm.trunc
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "badimm1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.ashr
+2: llvm.icmp
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "badimm2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.ashr
+2: llvm.icmp
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "badimm3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.ashr
+2: llvm.icmp
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "badimm4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.ashr
+2: llvm.icmp
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "oneusexor"
+4: "oneusexor" has unsupported operation: llvm.call
+
+1: "oneuseconv"
+4: "oneuseconv" has unsupported operation: llvm.call
+
+1: "oneusecmp"
+4: "oneusecmp" has unsupported operation: llvm.call
+
+1: "oneuseboth"
+4: "oneuseboth" has unsupported operation: llvm.call
+
+4: "oneuseboth" has unsupported operation: llvm.call
+
+1: "oneusethree"
+4: "oneusethree" has unsupported operation: llvm.call
+
+4: "oneusethree" has unsupported operation: llvm.call
+
+4: "oneusethree" has unsupported operation: llvm.call
+
+1: "differentconsts_usetrunc"
+4: "differentconsts_usetrunc" has unsupported operation: llvm.call
+
+1: "differentconsts_useadd"
+4: "differentconsts_useadd" has unsupported operation: llvm.call
+
+1: "differentconsts_useaddtrunc"
+4: "differentconsts_useaddtrunc" has unsupported operation: llvm.call
+
+4: "differentconsts_useaddtrunc" has unsupported operation: llvm.call
+
+1: "C0zero"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "C0zeroV"
+8: "C0zeroV" contains vectors which are unsupported
+
+1: "C0zeroVu"
+7: "C0zeroVu" is unchanged by InstCombine
+
+1: "f"
+7: "f" is unchanged by InstCombine
+

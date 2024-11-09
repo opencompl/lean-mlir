@@ -1,0 +1,73 @@
+1: "memcmp"
+9: "memcmp" has pointer type input
+
+1: "fold_memcmp_ia16a_i8a"
+9: "fold_memcmp_ia16a_i8a" has pointer type input
+
+4: "fold_memcmp_ia16a_i8a" has unsupported operation: llvm.store
+
+4: "fold_memcmp_ia16a_i8a" has unsupported operation: llvm.getelementptr
+
+4: "fold_memcmp_ia16a_i8a" has unsupported operation: llvm.store
+
+4: "fold_memcmp_ia16a_i8a" has unsupported operation: llvm.getelementptr
+
+4: "fold_memcmp_ia16a_i8a" has unsupported operation: llvm.store
+
+4: "fold_memcmp_ia16a_i8a" has unsupported operation: llvm.getelementptr
+
+4: "fold_memcmp_ia16a_i8a" has unsupported operation: llvm.store
+
+4: "fold_memcmp_ia16a_i8a" has unsupported operation: llvm.getelementptr
+
+4: "fold_memcmp_ia16a_i8a" has unsupported operation: llvm.store
+
+4: "fold_memcmp_ia16a_i8a" has unsupported operation: llvm.getelementptr
+
+4: "fold_memcmp_ia16a_i8a" has unsupported operation: llvm.store
+
+4: "fold_memcmp_ia16a_i8a" has unsupported operation: llvm.getelementptr
+
+4: "fold_memcmp_ia16a_i8a" has unsupported operation: llvm.store
+
+4: "fold_memcmp_ia16a_i8a" has unsupported operation: llvm.getelementptr
+
+4: "fold_memcmp_ia16a_i8a" has unsupported operation: llvm.store
+
+4: "fold_memcmp_ia16a_i8a" has unsupported operation: llvm.getelementptr
+
+4: "fold_memcmp_ia16a_i8a" has unsupported operation: llvm.store
+
+4: "fold_memcmp_ia16a_i8a" has unsupported operation: llvm.return
+
+1: "fold_memcmp_ia16a_p1_i8a_p1"
+9: "fold_memcmp_ia16a_p1_i8a_p1" has pointer type input
+
+4: "fold_memcmp_ia16a_p1_i8a_p1" has unsupported operation: llvm.store
+
+4: "fold_memcmp_ia16a_p1_i8a_p1" has unsupported operation: llvm.getelementptr
+
+4: "fold_memcmp_ia16a_p1_i8a_p1" has unsupported operation: llvm.store
+
+4: "fold_memcmp_ia16a_p1_i8a_p1" has unsupported operation: llvm.getelementptr
+
+4: "fold_memcmp_ia16a_p1_i8a_p1" has unsupported operation: llvm.store
+
+4: "fold_memcmp_ia16a_p1_i8a_p1" has unsupported operation: llvm.getelementptr
+
+4: "fold_memcmp_ia16a_p1_i8a_p1" has unsupported operation: llvm.store
+
+4: "fold_memcmp_ia16a_p1_i8a_p1" has unsupported operation: llvm.getelementptr
+
+4: "fold_memcmp_ia16a_p1_i8a_p1" has unsupported operation: llvm.store
+
+4: "fold_memcmp_ia16a_p1_i8a_p1" has unsupported operation: llvm.getelementptr
+
+4: "fold_memcmp_ia16a_p1_i8a_p1" has unsupported operation: llvm.store
+
+4: "fold_memcmp_ia16a_p1_i8a_p1" has unsupported operation: llvm.getelementptr
+
+4: "fold_memcmp_ia16a_p1_i8a_p1" has unsupported operation: llvm.store
+
+4: "fold_memcmp_ia16a_p1_i8a_p1" has unsupported operation: llvm.return
+

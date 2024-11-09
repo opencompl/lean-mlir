@@ -1,0 +1,20 @@
+1: "cmp_x_and_negp2_with_eq"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "cmp_x_and_negp2_with_eq_fail_not_signmask"
+7: "cmp_x_and_negp2_with_eq_fail_not_signmask" is unchanged by InstCombine
+
+1: "cmp_x_and_negp2_with_ne"
+8: "cmp_x_and_negp2_with_ne" contains vectors which are unsupported
+
+1: "cmp_x_and_negp2_with_ne_or_z"
+8: "cmp_x_and_negp2_with_ne_or_z" contains vectors which are unsupported
+
+1: "cmp_x_and_negp2_with_ne_fail_not_p2"
+7: "cmp_x_and_negp2_with_ne_fail_not_p2" is unchanged by InstCombine
+

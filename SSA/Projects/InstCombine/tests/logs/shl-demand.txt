@@ -1,0 +1,133 @@
+1: "src_srem_shl_demand_max_signbit"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.shl
+2: llvm.and
+2: llvm.return
+
+1: "src_srem_shl_demand_min_signbit"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.shl
+2: llvm.and
+2: llvm.return
+
+1: "src_srem_shl_demand_max_mask"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.shl
+2: llvm.and
+2: llvm.return
+
+1: "src_srem_shl_demand_max_signbit_mask_hit_first_demand"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.shl
+2: llvm.and
+2: llvm.return
+
+1: "src_srem_shl_demand_min_signbit_mask_hit_last_demand"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.shl
+2: llvm.and
+2: llvm.return
+
+1: "src_srem_shl_demand_eliminate_signbit"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.shl
+2: llvm.and
+2: llvm.return
+
+1: "src_srem_shl_demand_max_mask_hit_demand"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.shl
+2: llvm.and
+2: llvm.return
+
+1: "src_srem_shl_mask_vector"
+8: "src_srem_shl_mask_vector" contains vectors which are unsupported
+
+1: "src_srem_shl_mask_vector_nonconstant"
+7: "src_srem_shl_mask_vector_nonconstant" is unchanged by InstCombine
+
+1: "sext_shl_trunc_same_size"
+2: llvm.func
+2: llvm.sext
+2: llvm.shl
+2: llvm.trunc
+2: llvm.return
+
+1: "sext_shl_trunc_smaller"
+2: llvm.func
+2: llvm.sext
+2: llvm.shl
+2: llvm.trunc
+2: llvm.return
+
+1: "sext_shl_trunc_larger"
+7: "sext_shl_trunc_larger" is unchanged by InstCombine
+
+1: "sext_shl_mask"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.shl
+2: llvm.and
+2: llvm.return
+
+1: "sext_shl_mask_higher"
+7: "sext_shl_mask_higher" is unchanged by InstCombine
+
+1: "set_shl_mask"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.shl
+2: llvm.and
+2: llvm.return
+
+1: "must_drop_poison"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.shl
+2: llvm.trunc
+2: llvm.return
+
+1: "f_t15_t01_t09"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.shl
+2: llvm.ashr
+2: llvm.shl
+2: llvm.return
+

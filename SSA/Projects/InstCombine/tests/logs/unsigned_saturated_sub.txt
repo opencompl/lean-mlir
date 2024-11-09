@@ -1,0 +1,198 @@
+1: "use"
+5: "use" is empty
+
+1: "usei32"
+5: "usei32" is empty
+
+1: "usei1"
+5: "usei1" is empty
+
+1: "usub_sat_C1_C2"
+4: "usub_sat_C1_C2" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "usub_sat_C1_C2_produce_0"
+4: "usub_sat_C1_C2_produce_0" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "usub_sat_C1_C2_produce_0_too"
+4: "usub_sat_C1_C2_produce_0_too" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "usub_sat_C1_C2_splat"
+4: "usub_sat_C1_C2_splat" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "usub_sat_C1_C2_non_splat"
+4: "usub_sat_C1_C2_non_splat" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "usub_sat_C1_C2_splat_produce_0"
+8: "usub_sat_C1_C2_splat_produce_0" contains vectors which are unsupported
+
+1: "usub_sat_C1_C2_splat_produce_0_too"
+8: "usub_sat_C1_C2_splat_produce_0_too" contains vectors which are unsupported
+
+1: "usub_sat_C1_C2_non_splat_produce_0_too"
+8: "usub_sat_C1_C2_non_splat_produce_0_too" contains vectors which are unsupported
+
+1: "usub_sat_C1_C2_without_nuw"
+4: "usub_sat_C1_C2_without_nuw" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "max_sub_ugt"
+4: "max_sub_ugt" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "max_sub_uge"
+4: "max_sub_uge" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "max_sub_uge_extrause1"
+4: "max_sub_uge_extrause1" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+4: "max_sub_uge_extrause1" has unsupported operation: llvm.call
+
+1: "max_sub_uge_extrause2"
+4: "max_sub_uge_extrause2" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+4: "max_sub_uge_extrause2" has unsupported operation: llvm.call
+
+1: "max_sub_uge_extrause3"
+4: "max_sub_uge_extrause3" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+4: "max_sub_uge_extrause3" has unsupported operation: llvm.call
+
+4: "max_sub_uge_extrause3" has unsupported operation: llvm.call
+
+1: "max_sub_ugt_vec"
+4: "max_sub_ugt_vec" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "max_sub_ult"
+4: "max_sub_ult" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+4: "max_sub_ult" has unsupported operation: llvm.call
+
+1: "max_sub_ugt_sel_swapped"
+4: "max_sub_ugt_sel_swapped" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+4: "max_sub_ugt_sel_swapped" has unsupported operation: llvm.call
+
+1: "max_sub_ult_sel_swapped"
+4: "max_sub_ult_sel_swapped" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "neg_max_sub_ugt"
+4: "neg_max_sub_ugt" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+4: "neg_max_sub_ugt" has unsupported operation: llvm.call
+
+1: "neg_max_sub_ult"
+4: "neg_max_sub_ult" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "neg_max_sub_ugt_sel_swapped"
+4: "neg_max_sub_ugt_sel_swapped" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "neg_max_sub_ugt_sel_swapped_extrause1"
+4: "neg_max_sub_ugt_sel_swapped_extrause1" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+4: "neg_max_sub_ugt_sel_swapped_extrause1" has unsupported operation: llvm.call
+
+1: "neg_max_sub_ugt_sel_swapped_extrause2"
+4: "neg_max_sub_ugt_sel_swapped_extrause2" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+4: "neg_max_sub_ugt_sel_swapped_extrause2" has unsupported operation: llvm.call
+
+1: "neg_max_sub_ugt_sel_swapped_extrause3"
+4: "neg_max_sub_ugt_sel_swapped_extrause3" has unsupported operation: llvm.call
+
+4: "neg_max_sub_ugt_sel_swapped_extrause3" has unsupported operation: llvm.call
+
+1: "neg_max_sub_ult_sel_swapped"
+4: "neg_max_sub_ult_sel_swapped" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+4: "neg_max_sub_ult_sel_swapped" has unsupported operation: llvm.call
+
+1: "max_sub_ugt_c1"
+4: "max_sub_ugt_c1" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "max_sub_ugt_c01"
+4: "max_sub_ugt_c01" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "max_sub_ugt_c10"
+4: "max_sub_ugt_c10" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "max_sub_ugt_c910"
+7: "max_sub_ugt_c910" is unchanged by InstCombine
+
+1: "max_sub_ugt_c1110"
+7: "max_sub_ugt_c1110" is unchanged by InstCombine
+
+1: "max_sub_ugt_c0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "max_sub_ugt_cmiss"
+7: "max_sub_ugt_cmiss" is unchanged by InstCombine
+
+1: "max_sub_ult_c1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "max_sub_ult_c2"
+4: "max_sub_ult_c2" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "max_sub_ult_c2_oneuseicmp"
+4: "max_sub_ult_c2_oneuseicmp" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+4: "max_sub_ult_c2_oneuseicmp" has unsupported operation: llvm.call
+
+1: "max_sub_ult_c2_oneusesub"
+4: "max_sub_ult_c2_oneusesub" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+4: "max_sub_ult_c2_oneusesub" has unsupported operation: llvm.call
+
+1: "max_sub_ult_c32"
+7: "max_sub_ult_c32" is unchanged by InstCombine
+
+1: "max_sub_ugt_c32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "max_sub_uge_c32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "max_sub_ult_c12"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "max_sub_ult_c0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.return
+

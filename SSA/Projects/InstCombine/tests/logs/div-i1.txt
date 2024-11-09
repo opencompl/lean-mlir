@@ -1,0 +1,63 @@
+1: "sdiv_by_zero_indirect_is_poison"
+4: "sdiv_by_zero_indirect_is_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "sdiv_by_zero_indirect_is_poison" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sdiv_by_zero_indirect_is_poison" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "sdiv_by_zero_indirect_is_poison" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "udiv_by_zero_indirect_is_poison"
+4: "udiv_by_zero_indirect_is_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "udiv_by_zero_indirect_is_poison" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "udiv_by_zero_indirect_is_poison" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "udiv_by_zero_indirect_is_poison" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "srem_by_zero_indirect_is_poison"
+4: "srem_by_zero_indirect_is_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "srem_by_zero_indirect_is_poison" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "srem_by_zero_indirect_is_poison" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "srem_by_zero_indirect_is_poison" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "urem_by_zero_indirect_is_poison"
+4: "urem_by_zero_indirect_is_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "urem_by_zero_indirect_is_poison" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "urem_by_zero_indirect_is_poison" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "urem_by_zero_indirect_is_poison" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "sdiv_i1_is_op0"
+2: llvm.func
+2: llvm.sdiv
+2: llvm.return
+
+1: "udiv_i1_is_op0"
+2: llvm.func
+2: llvm.udiv
+2: llvm.return
+
+1: "srem_i1_is_zero"
+2: llvm.func
+2: llvm.srem
+2: llvm.return
+
+1: "urem_i1_is_zero"
+2: llvm.func
+2: llvm.urem
+2: llvm.return
+
+1: "pt62607"
+4: "pt62607" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "pt62607" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "pt62607" has unsupported operation: builtin.unregistered: llvm.cond_br
+

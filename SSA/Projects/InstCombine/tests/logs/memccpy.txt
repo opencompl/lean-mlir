@@ -1,0 +1,215 @@
+1: "memccpy"
+9: "memccpy" has pointer type input
+
+1: "memccpy_to_memcpy"
+9: "memccpy_to_memcpy" has pointer type input
+
+4: "memccpy_to_memcpy" has unsupported operation: llvm.store
+
+4: "memccpy_to_memcpy" has unsupported operation: llvm.getelementptr
+
+1: "memccpy_to_memcpy2"
+9: "memccpy_to_memcpy2" has pointer type input
+
+4: "memccpy_to_memcpy2" has unsupported operation: llvm.store
+
+4: "memccpy_to_memcpy2" has unsupported operation: llvm.getelementptr
+
+1: "memccpy_to_memcpy3"
+9: "memccpy_to_memcpy3" has pointer type input
+
+4: "memccpy_to_memcpy3" has unsupported operation: llvm.mlir.addressof
+
+4: "memccpy_to_memcpy3" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "memccpy_to_memcpy3" has unsupported operation: llvm.return
+
+1: "memccpy_to_memcpy3_tail"
+9: "memccpy_to_memcpy3_tail" has pointer type input
+
+4: "memccpy_to_memcpy3_tail" has unsupported operation: llvm.mlir.addressof
+
+4: "memccpy_to_memcpy3_tail" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "memccpy_to_memcpy3_tail" has unsupported operation: llvm.return
+
+1: "memccpy_to_memcpy3_musttail"
+9: "memccpy_to_memcpy3_musttail" has pointer type input
+
+4: "memccpy_to_memcpy3_musttail" has unsupported operation: llvm.mlir.addressof
+
+4: "memccpy_to_memcpy3_musttail" has unsupported operation: llvm.call
+
+1: "memccpy_to_memcpy4"
+9: "memccpy_to_memcpy4" has pointer type input
+
+4: "memccpy_to_memcpy4" has unsupported operation: llvm.mlir.addressof
+
+4: "memccpy_to_memcpy4" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "memccpy_to_memcpy4" has unsupported operation: llvm.return
+
+1: "memccpy_to_memcpy5"
+9: "memccpy_to_memcpy5" has pointer type input
+
+4: "memccpy_to_memcpy5" has unsupported operation: llvm.mlir.addressof
+
+4: "memccpy_to_memcpy5" has unsupported operation: llvm.mlir.zero
+
+4: "memccpy_to_memcpy5" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+1: "memccpy_to_memcpy5_tail"
+9: "memccpy_to_memcpy5_tail" has pointer type input
+
+4: "memccpy_to_memcpy5_tail" has unsupported operation: llvm.mlir.addressof
+
+4: "memccpy_to_memcpy5_tail" has unsupported operation: llvm.mlir.zero
+
+4: "memccpy_to_memcpy5_tail" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+1: "memccpy_to_memcpy5_musttail"
+9: "memccpy_to_memcpy5_musttail" has pointer type input
+
+4: "memccpy_to_memcpy5_musttail" has unsupported operation: llvm.mlir.addressof
+
+4: "memccpy_to_memcpy5_musttail" has unsupported operation: llvm.call
+
+1: "memccpy_to_memcpy6"
+9: "memccpy_to_memcpy6" has pointer type input
+
+4: "memccpy_to_memcpy6" has unsupported operation: llvm.mlir.addressof
+
+4: "memccpy_to_memcpy6" has unsupported operation: llvm.mlir.zero
+
+4: "memccpy_to_memcpy6" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+1: "memccpy_to_memcpy7"
+9: "memccpy_to_memcpy7" has pointer type input
+
+4: "memccpy_to_memcpy7" has unsupported operation: llvm.mlir.addressof
+
+4: "memccpy_to_memcpy7" has unsupported operation: llvm.mlir.zero
+
+4: "memccpy_to_memcpy7" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+1: "memccpy_to_memcpy8"
+9: "memccpy_to_memcpy8" has pointer type input
+
+4: "memccpy_to_memcpy8" has unsupported operation: llvm.mlir.addressof
+
+4: "memccpy_to_memcpy8" has unsupported operation: llvm.mlir.zero
+
+4: "memccpy_to_memcpy8" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+1: "memccpy_to_memcpy9"
+9: "memccpy_to_memcpy9" has pointer type input
+
+4: "memccpy_to_memcpy9" has unsupported operation: llvm.mlir.addressof
+
+4: "memccpy_to_memcpy9" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "memccpy_to_memcpy9" has unsupported operation: llvm.getelementptr
+
+1: "memccpy_to_memcpy10"
+9: "memccpy_to_memcpy10" has pointer type input
+
+4: "memccpy_to_memcpy10" has unsupported operation: llvm.mlir.addressof
+
+4: "memccpy_to_memcpy10" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "memccpy_to_memcpy10" has unsupported operation: llvm.getelementptr
+
+1: "memccpy_to_memcpy11"
+9: "memccpy_to_memcpy11" has pointer type input
+
+4: "memccpy_to_memcpy11" has unsupported operation: llvm.mlir.addressof
+
+4: "memccpy_to_memcpy11" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "memccpy_to_memcpy11" has unsupported operation: llvm.getelementptr
+
+1: "memccpy_to_memcpy12"
+9: "memccpy_to_memcpy12" has pointer type input
+
+4: "memccpy_to_memcpy12" has unsupported operation: llvm.mlir.addressof
+
+4: "memccpy_to_memcpy12" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "memccpy_to_memcpy12" has unsupported operation: llvm.getelementptr
+
+1: "memccpy_to_null"
+9: "memccpy_to_null" has pointer type input
+
+4: "memccpy_to_null" has unsupported operation: llvm.mlir.zero
+
+1: "memccpy_dst_src_same_retval_unused"
+9: "memccpy_dst_src_same_retval_unused" has pointer type input
+
+4: "memccpy_dst_src_same_retval_unused" has unsupported operation: llvm.return
+
+1: "unknown_src"
+9: "unknown_src" has pointer type input
+
+4: "unknown_src" has unsupported operation: llvm.call
+
+1: "unknown_stop_char"
+9: "unknown_stop_char" has pointer type input
+
+4: "unknown_stop_char" has unsupported operation: llvm.mlir.addressof
+
+4: "unknown_stop_char" has unsupported operation: llvm.call
+
+1: "unknown_size_n"
+9: "unknown_size_n" has pointer type input
+
+4: "unknown_size_n" has unsupported operation: llvm.mlir.addressof
+
+4: "unknown_size_n" has unsupported operation: llvm.call
+
+1: "no_nul_terminator"
+9: "no_nul_terminator" has pointer type input
+
+4: "no_nul_terminator" has unsupported operation: llvm.mlir.addressof
+
+4: "no_nul_terminator" has unsupported operation: llvm.call
+
+1: "possibly_valid_data_after_array"
+9: "possibly_valid_data_after_array" has pointer type input
+
+4: "possibly_valid_data_after_array" has unsupported operation: llvm.mlir.addressof
+
+4: "possibly_valid_data_after_array" has unsupported operation: llvm.call
+
+1: "possibly_valid_data_after_array2"
+9: "possibly_valid_data_after_array2" has pointer type input
+
+4: "possibly_valid_data_after_array2" has unsupported operation: llvm.mlir.addressof
+
+4: "possibly_valid_data_after_array2" has unsupported operation: llvm.call
+
+1: "possibly_valid_data_after_array3"
+9: "possibly_valid_data_after_array3" has pointer type input
+
+4: "possibly_valid_data_after_array3" has unsupported operation: llvm.mlir.addressof
+
+4: "possibly_valid_data_after_array3" has unsupported operation: llvm.call
+
+1: "memccpy_dst_src_same_retval_used"
+9: "memccpy_dst_src_same_retval_used" has pointer type input
+
+4: "memccpy_dst_src_same_retval_used" has unsupported operation: llvm.call
+
+1: "memccpy_to_memcpy_musttail"
+9: "memccpy_to_memcpy_musttail" has pointer type input
+
+4: "memccpy_to_memcpy_musttail" has unsupported operation: llvm.mlir.addressof
+
+4: "memccpy_to_memcpy_musttail" has unsupported operation: llvm.call
+
+1: "memccpy_to_memcpy2_musttail"
+9: "memccpy_to_memcpy2_musttail" has pointer type input
+
+4: "memccpy_to_memcpy2_musttail" has unsupported operation: llvm.mlir.addressof
+
+4: "memccpy_to_memcpy2_musttail" has unsupported operation: llvm.call
+

@@ -1,0 +1,255 @@
+1: "zext_zext_sgt"
+2: llvm.func
+2: llvm.zext
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_zext_ugt"
+8: "zext_zext_ugt" contains vectors which are unsupported
+
+1: "zext_zext_eq"
+2: llvm.func
+2: llvm.zext
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_zext_sle_op0_narrow"
+2: llvm.func
+2: llvm.zext
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_zext_ule_op0_wide"
+2: llvm.func
+2: llvm.zext
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "sext_sext_slt"
+2: llvm.func
+2: llvm.sext
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "sext_sext_ult"
+2: llvm.func
+2: llvm.sext
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "sext_sext_ne"
+2: llvm.func
+2: llvm.sext
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "sext_sext_sge_op0_narrow"
+2: llvm.func
+2: llvm.sext
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "sext_sext_uge_op0_wide"
+8: "sext_sext_uge_op0_wide" contains vectors which are unsupported
+
+1: "zext_sext_sgt"
+7: "zext_sext_sgt" is unchanged by InstCombine
+
+1: "zext_nneg_sext_sgt"
+2: llvm.func
+2: llvm.zext
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_sext_ugt"
+7: "zext_sext_ugt" is unchanged by InstCombine
+
+1: "zext_nneg_sext_ugt"
+2: llvm.func
+2: llvm.zext
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_sext_eq"
+7: "zext_sext_eq" is unchanged by InstCombine
+
+1: "zext_nneg_sext_eq"
+2: llvm.func
+2: llvm.zext
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_sext_sle_op0_narrow"
+7: "zext_sext_sle_op0_narrow" is unchanged by InstCombine
+
+1: "zext_nneg_sext_sle_op0_narrow"
+2: llvm.func
+2: llvm.zext
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_sext_ule_op0_wide"
+7: "zext_sext_ule_op0_wide" is unchanged by InstCombine
+
+1: "zext_nneg_sext_ule_op0_wide"
+2: llvm.func
+2: llvm.zext
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "sext_zext_slt"
+7: "sext_zext_slt" is unchanged by InstCombine
+
+1: "sext_zext_nneg_slt"
+2: llvm.func
+2: llvm.sext
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "sext_zext_ult"
+7: "sext_zext_ult" is unchanged by InstCombine
+
+1: "sext_zext_nneg_ult"
+2: llvm.func
+2: llvm.sext
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "sext_zext_ne"
+7: "sext_zext_ne" is unchanged by InstCombine
+
+1: "sext_zext_nneg_ne"
+8: "sext_zext_nneg_ne" contains vectors which are unsupported
+
+1: "sext_zext_sge_op0_narrow"
+7: "sext_zext_sge_op0_narrow" is unchanged by InstCombine
+
+1: "sext_zext_nneg_sge_op0_narrow"
+2: llvm.func
+2: llvm.sext
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "sext_zext_uge_op0_wide"
+7: "sext_zext_uge_op0_wide" is unchanged by InstCombine
+
+1: "sext_zext_nneg_uge_op0_wide"
+2: llvm.func
+2: llvm.sext
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_sext_sgt_known_nonneg"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.zext
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_sext_ugt_known_nonneg"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.zext
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_sext_eq_known_nonneg"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.zext
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_sext_sle_known_nonneg_op0_narrow"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.zext
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_sext_ule_known_nonneg_op0_wide"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.urem
+2: llvm.zext
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "sext_zext_slt_known_nonneg"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.and
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "sext_zext_ult_known_nonneg"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.lshr
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "sext_zext_ne_known_nonneg"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.udiv
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "sext_zext_sge_known_nonneg_op0_narrow"
+8: "sext_zext_sge_known_nonneg_op0_narrow" contains vectors which are unsupported
+
+1: "sext_zext_uge_known_nonneg_op0_wide"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.and
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_eq_sext"
+2: llvm.func
+2: llvm.zext
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_eq_sext_fail_not_i1"
+7: "zext_eq_sext_fail_not_i1" is unchanged by InstCombine
+
+1: "zext_ne_sext"
+8: "zext_ne_sext" contains vectors which are unsupported
+

@@ -1,0 +1,430 @@
+1: "eq_smax1"
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "eq_smax2"
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "eq_smax3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "eq_smax4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "sle_smax1"
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "sle_smax2"
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "sle_smax3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "sle_smax4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "ne_smax1"
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "ne_smax2"
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "ne_smax3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "ne_smax4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "sgt_smax1"
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "sgt_smax2"
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "sgt_smax3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "sgt_smax4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "use"
+5: "use" is empty
+
+1: "eq_smax_contextual"
+4: "eq_smax_contextual" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "eq_smax_contextual" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "eq_smax_contextual" has unsupported operation: llvm.call
+
+4: "eq_smax_contextual" has unsupported operation: llvm.call
+
+4: "eq_smax_contextual" has unsupported operation: llvm.call
+
+4: "eq_smax_contextual" has unsupported operation: llvm.call
+
+4: "eq_smax_contextual" has unsupported operation: llvm.call
+
+4: "eq_smax_contextual" has unsupported operation: llvm.call
+
+4: "eq_smax_contextual" has unsupported operation: llvm.call
+
+4: "eq_smax_contextual" has unsupported operation: llvm.call
+
+4: "eq_smax_contextual" has unsupported operation: llvm.call
+
+4: "eq_smax_contextual" has unsupported operation: llvm.call
+
+4: "eq_smax_contextual" has unsupported operation: llvm.return
+
+4: "eq_smax_contextual" has unsupported operation: llvm.return
+
+1: "eq_smax_contextual_commuted"
+4: "eq_smax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "eq_smax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "eq_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "eq_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "eq_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "eq_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "eq_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "eq_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "eq_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "eq_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "eq_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "eq_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "eq_smax_contextual_commuted" has unsupported operation: llvm.return
+
+4: "eq_smax_contextual_commuted" has unsupported operation: llvm.return
+
+1: "slt_smax_contextual"
+4: "slt_smax_contextual" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "slt_smax_contextual" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "slt_smax_contextual" has unsupported operation: llvm.call
+
+4: "slt_smax_contextual" has unsupported operation: llvm.call
+
+4: "slt_smax_contextual" has unsupported operation: llvm.call
+
+4: "slt_smax_contextual" has unsupported operation: llvm.call
+
+4: "slt_smax_contextual" has unsupported operation: llvm.call
+
+4: "slt_smax_contextual" has unsupported operation: llvm.call
+
+4: "slt_smax_contextual" has unsupported operation: llvm.call
+
+4: "slt_smax_contextual" has unsupported operation: llvm.call
+
+4: "slt_smax_contextual" has unsupported operation: llvm.call
+
+4: "slt_smax_contextual" has unsupported operation: llvm.call
+
+4: "slt_smax_contextual" has unsupported operation: llvm.return
+
+4: "slt_smax_contextual" has unsupported operation: llvm.return
+
+1: "slt_smax_contextual_commuted"
+4: "slt_smax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "slt_smax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "slt_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "slt_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "slt_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "slt_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "slt_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "slt_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "slt_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "slt_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "slt_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "slt_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "slt_smax_contextual_commuted" has unsupported operation: llvm.return
+
+4: "slt_smax_contextual_commuted" has unsupported operation: llvm.return
+
+1: "sle_smax_contextual"
+4: "sle_smax_contextual" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sle_smax_contextual" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "sle_smax_contextual" has unsupported operation: llvm.call
+
+4: "sle_smax_contextual" has unsupported operation: llvm.call
+
+4: "sle_smax_contextual" has unsupported operation: llvm.call
+
+4: "sle_smax_contextual" has unsupported operation: llvm.call
+
+4: "sle_smax_contextual" has unsupported operation: llvm.call
+
+4: "sle_smax_contextual" has unsupported operation: llvm.call
+
+4: "sle_smax_contextual" has unsupported operation: llvm.call
+
+4: "sle_smax_contextual" has unsupported operation: llvm.call
+
+4: "sle_smax_contextual" has unsupported operation: llvm.call
+
+4: "sle_smax_contextual" has unsupported operation: llvm.call
+
+4: "sle_smax_contextual" has unsupported operation: llvm.return
+
+4: "sle_smax_contextual" has unsupported operation: llvm.return
+
+1: "sle_smax_contextual_commuted"
+4: "sle_smax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sle_smax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "sle_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sle_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sle_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sle_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sle_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sle_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sle_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sle_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sle_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sle_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sle_smax_contextual_commuted" has unsupported operation: llvm.return
+
+4: "sle_smax_contextual_commuted" has unsupported operation: llvm.return
+
+1: "sgt_smax_contextual"
+4: "sgt_smax_contextual" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sgt_smax_contextual" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "sgt_smax_contextual" has unsupported operation: llvm.call
+
+4: "sgt_smax_contextual" has unsupported operation: llvm.call
+
+4: "sgt_smax_contextual" has unsupported operation: llvm.call
+
+4: "sgt_smax_contextual" has unsupported operation: llvm.call
+
+4: "sgt_smax_contextual" has unsupported operation: llvm.call
+
+4: "sgt_smax_contextual" has unsupported operation: llvm.call
+
+4: "sgt_smax_contextual" has unsupported operation: llvm.call
+
+4: "sgt_smax_contextual" has unsupported operation: llvm.call
+
+4: "sgt_smax_contextual" has unsupported operation: llvm.call
+
+4: "sgt_smax_contextual" has unsupported operation: llvm.call
+
+4: "sgt_smax_contextual" has unsupported operation: llvm.return
+
+4: "sgt_smax_contextual" has unsupported operation: llvm.return
+
+1: "sgt_smax_contextual_commuted"
+4: "sgt_smax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sgt_smax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "sgt_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sgt_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sgt_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sgt_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sgt_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sgt_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sgt_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sgt_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sgt_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sgt_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sgt_smax_contextual_commuted" has unsupported operation: llvm.return
+
+4: "sgt_smax_contextual_commuted" has unsupported operation: llvm.return
+
+1: "sge_smax_contextual"
+4: "sge_smax_contextual" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sge_smax_contextual" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "sge_smax_contextual" has unsupported operation: llvm.call
+
+4: "sge_smax_contextual" has unsupported operation: llvm.call
+
+4: "sge_smax_contextual" has unsupported operation: llvm.call
+
+4: "sge_smax_contextual" has unsupported operation: llvm.call
+
+4: "sge_smax_contextual" has unsupported operation: llvm.call
+
+4: "sge_smax_contextual" has unsupported operation: llvm.call
+
+4: "sge_smax_contextual" has unsupported operation: llvm.call
+
+4: "sge_smax_contextual" has unsupported operation: llvm.call
+
+4: "sge_smax_contextual" has unsupported operation: llvm.call
+
+4: "sge_smax_contextual" has unsupported operation: llvm.call
+
+4: "sge_smax_contextual" has unsupported operation: llvm.return
+
+4: "sge_smax_contextual" has unsupported operation: llvm.return
+
+1: "sge_smax_contextual_commuted"
+4: "sge_smax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sge_smax_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "sge_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sge_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sge_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sge_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sge_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sge_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sge_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sge_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sge_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sge_smax_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sge_smax_contextual_commuted" has unsupported operation: llvm.return
+
+4: "sge_smax_contextual_commuted" has unsupported operation: llvm.return
+
+1: "test_smax_ugt"
+4: "test_smax_ugt" has unsupported operation after optimization: builtin.unregistered: llvm.intr.smax
+
+1: "test_smax_ugt_neg1"
+4: "test_smax_ugt_neg1" has unsupported operation after optimization: builtin.unregistered: llvm.intr.smax
+
+1: "test_smax_ugt_neg2"
+4: "test_smax_ugt_neg2" has unsupported operation: builtin.unregistered: llvm.intr.smax
+

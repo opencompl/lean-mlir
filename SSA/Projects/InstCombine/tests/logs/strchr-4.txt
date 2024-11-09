@@ -1,0 +1,24 @@
+1: "strchr"
+9: "strchr" has pointer type input
+
+1: "fold_strchr_s_c_eq_s"
+9: "fold_strchr_s_c_eq_s" has pointer type input
+
+4: "fold_strchr_s_c_eq_s" has unsupported operation: llvm.load
+
+1: "fold_strchr_s_c_neq_s"
+9: "fold_strchr_s_c_neq_s" has pointer type input
+
+4: "fold_strchr_s_c_neq_s" has unsupported operation: llvm.load
+
+1: "fold_strchr_s_nul_eqz"
+9: "fold_strchr_s_nul_eqz" has pointer type input
+
+1: "fold_strchr_s_nul_nez"
+9: "fold_strchr_s_nul_nez" has pointer type input
+
+1: "fold_strchr_a_c_eq_a"
+4: "fold_strchr_a_c_eq_a" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_strchr_a_c_eq_a" has unsupported operation after optimization: llvm.call
+

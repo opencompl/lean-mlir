@@ -1,0 +1,2 @@
+3: bitcast-vec-canon-inseltpoison.ll: parsing has failed
+

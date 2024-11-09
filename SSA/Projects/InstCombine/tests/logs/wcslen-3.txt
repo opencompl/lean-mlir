@@ -1,0 +1,88 @@
+1: "wcslen"
+9: "wcslen" has pointer type input
+
+1: "test_simplify1"
+4: "test_simplify1" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test_simplify1" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify2"
+4: "test_simplify2" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test_simplify2" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify3"
+4: "test_simplify3" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test_simplify3" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify4"
+4: "test_simplify4" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test_simplify4" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify5"
+4: "test_simplify5" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test_simplify5" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify6"
+9: "test_simplify6" has pointer type input
+
+4: "test_simplify6" has unsupported operation: llvm.load
+
+1: "test_simplify7"
+4: "test_simplify7" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test_simplify7" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify8"
+9: "test_simplify8" has pointer type input
+
+4: "test_simplify8" has unsupported operation: llvm.load
+
+1: "test_simplify9"
+4: "test_simplify9" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test_simplify9" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test_simplify9" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify10"
+4: "test_simplify10" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test_simplify10" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test_simplify10" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify11"
+4: "test_simplify11" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test_simplify11" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test_simplify11" has unsupported operation after optimization: llvm.call
+
+1: "test_no_simplify1"
+4: "test_no_simplify1" has unsupported operation: llvm.mlir.addressof
+
+4: "test_no_simplify1" has unsupported operation: llvm.call
+
+1: "test_no_simplify2"
+4: "test_no_simplify2" has unsupported operation: llvm.mlir.addressof
+
+4: "test_no_simplify2" has unsupported operation: llvm.getelementptr
+
+4: "test_no_simplify2" has unsupported operation: llvm.call
+
+1: "test_no_simplify3"
+4: "test_no_simplify3" has unsupported operation: llvm.mlir.addressof
+
+4: "test_no_simplify3" has unsupported operation: llvm.getelementptr
+
+4: "test_no_simplify3" has unsupported operation: llvm.call
+
+1: "test_no_simplify4"
+4: "test_no_simplify4" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test_no_simplify4" has unsupported operation after optimization: llvm.call
+

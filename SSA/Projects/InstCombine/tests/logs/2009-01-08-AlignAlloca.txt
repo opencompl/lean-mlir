@@ -1,0 +1,20 @@
+1: "bar"
+4: "bar" has unsupported operation: llvm.alloca
+
+4: "bar" has unsupported operation: llvm.alloca
+
+4: "bar" has unsupported operation: llvm.store
+
+4: "bar" has unsupported operation: llvm.getelementptr
+
+4: "bar" has unsupported operation: llvm.store
+
+4: "bar" has unsupported operation: llvm.store
+
+4: "bar" has unsupported operation: llvm.call
+
+4: "bar" has unsupported operation: llvm.load
+
+1: "foo"
+5: "foo" is empty
+

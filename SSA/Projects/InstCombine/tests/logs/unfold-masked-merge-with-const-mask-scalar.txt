@@ -1,0 +1,124 @@
+1: "scalar0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "scalar1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "in_constant_varx_mone"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "in_constant_varx_14"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "in_constant_mone_vary"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "in_constant_14_vary"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "gen4"
+5: "gen4" is empty
+
+1: "c_1_0_0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "c_0_1_0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "c_0_0_1"
+4: "c_0_0_1" has unsupported operation: llvm.call
+
+4: "c_0_0_1" has unsupported operation: llvm.call
+
+1: "c_1_1_0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "c_1_0_1"
+4: "c_1_0_1" has unsupported operation: llvm.call
+
+1: "c_0_1_1"
+4: "c_0_1_1" has unsupported operation: llvm.call
+
+1: "c_1_1_1"
+4: "c_1_1_1" has unsupported operation: llvm.call
+
+4: "c_1_1_1" has unsupported operation: llvm.call
+
+1: "commutativity_constant_14_vary"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "use4"
+5: "use4" is empty
+
+1: "n_oneuse_D"
+4: "n_oneuse_D" has unsupported operation: llvm.call
+
+1: "n_oneuse_A"
+4: "n_oneuse_A" has unsupported operation: llvm.call
+
+1: "n_oneuse_AD"
+4: "n_oneuse_AD" has unsupported operation: llvm.call
+
+4: "n_oneuse_AD" has unsupported operation: llvm.call
+
+1: "n_var_mask"
+7: "n_var_mask" is unchanged by InstCombine
+
+1: "n_third_var"
+7: "n_third_var" is unchanged by InstCombine
+

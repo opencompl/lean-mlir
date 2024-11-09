@@ -1,0 +1,87 @@
+1: "use"
+5: "use" is empty
+
+1: "cmpeq_xor_cst1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "cmpeq_xor_cst2"
+7: "cmpeq_xor_cst2" is unchanged by InstCombine
+
+1: "cmpeq_xor_cst3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "cmpne_xor_cst1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "cmpne_xor_cst2"
+7: "cmpne_xor_cst2" is unchanged by InstCombine
+
+1: "cmpne_xor_cst3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "cmpeq_xor_cst1_multiuse"
+4: "cmpeq_xor_cst1_multiuse" has unsupported operation: llvm.call
+
+1: "cmpeq_xor_cst1_commuted"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "cmpeq_xor_cst1_vec"
+8: "cmpeq_xor_cst1_vec" contains vectors which are unsupported
+
+1: "foo1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.xor
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "foo2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "foo3"
+7: "foo3" is unchanged by InstCombine
+
+1: "use.i8"
+5: "use.i8" is empty
+
+1: "fold_xorC_eq0_multiuse"
+4: "fold_xorC_eq0_multiuse" has unsupported operation: llvm.call
+
+1: "fold_xorC_eq1_multiuse_fail"
+4: "fold_xorC_eq1_multiuse_fail" has unsupported operation: llvm.call
+
+1: "fold_xorC_neC_multiuse"
+4: "fold_xorC_neC_multiuse" has unsupported operation: llvm.call
+

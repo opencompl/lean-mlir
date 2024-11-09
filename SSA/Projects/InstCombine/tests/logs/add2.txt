@@ -1,0 +1,318 @@
+1: "test1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.shl
+2: llvm.add
+2: llvm.and
+2: llvm.return
+
+1: "test2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.add
+2: llvm.return
+
+1: "test3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.lshr
+2: llvm.add
+2: llvm.return
+
+1: "test4"
+2: llvm.func
+2: llvm.add
+2: llvm.return
+
+1: "test5"
+8: "test5" contains vectors which are unsupported
+
+1: "test6"
+8: "test6" contains vectors which are unsupported
+
+1: "test7"
+8: "test7" contains vectors which are unsupported
+
+1: "test9"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.mul
+2: llvm.add
+2: llvm.return
+
+1: "test10"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.or
+2: llvm.xor
+2: llvm.add
+2: llvm.add
+2: llvm.return
+
+1: "test11"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.xor
+2: llvm.add
+2: llvm.add
+2: llvm.return
+
+1: "test12"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.or
+2: llvm.xor
+2: llvm.add
+2: llvm.return
+
+1: "test13"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.xor
+2: llvm.add
+2: llvm.add
+2: llvm.return
+
+1: "test14"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.or
+2: llvm.xor
+2: llvm.add
+2: llvm.return
+
+1: "test15"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.xor
+2: llvm.add
+2: llvm.add
+2: llvm.return
+
+1: "test16"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.and
+2: llvm.xor
+2: llvm.add
+2: llvm.return
+
+1: "test17"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.xor
+2: llvm.add
+2: llvm.return
+
+1: "test18"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.and
+2: llvm.xor
+2: llvm.add
+2: llvm.return
+
+1: "add_nsw_mul_nsw"
+2: llvm.func
+2: llvm.add
+2: llvm.add
+2: llvm.return
+
+1: "mul_add_to_mul_1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.add
+2: llvm.return
+
+1: "mul_add_to_mul_2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.add
+2: llvm.return
+
+1: "mul_add_to_mul_3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.mul
+2: llvm.add
+2: llvm.return
+
+1: "mul_add_to_mul_4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.mul
+2: llvm.add
+2: llvm.return
+
+1: "mul_add_to_mul_5"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.mul
+2: llvm.add
+2: llvm.return
+
+1: "mul_add_to_mul_6"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.mul
+2: llvm.add
+2: llvm.return
+
+1: "mul_add_to_mul_7"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.add
+2: llvm.return
+
+1: "mul_add_to_mul_8"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.mul
+2: llvm.add
+2: llvm.return
+
+1: "mul_add_to_mul_9"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.mul
+2: llvm.add
+2: llvm.return
+
+1: "add_cttz"
+4: "add_cttz" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "add_cttz_2"
+4: "add_cttz_2" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "add_or_and"
+2: llvm.func
+2: llvm.or
+2: llvm.and
+2: llvm.add
+2: llvm.return
+
+1: "add_or_and_commutative"
+2: llvm.func
+2: llvm.or
+2: llvm.and
+2: llvm.add
+2: llvm.return
+
+1: "add_and_or"
+2: llvm.func
+2: llvm.or
+2: llvm.and
+2: llvm.add
+2: llvm.return
+
+1: "add_and_or_commutative"
+2: llvm.func
+2: llvm.or
+2: llvm.and
+2: llvm.add
+2: llvm.return
+
+1: "add_nsw_or_and"
+2: llvm.func
+2: llvm.or
+2: llvm.and
+2: llvm.add
+2: llvm.return
+
+1: "add_nuw_or_and"
+2: llvm.func
+2: llvm.or
+2: llvm.and
+2: llvm.add
+2: llvm.return
+
+1: "add_nuw_nsw_or_and"
+2: llvm.func
+2: llvm.or
+2: llvm.and
+2: llvm.add
+2: llvm.return
+
+1: "add_of_mul"
+2: llvm.func
+2: llvm.mul
+2: llvm.mul
+2: llvm.add
+2: llvm.return
+
+1: "add_of_selects"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.add
+2: llvm.return
+
+1: "add_undemanded_low_bits"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.add
+2: llvm.lshr
+2: llvm.return
+
+1: "sub_undemanded_low_bits"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.sub
+2: llvm.lshr
+2: llvm.return
+

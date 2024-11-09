@@ -1,0 +1,76 @@
+1: "use8"
+5: "use8" is empty
+
+1: "use1"
+5: "use1" is empty
+
+1: "t0"
+4: "t0" has unsupported operation: llvm.call
+
+1: "t0_logical"
+4: "t0_logical" has unsupported operation: llvm.call
+
+1: "t1_oneuse0"
+4: "t1_oneuse0" has unsupported operation: llvm.call
+
+4: "t1_oneuse0" has unsupported operation: llvm.call
+
+1: "t1_oneuse0_logical"
+4: "t1_oneuse0_logical" has unsupported operation: llvm.call
+
+4: "t1_oneuse0_logical" has unsupported operation: llvm.call
+
+1: "t2_oneuse1"
+4: "t2_oneuse1" has unsupported operation: llvm.call
+
+4: "t2_oneuse1" has unsupported operation: llvm.call
+
+1: "t2_oneuse1_logical"
+4: "t2_oneuse1_logical" has unsupported operation: llvm.call
+
+4: "t2_oneuse1_logical" has unsupported operation: llvm.call
+
+1: "n3_oneuse2_bad"
+4: "n3_oneuse2_bad" has unsupported operation: llvm.call
+
+4: "n3_oneuse2_bad" has unsupported operation: llvm.call
+
+4: "n3_oneuse2_bad" has unsupported operation: llvm.call
+
+1: "n3_oneuse2_bad_logical"
+4: "n3_oneuse2_bad_logical" has unsupported operation: llvm.call
+
+4: "n3_oneuse2_bad_logical" has unsupported operation: llvm.call
+
+4: "n3_oneuse2_bad_logical" has unsupported operation: llvm.call
+
+1: "t4_commutativity0"
+4: "t4_commutativity0" has unsupported operation: llvm.call
+
+1: "t4_commutativity0_logical"
+4: "t4_commutativity0_logical" has unsupported operation: llvm.call
+
+1: "t5_commutativity1"
+4: "t5_commutativity1" has unsupported operation: llvm.call
+
+1: "t5_commutativity1_logical"
+4: "t5_commutativity1_logical" has unsupported operation: llvm.call
+
+1: "t6_commutativity3"
+4: "t6_commutativity3" has unsupported operation: llvm.call
+
+1: "t6_commutativity3_logical"
+4: "t6_commutativity3_logical" has unsupported operation: llvm.call
+
+1: "t7"
+4: "t7" has unsupported operation: llvm.call
+
+1: "t7_logical"
+4: "t7_logical" has unsupported operation: llvm.call
+
+1: "t8"
+4: "t8" has unsupported operation: llvm.call
+
+1: "t8_logical"
+4: "t8_logical" has unsupported operation: llvm.call
+

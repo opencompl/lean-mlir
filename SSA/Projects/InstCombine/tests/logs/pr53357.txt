@@ -1,0 +1,55 @@
+1: "src"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.or
+2: llvm.xor
+2: llvm.add
+2: llvm.return
+
+1: "src_vec"
+8: "src_vec" contains vectors which are unsupported
+
+1: "src_vec_poison"
+8: "src_vec_poison" contains vectors which are unsupported
+
+1: "src2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.or
+2: llvm.xor
+2: llvm.add
+2: llvm.return
+
+1: "src3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.xor
+2: llvm.xor
+2: llvm.and
+2: llvm.add
+2: llvm.return
+
+1: "src4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.or
+2: llvm.xor
+2: llvm.add
+2: llvm.return
+
+1: "src5"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.xor
+2: llvm.and
+2: llvm.add
+2: llvm.return
+
+1: "src6"
+7: "src6" is unchanged by InstCombine
+

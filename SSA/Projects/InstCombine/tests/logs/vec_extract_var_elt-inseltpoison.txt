@@ -1,0 +1,24 @@
+1: "test"
+9: "test" has pointer type input
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test" has unsupported operation: llvm.load
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "test" has unsupported operation: llvm.store
+
+4: "test" has unsupported operation: llvm.return
+
+1: "test2"
+4: "test2" has unsupported operation: builtin.unregistered: llvm.extractelement
+

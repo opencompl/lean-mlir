@@ -1,0 +1,10 @@
+1: "spam"
+9: "spam" has pointer type input
+
+4: "spam" has unsupported operation: llvm.call
+
+4: "spam" has unsupported operation: llvm.return
+
+1: "widget"
+9: "widget" has pointer type input
+

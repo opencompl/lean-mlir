@@ -1,0 +1,98 @@
+1: "strnlen"
+9: "strnlen" has pointer type input
+
+1: "fold_strnlen_sx_pi_0"
+4: "fold_strnlen_sx_pi_0" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_strnlen_sx_pi_0" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_strnlen_sx_pi_0" has unsupported operation after optimization: llvm.call
+
+1: "call_strnlen_sx_pi_n"
+4: "call_strnlen_sx_pi_n" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strnlen_sx_pi_n" has unsupported operation: llvm.getelementptr
+
+4: "call_strnlen_sx_pi_n" has unsupported operation: llvm.call
+
+1: "call_strnlen_a3_pi_2"
+4: "call_strnlen_a3_pi_2" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strnlen_a3_pi_2" has unsupported operation: llvm.getelementptr
+
+4: "call_strnlen_a3_pi_2" has unsupported operation: llvm.call
+
+1: "call_strnlen_a3_pi_3"
+4: "call_strnlen_a3_pi_3" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strnlen_a3_pi_3" has unsupported operation: llvm.getelementptr
+
+4: "call_strnlen_a3_pi_3" has unsupported operation: llvm.call
+
+1: "fold_strnlen_s3_pi_0"
+4: "fold_strnlen_s3_pi_0" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_strnlen_s3_pi_0" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_strnlen_s3_pi_0" has unsupported operation after optimization: llvm.call
+
+1: "call_strnlen_s5_pi_0"
+4: "call_strnlen_s5_pi_0" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "call_strnlen_s5_pi_0" has unsupported operation after optimization: llvm.call
+
+1: "fold_strnlen_s5_3_pi_0"
+4: "fold_strnlen_s5_3_pi_0" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_strnlen_s5_3_pi_0" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_strnlen_s5_3_pi_0" has unsupported operation after optimization: llvm.call
+
+1: "call_strnlen_s5_3_pi_n"
+4: "call_strnlen_s5_3_pi_n" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strnlen_s5_3_pi_n" has unsupported operation: llvm.getelementptr
+
+4: "call_strnlen_s5_3_pi_n" has unsupported operation: llvm.call
+
+1: "fold_strnlen_a3_n"
+4: "fold_strnlen_a3_n" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "fold_strnlen_s3_n"
+4: "fold_strnlen_s3_n" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "fold_strnlen_a3_pi_2"
+4: "fold_strnlen_a3_pi_2" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strnlen_a3_pi_2" has unsupported operation: llvm.getelementptr
+
+4: "fold_strnlen_a3_pi_2" has unsupported operation: llvm.call
+
+1: "fold_strnlen_s3_pi_2"
+4: "fold_strnlen_s3_pi_2" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strnlen_s3_pi_2" has unsupported operation: llvm.getelementptr
+
+4: "fold_strnlen_s3_pi_2" has unsupported operation: llvm.call
+
+1: "fold_strnlen_s3_pi_3"
+4: "fold_strnlen_s3_pi_3" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strnlen_s3_pi_3" has unsupported operation: llvm.getelementptr
+
+4: "fold_strnlen_s3_pi_3" has unsupported operation: llvm.call
+
+1: "fold_strnlen_s3_pi_n"
+4: "fold_strnlen_s3_pi_n" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strnlen_s3_pi_n" has unsupported operation: llvm.getelementptr
+
+4: "fold_strnlen_s3_pi_n" has unsupported operation: llvm.call
+
+1: "call_strnlen_s5_3_pi_2"
+4: "call_strnlen_s5_3_pi_2" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strnlen_s5_3_pi_2" has unsupported operation: llvm.getelementptr
+
+4: "call_strnlen_s5_3_pi_2" has unsupported operation: llvm.call
+

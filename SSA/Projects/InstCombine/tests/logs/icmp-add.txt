@@ -1,0 +1,782 @@
+1: "use"
+5: "use" is empty
+
+1: "cvt_icmp_0_zext_plus_zext_eq_i16"
+6: Cannot find function after optimization with sym name: "cvt_icmp_0_zext_plus_zext_eq_i16"
+
+1: "cvt_icmp_0_zext_plus_zext_eq_i8"
+6: Cannot find function after optimization with sym name: "cvt_icmp_0_zext_plus_zext_eq_i8"
+
+1: "cvt_icmp_neg_2_zext_plus_zext_eq"
+6: Cannot find function after optimization with sym name: "cvt_icmp_neg_2_zext_plus_zext_eq"
+
+1: "cvt_icmp_neg_1_zext_plus_zext_eq"
+6: Cannot find function after optimization with sym name: "cvt_icmp_neg_1_zext_plus_zext_eq"
+
+1: "cvt_icmp_0_zext_plus_zext_eq"
+6: Cannot find function after optimization with sym name: "cvt_icmp_0_zext_plus_zext_eq"
+
+1: "cvt_icmp_1_zext_plus_zext_eq"
+6: Cannot find function after optimization with sym name: "cvt_icmp_1_zext_plus_zext_eq"
+
+1: "cvt_icmp_1_zext_plus_zext_eq_vec"
+6: Cannot find function after optimization with sym name: "cvt_icmp_1_zext_plus_zext_eq_vec"
+
+1: "cvt_icmp_2_zext_plus_zext_eq"
+6: Cannot find function after optimization with sym name: "cvt_icmp_2_zext_plus_zext_eq"
+
+1: "cvt_icmp_neg_2_sext_plus_sext_eq"
+6: Cannot find function after optimization with sym name: "cvt_icmp_neg_2_sext_plus_sext_eq"
+
+1: "cvt_icmp_neg_1_sext_plus_sext_eq"
+6: Cannot find function after optimization with sym name: "cvt_icmp_neg_1_sext_plus_sext_eq"
+
+1: "cvt_icmp_0_sext_plus_sext_eq"
+6: Cannot find function after optimization with sym name: "cvt_icmp_0_sext_plus_sext_eq"
+
+1: "cvt_icmp_1_sext_plus_sext_eq"
+6: Cannot find function after optimization with sym name: "cvt_icmp_1_sext_plus_sext_eq"
+
+1: "cvt_icmp_2_sext_plus_sext_eq"
+6: Cannot find function after optimization with sym name: "cvt_icmp_2_sext_plus_sext_eq"
+
+1: "cvt_icmp_neg_2_sext_plus_zext_eq"
+6: Cannot find function after optimization with sym name: "cvt_icmp_neg_2_sext_plus_zext_eq"
+
+1: "cvt_icmp_neg_1_sext_plus_zext_eq"
+6: Cannot find function after optimization with sym name: "cvt_icmp_neg_1_sext_plus_zext_eq"
+
+1: "cvt_icmp_0_sext_plus_zext_eq"
+6: Cannot find function after optimization with sym name: "cvt_icmp_0_sext_plus_zext_eq"
+
+1: "cvt_icmp_1_sext_plus_zext_eq"
+6: Cannot find function after optimization with sym name: "cvt_icmp_1_sext_plus_zext_eq"
+
+1: "cvt_icmp_2_sext_plus_zext_eq"
+6: Cannot find function after optimization with sym name: "cvt_icmp_2_sext_plus_zext_eq"
+
+1: "cvt_icmp_neg_2_zext_plus_zext_ne"
+6: Cannot find function after optimization with sym name: "cvt_icmp_neg_2_zext_plus_zext_ne"
+
+1: "cvt_icmp_neg_1_zext_plus_zext_ne"
+6: Cannot find function after optimization with sym name: "cvt_icmp_neg_1_zext_plus_zext_ne"
+
+1: "cvt_icmp_0_zext_plus_zext_ne"
+6: Cannot find function after optimization with sym name: "cvt_icmp_0_zext_plus_zext_ne"
+
+1: "cvt_icmp_1_zext_plus_zext_ne"
+6: Cannot find function after optimization with sym name: "cvt_icmp_1_zext_plus_zext_ne"
+
+1: "cvt_icmp_1_zext_plus_zext_ne_extra_use_1"
+4: "cvt_icmp_1_zext_plus_zext_ne_extra_use_1" has unsupported operation: llvm.call
+
+1: "cvt_icmp_1_zext_plus_zext_ne_extra_use_2"
+4: "cvt_icmp_1_zext_plus_zext_ne_extra_use_2" has unsupported operation: llvm.call
+
+4: "cvt_icmp_1_zext_plus_zext_ne_extra_use_2" has unsupported operation: llvm.call
+
+1: "cvt_icmp_2_zext_plus_zext_ne"
+6: Cannot find function after optimization with sym name: "cvt_icmp_2_zext_plus_zext_ne"
+
+1: "cvt_icmp_neg_2_sext_plus_sext_ne"
+6: Cannot find function after optimization with sym name: "cvt_icmp_neg_2_sext_plus_sext_ne"
+
+1: "cvt_icmp_neg_1_sext_plus_sext_ne"
+6: Cannot find function after optimization with sym name: "cvt_icmp_neg_1_sext_plus_sext_ne"
+
+1: "cvt_icmp_0_sext_plus_sext_ne"
+6: Cannot find function after optimization with sym name: "cvt_icmp_0_sext_plus_sext_ne"
+
+1: "cvt_icmp_1_sext_plus_sext_ne"
+6: Cannot find function after optimization with sym name: "cvt_icmp_1_sext_plus_sext_ne"
+
+1: "cvt_icmp_2_sext_plus_sext_ne"
+6: Cannot find function after optimization with sym name: "cvt_icmp_2_sext_plus_sext_ne"
+
+1: "cvt_icmp_neg_2_sext_plus_zext_ne"
+6: Cannot find function after optimization with sym name: "cvt_icmp_neg_2_sext_plus_zext_ne"
+
+1: "cvt_icmp_neg_1_sext_plus_zext_ne"
+6: Cannot find function after optimization with sym name: "cvt_icmp_neg_1_sext_plus_zext_ne"
+
+1: "cvt_icmp_0_sext_plus_zext_ne"
+6: Cannot find function after optimization with sym name: "cvt_icmp_0_sext_plus_zext_ne"
+
+1: "cvt_icmp_1_sext_plus_zext_ne"
+6: Cannot find function after optimization with sym name: "cvt_icmp_1_sext_plus_zext_ne"
+
+1: "cvt_icmp_2_sext_plus_zext_ne"
+6: Cannot find function after optimization with sym name: "cvt_icmp_2_sext_plus_zext_ne"
+
+1: "cvt_icmp_2_sext_plus_zext_ne_vec"
+6: Cannot find function after optimization with sym name: "cvt_icmp_2_sext_plus_zext_ne_vec"
+
+1: "cvt_icmp_neg_2_zext_plus_sext_eq"
+6: Cannot find function after optimization with sym name: "cvt_icmp_neg_2_zext_plus_sext_eq"
+
+1: "cvt_icmp_neg_2_zext_plus_sext_eq_vec"
+6: Cannot find function after optimization with sym name: "cvt_icmp_neg_2_zext_plus_sext_eq_vec"
+
+1: "cvt_icmp_neg_1_zext_plus_sext_eq"
+6: Cannot find function after optimization with sym name: "cvt_icmp_neg_1_zext_plus_sext_eq"
+
+1: "cvt_icmp_0_zext_plus_sext_eq"
+6: Cannot find function after optimization with sym name: "cvt_icmp_0_zext_plus_sext_eq"
+
+1: "cvt_icmp_1_zext_plus_sext_eq"
+6: Cannot find function after optimization with sym name: "cvt_icmp_1_zext_plus_sext_eq"
+
+1: "cvt_icmp_2_zext_plus_sext_eq"
+6: Cannot find function after optimization with sym name: "cvt_icmp_2_zext_plus_sext_eq"
+
+1: "cvt_icmp_neg_2_zext_plus_sext_ne"
+6: Cannot find function after optimization with sym name: "cvt_icmp_neg_2_zext_plus_sext_ne"
+
+1: "cvt_icmp_neg_1_zext_plus_sext_ne"
+6: Cannot find function after optimization with sym name: "cvt_icmp_neg_1_zext_plus_sext_ne"
+
+1: "cvt_icmp_0_zext_plus_sext_ne"
+6: Cannot find function after optimization with sym name: "cvt_icmp_0_zext_plus_sext_ne"
+
+1: "cvt_icmp_1_zext_plus_sext_ne"
+6: Cannot find function after optimization with sym name: "cvt_icmp_1_zext_plus_sext_ne"
+
+1: "cvt_icmp_2_zext_plus_sext_ne"
+6: Cannot find function after optimization with sym name: "cvt_icmp_2_zext_plus_sext_ne"
+
+1: "test_cvt_icmp1"
+9: "test_cvt_icmp1" has pointer type input
+
+4: "test_cvt_icmp1" has unsupported operation: llvm.store
+
+1: "test_cvt_icmp2"
+9: "test_cvt_icmp2" has pointer type input
+
+4: "test_cvt_icmp2" has unsupported operation: llvm.store
+
+1: "test_zext_zext_cvt_neg_2_ult_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_zext_cvt_neg_2_ult_icmp"
+
+1: "test_zext_zext_cvt_neg_1_ult_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_zext_cvt_neg_1_ult_icmp"
+
+1: "test_zext_zext_cvt_0_ult_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_zext_cvt_0_ult_icmp"
+
+1: "test_zext_zext_cvt_2_ult_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_zext_cvt_2_ult_icmp"
+
+1: "test_sext_sext_cvt_neg_2_ult_icmp"
+6: Cannot find function after optimization with sym name: "test_sext_sext_cvt_neg_2_ult_icmp"
+
+1: "test_sext_sext_cvt_neg_1_ult_icmp"
+6: Cannot find function after optimization with sym name: "test_sext_sext_cvt_neg_1_ult_icmp"
+
+1: "test_sext_sext_cvt_0_ult_icmp"
+6: Cannot find function after optimization with sym name: "test_sext_sext_cvt_0_ult_icmp"
+
+1: "test_sext_sext_cvt_1_ult_icmp"
+6: Cannot find function after optimization with sym name: "test_sext_sext_cvt_1_ult_icmp"
+
+1: "test_sext_sext_cvt_2_ult_icmp"
+6: Cannot find function after optimization with sym name: "test_sext_sext_cvt_2_ult_icmp"
+
+1: "test_sext_zext_cvt_neg_2_ult_icmp"
+6: Cannot find function after optimization with sym name: "test_sext_zext_cvt_neg_2_ult_icmp"
+
+1: "test_sext_zext_cvt_neg_1_ult_icmp"
+6: Cannot find function after optimization with sym name: "test_sext_zext_cvt_neg_1_ult_icmp"
+
+1: "test_sext_zext_cvt_0_ult_icmp"
+6: Cannot find function after optimization with sym name: "test_sext_zext_cvt_0_ult_icmp"
+
+1: "test_sext_zext_cvt_2_ult_icmp"
+6: Cannot find function after optimization with sym name: "test_sext_zext_cvt_2_ult_icmp"
+
+1: "test_zext_sext_cvt_neg_1_ult_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_sext_cvt_neg_1_ult_icmp"
+
+1: "test_zext_sext_cvt_0_ult_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_sext_cvt_0_ult_icmp"
+
+1: "test_zext_sext_cvt_1_ult_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_sext_cvt_1_ult_icmp"
+
+1: "test_cvt_icmp4"
+6: Cannot find function after optimization with sym name: "test_cvt_icmp4"
+
+1: "test_zext_zext_cvt_neg_2_ugt_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_zext_cvt_neg_2_ugt_icmp"
+
+1: "test_zext_zext_cvt_1_ugt_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_zext_cvt_1_ugt_icmp"
+
+1: "test_zext_zext_cvt_2_ugt_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_zext_cvt_2_ugt_icmp"
+
+1: "test_sext_sext_cvt_neg_2_ugt_icmp"
+6: Cannot find function after optimization with sym name: "test_sext_sext_cvt_neg_2_ugt_icmp"
+
+1: "test_sext_sext_cvt_0_ugt_icmp"
+6: Cannot find function after optimization with sym name: "test_sext_sext_cvt_0_ugt_icmp"
+
+1: "test_sext_sext_cvt_2_ugt_icmp"
+6: Cannot find function after optimization with sym name: "test_sext_sext_cvt_2_ugt_icmp"
+
+1: "test_zext_sext_cvt_neg_2_ugt_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_sext_cvt_neg_2_ugt_icmp"
+
+1: "test_zext_sext_cvt_neg_1_ugt_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_sext_cvt_neg_1_ugt_icmp"
+
+1: "test_zext_sext_cvt_0_ugt_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_sext_cvt_0_ugt_icmp"
+
+1: "test_zext_sext_cvt_1_ugt_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_sext_cvt_1_ugt_icmp"
+
+1: "test_zext_sext_cvt_2_ugt_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_sext_cvt_2_ugt_icmp"
+
+1: "test_cvt_icmp5"
+6: Cannot find function after optimization with sym name: "test_cvt_icmp5"
+
+1: "test_cvt_icmp6"
+6: Cannot find function after optimization with sym name: "test_cvt_icmp6"
+
+1: "test_cvt_icmp7"
+6: Cannot find function after optimization with sym name: "test_cvt_icmp7"
+
+1: "test_zext_zext_cvt_neg_2_sgt_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_zext_cvt_neg_2_sgt_icmp"
+
+1: "test_zext_zext_cvt_neg_1_sgt_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_zext_cvt_neg_1_sgt_icmp"
+
+1: "test_zext_zext_cvt_2_sgt_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_zext_cvt_2_sgt_icmp"
+
+1: "test_sext_sext_cvt_neg_2_sgt_icmp"
+6: Cannot find function after optimization with sym name: "test_sext_sext_cvt_neg_2_sgt_icmp"
+
+1: "test_sext_sext_cvt_0_sgt_icmp"
+6: Cannot find function after optimization with sym name: "test_sext_sext_cvt_0_sgt_icmp"
+
+1: "test_sext_sext_cvt_2_sgt_icmp"
+6: Cannot find function after optimization with sym name: "test_sext_sext_cvt_2_sgt_icmp"
+
+1: "test_zext_sext_cvt_neg_2_sgt_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_sext_cvt_neg_2_sgt_icmp"
+
+1: "test_zext_sext_cvt_neg_1_sgt_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_sext_cvt_neg_1_sgt_icmp"
+
+1: "test_zext_sext_cvt_0_sgt_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_sext_cvt_0_sgt_icmp"
+
+1: "test_zext_sext_cvt_1_sgt_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_sext_cvt_1_sgt_icmp"
+
+1: "test_zext_sext_cvt_2_sgt_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_sext_cvt_2_sgt_icmp"
+
+1: "test_zext_zext_cvt_neg_2_slt_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_zext_cvt_neg_2_slt_icmp"
+
+1: "test_zext_zext_cvt_neg_1_slt_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_zext_cvt_neg_1_slt_icmp"
+
+1: "test_zext_zext_cvt_2_slt_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_zext_cvt_2_slt_icmp"
+
+1: "test_sext_sext_cvt_neg_2_slt_icmp"
+6: Cannot find function after optimization with sym name: "test_sext_sext_cvt_neg_2_slt_icmp"
+
+1: "test_sext_sext_cvt_0_slt_icmp"
+6: Cannot find function after optimization with sym name: "test_sext_sext_cvt_0_slt_icmp"
+
+1: "test_sext_sext_cvt_2_slt_icmp"
+6: Cannot find function after optimization with sym name: "test_sext_sext_cvt_2_slt_icmp"
+
+1: "test_zext_sext_cvt_neg_2_slt_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_sext_cvt_neg_2_slt_icmp"
+
+1: "test_zext_sext_cvt_neg_1_slt_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_sext_cvt_neg_1_slt_icmp"
+
+1: "test_zext_sext_cvt_0_slt_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_sext_cvt_0_slt_icmp"
+
+1: "test_zext_sext_cvt_1_slt_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_sext_cvt_1_slt_icmp"
+
+1: "test_zext_sext_cvt_2_slt_icmp"
+6: Cannot find function after optimization with sym name: "test_zext_sext_cvt_2_slt_icmp"
+
+1: "test_cvt_icmp8"
+6: Cannot find function after optimization with sym name: "test_cvt_icmp8"
+
+1: "test_cvt_icmp9"
+6: Cannot find function after optimization with sym name: "test_cvt_icmp9"
+
+1: "test_cvt_icmp10"
+6: Cannot find function after optimization with sym name: "test_cvt_icmp10"
+
+1: "test_cvt_icmp11"
+6: Cannot find function after optimization with sym name: "test_cvt_icmp11"
+
+1: "test_cvt_icmp12"
+6: Cannot find function after optimization with sym name: "test_cvt_icmp12"
+
+1: "test_cvt_icmp13"
+6: Cannot find function after optimization with sym name: "test_cvt_icmp13"
+
+1: "test_cvt_icmp14"
+6: Cannot find function after optimization with sym name: "test_cvt_icmp14"
+
+1: "test_cvt_icmp15"
+6: Cannot find function after optimization with sym name: "test_cvt_icmp15"
+
+1: "test_cvt_icmp16"
+6: Cannot find function after optimization with sym name: "test_cvt_icmp16"
+
+1: "test_cvt_icmp17"
+6: Cannot find function after optimization with sym name: "test_cvt_icmp17"
+
+1: "test_cvt_icmp18"
+6: Cannot find function after optimization with sym name: "test_cvt_icmp18"
+
+1: "test_cvt_icmp19"
+6: Cannot find function after optimization with sym name: "test_cvt_icmp19"
+
+1: "test_cvt_icmp20"
+6: Cannot find function after optimization with sym name: "test_cvt_icmp20"
+
+1: "test_cvt_icmp21"
+6: Cannot find function after optimization with sym name: "test_cvt_icmp21"
+
+1: "test_cvt_icmp22"
+6: Cannot find function after optimization with sym name: "test_cvt_icmp22"
+
+1: "test_cvt_icmp23"
+6: Cannot find function after optimization with sym name: "test_cvt_icmp23"
+
+1: "test_cvt_icmp24"
+6: Cannot find function after optimization with sym name: "test_cvt_icmp24"
+
+1: "test_cvt_icmp25"
+6: Cannot find function after optimization with sym name: "test_cvt_icmp25"
+
+1: "test_cvt_icmp26"
+6: Cannot find function after optimization with sym name: "test_cvt_icmp26"
+
+1: "test1"
+6: Cannot find function after optimization with sym name: "test1"
+
+1: "test1vec"
+6: Cannot find function after optimization with sym name: "test1vec"
+
+1: "test2"
+6: Cannot find function after optimization with sym name: "test2"
+
+1: "test2vec"
+6: Cannot find function after optimization with sym name: "test2vec"
+
+1: "test3"
+6: Cannot find function after optimization with sym name: "test3"
+
+1: "test3vec"
+6: Cannot find function after optimization with sym name: "test3vec"
+
+1: "test4"
+6: Cannot find function after optimization with sym name: "test4"
+
+1: "test4multiuse"
+4: "test4multiuse" has unsupported operation: llvm.mlir.undef
+
+4: "test4multiuse" has unsupported operation: llvm.insertvalue
+
+4: "test4multiuse" has unsupported operation: llvm.insertvalue
+
+1: "test4vec"
+6: Cannot find function after optimization with sym name: "test4vec"
+
+1: "nsw_slt1"
+6: Cannot find function after optimization with sym name: "nsw_slt1"
+
+1: "nsw_slt1_splat_vec"
+6: Cannot find function after optimization with sym name: "nsw_slt1_splat_vec"
+
+1: "nsw_slt2"
+6: Cannot find function after optimization with sym name: "nsw_slt2"
+
+1: "nsw_slt2_splat_vec"
+6: Cannot find function after optimization with sym name: "nsw_slt2_splat_vec"
+
+1: "nsw_slt3"
+6: Cannot find function after optimization with sym name: "nsw_slt3"
+
+1: "nsw_slt4"
+6: Cannot find function after optimization with sym name: "nsw_slt4"
+
+1: "nsw_sgt1"
+6: Cannot find function after optimization with sym name: "nsw_sgt1"
+
+1: "nsw_sgt1_splat_vec"
+6: Cannot find function after optimization with sym name: "nsw_sgt1_splat_vec"
+
+1: "nsw_sgt2"
+6: Cannot find function after optimization with sym name: "nsw_sgt2"
+
+1: "nsw_sgt2_splat_vec"
+6: Cannot find function after optimization with sym name: "nsw_sgt2_splat_vec"
+
+1: "slt_zero_add_nsw"
+6: Cannot find function after optimization with sym name: "slt_zero_add_nsw"
+
+1: "slt_zero_add_nsw_splat_vec"
+6: Cannot find function after optimization with sym name: "slt_zero_add_nsw_splat_vec"
+
+1: "nsw_slt3_ov_no"
+6: Cannot find function after optimization with sym name: "nsw_slt3_ov_no"
+
+1: "nsw_slt4_ov"
+6: Cannot find function after optimization with sym name: "nsw_slt4_ov"
+
+1: "nsw_slt5_ov"
+6: Cannot find function after optimization with sym name: "nsw_slt5_ov"
+
+1: "slt_zero_add_nsw_signbit"
+6: Cannot find function after optimization with sym name: "slt_zero_add_nsw_signbit"
+
+1: "slt_zero_add_nuw_signbit"
+6: Cannot find function after optimization with sym name: "slt_zero_add_nuw_signbit"
+
+1: "reduce_add_ult"
+6: Cannot find function after optimization with sym name: "reduce_add_ult"
+
+1: "reduce_add_ugt"
+6: Cannot find function after optimization with sym name: "reduce_add_ugt"
+
+1: "reduce_add_ule"
+6: Cannot find function after optimization with sym name: "reduce_add_ule"
+
+1: "reduce_add_uge"
+6: Cannot find function after optimization with sym name: "reduce_add_uge"
+
+1: "ult_add_ssubov"
+6: Cannot find function after optimization with sym name: "ult_add_ssubov"
+
+1: "ult_add_nonuw"
+6: Cannot find function after optimization with sym name: "ult_add_nonuw"
+
+1: "uge_add_nonuw"
+6: Cannot find function after optimization with sym name: "uge_add_nonuw"
+
+1: "op_ugt_sum_commute1"
+6: Cannot find function after optimization with sym name: "op_ugt_sum_commute1"
+
+1: "op_ugt_sum_vec_commute2"
+6: Cannot find function after optimization with sym name: "op_ugt_sum_vec_commute2"
+
+1: "sum_ugt_op_uses"
+9: "sum_ugt_op_uses" has pointer type input
+
+4: "sum_ugt_op_uses" has unsupported operation: llvm.store
+
+1: "sum_ult_op_vec_commute1"
+6: Cannot find function after optimization with sym name: "sum_ult_op_vec_commute1"
+
+1: "sum_ult_op_commute2"
+6: Cannot find function after optimization with sym name: "sum_ult_op_commute2"
+
+1: "sum_ult_op_uses"
+9: "sum_ult_op_uses" has pointer type input
+
+4: "sum_ult_op_uses" has unsupported operation: llvm.store
+
+1: "common_op_nsw"
+6: Cannot find function after optimization with sym name: "common_op_nsw"
+
+1: "common_op_nsw_extra_uses"
+4: "common_op_nsw_extra_uses" has unsupported operation: llvm.call
+
+4: "common_op_nsw_extra_uses" has unsupported operation: llvm.call
+
+1: "common_op_nuw"
+6: Cannot find function after optimization with sym name: "common_op_nuw"
+
+1: "common_op_nuw_extra_uses"
+4: "common_op_nuw_extra_uses" has unsupported operation: llvm.call
+
+4: "common_op_nuw_extra_uses" has unsupported operation: llvm.call
+
+1: "common_op_nsw_commute"
+6: Cannot find function after optimization with sym name: "common_op_nsw_commute"
+
+1: "common_op_nuw_commute"
+6: Cannot find function after optimization with sym name: "common_op_nuw_commute"
+
+1: "common_op_test29"
+6: Cannot find function after optimization with sym name: "common_op_test29"
+
+1: "sum_nuw"
+6: Cannot find function after optimization with sym name: "sum_nuw"
+
+1: "sum_nsw_commute"
+6: Cannot find function after optimization with sym name: "sum_nsw_commute"
+
+1: "sum_nuw_commute"
+6: Cannot find function after optimization with sym name: "sum_nuw_commute"
+
+1: "use1"
+5: "use1" is empty
+
+1: "use8"
+5: "use8" is empty
+
+1: "bzip1"
+4: "bzip1" has unsupported operation: llvm.call
+
+4: "bzip1" has unsupported operation: llvm.return
+
+1: "bzip2"
+4: "bzip2" has unsupported operation: llvm.call
+
+4: "bzip2" has unsupported operation: llvm.call
+
+4: "bzip2" has unsupported operation: llvm.return
+
+1: "icmp_eq_add_undef"
+4: "icmp_eq_add_undef" has unsupported operation: llvm.mlir.undef
+
+4: "icmp_eq_add_undef" has unsupported operation: llvm.mlir.undef
+
+4: "icmp_eq_add_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "icmp_eq_add_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "icmp_eq_add_non_splat"
+6: Cannot find function after optimization with sym name: "icmp_eq_add_non_splat"
+
+1: "icmp_eq_add_undef2"
+4: "icmp_eq_add_undef2" has unsupported operation: llvm.mlir.undef
+
+4: "icmp_eq_add_undef2" has unsupported operation: llvm.mlir.undef
+
+4: "icmp_eq_add_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "icmp_eq_add_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "icmp_eq_add_non_splat2"
+6: Cannot find function after optimization with sym name: "icmp_eq_add_non_splat2"
+
+1: "without_nsw_nuw"
+6: Cannot find function after optimization with sym name: "without_nsw_nuw"
+
+1: "with_nsw_nuw"
+6: Cannot find function after optimization with sym name: "with_nsw_nuw"
+
+1: "with_nsw_large"
+6: Cannot find function after optimization with sym name: "with_nsw_large"
+
+1: "with_nsw_small"
+6: Cannot find function after optimization with sym name: "with_nsw_small"
+
+1: "with_nuw_large"
+6: Cannot find function after optimization with sym name: "with_nuw_large"
+
+1: "with_nuw_small"
+6: Cannot find function after optimization with sym name: "with_nuw_small"
+
+1: "with_nuw_large_negative"
+6: Cannot find function after optimization with sym name: "with_nuw_large_negative"
+
+1: "ugt_offset"
+6: Cannot find function after optimization with sym name: "ugt_offset"
+
+1: "ugt_offset_use"
+4: "ugt_offset_use" has unsupported operation: llvm.call
+
+1: "ugt_offset_splat"
+6: Cannot find function after optimization with sym name: "ugt_offset_splat"
+
+1: "ugt_wrong_offset"
+6: Cannot find function after optimization with sym name: "ugt_wrong_offset"
+
+1: "ugt_offset_nuw"
+6: Cannot find function after optimization with sym name: "ugt_offset_nuw"
+
+1: "ult_offset"
+6: Cannot find function after optimization with sym name: "ult_offset"
+
+1: "ult_offset_use"
+4: "ult_offset_use" has unsupported operation: llvm.call
+
+1: "ult_offset_splat"
+6: Cannot find function after optimization with sym name: "ult_offset_splat"
+
+1: "ult_wrong_offset"
+6: Cannot find function after optimization with sym name: "ult_wrong_offset"
+
+1: "ult_offset_nuw"
+6: Cannot find function after optimization with sym name: "ult_offset_nuw"
+
+1: "sgt_offset"
+6: Cannot find function after optimization with sym name: "sgt_offset"
+
+1: "sgt_offset_use"
+4: "sgt_offset_use" has unsupported operation: llvm.call
+
+1: "sgt_offset_splat"
+6: Cannot find function after optimization with sym name: "sgt_offset_splat"
+
+1: "sgt_wrong_offset"
+6: Cannot find function after optimization with sym name: "sgt_wrong_offset"
+
+1: "sgt_offset_nsw"
+6: Cannot find function after optimization with sym name: "sgt_offset_nsw"
+
+1: "slt_offset"
+6: Cannot find function after optimization with sym name: "slt_offset"
+
+1: "slt_offset_use"
+4: "slt_offset_use" has unsupported operation: llvm.call
+
+1: "slt_offset_splat"
+6: Cannot find function after optimization with sym name: "slt_offset_splat"
+
+1: "slt_wrong_offset"
+6: Cannot find function after optimization with sym name: "slt_wrong_offset"
+
+1: "slt_offset_nsw"
+6: Cannot find function after optimization with sym name: "slt_offset_nsw"
+
+1: "increment_max"
+4: "increment_max" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "decrement_max"
+4: "decrement_max" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "increment_min"
+4: "increment_min" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "decrement_min"
+4: "decrement_min" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "icmp_add_add_C"
+6: Cannot find function after optimization with sym name: "icmp_add_add_C"
+
+1: "icmp_add_add_C_pred"
+6: Cannot find function after optimization with sym name: "icmp_add_add_C_pred"
+
+1: "icmp_add_add_C_wrong_pred"
+6: Cannot find function after optimization with sym name: "icmp_add_add_C_wrong_pred"
+
+1: "icmp_add_add_C_wrong_operand"
+6: Cannot find function after optimization with sym name: "icmp_add_add_C_wrong_operand"
+
+1: "icmp_add_add_C_different_const"
+6: Cannot find function after optimization with sym name: "icmp_add_add_C_different_const"
+
+1: "icmp_add_add_C_vector"
+6: Cannot find function after optimization with sym name: "icmp_add_add_C_vector"
+
+1: "icmp_add_add_C_vector_undef"
+4: "icmp_add_add_C_vector_undef" has unsupported operation: llvm.mlir.undef
+
+4: "icmp_add_add_C_vector_undef" has unsupported operation: llvm.mlir.undef
+
+4: "icmp_add_add_C_vector_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "icmp_add_add_C_vector_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "icmp_add_add_C_comm1"
+6: Cannot find function after optimization with sym name: "icmp_add_add_C_comm1"
+
+1: "icmp_add_add_C_comm2"
+6: Cannot find function after optimization with sym name: "icmp_add_add_C_comm2"
+
+1: "icmp_add_add_C_comm2_pred"
+6: Cannot find function after optimization with sym name: "icmp_add_add_C_comm2_pred"
+
+1: "icmp_add_add_C_comm2_wrong_pred"
+6: Cannot find function after optimization with sym name: "icmp_add_add_C_comm2_wrong_pred"
+
+1: "icmp_add_add_C_comm3"
+6: Cannot find function after optimization with sym name: "icmp_add_add_C_comm3"
+
+1: "icmp_add_add_C_extra_use1"
+4: "icmp_add_add_C_extra_use1" has unsupported operation: llvm.call
+
+1: "icmp_add_add_C_extra_use2"
+4: "icmp_add_add_C_extra_use2" has unsupported operation: llvm.call
+
+1: "icmp_dec_assume_nonzero"
+4: "icmp_dec_assume_nonzero" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "icmp_dec_sub_assume_nonzero"
+4: "icmp_dec_sub_assume_nonzero" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "icmp_dec_nonzero"
+6: Cannot find function after optimization with sym name: "icmp_dec_nonzero"
+
+1: "icmp_dec_nonzero_vec"
+6: Cannot find function after optimization with sym name: "icmp_dec_nonzero_vec"
+
+1: "icmp_dec_notnonzero"
+6: Cannot find function after optimization with sym name: "icmp_dec_notnonzero"
+
+1: "icmp_addnuw_nonzero"
+6: Cannot find function after optimization with sym name: "icmp_addnuw_nonzero"
+
+1: "icmp_addnuw_nonzero_fail_multiuse"
+4: "icmp_addnuw_nonzero_fail_multiuse" has unsupported operation: llvm.call
+
+1: "ult_add_C2_pow2_C_neg"
+6: Cannot find function after optimization with sym name: "ult_add_C2_pow2_C_neg"
+
+1: "ult_add_nsw_C2_pow2_C_neg"
+6: Cannot find function after optimization with sym name: "ult_add_nsw_C2_pow2_C_neg"
+
+1: "ult_add_nuw_nsw_C2_pow2_C_neg"
+6: Cannot find function after optimization with sym name: "ult_add_nuw_nsw_C2_pow2_C_neg"
+
+1: "ult_add_C2_neg_C_pow2"
+6: Cannot find function after optimization with sym name: "ult_add_C2_neg_C_pow2"
+
+1: "ult_add_C2_pow2_C_neg_vec"
+6: Cannot find function after optimization with sym name: "ult_add_C2_pow2_C_neg_vec"
+
+1: "ult_add_C2_pow2_C_neg_multiuse"
+4: "ult_add_C2_pow2_C_neg_multiuse" has unsupported operation: llvm.mlir.addressof
+
+4: "ult_add_C2_pow2_C_neg_multiuse" has unsupported operation: llvm.call
+
+1: "uge_add_C2_pow2_C_neg"
+6: Cannot find function after optimization with sym name: "uge_add_C2_pow2_C_neg"
+
+1: "icmp_add_constant_with_constant_ult_to_slt"
+6: Cannot find function after optimization with sym name: "icmp_add_constant_with_constant_ult_to_slt"
+
+1: "icmp_add_constant_with_constant_ugt_to_sgt"
+6: Cannot find function after optimization with sym name: "icmp_add_constant_with_constant_ugt_to_sgt"
+
+1: "icmp_add_constant_with_constant_ult_to_slt_neg1"
+6: Cannot find function after optimization with sym name: "icmp_add_constant_with_constant_ult_to_slt_neg1"
+
+1: "icmp_add_constant_with_constant_ult_to_slt_neg2"
+6: Cannot find function after optimization with sym name: "icmp_add_constant_with_constant_ult_to_slt_neg2"
+
+1: "icmp_add_constant_with_constant_ult_to_slt_neg3"
+6: Cannot find function after optimization with sym name: "icmp_add_constant_with_constant_ult_to_slt_neg3"
+
+1: "icmp_add_constant_with_constant_ult_to_slt_neg4"
+6: Cannot find function after optimization with sym name: "icmp_add_constant_with_constant_ult_to_slt_neg4"
+
+1: "icmp_of_ucmp_plus_const_with_const"
+6: Cannot find function after optimization with sym name: "icmp_of_ucmp_plus_const_with_const"
+
+1: "llvm.ucmp.i8.i32"
+5: "llvm.ucmp.i8.i32" is empty
+

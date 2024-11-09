@@ -1,0 +1,28 @@
+1: "pow"
+5: "pow" is empty
+
+1: "sqrt_libcall"
+4: "sqrt_libcall" has unsupported operation: llvm.call
+
+1: "sqrt_intrinsic"
+4: "sqrt_intrinsic" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "sqrt_intrinsic" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "sqrt_intrinsic" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "shrink_libcall"
+4: "shrink_libcall" has unsupported operation: llvm.call
+
+1: "shrink_intrinsic"
+4: "shrink_intrinsic" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "shrink_intrinsic" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "shrink_intrinsic" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+4: "shrink_intrinsic" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "powf"
+5: "powf" is empty
+

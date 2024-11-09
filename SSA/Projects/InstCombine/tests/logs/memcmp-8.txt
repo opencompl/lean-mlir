@@ -1,0 +1,28 @@
+1: "memcmp"
+9: "memcmp" has pointer type input
+
+1: "fold_memcmp_a5_a5p5_n"
+4: "fold_memcmp_a5_a5p5_n" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_memcmp_a5_a5p5_n" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_memcmp_a5_a5p5_n" has unsupported operation after optimization: llvm.call
+
+1: "fold_memcmp_a5p5_a5p5_n"
+4: "fold_memcmp_a5p5_a5p5_n" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_memcmp_a5p5_a5p5_n" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_memcmp_a5p5_a5p5_n" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_memcmp_a5p5_a5p5_n" has unsupported operation after optimization: llvm.call
+
+1: "fold_memcmp_a5pi_a5p5_n"
+4: "fold_memcmp_a5pi_a5p5_n" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_memcmp_a5pi_a5p5_n" has unsupported operation: llvm.getelementptr
+
+4: "fold_memcmp_a5pi_a5p5_n" has unsupported operation: llvm.getelementptr
+
+4: "fold_memcmp_a5pi_a5p5_n" has unsupported operation: llvm.call
+

@@ -1,0 +1,35 @@
+1: "ctpop_x_and_negx"
+4: "ctpop_x_and_negx" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctpop
+
+1: "ctpop_x_nz_and_negx"
+4: "ctpop_x_nz_and_negx" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctpop
+
+1: "ctpop_2_shl"
+4: "ctpop_2_shl" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctpop
+
+1: "ctpop_2_shl_nz"
+4: "ctpop_2_shl_nz" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctpop
+
+1: "ctpop_imin_plus1_lshr_nz"
+4: "ctpop_imin_plus1_lshr_nz" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "ctpop_imin_plus1_lshr_nz" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "ctpop_x_and_negx_nz"
+4: "ctpop_x_and_negx_nz" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "ctpop_shl2_1_vec"
+8: "ctpop_shl2_1_vec" contains vectors which are unsupported
+
+1: "ctpop_lshr_intmin_intmin_plus1_vec_nz"
+4: "ctpop_lshr_intmin_intmin_plus1_vec_nz" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "ctpop_shl2_1_vec_nz"
+8: "ctpop_shl2_1_vec_nz" contains vectors which are unsupported
+
+1: "ctpop_x_and_negx_vec"
+8: "ctpop_x_and_negx_vec" contains vectors which are unsupported
+
+1: "ctpop_x_and_negx_vec_nz"
+8: "ctpop_x_and_negx_vec_nz" contains vectors which are unsupported
+

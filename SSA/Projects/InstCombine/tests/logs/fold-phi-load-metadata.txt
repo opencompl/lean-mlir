@@ -1,0 +1,19 @@
+1: "phi_load_metadata"
+9: "phi_load_metadata" has pointer type input
+
+4: "phi_load_metadata" has unsupported operation: llvm.mlir.addressof
+
+4: "phi_load_metadata" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_load_metadata" has unsupported operation: llvm.getelementptr
+
+4: "phi_load_metadata" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "phi_load_metadata" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "phi_load_metadata" has unsupported operation: llvm.load
+
+4: "phi_load_metadata" has unsupported operation: llvm.load
+
+4: "phi_load_metadata" has unsupported operation: llvm.store
+

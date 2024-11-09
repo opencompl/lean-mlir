@@ -1,0 +1,56 @@
+1: "use.i8"
+5: "use.i8" is empty
+
+1: "fold_sub_c_ctpop"
+4: "fold_sub_c_ctpop" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "fold_sub_var_ctpop_fail"
+4: "fold_sub_var_ctpop_fail" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "fold_sub_ctpop_c"
+4: "fold_sub_ctpop_c" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "fold_add_ctpop_c"
+4: "fold_add_ctpop_c" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "fold_distjoint_or_ctpop_c"
+4: "fold_distjoint_or_ctpop_c" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "fold_or_ctpop_c_fail"
+4: "fold_or_ctpop_c_fail" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "fold_add_ctpop_var_fail"
+4: "fold_add_ctpop_var_fail" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "fold_icmp_sgt_ctpop_c_i2_fail"
+4: "fold_icmp_sgt_ctpop_c_i2_fail" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctpop
+
+1: "fold_cmp_eq_ctpop_c"
+4: "fold_cmp_eq_ctpop_c" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "fold_cmp_eq_ctpop_c_multiuse_fail"
+4: "fold_cmp_eq_ctpop_c_multiuse_fail" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "fold_cmp_eq_ctpop_c_multiuse_fail" has unsupported operation: llvm.call
+
+1: "fold_cmp_ne_ctpop_c"
+4: "fold_cmp_ne_ctpop_c" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "fold_cmp_ne_ctpop_var_fail"
+4: "fold_cmp_ne_ctpop_var_fail" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "fold_cmp_ult_ctpop_c"
+4: "fold_cmp_ult_ctpop_c" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "fold_cmp_sle_ctpop_c"
+4: "fold_cmp_sle_ctpop_c" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "fold_cmp_ult_ctpop_c_no_not_inst_save_fail"
+4: "fold_cmp_ult_ctpop_c_no_not_inst_save_fail" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "fold_cmp_ugt_ctpop_c"
+4: "fold_cmp_ugt_ctpop_c" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "fold_cmp_ugt_ctpop_c_out_of_range_fail"
+4: "fold_cmp_ugt_ctpop_c_out_of_range_fail" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+

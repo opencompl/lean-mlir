@@ -1,0 +1,69 @@
+1: "use8"
+5: "use8" is empty
+
+1: "use1"
+5: "use1" is empty
+
+1: "p0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "p1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "n2"
+4: "n2" has unsupported operation: llvm.call
+
+1: "t3"
+9: "t3" has pointer type input
+
+4: "t3" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "t3" has unsupported operation: llvm.store
+
+4: "t3" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "t4"
+9: "t4" has pointer type input
+
+4: "t4" has unsupported operation: llvm.store
+
+1: "n5"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "n6"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "n7"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "n8"
+7: "n8" is unchanged by InstCombine
+

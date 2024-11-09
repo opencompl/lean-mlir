@@ -1,0 +1,20 @@
+1: "no_crash"
+4: "no_crash" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "no_crash" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "no_crash" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "no_crash" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "pr21377"
+4: "pr21377" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "pr21377" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "pr21377" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "pr21377" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "pr21377" has unsupported operation: builtin.unregistered: llvm.br
+
