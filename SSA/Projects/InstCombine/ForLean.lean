@@ -521,35 +521,26 @@ theorem getMsbD_rotateRight {w i r : Nat} {x : BitVec w} :
   rcases w with rfl | w
   · simp
   · by_cases hn : n < w + 1
-    · simp only [hn, decide_True, Bool.true_and, Nat.add_sub_cancel]
-      rw [← rotateRight_mod_eq_rotateRight]
-      have : m % (w + 1) < w + 1 := by apply Nat.mod_lt; omega
-      rw [rotateRight_eq_rotateRightAux_of_lt (by assumption)]
-      simp [show (w + 1 + n - m % (w + 1)) % (w + 1) < w + 1 by apply Nat.mod_lt; omega]
+    · have : m % (w + 1) < w + 1 := by apply Nat.mod_lt; omega
+      rw [← rotateRight_mod_eq_rotateRight, rotateRight_eq_rotateRightAux_of_lt (by assumption)]
+      simp only [hn, decide_True, add_tsub_cancel_right, Bool.true_and,
+        show (w + 1 + n - m % (w + 1)) % (w + 1) < w + 1 by apply Nat.mod_lt; omega]
       by_cases h : w - n ≥ w + 1 - m % (w + 1)
       · rw [getLsbD_rotateRightAux_of_geq (by omega)]
-        simp [show w - n < w + 1 by omega]
+        simp only [show w - n < w + 1 by omega, decide_True, Bool.true_and]
         generalize hm' : m % (w + 1) = m'
         have hmin' :  w + 1 + n - m' < w + 1 := by omega
         rw [Nat.mod_eq_of_lt hmin']
         by_cases hnm : n < m'
-        · simp [hnm]
-          congr 1
-          omega
-        · simp [hnm]
-          omega
+        <;> simp only [hnm, ↓reduceIte]; congr 1; omega
+        omega
       · rw [getLsbD_rotateRightAux_of_le (by omega)]
         generalize hm' : m % (w + 1) = m'
         have hmin' :  w + 1 + n - m' ≥  w + 1 := by omega
         by_cases hnm : n < m'
-        · simp [hnm]
-          congr 1
-          omega
-        · simp [hnm, show n - m' < w + 1 by omega]
-          congr 1
-          omega
+        <;> simp only [hnm, ↓reduceIte, show n - m' < w + 1 by omega, decide_True, Bool.true_and]; congr 1; omega
+        congr 1; omega
     · simp [hn]
-
 
 @[simp]
 theorem msb_rotateRight {r w: Nat} {x : BitVec w} :
