@@ -242,5 +242,5 @@ def process_file(file):
 
 if __name__ == "__main__":
     remove()
-    with Pool(1) as p:
+    with Pool(300) as p:
         p.map(process_file, os.listdir(directory))
