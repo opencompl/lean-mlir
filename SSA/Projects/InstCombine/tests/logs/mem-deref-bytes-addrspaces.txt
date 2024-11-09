@@ -1,9 +1,0 @@
-1: "memcmp"
-5: "memcmp" is empty
-
-1: "memcmp_const_size_update_deref"
-4: "memcmp_const_size_update_deref" has unsupported operation: llvm.call
-
-1: "memcmp_nonconst_size_nonnnull"
-4: "memcmp_nonconst_size_nonnnull" has unsupported operation: llvm.call
-

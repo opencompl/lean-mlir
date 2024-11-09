@@ -1,3 +1,0 @@
-1: "test"
-7: "test" is unchanged by InstCombine
-

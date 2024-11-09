@@ -1,6 +1,0 @@
-1: "remquo_fp80"
-4: "remquo_fp80" has unsupported operation: llvm.store
-
-1: "remquol"
-5: "remquol" is empty
-

@@ -1,7 +1,0 @@
-1: "test_load_store_load_combine"
-4: "test_load_store_load_combine" has unsupported operation: llvm.load
-
-4: "test_load_store_load_combine" has unsupported operation: builtin.unregistered: llvm.sitofp
-
-4: "test_load_store_load_combine" has unsupported operation: llvm.store
-

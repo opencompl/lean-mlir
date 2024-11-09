@@ -1,2 +1,0 @@
-3: 2009-02-20-InstCombine-SROA.ll: parsing has failed
-

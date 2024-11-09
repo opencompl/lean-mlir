@@ -1,2 +1,0 @@
-3: alloca-in-non-alloca-as.ll: parsing has failed
-

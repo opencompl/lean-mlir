@@ -1,8 +1,0 @@
-1: "spam"
-4: "spam" has unsupported operation: llvm.call
-
-4: "spam" has unsupported operation: llvm.return
-
-1: "widget"
-5: "widget" is empty
-

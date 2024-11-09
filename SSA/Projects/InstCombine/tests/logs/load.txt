@@ -1,2 +1,0 @@
-3: load.ll: parsing has failed
-

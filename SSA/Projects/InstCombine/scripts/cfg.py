@@ -16,7 +16,7 @@ if len(llvm_path) == 0:
 test_path = "SSA/Projects/InstCombine/tests/LLVM"
 proof_path = "SSA/Projects/InstCombine/tests/proofs"
 log_path = "SSA/Projects/InstCombine/tests/logs"
-llvm_test_path = llvm_path + "/llvm/test/Transforms/InstCombine"
+llvm_test_path = llvm_path + "/llvm/test/Transforms/InstCombine/try"
 expensive_files = [
     "pr96012.ll",
 ]
@@ -65,6 +65,7 @@ class Msg(Enum):
     E_NOT_FOUND = 6
     E_NOT_CHANGED = 7
     E_VECTOR = 8
+    E_PTRARG = 9
     
     def is_error(self):
         return self.value > 2

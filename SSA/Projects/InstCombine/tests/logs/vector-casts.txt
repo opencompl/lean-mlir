@@ -1,2 +1,0 @@
-3: vector-casts.ll: parsing has failed
-

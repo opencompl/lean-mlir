@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from xdsl.dialects.llvm import ReturnOp
+from xdsl.dialects.llvm import ReturnOp, LLVMPointerType
 from xdsl.utils.exceptions import ParseError
 from xdsl.dialects.llvm import FuncOp
 from xdsl.dialects.builtin import ModuleOp
@@ -25,13 +25,6 @@ def allowed(op):
         )
         or (op.name in allowed_names)
     )
-
-def allowed_argument(op):
-
-    if op.type == LLVM.PointerType:
-      return False
-
-    return True
 
 def show(block):
     output = io.StringIO()
@@ -167,12 +160,12 @@ def process_file(file):
         log.append(f"{Msg.FUNC_NAME.value}: {func_name}\n")
         
         flag = False
-
-        for argument in func.operands:
-            if not allowed_argument(argument):
+ 
+        for input_type in func.function_type.inputs:
+            if isinstance(input_type, LLVMPointerType):
+                log.append(f"{Msg.E_PTRARG.value}: {func_name} has pointer type input\n\n")
                 flag = True
-                log.append(f"{Msg.E_UNSUPPORTED.value}: {func_name} has unsupported operand: {op_name(operand)}\n\n")
-                continue
+                break
 
         for op in func.walk():
             if not allowed(op):
@@ -230,5 +223,5 @@ def process_file(file):
     
 if __name__ == "__main__":
     remove()
-    with Pool(200) as p:
+    with Pool(1) as p:
         p.map(process_file, os.listdir(directory))

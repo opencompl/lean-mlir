@@ -1,5 +1,0 @@
-1: "main"
-4: "main" has unsupported operation: llvm.store
-
-4: "main" has unsupported operation: builtin.unregistered: llvm.intr.assume
-

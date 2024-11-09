@@ -1,2 +1,0 @@
-3: vscale_extractelement.ll: parsing has failed
-

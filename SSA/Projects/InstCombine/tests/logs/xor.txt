@@ -257,6 +257,8 @@
 2: llvm.return
 
 1: "or_xor_extra_use"
+9: "or_xor_extra_use" has pointer type input
+
 4: "or_xor_extra_use" has unsupported operation: llvm.store
 
 1: "and_xor_commute1"
@@ -296,18 +298,28 @@
 2: llvm.return
 
 1: "and_xor_extra_use"
+9: "and_xor_extra_use" has pointer type input
+
 4: "and_xor_extra_use" has unsupported operation: llvm.store
 
 1: "xor_or_not"
+9: "xor_or_not" has pointer type input
+
 4: "xor_or_not" has unsupported operation: llvm.store
 
 1: "xor_or_not_uses"
+9: "xor_or_not_uses" has pointer type input
+
 4: "xor_or_not_uses" has unsupported operation: llvm.store
 
 1: "xor_and_not"
+9: "xor_and_not" has pointer type input
+
 4: "xor_and_not" has unsupported operation: llvm.store
 
 1: "xor_and_not_uses"
+9: "xor_and_not_uses" has pointer type input
+
 4: "xor_and_not_uses" has unsupported operation: llvm.store
 
 1: "test39"
@@ -386,9 +398,13 @@
 8: "or_or_xor_commute3" contains vectors which are unsupported
 
 1: "or_or_xor_use1"
+9: "or_or_xor_use1" has pointer type input
+
 4: "or_or_xor_use1" has unsupported operation: llvm.store
 
 1: "or_or_xor_use2"
+9: "or_or_xor_use2" has pointer type input
+
 4: "or_or_xor_use2" has unsupported operation: llvm.store
 
 1: "not_is_canonical"
@@ -502,33 +518,24 @@
 2: llvm.return
 
 1: "xor_orn_commute2"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.udiv
-2: llvm.xor
-2: llvm.or
-2: llvm.xor
-2: llvm.return
+9: "xor_orn_commute2" has pointer type input
 
 1: "xor_orn_commute2_1use"
+9: "xor_orn_commute2_1use" has pointer type input
+
 4: "xor_orn_commute2_1use" has unsupported operation: llvm.store
 
 1: "xor_orn_commute3"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.udiv
-2: llvm.udiv
-2: llvm.xor
-2: llvm.or
-2: llvm.xor
-2: llvm.return
+9: "xor_orn_commute3" has pointer type input
 
 1: "xor_orn_commute3_1use"
+9: "xor_orn_commute3_1use" has pointer type input
+
 4: "xor_orn_commute3_1use" has unsupported operation: llvm.store
 
 1: "xor_orn_2use"
+9: "xor_orn_2use" has pointer type input
+
 4: "xor_orn_2use" has unsupported operation: llvm.store
 
 4: "xor_orn_2use" has unsupported operation: llvm.store

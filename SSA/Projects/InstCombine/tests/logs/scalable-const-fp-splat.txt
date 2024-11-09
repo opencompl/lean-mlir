@@ -1,2 +1,0 @@
-3: scalable-const-fp-splat.ll: parsing has failed
-

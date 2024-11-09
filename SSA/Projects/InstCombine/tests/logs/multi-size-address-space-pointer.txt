@@ -1,2 +1,0 @@
-3: multi-size-address-space-pointer.ll: parsing has failed
-

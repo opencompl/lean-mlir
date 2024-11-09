@@ -1,2 +1,0 @@
-3: fneg-as-int.ll: parsing has failed
-

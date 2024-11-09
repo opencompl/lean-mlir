@@ -1,2 +1,0 @@
-3: vscale_insertelement.ll: parsing has failed
-

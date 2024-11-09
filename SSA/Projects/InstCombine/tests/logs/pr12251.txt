@@ -1,3 +1,0 @@
-1: "_Z3fooPb"
-4: "_Z3fooPb" has unsupported operation: llvm.load
-

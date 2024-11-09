@@ -1,2 +1,0 @@
-3: select-binop-foldable-floating-point.ll: parsing has failed
-

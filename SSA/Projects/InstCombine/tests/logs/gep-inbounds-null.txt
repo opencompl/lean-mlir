@@ -1,2 +1,0 @@
-3: gep-inbounds-null.ll: parsing has failed
-

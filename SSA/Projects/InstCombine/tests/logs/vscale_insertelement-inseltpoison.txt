@@ -1,2 +1,0 @@
-3: vscale_insertelement-inseltpoison.ll: parsing has failed
-

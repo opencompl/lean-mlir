@@ -1,7 +1,0 @@
-1: "bork"
-4: "bork" has unsupported operation: llvm.load
-
-4: "bork" has unsupported operation: builtin.unregistered: llvm.ptrtoint
-
-4: "bork" has unsupported operation: llvm.inttoptr
-

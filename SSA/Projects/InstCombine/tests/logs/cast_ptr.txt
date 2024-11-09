@@ -1,2 +1,0 @@
-3: cast_ptr.ll: parsing has failed
-

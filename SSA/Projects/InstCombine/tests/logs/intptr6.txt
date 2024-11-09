@@ -1,2 +1,0 @@
-3: intptr6.ll: parsing has failed
-

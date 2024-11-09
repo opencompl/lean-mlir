@@ -1,2 +1,0 @@
-3: shufflevec-constant.ll: parsing has failed
-

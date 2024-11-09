@@ -1,2 +1,0 @@
-3: bitcast-inseltpoison.ll: parsing has failed
-

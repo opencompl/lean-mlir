@@ -1,2 +1,0 @@
-3: load-store-forward.ll: parsing has failed
-

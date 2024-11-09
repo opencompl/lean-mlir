@@ -1,7 +1,0 @@
-1: "handle_event"
-4: "handle_event" has unsupported operation: llvm.getelementptr
-
-4: "handle_event" has unsupported operation: llvm.store
-
-4: "handle_event" has unsupported operation: llvm.return
-

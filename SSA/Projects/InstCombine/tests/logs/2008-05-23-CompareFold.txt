@@ -1,7 +1,0 @@
-1: "f"
-4: "f" has unsupported operation after optimization: llvm.load
-
-4: "f" has unsupported operation after optimization: builtin.unregistered: llvm.sitofp
-
-4: "f" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
-
