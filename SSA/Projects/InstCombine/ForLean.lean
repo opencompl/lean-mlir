@@ -515,7 +515,7 @@ theorem msb_rotateLeft {m w : Nat} {x : BitVec w} :
   · simp [h₀, show w = 0 by omega]
 
 @[simp]
-theorem getMsbD_rotateRight {w i r : Nat} {x : BitVec w} :
+theorem getMsbD_rotateRight {w n m : Nat} {x : BitVec w} :
     (x.rotateRight m).getMsbD n = (decide (n < w) && (if (n < m % w) then x.getMsbD ((w + n - m % w) % w) else x.getMsbD (n - m % w))):= by
   rw [getMsbD_eq_getLsbD, getMsbD_eq_getLsbD, getMsbD_eq_getLsbD]
   rcases w with rfl | w
@@ -550,12 +550,9 @@ theorem msb_rotateRight {r w: Nat} {x : BitVec w} :
   · by_cases h₁ : r < w
     · simp only [getMsbD_rotateRight, h₀, decide_True, tsub_zero, Nat.mod_eq_of_lt h₁,
         tsub_lt_self_iff, zero_lt_one, _root_.and_self, Bool.true_and]
-      by_cases h₂ : (w - 1 < w - r)
-      · sorry
-      · simp only [h₂, decide_False, cond_false, getMsbD_eq_getLsbD]
-        by_cases h₃ : x.getLsbD (w - 1 - (w - r))
-        · sorry
-        · sorry
+      by_cases h₂ : 0 < r
+      · simp [h₂]
+      · simp [h₂, show r = 0 by omega]
     · simp only [rotateRight, rotateRightAux, getMsbD_or, getMsbD_ushiftRight, h₀, decide_True,
         zero_le, Nat.sub_eq_zero_of_le, Bool.true_and, getMsbD_shiftLeft, zero_add]
       by_cases h₃ : (0 < r % w)
