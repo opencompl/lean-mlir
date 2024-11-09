@@ -1,2 +1,60 @@
-3: gep-merge-constant-indices.ll: parsing has failed
+1: "mergeBasic"
+4: "mergeBasic" has unsupported operation: llvm.getelementptr
+
+1: "mergeDifferentTypes"
+4: "mergeDifferentTypes" has unsupported operation: llvm.getelementptr
+
+1: "mergeReverse"
+4: "mergeReverse" has unsupported operation: llvm.getelementptr
+
+1: "zeroSum"
+4: "zeroSum" has unsupported operation after optimization: llvm.getelementptr
+
+4: "zeroSum" has unsupported operation after optimization: llvm.getelementptr
+
+1: "array1"
+4: "array1" has unsupported operation: llvm.getelementptr
+
+1: "array2"
+4: "array2" has unsupported operation: llvm.getelementptr
+
+1: "struct1"
+4: "struct1" has unsupported operation: llvm.getelementptr
+
+1: "struct2"
+4: "struct2" has unsupported operation: llvm.getelementptr
+
+1: "structStruct"
+4: "structStruct" has unsupported operation: llvm.getelementptr
+
+1: "appendIndex"
+4: "appendIndex" has unsupported operation: llvm.getelementptr
+
+1: "notDivisible"
+4: "notDivisible" has unsupported operation: llvm.getelementptr
+
+1: "partialConstant2"
+4: "partialConstant2" has unsupported operation: llvm.getelementptr
+
+4: "partialConstant2" has unsupported operation: llvm.getelementptr
+
+1: "partialConstant3"
+4: "partialConstant3" has unsupported operation: llvm.getelementptr
+
+4: "partialConstant3" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "partialConstant3" has unsupported operation: llvm.getelementptr
+
+1: "partialConstantMemberAliasing1"
+4: "partialConstantMemberAliasing1" has unsupported operation: llvm.getelementptr
+
+1: "partialConstantMemberAliasing2"
+4: "partialConstantMemberAliasing2" has unsupported operation: llvm.getelementptr
+
+4: "partialConstantMemberAliasing2" has unsupported operation: llvm.getelementptr
+
+1: "partialConstantMemberAliasing3"
+4: "partialConstantMemberAliasing3" has unsupported operation: llvm.getelementptr
+
+4: "partialConstantMemberAliasing3" has unsupported operation: llvm.getelementptr
 

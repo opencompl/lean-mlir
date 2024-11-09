@@ -199,7 +199,7 @@ def lshr_exact_add_nuw_before := [llvm|
   %0 = llvm.mlir.constant(1 : i32) : i32
   %1 = llvm.mlir.constant(4 : i32) : i32
   %2 = llvm.add %arg63, %0 overflow<nuw> : i32
-  %3 = llvm.lshr %1, %2 : i32
+  %3 = llvm.lshr exact %1, %2 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
@@ -207,7 +207,7 @@ def lshr_exact_add_nuw_after := [llvm|
 {
 ^0(%arg63 : i32):
   %0 = llvm.mlir.constant(2 : i32) : i32
-  %1 = llvm.lshr %0, %arg63 : i32
+  %1 = llvm.lshr exact %0, %arg63 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
@@ -228,7 +228,7 @@ def ashr_exact_add_nuw_before := [llvm|
   %0 = llvm.mlir.constant(1 : i32) : i32
   %1 = llvm.mlir.constant(-4 : i32) : i32
   %2 = llvm.add %arg62, %0 overflow<nuw> : i32
-  %3 = llvm.ashr %1, %2 : i32
+  %3 = llvm.ashr exact %1, %2 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
@@ -236,7 +236,7 @@ def ashr_exact_add_nuw_after := [llvm|
 {
 ^0(%arg62 : i32):
   %0 = llvm.mlir.constant(-2 : i32) : i32
-  %1 = llvm.ashr %0, %arg62 : i32
+  %1 = llvm.ashr exact %0, %arg62 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
@@ -257,7 +257,7 @@ def lshr_exact_add_negative_shift_positive_before := [llvm|
   %0 = llvm.mlir.constant(-1 : i32) : i32
   %1 = llvm.mlir.constant(2 : i32) : i32
   %2 = llvm.add %arg56, %0 : i32
-  %3 = llvm.lshr %1, %2 : i32
+  %3 = llvm.lshr exact %1, %2 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
@@ -265,7 +265,7 @@ def lshr_exact_add_negative_shift_positive_after := [llvm|
 {
 ^0(%arg56 : i32):
   %0 = llvm.mlir.constant(4 : i32) : i32
-  %1 = llvm.lshr %0, %arg56 : i32
+  %1 = llvm.lshr exact %0, %arg56 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
@@ -286,7 +286,7 @@ def ashr_exact_add_negative_shift_negative_before := [llvm|
   %0 = llvm.mlir.constant(-1 : i32) : i32
   %1 = llvm.mlir.constant(-2 : i32) : i32
   %2 = llvm.add %arg49, %0 : i32
-  %3 = llvm.ashr %1, %2 : i32
+  %3 = llvm.ashr exact %1, %2 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
@@ -294,7 +294,7 @@ def ashr_exact_add_negative_shift_negative_after := [llvm|
 {
 ^0(%arg49 : i32):
   %0 = llvm.mlir.constant(-4 : i32) : i32
-  %1 = llvm.ashr %0, %arg49 : i32
+  %1 = llvm.ashr exact %0, %arg49 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]

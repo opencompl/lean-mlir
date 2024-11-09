@@ -134,7 +134,7 @@ def same_source_not_matching_signbits_after := [llvm|
   %2 = llvm.mlir.constant(24 : i32) : i32
   %3 = llvm.and %arg2, %0 : i32
   %4 = llvm.shl %1, %3 : i32
-  %5 = llvm.ashr %4, %2 : i32
+  %5 = llvm.ashr exact %4, %2 : i32
   "llvm.return"(%5) : (i32) -> ()
 }
 ]

@@ -184,7 +184,7 @@ def test10_after := [llvm|
 ^0(%arg23 : i32):
   %0 = llvm.mlir.constant(30 : i32) : i32
   %1 = llvm.shl %arg23, %0 : i32
-  %2 = llvm.ashr %1, %0 : i32
+  %2 = llvm.ashr exact %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]

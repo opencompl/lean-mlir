@@ -1,2 +1,13 @@
-3: wcslen-6.ll: parsing has failed
+1: "wcslen"
+5: "wcslen" is empty
+
+1: "fold_af"
+4: "fold_af" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_af" has unsupported operation: llvm.call
+
+1: "fold_aS"
+4: "fold_aS" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_aS" has unsupported operation: llvm.call
 

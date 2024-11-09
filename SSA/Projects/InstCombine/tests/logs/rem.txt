@@ -445,7 +445,13 @@
 8: "urem_constant_dividend_select_of_constants_divisor_vec" contains vectors which are unsupported
 
 1: "urem_constant_dividend_select_of_constants_divisor_vec_ub1"
-8: "urem_constant_dividend_select_of_constants_divisor_vec_ub1" contains vectors which are unsupported
+4: "urem_constant_dividend_select_of_constants_divisor_vec_ub1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "urem_constant_dividend_select_of_constants_divisor_vec_ub1" has unsupported operation: llvm.mlir.undef
+
+4: "urem_constant_dividend_select_of_constants_divisor_vec_ub1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "urem_constant_dividend_select_of_constants_divisor_vec_ub1" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 1: "urem_constant_dividend_select_of_constants_divisor_vec_ub2"
 8: "urem_constant_dividend_select_of_constants_divisor_vec_ub2" contains vectors which are unsupported

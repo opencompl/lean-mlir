@@ -1,2 +1,40 @@
-3: sprintf-2.ll: parsing has failed
+1: "snprintf"
+5: "snprintf" is empty
+
+1: "fold_snprintf_member_pC"
+4: "fold_snprintf_member_pC" has unsupported operation: llvm.store
+
+4: "fold_snprintf_member_pC" has unsupported operation: llvm.getelementptr
+
+4: "fold_snprintf_member_pC" has unsupported operation: llvm.store
+
+4: "fold_snprintf_member_pC" has unsupported operation: llvm.getelementptr
+
+4: "fold_snprintf_member_pC" has unsupported operation: llvm.store
+
+4: "fold_snprintf_member_pC" has unsupported operation: llvm.getelementptr
+
+4: "fold_snprintf_member_pC" has unsupported operation: llvm.store
+
+4: "fold_snprintf_member_pC" has unsupported operation: llvm.getelementptr
+
+4: "fold_snprintf_member_pC" has unsupported operation: llvm.store
+
+4: "fold_snprintf_member_pC" has unsupported operation: llvm.getelementptr
+
+4: "fold_snprintf_member_pC" has unsupported operation: llvm.store
+
+4: "fold_snprintf_member_pC" has unsupported operation: llvm.getelementptr
+
+4: "fold_snprintf_member_pC" has unsupported operation: llvm.store
+
+4: "fold_snprintf_member_pC" has unsupported operation: llvm.getelementptr
+
+4: "fold_snprintf_member_pC" has unsupported operation: llvm.store
+
+4: "fold_snprintf_member_pC" has unsupported operation: llvm.getelementptr
+
+4: "fold_snprintf_member_pC" has unsupported operation: llvm.store
+
+4: "fold_snprintf_member_pC" has unsupported operation: llvm.return
 

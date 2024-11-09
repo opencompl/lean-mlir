@@ -15,6 +15,8 @@
 7: "test4" is unchanged by InstCombine
 
 1: "test5_undef"
+4: "test5_undef" has unsupported operation: llvm.mlir.undef
+
 4: "test5_undef" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "test5_undef" has unsupported operation: builtin.unregistered: llvm.cond_br

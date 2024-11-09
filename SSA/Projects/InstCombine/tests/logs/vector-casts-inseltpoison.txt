@@ -74,7 +74,7 @@
 8: "quxs" contains vectors which are unsupported
 
 1: "quxt"
-7: "quxt" is unchanged by InstCombine
+8: "quxt" contains vectors which are unsupported
 
 1: "fa"
 4: "fa" has unsupported operation: builtin.unregistered: llvm.fptrunc

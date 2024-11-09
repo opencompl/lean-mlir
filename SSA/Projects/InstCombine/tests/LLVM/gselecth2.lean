@@ -19,7 +19,7 @@ def ashr_exact_poison_constant_fold_before := [llvm|
   %0 = llvm.mlir.constant(42 : i8) : i8
   %1 = llvm.mlir.constant(3 : i8) : i8
   %2 = "llvm.select"(%arg10, %arg11, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
-  %3 = llvm.ashr %2, %1 : i8
+  %3 = llvm.ashr exact %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -50,7 +50,7 @@ def ashr_exact_before := [llvm|
   %0 = llvm.mlir.constant(16 : i8) : i8
   %1 = llvm.mlir.constant(3 : i8) : i8
   %2 = "llvm.select"(%arg8, %arg9, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
-  %3 = llvm.ashr %2, %1 : i8
+  %3 = llvm.ashr exact %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -59,7 +59,7 @@ def ashr_exact_after := [llvm|
 ^0(%arg8 : i1, %arg9 : i8):
   %0 = llvm.mlir.constant(3 : i8) : i8
   %1 = llvm.mlir.constant(2 : i8) : i8
-  %2 = llvm.ashr %arg9, %0 : i8
+  %2 = llvm.ashr exact %arg9, %0 : i8
   %3 = "llvm.select"(%arg8, %2, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
   "llvm.return"(%3) : (i8) -> ()
 }

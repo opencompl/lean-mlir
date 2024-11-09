@@ -281,7 +281,7 @@ def sdiv_mul_shl_nsw_exact_commute1_before := [llvm|
 ^0(%arg190 : i5, %arg191 : i5, %arg192 : i5):
   %0 = llvm.mul %arg191, %arg190 overflow<nsw> : i5
   %1 = llvm.shl %arg190, %arg192 overflow<nsw> : i5
-  %2 = llvm.sdiv %0, %1 : i5
+  %2 = llvm.sdiv exact %0, %1 : i5
   "llvm.return"(%2) : (i5) -> ()
 }
 ]
@@ -290,7 +290,7 @@ def sdiv_mul_shl_nsw_exact_commute1_after := [llvm|
 ^0(%arg190 : i5, %arg191 : i5, %arg192 : i5):
   %0 = llvm.mlir.constant(1 : i5) : i5
   %1 = llvm.shl %0, %arg192 overflow<nuw> : i5
-  %2 = llvm.sdiv %arg191, %1 : i5
+  %2 = llvm.sdiv exact %arg191, %1 : i5
   "llvm.return"(%2) : (i5) -> ()
 }
 ]
@@ -337,14 +337,14 @@ def udiv_mul_shl_nuw_exact_commute1_before := [llvm|
 ^0(%arg163 : i5, %arg164 : i5, %arg165 : i5):
   %0 = llvm.mul %arg164, %arg163 overflow<nuw> : i5
   %1 = llvm.shl %arg163, %arg165 overflow<nuw> : i5
-  %2 = llvm.udiv %0, %1 : i5
+  %2 = llvm.udiv exact %0, %1 : i5
   "llvm.return"(%2) : (i5) -> ()
 }
 ]
 def udiv_mul_shl_nuw_exact_commute1_after := [llvm|
 {
 ^0(%arg163 : i5, %arg164 : i5, %arg165 : i5):
-  %0 = llvm.lshr %arg164, %arg165 : i5
+  %0 = llvm.lshr exact %arg164, %arg165 : i5
   "llvm.return"(%0) : (i5) -> ()
 }
 ]
@@ -422,7 +422,7 @@ def udiv_shl_mul_nuw_exact_before := [llvm|
 ^0(%arg142 : i5, %arg143 : i5, %arg144 : i5):
   %0 = llvm.shl %arg142, %arg144 overflow<nuw> : i5
   %1 = llvm.mul %arg142, %arg143 overflow<nuw> : i5
-  %2 = llvm.udiv %0, %1 : i5
+  %2 = llvm.udiv exact %0, %1 : i5
   "llvm.return"(%2) : (i5) -> ()
 }
 ]
@@ -431,7 +431,7 @@ def udiv_shl_mul_nuw_exact_after := [llvm|
 ^0(%arg142 : i5, %arg143 : i5, %arg144 : i5):
   %0 = llvm.mlir.constant(1 : i5) : i5
   %1 = llvm.shl %0, %arg144 overflow<nuw> : i5
-  %2 = llvm.udiv %1, %arg143 : i5
+  %2 = llvm.udiv exact %1, %arg143 : i5
   "llvm.return"(%2) : (i5) -> ()
 }
 ]

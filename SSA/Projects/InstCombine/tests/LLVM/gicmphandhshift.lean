@@ -685,7 +685,7 @@ def ne_and_lshr_minval_after := [llvm|
   %0 = llvm.mlir.constant(-128 : i8) : i8
   %1 = llvm.mlir.constant(0 : i8) : i8
   %2 = llvm.mul %arg31, %arg31 : i8
-  %3 = llvm.lshr %0, %arg32 : i8
+  %3 = llvm.lshr exact %0, %arg32 : i8
   %4 = llvm.and %2, %3 : i8
   %5 = llvm.icmp "eq" %4, %1 : i8
   "llvm.return"(%5) : (i1) -> ()
@@ -1011,7 +1011,7 @@ def test_const_shr_exact_and_1_ne_0_before := [llvm|
   %0 = llvm.mlir.constant(42 : i32) : i32
   %1 = llvm.mlir.constant(1 : i32) : i32
   %2 = llvm.mlir.constant(0 : i32) : i32
-  %3 = llvm.lshr %0, %arg6 : i32
+  %3 = llvm.lshr exact %0, %arg6 : i32
   %4 = llvm.and %3, %1 : i32
   %5 = llvm.icmp "ne" %4, %2 : i32
   "llvm.return"(%5) : (i1) -> ()

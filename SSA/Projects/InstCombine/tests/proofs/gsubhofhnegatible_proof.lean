@@ -228,3 +228,36 @@ theorem negate_add_with_single_negatible_operand_depth2_thm (e e_1 : IntW 8) :
     all_goals sorry
 
 
+theorem negate_select_of_op_vs_negated_op_nsw_thm (e : IntW 8) (e_1 : IntW 1) (e_2 : IntW 8) :
+  sub e_2 (select e_1 (sub (const? 8 0) e { «nsw» := true, «nuw» := false }) e) ⊑
+    add (select e_1 e (sub (const? 8 0) e)) e_2 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+
+theorem negate_select_of_op_vs_negated_op_nsw_commuted_thm (e : IntW 8) (e_1 : IntW 1) (e_2 : IntW 8) :
+  sub e_2 (select e_1 e (sub (const? 8 0) e { «nsw» := true, «nuw» := false })) ⊑
+    add (select e_1 (sub (const? 8 0) e) e) e_2 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+
+theorem negate_select_of_op_vs_negated_op_nsw_xyyx_thm (e e_1 : IntW 8) (e_2 : IntW 1) (e_3 : IntW 8) :
+  sub e_3 (select e_2 (sub e_1 e { «nsw» := true, «nuw» := false }) (sub e e_1 { «nsw» := true, «nuw» := false })) ⊑
+    add (select e_2 (sub e e_1) (sub e_1 e)) e_3 := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+

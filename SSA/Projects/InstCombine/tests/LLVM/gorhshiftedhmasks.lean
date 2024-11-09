@@ -13,8 +13,6 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gorhshiftedhmasks_statements
 
-#exit
-
 def or_and_shifts1_before := [llvm|
 {
 ^0(%arg14 : i32):
@@ -107,9 +105,9 @@ def multiuse1_before := [llvm|
   %4 = llvm.and %arg11, %0 : i32
   %5 = llvm.and %arg11, %1 : i32
   %6 = llvm.shl %4, %2 overflow<nsw,nuw> : i32
-  %7 = llvm.lshr %4, %3 : i32
+  %7 = llvm.lshr exact %4, %3 : i32
   %8 = llvm.shl %5, %2 overflow<nsw,nuw> : i32
-  %9 = llvm.lshr %5, %3 : i32
+  %9 = llvm.lshr exact %5, %3 : i32
   %10 = llvm.or %6, %8 : i32
   %11 = llvm.or %7, %9 : i32
   %12 = llvm.or %11, %10 : i32
@@ -214,7 +212,7 @@ def multiuse3_before := [llvm|
   %4 = llvm.mlir.constant(15 : i32) : i32
   %5 = llvm.and %arg9, %0 : i32
   %6 = llvm.shl %5, %1 overflow<nsw,nuw> : i32
-  %7 = llvm.lshr %5, %2 : i32
+  %7 = llvm.lshr exact %5, %2 : i32
   %8 = llvm.shl %arg9, %1 : i32
   %9 = llvm.and %8, %3 : i32
   %10 = llvm.or %6, %9 : i32
@@ -425,3 +423,5 @@ theorem shl_mul_mask_wrong_mul_const_proof : shl_mul_mask_wrong_mul_const_before
   ---BEGIN shl_mul_mask_wrong_mul_const
   all_goals (try extract_goal ; sorry)
   ---END shl_mul_mask_wrong_mul_const
+
+

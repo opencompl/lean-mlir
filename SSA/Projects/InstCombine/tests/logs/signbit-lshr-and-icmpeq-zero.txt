@@ -1,20 +1,50 @@
 1: "scalar_i8_signbit_lshr_and_eq"
-7: "scalar_i8_signbit_lshr_and_eq" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
 
 1: "scalar_i16_signbit_lshr_and_eq"
-7: "scalar_i16_signbit_lshr_and_eq" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
 
 1: "scalar_i32_signbit_lshr_and_eq"
-7: "scalar_i32_signbit_lshr_and_eq" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
 
 1: "scalar_i64_signbit_lshr_and_eq"
-7: "scalar_i64_signbit_lshr_and_eq" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
 
 1: "scalar_i32_signbit_lshr_and_ne"
-7: "scalar_i32_signbit_lshr_and_ne" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
 
 1: "vec_4xi32_signbit_lshr_and_eq"
-7: "vec_4xi32_signbit_lshr_and_eq" is unchanged by InstCombine
+8: "vec_4xi32_signbit_lshr_and_eq" contains vectors which are unsupported
 
 1: "vec_4xi32_signbit_lshr_and_eq_undef1"
 4: "vec_4xi32_signbit_lshr_and_eq_undef1" has unsupported operation: llvm.mlir.undef
@@ -77,7 +107,14 @@
 4: "scalar_i32_signbit_lshr_and_eq_extra_use_lshr_and" has unsupported operation: llvm.store
 
 1: "scalar_i32_signbit_lshr_and_eq_X_is_constant1"
-7: "scalar_i32_signbit_lshr_and_eq_X_is_constant1" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
 
 1: "scalar_i32_signbit_lshr_and_eq_X_is_constant2"
 2: llvm.func
@@ -90,8 +127,20 @@
 2: llvm.return
 
 1: "scalar_i32_signbit_lshr_and_slt"
-7: "scalar_i32_signbit_lshr_and_slt" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
 
 1: "scalar_i32_signbit_lshr_and_eq_nonzero"
-7: "scalar_i32_signbit_lshr_and_eq_nonzero" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
 

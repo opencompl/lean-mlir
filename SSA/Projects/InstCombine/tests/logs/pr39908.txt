@@ -1,2 +1,15 @@
-3: pr39908.ll: parsing has failed
+1: "test"
+4: "test" has unsupported operation: llvm.getelementptr
+
+4: "test" has unsupported operation: llvm.getelementptr
+
+1: "test64"
+4: "test64" has unsupported operation: llvm.getelementptr
+
+4: "test64" has unsupported operation: llvm.getelementptr
+
+1: "test64_overflow"
+4: "test64_overflow" has unsupported operation: llvm.getelementptr
+
+4: "test64_overflow" has unsupported operation: llvm.getelementptr
 

@@ -392,7 +392,7 @@ theorem icmp_or_xor_2_4_fail_proof : icmp_or_xor_2_4_fail_before ⊑ icmp_or_xor
   all_goals (try extract_goal ; sorry)
   ---END icmp_or_xor_2_4_fail
 
-#exit -- This times out
+
 
 def icmp_or_xor_3_1_before := [llvm|
 {
@@ -1050,3 +1050,5 @@ theorem or_disjoint_with_constants_proof : or_disjoint_with_constants_before ⊑
   ---BEGIN or_disjoint_with_constants
   all_goals (try extract_goal ; sorry)
   ---END or_disjoint_with_constants
+
+

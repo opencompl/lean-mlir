@@ -628,7 +628,7 @@ def select_exact_lshr_icmp_const_before := [llvm|
   %1 = llvm.mlir.constant(5 : i32) : i32
   %2 = llvm.mlir.constant(0 : i32) : i32
   %3 = llvm.icmp "ugt" %arg146, %0 : i32
-  %4 = llvm.lshr %arg146, %1 : i32
+  %4 = llvm.lshr exact %arg146, %1 : i32
   %5 = "llvm.select"(%3, %4, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   "llvm.return"(%5) : (i32) -> ()
 }

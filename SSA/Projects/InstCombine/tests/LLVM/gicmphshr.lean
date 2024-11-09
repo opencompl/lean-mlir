@@ -245,7 +245,7 @@ def exact_ashr_eq_both_equal_before := [llvm|
 {
 ^0(%arg168 : i8):
   %0 = llvm.mlir.constant(-128 : i8) : i8
-  %1 = llvm.ashr %0, %arg168 : i8
+  %1 = llvm.ashr exact %0, %arg168 : i8
   %2 = llvm.icmp "eq" %1, %0 : i8
   "llvm.return"(%2) : (i1) -> ()
 }
@@ -273,7 +273,7 @@ def exact_ashr_ne_both_equal_before := [llvm|
 {
 ^0(%arg167 : i8):
   %0 = llvm.mlir.constant(-128 : i8) : i8
-  %1 = llvm.ashr %0, %arg167 : i8
+  %1 = llvm.ashr exact %0, %arg167 : i8
   %2 = llvm.icmp "ne" %1, %0 : i8
   "llvm.return"(%2) : (i1) -> ()
 }
@@ -301,7 +301,7 @@ def exact_lshr_eq_both_equal_before := [llvm|
 {
 ^0(%arg166 : i8):
   %0 = llvm.mlir.constant(126 : i8) : i8
-  %1 = llvm.lshr %0, %arg166 : i8
+  %1 = llvm.lshr exact %0, %arg166 : i8
   %2 = llvm.icmp "eq" %1, %0 : i8
   "llvm.return"(%2) : (i1) -> ()
 }
@@ -329,7 +329,7 @@ def exact_lshr_ne_both_equal_before := [llvm|
 {
 ^0(%arg165 : i8):
   %0 = llvm.mlir.constant(126 : i8) : i8
-  %1 = llvm.lshr %0, %arg165 : i8
+  %1 = llvm.lshr exact %0, %arg165 : i8
   %2 = llvm.icmp "ne" %1, %0 : i8
   "llvm.return"(%2) : (i1) -> ()
 }
@@ -358,7 +358,7 @@ def exact_lshr_eq_opposite_msb_before := [llvm|
 ^0(%arg164 : i8):
   %0 = llvm.mlir.constant(-128 : i8) : i8
   %1 = llvm.mlir.constant(1 : i8) : i8
-  %2 = llvm.lshr %0, %arg164 : i8
+  %2 = llvm.lshr exact %0, %arg164 : i8
   %3 = llvm.icmp "eq" %2, %1 : i8
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -416,7 +416,7 @@ def exact_lshr_ne_opposite_msb_before := [llvm|
 ^0(%arg162 : i8):
   %0 = llvm.mlir.constant(-128 : i8) : i8
   %1 = llvm.mlir.constant(1 : i8) : i8
-  %2 = llvm.lshr %0, %arg162 : i8
+  %2 = llvm.lshr exact %0, %arg162 : i8
   %3 = llvm.icmp "ne" %2, %1 : i8
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -474,7 +474,7 @@ def exact_ashr_eq_before := [llvm|
 ^0(%arg160 : i8):
   %0 = llvm.mlir.constant(-128 : i8) : i8
   %1 = llvm.mlir.constant(-1 : i8) : i8
-  %2 = llvm.ashr %0, %arg160 : i8
+  %2 = llvm.ashr exact %0, %arg160 : i8
   %3 = llvm.icmp "eq" %2, %1 : i8
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -503,7 +503,7 @@ def exact_ashr_ne_before := [llvm|
 ^0(%arg159 : i8):
   %0 = llvm.mlir.constant(-128 : i8) : i8
   %1 = llvm.mlir.constant(-1 : i8) : i8
-  %2 = llvm.ashr %0, %arg159 : i8
+  %2 = llvm.ashr exact %0, %arg159 : i8
   %3 = llvm.icmp "ne" %2, %1 : i8
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -532,7 +532,7 @@ def exact_lshr_eq_before := [llvm|
 ^0(%arg158 : i8):
   %0 = llvm.mlir.constant(4 : i8) : i8
   %1 = llvm.mlir.constant(1 : i8) : i8
-  %2 = llvm.lshr %0, %arg158 : i8
+  %2 = llvm.lshr exact %0, %arg158 : i8
   %3 = llvm.icmp "eq" %2, %1 : i8
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -561,7 +561,7 @@ def exact_lshr_ne_before := [llvm|
 ^0(%arg157 : i8):
   %0 = llvm.mlir.constant(4 : i8) : i8
   %1 = llvm.mlir.constant(1 : i8) : i8
-  %2 = llvm.lshr %0, %arg157 : i8
+  %2 = llvm.lshr exact %0, %arg157 : i8
   %3 = llvm.icmp "ne" %2, %1 : i8
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -706,7 +706,7 @@ def exact_lshr_eq_exactdiv_before := [llvm|
 ^0(%arg152 : i8):
   %0 = llvm.mlir.constant(80 : i8) : i8
   %1 = llvm.mlir.constant(5 : i8) : i8
-  %2 = llvm.lshr %0, %arg152 : i8
+  %2 = llvm.lshr exact %0, %arg152 : i8
   %3 = llvm.icmp "eq" %2, %1 : i8
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -735,7 +735,7 @@ def exact_lshr_ne_exactdiv_before := [llvm|
 ^0(%arg151 : i8):
   %0 = llvm.mlir.constant(80 : i8) : i8
   %1 = llvm.mlir.constant(5 : i8) : i8
-  %2 = llvm.lshr %0, %arg151 : i8
+  %2 = llvm.lshr exact %0, %arg151 : i8
   %3 = llvm.icmp "ne" %2, %1 : i8
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -822,7 +822,7 @@ def exact_ashr_eq_exactdiv_before := [llvm|
 ^0(%arg148 : i8):
   %0 = llvm.mlir.constant(-80 : i8) : i8
   %1 = llvm.mlir.constant(-5 : i8) : i8
-  %2 = llvm.ashr %0, %arg148 : i8
+  %2 = llvm.ashr exact %0, %arg148 : i8
   %3 = llvm.icmp "eq" %2, %1 : i8
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -851,7 +851,7 @@ def exact_ashr_ne_exactdiv_before := [llvm|
 ^0(%arg147 : i8):
   %0 = llvm.mlir.constant(-80 : i8) : i8
   %1 = llvm.mlir.constant(-5 : i8) : i8
-  %2 = llvm.ashr %0, %arg147 : i8
+  %2 = llvm.ashr exact %0, %arg147 : i8
   %3 = llvm.icmp "ne" %2, %1 : i8
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -938,7 +938,7 @@ def exact_lshr_eq_noexactdiv_before := [llvm|
 ^0(%arg144 : i8):
   %0 = llvm.mlir.constant(80 : i8) : i8
   %1 = llvm.mlir.constant(31 : i8) : i8
-  %2 = llvm.lshr %0, %arg144 : i8
+  %2 = llvm.lshr exact %0, %arg144 : i8
   %3 = llvm.icmp "eq" %2, %1 : i8
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -966,7 +966,7 @@ def exact_lshr_ne_noexactdiv_before := [llvm|
 ^0(%arg143 : i8):
   %0 = llvm.mlir.constant(80 : i8) : i8
   %1 = llvm.mlir.constant(31 : i8) : i8
-  %2 = llvm.lshr %0, %arg143 : i8
+  %2 = llvm.lshr exact %0, %arg143 : i8
   %3 = llvm.icmp "ne" %2, %1 : i8
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -1050,7 +1050,7 @@ def exact_ashr_eq_noexactdiv_before := [llvm|
 ^0(%arg140 : i8):
   %0 = llvm.mlir.constant(-80 : i8) : i8
   %1 = llvm.mlir.constant(-31 : i8) : i8
-  %2 = llvm.ashr %0, %arg140 : i8
+  %2 = llvm.ashr exact %0, %arg140 : i8
   %3 = llvm.icmp "eq" %2, %1 : i8
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -1078,7 +1078,7 @@ def exact_ashr_ne_noexactdiv_before := [llvm|
 ^0(%arg139 : i8):
   %0 = llvm.mlir.constant(-80 : i8) : i8
   %1 = llvm.mlir.constant(-31 : i8) : i8
-  %2 = llvm.ashr %0, %arg139 : i8
+  %2 = llvm.ashr exact %0, %arg139 : i8
   %3 = llvm.icmp "ne" %2, %1 : i8
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -1360,7 +1360,7 @@ def ashr_exact_eq_0_before := [llvm|
 {
 ^0(%arg127 : i32, %arg128 : i32):
   %0 = llvm.mlir.constant(0 : i32) : i32
-  %1 = llvm.ashr %arg127, %arg128 : i32
+  %1 = llvm.ashr exact %arg127, %arg128 : i32
   %2 = llvm.icmp "eq" %1, %0 : i32
   "llvm.return"(%2) : (i1) -> ()
 }
@@ -1388,7 +1388,7 @@ def lshr_exact_ne_0_before := [llvm|
 {
 ^0(%arg121 : i32, %arg122 : i32):
   %0 = llvm.mlir.constant(0 : i32) : i32
-  %1 = llvm.lshr %arg121, %arg122 : i32
+  %1 = llvm.lshr exact %arg121, %arg122 : i32
   %2 = llvm.icmp "ne" %1, %0 : i32
   "llvm.return"(%2) : (i1) -> ()
 }
@@ -2394,6 +2394,68 @@ theorem lshr_pow2_ugt1_proof : lshr_pow2_ugt1_before ⊑ lshr_pow2_ugt1_after :=
 
 
 
+def ashr_pow2_ugt_before := [llvm|
+{
+^0(%arg67 : i8):
+  %0 = llvm.mlir.constant(-128 : i8) : i8
+  %1 = llvm.mlir.constant(-96 : i8) : i8
+  %2 = llvm.ashr %0, %arg67 : i8
+  %3 = llvm.icmp "ugt" %2, %1 : i8
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+def ashr_pow2_ugt_after := [llvm|
+{
+^0(%arg67 : i8):
+  %0 = llvm.mlir.constant(-128 : i8) : i8
+  %1 = llvm.mlir.constant(-96 : i8) : i8
+  %2 = llvm.ashr exact %0, %arg67 : i8
+  %3 = llvm.icmp "ugt" %2, %1 : i8
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem ashr_pow2_ugt_proof : ashr_pow2_ugt_before ⊑ ashr_pow2_ugt_after := by
+  unfold ashr_pow2_ugt_before ashr_pow2_ugt_after
+  simp_alive_peephole
+  intros
+  ---BEGIN ashr_pow2_ugt
+  all_goals (try extract_goal ; sorry)
+  ---END ashr_pow2_ugt
+
+
+
+def lshr_pow2_sgt_before := [llvm|
+{
+^0(%arg66 : i8):
+  %0 = llvm.mlir.constant(-128 : i8) : i8
+  %1 = llvm.mlir.constant(3 : i8) : i8
+  %2 = llvm.lshr %0, %arg66 : i8
+  %3 = llvm.icmp "sgt" %2, %1 : i8
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+def lshr_pow2_sgt_after := [llvm|
+{
+^0(%arg66 : i8):
+  %0 = llvm.mlir.constant(-128 : i8) : i8
+  %1 = llvm.mlir.constant(3 : i8) : i8
+  %2 = llvm.lshr exact %0, %arg66 : i8
+  %3 = llvm.icmp "sgt" %2, %1 : i8
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem lshr_pow2_sgt_proof : lshr_pow2_sgt_before ⊑ lshr_pow2_sgt_after := by
+  unfold lshr_pow2_sgt_before lshr_pow2_sgt_after
+  simp_alive_peephole
+  intros
+  ---BEGIN lshr_pow2_sgt
+  all_goals (try extract_goal ; sorry)
+  ---END lshr_pow2_sgt
+
+
+
 def lshr_pow2_ult_before := [llvm|
 {
 ^0(%arg65 : i8):
@@ -2476,6 +2538,68 @@ theorem lshr_pow2_ult_smin_proof : lshr_pow2_ult_smin_before ⊑ lshr_pow2_ult_s
   ---BEGIN lshr_pow2_ult_smin
   all_goals (try extract_goal ; sorry)
   ---END lshr_pow2_ult_smin
+
+
+
+def ashr_pow2_ult_before := [llvm|
+{
+^0(%arg59 : i8):
+  %0 = llvm.mlir.constant(-128 : i8) : i8
+  %1 = llvm.mlir.constant(-96 : i8) : i8
+  %2 = llvm.ashr %0, %arg59 : i8
+  %3 = llvm.icmp "ult" %2, %1 : i8
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+def ashr_pow2_ult_after := [llvm|
+{
+^0(%arg59 : i8):
+  %0 = llvm.mlir.constant(-128 : i8) : i8
+  %1 = llvm.mlir.constant(-96 : i8) : i8
+  %2 = llvm.ashr exact %0, %arg59 : i8
+  %3 = llvm.icmp "ult" %2, %1 : i8
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem ashr_pow2_ult_proof : ashr_pow2_ult_before ⊑ ashr_pow2_ult_after := by
+  unfold ashr_pow2_ult_before ashr_pow2_ult_after
+  simp_alive_peephole
+  intros
+  ---BEGIN ashr_pow2_ult
+  all_goals (try extract_goal ; sorry)
+  ---END ashr_pow2_ult
+
+
+
+def lshr_pow2_slt_before := [llvm|
+{
+^0(%arg58 : i8):
+  %0 = llvm.mlir.constant(-128 : i8) : i8
+  %1 = llvm.mlir.constant(3 : i8) : i8
+  %2 = llvm.lshr %0, %arg58 : i8
+  %3 = llvm.icmp "slt" %2, %1 : i8
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+def lshr_pow2_slt_after := [llvm|
+{
+^0(%arg58 : i8):
+  %0 = llvm.mlir.constant(-128 : i8) : i8
+  %1 = llvm.mlir.constant(3 : i8) : i8
+  %2 = llvm.lshr exact %0, %arg58 : i8
+  %3 = llvm.icmp "slt" %2, %1 : i8
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem lshr_pow2_slt_proof : lshr_pow2_slt_before ⊑ lshr_pow2_slt_after := by
+  unfold lshr_pow2_slt_before lshr_pow2_slt_after
+  simp_alive_peephole
+  intros
+  ---BEGIN lshr_pow2_slt
+  all_goals (try extract_goal ; sorry)
+  ---END lshr_pow2_slt
 
 
 

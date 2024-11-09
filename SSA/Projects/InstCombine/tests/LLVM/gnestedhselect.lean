@@ -8,8 +8,6 @@ open BitVec
 open MLIR AST
 open Ctxt (Var)
 
-#exit
-
 set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
@@ -434,3 +432,5 @@ theorem test_implied_false_proof : test_implied_false_before ⊑ test_implied_fa
   ---BEGIN test_implied_false
   all_goals (try extract_goal ; sorry)
   ---END test_implied_false
+
+
