@@ -516,7 +516,7 @@ theorem msb_rotateLeft {m w : Nat} {x : BitVec w} :
 
 @[simp]
 theorem getMsbD_rotateRight {w i r : Nat} {x : BitVec w} :
-    (x.rotateRight m).getMsbD n = (decide (n < w) && (if (n < m) then x.getMsbD ((w - n + m) % w) else x.getMsbD (n - m))):= by
+    (x.rotateRight m).getMsbD n = (decide (n < w) && (if (n < m % w) then x.getMsbD ((w + n - m % w) % w) else x.getMsbD (n - m % w))):= by
   rw [getMsbD_eq_getLsbD, getMsbD_eq_getLsbD, getMsbD_eq_getLsbD]
   rcases w with rfl | w
   · simp
@@ -525,65 +525,29 @@ theorem getMsbD_rotateRight {w i r : Nat} {x : BitVec w} :
       rw [← rotateRight_mod_eq_rotateRight]
       have : m % (w + 1) < w + 1 := by apply Nat.mod_lt; omega
       rw [rotateRight_eq_rotateRightAux_of_lt (by assumption)]
-      simp [show (w + 1 - n + m) % (w + 1) < w + 1 by apply Nat.mod_lt; omega]
+      simp [show (w + 1 + n - m % (w + 1)) % (w + 1) < w + 1 by apply Nat.mod_lt; omega]
       by_cases h : w - n ≥ w + 1 - m % (w + 1)
-      · rw [getLsbD_rotateRightAux_of_geq h]
-        by_cases hnm : n < m
+      · rw [getLsbD_rotateRightAux_of_geq (by omega)]
+        simp [show w - n < w + 1 by omega]
+        generalize hm' : m % (w + 1) = m'
+        have hmin' :  w + 1 + n - m' < w + 1 := by omega
+        rw [Nat.mod_eq_of_lt hmin']
+        by_cases hnm : n < m'
         · simp [hnm]
-          have hmaj : (w + 1 - n + m) > w + 1 := by omega
-          simp only [show w - n < w + 1 by omega, decide_True, Bool.true_and]
-          by_cases hm : m < w + 1
-          · rw [Nat.mod_eq_of_lt hm]
-            congr 1
-            have h2 : (w + 1 - n + m) < 2 * (w + 1) := by omega
-            rw [add_mod_eq_add_sub (by omega) (by omega)]
-            rw [Nat.sub_add_comm]
-            · have heq : w - n - (w - m + 1) =  m - n - 1 := by omega
-              have heq' : (w + 1 - n + m - (w + 1)) = m - n := by omega
-              rw [heq, heq']
-              sorry
-            omega
-          · sorry
+          congr 1
+          omega
         · simp [hnm]
-          sorry
+          omega
       · rw [getLsbD_rotateRightAux_of_le (by omega)]
-        sorry
-
-
-      -- have : m % (w + 1) < w + 1 := by apply Nat.mod_lt; omega
-      -- rw [rotateRight_eq_rotateRightAux_of_lt (by assumption)]
-      -- by_cases h : w - n ≥ m % (w + 1)
-      -- ·
-      --   have hmr : (w - n) ≥ w + 1 - (m % (w + 1)) := by
-      --     simp_all
-      --     by_cases hmm : m % (w + 1) = w - n
-      --     · simp [hmm]
-      --       sorry
-      --     · sorry
-      --   rw [getLsbD_rotateRightAux_of_geq hmr]
-      --   simp only [show w - n < w + 1 by omega, decide_True, Bool.true_and,
-      --     show (m + n) % (w + 1) < w + 1 by apply Nat.mod_lt; omega]
-      --   congr 1
-      --   have hnm : (m + n) % (w + 1) = (m % (w + 1)) + n := by
-      --     rw [Nat.add_mod, Nat.mod_eq_of_lt (a := n) (by omega), Nat.mod_eq_of_lt]
-      --     omega
-      --   rw [hnm, Nat.sub_sub, Nat.add_comm]
-      -- · rw [getLsbD_rotateLeftAux_of_le (by omega)]
-      --   simp only [show ((m + n) % (w + 1) < w + 1) by apply Nat.mod_lt; omega, decide_True, Bool.true_and]
-      --   simp only [ge_iff_le, not_le] at h
-      --   rw [Nat.add_mod]
-      --   generalize hm' : m % (w + 1) = m'
-      --   rw [Nat.mod_eq_of_lt (a := n) (by omega)]
-      --   have hm'' : m' < w + 1 := by omega
-      --   congr 1
-      --   have : w + 1 - m' + (w - n) = w  - m' + (w + 1 - n) := by omega
-      --   rw [this]
-      --   simp only [show w - m' + (w + 1 - n) = w - (m' - (w + 1 - n)) by omega,
-      --     show w - (m' - (w + 1 - n)) = w - (m' + n - (w + 1)) by omega]
-      --   congr 1
-      --   have : m' + n < 2 * (w + 1) := by omega
-      --   have : m' + n ≥ (w + 1) := by omega
-      --   rw [add_mod_eq_add_sub (by omega) (by omega)]
+        generalize hm' : m % (w + 1) = m'
+        have hmin' :  w + 1 + n - m' ≥  w + 1 := by omega
+        by_cases hnm : n < m'
+        · simp [hnm]
+          congr 1
+          omega
+        · simp [hnm, show n - m' < w + 1 by omega]
+          congr 1
+          omega
     · simp [hn]
 
 
