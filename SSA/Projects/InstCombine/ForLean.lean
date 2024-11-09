@@ -514,26 +514,78 @@ theorem msb_rotateLeft {m w : Nat} {x : BitVec w} :
         omega
   · simp [h₀, show w = 0 by omega]
 
--- the rhs of the following theorem is equivalent to:
--- (decide (n < w) && (if (n - m < 0) then x.getMsbD (w - 1 + m - r) else x.getMsbD (n - m))
 @[simp]
 theorem getMsbD_rotateRight {w i r : Nat} {x : BitVec w} :
-    (x.rotateRight m).getMsbD n = (decide (n < w) && if (n - m < 0) then x.getMsbD (w - 1 + m - r) else x.getMsbD (n - m)) := by
+    (x.rotateRight m).getMsbD n = (decide (n < w) && (if (n < m) then x.getMsbD ((w - n + m) % w) else x.getMsbD (n - m))):= by
   rw [getMsbD_eq_getLsbD, getMsbD_eq_getLsbD, getMsbD_eq_getLsbD]
   rcases w with rfl | w
   · simp
-  · simp [rotateRight, rotateRightAux, getLsbD_rotateRightAux_of_geq, getLsbD_rotateRightAux_of_le]
-    have h : 0 ≤ n - m := by omega
-    by_cases hn : n < w + 1 <;> by_cases hm : m < w + 1
-    · simp [h, hn, hm, getLsbD_rotateRightAux_of_geq]
-      rw [Nat.mod_eq_of_lt hm]
+  · by_cases hn : n < w + 1
+    · simp only [hn, decide_True, Bool.true_and, Nat.add_sub_cancel]
+      rw [← rotateRight_mod_eq_rotateRight]
+      have : m % (w + 1) < w + 1 := by apply Nat.mod_lt; omega
+      rw [rotateRight_eq_rotateRightAux_of_lt (by assumption)]
+      simp [show (w + 1 - n + m) % (w + 1) < w + 1 by apply Nat.mod_lt; omega]
+      by_cases h : w - n ≥ w + 1 - m % (w + 1)
+      · rw [getLsbD_rotateRightAux_of_geq h]
+        by_cases hnm : n < m
+        · simp [hnm]
+          have hmaj : (w + 1 - n + m) > w + 1 := by omega
+          simp only [show w - n < w + 1 by omega, decide_True, Bool.true_and]
+          by_cases hm : m < w + 1
+          · rw [Nat.mod_eq_of_lt hm]
+            congr 1
+            have h2 : (w + 1 - n + m) < 2 * (w + 1) := by omega
+            rw [add_mod_eq_add_sub (by omega) (by omega)]
+            rw [Nat.sub_add_comm]
+            · have heq : w - n - (w - m + 1) =  m - n - 1 := by omega
+              have heq' : (w + 1 - n + m - (w + 1)) = m - n := by omega
+              rw [heq, heq']
+              sorry
+            omega
+          · sorry
+        · simp [hnm]
+          sorry
+      · rw [getLsbD_rotateRightAux_of_le (by omega)]
+        sorry
 
-      sorry
-    · simp [h, hn, hm, getLsbD_rotateRightAux_of_geq, getLsbD_rotateRightAux_of_le]
 
-      sorry
-    · simp [hn, hm]
-    · simp [hn, hm]
+      -- have : m % (w + 1) < w + 1 := by apply Nat.mod_lt; omega
+      -- rw [rotateRight_eq_rotateRightAux_of_lt (by assumption)]
+      -- by_cases h : w - n ≥ m % (w + 1)
+      -- ·
+      --   have hmr : (w - n) ≥ w + 1 - (m % (w + 1)) := by
+      --     simp_all
+      --     by_cases hmm : m % (w + 1) = w - n
+      --     · simp [hmm]
+      --       sorry
+      --     · sorry
+      --   rw [getLsbD_rotateRightAux_of_geq hmr]
+      --   simp only [show w - n < w + 1 by omega, decide_True, Bool.true_and,
+      --     show (m + n) % (w + 1) < w + 1 by apply Nat.mod_lt; omega]
+      --   congr 1
+      --   have hnm : (m + n) % (w + 1) = (m % (w + 1)) + n := by
+      --     rw [Nat.add_mod, Nat.mod_eq_of_lt (a := n) (by omega), Nat.mod_eq_of_lt]
+      --     omega
+      --   rw [hnm, Nat.sub_sub, Nat.add_comm]
+      -- · rw [getLsbD_rotateLeftAux_of_le (by omega)]
+      --   simp only [show ((m + n) % (w + 1) < w + 1) by apply Nat.mod_lt; omega, decide_True, Bool.true_and]
+      --   simp only [ge_iff_le, not_le] at h
+      --   rw [Nat.add_mod]
+      --   generalize hm' : m % (w + 1) = m'
+      --   rw [Nat.mod_eq_of_lt (a := n) (by omega)]
+      --   have hm'' : m' < w + 1 := by omega
+      --   congr 1
+      --   have : w + 1 - m' + (w - n) = w  - m' + (w + 1 - n) := by omega
+      --   rw [this]
+      --   simp only [show w - m' + (w + 1 - n) = w - (m' - (w + 1 - n)) by omega,
+      --     show w - (m' - (w + 1 - n)) = w - (m' + n - (w + 1)) by omega]
+      --   congr 1
+      --   have : m' + n < 2 * (w + 1) := by omega
+      --   have : m' + n ≥ (w + 1) := by omega
+      --   rw [add_mod_eq_add_sub (by omega) (by omega)]
+    · simp [hn]
+
 
 @[simp]
 theorem msb_rotateRight {r w: Nat} {x : BitVec w} :
