@@ -1,0 +1,120 @@
+⚠ [90/2524] Replayed Mathlib.Control.Combinators
+warning: ././.lake/packages/mathlib/././Mathlib/Control/Combinators.lean:35:4: `Monad.mapM'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+warning: ././.lake/packages/mathlib/././Mathlib/Control/Combinators.lean:57:4: `Monad.sequence'` is missing a doc-string, please add one.
+Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
+note: this linter can be disabled with `set_option linter.docPrime false`
+⚠ [2506/2524] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [2510/2524] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:350:4: declaration uses 'sorry'
+⚠ [2511/2524] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:26:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:33:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:40:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:43:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:54:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:58:8: declaration uses 'sorry'
+⚠ [2516/2524] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:56:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:129:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:164:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:198:6: declaration uses 'sorry'
+⚠ [2517/2524] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+✖ [2524/2524] Building SSA.Projects.InstCombine.tests.LLVM.gandhor
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/plausible/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/tobiascgrosser/.elan/toolchains/leanprover--lean4---nightly-2024-11-08/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gandhor.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gandhor.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gandhor.c --json
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:43:17: theorem extracted_1 (e e_1 : IntW 32) :
+  LLVM.or (LLVM.and (LLVM.or e_1 e) (const? 32 1)) (LLVM.and e_1 (const? 32 (-2))) ⊑
+    LLVM.or (LLVM.and e (const? 32 1)) e_1 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:38:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:75:17: theorem extracted_1 (e e_1 : IntW 32) :
+  LLVM.or (LLVM.and (const? 32 1) (LLVM.or e_1 e)) (LLVM.and (const? 32 (-2)) e) ⊑
+    LLVM.or (LLVM.and e_1 (const? 32 1)) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:70:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:107:17: theorem extracted_1 (e e_1 : IntW 32) :
+  LLVM.or (LLVM.and e_1 (const? 32 (-2))) (LLVM.and (LLVM.or e_1 e) (const? 32 1)) ⊑
+    LLVM.or (LLVM.and e (const? 32 1)) e_1 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:102:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:139:17: theorem extracted_1 (e e_1 : IntW 32) :
+  LLVM.or (LLVM.and (const? 32 (-2)) e_1) (LLVM.and (const? 32 1) (LLVM.or e e_1)) ⊑
+    LLVM.or (LLVM.and e (const? 32 1)) e_1 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:134:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:172:17: theorem extracted_1 (e e_1 : IntW 8) :
+  LLVM.and (LLVM.or (lshr e_1 (const? 8 6)) e) (const? 8 3) ⊑
+    LLVM.or (lshr e_1 (const? 8 6)) (LLVM.and e (const? 8 3)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:167:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:208:17: theorem extracted_1 (e e_1 : IntW 8) :
+  LLVM.and (LLVM.xor (mul e_1 (const? 8 43)) (lshr e (const? 8 6))) (const? 8 3) ⊑
+    LLVM.xor (LLVM.and (mul e_1 (const? 8 3)) (const? 8 3)) (lshr e (const? 8 6)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:203:8: declaration uses 'sorry'
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:213:32: maximum recursion depth has been reached
+use `set_option maxRecDepth <num>` to increase limit
+use `set_option diagnostics true` to get diagnostic information
+error: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:261:9: tactic 'unfold' failed, local variable 'or_or_and_complex_before' has no definition
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:299:17: theorem extracted_1 (e e_1 e_2 e_3 : IntW 8) :
+  LLVM.or (LLVM.or (LLVM.udiv (const? 8 42) e_3) (LLVM.and e_2 e_1)) (LLVM.and e_2 e) ⊑
+    LLVM.or (LLVM.udiv (const? 8 42) e_3) (LLVM.and e_2 (LLVM.or e_1 e)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:294:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:333:17: theorem extracted_1 (e e_1 e_2 e_3 : IntW 8) :
+  LLVM.or (LLVM.or (LLVM.udiv (const? 8 42) e_3) (LLVM.and e_2 e_1)) (LLVM.and e_1 e) ⊑
+    LLVM.or (LLVM.udiv (const? 8 42) e_3) (LLVM.and (LLVM.or e_2 e) e_1) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:328:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:367:17: theorem extracted_1 (e e_1 e_2 e_3 : IntW 8) :
+  LLVM.or (LLVM.or (LLVM.udiv (const? 8 42) e_3) (LLVM.and e_2 e_1)) (LLVM.and e e_2) ⊑
+    LLVM.or (LLVM.udiv (const? 8 42) e_3) (LLVM.and e_2 (LLVM.or e_1 e)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:362:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:401:17: theorem extracted_1 (e e_1 e_2 e_3 : IntW 8) :
+  LLVM.or (LLVM.or (LLVM.udiv (const? 8 42) e_3) (LLVM.and e_2 e_1)) (LLVM.and e e_1) ⊑
+    LLVM.or (LLVM.udiv (const? 8 42) e_3) (LLVM.and (LLVM.or e_2 e) e_1) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:396:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:431:17: theorem extracted_1 (e e_1 e_2 e_3 : IntW 8) :
+  LLVM.or (LLVM.or (LLVM.and e_3 e_2) e_1) (LLVM.and e_3 e) ⊑ LLVM.or (LLVM.and e_3 (LLVM.or e_2 e)) e_1 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:426:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:461:17: theorem extracted_1 (e e_1 e_2 e_3 : IntW 8) :
+  LLVM.or (LLVM.or (LLVM.and e_3 e_2) e_1) (LLVM.and e_2 e) ⊑ LLVM.or (LLVM.and (LLVM.or e_3 e) e_2) e_1 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:456:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:491:17: theorem extracted_1 (e e_1 e_2 e_3 : IntW 8) :
+  LLVM.or (LLVM.or (LLVM.and e_3 e_2) e_1) (LLVM.and e e_3) ⊑ LLVM.or (LLVM.and e_3 (LLVM.or e_2 e)) e_1 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:486:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:521:17: theorem extracted_1 (e e_1 e_2 e_3 : IntW 8) :
+  LLVM.or (LLVM.or (LLVM.and e_3 e_2) e_1) (LLVM.and e e_2) ⊑ LLVM.or (LLVM.and (LLVM.or e_3 e) e_2) e_1 := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:516:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:555:17: theorem extracted_1 (e e_1 e_2 e_3 : IntW 8) :
+  LLVM.or (LLVM.and e_3 e_2) (LLVM.or (LLVM.udiv (const? 8 42) e_1) (LLVM.and e_3 e)) ⊑
+    LLVM.or (LLVM.udiv (const? 8 42) e_1) (LLVM.and e_3 (LLVM.or e e_2)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:550:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:589:17: theorem extracted_1 (e e_1 e_2 e_3 : IntW 8) :
+  LLVM.or (LLVM.and e_3 e_2) (LLVM.or (LLVM.udiv (const? 8 42) e_1) (LLVM.and e e_3)) ⊑
+    LLVM.or (LLVM.udiv (const? 8 42) e_1) (LLVM.and (LLVM.or e e_2) e_3) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:584:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:623:17: theorem extracted_1 (e e_1 e_2 e_3 : IntW 8) :
+  LLVM.or (LLVM.and e_3 e_2) (LLVM.or (LLVM.udiv (const? 8 42) e_1) (LLVM.and e_2 e)) ⊑
+    LLVM.or (LLVM.udiv (const? 8 42) e_1) (LLVM.and e_2 (LLVM.or e e_3)) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:618:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:657:17: theorem extracted_1 (e e_1 e_2 e_3 : IntW 8) :
+  LLVM.or (LLVM.and e_3 e_2) (LLVM.or (LLVM.udiv (const? 8 42) e_1) (LLVM.and e e_2)) ⊑
+    LLVM.or (LLVM.udiv (const? 8 42) e_1) (LLVM.and (LLVM.or e e_3) e_2) := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:652:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:687:17: theorem extracted_1 (e e_1 e_2 e_3 : IntW 8) :
+  LLVM.or (LLVM.and e_3 e_2) (LLVM.or (LLVM.and e_3 e_1) e) ⊑ LLVM.or (LLVM.and e_3 (LLVM.or e_1 e_2)) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:682:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:717:17: theorem extracted_1 (e e_1 e_2 e_3 : IntW 8) :
+  LLVM.or (LLVM.and e_3 e_2) (LLVM.or (LLVM.and e_1 e_3) e) ⊑ LLVM.or (LLVM.and (LLVM.or e_1 e_2) e_3) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:712:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:747:17: theorem extracted_1 (e e_1 e_2 e_3 : IntW 8) :
+  LLVM.or (LLVM.and e_3 e_2) (LLVM.or (LLVM.and e_2 e_1) e) ⊑ LLVM.or (LLVM.and e_2 (LLVM.or e_1 e_3)) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:742:8: declaration uses 'sorry'
+info: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:777:17: theorem extracted_1 (e e_1 e_2 e_3 : IntW 8) :
+  LLVM.or (LLVM.and e_3 e_2) (LLVM.or (LLVM.and e_1 e_2) e) ⊑ LLVM.or (LLVM.and (LLVM.or e_1 e_3) e_2) e := sorry
+warning: ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean:772:8: declaration uses 'sorry'
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.gandhor
+error: build failed
