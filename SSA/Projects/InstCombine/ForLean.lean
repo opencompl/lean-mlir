@@ -497,21 +497,13 @@ theorem msb_rotateLeft {m w : Nat} {x : BitVec w} :
     (x.rotateLeft m).msb = x.getMsbD (m % w) := by
   simp only [getMsbD_eq_getLsbD, getLsbD_shiftLeft, BitVec.msb]
   by_cases h₀ : 0 < w
-  · simp [h₀]
-    by_cases h₁ : (m % w < w) <;> by_cases h₂ : (w - 1 < (m % w))
-    · simp [h₁, h₂, show m % w ≥ w by omega]
+  · have h₁ :  m % w < w := by apply Nat.mod_lt; omega
+    simp [h₀, h₁]
+    by_cases h₂ : w - 1 < m % w
+    · simp [h₂]
+      congr 1
       omega
-    · simp [h₁, h₂]
-    · have h₃ : (m % w) < w := by
-        simp only [gt_iff_lt, h₀, Nat.mod_lt]
-      contradiction
-    · simp only [not_lt] at h₁
-      by_cases h₃ : (w - 1 < m % w)
-      · simp only [h₃, decide_True, cond_true, show m % w < w by omega, Bool.true_and]
-        congr; omega
-      · simp only [h₃, decide_False, cond_false, Bool.iff_and_self, decide_eq_true_eq]
-        intro h₄
-        omega
+    · simp [h₂]
   · simp [h₀, show w = 0 by omega]
 
 @[simp]
