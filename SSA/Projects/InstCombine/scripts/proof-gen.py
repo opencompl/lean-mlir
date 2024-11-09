@@ -66,6 +66,7 @@ def process_file(file_path):
         return
     print(f"msg = {msg}")
 
+
     # Get the lines to replace and append
     lines_to_replace = get_lines(msg)
 
