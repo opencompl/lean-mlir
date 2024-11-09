@@ -495,17 +495,9 @@ theorem getMsbD_rotateLeft {m n w : Nat} {x : BitVec w} :
 @[simp]
 theorem msb_rotateLeft {m w : Nat} {x : BitVec w} :
     (x.rotateLeft m).msb = x.getMsbD (m % w) := by
-  simp only [getMsbD_eq_getLsbD, getLsbD_shiftLeft, BitVec.msb]
-  by_cases h₀ : 0 < w
-  · have h₁ :  m % w < w := by apply Nat.mod_lt; omega
-    simp only [h₀, decide_True, tsub_zero, getLsbD_rotateLeft, tsub_lt_self_iff, zero_lt_one,
-      _root_.and_self, Bool.true_and, h₁]
-    by_cases h₂ : w - 1 < m % w
-    · simp [h₂]
-      congr 1
-      omega
-    · simp [h₂]
-  · simp [h₀, show w = 0 by omega]
+  simp only [BitVec.msb, getMsbD_rotateLeft, add_zero, Bool.and_iff_right_iff_imp,
+    decide_eq_true_eq]
+  by_cases h₀ : 0 < w <;> simp [h₀]
 
 @[simp]
 theorem getMsbD_rotateRight {w n m : Nat} {x : BitVec w} :
@@ -540,7 +532,7 @@ theorem msb_rotateRight {r w: Nat} {x : BitVec w} :
     (x.rotateRight r).msb = x.getMsbD ((w - r % w) % w) := by
   simp only [BitVec.msb, getMsbD_rotateRight]
   by_cases h₀ : 0 < w
-  · simp only [h₀, decide_True, add_zero, zero_le, Nat.sub_eq_zero_of_le, Bool.true_and,
+  · simp [h₀, decide_True, add_zero, zero_le, Nat.sub_eq_zero_of_le, Bool.true_and,
     ite_eq_left_iff, not_lt, nonpos_iff_eq_zero]
     intro h₁
     simp [h₁]
