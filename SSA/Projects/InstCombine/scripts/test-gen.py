@@ -28,7 +28,7 @@ def allowed(op):
 
 def allowed_argument(op):
 
-    if  (op.type == LLVM.PointerType)
+    if op.type == LLVM.PointerType:
       return False
 
     return True
