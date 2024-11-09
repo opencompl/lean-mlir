@@ -1,6 +1,7 @@
 import SSA.Core.MLIRSyntax.PrettyEDSL
 import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.InstCombine.LLVM.PrettyEDSLOverflow
+import SSA.Projects.InstCombine.LLVM.PrettyEDSLExact
 open Lean
 
 namespace MLIR.EDSL
@@ -10,14 +11,9 @@ syntax "llvm.return"  : MLIR.Pretty.uniform_op
 syntax "llvm.copy"    : MLIR.Pretty.uniform_op
 syntax "llvm.neg"     : MLIR.Pretty.uniform_op
 syntax "llvm.not"     : MLIR.Pretty.uniform_op
-
 syntax "llvm.and"     : MLIR.Pretty.uniform_op
-syntax "llvm.ashr"    : MLIR.Pretty.uniform_op
 syntax "llvm.or"      : MLIR.Pretty.uniform_op
-syntax "llvm.sdiv"    : MLIR.Pretty.uniform_op
-syntax "llvm.lshr"    : MLIR.Pretty.uniform_op
 syntax "llvm.srem"    : MLIR.Pretty.uniform_op
-syntax "llvm.udiv"    : MLIR.Pretty.uniform_op
 syntax "llvm.urem"    : MLIR.Pretty.uniform_op
 syntax "llvm.xor"     : MLIR.Pretty.uniform_op
 
@@ -25,6 +21,11 @@ syntax "llvm.add"     : MLIR.Pretty.overflow_op
 syntax "llvm.shl"     : MLIR.Pretty.overflow_op
 syntax "llvm.mul"     : MLIR.Pretty.overflow_op
 syntax "llvm.sub"     : MLIR.Pretty.overflow_op
+
+syntax "llvm.udiv"    : MLIR.Pretty.exact_op
+syntax "llvm.sdiv"    : MLIR.Pretty.exact_op
+syntax "llvm.lshr"    : MLIR.Pretty.exact_op
+syntax "llvm.ashr"    : MLIR.Pretty.exact_op
 
 declare_syntax_cat InstCombine.cmp_op_name
 syntax "llvm.icmp.eq"  : InstCombine.cmp_op_name
@@ -207,6 +208,16 @@ private def pretty_test_icmp :=
   ^bb0(%arg0: i1):
     %1 = llvm.icmp "eq" %arg0, %arg0 : i1
     llvm.return %1 : i1
+  }]
+
+private def pretty_test_exact :=
+  [llvm ()|{
+  ^bb0(%arg0: i64):
+    %0 = llvm.udiv exact %arg0, %arg0 : i64
+    %1 = llvm.sdiv exact %arg0, %arg0 : i64
+    %2 = llvm.lshr exact %arg0, %arg0 : i64
+    %3 = llvm.ashr exact %arg0, %arg0 : i64
+    llvm.return %0 : i64
   }]
 
 example : pretty_test = prettier_test_generic 32 := by

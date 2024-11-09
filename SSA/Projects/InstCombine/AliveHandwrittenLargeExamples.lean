@@ -145,7 +145,7 @@ def alive_simplifyMulDivRem805 (w : Nat) :
         subst x
         simp only [ofNat_eq_ofNat, Nat.zero_eq, toNat_ofNat, Nat.reduceSucc,
           pow_one, Nat.mod_succ,
-          Nat.reduceAdd, Nat.mod_self, decide_True, ofBool_true]
+          Nat.reduceAdd, Nat.mod_self, decide_true, ofBool_true]
         decide
       case succ w'' =>
         have htwopow_pos : 2^w'' > 0 := Nat.pow_pos (by omega)
@@ -156,7 +156,7 @@ def alive_simplifyMulDivRem805 (w : Nat) :
           have hugt :
             (1 + BitVec.toNat x) % 2 ^ Nat.succ (Nat.succ w'') < 3 := by
               by_contra hcontra
-              simp only [toNat_add, toNat_ofNat, Nat.mod_add_mod, hcontra, decide_False,
+              simp only [toNat_add, toNat_ofNat, Nat.mod_add_mod, hcontra, decide_false,
                 ofBool_false, ofNat_eq_ofNat, Nat.reducePow, Fin.mk_one, Fin.isValue, ofFin_ofNat,
                 Option.some.injEq] at hugt
               contradiction
@@ -210,7 +210,7 @@ def alive_simplifyMulDivRem805 (w : Nat) :
               subst hAllOnes
               rw [toNat_allOnes] at hugt
               rw [Nat.add_sub_of_le (by omega)] at hugt
-              simp only [Nat.mod_self, Nat.ofNat_pos, decide_True,
+              simp only [Nat.mod_self, Nat.ofNat_pos, decide_true,
                 ofBool_true, ofNat_eq_ofNat] at hugt
               contradiction
 

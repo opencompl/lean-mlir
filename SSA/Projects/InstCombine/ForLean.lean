@@ -221,7 +221,7 @@ def sdiv_one_one : BitVec.sdiv 1#w 1#w = 1#w := by
   by_cases w_1 : w = 1; subst w_1; rfl
   unfold BitVec.sdiv
   unfold BitVec.udiv
-  simp only [msb_one, w_1, decide_False, toNat_ofNat, ne_eq, w_0, not_false_eq_true,
+  simp only [msb_one, w_1, decide_false, toNat_ofNat, ne_eq, w_0, not_false_eq_true,
     Nat.one_mod_two_pow_eq, zero_lt_one, Nat.div_self]
   apply BitVec.eq_of_toNat_eq
   simp
@@ -303,7 +303,7 @@ theorem sgt_zero_eq_not_neg_sgt_zero (A : BitVec w) (h_ne_intMin : A ≠ intMin 
   by_cases h : A.toInt < 0
   · simp [h]
     omega
-  · simp only [toInt_zero, neg_zero, h, decide_False, Bool.not_false, decide_eq_true_eq]
+  · simp only [toInt_zero, neg_zero, h, decide_false, Bool.not_false, decide_eq_true_eq]
     simp only [ofNat_eq_ofNat, ne_eq, ← toInt_ne, toInt_zero] at h_ne_zero
     omega
   simp only [ne_eq]
@@ -405,7 +405,7 @@ theorem and_add_or {A B : BitVec w} : (B &&& A) + (B ||| A) = B + A := by
 theorem signExtend_succ (i : Nat) (x : BitVec w) :
     x.signExtend (i+1) = cons (if i < w then x.getLsbD i else x.msb) (x.signExtend i) := by
   ext j
-  simp only [getLsbD_signExtend, Fin.is_lt, decide_True, Bool.true_and, getLsbD_cons]
+  simp only [getLsbD_signExtend, Fin.is_lt, decide_true, Bool.true_and, getLsbD_cons]
   split <;> split <;> simp_all <;> omega
 
 @[simp]

@@ -164,7 +164,7 @@ def mul {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := 
   let umul := ux' * uy'
   let uhbound := shbound <<< 1
 
-  if flags.nsw ∧ (smul < slbound ∨ smul ≥ shbound) then
+  if flags.nsw ∧ ((smul <ₛ slbound) ∨ (smul ≥ₛ shbound)) then
     none
   else if flags.nuw ∧ umul ≥ uhbound then
     none
@@ -317,7 +317,10 @@ We use this equation to define srem.
 -/
 @[simp_llvm]
 def srem? {w : Nat} (x y : BitVec w) : IntW w :=
-  (sdiv? x y).map (fun div => x - div * y)
+  if y == 0 || (w != 1 && x == (BitVec.intMin w) && y == -1) then
+    none
+  else
+    BitVec.srem x y
 
 @[simp_llvm_option]
 def srem {w : Nat} (x y : IntW w) : IntW w := do
@@ -346,9 +349,9 @@ def shl {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := 
   let x' ← x
   let y' ← y
     -- "If the nsw keyword is present, then the shift produces a poison value if it shifts out any bits that disagree with the resultant sign bit."
-  if flags.nsw ∧ ((x' <<< y') >>>ₛ y' = x') then
+  if flags.nsw ∧ ((x' <<< y').sshiftRight'  y' ≠ x') then
     none
-  else if flags.nuw ∧ ((x' <<< y') >>> y' = x') then
+  else if flags.nuw ∧ ((x' <<< y') >>> y' ≠ x') then
     none
   else
     shl? x' y'
@@ -391,7 +394,7 @@ Corresponds to `Std.BitVec.sshiftRight` in the `some` case.
 def ashr? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
   if op2 >= n
   then .none
-  else some (op1 >>>ₛ op2)
+  else some (op1.sshiftRight' op2)
 
 @[simp_llvm_option]
 def ashr {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW w := do
