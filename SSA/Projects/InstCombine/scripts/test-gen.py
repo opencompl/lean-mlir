@@ -26,6 +26,12 @@ def allowed(op):
         or (op.name in allowed_names)
     )
 
+def allowed_argument(op):
+
+    if  (op.type == LLVM.PointerType)
+      return False
+
+    return True
 
 def show(block):
     output = io.StringIO()
@@ -161,6 +167,13 @@ def process_file(file):
         log.append(f"{Msg.FUNC_NAME.value}: {func_name}\n")
         
         flag = False
+
+        for argument in func.operands:
+            if not allowed_argument(argument):
+                flag = True
+                log.append(f"{Msg.E_UNSUPPORTED.value}: {func_name} has unsupported operand: {op_name(operand)}\n\n")
+                continue
+
         for op in func.walk():
             if not allowed(op):
                 flag = True
