@@ -488,12 +488,14 @@ theorem getMsbD_rotateLeft {m n w : Nat} {x : BitVec w} :
         rw [add_mod_eq_add_sub (by omega) (by omega)]
     · simp [h₀]
 
--- @[simp]
--- theorem msb_rotateLeft {m w : Nat} {x : BitVec w} :
---     (x.rotateLeft m).msb = x.getMsbD (m % w) := by
---   simp only [BitVec.msb, getMsbD_rotateLeft, add_zero, Bool.and_iff_right_iff_imp,
---     decide_eq_true_eq]
---   by_cases h₀ : 0 < w <;> simp [h₀]
+@[simp]
+theorem msb_rotateLeft {m w : Nat} {x : BitVec w} :
+    (x.rotateLeft m).msb = x.getMsbD (m % w) := by
+  simp only [BitVec.msb, getMsbD_rotateLeft, add_zero, Bool.and_iff_right_iff_imp,
+    decide_eq_true_eq]
+  by_cases h₀ : 0 < w
+  · simp [h₀]
+  · simp [show w = 0 by omega]
 
 @[simp]
 theorem getMsbD_rotateRight {w n m : Nat} {x : BitVec w} :
