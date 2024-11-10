@@ -26,7 +26,7 @@ skipped_funcs = {
     "logical_and_noundef": "noundef",
 }
 expensive_files = [
-    "pr96012.ll",
+    "pr96012.ll", "icmp-or.lean"
 ]
 
 directory = os.fsencode(llvm_test_path)
