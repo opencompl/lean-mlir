@@ -5,12 +5,12 @@ note: this linter can be disabled with `set_option linter.docPrime false`
 warning: ././.lake/packages/mathlib/././Mathlib/Control/Combinators.lean:57:4: `Monad.sequence'` is missing a doc-string, please add one.
 Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
 note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [2506/2524] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+⚠ [2507/2524] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
-⚠ [2510/2524] Replayed SSA.Experimental.Bits.Fast.Tactic
+⚠ [2511/2524] Replayed SSA.Experimental.Bits.Fast.Tactic
 warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:350:4: declaration uses 'sorry'
-⚠ [2511/2524] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+⚠ [2512/2524] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:26:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
@@ -21,12 +21,12 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:40:8: declaratio
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:43:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:54:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:58:8: declaration uses 'sorry'
-⚠ [2516/2524] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+⚠ [2517/2524] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:56:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:129:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:164:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:198:6: declaration uses 'sorry'
-⚠ [2517/2524] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+⚠ [2518/2524] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
 ✖ [2524/2524] Building SSA.Projects.InstCombine.tests.LLVM.gandhor
 trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/plausible/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/leanwuzla/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/tobiascgrosser/.elan/toolchains/leanprover--lean4---nightly-2024-11-08/bin/lean ././././SSA/Projects/InstCombine/tests/LLVM/gandhor.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gandhor.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/tests/LLVM/gandhor.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gandhor.c --json
