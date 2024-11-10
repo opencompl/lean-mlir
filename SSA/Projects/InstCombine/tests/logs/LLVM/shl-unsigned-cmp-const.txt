@@ -132,6 +132,8 @@
 8: "vector_4xi32_shl_ugt_const" contains vectors which are unsupported
 
 1: "scalar_i8_shl_ult_const_extra_use_shl"
+9: "scalar_i8_shl_ult_const_extra_use_shl" has pointer type input
+
 4: "scalar_i8_shl_ult_const_extra_use_shl" has unsupported operation: llvm.store
 
 1: "scalar_i8_shl_slt_const"

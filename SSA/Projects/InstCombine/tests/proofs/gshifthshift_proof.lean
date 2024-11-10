@@ -120,6 +120,17 @@ theorem shl_lshr_demand1_thm (e : IntW 8) :
     all_goals sorry
 
 
+theorem shl_lshr_demand3_thm (e : IntW 8) :
+  LLVM.or (lshr (shl (const? 8 40) e) (const? 8 3)) (const? 8 (-64)) ⊑
+    LLVM.or (lshr (shl (const? 8 40) e) (const? 8 3) { «exact» := true }) (const? 8 (-64)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+
 theorem shl_lshr_demand6_thm (e : IntW 16) :
   LLVM.and (lshr (shl (const? 16 (-32624)) e) (const? 16 4)) (const? 16 4094) ⊑
     LLVM.and (shl (const? 16 2057) e) (const? 16 4094) := by 

@@ -32,11 +32,15 @@
 4: "bit_ceil_wrong_sub_constant" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
 1: "bit_ceil_32_shl_used_twice"
+9: "bit_ceil_32_shl_used_twice" has pointer type input
+
 4: "bit_ceil_32_shl_used_twice" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
 4: "bit_ceil_32_shl_used_twice" has unsupported operation: llvm.store
 
 1: "bit_ceil_32_sub_used_twice"
+9: "bit_ceil_32_sub_used_twice" has pointer type input
+
 4: "bit_ceil_32_sub_used_twice" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
 4: "bit_ceil_32_sub_used_twice" has unsupported operation: llvm.store

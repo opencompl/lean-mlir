@@ -1,28 +1,46 @@
 1: "test_load_cast_combine_tbaa"
+9: "test_load_cast_combine_tbaa" has pointer type input
+
 4: "test_load_cast_combine_tbaa" has unsupported operation: llvm.load
 
 1: "test_load_cast_combine_noalias"
+9: "test_load_cast_combine_noalias" has pointer type input
+
 4: "test_load_cast_combine_noalias" has unsupported operation: llvm.load
 
 1: "test_load_cast_combine_range"
+9: "test_load_cast_combine_range" has pointer type input
+
 4: "test_load_cast_combine_range" has unsupported operation: llvm.load
 
 1: "test_load_cast_combine_invariant"
+9: "test_load_cast_combine_invariant" has pointer type input
+
 4: "test_load_cast_combine_invariant" has unsupported operation: llvm.load
 
 1: "test_load_cast_combine_nontemporal"
+9: "test_load_cast_combine_nontemporal" has pointer type input
+
 4: "test_load_cast_combine_nontemporal" has unsupported operation: llvm.load
 
 1: "test_load_cast_combine_align"
+9: "test_load_cast_combine_align" has pointer type input
+
 4: "test_load_cast_combine_align" has unsupported operation: llvm.load
 
 1: "test_load_cast_combine_deref"
+9: "test_load_cast_combine_deref" has pointer type input
+
 4: "test_load_cast_combine_deref" has unsupported operation: llvm.load
 
 1: "test_load_cast_combine_deref_or_null"
+9: "test_load_cast_combine_deref_or_null" has pointer type input
+
 4: "test_load_cast_combine_deref_or_null" has unsupported operation: llvm.load
 
 1: "test_load_cast_combine_loop"
+9: "test_load_cast_combine_loop" has pointer type input
+
 4: "test_load_cast_combine_loop" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "test_load_cast_combine_loop" has unsupported operation: llvm.getelementptr
@@ -38,6 +56,8 @@
 4: "test_load_cast_combine_loop" has unsupported operation: llvm.return
 
 1: "test_load_cast_combine_nonnull"
+9: "test_load_cast_combine_nonnull" has pointer type input
+
 4: "test_load_cast_combine_nonnull" has unsupported operation: llvm.load
 
 4: "test_load_cast_combine_nonnull" has unsupported operation: llvm.getelementptr
@@ -47,8 +67,12 @@
 4: "test_load_cast_combine_nonnull" has unsupported operation: llvm.return
 
 1: "test_load_cast_combine_noundef"
+9: "test_load_cast_combine_noundef" has pointer type input
+
 4: "test_load_cast_combine_noundef" has unsupported operation: llvm.load
 
 1: "test_load_cast_combine_noalias_addrspace"
+9: "test_load_cast_combine_noalias_addrspace" has pointer type input
+
 4: "test_load_cast_combine_noalias_addrspace" has unsupported operation: llvm.load
 

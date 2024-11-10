@@ -52,6 +52,8 @@
 2: llvm.return
 
 1: "and_xor_not_common_op_extrause"
+9: "and_xor_not_common_op_extrause" has pointer type input
+
 4: "and_xor_not_common_op_extrause" has unsupported operation: llvm.store
 
 1: "and_not_xor_common_op"

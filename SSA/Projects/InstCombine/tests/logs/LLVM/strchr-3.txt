@@ -1,5 +1,5 @@
 1: "strchr"
-5: "strchr" is empty
+9: "strchr" has pointer type input
 
 1: "fold_strchr_s1_C"
 4: "fold_strchr_s1_C" has unsupported operation: llvm.mlir.addressof
@@ -49,5 +49,5 @@
 4: "fold_strchr_s11102_C" has unsupported operation: llvm.mlir.zero
 
 1: "memchr"
-5: "memchr" is empty
+9: "memchr" has pointer type input
 

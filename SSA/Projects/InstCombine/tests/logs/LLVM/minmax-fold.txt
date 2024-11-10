@@ -310,6 +310,8 @@
 4: "add_umin_wrong_wrap" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
 1: "add_umin_extra_use"
+9: "add_umin_extra_use" has pointer type input
+
 4: "add_umin_extra_use" has unsupported operation: llvm.store
 
 4: "add_umin_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.umin
@@ -347,6 +349,8 @@
 4: "add_umax_wrong_wrap" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
 1: "add_umax_extra_use"
+9: "add_umax_extra_use" has pointer type input
+
 4: "add_umax_extra_use" has unsupported operation: llvm.store
 
 4: "add_umax_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.umax
@@ -391,6 +395,8 @@
 4: "add_smin_wrong_wrap" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
 1: "add_smin_extra_use"
+9: "add_smin_extra_use" has pointer type input
+
 4: "add_smin_extra_use" has unsupported operation: llvm.store
 
 4: "add_smin_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.smin
@@ -429,6 +435,8 @@
 4: "add_smax_wrong_wrap" has unsupported operation: builtin.unregistered: llvm.intr.smax
 
 1: "add_smax_extra_use"
+9: "add_smax_extra_use" has pointer type input
+
 4: "add_smax_extra_use" has unsupported operation: llvm.store
 
 4: "add_smax_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.smax

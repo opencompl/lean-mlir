@@ -5,8 +5,6 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open LLVM
 open BitVec
 
-#exit
-
 open MLIR AST
 open Ctxt (Var)
 
@@ -35,7 +33,7 @@ theorem test0_proof : test0_before ⊑ test0_after := by
   simp_alive_peephole
   intros
   ---BEGIN test0
-  all_goals (try extract_goal ; sorry)
+  apply test0_thm
   ---END test0
 
 
@@ -60,7 +58,7 @@ theorem test1_proof : test1_before ⊑ test1_after := by
   simp_alive_peephole
   intros
   ---BEGIN test1
-  all_goals (try extract_goal ; sorry)
+  apply test1_thm
   ---END test1
 
 
@@ -85,7 +83,7 @@ theorem test2_proof : test2_before ⊑ test2_after := by
   simp_alive_peephole
   intros
   ---BEGIN test2
-  all_goals (try extract_goal ; sorry)
+  apply test2_thm
   ---END test2
 
 
@@ -110,7 +108,7 @@ theorem test3_proof : test3_before ⊑ test3_after := by
   simp_alive_peephole
   intros
   ---BEGIN test3
-  all_goals (try extract_goal ; sorry)
+  apply test3_thm
   ---END test3
 
 
@@ -137,7 +135,7 @@ theorem test4_proof : test4_before ⊑ test4_after := by
   simp_alive_peephole
   intros
   ---BEGIN test4
-  all_goals (try extract_goal ; sorry)
+  apply test4_thm
   ---END test4
 
 
@@ -165,7 +163,7 @@ theorem test5_proof : test5_before ⊑ test5_after := by
   simp_alive_peephole
   intros
   ---BEGIN test5
-  all_goals (try extract_goal ; sorry)
+  apply test5_thm
   ---END test5
 
 
@@ -191,7 +189,7 @@ theorem test6_proof : test6_before ⊑ test6_after := by
   simp_alive_peephole
   intros
   ---BEGIN test6
-  all_goals (try extract_goal ; sorry)
+  apply test6_thm
   ---END test6
 
 
@@ -224,7 +222,7 @@ theorem test7_proof : test7_before ⊑ test7_after := by
   simp_alive_peephole
   intros
   ---BEGIN test7
-  all_goals (try extract_goal ; sorry)
+  apply test7_thm
   ---END test7
 
 
@@ -253,7 +251,7 @@ theorem test9_proof : test9_before ⊑ test9_after := by
   simp_alive_peephole
   intros
   ---BEGIN test9
-  all_goals (try extract_goal ; sorry)
+  apply test9_thm
   ---END test9
 
 
@@ -284,7 +282,7 @@ theorem test10_proof : test10_before ⊑ test10_after := by
   simp_alive_peephole
   intros
   ---BEGIN test10
-  all_goals (try extract_goal ; sorry)
+  apply test10_thm
   ---END test10
 
 
@@ -315,7 +313,7 @@ theorem test11_proof : test11_before ⊑ test11_after := by
   simp_alive_peephole
   intros
   ---BEGIN test11
-  all_goals (try extract_goal ; sorry)
+  apply test11_thm
   ---END test11
 
 
@@ -344,7 +342,7 @@ theorem test12_proof : test12_before ⊑ test12_after := by
   simp_alive_peephole
   intros
   ---BEGIN test12
-  all_goals (try extract_goal ; sorry)
+  apply test12_thm
   ---END test12
 
 
@@ -373,7 +371,7 @@ theorem test18_proof : test18_before ⊑ test18_after := by
   simp_alive_peephole
   intros
   ---BEGIN test18
-  all_goals (try extract_goal ; sorry)
+  apply test18_thm
   ---END test18
 
 
@@ -398,7 +396,7 @@ theorem test19_proof : test19_before ⊑ test19_after := by
   simp_alive_peephole
   intros
   ---BEGIN test19
-  all_goals (try extract_goal ; sorry)
+  apply test19_thm
   ---END test19
 
 
@@ -427,7 +425,7 @@ theorem test22_proof : test22_before ⊑ test22_after := by
   simp_alive_peephole
   intros
   ---BEGIN test22
-  all_goals (try extract_goal ; sorry)
+  apply test22_thm
   ---END test22
 
 
@@ -458,7 +456,7 @@ theorem fold_zext_xor_sandwich_proof : fold_zext_xor_sandwich_before ⊑ fold_ze
   simp_alive_peephole
   intros
   ---BEGIN fold_zext_xor_sandwich
-  all_goals (try extract_goal ; sorry)
+  apply fold_zext_xor_sandwich_thm
   ---END fold_zext_xor_sandwich
 
 
@@ -485,7 +483,7 @@ theorem test23_proof : test23_before ⊑ test23_after := by
   simp_alive_peephole
   intros
   ---BEGIN test23
-  all_goals (try extract_goal ; sorry)
+  apply test23_thm
   ---END test23
 
 
@@ -512,7 +510,7 @@ theorem test24_proof : test24_before ⊑ test24_after := by
   simp_alive_peephole
   intros
   ---BEGIN test24
-  all_goals (try extract_goal ; sorry)
+  apply test24_thm
   ---END test24
 
 
@@ -540,7 +538,7 @@ theorem test25_proof : test25_before ⊑ test25_after := by
   simp_alive_peephole
   intros
   ---BEGIN test25
-  all_goals (try extract_goal ; sorry)
+  apply test25_thm
   ---END test25
 
 
@@ -569,7 +567,7 @@ theorem test27_proof : test27_before ⊑ test27_after := by
   simp_alive_peephole
   intros
   ---BEGIN test27
-  all_goals (try extract_goal ; sorry)
+  apply test27_thm
   ---END test27
 
 
@@ -598,7 +596,7 @@ theorem test28_proof : test28_before ⊑ test28_after := by
   simp_alive_peephole
   intros
   ---BEGIN test28
-  all_goals (try extract_goal ; sorry)
+  apply test28_thm
   ---END test28
 
 
@@ -627,7 +625,7 @@ theorem test28_sub_proof : test28_sub_before ⊑ test28_sub_after := by
   simp_alive_peephole
   intros
   ---BEGIN test28_sub
-  all_goals (try extract_goal ; sorry)
+  apply test28_sub_thm
   ---END test28_sub
 
 
@@ -658,7 +656,7 @@ theorem test29_proof : test29_before ⊑ test29_after := by
   simp_alive_peephole
   intros
   ---BEGIN test29
-  all_goals (try extract_goal ; sorry)
+  apply test29_thm
   ---END test29
 
 
@@ -692,7 +690,7 @@ theorem or_xor_commute1_proof : or_xor_commute1_before ⊑ or_xor_commute1_after
   simp_alive_peephole
   intros
   ---BEGIN or_xor_commute1
-  all_goals (try extract_goal ; sorry)
+  apply or_xor_commute1_thm
   ---END or_xor_commute1
 
 
@@ -726,7 +724,7 @@ theorem or_xor_commute2_proof : or_xor_commute2_before ⊑ or_xor_commute2_after
   simp_alive_peephole
   intros
   ---BEGIN or_xor_commute2
-  all_goals (try extract_goal ; sorry)
+  apply or_xor_commute2_thm
   ---END or_xor_commute2
 
 
@@ -760,7 +758,7 @@ theorem or_xor_commute3_proof : or_xor_commute3_before ⊑ or_xor_commute3_after
   simp_alive_peephole
   intros
   ---BEGIN or_xor_commute3
-  all_goals (try extract_goal ; sorry)
+  apply or_xor_commute3_thm
   ---END or_xor_commute3
 
 
@@ -794,7 +792,7 @@ theorem or_xor_commute4_proof : or_xor_commute4_before ⊑ or_xor_commute4_after
   simp_alive_peephole
   intros
   ---BEGIN or_xor_commute4
-  all_goals (try extract_goal ; sorry)
+  apply or_xor_commute4_thm
   ---END or_xor_commute4
 
 
@@ -828,7 +826,7 @@ theorem and_xor_commute1_proof : and_xor_commute1_before ⊑ and_xor_commute1_af
   simp_alive_peephole
   intros
   ---BEGIN and_xor_commute1
-  all_goals (try extract_goal ; sorry)
+  apply and_xor_commute1_thm
   ---END and_xor_commute1
 
 
@@ -862,7 +860,7 @@ theorem and_xor_commute2_proof : and_xor_commute2_before ⊑ and_xor_commute2_af
   simp_alive_peephole
   intros
   ---BEGIN and_xor_commute2
-  all_goals (try extract_goal ; sorry)
+  apply and_xor_commute2_thm
   ---END and_xor_commute2
 
 
@@ -896,7 +894,7 @@ theorem and_xor_commute3_proof : and_xor_commute3_before ⊑ and_xor_commute3_af
   simp_alive_peephole
   intros
   ---BEGIN and_xor_commute3
-  all_goals (try extract_goal ; sorry)
+  apply and_xor_commute3_thm
   ---END and_xor_commute3
 
 
@@ -930,7 +928,7 @@ theorem and_xor_commute4_proof : and_xor_commute4_before ⊑ and_xor_commute4_af
   simp_alive_peephole
   intros
   ---BEGIN and_xor_commute4
-  all_goals (try extract_goal ; sorry)
+  apply and_xor_commute4_thm
   ---END and_xor_commute4
 
 
@@ -960,7 +958,7 @@ theorem or_or_xor_proof : or_or_xor_before ⊑ or_or_xor_after := by
   simp_alive_peephole
   intros
   ---BEGIN or_or_xor
-  all_goals (try extract_goal ; sorry)
+  apply or_or_xor_thm
   ---END or_or_xor
 
 
@@ -990,7 +988,7 @@ theorem or_or_xor_commute1_proof : or_or_xor_commute1_before ⊑ or_or_xor_commu
   simp_alive_peephole
   intros
   ---BEGIN or_or_xor_commute1
-  all_goals (try extract_goal ; sorry)
+  apply or_or_xor_commute1_thm
   ---END or_or_xor_commute1
 
 
@@ -1020,7 +1018,7 @@ theorem or_or_xor_commute2_proof : or_or_xor_commute2_before ⊑ or_or_xor_commu
   simp_alive_peephole
   intros
   ---BEGIN or_or_xor_commute2
-  all_goals (try extract_goal ; sorry)
+  apply or_or_xor_commute2_thm
   ---END or_or_xor_commute2
 
 
@@ -1053,7 +1051,7 @@ theorem not_is_canonical_proof : not_is_canonical_before ⊑ not_is_canonical_af
   simp_alive_peephole
   intros
   ---BEGIN not_is_canonical
-  all_goals (try extract_goal ; sorry)
+  apply not_is_canonical_thm
   ---END not_is_canonical
 
 
@@ -1084,7 +1082,7 @@ theorem not_shl_proof : not_shl_before ⊑ not_shl_after := by
   simp_alive_peephole
   intros
   ---BEGIN not_shl
-  all_goals (try extract_goal ; sorry)
+  apply not_shl_thm
   ---END not_shl
 
 
@@ -1115,7 +1113,7 @@ theorem not_lshr_proof : not_lshr_before ⊑ not_lshr_after := by
   simp_alive_peephole
   intros
   ---BEGIN not_lshr
-  all_goals (try extract_goal ; sorry)
+  apply not_lshr_thm
   ---END not_lshr
 
 
@@ -1146,7 +1144,7 @@ theorem ashr_not_proof : ashr_not_before ⊑ ashr_not_after := by
   simp_alive_peephole
   intros
   ---BEGIN ashr_not
-  all_goals (try extract_goal ; sorry)
+  apply ashr_not_thm
   ---END ashr_not
 
 
@@ -1178,7 +1176,7 @@ theorem xor_andn_commute2_proof : xor_andn_commute2_before ⊑ xor_andn_commute2
   simp_alive_peephole
   intros
   ---BEGIN xor_andn_commute2
-  all_goals (try extract_goal ; sorry)
+  apply xor_andn_commute2_thm
   ---END xor_andn_commute2
 
 
@@ -1210,7 +1208,7 @@ theorem xor_andn_commute3_proof : xor_andn_commute3_before ⊑ xor_andn_commute3
   simp_alive_peephole
   intros
   ---BEGIN xor_andn_commute3
-  all_goals (try extract_goal ; sorry)
+  apply xor_andn_commute3_thm
   ---END xor_andn_commute3
 
 
@@ -1244,7 +1242,7 @@ theorem xor_andn_commute4_proof : xor_andn_commute4_before ⊑ xor_andn_commute4
   simp_alive_peephole
   intros
   ---BEGIN xor_andn_commute4
-  all_goals (try extract_goal ; sorry)
+  apply xor_andn_commute4_thm
   ---END xor_andn_commute4
 
 
@@ -1278,78 +1276,8 @@ theorem xor_orn_commute1_proof : xor_orn_commute1_before ⊑ xor_orn_commute1_af
   simp_alive_peephole
   intros
   ---BEGIN xor_orn_commute1
-  all_goals (try extract_goal ; sorry)
+  apply xor_orn_commute1_thm
   ---END xor_orn_commute1
-
-
-
-def xor_orn_commute2_before := [llvm|
-{
-^0(%arg59 : i32, %arg60 : i32, %arg61 : !llvm.ptr):
-  %0 = llvm.mlir.constant(42 : i32) : i32
-  %1 = llvm.mlir.constant(-1 : i32) : i32
-  %2 = llvm.udiv %0, %arg60 : i32
-  %3 = llvm.xor %arg59, %1 : i32
-  %4 = llvm.or %2, %3 : i32
-  %5 = llvm.xor %4, %arg59 : i32
-  "llvm.return"(%5) : (i32) -> ()
-}
-]
-def xor_orn_commute2_after := [llvm|
-{
-^0(%arg59 : i32, %arg60 : i32, %arg61 : !llvm.ptr):
-  %0 = llvm.mlir.constant(42 : i32) : i32
-  %1 = llvm.mlir.constant(-1 : i32) : i32
-  %2 = llvm.udiv %0, %arg60 : i32
-  %3 = llvm.and %arg59, %2 : i32
-  %4 = llvm.xor %3, %1 : i32
-  "llvm.return"(%4) : (i32) -> ()
-}
-]
-set_option debug.skipKernelTC true in
-theorem xor_orn_commute2_proof : xor_orn_commute2_before ⊑ xor_orn_commute2_after := by
-  unfold xor_orn_commute2_before xor_orn_commute2_after
-  simp_alive_peephole
-  intros
-  ---BEGIN xor_orn_commute2
-  all_goals (try extract_goal ; sorry)
-  ---END xor_orn_commute2
-
-
-
-def xor_orn_commute3_before := [llvm|
-{
-^0(%arg53 : i67, %arg54 : i67, %arg55 : !llvm.ptr):
-  %0 = llvm.mlir.constant(42 : i67) : i67
-  %1 = llvm.mlir.constant(-1 : i67) : i67
-  %2 = llvm.udiv %0, %arg53 : i67
-  %3 = llvm.udiv %0, %arg54 : i67
-  %4 = llvm.xor %2, %1 : i67
-  %5 = llvm.or %3, %4 : i67
-  %6 = llvm.xor %2, %5 : i67
-  "llvm.return"(%6) : (i67) -> ()
-}
-]
-def xor_orn_commute3_after := [llvm|
-{
-^0(%arg53 : i67, %arg54 : i67, %arg55 : !llvm.ptr):
-  %0 = llvm.mlir.constant(42 : i67) : i67
-  %1 = llvm.mlir.constant(-1 : i67) : i67
-  %2 = llvm.udiv %0, %arg53 : i67
-  %3 = llvm.udiv %0, %arg54 : i67
-  %4 = llvm.and %2, %3 : i67
-  %5 = llvm.xor %4, %1 : i67
-  "llvm.return"(%5) : (i67) -> ()
-}
-]
-set_option debug.skipKernelTC true in
-theorem xor_orn_commute3_proof : xor_orn_commute3_before ⊑ xor_orn_commute3_after := by
-  unfold xor_orn_commute3_before xor_orn_commute3_after
-  simp_alive_peephole
-  intros
-  ---BEGIN xor_orn_commute3
-  all_goals (try extract_goal ; sorry)
-  ---END xor_orn_commute3
 
 
 
@@ -1378,7 +1306,7 @@ theorem tryFactorization_xor_ashr_lshr_proof : tryFactorization_xor_ashr_lshr_be
   simp_alive_peephole
   intros
   ---BEGIN tryFactorization_xor_ashr_lshr
-  all_goals (try extract_goal ; sorry)
+  apply tryFactorization_xor_ashr_lshr_thm
   ---END tryFactorization_xor_ashr_lshr
 
 
@@ -1408,7 +1336,7 @@ theorem tryFactorization_xor_lshr_ashr_proof : tryFactorization_xor_lshr_ashr_be
   simp_alive_peephole
   intros
   ---BEGIN tryFactorization_xor_lshr_ashr
-  all_goals (try extract_goal ; sorry)
+  apply tryFactorization_xor_lshr_ashr_thm
   ---END tryFactorization_xor_lshr_ashr
 
 
@@ -1438,7 +1366,7 @@ theorem tryFactorization_xor_lshr_lshr_proof : tryFactorization_xor_lshr_lshr_be
   simp_alive_peephole
   intros
   ---BEGIN tryFactorization_xor_lshr_lshr
-  all_goals (try extract_goal ; sorry)
+  apply tryFactorization_xor_lshr_lshr_thm
   ---END tryFactorization_xor_lshr_lshr
 
 
@@ -1468,7 +1396,7 @@ theorem tryFactorization_xor_ashr_ashr_proof : tryFactorization_xor_ashr_ashr_be
   simp_alive_peephole
   intros
   ---BEGIN tryFactorization_xor_ashr_ashr
-  all_goals (try extract_goal ; sorry)
+  apply tryFactorization_xor_ashr_ashr_thm
   ---END tryFactorization_xor_ashr_ashr
 
 
@@ -1501,7 +1429,7 @@ theorem PR96857_xor_with_noundef_proof : PR96857_xor_with_noundef_before ⊑ PR9
   simp_alive_peephole
   intros
   ---BEGIN PR96857_xor_with_noundef
-  all_goals (try extract_goal ; sorry)
+  apply PR96857_xor_with_noundef_thm
   ---END PR96857_xor_with_noundef
 
 
@@ -1534,7 +1462,7 @@ theorem PR96857_xor_without_noundef_proof : PR96857_xor_without_noundef_before �
   simp_alive_peephole
   intros
   ---BEGIN PR96857_xor_without_noundef
-  all_goals (try extract_goal ; sorry)
+  apply PR96857_xor_without_noundef_thm
   ---END PR96857_xor_without_noundef
 
 
@@ -1559,7 +1487,7 @@ theorem or_disjoint_with_xor_proof : or_disjoint_with_xor_before ⊑ or_disjoint
   simp_alive_peephole
   intros
   ---BEGIN or_disjoint_with_xor
-  all_goals (try extract_goal ; sorry)
+  apply or_disjoint_with_xor_thm
   ---END or_disjoint_with_xor
 
 
@@ -1584,7 +1512,7 @@ theorem xor_with_or_disjoint_ab_proof : xor_with_or_disjoint_ab_before ⊑ xor_w
   simp_alive_peephole
   intros
   ---BEGIN xor_with_or_disjoint_ab
-  all_goals (try extract_goal ; sorry)
+  apply xor_with_or_disjoint_ab_thm
   ---END xor_with_or_disjoint_ab
 
 
@@ -1609,7 +1537,7 @@ theorem xor_with_or_disjoint_ba_proof : xor_with_or_disjoint_ba_before ⊑ xor_w
   simp_alive_peephole
   intros
   ---BEGIN xor_with_or_disjoint_ba
-  all_goals (try extract_goal ; sorry)
+  apply xor_with_or_disjoint_ba_thm
   ---END xor_with_or_disjoint_ba
 
 
@@ -1644,5 +1572,7 @@ theorem select_or_disjoint_or_proof : select_or_disjoint_or_before ⊑ select_or
   simp_alive_peephole
   intros
   ---BEGIN select_or_disjoint_or
-  all_goals (try extract_goal ; sorry)
+  apply select_or_disjoint_or_thm
   ---END select_or_disjoint_or
+
+

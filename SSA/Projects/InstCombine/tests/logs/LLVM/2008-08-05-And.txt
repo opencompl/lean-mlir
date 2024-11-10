@@ -1,4 +1,6 @@
 1: "f"
+9: "f" has pointer type input
+
 4: "f" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "f" has unsupported operation: llvm.load
@@ -10,6 +12,8 @@
 4: "f" has unsupported operation: llvm.return
 
 1: "f_logical"
+9: "f_logical" has pointer type input
+
 4: "f_logical" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "f_logical" has unsupported operation: llvm.load

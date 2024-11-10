@@ -111,3 +111,69 @@ theorem shl_add_nsw_proof : shl_add_nsw_before ⊑ shl_add_nsw_after := by
   ---END shl_add_nsw
 
 
+
+def lshr_add_exact_before := [llvm|
+{
+^0(%arg6 : i8, %arg7 : i8):
+  %0 = llvm.mlir.constant(-4 : i8) : i8
+  %1 = llvm.mlir.constant(2 : i8) : i8
+  %2 = llvm.and %arg6, %0 : i8
+  %3 = llvm.and %arg7, %1 : i8
+  %4 = llvm.lshr %2, %3 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+def lshr_add_exact_after := [llvm|
+{
+^0(%arg6 : i8, %arg7 : i8):
+  %0 = llvm.mlir.constant(-4 : i8) : i8
+  %1 = llvm.mlir.constant(2 : i8) : i8
+  %2 = llvm.and %arg6, %0 : i8
+  %3 = llvm.and %arg7, %1 : i8
+  %4 = llvm.lshr exact %2, %3 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem lshr_add_exact_proof : lshr_add_exact_before ⊑ lshr_add_exact_after := by
+  unfold lshr_add_exact_before lshr_add_exact_after
+  simp_alive_peephole
+  intros
+  ---BEGIN lshr_add_exact
+  all_goals (try extract_goal ; sorry)
+  ---END lshr_add_exact
+
+
+
+def ashr_add_exact_before := [llvm|
+{
+^0(%arg2 : i8, %arg3 : i8):
+  %0 = llvm.mlir.constant(-14 : i8) : i8
+  %1 = llvm.mlir.constant(1 : i8) : i8
+  %2 = llvm.and %arg2, %0 : i8
+  %3 = llvm.and %arg3, %1 : i8
+  %4 = llvm.ashr %2, %3 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+def ashr_add_exact_after := [llvm|
+{
+^0(%arg2 : i8, %arg3 : i8):
+  %0 = llvm.mlir.constant(-14 : i8) : i8
+  %1 = llvm.mlir.constant(1 : i8) : i8
+  %2 = llvm.and %arg2, %0 : i8
+  %3 = llvm.and %arg3, %1 : i8
+  %4 = llvm.ashr exact %2, %3 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem ashr_add_exact_proof : ashr_add_exact_before ⊑ ashr_add_exact_after := by
+  unfold ashr_add_exact_before ashr_add_exact_after
+  simp_alive_peephole
+  intros
+  ---BEGIN ashr_add_exact
+  all_goals (try extract_goal ; sorry)
+  ---END ashr_add_exact
+
+

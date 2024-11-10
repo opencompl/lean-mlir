@@ -155,6 +155,8 @@
 2: llvm.return
 
 1: "test11"
+9: "test11" has pointer type input
+
 4: "test11" has unsupported operation: llvm.store
 
 1: "test12"
@@ -335,6 +337,8 @@
 4: "ashr_lowmask_use" has unsupported operation: llvm.call
 
 1: "ashr_lowmask_use_splat"
+9: "ashr_lowmask_use_splat" has pointer type input
+
 4: "ashr_lowmask_use_splat" has unsupported operation: llvm.store
 
 1: "ashr_not_lowmask1_use"
@@ -804,6 +808,8 @@
 4: "not_lowmask_sext_in_reg2" has unsupported operation: llvm.call
 
 1: "lowmask_sext_in_reg_splat"
+9: "lowmask_sext_in_reg_splat" has pointer type input
+
 4: "lowmask_sext_in_reg_splat" has unsupported operation: llvm.store
 
 1: "lowmask_add"
@@ -821,6 +827,8 @@
 4: "lowmask_add_2_uses" has unsupported operation: llvm.call
 
 1: "lowmask_add_2_splat"
+9: "lowmask_add_2_splat" has pointer type input
+
 4: "lowmask_add_2_splat" has unsupported operation: llvm.store
 
 1: "not_lowmask_add"
@@ -830,9 +838,13 @@
 4: "not_lowmask_add2" has unsupported operation: llvm.call
 
 1: "lowmask_add_splat"
+9: "lowmask_add_splat" has pointer type input
+
 4: "lowmask_add_splat" has unsupported operation: llvm.store
 
 1: "lowmask_add_splat_poison"
+9: "lowmask_add_splat_poison" has pointer type input
+
 4: "lowmask_add_splat_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
 4: "lowmask_add_splat_poison" has unsupported operation: llvm.mlir.undef
@@ -850,6 +862,8 @@
 4: "lowmask_add_splat_poison" has unsupported operation: llvm.store
 
 1: "lowmask_add_vec"
+9: "lowmask_add_vec" has pointer type input
+
 4: "lowmask_add_vec" has unsupported operation: llvm.store
 
 1: "flip_masked_bit"

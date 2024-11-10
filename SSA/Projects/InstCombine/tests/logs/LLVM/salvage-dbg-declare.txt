@@ -1,5 +1,5 @@
 1: "bar"
-5: "bar" is empty
+9: "bar" has pointer type input
 
 1: "foo"
 4: "foo" has unsupported operation: llvm.alloca

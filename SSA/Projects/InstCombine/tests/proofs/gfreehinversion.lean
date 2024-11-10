@@ -13,8 +13,6 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gfreehinversion_statements
 
-#exit
-
 def xor_1_before := [llvm|
 {
 ^0(%arg137 : i8, %arg138 : i1, %arg139 : i8, %arg140 : i8):
@@ -44,7 +42,7 @@ theorem xor_1_proof : xor_1_before ⊑ xor_1_after := by
   simp_alive_peephole
   intros
   ---BEGIN xor_1
-  all_goals (try extract_goal ; sorry)
+  apply xor_1_thm
   ---END xor_1
 
 
@@ -78,7 +76,7 @@ theorem xor_2_proof : xor_2_before ⊑ xor_2_after := by
   simp_alive_peephole
   intros
   ---BEGIN xor_2
-  all_goals (try extract_goal ; sorry)
+  apply xor_2_thm
   ---END xor_2
 
 
@@ -112,7 +110,7 @@ theorem add_1_proof : add_1_before ⊑ add_1_after := by
   simp_alive_peephole
   intros
   ---BEGIN add_1
-  all_goals (try extract_goal ; sorry)
+  apply add_1_thm
   ---END add_1
 
 
@@ -146,7 +144,7 @@ theorem add_2_proof : add_2_before ⊑ add_2_after := by
   simp_alive_peephole
   intros
   ---BEGIN add_2
-  all_goals (try extract_goal ; sorry)
+  apply add_2_thm
   ---END add_2
 
 
@@ -180,7 +178,7 @@ theorem sub_1_proof : sub_1_before ⊑ sub_1_after := by
   simp_alive_peephole
   intros
   ---BEGIN sub_1
-  all_goals (try extract_goal ; sorry)
+  apply sub_1_thm
   ---END sub_1
 
 
@@ -216,7 +214,7 @@ theorem sub_2_proof : sub_2_before ⊑ sub_2_after := by
   simp_alive_peephole
   intros
   ---BEGIN sub_2
-  all_goals (try extract_goal ; sorry)
+  apply sub_2_thm
   ---END sub_2
 
 
@@ -252,7 +250,7 @@ theorem sub_3_proof : sub_3_before ⊑ sub_3_after := by
   simp_alive_peephole
   intros
   ---BEGIN sub_3
-  all_goals (try extract_goal ; sorry)
+  apply sub_3_thm
   ---END sub_3
 
 
@@ -286,7 +284,7 @@ theorem ashr_1_proof : ashr_1_before ⊑ ashr_1_after := by
   simp_alive_peephole
   intros
   ---BEGIN ashr_1
-  all_goals (try extract_goal ; sorry)
+  apply ashr_1_thm
   ---END ashr_1
 
 
@@ -326,7 +324,7 @@ theorem select_1_proof : select_1_before ⊑ select_1_after := by
   simp_alive_peephole
   intros
   ---BEGIN select_1
-  all_goals (try extract_goal ; sorry)
+  apply select_1_thm
   ---END select_1
 
 
@@ -364,7 +362,7 @@ theorem select_2_proof : select_2_before ⊑ select_2_after := by
   simp_alive_peephole
   intros
   ---BEGIN select_2
-  all_goals (try extract_goal ; sorry)
+  apply select_2_thm
   ---END select_2
 
 
@@ -396,5 +394,7 @@ theorem lshr_not_nneg2_proof : lshr_not_nneg2_before ⊑ lshr_not_nneg2_after :=
   simp_alive_peephole
   intros
   ---BEGIN lshr_not_nneg2
-  all_goals (try extract_goal ; sorry)
+  apply lshr_not_nneg2_thm
   ---END lshr_not_nneg2
+
+

@@ -5426,7 +5426,7 @@ def lshrugt_01_00_exact_before := [llvm|
 ^0(%arg221 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(0 : i4) : i4
-  %2 = llvm.lshr %arg221, %0 : i4
+  %2 = llvm.lshr exact %arg221, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -5454,7 +5454,7 @@ def lshrugt_01_01_exact_before := [llvm|
 {
 ^0(%arg220 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
-  %1 = llvm.lshr %arg220, %0 : i4
+  %1 = llvm.lshr exact %arg220, %0 : i4
   %2 = llvm.icmp "ugt" %1, %0 : i4
   "llvm.return"(%2) : (i1) -> ()
 }
@@ -5483,7 +5483,7 @@ def lshrugt_01_02_exact_before := [llvm|
 ^0(%arg219 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(2 : i4) : i4
-  %2 = llvm.lshr %arg219, %0 : i4
+  %2 = llvm.lshr exact %arg219, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -5512,7 +5512,7 @@ def lshrugt_01_03_exact_before := [llvm|
 ^0(%arg218 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(3 : i4) : i4
-  %2 = llvm.lshr %arg218, %0 : i4
+  %2 = llvm.lshr exact %arg218, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -5541,7 +5541,7 @@ def lshrugt_01_04_exact_before := [llvm|
 ^0(%arg217 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(4 : i4) : i4
-  %2 = llvm.lshr %arg217, %0 : i4
+  %2 = llvm.lshr exact %arg217, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -5570,7 +5570,7 @@ def lshrugt_01_05_exact_before := [llvm|
 ^0(%arg216 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(5 : i4) : i4
-  %2 = llvm.lshr %arg216, %0 : i4
+  %2 = llvm.lshr exact %arg216, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -5599,7 +5599,7 @@ def lshrugt_01_06_exact_before := [llvm|
 ^0(%arg215 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(6 : i4) : i4
-  %2 = llvm.lshr %arg215, %0 : i4
+  %2 = llvm.lshr exact %arg215, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -5628,7 +5628,7 @@ def lshrugt_01_07_exact_before := [llvm|
 ^0(%arg214 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(7 : i4) : i4
-  %2 = llvm.lshr %arg214, %0 : i4
+  %2 = llvm.lshr exact %arg214, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -5656,7 +5656,7 @@ def lshrugt_01_08_exact_before := [llvm|
 ^0(%arg213 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-8 : i4) : i4
-  %2 = llvm.lshr %arg213, %0 : i4
+  %2 = llvm.lshr exact %arg213, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -5684,7 +5684,7 @@ def lshrugt_01_09_exact_before := [llvm|
 ^0(%arg212 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-7 : i4) : i4
-  %2 = llvm.lshr %arg212, %0 : i4
+  %2 = llvm.lshr exact %arg212, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -5712,7 +5712,7 @@ def lshrugt_01_10_exact_before := [llvm|
 ^0(%arg211 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-6 : i4) : i4
-  %2 = llvm.lshr %arg211, %0 : i4
+  %2 = llvm.lshr exact %arg211, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -5740,7 +5740,7 @@ def lshrugt_01_11_exact_before := [llvm|
 ^0(%arg210 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-5 : i4) : i4
-  %2 = llvm.lshr %arg210, %0 : i4
+  %2 = llvm.lshr exact %arg210, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -5768,7 +5768,7 @@ def lshrugt_01_12_exact_before := [llvm|
 ^0(%arg209 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-4 : i4) : i4
-  %2 = llvm.lshr %arg209, %0 : i4
+  %2 = llvm.lshr exact %arg209, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -5796,7 +5796,7 @@ def lshrugt_01_13_exact_before := [llvm|
 ^0(%arg208 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-3 : i4) : i4
-  %2 = llvm.lshr %arg208, %0 : i4
+  %2 = llvm.lshr exact %arg208, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -5824,7 +5824,7 @@ def lshrugt_01_14_exact_before := [llvm|
 ^0(%arg207 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-2 : i4) : i4
-  %2 = llvm.lshr %arg207, %0 : i4
+  %2 = llvm.lshr exact %arg207, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -5852,7 +5852,7 @@ def lshrugt_01_15_exact_before := [llvm|
 ^0(%arg206 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-1 : i4) : i4
-  %2 = llvm.lshr %arg206, %0 : i4
+  %2 = llvm.lshr exact %arg206, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -5880,7 +5880,7 @@ def lshrugt_02_00_exact_before := [llvm|
 ^0(%arg205 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(0 : i4) : i4
-  %2 = llvm.lshr %arg205, %0 : i4
+  %2 = llvm.lshr exact %arg205, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -5909,7 +5909,7 @@ def lshrugt_02_01_exact_before := [llvm|
 ^0(%arg204 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(1 : i4) : i4
-  %2 = llvm.lshr %arg204, %0 : i4
+  %2 = llvm.lshr exact %arg204, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -5937,7 +5937,7 @@ def lshrugt_02_02_exact_before := [llvm|
 {
 ^0(%arg203 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
-  %1 = llvm.lshr %arg203, %0 : i4
+  %1 = llvm.lshr exact %arg203, %0 : i4
   %2 = llvm.icmp "ugt" %1, %0 : i4
   "llvm.return"(%2) : (i1) -> ()
 }
@@ -5966,7 +5966,7 @@ def lshrugt_02_03_exact_before := [llvm|
 ^0(%arg202 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(3 : i4) : i4
-  %2 = llvm.lshr %arg202, %0 : i4
+  %2 = llvm.lshr exact %arg202, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -5994,7 +5994,7 @@ def lshrugt_02_04_exact_before := [llvm|
 ^0(%arg201 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(4 : i4) : i4
-  %2 = llvm.lshr %arg201, %0 : i4
+  %2 = llvm.lshr exact %arg201, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6022,7 +6022,7 @@ def lshrugt_02_05_exact_before := [llvm|
 ^0(%arg200 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(5 : i4) : i4
-  %2 = llvm.lshr %arg200, %0 : i4
+  %2 = llvm.lshr exact %arg200, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6050,7 +6050,7 @@ def lshrugt_02_06_exact_before := [llvm|
 ^0(%arg199 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(6 : i4) : i4
-  %2 = llvm.lshr %arg199, %0 : i4
+  %2 = llvm.lshr exact %arg199, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6078,7 +6078,7 @@ def lshrugt_02_07_exact_before := [llvm|
 ^0(%arg198 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(7 : i4) : i4
-  %2 = llvm.lshr %arg198, %0 : i4
+  %2 = llvm.lshr exact %arg198, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6106,7 +6106,7 @@ def lshrugt_02_08_exact_before := [llvm|
 ^0(%arg197 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-8 : i4) : i4
-  %2 = llvm.lshr %arg197, %0 : i4
+  %2 = llvm.lshr exact %arg197, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6134,7 +6134,7 @@ def lshrugt_02_09_exact_before := [llvm|
 ^0(%arg196 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-7 : i4) : i4
-  %2 = llvm.lshr %arg196, %0 : i4
+  %2 = llvm.lshr exact %arg196, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6162,7 +6162,7 @@ def lshrugt_02_10_exact_before := [llvm|
 ^0(%arg195 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-6 : i4) : i4
-  %2 = llvm.lshr %arg195, %0 : i4
+  %2 = llvm.lshr exact %arg195, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6190,7 +6190,7 @@ def lshrugt_02_11_exact_before := [llvm|
 ^0(%arg194 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-5 : i4) : i4
-  %2 = llvm.lshr %arg194, %0 : i4
+  %2 = llvm.lshr exact %arg194, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6218,7 +6218,7 @@ def lshrugt_02_12_exact_before := [llvm|
 ^0(%arg193 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-4 : i4) : i4
-  %2 = llvm.lshr %arg193, %0 : i4
+  %2 = llvm.lshr exact %arg193, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6246,7 +6246,7 @@ def lshrugt_02_13_exact_before := [llvm|
 ^0(%arg192 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-3 : i4) : i4
-  %2 = llvm.lshr %arg192, %0 : i4
+  %2 = llvm.lshr exact %arg192, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6274,7 +6274,7 @@ def lshrugt_02_14_exact_before := [llvm|
 ^0(%arg191 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-2 : i4) : i4
-  %2 = llvm.lshr %arg191, %0 : i4
+  %2 = llvm.lshr exact %arg191, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6302,7 +6302,7 @@ def lshrugt_02_15_exact_before := [llvm|
 ^0(%arg190 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-1 : i4) : i4
-  %2 = llvm.lshr %arg190, %0 : i4
+  %2 = llvm.lshr exact %arg190, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6330,7 +6330,7 @@ def lshrugt_03_00_exact_before := [llvm|
 ^0(%arg189 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(0 : i4) : i4
-  %2 = llvm.lshr %arg189, %0 : i4
+  %2 = llvm.lshr exact %arg189, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6359,7 +6359,7 @@ def lshrugt_03_01_exact_before := [llvm|
 ^0(%arg188 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(1 : i4) : i4
-  %2 = llvm.lshr %arg188, %0 : i4
+  %2 = llvm.lshr exact %arg188, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6387,7 +6387,7 @@ def lshrugt_03_02_exact_before := [llvm|
 ^0(%arg187 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(2 : i4) : i4
-  %2 = llvm.lshr %arg187, %0 : i4
+  %2 = llvm.lshr exact %arg187, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6414,7 +6414,7 @@ def lshrugt_03_03_exact_before := [llvm|
 {
 ^0(%arg186 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
-  %1 = llvm.lshr %arg186, %0 : i4
+  %1 = llvm.lshr exact %arg186, %0 : i4
   %2 = llvm.icmp "ugt" %1, %0 : i4
   "llvm.return"(%2) : (i1) -> ()
 }
@@ -6442,7 +6442,7 @@ def lshrugt_03_04_exact_before := [llvm|
 ^0(%arg185 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(4 : i4) : i4
-  %2 = llvm.lshr %arg185, %0 : i4
+  %2 = llvm.lshr exact %arg185, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6470,7 +6470,7 @@ def lshrugt_03_05_exact_before := [llvm|
 ^0(%arg184 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(5 : i4) : i4
-  %2 = llvm.lshr %arg184, %0 : i4
+  %2 = llvm.lshr exact %arg184, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6498,7 +6498,7 @@ def lshrugt_03_06_exact_before := [llvm|
 ^0(%arg183 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(6 : i4) : i4
-  %2 = llvm.lshr %arg183, %0 : i4
+  %2 = llvm.lshr exact %arg183, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6526,7 +6526,7 @@ def lshrugt_03_07_exact_before := [llvm|
 ^0(%arg182 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(7 : i4) : i4
-  %2 = llvm.lshr %arg182, %0 : i4
+  %2 = llvm.lshr exact %arg182, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6554,7 +6554,7 @@ def lshrugt_03_08_exact_before := [llvm|
 ^0(%arg181 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-8 : i4) : i4
-  %2 = llvm.lshr %arg181, %0 : i4
+  %2 = llvm.lshr exact %arg181, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6582,7 +6582,7 @@ def lshrugt_03_09_exact_before := [llvm|
 ^0(%arg180 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-7 : i4) : i4
-  %2 = llvm.lshr %arg180, %0 : i4
+  %2 = llvm.lshr exact %arg180, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6610,7 +6610,7 @@ def lshrugt_03_10_exact_before := [llvm|
 ^0(%arg179 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-6 : i4) : i4
-  %2 = llvm.lshr %arg179, %0 : i4
+  %2 = llvm.lshr exact %arg179, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6638,7 +6638,7 @@ def lshrugt_03_11_exact_before := [llvm|
 ^0(%arg178 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-5 : i4) : i4
-  %2 = llvm.lshr %arg178, %0 : i4
+  %2 = llvm.lshr exact %arg178, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6666,7 +6666,7 @@ def lshrugt_03_12_exact_before := [llvm|
 ^0(%arg177 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-4 : i4) : i4
-  %2 = llvm.lshr %arg177, %0 : i4
+  %2 = llvm.lshr exact %arg177, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6694,7 +6694,7 @@ def lshrugt_03_13_exact_before := [llvm|
 ^0(%arg176 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-3 : i4) : i4
-  %2 = llvm.lshr %arg176, %0 : i4
+  %2 = llvm.lshr exact %arg176, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6722,7 +6722,7 @@ def lshrugt_03_14_exact_before := [llvm|
 ^0(%arg175 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-2 : i4) : i4
-  %2 = llvm.lshr %arg175, %0 : i4
+  %2 = llvm.lshr exact %arg175, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6750,7 +6750,7 @@ def lshrugt_03_15_exact_before := [llvm|
 ^0(%arg174 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-1 : i4) : i4
-  %2 = llvm.lshr %arg174, %0 : i4
+  %2 = llvm.lshr exact %arg174, %0 : i4
   %3 = llvm.icmp "ugt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6778,7 +6778,7 @@ def ashr_eq_exact_before := [llvm|
 ^0(%arg173 : i8):
   %0 = llvm.mlir.constant(3 : i8) : i8
   %1 = llvm.mlir.constant(10 : i8) : i8
-  %2 = llvm.ashr %arg173, %0 : i8
+  %2 = llvm.ashr exact %arg173, %0 : i8
   %3 = llvm.icmp "eq" %2, %1 : i8
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6807,7 +6807,7 @@ def ashr_ne_exact_before := [llvm|
 ^0(%arg172 : i8):
   %0 = llvm.mlir.constant(3 : i8) : i8
   %1 = llvm.mlir.constant(10 : i8) : i8
-  %2 = llvm.ashr %arg172, %0 : i8
+  %2 = llvm.ashr exact %arg172, %0 : i8
   %3 = llvm.icmp "ne" %2, %1 : i8
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6836,7 +6836,7 @@ def ashr_ugt_exact_before := [llvm|
 ^0(%arg171 : i8):
   %0 = llvm.mlir.constant(3 : i8) : i8
   %1 = llvm.mlir.constant(10 : i8) : i8
-  %2 = llvm.ashr %arg171, %0 : i8
+  %2 = llvm.ashr exact %arg171, %0 : i8
   %3 = llvm.icmp "ugt" %2, %1 : i8
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6865,7 +6865,7 @@ def ashr_uge_exact_before := [llvm|
 ^0(%arg170 : i8):
   %0 = llvm.mlir.constant(3 : i8) : i8
   %1 = llvm.mlir.constant(10 : i8) : i8
-  %2 = llvm.ashr %arg170, %0 : i8
+  %2 = llvm.ashr exact %arg170, %0 : i8
   %3 = llvm.icmp "uge" %2, %1 : i8
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6894,7 +6894,7 @@ def ashr_ult_exact_before := [llvm|
 ^0(%arg169 : i8):
   %0 = llvm.mlir.constant(3 : i8) : i8
   %1 = llvm.mlir.constant(10 : i8) : i8
-  %2 = llvm.ashr %arg169, %0 : i8
+  %2 = llvm.ashr exact %arg169, %0 : i8
   %3 = llvm.icmp "ult" %2, %1 : i8
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6923,7 +6923,7 @@ def ashr_ule_exact_before := [llvm|
 ^0(%arg168 : i8):
   %0 = llvm.mlir.constant(3 : i8) : i8
   %1 = llvm.mlir.constant(10 : i8) : i8
-  %2 = llvm.ashr %arg168, %0 : i8
+  %2 = llvm.ashr exact %arg168, %0 : i8
   %3 = llvm.icmp "ule" %2, %1 : i8
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6952,7 +6952,7 @@ def ashr_sgt_exact_before := [llvm|
 ^0(%arg167 : i8):
   %0 = llvm.mlir.constant(3 : i8) : i8
   %1 = llvm.mlir.constant(10 : i8) : i8
-  %2 = llvm.ashr %arg167, %0 : i8
+  %2 = llvm.ashr exact %arg167, %0 : i8
   %3 = llvm.icmp "sgt" %2, %1 : i8
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -6981,7 +6981,7 @@ def ashr_sge_exact_before := [llvm|
 ^0(%arg166 : i8):
   %0 = llvm.mlir.constant(3 : i8) : i8
   %1 = llvm.mlir.constant(10 : i8) : i8
-  %2 = llvm.ashr %arg166, %0 : i8
+  %2 = llvm.ashr exact %arg166, %0 : i8
   %3 = llvm.icmp "sge" %2, %1 : i8
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -7010,7 +7010,7 @@ def ashr_slt_exact_before := [llvm|
 ^0(%arg165 : i8):
   %0 = llvm.mlir.constant(3 : i8) : i8
   %1 = llvm.mlir.constant(10 : i8) : i8
-  %2 = llvm.ashr %arg165, %0 : i8
+  %2 = llvm.ashr exact %arg165, %0 : i8
   %3 = llvm.icmp "slt" %2, %1 : i8
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -7039,7 +7039,7 @@ def ashr_sle_exact_before := [llvm|
 ^0(%arg164 : i8):
   %0 = llvm.mlir.constant(3 : i8) : i8
   %1 = llvm.mlir.constant(10 : i8) : i8
-  %2 = llvm.ashr %arg164, %0 : i8
+  %2 = llvm.ashr exact %arg164, %0 : i8
   %3 = llvm.icmp "sle" %2, %1 : i8
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -7390,7 +7390,7 @@ def lshrult_01_00_exact_before := [llvm|
 ^0(%arg149 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(0 : i4) : i4
-  %2 = llvm.lshr %arg149, %0 : i4
+  %2 = llvm.lshr exact %arg149, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -7417,7 +7417,7 @@ def lshrult_01_01_exact_before := [llvm|
 {
 ^0(%arg148 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
-  %1 = llvm.lshr %arg148, %0 : i4
+  %1 = llvm.lshr exact %arg148, %0 : i4
   %2 = llvm.icmp "ult" %1, %0 : i4
   "llvm.return"(%2) : (i1) -> ()
 }
@@ -7446,7 +7446,7 @@ def lshrult_01_02_exact_before := [llvm|
 ^0(%arg147 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(2 : i4) : i4
-  %2 = llvm.lshr %arg147, %0 : i4
+  %2 = llvm.lshr exact %arg147, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -7475,7 +7475,7 @@ def lshrult_01_03_exact_before := [llvm|
 ^0(%arg146 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(3 : i4) : i4
-  %2 = llvm.lshr %arg146, %0 : i4
+  %2 = llvm.lshr exact %arg146, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -7504,7 +7504,7 @@ def lshrult_01_04_exact_before := [llvm|
 ^0(%arg145 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(4 : i4) : i4
-  %2 = llvm.lshr %arg145, %0 : i4
+  %2 = llvm.lshr exact %arg145, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -7533,7 +7533,7 @@ def lshrult_01_05_exact_before := [llvm|
 ^0(%arg144 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(5 : i4) : i4
-  %2 = llvm.lshr %arg144, %0 : i4
+  %2 = llvm.lshr exact %arg144, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -7562,7 +7562,7 @@ def lshrult_01_06_exact_before := [llvm|
 ^0(%arg143 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(6 : i4) : i4
-  %2 = llvm.lshr %arg143, %0 : i4
+  %2 = llvm.lshr exact %arg143, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -7591,7 +7591,7 @@ def lshrult_01_07_exact_before := [llvm|
 ^0(%arg142 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(7 : i4) : i4
-  %2 = llvm.lshr %arg142, %0 : i4
+  %2 = llvm.lshr exact %arg142, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -7620,7 +7620,7 @@ def lshrult_01_08_exact_before := [llvm|
 ^0(%arg141 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-8 : i4) : i4
-  %2 = llvm.lshr %arg141, %0 : i4
+  %2 = llvm.lshr exact %arg141, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -7648,7 +7648,7 @@ def lshrult_01_09_exact_before := [llvm|
 ^0(%arg140 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-7 : i4) : i4
-  %2 = llvm.lshr %arg140, %0 : i4
+  %2 = llvm.lshr exact %arg140, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -7676,7 +7676,7 @@ def lshrult_01_10_exact_before := [llvm|
 ^0(%arg139 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-6 : i4) : i4
-  %2 = llvm.lshr %arg139, %0 : i4
+  %2 = llvm.lshr exact %arg139, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -7704,7 +7704,7 @@ def lshrult_01_11_exact_before := [llvm|
 ^0(%arg138 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-5 : i4) : i4
-  %2 = llvm.lshr %arg138, %0 : i4
+  %2 = llvm.lshr exact %arg138, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -7732,7 +7732,7 @@ def lshrult_01_12_exact_before := [llvm|
 ^0(%arg137 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-4 : i4) : i4
-  %2 = llvm.lshr %arg137, %0 : i4
+  %2 = llvm.lshr exact %arg137, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -7760,7 +7760,7 @@ def lshrult_01_13_exact_before := [llvm|
 ^0(%arg136 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-3 : i4) : i4
-  %2 = llvm.lshr %arg136, %0 : i4
+  %2 = llvm.lshr exact %arg136, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -7788,7 +7788,7 @@ def lshrult_01_14_exact_before := [llvm|
 ^0(%arg135 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-2 : i4) : i4
-  %2 = llvm.lshr %arg135, %0 : i4
+  %2 = llvm.lshr exact %arg135, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -7816,7 +7816,7 @@ def lshrult_01_15_exact_before := [llvm|
 ^0(%arg134 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-1 : i4) : i4
-  %2 = llvm.lshr %arg134, %0 : i4
+  %2 = llvm.lshr exact %arg134, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -7844,7 +7844,7 @@ def lshrult_02_00_exact_before := [llvm|
 ^0(%arg133 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(0 : i4) : i4
-  %2 = llvm.lshr %arg133, %0 : i4
+  %2 = llvm.lshr exact %arg133, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -7872,7 +7872,7 @@ def lshrult_02_01_exact_before := [llvm|
 ^0(%arg132 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(1 : i4) : i4
-  %2 = llvm.lshr %arg132, %0 : i4
+  %2 = llvm.lshr exact %arg132, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -7900,7 +7900,7 @@ def lshrult_02_02_exact_before := [llvm|
 {
 ^0(%arg131 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
-  %1 = llvm.lshr %arg131, %0 : i4
+  %1 = llvm.lshr exact %arg131, %0 : i4
   %2 = llvm.icmp "ult" %1, %0 : i4
   "llvm.return"(%2) : (i1) -> ()
 }
@@ -7929,7 +7929,7 @@ def lshrult_02_03_exact_before := [llvm|
 ^0(%arg130 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(3 : i4) : i4
-  %2 = llvm.lshr %arg130, %0 : i4
+  %2 = llvm.lshr exact %arg130, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -7958,7 +7958,7 @@ def lshrult_02_04_exact_before := [llvm|
 ^0(%arg129 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(4 : i4) : i4
-  %2 = llvm.lshr %arg129, %0 : i4
+  %2 = llvm.lshr exact %arg129, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -7986,7 +7986,7 @@ def lshrult_02_05_exact_before := [llvm|
 ^0(%arg128 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(5 : i4) : i4
-  %2 = llvm.lshr %arg128, %0 : i4
+  %2 = llvm.lshr exact %arg128, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8014,7 +8014,7 @@ def lshrult_02_06_exact_before := [llvm|
 ^0(%arg127 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(6 : i4) : i4
-  %2 = llvm.lshr %arg127, %0 : i4
+  %2 = llvm.lshr exact %arg127, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8042,7 +8042,7 @@ def lshrult_02_07_exact_before := [llvm|
 ^0(%arg126 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(7 : i4) : i4
-  %2 = llvm.lshr %arg126, %0 : i4
+  %2 = llvm.lshr exact %arg126, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8070,7 +8070,7 @@ def lshrult_02_08_exact_before := [llvm|
 ^0(%arg125 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-8 : i4) : i4
-  %2 = llvm.lshr %arg125, %0 : i4
+  %2 = llvm.lshr exact %arg125, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8098,7 +8098,7 @@ def lshrult_02_09_exact_before := [llvm|
 ^0(%arg124 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-7 : i4) : i4
-  %2 = llvm.lshr %arg124, %0 : i4
+  %2 = llvm.lshr exact %arg124, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8126,7 +8126,7 @@ def lshrult_02_10_exact_before := [llvm|
 ^0(%arg123 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-6 : i4) : i4
-  %2 = llvm.lshr %arg123, %0 : i4
+  %2 = llvm.lshr exact %arg123, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8154,7 +8154,7 @@ def lshrult_02_11_exact_before := [llvm|
 ^0(%arg122 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-5 : i4) : i4
-  %2 = llvm.lshr %arg122, %0 : i4
+  %2 = llvm.lshr exact %arg122, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8182,7 +8182,7 @@ def lshrult_02_12_exact_before := [llvm|
 ^0(%arg121 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-4 : i4) : i4
-  %2 = llvm.lshr %arg121, %0 : i4
+  %2 = llvm.lshr exact %arg121, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8210,7 +8210,7 @@ def lshrult_02_13_exact_before := [llvm|
 ^0(%arg120 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-3 : i4) : i4
-  %2 = llvm.lshr %arg120, %0 : i4
+  %2 = llvm.lshr exact %arg120, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8238,7 +8238,7 @@ def lshrult_02_14_exact_before := [llvm|
 ^0(%arg119 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-2 : i4) : i4
-  %2 = llvm.lshr %arg119, %0 : i4
+  %2 = llvm.lshr exact %arg119, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8266,7 +8266,7 @@ def lshrult_02_15_exact_before := [llvm|
 ^0(%arg118 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-1 : i4) : i4
-  %2 = llvm.lshr %arg118, %0 : i4
+  %2 = llvm.lshr exact %arg118, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8294,7 +8294,7 @@ def lshrult_03_00_exact_before := [llvm|
 ^0(%arg117 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(0 : i4) : i4
-  %2 = llvm.lshr %arg117, %0 : i4
+  %2 = llvm.lshr exact %arg117, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8322,7 +8322,7 @@ def lshrult_03_01_exact_before := [llvm|
 ^0(%arg116 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(1 : i4) : i4
-  %2 = llvm.lshr %arg116, %0 : i4
+  %2 = llvm.lshr exact %arg116, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8351,7 +8351,7 @@ def lshrult_03_02_exact_before := [llvm|
 ^0(%arg115 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(2 : i4) : i4
-  %2 = llvm.lshr %arg115, %0 : i4
+  %2 = llvm.lshr exact %arg115, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8378,7 +8378,7 @@ def lshrult_03_03_exact_before := [llvm|
 {
 ^0(%arg114 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
-  %1 = llvm.lshr %arg114, %0 : i4
+  %1 = llvm.lshr exact %arg114, %0 : i4
   %2 = llvm.icmp "ult" %1, %0 : i4
   "llvm.return"(%2) : (i1) -> ()
 }
@@ -8406,7 +8406,7 @@ def lshrult_03_04_exact_before := [llvm|
 ^0(%arg113 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(4 : i4) : i4
-  %2 = llvm.lshr %arg113, %0 : i4
+  %2 = llvm.lshr exact %arg113, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8434,7 +8434,7 @@ def lshrult_03_05_exact_before := [llvm|
 ^0(%arg112 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(5 : i4) : i4
-  %2 = llvm.lshr %arg112, %0 : i4
+  %2 = llvm.lshr exact %arg112, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8462,7 +8462,7 @@ def lshrult_03_06_exact_before := [llvm|
 ^0(%arg111 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(6 : i4) : i4
-  %2 = llvm.lshr %arg111, %0 : i4
+  %2 = llvm.lshr exact %arg111, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8490,7 +8490,7 @@ def lshrult_03_07_exact_before := [llvm|
 ^0(%arg110 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(7 : i4) : i4
-  %2 = llvm.lshr %arg110, %0 : i4
+  %2 = llvm.lshr exact %arg110, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8518,7 +8518,7 @@ def lshrult_03_08_exact_before := [llvm|
 ^0(%arg109 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-8 : i4) : i4
-  %2 = llvm.lshr %arg109, %0 : i4
+  %2 = llvm.lshr exact %arg109, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8546,7 +8546,7 @@ def lshrult_03_09_exact_before := [llvm|
 ^0(%arg108 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-7 : i4) : i4
-  %2 = llvm.lshr %arg108, %0 : i4
+  %2 = llvm.lshr exact %arg108, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8574,7 +8574,7 @@ def lshrult_03_10_exact_before := [llvm|
 ^0(%arg107 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-6 : i4) : i4
-  %2 = llvm.lshr %arg107, %0 : i4
+  %2 = llvm.lshr exact %arg107, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8602,7 +8602,7 @@ def lshrult_03_11_exact_before := [llvm|
 ^0(%arg106 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-5 : i4) : i4
-  %2 = llvm.lshr %arg106, %0 : i4
+  %2 = llvm.lshr exact %arg106, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8630,7 +8630,7 @@ def lshrult_03_12_exact_before := [llvm|
 ^0(%arg105 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-4 : i4) : i4
-  %2 = llvm.lshr %arg105, %0 : i4
+  %2 = llvm.lshr exact %arg105, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8658,7 +8658,7 @@ def lshrult_03_13_exact_before := [llvm|
 ^0(%arg104 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-3 : i4) : i4
-  %2 = llvm.lshr %arg104, %0 : i4
+  %2 = llvm.lshr exact %arg104, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8686,7 +8686,7 @@ def lshrult_03_14_exact_before := [llvm|
 ^0(%arg103 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-2 : i4) : i4
-  %2 = llvm.lshr %arg103, %0 : i4
+  %2 = llvm.lshr exact %arg103, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8714,7 +8714,7 @@ def lshrult_03_15_exact_before := [llvm|
 ^0(%arg102 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-1 : i4) : i4
-  %2 = llvm.lshr %arg102, %0 : i4
+  %2 = llvm.lshr exact %arg102, %0 : i4
   %3 = llvm.icmp "ult" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8742,7 +8742,7 @@ def ashrsgt_01_00_exact_before := [llvm|
 ^0(%arg101 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(0 : i4) : i4
-  %2 = llvm.ashr %arg101, %0 : i4
+  %2 = llvm.ashr exact %arg101, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8770,7 +8770,7 @@ def ashrsgt_01_01_exact_before := [llvm|
 {
 ^0(%arg100 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
-  %1 = llvm.ashr %arg100, %0 : i4
+  %1 = llvm.ashr exact %arg100, %0 : i4
   %2 = llvm.icmp "sgt" %1, %0 : i4
   "llvm.return"(%2) : (i1) -> ()
 }
@@ -8799,7 +8799,7 @@ def ashrsgt_01_02_exact_before := [llvm|
 ^0(%arg99 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(2 : i4) : i4
-  %2 = llvm.ashr %arg99, %0 : i4
+  %2 = llvm.ashr exact %arg99, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8828,7 +8828,7 @@ def ashrsgt_01_03_exact_before := [llvm|
 ^0(%arg98 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(3 : i4) : i4
-  %2 = llvm.ashr %arg98, %0 : i4
+  %2 = llvm.ashr exact %arg98, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8856,7 +8856,7 @@ def ashrsgt_01_04_exact_before := [llvm|
 ^0(%arg97 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(4 : i4) : i4
-  %2 = llvm.ashr %arg97, %0 : i4
+  %2 = llvm.ashr exact %arg97, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8884,7 +8884,7 @@ def ashrsgt_01_05_exact_before := [llvm|
 ^0(%arg96 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(5 : i4) : i4
-  %2 = llvm.ashr %arg96, %0 : i4
+  %2 = llvm.ashr exact %arg96, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8912,7 +8912,7 @@ def ashrsgt_01_06_exact_before := [llvm|
 ^0(%arg95 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(6 : i4) : i4
-  %2 = llvm.ashr %arg95, %0 : i4
+  %2 = llvm.ashr exact %arg95, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8940,7 +8940,7 @@ def ashrsgt_01_07_exact_before := [llvm|
 ^0(%arg94 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(7 : i4) : i4
-  %2 = llvm.ashr %arg94, %0 : i4
+  %2 = llvm.ashr exact %arg94, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8968,7 +8968,7 @@ def ashrsgt_01_08_exact_before := [llvm|
 ^0(%arg93 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-8 : i4) : i4
-  %2 = llvm.ashr %arg93, %0 : i4
+  %2 = llvm.ashr exact %arg93, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -8996,7 +8996,7 @@ def ashrsgt_01_09_exact_before := [llvm|
 ^0(%arg92 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-7 : i4) : i4
-  %2 = llvm.ashr %arg92, %0 : i4
+  %2 = llvm.ashr exact %arg92, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9024,7 +9024,7 @@ def ashrsgt_01_10_exact_before := [llvm|
 ^0(%arg91 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-6 : i4) : i4
-  %2 = llvm.ashr %arg91, %0 : i4
+  %2 = llvm.ashr exact %arg91, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9052,7 +9052,7 @@ def ashrsgt_01_11_exact_before := [llvm|
 ^0(%arg90 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-5 : i4) : i4
-  %2 = llvm.ashr %arg90, %0 : i4
+  %2 = llvm.ashr exact %arg90, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9080,7 +9080,7 @@ def ashrsgt_01_12_exact_before := [llvm|
 ^0(%arg89 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-4 : i4) : i4
-  %2 = llvm.ashr %arg89, %0 : i4
+  %2 = llvm.ashr exact %arg89, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9109,7 +9109,7 @@ def ashrsgt_01_13_exact_before := [llvm|
 ^0(%arg88 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-3 : i4) : i4
-  %2 = llvm.ashr %arg88, %0 : i4
+  %2 = llvm.ashr exact %arg88, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9138,7 +9138,7 @@ def ashrsgt_01_14_exact_before := [llvm|
 ^0(%arg87 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-2 : i4) : i4
-  %2 = llvm.ashr %arg87, %0 : i4
+  %2 = llvm.ashr exact %arg87, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9167,7 +9167,7 @@ def ashrsgt_01_15_exact_before := [llvm|
 ^0(%arg86 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-1 : i4) : i4
-  %2 = llvm.ashr %arg86, %0 : i4
+  %2 = llvm.ashr exact %arg86, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9196,7 +9196,7 @@ def ashrsgt_02_00_exact_before := [llvm|
 ^0(%arg85 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(0 : i4) : i4
-  %2 = llvm.ashr %arg85, %0 : i4
+  %2 = llvm.ashr exact %arg85, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9225,7 +9225,7 @@ def ashrsgt_02_01_exact_before := [llvm|
 ^0(%arg84 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(1 : i4) : i4
-  %2 = llvm.ashr %arg84, %0 : i4
+  %2 = llvm.ashr exact %arg84, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9252,7 +9252,7 @@ def ashrsgt_02_02_exact_before := [llvm|
 {
 ^0(%arg83 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
-  %1 = llvm.ashr %arg83, %0 : i4
+  %1 = llvm.ashr exact %arg83, %0 : i4
   %2 = llvm.icmp "sgt" %1, %0 : i4
   "llvm.return"(%2) : (i1) -> ()
 }
@@ -9280,7 +9280,7 @@ def ashrsgt_02_03_exact_before := [llvm|
 ^0(%arg82 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(3 : i4) : i4
-  %2 = llvm.ashr %arg82, %0 : i4
+  %2 = llvm.ashr exact %arg82, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9308,7 +9308,7 @@ def ashrsgt_02_04_exact_before := [llvm|
 ^0(%arg81 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(4 : i4) : i4
-  %2 = llvm.ashr %arg81, %0 : i4
+  %2 = llvm.ashr exact %arg81, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9336,7 +9336,7 @@ def ashrsgt_02_05_exact_before := [llvm|
 ^0(%arg80 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(5 : i4) : i4
-  %2 = llvm.ashr %arg80, %0 : i4
+  %2 = llvm.ashr exact %arg80, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9364,7 +9364,7 @@ def ashrsgt_02_06_exact_before := [llvm|
 ^0(%arg79 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(6 : i4) : i4
-  %2 = llvm.ashr %arg79, %0 : i4
+  %2 = llvm.ashr exact %arg79, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9392,7 +9392,7 @@ def ashrsgt_02_07_exact_before := [llvm|
 ^0(%arg78 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(7 : i4) : i4
-  %2 = llvm.ashr %arg78, %0 : i4
+  %2 = llvm.ashr exact %arg78, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9420,7 +9420,7 @@ def ashrsgt_02_08_exact_before := [llvm|
 ^0(%arg77 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-8 : i4) : i4
-  %2 = llvm.ashr %arg77, %0 : i4
+  %2 = llvm.ashr exact %arg77, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9448,7 +9448,7 @@ def ashrsgt_02_09_exact_before := [llvm|
 ^0(%arg76 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-7 : i4) : i4
-  %2 = llvm.ashr %arg76, %0 : i4
+  %2 = llvm.ashr exact %arg76, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9476,7 +9476,7 @@ def ashrsgt_02_10_exact_before := [llvm|
 ^0(%arg75 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-6 : i4) : i4
-  %2 = llvm.ashr %arg75, %0 : i4
+  %2 = llvm.ashr exact %arg75, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9504,7 +9504,7 @@ def ashrsgt_02_11_exact_before := [llvm|
 ^0(%arg74 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-5 : i4) : i4
-  %2 = llvm.ashr %arg74, %0 : i4
+  %2 = llvm.ashr exact %arg74, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9532,7 +9532,7 @@ def ashrsgt_02_12_exact_before := [llvm|
 ^0(%arg73 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-4 : i4) : i4
-  %2 = llvm.ashr %arg73, %0 : i4
+  %2 = llvm.ashr exact %arg73, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9560,7 +9560,7 @@ def ashrsgt_02_13_exact_before := [llvm|
 ^0(%arg72 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-3 : i4) : i4
-  %2 = llvm.ashr %arg72, %0 : i4
+  %2 = llvm.ashr exact %arg72, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9588,7 +9588,7 @@ def ashrsgt_02_14_exact_before := [llvm|
 ^0(%arg71 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-2 : i4) : i4
-  %2 = llvm.ashr %arg71, %0 : i4
+  %2 = llvm.ashr exact %arg71, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9617,7 +9617,7 @@ def ashrsgt_02_15_exact_before := [llvm|
 ^0(%arg70 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-1 : i4) : i4
-  %2 = llvm.ashr %arg70, %0 : i4
+  %2 = llvm.ashr exact %arg70, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9646,7 +9646,7 @@ def ashrsgt_03_00_exact_before := [llvm|
 ^0(%arg69 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(0 : i4) : i4
-  %2 = llvm.ashr %arg69, %0 : i4
+  %2 = llvm.ashr exact %arg69, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9674,7 +9674,7 @@ def ashrsgt_03_01_exact_before := [llvm|
 ^0(%arg68 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(1 : i4) : i4
-  %2 = llvm.ashr %arg68, %0 : i4
+  %2 = llvm.ashr exact %arg68, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9702,7 +9702,7 @@ def ashrsgt_03_02_exact_before := [llvm|
 ^0(%arg67 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(2 : i4) : i4
-  %2 = llvm.ashr %arg67, %0 : i4
+  %2 = llvm.ashr exact %arg67, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9729,7 +9729,7 @@ def ashrsgt_03_03_exact_before := [llvm|
 {
 ^0(%arg66 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
-  %1 = llvm.ashr %arg66, %0 : i4
+  %1 = llvm.ashr exact %arg66, %0 : i4
   %2 = llvm.icmp "sgt" %1, %0 : i4
   "llvm.return"(%2) : (i1) -> ()
 }
@@ -9757,7 +9757,7 @@ def ashrsgt_03_04_exact_before := [llvm|
 ^0(%arg65 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(4 : i4) : i4
-  %2 = llvm.ashr %arg65, %0 : i4
+  %2 = llvm.ashr exact %arg65, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9785,7 +9785,7 @@ def ashrsgt_03_05_exact_before := [llvm|
 ^0(%arg64 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(5 : i4) : i4
-  %2 = llvm.ashr %arg64, %0 : i4
+  %2 = llvm.ashr exact %arg64, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9813,7 +9813,7 @@ def ashrsgt_03_06_exact_before := [llvm|
 ^0(%arg63 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(6 : i4) : i4
-  %2 = llvm.ashr %arg63, %0 : i4
+  %2 = llvm.ashr exact %arg63, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9841,7 +9841,7 @@ def ashrsgt_03_07_exact_before := [llvm|
 ^0(%arg62 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(7 : i4) : i4
-  %2 = llvm.ashr %arg62, %0 : i4
+  %2 = llvm.ashr exact %arg62, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9869,7 +9869,7 @@ def ashrsgt_03_08_exact_before := [llvm|
 ^0(%arg61 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-8 : i4) : i4
-  %2 = llvm.ashr %arg61, %0 : i4
+  %2 = llvm.ashr exact %arg61, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9897,7 +9897,7 @@ def ashrsgt_03_09_exact_before := [llvm|
 ^0(%arg60 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-7 : i4) : i4
-  %2 = llvm.ashr %arg60, %0 : i4
+  %2 = llvm.ashr exact %arg60, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9925,7 +9925,7 @@ def ashrsgt_03_10_exact_before := [llvm|
 ^0(%arg59 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-6 : i4) : i4
-  %2 = llvm.ashr %arg59, %0 : i4
+  %2 = llvm.ashr exact %arg59, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9953,7 +9953,7 @@ def ashrsgt_03_11_exact_before := [llvm|
 ^0(%arg58 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-5 : i4) : i4
-  %2 = llvm.ashr %arg58, %0 : i4
+  %2 = llvm.ashr exact %arg58, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -9981,7 +9981,7 @@ def ashrsgt_03_12_exact_before := [llvm|
 ^0(%arg57 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-4 : i4) : i4
-  %2 = llvm.ashr %arg57, %0 : i4
+  %2 = llvm.ashr exact %arg57, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10009,7 +10009,7 @@ def ashrsgt_03_13_exact_before := [llvm|
 ^0(%arg56 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-3 : i4) : i4
-  %2 = llvm.ashr %arg56, %0 : i4
+  %2 = llvm.ashr exact %arg56, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10037,7 +10037,7 @@ def ashrsgt_03_14_exact_before := [llvm|
 ^0(%arg55 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-2 : i4) : i4
-  %2 = llvm.ashr %arg55, %0 : i4
+  %2 = llvm.ashr exact %arg55, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10065,7 +10065,7 @@ def ashrsgt_03_15_exact_before := [llvm|
 ^0(%arg54 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-1 : i4) : i4
-  %2 = llvm.ashr %arg54, %0 : i4
+  %2 = llvm.ashr exact %arg54, %0 : i4
   %3 = llvm.icmp "sgt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10094,7 +10094,7 @@ def ashrslt_01_00_exact_before := [llvm|
 ^0(%arg53 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(0 : i4) : i4
-  %2 = llvm.ashr %arg53, %0 : i4
+  %2 = llvm.ashr exact %arg53, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10122,7 +10122,7 @@ def ashrslt_01_01_exact_before := [llvm|
 {
 ^0(%arg52 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
-  %1 = llvm.ashr %arg52, %0 : i4
+  %1 = llvm.ashr exact %arg52, %0 : i4
   %2 = llvm.icmp "slt" %1, %0 : i4
   "llvm.return"(%2) : (i1) -> ()
 }
@@ -10151,7 +10151,7 @@ def ashrslt_01_02_exact_before := [llvm|
 ^0(%arg51 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(2 : i4) : i4
-  %2 = llvm.ashr %arg51, %0 : i4
+  %2 = llvm.ashr exact %arg51, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10180,7 +10180,7 @@ def ashrslt_01_03_exact_before := [llvm|
 ^0(%arg50 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(3 : i4) : i4
-  %2 = llvm.ashr %arg50, %0 : i4
+  %2 = llvm.ashr exact %arg50, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10209,7 +10209,7 @@ def ashrslt_01_04_exact_before := [llvm|
 ^0(%arg49 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(4 : i4) : i4
-  %2 = llvm.ashr %arg49, %0 : i4
+  %2 = llvm.ashr exact %arg49, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10237,7 +10237,7 @@ def ashrslt_01_05_exact_before := [llvm|
 ^0(%arg48 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(5 : i4) : i4
-  %2 = llvm.ashr %arg48, %0 : i4
+  %2 = llvm.ashr exact %arg48, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10265,7 +10265,7 @@ def ashrslt_01_06_exact_before := [llvm|
 ^0(%arg47 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(6 : i4) : i4
-  %2 = llvm.ashr %arg47, %0 : i4
+  %2 = llvm.ashr exact %arg47, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10293,7 +10293,7 @@ def ashrslt_01_07_exact_before := [llvm|
 ^0(%arg46 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(7 : i4) : i4
-  %2 = llvm.ashr %arg46, %0 : i4
+  %2 = llvm.ashr exact %arg46, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10321,7 +10321,7 @@ def ashrslt_01_08_exact_before := [llvm|
 ^0(%arg45 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-8 : i4) : i4
-  %2 = llvm.ashr %arg45, %0 : i4
+  %2 = llvm.ashr exact %arg45, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10349,7 +10349,7 @@ def ashrslt_01_09_exact_before := [llvm|
 ^0(%arg44 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-7 : i4) : i4
-  %2 = llvm.ashr %arg44, %0 : i4
+  %2 = llvm.ashr exact %arg44, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10377,7 +10377,7 @@ def ashrslt_01_10_exact_before := [llvm|
 ^0(%arg43 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-6 : i4) : i4
-  %2 = llvm.ashr %arg43, %0 : i4
+  %2 = llvm.ashr exact %arg43, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10405,7 +10405,7 @@ def ashrslt_01_11_exact_before := [llvm|
 ^0(%arg42 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-5 : i4) : i4
-  %2 = llvm.ashr %arg42, %0 : i4
+  %2 = llvm.ashr exact %arg42, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10433,7 +10433,7 @@ def ashrslt_01_12_exact_before := [llvm|
 ^0(%arg41 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-4 : i4) : i4
-  %2 = llvm.ashr %arg41, %0 : i4
+  %2 = llvm.ashr exact %arg41, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10461,7 +10461,7 @@ def ashrslt_01_13_exact_before := [llvm|
 ^0(%arg40 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-3 : i4) : i4
-  %2 = llvm.ashr %arg40, %0 : i4
+  %2 = llvm.ashr exact %arg40, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10490,7 +10490,7 @@ def ashrslt_01_14_exact_before := [llvm|
 ^0(%arg39 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-2 : i4) : i4
-  %2 = llvm.ashr %arg39, %0 : i4
+  %2 = llvm.ashr exact %arg39, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10519,7 +10519,7 @@ def ashrslt_01_15_exact_before := [llvm|
 ^0(%arg38 : i4):
   %0 = llvm.mlir.constant(1 : i4) : i4
   %1 = llvm.mlir.constant(-1 : i4) : i4
-  %2 = llvm.ashr %arg38, %0 : i4
+  %2 = llvm.ashr exact %arg38, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10548,7 +10548,7 @@ def ashrslt_02_00_exact_before := [llvm|
 ^0(%arg37 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(0 : i4) : i4
-  %2 = llvm.ashr %arg37, %0 : i4
+  %2 = llvm.ashr exact %arg37, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10577,7 +10577,7 @@ def ashrslt_02_01_exact_before := [llvm|
 ^0(%arg36 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(1 : i4) : i4
-  %2 = llvm.ashr %arg36, %0 : i4
+  %2 = llvm.ashr exact %arg36, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10605,7 +10605,7 @@ def ashrslt_02_02_exact_before := [llvm|
 {
 ^0(%arg35 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
-  %1 = llvm.ashr %arg35, %0 : i4
+  %1 = llvm.ashr exact %arg35, %0 : i4
   %2 = llvm.icmp "slt" %1, %0 : i4
   "llvm.return"(%2) : (i1) -> ()
 }
@@ -10633,7 +10633,7 @@ def ashrslt_02_03_exact_before := [llvm|
 ^0(%arg34 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(3 : i4) : i4
-  %2 = llvm.ashr %arg34, %0 : i4
+  %2 = llvm.ashr exact %arg34, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10661,7 +10661,7 @@ def ashrslt_02_04_exact_before := [llvm|
 ^0(%arg33 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(4 : i4) : i4
-  %2 = llvm.ashr %arg33, %0 : i4
+  %2 = llvm.ashr exact %arg33, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10689,7 +10689,7 @@ def ashrslt_02_05_exact_before := [llvm|
 ^0(%arg32 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(5 : i4) : i4
-  %2 = llvm.ashr %arg32, %0 : i4
+  %2 = llvm.ashr exact %arg32, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10717,7 +10717,7 @@ def ashrslt_02_06_exact_before := [llvm|
 ^0(%arg31 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(6 : i4) : i4
-  %2 = llvm.ashr %arg31, %0 : i4
+  %2 = llvm.ashr exact %arg31, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10745,7 +10745,7 @@ def ashrslt_02_07_exact_before := [llvm|
 ^0(%arg30 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(7 : i4) : i4
-  %2 = llvm.ashr %arg30, %0 : i4
+  %2 = llvm.ashr exact %arg30, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10773,7 +10773,7 @@ def ashrslt_02_08_exact_before := [llvm|
 ^0(%arg29 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-8 : i4) : i4
-  %2 = llvm.ashr %arg29, %0 : i4
+  %2 = llvm.ashr exact %arg29, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10801,7 +10801,7 @@ def ashrslt_02_09_exact_before := [llvm|
 ^0(%arg28 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-7 : i4) : i4
-  %2 = llvm.ashr %arg28, %0 : i4
+  %2 = llvm.ashr exact %arg28, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10829,7 +10829,7 @@ def ashrslt_02_10_exact_before := [llvm|
 ^0(%arg27 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-6 : i4) : i4
-  %2 = llvm.ashr %arg27, %0 : i4
+  %2 = llvm.ashr exact %arg27, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10857,7 +10857,7 @@ def ashrslt_02_11_exact_before := [llvm|
 ^0(%arg26 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-5 : i4) : i4
-  %2 = llvm.ashr %arg26, %0 : i4
+  %2 = llvm.ashr exact %arg26, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10885,7 +10885,7 @@ def ashrslt_02_12_exact_before := [llvm|
 ^0(%arg25 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-4 : i4) : i4
-  %2 = llvm.ashr %arg25, %0 : i4
+  %2 = llvm.ashr exact %arg25, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10913,7 +10913,7 @@ def ashrslt_02_13_exact_before := [llvm|
 ^0(%arg24 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-3 : i4) : i4
-  %2 = llvm.ashr %arg24, %0 : i4
+  %2 = llvm.ashr exact %arg24, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10941,7 +10941,7 @@ def ashrslt_02_14_exact_before := [llvm|
 ^0(%arg23 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-2 : i4) : i4
-  %2 = llvm.ashr %arg23, %0 : i4
+  %2 = llvm.ashr exact %arg23, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10969,7 +10969,7 @@ def ashrslt_02_15_exact_before := [llvm|
 ^0(%arg22 : i4):
   %0 = llvm.mlir.constant(2 : i4) : i4
   %1 = llvm.mlir.constant(-1 : i4) : i4
-  %2 = llvm.ashr %arg22, %0 : i4
+  %2 = llvm.ashr exact %arg22, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -10998,7 +10998,7 @@ def ashrslt_03_00_exact_before := [llvm|
 ^0(%arg21 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(0 : i4) : i4
-  %2 = llvm.ashr %arg21, %0 : i4
+  %2 = llvm.ashr exact %arg21, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -11027,7 +11027,7 @@ def ashrslt_03_01_exact_before := [llvm|
 ^0(%arg20 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(1 : i4) : i4
-  %2 = llvm.ashr %arg20, %0 : i4
+  %2 = llvm.ashr exact %arg20, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -11055,7 +11055,7 @@ def ashrslt_03_02_exact_before := [llvm|
 ^0(%arg19 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(2 : i4) : i4
-  %2 = llvm.ashr %arg19, %0 : i4
+  %2 = llvm.ashr exact %arg19, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -11082,7 +11082,7 @@ def ashrslt_03_03_exact_before := [llvm|
 {
 ^0(%arg18 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
-  %1 = llvm.ashr %arg18, %0 : i4
+  %1 = llvm.ashr exact %arg18, %0 : i4
   %2 = llvm.icmp "slt" %1, %0 : i4
   "llvm.return"(%2) : (i1) -> ()
 }
@@ -11110,7 +11110,7 @@ def ashrslt_03_04_exact_before := [llvm|
 ^0(%arg17 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(4 : i4) : i4
-  %2 = llvm.ashr %arg17, %0 : i4
+  %2 = llvm.ashr exact %arg17, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -11138,7 +11138,7 @@ def ashrslt_03_05_exact_before := [llvm|
 ^0(%arg16 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(5 : i4) : i4
-  %2 = llvm.ashr %arg16, %0 : i4
+  %2 = llvm.ashr exact %arg16, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -11166,7 +11166,7 @@ def ashrslt_03_06_exact_before := [llvm|
 ^0(%arg15 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(6 : i4) : i4
-  %2 = llvm.ashr %arg15, %0 : i4
+  %2 = llvm.ashr exact %arg15, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -11194,7 +11194,7 @@ def ashrslt_03_07_exact_before := [llvm|
 ^0(%arg14 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(7 : i4) : i4
-  %2 = llvm.ashr %arg14, %0 : i4
+  %2 = llvm.ashr exact %arg14, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -11222,7 +11222,7 @@ def ashrslt_03_08_exact_before := [llvm|
 ^0(%arg13 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-8 : i4) : i4
-  %2 = llvm.ashr %arg13, %0 : i4
+  %2 = llvm.ashr exact %arg13, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -11250,7 +11250,7 @@ def ashrslt_03_09_exact_before := [llvm|
 ^0(%arg12 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-7 : i4) : i4
-  %2 = llvm.ashr %arg12, %0 : i4
+  %2 = llvm.ashr exact %arg12, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -11278,7 +11278,7 @@ def ashrslt_03_10_exact_before := [llvm|
 ^0(%arg11 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-6 : i4) : i4
-  %2 = llvm.ashr %arg11, %0 : i4
+  %2 = llvm.ashr exact %arg11, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -11306,7 +11306,7 @@ def ashrslt_03_11_exact_before := [llvm|
 ^0(%arg10 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-5 : i4) : i4
-  %2 = llvm.ashr %arg10, %0 : i4
+  %2 = llvm.ashr exact %arg10, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -11334,7 +11334,7 @@ def ashrslt_03_12_exact_before := [llvm|
 ^0(%arg9 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-4 : i4) : i4
-  %2 = llvm.ashr %arg9, %0 : i4
+  %2 = llvm.ashr exact %arg9, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -11362,7 +11362,7 @@ def ashrslt_03_13_exact_before := [llvm|
 ^0(%arg8 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-3 : i4) : i4
-  %2 = llvm.ashr %arg8, %0 : i4
+  %2 = llvm.ashr exact %arg8, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -11390,7 +11390,7 @@ def ashrslt_03_14_exact_before := [llvm|
 ^0(%arg7 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-2 : i4) : i4
-  %2 = llvm.ashr %arg7, %0 : i4
+  %2 = llvm.ashr exact %arg7, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -11418,7 +11418,7 @@ def ashrslt_03_15_exact_before := [llvm|
 ^0(%arg6 : i4):
   %0 = llvm.mlir.constant(3 : i4) : i4
   %1 = llvm.mlir.constant(-1 : i4) : i4
-  %2 = llvm.ashr %arg6, %0 : i4
+  %2 = llvm.ashr exact %arg6, %0 : i4
   %3 = llvm.icmp "slt" %2, %1 : i4
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -11446,7 +11446,7 @@ def ashr_slt_exact_near_pow2_cmpval_before := [llvm|
 ^0(%arg5 : i8):
   %0 = llvm.mlir.constant(1 : i8) : i8
   %1 = llvm.mlir.constant(5 : i8) : i8
-  %2 = llvm.ashr %arg5, %0 : i8
+  %2 = llvm.ashr exact %arg5, %0 : i8
   %3 = llvm.icmp "slt" %2, %1 : i8
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -11475,7 +11475,7 @@ def ashr_ult_exact_near_pow2_cmpval_before := [llvm|
 ^0(%arg4 : i8):
   %0 = llvm.mlir.constant(1 : i8) : i8
   %1 = llvm.mlir.constant(5 : i8) : i8
-  %2 = llvm.ashr %arg4, %0 : i8
+  %2 = llvm.ashr exact %arg4, %0 : i8
   %3 = llvm.icmp "ult" %2, %1 : i8
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -11533,7 +11533,7 @@ def negtest_near_pow2_cmpval_ashr_wrong_cmp_pred_before := [llvm|
 ^0(%arg2 : i8):
   %0 = llvm.mlir.constant(1 : i8) : i8
   %1 = llvm.mlir.constant(5 : i8) : i8
-  %2 = llvm.ashr %arg2, %0 : i8
+  %2 = llvm.ashr exact %arg2, %0 : i8
   %3 = llvm.icmp "eq" %2, %1 : i8
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -11562,7 +11562,7 @@ def negtest_near_pow2_cmpval_isnt_close_to_pow2_before := [llvm|
 ^0(%arg1 : i8):
   %0 = llvm.mlir.constant(1 : i8) : i8
   %1 = llvm.mlir.constant(6 : i8) : i8
-  %2 = llvm.ashr %arg1, %0 : i8
+  %2 = llvm.ashr exact %arg1, %0 : i8
   %3 = llvm.icmp "slt" %2, %1 : i8
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -11591,7 +11591,7 @@ def negtest_near_pow2_cmpval_would_overflow_into_signbit_before := [llvm|
 ^0(%arg0 : i8):
   %0 = llvm.mlir.constant(2 : i8) : i8
   %1 = llvm.mlir.constant(33 : i8) : i8
-  %2 = llvm.ashr %arg0, %0 : i8
+  %2 = llvm.ashr exact %arg0, %0 : i8
   %3 = llvm.icmp "ult" %2, %1 : i8
   "llvm.return"(%3) : (i1) -> ()
 }

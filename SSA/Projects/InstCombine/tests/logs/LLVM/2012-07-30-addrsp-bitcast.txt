@@ -1,5 +1,5 @@
 1: "foo"
-5: "foo" is empty
+9: "foo" has pointer type input
 
 1: "test"
 4: "test" has unsupported operation: llvm.mlir.addressof

@@ -105,16 +105,22 @@
 4: "t12_c1_c2_exrause" has unsupported operation: llvm.call
 
 1: "constantexpr0"
+9: "constantexpr0" has pointer type input
+
 4: "constantexpr0" has unsupported operation: llvm.mlir.addressof
 
 4: "constantexpr0" has unsupported operation: builtin.unregistered: llvm.ptrtoint
 
 1: "constantexpr1"
+9: "constantexpr1" has pointer type input
+
 4: "constantexpr1" has unsupported operation: llvm.mlir.addressof
 
 4: "constantexpr1" has unsupported operation: builtin.unregistered: llvm.ptrtoint
 
 1: "constantexpr2"
+9: "constantexpr2" has pointer type input
+
 4: "constantexpr2" has unsupported operation: llvm.mlir.addressof
 
 4: "constantexpr2" has unsupported operation: builtin.unregistered: llvm.ptrtoint

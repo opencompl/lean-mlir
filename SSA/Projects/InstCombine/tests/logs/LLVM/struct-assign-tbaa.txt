@@ -1,4 +1,6 @@
 1: "test1"
+9: "test1" has pointer type input
+
 4: "test1" has unsupported operation: llvm.load
 
 4: "test1" has unsupported operation: llvm.store
@@ -11,6 +13,8 @@
 4: "test2" has unsupported operation: llvm.store
 
 1: "test3_multiple_fields"
+9: "test3_multiple_fields" has pointer type input
+
 4: "test3_multiple_fields" has unsupported operation: llvm.load
 
 4: "test3_multiple_fields" has unsupported operation: llvm.store
@@ -18,6 +22,8 @@
 4: "test3_multiple_fields" has unsupported operation: llvm.return
 
 1: "test4_multiple_copy_first_field"
+9: "test4_multiple_copy_first_field" has pointer type input
+
 4: "test4_multiple_copy_first_field" has unsupported operation: llvm.load
 
 4: "test4_multiple_copy_first_field" has unsupported operation: llvm.store
@@ -25,6 +31,8 @@
 4: "test4_multiple_copy_first_field" has unsupported operation: llvm.return
 
 1: "test5_multiple_copy_more_than_first_field"
+9: "test5_multiple_copy_more_than_first_field" has pointer type input
+
 4: "test5_multiple_copy_more_than_first_field" has unsupported operation: llvm.load
 
 4: "test5_multiple_copy_more_than_first_field" has unsupported operation: llvm.store

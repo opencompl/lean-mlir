@@ -248,6 +248,68 @@ theorem lshr_mul_nuw_nsw_proof : lshr_mul_nuw_nsw_before ⊑ lshr_mul_nuw_nsw_af
 
 
 
+def lshr_mul_negative_nonuw_before := [llvm|
+{
+^0(%arg30 : i64):
+  %0 = llvm.mlir.constant(52) : i64
+  %1 = llvm.mlir.constant(2) : i64
+  %2 = llvm.mul %arg30, %0 : i64
+  %3 = llvm.lshr %2, %1 : i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+def lshr_mul_negative_nonuw_after := [llvm|
+{
+^0(%arg30 : i64):
+  %0 = llvm.mlir.constant(52) : i64
+  %1 = llvm.mlir.constant(2) : i64
+  %2 = llvm.mul %arg30, %0 : i64
+  %3 = llvm.lshr exact %2, %1 : i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem lshr_mul_negative_nonuw_proof : lshr_mul_negative_nonuw_before ⊑ lshr_mul_negative_nonuw_after := by
+  unfold lshr_mul_negative_nonuw_before lshr_mul_negative_nonuw_after
+  simp_alive_peephole
+  intros
+  ---BEGIN lshr_mul_negative_nonuw
+  all_goals (try extract_goal ; sorry)
+  ---END lshr_mul_negative_nonuw
+
+
+
+def lshr_mul_negative_nsw_before := [llvm|
+{
+^0(%arg29 : i64):
+  %0 = llvm.mlir.constant(52) : i64
+  %1 = llvm.mlir.constant(2) : i64
+  %2 = llvm.mul %arg29, %0 overflow<nsw> : i64
+  %3 = llvm.lshr %2, %1 : i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+def lshr_mul_negative_nsw_after := [llvm|
+{
+^0(%arg29 : i64):
+  %0 = llvm.mlir.constant(52) : i64
+  %1 = llvm.mlir.constant(2) : i64
+  %2 = llvm.mul %arg29, %0 overflow<nsw> : i64
+  %3 = llvm.lshr exact %2, %1 : i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem lshr_mul_negative_nsw_proof : lshr_mul_negative_nsw_before ⊑ lshr_mul_negative_nsw_after := by
+  unfold lshr_mul_negative_nsw_before lshr_mul_negative_nsw_after
+  simp_alive_peephole
+  intros
+  ---BEGIN lshr_mul_negative_nsw
+  all_goals (try extract_goal ; sorry)
+  ---END lshr_mul_negative_nsw
+
+
+
 def shl_add_before := [llvm|
 {
 ^0(%arg27 : i8, %arg28 : i8):

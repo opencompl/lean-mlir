@@ -275,6 +275,8 @@
 4: "sub_ne_zero_use" has unsupported operation: llvm.call
 
 1: "sub_eq_zero_select"
+9: "sub_eq_zero_select" has pointer type input
+
 4: "sub_eq_zero_select" has unsupported operation: llvm.store
 
 1: "PR54558_reduced"

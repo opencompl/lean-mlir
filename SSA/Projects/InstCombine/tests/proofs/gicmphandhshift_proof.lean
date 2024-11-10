@@ -226,7 +226,7 @@ theorem eq_and_shl_one_thm (e e_1 : IntW 8) :
 
 theorem ne_and_lshr_minval_thm (e e_1 : IntW 8) :
   icmp IntPredicate.ne (LLVM.and (mul e_1 e_1) (lshr (const? 8 (-128)) e)) (lshr (const? 8 (-128)) e) ⊑
-    icmp IntPredicate.eq (LLVM.and (mul e_1 e_1) (lshr (const? 8 (-128)) e)) (const? 8 0) := by 
+    icmp IntPredicate.eq (LLVM.and (mul e_1 e_1) (lshr (const? 8 (-128)) e { «exact» := true })) (const? 8 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -338,7 +338,7 @@ theorem test_not_const_shr_and_1_ne_0_thm (e : IntW 32) :
 
 
 theorem test_const_shr_exact_and_1_ne_0_thm (e : IntW 32) :
-  icmp IntPredicate.ne (LLVM.and (lshr (const? 32 42) e) (const? 32 1)) (const? 32 0) ⊑
+  icmp IntPredicate.ne (LLVM.and (lshr (const? 32 42) e { «exact» := true }) (const? 32 1)) (const? 32 0) ⊑
     icmp IntPredicate.ne (LLVM.and (shl (const? 32 1) e { «nsw» := false, «nuw» := true }) (const? 32 42))
       (const? 32 0) := by 
     simp_alive_undef

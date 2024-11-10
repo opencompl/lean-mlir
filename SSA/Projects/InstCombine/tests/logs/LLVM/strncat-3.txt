@@ -1,5 +1,5 @@
 1: "strncat"
-5: "strncat" is empty
+9: "strncat" has pointer type input
 
 1: "test_nosimplify1"
 4: "test_nosimplify1" has unsupported operation: llvm.mlir.addressof

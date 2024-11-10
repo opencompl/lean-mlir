@@ -7,6 +7,8 @@
 4: "f_1" has unsupported operation: llvm.inttoptr
 
 1: "f_2"
+9: "f_2" has pointer type input
+
 4: "f_2" has unsupported operation: llvm.load
 
 4: "f_2" has unsupported operation: llvm.store
@@ -14,6 +16,8 @@
 4: "f_2" has unsupported operation: llvm.return
 
 1: "f_3"
+9: "f_3" has pointer type input
+
 4: "f_3" has unsupported operation: llvm.load
 
 4: "f_3" has unsupported operation: llvm.store
@@ -21,6 +25,8 @@
 4: "f_3" has unsupported operation: llvm.return
 
 1: "g"
+9: "g" has pointer type input
+
 4: "g" has unsupported operation: llvm.load
 
 4: "g" has unsupported operation: llvm.call
@@ -34,6 +40,8 @@
 4: "g" has unsupported operation: llvm.load
 
 1: "g2"
+9: "g2" has pointer type input
+
 4: "g2" has unsupported operation: llvm.load
 
 4: "g2" has unsupported operation: llvm.call
@@ -48,6 +56,8 @@
 5: "alloc" is empty
 
 1: "f_4"
+9: "f_4" has pointer type input
+
 4: "f_4" has unsupported operation: llvm.mlir.addressof
 
 4: "f_4" has unsupported operation: llvm.call

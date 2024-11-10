@@ -42,6 +42,8 @@
 4: "rsqrt_squared" has unsupported operation: builtin.unregistered: llvm.fdiv
 
 1: "rsqrt_x_reassociate_extra_use"
+9: "rsqrt_x_reassociate_extra_use" has pointer type input
+
 4: "rsqrt_x_reassociate_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
 
 4: "rsqrt_x_reassociate_extra_use" has unsupported operation: builtin.unregistered: llvm.fdiv
@@ -51,6 +53,8 @@
 4: "rsqrt_x_reassociate_extra_use" has unsupported operation: llvm.store
 
 1: "x_add_y_rsqrt_reassociate_extra_use"
+9: "x_add_y_rsqrt_reassociate_extra_use" has pointer type input
+
 4: "x_add_y_rsqrt_reassociate_extra_use" has unsupported operation: builtin.unregistered: llvm.fadd
 
 4: "x_add_y_rsqrt_reassociate_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.sqrt

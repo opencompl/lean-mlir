@@ -209,7 +209,7 @@
 4: "pr64235" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "invoke"
-5: "invoke" is empty
+9: "invoke" has pointer type input
 
 1: "__gxx_personality_v0"
 5: "__gxx_personality_v0" is empty

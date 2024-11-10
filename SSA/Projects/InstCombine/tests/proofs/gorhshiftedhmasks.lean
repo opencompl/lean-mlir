@@ -13,8 +13,6 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gorhshiftedhmasks_statements
 
-#exit
-
 def or_and_shifts1_before := [llvm|
 {
 ^0(%arg14 : i32):
@@ -51,7 +49,7 @@ theorem or_and_shifts1_proof : or_and_shifts1_before ⊑ or_and_shifts1_after :=
   simp_alive_peephole
   intros
   ---BEGIN or_and_shifts1
-  all_goals (try extract_goal ; sorry)
+  apply or_and_shifts1_thm
   ---END or_and_shifts1
 
 
@@ -92,7 +90,7 @@ theorem or_and_shift_shift_and_proof : or_and_shift_shift_and_before ⊑ or_and_
   simp_alive_peephole
   intros
   ---BEGIN or_and_shift_shift_and
-  all_goals (try extract_goal ; sorry)
+  apply or_and_shift_shift_and_thm
   ---END or_and_shift_shift_and
 
 
@@ -107,9 +105,9 @@ def multiuse1_before := [llvm|
   %4 = llvm.and %arg11, %0 : i32
   %5 = llvm.and %arg11, %1 : i32
   %6 = llvm.shl %4, %2 overflow<nsw,nuw> : i32
-  %7 = llvm.lshr %4, %3 : i32
+  %7 = llvm.lshr exact %4, %3 : i32
   %8 = llvm.shl %5, %2 overflow<nsw,nuw> : i32
-  %9 = llvm.lshr %5, %3 : i32
+  %9 = llvm.lshr exact %5, %3 : i32
   %10 = llvm.or %6, %8 : i32
   %11 = llvm.or %7, %9 : i32
   %12 = llvm.or %11, %10 : i32
@@ -140,7 +138,7 @@ theorem multiuse1_proof : multiuse1_before ⊑ multiuse1_after := by
   simp_alive_peephole
   intros
   ---BEGIN multiuse1
-  all_goals (try extract_goal ; sorry)
+  apply multiuse1_thm
   ---END multiuse1
 
 
@@ -199,7 +197,7 @@ theorem multiuse2_proof : multiuse2_before ⊑ multiuse2_after := by
   simp_alive_peephole
   intros
   ---BEGIN multiuse2
-  all_goals (try extract_goal ; sorry)
+  apply multiuse2_thm
   ---END multiuse2
 
 
@@ -214,7 +212,7 @@ def multiuse3_before := [llvm|
   %4 = llvm.mlir.constant(15 : i32) : i32
   %5 = llvm.and %arg9, %0 : i32
   %6 = llvm.shl %5, %1 overflow<nsw,nuw> : i32
-  %7 = llvm.lshr %5, %2 : i32
+  %7 = llvm.lshr exact %5, %2 : i32
   %8 = llvm.shl %arg9, %1 : i32
   %9 = llvm.and %8, %3 : i32
   %10 = llvm.or %6, %9 : i32
@@ -250,7 +248,7 @@ theorem multiuse3_proof : multiuse3_before ⊑ multiuse3_after := by
   simp_alive_peephole
   intros
   ---BEGIN multiuse3
-  all_goals (try extract_goal ; sorry)
+  apply multiuse3_thm
   ---END multiuse3
 
 
@@ -283,7 +281,7 @@ theorem shl_mask_proof : shl_mask_before ⊑ shl_mask_after := by
   simp_alive_peephole
   intros
   ---BEGIN shl_mask
-  all_goals (try extract_goal ; sorry)
+  apply shl_mask_thm
   ---END shl_mask
 
 
@@ -316,7 +314,7 @@ theorem shl_mask_wrong_shl_const_proof : shl_mask_wrong_shl_const_before ⊑ shl
   simp_alive_peephole
   intros
   ---BEGIN shl_mask_wrong_shl_const
-  all_goals (try extract_goal ; sorry)
+  apply shl_mask_wrong_shl_const_thm
   ---END shl_mask_wrong_shl_const
 
 
@@ -349,7 +347,7 @@ theorem shl_mask_weird_type_proof : shl_mask_weird_type_before ⊑ shl_mask_weir
   simp_alive_peephole
   intros
   ---BEGIN shl_mask_weird_type
-  all_goals (try extract_goal ; sorry)
+  apply shl_mask_weird_type_thm
   ---END shl_mask_weird_type
 
 
@@ -386,7 +384,7 @@ theorem shl_mul_mask_proof : shl_mul_mask_before ⊑ shl_mul_mask_after := by
   simp_alive_peephole
   intros
   ---BEGIN shl_mul_mask
-  all_goals (try extract_goal ; sorry)
+  apply shl_mul_mask_thm
   ---END shl_mul_mask
 
 
@@ -423,5 +421,7 @@ theorem shl_mul_mask_wrong_mul_const_proof : shl_mul_mask_wrong_mul_const_before
   simp_alive_peephole
   intros
   ---BEGIN shl_mul_mask_wrong_mul_const
-  all_goals (try extract_goal ; sorry)
+  apply shl_mul_mask_wrong_mul_const_thm
   ---END shl_mul_mask_wrong_mul_const
+
+

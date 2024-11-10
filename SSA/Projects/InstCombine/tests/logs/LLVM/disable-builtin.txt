@@ -1,8 +1,6 @@
 1: "strcat"
-5: "strcat" is empty
+9: "strcat" has pointer type input
 
 1: "test_strcat"
-4: "test_strcat" has unsupported operation after optimization: llvm.mlir.addressof
-
-4: "test_strcat" has unsupported operation after optimization: llvm.call
+9: "test_strcat" has pointer type input
 

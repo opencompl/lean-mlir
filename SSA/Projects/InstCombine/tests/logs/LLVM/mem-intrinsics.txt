@@ -13,11 +13,15 @@
 4: "memset_null_ub" has unsupported operation: llvm.return
 
 1: "memcpy_null_src"
+9: "memcpy_null_src" has pointer type input
+
 4: "memcpy_null_src" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 4: "memcpy_null_src" has unsupported operation: llvm.return
 
 1: "memmove_null_src"
+9: "memmove_null_src" has pointer type input
+
 4: "memmove_null_src" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 4: "memmove_null_src" has unsupported operation: llvm.return
@@ -42,5 +46,5 @@
 4: "memset_null_is_defined" has unsupported operation: llvm.return
 
 1: "llvm.memset.element.unordered.atomic.p0.i64"
-5: "llvm.memset.element.unordered.atomic.p0.i64" is empty
+9: "llvm.memset.element.unordered.atomic.p0.i64" has pointer type input
 

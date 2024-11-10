@@ -19,7 +19,7 @@ def t0_lshr_before := [llvm|
   %0 = llvm.mlir.constant(-1 : i32) : i32
   %1 = llvm.shl %0, %arg31 : i32
   %2 = llvm.and %1, %arg30 : i32
-  %3 = llvm.lshr %2, %arg31 : i32
+  %3 = llvm.lshr exact %2, %arg31 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
@@ -29,7 +29,7 @@ def t0_lshr_after := [llvm|
   %0 = llvm.mlir.constant(-1 : i32) : i32
   %1 = llvm.shl %0, %arg31 overflow<nsw> : i32
   %2 = llvm.and %1, %arg30 : i32
-  %3 = llvm.lshr %2, %arg31 : i32
+  %3 = llvm.lshr exact %2, %arg31 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
@@ -50,7 +50,7 @@ def t1_sshr_before := [llvm|
   %0 = llvm.mlir.constant(-1 : i32) : i32
   %1 = llvm.shl %0, %arg29 : i32
   %2 = llvm.and %1, %arg28 : i32
-  %3 = llvm.ashr %2, %arg29 : i32
+  %3 = llvm.ashr exact %2, %arg29 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
@@ -60,7 +60,7 @@ def t1_sshr_after := [llvm|
   %0 = llvm.mlir.constant(-1 : i32) : i32
   %1 = llvm.shl %0, %arg29 overflow<nsw> : i32
   %2 = llvm.and %1, %arg28 : i32
-  %3 = llvm.ashr %2, %arg29 : i32
+  %3 = llvm.ashr exact %2, %arg29 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
 ]

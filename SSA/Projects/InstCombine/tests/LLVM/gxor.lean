@@ -5,8 +5,6 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open LLVM
 open BitVec
 
-#exit
-
 open MLIR AST
 open Ctxt (Var)
 
@@ -1283,76 +1281,6 @@ theorem xor_orn_commute1_proof : xor_orn_commute1_before ⊑ xor_orn_commute1_af
 
 
 
-def xor_orn_commute2_before := [llvm|
-{
-^0(%arg59 : i32, %arg60 : i32, %arg61 : !llvm.ptr):
-  %0 = llvm.mlir.constant(42 : i32) : i32
-  %1 = llvm.mlir.constant(-1 : i32) : i32
-  %2 = llvm.udiv %0, %arg60 : i32
-  %3 = llvm.xor %arg59, %1 : i32
-  %4 = llvm.or %2, %3 : i32
-  %5 = llvm.xor %4, %arg59 : i32
-  "llvm.return"(%5) : (i32) -> ()
-}
-]
-def xor_orn_commute2_after := [llvm|
-{
-^0(%arg59 : i32, %arg60 : i32, %arg61 : !llvm.ptr):
-  %0 = llvm.mlir.constant(42 : i32) : i32
-  %1 = llvm.mlir.constant(-1 : i32) : i32
-  %2 = llvm.udiv %0, %arg60 : i32
-  %3 = llvm.and %arg59, %2 : i32
-  %4 = llvm.xor %3, %1 : i32
-  "llvm.return"(%4) : (i32) -> ()
-}
-]
-set_option debug.skipKernelTC true in
-theorem xor_orn_commute2_proof : xor_orn_commute2_before ⊑ xor_orn_commute2_after := by
-  unfold xor_orn_commute2_before xor_orn_commute2_after
-  simp_alive_peephole
-  intros
-  ---BEGIN xor_orn_commute2
-  all_goals (try extract_goal ; sorry)
-  ---END xor_orn_commute2
-
-
-
-def xor_orn_commute3_before := [llvm|
-{
-^0(%arg53 : i67, %arg54 : i67, %arg55 : !llvm.ptr):
-  %0 = llvm.mlir.constant(42 : i67) : i67
-  %1 = llvm.mlir.constant(-1 : i67) : i67
-  %2 = llvm.udiv %0, %arg53 : i67
-  %3 = llvm.udiv %0, %arg54 : i67
-  %4 = llvm.xor %2, %1 : i67
-  %5 = llvm.or %3, %4 : i67
-  %6 = llvm.xor %2, %5 : i67
-  "llvm.return"(%6) : (i67) -> ()
-}
-]
-def xor_orn_commute3_after := [llvm|
-{
-^0(%arg53 : i67, %arg54 : i67, %arg55 : !llvm.ptr):
-  %0 = llvm.mlir.constant(42 : i67) : i67
-  %1 = llvm.mlir.constant(-1 : i67) : i67
-  %2 = llvm.udiv %0, %arg53 : i67
-  %3 = llvm.udiv %0, %arg54 : i67
-  %4 = llvm.and %2, %3 : i67
-  %5 = llvm.xor %4, %1 : i67
-  "llvm.return"(%5) : (i67) -> ()
-}
-]
-set_option debug.skipKernelTC true in
-theorem xor_orn_commute3_proof : xor_orn_commute3_before ⊑ xor_orn_commute3_after := by
-  unfold xor_orn_commute3_before xor_orn_commute3_after
-  simp_alive_peephole
-  intros
-  ---BEGIN xor_orn_commute3
-  all_goals (try extract_goal ; sorry)
-  ---END xor_orn_commute3
-
-
-
 def tryFactorization_xor_ashr_lshr_before := [llvm|
 {
 ^0(%arg40 : i32):
@@ -1646,3 +1574,5 @@ theorem select_or_disjoint_or_proof : select_or_disjoint_or_before ⊑ select_or
   ---BEGIN select_or_disjoint_or
   all_goals (try extract_goal ; sorry)
   ---END select_or_disjoint_or
+
+

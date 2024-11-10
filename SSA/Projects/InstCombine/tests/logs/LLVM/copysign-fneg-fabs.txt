@@ -73,6 +73,8 @@
 4: "fabs_copysign_all_flags" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
 1: "fabs_copysign_no_flags_copysign_user"
+9: "fabs_copysign_no_flags_copysign_user" has pointer type input
+
 4: "fabs_copysign_no_flags_copysign_user" has unsupported operation: builtin.unregistered: llvm.intr.copysign
 
 4: "fabs_copysign_no_flags_copysign_user" has unsupported operation: llvm.store
@@ -85,6 +87,8 @@
 4: "fneg_fabs_copysign_drop_flags" has unsupported operation: builtin.unregistered: llvm.fneg
 
 1: "fneg_copysign_multi_use"
+9: "fneg_copysign_multi_use" has pointer type input
+
 4: "fneg_copysign_multi_use" has unsupported operation: builtin.unregistered: llvm.intr.copysign
 
 4: "fneg_copysign_multi_use" has unsupported operation: llvm.store
@@ -92,6 +96,8 @@
 4: "fneg_copysign_multi_use" has unsupported operation: builtin.unregistered: llvm.fneg
 
 1: "fabs_copysign_multi_use"
+9: "fabs_copysign_multi_use" has pointer type input
+
 4: "fabs_copysign_multi_use" has unsupported operation: builtin.unregistered: llvm.intr.copysign
 
 4: "fabs_copysign_multi_use" has unsupported operation: llvm.store
@@ -99,6 +105,8 @@
 4: "fabs_copysign_multi_use" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
 1: "fabs_flags_copysign_multi_use"
+9: "fabs_flags_copysign_multi_use" has pointer type input
+
 4: "fabs_flags_copysign_multi_use" has unsupported operation: builtin.unregistered: llvm.intr.copysign
 
 4: "fabs_flags_copysign_multi_use" has unsupported operation: llvm.store
@@ -106,6 +114,8 @@
 4: "fabs_flags_copysign_multi_use" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
 1: "fneg_fabs_copysign_multi_use_fabs"
+9: "fneg_fabs_copysign_multi_use_fabs" has pointer type input
+
 4: "fneg_fabs_copysign_multi_use_fabs" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
 4: "fneg_fabs_copysign_multi_use_fabs" has unsupported operation: llvm.store

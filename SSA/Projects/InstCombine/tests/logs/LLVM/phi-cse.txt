@@ -1,4 +1,6 @@
 1: "test0"
+9: "test0" has pointer type input
+
 4: "test0" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test0" has unsupported operation: builtin.unregistered: llvm.br
@@ -12,6 +14,8 @@
 4: "test0" has unsupported operation: llvm.return
 
 1: "test1"
+9: "test1" has pointer type input
+
 4: "test1" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test1" has unsupported operation: builtin.unregistered: llvm.br
@@ -25,6 +29,8 @@
 4: "test1" has unsupported operation: llvm.return
 
 1: "negative_test2"
+9: "negative_test2" has pointer type input
+
 4: "negative_test2" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "negative_test2" has unsupported operation: builtin.unregistered: llvm.br
@@ -38,6 +44,8 @@
 4: "negative_test2" has unsupported operation: llvm.return
 
 1: "negative_test3"
+9: "negative_test3" has pointer type input
+
 4: "negative_test3" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "negative_test3" has unsupported operation: builtin.unregistered: llvm.br
@@ -51,6 +59,8 @@
 4: "negative_test3" has unsupported operation: llvm.return
 
 1: "negative_test4"
+9: "negative_test4" has pointer type input
+
 4: "negative_test4" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "negative_test4" has unsupported operation: builtin.unregistered: llvm.br
@@ -64,6 +74,8 @@
 4: "negative_test4" has unsupported operation: llvm.return
 
 1: "test5"
+9: "test5" has pointer type input
+
 4: "test5" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test5" has unsupported operation: builtin.unregistered: llvm.br
@@ -75,6 +87,8 @@
 4: "test5" has unsupported operation: llvm.return
 
 1: "test6"
+9: "test6" has pointer type input
+
 4: "test6" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test6" has unsupported operation: builtin.unregistered: llvm.br
@@ -86,6 +100,8 @@
 4: "test6" has unsupported operation: llvm.return
 
 1: "test7"
+9: "test7" has pointer type input
+
 4: "test7" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test7" has unsupported operation: builtin.unregistered: llvm.br
@@ -101,6 +117,8 @@
 4: "test7" has unsupported operation: llvm.return
 
 1: "test8"
+9: "test8" has pointer type input
+
 4: "test8" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test8" has unsupported operation: builtin.unregistered: llvm.br
@@ -116,6 +134,8 @@
 4: "test8" has unsupported operation: llvm.return
 
 1: "test9"
+9: "test9" has pointer type input
+
 4: "test9" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test9" has unsupported operation: builtin.unregistered: llvm.br

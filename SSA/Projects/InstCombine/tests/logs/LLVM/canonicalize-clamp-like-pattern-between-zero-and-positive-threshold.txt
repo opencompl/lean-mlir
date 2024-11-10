@@ -135,5 +135,7 @@
 8: "t21_ult_slt_vec_poison2" contains vectors which are unsupported
 
 1: "t22_pointers"
+9: "t22_pointers" has pointer type input
+
 4: "t22_pointers" has unsupported operation: llvm.inttoptr
 

@@ -26,7 +26,7 @@
 4: "fu1" has unsupported operation: llvm.return
 
 1: "bar"
-5: "bar" is empty
+9: "bar" has pointer type input
 
 1: "fu2"
 4: "fu2" has unsupported operation: llvm.mlir.zero

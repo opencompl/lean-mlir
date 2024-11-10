@@ -227,7 +227,7 @@ theorem test_shl__none_are_safe_thm (e : IntW 64) (e_1 : IntW 32) :
 
 theorem test_lshr_exact__exact_is_safe_thm (e : IntW 64) (e_1 : IntW 32) :
   select (icmp IntPredicate.eq (LLVM.and e_1 (const? 32 60)) (const? 32 0)) e
-      (ashr e (zext 64 (lshr (LLVM.and e_1 (const? 32 60)) (const? 32 2)))) ⊑
+      (ashr e (zext 64 (lshr (LLVM.and e_1 (const? 32 60)) (const? 32 2) { «exact» := true }))) ⊑
     ashr e (zext 64 (LLVM.and (lshr e_1 (const? 32 2)) (const? 32 15))) := by 
     simp_alive_undef
     simp_alive_ops
@@ -251,7 +251,7 @@ theorem test_lshr__exact_is_safe_thm (e : IntW 64) (e_1 : IntW 32) :
 
 theorem test_lshr_exact__exact_is_unsafe_thm (e : IntW 64) (e_1 : IntW 32) :
   select (icmp IntPredicate.eq (LLVM.and e_1 (const? 32 63)) (const? 32 0)) e
-      (ashr e (zext 64 (lshr (LLVM.and e_1 (const? 32 63)) (const? 32 2)))) ⊑
+      (ashr e (zext 64 (lshr (LLVM.and e_1 (const? 32 63)) (const? 32 2) { «exact» := true }))) ⊑
     ashr e (zext 64 (LLVM.and (lshr e_1 (const? 32 2)) (const? 32 15))) := by 
     simp_alive_undef
     simp_alive_ops
@@ -275,7 +275,7 @@ theorem test_lshr__exact_is_unsafe_thm (e : IntW 64) (e_1 : IntW 32) :
 
 theorem test_ashr_exact__exact_is_safe_thm (e : IntW 64) (e_1 : IntW 32) :
   select (icmp IntPredicate.eq (LLVM.and e_1 (const? 32 (-2147483588))) (const? 32 0)) e
-      (ashr e (zext 64 (ashr (LLVM.and e_1 (const? 32 (-2147483588))) (const? 32 2)))) ⊑
+      (ashr e (zext 64 (ashr (LLVM.and e_1 (const? 32 (-2147483588))) (const? 32 2) { «exact» := true }))) ⊑
     ashr e (zext 64 (LLVM.and (ashr e_1 (const? 32 2)) (const? 32 (-536870897)))) := by 
     simp_alive_undef
     simp_alive_ops
@@ -299,7 +299,7 @@ theorem test_ashr__exact_is_safe_thm (e : IntW 64) (e_1 : IntW 32) :
 
 theorem test_ashr_exact__exact_is_unsafe_thm (e : IntW 64) (e_1 : IntW 32) :
   select (icmp IntPredicate.eq (LLVM.and e_1 (const? 32 (-2147483585))) (const? 32 0)) e
-      (ashr e (zext 64 (ashr (LLVM.and e_1 (const? 32 (-2147483585))) (const? 32 2)))) ⊑
+      (ashr e (zext 64 (ashr (LLVM.and e_1 (const? 32 (-2147483585))) (const? 32 2) { «exact» := true }))) ⊑
     ashr e (zext 64 (LLVM.and (ashr e_1 (const? 32 2)) (const? 32 (-536870897)))) := by 
     simp_alive_undef
     simp_alive_ops

@@ -49,6 +49,8 @@
 4: "test_srem" has unsupported operation: llvm.return
 
 1: "test_ptrtoint"
+9: "test_ptrtoint" has pointer type input
+
 4: "test_ptrtoint" has unsupported operation: llvm.return
 
 1: "test_and"

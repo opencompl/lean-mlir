@@ -1,5 +1,5 @@
 1: "use_ptr"
-5: "use_ptr" is empty
+9: "use_ptr" has pointer type input
 
 1: "inttoptr"
 4: "inttoptr" has unsupported operation after optimization: llvm.inttoptr
@@ -26,6 +26,8 @@
 8: "inttoptr_vector_constant_size_mismatch" contains vectors which are unsupported
 
 1: "inttoptr_oneside"
+9: "inttoptr_oneside" has pointer type input
+
 4: "inttoptr_oneside" has unsupported operation: llvm.inttoptr
 
 1: "inttoptr_used"

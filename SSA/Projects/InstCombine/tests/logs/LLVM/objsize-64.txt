@@ -8,14 +8,18 @@
 5: "__gxx_personality_v0" is empty
 
 1: "__cxa_call_unexpected"
-5: "__cxa_call_unexpected" is empty
+9: "__cxa_call_unexpected" has pointer type input
 
 1: "f1"
+9: "f1" has pointer type input
+
 4: "f1" has unsupported operation: llvm.call
 
 4: "f1" has unsupported operation: llvm.store
 
 1: "f2"
+9: "f2" has pointer type input
+
 4: "f2" has unsupported operation: llvm.mlir.undef
 
 4: "f2" has unsupported operation: builtin.unregistered: llvm.invoke
@@ -31,5 +35,5 @@
 4: "f2" has unsupported operation: builtin.unregistered: llvm.unreachable
 
 1: "llvm.objectsize.i64.p0"
-5: "llvm.objectsize.i64.p0" is empty
+9: "llvm.objectsize.i64.p0" has pointer type input
 

@@ -275,18 +275,28 @@
 7: "zext_icmp_eq_pow2" is unchanged by InstCombine
 
 1: "zext_icmp_eq_bool_0"
+9: "zext_icmp_eq_bool_0" has pointer type input
+
 4: "zext_icmp_eq_bool_0" has unsupported operation: llvm.load
 
 1: "zext_icmp_eq_bool_1"
+9: "zext_icmp_eq_bool_1" has pointer type input
+
 4: "zext_icmp_eq_bool_1" has unsupported operation: llvm.load
 
 1: "zext_icmp_ne_bool_0"
+9: "zext_icmp_ne_bool_0" has pointer type input
+
 4: "zext_icmp_ne_bool_0" has unsupported operation: llvm.load
 
 1: "zext_icmp_ne_bool_1"
+9: "zext_icmp_ne_bool_1" has pointer type input
+
 4: "zext_icmp_ne_bool_1" has unsupported operation: llvm.load
 
 1: "zext_icmp_eq0_no_shift"
+9: "zext_icmp_eq0_no_shift" has pointer type input
+
 4: "zext_icmp_eq0_no_shift" has unsupported operation: llvm.load
 
 1: "evaluate_zexted_const_expr"

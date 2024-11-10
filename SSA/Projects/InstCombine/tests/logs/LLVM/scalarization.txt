@@ -1,19 +1,27 @@
 1: "extract_load"
+9: "extract_load" has pointer type input
+
 4: "extract_load" has unsupported operation: llvm.load
 
 4: "extract_load" has unsupported operation: builtin.unregistered: llvm.extractelement
 
 1: "extract_load_fp"
+9: "extract_load_fp" has pointer type input
+
 4: "extract_load_fp" has unsupported operation: llvm.load
 
 4: "extract_load_fp" has unsupported operation: builtin.unregistered: llvm.extractelement
 
 1: "extract_load_volatile"
+9: "extract_load_volatile" has pointer type input
+
 4: "extract_load_volatile" has unsupported operation: llvm.load
 
 4: "extract_load_volatile" has unsupported operation: builtin.unregistered: llvm.extractelement
 
 1: "extract_load_extra_use"
+9: "extract_load_extra_use" has pointer type input
+
 4: "extract_load_extra_use" has unsupported operation: llvm.load
 
 4: "extract_load_extra_use" has unsupported operation: builtin.unregistered: llvm.extractelement
@@ -21,11 +29,15 @@
 4: "extract_load_extra_use" has unsupported operation: llvm.store
 
 1: "extract_load_variable_index"
+9: "extract_load_variable_index" has pointer type input
+
 4: "extract_load_variable_index" has unsupported operation: llvm.load
 
 4: "extract_load_variable_index" has unsupported operation: builtin.unregistered: llvm.extractelement
 
 1: "scalarize_phi"
+9: "scalarize_phi" has pointer type input
+
 4: "scalarize_phi" has unsupported operation: llvm.load
 
 4: "scalarize_phi" has unsupported operation: builtin.unregistered: llvm.br
@@ -97,6 +109,8 @@
 4: "extract_element_binop_nonsplat_variable_index" has unsupported operation: builtin.unregistered: llvm.extractelement
 
 1: "extract_element_load"
+9: "extract_element_load" has pointer type input
+
 4: "extract_element_load" has unsupported operation: llvm.load
 
 4: "extract_element_load" has unsupported operation: builtin.unregistered: llvm.extractelement
@@ -106,6 +120,8 @@
 4: "extract_element_load" has unsupported operation: builtin.unregistered: llvm.fadd
 
 1: "extract_element_multi_Use_load"
+9: "extract_element_multi_Use_load" has pointer type input
+
 4: "extract_element_multi_Use_load" has unsupported operation: llvm.load
 
 4: "extract_element_multi_Use_load" has unsupported operation: llvm.store

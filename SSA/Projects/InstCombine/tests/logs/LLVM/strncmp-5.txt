@@ -1,7 +1,9 @@
 1: "strncmp"
-5: "strncmp" is empty
+9: "strncmp" has pointer type input
 
 1: "fold_strncmp_a_b_n"
+9: "fold_strncmp_a_b_n" has pointer type input
+
 4: "fold_strncmp_a_b_n" has unsupported operation: llvm.store
 
 4: "fold_strncmp_a_b_n" has unsupported operation: llvm.getelementptr
@@ -31,6 +33,8 @@
 4: "fold_strncmp_a_b_n" has unsupported operation: llvm.return
 
 1: "call_strncmp_a_ax_n"
+9: "call_strncmp_a_ax_n" has pointer type input
+
 4: "call_strncmp_a_ax_n" has unsupported operation: llvm.mlir.addressof
 
 4: "call_strncmp_a_ax_n" has unsupported operation: llvm.mlir.addressof
@@ -42,6 +46,8 @@
 4: "call_strncmp_a_ax_n" has unsupported operation: llvm.return
 
 1: "fold_strncmp_a_c_n"
+9: "fold_strncmp_a_c_n" has pointer type input
+
 4: "fold_strncmp_a_c_n" has unsupported operation: llvm.store
 
 4: "fold_strncmp_a_c_n" has unsupported operation: llvm.getelementptr
@@ -67,6 +73,8 @@
 4: "fold_strncmp_a_c_n" has unsupported operation: llvm.return
 
 1: "fold_strncmp_a_d_n"
+9: "fold_strncmp_a_d_n" has pointer type input
+
 4: "fold_strncmp_a_d_n" has unsupported operation: llvm.store
 
 4: "fold_strncmp_a_d_n" has unsupported operation: llvm.getelementptr
@@ -100,11 +108,15 @@
 4: "fold_strncmp_a_d_n" has unsupported operation: llvm.return
 
 1: "fold_strncmp_a_d_nz"
+9: "fold_strncmp_a_d_nz" has pointer type input
+
 4: "fold_strncmp_a_d_nz" has unsupported operation: llvm.store
 
 4: "fold_strncmp_a_d_nz" has unsupported operation: llvm.return
 
 1: "fold_strncmp_d_e_n"
+9: "fold_strncmp_d_e_n" has pointer type input
+
 4: "fold_strncmp_d_e_n" has unsupported operation: llvm.store
 
 4: "fold_strncmp_d_e_n" has unsupported operation: llvm.getelementptr

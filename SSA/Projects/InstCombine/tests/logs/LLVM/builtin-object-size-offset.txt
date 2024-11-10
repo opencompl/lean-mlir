@@ -11,8 +11,8 @@
 4: "foo" has unsupported operation: llvm.return
 
 1: "printf"
-5: "printf" is empty
+9: "printf" has pointer type input
 
 1: "llvm.objectsize.i64.p0"
-5: "llvm.objectsize.i64.p0" is empty
+9: "llvm.objectsize.i64.p0" has pointer type input
 

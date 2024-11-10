@@ -1,21 +1,3 @@
 1: "func"
-4: "func" has unsupported operation after optimization: llvm.alloca
-
-4: "func" has unsupported operation after optimization: llvm.alloca
-
-4: "func" has unsupported operation after optimization: builtin.unregistered: llvm.intr.lifetime.start
-
-4: "func" has unsupported operation after optimization: builtin.unregistered: llvm.intr.vastart
-
-4: "func" has unsupported operation after optimization: builtin.unregistered: llvm.intr.lifetime.start
-
-4: "func" has unsupported operation after optimization: builtin.unregistered: llvm.intr.vacopy
-
-4: "func" has unsupported operation after optimization: builtin.unregistered: llvm.intr.vaend
-
-4: "func" has unsupported operation after optimization: builtin.unregistered: llvm.intr.lifetime.end
-
-4: "func" has unsupported operation after optimization: builtin.unregistered: llvm.intr.vaend
-
-4: "func" has unsupported operation after optimization: builtin.unregistered: llvm.intr.lifetime.end
+9: "func" has pointer type input
 

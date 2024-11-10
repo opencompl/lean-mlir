@@ -18,7 +18,8 @@ theorem and_sel_op0_thm (e : IntW 1) : LLVM.and (select e (const? 32 25) (const?
 
 
 theorem mul_sel_op0_thm (e : IntW 32) (e_1 : IntW 1) :
-  mul (select e_1 (const? 32 0) (LLVM.udiv (const? 32 42) e)) e ⊑ select e_1 (const? 32 0) (const? 32 42) := by 
+  mul (select e_1 (const? 32 0) (LLVM.udiv (const? 32 42) e { «exact» := true })) e ⊑
+    select e_1 (const? 32 0) (const? 32 42) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

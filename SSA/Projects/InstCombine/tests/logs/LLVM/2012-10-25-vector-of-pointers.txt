@@ -1,4 +1,6 @@
 1: "widget"
+9: "widget" has pointer type input
+
 4: "widget" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "widget" has unsupported operation: builtin.unregistered: llvm.cond_br

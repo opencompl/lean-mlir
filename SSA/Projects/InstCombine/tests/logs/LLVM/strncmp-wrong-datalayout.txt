@@ -1,6 +1,8 @@
 1: "strncmp"
-5: "strncmp" is empty
+9: "strncmp" has pointer type input
 
 1: "test6"
+9: "test6" has pointer type input
+
 4: "test6" has unsupported operation: llvm.call
 

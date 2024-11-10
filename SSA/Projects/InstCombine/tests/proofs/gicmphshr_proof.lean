@@ -89,7 +89,8 @@ theorem lshr_ne_both_equal_thm (e : IntW 8) :
 
 
 theorem exact_ashr_eq_both_equal_thm (e : IntW 8) :
-  icmp IntPredicate.eq (ashr (const? 8 (-128)) e) (const? 8 (-128)) ⊑ icmp IntPredicate.eq e (const? 8 0) := by 
+  icmp IntPredicate.eq (ashr (const? 8 (-128)) e { «exact» := true }) (const? 8 (-128)) ⊑
+    icmp IntPredicate.eq e (const? 8 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -99,7 +100,8 @@ theorem exact_ashr_eq_both_equal_thm (e : IntW 8) :
 
 
 theorem exact_ashr_ne_both_equal_thm (e : IntW 8) :
-  icmp IntPredicate.ne (ashr (const? 8 (-128)) e) (const? 8 (-128)) ⊑ icmp IntPredicate.ne e (const? 8 0) := by 
+  icmp IntPredicate.ne (ashr (const? 8 (-128)) e { «exact» := true }) (const? 8 (-128)) ⊑
+    icmp IntPredicate.ne e (const? 8 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -109,7 +111,8 @@ theorem exact_ashr_ne_both_equal_thm (e : IntW 8) :
 
 
 theorem exact_lshr_eq_both_equal_thm (e : IntW 8) :
-  icmp IntPredicate.eq (lshr (const? 8 126) e) (const? 8 126) ⊑ icmp IntPredicate.eq e (const? 8 0) := by 
+  icmp IntPredicate.eq (lshr (const? 8 126) e { «exact» := true }) (const? 8 126) ⊑
+    icmp IntPredicate.eq e (const? 8 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -119,7 +122,8 @@ theorem exact_lshr_eq_both_equal_thm (e : IntW 8) :
 
 
 theorem exact_lshr_ne_both_equal_thm (e : IntW 8) :
-  icmp IntPredicate.ne (lshr (const? 8 126) e) (const? 8 126) ⊑ icmp IntPredicate.ne e (const? 8 0) := by 
+  icmp IntPredicate.ne (lshr (const? 8 126) e { «exact» := true }) (const? 8 126) ⊑
+    icmp IntPredicate.ne e (const? 8 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -129,7 +133,8 @@ theorem exact_lshr_ne_both_equal_thm (e : IntW 8) :
 
 
 theorem exact_lshr_eq_opposite_msb_thm (e : IntW 8) :
-  icmp IntPredicate.eq (lshr (const? 8 (-128)) e) (const? 8 1) ⊑ icmp IntPredicate.eq e (const? 8 7) := by 
+  icmp IntPredicate.eq (lshr (const? 8 (-128)) e { «exact» := true }) (const? 8 1) ⊑
+    icmp IntPredicate.eq e (const? 8 7) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -149,7 +154,8 @@ theorem lshr_eq_opposite_msb_thm (e : IntW 8) :
 
 
 theorem exact_lshr_ne_opposite_msb_thm (e : IntW 8) :
-  icmp IntPredicate.ne (lshr (const? 8 (-128)) e) (const? 8 1) ⊑ icmp IntPredicate.ne e (const? 8 7) := by 
+  icmp IntPredicate.ne (lshr (const? 8 (-128)) e { «exact» := true }) (const? 8 1) ⊑
+    icmp IntPredicate.ne e (const? 8 7) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -169,7 +175,8 @@ theorem lshr_ne_opposite_msb_thm (e : IntW 8) :
 
 
 theorem exact_ashr_eq_thm (e : IntW 8) :
-  icmp IntPredicate.eq (ashr (const? 8 (-128)) e) (const? 8 (-1)) ⊑ icmp IntPredicate.eq e (const? 8 7) := by 
+  icmp IntPredicate.eq (ashr (const? 8 (-128)) e { «exact» := true }) (const? 8 (-1)) ⊑
+    icmp IntPredicate.eq e (const? 8 7) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -179,7 +186,8 @@ theorem exact_ashr_eq_thm (e : IntW 8) :
 
 
 theorem exact_ashr_ne_thm (e : IntW 8) :
-  icmp IntPredicate.ne (ashr (const? 8 (-128)) e) (const? 8 (-1)) ⊑ icmp IntPredicate.ne e (const? 8 7) := by 
+  icmp IntPredicate.ne (ashr (const? 8 (-128)) e { «exact» := true }) (const? 8 (-1)) ⊑
+    icmp IntPredicate.ne e (const? 8 7) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -189,7 +197,8 @@ theorem exact_ashr_ne_thm (e : IntW 8) :
 
 
 theorem exact_lshr_eq_thm (e : IntW 8) :
-  icmp IntPredicate.eq (lshr (const? 8 4) e) (const? 8 1) ⊑ icmp IntPredicate.eq e (const? 8 2) := by 
+  icmp IntPredicate.eq (lshr (const? 8 4) e { «exact» := true }) (const? 8 1) ⊑
+    icmp IntPredicate.eq e (const? 8 2) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -199,7 +208,8 @@ theorem exact_lshr_eq_thm (e : IntW 8) :
 
 
 theorem exact_lshr_ne_thm (e : IntW 8) :
-  icmp IntPredicate.ne (lshr (const? 8 4) e) (const? 8 1) ⊑ icmp IntPredicate.ne e (const? 8 2) := by 
+  icmp IntPredicate.ne (lshr (const? 8 4) e { «exact» := true }) (const? 8 1) ⊑
+    icmp IntPredicate.ne e (const? 8 2) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -249,7 +259,8 @@ theorem nonexact_lshr_ne_thm (e : IntW 8) :
 
 
 theorem exact_lshr_eq_exactdiv_thm (e : IntW 8) :
-  icmp IntPredicate.eq (lshr (const? 8 80) e) (const? 8 5) ⊑ icmp IntPredicate.eq e (const? 8 4) := by 
+  icmp IntPredicate.eq (lshr (const? 8 80) e { «exact» := true }) (const? 8 5) ⊑
+    icmp IntPredicate.eq e (const? 8 4) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -259,7 +270,8 @@ theorem exact_lshr_eq_exactdiv_thm (e : IntW 8) :
 
 
 theorem exact_lshr_ne_exactdiv_thm (e : IntW 8) :
-  icmp IntPredicate.ne (lshr (const? 8 80) e) (const? 8 5) ⊑ icmp IntPredicate.ne e (const? 8 4) := by 
+  icmp IntPredicate.ne (lshr (const? 8 80) e { «exact» := true }) (const? 8 5) ⊑
+    icmp IntPredicate.ne e (const? 8 4) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -289,7 +301,8 @@ theorem nonexact_lshr_ne_exactdiv_thm (e : IntW 8) :
 
 
 theorem exact_ashr_eq_exactdiv_thm (e : IntW 8) :
-  icmp IntPredicate.eq (ashr (const? 8 (-80)) e) (const? 8 (-5)) ⊑ icmp IntPredicate.eq e (const? 8 4) := by 
+  icmp IntPredicate.eq (ashr (const? 8 (-80)) e { «exact» := true }) (const? 8 (-5)) ⊑
+    icmp IntPredicate.eq e (const? 8 4) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -299,7 +312,8 @@ theorem exact_ashr_eq_exactdiv_thm (e : IntW 8) :
 
 
 theorem exact_ashr_ne_exactdiv_thm (e : IntW 8) :
-  icmp IntPredicate.ne (ashr (const? 8 (-80)) e) (const? 8 (-5)) ⊑ icmp IntPredicate.ne e (const? 8 4) := by 
+  icmp IntPredicate.ne (ashr (const? 8 (-80)) e { «exact» := true }) (const? 8 (-5)) ⊑
+    icmp IntPredicate.ne e (const? 8 4) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -328,7 +342,8 @@ theorem nonexact_ashr_ne_exactdiv_thm (e : IntW 8) :
     all_goals sorry
 
 
-theorem exact_lshr_eq_noexactdiv_thm (e : IntW 8) : icmp IntPredicate.eq (lshr (const? 8 80) e) (const? 8 31) ⊑ const? 1 0 := by 
+theorem exact_lshr_eq_noexactdiv_thm (e : IntW 8) :
+  icmp IntPredicate.eq (lshr (const? 8 80) e { «exact» := true }) (const? 8 31) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -337,7 +352,8 @@ theorem exact_lshr_eq_noexactdiv_thm (e : IntW 8) : icmp IntPredicate.eq (lshr (
     all_goals sorry
 
 
-theorem exact_lshr_ne_noexactdiv_thm (e : IntW 8) : icmp IntPredicate.ne (lshr (const? 8 80) e) (const? 8 31) ⊑ const? 1 1 := by 
+theorem exact_lshr_ne_noexactdiv_thm (e : IntW 8) :
+  icmp IntPredicate.ne (lshr (const? 8 80) e { «exact» := true }) (const? 8 31) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -364,7 +380,8 @@ theorem nonexact_lshr_ne_noexactdiv_thm (e : IntW 8) : icmp IntPredicate.ne (lsh
     all_goals sorry
 
 
-theorem exact_ashr_eq_noexactdiv_thm (e : IntW 8) : icmp IntPredicate.eq (ashr (const? 8 (-80)) e) (const? 8 (-31)) ⊑ const? 1 0 := by 
+theorem exact_ashr_eq_noexactdiv_thm (e : IntW 8) :
+  icmp IntPredicate.eq (ashr (const? 8 (-80)) e { «exact» := true }) (const? 8 (-31)) ⊑ const? 1 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -373,7 +390,8 @@ theorem exact_ashr_eq_noexactdiv_thm (e : IntW 8) : icmp IntPredicate.eq (ashr (
     all_goals sorry
 
 
-theorem exact_ashr_ne_noexactdiv_thm (e : IntW 8) : icmp IntPredicate.ne (ashr (const? 8 (-80)) e) (const? 8 (-31)) ⊑ const? 1 1 := by 
+theorem exact_ashr_ne_noexactdiv_thm (e : IntW 8) :
+  icmp IntPredicate.ne (ashr (const? 8 (-80)) e { «exact» := true }) (const? 8 (-31)) ⊑ const? 1 1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -468,7 +486,7 @@ theorem PR24873_thm (e : IntW 64) :
 
 
 theorem ashr_exact_eq_0_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.eq (ashr e_1 e) (const? 32 0) ⊑ icmp IntPredicate.eq e_1 (const? 32 0) := by 
+  icmp IntPredicate.eq (ashr e_1 e { «exact» := true }) (const? 32 0) ⊑ icmp IntPredicate.eq e_1 (const? 32 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -478,7 +496,7 @@ theorem ashr_exact_eq_0_thm (e e_1 : IntW 32) :
 
 
 theorem lshr_exact_ne_0_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.ne (lshr e_1 e) (const? 32 0) ⊑ icmp IntPredicate.ne e_1 (const? 32 0) := by 
+  icmp IntPredicate.ne (lshr e_1 e { «exact» := true }) (const? 32 0) ⊑ icmp IntPredicate.ne e_1 (const? 32 0) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -825,6 +843,28 @@ theorem lshr_pow2_ugt1_thm (e : IntW 8) :
     all_goals sorry
 
 
+theorem ashr_pow2_ugt_thm (e : IntW 8) :
+  icmp IntPredicate.ugt (ashr (const? 8 (-128)) e) (const? 8 (-96)) ⊑
+    icmp IntPredicate.ugt (ashr (const? 8 (-128)) e { «exact» := true }) (const? 8 (-96)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+
+theorem lshr_pow2_sgt_thm (e : IntW 8) :
+  icmp IntPredicate.sgt (lshr (const? 8 (-128)) e) (const? 8 3) ⊑
+    icmp IntPredicate.sgt (lshr (const? 8 (-128)) e { «exact» := true }) (const? 8 3) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+
 theorem lshr_pow2_ult_thm (e : IntW 8) :
   icmp IntPredicate.ult (lshr (const? 8 4) e) (const? 8 2) ⊑ icmp IntPredicate.ugt e (const? 8 1) := by 
     simp_alive_undef
@@ -847,6 +887,28 @@ theorem lshr_pow2_ult_equal_constants_thm (e : IntW 32) :
 
 theorem lshr_pow2_ult_smin_thm (e : IntW 8) :
   icmp IntPredicate.ult (lshr (const? 8 (-128)) e) (const? 8 (-128)) ⊑ icmp IntPredicate.ne e (const? 8 0) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+
+theorem ashr_pow2_ult_thm (e : IntW 8) :
+  icmp IntPredicate.ult (ashr (const? 8 (-128)) e) (const? 8 (-96)) ⊑
+    icmp IntPredicate.ult (ashr (const? 8 (-128)) e { «exact» := true }) (const? 8 (-96)) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+
+theorem lshr_pow2_slt_thm (e : IntW 8) :
+  icmp IntPredicate.slt (lshr (const? 8 (-128)) e) (const? 8 3) ⊑
+    icmp IntPredicate.slt (lshr (const? 8 (-128)) e { «exact» := true }) (const? 8 3) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

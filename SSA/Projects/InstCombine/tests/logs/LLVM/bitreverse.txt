@@ -40,6 +40,8 @@
 4: "shuf_4bits" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
 
 1: "shuf_load_4bits"
+9: "shuf_load_4bits" has pointer type input
+
 4: "shuf_load_4bits" has unsupported operation: llvm.load
 
 4: "shuf_load_4bits" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse

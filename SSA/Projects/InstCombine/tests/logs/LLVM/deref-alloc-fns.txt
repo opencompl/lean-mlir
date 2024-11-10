@@ -5,7 +5,7 @@
 5: "calloc" is empty
 
 1: "realloc"
-5: "realloc" is empty
+9: "realloc" has pointer type input
 
 1: "_Znam"
 5: "_Znam" is empty
@@ -14,7 +14,7 @@
 5: "_Znwm" is empty
 
 1: "strdup"
-5: "strdup" is empty
+9: "strdup" has pointer type input
 
 1: "aligned_alloc"
 5: "aligned_alloc" is empty
@@ -50,7 +50,7 @@
 4: "aligned_alloc_unknown_align" has unsupported operation: llvm.call
 
 1: "foo"
-5: "foo" is empty
+9: "foo" has pointer type input
 
 1: "aligned_alloc_dynamic_args"
 4: "aligned_alloc_dynamic_args" has unsupported operation: llvm.call
@@ -83,12 +83,18 @@
 4: "malloc_constant_zero_size" has unsupported operation: llvm.call
 
 1: "realloc_nonconstant_size"
+9: "realloc_nonconstant_size" has pointer type input
+
 4: "realloc_nonconstant_size" has unsupported operation: llvm.call
 
 1: "realloc_constant_zero_size"
+9: "realloc_constant_zero_size" has pointer type input
+
 4: "realloc_constant_zero_size" has unsupported operation: llvm.call
 
 1: "realloc_constant_size"
+9: "realloc_constant_size" has pointer type input
+
 4: "realloc_constant_size" has unsupported operation: llvm.call
 
 1: "calloc_nonconstant_size"
@@ -139,6 +145,8 @@
 4: "strdup_constant_str" has unsupported operation: llvm.call
 
 1: "strdup_notconstant_str"
+9: "strdup_notconstant_str" has pointer type input
+
 4: "strdup_notconstant_str" has unsupported operation: llvm.call
 
 1: "ossfuzz_23214"
@@ -154,5 +162,7 @@
 4: "my_calloc_constant_size" has unsupported operation: llvm.call
 
 1: "virtual_constant_size"
+9: "virtual_constant_size" has pointer type input
+
 4: "virtual_constant_size" has unsupported operation: llvm.call
 

@@ -34,11 +34,13 @@
 4: "nan_null" has unsupported operation: llvm.call
 
 1: "nan_non_constant"
+9: "nan_non_constant" has pointer type input
+
 4: "nan_non_constant" has unsupported operation: llvm.call
 
 1: "nanf"
-5: "nanf" is empty
+9: "nanf" has pointer type input
 
 1: "nan"
-5: "nan" is empty
+9: "nan" has pointer type input
 

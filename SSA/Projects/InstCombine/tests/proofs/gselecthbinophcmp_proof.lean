@@ -227,7 +227,8 @@ theorem select_lshr_icmp_const_reordered_thm (e : IntW 32) :
 
 
 theorem select_exact_lshr_icmp_const_thm (e : IntW 32) :
-  select (icmp IntPredicate.ugt e (const? 32 31)) (lshr e (const? 32 5)) (const? 32 0) ⊑ lshr e (const? 32 5) := by 
+  select (icmp IntPredicate.ugt e (const? 32 31)) (lshr e (const? 32 5) { «exact» := true }) (const? 32 0) ⊑
+    lshr e (const? 32 5) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

@@ -9,7 +9,8 @@ set_option linter.unreachableTactic false
 
 section gashrhlshr_proof
 theorem ashr_lshr_exact_ashr_only_thm (e e_1 : IntW 32) :
-  select (icmp IntPredicate.sgt e_1 (const? 32 (-1))) (lshr e_1 e) (ashr e_1 e) ⊑ ashr e_1 e := by 
+  select (icmp IntPredicate.sgt e_1 (const? 32 (-1))) (lshr e_1 e) (ashr e_1 e { «exact» := true }) ⊑
+    ashr e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -29,7 +30,9 @@ theorem ashr_lshr_no_exact_thm (e e_1 : IntW 32) :
 
 
 theorem ashr_lshr_exact_both_thm (e e_1 : IntW 32) :
-  select (icmp IntPredicate.sgt e_1 (const? 32 (-1))) (lshr e_1 e) (ashr e_1 e) ⊑ ashr e_1 e := by 
+  select (icmp IntPredicate.sgt e_1 (const? 32 (-1))) (lshr e_1 e { «exact» := true })
+      (ashr e_1 e { «exact» := true }) ⊑
+    ashr e_1 e { «exact» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -39,7 +42,8 @@ theorem ashr_lshr_exact_both_thm (e e_1 : IntW 32) :
 
 
 theorem ashr_lshr_exact_lshr_only_thm (e e_1 : IntW 32) :
-  select (icmp IntPredicate.sgt e_1 (const? 32 (-1))) (lshr e_1 e) (ashr e_1 e) ⊑ ashr e_1 e := by 
+  select (icmp IntPredicate.sgt e_1 (const? 32 (-1))) (lshr e_1 e { «exact» := true }) (ashr e_1 e) ⊑
+    ashr e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -49,7 +53,7 @@ theorem ashr_lshr_exact_lshr_only_thm (e e_1 : IntW 32) :
 
 
 theorem ashr_lshr2_thm (e e_1 : IntW 32) :
-  select (icmp IntPredicate.sgt e_1 (const? 32 5)) (lshr e_1 e) (ashr e_1 e) ⊑ ashr e_1 e := by 
+  select (icmp IntPredicate.sgt e_1 (const? 32 5)) (lshr e_1 e) (ashr e_1 e { «exact» := true }) ⊑ ashr e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -59,7 +63,7 @@ theorem ashr_lshr2_thm (e e_1 : IntW 32) :
 
 
 theorem ashr_lshr2_i128_thm (e e_1 : IntW 128) :
-  select (icmp IntPredicate.sgt e_1 (const? 128 5)) (lshr e_1 e) (ashr e_1 e) ⊑ ashr e_1 e := by 
+  select (icmp IntPredicate.sgt e_1 (const? 128 5)) (lshr e_1 e) (ashr e_1 e { «exact» := true }) ⊑ ashr e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -69,7 +73,7 @@ theorem ashr_lshr2_i128_thm (e e_1 : IntW 128) :
 
 
 theorem ashr_lshr_cst_thm (e : IntW 32) :
-  select (icmp IntPredicate.slt e (const? 32 1)) (ashr e (const? 32 8)) (lshr e (const? 32 8)) ⊑
+  select (icmp IntPredicate.slt e (const? 32 1)) (ashr e (const? 32 8) { «exact» := true }) (lshr e (const? 32 8)) ⊑
     ashr e (const? 32 8) := by 
     simp_alive_undef
     simp_alive_ops
@@ -80,7 +84,7 @@ theorem ashr_lshr_cst_thm (e : IntW 32) :
 
 
 theorem ashr_lshr_cst2_thm (e : IntW 32) :
-  select (icmp IntPredicate.sgt e (const? 32 (-1))) (lshr e (const? 32 8)) (ashr e (const? 32 8)) ⊑
+  select (icmp IntPredicate.sgt e (const? 32 (-1))) (lshr e (const? 32 8)) (ashr e (const? 32 8) { «exact» := true }) ⊑
     ashr e (const? 32 8) := by 
     simp_alive_undef
     simp_alive_ops
@@ -91,7 +95,7 @@ theorem ashr_lshr_cst2_thm (e : IntW 32) :
 
 
 theorem ashr_lshr_inv_thm (e e_1 : IntW 32) :
-  select (icmp IntPredicate.slt e_1 (const? 32 1)) (ashr e_1 e) (lshr e_1 e) ⊑ ashr e_1 e := by 
+  select (icmp IntPredicate.slt e_1 (const? 32 1)) (ashr e_1 e { «exact» := true }) (lshr e_1 e) ⊑ ashr e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -101,7 +105,7 @@ theorem ashr_lshr_inv_thm (e e_1 : IntW 32) :
 
 
 theorem ashr_lshr_inv2_thm (e e_1 : IntW 32) :
-  select (icmp IntPredicate.slt e_1 (const? 32 7)) (ashr e_1 e) (lshr e_1 e) ⊑ ashr e_1 e := by 
+  select (icmp IntPredicate.slt e_1 (const? 32 7)) (ashr e_1 e { «exact» := true }) (lshr e_1 e) ⊑ ashr e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -219,7 +223,8 @@ theorem ashr_sub_nsw_thm (e e_1 : IntW 17) :
 
 
 theorem ashr_known_pos_exact_thm (e e_1 : IntW 8) :
-  ashr (LLVM.and e_1 (const? 8 127)) e ⊑ lshr (LLVM.and e_1 (const? 8 127)) e := by 
+  ashr (LLVM.and e_1 (const? 8 127)) e { «exact» := true } ⊑
+    lshr (LLVM.and e_1 (const? 8 127)) e { «exact» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -240,8 +245,8 @@ theorem lshr_mul_times_3_div_2_thm (e : IntW 32) :
 
 
 theorem lshr_mul_times_3_div_2_exact_thm (e : IntW 32) :
-  lshr (mul e (const? 32 3) { «nsw» := true, «nuw» := false }) (const? 32 1) ⊑
-    add e (lshr e (const? 32 1)) { «nsw» := true, «nuw» := false } := by 
+  lshr (mul e (const? 32 3) { «nsw» := true, «nuw» := false }) (const? 32 1) { «exact» := true } ⊑
+    add e (lshr e (const? 32 1) { «exact» := true }) { «nsw» := true, «nuw» := false } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -251,8 +256,8 @@ theorem lshr_mul_times_3_div_2_exact_thm (e : IntW 32) :
 
 
 theorem lshr_mul_times_3_div_2_exact_2_thm (e : IntW 32) :
-  lshr (mul e (const? 32 3) { «nsw» := false, «nuw» := true }) (const? 32 1) ⊑
-    add e (lshr e (const? 32 1)) { «nsw» := false, «nuw» := true } := by 
+  lshr (mul e (const? 32 3) { «nsw» := false, «nuw» := true }) (const? 32 1) { «exact» := true } ⊑
+    add e (lshr e (const? 32 1) { «exact» := true }) { «nsw» := false, «nuw» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -273,8 +278,8 @@ theorem lshr_mul_times_5_div_4_thm (e : IntW 32) :
 
 
 theorem lshr_mul_times_5_div_4_exact_thm (e : IntW 32) :
-  lshr (mul e (const? 32 5) { «nsw» := true, «nuw» := false }) (const? 32 2) ⊑
-    add e (lshr e (const? 32 2)) { «nsw» := true, «nuw» := false } := by 
+  lshr (mul e (const? 32 5) { «nsw» := true, «nuw» := false }) (const? 32 2) { «exact» := true } ⊑
+    add e (lshr e (const? 32 2) { «exact» := true }) { «nsw» := true, «nuw» := false } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -284,8 +289,8 @@ theorem lshr_mul_times_5_div_4_exact_thm (e : IntW 32) :
 
 
 theorem lshr_mul_times_5_div_4_exact_2_thm (e : IntW 32) :
-  lshr (mul e (const? 32 5) { «nsw» := false, «nuw» := true }) (const? 32 2) ⊑
-    add e (lshr e (const? 32 2)) { «nsw» := false, «nuw» := true } := by 
+  lshr (mul e (const? 32 5) { «nsw» := false, «nuw» := true }) (const? 32 2) { «exact» := true } ⊑
+    add e (lshr e (const? 32 2) { «exact» := true }) { «nsw» := false, «nuw» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -306,8 +311,8 @@ theorem ashr_mul_times_3_div_2_thm (e : IntW 32) :
 
 
 theorem ashr_mul_times_3_div_2_exact_thm (e : IntW 32) :
-  ashr (mul e (const? 32 3) { «nsw» := true, «nuw» := false }) (const? 32 1) ⊑
-    add e (ashr e (const? 32 1)) { «nsw» := true, «nuw» := false } := by 
+  ashr (mul e (const? 32 3) { «nsw» := true, «nuw» := false }) (const? 32 1) { «exact» := true } ⊑
+    add e (ashr e (const? 32 1) { «exact» := true }) { «nsw» := true, «nuw» := false } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -317,8 +322,8 @@ theorem ashr_mul_times_3_div_2_exact_thm (e : IntW 32) :
 
 
 theorem ashr_mul_times_3_div_2_exact_2_thm (e : IntW 32) :
-  ashr (mul e (const? 32 3) { «nsw» := true, «nuw» := false }) (const? 32 1) ⊑
-    add e (ashr e (const? 32 1)) { «nsw» := true, «nuw» := false } := by 
+  ashr (mul e (const? 32 3) { «nsw» := true, «nuw» := false }) (const? 32 1) { «exact» := true } ⊑
+    add e (ashr e (const? 32 1) { «exact» := true }) { «nsw» := true, «nuw» := false } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -339,8 +344,8 @@ theorem ashr_mul_times_5_div_4_thm (e : IntW 32) :
 
 
 theorem ashr_mul_times_5_div_4_exact_thm (e : IntW 32) :
-  ashr (mul e (const? 32 5) { «nsw» := true, «nuw» := false }) (const? 32 2) ⊑
-    add e (ashr e (const? 32 2)) { «nsw» := true, «nuw» := false } := by 
+  ashr (mul e (const? 32 5) { «nsw» := true, «nuw» := false }) (const? 32 2) { «exact» := true } ⊑
+    add e (ashr e (const? 32 2) { «exact» := true }) { «nsw» := true, «nuw» := false } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -350,8 +355,8 @@ theorem ashr_mul_times_5_div_4_exact_thm (e : IntW 32) :
 
 
 theorem ashr_mul_times_5_div_4_exact_2_thm (e : IntW 32) :
-  ashr (mul e (const? 32 5) { «nsw» := true, «nuw» := false }) (const? 32 2) ⊑
-    add e (ashr e (const? 32 2)) { «nsw» := true, «nuw» := false } := by 
+  ashr (mul e (const? 32 5) { «nsw» := true, «nuw» := false }) (const? 32 2) { «exact» := true } ⊑
+    add e (ashr e (const? 32 2) { «exact» := true }) { «nsw» := true, «nuw» := false } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

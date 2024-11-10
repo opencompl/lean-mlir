@@ -5,6 +5,8 @@
 5: "f2" is empty
 
 1: "g"
+9: "g" has pointer type input
+
 4: "g" has unsupported operation: llvm.call
 
 4: "g" has unsupported operation: llvm.call

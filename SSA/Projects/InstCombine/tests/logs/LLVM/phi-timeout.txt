@@ -1,4 +1,6 @@
 1: "timeout"
+9: "timeout" has pointer type input
+
 4: "timeout" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "timeout" has unsupported operation: llvm.getelementptr

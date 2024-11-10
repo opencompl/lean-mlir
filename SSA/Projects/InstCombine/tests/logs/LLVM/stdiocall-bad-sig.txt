@@ -1,19 +1,21 @@
 1: "fwrite"
-5: "fwrite" is empty
+9: "fwrite" has pointer type input
 
 1: "fputc"
-5: "fputc" is empty
+9: "fputc" has pointer type input
 
 1: "printf"
-5: "printf" is empty
+9: "printf" has pointer type input
 
 1: "fprintf"
-5: "fprintf" is empty
+9: "fprintf" has pointer type input
 
 1: "sprintf"
-5: "sprintf" is empty
+9: "sprintf" has pointer type input
 
 1: "call_fwrite"
+9: "call_fwrite" has pointer type input
+
 4: "call_fwrite" has unsupported operation: llvm.mlir.addressof
 
 4: "call_fwrite" has unsupported operation: llvm.call
@@ -21,6 +23,8 @@
 4: "call_fwrite" has unsupported operation: llvm.return
 
 1: "call_printf"
+9: "call_printf" has pointer type input
+
 4: "call_printf" has unsupported operation: llvm.mlir.addressof
 
 4: "call_printf" has unsupported operation: llvm.mlir.addressof
@@ -30,6 +34,8 @@
 4: "call_printf" has unsupported operation: llvm.return
 
 1: "call_fprintf"
+9: "call_fprintf" has pointer type input
+
 4: "call_fprintf" has unsupported operation: llvm.mlir.addressof
 
 4: "call_fprintf" has unsupported operation: llvm.mlir.addressof
@@ -37,6 +43,8 @@
 4: "call_fprintf" has unsupported operation: llvm.call
 
 1: "call_sprintf"
+9: "call_sprintf" has pointer type input
+
 4: "call_sprintf" has unsupported operation: llvm.mlir.addressof
 
 4: "call_sprintf" has unsupported operation: llvm.mlir.addressof

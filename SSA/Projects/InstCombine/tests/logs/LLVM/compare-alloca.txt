@@ -1,23 +1,21 @@
 1: "alloca_argument_compare"
-4: "alloca_argument_compare" has unsupported operation after optimization: llvm.alloca
+9: "alloca_argument_compare" has pointer type input
 
 1: "alloca_argument_compare_swapped"
-4: "alloca_argument_compare_swapped" has unsupported operation after optimization: llvm.alloca
+9: "alloca_argument_compare_swapped" has pointer type input
 
 1: "alloca_argument_compare_ne"
-4: "alloca_argument_compare_ne" has unsupported operation after optimization: llvm.alloca
+9: "alloca_argument_compare_ne" has pointer type input
 
 1: "alloca_argument_compare_derived_ptrs"
-4: "alloca_argument_compare_derived_ptrs" has unsupported operation after optimization: llvm.alloca
-
-4: "alloca_argument_compare_derived_ptrs" has unsupported operation after optimization: llvm.getelementptr
-
-4: "alloca_argument_compare_derived_ptrs" has unsupported operation after optimization: llvm.getelementptr
+9: "alloca_argument_compare_derived_ptrs" has pointer type input
 
 1: "escape"
-5: "escape" is empty
+9: "escape" has pointer type input
 
 1: "alloca_argument_compare_escaped_alloca"
+9: "alloca_argument_compare_escaped_alloca" has pointer type input
+
 4: "alloca_argument_compare_escaped_alloca" has unsupported operation: llvm.alloca
 
 4: "alloca_argument_compare_escaped_alloca" has unsupported operation: llvm.call
@@ -26,11 +24,15 @@
 5: "check_compares" is empty
 
 1: "alloca_argument_compare_two_compares"
+9: "alloca_argument_compare_two_compares" has pointer type input
+
 4: "alloca_argument_compare_two_compares" has unsupported operation: llvm.call
 
 4: "alloca_argument_compare_two_compares" has unsupported operation: llvm.return
 
 1: "alloca_argument_compare_escaped_through_store"
+9: "alloca_argument_compare_escaped_through_store" has pointer type input
+
 4: "alloca_argument_compare_escaped_through_store" has unsupported operation: llvm.alloca
 
 4: "alloca_argument_compare_escaped_through_store" has unsupported operation: llvm.getelementptr
@@ -38,15 +40,7 @@
 4: "alloca_argument_compare_escaped_through_store" has unsupported operation: llvm.store
 
 1: "alloca_argument_compare_benign_instrs"
-4: "alloca_argument_compare_benign_instrs" has unsupported operation after optimization: llvm.alloca
-
-4: "alloca_argument_compare_benign_instrs" has unsupported operation after optimization: builtin.unregistered: llvm.intr.lifetime.start
-
-4: "alloca_argument_compare_benign_instrs" has unsupported operation after optimization: llvm.load
-
-4: "alloca_argument_compare_benign_instrs" has unsupported operation after optimization: llvm.store
-
-4: "alloca_argument_compare_benign_instrs" has unsupported operation after optimization: builtin.unregistered: llvm.intr.lifetime.end
+9: "alloca_argument_compare_benign_instrs" has pointer type input
 
 1: "allocator"
 5: "allocator" is empty
@@ -58,7 +52,7 @@
 5: "hidden_inttoptr" is empty
 
 1: "hidden_offset"
-5: "hidden_offset" is empty
+9: "hidden_offset" has pointer type input
 
 1: "ptrtoint_single_cmp"
 4: "ptrtoint_single_cmp" has unsupported operation after optimization: llvm.alloca
@@ -104,7 +98,7 @@
 4: "neg_consistent_fold4" has unsupported operation: llvm.return
 
 1: "unknown"
-5: "unknown" is empty
+9: "unknown" has pointer type input
 
 1: "consistent_nocapture_inttoptr"
 4: "consistent_nocapture_inttoptr" has unsupported operation: llvm.alloca
@@ -122,6 +116,8 @@
 4: "consistent_nocapture_through_global" has unsupported operation: llvm.call
 
 1: "select_alloca_unrelated_ptr"
+9: "select_alloca_unrelated_ptr" has pointer type input
+
 4: "select_alloca_unrelated_ptr" has unsupported operation: llvm.alloca
 
 4: "select_alloca_unrelated_ptr" has unsupported operation: llvm.call
@@ -129,6 +125,8 @@
 4: "select_alloca_unrelated_ptr" has unsupported operation: llvm.return
 
 1: "alloca_offset_icmp"
+9: "alloca_offset_icmp" has pointer type input
+
 4: "alloca_offset_icmp" has unsupported operation: llvm.call
 
 4: "alloca_offset_icmp" has unsupported operation: llvm.return

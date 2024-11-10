@@ -128,31 +128,43 @@
 4: "test_cttz_not_bw_vec" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
 1: "test_multiuse_def"
+9: "test_multiuse_def" has pointer type input
+
 4: "test_multiuse_def" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
 4: "test_multiuse_def" has unsupported operation: llvm.store
 
 1: "test_multiuse_undef"
+9: "test_multiuse_undef" has pointer type input
+
 4: "test_multiuse_undef" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
 
 4: "test_multiuse_undef" has unsupported operation: llvm.store
 
 1: "test_multiuse_zext_def"
+9: "test_multiuse_zext_def" has pointer type input
+
 4: "test_multiuse_zext_def" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
 4: "test_multiuse_zext_def" has unsupported operation: llvm.store
 
 1: "test_multiuse_zext_undef"
+9: "test_multiuse_zext_undef" has pointer type input
+
 4: "test_multiuse_zext_undef" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
 4: "test_multiuse_zext_undef" has unsupported operation: llvm.store
 
 1: "test_multiuse_trunc_def"
+9: "test_multiuse_trunc_def" has pointer type input
+
 4: "test_multiuse_trunc_def" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
 4: "test_multiuse_trunc_def" has unsupported operation: llvm.store
 
 1: "test_multiuse_trunc_undef"
+9: "test_multiuse_trunc_undef" has pointer type input
+
 4: "test_multiuse_trunc_undef" has unsupported operation: builtin.unregistered: llvm.intr.cttz
 
 4: "test_multiuse_trunc_undef" has unsupported operation: llvm.store

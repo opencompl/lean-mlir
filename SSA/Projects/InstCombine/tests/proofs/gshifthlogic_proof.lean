@@ -85,6 +85,27 @@ theorem lshr_mul_nuw_nsw_thm (e : IntW 64) :
     all_goals sorry
 
 
+theorem lshr_mul_negative_nonuw_thm (e : IntW 64) :
+  lshr (mul e (const? 64 52)) (const? 64 2) ⊑ lshr (mul e (const? 64 52)) (const? 64 2) { «exact» := true } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+
+theorem lshr_mul_negative_nsw_thm (e : IntW 64) :
+  lshr (mul e (const? 64 52) { «nsw» := true, «nuw» := false }) (const? 64 2) ⊑
+    lshr (mul e (const? 64 52) { «nsw» := true, «nuw» := false }) (const? 64 2) { «exact» := true } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+
 theorem shl_add_thm (e e_1 : IntW 8) :
   shl (add (shl e_1 (const? 8 3)) e) (const? 8 2) ⊑ add (shl e_1 (const? 8 5)) (shl e (const? 8 2)) := by 
     simp_alive_undef

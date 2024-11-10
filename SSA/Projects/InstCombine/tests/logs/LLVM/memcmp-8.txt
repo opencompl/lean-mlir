@@ -1,5 +1,5 @@
 1: "memcmp"
-5: "memcmp" is empty
+9: "memcmp" has pointer type input
 
 1: "fold_memcmp_a5_a5p5_n"
 4: "fold_memcmp_a5_a5p5_n" has unsupported operation after optimization: llvm.mlir.addressof

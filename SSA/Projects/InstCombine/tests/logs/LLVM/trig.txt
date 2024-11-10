@@ -14,6 +14,8 @@
 4: "coshAcoshInverseFast" has unsupported operation: llvm.call
 
 1: "indirectTanCall"
+9: "indirectTanCall" has pointer type input
+
 4: "indirectTanCall" has unsupported operation: llvm.call
 
 4: "indirectTanCall" has unsupported operation: llvm.call

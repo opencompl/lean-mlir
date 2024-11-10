@@ -2,6 +2,8 @@
 5: "test58_d" is empty
 
 1: "test59"
+9: "test59" has pointer type input
+
 4: "test59" has unsupported operation: llvm.getelementptr
 
 4: "test59" has unsupported operation: builtin.unregistered: llvm.ptrtoint
@@ -9,6 +11,8 @@
 4: "test59" has unsupported operation: llvm.call
 
 1: "test59_as1"
+9: "test59_as1" has pointer type input
+
 4: "test59_as1" has unsupported operation: llvm.getelementptr
 
 4: "test59_as1" has unsupported operation: builtin.unregistered: llvm.ptrtoint
@@ -16,58 +20,44 @@
 4: "test59_as1" has unsupported operation: llvm.call
 
 1: "test60"
-4: "test60" has unsupported operation after optimization: llvm.getelementptr
-
-4: "test60" has unsupported operation after optimization: llvm.getelementptr
+9: "test60" has pointer type input
 
 1: "test60_as1"
-4: "test60_as1" has unsupported operation after optimization: llvm.getelementptr
-
-4: "test60_as1" has unsupported operation after optimization: llvm.getelementptr
+9: "test60_as1" has pointer type input
 
 1: "test60_addrspacecast"
-4: "test60_addrspacecast" has unsupported operation after optimization: builtin.unregistered: llvm.addrspacecast
-
-4: "test60_addrspacecast" has unsupported operation after optimization: llvm.getelementptr
-
-4: "test60_addrspacecast" has unsupported operation after optimization: llvm.getelementptr
-
-4: "test60_addrspacecast" has unsupported operation after optimization: builtin.unregistered: llvm.addrspacecast
+9: "test60_addrspacecast" has pointer type input
 
 1: "test60_addrspacecast_smaller"
-4: "test60_addrspacecast_smaller" has unsupported operation after optimization: builtin.unregistered: llvm.addrspacecast
-
-4: "test60_addrspacecast_smaller" has unsupported operation after optimization: llvm.getelementptr
-
-4: "test60_addrspacecast_smaller" has unsupported operation after optimization: llvm.getelementptr
-
-4: "test60_addrspacecast_smaller" has unsupported operation after optimization: builtin.unregistered: llvm.addrspacecast
+9: "test60_addrspacecast_smaller" has pointer type input
 
 1: "test60_addrspacecast_larger"
-4: "test60_addrspacecast_larger" has unsupported operation after optimization: builtin.unregistered: llvm.addrspacecast
-
-4: "test60_addrspacecast_larger" has unsupported operation after optimization: llvm.getelementptr
-
-4: "test60_addrspacecast_larger" has unsupported operation after optimization: llvm.getelementptr
-
-4: "test60_addrspacecast_larger" has unsupported operation after optimization: builtin.unregistered: llvm.addrspacecast
+9: "test60_addrspacecast_larger" has pointer type input
 
 1: "test61"
+9: "test61" has pointer type input
+
 4: "test61" has unsupported operation: llvm.getelementptr
 
 4: "test61" has unsupported operation: llvm.getelementptr
 
 1: "test61_as1"
+9: "test61_as1" has pointer type input
+
 4: "test61_as1" has unsupported operation: llvm.getelementptr
 
 4: "test61_as1" has unsupported operation: llvm.getelementptr
 
 1: "test62"
+9: "test62" has pointer type input
+
 4: "test62" has unsupported operation: llvm.getelementptr
 
 4: "test62" has unsupported operation: llvm.getelementptr
 
 1: "test62_as1"
+9: "test62_as1" has pointer type input
+
 4: "test62_as1" has unsupported operation: llvm.getelementptr
 
 4: "test62_as1" has unsupported operation: llvm.getelementptr
@@ -117,12 +107,8 @@
 7: "icmp_ashr_and_overshift" is unchanged by InstCombine
 
 1: "test71"
-4: "test71" has unsupported operation after optimization: llvm.getelementptr
-
-4: "test71" has unsupported operation after optimization: llvm.getelementptr
+9: "test71" has pointer type input
 
 1: "test71_as1"
-4: "test71_as1" has unsupported operation after optimization: llvm.getelementptr
-
-4: "test71_as1" has unsupported operation after optimization: llvm.getelementptr
+9: "test71_as1" has pointer type input
 

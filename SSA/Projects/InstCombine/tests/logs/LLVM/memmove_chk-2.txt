@@ -8,5 +8,5 @@
 4: "test_no_simplify" has unsupported operation: llvm.return
 
 1: "__memmove_chk"
-5: "__memmove_chk" is empty
+9: "__memmove_chk" has pointer type input
 

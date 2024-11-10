@@ -27,7 +27,7 @@ def shl_sub_i32_after := [llvm|
 {
 ^0(%arg18 : i32):
   %0 = llvm.mlir.constant(-2147483648 : i32) : i32
-  %1 = llvm.lshr %0, %arg18 : i32
+  %1 = llvm.lshr exact %0, %arg18 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
@@ -56,7 +56,7 @@ def shl_sub_i8_after := [llvm|
 {
 ^0(%arg16 : i8):
   %0 = llvm.mlir.constant(-128 : i8) : i8
-  %1 = llvm.lshr %0, %arg16 : i8
+  %1 = llvm.lshr exact %0, %arg16 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
@@ -85,7 +85,7 @@ def shl_sub_i64_after := [llvm|
 {
 ^0(%arg15 : i64):
   %0 = llvm.mlir.constant(-9223372036854775808) : i64
-  %1 = llvm.lshr %0, %arg15 : i64
+  %1 = llvm.lshr exact %0, %arg15 : i64
   "llvm.return"(%1) : (i64) -> ()
 }
 ]

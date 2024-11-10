@@ -56,12 +56,18 @@
 8: "vec_shl_and_negC_eq_poison3" contains vectors which are unsupported
 
 1: "scalar_shl_and_negC_eq_extra_use_shl"
+9: "scalar_shl_and_negC_eq_extra_use_shl" has pointer type input
+
 4: "scalar_shl_and_negC_eq_extra_use_shl" has unsupported operation: llvm.store
 
 1: "scalar_shl_and_negC_eq_extra_use_and"
+9: "scalar_shl_and_negC_eq_extra_use_and" has pointer type input
+
 4: "scalar_shl_and_negC_eq_extra_use_and" has unsupported operation: llvm.store
 
 1: "scalar_shl_and_negC_eq_extra_use_shl_and"
+9: "scalar_shl_and_negC_eq_extra_use_shl_and" has pointer type input
+
 4: "scalar_shl_and_negC_eq_extra_use_shl_and" has unsupported operation: llvm.store
 
 4: "scalar_shl_and_negC_eq_extra_use_shl_and" has unsupported operation: llvm.store

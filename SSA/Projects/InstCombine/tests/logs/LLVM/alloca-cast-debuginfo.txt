@@ -1,4 +1,6 @@
 1: "f"
+9: "f" has pointer type input
+
 4: "f" has unsupported operation: llvm.alloca
 
 4: "f" has unsupported operation: builtin.unregistered: llvm.intr.dbg.declare
@@ -12,5 +14,5 @@
 4: "f" has unsupported operation: llvm.return
 
 1: "escape"
-5: "escape" is empty
+9: "escape" has pointer type input
 

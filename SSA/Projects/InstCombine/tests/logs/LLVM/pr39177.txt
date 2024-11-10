@@ -1,19 +1,5 @@
 1: "__fwrite_alias"
-4: "__fwrite_alias" has unsupported operation after optimization: llvm.alloca
-
-4: "__fwrite_alias" has unsupported operation after optimization: llvm.alloca
-
-4: "__fwrite_alias" has unsupported operation after optimization: llvm.alloca
-
-4: "__fwrite_alias" has unsupported operation after optimization: llvm.alloca
-
-4: "__fwrite_alias" has unsupported operation after optimization: llvm.store
-
-4: "__fwrite_alias" has unsupported operation after optimization: llvm.store
-
-4: "__fwrite_alias" has unsupported operation after optimization: llvm.store
-
-4: "__fwrite_alias" has unsupported operation after optimization: llvm.store
+9: "__fwrite_alias" has pointer type input
 
 1: "foo"
 4: "foo" has unsupported operation: llvm.mlir.addressof
@@ -27,5 +13,5 @@
 4: "foo" has unsupported operation: llvm.return
 
 1: "fprintf"
-5: "fprintf" is empty
+9: "fprintf" has pointer type input
 

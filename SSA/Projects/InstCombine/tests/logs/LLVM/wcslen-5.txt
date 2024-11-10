@@ -1,5 +1,5 @@
 1: "wcslen"
-5: "wcslen" is empty
+9: "wcslen" has pointer type input
 
 1: "fold_wcslen_s3_pi_s5"
 4: "fold_wcslen_s3_pi_s5" has unsupported operation: llvm.mlir.addressof

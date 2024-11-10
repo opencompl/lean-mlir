@@ -47,7 +47,7 @@ def t0_exact_before := [llvm|
 ^0(%arg9 : i64):
   %0 = llvm.mlir.constant(63) : i64
   %1 = llvm.mlir.constant(0) : i64
-  %2 = llvm.lshr %arg9, %0 : i64
+  %2 = llvm.lshr exact %arg9, %0 : i64
   %3 = llvm.sub %1, %2 : i64
   "llvm.return"(%3) : (i64) -> ()
 }
@@ -56,7 +56,7 @@ def t0_exact_after := [llvm|
 {
 ^0(%arg9 : i64):
   %0 = llvm.mlir.constant(63) : i64
-  %1 = llvm.ashr %arg9, %0 : i64
+  %1 = llvm.ashr exact %arg9, %0 : i64
   "llvm.return"(%1) : (i64) -> ()
 }
 ]
@@ -105,7 +105,7 @@ def t3_exact_before := [llvm|
 ^0(%arg7 : i64):
   %0 = llvm.mlir.constant(63) : i64
   %1 = llvm.mlir.constant(0) : i64
-  %2 = llvm.ashr %arg7, %0 : i64
+  %2 = llvm.ashr exact %arg7, %0 : i64
   %3 = llvm.sub %1, %2 : i64
   "llvm.return"(%3) : (i64) -> ()
 }
@@ -114,7 +114,7 @@ def t3_exact_after := [llvm|
 {
 ^0(%arg7 : i64):
   %0 = llvm.mlir.constant(63) : i64
-  %1 = llvm.lshr %arg7, %0 : i64
+  %1 = llvm.lshr exact %arg7, %0 : i64
   "llvm.return"(%1) : (i64) -> ()
 }
 ]

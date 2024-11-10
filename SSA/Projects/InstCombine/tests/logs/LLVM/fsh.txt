@@ -238,6 +238,8 @@
 4: "fsh_rotate_18" has unsupported operation: builtin.unregistered: llvm.intr.fshl
 
 1: "fsh_load_rotate_12"
+9: "fsh_load_rotate_12" has pointer type input
+
 4: "fsh_load_rotate_12" has unsupported operation: llvm.load
 
 4: "fsh_load_rotate_12" has unsupported operation: llvm.getelementptr
@@ -255,6 +257,8 @@
 4: "fsh_load_rotate_12" has unsupported operation: builtin.unregistered: llvm.intr.fshl
 
 1: "fsh_load_rotate_25"
+9: "fsh_load_rotate_25" has pointer type input
+
 4: "fsh_load_rotate_25" has unsupported operation: llvm.load
 
 4: "fsh_load_rotate_25" has unsupported operation: llvm.getelementptr

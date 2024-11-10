@@ -5,42 +5,52 @@
 5: "use_vec" is empty
 
 1: "test_nonzero"
-4: "test_nonzero" has unsupported operation after optimization: llvm.load
+9: "test_nonzero" has pointer type input
 
 1: "test_nonzero2"
-4: "test_nonzero2" has unsupported operation after optimization: llvm.load
+9: "test_nonzero2" has pointer type input
 
 1: "test_nonzero3"
+9: "test_nonzero3" has pointer type input
+
 4: "test_nonzero3" has unsupported operation: llvm.load
 
 1: "test_nonzero4"
-4: "test_nonzero4" has unsupported operation after optimization: llvm.load
+9: "test_nonzero4" has pointer type input
 
 1: "test_nonzero5"
-4: "test_nonzero5" has unsupported operation after optimization: llvm.load
+9: "test_nonzero5" has pointer type input
 
 1: "test_nonzero6"
+9: "test_nonzero6" has pointer type input
+
 4: "test_nonzero6" has unsupported operation: llvm.load
 
 1: "test_not_in_range"
-4: "test_not_in_range" has unsupported operation after optimization: llvm.load
+9: "test_not_in_range" has pointer type input
 
 1: "test_in_range"
+9: "test_in_range" has pointer type input
+
 4: "test_in_range" has unsupported operation: llvm.load
 
 1: "test_range_sgt_constant"
-4: "test_range_sgt_constant" has unsupported operation after optimization: llvm.load
+9: "test_range_sgt_constant" has pointer type input
 
 1: "test_range_slt_constant"
-4: "test_range_slt_constant" has unsupported operation after optimization: llvm.load
+9: "test_range_slt_constant" has pointer type input
 
 1: "test_multi_range1"
-4: "test_multi_range1" has unsupported operation after optimization: llvm.load
+9: "test_multi_range1" has pointer type input
 
 1: "test_multi_range2"
+9: "test_multi_range2" has pointer type input
+
 4: "test_multi_range2" has unsupported operation: llvm.load
 
 1: "test_two_ranges"
+9: "test_two_ranges" has pointer type input
+
 4: "test_two_ranges" has unsupported operation: llvm.load
 
 4: "test_two_ranges" has unsupported operation: llvm.load
@@ -49,9 +59,7 @@
 7: "test_two_attribute_ranges" is unchanged by InstCombine
 
 1: "test_two_ranges2"
-4: "test_two_ranges2" has unsupported operation after optimization: llvm.load
-
-4: "test_two_ranges2" has unsupported operation after optimization: llvm.load
+9: "test_two_ranges2" has pointer type input
 
 1: "test_two_argument_ranges"
 2: llvm.func
@@ -59,26 +67,26 @@
 2: llvm.return
 
 1: "test_one_range_and_one_argument_range"
-4: "test_one_range_and_one_argument_range" has unsupported operation after optimization: llvm.load
+9: "test_one_range_and_one_argument_range" has pointer type input
 
 1: "test_one_argument_range_and_one_range"
-4: "test_one_argument_range_and_one_range" has unsupported operation after optimization: llvm.load
+9: "test_one_argument_range_and_one_range" has pointer type input
 
 1: "test_two_ranges3"
-4: "test_two_ranges3" has unsupported operation after optimization: llvm.load
-
-4: "test_two_ranges3" has unsupported operation after optimization: llvm.load
+9: "test_two_ranges3" has pointer type input
 
 1: "test_two_ranges_vec"
+9: "test_two_ranges_vec" has pointer type input
+
 4: "test_two_ranges_vec" has unsupported operation: llvm.load
 
 4: "test_two_ranges_vec" has unsupported operation: llvm.load
 
 1: "test_two_ranges_vec_false"
-8: "test_two_ranges_vec_false" contains vectors which are unsupported
+9: "test_two_ranges_vec_false" has pointer type input
 
 1: "test_two_ranges_vec_true"
-8: "test_two_ranges_vec_true" contains vectors which are unsupported
+9: "test_two_ranges_vec_true" has pointer type input
 
 1: "test_two_argument_ranges_vec"
 7: "test_two_argument_ranges_vec" is unchanged by InstCombine
@@ -117,6 +125,8 @@
 4: "test_one_return_argument_and_one_argument_range" has unsupported operation: llvm.call
 
 1: "test_one_range_and_one_return_argument"
+9: "test_one_range_and_one_return_argument" has pointer type input
+
 4: "test_one_range_and_one_return_argument" has unsupported operation: llvm.call
 
 1: "ugt_zext"
@@ -429,15 +439,23 @@
 2: llvm.return
 
 1: "icmp_eq_bool_0"
+9: "icmp_eq_bool_0" has pointer type input
+
 4: "icmp_eq_bool_0" has unsupported operation: llvm.load
 
 1: "icmp_eq_bool_1"
+9: "icmp_eq_bool_1" has pointer type input
+
 4: "icmp_eq_bool_1" has unsupported operation: llvm.load
 
 1: "icmp_ne_bool_0"
+9: "icmp_ne_bool_0" has pointer type input
+
 4: "icmp_ne_bool_0" has unsupported operation: llvm.load
 
 1: "icmp_ne_bool_1"
+9: "icmp_ne_bool_1" has pointer type input
+
 4: "icmp_ne_bool_1" has unsupported operation: llvm.load
 
 1: "icmp_ne_zext_eq_zero"

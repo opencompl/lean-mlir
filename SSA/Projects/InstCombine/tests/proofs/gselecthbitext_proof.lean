@@ -70,7 +70,7 @@ theorem trunc_sel_smaller_sext_thm (e : IntW 64) (e_1 : IntW 1) :
 
 theorem trunc_sel_equal_sext_thm (e : IntW 32) (e_1 : IntW 1) :
   sext 32 (select e_1 (trunc 16 e) (const? 16 42)) ⊑
-    select e_1 (ashr (shl e (const? 32 16)) (const? 32 16)) (const? 32 42) := by 
+    select e_1 (ashr (shl e (const? 32 16)) (const? 32 16) { «exact» := true }) (const? 32 42) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

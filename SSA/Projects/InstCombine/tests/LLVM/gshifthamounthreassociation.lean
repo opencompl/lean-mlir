@@ -21,7 +21,7 @@ def t0_before := [llvm|
   %2 = llvm.sub %0, %arg44 : i32
   %3 = llvm.lshr %arg43, %2 : i32
   %4 = llvm.add %arg44, %1 : i32
-  %5 = llvm.lshr %3, %4 : i32
+  %5 = llvm.lshr exact %3, %4 : i32
   "llvm.return"(%5) : (i32) -> ()
 }
 ]
@@ -81,7 +81,7 @@ def t7_ashr_before := [llvm|
   %0 = llvm.mlir.constant(32 : i32) : i32
   %1 = llvm.mlir.constant(-2 : i32) : i32
   %2 = llvm.sub %0, %arg30 : i32
-  %3 = llvm.ashr %arg29, %2 : i32
+  %3 = llvm.ashr exact %arg29, %2 : i32
   %4 = llvm.add %arg30, %1 : i32
   %5 = llvm.ashr %3, %4 : i32
   "llvm.return"(%5) : (i32) -> ()
@@ -112,9 +112,9 @@ def t8_lshr_exact_flag_preservation_before := [llvm|
   %0 = llvm.mlir.constant(32 : i32) : i32
   %1 = llvm.mlir.constant(-2 : i32) : i32
   %2 = llvm.sub %0, %arg28 : i32
-  %3 = llvm.lshr %arg27, %2 : i32
+  %3 = llvm.lshr exact %arg27, %2 : i32
   %4 = llvm.add %arg28, %1 : i32
-  %5 = llvm.lshr %3, %4 : i32
+  %5 = llvm.lshr exact %3, %4 : i32
   "llvm.return"(%5) : (i32) -> ()
 }
 ]
@@ -122,7 +122,7 @@ def t8_lshr_exact_flag_preservation_after := [llvm|
 {
 ^0(%arg27 : i32, %arg28 : i32):
   %0 = llvm.mlir.constant(30 : i32) : i32
-  %1 = llvm.lshr %arg27, %0 : i32
+  %1 = llvm.lshr exact %arg27, %0 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
@@ -143,9 +143,9 @@ def t9_ashr_exact_flag_preservation_before := [llvm|
   %0 = llvm.mlir.constant(32 : i32) : i32
   %1 = llvm.mlir.constant(-2 : i32) : i32
   %2 = llvm.sub %0, %arg26 : i32
-  %3 = llvm.ashr %arg25, %2 : i32
+  %3 = llvm.ashr exact %arg25, %2 : i32
   %4 = llvm.add %arg26, %1 : i32
-  %5 = llvm.ashr %3, %4 : i32
+  %5 = llvm.ashr exact %3, %4 : i32
   "llvm.return"(%5) : (i32) -> ()
 }
 ]
@@ -153,7 +153,7 @@ def t9_ashr_exact_flag_preservation_after := [llvm|
 {
 ^0(%arg25 : i32, %arg26 : i32):
   %0 = llvm.mlir.constant(30 : i32) : i32
-  %1 = llvm.ashr %arg25, %0 : i32
+  %1 = llvm.ashr exact %arg25, %0 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]

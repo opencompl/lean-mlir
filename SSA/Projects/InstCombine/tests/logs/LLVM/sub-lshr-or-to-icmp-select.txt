@@ -25,8 +25,12 @@
 8: "neg_or_lshr_i32_vec_commute" contains vectors which are unsupported
 
 1: "neg_extra_use_or_lshr_i32"
+9: "neg_extra_use_or_lshr_i32" has pointer type input
+
 4: "neg_extra_use_or_lshr_i32" has unsupported operation: llvm.store
 
 1: "neg_or_extra_use_lshr_i32"
+9: "neg_or_extra_use_lshr_i32" has pointer type input
+
 4: "neg_or_extra_use_lshr_i32" has unsupported operation: llvm.store
 

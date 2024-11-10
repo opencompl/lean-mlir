@@ -2,7 +2,7 @@
 5: "g" is empty
 
 1: "use"
-5: "use" is empty
+9: "use" has pointer type input
 
 1: "call1"
 4: "call1" has unsupported operation: llvm.mlir.addressof
@@ -49,6 +49,8 @@
 4: "alloca" has unsupported operation: llvm.return
 
 1: "arg1"
+9: "arg1" has pointer type input
+
 4: "arg1" has unsupported operation: llvm.mlir.addressof
 
 4: "arg1" has unsupported operation: llvm.getelementptr
@@ -58,6 +60,8 @@
 4: "arg1" has unsupported operation: llvm.return
 
 1: "arg2"
+9: "arg2" has pointer type input
+
 4: "arg2" has unsupported operation: llvm.mlir.addressof
 
 4: "arg2" has unsupported operation: llvm.getelementptr
@@ -67,6 +71,8 @@
 4: "arg2" has unsupported operation: llvm.return
 
 1: "arg3"
+9: "arg3" has pointer type input
+
 4: "arg3" has unsupported operation: llvm.mlir.addressof
 
 4: "arg3" has unsupported operation: llvm.getelementptr

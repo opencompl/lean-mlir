@@ -8,7 +8,8 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 
 section gsdivhexacthbyhpowerhofhtwo_proof
-theorem t0_thm (e : IntW 8) : LLVM.sdiv e (const? 8 32) ⊑ ashr e (const? 8 5) := by 
+theorem t0_thm (e : IntW 8) :
+  LLVM.sdiv e (const? 8 32) { «exact» := true } ⊑ ashr e (const? 8 5) { «exact» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -28,7 +29,8 @@ theorem n2_thm (e : IntW 8) :
 
 
 theorem shl1_nsw_thm (e e_1 : IntW 8) :
-  LLVM.sdiv e_1 (shl (const? 8 1) e { «nsw» := true, «nuw» := false }) ⊑ ashr e_1 e := by 
+  LLVM.sdiv e_1 (shl (const? 8 1) e { «nsw» := true, «nuw» := false }) { «exact» := true } ⊑
+    ashr e_1 e { «exact» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

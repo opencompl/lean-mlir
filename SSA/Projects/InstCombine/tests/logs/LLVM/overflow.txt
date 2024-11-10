@@ -15,6 +15,8 @@
 4: "test1" has unsupported operation: llvm.extractvalue
 
 1: "test2"
+9: "test2" has pointer type input
+
 4: "test2" has unsupported operation: llvm.store
 
 4: "test2" has unsupported operation: builtin.unregistered: llvm.cond_br

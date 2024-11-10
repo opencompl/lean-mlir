@@ -1,4 +1,6 @@
 1: "mng_write_basi"
+9: "mng_write_basi" has pointer type input
+
 4: "mng_write_basi" has unsupported operation: llvm.load
 
 4: "mng_write_basi" has unsupported operation: llvm.load

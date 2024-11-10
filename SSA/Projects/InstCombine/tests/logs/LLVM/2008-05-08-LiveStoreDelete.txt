@@ -17,7 +17,7 @@
 5: "malloc" is empty
 
 1: "strlen"
-5: "strlen" is empty
+9: "strlen" has pointer type input
 
 1: "b"
 5: "b" is empty

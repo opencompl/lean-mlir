@@ -20,6 +20,8 @@
 4: "test_or3" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "test_or4"
+9: "test_or4" has pointer type input
+
 4: "test_or4" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "test_or4" has unsupported operation: llvm.load
@@ -50,6 +52,8 @@
 4: "test_and3" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "test_and4"
+9: "test_and4" has pointer type input
+
 4: "test_and4" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "test_and4" has unsupported operation: llvm.load

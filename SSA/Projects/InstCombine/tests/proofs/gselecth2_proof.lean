@@ -9,7 +9,8 @@ set_option linter.unreachableTactic false
 
 section gselecth2_proof
 theorem ashr_exact_poison_constant_fold_thm (e : IntW 8) (e_1 : IntW 1) :
-  ashr (select e_1 e (const? 8 42)) (const? 8 3) ⊑ select e_1 (ashr e (const? 8 3)) (const? 8 5) := by 
+  ashr (select e_1 e (const? 8 42)) (const? 8 3) { «exact» := true } ⊑
+    select e_1 (ashr e (const? 8 3)) (const? 8 5) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -19,7 +20,8 @@ theorem ashr_exact_poison_constant_fold_thm (e : IntW 8) (e_1 : IntW 1) :
 
 
 theorem ashr_exact_thm (e : IntW 8) (e_1 : IntW 1) :
-  ashr (select e_1 e (const? 8 16)) (const? 8 3) ⊑ select e_1 (ashr e (const? 8 3)) (const? 8 2) := by 
+  ashr (select e_1 e (const? 8 16)) (const? 8 3) { «exact» := true } ⊑
+    select e_1 (ashr e (const? 8 3) { «exact» := true }) (const? 8 2) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

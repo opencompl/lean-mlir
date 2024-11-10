@@ -122,6 +122,8 @@
 4: "ashr_poison_poison_xor" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 1: "lshr_or_extra_use"
+9: "lshr_or_extra_use" has pointer type input
+
 4: "lshr_or_extra_use" has unsupported operation: llvm.store
 
 1: "PR44028"
@@ -155,10 +157,20 @@
 4: "lshr_mul_negative_oneuse" has unsupported operation: llvm.call
 
 1: "lshr_mul_negative_nonuw"
-7: "lshr_mul_negative_nonuw" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.lshr
+2: llvm.return
 
 1: "lshr_mul_negative_nsw"
-7: "lshr_mul_negative_nsw" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.lshr
+2: llvm.return
 
 1: "shl_add"
 2: llvm.func

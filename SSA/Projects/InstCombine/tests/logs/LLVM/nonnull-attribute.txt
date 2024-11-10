@@ -1,8 +1,8 @@
 1: "addrspace0"
-5: "addrspace0" is empty
+9: "addrspace0" has pointer type input
 
 1: "addrspace1"
-5: "addrspace1" is empty
+9: "addrspace1" has pointer type input
 
 1: "test"
 4: "test" has unsupported operation: llvm.mlir.addressof

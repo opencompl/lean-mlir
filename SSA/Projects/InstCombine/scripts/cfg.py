@@ -26,7 +26,7 @@ skipped_funcs = {
     "logical_and_noundef": "noundef",
 }
 expensive_files = [
-    "pr96012.ll",
+    "pr96012.ll", "icmp-or.ll"
 ]
 
 directory = os.fsencode(llvm_test_path)
@@ -74,6 +74,7 @@ class Msg(Enum):
     E_NOT_FOUND = 6
     E_NOT_CHANGED = 7
     E_VECTOR = 8
-
+    E_PTRARG = 9
+    
     def is_error(self):
         return self.value > 2

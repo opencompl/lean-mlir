@@ -1,5 +1,5 @@
 1: "strpbrk"
-5: "strpbrk" is empty
+9: "strpbrk" has pointer type input
 
 1: "test_no_simplify1"
 4: "test_no_simplify1" has unsupported operation: llvm.mlir.addressof

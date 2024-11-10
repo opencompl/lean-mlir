@@ -18,7 +18,7 @@ def p0_before := [llvm|
 ^0(%arg14 : i8):
   %0 = llvm.mlir.constant(5 : i8) : i8
   %1 = llvm.shl %arg14, %0 : i8
-  %2 = llvm.ashr %1, %0 : i8
+  %2 = llvm.ashr exact %1, %0 : i8
   %3 = llvm.icmp "eq" %2, %arg14 : i8
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -49,7 +49,7 @@ def pb_before := [llvm|
 ^0(%arg13 : i65):
   %0 = llvm.mlir.constant(1 : i65) : i65
   %1 = llvm.shl %arg13, %0 : i65
-  %2 = llvm.ashr %1, %0 : i65
+  %2 = llvm.ashr exact %1, %0 : i65
   %3 = llvm.icmp "eq" %arg13, %2 : i65
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -80,7 +80,7 @@ def n1_before := [llvm|
 ^0(%arg3 : i8):
   %0 = llvm.mlir.constant(5 : i8) : i8
   %1 = llvm.shl %arg3, %0 : i8
-  %2 = llvm.lshr %1, %0 : i8
+  %2 = llvm.lshr exact %1, %0 : i8
   %3 = llvm.icmp "eq" %2, %arg3 : i8
   "llvm.return"(%3) : (i1) -> ()
 }

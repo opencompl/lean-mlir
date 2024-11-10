@@ -1,8 +1,8 @@
 1: "strncat"
-5: "strncat" is empty
+9: "strncat" has pointer type input
 
 1: "puts"
-5: "puts" is empty
+9: "puts" has pointer type input
 
 1: "main"
 4: "main" has unsupported operation: llvm.mlir.addressof
@@ -20,5 +20,5 @@
 4: "main" has unsupported operation: llvm.call
 
 1: "strlen"
-5: "strlen" is empty
+9: "strlen" has pointer type input
 

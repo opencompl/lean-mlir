@@ -22,6 +22,8 @@
 4: "test2" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "D60846_miscompile"
+9: "D60846_miscompile" has pointer type input
+
 4: "D60846_miscompile" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "D60846_miscompile" has unsupported operation: builtin.unregistered: llvm.cond_br

@@ -233,6 +233,8 @@
 4: "sqrt_intrinsic_three_args5" has unsupported operation: builtin.unregistered: llvm.fmul
 
 1: "sqrt_intrinsic_three_args6"
+9: "sqrt_intrinsic_three_args6" has pointer type input
+
 4: "sqrt_intrinsic_three_args6" has unsupported operation: llvm.load
 
 4: "sqrt_intrinsic_three_args6" has unsupported operation: builtin.unregistered: llvm.intr.fabs

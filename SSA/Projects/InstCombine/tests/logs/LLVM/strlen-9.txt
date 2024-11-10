@@ -1,7 +1,9 @@
 1: "strlen"
-5: "strlen" is empty
+9: "strlen" has pointer type input
 
 1: "fold_strlen_no_nul"
+9: "fold_strlen_no_nul" has pointer type input
+
 4: "fold_strlen_no_nul" has unsupported operation: llvm.mlir.addressof
 
 4: "fold_strlen_no_nul" has unsupported operation: llvm.mlir.addressof

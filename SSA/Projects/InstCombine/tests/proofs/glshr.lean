@@ -194,14 +194,14 @@ def shl_add_lshr_flag_preservation_before := [llvm|
 ^0(%arg157 : i32, %arg158 : i32, %arg159 : i32):
   %0 = llvm.shl %arg157, %arg158 overflow<nuw> : i32
   %1 = llvm.add %0, %arg159 overflow<nsw,nuw> : i32
-  %2 = llvm.lshr %1, %arg158 : i32
+  %2 = llvm.lshr exact %1, %arg158 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
 def shl_add_lshr_flag_preservation_after := [llvm|
 {
 ^0(%arg157 : i32, %arg158 : i32, %arg159 : i32):
-  %0 = llvm.lshr %arg159, %arg158 : i32
+  %0 = llvm.lshr exact %arg159, %arg158 : i32
   %1 = llvm.add %0, %arg157 overflow<nsw,nuw> : i32
   "llvm.return"(%1) : (i32) -> ()
 }
@@ -280,14 +280,14 @@ def shl_sub_lshr_before := [llvm|
 ^0(%arg139 : i32, %arg140 : i32, %arg141 : i32):
   %0 = llvm.shl %arg139, %arg140 overflow<nuw> : i32
   %1 = llvm.sub %0, %arg141 overflow<nsw,nuw> : i32
-  %2 = llvm.lshr %1, %arg140 : i32
+  %2 = llvm.lshr exact %1, %arg140 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
 def shl_sub_lshr_after := [llvm|
 {
 ^0(%arg139 : i32, %arg140 : i32, %arg141 : i32):
-  %0 = llvm.lshr %arg141, %arg140 : i32
+  %0 = llvm.lshr exact %arg141, %arg140 : i32
   %1 = llvm.sub %arg139, %0 overflow<nsw,nuw> : i32
   "llvm.return"(%1) : (i32) -> ()
 }
@@ -308,14 +308,14 @@ def shl_sub_lshr_reverse_before := [llvm|
 ^0(%arg136 : i32, %arg137 : i32, %arg138 : i32):
   %0 = llvm.shl %arg136, %arg137 overflow<nuw> : i32
   %1 = llvm.sub %arg138, %0 overflow<nsw,nuw> : i32
-  %2 = llvm.lshr %1, %arg137 : i32
+  %2 = llvm.lshr exact %1, %arg137 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
 def shl_sub_lshr_reverse_after := [llvm|
 {
 ^0(%arg136 : i32, %arg137 : i32, %arg138 : i32):
-  %0 = llvm.lshr %arg138, %arg137 : i32
+  %0 = llvm.lshr exact %arg138, %arg137 : i32
   %1 = llvm.sub %0, %arg136 overflow<nsw,nuw> : i32
   "llvm.return"(%1) : (i32) -> ()
 }
@@ -336,14 +336,14 @@ def shl_sub_lshr_reverse_no_nsw_before := [llvm|
 ^0(%arg133 : i32, %arg134 : i32, %arg135 : i32):
   %0 = llvm.shl %arg133, %arg134 overflow<nuw> : i32
   %1 = llvm.sub %arg135, %0 overflow<nuw> : i32
-  %2 = llvm.lshr %1, %arg134 : i32
+  %2 = llvm.lshr exact %1, %arg134 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
 def shl_sub_lshr_reverse_no_nsw_after := [llvm|
 {
 ^0(%arg133 : i32, %arg134 : i32, %arg135 : i32):
-  %0 = llvm.lshr %arg135, %arg134 : i32
+  %0 = llvm.lshr exact %arg135, %arg134 : i32
   %1 = llvm.sub %0, %arg133 overflow<nuw> : i32
   "llvm.return"(%1) : (i32) -> ()
 }
@@ -364,14 +364,14 @@ def shl_sub_lshr_reverse_nsw_on_op1_before := [llvm|
 ^0(%arg130 : i32, %arg131 : i32, %arg132 : i32):
   %0 = llvm.shl %arg130, %arg131 overflow<nsw,nuw> : i32
   %1 = llvm.sub %arg132, %0 overflow<nuw> : i32
-  %2 = llvm.lshr %1, %arg131 : i32
+  %2 = llvm.lshr exact %1, %arg131 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
 def shl_sub_lshr_reverse_nsw_on_op1_after := [llvm|
 {
 ^0(%arg130 : i32, %arg131 : i32, %arg132 : i32):
-  %0 = llvm.lshr %arg132, %arg131 : i32
+  %0 = llvm.lshr exact %arg132, %arg131 : i32
   %1 = llvm.sub %0, %arg130 overflow<nuw> : i32
   "llvm.return"(%1) : (i32) -> ()
 }
@@ -616,7 +616,7 @@ def shl_lshr_and_exact_before := [llvm|
 ^0(%arg88 : i32, %arg89 : i32, %arg90 : i32):
   %0 = llvm.shl %arg88, %arg89 overflow<nuw> : i32
   %1 = llvm.and %0, %arg90 : i32
-  %2 = llvm.lshr %1, %arg89 : i32
+  %2 = llvm.lshr exact %1, %arg89 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]

@@ -72,7 +72,8 @@ theorem shl_nsw_add_nuw_thm (e : IntW 32) :
 
 
 theorem lshr_exact_add_nuw_thm (e : IntW 32) :
-  lshr (const? 32 4) (add e (const? 32 1) { «nsw» := false, «nuw» := true }) ⊑ lshr (const? 32 2) e := by 
+  lshr (const? 32 4) (add e (const? 32 1) { «nsw» := false, «nuw» := true }) { «exact» := true } ⊑
+    lshr (const? 32 2) e { «exact» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -82,7 +83,8 @@ theorem lshr_exact_add_nuw_thm (e : IntW 32) :
 
 
 theorem ashr_exact_add_nuw_thm (e : IntW 32) :
-  ashr (const? 32 (-4)) (add e (const? 32 1) { «nsw» := false, «nuw» := true }) ⊑ ashr (const? 32 (-2)) e := by 
+  ashr (const? 32 (-4)) (add e (const? 32 1) { «nsw» := false, «nuw» := true }) { «exact» := true } ⊑
+    ashr (const? 32 (-2)) e { «exact» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -91,7 +93,8 @@ theorem ashr_exact_add_nuw_thm (e : IntW 32) :
     all_goals sorry
 
 
-theorem lshr_exact_add_negative_shift_positive_thm (e : IntW 32) : lshr (const? 32 2) (add e (const? 32 (-1))) ⊑ lshr (const? 32 4) e := by 
+theorem lshr_exact_add_negative_shift_positive_thm (e : IntW 32) :
+  lshr (const? 32 2) (add e (const? 32 (-1))) { «exact» := true } ⊑ lshr (const? 32 4) e { «exact» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -100,7 +103,9 @@ theorem lshr_exact_add_negative_shift_positive_thm (e : IntW 32) : lshr (const? 
     all_goals sorry
 
 
-theorem ashr_exact_add_negative_shift_negative_thm (e : IntW 32) : ashr (const? 32 (-2)) (add e (const? 32 (-1))) ⊑ ashr (const? 32 (-4)) e := by 
+theorem ashr_exact_add_negative_shift_negative_thm (e : IntW 32) :
+  ashr (const? 32 (-2)) (add e (const? 32 (-1))) { «exact» := true } ⊑
+    ashr (const? 32 (-4)) e { «exact» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

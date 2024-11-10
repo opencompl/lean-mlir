@@ -11,6 +11,8 @@
 4: "sub_umin_commute_vec" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
 
 1: "sub_umin_uses"
+9: "sub_umin_uses" has pointer type input
+
 4: "sub_umin_uses" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
 4: "sub_umin_uses" has unsupported operation: llvm.store

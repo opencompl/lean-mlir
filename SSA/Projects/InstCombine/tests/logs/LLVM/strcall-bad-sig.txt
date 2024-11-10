@@ -1,13 +1,15 @@
 1: "atoi"
-5: "atoi" is empty
+9: "atoi" has pointer type input
 
 1: "atol"
-5: "atol" is empty
+9: "atol" has pointer type input
 
 1: "atoll"
-5: "atoll" is empty
+9: "atoll" has pointer type input
 
 1: "call_bad_ato"
+9: "call_bad_ato" has pointer type input
+
 4: "call_bad_ato" has unsupported operation: llvm.mlir.addressof
 
 4: "call_bad_ato" has unsupported operation: llvm.call
@@ -29,7 +31,7 @@
 4: "call_bad_ato" has unsupported operation: llvm.return
 
 1: "strncasecmp"
-5: "strncasecmp" is empty
+9: "strncasecmp" has pointer type input
 
 1: "call_bad_strncasecmp"
 4: "call_bad_strncasecmp" has unsupported operation: llvm.mlir.addressof
@@ -39,7 +41,7 @@
 4: "call_bad_strncasecmp" has unsupported operation: llvm.call
 
 1: "strcoll"
-5: "strcoll" is empty
+9: "strcoll" has pointer type input
 
 1: "call_bad_strcoll"
 4: "call_bad_strcoll" has unsupported operation: llvm.mlir.addressof
@@ -49,7 +51,7 @@
 4: "call_bad_strcoll" has unsupported operation: llvm.call
 
 1: "strndup"
-5: "strndup" is empty
+9: "strndup" has pointer type input
 
 1: "call_bad_strndup"
 4: "call_bad_strndup" has unsupported operation: llvm.mlir.addressof
@@ -57,7 +59,7 @@
 4: "call_bad_strndup" has unsupported operation: llvm.call
 
 1: "strtok"
-5: "strtok" is empty
+9: "strtok" has pointer type input
 
 1: "call_bad_strtok"
 4: "call_bad_strtok" has unsupported operation: llvm.mlir.addressof
@@ -67,7 +69,7 @@
 4: "call_bad_strtok" has unsupported operation: llvm.call
 
 1: "strtok_r"
-5: "strtok_r" is empty
+9: "strtok_r" has pointer type input
 
 1: "call_bad_strtok_r"
 4: "call_bad_strtok_r" has unsupported operation: llvm.mlir.addressof
@@ -77,18 +79,20 @@
 4: "call_bad_strtok_r" has unsupported operation: llvm.call
 
 1: "strtol"
-5: "strtol" is empty
+9: "strtol" has pointer type input
 
 1: "strtoul"
-5: "strtoul" is empty
+9: "strtoul" has pointer type input
 
 1: "strtoll"
-5: "strtoll" is empty
+9: "strtoll" has pointer type input
 
 1: "strtoull"
-5: "strtoull" is empty
+9: "strtoull" has pointer type input
 
 1: "call_bad_strto"
+9: "call_bad_strto" has pointer type input
+
 4: "call_bad_strto" has unsupported operation: llvm.mlir.addressof
 
 4: "call_bad_strto" has unsupported operation: llvm.mlir.zero
@@ -116,7 +120,7 @@
 4: "call_bad_strto" has unsupported operation: llvm.return
 
 1: "strxfrm"
-5: "strxfrm" is empty
+9: "strxfrm" has pointer type input
 
 1: "call_bad_strxfrm"
 4: "call_bad_strxfrm" has unsupported operation: llvm.mlir.addressof

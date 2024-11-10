@@ -17,6 +17,8 @@
 2: llvm.return
 
 1: "min_max_bitcast"
+9: "min_max_bitcast" has pointer type input
+
 4: "min_max_bitcast" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "min_max_bitcast" has unsupported operation: llvm.store

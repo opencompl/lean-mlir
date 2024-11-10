@@ -246,6 +246,8 @@
 8: "and_ne_with_diff_one_splatvec" contains vectors which are unsupported
 
 1: "simplify_before_foldAndOfICmps"
+9: "simplify_before_foldAndOfICmps" has pointer type input
+
 4: "simplify_before_foldAndOfICmps" has unsupported operation: llvm.mlir.zero
 
 4: "simplify_before_foldAndOfICmps" has unsupported operation: llvm.alloca

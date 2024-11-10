@@ -1,5 +1,5 @@
 1: "memrchr"
-5: "memrchr" is empty
+9: "memrchr" has pointer type input
 
 1: "fold_memrchr_a11111_c_5"
 4: "fold_memrchr_a11111_c_5" has unsupported operation: llvm.mlir.addressof

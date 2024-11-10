@@ -1,5 +1,5 @@
 1: "strcmp"
-5: "strcmp" is empty
+9: "strcmp" has pointer type input
 
 1: "fold_strcmp_a5i0_a5i1_to_0"
 4: "fold_strcmp_a5i0_a5i1_to_0" has unsupported operation after optimization: llvm.mlir.addressof

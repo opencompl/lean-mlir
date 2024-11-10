@@ -2,7 +2,7 @@
 5: "takes_i32" is empty
 
 1: "takes_i32_inalloca"
-5: "takes_i32_inalloca" is empty
+9: "takes_i32_inalloca" has pointer type input
 
 1: "f"
 4: "f" has unsupported operation: llvm.mlir.addressof

@@ -1,5 +1,5 @@
 1: "strndup"
-5: "strndup" is empty
+9: "strndup" has pointer type input
 
 1: "test1"
 4: "test1" has unsupported operation: llvm.mlir.addressof
@@ -32,5 +32,5 @@
 4: "test6" has unsupported operation: llvm.call
 
 1: "strdup"
-5: "strdup" is empty
+9: "strdup" has pointer type input
 

@@ -47,7 +47,8 @@ theorem positive_biggerLshr_thm (e : IntW 32) :
 
 
 theorem positive_biggerLshr_lshrexact_thm (e : IntW 32) :
-  lshr (shl e (const? 32 5)) (const? 32 10) ⊑ LLVM.and (lshr e (const? 32 5)) (const? 32 4194303) := by 
+  lshr (shl e (const? 32 5)) (const? 32 10) { «exact» := true } ⊑
+    LLVM.and (lshr e (const? 32 5) { «exact» := true }) (const? 32 4194303) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -97,7 +98,8 @@ theorem positive_biggerLshr_shlnuw_thm (e : IntW 32) :
 
 
 theorem positive_biggerLshr_shlnuw_lshrexact_thm (e : IntW 32) :
-  lshr (shl e (const? 32 5) { «nsw» := false, «nuw» := true }) (const? 32 10) ⊑ lshr e (const? 32 5) := by 
+  lshr (shl e (const? 32 5) { «nsw» := false, «nuw» := true }) (const? 32 10) { «exact» := true } ⊑
+    lshr e (const? 32 5) { «exact» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

@@ -13,6 +13,8 @@
 4: "fdiv_strict_cos_strict_sin_reassoc" has unsupported operation: builtin.unregistered: llvm.fdiv
 
 1: "fdiv_reassoc_cos_strict_sin_strict"
+9: "fdiv_reassoc_cos_strict_sin_strict" has pointer type input
+
 4: "fdiv_reassoc_cos_strict_sin_strict" has unsupported operation: llvm.call
 
 4: "fdiv_reassoc_cos_strict_sin_strict" has unsupported operation: builtin.unregistered: llvm.fdiv

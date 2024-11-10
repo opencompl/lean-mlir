@@ -1,5 +1,5 @@
 1: "main"
-6: Cannot find function after optimization with sym name: "main"
+9: "main" has pointer type input
 
 1: "dead_aligned_alloc"
 6: Cannot find function after optimization with sym name: "dead_aligned_alloc"
@@ -38,18 +38,22 @@
 5: "other_aligned_alloc" is empty
 
 1: "free"
-5: "free" is empty
+9: "free" has pointer type input
 
 1: "foo"
 6: Cannot find function after optimization with sym name: "foo"
 
 1: "test3"
+9: "test3" has pointer type input
+
 4: "test3" has unsupported operation: llvm.return
 
 1: "test4"
 4: "test4" has unsupported operation: llvm.return
 
 1: "test5"
+9: "test5" has pointer type input
+
 4: "test5" has unsupported operation: llvm.call
 
 4: "test5" has unsupported operation: llvm.call
@@ -81,6 +85,8 @@
 4: "test5" has unsupported operation: llvm.return
 
 1: "test6"
+9: "test6" has pointer type input
+
 4: "test6" has unsupported operation: llvm.mlir.zero
 
 4: "test6" has unsupported operation: llvm.call
@@ -92,6 +98,8 @@
 4: "test6" has unsupported operation: llvm.return
 
 1: "test12"
+9: "test12" has pointer type input
+
 4: "test12" has unsupported operation: llvm.mlir.zero
 
 4: "test12" has unsupported operation: llvm.call
@@ -103,6 +111,8 @@
 4: "test12" has unsupported operation: llvm.return
 
 1: "test_nonnull_free_move"
+9: "test_nonnull_free_move" has pointer type input
+
 4: "test_nonnull_free_move" has unsupported operation: llvm.mlir.zero
 
 4: "test_nonnull_free_move" has unsupported operation: llvm.call
@@ -114,6 +124,8 @@
 4: "test_nonnull_free_move" has unsupported operation: llvm.return
 
 1: "test_dereferenceable_free_move"
+9: "test_dereferenceable_free_move" has pointer type input
+
 4: "test_dereferenceable_free_move" has unsupported operation: llvm.mlir.zero
 
 4: "test_dereferenceable_free_move" has unsupported operation: llvm.call
@@ -125,6 +137,8 @@
 4: "test_dereferenceable_free_move" has unsupported operation: llvm.return
 
 1: "test_nonnull_dereferenceable_free_move"
+9: "test_nonnull_dereferenceable_free_move" has pointer type input
+
 4: "test_nonnull_dereferenceable_free_move" has unsupported operation: llvm.mlir.zero
 
 4: "test_nonnull_dereferenceable_free_move" has unsupported operation: llvm.call
@@ -136,25 +150,33 @@
 4: "test_nonnull_dereferenceable_free_move" has unsupported operation: llvm.return
 
 1: "test13"
+9: "test13" has pointer type input
+
 4: "test13" has unsupported operation: llvm.call
 
 4: "test13" has unsupported operation: llvm.return
 
 1: "test14"
+9: "test14" has pointer type input
+
 4: "test14" has unsupported operation: llvm.call
 
 4: "test14" has unsupported operation: llvm.return
 
 1: "test15"
+9: "test15" has pointer type input
+
 4: "test15" has unsupported operation: llvm.call
 
 4: "test15" has unsupported operation: llvm.return
 
 1: "test16"
+9: "test16" has pointer type input
+
 4: "test16" has unsupported operation: llvm.call
 
 4: "test16" has unsupported operation: llvm.return
 
 1: "llvm.objectsize.i64.p0"
-5: "llvm.objectsize.i64.p0" is empty
+9: "llvm.objectsize.i64.p0" has pointer type input
 

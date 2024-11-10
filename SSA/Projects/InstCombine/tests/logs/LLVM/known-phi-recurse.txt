@@ -34,3 +34,36 @@
 
 4: "neg_many_branches" has unsupported operation: builtin.unregistered: llvm.br
 
+1: "knownbits_phi_select_test1"
+9: "knownbits_phi_select_test1" has pointer type input
+
+4: "knownbits_phi_select_test1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "knownbits_phi_select_test1" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "knownbits_phi_select_test1" has unsupported operation: llvm.getelementptr
+
+4: "knownbits_phi_select_test1" has unsupported operation: llvm.load
+
+4: "knownbits_phi_select_test1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "knownbits_phi_select_test1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "knownbits_phi_select_test1" has unsupported operation: llvm.getelementptr
+
+4: "knownbits_phi_select_test1" has unsupported operation: llvm.load
+
+4: "knownbits_phi_select_test1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "knownbits_phi_select_test2"
+4: "knownbits_phi_select_test2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "knownbits_phi_select_test2" has unsupported operation: llvm.call
+
+4: "knownbits_phi_select_test2" has unsupported operation: llvm.call
+
+4: "knownbits_phi_select_test2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "cond"
+5: "cond" is empty
+

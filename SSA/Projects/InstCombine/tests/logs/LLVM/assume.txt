@@ -1,4 +1,6 @@
 1: "foo1"
+9: "foo1" has pointer type input
+
 4: "foo1" has unsupported operation: llvm.load
 
 4: "foo1" has unsupported operation: builtin.unregistered: llvm.ptrtoint
@@ -6,6 +8,8 @@
 4: "foo1" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "foo2"
+9: "foo2" has pointer type input
+
 4: "foo2" has unsupported operation: builtin.unregistered: llvm.ptrtoint
 
 4: "foo2" has unsupported operation: builtin.unregistered: llvm.intr.assume
@@ -67,27 +71,37 @@
 4: "assume_not" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "escape"
-5: "escape" is empty
+9: "escape" has pointer type input
 
 1: "bundle1"
+9: "bundle1" has pointer type input
+
 4: "bundle1" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 4: "bundle1" has unsupported operation: llvm.load
 
 1: "bundle2"
+9: "bundle2" has pointer type input
+
 4: "bundle2" has unsupported operation: llvm.load
 
 1: "nonnull1"
+9: "nonnull1" has pointer type input
+
 4: "nonnull1" has unsupported operation: llvm.load
 
 4: "nonnull1" has unsupported operation: llvm.call
 
 1: "nonnull2"
+9: "nonnull2" has pointer type input
+
 4: "nonnull2" has unsupported operation: llvm.load
 
 4: "nonnull2" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "nonnull3"
+9: "nonnull3" has pointer type input
+
 4: "nonnull3" has unsupported operation: llvm.mlir.zero
 
 4: "nonnull3" has unsupported operation: llvm.load
@@ -97,6 +111,8 @@
 4: "nonnull3" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "nonnull4"
+9: "nonnull4" has pointer type input
+
 4: "nonnull4" has unsupported operation: llvm.mlir.zero
 
 4: "nonnull4" has unsupported operation: llvm.load
@@ -106,6 +122,8 @@
 4: "nonnull4" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "nonnull5"
+9: "nonnull5" has pointer type input
+
 4: "nonnull5" has unsupported operation: llvm.mlir.zero
 
 4: "nonnull5" has unsupported operation: llvm.load
@@ -140,6 +158,8 @@
 4: "PR40940" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "nonnull3A"
+9: "nonnull3A" has pointer type input
+
 4: "nonnull3A" has unsupported operation: llvm.mlir.zero
 
 4: "nonnull3A" has unsupported operation: llvm.load
@@ -149,6 +169,8 @@
 4: "nonnull3A" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "nonnull3B"
+9: "nonnull3B" has pointer type input
+
 4: "nonnull3B" has unsupported operation: llvm.mlir.zero
 
 4: "nonnull3B" has unsupported operation: builtin.unregistered: llvm.cond_br
@@ -161,6 +183,8 @@
 5: "tmp1" is empty
 
 1: "nonnull3C"
+9: "nonnull3C" has pointer type input
+
 4: "nonnull3C" has unsupported operation: llvm.mlir.zero
 
 4: "nonnull3C" has unsupported operation: builtin.unregistered: llvm.cond_br
@@ -172,6 +196,8 @@
 4: "nonnull3C" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "nonnull3D"
+9: "nonnull3D" has pointer type input
+
 4: "nonnull3D" has unsupported operation: llvm.mlir.zero
 
 4: "nonnull3D" has unsupported operation: builtin.unregistered: llvm.cond_br
@@ -225,6 +251,8 @@
 4: "unreachable_assume_logical" has unsupported operation: builtin.unregistered: llvm.unreachable
 
 1: "unreachable_assumes_and_store"
+9: "unreachable_assumes_and_store" has pointer type input
+
 4: "unreachable_assumes_and_store" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 4: "unreachable_assumes_and_store" has unsupported operation: builtin.unregistered: llvm.cond_br
@@ -236,6 +264,8 @@
 4: "unreachable_assumes_and_store" has unsupported operation: builtin.unregistered: llvm.unreachable
 
 1: "unreachable_assumes_and_store_logical"
+9: "unreachable_assumes_and_store_logical" has pointer type input
+
 4: "unreachable_assumes_and_store_logical" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 4: "unreachable_assumes_and_store_logical" has unsupported operation: builtin.unregistered: llvm.cond_br
@@ -247,6 +277,8 @@
 4: "unreachable_assumes_and_store_logical" has unsupported operation: builtin.unregistered: llvm.unreachable
 
 1: "canonicalize_assume"
+9: "canonicalize_assume" has pointer type input
+
 4: "canonicalize_assume" has unsupported operation: llvm.getelementptr
 
 4: "canonicalize_assume" has unsupported operation: builtin.unregistered: llvm.intr.assume
@@ -254,6 +286,8 @@
 4: "canonicalize_assume" has unsupported operation: llvm.return
 
 1: "assume_makes_and_known_assume_on_arg"
+9: "assume_makes_and_known_assume_on_arg" has pointer type input
+
 4: "assume_makes_and_known_assume_on_arg" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 4: "assume_makes_and_known_assume_on_arg" has unsupported operation: llvm.store
@@ -261,6 +295,8 @@
 4: "assume_makes_and_known_assume_on_arg" has unsupported operation: llvm.return
 
 1: "assume_makes_and_known_assume_on_mul"
+9: "assume_makes_and_known_assume_on_mul" has pointer type input
+
 4: "assume_makes_and_known_assume_on_mul" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 4: "assume_makes_and_known_assume_on_mul" has unsupported operation: llvm.store
@@ -268,6 +304,8 @@
 4: "assume_makes_and_known_assume_on_mul" has unsupported operation: llvm.return
 
 1: "assume_makes_and_known_assume_on_bitwise"
+9: "assume_makes_and_known_assume_on_bitwise" has pointer type input
+
 4: "assume_makes_and_known_assume_on_bitwise" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 4: "assume_makes_and_known_assume_on_bitwise" has unsupported operation: llvm.store

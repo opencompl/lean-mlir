@@ -1,13 +1,19 @@
 1: "strnlen"
-5: "strnlen" is empty
+9: "strnlen" has pointer type input
 
 1: "no_access_strnlen_p_n"
+9: "no_access_strnlen_p_n" has pointer type input
+
 4: "no_access_strnlen_p_n" has unsupported operation: llvm.call
 
 1: "access_strnlen_p_2"
+9: "access_strnlen_p_2" has pointer type input
+
 4: "access_strnlen_p_2" has unsupported operation: llvm.call
 
 1: "access_strnlen_p_nz"
+9: "access_strnlen_p_nz" has pointer type input
+
 4: "access_strnlen_p_nz" has unsupported operation: llvm.call
 
 1: "fold_strnlen_ax_0"

@@ -465,6 +465,30 @@
 1: "negate_select_of_op_vs_negated_op"
 4: "negate_select_of_op_vs_negated_op" has unsupported operation: llvm.call
 
+1: "negate_select_of_op_vs_negated_op_nsw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: builtin.unregistered: llvm.select
+2: llvm.sub
+2: llvm.return
+
+1: "negate_select_of_op_vs_negated_op_nsw_commuted"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: builtin.unregistered: llvm.select
+2: llvm.sub
+2: llvm.return
+
+1: "negate_select_of_op_vs_negated_op_nsw_xyyx"
+2: llvm.func
+2: llvm.sub
+2: llvm.sub
+2: builtin.unregistered: llvm.select
+2: llvm.sub
+2: llvm.return
+
 1: "dont_negate_ordinary_select"
 7: "dont_negate_ordinary_select" is unchanged by InstCombine
 

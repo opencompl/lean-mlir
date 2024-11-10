@@ -1,7 +1,9 @@
 1: "fprintf"
-5: "fprintf" is empty
+9: "fprintf" has pointer type input
 
 1: "test_simplify1"
+9: "test_simplify1" has pointer type input
+
 4: "test_simplify1" has unsupported operation: llvm.mlir.addressof
 
 4: "test_simplify1" has unsupported operation: llvm.call
@@ -9,11 +11,15 @@
 4: "test_simplify1" has unsupported operation: llvm.return
 
 1: "test_simplify2"
+9: "test_simplify2" has pointer type input
+
 4: "test_simplify2" has unsupported operation: llvm.call
 
 4: "test_simplify2" has unsupported operation: llvm.return
 
 1: "test_simplify3"
+9: "test_simplify3" has pointer type input
+
 4: "test_simplify3" has unsupported operation: llvm.mlir.addressof
 
 4: "test_simplify3" has unsupported operation: llvm.call
@@ -21,6 +27,8 @@
 4: "test_simplify3" has unsupported operation: llvm.return
 
 1: "test_simplify4"
+9: "test_simplify4" has pointer type input
+
 4: "test_simplify4" has unsupported operation: llvm.mlir.addressof
 
 4: "test_simplify4" has unsupported operation: llvm.call
@@ -28,6 +36,8 @@
 4: "test_simplify4" has unsupported operation: llvm.return
 
 1: "test_simplify5"
+9: "test_simplify5" has pointer type input
+
 4: "test_simplify5" has unsupported operation: llvm.mlir.addressof
 
 4: "test_simplify5" has unsupported operation: llvm.call
@@ -35,6 +45,8 @@
 4: "test_simplify5" has unsupported operation: llvm.return
 
 1: "test_no_simplify1"
+9: "test_no_simplify1" has pointer type input
+
 4: "test_no_simplify1" has unsupported operation: llvm.mlir.addressof
 
 4: "test_no_simplify1" has unsupported operation: llvm.call
@@ -42,6 +54,8 @@
 4: "test_no_simplify1" has unsupported operation: llvm.return
 
 1: "test_no_simplify2"
+9: "test_no_simplify2" has pointer type input
+
 4: "test_no_simplify2" has unsupported operation: llvm.mlir.addressof
 
 4: "test_no_simplify2" has unsupported operation: llvm.call
@@ -49,11 +63,15 @@
 4: "test_no_simplify2" has unsupported operation: llvm.return
 
 1: "test_no_simplify3"
+9: "test_no_simplify3" has pointer type input
+
 4: "test_no_simplify3" has unsupported operation: llvm.mlir.addressof
 
 4: "test_no_simplify3" has unsupported operation: llvm.call
 
 1: "test_no_simplify4"
+9: "test_no_simplify4" has pointer type input
+
 4: "test_no_simplify4" has unsupported operation: llvm.mlir.addressof
 
 4: "test_no_simplify4" has unsupported operation: llvm.call
@@ -61,11 +79,11 @@
 4: "test_no_simplify4" has unsupported operation: llvm.return
 
 1: "fwrite"
-5: "fwrite" is empty
+9: "fwrite" has pointer type input
 
 1: "fputc"
-5: "fputc" is empty
+9: "fputc" has pointer type input
 
 1: "fputs"
-5: "fputs" is empty
+9: "fputs" has pointer type input
 

@@ -16,5 +16,5 @@
 4: "bork" has unsupported operation: llvm.return
 
 1: "objc_msgSend_fpret"
-5: "objc_msgSend_fpret" is empty
+9: "objc_msgSend_fpret" has pointer type input
 

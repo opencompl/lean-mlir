@@ -64,6 +64,8 @@
 2: llvm.return
 
 1: "xor_icmp_ptr"
+9: "xor_icmp_ptr" has pointer type input
+
 4: "xor_icmp_ptr" has unsupported operation: llvm.mlir.zero
 
 1: "xor_icmp_true_signed"

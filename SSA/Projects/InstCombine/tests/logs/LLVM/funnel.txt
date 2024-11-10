@@ -95,28 +95,42 @@
 4: "fshl_select_vector" has unsupported operation: builtin.unregistered: llvm.intr.fshl
 
 1: "fshl_concat_i8_i24"
+9: "fshl_concat_i8_i24" has pointer type input
+
 4: "fshl_concat_i8_i24" has unsupported operation: llvm.store
 
 4: "fshl_concat_i8_i24" has unsupported operation: builtin.unregistered: llvm.intr.fshl
 
 1: "fshl_concat_i8_i8"
+9: "fshl_concat_i8_i8" has pointer type input
+
 4: "fshl_concat_i8_i8" has unsupported operation: llvm.store
 
 4: "fshl_concat_i8_i8" has unsupported operation: builtin.unregistered: llvm.intr.fshl
 
 1: "fshl_concat_i8_i8_overlap"
+9: "fshl_concat_i8_i8_overlap" has pointer type input
+
 4: "fshl_concat_i8_i8_overlap" has unsupported operation: llvm.store
 
 1: "fshl_concat_i8_i8_drop"
+9: "fshl_concat_i8_i8_drop" has pointer type input
+
 4: "fshl_concat_i8_i8_drop" has unsupported operation: llvm.store
 
 1: "fshl_concat_i8_i8_different_slot"
+9: "fshl_concat_i8_i8_different_slot" has pointer type input
+
 4: "fshl_concat_i8_i8_different_slot" has unsupported operation: llvm.store
 
 1: "fshl_concat_unknown_source"
+9: "fshl_concat_unknown_source" has pointer type input
+
 4: "fshl_concat_unknown_source" has unsupported operation: llvm.store
 
 1: "fshl_concat_vector"
+9: "fshl_concat_vector" has pointer type input
+
 4: "fshl_concat_vector" has unsupported operation: llvm.store
 
 4: "fshl_concat_vector" has unsupported operation: builtin.unregistered: llvm.intr.fshl

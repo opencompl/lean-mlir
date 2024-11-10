@@ -8,21 +8,33 @@
 5: "use.i16" is empty
 
 1: "and_test1"
+9: "and_test1" has pointer type input
+
 4: "and_test1" has unsupported operation: llvm.load
 
 1: "and_test1_logical"
+9: "and_test1_logical" has pointer type input
+
 4: "and_test1_logical" has unsupported operation: llvm.load
 
 1: "and_test1_vector"
+9: "and_test1_vector" has pointer type input
+
 4: "and_test1_vector" has unsupported operation: llvm.load
 
 1: "and_test2"
+9: "and_test2" has pointer type input
+
 4: "and_test2" has unsupported operation: llvm.load
 
 1: "and_test2_logical"
+9: "and_test2_logical" has pointer type input
+
 4: "and_test2_logical" has unsupported operation: llvm.load
 
 1: "and_test2_vector"
+9: "and_test2_vector" has pointer type input
+
 4: "and_test2_vector" has unsupported operation: llvm.load
 
 1: "or_basic"

@@ -14,5 +14,5 @@
 5: "_Znam" is empty
 
 1: "free"
-5: "free" is empty
+9: "free" has pointer type input
 

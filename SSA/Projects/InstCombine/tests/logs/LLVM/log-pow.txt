@@ -55,6 +55,8 @@
 4: "log_pow_not_fast" has unsupported operation: builtin.unregistered: llvm.intr.log
 
 1: "function_pointer"
+9: "function_pointer" has pointer type input
+
 4: "function_pointer" has unsupported operation: llvm.call
 
 4: "function_pointer" has unsupported operation: llvm.call
@@ -74,6 +76,8 @@
 4: "log_exp2_not_fast" has unsupported operation: builtin.unregistered: llvm.intr.log
 
 1: "pr43617"
+9: "pr43617" has pointer type input
+
 4: "pr43617" has unsupported operation: builtin.unregistered: llvm.fneg
 
 4: "pr43617" has unsupported operation: llvm.call

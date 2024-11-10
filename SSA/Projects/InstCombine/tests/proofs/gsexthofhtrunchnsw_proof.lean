@@ -43,7 +43,7 @@ theorem same_source_matching_signbits_thm (e : IntW 32) :
 
 theorem same_source_not_matching_signbits_thm (e : IntW 32) :
   sext 32 (trunc 8 (shl (const? 32 (-1)) (LLVM.and e (const? 32 8)) { «nsw» := true, «nuw» := false })) ⊑
-    ashr (shl (const? 32 (-16777216)) (LLVM.and e (const? 32 8))) (const? 32 24) := by 
+    ashr (shl (const? 32 (-16777216)) (LLVM.and e (const? 32 8))) (const? 32 24) { «exact» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

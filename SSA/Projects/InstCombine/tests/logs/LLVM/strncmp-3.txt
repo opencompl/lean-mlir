@@ -1,5 +1,5 @@
 1: "strncmp"
-5: "strncmp" is empty
+9: "strncmp" has pointer type input
 
 1: "call_strncmp_ax_bx_uimax_p1"
 4: "call_strncmp_ax_bx_uimax_p1" has unsupported operation: llvm.mlir.addressof

@@ -75,5 +75,5 @@
 4: "bar_store" has unsupported operation: llvm.return
 
 1: "kip"
-5: "kip" is empty
+9: "kip" has pointer type input
 

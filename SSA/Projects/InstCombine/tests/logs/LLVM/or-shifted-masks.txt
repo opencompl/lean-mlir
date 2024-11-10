@@ -128,6 +128,8 @@
 2: llvm.return
 
 1: "shl_mask_extra_use"
+9: "shl_mask_extra_use" has pointer type input
+
 4: "shl_mask_extra_use" has unsupported operation: llvm.store
 
 1: "shl_mul_mask"

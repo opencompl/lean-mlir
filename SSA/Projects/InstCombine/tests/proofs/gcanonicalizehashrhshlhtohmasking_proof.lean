@@ -176,7 +176,7 @@ theorem positive_biggershl_shlnuwnsw_thm (e : IntW 8) :
     all_goals sorry
 
 
-theorem positive_samevar_ashrexact_thm (e e_1 : IntW 8) : shl (ashr e_1 e) e ⊑ e_1 := by 
+theorem positive_samevar_ashrexact_thm (e e_1 : IntW 8) : shl (ashr e_1 e { «exact» := true }) e ⊑ e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -185,7 +185,7 @@ theorem positive_samevar_ashrexact_thm (e e_1 : IntW 8) : shl (ashr e_1 e) e ⊑
     all_goals sorry
 
 
-theorem positive_sameconst_ashrexact_thm (e : IntW 8) : shl (ashr e (const? 8 3)) (const? 8 3) ⊑ e := by 
+theorem positive_sameconst_ashrexact_thm (e : IntW 8) : shl (ashr e (const? 8 3) { «exact» := true }) (const? 8 3) ⊑ e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -194,7 +194,8 @@ theorem positive_sameconst_ashrexact_thm (e : IntW 8) : shl (ashr e (const? 8 3)
     all_goals sorry
 
 
-theorem positive_biggerashr_ashrexact_thm (e : IntW 8) : shl (ashr e (const? 8 6)) (const? 8 3) ⊑ ashr e (const? 8 3) := by 
+theorem positive_biggerashr_ashrexact_thm (e : IntW 8) :
+  shl (ashr e (const? 8 6) { «exact» := true }) (const? 8 3) ⊑ ashr e (const? 8 3) { «exact» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -203,7 +204,8 @@ theorem positive_biggerashr_ashrexact_thm (e : IntW 8) : shl (ashr e (const? 8 6
     all_goals sorry
 
 
-theorem positive_biggershl_ashrexact_thm (e : IntW 8) : shl (ashr e (const? 8 3)) (const? 8 6) ⊑ shl e (const? 8 3) := by 
+theorem positive_biggershl_ashrexact_thm (e : IntW 8) :
+  shl (ashr e (const? 8 3) { «exact» := true }) (const? 8 6) ⊑ shl e (const? 8 3) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -212,7 +214,8 @@ theorem positive_biggershl_ashrexact_thm (e : IntW 8) : shl (ashr e (const? 8 3)
     all_goals sorry
 
 
-theorem positive_samevar_shlnsw_ashrexact_thm (e e_1 : IntW 8) : shl (ashr e_1 e) e { «nsw» := true, «nuw» := false } ⊑ e_1 := by 
+theorem positive_samevar_shlnsw_ashrexact_thm (e e_1 : IntW 8) :
+  shl (ashr e_1 e { «exact» := true }) e { «nsw» := true, «nuw» := false } ⊑ e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -221,7 +224,8 @@ theorem positive_samevar_shlnsw_ashrexact_thm (e e_1 : IntW 8) : shl (ashr e_1 e
     all_goals sorry
 
 
-theorem positive_sameconst_shlnsw_ashrexact_thm (e : IntW 8) : shl (ashr e (const? 8 3)) (const? 8 3) { «nsw» := true, «nuw» := false } ⊑ e := by 
+theorem positive_sameconst_shlnsw_ashrexact_thm (e : IntW 8) :
+  shl (ashr e (const? 8 3) { «exact» := true }) (const? 8 3) { «nsw» := true, «nuw» := false } ⊑ e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -231,7 +235,8 @@ theorem positive_sameconst_shlnsw_ashrexact_thm (e : IntW 8) : shl (ashr e (cons
 
 
 theorem positive_biggerashr_shlnsw_ashrexact_thm (e : IntW 8) :
-  shl (ashr e (const? 8 6)) (const? 8 3) { «nsw» := true, «nuw» := false } ⊑ ashr e (const? 8 3) := by 
+  shl (ashr e (const? 8 6) { «exact» := true }) (const? 8 3) { «nsw» := true, «nuw» := false } ⊑
+    ashr e (const? 8 3) { «exact» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -241,7 +246,7 @@ theorem positive_biggerashr_shlnsw_ashrexact_thm (e : IntW 8) :
 
 
 theorem positive_biggershl_shlnsw_ashrexact_thm (e : IntW 8) :
-  shl (ashr e (const? 8 3)) (const? 8 6) { «nsw» := true, «nuw» := false } ⊑
+  shl (ashr e (const? 8 3) { «exact» := true }) (const? 8 6) { «nsw» := true, «nuw» := false } ⊑
     shl e (const? 8 3) { «nsw» := true, «nuw» := false } := by 
     simp_alive_undef
     simp_alive_ops
@@ -251,7 +256,8 @@ theorem positive_biggershl_shlnsw_ashrexact_thm (e : IntW 8) :
     all_goals sorry
 
 
-theorem positive_samevar_shlnuw_ashrexact_thm (e e_1 : IntW 8) : shl (ashr e_1 e) e { «nsw» := false, «nuw» := true } ⊑ e_1 := by 
+theorem positive_samevar_shlnuw_ashrexact_thm (e e_1 : IntW 8) :
+  shl (ashr e_1 e { «exact» := true }) e { «nsw» := false, «nuw» := true } ⊑ e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -260,7 +266,8 @@ theorem positive_samevar_shlnuw_ashrexact_thm (e e_1 : IntW 8) : shl (ashr e_1 e
     all_goals sorry
 
 
-theorem positive_sameconst_shlnuw_ashrexact_thm (e : IntW 8) : shl (ashr e (const? 8 3)) (const? 8 3) { «nsw» := false, «nuw» := true } ⊑ e := by 
+theorem positive_sameconst_shlnuw_ashrexact_thm (e : IntW 8) :
+  shl (ashr e (const? 8 3) { «exact» := true }) (const? 8 3) { «nsw» := false, «nuw» := true } ⊑ e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -270,7 +277,8 @@ theorem positive_sameconst_shlnuw_ashrexact_thm (e : IntW 8) : shl (ashr e (cons
 
 
 theorem positive_biggerashr_shlnuw_ashrexact_thm (e : IntW 8) :
-  shl (ashr e (const? 8 6)) (const? 8 3) { «nsw» := false, «nuw» := true } ⊑ ashr e (const? 8 3) := by 
+  shl (ashr e (const? 8 6) { «exact» := true }) (const? 8 3) { «nsw» := false, «nuw» := true } ⊑
+    ashr e (const? 8 3) { «exact» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -280,7 +288,7 @@ theorem positive_biggerashr_shlnuw_ashrexact_thm (e : IntW 8) :
 
 
 theorem positive_biggershl_shlnuw_ashrexact_thm (e : IntW 8) :
-  shl (ashr e (const? 8 3)) (const? 8 6) { «nsw» := false, «nuw» := true } ⊑
+  shl (ashr e (const? 8 3) { «exact» := true }) (const? 8 6) { «nsw» := false, «nuw» := true } ⊑
     shl e (const? 8 3) { «nsw» := false, «nuw» := true } := by 
     simp_alive_undef
     simp_alive_ops
@@ -290,7 +298,8 @@ theorem positive_biggershl_shlnuw_ashrexact_thm (e : IntW 8) :
     all_goals sorry
 
 
-theorem positive_samevar_shlnuwnsw_ashrexact_thm (e e_1 : IntW 8) : shl (ashr e_1 e) e { «nsw» := true, «nuw» := true } ⊑ e_1 := by 
+theorem positive_samevar_shlnuwnsw_ashrexact_thm (e e_1 : IntW 8) :
+  shl (ashr e_1 e { «exact» := true }) e { «nsw» := true, «nuw» := true } ⊑ e_1 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -299,7 +308,8 @@ theorem positive_samevar_shlnuwnsw_ashrexact_thm (e e_1 : IntW 8) : shl (ashr e_
     all_goals sorry
 
 
-theorem positive_sameconst_shlnuwnsw_ashrexact_thm (e : IntW 8) : shl (ashr e (const? 8 3)) (const? 8 3) { «nsw» := true, «nuw» := true } ⊑ e := by 
+theorem positive_sameconst_shlnuwnsw_ashrexact_thm (e : IntW 8) :
+  shl (ashr e (const? 8 3) { «exact» := true }) (const? 8 3) { «nsw» := true, «nuw» := true } ⊑ e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -309,7 +319,8 @@ theorem positive_sameconst_shlnuwnsw_ashrexact_thm (e : IntW 8) : shl (ashr e (c
 
 
 theorem positive_biggerashr_shlnuwnsw_ashrexact_thm (e : IntW 8) :
-  shl (ashr e (const? 8 6)) (const? 8 3) { «nsw» := true, «nuw» := true } ⊑ ashr e (const? 8 3) := by 
+  shl (ashr e (const? 8 6) { «exact» := true }) (const? 8 3) { «nsw» := true, «nuw» := true } ⊑
+    ashr e (const? 8 3) { «exact» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -319,7 +330,7 @@ theorem positive_biggerashr_shlnuwnsw_ashrexact_thm (e : IntW 8) :
 
 
 theorem positive_biggershl_shlnuwnsw_ashrexact_thm (e : IntW 8) :
-  shl (ashr e (const? 8 3)) (const? 8 6) { «nsw» := true, «nuw» := true } ⊑
+  shl (ashr e (const? 8 3) { «exact» := true }) (const? 8 6) { «nsw» := true, «nuw» := true } ⊑
     shl e (const? 8 3) { «nsw» := true, «nuw» := true } := by 
     simp_alive_undef
     simp_alive_ops

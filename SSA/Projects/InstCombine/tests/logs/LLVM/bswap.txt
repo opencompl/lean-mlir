@@ -170,6 +170,8 @@
 4: "shuf_4bytes" has unsupported operation: builtin.unregistered: llvm.intr.bswap
 
 1: "shuf_load_4bytes"
+9: "shuf_load_4bytes" has pointer type input
+
 4: "shuf_load_4bytes" has unsupported operation: llvm.load
 
 4: "shuf_load_4bytes" has unsupported operation: builtin.unregistered: llvm.intr.bswap
@@ -213,6 +215,8 @@
 4: "funnel_and" has unsupported operation: builtin.unregistered: llvm.intr.bswap
 
 1: "trunc_bswap_i160"
+9: "trunc_bswap_i160" has pointer type input
+
 4: "trunc_bswap_i160" has unsupported operation: llvm.load
 
 1: "PR47191_problem1"

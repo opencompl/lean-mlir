@@ -1,5 +1,5 @@
 1: "strnlen"
-5: "strnlen" is empty
+9: "strnlen" has pointer type input
 
 1: "deref_strnlen_ecp_3"
 4: "deref_strnlen_ecp_3" has unsupported operation: llvm.mlir.addressof

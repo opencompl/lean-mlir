@@ -1,17 +1,17 @@
 1: "bzero"
-5: "bzero" is empty
+9: "bzero" has pointer type input
 
 1: "bcopy"
-5: "bcopy" is empty
+9: "bcopy" has pointer type input
 
 1: "bcmp"
-5: "bcmp" is empty
+9: "bcmp" has pointer type input
 
 1: "fputs"
-5: "fputs" is empty
+9: "fputs" has pointer type input
 
 1: "fputs_unlocked"
-5: "fputs_unlocked" is empty
+9: "fputs_unlocked" has pointer type input
 
 1: "function"
 4: "function" has unsupported operation: llvm.mlir.addressof

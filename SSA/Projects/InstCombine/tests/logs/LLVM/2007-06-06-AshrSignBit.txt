@@ -1,4 +1,6 @@
 1: "av_cmp_q_cond_true"
+9: "av_cmp_q_cond_true" has pointer type input
+
 4: "av_cmp_q_cond_true" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "av_cmp_q_cond_true" has unsupported operation: llvm.return

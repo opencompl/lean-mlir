@@ -103,8 +103,9 @@ theorem sdiv_mul_shl_nsw_thm (e e_1 e_2 : IntW 5) :
 
 
 theorem sdiv_mul_shl_nsw_exact_commute1_thm (e e_1 e_2 : IntW 5) :
-  LLVM.sdiv (mul e_2 e_1 { «nsw» := true, «nuw» := false }) (shl e_1 e { «nsw» := true, «nuw» := false }) ⊑
-    LLVM.sdiv e_2 (shl (const? 5 1) e { «nsw» := false, «nuw» := true }) := by 
+  LLVM.sdiv (mul e_2 e_1 { «nsw» := true, «nuw» := false }) (shl e_1 e { «nsw» := true, «nuw» := false })
+      { «exact» := true } ⊑
+    LLVM.sdiv e_2 (shl (const? 5 1) e { «nsw» := false, «nuw» := true }) { «exact» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -125,8 +126,9 @@ theorem udiv_mul_shl_nuw_thm (e e_1 e_2 : IntW 5) :
 
 
 theorem udiv_mul_shl_nuw_exact_commute1_thm (e e_1 e_2 : IntW 5) :
-  LLVM.udiv (mul e_2 e_1 { «nsw» := false, «nuw» := true }) (shl e_1 e { «nsw» := false, «nuw» := true }) ⊑
-    lshr e_2 e := by 
+  LLVM.udiv (mul e_2 e_1 { «nsw» := false, «nuw» := true }) (shl e_1 e { «nsw» := false, «nuw» := true })
+      { «exact» := true } ⊑
+    lshr e_2 e { «exact» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -158,8 +160,9 @@ theorem udiv_shl_mul_nuw_swap_thm (e e_1 e_2 : IntW 5) :
 
 
 theorem udiv_shl_mul_nuw_exact_thm (e e_1 e_2 : IntW 5) :
-  LLVM.udiv (shl e_2 e_1 { «nsw» := false, «nuw» := true }) (mul e_2 e { «nsw» := false, «nuw» := true }) ⊑
-    LLVM.udiv (shl (const? 5 1) e_1 { «nsw» := false, «nuw» := true }) e := by 
+  LLVM.udiv (shl e_2 e_1 { «nsw» := false, «nuw» := true }) (mul e_2 e { «nsw» := false, «nuw» := true })
+      { «exact» := true } ⊑
+    LLVM.udiv (shl (const? 5 1) e_1 { «nsw» := false, «nuw» := true }) e { «exact» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

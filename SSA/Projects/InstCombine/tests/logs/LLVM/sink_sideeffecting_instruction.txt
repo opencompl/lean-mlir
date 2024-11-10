@@ -1,4 +1,6 @@
 1: "foo"
+9: "foo" has pointer type input
+
 4: "foo" has unsupported operation: llvm.call
 
 4: "foo" has unsupported operation: llvm.store
@@ -40,10 +42,10 @@
 4: "test" has unsupported operation: builtin.unregistered: llvm.intr.lifetime.end
 
 1: "unknown"
-5: "unknown" is empty
+9: "unknown" has pointer type input
 
 1: "unknown.as2"
-5: "unknown.as2" is empty
+9: "unknown.as2" has pointer type input
 
 1: "sink_write_to_use"
 4: "sink_write_to_use" has unsupported operation: llvm.alloca

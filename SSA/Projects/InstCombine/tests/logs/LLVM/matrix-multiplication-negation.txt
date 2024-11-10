@@ -83,6 +83,8 @@
 4: "matrix_multiply_two_operands_with_multiple_uses" has unsupported operation: builtin.unregistered: llvm.fsub
 
 1: "matrix_multiply_two_operands_with_multiple_uses2"
+9: "matrix_multiply_two_operands_with_multiple_uses2" has pointer type input
+
 4: "matrix_multiply_two_operands_with_multiple_uses2" has unsupported operation: builtin.unregistered: llvm.fneg
 
 4: "matrix_multiply_two_operands_with_multiple_uses2" has unsupported operation: builtin.unregistered: llvm.fneg
@@ -105,6 +107,8 @@
 4: "fneg_with_multiple_uses" has unsupported operation: builtin.unregistered: llvm.fadd
 
 1: "fneg_with_multiple_uses_2"
+9: "fneg_with_multiple_uses_2" has pointer type input
+
 4: "fneg_with_multiple_uses_2" has unsupported operation: builtin.unregistered: llvm.fneg
 
 4: "fneg_with_multiple_uses_2" has unsupported operation: builtin.unregistered: llvm.intr.matrix.multiply

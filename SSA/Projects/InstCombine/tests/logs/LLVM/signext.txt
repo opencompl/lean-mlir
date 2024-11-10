@@ -59,7 +59,11 @@
 8: "sextinreg2_splat" contains vectors which are unsupported
 
 1: "test5"
-7: "test5" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.ashr
+2: llvm.return
 
 1: "test6"
 2: llvm.func

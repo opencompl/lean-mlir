@@ -1,5 +1,5 @@
 1: "printf"
-5: "printf" is empty
+9: "printf" has pointer type input
 
 1: "_Z8tempCastj"
 4: "_Z8tempCastj" has unsupported operation: llvm.mlir.addressof

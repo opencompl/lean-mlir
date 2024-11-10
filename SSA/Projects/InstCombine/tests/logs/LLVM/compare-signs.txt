@@ -106,6 +106,8 @@
 2: llvm.return
 
 1: "shift_trunc_signbit_test_vec_uses"
+9: "shift_trunc_signbit_test_vec_uses" has pointer type input
+
 4: "shift_trunc_signbit_test_vec_uses" has unsupported operation: llvm.store
 
 4: "shift_trunc_signbit_test_vec_uses" has unsupported operation: llvm.store

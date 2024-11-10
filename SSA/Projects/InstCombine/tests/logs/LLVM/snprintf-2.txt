@@ -1,5 +1,5 @@
 1: "snprintf"
-5: "snprintf" is empty
+9: "snprintf" has pointer type input
 
 1: "fold_snprintf_fmt"
 4: "fold_snprintf_fmt" has unsupported operation: llvm.mlir.addressof

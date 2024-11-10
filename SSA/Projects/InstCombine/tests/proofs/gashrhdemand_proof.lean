@@ -31,7 +31,8 @@ theorem srem8_ashr_mask_thm (e : IntW 32) :
     all_goals sorry
 
 
-theorem ashr_can_be_lshr_thm (e : IntW 32) : trunc 16 (ashr e (const? 32 16)) ⊑ trunc 16 (lshr e (const? 32 16)) := by 
+theorem ashr_can_be_lshr_thm (e : IntW 32) :
+  trunc 16 (ashr e (const? 32 16) { «exact» := true }) ⊑ trunc 16 (lshr e (const? 32 16) { «exact» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -41,7 +42,7 @@ theorem ashr_can_be_lshr_thm (e : IntW 32) : trunc 16 (ashr e (const? 32 16)) �
 
 
 theorem ashr_can_be_lshr_2_thm (e : IntW 32) :
-  trunc 32 (ashr (shl (LLVM.or (zext 64 e) (const? 64 4278190080)) (const? 64 34)) (const? 64 32)) ⊑
+  trunc 32 (ashr (shl (LLVM.or (zext 64 e) (const? 64 4278190080)) (const? 64 34)) (const? 64 32) { «exact» := true }) ⊑
     LLVM.or (shl e (const? 32 2)) (const? 32 (-67108864)) := by 
     simp_alive_undef
     simp_alive_ops

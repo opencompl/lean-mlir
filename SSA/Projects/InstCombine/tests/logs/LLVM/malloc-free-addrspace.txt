@@ -14,19 +14,13 @@
 4: "remove_aligned_alloc" has unsupported operation after optimization: llvm.call
 
 1: "remove_strdup"
-4: "remove_strdup" has unsupported operation after optimization: llvm.call
-
-4: "remove_strdup" has unsupported operation after optimization: llvm.call
+9: "remove_strdup" has pointer type input
 
 1: "remove_new"
-4: "remove_new" has unsupported operation after optimization: llvm.call
-
-4: "remove_new" has unsupported operation after optimization: llvm.call
+9: "remove_new" has pointer type input
 
 1: "remove_new_array"
-4: "remove_new_array" has unsupported operation after optimization: llvm.call
-
-4: "remove_new_array" has unsupported operation after optimization: llvm.call
+9: "remove_new_array" has pointer type input
 
 1: "calloc"
 5: "calloc" is empty
@@ -38,20 +32,20 @@
 5: "aligned_alloc" is empty
 
 1: "strdup"
-5: "strdup" is empty
+9: "strdup" has pointer type input
 
 1: "free"
-5: "free" is empty
+9: "free" has pointer type input
 
 1: "_Znwm"
 5: "_Znwm" is empty
 
 1: "_ZdlPv"
-5: "_ZdlPv" is empty
+9: "_ZdlPv" has pointer type input
 
 1: "_Znam"
 5: "_Znam" is empty
 
 1: "_ZdaPv"
-5: "_ZdaPv" is empty
+9: "_ZdaPv" has pointer type input
 

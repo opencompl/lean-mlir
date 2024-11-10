@@ -30,7 +30,7 @@ def sextinreg_after := [llvm|
 ^0(%arg14 : i32):
   %0 = llvm.mlir.constant(16 : i32) : i32
   %1 = llvm.shl %arg14, %0 : i32
-  %2 = llvm.ashr %1, %0 : i32
+  %2 = llvm.ashr exact %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -62,7 +62,7 @@ def sextinreg_alt_after := [llvm|
 ^0(%arg11 : i32):
   %0 = llvm.mlir.constant(16 : i32) : i32
   %1 = llvm.shl %arg11, %0 : i32
-  %2 = llvm.ashr %1, %0 : i32
+  %2 = llvm.ashr exact %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -123,7 +123,7 @@ def sextinreg2_after := [llvm|
 ^0(%arg6 : i32):
   %0 = llvm.mlir.constant(24 : i32) : i32
   %1 = llvm.shl %arg6, %0 : i32
-  %2 = llvm.ashr %1, %0 : i32
+  %2 = llvm.ashr exact %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -135,6 +135,35 @@ theorem sextinreg2_proof : sextinreg2_before ⊑ sextinreg2_after := by
   ---BEGIN sextinreg2
   apply sextinreg2_thm
   ---END sextinreg2
+
+
+
+def test5_before := [llvm|
+{
+^0(%arg4 : i32):
+  %0 = llvm.mlir.constant(16 : i32) : i32
+  %1 = llvm.shl %arg4, %0 : i32
+  %2 = llvm.ashr %1, %0 : i32
+  "llvm.return"(%2) : (i32) -> ()
+}
+]
+def test5_after := [llvm|
+{
+^0(%arg4 : i32):
+  %0 = llvm.mlir.constant(16 : i32) : i32
+  %1 = llvm.shl %arg4, %0 : i32
+  %2 = llvm.ashr exact %1, %0 : i32
+  "llvm.return"(%2) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test5_proof : test5_before ⊑ test5_after := by
+  unfold test5_before test5_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test5
+  apply test5_thm
+  ---END test5
 
 
 

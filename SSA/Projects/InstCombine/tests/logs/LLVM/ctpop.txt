@@ -26,6 +26,8 @@
 4: "mask_one_bit" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctpop
 
 1: "mask_one_bit_splat"
+9: "mask_one_bit_splat" has pointer type input
+
 4: "mask_one_bit_splat" has unsupported operation: llvm.store
 
 1: "_parity_of_not"
@@ -67,6 +69,8 @@
 4: "ctpop_add_no_common_bits_vec" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
 1: "ctpop_add_no_common_bits_vec_use"
+9: "ctpop_add_no_common_bits_vec_use" has pointer type input
+
 4: "ctpop_add_no_common_bits_vec_use" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
 4: "ctpop_add_no_common_bits_vec_use" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
@@ -74,6 +78,8 @@
 4: "ctpop_add_no_common_bits_vec_use" has unsupported operation: llvm.store
 
 1: "ctpop_add_no_common_bits_vec_use2"
+9: "ctpop_add_no_common_bits_vec_use2" has pointer type input
+
 4: "ctpop_add_no_common_bits_vec_use2" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
 4: "ctpop_add_no_common_bits_vec_use2" has unsupported operation: llvm.store
@@ -99,6 +105,8 @@
 4: "sub_ctpop_vec" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
 1: "sub_ctpop_vec_extra_use"
+9: "sub_ctpop_vec_extra_use" has pointer type input
+
 4: "sub_ctpop_vec_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
 4: "sub_ctpop_vec_extra_use" has unsupported operation: llvm.store
@@ -110,6 +118,8 @@
 4: "zext_ctpop_vec" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
 
 1: "zext_ctpop_extra_use"
+9: "zext_ctpop_extra_use" has pointer type input
+
 4: "zext_ctpop_extra_use" has unsupported operation: llvm.store
 
 4: "zext_ctpop_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.ctpop

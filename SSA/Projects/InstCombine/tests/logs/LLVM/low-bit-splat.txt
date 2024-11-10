@@ -71,8 +71,17 @@
 7: "n10" is unchanged by InstCombine
 
 1: "n11"
-7: "n11" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.ashr
+2: llvm.return
 
 1: "n12"
-7: "n12" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.ashr
+2: llvm.return
 

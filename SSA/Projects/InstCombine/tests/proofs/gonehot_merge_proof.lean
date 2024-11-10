@@ -129,8 +129,10 @@ theorem foo1_and_signbit_lshr_thm (e e_1 e_2 : IntW 32) :
       (icmp IntPredicate.eq (LLVM.and (lshr (const? 32 (-2147483648)) e) e_1) (const? 32 0)) ⊑
     icmp IntPredicate.ne
       (LLVM.and e_1
-        (LLVM.or (shl (const? 32 1) e_2 { «nsw» := false, «nuw» := true }) (lshr (const? 32 (-2147483648)) e)))
-      (LLVM.or (shl (const? 32 1) e_2 { «nsw» := false, «nuw» := true }) (lshr (const? 32 (-2147483648)) e)) := by 
+        (LLVM.or (shl (const? 32 1) e_2 { «nsw» := false, «nuw» := true })
+          (lshr (const? 32 (-2147483648)) e { «exact» := true })))
+      (LLVM.or (shl (const? 32 1) e_2 { «nsw» := false, «nuw» := true })
+        (lshr (const? 32 (-2147483648)) e { «exact» := true })) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -144,8 +146,10 @@ theorem foo1_or_signbit_lshr_thm (e e_1 e_2 : IntW 32) :
       (icmp IntPredicate.ne (LLVM.and (lshr (const? 32 (-2147483648)) e) e_1) (const? 32 0)) ⊑
     icmp IntPredicate.eq
       (LLVM.and e_1
-        (LLVM.or (shl (const? 32 1) e_2 { «nsw» := false, «nuw» := true }) (lshr (const? 32 (-2147483648)) e)))
-      (LLVM.or (shl (const? 32 1) e_2 { «nsw» := false, «nuw» := true }) (lshr (const? 32 (-2147483648)) e)) := by 
+        (LLVM.or (shl (const? 32 1) e_2 { «nsw» := false, «nuw» := true })
+          (lshr (const? 32 (-2147483648)) e { «exact» := true })))
+      (LLVM.or (shl (const? 32 1) e_2 { «nsw» := false, «nuw» := true })
+        (lshr (const? 32 (-2147483648)) e { «exact» := true })) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

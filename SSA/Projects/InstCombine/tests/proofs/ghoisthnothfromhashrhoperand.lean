@@ -47,7 +47,7 @@ def t1_before := [llvm|
 ^0(%arg6 : i8, %arg7 : i8):
   %0 = llvm.mlir.constant(-1 : i8) : i8
   %1 = llvm.xor %arg6, %0 : i8
-  %2 = llvm.ashr %1, %arg7 : i8
+  %2 = llvm.ashr exact %1, %arg7 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]

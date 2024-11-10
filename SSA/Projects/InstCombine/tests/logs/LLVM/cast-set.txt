@@ -34,5 +34,7 @@
 2: llvm.return
 
 1: "test7"
+9: "test7" has pointer type input
+
 4: "test7" has unsupported operation: llvm.mlir.zero
 

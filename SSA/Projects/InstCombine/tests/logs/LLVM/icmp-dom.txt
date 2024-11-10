@@ -83,6 +83,8 @@
 4: "falseblock_cmp_is_true_commute" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "PR48900"
+9: "PR48900" has pointer type input
+
 4: "PR48900" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
 4: "PR48900" has unsupported operation: builtin.unregistered: llvm.cond_br
@@ -90,6 +92,8 @@
 4: "PR48900" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
 1: "PR48900_alt"
+9: "PR48900_alt" has pointer type input
+
 4: "PR48900_alt" has unsupported operation: builtin.unregistered: llvm.intr.smax
 
 4: "PR48900_alt" has unsupported operation: builtin.unregistered: llvm.cond_br

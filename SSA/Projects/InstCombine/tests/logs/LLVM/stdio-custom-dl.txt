@@ -12,11 +12,11 @@
 4: "fputs_test_custom_dl" has unsupported operation: llvm.return
 
 1: "fopen"
-5: "fopen" is empty
+9: "fopen" has pointer type input
 
 1: "fputs"
-5: "fputs" is empty
+9: "fputs" has pointer type input
 
 1: "fwrite"
-5: "fwrite" is empty
+9: "fwrite" has pointer type input
 

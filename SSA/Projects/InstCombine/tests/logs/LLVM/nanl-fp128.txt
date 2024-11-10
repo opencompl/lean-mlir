@@ -14,5 +14,5 @@
 4: "nanl_hex" has unsupported operation after optimization: llvm.call
 
 1: "nanl"
-5: "nanl" is empty
+9: "nanl" has pointer type input
 

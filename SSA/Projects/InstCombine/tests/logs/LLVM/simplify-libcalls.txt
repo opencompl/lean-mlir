@@ -1,7 +1,9 @@
 1: "sprintf"
-5: "sprintf" is empty
+9: "sprintf" has pointer type input
 
 1: "foo"
+9: "foo" has pointer type input
+
 4: "foo" has unsupported operation: llvm.call
 
 4: "foo" has unsupported operation: llvm.return
@@ -12,7 +14,7 @@
 4: "test1" has unsupported operation: llvm.getelementptr
 
 1: "strchr"
-5: "strchr" is empty
+9: "strchr" has pointer type input
 
 1: "test2"
 4: "test2" has unsupported operation: llvm.mlir.addressof
@@ -23,9 +25,11 @@
 4: "test3" has unsupported operation: llvm.mlir.zero
 
 1: "memcmp"
-5: "memcmp" is empty
+9: "memcmp" has pointer type input
 
 1: "PR2341"
+9: "PR2341" has pointer type input
+
 4: "PR2341" has unsupported operation: llvm.mlir.addressof
 
 4: "PR2341" has unsupported operation: llvm.load
@@ -44,6 +48,8 @@
 4: "PR4284" has unsupported operation after optimization: llvm.call
 
 1: "PR4641"
+9: "PR4641" has pointer type input
+
 4: "PR4641" has unsupported operation: llvm.mlir.addressof
 
 4: "PR4641" has unsupported operation: llvm.mlir.addressof
@@ -55,7 +61,7 @@
 4: "PR4641" has unsupported operation: builtin.unregistered: llvm.unreachable
 
 1: "fopen"
-5: "fopen" is empty
+9: "fopen" has pointer type input
 
 1: "exit"
 5: "exit" is empty
@@ -85,9 +91,11 @@
 4: "MemCpy" has unsupported operation after optimization: builtin.unregistered: llvm.intr.memcpy
 
 1: "strcmp"
-5: "strcmp" is empty
+9: "strcmp" has pointer type input
 
 1: "test9"
+9: "test9" has pointer type input
+
 4: "test9" has unsupported operation: llvm.return
 
 1: "isdigit"
@@ -124,16 +132,20 @@
 4: "fake_ldexp_16" has unsupported operation: llvm.call
 
 1: "snprintf"
-5: "snprintf" is empty
+9: "snprintf" has pointer type input
 
 1: "fake_snprintf"
+9: "fake_snprintf" has pointer type input
+
 4: "fake_snprintf" has unsupported operation: llvm.call
 
 1: "strlen"
+9: "strlen" has pointer type input
+
 4: "strlen" has unsupported operation: llvm.call
 
 1: "__stpncpy_chk"
-5: "__stpncpy_chk" is empty
+9: "__stpncpy_chk" has pointer type input
 
 1: "emit_stpncpy"
 4: "emit_stpncpy" has unsupported operation: llvm.mlir.addressof
@@ -143,19 +155,21 @@
 4: "emit_stpncpy" has unsupported operation: llvm.call
 
 1: "simplify_memset_chk_pr112633"
+9: "simplify_memset_chk_pr112633" has pointer type input
+
 4: "simplify_memset_chk_pr112633" has unsupported operation: llvm.call
 
 4: "simplify_memset_chk_pr112633" has unsupported operation: llvm.return
 
 1: "__memset_chk"
-5: "__memset_chk" is empty
+9: "__memset_chk" has pointer type input
 
 1: "strcpy"
-5: "strcpy" is empty
+9: "strcpy" has pointer type input
 
 1: "ldexp"
 5: "ldexp" is empty
 
 1: "stpncpy"
-5: "stpncpy" is empty
+9: "stpncpy" has pointer type input
 

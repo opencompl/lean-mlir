@@ -224,6 +224,8 @@
 7: "lshr_sub" is unchanged by InstCombine
 
 1: "lshr_sub_nsw_extra_use"
+9: "lshr_sub_nsw_extra_use" has pointer type input
+
 4: "lshr_sub_nsw_extra_use" has unsupported operation: llvm.store
 
 1: "lshr_sub_nsw_splat"
@@ -254,6 +256,8 @@
 7: "ashr_sub" is unchanged by InstCombine
 
 1: "ashr_sub_nsw_extra_use"
+9: "ashr_sub_nsw_extra_use" has pointer type input
+
 4: "ashr_sub_nsw_extra_use" has unsupported operation: llvm.store
 
 1: "ashr_sub_nsw_splat"

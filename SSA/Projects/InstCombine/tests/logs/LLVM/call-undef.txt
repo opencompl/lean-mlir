@@ -2,13 +2,13 @@
 5: "c" is empty
 
 1: "d"
-5: "d" is empty
+9: "d" has pointer type input
 
 1: "e"
 5: "e" is empty
 
 1: "f"
-5: "f" is empty
+9: "f" has pointer type input
 
 1: "test1"
 4: "test1" has unsupported operation: llvm.mlir.undef

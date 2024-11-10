@@ -318,6 +318,8 @@
 8: "trunc_shl_nosplat_v2i32_v2i64" contains vectors which are unsupported
 
 1: "trunc_shl_31_i32_i64_multi_use"
+9: "trunc_shl_31_i32_i64_multi_use" has pointer type input
+
 4: "trunc_shl_31_i32_i64_multi_use" has unsupported operation: llvm.store
 
 4: "trunc_shl_31_i32_i64_multi_use" has unsupported operation: llvm.store

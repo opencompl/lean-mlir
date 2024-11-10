@@ -1,4 +1,6 @@
 1: "test"
+9: "test" has pointer type input
+
 4: "test" has unsupported operation: llvm.mlir.addressof
 
 4: "test" has unsupported operation: llvm.mlir.addressof
@@ -31,7 +33,7 @@
 4: "test2" has unsupported operation: builtin.unregistered: llvm.unreachable
 
 1: "func"
-5: "func" is empty
+9: "func" has pointer type input
 
 1: "get_cond"
 5: "get_cond" is empty

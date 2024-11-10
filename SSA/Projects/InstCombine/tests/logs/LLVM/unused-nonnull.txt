@@ -1,4 +1,6 @@
 1: "main"
+9: "main" has pointer type input
+
 4: "main" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
 4: "main" has unsupported operation: llvm.load
@@ -12,8 +14,8 @@
 4: "main" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "compute"
-7: "compute" is unchanged by InstCombine
+9: "compute" has pointer type input
 
 1: "call_if_null"
-5: "call_if_null" is empty
+9: "call_if_null" has pointer type input
 

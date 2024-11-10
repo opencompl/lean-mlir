@@ -135,6 +135,8 @@
 4: "fabs_uno" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "test17"
+9: "test17" has pointer type input
+
 4: "test17" has unsupported operation: llvm.call
 
 4: "test17" has unsupported operation: builtin.unregistered: llvm.fcmp
@@ -231,6 +233,8 @@
 4: "is_signbit_clear_3" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "is_signbit_set_extra_use"
+9: "is_signbit_set_extra_use" has pointer type input
+
 4: "is_signbit_set_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.copysign
 
 4: "is_signbit_set_extra_use" has unsupported operation: llvm.store
@@ -256,6 +260,8 @@
 8: "lossy_oeq" contains vectors which are unsupported
 
 1: "lossy_one"
+9: "lossy_one" has pointer type input
+
 4: "lossy_one" has unsupported operation: builtin.unregistered: llvm.fpext
 
 4: "lossy_one" has unsupported operation: llvm.store
@@ -276,6 +282,8 @@
 4: "lossy_ogt" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "lossy_oge"
+9: "lossy_oge" has pointer type input
+
 4: "lossy_oge" has unsupported operation: builtin.unregistered: llvm.fpext
 
 4: "lossy_oge" has unsupported operation: llvm.store
@@ -298,6 +306,8 @@
 4: "lossy_ugt" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "lossy_uge"
+9: "lossy_uge" has pointer type input
+
 4: "lossy_uge" has unsupported operation: builtin.unregistered: llvm.fpext
 
 4: "lossy_uge" has unsupported operation: llvm.store
@@ -330,6 +340,8 @@
 4: "fneg_oge" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "fneg_olt"
+9: "fneg_olt" has pointer type input
+
 4: "fneg_olt" has unsupported operation: builtin.unregistered: llvm.fneg
 
 4: "fneg_olt" has unsupported operation: llvm.store
@@ -355,6 +367,8 @@
 4: "fneg_ugt" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "fneg_uge"
+9: "fneg_uge" has pointer type input
+
 4: "fneg_uge" has unsupported operation: builtin.unregistered: llvm.fneg
 
 4: "fneg_uge" has unsupported operation: llvm.store
@@ -386,6 +400,8 @@
 4: "fneg_oge_swap" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "fneg_olt_swap"
+9: "fneg_olt_swap" has pointer type input
+
 4: "fneg_olt_swap" has unsupported operation: builtin.unregistered: llvm.fadd
 
 4: "fneg_olt_swap" has unsupported operation: builtin.unregistered: llvm.fneg
@@ -425,6 +441,8 @@
 4: "fneg_ugt_swap" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "fneg_uge_swap"
+9: "fneg_uge_swap" has pointer type input
+
 4: "fneg_uge_swap" has unsupported operation: builtin.unregistered: llvm.fadd
 
 4: "fneg_uge_swap" has unsupported operation: builtin.unregistered: llvm.fneg

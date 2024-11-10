@@ -30,3 +30,23 @@ theorem t1_otherbitwidth_thm (e : IntW 16) :
     all_goals sorry
 
 
+theorem n11_thm (e : IntW 8) :
+  ashr (shl e (const? 8 7)) (const? 8 6) ⊑ ashr (shl e (const? 8 7)) (const? 8 6) { «exact» := true } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+
+theorem n12_thm (e : IntW 8) :
+  ashr (shl e (const? 8 6)) (const? 8 6) ⊑ ashr (shl e (const? 8 6)) (const? 8 6) { «exact» := true } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+

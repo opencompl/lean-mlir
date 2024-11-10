@@ -1,5 +1,5 @@
 1: "puts"
-5: "puts" is empty
+9: "puts" has pointer type input
 
 1: "test_simplify1"
 4: "test_simplify1" has unsupported operation: llvm.call

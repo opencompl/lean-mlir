@@ -150,7 +150,7 @@
 2: llvm.return
 
 1: "pr64610"
-4: "pr64610" has unsupported operation after optimization: llvm.load
+9: "pr64610" has pointer type input
 
 1: "icmp_eq_x_invertable_y2_todo"
 2: llvm.func

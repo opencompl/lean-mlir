@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from xdsl.dialects.llvm import ReturnOp
+from xdsl.dialects.llvm import ReturnOp, LLVMPointerType
 from xdsl.utils.exceptions import ParseError
 from xdsl.dialects.llvm import FuncOp
 from xdsl.parser import Parser
@@ -169,6 +169,13 @@ def process_file(file):
             continue
 
         flag = False
+ 
+        for input_type in func.function_type.inputs:
+            if isinstance(input_type, LLVMPointerType):
+                log.append(f"{Msg.E_PTRARG.value}: {func_name} has pointer type input\n\n")
+                flag = True
+                break
+
         for op in func.walk():
             if not allowed(op):
                 flag = True
@@ -236,5 +243,5 @@ def process_file(file):
 
 if __name__ == "__main__":
     remove()
-    with Pool(32) as p:
+    with Pool(300) as p:
         p.map(process_file, os.listdir(directory))

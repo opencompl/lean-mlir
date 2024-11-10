@@ -1,7 +1,9 @@
 1: "sprintf"
-5: "sprintf" is empty
+9: "sprintf" has pointer type input
 
 1: "PR51200"
+9: "PR51200" has pointer type input
+
 4: "PR51200" has unsupported operation: llvm.call
 
 4: "PR51200" has unsupported operation: builtin.unregistered: llvm.ptrtoint
@@ -9,5 +11,5 @@
 4: "PR51200" has unsupported operation: builtin.unregistered: llvm.ptrtoint
 
 1: "stpcpy"
-5: "stpcpy" is empty
+9: "stpcpy" has pointer type input
 

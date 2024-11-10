@@ -2,18 +2,20 @@
 5: "foo" is empty
 
 1: "memcmp"
-5: "memcmp" is empty
+9: "memcmp" has pointer type input
 
 1: "printf"
-5: "printf" is empty
+9: "printf" has pointer type input
 
 1: "exp2"
 5: "exp2" is empty
 
 1: "__sprintf_chk"
-5: "__sprintf_chk" is empty
+9: "__sprintf_chk" has pointer type input
 
 1: "baz"
+9: "baz" has pointer type input
+
 4: "baz" has unsupported operation: llvm.call
 
 4: "baz" has unsupported operation: llvm.call
@@ -34,7 +36,7 @@
 4: "test_variadic" has unsupported operation: llvm.call
 
 1: "bcmp"
-5: "bcmp" is empty
+9: "bcmp" has pointer type input
 
 1: "putchar"
 5: "putchar" is empty
@@ -43,5 +45,5 @@
 5: "ldexp" is empty
 
 1: "sprintf"
-5: "sprintf" is empty
+9: "sprintf" has pointer type input
 

@@ -19,7 +19,7 @@ def ashr_lshr_exact_ashr_only_before := [llvm|
   %0 = llvm.mlir.constant(-1 : i32) : i32
   %1 = llvm.icmp "sgt" %arg133, %0 : i32
   %2 = llvm.lshr %arg133, %arg134 : i32
-  %3 = llvm.ashr %arg133, %arg134 : i32
+  %3 = llvm.ashr exact %arg133, %arg134 : i32
   %4 = "llvm.select"(%1, %2, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   "llvm.return"(%4) : (i32) -> ()
 }
@@ -76,8 +76,8 @@ def ashr_lshr_exact_both_before := [llvm|
 ^0(%arg129 : i32, %arg130 : i32):
   %0 = llvm.mlir.constant(-1 : i32) : i32
   %1 = llvm.icmp "sgt" %arg129, %0 : i32
-  %2 = llvm.lshr %arg129, %arg130 : i32
-  %3 = llvm.ashr %arg129, %arg130 : i32
+  %2 = llvm.lshr exact %arg129, %arg130 : i32
+  %3 = llvm.ashr exact %arg129, %arg130 : i32
   %4 = "llvm.select"(%1, %2, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   "llvm.return"(%4) : (i32) -> ()
 }
@@ -85,7 +85,7 @@ def ashr_lshr_exact_both_before := [llvm|
 def ashr_lshr_exact_both_after := [llvm|
 {
 ^0(%arg129 : i32, %arg130 : i32):
-  %0 = llvm.ashr %arg129, %arg130 : i32
+  %0 = llvm.ashr exact %arg129, %arg130 : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
@@ -105,7 +105,7 @@ def ashr_lshr_exact_lshr_only_before := [llvm|
 ^0(%arg127 : i32, %arg128 : i32):
   %0 = llvm.mlir.constant(-1 : i32) : i32
   %1 = llvm.icmp "sgt" %arg127, %0 : i32
-  %2 = llvm.lshr %arg127, %arg128 : i32
+  %2 = llvm.lshr exact %arg127, %arg128 : i32
   %3 = llvm.ashr %arg127, %arg128 : i32
   %4 = "llvm.select"(%1, %2, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   "llvm.return"(%4) : (i32) -> ()
@@ -135,7 +135,7 @@ def ashr_lshr2_before := [llvm|
   %0 = llvm.mlir.constant(5 : i32) : i32
   %1 = llvm.icmp "sgt" %arg125, %0 : i32
   %2 = llvm.lshr %arg125, %arg126 : i32
-  %3 = llvm.ashr %arg125, %arg126 : i32
+  %3 = llvm.ashr exact %arg125, %arg126 : i32
   %4 = "llvm.select"(%1, %2, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   "llvm.return"(%4) : (i32) -> ()
 }
@@ -164,7 +164,7 @@ def ashr_lshr2_i128_before := [llvm|
   %0 = llvm.mlir.constant(5 : i128) : i128
   %1 = llvm.icmp "sgt" %arg123, %0 : i128
   %2 = llvm.lshr %arg123, %arg124 : i128
-  %3 = llvm.ashr %arg123, %arg124 : i128
+  %3 = llvm.ashr exact %arg123, %arg124 : i128
   %4 = "llvm.select"(%1, %2, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i128, i128) -> i128
   "llvm.return"(%4) : (i128) -> ()
 }
@@ -194,7 +194,7 @@ def ashr_lshr_cst_before := [llvm|
   %1 = llvm.mlir.constant(8 : i32) : i32
   %2 = llvm.icmp "slt" %arg105, %0 : i32
   %3 = llvm.lshr %arg105, %1 : i32
-  %4 = llvm.ashr %arg105, %1 : i32
+  %4 = llvm.ashr exact %arg105, %1 : i32
   %5 = "llvm.select"(%2, %4, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   "llvm.return"(%5) : (i32) -> ()
 }
@@ -225,7 +225,7 @@ def ashr_lshr_cst2_before := [llvm|
   %1 = llvm.mlir.constant(8 : i32) : i32
   %2 = llvm.icmp "sgt" %arg103, %0 : i32
   %3 = llvm.lshr %arg103, %1 : i32
-  %4 = llvm.ashr %arg103, %1 : i32
+  %4 = llvm.ashr exact %arg103, %1 : i32
   %5 = "llvm.select"(%2, %3, %4) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   "llvm.return"(%5) : (i32) -> ()
 }
@@ -255,7 +255,7 @@ def ashr_lshr_inv_before := [llvm|
   %0 = llvm.mlir.constant(1 : i32) : i32
   %1 = llvm.icmp "slt" %arg101, %0 : i32
   %2 = llvm.lshr %arg101, %arg102 : i32
-  %3 = llvm.ashr %arg101, %arg102 : i32
+  %3 = llvm.ashr exact %arg101, %arg102 : i32
   %4 = "llvm.select"(%1, %3, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   "llvm.return"(%4) : (i32) -> ()
 }
@@ -284,7 +284,7 @@ def ashr_lshr_inv2_before := [llvm|
   %0 = llvm.mlir.constant(7 : i32) : i32
   %1 = llvm.icmp "slt" %arg99, %0 : i32
   %2 = llvm.lshr %arg99, %arg100 : i32
-  %3 = llvm.ashr %arg99, %arg100 : i32
+  %3 = llvm.ashr exact %arg99, %arg100 : i32
   %4 = "llvm.select"(%1, %3, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   "llvm.return"(%4) : (i32) -> ()
 }
@@ -632,7 +632,7 @@ def ashr_known_pos_exact_before := [llvm|
 ^0(%arg35 : i8, %arg36 : i8):
   %0 = llvm.mlir.constant(127 : i8) : i8
   %1 = llvm.and %arg35, %0 : i8
-  %2 = llvm.ashr %1, %arg36 : i8
+  %2 = llvm.ashr exact %1, %arg36 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
@@ -641,7 +641,7 @@ def ashr_known_pos_exact_after := [llvm|
 ^0(%arg35 : i8, %arg36 : i8):
   %0 = llvm.mlir.constant(127 : i8) : i8
   %1 = llvm.and %arg35, %0 : i8
-  %2 = llvm.lshr %1, %arg36 : i8
+  %2 = llvm.lshr exact %1, %arg36 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
@@ -692,7 +692,7 @@ def lshr_mul_times_3_div_2_exact_before := [llvm|
   %0 = llvm.mlir.constant(3 : i32) : i32
   %1 = llvm.mlir.constant(1 : i32) : i32
   %2 = llvm.mul %arg31, %0 overflow<nsw> : i32
-  %3 = llvm.lshr %2, %1 : i32
+  %3 = llvm.lshr exact %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
@@ -700,7 +700,7 @@ def lshr_mul_times_3_div_2_exact_after := [llvm|
 {
 ^0(%arg31 : i32):
   %0 = llvm.mlir.constant(1 : i32) : i32
-  %1 = llvm.lshr %arg31, %0 : i32
+  %1 = llvm.lshr exact %arg31, %0 : i32
   %2 = llvm.add %arg31, %1 overflow<nsw> : i32
   "llvm.return"(%2) : (i32) -> ()
 }
@@ -722,7 +722,7 @@ def lshr_mul_times_3_div_2_exact_2_before := [llvm|
   %0 = llvm.mlir.constant(3 : i32) : i32
   %1 = llvm.mlir.constant(1 : i32) : i32
   %2 = llvm.mul %arg28, %0 overflow<nuw> : i32
-  %3 = llvm.lshr %2, %1 : i32
+  %3 = llvm.lshr exact %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
@@ -730,7 +730,7 @@ def lshr_mul_times_3_div_2_exact_2_after := [llvm|
 {
 ^0(%arg28 : i32):
   %0 = llvm.mlir.constant(1 : i32) : i32
-  %1 = llvm.lshr %arg28, %0 : i32
+  %1 = llvm.lshr exact %arg28, %0 : i32
   %2 = llvm.add %arg28, %1 overflow<nuw> : i32
   "llvm.return"(%2) : (i32) -> ()
 }
@@ -782,7 +782,7 @@ def lshr_mul_times_5_div_4_exact_before := [llvm|
   %0 = llvm.mlir.constant(5 : i32) : i32
   %1 = llvm.mlir.constant(2 : i32) : i32
   %2 = llvm.mul %arg26, %0 overflow<nsw> : i32
-  %3 = llvm.lshr %2, %1 : i32
+  %3 = llvm.lshr exact %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
@@ -790,7 +790,7 @@ def lshr_mul_times_5_div_4_exact_after := [llvm|
 {
 ^0(%arg26 : i32):
   %0 = llvm.mlir.constant(2 : i32) : i32
-  %1 = llvm.lshr %arg26, %0 : i32
+  %1 = llvm.lshr exact %arg26, %0 : i32
   %2 = llvm.add %arg26, %1 overflow<nsw> : i32
   "llvm.return"(%2) : (i32) -> ()
 }
@@ -812,7 +812,7 @@ def lshr_mul_times_5_div_4_exact_2_before := [llvm|
   %0 = llvm.mlir.constant(5 : i32) : i32
   %1 = llvm.mlir.constant(2 : i32) : i32
   %2 = llvm.mul %arg23, %0 overflow<nuw> : i32
-  %3 = llvm.lshr %2, %1 : i32
+  %3 = llvm.lshr exact %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
@@ -820,7 +820,7 @@ def lshr_mul_times_5_div_4_exact_2_after := [llvm|
 {
 ^0(%arg23 : i32):
   %0 = llvm.mlir.constant(2 : i32) : i32
-  %1 = llvm.lshr %arg23, %0 : i32
+  %1 = llvm.lshr exact %arg23, %0 : i32
   %2 = llvm.add %arg23, %1 overflow<nuw> : i32
   "llvm.return"(%2) : (i32) -> ()
 }
@@ -872,7 +872,7 @@ def ashr_mul_times_3_div_2_exact_before := [llvm|
   %0 = llvm.mlir.constant(3 : i32) : i32
   %1 = llvm.mlir.constant(1 : i32) : i32
   %2 = llvm.mul %arg21, %0 overflow<nsw> : i32
-  %3 = llvm.ashr %2, %1 : i32
+  %3 = llvm.ashr exact %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
@@ -880,7 +880,7 @@ def ashr_mul_times_3_div_2_exact_after := [llvm|
 {
 ^0(%arg21 : i32):
   %0 = llvm.mlir.constant(1 : i32) : i32
-  %1 = llvm.ashr %arg21, %0 : i32
+  %1 = llvm.ashr exact %arg21, %0 : i32
   %2 = llvm.add %arg21, %1 overflow<nsw> : i32
   "llvm.return"(%2) : (i32) -> ()
 }
@@ -902,7 +902,7 @@ def ashr_mul_times_3_div_2_exact_2_before := [llvm|
   %0 = llvm.mlir.constant(3 : i32) : i32
   %1 = llvm.mlir.constant(1 : i32) : i32
   %2 = llvm.mul %arg17, %0 overflow<nsw> : i32
-  %3 = llvm.ashr %2, %1 : i32
+  %3 = llvm.ashr exact %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
@@ -910,7 +910,7 @@ def ashr_mul_times_3_div_2_exact_2_after := [llvm|
 {
 ^0(%arg17 : i32):
   %0 = llvm.mlir.constant(1 : i32) : i32
-  %1 = llvm.ashr %arg17, %0 : i32
+  %1 = llvm.ashr exact %arg17, %0 : i32
   %2 = llvm.add %arg17, %1 overflow<nsw> : i32
   "llvm.return"(%2) : (i32) -> ()
 }
@@ -962,7 +962,7 @@ def ashr_mul_times_5_div_4_exact_before := [llvm|
   %0 = llvm.mlir.constant(5 : i32) : i32
   %1 = llvm.mlir.constant(2 : i32) : i32
   %2 = llvm.mul %arg15, %0 overflow<nsw> : i32
-  %3 = llvm.ashr %2, %1 : i32
+  %3 = llvm.ashr exact %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
@@ -970,7 +970,7 @@ def ashr_mul_times_5_div_4_exact_after := [llvm|
 {
 ^0(%arg15 : i32):
   %0 = llvm.mlir.constant(2 : i32) : i32
-  %1 = llvm.ashr %arg15, %0 : i32
+  %1 = llvm.ashr exact %arg15, %0 : i32
   %2 = llvm.add %arg15, %1 overflow<nsw> : i32
   "llvm.return"(%2) : (i32) -> ()
 }
@@ -992,7 +992,7 @@ def ashr_mul_times_5_div_4_exact_2_before := [llvm|
   %0 = llvm.mlir.constant(5 : i32) : i32
   %1 = llvm.mlir.constant(2 : i32) : i32
   %2 = llvm.mul %arg12, %0 overflow<nsw> : i32
-  %3 = llvm.ashr %2, %1 : i32
+  %3 = llvm.ashr exact %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
@@ -1000,7 +1000,7 @@ def ashr_mul_times_5_div_4_exact_2_after := [llvm|
 {
 ^0(%arg12 : i32):
   %0 = llvm.mlir.constant(2 : i32) : i32
-  %1 = llvm.ashr %arg12, %0 : i32
+  %1 = llvm.ashr exact %arg12, %0 : i32
   %2 = llvm.add %arg12, %1 overflow<nsw> : i32
   "llvm.return"(%2) : (i32) -> ()
 }

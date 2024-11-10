@@ -25,6 +25,8 @@
 4: "n2" has unsupported operation: llvm.call
 
 1: "t3"
+9: "t3" has pointer type input
+
 4: "t3" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "t3" has unsupported operation: llvm.store
@@ -32,6 +34,8 @@
 4: "t3" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "t4"
+9: "t4" has pointer type input
+
 4: "t4" has unsupported operation: llvm.store
 
 1: "n5"

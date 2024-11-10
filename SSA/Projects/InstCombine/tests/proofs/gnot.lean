@@ -5,8 +5,6 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 open LLVM
 open BitVec
 
-#exit
-
 open MLIR AST
 open Ctxt (Var)
 
@@ -36,7 +34,7 @@ theorem test1_proof : test1_before ⊑ test1_after := by
   simp_alive_peephole
   intros
   ---BEGIN test1
-  all_goals (try extract_goal ; sorry)
+  apply test1_thm
   ---END test1
 
 
@@ -63,7 +61,7 @@ theorem invert_icmp_proof : invert_icmp_before ⊑ invert_icmp_after := by
   simp_alive_peephole
   intros
   ---BEGIN invert_icmp
-  all_goals (try extract_goal ; sorry)
+  apply invert_icmp_thm
   ---END invert_icmp
 
 
@@ -91,7 +89,7 @@ theorem not_not_cmp_proof : not_not_cmp_before ⊑ not_not_cmp_after := by
   simp_alive_peephole
   intros
   ---BEGIN not_not_cmp
-  all_goals (try extract_goal ; sorry)
+  apply not_not_cmp_thm
   ---END not_not_cmp
 
 
@@ -120,7 +118,7 @@ theorem not_cmp_constant_proof : not_cmp_constant_before ⊑ not_cmp_constant_af
   simp_alive_peephole
   intros
   ---BEGIN not_cmp_constant
-  all_goals (try extract_goal ; sorry)
+  apply not_cmp_constant_thm
   ---END not_cmp_constant
 
 
@@ -148,7 +146,7 @@ theorem not_ashr_not_proof : not_ashr_not_before ⊑ not_ashr_not_after := by
   simp_alive_peephole
   intros
   ---BEGIN not_ashr_not
-  all_goals (try extract_goal ; sorry)
+  apply not_ashr_not_thm
   ---END not_ashr_not
 
 
@@ -177,7 +175,7 @@ theorem not_ashr_const_proof : not_ashr_const_before ⊑ not_ashr_const_after :=
   simp_alive_peephole
   intros
   ---BEGIN not_ashr_const
-  all_goals (try extract_goal ; sorry)
+  apply not_ashr_const_thm
   ---END not_ashr_const
 
 
@@ -206,7 +204,7 @@ theorem not_lshr_const_proof : not_lshr_const_before ⊑ not_lshr_const_after :=
   simp_alive_peephole
   intros
   ---BEGIN not_lshr_const
-  all_goals (try extract_goal ; sorry)
+  apply not_lshr_const_thm
   ---END not_lshr_const
 
 
@@ -235,7 +233,7 @@ theorem not_sub_proof : not_sub_before ⊑ not_sub_after := by
   simp_alive_peephole
   intros
   ---BEGIN not_sub
-  all_goals (try extract_goal ; sorry)
+  apply not_sub_thm
   ---END not_sub
 
 
@@ -264,7 +262,7 @@ theorem not_add_proof : not_add_before ⊑ not_add_after := by
   simp_alive_peephole
   intros
   ---BEGIN not_add
-  all_goals (try extract_goal ; sorry)
+  apply not_add_thm
   ---END not_add
 
 
@@ -296,7 +294,7 @@ theorem not_or_neg_proof : not_or_neg_before ⊑ not_or_neg_after := by
   simp_alive_peephole
   intros
   ---BEGIN not_or_neg
-  all_goals (try extract_goal ; sorry)
+  apply not_or_neg_thm
   ---END not_or_neg
 
 
@@ -326,7 +324,7 @@ theorem not_select_bool_const1_proof : not_select_bool_const1_before ⊑ not_sel
   simp_alive_peephole
   intros
   ---BEGIN not_select_bool_const1
-  all_goals (try extract_goal ; sorry)
+  apply not_select_bool_const1_thm
   ---END not_select_bool_const1
 
 
@@ -356,7 +354,7 @@ theorem not_select_bool_const4_proof : not_select_bool_const4_before ⊑ not_sel
   simp_alive_peephole
   intros
   ---BEGIN not_select_bool_const4
-  all_goals (try extract_goal ; sorry)
+  apply not_select_bool_const4_thm
   ---END not_select_bool_const4
 
 
@@ -387,7 +385,7 @@ theorem not_logicalAnd_not_op1_proof : not_logicalAnd_not_op1_before ⊑ not_log
   simp_alive_peephole
   intros
   ---BEGIN not_logicalAnd_not_op1
-  all_goals (try extract_goal ; sorry)
+  apply not_logicalAnd_not_op1_thm
   ---END not_logicalAnd_not_op1
 
 
@@ -418,7 +416,7 @@ theorem not_logicalOr_not_op1_proof : not_logicalOr_not_op1_before ⊑ not_logic
   simp_alive_peephole
   intros
   ---BEGIN not_logicalOr_not_op1
-  all_goals (try extract_goal ; sorry)
+  apply not_logicalOr_not_op1_thm
   ---END not_logicalOr_not_op1
 
 
@@ -449,7 +447,7 @@ theorem invert_both_cmp_operands_add_proof : invert_both_cmp_operands_add_before
   simp_alive_peephole
   intros
   ---BEGIN invert_both_cmp_operands_add
-  all_goals (try extract_goal ; sorry)
+  apply invert_both_cmp_operands_add_thm
   ---END invert_both_cmp_operands_add
 
 
@@ -480,7 +478,7 @@ theorem invert_both_cmp_operands_sub_proof : invert_both_cmp_operands_sub_before
   simp_alive_peephole
   intros
   ---BEGIN invert_both_cmp_operands_sub
-  all_goals (try extract_goal ; sorry)
+  apply invert_both_cmp_operands_sub_thm
   ---END invert_both_cmp_operands_sub
 
 
@@ -513,7 +511,7 @@ theorem invert_both_cmp_operands_complex_proof : invert_both_cmp_operands_comple
   simp_alive_peephole
   intros
   ---BEGIN invert_both_cmp_operands_complex
-  all_goals (try extract_goal ; sorry)
+  apply invert_both_cmp_operands_complex_thm
   ---END invert_both_cmp_operands_complex
 
 
@@ -546,7 +544,7 @@ theorem test_sext_proof : test_sext_before ⊑ test_sext_after := by
   simp_alive_peephole
   intros
   ---BEGIN test_sext
-  all_goals (try extract_goal ; sorry)
+  apply test_sext_thm
   ---END test_sext
 
 
@@ -581,7 +579,7 @@ theorem test_zext_nneg_proof : test_zext_nneg_before ⊑ test_zext_nneg_after :=
   simp_alive_peephole
   intros
   ---BEGIN test_zext_nneg
-  all_goals (try extract_goal ; sorry)
+  apply test_zext_nneg_thm
   ---END test_zext_nneg
 
 
@@ -615,7 +613,7 @@ theorem test_trunc_proof : test_trunc_before ⊑ test_trunc_after := by
   simp_alive_peephole
   intros
   ---BEGIN test_trunc
-  all_goals (try extract_goal ; sorry)
+  apply test_trunc_thm
   ---END test_trunc
 
 
@@ -654,7 +652,7 @@ theorem test_invert_demorgan_or2_proof : test_invert_demorgan_or2_before ⊑ tes
   simp_alive_peephole
   intros
   ---BEGIN test_invert_demorgan_or2
-  all_goals (try extract_goal ; sorry)
+  apply test_invert_demorgan_or2_thm
   ---END test_invert_demorgan_or2
 
 
@@ -713,7 +711,7 @@ theorem test_invert_demorgan_or3_proof : test_invert_demorgan_or3_before ⊑ tes
   simp_alive_peephole
   intros
   ---BEGIN test_invert_demorgan_or3
-  all_goals (try extract_goal ; sorry)
+  apply test_invert_demorgan_or3_thm
   ---END test_invert_demorgan_or3
 
 
@@ -753,7 +751,7 @@ theorem test_invert_demorgan_logical_or_proof : test_invert_demorgan_logical_or_
   simp_alive_peephole
   intros
   ---BEGIN test_invert_demorgan_logical_or
-  all_goals (try extract_goal ; sorry)
+  apply test_invert_demorgan_logical_or_thm
   ---END test_invert_demorgan_logical_or
 
 
@@ -785,7 +783,7 @@ theorem test_invert_demorgan_and2_proof : test_invert_demorgan_and2_before ⊑ t
   simp_alive_peephole
   intros
   ---BEGIN test_invert_demorgan_and2
-  all_goals (try extract_goal ; sorry)
+  apply test_invert_demorgan_and2_thm
   ---END test_invert_demorgan_and2
 
 
@@ -819,7 +817,7 @@ theorem test_invert_demorgan_and3_proof : test_invert_demorgan_and3_before ⊑ t
   simp_alive_peephole
   intros
   ---BEGIN test_invert_demorgan_and3
-  all_goals (try extract_goal ; sorry)
+  apply test_invert_demorgan_and3_thm
   ---END test_invert_demorgan_and3
 
 
@@ -860,5 +858,7 @@ theorem test_invert_demorgan_logical_and_proof : test_invert_demorgan_logical_an
   simp_alive_peephole
   intros
   ---BEGIN test_invert_demorgan_logical_and
-  all_goals (try extract_goal ; sorry)
+  apply test_invert_demorgan_logical_and_thm
   ---END test_invert_demorgan_logical_and
+
+

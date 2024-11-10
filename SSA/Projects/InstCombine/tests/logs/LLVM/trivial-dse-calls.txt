@@ -2,13 +2,13 @@
 5: "unknown" is empty
 
 1: "f"
-5: "f" is empty
+9: "f" has pointer type input
 
 1: "f2"
-5: "f2" is empty
+9: "f2" has pointer type input
 
 1: "f3"
-5: "f3" is empty
+9: "f3" has pointer type input
 
 1: "test_dead"
 4: "test_dead" has unsupported operation: llvm.return

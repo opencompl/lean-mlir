@@ -2,6 +2,8 @@
 5: "use" is empty
 
 1: "test"
+9: "test" has pointer type input
+
 4: "test" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 4: "test" has unsupported operation: builtin.unregistered: llvm.extractelement
@@ -102,6 +104,8 @@
 4: "shuf_bitcast_insert" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 1: "shuf_bitcast_inserti_use1"
+9: "shuf_bitcast_inserti_use1" has pointer type input
+
 4: "shuf_bitcast_inserti_use1" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 4: "shuf_bitcast_inserti_use1" has unsupported operation: llvm.store
@@ -109,6 +113,8 @@
 4: "shuf_bitcast_inserti_use1" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 1: "shuf_bitcast_insert_use2"
+9: "shuf_bitcast_insert_use2" has pointer type input
+
 4: "shuf_bitcast_insert_use2" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 4: "shuf_bitcast_insert_use2" has unsupported operation: llvm.store

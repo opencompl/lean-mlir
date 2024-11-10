@@ -1,5 +1,5 @@
 1: "memrchr"
-5: "memrchr" is empty
+9: "memrchr" has pointer type input
 
 1: "call_memrchr_ap5_c_1_eq_a"
 4: "call_memrchr_ap5_c_1_eq_a" has unsupported operation: builtin.unregistered: llvm.mlir.poison

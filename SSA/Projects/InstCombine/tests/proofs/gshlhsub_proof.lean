@@ -8,7 +8,8 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 
 section gshlhsub_proof
-theorem shl_sub_i32_thm (e : IntW 32) : shl (const? 32 1) (sub (const? 32 31) e) ⊑ lshr (const? 32 (-2147483648)) e := by 
+theorem shl_sub_i32_thm (e : IntW 32) :
+  shl (const? 32 1) (sub (const? 32 31) e) ⊑ lshr (const? 32 (-2147483648)) e { «exact» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -17,7 +18,8 @@ theorem shl_sub_i32_thm (e : IntW 32) : shl (const? 32 1) (sub (const? 32 31) e)
     all_goals sorry
 
 
-theorem shl_sub_i8_thm (e : IntW 8) : shl (const? 8 1) (sub (const? 8 7) e) ⊑ lshr (const? 8 (-128)) e := by 
+theorem shl_sub_i8_thm (e : IntW 8) :
+  shl (const? 8 1) (sub (const? 8 7) e) ⊑ lshr (const? 8 (-128)) e { «exact» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -27,7 +29,7 @@ theorem shl_sub_i8_thm (e : IntW 8) : shl (const? 8 1) (sub (const? 8 7) e) ⊑ 
 
 
 theorem shl_sub_i64_thm (e : IntW 64) :
-  shl (const? 64 1) (sub (const? 64 63) e) ⊑ lshr (const? 64 (-9223372036854775808)) e := by 
+  shl (const? 64 1) (sub (const? 64 63) e) ⊑ lshr (const? 64 (-9223372036854775808)) e { «exact» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

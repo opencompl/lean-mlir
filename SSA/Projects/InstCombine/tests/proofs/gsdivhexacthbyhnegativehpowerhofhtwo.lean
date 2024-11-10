@@ -17,7 +17,7 @@ def t0_before := [llvm|
 {
 ^0(%arg15 : i8):
   %0 = llvm.mlir.constant(-32 : i8) : i8
-  %1 = llvm.sdiv %arg15, %0 : i8
+  %1 = llvm.sdiv exact %arg15, %0 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
@@ -26,7 +26,7 @@ def t0_after := [llvm|
 ^0(%arg15 : i8):
   %0 = llvm.mlir.constant(5 : i8) : i8
   %1 = llvm.mlir.constant(0 : i8) : i8
-  %2 = llvm.ashr %arg15, %0 : i8
+  %2 = llvm.ashr exact %arg15, %0 : i8
   %3 = llvm.sub %1, %2 overflow<nsw> : i8
   "llvm.return"(%3) : (i8) -> ()
 }

@@ -80,6 +80,8 @@
 4: "rotl_safe_i32" has unsupported operation: builtin.unregistered: llvm.intr.fshl
 
 1: "rotl_safe_i16_commute_extra_use"
+9: "rotl_safe_i16_commute_extra_use" has pointer type input
+
 4: "rotl_safe_i16_commute_extra_use" has unsupported operation: llvm.store
 
 4: "rotl_safe_i16_commute_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.fshl
@@ -88,6 +90,8 @@
 4: "rotr_safe_i64" has unsupported operation: builtin.unregistered: llvm.intr.fshr
 
 1: "rotr_safe_i8_commute_extra_use"
+9: "rotr_safe_i8_commute_extra_use" has pointer type input
+
 4: "rotr_safe_i8_commute_extra_use" has unsupported operation: llvm.store
 
 1: "rotl_safe_v2i32"

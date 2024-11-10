@@ -19,7 +19,8 @@ theorem t0_thm (e : IntW 64) :
 
 
 theorem t1_exact_thm (e : IntW 64) :
-  sub (const? 32 0) (trunc 32 (lshr e (const? 64 63))) ⊑ trunc 32 (ashr e (const? 64 63)) := by 
+  sub (const? 32 0) (trunc 32 (lshr e (const? 64 63) { «exact» := true })) ⊑
+    trunc 32 (ashr e (const? 64 63) { «exact» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -39,7 +40,8 @@ theorem t2_thm (e : IntW 64) :
 
 
 theorem t3_exact_thm (e : IntW 64) :
-  sub (const? 32 0) (trunc 32 (ashr e (const? 64 63))) ⊑ trunc 32 (lshr e (const? 64 63)) := by 
+  sub (const? 32 0) (trunc 32 (ashr e (const? 64 63) { «exact» := true })) ⊑
+    trunc 32 (lshr e (const? 64 63) { «exact» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

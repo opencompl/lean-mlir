@@ -342,6 +342,8 @@
 4: "test_class_not_is_nan" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 1: "test_class_not_is_nan_multi_use"
+9: "test_class_not_is_nan_multi_use" has pointer type input
+
 4: "test_class_not_is_nan_multi_use" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "test_class_not_is_nan_multi_use" has unsupported operation: llvm.store
@@ -394,6 +396,8 @@
 4: "test_fold_or_class_f32_1" has unsupported operation: builtin.unregistered: llvm.intr.is.fpclass
 
 1: "test_no_fold_or_class_f32_multi_use0"
+9: "test_no_fold_or_class_f32_multi_use0" has pointer type input
+
 4: "test_no_fold_or_class_f32_multi_use0" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "test_no_fold_or_class_f32_multi_use0" has unsupported operation: llvm.store
@@ -401,6 +405,8 @@
 4: "test_no_fold_or_class_f32_multi_use0" has unsupported operation: builtin.unregistered: llvm.intr.is.fpclass
 
 1: "test_no_fold_or_class_f32_multi_use1"
+9: "test_no_fold_or_class_f32_multi_use1" has pointer type input
+
 4: "test_no_fold_or_class_f32_multi_use1" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "test_no_fold_or_class_f32_multi_use1" has unsupported operation: builtin.unregistered: llvm.intr.is.fpclass
@@ -472,6 +478,8 @@
 4: "test_fold_and_class_f32_1" has unsupported operation after optimization: builtin.unregistered: llvm.intr.is.fpclass
 
 1: "test_no_fold_and_class_f32_multi_use0"
+9: "test_no_fold_and_class_f32_multi_use0" has pointer type input
+
 4: "test_no_fold_and_class_f32_multi_use0" has unsupported operation: builtin.unregistered: llvm.intr.is.fpclass
 
 4: "test_no_fold_and_class_f32_multi_use0" has unsupported operation: llvm.store
@@ -479,6 +487,8 @@
 4: "test_no_fold_and_class_f32_multi_use0" has unsupported operation: builtin.unregistered: llvm.intr.is.fpclass
 
 1: "test_no_fold_and_class_f32_multi_use1"
+9: "test_no_fold_and_class_f32_multi_use1" has pointer type input
+
 4: "test_no_fold_and_class_f32_multi_use1" has unsupported operation: builtin.unregistered: llvm.intr.is.fpclass
 
 4: "test_no_fold_and_class_f32_multi_use1" has unsupported operation: builtin.unregistered: llvm.intr.is.fpclass
@@ -533,6 +543,8 @@
 4: "test_fold_xor_class_f32_1" has unsupported operation: builtin.unregistered: llvm.intr.is.fpclass
 
 1: "test_no_fold_xor_class_f32_multi_use0"
+9: "test_no_fold_xor_class_f32_multi_use0" has pointer type input
+
 4: "test_no_fold_xor_class_f32_multi_use0" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "test_no_fold_xor_class_f32_multi_use0" has unsupported operation: llvm.store
@@ -540,6 +552,8 @@
 4: "test_no_fold_xor_class_f32_multi_use0" has unsupported operation: builtin.unregistered: llvm.intr.is.fpclass
 
 1: "test_no_fold_xor_class_f32_multi_use1"
+9: "test_no_fold_xor_class_f32_multi_use1" has pointer type input
+
 4: "test_no_fold_xor_class_f32_multi_use1" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "test_no_fold_xor_class_f32_multi_use1" has unsupported operation: builtin.unregistered: llvm.intr.is.fpclass
@@ -648,6 +662,8 @@
 4: "test_class_fneg_posinf_negnormal_possubnormal_negzero_snan_strictfp" has unsupported operation: builtin.unregistered: llvm.intr.is.fpclass
 
 1: "test_class_fneg_multiple_use_fneg"
+9: "test_class_fneg_multiple_use_fneg" has pointer type input
+
 4: "test_class_fneg_multiple_use_fneg" has unsupported operation: builtin.unregistered: llvm.fneg
 
 4: "test_class_fneg_multiple_use_fneg" has unsupported operation: llvm.store
@@ -756,6 +772,8 @@
 4: "test_class_fabs_posinf_negnormal_possubnormal_negzero_snan_strictfp" has unsupported operation: builtin.unregistered: llvm.intr.is.fpclass
 
 1: "test_class_fabs_multiple_use_fabs"
+9: "test_class_fabs_multiple_use_fabs" has pointer type input
+
 4: "test_class_fabs_multiple_use_fabs" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
 4: "test_class_fabs_multiple_use_fabs" has unsupported operation: llvm.store
@@ -876,6 +894,8 @@
 4: "test_class_fneg_fabs_posinf_negnormal_possubnormal_negzero_snan_strictfp" has unsupported operation: builtin.unregistered: llvm.intr.is.fpclass
 
 1: "test_class_fneg_fabs_multiple_use_fabs"
+9: "test_class_fneg_fabs_multiple_use_fabs" has pointer type input
+
 4: "test_class_fneg_fabs_multiple_use_fabs" has unsupported operation: builtin.unregistered: llvm.intr.fabs
 
 4: "test_class_fneg_fabs_multiple_use_fabs" has unsupported operation: builtin.unregistered: llvm.fneg

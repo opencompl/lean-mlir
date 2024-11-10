@@ -14,64 +14,64 @@
 5: "floor" is empty
 
 1: "strcat"
-5: "strcat" is empty
+9: "strcat" has pointer type input
 
 1: "strncat"
-5: "strncat" is empty
+9: "strncat" has pointer type input
 
 1: "strchr"
-5: "strchr" is empty
+9: "strchr" has pointer type input
 
 1: "strrchr"
-5: "strrchr" is empty
+9: "strrchr" has pointer type input
 
 1: "strcmp"
-5: "strcmp" is empty
+9: "strcmp" has pointer type input
 
 1: "strncmp"
-5: "strncmp" is empty
+9: "strncmp" has pointer type input
 
 1: "strcpy"
-5: "strcpy" is empty
+9: "strcpy" has pointer type input
 
 1: "stpcpy"
-5: "stpcpy" is empty
+9: "stpcpy" has pointer type input
 
 1: "strncpy"
-5: "strncpy" is empty
+9: "strncpy" has pointer type input
 
 1: "strlen"
-5: "strlen" is empty
+9: "strlen" has pointer type input
 
 1: "strpbrk"
-5: "strpbrk" is empty
+9: "strpbrk" has pointer type input
 
 1: "strspn"
-5: "strspn" is empty
+9: "strspn" has pointer type input
 
 1: "strtod"
-5: "strtod" is empty
+9: "strtod" has pointer type input
 
 1: "strtof"
-5: "strtof" is empty
+9: "strtof" has pointer type input
 
 1: "strtold"
-5: "strtold" is empty
+9: "strtold" has pointer type input
 
 1: "strtol"
-5: "strtol" is empty
+9: "strtol" has pointer type input
 
 1: "strtoll"
-5: "strtoll" is empty
+9: "strtoll" has pointer type input
 
 1: "strtoul"
-5: "strtoul" is empty
+9: "strtoul" has pointer type input
 
 1: "strtoull"
-5: "strtoull" is empty
+9: "strtoull" has pointer type input
 
 1: "strcspn"
-5: "strcspn" is empty
+9: "strcspn" has pointer type input
 
 1: "abs"
 5: "abs" is empty
@@ -86,7 +86,7 @@
 5: "ffsll" is empty
 
 1: "fprintf"
-5: "fprintf" is empty
+9: "fprintf" has pointer type input
 
 1: "isascii"
 5: "isascii" is empty
@@ -104,10 +104,10 @@
 5: "llabs" is empty
 
 1: "printf"
-5: "printf" is empty
+9: "printf" has pointer type input
 
 1: "sprintf"
-5: "sprintf" is empty
+9: "sprintf" has pointer type input
 
 1: "t1"
 4: "t1" has unsupported operation: builtin.unregistered: llvm.intr.ceil
@@ -125,11 +125,11 @@
 4: "t5" has unsupported operation: builtin.unregistered: llvm.intr.floor
 
 1: "t6"
-4: "t6" has unsupported operation after optimization: llvm.mlir.addressof
-
-4: "t6" has unsupported operation after optimization: llvm.call
+9: "t6" has pointer type input
 
 1: "t7"
+9: "t7" has pointer type input
+
 4: "t7" has unsupported operation: llvm.mlir.addressof
 
 4: "t7" has unsupported operation: llvm.call
@@ -159,14 +159,20 @@
 4: "t11" has unsupported operation after optimization: llvm.call
 
 1: "t12"
+9: "t12" has pointer type input
+
 4: "t12" has unsupported operation: llvm.store
 
 1: "t13"
+9: "t13" has pointer type input
+
 4: "t13" has unsupported operation: llvm.getelementptr
 
 4: "t13" has unsupported operation: llvm.store
 
 1: "t14"
+9: "t14" has pointer type input
+
 4: "t14" has unsupported operation: llvm.mlir.addressof
 
 4: "t14" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
@@ -177,52 +183,64 @@
 4: "t15" has unsupported operation after optimization: llvm.call
 
 1: "t16"
+9: "t16" has pointer type input
+
 4: "t16" has unsupported operation: llvm.mlir.zero
 
 1: "t17"
-4: "t17" has unsupported operation after optimization: llvm.mlir.addressof
-
-4: "t17" has unsupported operation after optimization: llvm.call
+9: "t17" has pointer type input
 
 1: "t18"
+9: "t18" has pointer type input
+
 4: "t18" has unsupported operation: llvm.mlir.addressof
 
 4: "t18" has unsupported operation: llvm.call
 
 1: "t19"
+9: "t19" has pointer type input
+
 4: "t19" has unsupported operation: llvm.mlir.addressof
 
 4: "t19" has unsupported operation: llvm.call
 
 1: "t20"
+9: "t20" has pointer type input
+
 4: "t20" has unsupported operation: llvm.mlir.addressof
 
 4: "t20" has unsupported operation: llvm.call
 
 1: "t21"
+9: "t21" has pointer type input
+
 4: "t21" has unsupported operation: llvm.mlir.addressof
 
 4: "t21" has unsupported operation: llvm.call
 
 1: "t22"
+9: "t22" has pointer type input
+
 4: "t22" has unsupported operation: llvm.mlir.addressof
 
 4: "t22" has unsupported operation: llvm.call
 
 1: "t23"
+9: "t23" has pointer type input
+
 4: "t23" has unsupported operation: llvm.mlir.addressof
 
 4: "t23" has unsupported operation: llvm.call
 
 1: "t24"
+9: "t24" has pointer type input
+
 4: "t24" has unsupported operation: llvm.mlir.addressof
 
 4: "t24" has unsupported operation: llvm.call
 
 1: "t25"
-4: "t25" has unsupported operation after optimization: llvm.mlir.addressof
-
-4: "t25" has unsupported operation after optimization: llvm.call
+9: "t25" has pointer type input
 
 1: "t26"
 4: "t26" has unsupported operation: builtin.unregistered: llvm.intr.abs
@@ -268,6 +286,8 @@
 4: "t36" has unsupported operation: llvm.return
 
 1: "t37"
+9: "t37" has pointer type input
+
 4: "t37" has unsupported operation: llvm.mlir.addressof
 
 4: "t37" has unsupported operation: llvm.call
@@ -275,5 +295,5 @@
 4: "t37" has unsupported operation: llvm.return
 
 1: "memrchr"
-5: "memrchr" is empty
+9: "memrchr" has pointer type input
 

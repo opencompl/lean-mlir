@@ -209,7 +209,7 @@ def trunc_sel_equal_sext_after := [llvm|
   %0 = llvm.mlir.constant(16 : i32) : i32
   %1 = llvm.mlir.constant(42 : i32) : i32
   %2 = llvm.shl %arg77, %0 : i32
-  %3 = llvm.ashr %2, %0 : i32
+  %3 = llvm.ashr exact %2, %0 : i32
   %4 = "llvm.select"(%arg78, %3, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   "llvm.return"(%4) : (i32) -> ()
 }

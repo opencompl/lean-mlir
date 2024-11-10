@@ -2,6 +2,8 @@
 4: "test1" has unsupported operation: llvm.alloca
 
 1: "test2"
+9: "test2" has pointer type input
+
 4: "test2" has unsupported operation: llvm.return
 
 1: "foo"
@@ -34,10 +36,10 @@
 4: "foo" has unsupported operation: llvm.return
 
 1: "bar"
-5: "bar" is empty
+9: "bar" has pointer type input
 
 1: "inalloca_callee"
-5: "inalloca_callee" is empty
+9: "inalloca_callee" has pointer type input
 
 1: "test3"
 4: "test3" has unsupported operation: llvm.mlir.addressof
@@ -61,6 +63,8 @@
 4: "test3" has unsupported operation: llvm.return
 
 1: "test4"
+9: "test4" has pointer type input
+
 4: "test4" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "test4" has unsupported operation: llvm.load

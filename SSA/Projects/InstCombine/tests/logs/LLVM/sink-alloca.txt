@@ -2,7 +2,7 @@
 5: "cond" is empty
 
 1: "use_and_return"
-5: "use_and_return" is empty
+9: "use_and_return" has pointer type input
 
 1: "foo"
 4: "foo" has unsupported operation: llvm.call

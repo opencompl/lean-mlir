@@ -53,12 +53,18 @@
 2: llvm.return
 
 1: "test5_extra_use_not"
+9: "test5_extra_use_not" has pointer type input
+
 4: "test5_extra_use_not" has unsupported operation: llvm.store
 
 1: "test5_extra_use_xor"
+9: "test5_extra_use_xor" has pointer type input
+
 4: "test5_extra_use_xor" has unsupported operation: llvm.store
 
 1: "test5_extra_use_not_xor"
+9: "test5_extra_use_not_xor" has pointer type input
+
 4: "test5_extra_use_not_xor" has unsupported operation: llvm.store
 
 4: "test5_extra_use_not_xor" has unsupported operation: llvm.store
@@ -124,9 +130,13 @@
 2: llvm.return
 
 1: "test10_extrause"
+9: "test10_extrause" has pointer type input
+
 4: "test10_extrause" has unsupported operation: llvm.store
 
 1: "test10_commuted_extrause"
+9: "test10_commuted_extrause" has pointer type input
+
 4: "test10_commuted_extrause" has unsupported operation: llvm.store
 
 1: "test10_canonical"

@@ -358,6 +358,41 @@ theorem shl_lshr_demand1_proof : shl_lshr_demand1_before ⊑ shl_lshr_demand1_af
 
 
 
+def shl_lshr_demand3_before := [llvm|
+{
+^0(%arg18 : i8):
+  %0 = llvm.mlir.constant(40 : i8) : i8
+  %1 = llvm.mlir.constant(3 : i8) : i8
+  %2 = llvm.mlir.constant(-64 : i8) : i8
+  %3 = llvm.shl %0, %arg18 : i8
+  %4 = llvm.lshr %3, %1 : i8
+  %5 = llvm.or %4, %2 : i8
+  "llvm.return"(%5) : (i8) -> ()
+}
+]
+def shl_lshr_demand3_after := [llvm|
+{
+^0(%arg18 : i8):
+  %0 = llvm.mlir.constant(40 : i8) : i8
+  %1 = llvm.mlir.constant(3 : i8) : i8
+  %2 = llvm.mlir.constant(-64 : i8) : i8
+  %3 = llvm.shl %0, %arg18 : i8
+  %4 = llvm.lshr exact %3, %1 : i8
+  %5 = llvm.or %4, %2 : i8
+  "llvm.return"(%5) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem shl_lshr_demand3_proof : shl_lshr_demand3_before ⊑ shl_lshr_demand3_after := by
+  unfold shl_lshr_demand3_before shl_lshr_demand3_after
+  simp_alive_peephole
+  intros
+  ---BEGIN shl_lshr_demand3
+  apply shl_lshr_demand3_thm
+  ---END shl_lshr_demand3
+
+
+
 def shl_lshr_demand6_before := [llvm|
 {
 ^0(%arg10 : i16):

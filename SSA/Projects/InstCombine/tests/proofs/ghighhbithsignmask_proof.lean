@@ -17,7 +17,8 @@ theorem t0_thm (e : IntW 64) : sub (const? 64 0) (lshr e (const? 64 63)) ⊑ ash
     all_goals sorry
 
 
-theorem t0_exact_thm (e : IntW 64) : sub (const? 64 0) (lshr e (const? 64 63)) ⊑ ashr e (const? 64 63) := by 
+theorem t0_exact_thm (e : IntW 64) :
+  sub (const? 64 0) (lshr e (const? 64 63) { «exact» := true }) ⊑ ashr e (const? 64 63) { «exact» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -35,7 +36,8 @@ theorem t2_thm (e : IntW 64) : sub (const? 64 0) (ashr e (const? 64 63)) ⊑ lsh
     all_goals sorry
 
 
-theorem t3_exact_thm (e : IntW 64) : sub (const? 64 0) (ashr e (const? 64 63)) ⊑ lshr e (const? 64 63) := by 
+theorem t3_exact_thm (e : IntW 64) :
+  sub (const? 64 0) (ashr e (const? 64 63) { «exact» := true }) ⊑ lshr e (const? 64 63) { «exact» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

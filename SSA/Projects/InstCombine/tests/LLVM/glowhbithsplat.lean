@@ -72,3 +72,63 @@ theorem t1_otherbitwidth_proof : t1_otherbitwidth_before ⊑ t1_otherbitwidth_af
   ---END t1_otherbitwidth
 
 
+
+def n11_before := [llvm|
+{
+^0(%arg1 : i8):
+  %0 = llvm.mlir.constant(7 : i8) : i8
+  %1 = llvm.mlir.constant(6 : i8) : i8
+  %2 = llvm.shl %arg1, %0 : i8
+  %3 = llvm.ashr %2, %1 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+def n11_after := [llvm|
+{
+^0(%arg1 : i8):
+  %0 = llvm.mlir.constant(7 : i8) : i8
+  %1 = llvm.mlir.constant(6 : i8) : i8
+  %2 = llvm.shl %arg1, %0 : i8
+  %3 = llvm.ashr exact %2, %1 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem n11_proof : n11_before ⊑ n11_after := by
+  unfold n11_before n11_after
+  simp_alive_peephole
+  intros
+  ---BEGIN n11
+  all_goals (try extract_goal ; sorry)
+  ---END n11
+
+
+
+def n12_before := [llvm|
+{
+^0(%arg0 : i8):
+  %0 = llvm.mlir.constant(6 : i8) : i8
+  %1 = llvm.shl %arg0, %0 : i8
+  %2 = llvm.ashr %1, %0 : i8
+  "llvm.return"(%2) : (i8) -> ()
+}
+]
+def n12_after := [llvm|
+{
+^0(%arg0 : i8):
+  %0 = llvm.mlir.constant(6 : i8) : i8
+  %1 = llvm.shl %arg0, %0 : i8
+  %2 = llvm.ashr exact %1, %0 : i8
+  "llvm.return"(%2) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem n12_proof : n12_before ⊑ n12_after := by
+  unfold n12_before n12_after
+  simp_alive_peephole
+  intros
+  ---BEGIN n12
+  all_goals (try extract_goal ; sorry)
+  ---END n12
+
+

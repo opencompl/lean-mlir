@@ -17,6 +17,8 @@
 4: "lshr12_i32" has unsupported operation: builtin.unregistered: llvm.intr.bswap
 
 1: "lshr8_i32_use"
+9: "lshr8_i32_use" has pointer type input
+
 4: "lshr8_i32_use" has unsupported operation: llvm.store
 
 4: "lshr8_i32_use" has unsupported operation: builtin.unregistered: llvm.intr.bswap
@@ -42,6 +44,8 @@
 4: "shl42_i64" has unsupported operation: builtin.unregistered: llvm.intr.bswap
 
 1: "shl8_i32_use"
+9: "shl8_i32_use" has pointer type input
+
 4: "shl8_i32_use" has unsupported operation: llvm.store
 
 4: "shl8_i32_use" has unsupported operation: builtin.unregistered: llvm.intr.bswap
@@ -227,6 +231,8 @@
 4: "bs_all_operand64_multiuse_both" has unsupported operation: llvm.call
 
 1: "bs_and_constexpr"
+9: "bs_and_constexpr" has pointer type input
+
 4: "bs_and_constexpr" has unsupported operation: llvm.mlir.addressof
 
 4: "bs_and_constexpr" has unsupported operation: builtin.unregistered: llvm.ptrtoint
@@ -238,6 +244,8 @@
 4: "bs_and_constexpr" has unsupported operation: llvm.return
 
 1: "bs_and_bs_constexpr"
+9: "bs_and_bs_constexpr" has pointer type input
+
 4: "bs_and_bs_constexpr" has unsupported operation: llvm.mlir.addressof
 
 4: "bs_and_bs_constexpr" has unsupported operation: builtin.unregistered: llvm.ptrtoint

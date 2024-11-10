@@ -15,20 +15,20 @@ section gsaturatinghaddhsub_statements
 
 def test_simplify_decrement_invalid_ne_before := [llvm|
 {
-^0(%arg207 : i8):
+^0(%arg209 : i8):
   %0 = llvm.mlir.constant(0 : i8) : i8
   %1 = llvm.mlir.constant(1 : i8) : i8
-  %2 = llvm.icmp "ne" %arg207, %0 : i8
-  %3 = llvm.sub %arg207, %1 : i8
+  %2 = llvm.icmp "ne" %arg209, %0 : i8
+  %3 = llvm.sub %arg209, %1 : i8
   %4 = "llvm.select"(%2, %0, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
   "llvm.return"(%4) : (i8) -> ()
 }
 ]
 def test_simplify_decrement_invalid_ne_after := [llvm|
 {
-^0(%arg207 : i8):
+^0(%arg209 : i8):
   %0 = llvm.mlir.constant(0 : i8) : i8
-  %1 = llvm.icmp "eq" %arg207, %0 : i8
+  %1 = llvm.icmp "eq" %arg209, %0 : i8
   %2 = llvm.sext %1 : i1 to i8
   "llvm.return"(%2) : (i8) -> ()
 }
@@ -46,22 +46,22 @@ theorem test_simplify_decrement_invalid_ne_proof : test_simplify_decrement_inval
 
 def test_invalid_simplify_sub2_before := [llvm|
 {
-^0(%arg206 : i8):
+^0(%arg208 : i8):
   %0 = llvm.mlir.constant(0 : i8) : i8
   %1 = llvm.mlir.constant(2 : i8) : i8
-  %2 = llvm.icmp "eq" %arg206, %0 : i8
-  %3 = llvm.sub %arg206, %1 : i8
+  %2 = llvm.icmp "eq" %arg208, %0 : i8
+  %3 = llvm.sub %arg208, %1 : i8
   %4 = "llvm.select"(%2, %0, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
   "llvm.return"(%4) : (i8) -> ()
 }
 ]
 def test_invalid_simplify_sub2_after := [llvm|
 {
-^0(%arg206 : i8):
+^0(%arg208 : i8):
   %0 = llvm.mlir.constant(0 : i8) : i8
   %1 = llvm.mlir.constant(-2 : i8) : i8
-  %2 = llvm.icmp "eq" %arg206, %0 : i8
-  %3 = llvm.add %arg206, %1 : i8
+  %2 = llvm.icmp "eq" %arg208, %0 : i8
+  %3 = llvm.add %arg208, %1 : i8
   %4 = "llvm.select"(%2, %0, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
   "llvm.return"(%4) : (i8) -> ()
 }
@@ -79,24 +79,24 @@ theorem test_invalid_simplify_sub2_proof : test_invalid_simplify_sub2_before ⊑
 
 def test_invalid_simplify_eq2_before := [llvm|
 {
-^0(%arg205 : i8):
+^0(%arg207 : i8):
   %0 = llvm.mlir.constant(2 : i8) : i8
   %1 = llvm.mlir.constant(1 : i8) : i8
   %2 = llvm.mlir.constant(0 : i8) : i8
-  %3 = llvm.icmp "eq" %arg205, %0 : i8
-  %4 = llvm.sub %arg205, %1 : i8
+  %3 = llvm.icmp "eq" %arg207, %0 : i8
+  %4 = llvm.sub %arg207, %1 : i8
   %5 = "llvm.select"(%3, %2, %4) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
   "llvm.return"(%5) : (i8) -> ()
 }
 ]
 def test_invalid_simplify_eq2_after := [llvm|
 {
-^0(%arg205 : i8):
+^0(%arg207 : i8):
   %0 = llvm.mlir.constant(2 : i8) : i8
   %1 = llvm.mlir.constant(-1 : i8) : i8
   %2 = llvm.mlir.constant(0 : i8) : i8
-  %3 = llvm.icmp "eq" %arg205, %0 : i8
-  %4 = llvm.add %arg205, %1 : i8
+  %3 = llvm.icmp "eq" %arg207, %0 : i8
+  %4 = llvm.add %arg207, %1 : i8
   %5 = "llvm.select"(%3, %2, %4) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
   "llvm.return"(%5) : (i8) -> ()
 }
@@ -114,23 +114,23 @@ theorem test_invalid_simplify_eq2_proof : test_invalid_simplify_eq2_before ⊑ t
 
 def test_invalid_simplify_select_1_before := [llvm|
 {
-^0(%arg204 : i8):
+^0(%arg206 : i8):
   %0 = llvm.mlir.constant(0 : i8) : i8
   %1 = llvm.mlir.constant(1 : i8) : i8
-  %2 = llvm.icmp "eq" %arg204, %0 : i8
-  %3 = llvm.sub %arg204, %1 : i8
+  %2 = llvm.icmp "eq" %arg206, %0 : i8
+  %3 = llvm.sub %arg206, %1 : i8
   %4 = "llvm.select"(%2, %1, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
   "llvm.return"(%4) : (i8) -> ()
 }
 ]
 def test_invalid_simplify_select_1_after := [llvm|
 {
-^0(%arg204 : i8):
+^0(%arg206 : i8):
   %0 = llvm.mlir.constant(0 : i8) : i8
   %1 = llvm.mlir.constant(-1 : i8) : i8
   %2 = llvm.mlir.constant(1 : i8) : i8
-  %3 = llvm.icmp "eq" %arg204, %0 : i8
-  %4 = llvm.add %arg204, %1 : i8
+  %3 = llvm.icmp "eq" %arg206, %0 : i8
+  %4 = llvm.add %arg206, %1 : i8
   %5 = "llvm.select"(%3, %2, %4) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
   "llvm.return"(%5) : (i8) -> ()
 }
@@ -148,22 +148,22 @@ theorem test_invalid_simplify_select_1_proof : test_invalid_simplify_select_1_be
 
 def test_invalid_simplify_other_before := [llvm|
 {
-^0(%arg202 : i8, %arg203 : i8):
+^0(%arg204 : i8, %arg205 : i8):
   %0 = llvm.mlir.constant(0 : i8) : i8
   %1 = llvm.mlir.constant(1 : i8) : i8
-  %2 = llvm.icmp "eq" %arg202, %0 : i8
-  %3 = llvm.sub %arg203, %1 : i8
+  %2 = llvm.icmp "eq" %arg204, %0 : i8
+  %3 = llvm.sub %arg205, %1 : i8
   %4 = "llvm.select"(%2, %0, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
   "llvm.return"(%4) : (i8) -> ()
 }
 ]
 def test_invalid_simplify_other_after := [llvm|
 {
-^0(%arg202 : i8, %arg203 : i8):
+^0(%arg204 : i8, %arg205 : i8):
   %0 = llvm.mlir.constant(0 : i8) : i8
   %1 = llvm.mlir.constant(-1 : i8) : i8
-  %2 = llvm.icmp "eq" %arg202, %0 : i8
-  %3 = llvm.add %arg203, %1 : i8
+  %2 = llvm.icmp "eq" %arg204, %0 : i8
+  %3 = llvm.add %arg205, %1 : i8
   %4 = "llvm.select"(%2, %0, %3) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
   "llvm.return"(%4) : (i8) -> ()
 }
@@ -181,24 +181,24 @@ theorem test_invalid_simplify_other_proof : test_invalid_simplify_other_before �
 
 def uadd_sat_flipped_wrong_bounds_before := [llvm|
 {
-^0(%arg94 : i32):
+^0(%arg96 : i32):
   %0 = llvm.mlir.constant(-12 : i32) : i32
   %1 = llvm.mlir.constant(9 : i32) : i32
   %2 = llvm.mlir.constant(-1 : i32) : i32
-  %3 = llvm.icmp "uge" %arg94, %0 : i32
-  %4 = llvm.add %arg94, %1 : i32
+  %3 = llvm.icmp "uge" %arg96, %0 : i32
+  %4 = llvm.add %arg96, %1 : i32
   %5 = "llvm.select"(%3, %2, %4) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   "llvm.return"(%5) : (i32) -> ()
 }
 ]
 def uadd_sat_flipped_wrong_bounds_after := [llvm|
 {
-^0(%arg94 : i32):
+^0(%arg96 : i32):
   %0 = llvm.mlir.constant(-13 : i32) : i32
   %1 = llvm.mlir.constant(9 : i32) : i32
   %2 = llvm.mlir.constant(-1 : i32) : i32
-  %3 = llvm.icmp "ugt" %arg94, %0 : i32
-  %4 = llvm.add %arg94, %1 : i32
+  %3 = llvm.icmp "ugt" %arg96, %0 : i32
+  %4 = llvm.add %arg96, %1 : i32
   %5 = "llvm.select"(%3, %2, %4) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   "llvm.return"(%5) : (i32) -> ()
 }
@@ -216,24 +216,24 @@ theorem uadd_sat_flipped_wrong_bounds_proof : uadd_sat_flipped_wrong_bounds_befo
 
 def uadd_sat_flipped_wrong_bounds4_before := [llvm|
 {
-^0(%arg91 : i32):
+^0(%arg93 : i32):
   %0 = llvm.mlir.constant(-8 : i32) : i32
   %1 = llvm.mlir.constant(9 : i32) : i32
   %2 = llvm.mlir.constant(-1 : i32) : i32
-  %3 = llvm.icmp "uge" %arg91, %0 : i32
-  %4 = llvm.add %arg91, %1 : i32
+  %3 = llvm.icmp "uge" %arg93, %0 : i32
+  %4 = llvm.add %arg93, %1 : i32
   %5 = "llvm.select"(%3, %2, %4) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   "llvm.return"(%5) : (i32) -> ()
 }
 ]
 def uadd_sat_flipped_wrong_bounds4_after := [llvm|
 {
-^0(%arg91 : i32):
+^0(%arg93 : i32):
   %0 = llvm.mlir.constant(-9 : i32) : i32
   %1 = llvm.mlir.constant(9 : i32) : i32
   %2 = llvm.mlir.constant(-1 : i32) : i32
-  %3 = llvm.icmp "ugt" %arg91, %0 : i32
-  %4 = llvm.add %arg91, %1 : i32
+  %3 = llvm.icmp "ugt" %arg93, %0 : i32
+  %4 = llvm.add %arg93, %1 : i32
   %5 = "llvm.select"(%3, %2, %4) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   "llvm.return"(%5) : (i32) -> ()
 }
@@ -251,24 +251,24 @@ theorem uadd_sat_flipped_wrong_bounds4_proof : uadd_sat_flipped_wrong_bounds4_be
 
 def uadd_sat_flipped_wrong_bounds6_before := [llvm|
 {
-^0(%arg89 : i32):
+^0(%arg91 : i32):
   %0 = llvm.mlir.constant(-12 : i32) : i32
   %1 = llvm.mlir.constant(9 : i32) : i32
   %2 = llvm.mlir.constant(-1 : i32) : i32
-  %3 = llvm.icmp "ule" %arg89, %0 : i32
-  %4 = llvm.add %arg89, %1 : i32
+  %3 = llvm.icmp "ule" %arg91, %0 : i32
+  %4 = llvm.add %arg91, %1 : i32
   %5 = "llvm.select"(%3, %4, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   "llvm.return"(%5) : (i32) -> ()
 }
 ]
 def uadd_sat_flipped_wrong_bounds6_after := [llvm|
 {
-^0(%arg89 : i32):
+^0(%arg91 : i32):
   %0 = llvm.mlir.constant(-11 : i32) : i32
   %1 = llvm.mlir.constant(9 : i32) : i32
   %2 = llvm.mlir.constant(-1 : i32) : i32
-  %3 = llvm.icmp "ult" %arg89, %0 : i32
-  %4 = llvm.add %arg89, %1 : i32
+  %3 = llvm.icmp "ult" %arg91, %0 : i32
+  %4 = llvm.add %arg91, %1 : i32
   %5 = "llvm.select"(%3, %4, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   "llvm.return"(%5) : (i32) -> ()
 }
@@ -286,24 +286,24 @@ theorem uadd_sat_flipped_wrong_bounds6_proof : uadd_sat_flipped_wrong_bounds6_be
 
 def uadd_sat_flipped_wrong_bounds7_before := [llvm|
 {
-^0(%arg88 : i32):
+^0(%arg90 : i32):
   %0 = llvm.mlir.constant(-12 : i32) : i32
   %1 = llvm.mlir.constant(9 : i32) : i32
   %2 = llvm.mlir.constant(-1 : i32) : i32
-  %3 = llvm.icmp "ule" %arg88, %0 : i32
-  %4 = llvm.add %arg88, %1 : i32
+  %3 = llvm.icmp "ule" %arg90, %0 : i32
+  %4 = llvm.add %arg90, %1 : i32
   %5 = "llvm.select"(%3, %4, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   "llvm.return"(%5) : (i32) -> ()
 }
 ]
 def uadd_sat_flipped_wrong_bounds7_after := [llvm|
 {
-^0(%arg88 : i32):
+^0(%arg90 : i32):
   %0 = llvm.mlir.constant(-11 : i32) : i32
   %1 = llvm.mlir.constant(9 : i32) : i32
   %2 = llvm.mlir.constant(-1 : i32) : i32
-  %3 = llvm.icmp "ult" %arg88, %0 : i32
-  %4 = llvm.add %arg88, %1 : i32
+  %3 = llvm.icmp "ult" %arg90, %0 : i32
+  %4 = llvm.add %arg90, %1 : i32
   %5 = "llvm.select"(%3, %4, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   "llvm.return"(%5) : (i32) -> ()
 }

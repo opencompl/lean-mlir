@@ -1,8 +1,8 @@
 1: "strncpy"
-5: "strncpy" is empty
+9: "strncpy" has pointer type input
 
 1: "puts"
-5: "puts" is empty
+9: "puts" has pointer type input
 
 1: "test_simplify1"
 4: "test_simplify1" has unsupported operation: llvm.mlir.addressof
@@ -39,6 +39,8 @@
 4: "test_simplify4" has unsupported operation: llvm.return
 
 1: "test_simplify5"
+9: "test_simplify5" has pointer type input
+
 4: "test_simplify5" has unsupported operation: llvm.mlir.addressof
 
 4: "test_simplify5" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
@@ -46,6 +48,8 @@
 4: "test_simplify5" has unsupported operation: llvm.return
 
 1: "test_simplify6"
+9: "test_simplify6" has pointer type input
+
 4: "test_simplify6" has unsupported operation: llvm.mlir.addressof
 
 4: "test_simplify6" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
@@ -53,22 +57,32 @@
 4: "test_simplify6" has unsupported operation: llvm.return
 
 1: "test_simplify7"
+9: "test_simplify7" has pointer type input
+
 4: "test_simplify7" has unsupported operation: builtin.unregistered: llvm.intr.memset
 
 4: "test_simplify7" has unsupported operation: llvm.return
 
 1: "test1"
+9: "test1" has pointer type input
+
 4: "test1" has unsupported operation: llvm.call
 
 1: "test2"
+9: "test2" has pointer type input
+
 4: "test2" has unsupported operation: llvm.mlir.addressof
 
 4: "test2" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
 
 1: "test3"
+9: "test3" has pointer type input
+
 4: "test3" has unsupported operation: builtin.unregistered: llvm.intr.memset
 
 1: "test4"
+9: "test4" has pointer type input
+
 4: "test4" has unsupported operation: builtin.unregistered: llvm.intr.memset
 
 1: "test_no_simplify1"
@@ -88,9 +102,13 @@
 4: "test_no_simplify2" has unsupported operation: llvm.return
 
 1: "test_no_simplify3"
+9: "test_no_simplify3" has pointer type input
+
 4: "test_no_simplify3" has unsupported operation: llvm.call
 
 1: "test_no_simplify4"
+9: "test_no_simplify4" has pointer type input
+
 4: "test_no_simplify4" has unsupported operation: llvm.call
 
 1: "test_no_incompatible_attr"

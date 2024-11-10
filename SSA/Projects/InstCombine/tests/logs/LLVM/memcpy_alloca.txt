@@ -1,7 +1,11 @@
 1: "test"
+9: "test" has pointer type input
+
 4: "test" has unsupported operation: llvm.return
 
 1: "test2"
+9: "test2" has pointer type input
+
 4: "test2" has unsupported operation: llvm.alloca
 
 4: "test2" has unsupported operation: llvm.store
@@ -11,6 +15,8 @@
 4: "test2" has unsupported operation: llvm.return
 
 1: "test3"
+9: "test3" has pointer type input
+
 4: "test3" has unsupported operation: llvm.alloca
 
 4: "test3" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
@@ -18,12 +24,18 @@
 4: "test3" has unsupported operation: llvm.return
 
 1: "test4"
+9: "test4" has pointer type input
+
 4: "test4" has unsupported operation: llvm.return
 
 1: "test5"
+9: "test5" has pointer type input
+
 4: "test5" has unsupported operation: llvm.return
 
 1: "test6"
+9: "test6" has pointer type input
+
 4: "test6" has unsupported operation: llvm.alloca
 
 4: "test6" has unsupported operation: llvm.getelementptr

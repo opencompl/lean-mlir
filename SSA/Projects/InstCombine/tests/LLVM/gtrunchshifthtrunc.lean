@@ -78,7 +78,7 @@ def trunc_ashr_trunc_exact_before := [llvm|
 ^0(%arg6 : i64):
   %0 = llvm.mlir.constant(8 : i32) : i32
   %1 = llvm.trunc %arg6 : i64 to i32
-  %2 = llvm.ashr %1, %0 : i32
+  %2 = llvm.ashr exact %1, %0 : i32
   %3 = llvm.trunc %2 : i32 to i8
   "llvm.return"(%3) : (i8) -> ()
 }
@@ -87,7 +87,7 @@ def trunc_ashr_trunc_exact_after := [llvm|
 {
 ^0(%arg6 : i64):
   %0 = llvm.mlir.constant(8) : i64
-  %1 = llvm.lshr %arg6, %0 : i64
+  %1 = llvm.lshr exact %arg6, %0 : i64
   %2 = llvm.trunc %1 : i64 to i8
   "llvm.return"(%2) : (i8) -> ()
 }

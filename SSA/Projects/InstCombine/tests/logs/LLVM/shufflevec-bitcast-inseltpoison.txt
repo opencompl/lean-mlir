@@ -2,6 +2,8 @@
 5: "use" is empty
 
 1: "test"
+9: "test" has pointer type input
+
 4: "test" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 4: "test" has unsupported operation: builtin.unregistered: llvm.extractelement

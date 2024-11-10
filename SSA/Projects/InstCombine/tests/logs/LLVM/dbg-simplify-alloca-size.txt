@@ -1,5 +1,5 @@
 1: "foo"
-5: "foo" is empty
+9: "foo" has pointer type input
 
 1: "toplevel"
 4: "toplevel" has unsupported operation: llvm.alloca

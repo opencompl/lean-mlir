@@ -1,11 +1,5 @@
 1: "test1"
-4: "test1" has unsupported operation after optimization: llvm.getelementptr
-
-4: "test1" has unsupported operation after optimization: llvm.load
-
-4: "test1" has unsupported operation after optimization: llvm.getelementptr
-
-4: "test1" has unsupported operation after optimization: llvm.load
+9: "test1" has pointer type input
 
 1: "test2"
 4: "test2" has unsupported operation after optimization: llvm.mlir.addressof

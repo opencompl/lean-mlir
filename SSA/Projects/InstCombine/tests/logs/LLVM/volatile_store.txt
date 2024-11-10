@@ -10,6 +10,8 @@
 4: "self_assign_1" has unsupported operation: llvm.return
 
 1: "volatile_store_before_unreachable"
+9: "volatile_store_before_unreachable" has pointer type input
+
 4: "volatile_store_before_unreachable" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "volatile_store_before_unreachable" has unsupported operation: llvm.store

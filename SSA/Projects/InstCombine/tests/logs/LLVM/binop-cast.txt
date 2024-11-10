@@ -76,9 +76,13 @@
 4: "xor_sext_to_sel_multi_use_constant_mask" has unsupported operation: llvm.call
 
 1: "PR63321"
+9: "PR63321" has pointer type input
+
 4: "PR63321" has unsupported operation: llvm.load
 
 1: "and_add_non_bool"
+9: "and_add_non_bool" has pointer type input
+
 4: "and_add_non_bool" has unsupported operation: llvm.load
 
 1: "and_add_bool_to_select"

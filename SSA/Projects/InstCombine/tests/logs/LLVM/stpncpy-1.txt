@@ -1,10 +1,12 @@
 1: "stpncpy"
-5: "stpncpy" is empty
+9: "stpncpy" has pointer type input
 
 1: "sink"
-5: "sink" is empty
+9: "sink" has pointer type input
 
 1: "fold_stpncpy_overlap"
+9: "fold_stpncpy_overlap" has pointer type input
+
 4: "fold_stpncpy_overlap" has unsupported operation: llvm.call
 
 4: "fold_stpncpy_overlap" has unsupported operation: llvm.load
@@ -16,6 +18,8 @@
 4: "fold_stpncpy_overlap" has unsupported operation: llvm.return
 
 1: "call_stpncpy_overlap"
+9: "call_stpncpy_overlap" has pointer type input
+
 4: "call_stpncpy_overlap" has unsupported operation: llvm.call
 
 4: "call_stpncpy_overlap" has unsupported operation: llvm.call
@@ -31,6 +35,8 @@
 4: "call_stpncpy_overlap" has unsupported operation: llvm.return
 
 1: "fold_stpncpy_s0"
+9: "fold_stpncpy_s0" has pointer type input
+
 4: "fold_stpncpy_s0" has unsupported operation: llvm.call
 
 4: "fold_stpncpy_s0" has unsupported operation: llvm.store
@@ -52,6 +58,8 @@
 4: "fold_stpncpy_s0" has unsupported operation: llvm.return
 
 1: "fold_stpncpy_s1"
+9: "fold_stpncpy_s1" has pointer type input
+
 4: "fold_stpncpy_s1" has unsupported operation: llvm.mlir.addressof
 
 4: "fold_stpncpy_s1" has unsupported operation: llvm.mlir.addressof
@@ -85,6 +93,8 @@
 4: "fold_stpncpy_s1" has unsupported operation: llvm.return
 
 1: "fold_stpncpy_s4"
+9: "fold_stpncpy_s4" has pointer type input
+
 4: "fold_stpncpy_s4" has unsupported operation: llvm.mlir.addressof
 
 4: "fold_stpncpy_s4" has unsupported operation: llvm.mlir.addressof
@@ -124,6 +134,8 @@
 4: "fold_stpncpy_s4" has unsupported operation: llvm.return
 
 1: "call_stpncpy_xx_n"
+9: "call_stpncpy_xx_n" has pointer type input
+
 4: "call_stpncpy_xx_n" has unsupported operation: llvm.mlir.addressof
 
 4: "call_stpncpy_xx_n" has unsupported operation: llvm.getelementptr
@@ -151,6 +163,8 @@
 4: "call_stpncpy_xx_n" has unsupported operation: llvm.return
 
 1: "fold_stpncpy_a4"
+9: "fold_stpncpy_a4" has pointer type input
+
 4: "fold_stpncpy_a4" has unsupported operation: llvm.mlir.addressof
 
 4: "fold_stpncpy_a4" has unsupported operation: llvm.mlir.addressof
@@ -196,6 +210,8 @@
 4: "fold_stpncpy_a4" has unsupported operation: llvm.return
 
 1: "fold_stpncpy_s"
+9: "fold_stpncpy_s" has pointer type input
+
 4: "fold_stpncpy_s" has unsupported operation: llvm.call
 
 4: "fold_stpncpy_s" has unsupported operation: llvm.load
@@ -209,6 +225,8 @@
 4: "fold_stpncpy_s" has unsupported operation: llvm.return
 
 1: "call_stpncpy_s"
+9: "call_stpncpy_s" has pointer type input
+
 4: "call_stpncpy_s" has unsupported operation: llvm.call
 
 4: "call_stpncpy_s" has unsupported operation: llvm.call

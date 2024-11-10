@@ -10,5 +10,5 @@
 4: "foo" has unsupported operation: llvm.return
 
 1: "frob"
-5: "frob" is empty
+9: "frob" has pointer type input
 

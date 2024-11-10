@@ -119,6 +119,18 @@ theorem lshr_add_fail_thm (e : IntW 8) :
     all_goals sorry
 
 
+theorem ashr_add_fail_thm (e : IntW 8) :
+  add (ashr (const? 8 (-128)) e) (ashr (const? 8 (-128)) (add e (const? 8 1))) ⊑
+    add (ashr (const? 8 (-128)) e { «exact» := true })
+      (ashr (const? 8 (-128)) (add e (const? 8 1)) { «exact» := true }) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+
 theorem shl_or_commuted_thm (e : IntW 8) :
   LLVM.or (shl (const? 8 3) (add e (const? 8 1))) (shl (const? 8 16) e) ⊑ shl (const? 8 22) e := by 
     simp_alive_undef

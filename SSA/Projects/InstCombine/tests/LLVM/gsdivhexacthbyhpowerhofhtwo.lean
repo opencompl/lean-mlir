@@ -17,7 +17,7 @@ def t0_before := [llvm|
 {
 ^0(%arg22 : i8):
   %0 = llvm.mlir.constant(32 : i8) : i8
-  %1 = llvm.sdiv %arg22, %0 : i8
+  %1 = llvm.sdiv exact %arg22, %0 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
@@ -25,7 +25,7 @@ def t0_after := [llvm|
 {
 ^0(%arg22 : i8):
   %0 = llvm.mlir.constant(5 : i8) : i8
-  %1 = llvm.ashr %arg22, %0 : i8
+  %1 = llvm.ashr exact %arg22, %0 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
@@ -73,14 +73,14 @@ def shl1_nsw_before := [llvm|
 ^0(%arg14 : i8, %arg15 : i8):
   %0 = llvm.mlir.constant(1 : i8) : i8
   %1 = llvm.shl %0, %arg15 overflow<nsw> : i8
-  %2 = llvm.sdiv %arg14, %1 : i8
+  %2 = llvm.sdiv exact %arg14, %1 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
 def shl1_nsw_after := [llvm|
 {
 ^0(%arg14 : i8, %arg15 : i8):
-  %0 = llvm.ashr %arg14, %arg15 : i8
+  %0 = llvm.ashr exact %arg14, %arg15 : i8
   "llvm.return"(%0) : (i8) -> ()
 }
 ]

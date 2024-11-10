@@ -1,17 +1,17 @@
 1: "strtol"
-5: "strtol" is empty
+9: "strtol" has pointer type input
 
 1: "atoi"
-5: "atoi" is empty
+9: "atoi" has pointer type input
 
 1: "atol"
-5: "atol" is empty
+9: "atol" has pointer type input
 
 1: "atoll"
-5: "atoll" is empty
+9: "atoll" has pointer type input
 
 1: "strtoll"
-5: "strtoll" is empty
+9: "strtoll" has pointer type input
 
 1: "strtol_dec"
 4: "strtol_dec" has unsupported operation after optimization: llvm.mlir.addressof
@@ -35,6 +35,8 @@
 4: "strtol_hex" has unsupported operation after optimization: llvm.call
 
 1: "strtol_endptr_not_null"
+9: "strtol_endptr_not_null" has pointer type input
+
 4: "strtol_endptr_not_null" has unsupported operation: llvm.mlir.addressof
 
 4: "strtol_endptr_not_null" has unsupported operation: llvm.getelementptr
@@ -42,6 +44,8 @@
 4: "strtol_endptr_not_null" has unsupported operation: llvm.store
 
 1: "strtol_endptr_maybe_null"
+9: "strtol_endptr_maybe_null" has pointer type input
+
 4: "strtol_endptr_maybe_null" has unsupported operation: llvm.mlir.addressof
 
 4: "strtol_endptr_maybe_null" has unsupported operation: llvm.call
@@ -52,11 +56,15 @@
 4: "atoi_test" has unsupported operation after optimization: llvm.call
 
 1: "strtol_not_const_str"
+9: "strtol_not_const_str" has pointer type input
+
 4: "strtol_not_const_str" has unsupported operation: llvm.mlir.zero
 
 4: "strtol_not_const_str" has unsupported operation: llvm.call
 
 1: "atoi_not_const_str"
+9: "atoi_not_const_str" has pointer type input
+
 4: "atoi_not_const_str" has unsupported operation: llvm.call
 
 1: "strtol_not_const_base"

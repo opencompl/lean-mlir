@@ -1,5 +1,5 @@
 1: "printf"
-5: "printf" is empty
+9: "printf" has pointer type input
 
 1: "test_simplify1"
 4: "test_simplify1" has unsupported operation: llvm.return
@@ -53,6 +53,8 @@
 4: "test_no_simplify1" has unsupported operation: llvm.return
 
 1: "test_no_simplify2"
+9: "test_no_simplify2" has pointer type input
+
 4: "test_no_simplify2" has unsupported operation: llvm.call
 
 4: "test_no_simplify2" has unsupported operation: llvm.return
@@ -66,5 +68,5 @@
 5: "putchar" is empty
 
 1: "puts"
-5: "puts" is empty
+9: "puts" has pointer type input
 

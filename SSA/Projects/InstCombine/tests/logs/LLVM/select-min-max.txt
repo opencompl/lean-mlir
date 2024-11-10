@@ -5,6 +5,8 @@
 4: "smax_smax_common_op_01" has unsupported operation: builtin.unregistered: llvm.intr.smax
 
 1: "umin_umin_common_op_10"
+9: "umin_umin_common_op_10" has pointer type input
+
 4: "umin_umin_common_op_10" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
 4: "umin_umin_common_op_10" has unsupported operation: llvm.store
@@ -12,6 +14,8 @@
 4: "umin_umin_common_op_10" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
 1: "umax_umax_common_op_11"
+9: "umax_umax_common_op_11" has pointer type input
+
 4: "umax_umax_common_op_11" has unsupported operation: builtin.unregistered: llvm.intr.umax
 
 4: "umax_umax_common_op_11" has unsupported operation: llvm.store
@@ -29,6 +33,8 @@
 4: "smin_smin_no_common_op" has unsupported operation: builtin.unregistered: llvm.intr.smin
 
 1: "umin_umin_common_op_10_uses"
+9: "umin_umin_common_op_10_uses" has pointer type input
+
 4: "umin_umin_common_op_10_uses" has unsupported operation: builtin.unregistered: llvm.intr.umin
 
 4: "umin_umin_common_op_10_uses" has unsupported operation: llvm.store

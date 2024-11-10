@@ -2,7 +2,7 @@
 5: "malloc" is empty
 
 1: "free"
-5: "free" is empty
+9: "free" has pointer type input
 
 1: "test1"
 4: "test1" has unsupported operation after optimization: llvm.mlir.zero

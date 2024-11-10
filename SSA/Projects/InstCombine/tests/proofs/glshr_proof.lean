@@ -66,8 +66,9 @@ theorem mul_splat_fold_thm (e : IntW 32) :
 
 
 theorem shl_add_lshr_flag_preservation_thm (e e_1 e_2 : IntW 32) :
-  lshr (add (shl e_2 e_1 { «nsw» := false, «nuw» := true }) e { «nsw» := true, «nuw» := true }) e_1 ⊑
-    add (lshr e e_1) e_2 { «nsw» := true, «nuw» := true } := by 
+  lshr (add (shl e_2 e_1 { «nsw» := false, «nuw» := true }) e { «nsw» := true, «nuw» := true }) e_1
+      { «exact» := true } ⊑
+    add (lshr e e_1 { «exact» := true }) e_2 { «nsw» := true, «nuw» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -99,8 +100,9 @@ theorem shl_add_lshr_comm_thm (e e_1 e_2 : IntW 32) :
 
 
 theorem shl_sub_lshr_thm (e e_1 e_2 : IntW 32) :
-  lshr (sub (shl e_2 e_1 { «nsw» := false, «nuw» := true }) e { «nsw» := true, «nuw» := true }) e_1 ⊑
-    sub e_2 (lshr e e_1) { «nsw» := true, «nuw» := true } := by 
+  lshr (sub (shl e_2 e_1 { «nsw» := false, «nuw» := true }) e { «nsw» := true, «nuw» := true }) e_1
+      { «exact» := true } ⊑
+    sub e_2 (lshr e e_1 { «exact» := true }) { «nsw» := true, «nuw» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -110,8 +112,8 @@ theorem shl_sub_lshr_thm (e e_1 e_2 : IntW 32) :
 
 
 theorem shl_sub_lshr_reverse_thm (e e_1 e_2 : IntW 32) :
-  lshr (sub e_2 (shl e_1 e { «nsw» := false, «nuw» := true }) { «nsw» := true, «nuw» := true }) e ⊑
-    sub (lshr e_2 e) e_1 { «nsw» := true, «nuw» := true } := by 
+  lshr (sub e_2 (shl e_1 e { «nsw» := false, «nuw» := true }) { «nsw» := true, «nuw» := true }) e { «exact» := true } ⊑
+    sub (lshr e_2 e { «exact» := true }) e_1 { «nsw» := true, «nuw» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -121,8 +123,8 @@ theorem shl_sub_lshr_reverse_thm (e e_1 e_2 : IntW 32) :
 
 
 theorem shl_sub_lshr_reverse_no_nsw_thm (e e_1 e_2 : IntW 32) :
-  lshr (sub e_2 (shl e_1 e { «nsw» := false, «nuw» := true }) { «nsw» := false, «nuw» := true }) e ⊑
-    sub (lshr e_2 e) e_1 { «nsw» := false, «nuw» := true } := by 
+  lshr (sub e_2 (shl e_1 e { «nsw» := false, «nuw» := true }) { «nsw» := false, «nuw» := true }) e { «exact» := true } ⊑
+    sub (lshr e_2 e { «exact» := true }) e_1 { «nsw» := false, «nuw» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -132,8 +134,8 @@ theorem shl_sub_lshr_reverse_no_nsw_thm (e e_1 e_2 : IntW 32) :
 
 
 theorem shl_sub_lshr_reverse_nsw_on_op1_thm (e e_1 e_2 : IntW 32) :
-  lshr (sub e_2 (shl e_1 e { «nsw» := true, «nuw» := true }) { «nsw» := false, «nuw» := true }) e ⊑
-    sub (lshr e_2 e) e_1 { «nsw» := false, «nuw» := true } := by 
+  lshr (sub e_2 (shl e_1 e { «nsw» := true, «nuw» := true }) { «nsw» := false, «nuw» := true }) e { «exact» := true } ⊑
+    sub (lshr e_2 e { «exact» := true }) e_1 { «nsw» := false, «nuw» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -223,7 +225,8 @@ theorem shl_and_lshr_comm_thm (e e_1 e_2 : IntW 32) :
 
 
 theorem shl_lshr_and_exact_thm (e e_1 e_2 : IntW 32) :
-  lshr (LLVM.and (shl e_2 e_1 { «nsw» := false, «nuw» := true }) e) e_1 ⊑ LLVM.and (lshr e e_1) e_2 := by 
+  lshr (LLVM.and (shl e_2 e_1 { «nsw» := false, «nuw» := true }) e) e_1 { «exact» := true } ⊑
+    LLVM.and (lshr e e_1) e_2 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

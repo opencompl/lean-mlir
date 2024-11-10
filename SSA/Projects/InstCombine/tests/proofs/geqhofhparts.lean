@@ -8,8 +8,6 @@ open BitVec
 open MLIR AST
 open Ctxt (Var)
 
-#exit
-
 set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
@@ -46,7 +44,7 @@ theorem eq_10_proof : eq_10_before ⊑ eq_10_after := by
   simp_alive_peephole
   intros
   ---BEGIN eq_10
-  all_goals (try extract_goal ; sorry)
+  apply eq_10_thm
   ---END eq_10
 
 
@@ -89,7 +87,7 @@ theorem eq_210_proof : eq_210_before ⊑ eq_210_after := by
   simp_alive_peephole
   intros
   ---BEGIN eq_210
-  all_goals (try extract_goal ; sorry)
+  apply eq_210_thm
   ---END eq_210
 
 
@@ -137,7 +135,7 @@ theorem eq_3210_proof : eq_3210_before ⊑ eq_3210_after := by
   simp_alive_peephole
   intros
   ---BEGIN eq_3210
-  all_goals (try extract_goal ; sorry)
+  apply eq_3210_thm
   ---END eq_3210
 
 
@@ -179,7 +177,7 @@ theorem eq_21_proof : eq_21_before ⊑ eq_21_after := by
   simp_alive_peephole
   intros
   ---BEGIN eq_21
-  all_goals (try extract_goal ; sorry)
+  apply eq_21_thm
   ---END eq_21
 
 
@@ -221,7 +219,7 @@ theorem eq_21_comm_and_proof : eq_21_comm_and_before ⊑ eq_21_comm_and_after :=
   simp_alive_peephole
   intros
   ---BEGIN eq_21_comm_and
-  all_goals (try extract_goal ; sorry)
+  apply eq_21_comm_and_thm
   ---END eq_21_comm_and
 
 
@@ -263,7 +261,7 @@ theorem eq_21_comm_eq_proof : eq_21_comm_eq_before ⊑ eq_21_comm_eq_after := by
   simp_alive_peephole
   intros
   ---BEGIN eq_21_comm_eq
-  all_goals (try extract_goal ; sorry)
+  apply eq_21_comm_eq_thm
   ---END eq_21_comm_eq
 
 
@@ -305,7 +303,7 @@ theorem eq_21_comm_eq2_proof : eq_21_comm_eq2_before ⊑ eq_21_comm_eq2_after :=
   simp_alive_peephole
   intros
   ---BEGIN eq_21_comm_eq2
-  all_goals (try extract_goal ; sorry)
+  apply eq_21_comm_eq2_thm
   ---END eq_21_comm_eq2
 
 
@@ -347,7 +345,7 @@ theorem eq_irregular_bit_widths_proof : eq_irregular_bit_widths_before ⊑ eq_ir
   simp_alive_peephole
   intros
   ---BEGIN eq_irregular_bit_widths
-  all_goals (try extract_goal ; sorry)
+  apply eq_irregular_bit_widths_thm
   ---END eq_irregular_bit_widths
 
 
@@ -390,7 +388,7 @@ theorem eq_21_logical_proof : eq_21_logical_before ⊑ eq_21_logical_after := by
   simp_alive_peephole
   intros
   ---BEGIN eq_21_logical
-  all_goals (try extract_goal ; sorry)
+  apply eq_21_logical_thm
   ---END eq_21_logical
 
 
@@ -429,7 +427,7 @@ theorem eq_shift_in_zeros_proof : eq_shift_in_zeros_before ⊑ eq_shift_in_zeros
   simp_alive_peephole
   intros
   ---BEGIN eq_shift_in_zeros
-  all_goals (try extract_goal ; sorry)
+  apply eq_shift_in_zeros_thm
   ---END eq_shift_in_zeros
 
 
@@ -465,7 +463,7 @@ theorem ne_10_proof : ne_10_before ⊑ ne_10_after := by
   simp_alive_peephole
   intros
   ---BEGIN ne_10
-  all_goals (try extract_goal ; sorry)
+  apply ne_10_thm
   ---END ne_10
 
 
@@ -508,7 +506,7 @@ theorem ne_210_proof : ne_210_before ⊑ ne_210_after := by
   simp_alive_peephole
   intros
   ---BEGIN ne_210
-  all_goals (try extract_goal ; sorry)
+  apply ne_210_thm
   ---END ne_210
 
 
@@ -556,7 +554,7 @@ theorem ne_3210_proof : ne_3210_before ⊑ ne_3210_after := by
   simp_alive_peephole
   intros
   ---BEGIN ne_3210
-  all_goals (try extract_goal ; sorry)
+  apply ne_3210_thm
   ---END ne_3210
 
 
@@ -598,7 +596,7 @@ theorem ne_21_proof : ne_21_before ⊑ ne_21_after := by
   simp_alive_peephole
   intros
   ---BEGIN ne_21
-  all_goals (try extract_goal ; sorry)
+  apply ne_21_thm
   ---END ne_21
 
 
@@ -640,7 +638,7 @@ theorem ne_21_comm_or_proof : ne_21_comm_or_before ⊑ ne_21_comm_or_after := by
   simp_alive_peephole
   intros
   ---BEGIN ne_21_comm_or
-  all_goals (try extract_goal ; sorry)
+  apply ne_21_comm_or_thm
   ---END ne_21_comm_or
 
 
@@ -682,7 +680,7 @@ theorem ne_21_comm_ne_proof : ne_21_comm_ne_before ⊑ ne_21_comm_ne_after := by
   simp_alive_peephole
   intros
   ---BEGIN ne_21_comm_ne
-  all_goals (try extract_goal ; sorry)
+  apply ne_21_comm_ne_thm
   ---END ne_21_comm_ne
 
 
@@ -724,7 +722,7 @@ theorem ne_21_comm_ne2_proof : ne_21_comm_ne2_before ⊑ ne_21_comm_ne2_after :=
   simp_alive_peephole
   intros
   ---BEGIN ne_21_comm_ne2
-  all_goals (try extract_goal ; sorry)
+  apply ne_21_comm_ne2_thm
   ---END ne_21_comm_ne2
 
 
@@ -766,7 +764,7 @@ theorem ne_irregular_bit_widths_proof : ne_irregular_bit_widths_before ⊑ ne_ir
   simp_alive_peephole
   intros
   ---BEGIN ne_irregular_bit_widths
-  all_goals (try extract_goal ; sorry)
+  apply ne_irregular_bit_widths_thm
   ---END ne_irregular_bit_widths
 
 
@@ -809,7 +807,7 @@ theorem ne_21_logical_proof : ne_21_logical_before ⊑ ne_21_logical_after := by
   simp_alive_peephole
   intros
   ---BEGIN ne_21_logical
-  all_goals (try extract_goal ; sorry)
+  apply ne_21_logical_thm
   ---END ne_21_logical
 
 
@@ -848,7 +846,7 @@ theorem ne_shift_in_zeros_proof : ne_shift_in_zeros_before ⊑ ne_shift_in_zeros
   simp_alive_peephole
   intros
   ---BEGIN ne_shift_in_zeros
-  all_goals (try extract_goal ; sorry)
+  apply ne_shift_in_zeros_thm
   ---END ne_shift_in_zeros
 
 
@@ -879,7 +877,7 @@ theorem eq_optimized_highbits_cmp_proof : eq_optimized_highbits_cmp_before ⊑ e
   simp_alive_peephole
   intros
   ---BEGIN eq_optimized_highbits_cmp
-  all_goals (try extract_goal ; sorry)
+  apply eq_optimized_highbits_cmp_thm
   ---END eq_optimized_highbits_cmp
 
 
@@ -910,5 +908,7 @@ theorem ne_optimized_highbits_cmp_proof : ne_optimized_highbits_cmp_before ⊑ n
   simp_alive_peephole
   intros
   ---BEGIN ne_optimized_highbits_cmp
-  all_goals (try extract_goal ; sorry)
+  apply ne_optimized_highbits_cmp_thm
   ---END ne_optimized_highbits_cmp
+
+

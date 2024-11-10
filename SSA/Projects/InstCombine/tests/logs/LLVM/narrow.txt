@@ -35,6 +35,8 @@
 8: "shrink_and_vec" contains vectors which are unsupported
 
 1: "searchArray1"
+9: "searchArray1" has pointer type input
+
 4: "searchArray1" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "searchArray1" has unsupported operation: llvm.getelementptr
@@ -44,6 +46,8 @@
 4: "searchArray1" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "searchArray2"
+9: "searchArray2" has pointer type input
+
 4: "searchArray2" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "searchArray2" has unsupported operation: llvm.getelementptr

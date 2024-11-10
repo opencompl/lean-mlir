@@ -250,12 +250,18 @@
 2: llvm.return
 
 1: "xor_or_xor_common_op_extra_use1"
+9: "xor_or_xor_common_op_extra_use1" has pointer type input
+
 4: "xor_or_xor_common_op_extra_use1" has unsupported operation: llvm.store
 
 1: "xor_or_xor_common_op_extra_use2"
+9: "xor_or_xor_common_op_extra_use2" has pointer type input
+
 4: "xor_or_xor_common_op_extra_use2" has unsupported operation: llvm.store
 
 1: "xor_or_xor_common_op_extra_use3"
+9: "xor_or_xor_common_op_extra_use3" has pointer type input
+
 4: "xor_or_xor_common_op_extra_use3" has unsupported operation: llvm.store
 
 4: "xor_or_xor_common_op_extra_use3" has unsupported operation: llvm.store

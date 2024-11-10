@@ -94,18 +94,24 @@
 2: llvm.return
 
 1: "not_sub_extra_use"
+9: "not_sub_extra_use" has pointer type input
+
 4: "not_sub_extra_use" has unsupported operation: llvm.store
 
 1: "not_sub_splat"
 8: "not_sub_splat" contains vectors which are unsupported
 
 1: "not_sub_extra_use_splat"
+9: "not_sub_extra_use_splat" has pointer type input
+
 4: "not_sub_extra_use_splat" has unsupported operation: llvm.store
 
 1: "not_sub_vec"
 8: "not_sub_vec" contains vectors which are unsupported
 
 1: "not_sub_extra_use_vec"
+9: "not_sub_extra_use_vec" has pointer type input
+
 4: "not_sub_extra_use_vec" has unsupported operation: llvm.store
 
 1: "not_add"

@@ -32,11 +32,15 @@
 4: "reduce_and_zext_external_use" has unsupported operation: llvm.store
 
 1: "reduce_and_pointer_cast"
+9: "reduce_and_pointer_cast" has pointer type input
+
 4: "reduce_and_pointer_cast" has unsupported operation: llvm.load
 
 4: "reduce_and_pointer_cast" has unsupported operation: llvm.load
 
 1: "reduce_and_pointer_cast_wide"
+9: "reduce_and_pointer_cast_wide" has pointer type input
+
 4: "reduce_and_pointer_cast_wide" has unsupported operation: llvm.load
 
 4: "reduce_and_pointer_cast_wide" has unsupported operation: llvm.load
@@ -44,11 +48,15 @@
 4: "reduce_and_pointer_cast_wide" has unsupported operation: builtin.unregistered: llvm.bitcast
 
 1: "reduce_and_pointer_cast_ne"
+9: "reduce_and_pointer_cast_ne" has pointer type input
+
 4: "reduce_and_pointer_cast_ne" has unsupported operation: llvm.load
 
 4: "reduce_and_pointer_cast_ne" has unsupported operation: llvm.load
 
 1: "reduce_and_pointer_cast_ne_wide"
+9: "reduce_and_pointer_cast_ne_wide" has pointer type input
+
 4: "reduce_and_pointer_cast_ne_wide" has unsupported operation: llvm.load
 
 4: "reduce_and_pointer_cast_ne_wide" has unsupported operation: llvm.load

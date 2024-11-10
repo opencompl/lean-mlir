@@ -17,7 +17,7 @@ def sdiv_exact_eq_0_before := [llvm|
 {
 ^0(%arg16 : i8, %arg17 : i8):
   %0 = llvm.mlir.constant(0 : i8) : i8
-  %1 = llvm.sdiv %arg16, %arg17 : i8
+  %1 = llvm.sdiv exact %arg16, %arg17 : i8
   %2 = llvm.icmp "eq" %1, %0 : i8
   "llvm.return"(%2) : (i1) -> ()
 }
@@ -45,7 +45,7 @@ def udiv_exact_ne_0_before := [llvm|
 {
 ^0(%arg14 : i8, %arg15 : i8):
   %0 = llvm.mlir.constant(0 : i8) : i8
-  %1 = llvm.udiv %arg14, %arg15 : i8
+  %1 = llvm.udiv exact %arg14, %arg15 : i8
   %2 = llvm.icmp "ne" %1, %0 : i8
   "llvm.return"(%2) : (i1) -> ()
 }
@@ -73,7 +73,7 @@ def sdiv_exact_ne_1_before := [llvm|
 {
 ^0(%arg12 : i8, %arg13 : i8):
   %0 = llvm.mlir.constant(0 : i8) : i8
-  %1 = llvm.sdiv %arg12, %arg13 : i8
+  %1 = llvm.sdiv exact %arg12, %arg13 : i8
   %2 = llvm.icmp "eq" %1, %0 : i8
   "llvm.return"(%2) : (i1) -> ()
 }
@@ -101,7 +101,7 @@ def udiv_exact_eq_1_before := [llvm|
 {
 ^0(%arg10 : i8, %arg11 : i8):
   %0 = llvm.mlir.constant(1 : i8) : i8
-  %1 = llvm.udiv %arg10, %arg11 : i8
+  %1 = llvm.udiv exact %arg10, %arg11 : i8
   %2 = llvm.icmp "ne" %1, %0 : i8
   "llvm.return"(%2) : (i1) -> ()
 }
@@ -130,7 +130,7 @@ def sdiv_exact_eq_9_no_of_before := [llvm|
   %0 = llvm.mlir.constant(7 : i8) : i8
   %1 = llvm.mlir.constant(9 : i8) : i8
   %2 = llvm.and %arg9, %0 : i8
-  %3 = llvm.sdiv %arg8, %2 : i8
+  %3 = llvm.sdiv exact %arg8, %2 : i8
   %4 = llvm.icmp "eq" %3, %1 : i8
   "llvm.return"(%4) : (i1) -> ()
 }
@@ -163,7 +163,7 @@ def udiv_exact_ne_30_no_of_before := [llvm|
   %0 = llvm.mlir.constant(7 : i8) : i8
   %1 = llvm.mlir.constant(30 : i8) : i8
   %2 = llvm.and %arg1, %0 : i8
-  %3 = llvm.udiv %arg0, %2 : i8
+  %3 = llvm.udiv exact %arg0, %2 : i8
   %4 = llvm.icmp "ne" %3, %1 : i8
   "llvm.return"(%4) : (i1) -> ()
 }

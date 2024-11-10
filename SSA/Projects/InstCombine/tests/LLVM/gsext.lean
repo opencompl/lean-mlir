@@ -135,39 +135,6 @@ theorem test7_proof : test7_before ⊑ test7_after := by
 
 
 
-def test8_before := [llvm|
-{
-^0(%arg26 : i8, %arg27 : i32, %arg28 : i1, %arg29 : !llvm.ptr):
-  %0 = llvm.mlir.constant(24 : i32) : i32
-  %1 = llvm.mlir.constant(0 : i32) : i32
-  %2 = llvm.lshr %arg27, %0 : i32
-  %3 = "llvm.select"(%arg28, %2, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
-  %4 = llvm.trunc %3 : i32 to i16
-  %5 = llvm.sext %4 : i16 to i32
-  "llvm.return"(%5) : (i32) -> ()
-}
-]
-def test8_after := [llvm|
-{
-^0(%arg26 : i8, %arg27 : i32, %arg28 : i1, %arg29 : !llvm.ptr):
-  %0 = llvm.mlir.constant(24 : i32) : i32
-  %1 = llvm.mlir.constant(0 : i32) : i32
-  %2 = llvm.lshr %arg27, %0 : i32
-  %3 = "llvm.select"(%arg28, %2, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
-  "llvm.return"(%3) : (i32) -> ()
-}
-]
-set_option debug.skipKernelTC true in
-theorem test8_proof : test8_before ⊑ test8_after := by
-  unfold test8_before test8_after
-  simp_alive_peephole
-  intros
-  ---BEGIN test8
-  all_goals (try extract_goal ; sorry)
-  ---END test8
-
-
-
 def test10_before := [llvm|
 {
 ^0(%arg23 : i32):
@@ -184,7 +151,7 @@ def test10_after := [llvm|
 ^0(%arg23 : i32):
   %0 = llvm.mlir.constant(30 : i32) : i32
   %1 = llvm.shl %arg23, %0 : i32
-  %2 = llvm.ashr %1, %0 : i32
+  %2 = llvm.ashr exact %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]

@@ -15,6 +15,8 @@
 4: "pr26760" has unsupported operation: builtin.unregistered: llvm.br
 
 1: "pr8547"
+9: "pr8547" has pointer type input
+
 4: "pr8547" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "pr8547" has unsupported operation: llvm.store
@@ -203,7 +205,14 @@
 4: "shl_ashr_demand2" has unsupported operation: llvm.call
 
 1: "shl_lshr_demand3"
-7: "shl_lshr_demand3" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.lshr
+2: llvm.or
+2: llvm.return
 
 1: "shl_lshr_demand4"
 7: "shl_lshr_demand4" is unchanged by InstCombine

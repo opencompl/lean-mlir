@@ -1,4 +1,6 @@
 1: "t0"
+9: "t0" has pointer type input
+
 4: "t0" has unsupported operation: llvm.load
 
 4: "t0" has unsupported operation: builtin.unregistered: llvm.cond_br
@@ -24,6 +26,8 @@
 4: "t0" has unsupported operation: llvm.return
 
 1: "n1"
+9: "n1" has pointer type input
+
 4: "n1" has unsupported operation: llvm.load
 
 4: "n1" has unsupported operation: builtin.unregistered: llvm.cond_br
@@ -49,6 +53,8 @@
 4: "n1" has unsupported operation: llvm.return
 
 1: "n2"
+9: "n2" has pointer type input
+
 4: "n2" has unsupported operation: llvm.load
 
 4: "n2" has unsupported operation: builtin.unregistered: llvm.cond_br
@@ -75,10 +81,10 @@
 5: "abort" is empty
 
 1: "sink0"
-5: "sink0" is empty
+9: "sink0" has pointer type input
 
 1: "sink1"
-5: "sink1" is empty
+9: "sink1" has pointer type input
 
 1: "sink2"
 5: "sink2" is empty

@@ -45,6 +45,8 @@
 4: "PR49475_infloop" has unsupported operation: builtin.unregistered: llvm.intr.assume
 
 1: "PR51762"
+9: "PR51762" has pointer type input
+
 4: "PR51762" has unsupported operation: builtin.unregistered: llvm.mlir.poison
 
 4: "PR51762" has unsupported operation: builtin.unregistered: llvm.br

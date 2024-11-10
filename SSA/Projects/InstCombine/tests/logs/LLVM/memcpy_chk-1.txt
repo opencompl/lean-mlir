@@ -34,9 +34,13 @@
 4: "test_no_simplify2" has unsupported operation: llvm.call
 
 1: "test_no_simplify3"
+9: "test_no_simplify3" has pointer type input
+
 4: "test_no_simplify3" has unsupported operation: llvm.call
 
 1: "test_simplify_return_indcall"
+9: "test_simplify_return_indcall" has pointer type input
+
 4: "test_simplify_return_indcall" has unsupported operation: llvm.mlir.addressof
 
 4: "test_simplify_return_indcall" has unsupported operation: llvm.call
@@ -44,6 +48,8 @@
 4: "test_simplify_return_indcall" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
 
 1: "test_no_incompatible_attr"
+9: "test_no_incompatible_attr" has pointer type input
+
 4: "test_no_incompatible_attr" has unsupported operation: llvm.mlir.addressof
 
 4: "test_no_incompatible_attr" has unsupported operation: llvm.mlir.addressof
@@ -51,5 +57,5 @@
 4: "test_no_incompatible_attr" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
 
 1: "__memcpy_chk"
-5: "__memcpy_chk" is empty
+9: "__memcpy_chk" has pointer type input
 

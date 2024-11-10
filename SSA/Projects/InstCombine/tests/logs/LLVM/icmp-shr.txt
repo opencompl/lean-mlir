@@ -413,6 +413,8 @@
 2: llvm.return
 
 1: "ashr_ugt_0_multiuse"
+9: "ashr_ugt_0_multiuse" has pointer type input
+
 4: "ashr_ugt_0_multiuse" has unsupported operation: llvm.store
 
 1: "ashr_ugt_1"
@@ -558,6 +560,8 @@
 2: llvm.return
 
 1: "ashr_ult_2_multiuse"
+9: "ashr_ult_2_multiuse" has pointer type input
+
 4: "ashr_ult_2_multiuse" has unsupported operation: llvm.store
 
 1: "ashr_ult_3"
@@ -714,10 +718,20 @@
 2: llvm.return
 
 1: "ashr_pow2_ugt"
-7: "ashr_pow2_ugt" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.icmp
+2: llvm.return
 
 1: "lshr_pow2_sgt"
-7: "lshr_pow2_sgt" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.icmp
+2: llvm.return
 
 1: "lshr_pow2_ult"
 2: llvm.func
@@ -751,10 +765,20 @@
 2: llvm.return
 
 1: "ashr_pow2_ult"
-7: "ashr_pow2_ult" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.icmp
+2: llvm.return
 
 1: "lshr_pow2_slt"
-7: "lshr_pow2_slt" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.icmp
+2: llvm.return
 
 1: "lshr_neg_sgt_minus_1"
 2: llvm.func

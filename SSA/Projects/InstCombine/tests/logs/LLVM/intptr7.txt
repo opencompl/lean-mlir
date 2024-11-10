@@ -1,4 +1,6 @@
 1: "matching_phi"
+9: "matching_phi" has pointer type input
+
 4: "matching_phi" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "matching_phi" has unsupported operation: llvm.getelementptr
@@ -20,6 +22,8 @@
 4: "matching_phi" has unsupported operation: llvm.return
 
 1: "no_matching_phi"
+9: "no_matching_phi" has pointer type input
+
 4: "no_matching_phi" has unsupported operation: llvm.getelementptr
 
 4: "no_matching_phi" has unsupported operation: builtin.unregistered: llvm.cond_br

@@ -1,10 +1,12 @@
 1: "strtoul"
-5: "strtoul" is empty
+9: "strtoul" has pointer type input
 
 1: "strtoull"
-5: "strtoull" is empty
+9: "strtoull" has pointer type input
 
 1: "fold_strtoul"
+9: "fold_strtoul" has pointer type input
+
 4: "fold_strtoul" has unsupported operation: llvm.mlir.addressof
 
 4: "fold_strtoul" has unsupported operation: llvm.getelementptr
@@ -128,6 +130,8 @@
 4: "fold_strtoul" has unsupported operation: llvm.return
 
 1: "call_strtoul"
+9: "call_strtoul" has pointer type input
+
 4: "call_strtoul" has unsupported operation: llvm.mlir.addressof
 
 4: "call_strtoul" has unsupported operation: llvm.mlir.addressof
@@ -163,6 +167,8 @@
 4: "call_strtoul" has unsupported operation: llvm.return
 
 1: "fold_strtoull"
+9: "fold_strtoull" has pointer type input
+
 4: "fold_strtoull" has unsupported operation: llvm.mlir.addressof
 
 4: "fold_strtoull" has unsupported operation: llvm.getelementptr
@@ -276,6 +282,8 @@
 4: "fold_strtoull" has unsupported operation: llvm.return
 
 1: "call_strtoull"
+9: "call_strtoull" has pointer type input
+
 4: "call_strtoull" has unsupported operation: llvm.mlir.addressof
 
 4: "call_strtoull" has unsupported operation: llvm.mlir.addressof

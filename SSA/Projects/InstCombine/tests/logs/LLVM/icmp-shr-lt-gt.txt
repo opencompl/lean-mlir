@@ -769,6 +769,8 @@
 2: llvm.return
 
 1: "ashrsgt_01_00_multiuse"
+9: "ashrsgt_01_00_multiuse" has pointer type input
+
 4: "ashrsgt_01_00_multiuse" has unsupported operation: llvm.store
 
 1: "ashrsgt_01_01"
@@ -2067,6 +2069,8 @@
 2: llvm.return
 
 1: "ashr_00_00_ashr_extra_use"
+9: "ashr_00_00_ashr_extra_use" has pointer type input
+
 4: "ashr_00_00_ashr_extra_use" has unsupported operation: llvm.store
 
 1: "ashr_00_00_vec"

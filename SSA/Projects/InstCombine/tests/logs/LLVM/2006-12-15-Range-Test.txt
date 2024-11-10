@@ -1,4 +1,6 @@
 1: "print_pgm_cond_true"
+9: "print_pgm_cond_true" has pointer type input
+
 4: "print_pgm_cond_true" has unsupported operation: llvm.mlir.addressof
 
 4: "print_pgm_cond_true" has unsupported operation: builtin.unregistered: llvm.br
@@ -14,6 +16,8 @@
 4: "print_pgm_cond_true" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "print_pgm_cond_true_logical"
+9: "print_pgm_cond_true_logical" has pointer type input
+
 4: "print_pgm_cond_true_logical" has unsupported operation: llvm.mlir.addressof
 
 4: "print_pgm_cond_true_logical" has unsupported operation: builtin.unregistered: llvm.br

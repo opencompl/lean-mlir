@@ -59,8 +59,12 @@
 2: llvm.return
 
 1: "uaddo_1"
+9: "uaddo_1" has pointer type input
+
 4: "uaddo_1" has unsupported operation: llvm.store
 
 1: "uaddo_neg1"
+9: "uaddo_neg1" has pointer type input
+
 4: "uaddo_neg1" has unsupported operation: llvm.store
 

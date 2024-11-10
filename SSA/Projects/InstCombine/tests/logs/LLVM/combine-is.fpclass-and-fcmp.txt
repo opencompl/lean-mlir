@@ -8,6 +8,8 @@
 4: "fcmp_oeq_inf_or_class_normal_vector" has unsupported operation: builtin.unregistered: llvm.intr.is.fpclass
 
 1: "fcmp_oeq_inf_multi_use_or_class_normal"
+9: "fcmp_oeq_inf_multi_use_or_class_normal" has pointer type input
+
 4: "fcmp_oeq_inf_multi_use_or_class_normal" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "fcmp_oeq_inf_multi_use_or_class_normal" has unsupported operation: llvm.store
@@ -15,6 +17,8 @@
 4: "fcmp_oeq_inf_multi_use_or_class_normal" has unsupported operation: builtin.unregistered: llvm.intr.is.fpclass
 
 1: "fcmp_oeq_inf_or_class_normal_multi_use"
+9: "fcmp_oeq_inf_or_class_normal_multi_use" has pointer type input
+
 4: "fcmp_oeq_inf_or_class_normal_multi_use" has unsupported operation: builtin.unregistered: llvm.fcmp
 
 4: "fcmp_oeq_inf_or_class_normal_multi_use" has unsupported operation: builtin.unregistered: llvm.intr.is.fpclass

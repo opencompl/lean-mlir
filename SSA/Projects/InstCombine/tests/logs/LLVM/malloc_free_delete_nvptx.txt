@@ -1,11 +1,11 @@
 1: "user"
-5: "user" is empty
+9: "user" has pointer type input
 
 1: "malloc"
 5: "malloc" is empty
 
 1: "free"
-5: "free" is empty
+9: "free" has pointer type input
 
 1: "malloc_then_free_not_needed"
 4: "malloc_then_free_not_needed" has unsupported operation: llvm.return

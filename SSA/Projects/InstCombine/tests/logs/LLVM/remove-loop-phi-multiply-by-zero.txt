@@ -1,14 +1,20 @@
 1: "test_mul_fast_flags"
+9: "test_mul_fast_flags" has pointer type input
+
 4: "test_mul_fast_flags" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "test_mul_fast_flags" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "test_nsz_nnan_flags_enabled"
+9: "test_nsz_nnan_flags_enabled" has pointer type input
+
 4: "test_nsz_nnan_flags_enabled" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "test_nsz_nnan_flags_enabled" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "test_nnan_flag_enabled"
+9: "test_nnan_flag_enabled" has pointer type input
+
 4: "test_nnan_flag_enabled" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "test_nnan_flag_enabled" has unsupported operation: llvm.getelementptr
@@ -20,6 +26,8 @@
 4: "test_nnan_flag_enabled" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "test_ninf_flag_enabled"
+9: "test_ninf_flag_enabled" has pointer type input
+
 4: "test_ninf_flag_enabled" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "test_ninf_flag_enabled" has unsupported operation: llvm.getelementptr
@@ -31,6 +39,8 @@
 4: "test_ninf_flag_enabled" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "test_nsz_flag_enabled"
+9: "test_nsz_flag_enabled" has pointer type input
+
 4: "test_nsz_flag_enabled" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "test_nsz_flag_enabled" has unsupported operation: llvm.getelementptr
@@ -42,6 +52,8 @@
 4: "test_nsz_flag_enabled" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "test_phi_initalise_to_non_zero"
+9: "test_phi_initalise_to_non_zero" has pointer type input
+
 4: "test_phi_initalise_to_non_zero" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "test_phi_initalise_to_non_zero" has unsupported operation: llvm.getelementptr
@@ -53,6 +65,8 @@
 4: "test_phi_initalise_to_non_zero" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "test_multiple_phi_operands"
+9: "test_multiple_phi_operands" has pointer type input
+
 4: "test_multiple_phi_operands" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test_multiple_phi_operands" has unsupported operation: builtin.unregistered: llvm.br
@@ -66,6 +80,8 @@
 4: "test_multiple_phi_operands" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "test_multiple_phi_operands_with_non_zero"
+9: "test_multiple_phi_operands_with_non_zero" has pointer type input
+
 4: "test_multiple_phi_operands_with_non_zero" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test_multiple_phi_operands_with_non_zero" has unsupported operation: builtin.unregistered: llvm.br
@@ -79,6 +95,8 @@
 4: "test_multiple_phi_operands_with_non_zero" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "test_int_phi_operands"
+9: "test_int_phi_operands" has pointer type input
+
 4: "test_int_phi_operands" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "test_int_phi_operands" has unsupported operation: llvm.getelementptr
@@ -88,6 +106,8 @@
 4: "test_int_phi_operands" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "test_int_phi_operands_initalise_to_non_zero"
+9: "test_int_phi_operands_initalise_to_non_zero" has pointer type input
+
 4: "test_int_phi_operands_initalise_to_non_zero" has unsupported operation: builtin.unregistered: llvm.br
 
 4: "test_int_phi_operands_initalise_to_non_zero" has unsupported operation: llvm.getelementptr
@@ -97,6 +117,8 @@
 4: "test_int_phi_operands_initalise_to_non_zero" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "test_multiple_int_phi_operands"
+9: "test_multiple_int_phi_operands" has pointer type input
+
 4: "test_multiple_int_phi_operands" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test_multiple_int_phi_operands" has unsupported operation: builtin.unregistered: llvm.br
@@ -108,6 +130,8 @@
 4: "test_multiple_int_phi_operands" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 1: "test_multiple_int_phi_operands_initalise_to_non_zero"
+9: "test_multiple_int_phi_operands_initalise_to_non_zero" has pointer type input
+
 4: "test_multiple_int_phi_operands_initalise_to_non_zero" has unsupported operation: builtin.unregistered: llvm.cond_br
 
 4: "test_multiple_int_phi_operands_initalise_to_non_zero" has unsupported operation: builtin.unregistered: llvm.br

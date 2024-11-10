@@ -138,6 +138,8 @@
 8: "lshr_add_nuw" contains vectors which are unsupported
 
 1: "ashr_add_nuw"
+9: "ashr_add_nuw" has pointer type input
+
 4: "ashr_add_nuw" has unsupported operation: llvm.store
 
 1: "shl_nuw_add_nuw"
@@ -238,6 +240,8 @@
 2: llvm.return
 
 1: "shl_nuw_add_negative_splat_uses"
+9: "shl_nuw_add_negative_splat_uses" has pointer type input
+
 4: "shl_nuw_add_negative_splat_uses" has unsupported operation: llvm.store
 
 1: "shl_nsw_add_negative_invalid_constant"

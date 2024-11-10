@@ -1,7 +1,9 @@
 1: "strncmp"
-5: "strncmp" is empty
+9: "strncmp" has pointer type input
 
 1: "fold_strncmp_Aa_b"
+9: "fold_strncmp_Aa_b" has pointer type input
+
 4: "fold_strncmp_Aa_b" has unsupported operation: llvm.store
 
 4: "fold_strncmp_Aa_b" has unsupported operation: llvm.getelementptr
@@ -43,6 +45,8 @@
 4: "fold_strncmp_Aa_b" has unsupported operation: llvm.return
 
 1: "fold_strncmp_Ab_a"
+9: "fold_strncmp_Ab_a" has pointer type input
+
 4: "fold_strncmp_Ab_a" has unsupported operation: llvm.store
 
 4: "fold_strncmp_Ab_a" has unsupported operation: llvm.getelementptr
@@ -68,5 +72,5 @@
 4: "fold_strncmp_Ab_a" has unsupported operation: llvm.return
 
 1: "memcmp"
-5: "memcmp" is empty
+9: "memcmp" has pointer type input
 

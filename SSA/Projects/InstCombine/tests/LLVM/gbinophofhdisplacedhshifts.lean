@@ -370,6 +370,41 @@ theorem lshr_add_fail_proof : lshr_add_fail_before ⊑ lshr_add_fail_after := by
 
 
 
+def ashr_add_fail_before := [llvm|
+{
+^0(%arg14 : i8):
+  %0 = llvm.mlir.constant(-128 : i8) : i8
+  %1 = llvm.mlir.constant(1 : i8) : i8
+  %2 = llvm.ashr %0, %arg14 : i8
+  %3 = llvm.add %arg14, %1 : i8
+  %4 = llvm.ashr %0, %3 : i8
+  %5 = llvm.add %2, %4 : i8
+  "llvm.return"(%5) : (i8) -> ()
+}
+]
+def ashr_add_fail_after := [llvm|
+{
+^0(%arg14 : i8):
+  %0 = llvm.mlir.constant(-128 : i8) : i8
+  %1 = llvm.mlir.constant(1 : i8) : i8
+  %2 = llvm.ashr exact %0, %arg14 : i8
+  %3 = llvm.add %arg14, %1 : i8
+  %4 = llvm.ashr exact %0, %3 : i8
+  %5 = llvm.add %2, %4 : i8
+  "llvm.return"(%5) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem ashr_add_fail_proof : ashr_add_fail_before ⊑ ashr_add_fail_after := by
+  unfold ashr_add_fail_before ashr_add_fail_after
+  simp_alive_peephole
+  intros
+  ---BEGIN ashr_add_fail
+  all_goals (try extract_goal ; sorry)
+  ---END ashr_add_fail
+
+
+
 def shl_or_commuted_before := [llvm|
 {
 ^0(%arg13 : i8):

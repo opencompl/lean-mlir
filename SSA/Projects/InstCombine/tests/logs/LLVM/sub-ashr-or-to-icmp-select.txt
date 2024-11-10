@@ -85,21 +85,31 @@
 8: "neg_or_ashr_i32_vec_commute" contains vectors which are unsupported
 
 1: "sub_ashr_or_i32_extra_use_sub"
+9: "sub_ashr_or_i32_extra_use_sub" has pointer type input
+
 4: "sub_ashr_or_i32_extra_use_sub" has unsupported operation: llvm.store
 
 1: "sub_ashr_or_i32_extra_use_or"
+9: "sub_ashr_or_i32_extra_use_or" has pointer type input
+
 4: "sub_ashr_or_i32_extra_use_or" has unsupported operation: llvm.store
 
 1: "neg_extra_use_or_ashr_i32"
+9: "neg_extra_use_or_ashr_i32" has pointer type input
+
 4: "neg_extra_use_or_ashr_i32" has unsupported operation: llvm.store
 
 1: "sub_ashr_or_i32_extra_use_ashr"
+9: "sub_ashr_or_i32_extra_use_ashr" has pointer type input
+
 4: "sub_ashr_or_i32_extra_use_ashr" has unsupported operation: llvm.store
 
 1: "sub_ashr_or_i32_no_nsw_nuw"
 7: "sub_ashr_or_i32_no_nsw_nuw" is unchanged by InstCombine
 
 1: "neg_or_extra_use_ashr_i32"
+9: "neg_or_extra_use_ashr_i32" has pointer type input
+
 4: "neg_or_extra_use_ashr_i32" has unsupported operation: llvm.store
 
 1: "sub_ashr_or_i32_vec_undef1"

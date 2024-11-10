@@ -41,3 +41,25 @@ theorem shl_add_nsw_thm (e e_1 : IntW 8) :
     all_goals sorry
 
 
+theorem lshr_add_exact_thm (e e_1 : IntW 8) :
+  lshr (LLVM.and e_1 (const? 8 (-4))) (LLVM.and e (const? 8 2)) ⊑
+    lshr (LLVM.and e_1 (const? 8 (-4))) (LLVM.and e (const? 8 2)) { «exact» := true } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+
+theorem ashr_add_exact_thm (e e_1 : IntW 8) :
+  ashr (LLVM.and e_1 (const? 8 (-14))) (LLVM.and e (const? 8 1)) ⊑
+    ashr (LLVM.and e_1 (const? 8 (-14))) (LLVM.and e (const? 8 1)) { «exact» := true } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+

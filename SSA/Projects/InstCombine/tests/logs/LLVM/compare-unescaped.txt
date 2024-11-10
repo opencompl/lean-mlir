@@ -38,7 +38,7 @@
 4: "compare_ne_global_maybe_null" has unsupported operation: llvm.call
 
 1: "escape"
-5: "escape" is empty
+9: "escape" has pointer type input
 
 1: "compare_and_call_after"
 4: "compare_and_call_after" has unsupported operation: llvm.mlir.addressof
@@ -65,6 +65,8 @@
 4: "compare_samepointer_escaped" has unsupported operation: llvm.call
 
 1: "compare_ret_escape"
+9: "compare_ret_escape" has pointer type input
+
 4: "compare_ret_escape" has unsupported operation: llvm.mlir.addressof
 
 4: "compare_ret_escape" has unsupported operation: llvm.call
@@ -86,7 +88,7 @@
 5: "hidden_inttoptr" is empty
 
 1: "hidden_offset"
-5: "hidden_offset" is empty
+9: "hidden_offset" has pointer type input
 
 1: "ptrtoint_single_cmp"
 4: "ptrtoint_single_cmp" has unsupported operation: llvm.inttoptr
@@ -146,7 +148,7 @@
 4: "neg_consistent_fold4" has unsupported operation: llvm.return
 
 1: "unknown"
-5: "unknown" is empty
+9: "unknown" has pointer type input
 
 1: "consistent_nocapture_inttoptr"
 4: "consistent_nocapture_inttoptr" has unsupported operation: llvm.inttoptr

@@ -69,7 +69,8 @@ macro "simp_alive_ssa" : tactic =>
         simp_peephole [InstCombine.Op.denote] at Γv
 
         simp (config := {failIfUnchanged := false}) only [
-            InstCombine.Op.denote, HVector.getN, HVector.get
+            InstCombine.Op.denote, HVector.getN, HVector.get,
+            beq_self_eq_true, Option.isSome_some
           ]
 
         -- Fold integers into their canonical form.

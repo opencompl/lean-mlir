@@ -1,5 +1,5 @@
 1: "memchr"
-5: "memchr" is empty
+9: "memchr" has pointer type input
 
 1: "test1"
 4: "test1" has unsupported operation: llvm.mlir.addressof
@@ -144,14 +144,22 @@
 4: "pr32124" has unsupported operation: llvm.mlir.addressof
 
 1: "test16"
+9: "test16" has pointer type input
+
 4: "test16" has unsupported operation: llvm.call
 
 1: "test17"
+9: "test17" has pointer type input
+
 4: "test17" has unsupported operation: llvm.call
 
 1: "test18"
+9: "test18" has pointer type input
+
 4: "test18" has unsupported operation: llvm.call
 
 1: "test19"
+9: "test19" has pointer type input
+
 4: "test19" has unsupported operation: llvm.call
 

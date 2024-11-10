@@ -305,6 +305,8 @@
 8: "negative_and_odd_vec" contains vectors which are unsupported
 
 1: "negative_and_odd_uses"
+9: "negative_and_odd_uses" has pointer type input
+
 4: "negative_and_odd_uses" has unsupported operation: llvm.store
 
 1: "srem3"

@@ -1,5 +1,5 @@
 1: "stpcpy"
-5: "stpcpy" is empty
+9: "stpcpy" has pointer type input
 
 1: "test_simplify1"
 4: "test_simplify1" has unsupported operation: llvm.mlir.addressof
@@ -18,6 +18,8 @@
 4: "test_simplify2" has unsupported operation: llvm.getelementptr
 
 1: "test_simplify3"
+9: "test_simplify3" has pointer type input
+
 4: "test_simplify3" has unsupported operation: llvm.mlir.addressof
 
 4: "test_simplify3" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
@@ -32,6 +34,8 @@
 4: "test_no_simplify1" has unsupported operation: llvm.call
 
 1: "test_no_simplify2"
+9: "test_no_simplify2" has pointer type input
+
 4: "test_no_simplify2" has unsupported operation: llvm.call
 
 1: "test_no_incompatible_attr"
@@ -44,8 +48,8 @@
 4: "test_no_incompatible_attr" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
 
 1: "strlen"
-5: "strlen" is empty
+9: "strlen" has pointer type input
 
 1: "strcpy"
-5: "strcpy" is empty
+9: "strcpy" has pointer type input
 

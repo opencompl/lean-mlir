@@ -84,7 +84,7 @@ def ashr_can_be_lshr_before := [llvm|
 {
 ^0(%arg1 : i32):
   %0 = llvm.mlir.constant(16 : i32) : i32
-  %1 = llvm.ashr %arg1, %0 : i32
+  %1 = llvm.ashr exact %arg1, %0 : i32
   %2 = llvm.trunc %1 : i32 to i16
   "llvm.return"(%2) : (i16) -> ()
 }
@@ -93,7 +93,7 @@ def ashr_can_be_lshr_after := [llvm|
 {
 ^0(%arg1 : i32):
   %0 = llvm.mlir.constant(16 : i32) : i32
-  %1 = llvm.lshr %arg1, %0 : i32
+  %1 = llvm.lshr exact %arg1, %0 : i32
   %2 = llvm.trunc %1 : i32 to i16
   "llvm.return"(%2) : (i16) -> ()
 }
@@ -118,7 +118,7 @@ def ashr_can_be_lshr_2_before := [llvm|
   %3 = llvm.zext %arg0 : i32 to i64
   %4 = llvm.or %3, %0 : i64
   %5 = llvm.shl %4, %1 : i64
-  %6 = llvm.ashr %5, %2 : i64
+  %6 = llvm.ashr exact %5, %2 : i64
   %7 = llvm.trunc %6 : i64 to i32
   "llvm.return"(%7) : (i32) -> ()
 }

@@ -1,5 +1,5 @@
 1: "fprintf"
-5: "fprintf" is empty
+9: "fprintf" has pointer type input
 
 1: "test1"
 4: "test1" has unsupported operation: llvm.mlir.addressof

@@ -163,6 +163,8 @@
 4: "reduce_precision_fmf" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
 
 1: "reduce_precision_multi_use_0"
+9: "reduce_precision_multi_use_0" has pointer type input
+
 4: "reduce_precision_multi_use_0" has unsupported operation: builtin.unregistered: llvm.fpext
 
 4: "reduce_precision_multi_use_0" has unsupported operation: builtin.unregistered: llvm.fpext
@@ -174,6 +176,8 @@
 4: "reduce_precision_multi_use_0" has unsupported operation: builtin.unregistered: llvm.fptrunc
 
 1: "reduce_precision_multi_use_1"
+9: "reduce_precision_multi_use_1" has pointer type input
+
 4: "reduce_precision_multi_use_1" has unsupported operation: builtin.unregistered: llvm.fpext
 
 4: "reduce_precision_multi_use_1" has unsupported operation: builtin.unregistered: llvm.fpext
