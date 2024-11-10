@@ -25,6 +25,7 @@ def allowed(op):
         or (op.name in allowed_names)
     )
 
+
 def show(block):
     output = io.StringIO()
     p = Printer(stream=output)
