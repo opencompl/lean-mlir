@@ -124,7 +124,6 @@ def and_sequence_20_rhs (w : Nat)  :=
 
 theorem and_sequence_20_eq (w : Nat) :
     and_sequence_20_lhs w  ⊑ and_sequence_20_rhs w := by
-  stop
   unfold and_sequence_20_lhs and_sequence_20_rhs
   simp_alive_peephole
   alive_auto
@@ -175,7 +174,6 @@ def and_sequence_30_rhs (w : Nat)  :=
 
 theorem and_sequence_30_eq (w : Nat) :
     and_sequence_30_lhs w  ⊑ and_sequence_30_rhs w := by
-  stop
   unfold and_sequence_30_lhs and_sequence_30_rhs
   simp_alive_peephole
   alive_auto
@@ -238,7 +236,6 @@ def and_sequence_40_rhs (w : Nat)  :=
 set_option maxHeartbeats 800000 in
 theorem and_sequence_40_eq (w : Nat) :
     and_sequence_40_lhs w  ⊑ and_sequence_40_rhs w := by
-  stop
   unfold and_sequence_40_lhs and_sequence_40_rhs
   simp_alive_peephole
   alive_auto
