@@ -15,6 +15,7 @@ The pretty syntax for these flags is `overflow<flags>`.
 It gets translated to `<{overflowFlags = #llvm.overflow< flags >}>` in the generic syntax.
 -/
 declare_syntax_cat MLIR.Pretty.overflow_op
+declare_syntax_cat MLIR.Pretty.overflow_int_cast_op
 
 syntax overflow_flag := "nsw" <|> "nuw"
 
@@ -35,5 +36,17 @@ macro_rules
         `(mlir_attr_val|$(mkIdent `nuw):ident)
       | _ => Macro.throwUnsupported
     `([mlir_op| $[$resName =]? $opName ($xs,*) $[<{overflowFlags = #llvm.overflow< $ovflags,* >}>]? : ($argTys,*) -> ($retTy:mlir_type,*) ])
+
+syntax mlir_op_operand " = " MLIR.Pretty.overflow_int_cast_op mlir_op_operand (" overflow<" overflow_flag,* "> ")? " : " mlir_type " to " mlir_type : mlir_op
+macro_rules
+  | `(mlir_op| $resName:mlir_op_operand = $name:MLIR.Pretty.overflow_int_cast_op $x $[overflow< $[$f],* >]? : $t to $t' ) => do
+    let some opName := extractOpName name.raw | Macro.throwUnsupported
+    let ovflags ← f.mapM fun f => f.mapM fun
+      | `(overflow_flag|nsw) =>
+        `(mlir_attr_val|$(mkIdent `nsw):ident)
+      | `(overflow_flag|nuw) =>
+        `(mlir_attr_val|$(mkIdent `nuw):ident)
+      | _ => Macro.throwUnsupported
+    `([mlir_op| $resName:mlir_op_operand = $opName ($x) $[<{overflowFlags = #llvm.overflow< $ovflags,* >}>]? : ($t) -> $t' ])
 
 end MLIR.EDSL

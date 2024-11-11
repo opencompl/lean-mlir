@@ -50,7 +50,7 @@ macro_rules
     `(mlir_op| $resName:mlir_op_operand = $opName ($x, $y) : ($t, $t) -> (i1) )
 
 declare_syntax_cat InstCombine.int_cast_op
-syntax "llvm.trunc" : InstCombine.int_cast_op
+syntax "llvm.trunc" : MLIR.Pretty.overflow_int_cast_op
 syntax "llvm.zext" : MLIR.Pretty.nneg_op
 syntax "llvm.sext" : InstCombine.int_cast_op
 

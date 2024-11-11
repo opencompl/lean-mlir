@@ -189,11 +189,21 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
         | "llvm.not"   => pure .not
         | "llvm.neg"   => pure .neg
         | "llvm.copy"  => pure .copy
-        | "llvm.trunc" => pure <| .trunc (← getOutputWidth opStx "trunc")
         | "llvm.zext"  => do
           let nonNeg? := opStx.attrs.getAttr "nonNeg"
           pure <| .zext (← getOutputWidth opStx "zext") ⟨nonNeg?.isSome⟩
-        | "llvm.sext"  => pure <| .sext (← getOutputWidth opStx "sext")
+        | "llvm.sext"  => pure <| .zext (← getOutputWidth opStx "sext")
+        | "llvm.trunc" => do
+          let attr? := opStx.attrs.getAttr "overflowFlags"
+          match attr? with
+            | .none =>  pure <| .trunc (← getOutputWidth opStx "trunc")
+            | .some y => match y with
+              | .opaque_ "llvm.overflow" "nsw" => pure <| .trunc (← getOutputWidth opStx "trunc") ⟨true, false⟩
+              | .opaque_ "llvm.overflow" "nuw" => pure <| .trunc (← getOutputWidth opStx "trunc") ⟨false, true⟩
+              | .list [.opaque_ "llvm.overflow" "nuw", .opaque_ "llvm.overflow" "nsw"] => pure <| .trunc (← getOutputWidth opStx "trunc") ⟨true, true⟩
+              | .list [.opaque_ "llvm.overflow" "nsw", .opaque_ "llvm.overflow" "nuw"] => pure <| .trunc (← getOutputWidth opStx "trunc") ⟨true, true⟩
+              | .opaque_ "llvm.overflow" s => throw <| .generic s!"The overflow flag {s} not allowed. We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
+              | _ => throw <| .generic s!"Unrecognised overflow flag found: {MLIR.AST.docAttrVal y}. We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
         | _ => throw <| .generic s!"Unknown (unary) operation syntax {opStx.name}"
     return ⟨_, _, mkUnaryOp op v⟩
   | [] =>

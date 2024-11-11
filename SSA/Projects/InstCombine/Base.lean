@@ -84,7 +84,7 @@ inductive MOp.UnaryOp (φ : Nat) : Type
   | neg
   | not
   | copy
-  | trunc (w' : Width φ)
+  | trunc (w' : Width φ) (nswnuw : NoWrapFlags := {nsw := false, nuw := false} )
   | zext  (w' : Width φ) (nneg : NonNegFlag := {nneg := false} )
   | sext  (w' : Width φ)
 deriving Repr, DecidableEq, Inhabited
@@ -158,7 +158,6 @@ namespace MOp
 @[match_pattern] def neg    (w : Width φ) : MOp φ := .unary w .neg
 @[match_pattern] def not    (w : Width φ) : MOp φ := .unary w .not
 @[match_pattern] def copy   (w : Width φ) : MOp φ := .unary w .copy
-@[match_pattern] def trunc  (w w' : Width φ) : MOp φ := .unary w (.trunc w')
 @[match_pattern] def sext   (w w' : Width φ) : MOp φ := .unary w (.sext w')
 
 /- This definition uses a nneg flag -/
@@ -177,6 +176,10 @@ namespace MOp
     := .binary w (.or DisjointFlag )
 
 /- These definitions use NoWrapFlags -/
+@[match_pattern] def trunc  (w w' : Width φ)
+  (NoWrapFlags: NoWrapFlags := {nsw := false , nuw := false}) : MOp φ
+    := .unary w (.trunc w' NoWrapFlags)
+
 @[match_pattern] def shl (w : Width φ)
   (NoWrapFlags: NoWrapFlags := {nsw := false , nuw := false}) : MOp φ
     := .binary w (.shl NoWrapFlags )
@@ -208,7 +211,7 @@ namespace MOp
 def deepCasesOn {motive : ∀ {φ}, MOp φ → Sort*}
     (neg    : ∀ {φ} {w : Width φ},               motive (neg  w))
     (not    : ∀ {φ} {w : Width φ},               motive (not  w))
-    (trunc  : ∀ {φ} {w w' : Width φ},            motive (trunc w w'))
+    (trunc  : ∀ {φ NoWrapFlags} {w w' : Width φ},            motive (trunc w w' NoWrapFlags))
     (zext   : ∀ {φ NonNegFlag} {w w' : Width φ}, motive (zext  w w' NonNegFlag))
     (sext   : ∀ {φ} {w w' : Width φ},            motive (sext  w w'))
     (copy   : ∀ {φ} {w : Width φ},               motive (copy w))
@@ -231,7 +234,7 @@ def deepCasesOn {motive : ∀ {φ}, MOp φ → Sort*}
     ∀ {φ} (op : MOp φ), motive op
   | _, .neg _      => neg
   | _, .not _      => not
-  | _, .trunc _ _  => trunc
+  | _, .trunc _ _ _  => trunc
   | _, .zext _ _ _ => zext
   | _, .sext _ _   => sext
   | _, .copy _     => copy
@@ -271,7 +274,7 @@ instance : ToString (MOp φ) where
   | .sub _ _    => "sub"
   | .neg _      => "neg"
   | .copy _     => "copy"
-  | .trunc _ _  => "trunc"
+  | .trunc _ _ _  => "trunc"
   | .zext _ _ _ => "zext"
   | .sext _ _   => "sext"
   | .sdiv _ _   => "sdiv"
@@ -282,7 +285,7 @@ instance : ToString (MOp φ) where
 abbrev Op := MOp 0
 
 def MOp.UnaryOp.instantiate (as : Mathlib.Vector Nat φ) : MOp.UnaryOp φ → MOp.UnaryOp 0
-| .trunc w'     => .trunc (.concrete <| w'.instantiate as)
+| .trunc w' flags     => .trunc (.concrete <| w'.instantiate as) flags
 | .zext w' flag => .zext (.concrete <| w'.instantiate as) flag
 | .sext w'      => .sext (.concrete <| w'.instantiate as)
 | .neg          => .neg
@@ -296,7 +299,6 @@ namespace Op
 
 @[match_pattern] abbrev and    : Nat → Op := MOp.and    ∘ .concrete
 @[match_pattern] abbrev not    : Nat → Op := MOp.not    ∘ .concrete
-@[match_pattern] abbrev trunc  : Nat → Nat → Op := fun w w' => MOp.trunc (.concrete w) (.concrete w')
 @[match_pattern] abbrev sext   : Nat → Nat → Op := fun w w' => MOp.sext (.concrete w) (.concrete w')
 @[match_pattern] abbrev xor    : Nat → Op := MOp.xor    ∘ .concrete
 @[match_pattern] abbrev urem   : Nat → Op := MOp.urem   ∘ .concrete
@@ -315,6 +317,9 @@ namespace Op
 @[match_pattern] abbrev or (w : Nat) (flag : DisjointFlag := {disjoint := false} ) : Op := MOp.or (.concrete w) flag
 
 /- These operations are separate from the others because they take in 2 flags: nuw and nsw.-/
+@[match_pattern] abbrev trunc (w w': Nat) (flags: NoWrapFlags :=
+   {nsw := false , nuw := false}) : Op := MOp.trunc (.concrete w) (.concrete w') flags
+
 @[match_pattern] abbrev shl (w : Nat) (flags: NoWrapFlags :=
    {nsw := false , nuw := false}) : Op:=  MOp.shl (.concrete w) flags
 @[match_pattern] abbrev add (w : Nat) (flags: NoWrapFlags :=
@@ -345,7 +350,7 @@ def MOp.sig : MOp φ → List (MTy φ)
 
 @[simp, reducible]
 def MOp.UnaryOp.outTy (w : Width φ) : MOp.UnaryOp φ → MTy φ
-| .trunc w' => .bitvec w'
+| .trunc w' _ => .bitvec w'
 | .zext w' _ => .bitvec w'
 | .sext w' => .bitvec w'
 | _ => .bitvec w
@@ -379,7 +384,7 @@ def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (DialectSignature.sig 
   | Op.copy _         =>               (op.getN 0)
   | Op.not _          => LLVM.not      (op.getN 0)
   | Op.neg _          => LLVM.neg      (op.getN 0)
-  | Op.trunc w w'     => LLVM.trunc w' (op.getN 0)
+  | Op.trunc w w'    flags => LLVM.trunc w' (op.getN 0) flags
   | Op.zext w w' flag => LLVM.zext  w' (op.getN 0) flag
   | Op.sext w w'      => LLVM.sext  w' (op.getN 0)
   | Op.and _          => LLVM.and      (op.getN 0) (op.getN 1)
