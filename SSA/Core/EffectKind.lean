@@ -112,23 +112,31 @@ section Lattice
 def sup : EffectKind → EffectKind → EffectKind
   | .pure, .pure => .pure
   | _, _ => .impure
-instance : Sup EffectKind := {sup}
+
+instance : Max EffectKind where
+  max := sup
 
 def inf : EffectKind → EffectKind → EffectKind
   | .impure, .impure => .impure
   | _, _ => .pure
-instance : Inf EffectKind := {inf}
 
-@[simp] theorem pure_sup_pure_eq  : pure ⊔ pure = pure    := rfl
-@[simp] theorem impure_sup_eq     : impure ⊔ e  = impure  := rfl
-@[simp] theorem sup_impure_eq     : e ⊔ impure  = impure  := by cases e <;> rfl
+instance : Min EffectKind where
+  min := inf
 
-@[simp] theorem impure_inf_impure_eq  : impure ⊓ impure = impure  := rfl
-@[simp] theorem pure_inf_eq           : pure ⊓ e = pure           := rfl
-@[simp] theorem inf_pure_eq           : e ⊓ pure = pure           := by cases e <;> rfl
+@[simp] theorem pure_sup_pure_eq  : max pure pure = pure    := rfl
+@[simp] theorem pure_sup_pure_eq'  : max pure pure = pure    := rfl
+
+@[simp] theorem impure_sup_eq     : max impure e  = impure  := rfl
+@[simp] theorem sup_impure_eq     : max e impure  = impure  := by cases e <;> rfl
+
+@[simp] theorem impure_inf_impure_eq  : min impure impure = impure  := rfl
+@[simp] theorem pure_inf_eq           : min pure e = pure           := rfl
+@[simp] theorem inf_pure_eq           : min e pure = pure           := by cases e <;> rfl
 
 -- TODO: these proofs are currently quite slow, they could probablye be sped up quite a bit
 instance : Lattice EffectKind where
+  sup           := max
+  inf           := min
   le_sup_left   := by rintro (_|_) (_|_) <;> constructor
   le_sup_right  := by rintro (_|_) (_|_) <;> constructor
   sup_le        := by rintro (_|_) (_|_) (_|_) <;> simp
