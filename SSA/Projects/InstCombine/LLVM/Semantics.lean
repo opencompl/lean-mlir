@@ -575,14 +575,21 @@ def trunc {w: Nat} (w': Nat) (x: IntW w) : IntW w' := do
   let x' <- x
   trunc? w' x'
 
+structure NonNegFlag where
+  nneg : Bool := false
+  deriving Repr, DecidableEq
+
 @[simp_llvm]
 def zext? {w: Nat} (w': Nat) (x: BitVec w) : IntW w' := do
   some <| (BitVec.zeroExtend w' x)
 
 @[simp_llvm_option]
-def zext {w: Nat} (w': Nat) (x: IntW w) : IntW w' := do
+def zext {w: Nat} (w': Nat) (x: IntW w) (flag : NonNegFlag := {nneg := false}) : IntW w' := do
   let x' <- x
-  zext? w' x'
+  if flag.nneg ∧ x'.msb then
+    none
+  else
+    zext? w' x'
 
 @[simp_llvm]
 def sext? {w: Nat} (w': Nat) (x: BitVec w) : IntW w' := do
