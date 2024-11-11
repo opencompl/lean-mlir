@@ -37,7 +37,7 @@ theorem src_is_mask_sext_thm (e : IntW 16) (e_1 : IntW 8) :
   icmp IntPredicate.eq
       (LLVM.and (LLVM.xor (sext 16 (lshr (const? 8 31) e_1)) (const? 16 (-1))) (LLVM.xor e (const? 16 123)))
       (const? 16 0) ⊑
-    icmp IntPredicate.ule (LLVM.xor e (const? 16 123)) (zext 16 (lshr (const? 8 31) e_1)) := by 
+    icmp IntPredicate.ule (LLVM.xor e (const? 16 123)) (zext 16 (lshr (const? 8 31) e_1) { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

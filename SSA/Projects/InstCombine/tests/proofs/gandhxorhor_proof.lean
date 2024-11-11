@@ -1337,7 +1337,7 @@ theorem and_orn_xor_commute8_thm (e e_1 : IntW 32) :
 
 
 theorem and_zext_zext_thm (e : IntW 4) (e_1 : IntW 8) :
-  LLVM.and (zext 16 e_1) (zext 16 e) ⊑ zext 16 (LLVM.and e_1 (zext 8 e)) := by 
+  LLVM.and (zext 16 e_1) (zext 16 e) ⊑ zext 16 (LLVM.and e_1 (zext 8 e)) { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

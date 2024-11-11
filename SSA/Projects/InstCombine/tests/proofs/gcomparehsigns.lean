@@ -308,3 +308,36 @@ theorem shift_trunc_wrong_shift_proof : shift_trunc_wrong_shift_before ⊑ shift
   ---END shift_trunc_wrong_shift
 
 
+
+def shift_trunc_wrong_cmp_before := [llvm|
+{
+^0(%arg0 : i32):
+  %0 = llvm.mlir.constant(24 : i32) : i32
+  %1 = llvm.mlir.constant(1 : i8) : i8
+  %2 = llvm.lshr %arg0, %0 : i32
+  %3 = llvm.trunc %2 : i32 to i8
+  %4 = llvm.icmp "slt" %3, %1 : i8
+  "llvm.return"(%4) : (i1) -> ()
+}
+]
+def shift_trunc_wrong_cmp_after := [llvm|
+{
+^0(%arg0 : i32):
+  %0 = llvm.mlir.constant(24 : i32) : i32
+  %1 = llvm.mlir.constant(1 : i8) : i8
+  %2 = llvm.lshr %arg0, %0 : i32
+  %3 = llvm.trunc %2 overflow<nuw> : i32 to i8
+  %4 = llvm.icmp "slt" %3, %1 : i8
+  "llvm.return"(%4) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem shift_trunc_wrong_cmp_proof : shift_trunc_wrong_cmp_before ⊑ shift_trunc_wrong_cmp_after := by
+  unfold shift_trunc_wrong_cmp_before shift_trunc_wrong_cmp_after
+  simp_alive_peephole
+  intros
+  ---BEGIN shift_trunc_wrong_cmp
+  apply shift_trunc_wrong_cmp_thm
+  ---END shift_trunc_wrong_cmp
+
+

@@ -423,7 +423,7 @@ def f_t15_t01_t09_after := [llvm|
   %0 = llvm.mlir.constant(15 : i40) : i40
   %1 = llvm.mlir.constant(-65536 : i32) : i32
   %2 = llvm.ashr %arg0, %0 : i40
-  %3 = llvm.trunc %2 : i40 to i32
+  %3 = llvm.trunc %2 overflow<nsw> : i40 to i32
   %4 = llvm.and %3, %1 : i32
   "llvm.return"(%4) : (i32) -> ()
 }

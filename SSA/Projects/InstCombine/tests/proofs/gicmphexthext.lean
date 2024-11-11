@@ -235,7 +235,7 @@ theorem sext_sext_sge_op0_narrow_proof : sext_sext_sge_op0_narrow_before ⊑ sex
 def zext_nneg_sext_sgt_before := [llvm|
 {
 ^0(%arg62 : i8, %arg63 : i8):
-  %0 = llvm.zext %arg62 : i8 to i32
+  %0 = llvm.zext nneg %arg62 : i8 to i32
   %1 = llvm.sext %arg63 : i8 to i32
   %2 = llvm.icmp "sgt" %0, %1 : i32
   "llvm.return"(%2) : (i1) -> ()
@@ -262,7 +262,7 @@ theorem zext_nneg_sext_sgt_proof : zext_nneg_sext_sgt_before ⊑ zext_nneg_sext_
 def zext_nneg_sext_ugt_before := [llvm|
 {
 ^0(%arg58 : i8, %arg59 : i8):
-  %0 = llvm.zext %arg58 : i8 to i32
+  %0 = llvm.zext nneg %arg58 : i8 to i32
   %1 = llvm.sext %arg59 : i8 to i32
   %2 = llvm.icmp "ugt" %0, %1 : i32
   "llvm.return"(%2) : (i1) -> ()
@@ -289,7 +289,7 @@ theorem zext_nneg_sext_ugt_proof : zext_nneg_sext_ugt_before ⊑ zext_nneg_sext_
 def zext_nneg_sext_eq_before := [llvm|
 {
 ^0(%arg54 : i8, %arg55 : i8):
-  %0 = llvm.zext %arg54 : i8 to i32
+  %0 = llvm.zext nneg %arg54 : i8 to i32
   %1 = llvm.sext %arg55 : i8 to i32
   %2 = llvm.icmp "eq" %0, %1 : i32
   "llvm.return"(%2) : (i1) -> ()
@@ -316,7 +316,7 @@ theorem zext_nneg_sext_eq_proof : zext_nneg_sext_eq_before ⊑ zext_nneg_sext_eq
 def zext_nneg_sext_sle_op0_narrow_before := [llvm|
 {
 ^0(%arg50 : i8, %arg51 : i16):
-  %0 = llvm.zext %arg50 : i8 to i32
+  %0 = llvm.zext nneg %arg50 : i8 to i32
   %1 = llvm.sext %arg51 : i16 to i32
   %2 = llvm.icmp "sle" %0, %1 : i32
   "llvm.return"(%2) : (i1) -> ()
@@ -344,7 +344,7 @@ theorem zext_nneg_sext_sle_op0_narrow_proof : zext_nneg_sext_sle_op0_narrow_befo
 def zext_nneg_sext_ule_op0_wide_before := [llvm|
 {
 ^0(%arg46 : i9, %arg47 : i8):
-  %0 = llvm.zext %arg46 : i9 to i32
+  %0 = llvm.zext nneg %arg46 : i9 to i32
   %1 = llvm.sext %arg47 : i8 to i32
   %2 = llvm.icmp "ule" %0, %1 : i32
   "llvm.return"(%2) : (i1) -> ()
@@ -373,7 +373,7 @@ def sext_zext_nneg_slt_before := [llvm|
 {
 ^0(%arg42 : i8, %arg43 : i8):
   %0 = llvm.sext %arg42 : i8 to i32
-  %1 = llvm.zext %arg43 : i8 to i32
+  %1 = llvm.zext nneg %arg43 : i8 to i32
   %2 = llvm.icmp "slt" %0, %1 : i32
   "llvm.return"(%2) : (i1) -> ()
 }
@@ -400,7 +400,7 @@ def sext_zext_nneg_ult_before := [llvm|
 {
 ^0(%arg38 : i8, %arg39 : i8):
   %0 = llvm.sext %arg38 : i8 to i32
-  %1 = llvm.zext %arg39 : i8 to i32
+  %1 = llvm.zext nneg %arg39 : i8 to i32
   %2 = llvm.icmp "ult" %0, %1 : i32
   "llvm.return"(%2) : (i1) -> ()
 }
@@ -427,7 +427,7 @@ def sext_zext_nneg_sge_op0_narrow_before := [llvm|
 {
 ^0(%arg30 : i5, %arg31 : i8):
   %0 = llvm.sext %arg30 : i5 to i32
-  %1 = llvm.zext %arg31 : i8 to i32
+  %1 = llvm.zext nneg %arg31 : i8 to i32
   %2 = llvm.icmp "sge" %0, %1 : i32
   "llvm.return"(%2) : (i1) -> ()
 }
@@ -455,7 +455,7 @@ def sext_zext_nneg_uge_op0_wide_before := [llvm|
 {
 ^0(%arg26 : i16, %arg27 : i8):
   %0 = llvm.sext %arg26 : i16 to i32
-  %1 = llvm.zext %arg27 : i8 to i32
+  %1 = llvm.zext nneg %arg27 : i8 to i32
   %2 = llvm.icmp "uge" %0, %1 : i32
   "llvm.return"(%2) : (i1) -> ()
 }
@@ -588,7 +588,7 @@ def zext_sext_sle_known_nonneg_op0_narrow_after := [llvm|
 ^0(%arg18 : i8, %arg19 : i16):
   %0 = llvm.mlir.constant(12 : i8) : i8
   %1 = llvm.and %arg18, %0 : i8
-  %2 = llvm.zext %1 : i8 to i16
+  %2 = llvm.zext nneg %1 : i8 to i16
   %3 = llvm.icmp "sge" %arg19, %2 : i16
   "llvm.return"(%3) : (i1) -> ()
 }
@@ -745,7 +745,7 @@ def sext_zext_uge_known_nonneg_op0_wide_after := [llvm|
 ^0(%arg6 : i16, %arg7 : i8):
   %0 = llvm.mlir.constant(12 : i8) : i8
   %1 = llvm.and %arg7, %0 : i8
-  %2 = llvm.zext %1 : i8 to i16
+  %2 = llvm.zext nneg %1 : i8 to i16
   %3 = llvm.icmp "uge" %arg6, %2 : i16
   "llvm.return"(%3) : (i1) -> ()
 }

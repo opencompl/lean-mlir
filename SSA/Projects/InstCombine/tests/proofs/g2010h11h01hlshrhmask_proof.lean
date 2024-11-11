@@ -17,7 +17,8 @@ theorem main_thm (e : IntW 32) :
               (LLVM.xor (LLVM.and (trunc 8 e) (const? 8 122)) (const? 8 (-17)))))
           (const? 8 7))
         (const? 8 64)) ⊑
-    zext 32 (LLVM.and (shl (LLVM.xor (trunc 8 e) (const? 8 (-1))) (const? 8 5)) (const? 8 64)) := by 
+    zext 32 (LLVM.and (shl (LLVM.xor (trunc 8 e) (const? 8 (-1))) (const? 8 5)) (const? 8 64))
+      { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

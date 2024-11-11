@@ -19,7 +19,7 @@ theorem t1_thm (e : IntW 32) (e_1 : IntW 16) :
 
 
 theorem t2_thm (e : IntW 32) (e_1 : IntW 64) :
-  LLVM.udiv e_1 (zext 64 (shl (const? 32 1) e)) ⊑ lshr e_1 (zext 64 e) := by 
+  LLVM.udiv e_1 (zext 64 (shl (const? 32 1) e)) ⊑ lshr e_1 (zext 64 e { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -29,7 +29,7 @@ theorem t2_thm (e : IntW 32) (e_1 : IntW 64) :
 
 
 theorem t3_thm (e : IntW 32) (e_1 : IntW 64) :
-  LLVM.udiv e_1 (zext 64 (shl (const? 32 4) e)) ⊑ lshr e_1 (zext 64 (add e (const? 32 2))) := by 
+  LLVM.udiv e_1 (zext 64 (shl (const? 32 4) e)) ⊑ lshr e_1 (zext 64 (add e (const? 32 2)) { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

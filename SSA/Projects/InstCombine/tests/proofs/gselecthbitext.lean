@@ -241,7 +241,7 @@ def trunc_sel_larger_zext_after := [llvm|
   %0 = llvm.mlir.constant(65535 : i32) : i32
   %1 = llvm.mlir.constant(42) : i64
   %2 = llvm.and %arg73, %0 : i32
-  %3 = llvm.zext %2 : i32 to i64
+  %3 = llvm.zext nneg %2 : i32 to i64
   %4 = "llvm.select"(%arg74, %3, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
   "llvm.return"(%4) : (i64) -> ()
 }

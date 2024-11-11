@@ -74,3 +74,27 @@ theorem testi64i32_ne_thm (e : IntW 64) :
     all_goals sorry
 
 
+theorem wrongimm2_thm (e : IntW 16) :
+  icmp IntPredicate.eq (ashr (trunc 8 e) (const? 8 6)) (trunc 8 (lshr e (const? 16 8))) ⊑
+    icmp IntPredicate.eq (ashr (trunc 8 e) (const? 8 6))
+      (trunc 8 (lshr e (const? 16 8)) { «nsw» := false, «nuw» := true }) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+
+theorem slt_thm (e : IntW 64) :
+  icmp IntPredicate.slt (ashr (trunc 32 e) (const? 32 31)) (trunc 32 (lshr e (const? 64 32))) ⊑
+    icmp IntPredicate.slt (ashr (trunc 32 e) (const? 32 31))
+      (trunc 32 (lshr e (const? 64 32)) { «nsw» := false, «nuw» := true }) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+

@@ -46,7 +46,8 @@ theorem smear_sign_and_widen_thm (e : IntW 8) : lshr (sext 32 e) (const? 32 24) 
     all_goals sorry
 
 
-theorem fake_sext_thm (e : IntW 3) : lshr (sext 18 e) (const? 18 17) ⊑ zext 18 (lshr e (const? 3 2)) := by 
+theorem fake_sext_thm (e : IntW 3) :
+  lshr (sext 18 e) (const? 18 17) ⊑ zext 18 (lshr e (const? 3 2)) { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -267,7 +268,8 @@ theorem negative_and_odd_thm (e : IntW 32) :
 
 
 theorem trunc_sandwich_thm (e : IntW 32) :
-  lshr (trunc 12 (lshr e (const? 32 28))) (const? 12 2) ⊑ trunc 12 (lshr e (const? 32 30)) := by 
+  lshr (trunc 12 (lshr e (const? 32 28))) (const? 12 2) ⊑
+    trunc 12 (lshr e (const? 32 30)) { «nsw» := true, «nuw» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -277,7 +279,8 @@ theorem trunc_sandwich_thm (e : IntW 32) :
 
 
 theorem trunc_sandwich_min_shift1_thm (e : IntW 32) :
-  lshr (trunc 12 (lshr e (const? 32 20))) (const? 12 1) ⊑ trunc 12 (lshr e (const? 32 21)) := by 
+  lshr (trunc 12 (lshr e (const? 32 20))) (const? 12 1) ⊑
+    trunc 12 (lshr e (const? 32 21)) { «nsw» := true, «nuw» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -288,7 +291,7 @@ theorem trunc_sandwich_min_shift1_thm (e : IntW 32) :
 
 theorem trunc_sandwich_small_shift1_thm (e : IntW 32) :
   lshr (trunc 12 (lshr e (const? 32 19))) (const? 12 1) ⊑
-    LLVM.and (trunc 12 (lshr e (const? 32 20))) (const? 12 2047) := by 
+    LLVM.and (trunc 12 (lshr e (const? 32 20)) { «nsw» := false, «nuw» := true }) (const? 12 2047) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -298,7 +301,8 @@ theorem trunc_sandwich_small_shift1_thm (e : IntW 32) :
 
 
 theorem trunc_sandwich_max_sum_shift_thm (e : IntW 32) :
-  lshr (trunc 12 (lshr e (const? 32 20))) (const? 12 11) ⊑ trunc 12 (lshr e (const? 32 31)) := by 
+  lshr (trunc 12 (lshr e (const? 32 20))) (const? 12 11) ⊑
+    trunc 12 (lshr e (const? 32 31)) { «nsw» := true, «nuw» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -308,7 +312,8 @@ theorem trunc_sandwich_max_sum_shift_thm (e : IntW 32) :
 
 
 theorem trunc_sandwich_max_sum_shift2_thm (e : IntW 32) :
-  lshr (trunc 12 (lshr e (const? 32 30))) (const? 12 1) ⊑ trunc 12 (lshr e (const? 32 31)) := by 
+  lshr (trunc 12 (lshr e (const? 32 30))) (const? 12 1) ⊑
+    trunc 12 (lshr e (const? 32 31)) { «nsw» := true, «nuw» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

@@ -31,7 +31,8 @@ theorem sub_mask1_lshr_thm (e : IntW 8) :
 
 theorem sub_mask1_trunc_lshr_thm (e : IntW 64) :
   sub (const? 8 10) (LLVM.and (trunc 8 (lshr e (const? 64 15))) (const? 8 1)) ⊑
-    add (trunc 8 (ashr (shl e (const? 64 48)) (const? 64 63))) (const? 8 10) { «nsw» := true, «nuw» := false } := by 
+    add (trunc 8 (ashr (shl e (const? 64 48)) (const? 64 63)) { «nsw» := true, «nuw» := false }) (const? 8 10)
+      { «nsw» := true, «nuw» := false } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -43,7 +44,7 @@ theorem sub_mask1_trunc_lshr_thm (e : IntW 64) :
 theorem sub_sext_mask1_trunc_lshr_thm (e : IntW 64) :
   sub (const? 32 10) (sext 32 (LLVM.and (trunc 8 (lshr e (const? 64 15))) (const? 8 1))) ⊑
     zext 32
-      (add (trunc 8 (ashr (shl e (const? 64 48)) (const? 64 63))) (const? 8 10)
+      (add (trunc 8 (ashr (shl e (const? 64 48)) (const? 64 63)) { «nsw» := true, «nuw» := false }) (const? 8 10)
         { «nsw» := true, «nuw» := false }) := by 
     simp_alive_undef
     simp_alive_ops
@@ -98,7 +99,7 @@ theorem neg_not_signbit1_thm (e : IntW 8) :
 
 theorem neg_not_signbit2_thm (e : IntW 8) :
   sub (const? 32 0) (zext 32 (lshr e (const? 8 6))) ⊑
-    sub (const? 32 0) (zext 32 (lshr e (const? 8 6))) { «nsw» := true, «nuw» := false } := by 
+    sub (const? 32 0) (zext 32 (lshr e (const? 8 6)) { «nneg» := true }) { «nsw» := true, «nuw» := false } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

@@ -48,7 +48,7 @@ theorem shl_trunc_smaller_lshr_thm (e : IntW 32) :
 
 theorem shl_trunc_bigger_ashr_thm (e : IntW 32) :
   shl (trunc 24 (ashr e (const? 32 12))) (const? 24 3) ⊑
-    LLVM.and (trunc 24 (ashr e (const? 32 9))) (const? 24 (-8)) := by 
+    LLVM.and (trunc 24 (ashr e (const? 32 9)) { «nsw» := true, «nuw» := false }) (const? 24 (-8)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

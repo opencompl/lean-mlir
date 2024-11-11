@@ -417,7 +417,8 @@ theorem test31_thm (e : IntW 1) :
 
 
 theorem and_zext_demanded_thm (e : IntW 16) (e_1 : IntW 32) :
-  LLVM.and (LLVM.or e_1 (const? 32 255)) (zext 32 (lshr e (const? 16 8))) ⊑ zext 32 (lshr e (const? 16 8)) := by 
+  LLVM.and (LLVM.or e_1 (const? 32 255)) (zext 32 (lshr e (const? 16 8))) ⊑
+    zext 32 (lshr e (const? 16 8)) { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -469,7 +470,7 @@ theorem test34_thm (e e_1 : IntW 32) : LLVM.and (LLVM.or e_1 e) e_1 ⊑ e_1 := b
 
 theorem test35_thm (e : IntW 32) :
   LLVM.and (sub (const? 64 0) (zext 64 e)) (const? 64 240) ⊑
-    zext 64 (LLVM.and (sub (const? 32 0) e) (const? 32 240)) := by 
+    zext 64 (LLVM.and (sub (const? 32 0) e) (const? 32 240)) { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -480,7 +481,7 @@ theorem test35_thm (e : IntW 32) :
 
 theorem test36_thm (e : IntW 32) :
   LLVM.and (add (zext 64 e) (const? 64 7)) (const? 64 240) ⊑
-    zext 64 (LLVM.and (add e (const? 32 7)) (const? 32 240)) := by 
+    zext 64 (LLVM.and (add e (const? 32 7)) (const? 32 240)) { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -491,7 +492,7 @@ theorem test36_thm (e : IntW 32) :
 
 theorem test37_thm (e : IntW 32) :
   LLVM.and (mul (zext 64 e) (const? 64 7)) (const? 64 240) ⊑
-    zext 64 (LLVM.and (mul e (const? 32 7)) (const? 32 240)) := by 
+    zext 64 (LLVM.and (mul e (const? 32 7)) (const? 32 240)) { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -501,7 +502,8 @@ theorem test37_thm (e : IntW 32) :
 
 
 theorem test38_thm (e : IntW 32) :
-  LLVM.and (LLVM.xor (zext 64 e) (const? 64 7)) (const? 64 240) ⊑ zext 64 (LLVM.and e (const? 32 240)) := by 
+  LLVM.and (LLVM.xor (zext 64 e) (const? 64 7)) (const? 64 240) ⊑
+    zext 64 (LLVM.and e (const? 32 240)) { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -511,7 +513,8 @@ theorem test38_thm (e : IntW 32) :
 
 
 theorem test39_thm (e : IntW 32) :
-  LLVM.and (LLVM.or (zext 64 e) (const? 64 7)) (const? 64 240) ⊑ zext 64 (LLVM.and e (const? 32 240)) := by 
+  LLVM.and (LLVM.or (zext 64 e) (const? 64 7)) (const? 64 240) ⊑
+    zext 64 (LLVM.and e (const? 32 240)) { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

@@ -81,7 +81,7 @@ theorem trunc_sel_equal_sext_thm (e : IntW 32) (e_1 : IntW 1) :
 
 theorem trunc_sel_larger_zext_thm (e : IntW 32) (e_1 : IntW 1) :
   zext 64 (select e_1 (trunc 16 e) (const? 16 42)) ⊑
-    select e_1 (zext 64 (LLVM.and e (const? 32 65535))) (const? 64 42) := by 
+    select e_1 (zext 64 (LLVM.and e (const? 32 65535)) { «nneg» := true }) (const? 64 42) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

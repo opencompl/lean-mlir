@@ -66,7 +66,7 @@ def wide_source_matching_signbits_after := [llvm|
   %1 = llvm.mlir.constant(-1 : i32) : i32
   %2 = llvm.and %arg5, %0 : i32
   %3 = llvm.shl %1, %2 overflow<nsw> : i32
-  %4 = llvm.trunc %3 : i32 to i24
+  %4 = llvm.trunc %3 overflow<nsw> : i32 to i24
   "llvm.return"(%4) : (i24) -> ()
 }
 ]

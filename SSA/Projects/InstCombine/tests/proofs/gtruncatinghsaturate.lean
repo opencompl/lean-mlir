@@ -174,7 +174,7 @@ def badimm1_after := [llvm|
   %3 = llvm.mlir.constant(127 : i8) : i8
   %4 = llvm.mlir.constant(-128 : i8) : i8
   %5 = llvm.lshr %arg28, %0 : i16
-  %6 = llvm.trunc %5 : i16 to i8
+  %6 = llvm.trunc %5 overflow<nsw,nuw> : i16 to i8
   %7 = llvm.trunc %arg28 : i16 to i8
   %8 = llvm.ashr %7, %1 : i8
   %9 = llvm.icmp "eq" %8, %6 : i8
@@ -223,7 +223,7 @@ def badimm2_after := [llvm|
   %3 = llvm.mlir.constant(127 : i8) : i8
   %4 = llvm.mlir.constant(-128 : i8) : i8
   %5 = llvm.lshr %arg27, %0 : i16
-  %6 = llvm.trunc %5 : i16 to i8
+  %6 = llvm.trunc %5 overflow<nuw> : i16 to i8
   %7 = llvm.trunc %arg27 : i16 to i8
   %8 = llvm.ashr %7, %1 : i8
   %9 = llvm.icmp "eq" %8, %6 : i8
@@ -274,7 +274,7 @@ def badimm3_after := [llvm|
   %5 = llvm.add %arg26, %0 : i16
   %6 = llvm.icmp "ult" %5, %1 : i16
   %7 = llvm.ashr %arg26, %2 : i16
-  %8 = llvm.trunc %7 : i16 to i8
+  %8 = llvm.trunc %7 overflow<nsw> : i16 to i8
   %9 = llvm.xor %8, %3 : i8
   %10 = "llvm.select"(%6, %4, %9) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
   "llvm.return"(%10) : (i8) -> ()

@@ -141,7 +141,7 @@ theorem must_drop_poison_thm (e e_1 : IntW 32) :
 
 theorem f_t15_t01_t09_thm (e : IntW 40) :
   shl (trunc 32 (ashr e (const? 40 31))) (const? 32 16) ⊑
-    LLVM.and (trunc 32 (ashr e (const? 40 15))) (const? 32 (-65536)) := by 
+    LLVM.and (trunc 32 (ashr e (const? 40 15)) { «nsw» := true, «nuw» := false }) (const? 32 (-65536)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

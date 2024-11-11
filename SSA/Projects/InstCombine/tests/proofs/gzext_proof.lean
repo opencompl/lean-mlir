@@ -193,7 +193,7 @@ theorem zext_masked_bit_nonzero_to_smaller_bitwidth_thm (e e_1 : IntW 32) :
 
 theorem zext_masked_bit_zero_to_larger_bitwidth_thm (e e_1 : IntW 32) :
   zext 64 (icmp IntPredicate.eq (LLVM.and (shl (const? 32 1) e_1) e) (const? 32 0)) ⊑
-    zext 64 (LLVM.and (lshr (LLVM.xor e (const? 32 (-1))) e_1) (const? 32 1)) := by 
+    zext 64 (LLVM.and (lshr (LLVM.xor e (const? 32 (-1))) e_1) (const? 32 1)) { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -203,7 +203,7 @@ theorem zext_masked_bit_zero_to_larger_bitwidth_thm (e e_1 : IntW 32) :
 
 
 theorem zext_nneg_flag_drop_thm (e : IntW 16) (e_1 : IntW 8) :
-  LLVM.or (LLVM.or (zext 16 (LLVM.and e_1 (const? 8 127))) e) (const? 16 128) ⊑
+  LLVM.or (LLVM.or (zext 16 (LLVM.and e_1 (const? 8 127)) { «nneg» := true }) e) (const? 16 128) ⊑
     LLVM.or (LLVM.or e (zext 16 e_1)) (const? 16 128) := by 
     simp_alive_undef
     simp_alive_ops
@@ -213,7 +213,8 @@ theorem zext_nneg_flag_drop_thm (e : IntW 16) (e_1 : IntW 8) :
     all_goals sorry
 
 
-theorem zext_nneg_redundant_and_thm (e : IntW 8) : LLVM.and (zext 32 e) (const? 32 127) ⊑ zext 32 e := by 
+theorem zext_nneg_redundant_and_thm (e : IntW 8) :
+  LLVM.and (zext 32 e { «nneg» := true }) (const? 32 127) ⊑ zext 32 e { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -222,7 +223,7 @@ theorem zext_nneg_redundant_and_thm (e : IntW 8) : LLVM.and (zext 32 e) (const? 
     all_goals sorry
 
 
-theorem zext_nneg_signbit_extract_thm (e : IntW 32) : lshr (zext 64 e) (const? 64 31) ⊑ const? 64 0 := by 
+theorem zext_nneg_signbit_extract_thm (e : IntW 32) : lshr (zext 64 e { «nneg» := true }) (const? 64 31) ⊑ const? 64 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -231,7 +232,7 @@ theorem zext_nneg_signbit_extract_thm (e : IntW 32) : lshr (zext 64 e) (const? 6
     all_goals sorry
 
 
-theorem zext_nneg_i1_thm (e : IntW 1) : zext 32 e ⊑ const? 32 0 := by 
+theorem zext_nneg_i1_thm (e : IntW 1) : zext 32 e { «nneg» := true } ⊑ const? 32 0 := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

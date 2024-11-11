@@ -11,7 +11,7 @@ section gselecthobohpeohops_proof
 theorem test_shl_nuw_nsw__all_are_safe_thm (e : IntW 64) (e_1 : IntW 32) :
   select (icmp IntPredicate.eq (LLVM.and e_1 (const? 32 15)) (const? 32 0)) e
       (ashr e (zext 64 (shl (LLVM.and e_1 (const? 32 15)) (const? 32 2) { «nsw» := true, «nuw» := true }))) ⊑
-    ashr e (zext 64 (LLVM.and (shl e_1 (const? 32 2)) (const? 32 60))) := by 
+    ashr e (zext 64 (LLVM.and (shl e_1 (const? 32 2)) (const? 32 60)) { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -23,7 +23,7 @@ theorem test_shl_nuw_nsw__all_are_safe_thm (e : IntW 64) (e_1 : IntW 32) :
 theorem test_shl_nuw__all_are_safe_thm (e : IntW 64) (e_1 : IntW 32) :
   select (icmp IntPredicate.eq (LLVM.and e_1 (const? 32 15)) (const? 32 0)) e
       (ashr e (zext 64 (shl (LLVM.and e_1 (const? 32 15)) (const? 32 2) { «nsw» := false, «nuw» := true }))) ⊑
-    ashr e (zext 64 (LLVM.and (shl e_1 (const? 32 2)) (const? 32 60))) := by 
+    ashr e (zext 64 (LLVM.and (shl e_1 (const? 32 2)) (const? 32 60)) { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -35,7 +35,7 @@ theorem test_shl_nuw__all_are_safe_thm (e : IntW 64) (e_1 : IntW 32) :
 theorem test_shl_nsw__all_are_safe_thm (e : IntW 64) (e_1 : IntW 32) :
   select (icmp IntPredicate.eq (LLVM.and e_1 (const? 32 15)) (const? 32 0)) e
       (ashr e (zext 64 (shl (LLVM.and e_1 (const? 32 15)) (const? 32 2) { «nsw» := true, «nuw» := false }))) ⊑
-    ashr e (zext 64 (LLVM.and (shl e_1 (const? 32 2)) (const? 32 60))) := by 
+    ashr e (zext 64 (LLVM.and (shl e_1 (const? 32 2)) (const? 32 60)) { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -47,7 +47,7 @@ theorem test_shl_nsw__all_are_safe_thm (e : IntW 64) (e_1 : IntW 32) :
 theorem test_shl__all_are_safe_thm (e : IntW 64) (e_1 : IntW 32) :
   select (icmp IntPredicate.eq (LLVM.and e_1 (const? 32 15)) (const? 32 0)) e
       (ashr e (zext 64 (shl (LLVM.and e_1 (const? 32 15)) (const? 32 2)))) ⊑
-    ashr e (zext 64 (LLVM.and (shl e_1 (const? 32 2)) (const? 32 60))) := by 
+    ashr e (zext 64 (LLVM.and (shl e_1 (const? 32 2)) (const? 32 60)) { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -59,7 +59,7 @@ theorem test_shl__all_are_safe_thm (e : IntW 64) (e_1 : IntW 32) :
 theorem test_shl_nuw_nsw__nuw_is_safe_thm (e : IntW 64) (e_1 : IntW 32) :
   select (icmp IntPredicate.eq (LLVM.and e_1 (const? 32 1073741822)) (const? 32 0)) e
       (ashr e (zext 64 (shl (LLVM.and e_1 (const? 32 1073741822)) (const? 32 2) { «nsw» := true, «nuw» := true }))) ⊑
-    ashr e (zext 64 (LLVM.and (shl e_1 (const? 32 2)) (const? 32 (-8)))) := by 
+    ashr e (zext 64 (LLVM.and (shl e_1 (const? 32 2)) (const? 32 (-8))) { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -71,7 +71,7 @@ theorem test_shl_nuw_nsw__nuw_is_safe_thm (e : IntW 64) (e_1 : IntW 32) :
 theorem test_shl_nuw__nuw_is_safe_thm (e : IntW 64) (e_1 : IntW 32) :
   select (icmp IntPredicate.eq (LLVM.and e_1 (const? 32 1073741822)) (const? 32 0)) e
       (ashr e (zext 64 (shl (LLVM.and e_1 (const? 32 1073741822)) (const? 32 2) { «nsw» := false, «nuw» := true }))) ⊑
-    ashr e (zext 64 (LLVM.and (shl e_1 (const? 32 2)) (const? 32 (-8)))) := by 
+    ashr e (zext 64 (LLVM.and (shl e_1 (const? 32 2)) (const? 32 (-8))) { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -83,7 +83,7 @@ theorem test_shl_nuw__nuw_is_safe_thm (e : IntW 64) (e_1 : IntW 32) :
 theorem test_shl_nsw__nuw_is_safe_thm (e : IntW 64) (e_1 : IntW 32) :
   select (icmp IntPredicate.eq (LLVM.and e_1 (const? 32 1073741822)) (const? 32 0)) e
       (ashr e (zext 64 (shl (LLVM.and e_1 (const? 32 1073741822)) (const? 32 2) { «nsw» := true, «nuw» := false }))) ⊑
-    ashr e (zext 64 (LLVM.and (shl e_1 (const? 32 2)) (const? 32 (-8)))) := by 
+    ashr e (zext 64 (LLVM.and (shl e_1 (const? 32 2)) (const? 32 (-8))) { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -95,7 +95,7 @@ theorem test_shl_nsw__nuw_is_safe_thm (e : IntW 64) (e_1 : IntW 32) :
 theorem test_shl__nuw_is_safe_thm (e : IntW 64) (e_1 : IntW 32) :
   select (icmp IntPredicate.eq (LLVM.and e_1 (const? 32 1073741822)) (const? 32 0)) e
       (ashr e (zext 64 (shl (LLVM.and e_1 (const? 32 1073741822)) (const? 32 2)))) ⊑
-    ashr e (zext 64 (LLVM.and (shl e_1 (const? 32 2)) (const? 32 (-8)))) := by 
+    ashr e (zext 64 (LLVM.and (shl e_1 (const? 32 2)) (const? 32 (-8))) { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -180,7 +180,7 @@ theorem test_shl__nsw_is_safe_thm (e : IntW 32) :
 theorem test_shl_nuw_nsw__none_are_safe_thm (e : IntW 64) (e_1 : IntW 32) :
   select (icmp IntPredicate.eq (LLVM.and e_1 (const? 32 (-2))) (const? 32 0)) e
       (ashr e (zext 64 (shl (LLVM.and e_1 (const? 32 (-2))) (const? 32 2) { «nsw» := true, «nuw» := true }))) ⊑
-    ashr e (zext 64 (LLVM.and (shl e_1 (const? 32 2)) (const? 32 (-8)))) := by 
+    ashr e (zext 64 (LLVM.and (shl e_1 (const? 32 2)) (const? 32 (-8))) { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -192,7 +192,7 @@ theorem test_shl_nuw_nsw__none_are_safe_thm (e : IntW 64) (e_1 : IntW 32) :
 theorem test_shl_nuw__none_are_safe_thm (e : IntW 64) (e_1 : IntW 32) :
   select (icmp IntPredicate.eq (LLVM.and e_1 (const? 32 (-2))) (const? 32 0)) e
       (ashr e (zext 64 (shl (LLVM.and e_1 (const? 32 (-2))) (const? 32 2) { «nsw» := false, «nuw» := true }))) ⊑
-    ashr e (zext 64 (LLVM.and (shl e_1 (const? 32 2)) (const? 32 (-8)))) := by 
+    ashr e (zext 64 (LLVM.and (shl e_1 (const? 32 2)) (const? 32 (-8))) { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -204,7 +204,7 @@ theorem test_shl_nuw__none_are_safe_thm (e : IntW 64) (e_1 : IntW 32) :
 theorem test_shl_nsw__none_are_safe_thm (e : IntW 64) (e_1 : IntW 32) :
   select (icmp IntPredicate.eq (LLVM.and e_1 (const? 32 (-2))) (const? 32 0)) e
       (ashr e (zext 64 (shl (LLVM.and e_1 (const? 32 (-2))) (const? 32 2) { «nsw» := true, «nuw» := false }))) ⊑
-    ashr e (zext 64 (LLVM.and (shl e_1 (const? 32 2)) (const? 32 (-8)))) := by 
+    ashr e (zext 64 (LLVM.and (shl e_1 (const? 32 2)) (const? 32 (-8))) { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -216,7 +216,7 @@ theorem test_shl_nsw__none_are_safe_thm (e : IntW 64) (e_1 : IntW 32) :
 theorem test_shl__none_are_safe_thm (e : IntW 64) (e_1 : IntW 32) :
   select (icmp IntPredicate.eq (LLVM.and e_1 (const? 32 (-2))) (const? 32 0)) e
       (ashr e (zext 64 (shl (LLVM.and e_1 (const? 32 (-2))) (const? 32 2)))) ⊑
-    ashr e (zext 64 (LLVM.and (shl e_1 (const? 32 2)) (const? 32 (-8)))) := by 
+    ashr e (zext 64 (LLVM.and (shl e_1 (const? 32 2)) (const? 32 (-8))) { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -228,7 +228,7 @@ theorem test_shl__none_are_safe_thm (e : IntW 64) (e_1 : IntW 32) :
 theorem test_lshr_exact__exact_is_safe_thm (e : IntW 64) (e_1 : IntW 32) :
   select (icmp IntPredicate.eq (LLVM.and e_1 (const? 32 60)) (const? 32 0)) e
       (ashr e (zext 64 (lshr (LLVM.and e_1 (const? 32 60)) (const? 32 2) { «exact» := true }))) ⊑
-    ashr e (zext 64 (LLVM.and (lshr e_1 (const? 32 2)) (const? 32 15))) := by 
+    ashr e (zext 64 (LLVM.and (lshr e_1 (const? 32 2)) (const? 32 15)) { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -240,7 +240,7 @@ theorem test_lshr_exact__exact_is_safe_thm (e : IntW 64) (e_1 : IntW 32) :
 theorem test_lshr__exact_is_safe_thm (e : IntW 64) (e_1 : IntW 32) :
   select (icmp IntPredicate.eq (LLVM.and e_1 (const? 32 60)) (const? 32 0)) e
       (ashr e (zext 64 (lshr (LLVM.and e_1 (const? 32 60)) (const? 32 2)))) ⊑
-    ashr e (zext 64 (LLVM.and (lshr e_1 (const? 32 2)) (const? 32 15))) := by 
+    ashr e (zext 64 (LLVM.and (lshr e_1 (const? 32 2)) (const? 32 15)) { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -252,7 +252,7 @@ theorem test_lshr__exact_is_safe_thm (e : IntW 64) (e_1 : IntW 32) :
 theorem test_lshr_exact__exact_is_unsafe_thm (e : IntW 64) (e_1 : IntW 32) :
   select (icmp IntPredicate.eq (LLVM.and e_1 (const? 32 63)) (const? 32 0)) e
       (ashr e (zext 64 (lshr (LLVM.and e_1 (const? 32 63)) (const? 32 2) { «exact» := true }))) ⊑
-    ashr e (zext 64 (LLVM.and (lshr e_1 (const? 32 2)) (const? 32 15))) := by 
+    ashr e (zext 64 (LLVM.and (lshr e_1 (const? 32 2)) (const? 32 15)) { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -264,7 +264,7 @@ theorem test_lshr_exact__exact_is_unsafe_thm (e : IntW 64) (e_1 : IntW 32) :
 theorem test_lshr__exact_is_unsafe_thm (e : IntW 64) (e_1 : IntW 32) :
   select (icmp IntPredicate.eq (LLVM.and e_1 (const? 32 63)) (const? 32 0)) e
       (ashr e (zext 64 (lshr (LLVM.and e_1 (const? 32 63)) (const? 32 2)))) ⊑
-    ashr e (zext 64 (LLVM.and (lshr e_1 (const? 32 2)) (const? 32 15))) := by 
+    ashr e (zext 64 (LLVM.and (lshr e_1 (const? 32 2)) (const? 32 15)) { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -276,7 +276,7 @@ theorem test_lshr__exact_is_unsafe_thm (e : IntW 64) (e_1 : IntW 32) :
 theorem test_ashr_exact__exact_is_safe_thm (e : IntW 64) (e_1 : IntW 32) :
   select (icmp IntPredicate.eq (LLVM.and e_1 (const? 32 (-2147483588))) (const? 32 0)) e
       (ashr e (zext 64 (ashr (LLVM.and e_1 (const? 32 (-2147483588))) (const? 32 2) { «exact» := true }))) ⊑
-    ashr e (zext 64 (LLVM.and (ashr e_1 (const? 32 2)) (const? 32 (-536870897)))) := by 
+    ashr e (zext 64 (LLVM.and (ashr e_1 (const? 32 2)) (const? 32 (-536870897))) { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -288,7 +288,7 @@ theorem test_ashr_exact__exact_is_safe_thm (e : IntW 64) (e_1 : IntW 32) :
 theorem test_ashr__exact_is_safe_thm (e : IntW 64) (e_1 : IntW 32) :
   select (icmp IntPredicate.eq (LLVM.and e_1 (const? 32 (-2147483588))) (const? 32 0)) e
       (ashr e (zext 64 (ashr (LLVM.and e_1 (const? 32 (-2147483588))) (const? 32 2)))) ⊑
-    ashr e (zext 64 (LLVM.and (ashr e_1 (const? 32 2)) (const? 32 (-536870897)))) := by 
+    ashr e (zext 64 (LLVM.and (ashr e_1 (const? 32 2)) (const? 32 (-536870897))) { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -300,7 +300,7 @@ theorem test_ashr__exact_is_safe_thm (e : IntW 64) (e_1 : IntW 32) :
 theorem test_ashr_exact__exact_is_unsafe_thm (e : IntW 64) (e_1 : IntW 32) :
   select (icmp IntPredicate.eq (LLVM.and e_1 (const? 32 (-2147483585))) (const? 32 0)) e
       (ashr e (zext 64 (ashr (LLVM.and e_1 (const? 32 (-2147483585))) (const? 32 2) { «exact» := true }))) ⊑
-    ashr e (zext 64 (LLVM.and (ashr e_1 (const? 32 2)) (const? 32 (-536870897)))) := by 
+    ashr e (zext 64 (LLVM.and (ashr e_1 (const? 32 2)) (const? 32 (-536870897))) { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -312,7 +312,7 @@ theorem test_ashr_exact__exact_is_unsafe_thm (e : IntW 64) (e_1 : IntW 32) :
 theorem test_ashr__exact_is_unsafe_thm (e : IntW 64) (e_1 : IntW 32) :
   select (icmp IntPredicate.eq (LLVM.and e_1 (const? 32 (-2147483585))) (const? 32 0)) e
       (ashr e (zext 64 (ashr (LLVM.and e_1 (const? 32 (-2147483585))) (const? 32 2)))) ⊑
-    ashr e (zext 64 (LLVM.and (ashr e_1 (const? 32 2)) (const? 32 (-536870897)))) := by 
+    ashr e (zext 64 (LLVM.and (ashr e_1 (const? 32 2)) (const? 32 (-536870897))) { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
