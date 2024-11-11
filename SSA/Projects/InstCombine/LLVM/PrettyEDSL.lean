@@ -2,6 +2,7 @@ import SSA.Core.MLIRSyntax.PrettyEDSL
 import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.InstCombine.LLVM.PrettyEDSLOverflow
 import SSA.Projects.InstCombine.LLVM.PrettyEDSLExact
+import SSA.Projects.InstCombine.LLVM.PrettyEDSLNonNeg
 open Lean
 
 namespace MLIR.EDSL
@@ -50,7 +51,7 @@ macro_rules
 
 declare_syntax_cat InstCombine.int_cast_op
 syntax "llvm.trunc" : InstCombine.int_cast_op
-syntax "llvm.zext" : InstCombine.int_cast_op
+syntax "llvm.zext" : MLIR.Pretty.nneg_op
 syntax "llvm.sext" : InstCombine.int_cast_op
 
 syntax mlir_op_operand " = " InstCombine.int_cast_op mlir_op_operand " : " mlir_type " to " mlir_type : mlir_op
@@ -208,6 +209,13 @@ private def pretty_test_icmp :=
   ^bb0(%arg0: i1):
     %1 = llvm.icmp "eq" %arg0, %arg0 : i1
     llvm.return %1 : i1
+  }]
+
+private def pretty_test_zext :=
+  [llvm ()|{
+  ^bb0(%arg0: i32):
+    %1 = llvm.zext nneg %arg0 : i32 to i64
+    llvm.return %1 : i64
   }]
 
 private def pretty_test_exact :=
