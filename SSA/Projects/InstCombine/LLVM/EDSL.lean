@@ -190,7 +190,9 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
         | "llvm.neg"   => pure .neg
         | "llvm.copy"  => pure .copy
         | "llvm.trunc" => pure <| .trunc (← getOutputWidth opStx "trunc")
-        | "llvm.zext"  => pure <| .zext (← getOutputWidth opStx "zext")
+        | "llvm.zext"  => do
+          let nonNeg? := opStx.attrs.getAttr "nonNeg"
+          pure <| .zext (← getOutputWidth opStx "zext") ⟨nonNeg?.isSome⟩
         | "llvm.sext"  => pure <| .sext (← getOutputWidth opStx "sext")
         | _ => throw <| .generic s!"Unknown (unary) operation syntax {opStx.name}"
     return ⟨_, _, mkUnaryOp op v⟩

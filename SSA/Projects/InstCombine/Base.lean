@@ -85,8 +85,8 @@ inductive MOp.UnaryOp (φ : Nat) : Type
   | not
   | copy
   | trunc (w' : Width φ)
-  | zext (w' : Width φ)
-  | sext (w' : Width φ)
+  | zext  (w' : Width φ) (nneg : NonNegFlag := {nneg := false} )
+  | sext  (w' : Width φ)
 deriving Repr, DecidableEq, Inhabited
 
 /-- Homogeneous, binary operations -/
@@ -159,9 +159,12 @@ namespace MOp
 @[match_pattern] def not    (w : Width φ) : MOp φ := .unary w .not
 @[match_pattern] def copy   (w : Width φ) : MOp φ := .unary w .copy
 @[match_pattern] def trunc  (w w' : Width φ) : MOp φ := .unary w (.trunc w')
-@[match_pattern] def zext   (w w' : Width φ) : MOp φ := .unary w (.zext w')
 @[match_pattern] def sext   (w w' : Width φ) : MOp φ := .unary w (.sext w')
 
+/- This definition uses a nneg flag -/
+@[match_pattern] def zext (w w' : Width φ)
+  (NonNegFlag: NonNegFlag := {nneg := false}) : MOp φ
+    := .unary w (.zext w' NonNegFlag)
 
 @[match_pattern] def and    (w : Width φ) : MOp φ := .binary w .and
 @[match_pattern] def xor    (w : Width φ) : MOp φ := .binary w .xor
@@ -203,88 +206,88 @@ namespace MOp
 
 /-- Recursion principle in terms of individual operations, rather than `unary` or `binary` -/
 def deepCasesOn {motive : ∀ {φ}, MOp φ → Sort*}
-    (neg    : ∀ {φ} {w : Width φ},              motive (neg  w))
-    (not    : ∀ {φ} {w : Width φ},              motive (not  w))
-    (trunc  : ∀ {φ} {w w' : Width φ},              motive (trunc w w'))
-    (zext   : ∀ {φ} {w w' : Width φ},              motive (zext  w w'))
-    (sext   : ∀ {φ} {w w' : Width φ},              motive (sext  w w'))
-    (copy   : ∀ {φ} {w : Width φ},              motive (copy w))
-    (and    : ∀ {φ} {w : Width φ},              motive (and  w))
-    (or     : ∀ {φ DisjointFlag} {w : Width φ}, motive (or w DisjointFlag))
-    (xor    : ∀ {φ} {w : Width φ},              motive (xor  w))
-    (shl    : ∀ {φ NoWrapFlags} {w : Width φ},  motive (shl  w NoWrapFlags))
-    (lshr   : ∀ {φ ExactFlag} {w : Width φ},    motive (lshr w ExactFlag))
-    (ashr   : ∀ {φ ExactFlag} {w : Width φ},    motive (ashr w ExactFlag))
-    (urem   : ∀ {φ} {w : Width φ},              motive (urem w))
-    (srem   : ∀ {φ} {w : Width φ},              motive (srem w))
-    (add    : ∀ {φ NoWrapFlags} {w : Width φ},  motive (add w NoWrapFlags))
-    (mul    : ∀ {φ NoWrapFlags} {w : Width φ},  motive (mul w NoWrapFlags))
-    (sub    : ∀ {φ NoWrapFlags} {w : Width φ},  motive (sub w NoWrapFlags))
-    (sdiv   : ∀ {φ ExactFlag} {w : Width φ},    motive (sdiv w ExactFlag))
-    (udiv   : ∀ {φ ExactFlag} {w : Width φ},    motive (udiv w ExactFlag))
-    (select : ∀ {φ} {w : Width φ},              motive (select w))
-    (icmp   : ∀ {φ c} {w : Width φ},            motive (icmp c w))
-    (const  : ∀ {φ v} {w : Width φ},            motive (const w v)) :
+    (neg    : ∀ {φ} {w : Width φ},               motive (neg  w))
+    (not    : ∀ {φ} {w : Width φ},               motive (not  w))
+    (trunc  : ∀ {φ} {w w' : Width φ},            motive (trunc w w'))
+    (zext   : ∀ {φ NonNegFlag} {w w' : Width φ}, motive (zext  w w' NonNegFlag))
+    (sext   : ∀ {φ} {w w' : Width φ},            motive (sext  w w'))
+    (copy   : ∀ {φ} {w : Width φ},               motive (copy w))
+    (and    : ∀ {φ} {w : Width φ},               motive (and  w))
+    (or     : ∀ {φ DisjointFlag} {w : Width φ},  motive (or w DisjointFlag))
+    (xor    : ∀ {φ} {w : Width φ},               motive (xor  w))
+    (shl    : ∀ {φ NoWrapFlags} {w : Width φ},   motive (shl  w NoWrapFlags))
+    (lshr   : ∀ {φ ExactFlag} {w : Width φ},     motive (lshr w ExactFlag))
+    (ashr   : ∀ {φ ExactFlag} {w : Width φ},     motive (ashr w ExactFlag))
+    (urem   : ∀ {φ} {w : Width φ},               motive (urem w))
+    (srem   : ∀ {φ} {w : Width φ},               motive (srem w))
+    (add    : ∀ {φ NoWrapFlags} {w : Width φ},   motive (add w NoWrapFlags))
+    (mul    : ∀ {φ NoWrapFlags} {w : Width φ},   motive (mul w NoWrapFlags))
+    (sub    : ∀ {φ NoWrapFlags} {w : Width φ},   motive (sub w NoWrapFlags))
+    (sdiv   : ∀ {φ ExactFlag} {w : Width φ},     motive (sdiv w ExactFlag))
+    (udiv   : ∀ {φ ExactFlag} {w : Width φ},     motive (udiv w ExactFlag))
+    (select : ∀ {φ} {w : Width φ},               motive (select w))
+    (icmp   : ∀ {φ c} {w : Width φ},             motive (icmp c w))
+    (const  : ∀ {φ v} {w : Width φ},             motive (const w v)) :
     ∀ {φ} (op : MOp φ), motive op
-  | _, .neg _    => neg
-  | _, .not _    => not
-  | _, .trunc _ _ => trunc
-  | _, .zext _ _  => zext
-  | _, .sext _  _ => sext
-  | _, .copy _   => copy
-  | _, .and _    => and
-  | _, .or _ _   => or
-  | _, .xor _    => xor
-  | _, .shl _ _  => shl
-  | _, .lshr _ _ => lshr
-  | _, .ashr _ _ => ashr
-  | _, .urem _   => urem
-  | _, .srem _   => srem
-  | _, .add _ _  => add
-  | _, .mul _ _  => mul
-  | _, .sub _ _  => sub
-  | _, .sdiv _ _ => sdiv
-  | _, .udiv _ _ => udiv
-  | _, .select _ => select
-  | _, .icmp ..  => icmp
-  | _, .const .. => const
+  | _, .neg _      => neg
+  | _, .not _      => not
+  | _, .trunc _ _  => trunc
+  | _, .zext _ _ _ => zext
+  | _, .sext _ _   => sext
+  | _, .copy _     => copy
+  | _, .and _      => and
+  | _, .or _ _     => or
+  | _, .xor _      => xor
+  | _, .shl _ _    => shl
+  | _, .lshr _ _   => lshr
+  | _, .ashr _ _   => ashr
+  | _, .urem _     => urem
+  | _, .srem _     => srem
+  | _, .add _ _    => add
+  | _, .mul _ _    => mul
+  | _, .sub _ _    => sub
+  | _, .sdiv _ _   => sdiv
+  | _, .udiv _ _   => udiv
+  | _, .select _   => select
+  | _, .icmp ..    => icmp
+  | _, .const ..   => const
 
 end MOp
 
 instance : ToString (MOp φ) where
   toString
-  | .and _     => "and"
-  | .or _ _    => "or"
-  | .not _     => "not"
-  | .xor _     => "xor"
-  | .shl _ _   => "shl"
-  | .lshr _ _  => "lshr"
-  | .ashr _ _  => "ashr"
-  | .urem _    => "urem"
-  | .srem _    => "srem"
-  | .select _  => "select"
-  | .add _ _   => "add"
-  | .mul _ _   => "mul"
-  | .sub _ _   => "sub"
-  | .neg _     => "neg"
-  | .copy _    => "copy"
-  | .trunc _ _ => "trunc"
-  | .zext _  _ => "zext"
-  | .sext _ _  => "sext"
-  | .sdiv _ _  => "sdiv"
-  | .udiv _ _  => "udiv"
-  | .icmp ty _ => s!"icmp {ty}"
-  | .const _ v => s!"const {v}"
+  | .and _      => "and"
+  | .or _ _     => "or"
+  | .not _      => "not"
+  | .xor _      => "xor"
+  | .shl _ _    => "shl"
+  | .lshr _ _   => "lshr"
+  | .ashr _ _   => "ashr"
+  | .urem _     => "urem"
+  | .srem _     => "srem"
+  | .select _   => "select"
+  | .add _ _    => "add"
+  | .mul _ _    => "mul"
+  | .sub _ _    => "sub"
+  | .neg _      => "neg"
+  | .copy _     => "copy"
+  | .trunc _ _  => "trunc"
+  | .zext _ _ _ => "zext"
+  | .sext _ _   => "sext"
+  | .sdiv _ _   => "sdiv"
+  | .udiv _ _   => "udiv"
+  | .icmp ty _  => s!"icmp {ty}"
+  | .const _ v  => s!"const {v}"
 
 abbrev Op := MOp 0
 
 def MOp.UnaryOp.instantiate (as : Mathlib.Vector Nat φ) : MOp.UnaryOp φ → MOp.UnaryOp 0
-| .trunc w' => .trunc (.concrete <| w'.instantiate as)
-| .zext w' => .zext (.concrete <| w'.instantiate as)
-| .sext w' => .sext (.concrete <| w'.instantiate as)
-| .neg => .neg
-| .not => .not
-| .copy => .copy
+| .trunc w'     => .trunc (.concrete <| w'.instantiate as)
+| .zext w' flag => .zext (.concrete <| w'.instantiate as) flag
+| .sext w'      => .sext (.concrete <| w'.instantiate as)
+| .neg          => .neg
+| .not          => .not
+| .copy         => .copy
 
 namespace Op
 
@@ -294,7 +297,6 @@ namespace Op
 @[match_pattern] abbrev and    : Nat → Op := MOp.and    ∘ .concrete
 @[match_pattern] abbrev not    : Nat → Op := MOp.not    ∘ .concrete
 @[match_pattern] abbrev trunc  : Nat → Nat → Op := fun w w' => MOp.trunc (.concrete w) (.concrete w')
-@[match_pattern] abbrev zext   : Nat → Nat → Op := fun w w' => MOp.zext (.concrete w) (.concrete w')
 @[match_pattern] abbrev sext   : Nat → Nat → Op := fun w w' => MOp.sext (.concrete w) (.concrete w')
 @[match_pattern] abbrev xor    : Nat → Op := MOp.xor    ∘ .concrete
 @[match_pattern] abbrev urem   : Nat → Op := MOp.urem   ∘ .concrete
@@ -305,6 +307,9 @@ namespace Op
 
 @[match_pattern] abbrev icmp (c : IntPredicate)   : Nat → Op  := MOp.icmp c ∘ .concrete
 @[match_pattern] abbrev const (w : Nat) (val : ℤ) : Op        := MOp.const (.concrete w) val
+
+/- This operation is separate from the others because it takes in a flag: nneg. -/
+@[match_pattern] abbrev zext (w w': Nat) (flag : NonNegFlag := {nneg := false}) : Op := MOp.zext (.concrete w) (.concrete w') flag
 
 /- This operation is separate from the others because it takes in a flag: disjoint. -/
 @[match_pattern] abbrev or (w : Nat) (flag : DisjointFlag := {disjoint := false} ) : Op := MOp.or (.concrete w) flag
@@ -341,7 +346,7 @@ def MOp.sig : MOp φ → List (MTy φ)
 @[simp, reducible]
 def MOp.UnaryOp.outTy (w : Width φ) : MOp.UnaryOp φ → MTy φ
 | .trunc w' => .bitvec w'
-| .zext w' => .bitvec w'
+| .zext w' _ => .bitvec w'
 | .sext w' => .bitvec w'
 | _ => .bitvec w
 
@@ -370,28 +375,28 @@ instance : DialectSignature LLVM where
 def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (DialectSignature.sig o)) :
     (TyDenote.toType <| DialectSignature.outTy o) :=
   match o with
-  | Op.const _ val => const? _ val
-  | Op.copy _      =>              (op.getN 0)
-  | Op.not _       => LLVM.not     (op.getN 0)
-  | Op.neg _       => LLVM.neg     (op.getN 0)
-  | Op.trunc w w'  => LLVM.trunc w' (op.getN 0)
-  | Op.zext w w'   => LLVM.zext  w' (op.getN 0)
-  | Op.sext w w'   => LLVM.sext  w' (op.getN 0)
-  | Op.and _       => LLVM.and     (op.getN 0) (op.getN 1)
-  | Op.or _ flag   => LLVM.or      (op.getN 0) (op.getN 1) flag
-  | Op.xor _       => LLVM.xor     (op.getN 0) (op.getN 1)
-  | Op.shl _ flags => LLVM.shl     (op.getN 0) (op.getN 1) flags
-  | Op.lshr _ flag => LLVM.lshr    (op.getN 0) (op.getN 1) flag
-  | Op.ashr _ flag => LLVM.ashr    (op.getN 0) (op.getN 1) flag
-  | Op.sub _ flags => LLVM.sub     (op.getN 0) (op.getN 1) flags
-  | Op.add _ flags => LLVM.add     (op.getN 0) (op.getN 1) flags
-  | Op.mul _ flags => LLVM.mul     (op.getN 0) (op.getN 1) flags
-  | Op.sdiv _ flag => LLVM.sdiv    (op.getN 0) (op.getN 1) flag
-  | Op.udiv _ flag => LLVM.udiv    (op.getN 0) (op.getN 1) flag
-  | Op.urem _      => LLVM.urem    (op.getN 0) (op.getN 1)
-  | Op.srem _      => LLVM.srem    (op.getN 0) (op.getN 1)
-  | Op.icmp c _    => LLVM.icmp  c (op.getN 0) (op.getN 1)
-  | Op.select _    => LLVM.select  (op.getN 0) (op.getN 1) (op.getN 2)
+  | Op.const _ val    => const? _ val
+  | Op.copy _         =>               (op.getN 0)
+  | Op.not _          => LLVM.not      (op.getN 0)
+  | Op.neg _          => LLVM.neg      (op.getN 0)
+  | Op.trunc w w'     => LLVM.trunc w' (op.getN 0)
+  | Op.zext w w' flag => LLVM.zext  w' (op.getN 0) flag
+  | Op.sext w w'      => LLVM.sext  w' (op.getN 0)
+  | Op.and _          => LLVM.and      (op.getN 0) (op.getN 1)
+  | Op.or _ flag      => LLVM.or       (op.getN 0) (op.getN 1) flag
+  | Op.xor _          => LLVM.xor      (op.getN 0) (op.getN 1)
+  | Op.shl _ flags    => LLVM.shl      (op.getN 0) (op.getN 1) flags
+  | Op.lshr _ flag    => LLVM.lshr     (op.getN 0) (op.getN 1) flag
+  | Op.ashr _ flag    => LLVM.ashr     (op.getN 0) (op.getN 1) flag
+  | Op.sub _ flags    => LLVM.sub      (op.getN 0) (op.getN 1) flags
+  | Op.add _ flags    => LLVM.add      (op.getN 0) (op.getN 1) flags
+  | Op.mul _ flags    => LLVM.mul      (op.getN 0) (op.getN 1) flags
+  | Op.sdiv _ flag    => LLVM.sdiv     (op.getN 0) (op.getN 1) flag
+  | Op.udiv _ flag    => LLVM.udiv     (op.getN 0) (op.getN 1) flag
+  | Op.urem _         => LLVM.urem     (op.getN 0) (op.getN 1)
+  | Op.srem _         => LLVM.srem     (op.getN 0) (op.getN 1)
+  | Op.icmp c _       => LLVM.icmp  c  (op.getN 0) (op.getN 1)
+  | Op.select _       => LLVM.select   (op.getN 0) (op.getN 1) (op.getN 2)
 
 instance : DialectDenote LLVM := ⟨
   fun o args _ => Op.denote o args
