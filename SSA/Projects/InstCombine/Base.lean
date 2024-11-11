@@ -309,7 +309,7 @@ namespace Op
 @[match_pattern] abbrev const (w : Nat) (val : ℤ) : Op        := MOp.const (.concrete w) val
 
 /- This operation is separate from the others because it takes in a flag: nneg. -/
-@[match_pattern] abbrev zext (w w': Nat) (flag: NonNegFlag := {nneg := false}) : Op := MOp.zext (.concrete w) (.concrete w') flag
+@[match_pattern] abbrev zext (w w': Nat) (flag : NonNegFlag := {nneg := false}) : Op := MOp.zext (.concrete w) (.concrete w') flag
 
 /- This operation is separate from the others because it takes in a flag: disjoint. -/
 @[match_pattern] abbrev or (w : Nat) (flag : DisjointFlag := {disjoint := false} ) : Op := MOp.or (.concrete w) flag
