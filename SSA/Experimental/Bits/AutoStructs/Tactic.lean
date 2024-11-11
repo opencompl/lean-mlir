@@ -7,7 +7,6 @@ import Lean.Meta.KExprMap
 import SSA.Experimental.Bits.AutoStructs.Basic
 import SSA.Experimental.Bits.AutoStructs.Defs
 import SSA.Experimental.Bits.AutoStructs.FormulaToAuto
-import SSA.Experimental.Bits.SafeNativeDecide
 import Qq.Macro
 
 
@@ -392,7 +391,7 @@ macro "bv_automata'" : tactic =>
          AutoStructs.eval_or,
          AutoStructs.eval_not]
        rfl }
-     { apply decision_procedure_is_correct; safe_native_decide } ))
+     { apply decision_procedure_is_correct; native_decide } ))
 
 end Tactic
 

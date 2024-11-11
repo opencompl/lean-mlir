@@ -2,7 +2,6 @@ import Lean.Meta.Tactic.Simp.BuiltinSimprocs
 import SSA.Experimental.Bits.Fast.BitStream
 import SSA.Experimental.Bits.Fast.Decide
 import SSA.Experimental.Bits.Fast.Lemmas
-import SSA.Experimental.Bits.SafeNativeDecide
 import Qq.Macro
 
 open Lean Elab Tactic
@@ -332,7 +331,7 @@ macro "bv_automata" : tactic =>
   intros _ _
   apply congrFun
   apply congrFun
-  safe_native_decide
+  native_decide
   ))
 
 /-!
