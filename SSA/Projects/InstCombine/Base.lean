@@ -346,7 +346,7 @@ def MOp.sig : MOp φ → List (MTy φ)
 @[simp, reducible]
 def MOp.UnaryOp.outTy (w : Width φ) : MOp.UnaryOp φ → MTy φ
 | .trunc w' => .bitvec w'
-| .zext w' => .bitvec w'
+| .zext w' _ => .bitvec w'
 | .sext w' => .bitvec w'
 | _ => .bitvec w
 
