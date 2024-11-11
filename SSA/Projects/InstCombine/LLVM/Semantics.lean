@@ -571,11 +571,11 @@ def trunc? {w: Nat} (w': Nat) (x: BitVec w) : IntW w' := do
   some <| (BitVec.truncate w' x)
 
 @[simp_llvm_option]
-def trunc {w: Nat} (w': Nat) (x: IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w' := do
+def trunc {w: Nat} (w': Nat) (x: IntW w) (noWrapFlags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w' := do
   let x' <- x
-  if flags.nsw ∧ ((x'.truncate w').signExtend w ≠ x') then
+  if noWrapFlags.nsw ∧ ((x'.truncate w').signExtend w ≠ x') then
     none
-  else if flags.nuw ∧ ((x'.truncate w').zeroExtend w ≠ x') then
+  else if noWrapFlags.nuw ∧ ((x'.truncate w').zeroExtend w ≠ x') then
     none
   else
     trunc? w' x'

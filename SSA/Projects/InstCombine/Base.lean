@@ -84,7 +84,7 @@ inductive MOp.UnaryOp (φ : Nat) : Type
   | neg
   | not
   | copy
-  | trunc (w' : Width φ) (nswnuw : NoWrapFlags := {nsw := false, nuw := false} )
+  | trunc (w' : Width φ) (noWrapFlags : NoWrapFlags := {nsw := false, nuw := false} )
   | zext  (w' : Width φ) (nneg : NonNegFlag := {nneg := false} )
   | sext  (w' : Width φ)
 deriving Repr, DecidableEq, Inhabited
@@ -177,8 +177,8 @@ namespace MOp
 
 /- These definitions use NoWrapFlags -/
 @[match_pattern] def trunc  (w w' : Width φ)
-  (NoWrapFlags: NoWrapFlags := {nsw := false , nuw := false}) : MOp φ
-    := .unary w (.trunc w' NoWrapFlags)
+  (noWrapFlags: NoWrapFlags := {nsw := false , nuw := false}) : MOp φ
+    := .unary w (.trunc w' noWrapFlags)
 
 @[match_pattern] def shl (w : Width φ)
   (NoWrapFlags: NoWrapFlags := {nsw := false , nuw := false}) : MOp φ
@@ -211,7 +211,7 @@ namespace MOp
 def deepCasesOn {motive : ∀ {φ}, MOp φ → Sort*}
     (neg    : ∀ {φ} {w : Width φ},               motive (neg  w))
     (not    : ∀ {φ} {w : Width φ},               motive (not  w))
-    (trunc  : ∀ {φ NoWrapFlags} {w w' : Width φ},            motive (trunc w w' NoWrapFlags))
+    (trunc  : ∀ {φ noWrapFlags} {w w' : Width φ},            motive (trunc w w' noWrapFlags))
     (zext   : ∀ {φ NonNegFlag} {w w' : Width φ}, motive (zext  w w' NonNegFlag))
     (sext   : ∀ {φ} {w w' : Width φ},            motive (sext  w w'))
     (copy   : ∀ {φ} {w : Width φ},               motive (copy w))
@@ -317,8 +317,8 @@ namespace Op
 @[match_pattern] abbrev or (w : Nat) (flag : DisjointFlag := {disjoint := false} ) : Op := MOp.or (.concrete w) flag
 
 /- These operations are separate from the others because they take in 2 flags: nuw and nsw.-/
-@[match_pattern] abbrev trunc (w w': Nat) (flags: NoWrapFlags :=
-   {nsw := false , nuw := false}) : Op := MOp.trunc (.concrete w) (.concrete w') flags
+@[match_pattern] abbrev trunc (w w': Nat) (noWrapFlags: NoWrapFlags :=
+   {nsw := false , nuw := false}) : Op := MOp.trunc (.concrete w) (.concrete w') noWrapFlags
 
 @[match_pattern] abbrev shl (w : Nat) (flags: NoWrapFlags :=
    {nsw := false , nuw := false}) : Op:=  MOp.shl (.concrete w) flags
