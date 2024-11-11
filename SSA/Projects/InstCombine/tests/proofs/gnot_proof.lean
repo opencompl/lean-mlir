@@ -196,7 +196,7 @@ theorem test_sext_thm (e e_1 : IntW 32) :
 
 
 theorem test_zext_nneg_thm (e : IntW 64) (e_1 : IntW 32) (e_2 : IntW 64) :
-  sub (add e_2 (const? 64 (-5))) (add (zext 64 (LLVM.xor e_1 (const? 32 (-1)))) e) ⊑
+  sub (add e_2 (const? 64 (-5))) (add (zext 64 (LLVM.xor e_1 (const? 32 (-1))) { «nneg» := true }) e) ⊑
     add (add e_2 (const? 64 (-4))) (sub (sext 64 e_1) e) := by 
     simp_alive_undef
     simp_alive_ops

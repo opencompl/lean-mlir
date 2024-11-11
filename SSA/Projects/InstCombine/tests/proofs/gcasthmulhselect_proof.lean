@@ -39,6 +39,21 @@ theorem select2_thm (e e_1 e_2 : IntW 8) (e_3 : IntW 1) :
     all_goals sorry
 
 
+theorem eval_zext_multi_use_in_one_inst_thm (e : IntW 32) :
+  zext 32
+      (mul (LLVM.and (trunc 16 e) (const? 16 5)) (LLVM.and (trunc 16 e) (const? 16 5))
+        { «nsw» := true, «nuw» := true }) ⊑
+    zext 32
+      (mul (LLVM.and (trunc 16 e) (const? 16 5)) (LLVM.and (trunc 16 e) (const? 16 5)) { «nsw» := true, «nuw» := true })
+      { «nneg» := true } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+
 theorem foo_thm (e : IntW 1) : e ⊑ e := by 
     simp_alive_undef
     simp_alive_ops

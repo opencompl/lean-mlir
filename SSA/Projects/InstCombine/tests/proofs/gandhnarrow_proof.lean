@@ -39,7 +39,8 @@ theorem zext_mul_thm (e : IntW 8) :
 
 
 theorem zext_lshr_thm (e : IntW 8) :
-  LLVM.and (lshr (zext 16 e) (const? 16 4)) (zext 16 e) ⊑ zext 16 (LLVM.and (lshr e (const? 8 4)) e) := by 
+  LLVM.and (lshr (zext 16 e) (const? 16 4)) (zext 16 e) ⊑
+    zext 16 (LLVM.and (lshr e (const? 8 4)) e) { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -49,7 +50,8 @@ theorem zext_lshr_thm (e : IntW 8) :
 
 
 theorem zext_ashr_thm (e : IntW 8) :
-  LLVM.and (ashr (zext 16 e) (const? 16 2)) (zext 16 e) ⊑ zext 16 (LLVM.and (lshr e (const? 8 2)) e) := by 
+  LLVM.and (ashr (zext 16 e) (const? 16 2)) (zext 16 e) ⊑
+    zext 16 (LLVM.and (lshr e (const? 8 2)) e) { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

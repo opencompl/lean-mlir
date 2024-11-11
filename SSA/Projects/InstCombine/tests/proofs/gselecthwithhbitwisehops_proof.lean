@@ -293,7 +293,7 @@ theorem select_icmp_and_8_eq_0_xor_8_thm (e : IntW 32) :
 
 theorem select_icmp_x_and_8_eq_0_y_xor_8_thm (e : IntW 64) (e_1 : IntW 32) :
   select (icmp IntPredicate.eq (LLVM.and e_1 (const? 32 8)) (const? 32 0)) e (LLVM.xor e (const? 64 8)) ⊑
-    LLVM.xor e (zext 64 (LLVM.and e_1 (const? 32 8))) := by 
+    LLVM.xor e (zext 64 (LLVM.and e_1 (const? 32 8)) { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -304,7 +304,7 @@ theorem select_icmp_x_and_8_eq_0_y_xor_8_thm (e : IntW 64) (e_1 : IntW 32) :
 
 theorem select_icmp_x_and_8_ne_0_y_xor_8_thm (e : IntW 64) (e_1 : IntW 32) :
   select (icmp IntPredicate.eq (LLVM.and e_1 (const? 32 8)) (const? 32 0)) (LLVM.xor e (const? 64 8)) e ⊑
-    LLVM.xor e (zext 64 (LLVM.xor (LLVM.and e_1 (const? 32 8)) (const? 32 8))) := by 
+    LLVM.xor e (zext 64 (LLVM.xor (LLVM.and e_1 (const? 32 8)) (const? 32 8)) { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -315,7 +315,7 @@ theorem select_icmp_x_and_8_ne_0_y_xor_8_thm (e : IntW 64) (e_1 : IntW 32) :
 
 theorem select_icmp_x_and_8_ne_0_y_or_8_thm (e : IntW 64) (e_1 : IntW 32) :
   select (icmp IntPredicate.eq (LLVM.and e_1 (const? 32 8)) (const? 32 0)) (LLVM.or e (const? 64 8)) e ⊑
-    LLVM.or e (zext 64 (LLVM.xor (LLVM.and e_1 (const? 32 8)) (const? 32 8))) := by 
+    LLVM.or e (zext 64 (LLVM.xor (LLVM.and e_1 (const? 32 8)) (const? 32 8)) { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

@@ -152,7 +152,7 @@ def shl_trunc_bigger_ashr_after := [llvm|
   %0 = llvm.mlir.constant(9 : i32) : i32
   %1 = llvm.mlir.constant(-8 : i24) : i24
   %2 = llvm.ashr %arg42, %0 : i32
-  %3 = llvm.trunc %2 : i32 to i24
+  %3 = llvm.trunc %2 overflow<nsw> : i32 to i24
   %4 = llvm.and %3, %1 : i24
   "llvm.return"(%4) : (i24) -> ()
 }

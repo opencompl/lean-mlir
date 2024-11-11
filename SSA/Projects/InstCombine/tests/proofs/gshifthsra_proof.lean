@@ -9,7 +9,8 @@ set_option linter.unreachableTactic false
 
 section gshifthsra_proof
 theorem test1_thm (e : IntW 8) (e_1 : IntW 32) :
-  LLVM.and (ashr e_1 (zext 32 e)) (const? 32 1) ⊑ LLVM.and (lshr e_1 (zext 32 e)) (const? 32 1) := by 
+  LLVM.and (ashr e_1 (zext 32 e)) (const? 32 1) ⊑
+    LLVM.and (lshr e_1 (zext 32 e { «nneg» := true })) (const? 32 1) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

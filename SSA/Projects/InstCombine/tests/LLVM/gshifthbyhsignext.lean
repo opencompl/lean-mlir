@@ -24,7 +24,7 @@ def t0_shl_before := [llvm|
 def t0_shl_after := [llvm|
 {
 ^0(%arg28 : i32, %arg29 : i8):
-  %0 = llvm.zext %arg29 : i8 to i32
+  %0 = llvm.zext nneg %arg29 : i8 to i32
   %1 = llvm.shl %arg28, %0 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
@@ -51,7 +51,7 @@ def t1_lshr_before := [llvm|
 def t1_lshr_after := [llvm|
 {
 ^0(%arg26 : i32, %arg27 : i8):
-  %0 = llvm.zext %arg27 : i8 to i32
+  %0 = llvm.zext nneg %arg27 : i8 to i32
   %1 = llvm.lshr %arg26, %0 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
@@ -78,7 +78,7 @@ def t2_ashr_before := [llvm|
 def t2_ashr_after := [llvm|
 {
 ^0(%arg24 : i32, %arg25 : i8):
-  %0 = llvm.zext %arg25 : i8 to i32
+  %0 = llvm.zext nneg %arg25 : i8 to i32
   %1 = llvm.ashr %arg24, %0 : i32
   "llvm.return"(%1) : (i32) -> ()
 }

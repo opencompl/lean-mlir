@@ -50,8 +50,10 @@ theorem differentconsts_thm (e : IntW 32) :
 theorem badimm1_thm (e : IntW 16) :
   select (icmp IntPredicate.eq (ashr (trunc 8 e) (const? 8 7)) (trunc 8 (lshr e (const? 16 9)))) (trunc 8 e)
       (LLVM.xor (trunc 8 (ashr e (const? 16 15))) (const? 8 127)) ⊑
-    select (icmp IntPredicate.eq (ashr (trunc 8 e) (const? 8 7)) (trunc 8 (lshr e (const? 16 9)))) (trunc 8 e)
-      (select (icmp IntPredicate.sgt e (const? 16 (-1))) (const? 8 127) (const? 8 (-128))) := by 
+    select
+      (icmp IntPredicate.eq (ashr (trunc 8 e) (const? 8 7))
+        (trunc 8 (lshr e (const? 16 9)) { «nsw» := true, «nuw» := true }))
+      (trunc 8 e) (select (icmp IntPredicate.sgt e (const? 16 (-1))) (const? 8 127) (const? 8 (-128))) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -63,8 +65,10 @@ theorem badimm1_thm (e : IntW 16) :
 theorem badimm2_thm (e : IntW 16) :
   select (icmp IntPredicate.eq (ashr (trunc 8 e) (const? 8 6)) (trunc 8 (lshr e (const? 16 8)))) (trunc 8 e)
       (LLVM.xor (trunc 8 (ashr e (const? 16 15))) (const? 8 127)) ⊑
-    select (icmp IntPredicate.eq (ashr (trunc 8 e) (const? 8 6)) (trunc 8 (lshr e (const? 16 8)))) (trunc 8 e)
-      (select (icmp IntPredicate.sgt e (const? 16 (-1))) (const? 8 127) (const? 8 (-128))) := by 
+    select
+      (icmp IntPredicate.eq (ashr (trunc 8 e) (const? 8 6))
+        (trunc 8 (lshr e (const? 16 8)) { «nsw» := false, «nuw» := true }))
+      (trunc 8 e) (select (icmp IntPredicate.sgt e (const? 16 (-1))) (const? 8 127) (const? 8 (-128))) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -77,7 +81,7 @@ theorem badimm3_thm (e : IntW 16) :
   select (icmp IntPredicate.eq (ashr (trunc 8 e) (const? 8 7)) (trunc 8 (lshr e (const? 16 8)))) (trunc 8 e)
       (LLVM.xor (trunc 8 (ashr e (const? 16 14))) (const? 8 127)) ⊑
     select (icmp IntPredicate.ult (add e (const? 16 128)) (const? 16 256)) (trunc 8 e)
-      (LLVM.xor (trunc 8 (ashr e (const? 16 14))) (const? 8 127)) := by 
+      (LLVM.xor (trunc 8 (ashr e (const? 16 14)) { «nsw» := true, «nuw» := false }) (const? 8 127)) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

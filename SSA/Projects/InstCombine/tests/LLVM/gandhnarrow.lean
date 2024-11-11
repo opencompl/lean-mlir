@@ -122,7 +122,7 @@ def zext_lshr_after := [llvm|
   %0 = llvm.mlir.constant(4 : i8) : i8
   %1 = llvm.lshr %arg12, %0 : i8
   %2 = llvm.and %1, %arg12 : i8
-  %3 = llvm.zext %2 : i8 to i16
+  %3 = llvm.zext nneg %2 : i8 to i16
   "llvm.return"(%3) : (i16) -> ()
 }
 ]
@@ -153,7 +153,7 @@ def zext_ashr_after := [llvm|
   %0 = llvm.mlir.constant(2 : i8) : i8
   %1 = llvm.lshr %arg11, %0 : i8
   %2 = llvm.and %1, %arg11 : i8
-  %3 = llvm.zext %2 : i8 to i16
+  %3 = llvm.zext nneg %2 : i8 to i16
   "llvm.return"(%3) : (i16) -> ()
 }
 ]

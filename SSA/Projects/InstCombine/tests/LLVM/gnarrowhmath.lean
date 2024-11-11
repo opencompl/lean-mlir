@@ -70,7 +70,7 @@ def sext_zext_add_mismatched_exts_after := [llvm|
   %2 = llvm.ashr %arg41, %0 : i32
   %3 = llvm.lshr %arg41, %1 : i32
   %4 = llvm.sext %2 : i32 to i64
-  %5 = llvm.zext %3 : i32 to i64
+  %5 = llvm.zext nneg %3 : i32 to i64
   %6 = llvm.add %4, %5 overflow<nsw> : i64
   "llvm.return"(%6) : (i64) -> ()
 }

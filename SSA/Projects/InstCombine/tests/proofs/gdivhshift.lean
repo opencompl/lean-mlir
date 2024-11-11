@@ -57,7 +57,7 @@ def t2_before := [llvm|
 def t2_after := [llvm|
 {
 ^0(%arg237 : i64, %arg238 : i32):
-  %0 = llvm.zext %arg238 : i32 to i64
+  %0 = llvm.zext nneg %arg238 : i32 to i64
   %1 = llvm.lshr %arg237, %0 : i64
   "llvm.return"(%1) : (i64) -> ()
 }
@@ -88,7 +88,7 @@ def t3_after := [llvm|
 ^0(%arg235 : i64, %arg236 : i32):
   %0 = llvm.mlir.constant(2 : i32) : i32
   %1 = llvm.add %arg236, %0 : i32
-  %2 = llvm.zext %1 : i32 to i64
+  %2 = llvm.zext nneg %1 : i32 to i64
   %3 = llvm.lshr %arg235, %2 : i64
   "llvm.return"(%3) : (i64) -> ()
 }

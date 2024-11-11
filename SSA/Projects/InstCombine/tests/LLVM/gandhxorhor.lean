@@ -4056,7 +4056,7 @@ def and_zext_zext_after := [llvm|
 ^0(%arg58 : i8, %arg59 : i4):
   %0 = llvm.zext %arg59 : i4 to i8
   %1 = llvm.and %arg58, %0 : i8
-  %2 = llvm.zext %1 : i8 to i16
+  %2 = llvm.zext nneg %1 : i8 to i16
   "llvm.return"(%2) : (i16) -> ()
 }
 ]

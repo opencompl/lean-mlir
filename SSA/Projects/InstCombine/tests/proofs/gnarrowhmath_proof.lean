@@ -21,7 +21,8 @@ theorem sext_sext_add_thm (e : IntW 32) :
 
 theorem sext_zext_add_mismatched_exts_thm (e : IntW 32) :
   add (sext 64 (ashr e (const? 32 7))) (zext 64 (lshr e (const? 32 9))) ⊑
-    add (sext 64 (ashr e (const? 32 7))) (zext 64 (lshr e (const? 32 9))) { «nsw» := true, «nuw» := false } := by 
+    add (sext 64 (ashr e (const? 32 7))) (zext 64 (lshr e (const? 32 9)) { «nneg» := true })
+      { «nsw» := true, «nuw» := false } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

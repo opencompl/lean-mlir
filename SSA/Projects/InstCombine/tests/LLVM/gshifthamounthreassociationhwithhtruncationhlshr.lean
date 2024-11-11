@@ -32,7 +32,7 @@ def t0_after := [llvm|
 ^0(%arg18 : i32, %arg19 : i16):
   %0 = llvm.mlir.constant(31 : i32) : i32
   %1 = llvm.lshr %arg18, %0 : i32
-  %2 = llvm.trunc %1 : i32 to i16
+  %2 = llvm.trunc %1 overflow<nsw,nuw> : i32 to i16
   "llvm.return"(%2) : (i16) -> ()
 }
 ]
@@ -44,5 +44,83 @@ theorem t0_proof : t0_before ⊑ t0_after := by
   ---BEGIN t0
   all_goals (try extract_goal ; sorry)
   ---END t0
+
+
+
+def t9_lshr_before := [llvm|
+{
+^0(%arg2 : i32, %arg3 : i16):
+  %0 = llvm.mlir.constant(32 : i16) : i16
+  %1 = llvm.mlir.constant(-2 : i16) : i16
+  %2 = llvm.sub %0, %arg3 : i16
+  %3 = llvm.zext %2 : i16 to i32
+  %4 = llvm.lshr %arg2, %3 : i32
+  %5 = llvm.trunc %4 : i32 to i16
+  %6 = llvm.add %arg3, %1 : i16
+  %7 = llvm.lshr %5, %6 : i16
+  "llvm.return"(%7) : (i16) -> ()
+}
+]
+def t9_lshr_after := [llvm|
+{
+^0(%arg2 : i32, %arg3 : i16):
+  %0 = llvm.mlir.constant(32 : i16) : i16
+  %1 = llvm.mlir.constant(-2 : i16) : i16
+  %2 = llvm.sub %0, %arg3 : i16
+  %3 = llvm.zext nneg %2 : i16 to i32
+  %4 = llvm.lshr %arg2, %3 : i32
+  %5 = llvm.trunc %4 : i32 to i16
+  %6 = llvm.add %arg3, %1 : i16
+  %7 = llvm.lshr %5, %6 : i16
+  "llvm.return"(%7) : (i16) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem t9_lshr_proof : t9_lshr_before ⊑ t9_lshr_after := by
+  unfold t9_lshr_before t9_lshr_after
+  simp_alive_peephole
+  intros
+  ---BEGIN t9_lshr
+  all_goals (try extract_goal ; sorry)
+  ---END t9_lshr
+
+
+
+def n10_ashr_lshr_before := [llvm|
+{
+^0(%arg0 : i32, %arg1 : i16):
+  %0 = llvm.mlir.constant(32 : i16) : i16
+  %1 = llvm.mlir.constant(-1 : i16) : i16
+  %2 = llvm.sub %0, %arg1 : i16
+  %3 = llvm.zext %2 : i16 to i32
+  %4 = llvm.ashr %arg0, %3 : i32
+  %5 = llvm.trunc %4 : i32 to i16
+  %6 = llvm.add %arg1, %1 : i16
+  %7 = llvm.lshr %5, %6 : i16
+  "llvm.return"(%7) : (i16) -> ()
+}
+]
+def n10_ashr_lshr_after := [llvm|
+{
+^0(%arg0 : i32, %arg1 : i16):
+  %0 = llvm.mlir.constant(32 : i16) : i16
+  %1 = llvm.mlir.constant(-1 : i16) : i16
+  %2 = llvm.sub %0, %arg1 : i16
+  %3 = llvm.zext nneg %2 : i16 to i32
+  %4 = llvm.ashr %arg0, %3 : i32
+  %5 = llvm.trunc %4 : i32 to i16
+  %6 = llvm.add %arg1, %1 : i16
+  %7 = llvm.lshr %5, %6 : i16
+  "llvm.return"(%7) : (i16) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem n10_ashr_lshr_proof : n10_ashr_lshr_before ⊑ n10_ashr_lshr_after := by
+  unfold n10_ashr_lshr_before n10_ashr_lshr_after
+  simp_alive_peephole
+  intros
+  ---BEGIN n10_ashr_lshr
+  all_goals (try extract_goal ; sorry)
+  ---END n10_ashr_lshr
 
 

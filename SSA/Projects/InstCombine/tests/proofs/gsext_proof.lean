@@ -8,7 +8,8 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 
 section gsext_proof
-theorem test4_thm (e : IntW 32) : sext 64 (LLVM.udiv e (const? 32 3)) ⊑ zext 64 (LLVM.udiv e (const? 32 3)) := by 
+theorem test4_thm (e : IntW 32) :
+  sext 64 (LLVM.udiv e (const? 32 3)) ⊑ zext 64 (LLVM.udiv e (const? 32 3)) { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -17,7 +18,8 @@ theorem test4_thm (e : IntW 32) : sext 64 (LLVM.udiv e (const? 32 3)) ⊑ zext 6
     all_goals sorry
 
 
-theorem test5_thm (e : IntW 32) : sext 64 (urem e (const? 32 30000)) ⊑ zext 64 (urem e (const? 32 30000)) := by 
+theorem test5_thm (e : IntW 32) :
+  sext 64 (urem e (const? 32 30000)) ⊑ zext 64 (urem e (const? 32 30000)) { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -28,7 +30,7 @@ theorem test5_thm (e : IntW 32) : sext 64 (urem e (const? 32 30000)) ⊑ zext 64
 
 theorem test6_thm (e : IntW 32) :
   sext 64 (mul (lshr e (const? 32 3)) (const? 32 3)) ⊑
-    zext 64 (mul (lshr e (const? 32 3)) (const? 32 3) { «nsw» := true, «nuw» := true }) := by 
+    zext 64 (mul (lshr e (const? 32 3)) (const? 32 3) { «nsw» := true, «nuw» := true }) { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -39,7 +41,8 @@ theorem test6_thm (e : IntW 32) :
 
 theorem test7_thm (e : IntW 32) :
   sext 64 (sub (const? 32 20000) (LLVM.and e (const? 32 511))) ⊑
-    zext 64 (sub (const? 32 20000) (LLVM.and e (const? 32 511)) { «nsw» := true, «nuw» := true }) := by 
+    zext 64 (sub (const? 32 20000) (LLVM.and e (const? 32 511)) { «nsw» := true, «nuw» := true })
+      { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -135,7 +138,8 @@ theorem smear_set_bit_thm (e : IntW 32) :
 
 
 theorem smear_set_bit_different_dest_type_thm (e : IntW 32) :
-  sext 16 (ashr (trunc 8 e) (const? 8 7)) ⊑ trunc 16 (ashr (shl e (const? 32 24)) (const? 32 31)) := by 
+  sext 16 (ashr (trunc 8 e) (const? 8 7)) ⊑
+    trunc 16 (ashr (shl e (const? 32 24)) (const? 32 31)) { «nsw» := true, «nuw» := false } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

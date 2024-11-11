@@ -110,7 +110,7 @@ def src_is_mask_sext_after := [llvm|
   %1 = llvm.mlir.constant(31 : i8) : i8
   %2 = llvm.xor %arg127, %0 : i16
   %3 = llvm.lshr %1, %arg128 : i8
-  %4 = llvm.zext %3 : i8 to i16
+  %4 = llvm.zext nneg %3 : i8 to i16
   %5 = llvm.icmp "ule" %2, %4 : i16
   "llvm.return"(%5) : (i1) -> ()
 }

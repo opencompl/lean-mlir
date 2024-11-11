@@ -101,7 +101,7 @@ def sub_mask1_trunc_lshr_after := [llvm|
   %2 = llvm.mlir.constant(10 : i8) : i8
   %3 = llvm.shl %arg17, %0 : i64
   %4 = llvm.ashr %3, %1 : i64
-  %5 = llvm.trunc %4 : i64 to i8
+  %5 = llvm.trunc %4 overflow<nsw> : i64 to i8
   %6 = llvm.add %5, %2 overflow<nsw> : i8
   "llvm.return"(%6) : (i8) -> ()
 }
@@ -139,7 +139,7 @@ def sub_sext_mask1_trunc_lshr_after := [llvm|
   %2 = llvm.mlir.constant(10 : i8) : i8
   %3 = llvm.shl %arg16, %0 : i64
   %4 = llvm.ashr %3, %1 : i64
-  %5 = llvm.trunc %4 : i64 to i8
+  %5 = llvm.trunc %4 overflow<nsw> : i64 to i8
   %6 = llvm.add %5, %2 overflow<nsw> : i8
   %7 = llvm.zext %6 : i8 to i32
   "llvm.return"(%7) : (i32) -> ()
@@ -306,7 +306,7 @@ def neg_not_signbit2_after := [llvm|
   %0 = llvm.mlir.constant(6 : i8) : i8
   %1 = llvm.mlir.constant(0 : i32) : i32
   %2 = llvm.lshr %arg4, %0 : i8
-  %3 = llvm.zext %2 : i8 to i32
+  %3 = llvm.zext nneg %2 : i8 to i32
   %4 = llvm.sub %1, %3 overflow<nsw> : i32
   "llvm.return"(%4) : (i32) -> ()
 }

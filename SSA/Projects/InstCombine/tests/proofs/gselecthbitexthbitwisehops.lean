@@ -35,7 +35,7 @@ def sel_false_val_is_a_masked_shl_of_true_val1_after := [llvm|
   %1 = llvm.mlir.constant(60 : i32) : i32
   %2 = llvm.shl %arg10, %0 : i32
   %3 = llvm.and %2, %1 : i32
-  %4 = llvm.zext %3 : i32 to i64
+  %4 = llvm.zext nneg %3 : i32 to i64
   %5 = llvm.ashr %arg11, %4 : i64
   "llvm.return"(%5) : (i64) -> ()
 }
@@ -73,7 +73,7 @@ def sel_false_val_is_a_masked_shl_of_true_val2_after := [llvm|
   %1 = llvm.mlir.constant(60 : i32) : i32
   %2 = llvm.shl %arg8, %0 : i32
   %3 = llvm.and %2, %1 : i32
-  %4 = llvm.zext %3 : i32 to i64
+  %4 = llvm.zext nneg %3 : i32 to i64
   %5 = llvm.ashr %arg9, %4 : i64
   "llvm.return"(%5) : (i64) -> ()
 }
@@ -111,7 +111,7 @@ def sel_false_val_is_a_masked_lshr_of_true_val1_after := [llvm|
   %1 = llvm.mlir.constant(15 : i32) : i32
   %2 = llvm.lshr %arg6, %0 : i32
   %3 = llvm.and %2, %1 : i32
-  %4 = llvm.zext %3 : i32 to i64
+  %4 = llvm.zext nneg %3 : i32 to i64
   %5 = llvm.ashr %arg7, %4 : i64
   "llvm.return"(%5) : (i64) -> ()
 }
@@ -149,7 +149,7 @@ def sel_false_val_is_a_masked_lshr_of_true_val2_after := [llvm|
   %1 = llvm.mlir.constant(15 : i32) : i32
   %2 = llvm.lshr %arg4, %0 : i32
   %3 = llvm.and %2, %1 : i32
-  %4 = llvm.zext %3 : i32 to i64
+  %4 = llvm.zext nneg %3 : i32 to i64
   %5 = llvm.ashr %arg5, %4 : i64
   "llvm.return"(%5) : (i64) -> ()
 }
@@ -187,7 +187,7 @@ def sel_false_val_is_a_masked_ashr_of_true_val1_after := [llvm|
   %1 = llvm.mlir.constant(-536870897 : i32) : i32
   %2 = llvm.ashr %arg2, %0 : i32
   %3 = llvm.and %2, %1 : i32
-  %4 = llvm.zext %3 : i32 to i64
+  %4 = llvm.zext nneg %3 : i32 to i64
   %5 = llvm.ashr %arg3, %4 : i64
   "llvm.return"(%5) : (i64) -> ()
 }
@@ -225,7 +225,7 @@ def sel_false_val_is_a_masked_ashr_of_true_val2_after := [llvm|
   %1 = llvm.mlir.constant(-536870897 : i32) : i32
   %2 = llvm.ashr %arg0, %0 : i32
   %3 = llvm.and %2, %1 : i32
-  %4 = llvm.zext %3 : i32 to i64
+  %4 = llvm.zext nneg %3 : i32 to i64
   %5 = llvm.ashr %arg1, %4 : i64
   "llvm.return"(%5) : (i64) -> ()
 }

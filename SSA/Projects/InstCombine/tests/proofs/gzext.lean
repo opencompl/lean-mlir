@@ -554,7 +554,7 @@ def zext_masked_bit_zero_to_larger_bitwidth_after := [llvm|
   %2 = llvm.xor %arg39, %0 : i32
   %3 = llvm.lshr %2, %arg40 : i32
   %4 = llvm.and %3, %1 : i32
-  %5 = llvm.zext %4 : i32 to i64
+  %5 = llvm.zext nneg %4 : i32 to i64
   "llvm.return"(%5) : (i64) -> ()
 }
 ]
@@ -575,7 +575,7 @@ def zext_nneg_flag_drop_before := [llvm|
   %0 = llvm.mlir.constant(127 : i8) : i8
   %1 = llvm.mlir.constant(128 : i16) : i16
   %2 = llvm.and %arg7, %0 : i8
-  %3 = llvm.zext %2 : i8 to i16
+  %3 = llvm.zext nneg %2 : i8 to i16
   %4 = llvm.or %3, %arg8 : i16
   %5 = llvm.or %4, %1 : i16
   "llvm.return"(%5) : (i16) -> ()
@@ -606,7 +606,7 @@ def zext_nneg_redundant_and_before := [llvm|
 {
 ^0(%arg6 : i8):
   %0 = llvm.mlir.constant(127 : i32) : i32
-  %1 = llvm.zext %arg6 : i8 to i32
+  %1 = llvm.zext nneg %arg6 : i8 to i32
   %2 = llvm.and %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
@@ -614,7 +614,7 @@ def zext_nneg_redundant_and_before := [llvm|
 def zext_nneg_redundant_and_after := [llvm|
 {
 ^0(%arg6 : i8):
-  %0 = llvm.zext %arg6 : i8 to i32
+  %0 = llvm.zext nneg %arg6 : i8 to i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
@@ -633,7 +633,7 @@ def zext_nneg_signbit_extract_before := [llvm|
 {
 ^0(%arg4 : i32):
   %0 = llvm.mlir.constant(31) : i64
-  %1 = llvm.zext %arg4 : i32 to i64
+  %1 = llvm.zext nneg %arg4 : i32 to i64
   %2 = llvm.lshr %1, %0 : i64
   "llvm.return"(%2) : (i64) -> ()
 }
@@ -659,7 +659,7 @@ theorem zext_nneg_signbit_extract_proof : zext_nneg_signbit_extract_before ⊑ z
 def zext_nneg_i1_before := [llvm|
 {
 ^0(%arg2 : i1):
-  %0 = llvm.zext %arg2 : i1 to i32
+  %0 = llvm.zext nneg %arg2 : i1 to i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]

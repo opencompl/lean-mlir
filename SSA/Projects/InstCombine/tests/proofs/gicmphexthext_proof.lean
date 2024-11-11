@@ -89,7 +89,7 @@ theorem sext_sext_sge_op0_narrow_thm (e : IntW 8) (e_1 : IntW 5) :
 
 
 theorem zext_nneg_sext_sgt_thm (e e_1 : IntW 8) :
-  icmp IntPredicate.sgt (zext 32 e_1) (sext 32 e) ⊑ icmp IntPredicate.sgt e_1 e := by 
+  icmp IntPredicate.sgt (zext 32 e_1 { «nneg» := true }) (sext 32 e) ⊑ icmp IntPredicate.sgt e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -99,7 +99,7 @@ theorem zext_nneg_sext_sgt_thm (e e_1 : IntW 8) :
 
 
 theorem zext_nneg_sext_ugt_thm (e e_1 : IntW 8) :
-  icmp IntPredicate.ugt (zext 32 e_1) (sext 32 e) ⊑ icmp IntPredicate.ugt e_1 e := by 
+  icmp IntPredicate.ugt (zext 32 e_1 { «nneg» := true }) (sext 32 e) ⊑ icmp IntPredicate.ugt e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -109,7 +109,7 @@ theorem zext_nneg_sext_ugt_thm (e e_1 : IntW 8) :
 
 
 theorem zext_nneg_sext_eq_thm (e e_1 : IntW 8) :
-  icmp IntPredicate.eq (zext 32 e_1) (sext 32 e) ⊑ icmp IntPredicate.eq e_1 e := by 
+  icmp IntPredicate.eq (zext 32 e_1 { «nneg» := true }) (sext 32 e) ⊑ icmp IntPredicate.eq e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -119,7 +119,7 @@ theorem zext_nneg_sext_eq_thm (e e_1 : IntW 8) :
 
 
 theorem zext_nneg_sext_sle_op0_narrow_thm (e : IntW 16) (e_1 : IntW 8) :
-  icmp IntPredicate.sle (zext 32 e_1) (sext 32 e) ⊑ icmp IntPredicate.sge e (sext 16 e_1) := by 
+  icmp IntPredicate.sle (zext 32 e_1 { «nneg» := true }) (sext 32 e) ⊑ icmp IntPredicate.sge e (sext 16 e_1) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -129,7 +129,7 @@ theorem zext_nneg_sext_sle_op0_narrow_thm (e : IntW 16) (e_1 : IntW 8) :
 
 
 theorem zext_nneg_sext_ule_op0_wide_thm (e : IntW 8) (e_1 : IntW 9) :
-  icmp IntPredicate.ule (zext 32 e_1) (sext 32 e) ⊑ icmp IntPredicate.ule e_1 (sext 9 e) := by 
+  icmp IntPredicate.ule (zext 32 e_1 { «nneg» := true }) (sext 32 e) ⊑ icmp IntPredicate.ule e_1 (sext 9 e) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -139,7 +139,7 @@ theorem zext_nneg_sext_ule_op0_wide_thm (e : IntW 8) (e_1 : IntW 9) :
 
 
 theorem sext_zext_nneg_slt_thm (e e_1 : IntW 8) :
-  icmp IntPredicate.slt (sext 32 e_1) (zext 32 e) ⊑ icmp IntPredicate.slt e_1 e := by 
+  icmp IntPredicate.slt (sext 32 e_1) (zext 32 e { «nneg» := true }) ⊑ icmp IntPredicate.slt e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -149,7 +149,7 @@ theorem sext_zext_nneg_slt_thm (e e_1 : IntW 8) :
 
 
 theorem sext_zext_nneg_ult_thm (e e_1 : IntW 8) :
-  icmp IntPredicate.ult (sext 32 e_1) (zext 32 e) ⊑ icmp IntPredicate.ult e_1 e := by 
+  icmp IntPredicate.ult (sext 32 e_1) (zext 32 e { «nneg» := true }) ⊑ icmp IntPredicate.ult e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -159,7 +159,7 @@ theorem sext_zext_nneg_ult_thm (e e_1 : IntW 8) :
 
 
 theorem sext_zext_nneg_sge_op0_narrow_thm (e : IntW 8) (e_1 : IntW 5) :
-  icmp IntPredicate.sge (sext 32 e_1) (zext 32 e) ⊑ icmp IntPredicate.sle e (sext 8 e_1) := by 
+  icmp IntPredicate.sge (sext 32 e_1) (zext 32 e { «nneg» := true }) ⊑ icmp IntPredicate.sle e (sext 8 e_1) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -169,7 +169,7 @@ theorem sext_zext_nneg_sge_op0_narrow_thm (e : IntW 8) (e_1 : IntW 5) :
 
 
 theorem sext_zext_nneg_uge_op0_wide_thm (e : IntW 8) (e_1 : IntW 16) :
-  icmp IntPredicate.uge (sext 32 e_1) (zext 32 e) ⊑ icmp IntPredicate.uge e_1 (sext 16 e) := by 
+  icmp IntPredicate.uge (sext 32 e_1) (zext 32 e { «nneg» := true }) ⊑ icmp IntPredicate.uge e_1 (sext 16 e) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -213,7 +213,7 @@ theorem zext_sext_eq_known_nonneg_thm (e e_1 : IntW 8) :
 
 theorem zext_sext_sle_known_nonneg_op0_narrow_thm (e : IntW 16) (e_1 : IntW 8) :
   icmp IntPredicate.sle (zext 32 (LLVM.and e_1 (const? 8 12))) (sext 32 e) ⊑
-    icmp IntPredicate.sge e (zext 16 (LLVM.and e_1 (const? 8 12))) := by 
+    icmp IntPredicate.sge e (zext 16 (LLVM.and e_1 (const? 8 12)) { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -268,7 +268,7 @@ theorem sext_zext_ne_known_nonneg_thm (e e_1 : IntW 8) :
 
 theorem sext_zext_uge_known_nonneg_op0_wide_thm (e : IntW 8) (e_1 : IntW 16) :
   icmp IntPredicate.uge (sext 32 e_1) (zext 32 (LLVM.and e (const? 8 12))) ⊑
-    icmp IntPredicate.uge e_1 (zext 16 (LLVM.and e (const? 8 12))) := by 
+    icmp IntPredicate.uge e_1 (zext 16 (LLVM.and e (const? 8 12)) { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

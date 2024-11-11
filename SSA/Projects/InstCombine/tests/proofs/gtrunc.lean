@@ -57,7 +57,7 @@ def test6_after := [llvm|
 ^0(%arg103 : i64):
   %0 = llvm.mlir.constant(32) : i64
   %1 = llvm.lshr %arg103, %0 : i64
-  %2 = llvm.trunc %1 : i64 to i32
+  %2 = llvm.trunc %1 overflow<nuw> : i64 to i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -188,7 +188,7 @@ def test7_after := [llvm|
 ^0(%arg96 : i64):
   %0 = llvm.mlir.constant(32) : i64
   %1 = llvm.lshr %arg96, %0 : i64
-  %2 = llvm.zext %1 : i64 to i92
+  %2 = llvm.zext nneg %1 : i64 to i92
   "llvm.return"(%2) : (i92) -> ()
 }
 ]
@@ -284,7 +284,7 @@ def test11_after := [llvm|
   %0 = llvm.mlir.constant(31 : i32) : i32
   %1 = llvm.zext %arg84 : i32 to i64
   %2 = llvm.and %arg85, %0 : i32
-  %3 = llvm.zext %2 : i32 to i64
+  %3 = llvm.zext nneg %2 : i32 to i64
   %4 = llvm.shl %1, %3 overflow<nsw,nuw> : i64
   "llvm.return"(%4) : (i64) -> ()
 }
@@ -318,7 +318,7 @@ def test12_after := [llvm|
   %0 = llvm.mlir.constant(31 : i32) : i32
   %1 = llvm.zext %arg76 : i32 to i64
   %2 = llvm.and %arg77, %0 : i32
-  %3 = llvm.zext %2 : i32 to i64
+  %3 = llvm.zext nneg %2 : i32 to i64
   %4 = llvm.lshr %1, %3 : i64
   "llvm.return"(%4) : (i64) -> ()
 }
@@ -352,7 +352,7 @@ def test13_after := [llvm|
   %0 = llvm.mlir.constant(31 : i32) : i32
   %1 = llvm.sext %arg68 : i32 to i64
   %2 = llvm.and %arg69, %0 : i32
-  %3 = llvm.zext %2 : i32 to i64
+  %3 = llvm.zext nneg %2 : i32 to i64
   %4 = llvm.ashr %1, %3 : i64
   "llvm.return"(%4) : (i64) -> ()
 }
@@ -915,7 +915,7 @@ def drop_nsw_trunc_before := [llvm|
   %0 = llvm.mlir.constant(255 : i16) : i16
   %1 = llvm.and %arg13, %0 : i16
   %2 = llvm.and %1, %arg14 : i16
-  %3 = llvm.trunc %2 : i16 to i8
+  %3 = llvm.trunc %2 overflow<nsw> : i16 to i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -944,7 +944,7 @@ def drop_nuw_trunc_before := [llvm|
   %0 = llvm.mlir.constant(255 : i16) : i16
   %1 = llvm.and %arg11, %0 : i16
   %2 = llvm.and %1, %arg12 : i16
-  %3 = llvm.trunc %2 : i16 to i8
+  %3 = llvm.trunc %2 overflow<nuw> : i16 to i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -973,7 +973,7 @@ def drop_both_trunc_before := [llvm|
   %0 = llvm.mlir.constant(255 : i16) : i16
   %1 = llvm.and %arg9, %0 : i16
   %2 = llvm.and %1, %arg10 : i16
-  %3 = llvm.trunc %2 : i16 to i8
+  %3 = llvm.trunc %2 overflow<nsw,nuw> : i16 to i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -1000,7 +1000,7 @@ def trunc_nuw_xor_before := [llvm|
 {
 ^0(%arg5 : i8, %arg6 : i8):
   %0 = llvm.xor %arg5, %arg6 : i8
-  %1 = llvm.trunc %0 : i8 to i1
+  %1 = llvm.trunc %0 overflow<nuw> : i8 to i1
   "llvm.return"(%1) : (i1) -> ()
 }
 ]
@@ -1026,7 +1026,7 @@ def trunc_nsw_xor_before := [llvm|
 {
 ^0(%arg3 : i8, %arg4 : i8):
   %0 = llvm.xor %arg3, %arg4 : i8
-  %1 = llvm.trunc %0 : i8 to i1
+  %1 = llvm.trunc %0 overflow<nsw> : i8 to i1
   "llvm.return"(%1) : (i1) -> ()
 }
 ]

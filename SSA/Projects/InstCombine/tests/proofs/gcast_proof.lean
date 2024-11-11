@@ -239,9 +239,20 @@ theorem test43_thm (e : IntW 8) :
     all_goals sorry
 
 
+theorem test44_thm (e : IntW 8) :
+  zext 64 (LLVM.or (zext 16 e) (const? 16 1234)) ⊑
+    zext 64 (LLVM.or (zext 16 e) (const? 16 1234)) { «nneg» := true } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+
 theorem test46_thm (e : IntW 64) :
   zext 64 (shl (LLVM.and (trunc 32 e) (const? 32 42)) (const? 32 8)) ⊑
-    zext 64 (LLVM.and (shl (trunc 32 e) (const? 32 8)) (const? 32 10752)) := by 
+    zext 64 (LLVM.and (shl (trunc 32 e) (const? 32 8)) (const? 32 10752)) { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -262,7 +273,8 @@ theorem test47_thm (e : IntW 8) :
 
 theorem test48_thm (e : IntW 8) :
   zext 64 (LLVM.or (shl (zext 32 e) (const? 32 8)) (zext 32 e)) ⊑
-    zext 64 (LLVM.or (shl (zext 32 e) (const? 32 8) { «nsw» := true, «nuw» := true }) (zext 32 e)) := by 
+    zext 64 (LLVM.or (shl (zext 32 e) (const? 32 8) { «nsw» := true, «nuw» := true }) (zext 32 e))
+      { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -326,11 +338,43 @@ theorem test55_thm (e : IntW 32) :
     all_goals sorry
 
 
+theorem test56_thm (e : IntW 16) :
+  zext 64 (lshr (sext 32 e) (const? 32 5)) ⊑ zext 64 (lshr (sext 32 e) (const? 32 5)) { «nneg» := true } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+
+theorem test57_thm (e : IntW 64) :
+  zext 64 (lshr (trunc 32 e) (const? 32 8)) ⊑ zext 64 (lshr (trunc 32 e) (const? 32 8)) { «nneg» := true } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+
+theorem test58_thm (e : IntW 64) :
+  zext 64 (LLVM.or (lshr (trunc 32 e) (const? 32 8)) (const? 32 128)) ⊑
+    zext 64 (LLVM.or (lshr (trunc 32 e) (const? 32 8)) (const? 32 128)) { «nneg» := true } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+
 theorem test59_thm (e e_1 : IntW 8) :
   zext 64 (LLVM.or (lshr (zext 32 e_1) (const? 32 4)) (LLVM.and (shl (zext 32 e) (const? 32 4)) (const? 32 48))) ⊑
     zext 64
       (LLVM.or (LLVM.and (shl (zext 32 e) (const? 32 4) { «nsw» := true, «nuw» := true }) (const? 32 48))
-        (zext 32 (lshr e_1 (const? 8 4)))) := by 
+        (zext 32 (lshr e_1 (const? 8 4)) { «nneg» := true }))
+      { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -459,6 +503,17 @@ theorem PR24763_thm (e : IntW 8) : trunc 16 (lshr (sext 32 e) (const? 32 1)) ⊑
     all_goals sorry
 
 
+theorem test91_thm (e : IntW 64) :
+  trunc 64 (lshr (sext 96 e) (const? 96 48)) ⊑
+    trunc 64 (lshr (sext 96 e) (const? 96 48)) { «nsw» := true, «nuw» := true } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+
 theorem test92_thm (e : IntW 64) : trunc 64 (lshr (sext 96 e) (const? 96 32)) ⊑ ashr e (const? 64 32) := by 
     simp_alive_undef
     simp_alive_ops
@@ -496,7 +551,8 @@ theorem trunc_lshr_sext_exact_thm (e : IntW 8) :
     all_goals sorry
 
 
-theorem trunc_lshr_sext_wide_input_thm (e : IntW 16) : trunc 8 (lshr (sext 32 e) (const? 32 9)) ⊑ trunc 8 (ashr e (const? 16 9)) := by 
+theorem trunc_lshr_sext_wide_input_thm (e : IntW 16) :
+  trunc 8 (lshr (sext 32 e) (const? 32 9)) ⊑ trunc 8 (ashr e (const? 16 9)) { «nsw» := true, «nuw» := false } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -507,7 +563,7 @@ theorem trunc_lshr_sext_wide_input_thm (e : IntW 16) : trunc 8 (lshr (sext 32 e)
 
 theorem trunc_lshr_sext_wide_input_exact_thm (e : IntW 16) :
   trunc 8 (lshr (sext 32 e) (const? 32 9) { «exact» := true }) ⊑
-    trunc 8 (ashr e (const? 16 9) { «exact» := true }) := by 
+    trunc 8 (ashr e (const? 16 9) { «exact» := true }) { «nsw» := true, «nuw» := false } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -562,9 +618,42 @@ theorem pr33078_2_thm (e : IntW 8) : trunc 12 (lshr (sext 16 e) (const? 16 4)) �
     all_goals sorry
 
 
+theorem pr33078_3_thm (e : IntW 8) :
+  trunc 4 (lshr (sext 16 e) (const? 16 12)) ⊑
+    trunc 4 (lshr (sext 16 e) (const? 16 12)) { «nsw» := false, «nuw» := true } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+
+theorem pr33078_4_thm (e : IntW 3) :
+  trunc 8 (lshr (sext 16 e) (const? 16 13)) ⊑
+    trunc 8 (lshr (sext 16 e) (const? 16 13)) { «nsw» := true, «nuw» := true } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+
 theorem test94_thm (e : IntW 32) :
   sext 64 (LLVM.xor (sext 8 (icmp IntPredicate.eq e (const? 32 (-2)))) (const? 8 (-1))) ⊑
     sext 64 (icmp IntPredicate.ne e (const? 32 (-2))) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+
+theorem test95_thm (e : IntW 32) :
+  zext 32 (LLVM.or (LLVM.and (lshr (trunc 8 e) (const? 8 6)) (const? 8 2)) (const? 8 40)) ⊑
+    zext 32 (LLVM.or (LLVM.and (lshr (trunc 8 e) (const? 8 6)) (const? 8 2)) (const? 8 40)) { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

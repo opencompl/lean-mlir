@@ -9,7 +9,7 @@ set_option linter.unreachableTactic false
 
 section gshifthaddhinseltpoison_proof
 theorem shl_C1_add_A_C2_i32_thm (e : IntW 16) :
-  shl (const? 32 6) (add (zext 32 e) (const? 32 5)) ⊑ shl (const? 32 192) (zext 32 e) := by 
+  shl (const? 32 6) (add (zext 32 e) (const? 32 5)) ⊑ shl (const? 32 192) (zext 32 e { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

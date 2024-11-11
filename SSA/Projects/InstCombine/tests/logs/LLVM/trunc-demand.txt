@@ -23,7 +23,13 @@
 2: llvm.return
 
 1: "trunc_lshr_big_mask"
-7: "trunc_lshr_big_mask" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.and
+2: llvm.return
 
 1: "trunc_lshr_use1"
 4: "trunc_lshr_use1" has unsupported operation: llvm.call
@@ -59,5 +65,11 @@
 2: llvm.return
 
 1: "or_trunc_lshr_small_mask"
-7: "or_trunc_lshr_small_mask" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.or
+2: llvm.return
 

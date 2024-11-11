@@ -30,7 +30,13 @@
 7: "eval_trunc_multi_use_in_one_inst" is unchanged by InstCombine
 
 1: "eval_zext_multi_use_in_one_inst"
-7: "eval_zext_multi_use_in_one_inst" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.and
+2: llvm.mul
+2: llvm.zext
+2: llvm.return
 
 1: "eval_sext_multi_use_in_one_inst"
 7: "eval_sext_multi_use_in_one_inst" is unchanged by InstCombine

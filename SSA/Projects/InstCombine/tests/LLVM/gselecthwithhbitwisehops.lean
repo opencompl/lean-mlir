@@ -908,7 +908,7 @@ def select_icmp_x_and_8_eq_0_y_xor_8_after := [llvm|
 ^0(%arg179 : i32, %arg180 : i64):
   %0 = llvm.mlir.constant(8 : i32) : i32
   %1 = llvm.and %arg179, %0 : i32
-  %2 = llvm.zext %1 : i32 to i64
+  %2 = llvm.zext nneg %1 : i32 to i64
   %3 = llvm.xor %arg180, %2 : i64
   "llvm.return"(%3) : (i64) -> ()
 }
@@ -943,7 +943,7 @@ def select_icmp_x_and_8_ne_0_y_xor_8_after := [llvm|
   %0 = llvm.mlir.constant(8 : i32) : i32
   %1 = llvm.and %arg177, %0 : i32
   %2 = llvm.xor %1, %0 : i32
-  %3 = llvm.zext %2 : i32 to i64
+  %3 = llvm.zext nneg %2 : i32 to i64
   %4 = llvm.xor %arg178, %3 : i64
   "llvm.return"(%4) : (i64) -> ()
 }
@@ -978,7 +978,7 @@ def select_icmp_x_and_8_ne_0_y_or_8_after := [llvm|
   %0 = llvm.mlir.constant(8 : i32) : i32
   %1 = llvm.and %arg175, %0 : i32
   %2 = llvm.xor %1, %0 : i32
-  %3 = llvm.zext %2 : i32 to i64
+  %3 = llvm.zext nneg %2 : i32 to i64
   %4 = llvm.or %arg176, %3 : i64
   "llvm.return"(%4) : (i64) -> ()
 }

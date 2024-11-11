@@ -308,7 +308,12 @@
 2: llvm.return
 
 1: "test44"
-7: "test44" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.or
+2: llvm.zext
+2: llvm.return
 
 1: "test45"
 7: "test45" is unchanged by InstCombine
@@ -402,19 +407,36 @@
 2: llvm.return
 
 1: "test56"
-7: "test56" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.lshr
+2: llvm.zext
+2: llvm.return
 
 1: "test56vec"
-7: "test56vec" is unchanged by InstCombine
+8: "test56vec" contains vectors which are unsupported
 
 1: "test57"
-7: "test57" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.lshr
+2: llvm.zext
+2: llvm.return
 
 1: "test57vec"
-7: "test57vec" is unchanged by InstCombine
+8: "test57vec" contains vectors which are unsupported
 
 1: "test58"
-7: "test58" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.lshr
+2: llvm.or
+2: llvm.zext
+2: llvm.return
 
 1: "test59"
 2: llvm.func
@@ -756,7 +778,12 @@
 8: "test90" contains vectors which are unsupported
 
 1: "test91"
-7: "test91" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.return
 
 1: "test92"
 2: llvm.func
@@ -916,7 +943,7 @@
 4: "trunc_lshr_overshift_sext_narrow_input_uses3" has unsupported operation: llvm.call
 
 1: "trunc_lshr_overshift2_sext"
-7: "trunc_lshr_overshift2_sext" is unchanged by InstCombine
+8: "trunc_lshr_overshift2_sext" contains vectors which are unsupported
 
 1: "trunc_lshr_overshift2_sext_uses1"
 4: "trunc_lshr_overshift2_sext_uses1" has unsupported operation: llvm.call
@@ -991,10 +1018,20 @@
 2: llvm.return
 
 1: "pr33078_3"
-7: "pr33078_3" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.return
 
 1: "pr33078_4"
-7: "pr33078_4" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.return
 
 1: "test94"
 2: llvm.func
@@ -1007,5 +1044,14 @@
 2: llvm.return
 
 1: "test95"
-7: "test95" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.lshr
+2: llvm.and
+2: llvm.or
+2: llvm.zext
+2: llvm.return
 

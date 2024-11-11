@@ -143,7 +143,7 @@ def test5_after := [llvm|
 ^0(%arg95 : i32, %arg96 : i8):
   %0 = llvm.mlir.constant(32 : i32) : i32
   %1 = llvm.mlir.constant(-1 : i32) : i32
-  %2 = llvm.zext %arg96 : i8 to i32
+  %2 = llvm.zext nneg %arg96 : i8 to i32
   %3 = llvm.shl %0, %2 overflow<nuw> : i32
   %4 = llvm.add %3, %1 : i32
   %5 = llvm.and %arg95, %4 : i32
@@ -410,7 +410,7 @@ def test15_after := [llvm|
   %1 = llvm.shl %0, %arg84 overflow<nsw> : i32
   %2 = llvm.xor %1, %0 : i32
   %3 = llvm.and %arg83, %2 : i32
-  %4 = llvm.zext %3 : i32 to i64
+  %4 = llvm.zext nneg %3 : i32 to i64
   "llvm.return"(%4) : (i64) -> ()
 }
 ]

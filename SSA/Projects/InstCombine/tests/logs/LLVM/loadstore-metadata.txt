@@ -76,3 +76,46 @@
 
 4: "test_load_cast_combine_noalias_addrspace" has unsupported operation: llvm.load
 
+1: "preserve_load_metadata_after_select_transform1"
+9: "preserve_load_metadata_after_select_transform1" has pointer type input
+
+4: "preserve_load_metadata_after_select_transform1" has unsupported operation: llvm.load
+
+4: "preserve_load_metadata_after_select_transform1" has unsupported operation: llvm.load
+
+1: "preserve_load_metadata_after_select_transform2"
+9: "preserve_load_metadata_after_select_transform2" has pointer type input
+
+4: "preserve_load_metadata_after_select_transform2" has unsupported operation: llvm.load
+
+4: "preserve_load_metadata_after_select_transform2" has unsupported operation: llvm.load
+
+4: "preserve_load_metadata_after_select_transform2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "preserve_load_metadata_after_select_transform_metadata_missing_1"
+9: "preserve_load_metadata_after_select_transform_metadata_missing_1" has pointer type input
+
+4: "preserve_load_metadata_after_select_transform_metadata_missing_1" has unsupported operation: llvm.load
+
+4: "preserve_load_metadata_after_select_transform_metadata_missing_1" has unsupported operation: llvm.load
+
+4: "preserve_load_metadata_after_select_transform_metadata_missing_1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "preserve_load_metadata_after_select_transform_metadata_missing_2"
+9: "preserve_load_metadata_after_select_transform_metadata_missing_2" has pointer type input
+
+4: "preserve_load_metadata_after_select_transform_metadata_missing_2" has unsupported operation: llvm.load
+
+4: "preserve_load_metadata_after_select_transform_metadata_missing_2" has unsupported operation: llvm.load
+
+4: "preserve_load_metadata_after_select_transform_metadata_missing_2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "preserve_load_metadata_after_select_transform_metadata_missing_3"
+9: "preserve_load_metadata_after_select_transform_metadata_missing_3" has pointer type input
+
+4: "preserve_load_metadata_after_select_transform_metadata_missing_3" has unsupported operation: llvm.load
+
+4: "preserve_load_metadata_after_select_transform_metadata_missing_3" has unsupported operation: llvm.load
+
+4: "preserve_load_metadata_after_select_transform_metadata_missing_3" has unsupported operation: builtin.unregistered: llvm.fcmp
+

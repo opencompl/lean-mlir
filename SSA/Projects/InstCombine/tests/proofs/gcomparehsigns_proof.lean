@@ -109,3 +109,14 @@ theorem shift_trunc_wrong_shift_thm (e : IntW 32) :
     all_goals sorry
 
 
+theorem shift_trunc_wrong_cmp_thm (e : IntW 32) :
+  icmp IntPredicate.slt (trunc 8 (lshr e (const? 32 24))) (const? 8 1) ⊑
+    icmp IntPredicate.slt (trunc 8 (lshr e (const? 32 24)) { «nsw» := false, «nuw» := true }) (const? 8 1) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+

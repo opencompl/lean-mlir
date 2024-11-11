@@ -261,7 +261,7 @@ def udiv_i32_c_after := [llvm|
 ^0(%arg14 : i8):
   %0 = llvm.mlir.constant(10 : i8) : i8
   %1 = llvm.udiv %arg14, %0 : i8
-  %2 = llvm.zext %1 : i8 to i32
+  %2 = llvm.zext nneg %1 : i8 to i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -321,7 +321,7 @@ def udiv_illegal_type_c_after := [llvm|
 ^0(%arg11 : i9):
   %0 = llvm.mlir.constant(10 : i9) : i9
   %1 = llvm.udiv %arg11, %0 : i9
-  %2 = llvm.zext %1 : i9 to i32
+  %2 = llvm.zext nneg %1 : i9 to i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -350,7 +350,7 @@ def urem_i32_c_after := [llvm|
 ^0(%arg10 : i8):
   %0 = llvm.mlir.constant(10 : i8) : i8
   %1 = llvm.urem %arg10, %0 : i8
-  %2 = llvm.zext %1 : i8 to i32
+  %2 = llvm.zext nneg %1 : i8 to i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -410,7 +410,7 @@ def urem_illegal_type_c_after := [llvm|
 ^0(%arg7 : i9):
   %0 = llvm.mlir.constant(10 : i9) : i9
   %1 = llvm.urem %arg7, %0 : i9
-  %2 = llvm.zext %1 : i9 to i32
+  %2 = llvm.zext nneg %1 : i9 to i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -439,7 +439,7 @@ def udiv_c_i32_after := [llvm|
 ^0(%arg6 : i8):
   %0 = llvm.mlir.constant(10 : i8) : i8
   %1 = llvm.udiv %0, %arg6 : i8
-  %2 = llvm.zext %1 : i8 to i32
+  %2 = llvm.zext nneg %1 : i8 to i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -468,7 +468,7 @@ def urem_c_i32_after := [llvm|
 ^0(%arg5 : i8):
   %0 = llvm.mlir.constant(10 : i8) : i8
   %1 = llvm.urem %0, %arg5 : i8
-  %2 = llvm.zext %1 : i8 to i32
+  %2 = llvm.zext nneg %1 : i8 to i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]

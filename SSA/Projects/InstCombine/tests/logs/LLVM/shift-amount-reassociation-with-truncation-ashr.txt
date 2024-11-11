@@ -64,8 +64,26 @@
 4: "t8_extrause2" has unsupported operation: llvm.call
 
 1: "t9_ashr"
-7: "t9_ashr" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.zext
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.add
+2: llvm.ashr
+2: llvm.return
 
 1: "n10_lshr_ashr"
-7: "n10_lshr_ashr" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.zext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.add
+2: llvm.ashr
+2: llvm.return
 

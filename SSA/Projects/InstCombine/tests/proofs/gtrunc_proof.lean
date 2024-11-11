@@ -18,7 +18,8 @@ theorem test5_thm (e : IntW 32) : trunc 32 (lshr (zext 128 e) (const? 128 16)) �
 
 
 theorem test6_thm (e : IntW 64) :
-  trunc 32 (lshr (zext 128 e) (const? 128 32)) ⊑ trunc 32 (lshr e (const? 64 32)) := by 
+  trunc 32 (lshr (zext 128 e) (const? 128 32)) ⊑
+    trunc 32 (lshr e (const? 64 32)) { «nsw» := false, «nuw» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -61,7 +62,7 @@ theorem trunc_ashr_thm (e : IntW 32) :
 
 
 theorem test7_thm (e : IntW 64) :
-  trunc 92 (lshr (zext 128 e) (const? 128 32)) ⊑ zext 92 (lshr e (const? 64 32)) := by 
+  trunc 92 (lshr (zext 128 e) (const? 128 32)) ⊑ zext 92 (lshr e (const? 64 32)) { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -92,7 +93,7 @@ theorem test9_thm (e : IntW 32) : trunc 8 (LLVM.and e (const? 32 42)) ⊑ LLVM.a
 
 theorem test11_thm (e e_1 : IntW 32) :
   trunc 64 (shl (zext 128 e_1) (LLVM.and (zext 128 e) (const? 128 31))) ⊑
-    shl (zext 64 e_1) (zext 64 (LLVM.and e (const? 32 31))) { «nsw» := true, «nuw» := true } := by 
+    shl (zext 64 e_1) (zext 64 (LLVM.and e (const? 32 31)) { «nneg» := true }) { «nsw» := true, «nuw» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -103,7 +104,7 @@ theorem test11_thm (e e_1 : IntW 32) :
 
 theorem test12_thm (e e_1 : IntW 32) :
   trunc 64 (lshr (zext 128 e_1) (LLVM.and (zext 128 e) (const? 128 31))) ⊑
-    lshr (zext 64 e_1) (zext 64 (LLVM.and e (const? 32 31))) := by 
+    lshr (zext 64 e_1) (zext 64 (LLVM.and e (const? 32 31)) { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -114,7 +115,7 @@ theorem test12_thm (e e_1 : IntW 32) :
 
 theorem test13_thm (e e_1 : IntW 32) :
   trunc 64 (ashr (sext 128 e_1) (LLVM.and (zext 128 e) (const? 128 31))) ⊑
-    ashr (sext 64 e_1) (zext 64 (LLVM.and e (const? 32 31))) := by 
+    ashr (sext 64 e_1) (zext 64 (LLVM.and e (const? 32 31)) { «nneg» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -303,7 +304,8 @@ theorem PR44545_thm (e e_1 : IntW 32) :
 
 
 theorem drop_nsw_trunc_thm (e e_1 : IntW 16) :
-  trunc 8 (LLVM.and (LLVM.and e_1 (const? 16 255)) e) ⊑ trunc 8 (LLVM.and e_1 e) := by 
+  trunc 8 (LLVM.and (LLVM.and e_1 (const? 16 255)) e) { «nsw» := true, «nuw» := false } ⊑
+    trunc 8 (LLVM.and e_1 e) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -313,7 +315,8 @@ theorem drop_nsw_trunc_thm (e e_1 : IntW 16) :
 
 
 theorem drop_nuw_trunc_thm (e e_1 : IntW 16) :
-  trunc 8 (LLVM.and (LLVM.and e_1 (const? 16 255)) e) ⊑ trunc 8 (LLVM.and e_1 e) := by 
+  trunc 8 (LLVM.and (LLVM.and e_1 (const? 16 255)) e) { «nsw» := false, «nuw» := true } ⊑
+    trunc 8 (LLVM.and e_1 e) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -323,7 +326,8 @@ theorem drop_nuw_trunc_thm (e e_1 : IntW 16) :
 
 
 theorem drop_both_trunc_thm (e e_1 : IntW 16) :
-  trunc 8 (LLVM.and (LLVM.and e_1 (const? 16 255)) e) ⊑ trunc 8 (LLVM.and e_1 e) := by 
+  trunc 8 (LLVM.and (LLVM.and e_1 (const? 16 255)) e) { «nsw» := true, «nuw» := true } ⊑
+    trunc 8 (LLVM.and e_1 e) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -332,7 +336,8 @@ theorem drop_both_trunc_thm (e e_1 : IntW 16) :
     all_goals sorry
 
 
-theorem trunc_nuw_xor_thm (e e_1 : IntW 8) : trunc 1 (LLVM.xor e_1 e) ⊑ icmp IntPredicate.ne e_1 e := by 
+theorem trunc_nuw_xor_thm (e e_1 : IntW 8) :
+  trunc 1 (LLVM.xor e_1 e) { «nsw» := false, «nuw» := true } ⊑ icmp IntPredicate.ne e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -341,7 +346,8 @@ theorem trunc_nuw_xor_thm (e e_1 : IntW 8) : trunc 1 (LLVM.xor e_1 e) ⊑ icmp I
     all_goals sorry
 
 
-theorem trunc_nsw_xor_thm (e e_1 : IntW 8) : trunc 1 (LLVM.xor e_1 e) ⊑ icmp IntPredicate.ne e_1 e := by 
+theorem trunc_nsw_xor_thm (e e_1 : IntW 8) :
+  trunc 1 (LLVM.xor e_1 e) { «nsw» := true, «nuw» := false } ⊑ icmp IntPredicate.ne e_1 e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

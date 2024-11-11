@@ -37,7 +37,7 @@ def pr110631_after := [llvm|
   %2 = llvm.xor %arg0, %0 : i32
   %3 = llvm.trunc %arg1 : i64 to i32
   %4 = llvm.and %2, %3 : i32
-  %5 = llvm.trunc %4 : i32 to i16
+  %5 = llvm.trunc %4 overflow<nuw> : i32 to i16
   %6 = llvm.xor %5, %1 : i16
   "llvm.return"(%6) : (i16) -> ()
 }

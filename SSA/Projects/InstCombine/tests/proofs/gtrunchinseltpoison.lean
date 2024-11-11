@@ -57,7 +57,7 @@ def test6_after := [llvm|
 ^0(%arg88 : i64):
   %0 = llvm.mlir.constant(32) : i64
   %1 = llvm.lshr %arg88, %0 : i64
-  %2 = llvm.trunc %1 : i64 to i32
+  %2 = llvm.trunc %1 overflow<nuw> : i64 to i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -188,7 +188,7 @@ def test7_after := [llvm|
 ^0(%arg81 : i64):
   %0 = llvm.mlir.constant(32) : i64
   %1 = llvm.lshr %arg81, %0 : i64
-  %2 = llvm.zext %1 : i64 to i92
+  %2 = llvm.zext nneg %1 : i64 to i92
   "llvm.return"(%2) : (i92) -> ()
 }
 ]
@@ -284,7 +284,7 @@ def test11_after := [llvm|
   %0 = llvm.mlir.constant(31 : i32) : i32
   %1 = llvm.zext %arg69 : i32 to i64
   %2 = llvm.and %arg70, %0 : i32
-  %3 = llvm.zext %2 : i32 to i64
+  %3 = llvm.zext nneg %2 : i32 to i64
   %4 = llvm.shl %1, %3 overflow<nsw,nuw> : i64
   "llvm.return"(%4) : (i64) -> ()
 }
@@ -318,7 +318,7 @@ def test12_after := [llvm|
   %0 = llvm.mlir.constant(31 : i32) : i32
   %1 = llvm.zext %arg61 : i32 to i64
   %2 = llvm.and %arg62, %0 : i32
-  %3 = llvm.zext %2 : i32 to i64
+  %3 = llvm.zext nneg %2 : i32 to i64
   %4 = llvm.lshr %1, %3 : i64
   "llvm.return"(%4) : (i64) -> ()
 }
@@ -352,7 +352,7 @@ def test13_after := [llvm|
   %0 = llvm.mlir.constant(31 : i32) : i32
   %1 = llvm.sext %arg53 : i32 to i64
   %2 = llvm.and %arg54, %0 : i32
-  %3 = llvm.zext %2 : i32 to i64
+  %3 = llvm.zext nneg %2 : i32 to i64
   %4 = llvm.ashr %1, %3 : i64
   "llvm.return"(%4) : (i64) -> ()
 }

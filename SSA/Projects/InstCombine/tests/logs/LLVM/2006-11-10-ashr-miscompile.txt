@@ -1,3 +1,7 @@
 1: "test"
-7: "test" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.lshr
+2: llvm.return
 

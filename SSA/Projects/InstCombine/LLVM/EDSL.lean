@@ -192,7 +192,7 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
         | "llvm.zext"  => do
           let nonNeg? := opStx.attrs.getAttr "nonNeg"
           pure <| .zext (← getOutputWidth opStx "zext") ⟨nonNeg?.isSome⟩
-        | "llvm.sext"  => pure <| .zext (← getOutputWidth opStx "sext")
+        | "llvm.sext"  => pure <| .sext (← getOutputWidth opStx "sext")
         | "llvm.trunc" => do
           let attr? := opStx.attrs.getAttr "overflowFlags"
           match attr? with

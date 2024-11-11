@@ -49,7 +49,9 @@ theorem test4_thm (e : IntW 1) (e_1 : IntW 32) :
 
 theorem test5_thm (e : IntW 8) (e_1 : IntW 32) :
   urem e_1 (shl (const? 32 32) (zext 32 e)) ⊑
-    LLVM.and e_1 (add (shl (const? 32 32) (zext 32 e) { «nsw» := false, «nuw» := true }) (const? 32 (-1))) := by 
+    LLVM.and e_1
+      (add (shl (const? 32 32) (zext 32 e { «nneg» := true }) { «nsw» := false, «nuw» := true })
+        (const? 32 (-1))) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -138,8 +140,8 @@ theorem test14_thm (e : IntW 32) (e_1 : IntW 64) :
 
 theorem test15_thm (e e_1 : IntW 32) :
   urem (zext 64 e_1) (zext 64 (shl (const? 32 1) e)) ⊑
-    zext 64
-      (LLVM.and e_1 (LLVM.xor (shl (const? 32 (-1)) e { «nsw» := true, «nuw» := false }) (const? 32 (-1)))) := by 
+    zext 64 (LLVM.and e_1 (LLVM.xor (shl (const? 32 (-1)) e { «nsw» := true, «nuw» := false }) (const? 32 (-1))))
+      { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

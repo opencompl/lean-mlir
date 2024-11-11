@@ -29,7 +29,8 @@ theorem OrZextOr_thm (e : IntW 3) :
 
 
 theorem AndZextAnd_thm (e : IntW 3) :
-  LLVM.and (zext 5 (LLVM.and e (const? 3 3))) (const? 5 14) ⊑ zext 5 (LLVM.and e (const? 3 2)) := by 
+  LLVM.and (zext 5 (LLVM.and e (const? 3 3))) (const? 5 14) ⊑
+    zext 5 (LLVM.and e (const? 3 2)) { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -39,8 +40,8 @@ theorem AndZextAnd_thm (e : IntW 3) :
 
 
 theorem zext_nneg_thm (e : IntW 16) :
-  LLVM.and (zext 24 (LLVM.and e (const? 16 32767))) (const? 24 8388607) ⊑
-    zext 24 (LLVM.and e (const? 16 32767)) := by 
+  LLVM.and (zext 24 (LLVM.and e (const? 16 32767)) { «nneg» := true }) (const? 24 8388607) ⊑
+    zext 24 (LLVM.and e (const? 16 32767)) { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

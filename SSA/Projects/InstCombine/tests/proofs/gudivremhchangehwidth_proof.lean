@@ -86,7 +86,8 @@ theorem urem_illegal_type_thm (e e_1 : IntW 9) : urem (zext 32 e_1) (zext 32 e) 
     all_goals sorry
 
 
-theorem udiv_i32_c_thm (e : IntW 8) : LLVM.udiv (zext 32 e) (const? 32 10) ⊑ zext 32 (LLVM.udiv e (const? 8 10)) := by 
+theorem udiv_i32_c_thm (e : IntW 8) :
+  LLVM.udiv (zext 32 e) (const? 32 10) ⊑ zext 32 (LLVM.udiv e (const? 8 10)) { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -106,7 +107,8 @@ theorem udiv_i32_c_multiuse_thm (e : IntW 8) :
     all_goals sorry
 
 
-theorem udiv_illegal_type_c_thm (e : IntW 9) : LLVM.udiv (zext 32 e) (const? 32 10) ⊑ zext 32 (LLVM.udiv e (const? 9 10)) := by 
+theorem udiv_illegal_type_c_thm (e : IntW 9) :
+  LLVM.udiv (zext 32 e) (const? 32 10) ⊑ zext 32 (LLVM.udiv e (const? 9 10)) { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -115,7 +117,8 @@ theorem udiv_illegal_type_c_thm (e : IntW 9) : LLVM.udiv (zext 32 e) (const? 32 
     all_goals sorry
 
 
-theorem urem_i32_c_thm (e : IntW 8) : urem (zext 32 e) (const? 32 10) ⊑ zext 32 (urem e (const? 8 10)) := by 
+theorem urem_i32_c_thm (e : IntW 8) :
+  urem (zext 32 e) (const? 32 10) ⊑ zext 32 (urem e (const? 8 10)) { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -135,7 +138,8 @@ theorem urem_i32_c_multiuse_thm (e : IntW 8) :
     all_goals sorry
 
 
-theorem urem_illegal_type_c_thm (e : IntW 9) : urem (zext 32 e) (const? 32 10) ⊑ zext 32 (urem e (const? 9 10)) := by 
+theorem urem_illegal_type_c_thm (e : IntW 9) :
+  urem (zext 32 e) (const? 32 10) ⊑ zext 32 (urem e (const? 9 10)) { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -144,7 +148,8 @@ theorem urem_illegal_type_c_thm (e : IntW 9) : urem (zext 32 e) (const? 32 10) �
     all_goals sorry
 
 
-theorem udiv_c_i32_thm (e : IntW 8) : LLVM.udiv (const? 32 10) (zext 32 e) ⊑ zext 32 (LLVM.udiv (const? 8 10) e) := by 
+theorem udiv_c_i32_thm (e : IntW 8) :
+  LLVM.udiv (const? 32 10) (zext 32 e) ⊑ zext 32 (LLVM.udiv (const? 8 10) e) { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -153,7 +158,8 @@ theorem udiv_c_i32_thm (e : IntW 8) : LLVM.udiv (const? 32 10) (zext 32 e) ⊑ z
     all_goals sorry
 
 
-theorem urem_c_i32_thm (e : IntW 8) : urem (const? 32 10) (zext 32 e) ⊑ zext 32 (urem (const? 8 10) e) := by 
+theorem urem_c_i32_thm (e : IntW 8) :
+  urem (const? 32 10) (zext 32 e) ⊑ zext 32 (urem (const? 8 10) e) { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

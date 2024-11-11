@@ -142,3 +142,36 @@ theorem testi128i128_proof : testi128i128_before ⊑ testi128i128_after := by
   ---END testi128i128
 
 
+
+def wrongimm_before := [llvm|
+{
+^0(%arg4 : i16):
+  %0 = llvm.mlir.constant(14 : i16) : i16
+  %1 = llvm.mlir.constant(27 : i8) : i8
+  %2 = llvm.ashr %arg4, %0 : i16
+  %3 = llvm.trunc %2 : i16 to i8
+  %4 = llvm.xor %3, %1 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+def wrongimm_after := [llvm|
+{
+^0(%arg4 : i16):
+  %0 = llvm.mlir.constant(14 : i16) : i16
+  %1 = llvm.mlir.constant(27 : i8) : i8
+  %2 = llvm.ashr %arg4, %0 : i16
+  %3 = llvm.trunc %2 overflow<nsw> : i16 to i8
+  %4 = llvm.xor %3, %1 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem wrongimm_proof : wrongimm_before ⊑ wrongimm_after := by
+  unfold wrongimm_before wrongimm_after
+  simp_alive_peephole
+  intros
+  ---BEGIN wrongimm
+  all_goals (try extract_goal ; sorry)
+  ---END wrongimm
+
+

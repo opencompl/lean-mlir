@@ -27,7 +27,7 @@ def test4_after := [llvm|
 ^0(%arg33 : i32):
   %0 = llvm.mlir.constant(3 : i32) : i32
   %1 = llvm.udiv %arg33, %0 : i32
-  %2 = llvm.zext %1 : i32 to i64
+  %2 = llvm.zext nneg %1 : i32 to i64
   "llvm.return"(%2) : (i64) -> ()
 }
 ]
@@ -56,7 +56,7 @@ def test5_after := [llvm|
 ^0(%arg32 : i32):
   %0 = llvm.mlir.constant(30000 : i32) : i32
   %1 = llvm.urem %arg32, %0 : i32
-  %2 = llvm.zext %1 : i32 to i64
+  %2 = llvm.zext nneg %1 : i32 to i64
   "llvm.return"(%2) : (i64) -> ()
 }
 ]
@@ -87,7 +87,7 @@ def test6_after := [llvm|
   %0 = llvm.mlir.constant(3 : i32) : i32
   %1 = llvm.lshr %arg31, %0 : i32
   %2 = llvm.mul %1, %0 overflow<nsw,nuw> : i32
-  %3 = llvm.zext %2 : i32 to i64
+  %3 = llvm.zext nneg %2 : i32 to i64
   "llvm.return"(%3) : (i64) -> ()
 }
 ]
@@ -120,7 +120,7 @@ def test7_after := [llvm|
   %1 = llvm.mlir.constant(20000 : i32) : i32
   %2 = llvm.and %arg30, %0 : i32
   %3 = llvm.sub %1, %2 overflow<nsw,nuw> : i32
-  %4 = llvm.zext %3 : i32 to i64
+  %4 = llvm.zext nneg %3 : i32 to i64
   "llvm.return"(%4) : (i64) -> ()
 }
 ]
@@ -407,7 +407,7 @@ def smear_set_bit_different_dest_type_after := [llvm|
   %1 = llvm.mlir.constant(31 : i32) : i32
   %2 = llvm.shl %arg2, %0 : i32
   %3 = llvm.ashr %2, %1 : i32
-  %4 = llvm.trunc %3 : i32 to i16
+  %4 = llvm.trunc %3 overflow<nsw> : i32 to i16
   "llvm.return"(%4) : (i16) -> ()
 }
 ]

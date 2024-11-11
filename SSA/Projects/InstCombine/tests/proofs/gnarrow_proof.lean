@@ -37,3 +37,13 @@ theorem shrink_or_thm (e : IntW 6) : trunc 3 (LLVM.or e (const? 6 (-31))) ⊑ LL
     all_goals sorry
 
 
+theorem shrink_and_thm (e : IntW 64) :
+  trunc 31 (LLVM.and e (const? 64 42)) ⊑ trunc 31 (LLVM.and e (const? 64 42)) { «nsw» := true, «nuw» := true } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+

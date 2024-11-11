@@ -52,3 +52,14 @@ theorem testi128i128_thm (e : IntW 128) :
     all_goals sorry
 
 
+theorem wrongimm_thm (e : IntW 16) :
+  LLVM.xor (trunc 8 (ashr e (const? 16 14))) (const? 8 27) ⊑
+    LLVM.xor (trunc 8 (ashr e (const? 16 14)) { «nsw» := true, «nuw» := false }) (const? 8 27) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+

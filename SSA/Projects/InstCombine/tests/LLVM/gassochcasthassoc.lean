@@ -91,7 +91,7 @@ def AndZextAnd_after := [llvm|
 ^0(%arg2 : i3):
   %0 = llvm.mlir.constant(2 : i3) : i3
   %1 = llvm.and %arg2, %0 : i3
-  %2 = llvm.zext %1 : i3 to i5
+  %2 = llvm.zext nneg %1 : i3 to i5
   "llvm.return"(%2) : (i5) -> ()
 }
 ]
@@ -112,7 +112,7 @@ def zext_nneg_before := [llvm|
   %0 = llvm.mlir.constant(32767 : i16) : i16
   %1 = llvm.mlir.constant(8388607 : i24) : i24
   %2 = llvm.and %arg0, %0 : i16
-  %3 = llvm.zext %2 : i16 to i24
+  %3 = llvm.zext nneg %2 : i16 to i24
   %4 = llvm.and %3, %1 : i24
   "llvm.return"(%4) : (i24) -> ()
 }
@@ -122,7 +122,7 @@ def zext_nneg_after := [llvm|
 ^0(%arg0 : i16):
   %0 = llvm.mlir.constant(32767 : i16) : i16
   %1 = llvm.and %arg0, %0 : i16
-  %2 = llvm.zext %1 : i16 to i24
+  %2 = llvm.zext nneg %1 : i16 to i24
   "llvm.return"(%2) : (i24) -> ()
 }
 ]
