@@ -275,10 +275,6 @@ theorem getLsb_geX(x : BitVec w) (hi : i ≥ w) :
   have rk : _ := @BitVec.getLsbD_ge w x i hi
   apply rk
 
-@[simp]
-private theorem toInt_zero : BitVec.toInt (BitVec.ofNat w 0) = 0 := by
-  simp [toInt_ofNat]
-
 theorem intMin_slt_zero (h : 0 < w) :
     BitVec.slt (intMin w) 0 := by
   simp only [BitVec.slt, toInt_intMin, Int.ofNat_emod, Nat.cast_pow, Nat.cast_ofNat, ofNat_eq_ofNat,
