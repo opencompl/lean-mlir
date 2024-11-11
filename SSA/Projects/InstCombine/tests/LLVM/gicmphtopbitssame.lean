@@ -216,3 +216,77 @@ theorem testi64i32_ne_proof : testi64i32_ne_before ⊑ testi64i32_ne_after := by
   ---END testi64i32_ne
 
 
+
+def wrongimm2_before := [llvm|
+{
+^0(%arg4 : i16):
+  %0 = llvm.mlir.constant(8 : i16) : i16
+  %1 = llvm.mlir.constant(6 : i8) : i8
+  %2 = llvm.lshr %arg4, %0 : i16
+  %3 = llvm.trunc %2 : i16 to i8
+  %4 = llvm.trunc %arg4 : i16 to i8
+  %5 = llvm.ashr %4, %1 : i8
+  %6 = llvm.icmp "eq" %5, %3 : i8
+  "llvm.return"(%6) : (i1) -> ()
+}
+]
+def wrongimm2_after := [llvm|
+{
+^0(%arg4 : i16):
+  %0 = llvm.mlir.constant(8 : i16) : i16
+  %1 = llvm.mlir.constant(6 : i8) : i8
+  %2 = llvm.lshr %arg4, %0 : i16
+  %3 = llvm.trunc %2 overflow<nuw> : i16 to i8
+  %4 = llvm.trunc %arg4 : i16 to i8
+  %5 = llvm.ashr %4, %1 : i8
+  %6 = llvm.icmp "eq" %5, %3 : i8
+  "llvm.return"(%6) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem wrongimm2_proof : wrongimm2_before ⊑ wrongimm2_after := by
+  unfold wrongimm2_before wrongimm2_after
+  simp_alive_peephole
+  intros
+  ---BEGIN wrongimm2
+  all_goals (try extract_goal ; sorry)
+  ---END wrongimm2
+
+
+
+def slt_before := [llvm|
+{
+^0(%arg3 : i64):
+  %0 = llvm.mlir.constant(32) : i64
+  %1 = llvm.mlir.constant(31 : i32) : i32
+  %2 = llvm.lshr %arg3, %0 : i64
+  %3 = llvm.trunc %2 : i64 to i32
+  %4 = llvm.trunc %arg3 : i64 to i32
+  %5 = llvm.ashr %4, %1 : i32
+  %6 = llvm.icmp "slt" %5, %3 : i32
+  "llvm.return"(%6) : (i1) -> ()
+}
+]
+def slt_after := [llvm|
+{
+^0(%arg3 : i64):
+  %0 = llvm.mlir.constant(32) : i64
+  %1 = llvm.mlir.constant(31 : i32) : i32
+  %2 = llvm.lshr %arg3, %0 : i64
+  %3 = llvm.trunc %2 overflow<nuw> : i64 to i32
+  %4 = llvm.trunc %arg3 : i64 to i32
+  %5 = llvm.ashr %4, %1 : i32
+  %6 = llvm.icmp "slt" %5, %3 : i32
+  "llvm.return"(%6) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem slt_proof : slt_before ⊑ slt_after := by
+  unfold slt_before slt_after
+  simp_alive_peephole
+  intros
+  ---BEGIN slt
+  all_goals (try extract_goal ; sorry)
+  ---END slt
+
+

@@ -28,7 +28,7 @@ def shl_C1_add_A_C2_i32_after := [llvm|
 {
 ^0(%arg78 : i16):
   %0 = llvm.mlir.constant(192 : i32) : i32
-  %1 = llvm.zext %arg78 : i16 to i32
+  %1 = llvm.zext nneg %arg78 : i16 to i32
   %2 = llvm.shl %0, %1 : i32
   "llvm.return"(%2) : (i32) -> ()
 }

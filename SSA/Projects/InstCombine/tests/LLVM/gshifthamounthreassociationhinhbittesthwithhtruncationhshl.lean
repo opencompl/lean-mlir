@@ -36,7 +36,7 @@ def t0_const_after_fold_lshr_shl_ne_after := [llvm|
   %0 = llvm.mlir.constant(31 : i32) : i32
   %1 = llvm.mlir.constant(0) : i64
   %2 = llvm.lshr %arg43, %0 : i32
-  %3 = llvm.zext %2 : i32 to i64
+  %3 = llvm.zext nneg %2 : i32 to i64
   %4 = llvm.and %arg44, %3 : i64
   %5 = llvm.icmp "ne" %4, %1 : i64
   "llvm.return"(%5) : (i1) -> ()
@@ -90,6 +90,49 @@ theorem t10_constants_proof : t10_constants_before ⊑ t10_constants_after := by
 
 
 
+def n13_overshift_before := [llvm|
+{
+^0(%arg7 : i32, %arg8 : i64, %arg9 : i32):
+  %0 = llvm.mlir.constant(32 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.sub %0, %arg9 : i32
+  %3 = llvm.lshr %arg7, %2 : i32
+  %4 = llvm.add %arg9, %0 : i32
+  %5 = llvm.zext %4 : i32 to i64
+  %6 = llvm.shl %arg8, %5 : i64
+  %7 = llvm.trunc %6 : i64 to i32
+  %8 = llvm.and %3, %7 : i32
+  %9 = llvm.icmp "ne" %8, %1 : i32
+  "llvm.return"(%9) : (i1) -> ()
+}
+]
+def n13_overshift_after := [llvm|
+{
+^0(%arg7 : i32, %arg8 : i64, %arg9 : i32):
+  %0 = llvm.mlir.constant(32 : i32) : i32
+  %1 = llvm.mlir.constant(0 : i32) : i32
+  %2 = llvm.sub %0, %arg9 : i32
+  %3 = llvm.lshr %arg7, %2 : i32
+  %4 = llvm.add %arg9, %0 : i32
+  %5 = llvm.zext nneg %4 : i32 to i64
+  %6 = llvm.shl %arg8, %5 : i64
+  %7 = llvm.trunc %6 : i64 to i32
+  %8 = llvm.and %3, %7 : i32
+  %9 = llvm.icmp "ne" %8, %1 : i32
+  "llvm.return"(%9) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem n13_overshift_proof : n13_overshift_before ⊑ n13_overshift_after := by
+  unfold n13_overshift_before n13_overshift_after
+  simp_alive_peephole
+  intros
+  ---BEGIN n13_overshift
+  all_goals (try extract_goal ; sorry)
+  ---END n13_overshift
+
+
+
 def n14_trunc_of_lshr_before := [llvm|
 {
 ^0(%arg4 : i64, %arg5 : i32, %arg6 : i32):
@@ -114,7 +157,7 @@ def n14_trunc_of_lshr_after := [llvm|
   %1 = llvm.mlir.constant(-1 : i32) : i32
   %2 = llvm.mlir.constant(0 : i32) : i32
   %3 = llvm.sub %0, %arg6 : i32
-  %4 = llvm.zext %3 : i32 to i64
+  %4 = llvm.zext nneg %3 : i32 to i64
   %5 = llvm.lshr %arg4, %4 : i64
   %6 = llvm.trunc %5 : i64 to i32
   %7 = llvm.add %arg6, %1 : i32

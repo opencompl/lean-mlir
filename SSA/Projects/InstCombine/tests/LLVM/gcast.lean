@@ -695,6 +695,37 @@ theorem test43_proof : test43_before ⊑ test43_after := by
 
 
 
+def test44_before := [llvm|
+{
+^0(%arg144 : i8):
+  %0 = llvm.mlir.constant(1234 : i16) : i16
+  %1 = llvm.zext %arg144 : i8 to i16
+  %2 = llvm.or %1, %0 : i16
+  %3 = llvm.zext %2 : i16 to i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+def test44_after := [llvm|
+{
+^0(%arg144 : i8):
+  %0 = llvm.mlir.constant(1234 : i16) : i16
+  %1 = llvm.zext %arg144 : i8 to i16
+  %2 = llvm.or %1, %0 : i16
+  %3 = llvm.zext nneg %2 : i16 to i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test44_proof : test44_before ⊑ test44_after := by
+  unfold test44_before test44_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test44
+  all_goals (try extract_goal ; sorry)
+  ---END test44
+
+
+
 def test46_before := [llvm|
 {
 ^0(%arg141 : i64):
@@ -715,7 +746,7 @@ def test46_after := [llvm|
   %2 = llvm.trunc %arg141 : i64 to i32
   %3 = llvm.shl %2, %0 : i32
   %4 = llvm.and %3, %1 : i32
-  %5 = llvm.zext %4 : i32 to i64
+  %5 = llvm.zext nneg %4 : i32 to i64
   "llvm.return"(%5) : (i64) -> ()
 }
 ]
@@ -780,7 +811,7 @@ def test48_after := [llvm|
   %1 = llvm.zext %arg137 : i8 to i32
   %2 = llvm.shl %1, %0 overflow<nsw,nuw> : i32
   %3 = llvm.or %2, %1 : i32
-  %4 = llvm.zext %3 : i32 to i64
+  %4 = llvm.zext nneg %3 : i32 to i64
   "llvm.return"(%4) : (i64) -> ()
 }
 ]
@@ -973,6 +1004,103 @@ theorem test55_proof : test55_before ⊑ test55_after := by
 
 
 
+def test56_before := [llvm|
+{
+^0(%arg128 : i16):
+  %0 = llvm.mlir.constant(5 : i32) : i32
+  %1 = llvm.sext %arg128 : i16 to i32
+  %2 = llvm.lshr %1, %0 : i32
+  %3 = llvm.zext %2 : i32 to i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+def test56_after := [llvm|
+{
+^0(%arg128 : i16):
+  %0 = llvm.mlir.constant(5 : i32) : i32
+  %1 = llvm.sext %arg128 : i16 to i32
+  %2 = llvm.lshr %1, %0 : i32
+  %3 = llvm.zext nneg %2 : i32 to i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test56_proof : test56_before ⊑ test56_after := by
+  unfold test56_before test56_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test56
+  all_goals (try extract_goal ; sorry)
+  ---END test56
+
+
+
+def test57_before := [llvm|
+{
+^0(%arg126 : i64):
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.trunc %arg126 : i64 to i32
+  %2 = llvm.lshr %1, %0 : i32
+  %3 = llvm.zext %2 : i32 to i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+def test57_after := [llvm|
+{
+^0(%arg126 : i64):
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.trunc %arg126 : i64 to i32
+  %2 = llvm.lshr %1, %0 : i32
+  %3 = llvm.zext nneg %2 : i32 to i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test57_proof : test57_before ⊑ test57_after := by
+  unfold test57_before test57_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test57
+  all_goals (try extract_goal ; sorry)
+  ---END test57
+
+
+
+def test58_before := [llvm|
+{
+^0(%arg124 : i64):
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(128 : i32) : i32
+  %2 = llvm.trunc %arg124 : i64 to i32
+  %3 = llvm.lshr %2, %0 : i32
+  %4 = llvm.or %3, %1 : i32
+  %5 = llvm.zext %4 : i32 to i64
+  "llvm.return"(%5) : (i64) -> ()
+}
+]
+def test58_after := [llvm|
+{
+^0(%arg124 : i64):
+  %0 = llvm.mlir.constant(8 : i32) : i32
+  %1 = llvm.mlir.constant(128 : i32) : i32
+  %2 = llvm.trunc %arg124 : i64 to i32
+  %3 = llvm.lshr %2, %0 : i32
+  %4 = llvm.or %3, %1 : i32
+  %5 = llvm.zext nneg %4 : i32 to i64
+  "llvm.return"(%5) : (i64) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test58_proof : test58_before ⊑ test58_after := by
+  unfold test58_before test58_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test58
+  all_goals (try extract_goal ; sorry)
+  ---END test58
+
+
+
 def test59_before := [llvm|
 {
 ^0(%arg122 : i8, %arg123 : i8):
@@ -998,9 +1126,9 @@ def test59_after := [llvm|
   %4 = llvm.shl %3, %0 overflow<nsw,nuw> : i32
   %5 = llvm.and %4, %1 : i32
   %6 = llvm.lshr %arg123, %2 : i8
-  %7 = llvm.zext %6 : i8 to i32
+  %7 = llvm.zext nneg %6 : i8 to i32
   %8 = llvm.or %5, %7 : i32
-  %9 = llvm.zext %8 : i32 to i64
+  %9 = llvm.zext nneg %8 : i32 to i64
   "llvm.return"(%9) : (i64) -> ()
 }
 ]
@@ -1363,6 +1491,37 @@ theorem PR24763_proof : PR24763_before ⊑ PR24763_after := by
 
 
 
+def test91_before := [llvm|
+{
+^0(%arg49 : i64):
+  %0 = llvm.mlir.constant(48 : i96) : i96
+  %1 = llvm.sext %arg49 : i64 to i96
+  %2 = llvm.lshr %1, %0 : i96
+  %3 = llvm.trunc %2 : i96 to i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+def test91_after := [llvm|
+{
+^0(%arg49 : i64):
+  %0 = llvm.mlir.constant(48 : i96) : i96
+  %1 = llvm.sext %arg49 : i64 to i96
+  %2 = llvm.lshr %1, %0 : i96
+  %3 = llvm.trunc %2 overflow<nsw,nuw> : i96 to i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test91_proof : test91_before ⊑ test91_after := by
+  unfold test91_before test91_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test91
+  all_goals (try extract_goal ; sorry)
+  ---END test91
+
+
+
 def test92_before := [llvm|
 {
 ^0(%arg48 : i64):
@@ -1494,7 +1653,7 @@ def trunc_lshr_sext_wide_input_after := [llvm|
 ^0(%arg33 : i16):
   %0 = llvm.mlir.constant(9 : i16) : i16
   %1 = llvm.ashr %arg33, %0 : i16
-  %2 = llvm.trunc %1 : i16 to i8
+  %2 = llvm.trunc %1 overflow<nsw> : i16 to i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
@@ -1524,7 +1683,7 @@ def trunc_lshr_sext_wide_input_exact_after := [llvm|
 ^0(%arg32 : i16):
   %0 = llvm.mlir.constant(9 : i16) : i16
   %1 = llvm.ashr exact %arg32, %0 : i16
-  %2 = llvm.trunc %1 : i16 to i8
+  %2 = llvm.trunc %1 overflow<nsw> : i16 to i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
@@ -1686,6 +1845,68 @@ theorem pr33078_2_proof : pr33078_2_before ⊑ pr33078_2_after := by
 
 
 
+def pr33078_3_before := [llvm|
+{
+^0(%arg3 : i8):
+  %0 = llvm.mlir.constant(12 : i16) : i16
+  %1 = llvm.sext %arg3 : i8 to i16
+  %2 = llvm.lshr %1, %0 : i16
+  %3 = llvm.trunc %2 : i16 to i4
+  "llvm.return"(%3) : (i4) -> ()
+}
+]
+def pr33078_3_after := [llvm|
+{
+^0(%arg3 : i8):
+  %0 = llvm.mlir.constant(12 : i16) : i16
+  %1 = llvm.sext %arg3 : i8 to i16
+  %2 = llvm.lshr %1, %0 : i16
+  %3 = llvm.trunc %2 overflow<nuw> : i16 to i4
+  "llvm.return"(%3) : (i4) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem pr33078_3_proof : pr33078_3_before ⊑ pr33078_3_after := by
+  unfold pr33078_3_before pr33078_3_after
+  simp_alive_peephole
+  intros
+  ---BEGIN pr33078_3
+  all_goals (try extract_goal ; sorry)
+  ---END pr33078_3
+
+
+
+def pr33078_4_before := [llvm|
+{
+^0(%arg2 : i3):
+  %0 = llvm.mlir.constant(13 : i16) : i16
+  %1 = llvm.sext %arg2 : i3 to i16
+  %2 = llvm.lshr %1, %0 : i16
+  %3 = llvm.trunc %2 : i16 to i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+def pr33078_4_after := [llvm|
+{
+^0(%arg2 : i3):
+  %0 = llvm.mlir.constant(13 : i16) : i16
+  %1 = llvm.sext %arg2 : i3 to i16
+  %2 = llvm.lshr %1, %0 : i16
+  %3 = llvm.trunc %2 overflow<nsw,nuw> : i16 to i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem pr33078_4_proof : pr33078_4_before ⊑ pr33078_4_after := by
+  unfold pr33078_4_before pr33078_4_after
+  simp_alive_peephole
+  intros
+  ---BEGIN pr33078_4
+  all_goals (try extract_goal ; sorry)
+  ---END pr33078_4
+
+
+
 def test94_before := [llvm|
 {
 ^0(%arg1 : i32):
@@ -1715,5 +1936,44 @@ theorem test94_proof : test94_before ⊑ test94_after := by
   ---BEGIN test94
   all_goals (try extract_goal ; sorry)
   ---END test94
+
+
+
+def test95_before := [llvm|
+{
+^0(%arg0 : i32):
+  %0 = llvm.mlir.constant(6 : i8) : i8
+  %1 = llvm.mlir.constant(2 : i8) : i8
+  %2 = llvm.mlir.constant(40 : i8) : i8
+  %3 = llvm.trunc %arg0 : i32 to i8
+  %4 = llvm.lshr %3, %0 : i8
+  %5 = llvm.and %4, %1 : i8
+  %6 = llvm.or %5, %2 : i8
+  %7 = llvm.zext %6 : i8 to i32
+  "llvm.return"(%7) : (i32) -> ()
+}
+]
+def test95_after := [llvm|
+{
+^0(%arg0 : i32):
+  %0 = llvm.mlir.constant(6 : i8) : i8
+  %1 = llvm.mlir.constant(2 : i8) : i8
+  %2 = llvm.mlir.constant(40 : i8) : i8
+  %3 = llvm.trunc %arg0 : i32 to i8
+  %4 = llvm.lshr %3, %0 : i8
+  %5 = llvm.and %4, %1 : i8
+  %6 = llvm.or %5, %2 : i8
+  %7 = llvm.zext nneg %6 : i8 to i32
+  "llvm.return"(%7) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem test95_proof : test95_before ⊑ test95_after := by
+  unfold test95_before test95_after
+  simp_alive_peephole
+  intros
+  ---BEGIN test95
+  all_goals (try extract_goal ; sorry)
+  ---END test95
 
 

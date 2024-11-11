@@ -107,6 +107,39 @@ theorem select2_proof : select2_before ⊑ select2_after := by
 
 
 
+def eval_zext_multi_use_in_one_inst_before := [llvm|
+{
+^0(%arg7 : i32):
+  %0 = llvm.mlir.constant(5 : i16) : i16
+  %1 = llvm.trunc %arg7 : i32 to i16
+  %2 = llvm.and %1, %0 : i16
+  %3 = llvm.mul %2, %2 overflow<nsw,nuw> : i16
+  %4 = llvm.zext %3 : i16 to i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def eval_zext_multi_use_in_one_inst_after := [llvm|
+{
+^0(%arg7 : i32):
+  %0 = llvm.mlir.constant(5 : i16) : i16
+  %1 = llvm.trunc %arg7 : i32 to i16
+  %2 = llvm.and %1, %0 : i16
+  %3 = llvm.mul %2, %2 overflow<nsw,nuw> : i16
+  %4 = llvm.zext nneg %3 : i16 to i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem eval_zext_multi_use_in_one_inst_proof : eval_zext_multi_use_in_one_inst_before ⊑ eval_zext_multi_use_in_one_inst_after := by
+  unfold eval_zext_multi_use_in_one_inst_before eval_zext_multi_use_in_one_inst_after
+  simp_alive_peephole
+  intros
+  ---BEGIN eval_zext_multi_use_in_one_inst
+  all_goals (try extract_goal ; sorry)
+  ---END eval_zext_multi_use_in_one_inst
+
+
+
 def foo_before := [llvm|
 {
 ^0(%arg0 : i1):

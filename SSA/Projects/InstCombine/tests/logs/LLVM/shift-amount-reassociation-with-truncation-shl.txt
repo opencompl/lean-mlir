@@ -67,7 +67,16 @@
 4: "t8_extrause2" has unsupported operation: llvm.call
 
 1: "n11"
-7: "n11" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.zext
+2: llvm.shl
+2: llvm.trunc
+2: llvm.add
+2: llvm.shl
+2: llvm.return
 
 1: "t01"
 4: "t01" has unsupported operation: llvm.mlir.addressof

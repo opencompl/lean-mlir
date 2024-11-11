@@ -13,6 +13,51 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gshifthamounthreassociationhinhbittesthwithhtruncationhlshr_statements
 
+def n0_before := [llvm|
+{
+^0(%arg48 : i32, %arg49 : i64, %arg50 : i32):
+  %0 = llvm.mlir.constant(32 : i32) : i32
+  %1 = llvm.mlir.constant(-16 : i32) : i32
+  %2 = llvm.mlir.constant(0 : i32) : i32
+  %3 = llvm.sub %0, %arg50 : i32
+  %4 = llvm.shl %arg48, %3 : i32
+  %5 = llvm.add %arg50, %1 : i32
+  %6 = llvm.zext %5 : i32 to i64
+  %7 = llvm.lshr %arg49, %6 : i64
+  %8 = llvm.trunc %7 : i64 to i32
+  %9 = llvm.and %4, %8 : i32
+  %10 = llvm.icmp "ne" %9, %2 : i32
+  "llvm.return"(%10) : (i1) -> ()
+}
+]
+def n0_after := [llvm|
+{
+^0(%arg48 : i32, %arg49 : i64, %arg50 : i32):
+  %0 = llvm.mlir.constant(32 : i32) : i32
+  %1 = llvm.mlir.constant(-16 : i32) : i32
+  %2 = llvm.mlir.constant(0 : i32) : i32
+  %3 = llvm.sub %0, %arg50 : i32
+  %4 = llvm.shl %arg48, %3 : i32
+  %5 = llvm.add %arg50, %1 : i32
+  %6 = llvm.zext nneg %5 : i32 to i64
+  %7 = llvm.lshr %arg49, %6 : i64
+  %8 = llvm.trunc %7 : i64 to i32
+  %9 = llvm.and %4, %8 : i32
+  %10 = llvm.icmp "ne" %9, %2 : i32
+  "llvm.return"(%10) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem n0_proof : n0_before ⊑ n0_after := by
+  unfold n0_before n0_after
+  simp_alive_peephole
+  intros
+  ---BEGIN n0
+  all_goals (try extract_goal ; sorry)
+  ---END n0
+
+
+
 def t1_before := [llvm|
 {
 ^0(%arg46 : i64, %arg47 : i32):
@@ -88,6 +133,53 @@ theorem t1_single_bit_proof : t1_single_bit_before ⊑ t1_single_bit_after := by
   ---BEGIN t1_single_bit
   all_goals (try extract_goal ; sorry)
   ---END t1_single_bit
+
+
+
+def n2_before := [llvm|
+{
+^0(%arg42 : i64, %arg43 : i32):
+  %0 = llvm.mlir.constant(32 : i32) : i32
+  %1 = llvm.mlir.constant(131071 : i32) : i32
+  %2 = llvm.mlir.constant(-16 : i32) : i32
+  %3 = llvm.mlir.constant(0 : i32) : i32
+  %4 = llvm.sub %0, %arg43 : i32
+  %5 = llvm.shl %1, %4 : i32
+  %6 = llvm.add %arg43, %2 : i32
+  %7 = llvm.zext %6 : i32 to i64
+  %8 = llvm.lshr %arg42, %7 : i64
+  %9 = llvm.trunc %8 : i64 to i32
+  %10 = llvm.and %5, %9 : i32
+  %11 = llvm.icmp "ne" %10, %3 : i32
+  "llvm.return"(%11) : (i1) -> ()
+}
+]
+def n2_after := [llvm|
+{
+^0(%arg42 : i64, %arg43 : i32):
+  %0 = llvm.mlir.constant(32 : i32) : i32
+  %1 = llvm.mlir.constant(131071 : i32) : i32
+  %2 = llvm.mlir.constant(-16 : i32) : i32
+  %3 = llvm.mlir.constant(0 : i32) : i32
+  %4 = llvm.sub %0, %arg43 : i32
+  %5 = llvm.shl %1, %4 : i32
+  %6 = llvm.add %arg43, %2 : i32
+  %7 = llvm.zext nneg %6 : i32 to i64
+  %8 = llvm.lshr %arg42, %7 : i64
+  %9 = llvm.trunc %8 : i64 to i32
+  %10 = llvm.and %5, %9 : i32
+  %11 = llvm.icmp "ne" %10, %3 : i32
+  "llvm.return"(%11) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem n2_proof : n2_before ⊑ n2_after := by
+  unfold n2_before n2_after
+  simp_alive_peephole
+  intros
+  ---BEGIN n2
+  all_goals (try extract_goal ; sorry)
+  ---END n2
 
 
 
@@ -169,6 +261,53 @@ theorem t3_singlebit_proof : t3_singlebit_before ⊑ t3_singlebit_after := by
 
 
 
+def n4_before := [llvm|
+{
+^0(%arg36 : i32, %arg37 : i32):
+  %0 = llvm.mlir.constant(32 : i32) : i32
+  %1 = llvm.mlir.constant(-16 : i32) : i32
+  %2 = llvm.mlir.constant(262143) : i64
+  %3 = llvm.mlir.constant(0 : i32) : i32
+  %4 = llvm.sub %0, %arg37 : i32
+  %5 = llvm.shl %arg36, %4 : i32
+  %6 = llvm.add %arg37, %1 : i32
+  %7 = llvm.zext %6 : i32 to i64
+  %8 = llvm.lshr %2, %7 : i64
+  %9 = llvm.trunc %8 : i64 to i32
+  %10 = llvm.and %5, %9 : i32
+  %11 = llvm.icmp "ne" %10, %3 : i32
+  "llvm.return"(%11) : (i1) -> ()
+}
+]
+def n4_after := [llvm|
+{
+^0(%arg36 : i32, %arg37 : i32):
+  %0 = llvm.mlir.constant(32 : i32) : i32
+  %1 = llvm.mlir.constant(-16 : i32) : i32
+  %2 = llvm.mlir.constant(262143) : i64
+  %3 = llvm.mlir.constant(0 : i32) : i32
+  %4 = llvm.sub %0, %arg37 : i32
+  %5 = llvm.shl %arg36, %4 : i32
+  %6 = llvm.add %arg37, %1 : i32
+  %7 = llvm.zext nneg %6 : i32 to i64
+  %8 = llvm.lshr %2, %7 : i64
+  %9 = llvm.trunc %8 overflow<nsw,nuw> : i64 to i32
+  %10 = llvm.and %5, %9 : i32
+  %11 = llvm.icmp "ne" %10, %3 : i32
+  "llvm.return"(%11) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem n4_proof : n4_before ⊑ n4_after := by
+  unfold n4_before n4_after
+  simp_alive_peephole
+  intros
+  ---BEGIN n4
+  all_goals (try extract_goal ; sorry)
+  ---END n4
+
+
+
 def t9_highest_bit_before := [llvm|
 {
 ^0(%arg25 : i32, %arg26 : i64, %arg27 : i32):
@@ -209,6 +348,51 @@ theorem t9_highest_bit_proof : t9_highest_bit_before ⊑ t9_highest_bit_after :=
 
 
 
+def t10_almost_highest_bit_before := [llvm|
+{
+^0(%arg22 : i32, %arg23 : i64, %arg24 : i32):
+  %0 = llvm.mlir.constant(64 : i32) : i32
+  %1 = llvm.mlir.constant(-2 : i32) : i32
+  %2 = llvm.mlir.constant(0 : i32) : i32
+  %3 = llvm.sub %0, %arg24 : i32
+  %4 = llvm.shl %arg22, %3 : i32
+  %5 = llvm.add %arg24, %1 : i32
+  %6 = llvm.zext %5 : i32 to i64
+  %7 = llvm.lshr %arg23, %6 : i64
+  %8 = llvm.trunc %7 : i64 to i32
+  %9 = llvm.and %4, %8 : i32
+  %10 = llvm.icmp "ne" %9, %2 : i32
+  "llvm.return"(%10) : (i1) -> ()
+}
+]
+def t10_almost_highest_bit_after := [llvm|
+{
+^0(%arg22 : i32, %arg23 : i64, %arg24 : i32):
+  %0 = llvm.mlir.constant(64 : i32) : i32
+  %1 = llvm.mlir.constant(-2 : i32) : i32
+  %2 = llvm.mlir.constant(0 : i32) : i32
+  %3 = llvm.sub %0, %arg24 : i32
+  %4 = llvm.shl %arg22, %3 : i32
+  %5 = llvm.add %arg24, %1 : i32
+  %6 = llvm.zext nneg %5 : i32 to i64
+  %7 = llvm.lshr %arg23, %6 : i64
+  %8 = llvm.trunc %7 : i64 to i32
+  %9 = llvm.and %4, %8 : i32
+  %10 = llvm.icmp "ne" %9, %2 : i32
+  "llvm.return"(%10) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem t10_almost_highest_bit_proof : t10_almost_highest_bit_before ⊑ t10_almost_highest_bit_after := by
+  unfold t10_almost_highest_bit_before t10_almost_highest_bit_after
+  simp_alive_peephole
+  intros
+  ---BEGIN t10_almost_highest_bit
+  all_goals (try extract_goal ; sorry)
+  ---END t10_almost_highest_bit
+
+
+
 def t11_no_shift_before := [llvm|
 {
 ^0(%arg19 : i32, %arg20 : i64, %arg21 : i32):
@@ -244,6 +428,51 @@ theorem t11_no_shift_proof : t11_no_shift_before ⊑ t11_no_shift_after := by
   ---BEGIN t11_no_shift
   all_goals (try extract_goal ; sorry)
   ---END t11_no_shift
+
+
+
+def t10_shift_by_one_before := [llvm|
+{
+^0(%arg16 : i32, %arg17 : i64, %arg18 : i32):
+  %0 = llvm.mlir.constant(64 : i32) : i32
+  %1 = llvm.mlir.constant(-63 : i32) : i32
+  %2 = llvm.mlir.constant(0 : i32) : i32
+  %3 = llvm.sub %0, %arg18 : i32
+  %4 = llvm.shl %arg16, %3 : i32
+  %5 = llvm.add %arg18, %1 : i32
+  %6 = llvm.zext %5 : i32 to i64
+  %7 = llvm.lshr %arg17, %6 : i64
+  %8 = llvm.trunc %7 : i64 to i32
+  %9 = llvm.and %4, %8 : i32
+  %10 = llvm.icmp "ne" %9, %2 : i32
+  "llvm.return"(%10) : (i1) -> ()
+}
+]
+def t10_shift_by_one_after := [llvm|
+{
+^0(%arg16 : i32, %arg17 : i64, %arg18 : i32):
+  %0 = llvm.mlir.constant(64 : i32) : i32
+  %1 = llvm.mlir.constant(-63 : i32) : i32
+  %2 = llvm.mlir.constant(0 : i32) : i32
+  %3 = llvm.sub %0, %arg18 : i32
+  %4 = llvm.shl %arg16, %3 : i32
+  %5 = llvm.add %arg18, %1 : i32
+  %6 = llvm.zext nneg %5 : i32 to i64
+  %7 = llvm.lshr %arg17, %6 : i64
+  %8 = llvm.trunc %7 : i64 to i32
+  %9 = llvm.and %4, %8 : i32
+  %10 = llvm.icmp "ne" %9, %2 : i32
+  "llvm.return"(%10) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem t10_shift_by_one_proof : t10_shift_by_one_before ⊑ t10_shift_by_one_after := by
+  unfold t10_shift_by_one_before t10_shift_by_one_after
+  simp_alive_peephole
+  intros
+  ---BEGIN t10_shift_by_one
+  all_goals (try extract_goal ; sorry)
+  ---END t10_shift_by_one
 
 
 

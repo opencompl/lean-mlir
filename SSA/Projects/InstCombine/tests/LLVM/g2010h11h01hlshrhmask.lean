@@ -44,7 +44,7 @@ def main_after := [llvm|
   %4 = llvm.xor %3, %0 : i8
   %5 = llvm.shl %4, %1 : i8
   %6 = llvm.and %5, %2 : i8
-  %7 = llvm.zext %6 : i8 to i32
+  %7 = llvm.zext nneg %6 : i8 to i32
   "llvm.return"(%7) : (i32) -> ()
 }
 ]

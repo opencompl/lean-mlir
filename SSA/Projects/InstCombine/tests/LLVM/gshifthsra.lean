@@ -27,7 +27,7 @@ def test1_after := [llvm|
 {
 ^0(%arg19 : i32, %arg20 : i8):
   %0 = llvm.mlir.constant(1 : i32) : i32
-  %1 = llvm.zext %arg20 : i8 to i32
+  %1 = llvm.zext nneg %arg20 : i8 to i32
   %2 = llvm.lshr %arg19, %1 : i32
   %3 = llvm.and %2, %0 : i32
   "llvm.return"(%3) : (i32) -> ()

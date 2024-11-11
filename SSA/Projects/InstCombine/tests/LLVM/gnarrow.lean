@@ -100,3 +100,32 @@ theorem shrink_or_proof : shrink_or_before ⊑ shrink_or_after := by
   ---END shrink_or
 
 
+
+def shrink_and_before := [llvm|
+{
+^0(%arg9 : i64):
+  %0 = llvm.mlir.constant(42) : i64
+  %1 = llvm.and %arg9, %0 : i64
+  %2 = llvm.trunc %1 : i64 to i31
+  "llvm.return"(%2) : (i31) -> ()
+}
+]
+def shrink_and_after := [llvm|
+{
+^0(%arg9 : i64):
+  %0 = llvm.mlir.constant(42) : i64
+  %1 = llvm.and %arg9, %0 : i64
+  %2 = llvm.trunc %1 overflow<nsw,nuw> : i64 to i31
+  "llvm.return"(%2) : (i31) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem shrink_and_proof : shrink_and_before ⊑ shrink_and_after := by
+  unfold shrink_and_before shrink_and_after
+  simp_alive_peephole
+  intros
+  ---BEGIN shrink_and
+  all_goals (try extract_goal ; sorry)
+  ---END shrink_and
+
+

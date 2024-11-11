@@ -35,7 +35,7 @@ def test_shl_nuw_nsw__all_are_safe_after := [llvm|
   %1 = llvm.mlir.constant(60 : i32) : i32
   %2 = llvm.shl %arg90, %0 : i32
   %3 = llvm.and %2, %1 : i32
-  %4 = llvm.zext %3 : i32 to i64
+  %4 = llvm.zext nneg %3 : i32 to i64
   %5 = llvm.ashr %arg91, %4 : i64
   "llvm.return"(%5) : (i64) -> ()
 }
@@ -73,7 +73,7 @@ def test_shl_nuw__all_are_safe_after := [llvm|
   %1 = llvm.mlir.constant(60 : i32) : i32
   %2 = llvm.shl %arg88, %0 : i32
   %3 = llvm.and %2, %1 : i32
-  %4 = llvm.zext %3 : i32 to i64
+  %4 = llvm.zext nneg %3 : i32 to i64
   %5 = llvm.ashr %arg89, %4 : i64
   "llvm.return"(%5) : (i64) -> ()
 }
@@ -111,7 +111,7 @@ def test_shl_nsw__all_are_safe_after := [llvm|
   %1 = llvm.mlir.constant(60 : i32) : i32
   %2 = llvm.shl %arg86, %0 : i32
   %3 = llvm.and %2, %1 : i32
-  %4 = llvm.zext %3 : i32 to i64
+  %4 = llvm.zext nneg %3 : i32 to i64
   %5 = llvm.ashr %arg87, %4 : i64
   "llvm.return"(%5) : (i64) -> ()
 }
@@ -149,7 +149,7 @@ def test_shl__all_are_safe_after := [llvm|
   %1 = llvm.mlir.constant(60 : i32) : i32
   %2 = llvm.shl %arg84, %0 : i32
   %3 = llvm.and %2, %1 : i32
-  %4 = llvm.zext %3 : i32 to i64
+  %4 = llvm.zext nneg %3 : i32 to i64
   %5 = llvm.ashr %arg85, %4 : i64
   "llvm.return"(%5) : (i64) -> ()
 }
@@ -187,7 +187,7 @@ def test_shl_nuw_nsw__nuw_is_safe_after := [llvm|
   %1 = llvm.mlir.constant(-8 : i32) : i32
   %2 = llvm.shl %arg82, %0 : i32
   %3 = llvm.and %2, %1 : i32
-  %4 = llvm.zext %3 : i32 to i64
+  %4 = llvm.zext nneg %3 : i32 to i64
   %5 = llvm.ashr %arg83, %4 : i64
   "llvm.return"(%5) : (i64) -> ()
 }
@@ -225,7 +225,7 @@ def test_shl_nuw__nuw_is_safe_after := [llvm|
   %1 = llvm.mlir.constant(-8 : i32) : i32
   %2 = llvm.shl %arg80, %0 : i32
   %3 = llvm.and %2, %1 : i32
-  %4 = llvm.zext %3 : i32 to i64
+  %4 = llvm.zext nneg %3 : i32 to i64
   %5 = llvm.ashr %arg81, %4 : i64
   "llvm.return"(%5) : (i64) -> ()
 }
@@ -263,7 +263,7 @@ def test_shl_nsw__nuw_is_safe_after := [llvm|
   %1 = llvm.mlir.constant(-8 : i32) : i32
   %2 = llvm.shl %arg78, %0 : i32
   %3 = llvm.and %2, %1 : i32
-  %4 = llvm.zext %3 : i32 to i64
+  %4 = llvm.zext nneg %3 : i32 to i64
   %5 = llvm.ashr %arg79, %4 : i64
   "llvm.return"(%5) : (i64) -> ()
 }
@@ -301,7 +301,7 @@ def test_shl__nuw_is_safe_after := [llvm|
   %1 = llvm.mlir.constant(-8 : i32) : i32
   %2 = llvm.shl %arg76, %0 : i32
   %3 = llvm.and %2, %1 : i32
-  %4 = llvm.zext %3 : i32 to i64
+  %4 = llvm.zext nneg %3 : i32 to i64
   %5 = llvm.ashr %arg77, %4 : i64
   "llvm.return"(%5) : (i64) -> ()
 }
@@ -485,7 +485,7 @@ def test_shl_nuw_nsw__none_are_safe_after := [llvm|
   %1 = llvm.mlir.constant(-8 : i32) : i32
   %2 = llvm.shl %arg70, %0 : i32
   %3 = llvm.and %2, %1 : i32
-  %4 = llvm.zext %3 : i32 to i64
+  %4 = llvm.zext nneg %3 : i32 to i64
   %5 = llvm.ashr %arg71, %4 : i64
   "llvm.return"(%5) : (i64) -> ()
 }
@@ -523,7 +523,7 @@ def test_shl_nuw__none_are_safe_after := [llvm|
   %1 = llvm.mlir.constant(-8 : i32) : i32
   %2 = llvm.shl %arg68, %0 : i32
   %3 = llvm.and %2, %1 : i32
-  %4 = llvm.zext %3 : i32 to i64
+  %4 = llvm.zext nneg %3 : i32 to i64
   %5 = llvm.ashr %arg69, %4 : i64
   "llvm.return"(%5) : (i64) -> ()
 }
@@ -561,7 +561,7 @@ def test_shl_nsw__none_are_safe_after := [llvm|
   %1 = llvm.mlir.constant(-8 : i32) : i32
   %2 = llvm.shl %arg66, %0 : i32
   %3 = llvm.and %2, %1 : i32
-  %4 = llvm.zext %3 : i32 to i64
+  %4 = llvm.zext nneg %3 : i32 to i64
   %5 = llvm.ashr %arg67, %4 : i64
   "llvm.return"(%5) : (i64) -> ()
 }
@@ -599,7 +599,7 @@ def test_shl__none_are_safe_after := [llvm|
   %1 = llvm.mlir.constant(-8 : i32) : i32
   %2 = llvm.shl %arg64, %0 : i32
   %3 = llvm.and %2, %1 : i32
-  %4 = llvm.zext %3 : i32 to i64
+  %4 = llvm.zext nneg %3 : i32 to i64
   %5 = llvm.ashr %arg65, %4 : i64
   "llvm.return"(%5) : (i64) -> ()
 }
@@ -637,7 +637,7 @@ def test_lshr_exact__exact_is_safe_after := [llvm|
   %1 = llvm.mlir.constant(15 : i32) : i32
   %2 = llvm.lshr %arg62, %0 : i32
   %3 = llvm.and %2, %1 : i32
-  %4 = llvm.zext %3 : i32 to i64
+  %4 = llvm.zext nneg %3 : i32 to i64
   %5 = llvm.ashr %arg63, %4 : i64
   "llvm.return"(%5) : (i64) -> ()
 }
@@ -675,7 +675,7 @@ def test_lshr__exact_is_safe_after := [llvm|
   %1 = llvm.mlir.constant(15 : i32) : i32
   %2 = llvm.lshr %arg60, %0 : i32
   %3 = llvm.and %2, %1 : i32
-  %4 = llvm.zext %3 : i32 to i64
+  %4 = llvm.zext nneg %3 : i32 to i64
   %5 = llvm.ashr %arg61, %4 : i64
   "llvm.return"(%5) : (i64) -> ()
 }
@@ -713,7 +713,7 @@ def test_lshr_exact__exact_is_unsafe_after := [llvm|
   %1 = llvm.mlir.constant(15 : i32) : i32
   %2 = llvm.lshr %arg58, %0 : i32
   %3 = llvm.and %2, %1 : i32
-  %4 = llvm.zext %3 : i32 to i64
+  %4 = llvm.zext nneg %3 : i32 to i64
   %5 = llvm.ashr %arg59, %4 : i64
   "llvm.return"(%5) : (i64) -> ()
 }
@@ -751,7 +751,7 @@ def test_lshr__exact_is_unsafe_after := [llvm|
   %1 = llvm.mlir.constant(15 : i32) : i32
   %2 = llvm.lshr %arg56, %0 : i32
   %3 = llvm.and %2, %1 : i32
-  %4 = llvm.zext %3 : i32 to i64
+  %4 = llvm.zext nneg %3 : i32 to i64
   %5 = llvm.ashr %arg57, %4 : i64
   "llvm.return"(%5) : (i64) -> ()
 }
@@ -789,7 +789,7 @@ def test_ashr_exact__exact_is_safe_after := [llvm|
   %1 = llvm.mlir.constant(-536870897 : i32) : i32
   %2 = llvm.ashr %arg54, %0 : i32
   %3 = llvm.and %2, %1 : i32
-  %4 = llvm.zext %3 : i32 to i64
+  %4 = llvm.zext nneg %3 : i32 to i64
   %5 = llvm.ashr %arg55, %4 : i64
   "llvm.return"(%5) : (i64) -> ()
 }
@@ -827,7 +827,7 @@ def test_ashr__exact_is_safe_after := [llvm|
   %1 = llvm.mlir.constant(-536870897 : i32) : i32
   %2 = llvm.ashr %arg52, %0 : i32
   %3 = llvm.and %2, %1 : i32
-  %4 = llvm.zext %3 : i32 to i64
+  %4 = llvm.zext nneg %3 : i32 to i64
   %5 = llvm.ashr %arg53, %4 : i64
   "llvm.return"(%5) : (i64) -> ()
 }
@@ -865,7 +865,7 @@ def test_ashr_exact__exact_is_unsafe_after := [llvm|
   %1 = llvm.mlir.constant(-536870897 : i32) : i32
   %2 = llvm.ashr %arg50, %0 : i32
   %3 = llvm.and %2, %1 : i32
-  %4 = llvm.zext %3 : i32 to i64
+  %4 = llvm.zext nneg %3 : i32 to i64
   %5 = llvm.ashr %arg51, %4 : i64
   "llvm.return"(%5) : (i64) -> ()
 }
@@ -903,7 +903,7 @@ def test_ashr__exact_is_unsafe_after := [llvm|
   %1 = llvm.mlir.constant(-536870897 : i32) : i32
   %2 = llvm.ashr %arg48, %0 : i32
   %3 = llvm.and %2, %1 : i32
-  %4 = llvm.zext %3 : i32 to i64
+  %4 = llvm.zext nneg %3 : i32 to i64
   %5 = llvm.ashr %arg49, %4 : i64
   "llvm.return"(%5) : (i64) -> ()
 }

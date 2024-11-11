@@ -147,7 +147,7 @@ def fake_sext_after := [llvm|
 ^0(%arg166 : i3):
   %0 = llvm.mlir.constant(2 : i3) : i3
   %1 = llvm.lshr %arg166, %0 : i3
-  %2 = llvm.zext %1 : i3 to i18
+  %2 = llvm.zext nneg %1 : i3 to i18
   "llvm.return"(%2) : (i18) -> ()
 }
 ]
@@ -742,7 +742,7 @@ def trunc_sandwich_after := [llvm|
 ^0(%arg70 : i32):
   %0 = llvm.mlir.constant(30 : i32) : i32
   %1 = llvm.lshr %arg70, %0 : i32
-  %2 = llvm.trunc %1 : i32 to i12
+  %2 = llvm.trunc %1 overflow<nsw,nuw> : i32 to i12
   "llvm.return"(%2) : (i12) -> ()
 }
 ]
@@ -773,7 +773,7 @@ def trunc_sandwich_min_shift1_after := [llvm|
 ^0(%arg68 : i32):
   %0 = llvm.mlir.constant(21 : i32) : i32
   %1 = llvm.lshr %arg68, %0 : i32
-  %2 = llvm.trunc %1 : i32 to i12
+  %2 = llvm.trunc %1 overflow<nsw,nuw> : i32 to i12
   "llvm.return"(%2) : (i12) -> ()
 }
 ]
@@ -805,7 +805,7 @@ def trunc_sandwich_small_shift1_after := [llvm|
   %0 = llvm.mlir.constant(20 : i32) : i32
   %1 = llvm.mlir.constant(2047 : i12) : i12
   %2 = llvm.lshr %arg67, %0 : i32
-  %3 = llvm.trunc %2 : i32 to i12
+  %3 = llvm.trunc %2 overflow<nuw> : i32 to i12
   %4 = llvm.and %3, %1 : i12
   "llvm.return"(%4) : (i12) -> ()
 }
@@ -837,7 +837,7 @@ def trunc_sandwich_max_sum_shift_after := [llvm|
 ^0(%arg66 : i32):
   %0 = llvm.mlir.constant(31 : i32) : i32
   %1 = llvm.lshr %arg66, %0 : i32
-  %2 = llvm.trunc %1 : i32 to i12
+  %2 = llvm.trunc %1 overflow<nsw,nuw> : i32 to i12
   "llvm.return"(%2) : (i12) -> ()
 }
 ]
@@ -868,7 +868,7 @@ def trunc_sandwich_max_sum_shift2_after := [llvm|
 ^0(%arg65 : i32):
   %0 = llvm.mlir.constant(31 : i32) : i32
   %1 = llvm.lshr %arg65, %0 : i32
-  %2 = llvm.trunc %1 : i32 to i12
+  %2 = llvm.trunc %1 overflow<nsw,nuw> : i32 to i12
   "llvm.return"(%2) : (i12) -> ()
 }
 ]

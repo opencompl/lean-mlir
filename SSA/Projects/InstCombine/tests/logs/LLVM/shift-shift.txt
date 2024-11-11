@@ -245,7 +245,7 @@
 8: "shl_lshr_demand5_nonuniform_vec_right" contains vectors which are unsupported
 
 1: "shl_lshr_demand5_nonuniform_vec_both"
-7: "shl_lshr_demand5_nonuniform_vec_both" is unchanged by InstCombine
+8: "shl_lshr_demand5_nonuniform_vec_both" contains vectors which are unsupported
 
 1: "shl_lshr_demand6"
 2: llvm.func
