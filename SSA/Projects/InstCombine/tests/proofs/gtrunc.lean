@@ -222,7 +222,7 @@ def test8_after := [llvm|
   %1 = llvm.zext %arg94 : i32 to i64
   %2 = llvm.zext %arg95 : i32 to i64
   %3 = llvm.shl %2, %0 overflow<nuw> : i64
-  %4 = llvm.or %3, %1 : i64
+  %4 = llvm.or disjoint %3, %1 : i64
   "llvm.return"(%4) : (i64) -> ()
 }
 ]

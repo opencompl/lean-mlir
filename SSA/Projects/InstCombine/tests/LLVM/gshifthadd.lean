@@ -940,7 +940,7 @@ def shl_fold_or_disjoint_cnt_before := [llvm|
 ^0(%arg2 : i8):
   %0 = llvm.mlir.constant(3 : i8) : i8
   %1 = llvm.mlir.constant(2 : i8) : i8
-  %2 = llvm.or %arg2, %0 : i8
+  %2 = llvm.or disjoint %arg2, %0 : i8
   %3 = llvm.shl %1, %2 : i8
   "llvm.return"(%3) : (i8) -> ()
 }

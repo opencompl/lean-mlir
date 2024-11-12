@@ -850,7 +850,7 @@ theorem shift_xor_multiuse_cmp_and_thm (e e_1 e_2 e_3 : IntW 32) :
 
 theorem set_bits_thm (e : IntW 8) (e_1 : IntW 1) :
   select e_1 (LLVM.or e (const? 8 5)) (LLVM.and e (const? 8 (-6))) ⊑
-    LLVM.or (LLVM.and e (const? 8 (-6))) (select e_1 (const? 8 5) (const? 8 0)) := by 
+    LLVM.or (LLVM.and e (const? 8 (-6))) (select e_1 (const? 8 5) (const? 8 0)) { «disjoint» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

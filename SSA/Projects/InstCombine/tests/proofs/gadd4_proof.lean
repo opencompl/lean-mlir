@@ -113,7 +113,7 @@ theorem fold_add_udiv_urem_commuted_thm (e : IntW 32) :
 
 
 theorem fold_add_udiv_urem_or_disjoint_thm (e : IntW 32) :
-  LLVM.or (shl (LLVM.udiv e (const? 32 10)) (const? 32 4)) (urem e (const? 32 10)) ⊑
+  LLVM.or (shl (LLVM.udiv e (const? 32 10)) (const? 32 4)) (urem e (const? 32 10)) { «disjoint» := true } ⊑
     add (mul (LLVM.udiv e (const? 32 10)) (const? 32 6) { «nsw» := false, «nuw» := true }) e := by 
     simp_alive_undef
     simp_alive_ops
@@ -125,7 +125,7 @@ theorem fold_add_udiv_urem_or_disjoint_thm (e : IntW 32) :
 
 theorem fold_add_udiv_urem_without_noundef_thm (e : IntW 32) :
   add (shl (LLVM.udiv e (const? 32 10)) (const? 32 4)) (urem e (const? 32 10)) ⊑
-    LLVM.or (shl (LLVM.udiv e (const? 32 10)) (const? 32 4)) (urem e (const? 32 10)) := by 
+    LLVM.or (shl (LLVM.udiv e (const? 32 10)) (const? 32 4)) (urem e (const? 32 10)) { «disjoint» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

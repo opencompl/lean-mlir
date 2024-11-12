@@ -152,7 +152,8 @@ theorem test15_thm (e e_1 : IntW 32) :
 
 theorem test16_thm (e e_1 : IntW 32) :
   urem e_1 (add (LLVM.and (lshr e (const? 32 11)) (const? 32 4)) (const? 32 4)) ⊑
-    LLVM.and e_1 (LLVM.or (LLVM.and (lshr e (const? 32 11)) (const? 32 4)) (const? 32 3)) := by 
+    LLVM.and e_1
+      (LLVM.or (LLVM.and (lshr e (const? 32 11)) (const? 32 4)) (const? 32 3) { «disjoint» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

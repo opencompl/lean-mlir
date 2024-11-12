@@ -141,8 +141,20 @@ theorem shl_or_commuted_thm (e : IntW 8) :
     all_goals sorry
 
 
+theorem mismatched_shifts_thm (e : IntW 8) :
+  LLVM.or (shl (const? 8 16) e) (lshr (const? 8 3) (add e (const? 8 1))) ⊑
+    LLVM.or (shl (const? 8 16) e) (lshr (const? 8 3) (add e (const? 8 1))) { «disjoint» := true } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+
 theorem shl_or_with_or_disjoint_instead_of_add_thm (e : IntW 8) :
-  LLVM.or (shl (const? 8 16) e) (shl (const? 8 3) (LLVM.or e (const? 8 1))) ⊑ shl (const? 8 22) e := by 
+  LLVM.or (shl (const? 8 16) e) (shl (const? 8 3) (LLVM.or e (const? 8 1) { «disjoint» := true })) ⊑
+    shl (const? 8 22) e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

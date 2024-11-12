@@ -437,6 +437,43 @@ theorem shl_or_commuted_proof : shl_or_commuted_before ⊑ shl_or_commuted_after
 
 
 
+def mismatched_shifts_before := [llvm|
+{
+^0(%arg6 : i8):
+  %0 = llvm.mlir.constant(16 : i8) : i8
+  %1 = llvm.mlir.constant(1 : i8) : i8
+  %2 = llvm.mlir.constant(3 : i8) : i8
+  %3 = llvm.shl %0, %arg6 : i8
+  %4 = llvm.add %arg6, %1 : i8
+  %5 = llvm.lshr %2, %4 : i8
+  %6 = llvm.or %3, %5 : i8
+  "llvm.return"(%6) : (i8) -> ()
+}
+]
+def mismatched_shifts_after := [llvm|
+{
+^0(%arg6 : i8):
+  %0 = llvm.mlir.constant(16 : i8) : i8
+  %1 = llvm.mlir.constant(1 : i8) : i8
+  %2 = llvm.mlir.constant(3 : i8) : i8
+  %3 = llvm.shl %0, %arg6 : i8
+  %4 = llvm.add %arg6, %1 : i8
+  %5 = llvm.lshr %2, %4 : i8
+  %6 = llvm.or disjoint %3, %5 : i8
+  "llvm.return"(%6) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem mismatched_shifts_proof : mismatched_shifts_before ⊑ mismatched_shifts_after := by
+  unfold mismatched_shifts_before mismatched_shifts_after
+  simp_alive_peephole
+  intros
+  ---BEGIN mismatched_shifts
+  apply mismatched_shifts_thm
+  ---END mismatched_shifts
+
+
+
 def shl_or_with_or_disjoint_instead_of_add_before := [llvm|
 {
 ^0(%arg1 : i8):
@@ -444,7 +481,7 @@ def shl_or_with_or_disjoint_instead_of_add_before := [llvm|
   %1 = llvm.mlir.constant(1 : i8) : i8
   %2 = llvm.mlir.constant(3 : i8) : i8
   %3 = llvm.shl %0, %arg1 : i8
-  %4 = llvm.or %arg1, %1 : i8
+  %4 = llvm.or disjoint %arg1, %1 : i8
   %5 = llvm.shl %2, %4 : i8
   %6 = llvm.or %3, %5 : i8
   "llvm.return"(%6) : (i8) -> ()

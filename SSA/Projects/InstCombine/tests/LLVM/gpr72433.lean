@@ -40,7 +40,7 @@ def widget_after := [llvm|
   %3 = llvm.zext %2 : i1 to i32
   %4 = llvm.shl %1, %3 overflow<nsw,nuw> : i32
   %5 = llvm.zext %2 : i1 to i32
-  %6 = llvm.or %4, %5 : i32
+  %6 = llvm.or disjoint %4, %5 : i32
   %7 = llvm.zext %2 : i1 to i32
   %8 = llvm.shl %6, %7 overflow<nsw,nuw> : i32
   "llvm.return"(%8) : (i32) -> ()

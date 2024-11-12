@@ -40,7 +40,8 @@ theorem mullo_thm (e e_1 : IntW 64) :
       (LLVM.and
         (mul (LLVM.and e_1 (const? 64 4294967295)) (LLVM.and e (const? 64 4294967295))
           { «nsw» := false, «nuw» := true })
-        (const? 64 4294967295)) := by 
+        (const? 64 4294967295))
+      { «disjoint» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

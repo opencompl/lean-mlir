@@ -212,7 +212,7 @@ def test7_after := [llvm|
   %1 = llvm.mlir.constant(128 : i32) : i32
   %2 = llvm.and %arg202, %0 : i32
   %3 = llvm.and %arg203, %1 : i32
-  %4 = llvm.or %2, %3 : i32
+  %4 = llvm.or disjoint %2, %3 : i32
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
@@ -272,7 +272,7 @@ def test10_after := [llvm|
   %0 = llvm.mlir.constant(3 : i8) : i8
   %1 = llvm.mlir.constant(4 : i8) : i8
   %2 = llvm.and %arg198, %0 : i8
-  %3 = llvm.or %2, %1 : i8
+  %3 = llvm.or disjoint %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -303,7 +303,7 @@ def test11_after := [llvm|
   %0 = llvm.mlir.constant(-13 : i8) : i8
   %1 = llvm.mlir.constant(8 : i8) : i8
   %2 = llvm.and %arg197, %0 : i8
-  %3 = llvm.or %2, %1 : i8
+  %3 = llvm.or disjoint %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -1419,7 +1419,7 @@ def PR96857_xor_with_noundef_after := [llvm|
   %1 = llvm.and %arg35, %arg33 : i4
   %2 = llvm.xor %arg35, %0 : i4
   %3 = llvm.and %arg34, %2 : i4
-  %4 = llvm.or %1, %3 : i4
+  %4 = llvm.or disjoint %1, %3 : i4
   "llvm.return"(%4) : (i4) -> ()
 }
 ]
@@ -1470,7 +1470,7 @@ theorem PR96857_xor_without_noundef_proof : PR96857_xor_without_noundef_before �
 def or_disjoint_with_xor_before := [llvm|
 {
 ^0(%arg28 : i32, %arg29 : i32):
-  %0 = llvm.or %arg28, %arg29 : i32
+  %0 = llvm.or disjoint %arg28, %arg29 : i32
   %1 = llvm.xor %0, %arg28 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
@@ -1495,7 +1495,7 @@ theorem or_disjoint_with_xor_proof : or_disjoint_with_xor_before ⊑ or_disjoint
 def xor_with_or_disjoint_ab_before := [llvm|
 {
 ^0(%arg26 : i32, %arg27 : i32):
-  %0 = llvm.or %arg26, %arg27 : i32
+  %0 = llvm.or disjoint %arg26, %arg27 : i32
   %1 = llvm.xor %arg26, %0 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
@@ -1520,7 +1520,7 @@ theorem xor_with_or_disjoint_ab_proof : xor_with_or_disjoint_ab_before ⊑ xor_w
 def xor_with_or_disjoint_ba_before := [llvm|
 {
 ^0(%arg24 : i32, %arg25 : i32):
-  %0 = llvm.or %arg25, %arg24 : i32
+  %0 = llvm.or disjoint %arg25, %arg24 : i32
   %1 = llvm.xor %arg25, %0 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
@@ -1549,7 +1549,7 @@ def select_or_disjoint_or_before := [llvm|
   %1 = llvm.mlir.constant(4 : i32) : i32
   %2 = "llvm.select"(%arg15, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   %3 = llvm.shl %arg14, %1 : i32
-  %4 = llvm.or %2, %3 : i32
+  %4 = llvm.or disjoint %2, %3 : i32
   %5 = llvm.add %4, %1 : i32
   "llvm.return"(%5) : (i32) -> ()
 }
@@ -1561,7 +1561,7 @@ def select_or_disjoint_or_after := [llvm|
   %1 = llvm.mlir.constant(4 : i32) : i32
   %2 = "llvm.select"(%arg15, %0, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
   %3 = llvm.shl %arg14, %1 : i32
-  %4 = llvm.or %2, %3 : i32
+  %4 = llvm.or disjoint %2, %3 : i32
   %5 = llvm.add %4, %1 overflow<nsw,nuw> : i32
   "llvm.return"(%5) : (i32) -> ()
 }

@@ -32,7 +32,23 @@
 7: "rev8_mul_and_mul" is unchanged by InstCombine
 
 1: "rev8_mul_and_lshr"
-7: "rev8_mul_and_lshr" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.mul
+2: llvm.and
+2: llvm.mul
+2: llvm.and
+2: llvm.or
+2: llvm.mul
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.return
 
 1: "shuf_4bits"
 4: "shuf_4bits" has unsupported operation: builtin.unregistered: llvm.bitcast

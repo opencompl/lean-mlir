@@ -125,7 +125,7 @@ theorem select_2_thm (e e_1 e_2 : IntW 8) (e_3 e_4 : IntW 1) :
 
 theorem lshr_not_nneg2_thm (e : IntW 8) :
   LLVM.xor (lshr (LLVM.xor e (const? 8 (-1))) (const? 8 1)) (const? 8 (-1)) ⊑
-    LLVM.or (lshr e (const? 8 1)) (const? 8 (-128)) := by 
+    LLVM.or (lshr e (const? 8 1)) (const? 8 (-128)) { «disjoint» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

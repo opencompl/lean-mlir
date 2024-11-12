@@ -398,7 +398,7 @@ def lshr_xor_or_good_mask_after := [llvm|
   %1 = llvm.mlir.constant(48 : i8) : i8
   %2 = llvm.or %arg109, %arg108 : i8
   %3 = llvm.lshr %2, %0 : i8
-  %4 = llvm.or %3, %1 : i8
+  %4 = llvm.or disjoint %3, %1 : i8
   "llvm.return"(%4) : (i8) -> ()
 }
 ]

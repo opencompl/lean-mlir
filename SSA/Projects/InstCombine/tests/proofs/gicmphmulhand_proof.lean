@@ -139,7 +139,8 @@ theorem pr51551_neg1_thm (e e_1 : IntW 32) :
       (LLVM.and (mul (LLVM.or (LLVM.and e_1 (const? 32 (-3))) (const? 32 1)) e { «nsw» := true, «nuw» := false })
         (const? 32 7))
       (const? 32 0) ⊑
-    icmp IntPredicate.eq (LLVM.and (mul (LLVM.or (LLVM.and e_1 (const? 32 4)) (const? 32 1)) e) (const? 32 7))
+    icmp IntPredicate.eq
+      (LLVM.and (mul (LLVM.or (LLVM.and e_1 (const? 32 4)) (const? 32 1) { «disjoint» := true }) e) (const? 32 7))
       (const? 32 0) := by 
     simp_alive_undef
     simp_alive_ops

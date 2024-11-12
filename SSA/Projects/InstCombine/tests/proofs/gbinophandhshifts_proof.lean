@@ -129,7 +129,7 @@ theorem shl_add_add_no_const_thm (e e_1 e_2 e_3 : IntW 8) :
 
 theorem lshr_xor_or_good_mask_thm (e e_1 : IntW 8) :
   LLVM.or (lshr e_1 (const? 8 4)) (LLVM.xor (lshr e (const? 8 4)) (const? 8 48)) ⊑
-    LLVM.or (lshr (LLVM.or e e_1) (const? 8 4)) (const? 8 48) := by 
+    LLVM.or (lshr (LLVM.or e e_1) (const? 8 4)) (const? 8 48) { «disjoint» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

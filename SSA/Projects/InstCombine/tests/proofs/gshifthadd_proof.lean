@@ -327,7 +327,8 @@ theorem lshr_32_add_zext_trunc_thm (e e_1 : IntW 32) :
     all_goals sorry
 
 
-theorem shl_fold_or_disjoint_cnt_thm (e : IntW 8) : shl (const? 8 2) (LLVM.or e (const? 8 3)) ⊑ shl (const? 8 16) e := by 
+theorem shl_fold_or_disjoint_cnt_thm (e : IntW 8) :
+  shl (const? 8 2) (LLVM.or e (const? 8 3) { «disjoint» := true }) ⊑ shl (const? 8 16) e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

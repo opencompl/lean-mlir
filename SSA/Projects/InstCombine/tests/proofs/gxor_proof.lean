@@ -74,7 +74,7 @@ theorem test6_thm (e : IntW 8) : LLVM.xor (LLVM.xor e (const? 8 17)) (const? 8 1
 
 theorem test7_thm (e e_1 : IntW 32) :
   LLVM.xor (LLVM.and e_1 (const? 32 7)) (LLVM.and e (const? 32 128)) ⊑
-    LLVM.or (LLVM.and e_1 (const? 32 7)) (LLVM.and e (const? 32 128)) := by 
+    LLVM.or (LLVM.and e_1 (const? 32 7)) (LLVM.and e (const? 32 128)) { «disjoint» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -94,7 +94,8 @@ theorem test9_thm (e : IntW 8) :
 
 
 theorem test10_thm (e : IntW 8) :
-  LLVM.xor (LLVM.and e (const? 8 3)) (const? 8 4) ⊑ LLVM.or (LLVM.and e (const? 8 3)) (const? 8 4) := by 
+  LLVM.xor (LLVM.and e (const? 8 3)) (const? 8 4) ⊑
+    LLVM.or (LLVM.and e (const? 8 3)) (const? 8 4) { «disjoint» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -104,7 +105,8 @@ theorem test10_thm (e : IntW 8) :
 
 
 theorem test11_thm (e : IntW 8) :
-  LLVM.xor (LLVM.or e (const? 8 12)) (const? 8 4) ⊑ LLVM.or (LLVM.and e (const? 8 (-13))) (const? 8 8) := by 
+  LLVM.xor (LLVM.or e (const? 8 12)) (const? 8 4) ⊑
+    LLVM.or (LLVM.and e (const? 8 (-13))) (const? 8 8) { «disjoint» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -477,7 +479,7 @@ theorem tryFactorization_xor_ashr_ashr_thm (e : IntW 32) :
 
 theorem PR96857_xor_with_noundef_thm (e e_1 e_2 : IntW 4) :
   LLVM.xor (LLVM.and e_2 e_1) (LLVM.and (LLVM.xor e_2 (const? 4 (-1))) e) ⊑
-    LLVM.or (LLVM.and e_2 e_1) (LLVM.and e (LLVM.xor e_2 (const? 4 (-1)))) := by 
+    LLVM.or (LLVM.and e_2 e_1) (LLVM.and e (LLVM.xor e_2 (const? 4 (-1)))) { «disjoint» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -497,7 +499,7 @@ theorem PR96857_xor_without_noundef_thm (e e_1 e_2 : IntW 4) :
     all_goals sorry
 
 
-theorem or_disjoint_with_xor_thm (e e_1 : IntW 32) : LLVM.xor (LLVM.or e_1 e) e_1 ⊑ e := by 
+theorem or_disjoint_with_xor_thm (e e_1 : IntW 32) : LLVM.xor (LLVM.or e_1 e { «disjoint» := true }) e_1 ⊑ e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -506,7 +508,7 @@ theorem or_disjoint_with_xor_thm (e e_1 : IntW 32) : LLVM.xor (LLVM.or e_1 e) e_
     all_goals sorry
 
 
-theorem xor_with_or_disjoint_ab_thm (e e_1 : IntW 32) : LLVM.xor e_1 (LLVM.or e_1 e) ⊑ e := by 
+theorem xor_with_or_disjoint_ab_thm (e e_1 : IntW 32) : LLVM.xor e_1 (LLVM.or e_1 e { «disjoint» := true }) ⊑ e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -515,7 +517,7 @@ theorem xor_with_or_disjoint_ab_thm (e e_1 : IntW 32) : LLVM.xor e_1 (LLVM.or e_
     all_goals sorry
 
 
-theorem xor_with_or_disjoint_ba_thm (e e_1 : IntW 32) : LLVM.xor e_1 (LLVM.or e_1 e) ⊑ e := by 
+theorem xor_with_or_disjoint_ba_thm (e e_1 : IntW 32) : LLVM.xor e_1 (LLVM.or e_1 e { «disjoint» := true }) ⊑ e := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -525,8 +527,8 @@ theorem xor_with_or_disjoint_ba_thm (e e_1 : IntW 32) : LLVM.xor e_1 (LLVM.or e_
 
 
 theorem select_or_disjoint_or_thm (e : IntW 32) (e_1 : IntW 1) :
-  add (LLVM.or (select e_1 (const? 32 0) (const? 32 4)) (shl e (const? 32 4))) (const? 32 4) ⊑
-    add (LLVM.or (select e_1 (const? 32 0) (const? 32 4)) (shl e (const? 32 4))) (const? 32 4)
+  add (LLVM.or (select e_1 (const? 32 0) (const? 32 4)) (shl e (const? 32 4)) { «disjoint» := true }) (const? 32 4) ⊑
+    add (LLVM.or (select e_1 (const? 32 0) (const? 32 4)) (shl e (const? 32 4)) { «disjoint» := true }) (const? 32 4)
       { «nsw» := true, «nuw» := true } := by 
     simp_alive_undef
     simp_alive_ops

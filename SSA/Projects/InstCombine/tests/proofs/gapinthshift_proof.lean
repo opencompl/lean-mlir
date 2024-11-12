@@ -118,7 +118,7 @@ theorem test13_thm (e : IntW 18) :
 
 theorem test14_thm (e : IntW 35) :
   shl (LLVM.or (lshr e (const? 35 4)) (const? 35 1234)) (const? 35 4) ⊑
-    LLVM.or (LLVM.and e (const? 35 (-19760))) (const? 35 19744) := by 
+    LLVM.or (LLVM.and e (const? 35 (-19760))) (const? 35 19744) { «disjoint» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -250,7 +250,7 @@ theorem test23_thm (e : IntW 44) : trunc 11 (ashr (shl e (const? 44 33)) (const?
 
 theorem shl_lshr_eq_amt_multi_use_thm (e : IntW 44) :
   add (shl e (const? 44 33)) (lshr (shl e (const? 44 33)) (const? 44 33)) ⊑
-    LLVM.or (shl e (const? 44 33)) (LLVM.and e (const? 44 2047)) := by 
+    LLVM.or (shl e (const? 44 33)) (LLVM.and e (const? 44 2047)) { «disjoint» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

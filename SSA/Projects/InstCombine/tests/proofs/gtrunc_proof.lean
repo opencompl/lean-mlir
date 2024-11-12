@@ -73,7 +73,8 @@ theorem test7_thm (e : IntW 64) :
 
 theorem test8_thm (e e_1 : IntW 32) :
   trunc 64 (LLVM.or (shl (zext 128 e_1) (const? 128 32)) (zext 128 e)) ⊑
-    LLVM.or (shl (zext 64 e_1) (const? 64 32) { «nsw» := false, «nuw» := true }) (zext 64 e) := by 
+    LLVM.or (shl (zext 64 e_1) (const? 64 32) { «nsw» := false, «nuw» := true }) (zext 64 e)
+      { «disjoint» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

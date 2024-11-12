@@ -12,7 +12,17 @@
 2: llvm.return
 
 1: "or_and_shifts2"
-7: "or_and_shifts2" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.lshr
+2: llvm.and
+2: llvm.or
+2: llvm.return
 
 1: "or_and_shift_shift_and"
 2: llvm.func

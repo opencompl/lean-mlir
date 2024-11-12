@@ -10,7 +10,8 @@ set_option linter.unreachableTactic false
 section gapinthxor2_proof
 theorem test1_thm (e e_1 : IntW 447) :
   LLVM.xor (LLVM.and e_1 (const? 447 70368744177664)) (LLVM.and e (const? 447 70368744177663)) ⊑
-    LLVM.or (LLVM.and e_1 (const? 447 70368744177664)) (LLVM.and e (const? 447 70368744177663)) := by 
+    LLVM.or (LLVM.and e_1 (const? 447 70368744177664)) (LLVM.and e (const? 447 70368744177663))
+      { «disjoint» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -68,7 +69,7 @@ theorem test6_thm (e : IntW 77) : LLVM.xor (LLVM.xor e (const? 77 23)) (const? 7
 
 theorem test7_thm (e : IntW 1023) :
   LLVM.xor (LLVM.or e (const? 1023 70368744177663)) (const? 1023 703687463) ⊑
-    LLVM.or (LLVM.and e (const? 1023 (-70368744177664))) (const? 1023 70368040490200) := by 
+    LLVM.or (LLVM.and e (const? 1023 (-70368744177664))) (const? 1023 70368040490200) { «disjoint» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

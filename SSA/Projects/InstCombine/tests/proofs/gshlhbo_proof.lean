@@ -112,8 +112,9 @@ theorem lshr_and_or_thm (e e_1 : IntW 8) :
 
 
 theorem lshr_and_or_disjoint_thm (e e_1 : IntW 8) :
-  shl (LLVM.or (LLVM.srem e_1 (const? 8 42)) (LLVM.and (lshr e (const? 8 2)) (const? 8 13))) (const? 8 2) ⊑
-    LLVM.or (LLVM.and e (const? 8 52)) (shl (LLVM.srem e_1 (const? 8 42)) (const? 8 2)) := by 
+  shl (LLVM.or (LLVM.srem e_1 (const? 8 42)) (LLVM.and (lshr e (const? 8 2)) (const? 8 13)) { «disjoint» := true })
+      (const? 8 2) ⊑
+    LLVM.or (LLVM.and e (const? 8 52)) (shl (LLVM.srem e_1 (const? 8 42)) (const? 8 2)) { «disjoint» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -123,8 +124,9 @@ theorem lshr_and_or_disjoint_thm (e e_1 : IntW 8) :
 
 
 theorem ashr_and_or_disjoint_thm (e e_1 : IntW 8) :
-  shl (LLVM.or (LLVM.srem e_1 (const? 8 42)) (LLVM.and (ashr e (const? 8 2)) (const? 8 13))) (const? 8 2) ⊑
-    LLVM.or (LLVM.and e (const? 8 52)) (shl (LLVM.srem e_1 (const? 8 42)) (const? 8 2)) := by 
+  shl (LLVM.or (LLVM.srem e_1 (const? 8 42)) (LLVM.and (ashr e (const? 8 2)) (const? 8 13)) { «disjoint» := true })
+      (const? 8 2) ⊑
+    LLVM.or (LLVM.and e (const? 8 52)) (shl (LLVM.srem e_1 (const? 8 42)) (const? 8 2)) { «disjoint» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

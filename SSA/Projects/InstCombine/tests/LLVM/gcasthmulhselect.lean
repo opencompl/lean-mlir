@@ -140,6 +140,43 @@ theorem eval_zext_multi_use_in_one_inst_proof : eval_zext_multi_use_in_one_inst_
 
 
 
+def eval_sext_multi_use_in_one_inst_before := [llvm|
+{
+^0(%arg6 : i32):
+  %0 = llvm.mlir.constant(14 : i16) : i16
+  %1 = llvm.mlir.constant(-32768 : i16) : i16
+  %2 = llvm.trunc %arg6 : i32 to i16
+  %3 = llvm.and %2, %0 : i16
+  %4 = llvm.mul %3, %3 overflow<nsw,nuw> : i16
+  %5 = llvm.or %4, %1 : i16
+  %6 = llvm.sext %5 : i16 to i32
+  "llvm.return"(%6) : (i32) -> ()
+}
+]
+def eval_sext_multi_use_in_one_inst_after := [llvm|
+{
+^0(%arg6 : i32):
+  %0 = llvm.mlir.constant(14 : i16) : i16
+  %1 = llvm.mlir.constant(-32768 : i16) : i16
+  %2 = llvm.trunc %arg6 : i32 to i16
+  %3 = llvm.and %2, %0 : i16
+  %4 = llvm.mul %3, %3 overflow<nsw,nuw> : i16
+  %5 = llvm.or disjoint %4, %1 : i16
+  %6 = llvm.sext %5 : i16 to i32
+  "llvm.return"(%6) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem eval_sext_multi_use_in_one_inst_proof : eval_sext_multi_use_in_one_inst_before ⊑ eval_sext_multi_use_in_one_inst_after := by
+  unfold eval_sext_multi_use_in_one_inst_before eval_sext_multi_use_in_one_inst_after
+  simp_alive_peephole
+  intros
+  ---BEGIN eval_sext_multi_use_in_one_inst
+  all_goals (try extract_goal ; sorry)
+  ---END eval_sext_multi_use_in_one_inst
+
+
+
 def foo_before := [llvm|
 {
 ^0(%arg0 : i1):

@@ -232,7 +232,7 @@ theorem clear_to_set_decomposebittest_thm (e : IntW 8) :
 
 theorem clear_to_clear_decomposebittest_thm (e : IntW 8) :
   select (icmp IntPredicate.sgt e (const? 8 (-1))) (const? 8 3) (const? 8 (-125)) ⊑
-    LLVM.or (LLVM.and e (const? 8 (-128))) (const? 8 3) := by 
+    LLVM.or (LLVM.and e (const? 8 (-128))) (const? 8 3) { «disjoint» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -243,7 +243,7 @@ theorem clear_to_clear_decomposebittest_thm (e : IntW 8) :
 
 theorem set_to_set_decomposebittest_thm (e : IntW 8) :
   select (icmp IntPredicate.slt e (const? 8 0)) (const? 8 (-125)) (const? 8 3) ⊑
-    LLVM.or (LLVM.and e (const? 8 (-128))) (const? 8 3) := by 
+    LLVM.or (LLVM.and e (const? 8 (-128))) (const? 8 3) { «disjoint» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

@@ -359,7 +359,7 @@ def test14_after := [llvm|
   %0 = llvm.mlir.constant(-19760 : i35) : i35
   %1 = llvm.mlir.constant(19744 : i35) : i35
   %2 = llvm.and %arg26, %0 : i35
-  %3 = llvm.or %2, %1 : i35
+  %3 = llvm.or disjoint %2, %1 : i35
   "llvm.return"(%3) : (i35) -> ()
 }
 ]
@@ -752,7 +752,7 @@ def shl_lshr_eq_amt_multi_use_after := [llvm|
   %1 = llvm.mlir.constant(2047 : i44) : i44
   %2 = llvm.shl %arg7, %0 : i44
   %3 = llvm.and %arg7, %1 : i44
-  %4 = llvm.or %2, %3 : i44
+  %4 = llvm.or disjoint %2, %3 : i44
   "llvm.return"(%4) : (i44) -> ()
 }
 ]

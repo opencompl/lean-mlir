@@ -337,3 +337,40 @@ theorem xor_sge_proof : xor_sge_before ⊑ xor_sge_after := by
   ---END xor_sge
 
 
+
+def xor_ugt_2_before := [llvm|
+{
+^0(%arg13 : i8, %arg14 : i8, %arg15 : i8):
+  %0 = llvm.mlir.constant(63 : i8) : i8
+  %1 = llvm.mlir.constant(64 : i8) : i8
+  %2 = llvm.add %arg13, %arg15 : i8
+  %3 = llvm.and %arg14, %0 : i8
+  %4 = llvm.or %3, %1 : i8
+  %5 = llvm.xor %2, %4 : i8
+  %6 = llvm.icmp "ugt" %2, %5 : i8
+  "llvm.return"(%6) : (i1) -> ()
+}
+]
+def xor_ugt_2_after := [llvm|
+{
+^0(%arg13 : i8, %arg14 : i8, %arg15 : i8):
+  %0 = llvm.mlir.constant(63 : i8) : i8
+  %1 = llvm.mlir.constant(64 : i8) : i8
+  %2 = llvm.add %arg13, %arg15 : i8
+  %3 = llvm.and %arg14, %0 : i8
+  %4 = llvm.or disjoint %3, %1 : i8
+  %5 = llvm.xor %2, %4 : i8
+  %6 = llvm.icmp "ugt" %2, %5 : i8
+  "llvm.return"(%6) : (i1) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem xor_ugt_2_proof : xor_ugt_2_before ⊑ xor_ugt_2_after := by
+  unfold xor_ugt_2_before xor_ugt_2_after
+  simp_alive_peephole
+  intros
+  ---BEGIN xor_ugt_2
+  apply xor_ugt_2_thm
+  ---END xor_ugt_2
+
+

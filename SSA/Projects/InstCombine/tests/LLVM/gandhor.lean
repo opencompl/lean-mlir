@@ -252,7 +252,7 @@ def or_or_and_complex_after := [llvm|
   %4 = llvm.shl %arg82, %0 : i64
   %5 = llvm.and %3, %1 : i64
   %6 = llvm.and %4, %2 : i64
-  %7 = llvm.or %5, %6 : i64
+  %7 = llvm.or disjoint %5, %6 : i64
   "llvm.return"(%7) : (i64) -> ()
 }
 ]
