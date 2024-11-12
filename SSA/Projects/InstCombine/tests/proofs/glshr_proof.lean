@@ -156,7 +156,8 @@ theorem shl_or_lshr_thm (e e_1 e_2 : IntW 32) :
 
 
 theorem shl_or_disjoint_lshr_thm (e e_1 e_2 : IntW 32) :
-  lshr (LLVM.or (shl e_2 e_1 { «nsw» := false, «nuw» := true }) e) e_1 ⊑ LLVM.or (lshr e e_1) e_2 := by 
+  lshr (LLVM.or (shl e_2 e_1 { «nsw» := false, «nuw» := true }) e { «disjoint» := true }) e_1 ⊑
+    LLVM.or (lshr e e_1) e_2 { «disjoint» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -176,7 +177,8 @@ theorem shl_or_lshr_comm_thm (e e_1 e_2 : IntW 32) :
 
 
 theorem shl_or_disjoint_lshr_comm_thm (e e_1 e_2 : IntW 32) :
-  lshr (LLVM.or e_2 (shl e_1 e { «nsw» := false, «nuw» := true })) e ⊑ LLVM.or (lshr e_2 e) e_1 := by 
+  lshr (LLVM.or e_2 (shl e_1 e { «nsw» := false, «nuw» := true }) { «disjoint» := true }) e ⊑
+    LLVM.or (lshr e_2 e) e_1 { «disjoint» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

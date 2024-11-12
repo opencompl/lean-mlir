@@ -31,7 +31,7 @@ theorem test1_thm (e : IntW 32) :
 
 theorem test2_thm (e : IntW 32) :
   LLVM.xor (add (LLVM.and e (const? 32 32)) (const? 32 145)) (const? 32 153) ⊑
-    LLVM.or (LLVM.and e (const? 32 32)) (const? 32 8) := by 
+    LLVM.or (LLVM.and e (const? 32 32)) (const? 32 8) { «disjoint» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -42,7 +42,7 @@ theorem test2_thm (e : IntW 32) :
 
 theorem test3_thm (e : IntW 32) :
   LLVM.xor (LLVM.and (LLVM.or e (const? 32 145)) (const? 32 177)) (const? 32 153) ⊑
-    LLVM.or (LLVM.and e (const? 32 32)) (const? 32 8) := by 
+    LLVM.or (LLVM.and e (const? 32 32)) (const? 32 8) { «disjoint» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

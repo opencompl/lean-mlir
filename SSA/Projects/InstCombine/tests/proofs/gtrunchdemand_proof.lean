@@ -42,7 +42,7 @@ theorem trunc_lshr_big_mask_thm (e : IntW 8) :
 
 theorem or_trunc_lshr_thm (e : IntW 8) :
   LLVM.or (trunc 6 (lshr e (const? 8 1))) (const? 6 (-32)) ⊑
-    LLVM.or (lshr (trunc 6 e) (const? 6 1)) (const? 6 (-32)) := by 
+    LLVM.or (lshr (trunc 6 e) (const? 6 1)) (const? 6 (-32)) { «disjoint» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -53,7 +53,7 @@ theorem or_trunc_lshr_thm (e : IntW 8) :
 
 theorem or_trunc_lshr_more_thm (e : IntW 8) :
   LLVM.or (trunc 6 (lshr e (const? 8 4))) (const? 6 (-4)) ⊑
-    LLVM.or (lshr (trunc 6 e) (const? 6 4)) (const? 6 (-4)) := by 
+    LLVM.or (lshr (trunc 6 e) (const? 6 4)) (const? 6 (-4)) { «disjoint» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

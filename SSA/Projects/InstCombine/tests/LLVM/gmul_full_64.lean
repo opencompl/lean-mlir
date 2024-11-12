@@ -52,7 +52,7 @@ def mullo_after := [llvm|
   %11 = llvm.add %10, %7 : i64
   %12 = llvm.add %11, %8 : i64
   %13 = llvm.shl %12, %1 : i64
-  %14 = llvm.or %13, %9 : i64
+  %14 = llvm.or disjoint %13, %9 : i64
   "llvm.return"(%14) : (i64) -> ()
 }
 ]

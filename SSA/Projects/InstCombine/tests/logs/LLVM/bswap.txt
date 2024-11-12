@@ -165,7 +165,15 @@
 4: "bswap_and_mask_0" has unsupported operation: builtin.unregistered: llvm.intr.bswap
 
 1: "bswap_and_mask_1"
-7: "bswap_and_mask_1" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.lshr
+2: llvm.and
+2: llvm.or
+2: llvm.return
 
 1: "bswap_and_mask_2"
 4: "bswap_and_mask_2" has unsupported operation: builtin.unregistered: llvm.intr.bswap

@@ -128,7 +128,7 @@ def or_trunc_lshr_after := [llvm|
   %1 = llvm.mlir.constant(-32 : i6) : i6
   %2 = llvm.trunc %arg2 : i8 to i6
   %3 = llvm.lshr %2, %0 : i6
-  %4 = llvm.or %3, %1 : i6
+  %4 = llvm.or disjoint %3, %1 : i6
   "llvm.return"(%4) : (i6) -> ()
 }
 ]
@@ -161,7 +161,7 @@ def or_trunc_lshr_more_after := [llvm|
   %1 = llvm.mlir.constant(-4 : i6) : i6
   %2 = llvm.trunc %arg1 : i8 to i6
   %3 = llvm.lshr %2, %0 : i6
-  %4 = llvm.or %3, %1 : i6
+  %4 = llvm.or disjoint %3, %1 : i6
   "llvm.return"(%4) : (i6) -> ()
 }
 ]

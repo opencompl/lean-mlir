@@ -129,3 +129,15 @@ theorem xor_sge_thm (e e_1 : IntW 8) :
     all_goals sorry
 
 
+theorem xor_ugt_2_thm (e e_1 e_2 : IntW 8) :
+  icmp IntPredicate.ugt (add e_2 e_1) (LLVM.xor (add e_2 e_1) (LLVM.or (LLVM.and e (const? 8 63)) (const? 8 64))) ⊑
+    icmp IntPredicate.ugt (add e_2 e_1)
+      (LLVM.xor (add e_2 e_1) (LLVM.or (LLVM.and e (const? 8 63)) (const? 8 64) { «disjoint» := true })) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+

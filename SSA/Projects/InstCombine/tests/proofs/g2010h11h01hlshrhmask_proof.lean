@@ -36,8 +36,9 @@ theorem foo_thm (e e_1 : IntW 8) :
       (LLVM.and (lshr (LLVM.xor (shl e_1 (const? 8 7)) (LLVM.and e (const? 8 (-118)))) (const? 8 2)) (const? 8 32))
       (LLVM.or
         (LLVM.or (LLVM.and e (const? 8 33))
-          (LLVM.and (sub (const? 8 40) (LLVM.and e (const? 8 84)) { «nsw» := true, «nuw» := false }) (const? 8 84)))
-        (LLVM.xor (shl e_1 (const? 8 7)) (LLVM.and e (const? 8 (-118))))) := by 
+          (LLVM.and (sub (const? 8 40) (LLVM.and e (const? 8 84)) { «nsw» := true, «nuw» := false }) (const? 8 84))
+          { «disjoint» := true })
+        (LLVM.xor (shl e_1 (const? 8 7)) (LLVM.and e (const? 8 (-118)))) { «disjoint» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

@@ -122,7 +122,19 @@ theorem shl_lshr_demand1_thm (e : IntW 8) :
 
 theorem shl_lshr_demand3_thm (e : IntW 8) :
   LLVM.or (lshr (shl (const? 8 40) e) (const? 8 3)) (const? 8 (-64)) ⊑
-    LLVM.or (lshr (shl (const? 8 40) e) (const? 8 3) { «exact» := true }) (const? 8 (-64)) := by 
+    LLVM.or (lshr (shl (const? 8 40) e) (const? 8 3) { «exact» := true }) (const? 8 (-64))
+      { «disjoint» := true } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+
+theorem shl_lshr_demand4_thm (e : IntW 8) :
+  LLVM.or (lshr (shl (const? 8 44) e) (const? 8 3)) (const? 8 (-32)) ⊑
+    LLVM.or (lshr (shl (const? 8 44) e) (const? 8 3)) (const? 8 (-32)) { «disjoint» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -155,7 +167,19 @@ theorem lshr_shl_demand1_thm (e : IntW 8) :
 
 theorem lshr_shl_demand3_thm (e : IntW 8) :
   LLVM.or (shl (lshr (const? 8 28) e) (const? 8 3)) (const? 8 3) ⊑
-    LLVM.or (shl (lshr (const? 8 28) e) (const? 8 3) { «nsw» := false, «nuw» := true }) (const? 8 3) := by 
+    LLVM.or (shl (lshr (const? 8 28) e) (const? 8 3) { «nsw» := false, «nuw» := true }) (const? 8 3)
+      { «disjoint» := true } := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+
+theorem lshr_shl_demand4_thm (e : IntW 8) :
+  LLVM.or (shl (lshr (const? 8 60) e) (const? 8 3)) (const? 8 7) ⊑
+    LLVM.or (shl (lshr (const? 8 60) e) (const? 8 3)) (const? 8 7) { «disjoint» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

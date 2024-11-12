@@ -210,7 +210,7 @@ theorem test38_thm (e : IntW 32) :
 
 theorem test40_thm (e : IntW 16) :
   trunc 16 (LLVM.or (lshr (zext 32 e) (const? 32 9)) (shl (zext 32 e) (const? 32 8))) ⊑
-    LLVM.or (lshr e (const? 16 9)) (shl e (const? 16 8)) := by 
+    LLVM.or (lshr e (const? 16 9)) (shl e (const? 16 8)) { «disjoint» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -273,7 +273,8 @@ theorem test47_thm (e : IntW 8) :
 
 theorem test48_thm (e : IntW 8) :
   zext 64 (LLVM.or (shl (zext 32 e) (const? 32 8)) (zext 32 e)) ⊑
-    zext 64 (LLVM.or (shl (zext 32 e) (const? 32 8) { «nsw» := true, «nuw» := true }) (zext 32 e))
+    zext 64
+      (LLVM.or (shl (zext 32 e) (const? 32 8) { «nsw» := true, «nuw» := true }) (zext 32 e) { «disjoint» := true })
       { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
@@ -285,7 +286,9 @@ theorem test48_thm (e : IntW 8) :
 
 theorem test51_thm (e : IntW 64) (e_1 : IntW 1) :
   sext 64 (select e_1 (LLVM.and (trunc 32 e) (const? 32 (-2))) (LLVM.or (trunc 32 e) (const? 32 1))) ⊑
-    sext 64 (LLVM.or (LLVM.and (trunc 32 e) (const? 32 (-2))) (zext 32 (LLVM.xor e_1 (const? 1 1)))) := by 
+    sext 64
+      (LLVM.or (LLVM.and (trunc 32 e) (const? 32 (-2))) (zext 32 (LLVM.xor e_1 (const? 1 1)))
+        { «disjoint» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -296,7 +299,7 @@ theorem test51_thm (e : IntW 64) (e_1 : IntW 1) :
 
 theorem test52_thm (e : IntW 64) :
   zext 32 (LLVM.and (LLVM.or (trunc 16 e) (const? 16 (-32574))) (const? 16 (-25350))) ⊑
-    zext 32 (LLVM.or (LLVM.and (trunc 16 e) (const? 16 7224)) (const? 16 (-32574))) := by 
+    zext 32 (LLVM.or (LLVM.and (trunc 16 e) (const? 16 7224)) (const? 16 (-32574)) { «disjoint» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -307,7 +310,7 @@ theorem test52_thm (e : IntW 64) :
 
 theorem test53_thm (e : IntW 32) :
   zext 64 (LLVM.and (LLVM.or (trunc 16 e) (const? 16 (-32574))) (const? 16 (-25350))) ⊑
-    zext 64 (LLVM.or (LLVM.and (trunc 16 e) (const? 16 7224)) (const? 16 (-32574))) := by 
+    zext 64 (LLVM.or (LLVM.and (trunc 16 e) (const? 16 7224)) (const? 16 (-32574)) { «disjoint» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -318,7 +321,7 @@ theorem test53_thm (e : IntW 32) :
 
 theorem test54_thm (e : IntW 64) :
   sext 32 (LLVM.and (LLVM.or (trunc 16 e) (const? 16 (-32574))) (const? 16 (-25350))) ⊑
-    sext 32 (LLVM.or (LLVM.and (trunc 16 e) (const? 16 7224)) (const? 16 (-32574))) := by 
+    sext 32 (LLVM.or (LLVM.and (trunc 16 e) (const? 16 7224)) (const? 16 (-32574)) { «disjoint» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -329,7 +332,7 @@ theorem test54_thm (e : IntW 64) :
 
 theorem test55_thm (e : IntW 32) :
   sext 64 (LLVM.and (LLVM.or (trunc 16 e) (const? 16 (-32574))) (const? 16 (-25350))) ⊑
-    sext 64 (LLVM.or (LLVM.and (trunc 16 e) (const? 16 7224)) (const? 16 (-32574))) := by 
+    sext 64 (LLVM.or (LLVM.and (trunc 16 e) (const? 16 7224)) (const? 16 (-32574)) { «disjoint» := true }) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -373,7 +376,7 @@ theorem test59_thm (e e_1 : IntW 8) :
   zext 64 (LLVM.or (lshr (zext 32 e_1) (const? 32 4)) (LLVM.and (shl (zext 32 e) (const? 32 4)) (const? 32 48))) ⊑
     zext 64
       (LLVM.or (LLVM.and (shl (zext 32 e) (const? 32 4) { «nsw» := true, «nuw» := true }) (const? 32 48))
-        (zext 32 (lshr e_1 (const? 8 4)) { «nneg» := true }))
+        (zext 32 (lshr e_1 (const? 8 4)) { «nneg» := true }) { «disjoint» := true })
       { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
@@ -653,7 +656,8 @@ theorem test94_thm (e : IntW 32) :
 
 theorem test95_thm (e : IntW 32) :
   zext 32 (LLVM.or (LLVM.and (lshr (trunc 8 e) (const? 8 6)) (const? 8 2)) (const? 8 40)) ⊑
-    zext 32 (LLVM.or (LLVM.and (lshr (trunc 8 e) (const? 8 6)) (const? 8 2)) (const? 8 40)) { «nneg» := true } := by 
+    zext 32 (LLVM.or (LLVM.and (lshr (trunc 8 e) (const? 8 6)) (const? 8 2)) (const? 8 40) { «disjoint» := true })
+      { «nneg» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

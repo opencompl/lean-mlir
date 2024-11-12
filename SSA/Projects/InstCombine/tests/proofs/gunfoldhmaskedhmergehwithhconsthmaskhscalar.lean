@@ -30,7 +30,7 @@ def scalar0_after := [llvm|
   %1 = llvm.mlir.constant(-2 : i4) : i4
   %2 = llvm.and %arg32, %0 : i4
   %3 = llvm.and %arg33, %1 : i4
-  %4 = llvm.or %2, %3 : i4
+  %4 = llvm.or disjoint %2, %3 : i4
   "llvm.return"(%4) : (i4) -> ()
 }
 ]
@@ -62,7 +62,7 @@ def scalar1_after := [llvm|
   %1 = llvm.mlir.constant(1 : i4) : i4
   %2 = llvm.and %arg30, %0 : i4
   %3 = llvm.and %arg31, %1 : i4
-  %4 = llvm.or %2, %3 : i4
+  %4 = llvm.or disjoint %2, %3 : i4
   "llvm.return"(%4) : (i4) -> ()
 }
 ]
@@ -214,7 +214,7 @@ def c_1_0_0_after := [llvm|
   %1 = llvm.mlir.constant(1 : i4) : i4
   %2 = llvm.and %arg20, %0 : i4
   %3 = llvm.and %arg21, %1 : i4
-  %4 = llvm.or %2, %3 : i4
+  %4 = llvm.or disjoint %2, %3 : i4
   "llvm.return"(%4) : (i4) -> ()
 }
 ]
@@ -246,7 +246,7 @@ def c_0_1_0_after := [llvm|
   %1 = llvm.mlir.constant(1 : i4) : i4
   %2 = llvm.and %arg19, %0 : i4
   %3 = llvm.and %arg18, %1 : i4
-  %4 = llvm.or %2, %3 : i4
+  %4 = llvm.or disjoint %2, %3 : i4
   "llvm.return"(%4) : (i4) -> ()
 }
 ]
@@ -278,7 +278,7 @@ def c_1_1_0_after := [llvm|
   %1 = llvm.mlir.constant(1 : i4) : i4
   %2 = llvm.and %arg17, %0 : i4
   %3 = llvm.and %arg16, %1 : i4
-  %4 = llvm.or %2, %3 : i4
+  %4 = llvm.or disjoint %2, %3 : i4
   "llvm.return"(%4) : (i4) -> ()
 }
 ]

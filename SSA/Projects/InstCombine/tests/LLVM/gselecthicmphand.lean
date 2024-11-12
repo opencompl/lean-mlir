@@ -703,7 +703,7 @@ def clear_to_clear_decomposebittest_after := [llvm|
   %0 = llvm.mlir.constant(-128 : i8) : i8
   %1 = llvm.mlir.constant(3 : i8) : i8
   %2 = llvm.and %arg12, %0 : i8
-  %3 = llvm.or %2, %1 : i8
+  %3 = llvm.or disjoint %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -735,7 +735,7 @@ def set_to_set_decomposebittest_after := [llvm|
   %0 = llvm.mlir.constant(-128 : i8) : i8
   %1 = llvm.mlir.constant(3 : i8) : i8
   %2 = llvm.and %arg11, %0 : i8
-  %3 = llvm.or %2, %1 : i8
+  %3 = llvm.or disjoint %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]

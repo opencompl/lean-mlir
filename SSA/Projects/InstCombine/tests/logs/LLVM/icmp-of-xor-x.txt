@@ -137,13 +137,21 @@
 2: llvm.return
 
 1: "xor_ugt_2"
-7: "xor_ugt_2" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.and
+2: llvm.or
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
 
 1: "xor_ult"
 7: "xor_ult" is unchanged by InstCombine
 
 1: "xor_sgt"
-7: "xor_sgt" is unchanged by InstCombine
+8: "xor_sgt" contains vectors which are unsupported
 
 1: "xor_sgt_fail_no_known_msb"
 8: "xor_sgt_fail_no_known_msb" contains vectors which are unsupported

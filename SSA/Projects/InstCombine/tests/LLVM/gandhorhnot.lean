@@ -396,6 +396,43 @@ theorem PR32830_proof : PR32830_before ⊑ PR32830_after := by
 
 
 
+def or_to_nxor_multiuse_before := [llvm|
+{
+^0(%arg56 : i32, %arg57 : i32):
+  %0 = llvm.mlir.constant(-1 : i32) : i32
+  %1 = llvm.and %arg56, %arg57 : i32
+  %2 = llvm.or %arg56, %arg57 : i32
+  %3 = llvm.xor %2, %0 : i32
+  %4 = llvm.or %1, %3 : i32
+  %5 = llvm.mul %1, %3 : i32
+  %6 = llvm.mul %5, %4 : i32
+  "llvm.return"(%6) : (i32) -> ()
+}
+]
+def or_to_nxor_multiuse_after := [llvm|
+{
+^0(%arg56 : i32, %arg57 : i32):
+  %0 = llvm.mlir.constant(-1 : i32) : i32
+  %1 = llvm.and %arg56, %arg57 : i32
+  %2 = llvm.or %arg56, %arg57 : i32
+  %3 = llvm.xor %2, %0 : i32
+  %4 = llvm.or disjoint %1, %3 : i32
+  %5 = llvm.mul %1, %3 : i32
+  %6 = llvm.mul %5, %4 : i32
+  "llvm.return"(%6) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem or_to_nxor_multiuse_proof : or_to_nxor_multiuse_before ⊑ or_to_nxor_multiuse_after := by
+  unfold or_to_nxor_multiuse_before or_to_nxor_multiuse_after
+  simp_alive_peephole
+  intros
+  ---BEGIN or_to_nxor_multiuse
+  all_goals (try extract_goal ; sorry)
+  ---END or_to_nxor_multiuse
+
+
+
 def simplify_or_common_op_commute0_before := [llvm|
 {
 ^0(%arg45 : i4, %arg46 : i4, %arg47 : i4):

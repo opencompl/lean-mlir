@@ -114,7 +114,7 @@ theorem test8_thm (e : IntW 128) :
 
 theorem test9_thm (e : IntW 77) :
   add (LLVM.and e (const? 77 562949953421310)) (const? 77 1) ⊑
-    LLVM.or (LLVM.and e (const? 77 562949953421310)) (const? 77 1) := by 
+    LLVM.or (LLVM.and e (const? 77 562949953421310)) (const? 77 1) { «disjoint» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

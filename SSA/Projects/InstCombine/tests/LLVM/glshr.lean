@@ -419,7 +419,7 @@ def shl_or_disjoint_lshr_before := [llvm|
 {
 ^0(%arg109 : i32, %arg110 : i32, %arg111 : i32):
   %0 = llvm.shl %arg109, %arg110 overflow<nuw> : i32
-  %1 = llvm.or %0, %arg111 : i32
+  %1 = llvm.or disjoint %0, %arg111 : i32
   %2 = llvm.lshr %1, %arg110 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
@@ -428,7 +428,7 @@ def shl_or_disjoint_lshr_after := [llvm|
 {
 ^0(%arg109 : i32, %arg110 : i32, %arg111 : i32):
   %0 = llvm.lshr %arg111, %arg110 : i32
-  %1 = llvm.or %0, %arg109 : i32
+  %1 = llvm.or disjoint %0, %arg109 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
@@ -475,7 +475,7 @@ def shl_or_disjoint_lshr_comm_before := [llvm|
 {
 ^0(%arg103 : i32, %arg104 : i32, %arg105 : i32):
   %0 = llvm.shl %arg103, %arg104 overflow<nuw> : i32
-  %1 = llvm.or %arg105, %0 : i32
+  %1 = llvm.or disjoint %arg105, %0 : i32
   %2 = llvm.lshr %1, %arg104 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
@@ -484,7 +484,7 @@ def shl_or_disjoint_lshr_comm_after := [llvm|
 {
 ^0(%arg103 : i32, %arg104 : i32, %arg105 : i32):
   %0 = llvm.lshr %arg105, %arg104 : i32
-  %1 = llvm.or %0, %arg103 : i32
+  %1 = llvm.or disjoint %0, %arg103 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]

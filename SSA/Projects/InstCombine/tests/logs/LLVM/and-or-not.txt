@@ -200,7 +200,15 @@
 4: "and_to_nxor_multiuse" has unsupported operation: builtin.unregistered: llvm.fptosi
 
 1: "or_to_nxor_multiuse"
-7: "or_to_nxor_multiuse" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.or
+2: llvm.xor
+2: llvm.or
+2: llvm.mul
+2: llvm.mul
+2: llvm.return
 
 1: "xor_to_xnor1"
 4: "xor_to_xnor1" has unsupported operation: builtin.unregistered: llvm.fptosi

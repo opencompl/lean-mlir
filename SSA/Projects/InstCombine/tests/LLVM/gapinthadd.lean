@@ -319,7 +319,7 @@ def test9_after := [llvm|
   %0 = llvm.mlir.constant(562949953421310 : i77) : i77
   %1 = llvm.mlir.constant(1 : i77) : i77
   %2 = llvm.and %arg0, %0 : i77
-  %3 = llvm.or %2, %1 : i77
+  %3 = llvm.or disjoint %2, %1 : i77
   "llvm.return"(%3) : (i77) -> ()
 }
 ]

@@ -2426,7 +2426,7 @@ def set_bits_after := [llvm|
   %2 = llvm.mlir.constant(0 : i8) : i8
   %3 = llvm.and %arg26, %0 : i8
   %4 = "llvm.select"(%arg27, %1, %2) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
-  %5 = llvm.or %3, %4 : i8
+  %5 = llvm.or disjoint %3, %4 : i8
   "llvm.return"(%5) : (i8) -> ()
 }
 ]

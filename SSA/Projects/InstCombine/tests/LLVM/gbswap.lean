@@ -36,7 +36,7 @@ def test1_trunc_after := [llvm|
   %3 = llvm.lshr %arg53, %0 : i32
   %4 = llvm.lshr %arg53, %1 : i32
   %5 = llvm.and %4, %2 : i32
-  %6 = llvm.or %3, %5 : i32
+  %6 = llvm.or disjoint %3, %5 : i32
   %7 = llvm.trunc %6 overflow<nuw> : i32 to i16
   "llvm.return"(%7) : (i16) -> ()
 }
@@ -119,5 +119,42 @@ theorem PR39793_bswap_u32_as_u16_trunc_proof : PR39793_bswap_u32_as_u16_trunc_be
   ---BEGIN PR39793_bswap_u32_as_u16_trunc
   all_goals (try extract_goal ; sorry)
   ---END PR39793_bswap_u32_as_u16_trunc
+
+
+
+def bswap_and_mask_1_before := [llvm|
+{
+^0(%arg19 : i64):
+  %0 = llvm.mlir.constant(56) : i64
+  %1 = llvm.mlir.constant(40) : i64
+  %2 = llvm.mlir.constant(65280) : i64
+  %3 = llvm.lshr %arg19, %0 : i64
+  %4 = llvm.lshr %arg19, %1 : i64
+  %5 = llvm.and %4, %2 : i64
+  %6 = llvm.or %5, %3 : i64
+  "llvm.return"(%6) : (i64) -> ()
+}
+]
+def bswap_and_mask_1_after := [llvm|
+{
+^0(%arg19 : i64):
+  %0 = llvm.mlir.constant(56) : i64
+  %1 = llvm.mlir.constant(40) : i64
+  %2 = llvm.mlir.constant(65280) : i64
+  %3 = llvm.lshr %arg19, %0 : i64
+  %4 = llvm.lshr %arg19, %1 : i64
+  %5 = llvm.and %4, %2 : i64
+  %6 = llvm.or disjoint %5, %3 : i64
+  "llvm.return"(%6) : (i64) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem bswap_and_mask_1_proof : bswap_and_mask_1_before ⊑ bswap_and_mask_1_after := by
+  unfold bswap_and_mask_1_before bswap_and_mask_1_after
+  simp_alive_peephole
+  intros
+  ---BEGIN bswap_and_mask_1
+  all_goals (try extract_goal ; sorry)
+  ---END bswap_and_mask_1
 
 

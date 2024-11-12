@@ -622,7 +622,7 @@ def test40_after := [llvm|
   %1 = llvm.mlir.constant(8 : i16) : i16
   %2 = llvm.lshr %arg153, %0 : i16
   %3 = llvm.shl %arg153, %1 : i16
-  %4 = llvm.or %2, %3 : i16
+  %4 = llvm.or disjoint %2, %3 : i16
   "llvm.return"(%4) : (i16) -> ()
 }
 ]
@@ -810,7 +810,7 @@ def test48_after := [llvm|
   %0 = llvm.mlir.constant(8 : i32) : i32
   %1 = llvm.zext %arg137 : i8 to i32
   %2 = llvm.shl %1, %0 overflow<nsw,nuw> : i32
-  %3 = llvm.or %2, %1 : i32
+  %3 = llvm.or disjoint %2, %1 : i32
   %4 = llvm.zext nneg %3 : i32 to i64
   "llvm.return"(%4) : (i64) -> ()
 }
@@ -848,7 +848,7 @@ def test51_after := [llvm|
   %3 = llvm.and %2, %0 : i32
   %4 = llvm.xor %arg134, %1 : i1
   %5 = llvm.zext %4 : i1 to i32
-  %6 = llvm.or %3, %5 : i32
+  %6 = llvm.or disjoint %3, %5 : i32
   %7 = llvm.sext %6 : i32 to i64
   "llvm.return"(%7) : (i64) -> ()
 }
@@ -883,7 +883,7 @@ def test52_after := [llvm|
   %1 = llvm.mlir.constant(-32574 : i16) : i16
   %2 = llvm.trunc %arg132 : i64 to i16
   %3 = llvm.and %2, %0 : i16
-  %4 = llvm.or %3, %1 : i16
+  %4 = llvm.or disjoint %3, %1 : i16
   %5 = llvm.zext %4 : i16 to i32
   "llvm.return"(%5) : (i32) -> ()
 }
@@ -918,7 +918,7 @@ def test53_after := [llvm|
   %1 = llvm.mlir.constant(-32574 : i16) : i16
   %2 = llvm.trunc %arg131 : i32 to i16
   %3 = llvm.and %2, %0 : i16
-  %4 = llvm.or %3, %1 : i16
+  %4 = llvm.or disjoint %3, %1 : i16
   %5 = llvm.zext %4 : i16 to i64
   "llvm.return"(%5) : (i64) -> ()
 }
@@ -953,7 +953,7 @@ def test54_after := [llvm|
   %1 = llvm.mlir.constant(-32574 : i16) : i16
   %2 = llvm.trunc %arg130 : i64 to i16
   %3 = llvm.and %2, %0 : i16
-  %4 = llvm.or %3, %1 : i16
+  %4 = llvm.or disjoint %3, %1 : i16
   %5 = llvm.sext %4 : i16 to i32
   "llvm.return"(%5) : (i32) -> ()
 }
@@ -988,7 +988,7 @@ def test55_after := [llvm|
   %1 = llvm.mlir.constant(-32574 : i16) : i16
   %2 = llvm.trunc %arg129 : i32 to i16
   %3 = llvm.and %2, %0 : i16
-  %4 = llvm.or %3, %1 : i16
+  %4 = llvm.or disjoint %3, %1 : i16
   %5 = llvm.sext %4 : i16 to i64
   "llvm.return"(%5) : (i64) -> ()
 }
@@ -1127,7 +1127,7 @@ def test59_after := [llvm|
   %5 = llvm.and %4, %1 : i32
   %6 = llvm.lshr %arg123, %2 : i8
   %7 = llvm.zext nneg %6 : i8 to i32
-  %8 = llvm.or %5, %7 : i32
+  %8 = llvm.or disjoint %5, %7 : i32
   %9 = llvm.zext nneg %8 : i32 to i64
   "llvm.return"(%9) : (i64) -> ()
 }
@@ -1962,7 +1962,7 @@ def test95_after := [llvm|
   %3 = llvm.trunc %arg0 : i32 to i8
   %4 = llvm.lshr %3, %0 : i8
   %5 = llvm.and %4, %1 : i8
-  %6 = llvm.or %5, %2 : i8
+  %6 = llvm.or disjoint %5, %2 : i8
   %7 = llvm.zext nneg %6 : i8 to i32
   "llvm.return"(%7) : (i32) -> ()
 }

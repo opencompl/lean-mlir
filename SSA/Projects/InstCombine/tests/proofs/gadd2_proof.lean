@@ -30,7 +30,7 @@ theorem test2_thm (e : IntW 32) :
 
 theorem test3_thm (e : IntW 32) :
   add (LLVM.and e (const? 32 128)) (lshr e (const? 32 30)) ⊑
-    LLVM.or (LLVM.and e (const? 32 128)) (lshr e (const? 32 30)) := by 
+    LLVM.or (LLVM.and e (const? 32 128)) (lshr e (const? 32 30)) { «disjoint» := true } := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

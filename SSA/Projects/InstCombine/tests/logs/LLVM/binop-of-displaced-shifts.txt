@@ -184,7 +184,15 @@
 4: "shl_or_multiuse" has unsupported operation: llvm.call
 
 1: "mismatched_shifts"
-7: "mismatched_shifts" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.add
+2: llvm.lshr
+2: llvm.or
+2: llvm.return
 
 1: "mismatched_ops"
 7: "mismatched_ops" is unchanged by InstCombine

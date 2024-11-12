@@ -378,7 +378,7 @@ def shl_lshr_demand3_after := [llvm|
   %2 = llvm.mlir.constant(-64 : i8) : i8
   %3 = llvm.shl %0, %arg18 : i8
   %4 = llvm.lshr exact %3, %1 : i8
-  %5 = llvm.or %4, %2 : i8
+  %5 = llvm.or disjoint %4, %2 : i8
   "llvm.return"(%5) : (i8) -> ()
 }
 ]
@@ -390,6 +390,41 @@ theorem shl_lshr_demand3_proof : shl_lshr_demand3_before ⊑ shl_lshr_demand3_af
   ---BEGIN shl_lshr_demand3
   apply shl_lshr_demand3_thm
   ---END shl_lshr_demand3
+
+
+
+def shl_lshr_demand4_before := [llvm|
+{
+^0(%arg17 : i8):
+  %0 = llvm.mlir.constant(44 : i8) : i8
+  %1 = llvm.mlir.constant(3 : i8) : i8
+  %2 = llvm.mlir.constant(-32 : i8) : i8
+  %3 = llvm.shl %0, %arg17 : i8
+  %4 = llvm.lshr %3, %1 : i8
+  %5 = llvm.or %4, %2 : i8
+  "llvm.return"(%5) : (i8) -> ()
+}
+]
+def shl_lshr_demand4_after := [llvm|
+{
+^0(%arg17 : i8):
+  %0 = llvm.mlir.constant(44 : i8) : i8
+  %1 = llvm.mlir.constant(3 : i8) : i8
+  %2 = llvm.mlir.constant(-32 : i8) : i8
+  %3 = llvm.shl %0, %arg17 : i8
+  %4 = llvm.lshr %3, %1 : i8
+  %5 = llvm.or disjoint %4, %2 : i8
+  "llvm.return"(%5) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem shl_lshr_demand4_proof : shl_lshr_demand4_before ⊑ shl_lshr_demand4_after := by
+  unfold shl_lshr_demand4_before shl_lshr_demand4_after
+  simp_alive_peephole
+  intros
+  ---BEGIN shl_lshr_demand4
+  apply shl_lshr_demand4_thm
+  ---END shl_lshr_demand4
 
 
 
@@ -477,7 +512,7 @@ def lshr_shl_demand3_after := [llvm|
   %1 = llvm.mlir.constant(3 : i8) : i8
   %2 = llvm.lshr %0, %arg7 : i8
   %3 = llvm.shl %2, %1 overflow<nuw> : i8
-  %4 = llvm.or %3, %1 : i8
+  %4 = llvm.or disjoint %3, %1 : i8
   "llvm.return"(%4) : (i8) -> ()
 }
 ]
@@ -489,5 +524,40 @@ theorem lshr_shl_demand3_proof : lshr_shl_demand3_before ⊑ lshr_shl_demand3_af
   ---BEGIN lshr_shl_demand3
   apply lshr_shl_demand3_thm
   ---END lshr_shl_demand3
+
+
+
+def lshr_shl_demand4_before := [llvm|
+{
+^0(%arg6 : i8):
+  %0 = llvm.mlir.constant(60 : i8) : i8
+  %1 = llvm.mlir.constant(3 : i8) : i8
+  %2 = llvm.mlir.constant(7 : i8) : i8
+  %3 = llvm.lshr %0, %arg6 : i8
+  %4 = llvm.shl %3, %1 : i8
+  %5 = llvm.or %4, %2 : i8
+  "llvm.return"(%5) : (i8) -> ()
+}
+]
+def lshr_shl_demand4_after := [llvm|
+{
+^0(%arg6 : i8):
+  %0 = llvm.mlir.constant(60 : i8) : i8
+  %1 = llvm.mlir.constant(3 : i8) : i8
+  %2 = llvm.mlir.constant(7 : i8) : i8
+  %3 = llvm.lshr %0, %arg6 : i8
+  %4 = llvm.shl %3, %1 : i8
+  %5 = llvm.or disjoint %4, %2 : i8
+  "llvm.return"(%5) : (i8) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem lshr_shl_demand4_proof : lshr_shl_demand4_before ⊑ lshr_shl_demand4_after := by
+  unfold lshr_shl_demand4_before lshr_shl_demand4_after
+  simp_alive_peephole
+  intros
+  ---BEGIN lshr_shl_demand4
+  apply lshr_shl_demand4_thm
+  ---END lshr_shl_demand4
 
 

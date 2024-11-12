@@ -445,7 +445,7 @@ def test16_after := [llvm|
   %2 = llvm.mlir.constant(3 : i32) : i32
   %3 = llvm.lshr %arg82, %0 : i32
   %4 = llvm.and %3, %1 : i32
-  %5 = llvm.or %4, %2 : i32
+  %5 = llvm.or disjoint %4, %2 : i32
   %6 = llvm.and %arg81, %5 : i32
   "llvm.return"(%6) : (i32) -> ()
 }

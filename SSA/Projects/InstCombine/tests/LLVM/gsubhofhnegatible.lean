@@ -607,7 +607,7 @@ def negation_of_increment_via_or_disjoint_before := [llvm|
 {
 ^0(%arg81 : i8, %arg82 : i8):
   %0 = llvm.mlir.constant(1 : i8) : i8
-  %1 = llvm.or %arg82, %0 : i8
+  %1 = llvm.or disjoint %arg82, %0 : i8
   %2 = llvm.sub %arg81, %1 : i8
   "llvm.return"(%2) : (i8) -> ()
 }

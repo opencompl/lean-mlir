@@ -31,7 +31,7 @@ def p_after := [llvm|
   %1 = llvm.and %arg60, %arg62 : i32
   %2 = llvm.xor %arg62, %0 : i32
   %3 = llvm.and %arg61, %2 : i32
-  %4 = llvm.or %1, %3 : i32
+  %4 = llvm.or disjoint %1, %3 : i32
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
@@ -64,7 +64,7 @@ def p_constmask_after := [llvm|
   %1 = llvm.mlir.constant(-65281 : i32) : i32
   %2 = llvm.and %arg49, %0 : i32
   %3 = llvm.and %arg50, %1 : i32
-  %4 = llvm.or %2, %3 : i32
+  %4 = llvm.or disjoint %2, %3 : i32
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
@@ -97,7 +97,7 @@ def p_constmask2_after := [llvm|
   %1 = llvm.mlir.constant(-65281 : i32) : i32
   %2 = llvm.and %arg41, %0 : i32
   %3 = llvm.and %arg42, %1 : i32
-  %4 = llvm.or %2, %3 : i32
+  %4 = llvm.or disjoint %2, %3 : i32
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
@@ -130,7 +130,7 @@ def p_commutative0_after := [llvm|
   %1 = llvm.and %arg34, %arg32 : i32
   %2 = llvm.xor %arg34, %0 : i32
   %3 = llvm.and %arg33, %2 : i32
-  %4 = llvm.or %1, %3 : i32
+  %4 = llvm.or disjoint %1, %3 : i32
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
@@ -163,7 +163,7 @@ def p_commutative2_after := [llvm|
   %1 = llvm.and %arg27, %arg29 : i32
   %2 = llvm.xor %arg29, %0 : i32
   %3 = llvm.and %arg28, %2 : i32
-  %4 = llvm.or %3, %1 : i32
+  %4 = llvm.or disjoint %3, %1 : i32
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
@@ -196,7 +196,7 @@ def p_commutative4_after := [llvm|
   %1 = llvm.and %arg24, %arg22 : i32
   %2 = llvm.xor %arg24, %0 : i32
   %3 = llvm.and %arg23, %2 : i32
-  %4 = llvm.or %3, %1 : i32
+  %4 = llvm.or disjoint %3, %1 : i32
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
@@ -229,7 +229,7 @@ def p_constmask_commutative_after := [llvm|
   %1 = llvm.mlir.constant(-65281 : i32) : i32
   %2 = llvm.and %arg16, %0 : i32
   %3 = llvm.and %arg17, %1 : i32
-  %4 = llvm.or %3, %2 : i32
+  %4 = llvm.or disjoint %3, %2 : i32
   "llvm.return"(%4) : (i32) -> ()
 }
 ]

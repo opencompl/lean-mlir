@@ -139,6 +139,19 @@ theorem PR32830_thm (e e_1 e_2 : IntW 64) :
     all_goals sorry
 
 
+theorem or_to_nxor_multiuse_thm (e e_1 : IntW 32) :
+  mul (mul (LLVM.and e_1 e) (LLVM.xor (LLVM.or e_1 e) (const? 32 (-1))))
+      (LLVM.or (LLVM.and e_1 e) (LLVM.xor (LLVM.or e_1 e) (const? 32 (-1)))) ⊑
+    mul (mul (LLVM.and e_1 e) (LLVM.xor (LLVM.or e_1 e) (const? 32 (-1))))
+      (LLVM.or (LLVM.and e_1 e) (LLVM.xor (LLVM.or e_1 e) (const? 32 (-1))) { «disjoint» := true }) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+
 theorem simplify_or_common_op_commute0_thm (e e_1 e_2 : IntW 4) :
   LLVM.or (LLVM.xor (LLVM.and (LLVM.and e_2 e_1) e) (const? 4 (-1))) e_2 ⊑ const? 4 (-1) := by 
     simp_alive_undef

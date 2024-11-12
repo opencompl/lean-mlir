@@ -54,6 +54,25 @@ theorem eval_zext_multi_use_in_one_inst_thm (e : IntW 32) :
     all_goals sorry
 
 
+theorem eval_sext_multi_use_in_one_inst_thm (e : IntW 32) :
+  sext 32
+      (LLVM.or
+        (mul (LLVM.and (trunc 16 e) (const? 16 14)) (LLVM.and (trunc 16 e) (const? 16 14))
+          { «nsw» := true, «nuw» := true })
+        (const? 16 (-32768))) ⊑
+    sext 32
+      (LLVM.or
+        (mul (LLVM.and (trunc 16 e) (const? 16 14)) (LLVM.and (trunc 16 e) (const? 16 14))
+          { «nsw» := true, «nuw» := true })
+        (const? 16 (-32768)) { «disjoint» := true }) := by 
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    simp_alive_benchmark
+    all_goals sorry
+
+
 theorem foo_thm (e : IntW 1) : e ⊑ e := by 
     simp_alive_undef
     simp_alive_ops

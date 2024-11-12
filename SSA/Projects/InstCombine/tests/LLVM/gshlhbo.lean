@@ -352,7 +352,7 @@ def lshr_and_or_disjoint_before := [llvm|
   %3 = llvm.srem %arg43, %0 : i8
   %4 = llvm.lshr %arg44, %1 : i8
   %5 = llvm.and %4, %2 : i8
-  %6 = llvm.or %3, %5 : i8
+  %6 = llvm.or disjoint %3, %5 : i8
   %7 = llvm.shl %6, %1 : i8
   "llvm.return"(%7) : (i8) -> ()
 }
@@ -366,7 +366,7 @@ def lshr_and_or_disjoint_after := [llvm|
   %3 = llvm.srem %arg43, %0 : i8
   %4 = llvm.shl %3, %1 : i8
   %5 = llvm.and %arg44, %2 : i8
-  %6 = llvm.or %5, %4 : i8
+  %6 = llvm.or disjoint %5, %4 : i8
   "llvm.return"(%6) : (i8) -> ()
 }
 ]
@@ -390,7 +390,7 @@ def ashr_and_or_disjoint_before := [llvm|
   %3 = llvm.srem %arg41, %0 : i8
   %4 = llvm.ashr %arg42, %1 : i8
   %5 = llvm.and %4, %2 : i8
-  %6 = llvm.or %3, %5 : i8
+  %6 = llvm.or disjoint %3, %5 : i8
   %7 = llvm.shl %6, %1 : i8
   "llvm.return"(%7) : (i8) -> ()
 }
@@ -404,7 +404,7 @@ def ashr_and_or_disjoint_after := [llvm|
   %3 = llvm.srem %arg41, %0 : i8
   %4 = llvm.shl %3, %1 : i8
   %5 = llvm.and %arg42, %2 : i8
-  %6 = llvm.or %5, %4 : i8
+  %6 = llvm.or disjoint %5, %4 : i8
   "llvm.return"(%6) : (i8) -> ()
 }
 ]

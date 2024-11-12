@@ -33,10 +33,16 @@
 4: "p_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 1: "p_constmask"
-7: "p_constmask" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.or
+2: llvm.return
 
 1: "p_constmask_splatvec"
-7: "p_constmask_splatvec" is unchanged by InstCombine
+8: "p_constmask_splatvec" contains vectors which are unsupported
 
 1: "p_constmask_vec"
 7: "p_constmask_vec" is unchanged by InstCombine
@@ -61,10 +67,16 @@
 4: "p_constmask_vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
 
 1: "p_constmask2"
-7: "p_constmask2" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.or
+2: llvm.return
 
 1: "p_constmask2_splatvec"
-7: "p_constmask2_splatvec" is unchanged by InstCombine
+8: "p_constmask2_splatvec" contains vectors which are unsupported
 
 1: "p_constmask2_vec"
 7: "p_constmask2_vec" is unchanged by InstCombine
@@ -131,7 +143,13 @@
 4: "p_commutative6" has unsupported operation: llvm.call
 
 1: "p_constmask_commutative"
-7: "p_constmask_commutative" is unchanged by InstCombine
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.or
+2: llvm.return
 
 1: "use32"
 5: "use32" is empty

@@ -335,7 +335,7 @@ def fold_add_udiv_urem_or_disjoint_before := [llvm|
   %2 = llvm.udiv %arg5, %0 : i32
   %3 = llvm.shl %2, %1 : i32
   %4 = llvm.urem %arg5, %0 : i32
-  %5 = llvm.or %3, %4 : i32
+  %5 = llvm.or disjoint %3, %4 : i32
   "llvm.return"(%5) : (i32) -> ()
 }
 ]
@@ -381,7 +381,7 @@ def fold_add_udiv_urem_without_noundef_after := [llvm|
   %2 = llvm.udiv %arg4, %0 : i32
   %3 = llvm.shl %2, %1 : i32
   %4 = llvm.urem %arg4, %0 : i32
-  %5 = llvm.or %3, %4 : i32
+  %5 = llvm.or disjoint %3, %4 : i32
   "llvm.return"(%5) : (i32) -> ()
 }
 ]

@@ -31,7 +31,7 @@ def test1_after := [llvm|
   %1 = llvm.mlir.constant(70368744177663 : i447) : i447
   %2 = llvm.and %arg6, %0 : i447
   %3 = llvm.and %arg7, %1 : i447
-  %4 = llvm.or %2, %3 : i447
+  %4 = llvm.or disjoint %2, %3 : i447
   "llvm.return"(%4) : (i447) -> ()
 }
 ]
@@ -193,7 +193,7 @@ def test7_after := [llvm|
   %0 = llvm.mlir.constant(-70368744177664 : i1023) : i1023
   %1 = llvm.mlir.constant(70368040490200 : i1023) : i1023
   %2 = llvm.and %arg0, %0 : i1023
-  %3 = llvm.or %2, %1 : i1023
+  %3 = llvm.or disjoint %2, %1 : i1023
   "llvm.return"(%3) : (i1023) -> ()
 }
 ]

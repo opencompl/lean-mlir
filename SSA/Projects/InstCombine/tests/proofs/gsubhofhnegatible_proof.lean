@@ -200,7 +200,8 @@ theorem negation_of_increment_via_or_with_no_common_bits_set_thm (e e_1 : IntW 8
     all_goals sorry
 
 
-theorem negation_of_increment_via_or_disjoint_thm (e e_1 : IntW 8) : sub e_1 (LLVM.or e (const? 8 1)) ⊑ add e_1 (LLVM.xor e (const? 8 (-1))) := by 
+theorem negation_of_increment_via_or_disjoint_thm (e e_1 : IntW 8) :
+  sub e_1 (LLVM.or e (const? 8 1) { «disjoint» := true }) ⊑ add e_1 (LLVM.xor e (const? 8 (-1))) := by 
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

@@ -39,7 +39,7 @@ def or_and_shifts1_after := [llvm|
   %5 = llvm.and %4, %1 : i32
   %6 = llvm.shl %arg14, %2 : i32
   %7 = llvm.and %6, %3 : i32
-  %8 = llvm.or %5, %7 : i32
+  %8 = llvm.or disjoint %5, %7 : i32
   "llvm.return"(%8) : (i32) -> ()
 }
 ]
@@ -51,6 +51,47 @@ theorem or_and_shifts1_proof : or_and_shifts1_before ⊑ or_and_shifts1_after :=
   ---BEGIN or_and_shifts1
   apply or_and_shifts1_thm
   ---END or_and_shifts1
+
+
+
+def or_and_shifts2_before := [llvm|
+{
+^0(%arg13 : i32):
+  %0 = llvm.mlir.constant(3 : i32) : i32
+  %1 = llvm.mlir.constant(896 : i32) : i32
+  %2 = llvm.mlir.constant(4 : i32) : i32
+  %3 = llvm.mlir.constant(7 : i32) : i32
+  %4 = llvm.shl %arg13, %0 : i32
+  %5 = llvm.and %4, %1 : i32
+  %6 = llvm.lshr %arg13, %2 : i32
+  %7 = llvm.and %6, %3 : i32
+  %8 = llvm.or %5, %7 : i32
+  "llvm.return"(%8) : (i32) -> ()
+}
+]
+def or_and_shifts2_after := [llvm|
+{
+^0(%arg13 : i32):
+  %0 = llvm.mlir.constant(3 : i32) : i32
+  %1 = llvm.mlir.constant(896 : i32) : i32
+  %2 = llvm.mlir.constant(4 : i32) : i32
+  %3 = llvm.mlir.constant(7 : i32) : i32
+  %4 = llvm.shl %arg13, %0 : i32
+  %5 = llvm.and %4, %1 : i32
+  %6 = llvm.lshr %arg13, %2 : i32
+  %7 = llvm.and %6, %3 : i32
+  %8 = llvm.or disjoint %5, %7 : i32
+  "llvm.return"(%8) : (i32) -> ()
+}
+]
+set_option debug.skipKernelTC true in
+theorem or_and_shifts2_proof : or_and_shifts2_before ⊑ or_and_shifts2_after := by
+  unfold or_and_shifts2_before or_and_shifts2_after
+  simp_alive_peephole
+  intros
+  ---BEGIN or_and_shifts2
+  apply or_and_shifts2_thm
+  ---END or_and_shifts2
 
 
 
@@ -127,8 +168,8 @@ def multiuse1_after := [llvm|
   %7 = llvm.and %6, %1 : i32
   %8 = llvm.shl %arg11, %2 : i32
   %9 = llvm.and %8, %3 : i32
-  %10 = llvm.or %5, %7 : i32
-  %11 = llvm.or %10, %9 : i32
+  %10 = llvm.or disjoint %5, %7 : i32
+  %11 = llvm.or disjoint %10, %9 : i32
   "llvm.return"(%11) : (i32) -> ()
 }
 ]
@@ -185,9 +226,9 @@ def multiuse2_after := [llvm|
   %11 = llvm.and %10, %3 : i32
   %12 = llvm.shl %arg10, %4 : i32
   %13 = llvm.and %12, %5 : i32
-  %14 = llvm.or %11, %9 : i32
-  %15 = llvm.or %7, %14 : i32
-  %16 = llvm.or %13, %15 : i32
+  %14 = llvm.or disjoint %11, %9 : i32
+  %15 = llvm.or disjoint %7, %14 : i32
+  %16 = llvm.or disjoint %13, %15 : i32
   "llvm.return"(%16) : (i32) -> ()
 }
 ]
@@ -237,8 +278,8 @@ def multiuse3_after := [llvm|
   %8 = llvm.and %7, %3 : i32
   %9 = llvm.lshr %arg9, %0 : i32
   %10 = llvm.and %9, %4 : i32
-  %11 = llvm.or %6, %10 : i32
-  %12 = llvm.or %11, %8 : i32
+  %11 = llvm.or disjoint %6, %10 : i32
+  %12 = llvm.or disjoint %11, %8 : i32
   "llvm.return"(%12) : (i32) -> ()
 }
 ]
@@ -271,7 +312,7 @@ def shl_mask_after := [llvm|
   %1 = llvm.mlir.constant(8 : i32) : i32
   %2 = llvm.and %arg6, %0 : i32
   %3 = llvm.shl %2, %1 overflow<nsw,nuw> : i32
-  %4 = llvm.or %2, %3 : i32
+  %4 = llvm.or disjoint %2, %3 : i32
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
@@ -337,7 +378,7 @@ def shl_mask_weird_type_after := [llvm|
   %1 = llvm.mlir.constant(8 : i37) : i37
   %2 = llvm.and %arg4, %0 : i37
   %3 = llvm.shl %2, %1 overflow<nsw,nuw> : i37
-  %4 = llvm.or %2, %3 : i37
+  %4 = llvm.or disjoint %2, %3 : i37
   "llvm.return"(%4) : (i37) -> ()
 }
 ]

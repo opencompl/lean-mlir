@@ -637,7 +637,7 @@
 7: "select_or_disjoint_xor" is unchanged by InstCombine
 
 1: "select_or_disjoint_xor_vec"
-7: "select_or_disjoint_xor_vec" is unchanged by InstCombine
+8: "select_or_disjoint_xor_vec" contains vectors which are unsupported
 
 1: "select_or_disjoint_or"
 2: llvm.func
