@@ -6,19 +6,19 @@ namespace MLIR.EDSL
 open Pretty
 
 /-!
-# Pretty syntax for the exact flag
+# Pretty syntax for the disjoint flag
 
-This file defines the `MLIR.Pretty.exact_op` syntax category which, just like `MLIR.Pretty.uniform_op`,
+This file defines the `MLIR.Pretty.disjoint_op` syntax category which, just like `MLIR.Pretty.disjoint_op`,
 is a category of MLIR operations where the arguments and return values are all of the same type.
-Additionally, `exact_op`s may be annotated with the `exact` flag.
-The pretty syntax for this flag is `exact`.
-It gets translated to `<{isExact}>` in the generic syntax.
+Additionally, `disjoint_op`s may be annotated with the `disjoint` flag.
+The pretty syntax for this flag is `disjoint`.
+It gets translated to `<{isDisjoint}>` in the generic syntax.
 -/
-declare_syntax_cat MLIR.Pretty.exact_op
+declare_syntax_cat MLIR.Pretty.disjoint_op
 
-syntax (mlir_op_operand " = ")? MLIR.Pretty.exact_op mlir_op_operand,* (" : " mlir_type)? : mlir_op
+syntax (mlir_op_operand " = ")? MLIR.Pretty.disjoint_op mlir_op_operand,* (" : " mlir_type)? : mlir_op
 macro_rules
-  | `(mlir_op| $[$resName =]? $name:MLIR.Pretty.exact_op $xs,*  $[: $t]? ) => do
+  | `(mlir_op| $[$resName =]? $name:MLIR.Pretty.disjoint_op $xs,*  $[: $t]? ) => do
     let some opName := extractOpName name.raw | Macro.throwUnsupported
     let t ← t.getDM `(mlir_type| _)
     let argTys : TSyntaxArray `mlir_type := xs.getElems.map (fun _ => t)
@@ -27,15 +27,15 @@ macro_rules
       | none => #[]
     `([mlir_op| $[$resName =]? $opName ($xs,*) : ($argTys,*) -> ($retTy:mlir_type,*) ])
 
-syntax (mlir_op_operand " = ")? MLIR.Pretty.exact_op " exact " mlir_op_operand,* (" : " mlir_type)? : mlir_op
+syntax (mlir_op_operand " = ")? MLIR.Pretty.disjoint_op " disjoint " mlir_op_operand,* (" : " mlir_type)? : mlir_op
 macro_rules
-  | `(mlir_op| $[$resName =]? $name:MLIR.Pretty.exact_op exact $xs,*  $[: $t]? ) => do
+  | `(mlir_op| $[$resName =]? $name:MLIR.Pretty.disjoint_op disjoint $xs,*  $[: $t]? ) => do
     let some opName := extractOpName name.raw | Macro.throwUnsupported
     let t ← t.getDM `(mlir_type| _)
     let argTys : TSyntaxArray `mlir_type := xs.getElems.map (fun _ => t)
     let retTy : TSyntaxArray `mlir_type := match resName with
       | some _ => #[t]
       | none => #[]
-    `([mlir_op| $[$resName =]? $opName ($xs,*) <{isExact}> : ($argTys,*) -> ($retTy:mlir_type,*) ])
+    `([mlir_op| $[$resName =]? $opName ($xs,*) <{isDisjoint}> : ($argTys,*) -> ($retTy:mlir_type,*) ])
 
 end MLIR.EDSL
