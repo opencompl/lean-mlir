@@ -121,8 +121,8 @@ def op_name(op):
 def process_file(file):
     filename = os.fsdecode(file)
     print(filename)
-    if filename in expensive_files:
-        print("file too expensive, skipping")
+    if err := skipped_files.get(filename):
+        print(f"file {filename} skipped: {err}")
         return
     stem = "g" + filename.split(".")[0].replace("-", "h")
     full_name = f"{llvm_test_path}/{filename}"
@@ -162,11 +162,6 @@ def process_file(file):
             )
             continue
         log.append(f"{Msg.FUNC_NAME.value}: {func_name}\n")
-        if err := skipped_funcs.get(func_name):
-            log.append(
-                f"{Msg.E_UNSUPPORTED.value}: {func_name} has unsupported operation: {err}\n\n"
-            )
-            continue
 
         flag = False
  

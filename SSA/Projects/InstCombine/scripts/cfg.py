@@ -24,10 +24,47 @@ skipped_funcs = {
     "bools2_logical_commute3_nopoison": "noundef",
     "logical_or_noundef_b": "noundef",
     "logical_and_noundef": "noundef",
+    "pr110631": "range",
+    "test_nonzero": "range",
+    "test_nonzero2": "range",
+    "test_nonzero3": "range",
+    "test_nonzero4": "range",
+    "test_nonzero5": "range",
+    "test_nonzero6": "range",
+    "test_not_in_range": "range",
+    "test_in_range": "range",
+    "test_range_sgt_constant": "range",
+    "test_range_slt_constant": "range",
+    "test_multi_range1": "range",
+    "test_multi_range2": "range",
+    "test_two_ranges": "range",
+    "test_two_attribute_ranges": "range",
+    "test_two_ranges2": "range",
+    "test_two_argument_ranges": "range",
+    "test_one_range_and_one_argument_range": "range",
+    "test_one_argument_range_and_one_range": "range",
+    "test_two_ranges3": "range",
+    "test_two_ranges_vec": "range",
+    "test_two_ranges_vec_false": "range",
+    "test_two_ranges_vec_true": "range",
+    "test_two_argument_ranges_vec": "range",
+    "test_two_argument_ranges_vec_false": "range",
+    "test_two_argument_ranges_vec_true": "range",
+    "test_two_return_attribute_ranges_not_simplified": "range",
+    "test_two_return_attribute_ranges_one_in_call": "range",
+    "test_two_return_attribute_ranges": "range",
+    "test_one_return_argument_and_one_argument_range": "range",
+    "test_one_range_and_one_return_argument": "range",
+    "icmp_eq_bool_0": "range",
+    "icmp_ne_bool_0": "range",
+    "icmp_ne_bool_1": "range",
 }
-expensive_files = [
-    "pr96012.ll", "icmp-or.ll"
-]
+
+skipped_files = {
+    "pr96012.ll":"expensive",
+    "icmp-or.ll":"expensive",
+    "instcombine-verify-known-bits.ll":"range meta-data unsuported"
+}
 
 directory = os.fsencode(llvm_test_path)
 
