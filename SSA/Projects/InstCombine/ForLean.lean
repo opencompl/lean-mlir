@@ -359,10 +359,7 @@ theorem and_add_xor_eq_or {a b : BitVec w} : (a &&& b) + (a ^^^ b) = a ||| b := 
 attribute [bv_ofBool] ofBool_or_ofBool
 attribute [bv_ofBool] ofBool_and_ofBool
 attribute [bv_ofBool] ofBool_xor_ofBool
-
-@[simp, bv_ofBool]
-theorem ofBool_eq' : ofBool a = ofBool b ↔ a = b:= by
-  rcases a <;> rcases b <;> simp [bv_toNat]
+attribute [simp, bv_ofBool] ofBool_eq_iff_eq
 
 theorem allOnes_xor_eq_not (x : BitVec w) : allOnes w ^^^ x = ~~~x := by
   apply eq_of_getLsbD_eq
