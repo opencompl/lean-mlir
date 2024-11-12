@@ -228,7 +228,7 @@ macro "bv_compare'": tactic =>
       (
         simp (config := {failIfUnchanged := false}) only [BitVec.twoPow, BitVec.intMin, BitVec.intMax] at *
         bv_compare
-        bv_decide
+        try bv_decide -- close the goal if possible but do not report errors again
       )
    )
 
