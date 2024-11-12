@@ -219,6 +219,13 @@ private def pretty_test_zext :=
     llvm.return %1 : i64
   }]
 
+private def pretty_test_disjoint :=
+  [llvm ()|{
+  ^bb0(%arg0: i32, %arg1: i32):
+    %1 = llvm.or disjoint %arg0, %arg1 : i32
+    llvm.return %1 : i32
+  }]
+
 private def pretty_test_exact :=
   [llvm ()|{
   ^bb0(%arg0: i64):
