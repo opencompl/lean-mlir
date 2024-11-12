@@ -16,16 +16,16 @@ It gets translated to `<{isDisjoint}>` in the generic syntax.
 -/
 declare_syntax_cat MLIR.Pretty.disjoint_op
 
-syntax (mlir_op_operand " = ")? MLIR.Pretty.disjoint_op mlir_op_operand,* (" : " mlir_type)? : mlir_op
-macro_rules
-  | `(mlir_op| $[$resName =]? $name:MLIR.Pretty.disjoint_op $xs,*  $[: $t]? ) => do
-    let some opName := extractOpName name.raw | Macro.throwUnsupported
-    let t ← t.getDM `(mlir_type| _)
-    let argTys : TSyntaxArray `mlir_type := xs.getElems.map (fun _ => t)
-    let retTy : TSyntaxArray `mlir_type := match resName with
-      | some _ => #[t]
-      | none => #[]
-    `([mlir_op| $[$resName =]? $opName ($xs,*) : ($argTys,*) -> ($retTy:mlir_type,*) ])
+-- syntax (mlir_op_operand " = ")? MLIR.Pretty.disjoint_op mlir_op_operand,* (" : " mlir_type)? : mlir_op
+-- macro_rules
+--   | `(mlir_op| $[$resName =]? $name:MLIR.Pretty.disjoint_op $xs,*  $[: $t]? ) => do
+--     let some opName := extractOpName name.raw | Macro.throwUnsupported
+--     let t ← t.getDM `(mlir_type| _)
+--     let argTys : TSyntaxArray `mlir_type := xs.getElems.map (fun _ => t)
+--     let retTy : TSyntaxArray `mlir_type := match resName with
+--       | some _ => #[t]
+--       | none => #[]
+--     `([mlir_op| $[$resName =]? $opName ($xs,*) : ($argTys,*) -> ($retTy:mlir_type,*) ])
 
 syntax (mlir_op_operand " = ")? MLIR.Pretty.disjoint_op " disjoint " mlir_op_operand,* (" : " mlir_type)? : mlir_op
 macro_rules

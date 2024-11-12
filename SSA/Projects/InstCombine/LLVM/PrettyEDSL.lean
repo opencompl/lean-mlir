@@ -13,6 +13,7 @@ syntax "llvm.return"  : MLIR.Pretty.uniform_op
 syntax "llvm.copy"    : MLIR.Pretty.uniform_op
 syntax "llvm.neg"     : MLIR.Pretty.uniform_op
 syntax "llvm.not"     : MLIR.Pretty.uniform_op
+syntax "llvm.or"      : MLIR.Pretty.uniform_op
 syntax "llvm.and"     : MLIR.Pretty.uniform_op
 syntax "llvm.srem"    : MLIR.Pretty.uniform_op
 syntax "llvm.urem"    : MLIR.Pretty.uniform_op
