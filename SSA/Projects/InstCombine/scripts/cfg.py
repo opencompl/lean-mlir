@@ -47,6 +47,7 @@ skipped_funcs = {
     "test_two_ranges_vec": "range",
     "test_two_ranges_vec_false": "range",
     "test_two_ranges_vec_true": "range",
+    "test_two_argument_ranges_thm": "range",
     "test_two_argument_ranges_vec": "range",
     "test_two_argument_ranges_vec_false": "range",
     "test_two_argument_ranges_vec_true": "range",
