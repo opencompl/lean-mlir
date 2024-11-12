@@ -3,6 +3,7 @@ import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.InstCombine.LLVM.PrettyEDSLOverflow
 import SSA.Projects.InstCombine.LLVM.PrettyEDSLExact
 import SSA.Projects.InstCombine.LLVM.PrettyEDSLNonNeg
+import SSA.Projects.InstCombine.LLVM.PrettyEDSLDisjoint
 open Lean
 
 namespace MLIR.EDSL
