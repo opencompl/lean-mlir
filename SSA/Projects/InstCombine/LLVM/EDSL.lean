@@ -109,7 +109,7 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
       let (op : MOp.BinaryOp ⊕ LLVM.IntPredicate) ← match opStx.name with
         | "llvm.and"    => pure <| Sum.inl .and
         | "llvm.or"     => do
-          let isDisjoint := opStx.attrs.getAttr "isDisjoint"
+          let isDisjoint? := opStx.attrs.getAttr "isDisjoint"
           pure <| Sum.inl (.or ⟨isDisjoint?.isSome⟩)
         | "llvm.xor"    => pure <| Sum.inl .xor
         | "llvm.urem"   => pure <| Sum.inl .urem
