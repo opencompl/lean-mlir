@@ -6,7 +6,7 @@ namespace MLIR.EDSL
 open Pretty
 
 /-!
-# Pretty syntax for overflow flags
+# Pretty syntax for the non negative flag
 
 This file defines the `MLIR.Pretty.nneg_op` syntax category which, just like `MLIR.Pretty.uniform_op`,
 is a category of MLIR operations where the arguments and return values are all of the same type.
@@ -15,8 +15,6 @@ The pretty syntax for this flag is `nneg`.
 It gets translated to `<{nonNeg}>` in the generic syntax.
 -/
 declare_syntax_cat MLIR.Pretty.nneg_op
-
--- syntax overflow_flag := "nsw" <|> "nuw"
 
 syntax (mlir_op_operand " = ")? MLIR.Pretty.nneg_op mlir_op_operand " : " mlir_type " to " mlir_type : mlir_op
 macro_rules

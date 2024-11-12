@@ -3,6 +3,7 @@ import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.InstCombine.LLVM.PrettyEDSLOverflow
 import SSA.Projects.InstCombine.LLVM.PrettyEDSLExact
 import SSA.Projects.InstCombine.LLVM.PrettyEDSLNonNeg
+import SSA.Projects.InstCombine.LLVM.PrettyEDSLDisjoint
 open Lean
 
 namespace MLIR.EDSL
@@ -12,8 +13,8 @@ syntax "llvm.return"  : MLIR.Pretty.uniform_op
 syntax "llvm.copy"    : MLIR.Pretty.uniform_op
 syntax "llvm.neg"     : MLIR.Pretty.uniform_op
 syntax "llvm.not"     : MLIR.Pretty.uniform_op
-syntax "llvm.and"     : MLIR.Pretty.uniform_op
 syntax "llvm.or"      : MLIR.Pretty.uniform_op
+syntax "llvm.and"     : MLIR.Pretty.uniform_op
 syntax "llvm.srem"    : MLIR.Pretty.uniform_op
 syntax "llvm.urem"    : MLIR.Pretty.uniform_op
 syntax "llvm.xor"     : MLIR.Pretty.uniform_op
@@ -27,6 +28,8 @@ syntax "llvm.udiv"    : MLIR.Pretty.exact_op
 syntax "llvm.sdiv"    : MLIR.Pretty.exact_op
 syntax "llvm.lshr"    : MLIR.Pretty.exact_op
 syntax "llvm.ashr"    : MLIR.Pretty.exact_op
+
+syntax "llvm.or"      : MLIR.Pretty.disjoint_op
 
 declare_syntax_cat InstCombine.cmp_op_name
 syntax "llvm.icmp.eq"  : InstCombine.cmp_op_name
@@ -216,6 +219,13 @@ private def pretty_test_zext :=
   ^bb0(%arg0: i32):
     %1 = llvm.zext nneg %arg0 : i32 to i64
     llvm.return %1 : i64
+  }]
+
+private def pretty_test_disjoint :=
+  [llvm ()|{
+  ^bb0(%arg0: i32, %arg1: i32):
+    %1 = llvm.or disjoint %arg0, %arg1 : i32
+    llvm.return %1 : i32
   }]
 
 private def pretty_test_exact :=
