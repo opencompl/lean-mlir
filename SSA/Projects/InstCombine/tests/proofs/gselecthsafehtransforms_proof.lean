@@ -260,17 +260,6 @@ theorem bools2_logical_commute2_and1_thm (e e_1 e_2 : IntW 1) :
     all_goals sorry
 
 
-theorem bools2_logical_commute3_nopoison_thm (e e_1 e_2 : IntW 1) :
-  select (select e_2 e_1 (const? 1 0)) (const? 1 1) (select e (LLVM.xor e_1 (const? 1 1)) (const? 1 0)) ⊑
-    select e_1 e_2 e := by 
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    simp_alive_benchmark
-    all_goals sorry
-
-
 theorem bools2_logical_commute3_and1_thm (e e_1 e_2 : IntW 1) :
   select (LLVM.and e_2 e_1) (const? 1 1) (select e (LLVM.xor e_1 (const? 1 1)) (const? 1 0)) ⊑ select e_1 e_2 e := by 
     simp_alive_undef

@@ -9,12 +9,7 @@
 
 4: "test_zero" has unsupported operation: llvm.getelementptr
 
-1: "test_nonzero"
-9: "test_nonzero" has pointer type input
-
-4: "test_nonzero" has unsupported operation: llvm.getelementptr
-
-4: "test_nonzero" has unsupported operation: llvm.getelementptr
+4: "test_nonzero" has unsupported operation: range
 
 1: "test_or_disjoint"
 9: "test_or_disjoint" has pointer type input

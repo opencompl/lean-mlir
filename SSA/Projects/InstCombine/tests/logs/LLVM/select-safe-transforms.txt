@@ -317,15 +317,7 @@
 1: "bools2_logical_commute3"
 4: "bools2_logical_commute3" has unsupported operation: builtin.unregistered: llvm.freeze
 
-1: "bools2_logical_commute3_nopoison"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.mlir.constant
-2: llvm.xor
-2: builtin.unregistered: llvm.select
-2: builtin.unregistered: llvm.select
-2: builtin.unregistered: llvm.select
-2: llvm.return
+4: "bools2_logical_commute3_nopoison" has unsupported operation: noundef
 
 1: "bools2_logical_commute3_and1"
 2: llvm.func
