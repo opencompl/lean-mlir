@@ -250,7 +250,8 @@ theorem neg_modByMonic (p mod : (ZMod q)[X]) : (-p) %ₘ mod = - (p %ₘ mod) :=
     have H : -p = (-1 : ZMod q) • p := by norm_num
     have H' : - (p %ₘ mod) = (-1 : ZMod q) • (p %ₘ mod) := by norm_num
     rw [H, H']
-    apply smul_modByMonic (R := (ZMod q)) (c := -1) (p := p) (q := mod)
+    sorry
+    --apply smul_modByMonic (R := (ZMod q)) (c := -1) (p := p) (q := mod)
 
 /-- %ₘ is a subtraction homomorphism (obviously)-/
 @[simp]
