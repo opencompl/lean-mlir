@@ -1,0 +1,503 @@
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:9:26: error: unexpected token 'theorem'; expected '}'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:16:2: error: no goals to be solved
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:21:2: error: no goals to be solved
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:23:40: error: unexpected token 'theorem'; expected ')'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:25:25: error: function expected at
+  AdditionNoOverflows?
+term has type
+  ?m.8433
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:26:24: error: unsolved goals
+w : ℕ
+x y : BitVec w
+x✝ : Sort u_1
+AdditionNoOverflows? : x✝
+h : sorry
+⊢ (x + y ≥ᵤ x ||| y) = true
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:30:25: error: function expected at
+  AdditionNoOverflows?
+term has type
+  ?m.19117
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:31:26: error: unsolved goals
+w : ℕ
+x y : BitVec w
+x✝ : Sort u_1
+AdditionNoOverflows? : x✝
+h : ¬sorry
+⊢ (x ||| y >ᵤ x + y) = true
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:36:30: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (x ^^^ y ≥ᵤ (x - y).abs) = true
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:41:37: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ x = y ↔ ((x - y).abs - 1#w).msb = true
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:46:43: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ x = y ↔ 0 < w ∧ (x - y).msb = false ∧ (-x + y).msb = false
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:53:2: error: no goals to be solved
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:56:34: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ ¬x = y ↔ (-(x - y).abs).msb = true
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:61:68: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (y >ₛ x) = true ↔ ¬(x - y).msb = ((x.msb ^^ y.msb) && ((x - y).msb ^^ x.msb))
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:66:70: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (y >ₛ x) = true ↔ x.msb = true ∧ 0 < w ∧ y.msb = false ∨ (0 < w ∧ x.msb = y.msb) ∧ (x - y).msb = true
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:71:70: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (y ≥ₛ x) = true ↔ (x.msb = true ∨ 0 < w ∧ y.msb = false) ∧ (¬x.msb = y.msb ∨ 0 < w ∧ (y - x).msb = false)
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:76:70: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (y >ᵤ x) = true ↔ (0 < w ∧ x.msb = false) ∧ y.msb = true ∨ (0 < w ∧ x.msb = y.msb) ∧ (x - y).msb = true
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:81:70: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (y ≥ᵤ x) = true ↔ (0 < w ∧ x.msb = false ∨ y.msb = true) ∧ (¬x.msb = y.msb ∨ 0 < w ∧ (y - x).msb = false)
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:86:31: error: unsolved goals
+w : ℕ
+x : BitVec w
+⊢ x = 0#w ↔ (x.abs - 1#w).msb = true
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:91:36: error: unsolved goals
+w : ℕ
+x : BitVec w
+⊢ x = 0#w ↔ 0 < w ∧ x.msb = false ∧ (-x).msb = false
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:96:37: error: unsolved goals
+w : ℕ
+x : BitVec w
+⊢ x = 0#w ↔ (0 < w ∧ x.msb = false) ∧ (x - 1#w).msb = true
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:103:2: error: no goals to be solved
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:106:30: error: unsolved goals
+w : ℕ
+x : BitVec w
+⊢ ¬x = 0#w ↔ (-x.abs).msb = true
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:111:24: error: unsolved goals
+w : ℕ
+x : BitVec w
+⊢ (0#w >ₛ x) = x.msb
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:118:2: error: no goals to be solved
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:121:39: error: unsolved goals
+w : ℕ
+x : BitVec w
+⊢ (0#w ≥ₛ x) = true ↔ x.msb = true ∨ 0 < w ∧ (-x).msb = false
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:126:37: error: unsolved goals
+w : ℕ
+x : BitVec w
+⊢ (x >ₛ 0#w) = true ↔ (-x).msb = true ∧ 0 < w ∧ x.msb = false
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:131:30: error: unsolved goals
+w : ℕ
+x : BitVec w
+⊢ (x ≥ₛ 0#w) = true ↔ 0 < w ∧ x.msb = false
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:136:55: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (y >ₛ x) = (2#w ^ (w - 1) + y >ₛ x + 2#w ^ (w - 1))
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:141:55: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (y >ᵤ x) = (-2#w ^ (w - 1) + y >ₛ x - 2#w ^ (w - 1))
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:146:61: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (y >ₛ x) = !2#w ^ (w - 1) + x ≥ᵤ y + 2#w ^ (w - 1)
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:151:57: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (y ≥ₛ x) = (2#w ^ (w - 1) + y ≥ᵤ x + 2#w ^ (w - 1))
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:158:2: error: no goals to be solved
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:161:54: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ x = y ↔ BitVec.carry w x (~~~y + 1#w) false = true
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:166:50: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ ¬x = y ↔ BitVec.carry w x (~~~y) false = true
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:171:90: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (y >ₛ x) = !BitVec.carry w (x + 2#w ^ (w - 1)) (~~~(2#w ^ (w - 1) + y) + 1#w) false
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:179:100: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (y >ₛ x) = !BitVec.carry w x (~~~y + 1#w) false ^^^ x.getMsbD (w - 1) ^^^ y.getMsbD (w - 1)
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:184:87: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (y ≥ₛ x) = BitVec.carry w (y + 2#w ^ (w - 1)) (~~~(2#w ^ (w - 1) + x) + 1#w) false
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:189:101: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (y ≥ₛ x) = BitVec.carry w y (~~~x + 1#w) false ^^^ x.getMsbD (w - 1) ^^^ y.getMsbD (w - 1)
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:194:57: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (y >ᵤ x) = !BitVec.carry w x (~~~y + 1#w) false
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:199:55: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (y ≥ᵤ x) = BitVec.carry w y (~~~x + 1#w) false
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:204:48: error: unsolved goals
+w : ℕ
+x : BitVec w
+⊢ x = 0#w ↔ BitVec.carry w (~~~x) (1#w) false = true
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:209:45: error: unsolved goals
+w : ℕ
+x : BitVec w
+⊢ ¬x = 0#w ↔ BitVec.carry w x (BitVec.allOnes w) false = true
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:214:45: error: unsolved goals
+w : ℕ
+x : BitVec w
+⊢ (0#w >ₛ x) = BitVec.carry w x x false
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:219:76: error: unsolved goals
+w : ℕ
+x : BitVec w
+⊢ (0#w ≥ₛ x) = BitVec.carry w (2#w ^ (w - 1)) (-2#w ^ (w - 1) - x) false
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:224:4: error: function expected at
+  AdditionNoOverflows?
+term has type
+  ?m.683890
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:224:45: error: unsolved goals
+w : ℕ
+x y : BitVec w
+x✝ : Sort u_1
+AdditionNoOverflows? : x✝
+⊢ sorry ↔ (y >ᵤ ~~~x) = true
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:229:4: error: function expected at
+  AdditionNoOverflows?
+term has type
+  ?m.689980
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:229:45: error: unsolved goals
+w : ℕ
+x y : BitVec w
+x✝ : Sort u_1
+AdditionNoOverflows? : x✝
+⊢ sorry ↔ (x >ᵤ x + y) = true
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:234:4: error: function expected at
+  AdditionNoOverflows?
+term has type
+  ?m.698255
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:234:51: error: unsolved goals
+w : ℕ
+x y : BitVec w
+x✝ : Sort u_1
+AdditionNoOverflows? : x✝
+⊢ sorry ↔ (y ≥ᵤ ~~~x) = true
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:239:4: error: function expected at
+  AdditionNoOverflows?
+term has type
+  ?m.704421
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:239:55: error: unsolved goals
+w : ℕ
+x y : BitVec w
+x✝ : Sort u_1
+AdditionNoOverflows? : x✝
+⊢ sorry ↔ (x ≥ᵤ x + y + 1#w) = true
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:244:4: error: function expected at
+  AdditionNoOverflows?
+term has type
+  ?m.714247
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:244:51: error: unsolved goals
+w : ℕ
+x y : BitVec w
+x✝ : Sort u_1
+AdditionNoOverflows? : x✝
+⊢ sorry ↔ (y >ᵤ x) = true
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:249:4: error: function expected at
+  AdditionNoOverflows?
+term has type
+  ?m.719254
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:249:55: error: unsolved goals
+w : ℕ
+x y : BitVec w
+x✝ : Sort u_1
+AdditionNoOverflows? : x✝
+⊢ sorry ↔ (x - y >ᵤ x) = true
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:254:4: error: function expected at
+  AdditionNoOverflows?
+term has type
+  ?m.728166
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:254:47: error: unsolved goals
+w : ℕ
+x y : BitVec w
+x✝ : Sort u_1
+AdditionNoOverflows? : x✝
+⊢ sorry ↔ (y ≥ᵤ x) = true
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:259:4: error: function expected at
+  AdditionNoOverflows?
+term has type
+  ?m.733249
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:259:55: error: unsolved goals
+w : ℕ
+x y : BitVec w
+x✝ : Sort u_1
+AdditionNoOverflows? : x✝
+⊢ sorry ↔ (x + (-y - 1#w) ≥ᵤ x) = true
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:263:52: error: unexpected token 'def'; expected ')'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:264:50: error: unexpected token 'def'; expected ')'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:266:28: error: unexpected token 'def'; expected ')'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:267:29: error: unexpected token 'theorem'; expected ')'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:270:82: error: unexpected token ':='; expected '}'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:275:88: error: unexpected token ':='; expected '}'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:280:22: error: function expected at
+  UnsignedMultiplicationOverflows?
+term has type
+  ?m.747422
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:280:62: error: unsolved goals
+w : ℕ
+x y z : BitVec w
+x✝ : Sort u_1
+UnsignedMultiplicationOverflows? : x✝
+h : y.toNat ≠ 0
+a✝ : x * y / z ≠ x
+⊢ sorry
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:285:57: error: function expected at
+  SignedMultiplicationOverflows?
+term has type
+  ?m.750673
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:285:95: error: unsolved goals
+w : ℕ
+x y z : BitVec w
+x✝ : Sort u_1
+SignedMultiplicationOverflows? : x✝
+h : y.toNat ≠ 0
+a✝ : y < 0 ∧ x.toInt = -2 ^ 31 ∨ x * y / z ≠ x
+⊢ sorry
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:289:48: error: unexpected token 'let'; expected ')'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:297:97: error: unexpected token ':='; expected '}'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:302:95: error: unexpected token ':='; expected '}'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:306:45: error: unexpected token 'theorem'; expected ')'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:309:4: error: function expected at
+  SignedDivisionOverflows??
+term has type
+  ?m.757969
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:309:78: error: unsolved goals
+w : ℕ
+x y : BitVec w
+x✝ : Sort u_1
+SignedDivisionOverflows?? : x✝
+⊢ sorry ↔ y = 0#w ∨ x.toInt = -2147483648 ∧ y = BitVec.allOnes w
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:314:90: error: unexpected token ':='; expected '}'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:319:90: error: unexpected token ':='; expected '}'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:323:42: error: unexpected token 'if'; expected ')'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:326:44: error: unexpected token 'if'; expected ')'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:329:23: error: unexpected token 'if'; expected ':=', 'where' or '|'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:332:23: error: unexpected token 'if'; expected ':=', 'where' or '|'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:335:21: error: unexpected token 'if'; expected ':=', 'where' or '|'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:338:21: error: unexpected token 'if'; expected ':=', 'where' or '|'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:344:9: error: unexpected token 'theorem'; expected ':=', 'where' or '|'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:342:4: error: function expected at
+  signedMaxBitVec
+term has type
+  ?m.789436
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:349:9: error: unexpected token 'theorem'; expected ':=', 'where' or '|'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:347:4: error: function expected at
+  signedMinBitVec
+term has type
+  ?m.789511
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:354:9: error: unexpected token 'theorem'; expected ':=', 'where' or '|'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:352:4: error: function expected at
+  unsignedMaxBitVec
+term has type
+  ?m.789586
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:359:9: error: unexpected token 'def'; expected ':=', 'where' or '|'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:357:4: error: function expected at
+  unsignedMinBitVec
+term has type
+  ?m.789661
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:361:29: error: unexpected token 'if'; expected ')'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:365:3: error: function expected at
+  signedDifferenceOrZero
+term has type
+  ?m.789761
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:365:44: error: function expected at
+  leBitmask
+term has type
+  ?m.789775
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:365:61: error: unsolved goals
+w : ℕ
+x y : BitVec w
+x✝¹ : Sort u_1
+signedDifferenceOrZero : x✝¹
+x✝ : Sort u_2
+leBitmask : x✝
+⊢ sorry = x - y &&& sorry
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:372:9: error: unexpected token 'theorem'; expected ':=', 'where' or '|'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:370:4: error: function expected at
+  signedMaxBitVec
+term has type
+  ?m.804710
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:377:9: error: unexpected token 'def'; expected ':=', 'where' or '|'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:375:4: error: function expected at
+  signedMinBitVec
+term has type
+  ?m.804785
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:379:32: error: unexpected token 'if'; expected ')'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:383:4: error: function expected at
+  unsignedDifferenceOrZero
+term has type
+  ?m.804885
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:383:52: error: function expected at
+  carryBitmask
+term has type
+  ?m.804902
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:383:73: error: unsolved goals
+w : ℕ
+x y : BitVec w
+x✝¹ : Sort u_1
+unsignedDifferenceOrZero : x✝¹
+x✝ : Sort u_2
+carryBitmask : x✝
+⊢ sorry = x - y &&& ~~~sorry
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:390:9: error: unexpected token 'theorem'; expected ':=', 'where' or '|'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:388:4: error: function expected at
+  unsignedMaxBitVec
+term has type
+  ?m.821145
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:395:9: error: unexpected token 'section'; expected ':=', 'where' or '|'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:393:4: error: function expected at
+  unsignedMinBitVec
+term has type
+  ?m.821220
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:398:26: error: unexpected token 'theorem'; expected '}'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:401:4: error: function expected at
+  signedDifferenceOrZero
+term has type
+  ?m.821361
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:401:87: error: unsolved goals
+w : ℕ
+x y d : BitVec w
+x✝ : Sort u_1
+signedDifferenceOrZero : x✝
+h : d = x - y
+⊢ sorry = d &&& (~~~d ^^^ ((x ^^^ y) &&& (d ^^^ x)) >>> (31 % 2 ^ w))
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:406:4: error: function expected at
+  unsignedDifferenceOrZero
+term has type
+  ?m.852983
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:406:97: error: unsolved goals
+w : ℕ
+x y d : BitVec w
+x✝ : Sort u_1
+unsignedDifferenceOrZero : x✝
+h : d = x - y
+⊢ sorry = d &&& ~~~((~~~x &&& y ||| ~~~(x ^^^ y) &&& d) >>> (31 % 2 ^ w))
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:411:4: error: function expected at
+  signedDifferenceOrZero
+term has type
+  ?m.890672
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:411:69: error: unsolved goals
+w : ℕ
+x y : BitVec w
+x✝ : Sort u_1
+signedDifferenceOrZero : x✝
+⊢ sorry = x - y &&& ~~~((x - y) >>> (31 % 2 ^ w))
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:418:9: error: unexpected token 'theorem'; expected ':=', 'where' or '|'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:416:4: error: function expected at
+  signedMaxBitVec
+term has type
+  ?m.913044
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:423:9: error: unexpected token 'theorem'; expected ':=', 'where' or '|'
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:421:4: error: function expected at
+  signedMinBitVec
+term has type
+  ?m.913125
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:426:16: error: function expected at
+  signedDifferenceOrZero
+term has type
+  ?m.913290
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:426:49: error: function expected at
+  signedDifferenceOrZero
+term has type
+  ?m.913290
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:426:85: error: unsolved goals
+w : ℕ
+x y : BitVec w
+x✝ : Sort u_1
+signedDifferenceOrZero : x✝
+⊢ (x >ₛ y) = true ↔ sorry
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:431:16: error: function expected at
+  unsignedDifferenceOrZero
+term has type
+  ?m.920954
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:431:51: error: function expected at
+  unsignedDifferenceOrZero
+term has type
+  ?m.920954
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:431:89: error: unsolved goals
+w : ℕ
+x y : BitVec w
+x✝ : Sort u_1
+unsignedDifferenceOrZero : x✝
+⊢ (x >ᵤ y) = true ↔ sorry
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:436:32: error: function expected at
+  unsignedDifferenceOrZero
+term has type
+  ?m.926244
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:436:73: error: function expected at
+  unsignedDifferenceOrZero
+term has type
+  ?m.926244
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:436:116: error: unsolved goals
+w : ℕ
+x y : BitVec w
+x✝ : Sort u_1
+unsignedDifferenceOrZero : x✝
+⊢ BitVec.carry w x y false = true ↔ sorry
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:443:18: error: function expected at
+  signedDifferenceOrZero
+term has type
+  ?m.931273
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:443:47: error: function expected at
+  signedDifferenceOrZero
+term has type
+  ?m.931273
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:443:77: error: unsolved goals
+w : ℕ
+x y : BitVec w
+x✝ : Sort u_1
+signedDifferenceOrZero : x✝
+⊢ (x - y).abs = sorry * 2#w
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:448:18: error: function expected at
+  unsignedDifferenceOrZero
+term has type
+  ?m.950394
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:448:49: error: function expected at
+  unsignedDifferenceOrZero
+term has type
+  ?m.950394
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:448:81: error: unsolved goals
+w : ℕ
+x y : BitVec w
+x✝ : Sort u_1
+unsignedDifferenceOrZero : x✝
+⊢ (x - y).abs = sorry * 2#w
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:453:47: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ BitVec.carry w x y false = (x >ᵤ ~~~y)
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:458:4: error: function expected at
+  signedDifferenceOrZero
+term has type
+  ?m.976302
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:458:45: error: function expected at
+  signedDifferenceOrZero
+term has type
+  ?m.976302
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:460:2: error: no goals to be solved
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:463:4: error: function expected at
+  unsignedDifferenceOrZero
+term has type
+  ?m.977935
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:463:47: error: function expected at
+  unsignedDifferenceOrZero
+term has type
+  ?m.977935
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:465:2: error: no goals to be solved

@@ -5,7 +5,7 @@ import shutil
 
 root = subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True).stdout.strip() + "/"
 print(f"root: {root}")
-out_dir = root + "results/HackersDelight/Symbolic/"
+out_dir = root + "bv-evaluation/results/HackersDelight/Symbolic/"
 print(f"Writing results to: {out_dir}")
 
 # directory with benchmarks

@@ -1,0 +1,1 @@
+/home/bollu/lean-mlir/SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:11:26: error: unexpected token 'theorem'; expected '}'
