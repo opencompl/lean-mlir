@@ -1,84 +1,44 @@
-⚠ [667/887] Replayed SSA.Core.ErasedContext
-warning: ././././SSA/Core/ErasedContext.lean:325:14: unused variable `t`
-note: this linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [674/887] Replayed SSA.Core.Framework
-warning: ././././SSA/Core/Framework.lean:1826:9: unused variable `inst`
-note: this linter can be disabled with `set_option linter.unusedVariables false`
-warning: ././././SSA/Core/Framework.lean:1833:75: unused variable `inst`
-note: this linter can be disabled with `set_option linter.unusedVariables false`
-warning: ././././SSA/Core/Framework.lean:2083:31: unused variable `x`
-note: this linter can be disabled with `set_option linter.unusedVariables false`
-warning: ././././SSA/Core/Framework.lean:2084:33: unused variable `x`
-note: this linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [687/887] Replayed SSA.Core.MLIRSyntax.AST
-warning: ././././SSA/Core/MLIRSyntax/AST.lean:40:4: The namespace 'SSAVal' is duplicated in the declaration 'MLIR.AST.SSAVal.SSAVal'
-note: this linter can be disabled with `set_option linter.dupNamespace false`
-⚠ [869/887] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
-⚠ [873/887] Replayed SSA.Experimental.Bits.Fast.Tactic
-warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:340:4: declaration uses 'sorry'
-⚠ [874/887] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:24:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:8: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:56:8: declaration uses 'sorry'
-⚠ [880/887] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
-warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:55:6: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:128:6: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:163:6: declaration uses 'sorry'
-warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:197:6: declaration uses 'sorry'
-⚠ [881/887] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
-warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
-ℹ [887/887] Built SSA.Projects.InstCombine.HackersDelight.ch2_2AdditionAndLogicalOps
-info: ././././SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:21:2: Bitwuzla proved the goal after 0.000000ms
-LeanSAT proved the goal after 5.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
-info: ././././SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:29:2: Bitwuzla proved the goal after 75.000000ms
-LeanSAT proved the goal after 75.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 60.751917ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
-info: ././././SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:37:2: Bitwuzla proved the goal after 0.000000ms
-LeanSAT proved the goal after 7.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
-info: ././././SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:45:2: Bitwuzla proved the goal after 0.000000ms
-LeanSAT proved the goal after 4.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
-info: ././././SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:53:2: Bitwuzla proved the goal after 0.000000ms
-LeanSAT proved the goal after 6.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
-info: ././././SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:61:2: Bitwuzla proved the goal after 77.000000ms
-LeanSAT proved the goal after 80.000000ms: rewriting 12.850958ms, bitblasting 0.000000ms, SAT solving 60.862875ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
-info: ././././SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:69:2: Bitwuzla proved the goal after 75.000000ms
-LeanSAT proved the goal after 75.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 60.501458ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
-info: ././././SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:77:2: Bitwuzla proved the goal after 73.000000ms
-LeanSAT proved the goal after 74.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 61.993166ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
-info: ././././SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:85:2: Bitwuzla proved the goal after 80.000000ms
-LeanSAT proved the goal after 79.000000ms: rewriting 13.153542ms, bitblasting 0.000000ms, SAT solving 60.352417ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
-info: ././././SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:93:2: Bitwuzla proved the goal after 78.000000ms
-LeanSAT proved the goal after 83.000000ms: rewriting 13.704750ms, bitblasting 0.000000ms, SAT solving 61.260917ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
-info: ././././SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:101:2: Bitwuzla proved the goal after 85.000000ms
-LeanSAT proved the goal after 88.000000ms: rewriting 17.512167ms, bitblasting 0.000000ms, SAT solving 60.413625ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
-info: ././././SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:109:2: Bitwuzla proved the goal after 81.000000ms
-LeanSAT proved the goal after 85.000000ms: rewriting 16.606333ms, bitblasting 0.000000ms, SAT solving 60.335667ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
-info: ././././SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:117:2: Bitwuzla proved the goal after 83.000000ms
-LeanSAT proved the goal after 81.000000ms: rewriting 17.116833ms, bitblasting 0.000000ms, SAT solving 55.514583ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
-info: ././././SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:125:2: Bitwuzla proved the goal after 78.000000ms
-LeanSAT proved the goal after 76.000000ms: rewriting 11.224000ms, bitblasting 0.000000ms, SAT solving 60.378333ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
-info: ././././SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:133:2: Bitwuzla proved the goal after 77.000000ms
-LeanSAT proved the goal after 75.000000ms: rewriting 10.936125ms, bitblasting 0.000000ms, SAT solving 60.123125ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
-info: ././././SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:141:2: Bitwuzla proved the goal after 76.000000ms
-LeanSAT proved the goal after 71.000000ms: rewriting 10.923500ms, bitblasting 0.000000ms, SAT solving 55.721166ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
-info: ././././SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:149:2: Bitwuzla proved the goal after 81.000000ms
-LeanSAT proved the goal after 87.000000ms: rewriting 16.608833ms, bitblasting 0.000000ms, SAT solving 60.170125ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
-info: ././././SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:157:2: Bitwuzla proved the goal after 76.000000ms
-LeanSAT proved the goal after 74.000000ms: rewriting 11.132208ms, bitblasting 0.000000ms, SAT solving 57.856375ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
-info: ././././SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:165:2: Bitwuzla proved the goal after 80.000000ms
-LeanSAT proved the goal after 81.000000ms: rewriting 13.830125ms, bitblasting 0.000000ms, SAT solving 60.224208ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
-info: ././././SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:173:2: Bitwuzla proved the goal after 76.000000ms
-LeanSAT proved the goal after 72.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 60.058333ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
-info: ././././SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:181:2: Bitwuzla proved the goal after 73.000000ms
-LeanSAT proved the goal after 71.000000ms: rewriting 0.000000ms, bitblasting 0.000000ms, SAT solving 60.087250ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
-info: ././././SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:189:2: Bitwuzla proved the goal after 76.000000ms
-LeanSAT proved the goal after 76.000000ms: rewriting 10.199375ms, bitblasting 0.000000ms, SAT solving 60.456167ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
-Build completed successfully.
+Bitwuzla proved the goal after 5.478510ms, solving context: 0.000000ms
+LeanSAT proved the goal after 5.375430ms: rewriting 5.341240ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+Bitwuzla proved the goal after 70.747861ms, solving context: 0.000000ms
+LeanSAT proved the goal after 73.066447ms: rewriting 14.461039ms, bitblasting 0.000000ms, SAT solving 55.115498ms, LRAT trimming 0.000000ms, LRAT checking 1.707860ms
+Bitwuzla proved the goal after 7.103859ms, solving context: 0.000000ms
+LeanSAT proved the goal after 7.043280ms: rewriting 7.029790ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+Bitwuzla proved the goal after 5.024450ms, solving context: 0.000000ms
+LeanSAT proved the goal after 5.275820ms: rewriting 5.265860ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+Bitwuzla proved the goal after 6.821410ms, solving context: 0.000000ms
+LeanSAT proved the goal after 7.026590ms: rewriting 7.017300ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+Bitwuzla proved the goal after 72.639239ms, solving context: 0.000000ms
+LeanSAT proved the goal after 77.786550ms: rewriting 17.155401ms, bitblasting 0.000000ms, SAT solving 55.119528ms, LRAT trimming 1.272670ms, LRAT checking 3.342030ms
+Bitwuzla proved the goal after 70.549721ms, solving context: 0.000000ms
+LeanSAT proved the goal after 74.504699ms: rewriting 15.129450ms, bitblasting 0.000000ms, SAT solving 55.183609ms, LRAT trimming 0.000000ms, LRAT checking 1.789800ms
+Bitwuzla proved the goal after 68.033240ms, solving context: 0.000000ms
+LeanSAT proved the goal after 71.026598ms: rewriting 12.307980ms, bitblasting 0.000000ms, SAT solving 55.189668ms, LRAT trimming 0.000000ms, LRAT checking 1.337190ms
+Bitwuzla proved the goal after 75.102480ms, solving context: 0.000000ms
+LeanSAT proved the goal after 79.911839ms: rewriting 19.557879ms, bitblasting 0.000000ms, SAT solving 55.231721ms, LRAT trimming 0.000000ms, LRAT checking 3.202740ms
+Bitwuzla proved the goal after 74.130368ms, solving context: 0.000000ms
+LeanSAT proved the goal after 79.399781ms: rewriting 18.244681ms, bitblasting 0.000000ms, SAT solving 55.295870ms, LRAT trimming 1.353090ms, LRAT checking 3.546840ms
+Bitwuzla proved the goal after 80.104728ms, solving context: 0.000000ms
+LeanSAT proved the goal after 87.811152ms: rewriting 24.422501ms, bitblasting 0.000000ms, SAT solving 55.160812ms, LRAT trimming 2.169220ms, LRAT checking 4.913859ms
+Bitwuzla proved the goal after 78.391890ms, solving context: 0.000000ms
+LeanSAT proved the goal after 83.699781ms: rewriting 22.420040ms, bitblasting 0.000000ms, SAT solving 55.218572ms, LRAT trimming 1.363520ms, LRAT checking 3.685399ms
+Bitwuzla proved the goal after 80.037329ms, solving context: 0.000000ms
+LeanSAT proved the goal after 87.130820ms: rewriting 24.300811ms, bitblasting 0.000000ms, SAT solving 55.272271ms, LRAT trimming 1.868549ms, LRAT checking 4.532650ms
+Bitwuzla proved the goal after 72.833109ms, solving context: 0.000000ms
+LeanSAT proved the goal after 76.526999ms: rewriting 17.153510ms, bitblasting 0.000000ms, SAT solving 55.269979ms, LRAT trimming 0.000000ms, LRAT checking 1.633520ms
+Bitwuzla proved the goal after 72.289051ms, solving context: 0.000000ms
+LeanSAT proved the goal after 75.317419ms: rewriting 16.423959ms, bitblasting 0.000000ms, SAT solving 55.205089ms, LRAT trimming 0.000000ms, LRAT checking 1.537001ms
+Bitwuzla proved the goal after 72.159600ms, solving context: 0.000000ms
+LeanSAT proved the goal after 75.587740ms: rewriting 16.276490ms, bitblasting 0.000000ms, SAT solving 55.306140ms, LRAT trimming 0.000000ms, LRAT checking 1.512810ms
+Bitwuzla proved the goal after 78.214131ms, solving context: 0.000000ms
+LeanSAT proved the goal after 85.172958ms: rewriting 21.986979ms, bitblasting 0.000000ms, SAT solving 55.243569ms, LRAT trimming 2.184770ms, LRAT checking 4.703690ms
+Bitwuzla proved the goal after 71.531940ms, solving context: 0.000000ms
+LeanSAT proved the goal after 75.652539ms: rewriting 15.746390ms, bitblasting 0.000000ms, SAT solving 55.228389ms, LRAT trimming 0.000000ms, LRAT checking 2.848280ms
+Bitwuzla proved the goal after 76.030242ms, solving context: 0.000000ms
+LeanSAT proved the goal after 80.499711ms: rewriting 20.379919ms, bitblasting 0.000000ms, SAT solving 55.229522ms, LRAT trimming 0.000000ms, LRAT checking 3.117940ms
+Bitwuzla proved the goal after 68.363441ms, solving context: 0.000000ms
+LeanSAT proved the goal after 71.242638ms: rewriting 12.862949ms, bitblasting 0.000000ms, SAT solving 55.263499ms, LRAT trimming 0.000000ms, LRAT checking 1.433020ms
+Bitwuzla proved the goal after 67.228828ms, solving context: 0.000000ms
+LeanSAT proved the goal after 69.611069ms: rewriting 11.402871ms, bitblasting 0.000000ms, SAT solving 55.263728ms, LRAT trimming 0.000000ms, LRAT checking 1.312170ms
+Bitwuzla proved the goal after 71.135580ms, solving context: 0.000000ms
+LeanSAT proved the goal after 74.629782ms: rewriting 15.311389ms, bitblasting 0.000000ms, SAT solving 55.331353ms, LRAT trimming 0.000000ms, LRAT checking 1.602560ms

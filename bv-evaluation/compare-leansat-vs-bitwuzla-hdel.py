@@ -1,8 +1,10 @@
+#!/usr/bin/env python3
 import subprocess
 import os 
 import shutil 
 
-results_dir = "bv-evaluation/results/HackersDelight/"
+results_dir = os.path.abspath("results/HackersDelight/") + "/"
+print(f"Writing results to: {results_dir}")
 
 benchmark_dir_list = "../SSA/Projects/InstCombine/HackersDelight/"
 benchmark_dir = "SSA/Projects/InstCombine/HackersDelight/"

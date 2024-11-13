@@ -1,0 +1,502 @@
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:16:2: error: no goals to be solved
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:21:2: error: no goals to be solved
+Bitwuzla provided a counter example after 64.580111ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 65.376228ms: rewriting 8.859419 SAT solving 55.133009ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:26:24: error: unsolved goals
+x y : BitVec 32
+h : AdditionNoOverflows? x y
+⊢ (x + y ≥ᵤ x ||| y) = true
+Bitwuzla provided a counter example after 64.158339ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 65.145040ms: rewriting 8.537600 SAT solving 55.217230ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:31:26: error: unsolved goals
+x y : BitVec 32
+h : ¬AdditionNoOverflows? x y
+⊢ (x ||| y >ᵤ x + y) = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:38:2: error: no goals to be solved
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:43:2: error: no goals to be solved
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:48:2: error: no goals to be solved
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:53:2: error: no goals to be solved
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:58:2: error: no goals to be solved
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:63:2: error: no goals to be solved
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:68:2: error: no goals to be solved
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:73:2: error: no goals to be solved
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:78:2: error: no goals to be solved
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:83:2: error: no goals to be solved
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:88:2: error: no goals to be solved
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:93:2: error: no goals to be solved
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:98:2: error: no goals to be solved
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:103:2: error: no goals to be solved
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:108:2: error: no goals to be solved
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:113:2: error: no goals to be solved
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:118:2: error: no goals to be solved
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:123:2: error: no goals to be solved
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:128:2: error: no goals to be solved
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:133:2: error: no goals to be solved
+Bitwuzla provided a counter example after 83.926029ms, solving context: 1.000000ms
+LeanSAT provided a counter example after 85.577320ms: rewriting 27.753581 SAT solving 55.552139ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:136:55: error: unsolved goals
+x y : BitVec 32
+w : ℕ
+⊢ (y >ₛ x) = (2#32 ^ (w - 1) + y >ₛ x + 2#32 ^ (w - 1))
+Bitwuzla provided a counter example after 89.308468ms, solving context: 1.000000ms
+LeanSAT provided a counter example after 92.188329ms: rewriting 33.561679 SAT solving 55.707710ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:141:55: error: unsolved goals
+x y : BitVec 32
+w : ℕ
+⊢ (y >ᵤ x) = (-2#32 ^ (w - 1) + y >ₛ x - 2#32 ^ (w - 1))
+Bitwuzla provided a counter example after 76.395868ms, solving context: 1.000000ms
+LeanSAT provided a counter example after 78.834869ms: rewriting 20.447271 SAT solving 56.038158ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:146:61: error: unsolved goals
+x y : BitVec 32
+w : ℕ
+⊢ (y >ₛ x) = !2#32 ^ (w - 1) + x ≥ᵤ y + 2#32 ^ (w - 1)
+Bitwuzla provided a counter example after 77.577711ms, solving context: 1.000000ms
+LeanSAT provided a counter example after 79.957379ms: rewriting 21.628619 SAT solving 56.040850ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:151:57: error: unsolved goals
+x y : BitVec 32
+w : ℕ
+⊢ (y ≥ₛ x) = (2#32 ^ (w - 1) + y ≥ᵤ x + 2#32 ^ (w - 1))
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:158:2: error: no goals to be solved
+Bitwuzla provided a counter example after 73.451948ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 74.016542ms: rewriting 17.213481 SAT solving 55.971201ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:161:54: error: unsolved goals
+x y : BitVec 32
+w : ℕ
+⊢ x = y ↔ BitVec.carry w x (~~~y + 1#32) false = true
+Bitwuzla provided a counter example after 71.824226ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 71.733354ms: rewriting 14.975572 SAT solving 55.952363ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:166:50: error: unsolved goals
+x y : BitVec 32
+w : ℕ
+⊢ ¬x = y ↔ BitVec.carry w x (~~~y) false = true
+Bitwuzla provided a counter example after 79.227441ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 80.339517ms: rewriting 23.489459 SAT solving 55.873158ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:171:90: error: unsolved goals
+x y : BitVec 32
+w : ℕ
+⊢ (y >ₛ x) = !BitVec.carry w (x + 2#32 ^ (w - 1)) (~~~(2#32 ^ (w - 1) + y) + 1#32) false
+Bitwuzla provided a counter example after 81.268589ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 82.017481ms: rewriting 25.304321 SAT solving 55.691350ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:179:100: error: unsolved goals
+x y : BitVec 32
+w : ℕ
+⊢ (y >ₛ x) = !BitVec.carry w x (~~~y + 1#32) false ^^^ x.getMsbD (w - 1) ^^^ y.getMsbD (w - 1)
+Bitwuzla provided a counter example after 79.232071ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 80.564159ms: rewriting 23.605279 SAT solving 55.919450ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:184:87: error: unsolved goals
+x y : BitVec 32
+w : ℕ
+⊢ (y ≥ₛ x) = BitVec.carry w (y + 2#32 ^ (w - 1)) (~~~(2#32 ^ (w - 1) + x) + 1#32) false
+Bitwuzla provided a counter example after 81.274479ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 81.871398ms: rewriting 25.048120 SAT solving 55.802648ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:189:101: error: unsolved goals
+x y : BitVec 32
+w : ℕ
+⊢ (y ≥ₛ x) = BitVec.carry w y (~~~x + 1#32) false ^^^ x.getMsbD (w - 1) ^^^ y.getMsbD (w - 1)
+Bitwuzla provided a counter example after 67.990681ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 68.845287ms: rewriting 11.790799 SAT solving 56.088488ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:194:57: error: unsolved goals
+x y : BitVec 32
+w : ℕ
+⊢ (y >ᵤ x) = !BitVec.carry w x (~~~y + 1#32) false
+Bitwuzla provided a counter example after 68.369080ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 69.230348ms: rewriting 12.134370 SAT solving 56.057728ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:199:55: error: unsolved goals
+x y : BitVec 32
+w : ℕ
+⊢ (y ≥ᵤ x) = BitVec.carry w y (~~~x + 1#32) false
+Bitwuzla provided a counter example after 70.936399ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 71.245929ms: rewriting 14.526450 SAT solving 56.059709ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:204:48: error: unsolved goals
+x : BitVec 32
+w : ℕ
+⊢ x = 0#32 ↔ BitVec.carry w (~~~x) (1#32) false = true
+Bitwuzla provided a counter example after 72.281250ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 72.116127ms: rewriting 15.367049 SAT solving 56.083778ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:209:45: error: unsolved goals
+x : BitVec 32
+w : ℕ
+⊢ ¬x = 0#32 ↔ BitVec.carry w x (4294967295#32) false = true
+Bitwuzla provided a counter example after 69.952192ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 69.919137ms: rewriting 13.043870 SAT solving 56.124277ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:214:45: error: unsolved goals
+x : BitVec 32
+w : ℕ
+⊢ (0#32 >ₛ x) = BitVec.carry w x x false
+Bitwuzla provided a counter example after 89.672040ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 90.307960ms: rewriting 33.939990 SAT solving 55.754860ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:219:76: error: unsolved goals
+x : BitVec 32
+w : ℕ
+⊢ (0#32 ≥ₛ x) = BitVec.carry w (2#32 ^ (w - 1)) (-2#32 ^ (w - 1) - x) false
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:226:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:226:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+Bitwuzla failed.
+LeanSAT failed.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:224:45: error: unsolved goals
+x y : BitVec 32
+⊢ AdditionNoOverflows? x y ↔ (y >ᵤ ~~~x) = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:231:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:231:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+Bitwuzla failed.
+LeanSAT failed.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:229:45: error: unsolved goals
+x y : BitVec 32
+⊢ AdditionNoOverflows? x y ↔ (x >ᵤ x + y) = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:236:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:236:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+Bitwuzla failed.
+LeanSAT failed.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:234:51: error: unsolved goals
+x y : BitVec 32
+⊢ AdditionNoOverflows? x (y + 1#32) ↔ (y ≥ᵤ ~~~x) = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:241:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:241:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+Bitwuzla failed.
+LeanSAT failed.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:239:55: error: unsolved goals
+x y : BitVec 32
+⊢ AdditionNoOverflows? x (y + 1#32) ↔ (x ≥ᵤ y + 1#32 + x) = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:246:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:246:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+Bitwuzla failed.
+LeanSAT failed.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:244:51: error: unsolved goals
+x y : BitVec 32
+⊢ AdditionNoOverflows? x (~~~y + 1#32) ↔ (y >ᵤ x) = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:251:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:251:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+Bitwuzla failed.
+LeanSAT failed.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:249:55: error: unsolved goals
+x y : BitVec 32
+⊢ AdditionNoOverflows? x (~~~y + 1#32) ↔ (x - y >ᵤ x) = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:256:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:256:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+Bitwuzla failed.
+LeanSAT failed.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:254:47: error: unsolved goals
+x y : BitVec 32
+⊢ AdditionNoOverflows? x (~~~y) ↔ (y ≥ᵤ x) = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:261:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:261:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+Bitwuzla failed.
+LeanSAT failed.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:259:55: error: unsolved goals
+x y : BitVec 32
+⊢ AdditionNoOverflows? x (~~~y) ↔ (x + (-y - 1#32) ≥ᵤ x) = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:272:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:272:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+Bitwuzla failed.
+LeanSAT failed.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:270:86: error: unsolved goals
+x y : BitVec 64
+⊢ UnsignedMultiplicationOverflows? x y ↔ ¬first32Bits (x * y) = 0#32
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:277:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:277:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+Bitwuzla failed.
+LeanSAT failed.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:275:92: error: unsolved goals
+x y : BitVec 64
+⊢ SignedMultiplicationOverflows? x y ↔ ¬first32Bits (x * y) = last32Bits (x * y) >>> 31
+Bitwuzla provided a counter example after 64.791139ms, solving context: 13.000000ms
+LeanSAT provided a counter example after 170.466269ms: rewriting 7.508191 SAT solving 110.039378ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:280:62: error: unsolved goals
+x y z : BitVec 32
+h : y.toNat ≠ 0
+a✝ : x * y / z ≠ x
+⊢ UnsignedMultiplicationOverflows? x y
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:287:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:287:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+Bitwuzla failed.
+LeanSAT failed.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:285:95: error: unsolved goals
+x y z : BitVec 32
+h : y.toNat ≠ 0
+a✝ : y < 0 ∧ x.toInt = -2 ^ 31 ∨ x * y / z ≠ x
+⊢ SignedMultiplicationOverflows? x y
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:299:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:299:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+Bitwuzla failed.
+LeanSAT failed.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:297:101: error: unsolved goals
+x y : BitVec 64
+⊢ 32 ≤ numberOfLeadingZeros x + numberOfLeadingZeros y ↔ ¬UnsignedMultiplicationOverflows? x y
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:304:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:304:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+Bitwuzla failed.
+LeanSAT failed.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:302:99: error: unsolved goals
+x y : BitVec 64
+⊢ numberOfLeadingZeros x + numberOfLeadingZeros y ≤ 30 ↔ UnsignedMultiplicationOverflows? x y
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:311:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:311:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+Bitwuzla failed.
+LeanSAT failed.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:309:78: error: unsolved goals
+x y : BitVec 32
+⊢ SignedDivisionOverflows?? x y ↔ y = 0#32 ∨ x.toInt = -2147483648 ∧ y = 4294967295#32
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:316:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:316:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+Bitwuzla failed.
+LeanSAT failed.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:314:94: error: unsolved goals
+x : BitVec 64
+y : BitVec 32
+⊢ SignedDivisionOverflows?? x (BitVec.setWidth 64 y) ↔ ¬y = 0#32 ∧ x < BitVec.setWidth 64 y <<< 32
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:321:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:321:2: error: None of the hypotheses are in the supported BitVec fragment.
+There are two potential fixes for this:
+1. If you are using custom BitVec constructs simplify them to built-in ones.
+2. If your problem is using only built-in ones it might currently be out of reach.
+   Consider expressing it in terms of different operations that are better supported.
+Bitwuzla failed.
+LeanSAT failed.
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:319:94: error: unsolved goals
+x y✝ : BitVec 64
+y : BitVec 32
+⊢ SignedDivisionOverflows?? x (BitVec.setWidth 64 y) ↔ ¬y = 0#32 ∧ x >>> 32 < BitVec.setWidth 64 y
+Bitwuzla provided a counter example after 67.053559ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 68.231149ms: rewriting 10.053360 SAT solving 56.880639ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:342:60: error: unsolved goals
+x y : BitVec 32
+⊢ signedMaxBitVec x y = y + signedDifferenceOrZero x y
+Bitwuzla provided a counter example after 73.054371ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 74.677168ms: rewriting 15.891029 SAT solving 57.027329ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:347:60: error: unsolved goals
+x y : BitVec 32
+⊢ signedMinBitVec x y = x - signedDifferenceOrZero x y
+Bitwuzla provided a counter example after 67.162158ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 68.393249ms: rewriting 10.092381 SAT solving 57.037868ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:352:64: error: unsolved goals
+x y : BitVec 32
+⊢ unsignedMaxBitVec x y = y + unsignedDifferenceOrZero x y
+Bitwuzla provided a counter example after 73.149419ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 74.794909ms: rewriting 15.922500 SAT solving 57.151719ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:357:64: error: unsolved goals
+x y : BitVec 32
+⊢ unsignedMinBitVec x y = x - unsignedDifferenceOrZero x y
+Bitwuzla provided a counter example after 74.996578ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 77.079592ms: rewriting 18.077721 SAT solving 57.048501ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:365:61: error: unsolved goals
+x y : BitVec 32
+⊢ signedDifferenceOrZero x y = x - y &&& leBitmask x y
+Bitwuzla provided a counter example after 67.141268ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 68.529293ms: rewriting 10.075851 SAT solving 57.136172ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:370:65: error: unsolved goals
+x y : BitVec 32
+⊢ signedMaxBitVec x y = (x ^^^ y) &&& leBitmask x y ^^^ y
+Bitwuzla provided a counter example after 67.181802ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 68.594636ms: rewriting 10.168900 SAT solving 57.095426ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:375:65: error: unsolved goals
+x y : BitVec 32
+⊢ signedMinBitVec x y = (x ^^^ y) &&& leBitmask y x ^^^ y
+Bitwuzla provided a counter example after 76.032341ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 78.232988ms: rewriting 19.026669 SAT solving 57.164139ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:383:73: error: unsolved goals
+x y : BitVec 32
+⊢ unsignedDifferenceOrZero x y = x - y &&& ~~~carryBitmask x y
+Bitwuzla provided a counter example after 80.559508ms, solving context: 1.000000ms
+LeanSAT provided a counter example after 83.132080ms: rewriting 23.466140 SAT solving 56.835160ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:388:66: error: unsolved goals
+x y : BitVec 32
+⊢ unsignedMaxBitVec x y = x - (x - y &&& carryBitmask x y)
+Bitwuzla provided a counter example after 79.836760ms, solving context: 1.000000ms
+LeanSAT provided a counter example after 82.466142ms: rewriting 23.281640 SAT solving 56.739142ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:393:66: error: unsolved goals
+x y : BitVec 32
+⊢ unsignedMinBitVec x y = y + (-y + x &&& carryBitmask x y)
+Bitwuzla provided a counter example after 79.512059ms, solving context: 1.000000ms
+LeanSAT provided a counter example after 82.084431ms: rewriting 22.459970 SAT solving 57.033121ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:401:87: error: unsolved goals
+x y d : BitVec 32
+h : d = x - y
+⊢ signedDifferenceOrZero x y = d &&& (~~~d ^^^ ((x ^^^ y) &&& (d ^^^ x)) >>> 31)
+Bitwuzla provided a counter example after 81.664388ms, solving context: 1.000000ms
+LeanSAT provided a counter example after 84.110190ms: rewriting 24.840230 SAT solving 56.893890ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:406:97: error: unsolved goals
+x y d : BitVec 32
+h : d = x - y
+⊢ unsignedDifferenceOrZero x y = d &&& ~~~((~~~x &&& y ||| ~~~(x ^^^ y) &&& d) >>> 31)
+Bitwuzla provided a counter example after 77.252171ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 79.619287ms: rewriting 20.423159 SAT solving 57.269808ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:411:69: error: unsolved goals
+x y : BitVec 32
+⊢ signedDifferenceOrZero x y = x - y &&& ~~~((x - y) >>> 31)
+Bitwuzla provided a counter example after 81.888520ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 84.117999ms: rewriting 24.783380 SAT solving 56.792189ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:416:64: error: unsolved goals
+x y : BitVec 32
+⊢ signedMaxBitVec x y = x - (x - y &&& (x - y) >>> 31)
+Bitwuzla provided a counter example after 81.106362ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 83.606398ms: rewriting 24.550930 SAT solving 56.753288ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:421:64: error: unsolved goals
+x y : BitVec 32
+⊢ signedMinBitVec x y = y + (-y + x &&& (-y + x) >>> 31)
+Bitwuzla provided a counter example after 85.233666ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 86.329412ms: rewriting 27.872431 SAT solving 56.710461ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:426:85: error: unsolved goals
+x y : BitVec 32
+⊢ (x >ₛ y) = true ↔ (signedDifferenceOrZero x y).msb = true ∨ (-signedDifferenceOrZero x y).msb = true
+Bitwuzla provided a counter example after 78.427938ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 79.432600ms: rewriting 20.843880 SAT solving 57.005310ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:431:89: error: unsolved goals
+x y : BitVec 32
+⊢ (x >ᵤ y) = true ↔ (unsignedDifferenceOrZero x y).msb = true ∨ (-unsignedDifferenceOrZero x y).msb = true
+Bitwuzla provided a counter example after 78.696720ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 79.108438ms: rewriting 21.210468 SAT solving 56.915180ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:436:116: error: unsolved goals
+x y : BitVec 32
+w : ℕ
+⊢ BitVec.carry w x y false = true ↔
+    (unsignedDifferenceOrZero x (~~~y)).msb = true ∨ (-unsignedDifferenceOrZero x (~~~y)).msb = true
+Bitwuzla provided a counter example after 89.742300ms, solving context: 2.000000ms
+LeanSAT provided a counter example after 93.097951ms: rewriting 28.969640 SAT solving 56.805131ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:443:77: error: unsolved goals
+x y : BitVec 32
+⊢ (x - y).abs = signedDifferenceOrZero x y + signedDifferenceOrZero y x
+Bitwuzla provided a counter example after 89.829361ms, solving context: 2.000000ms
+LeanSAT provided a counter example after 93.202837ms: rewriting 29.015548 SAT solving 56.973019ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:448:81: error: unsolved goals
+x y : BitVec 32
+⊢ (x - y).abs = unsignedDifferenceOrZero x y + unsignedDifferenceOrZero y x
+Bitwuzla provided a counter example after 65.449752ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 65.707066ms: rewriting 7.514109 SAT solving 57.219727ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:453:47: error: unsolved goals
+x y : BitVec 32
+w : ℕ
+⊢ BitVec.carry w x y false = (x >ᵤ ~~~y)
+Bitwuzla provided a counter example after 65.490261ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 65.896461ms: rewriting 7.884729 SAT solving 57.233432ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:458:75: error: unsolved goals
+x y : BitVec 32
+⊢ signedDifferenceOrZero (~~~x) (~~~y) = signedDifferenceOrZero x y
+Bitwuzla provided a counter example after 66.070489ms, solving context: 0.000000ms
+LeanSAT provided a counter example after 66.040361ms: rewriting 7.947160 SAT solving 57.313041ms
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:463:79: error: unsolved goals
+x y : BitVec 32
+⊢ unsignedDifferenceOrZero (~~~x) (~~~y) = unsignedDifferenceOrZero x y
