@@ -24,8 +24,14 @@ col = [
 "#fb9a99",
 "#e31a1c"]
 
-
-
+both_failed = 0
+inconsistencies = 0
+ls_only_failed = 0
+bw_only_failed = 0
+bitwuzla_failed_locations =[]
+leanSAT_failed_locations=[]
+err_loc_tot = []
+err_msg_tot = []
 for file in os.listdir(benchmark_dir):
     
 
@@ -44,8 +50,6 @@ for file in os.listdir(benchmark_dir):
         counter_leanSAT_rw_times = []
         counter_leanSAT_sat_times = []
 
-        err_locations = []
-        err_msg = []
 
 
         err_tot = 0
@@ -66,8 +70,11 @@ for file in os.listdir(benchmark_dir):
         counter_leanSAT_lrat_t_times_average = []
         counter_leanSAT_lrat_c_times_average = []
 
+        # collect the numbers for all repetitions
         for r in range(reps):
-            inconsistencies = 0
+            err_locations = []
+            err_msg = []
+
 
             res_file = open(res_dir+file.split(".")[0]+"_"+str(bvw)+"_r"+str(r)+".txt")
             # print(res_dir+file.split(".")[0]+"_r"+str(r)+".txt")
@@ -80,7 +87,12 @@ for file in os.listdir(benchmark_dir):
             while l:
                 if "Bitwuzla " in l: 
                     cegb = False
-                    if "counter" in l : 
+                    bw_failed = False
+                    if "failed" in l : 
+                        bw_failed = True
+                        if (r == 0):
+                            bitwuzla_failed_locations.append(file)
+                    elif "counter" in l : 
                         cegb = True
                         tot = float(l.split("after ")[1].split("ms")[0])
                         if r == 0:
@@ -100,10 +112,14 @@ for file in os.listdir(benchmark_dir):
                     l = res_file.readline()
                     # if testing went right the next line should contain 
                     if "LeanSAT " in l:
+                        ls_failed = False
                         cegl = False
-                        if "counter example" in l: 
+                        if "failed" in l : 
+                            ls_failed = True
+                            if (r == 0):
+                                leanSAT_failed_locations.append(file)
+                        elif "counter example" in l: 
                             tot = float(l.split("ms")[0].split("after ")[1])
-                            print(counter_leanSAT_rw_times_average)
                             if r == 0:
                                 counter_leanSAT_tot_times_average.append([tot])
                                 counter_leanSAT_rw_times_average.append([float(l.split(" SAT")[0].split("rewriting ")[1])])
@@ -133,6 +149,30 @@ for file in os.listdir(benchmark_dir):
                                 leanSAT_lrat_t_times_average[ls].append(float(l.split("ms")[4].split("g ")[1]))
                                 leanSAT_lrat_c_times_average[ls].append(float(l.split("ms")[5].split("g ")[1]))
                             ls = ls + 1
+                        
+                        if bw_failed and ls_failed and r ==0:
+                            both_failed+=1
+                        elif ls_failed and r ==0:
+                            ls_only_failed +=1
+                            # delete latest entry from bw results for consistency
+                            if cegb:
+                                del counter_bitwuzla_times_average[-1]
+                            else :
+                                del bitwuzla_times_average[-1]
+                        elif bw_failed and r ==0:
+                            bw_only_failed +=1
+                            if cegl : 
+                                del counter_leanSAT_tot_times_average[-1]
+                                del counter_leanSAT_rw_times_average[-1]
+                                del counter_leanSAT_sat_times_average[-1]
+                            else : 
+                                del leanSAT_tot_times_average[-1]
+                                del leanSAT_rw_times_average[-1]
+                                del leanSAT_bb_times_average[-1]
+                                del leanSAT_sat_times_average[-1]
+                                del leanSAT_lrat_t_times_average[-1]
+                                del leanSAT_lrat_c_times_average[-1]
+
                         if cegb and not cegl: 
                             print("bitwuzla found a counterexample, leanSAT proved a theorem in file "+file)
                             inconsistencies+=1
@@ -151,15 +191,14 @@ for file in os.listdir(benchmark_dir):
                             del counter_leanSAT_rw_times_average[-1]
                             del counter_leanSAT_sat_times_average[-1]
                     elif (("error:" in l or "PANIC" in l) and "Lean" not in l and r == 0):
-                        err_locations.append(l.split("error: ")[0].split("/")[-1][0:-1])
-                        err_msg.append((l.split("error: ")[1])[0:-1])
+                        err_loc_tot.append(l.split("error: ")[0].split("/")[-1][0:-1])
+                        err_msg_tot.append((l.split("error: ")[1])[0:-1])
                         errs = errs + 1  
                 elif (("error:" in l or "PANIC" in l) and "Lean" not in l and r == 0):
-                    err_locations.append(l.split("error: ")[0].split("/")[-1][0:-1])
-                    err_msg.append((l.split("error: ")[1])[0:-1])
+                    err_loc_tot.append(l.split("error: ")[0].split("/")[-1][0:-1])
+                    err_msg_tot.append((l.split("error: ")[1])[0:-1])
                     errs = errs + 1  
                 l = res_file.readline()
-
 
         err_tot = err_tot + errs
 
@@ -194,7 +233,6 @@ for file in os.listdir(benchmark_dir):
             counter_leanSAT_rw_times.append(np.mean(thm))
 
         for thm in counter_leanSAT_sat_times_average: 
-            print(counter_leanSAT_sat_times_average)
             counter_leanSAT_sat_times.append(np.mean(thm))
 
         print("\n\nwith bitwidth = "+str(bvw))
