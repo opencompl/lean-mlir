@@ -361,6 +361,8 @@ attribute [bv_ofBool] ofBool_and_ofBool
 attribute [bv_ofBool] ofBool_xor_ofBool
 attribute [simp, bv_ofBool] ofBool_eq_iff_eq
 
+attribute [bv_normalize] BitVec.mul_add
+
 theorem allOnes_xor_eq_not (x : BitVec w) : allOnes w ^^^ x = ~~~x := by
   apply eq_of_getLsbD_eq
   simp
