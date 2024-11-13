@@ -744,36 +744,6 @@ theorem bools2_logical_commute2_and1_proof : bools2_logical_commute2_and1_before
 
 
 
-def bools2_logical_commute3_nopoison_before := [llvm|
-{
-^0(%arg27 : i1, %arg28 : i1, %arg29 : i1):
-  %0 = llvm.mlir.constant(true) : i1
-  %1 = llvm.mlir.constant(false) : i1
-  %2 = llvm.xor %arg29, %0 : i1
-  %3 = "llvm.select"(%arg27, %arg29, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
-  %4 = "llvm.select"(%arg28, %2, %1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
-  %5 = "llvm.select"(%3, %0, %4) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
-  "llvm.return"(%5) : (i1) -> ()
-}
-]
-def bools2_logical_commute3_nopoison_after := [llvm|
-{
-^0(%arg27 : i1, %arg28 : i1, %arg29 : i1):
-  %0 = "llvm.select"(%arg29, %arg27, %arg28) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
-  "llvm.return"(%0) : (i1) -> ()
-}
-]
-set_option debug.skipKernelTC true in
-theorem bools2_logical_commute3_nopoison_proof : bools2_logical_commute3_nopoison_before ⊑ bools2_logical_commute3_nopoison_after := by
-  unfold bools2_logical_commute3_nopoison_before bools2_logical_commute3_nopoison_after
-  simp_alive_peephole
-  intros
-  ---BEGIN bools2_logical_commute3_nopoison
-  apply bools2_logical_commute3_nopoison_thm
-  ---END bools2_logical_commute3_nopoison
-
-
-
 def bools2_logical_commute3_and1_before := [llvm|
 {
 ^0(%arg24 : i1, %arg25 : i1, %arg26 : i1):

@@ -13,31 +13,6 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gicmphrange_statements
 
-def test_two_argument_ranges_before := [llvm|
-{
-^0(%arg196 : i32, %arg197 : i32):
-  %0 = llvm.icmp "ult" %arg197, %arg196 : i32
-  "llvm.return"(%0) : (i1) -> ()
-}
-]
-def test_two_argument_ranges_after := [llvm|
-{
-^0(%arg196 : i32, %arg197 : i32):
-  %0 = llvm.mlir.constant(false) : i1
-  "llvm.return"(%0) : (i1) -> ()
-}
-]
-set_option debug.skipKernelTC true in
-theorem test_two_argument_ranges_proof : test_two_argument_ranges_before ⊑ test_two_argument_ranges_after := by
-  unfold test_two_argument_ranges_before test_two_argument_ranges_after
-  simp_alive_peephole
-  intros
-  ---BEGIN test_two_argument_ranges
-  all_goals (try extract_goal ; sorry)
-  ---END test_two_argument_ranges
-
-
-
 def ugt_zext_before := [llvm|
 {
 ^0(%arg174 : i1, %arg175 : i8):

@@ -110,15 +110,6 @@ theorem logical_and_implies_folds_thm (e : IntW 32) :
     all_goals sorry
 
 
-theorem logical_or_noundef_b_thm (e e_1 : IntW 1) : select e_1 (const? 1 1) e ⊑ LLVM.or e_1 e := by 
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    simp_alive_benchmark
-    all_goals sorry
-
-
 theorem logical_and_noundef_b_thm (e e_1 : IntW 1) : select e_1 e (const? 1 0) ⊑ LLVM.and e_1 e := by 
     simp_alive_undef
     simp_alive_ops

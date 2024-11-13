@@ -8,15 +8,6 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 
 section gicmphrange_proof
-theorem test_two_argument_ranges_thm (e e_1 : IntW 32) : icmp IntPredicate.ult e_1 e ⊑ const? 1 0 := by 
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    simp_alive_benchmark
-    all_goals sorry
-
-
 theorem ugt_zext_thm (e : IntW 8) (e_1 : IntW 1) :
   icmp IntPredicate.ugt (zext 8 e_1) e ⊑ LLVM.and (icmp IntPredicate.eq e (const? 8 0)) e_1 := by 
     simp_alive_undef

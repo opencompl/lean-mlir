@@ -91,11 +91,7 @@
 1: "logical_or_noundef_a"
 7: "logical_or_noundef_a" is unchanged by InstCombine
 
-1: "logical_or_noundef_b"
-2: llvm.func
-2: llvm.mlir.constant
-2: builtin.unregistered: llvm.select
-2: llvm.return
+4: "logical_or_noundef_b" has unsupported operation: noundef
 
 1: "logical_and_noundef_a"
 7: "logical_and_noundef_a" is unchanged by InstCombine
