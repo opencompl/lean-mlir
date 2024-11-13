@@ -93,7 +93,7 @@ theorem f_deg_eq : (f q n).degree = 2^n := by
     Preorder.toLT, WithBot.preorder, OfNat.ofNat]
   simp only [degree_one, Nat.cast_pow, Nat.cast_ofNat]
   norm_cast
-  exact Fin.size_pos'
+  exact Fin.pos'
 
 /-- Charaterizing `f`: `f` is monic -/
 theorem f_monic : Monic (f q n) := by
