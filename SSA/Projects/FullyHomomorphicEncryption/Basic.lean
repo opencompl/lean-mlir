@@ -20,6 +20,7 @@ import Mathlib.RingTheory.Ideal.Basic
 import Mathlib.Data.ZMod.Defs
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Algebra.MonoidAlgebra.Basic
+import Mathlib.Algebra.Polynomial.RingDivision
 import Mathlib.Data.Finset.Sort
 import Mathlib.Data.List.ToFinsupp
 import Mathlib.Data.List.Basic
@@ -250,8 +251,7 @@ theorem neg_modByMonic (p mod : (ZMod q)[X]) : (-p) %ₘ mod = - (p %ₘ mod) :=
     have H : -p = (-1 : ZMod q) • p := by norm_num
     have H' : - (p %ₘ mod) = (-1 : ZMod q) • (p %ₘ mod) := by norm_num
     rw [H, H']
-    sorry
-    --apply smul_modByMonic (R := (ZMod q)) (c := -1) (p := p) (q := mod)
+    apply smul_modByMonic (R := (ZMod q)) (c := -1) (p := p) (q := mod)
 
 /-- %ₘ is a subtraction homomorphism (obviously)-/
 @[simp]
