@@ -156,7 +156,7 @@ def process_file(file):
         if not isinstance(func, FuncOp):
             continue
         func_name = func.sym_name
-        if err := skipped_funcs.get(func_name):
+        if err := skipped_funcs.get(func_name.data):
             log.append(
                 f"{Msg.E_UNSUPPORTED.value}: {func_name} has unsupported operation: {err}\n\n"
             )
