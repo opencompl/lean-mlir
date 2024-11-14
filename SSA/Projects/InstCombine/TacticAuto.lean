@@ -282,15 +282,15 @@ macro "bv_bench": tactic =>
       (
         all_goals (
           tac_bench [
-            "bv_bitwise" : bv_bitwise,
-            "bv_ac" : bv_ac,
-            "bv_distrib" : bv_distrib,
-            "bv_ring" : bv_ring,
-            "bv_of_bool" : bv_of_bool,
-            "bv_omega" : bv_omega,
-            "bv_automata_classic" : bv_automata_classic,
-            "bv_decide" : bv_decide,
-            "bv_auto" : bv_auto
+            "bvBitwise" : bv_bitwise,
+            "bvAc" : bv_ac,
+            "bvDistrib" : bv_distrib,
+            "bvRing" : bv_ring,
+            "bvOfBool" : bv_of_bool,
+            "bvOmega" : bv_omega,
+            "bvAutomataClassic" : bv_automata_classic,
+            "bvDecide" : bv_decide,
+            "bvAuto" : bv_auto
           ]
           try bv_auto
           try sorry
