@@ -15,7 +15,12 @@ open Lean.Parser.Tactic
 open Lean Meta Elab Tactic
 open Lean.Meta
 
+/--
+Run `tac_bench <name> <tacticSeq>` to run a sequence of tactics whose runtime is benchmarked.
+This does not affect the current goal state, and thus allow multiple `tac_bench` statements to be run in sequence.
+-/
 syntax (name := tacBench) "tac_bench" str tacticSeq : tactic
+
 
 def setTraceOptions (opt : Options) : Options := opt
     |>.setBool `trace.profiler true
@@ -70,6 +75,7 @@ theorem eg1 : 1 = 1 := by
   tac_bench "done" done
   tac_bench "sorry" sorry
   sorry
+
 theorem eg2 (x y : BitVec 8) : x * y = y * x := by
   tac_bench "bv_decide" bv_decide
   tac_bench "ac_nf" ac_nf
