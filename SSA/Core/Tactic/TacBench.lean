@@ -85,7 +85,7 @@ def evalTacBench : Tactic := fun
     for item in items do
       let out ← hermeticRun g item
       msg := msg ++ m!"\n" ++ out.toMessageData
-    logInfo msg
+    logInfo m!"TACSTART{.nestD msg}\nTACEND"
 | _ => throwUnsupportedSyntax
 
 
