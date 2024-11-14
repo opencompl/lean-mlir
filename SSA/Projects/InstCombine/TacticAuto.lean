@@ -121,7 +121,7 @@ This tactic attempts to shift ofBool to the outer-most level,
 and then convert everything to arithmetic
 and then solve with the omega tactic.
 -/
-macro "of_bool_tactic" : tactic =>
+macro "bv_of_bool" : tactic =>
   `(tactic|
     (
     try simp only [bv_ofBool, BitVec.ule, BitVec.ult, BitVec.sle, BitVec.slt, BitVec.toInt, BEq.beq, bne]
@@ -155,6 +155,54 @@ macro "bv_distrib" : tactic =>
     )
    )
 
+macro "bv_bitwise" : tactic =>
+  `(tactic|
+    (
+      ext
+      simp (config := {failIfUnchanged := false}) [BitVec.negOne_eq_allOnes, BitVec.allOnes_sub_eq_xor];
+      try bv_decide
+      done
+    )
+   )
+
+macro "bv_automata_classic" : tactic =>
+  `(tactic|
+    (
+      simp (config := {failIfUnchanged := false}) only [BitVec.two_mul, ←BitVec.negOne_eq_allOnes, ofBool_0_iff_false, ofBool_1_iff_true]
+      try rw [Bool.eq_iff_iff]
+      simp (config := {failIfUnchanged := false}) [Bool.or_eq_true_iff, Bool.and_eq_true_iff,  beq_iff_eq]
+      bv_automata'
+    )
+   )
+
+/--
+There are 2 main kinds of operations on BitVecs
+1. Boolean operations (^^^, &&&, |||) which can be solved by extensionality.
+2. Arithmetic operations (+, -) which can be solved by `ring_nf`.
+The purpose of the below line is to convert boolean
+operations to arithmetic operations and then
+solve the arithmetic with the `ring_nf` tactic.
+-/
+macro "bv_ring" : tactic =>
+  `(tactic|
+    (
+      simp (config := {failIfUnchanged := false}) only [← BitVec.allOnes_sub_eq_xor,
+        ← BitVec.negOne_eq_allOnes]
+      ring_nf
+      done
+    )
+   )
+
+macro "bv_ac" : tactic =>
+  `(tactic|
+    (
+      simp (config := {failIfUnchanged := false}) only [← BitVec.allOnes_sub_eq_xor,
+        ← BitVec.negOne_eq_allOnes]
+      ac_nf
+      done
+    )
+   )
+
 macro "bv_auto": tactic =>
   `(tactic|
       (
@@ -164,43 +212,14 @@ macro "bv_auto": tactic =>
         try bv_eliminate_bool
         repeat (split)
         <;> try simp (config := {failIfUnchanged := false})
-        /-
-        Solve tries each arm in order, falling through
-        if the goal is not closed.
-        Note that all goals are tried with the original state
-        (i.e. backtracking semantics).
-        -/
         try solve
-          | ext; simp [BitVec.negOne_eq_allOnes, BitVec.allOnes_sub_eq_xor];
-            try bv_decide
-          | simp [bv_ofBool]
-          /-
-          There are 2 main kinds of operations on BitVecs
-          1. Boolean operations (^^^, &&&, |||) which can be solved by extensionality.
-          2. Arithmetic operations (+, -) which can be solved by `ring_nf`.
-          The purpose of the below line is to convert boolean
-          operations to arithmetic operations and then
-          solve the arithmetic with the `ring_nf` tactic.
-          -/
-          | simp only [← BitVec.allOnes_sub_eq_xor]
-            simp only [← BitVec.negOne_eq_allOnes]
-            ring_nf
-          | of_bool_tactic
-          -- Disabled as `x &&& 4294967295#32 = x` leads to a stack overflow.
-          -- | (
-          --   simp (config := {failIfUnchanged := false}) only [(BitVec.two_mul), ←BitVec.negOne_eq_allOnes]
-          --    bv_automata
-          --  )
-          | (
-             simp (config := {failIfUnchanged := false}) only [BitVec.two_mul, ←BitVec.negOne_eq_allOnes, ofBool_0_iff_false, ofBool_1_iff_true]
-             try rw [Bool.eq_iff_iff]
-             simp (config := {failIfUnchanged := false}) [Bool.or_eq_true_iff, Bool.and_eq_true_iff,  beq_iff_eq]
-             bv_automata'
-           )
-          |
-            try split
-            all_goals bv_decide
+          | bv_bitwise
+          | bv_ac
           | bv_distrib
+          | bv_ring
+          | bv_of_bool
+          | bv_automata_classic
+          | bv_decide
       )
    )
 
@@ -255,5 +274,26 @@ macro "simp_alive_benchmark": tactic =>
   `(tactic|
       (
         all_goals bv_compare'
+      )
+   )
+
+macro "bv_bench": tactic =>
+  `(tactic|
+      (
+        all_goals (
+          tac_bench [
+            "bv_bitwise" : bv_bitwise,
+            "bv_ac" : bv_ac,
+            "bv_distrib" : bv_distrib,
+            "bv_ring" : bv_ring,
+            "bv_of_bool" : bv_of_bool,
+            "bv_omega" : bv_omega,
+            "bv_automata_classic" : bv_automata_classic,
+            "bv_decide" : bv_decide,
+            "bv_auto" : bv_auto
+          ]
+          try bv_auto
+          try sorry
+        )
       )
    )
