@@ -22,16 +22,16 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:198:6: dec
 ⚠ [892/899] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 83.571584 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 85.362375 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 12.873666 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 12.677084 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 8.880125 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 80.718209 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 8.556542 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 80.385459 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.283459 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.154250 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.750833 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.789833 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -43,26 +43,26 @@ TACSTART
      a := ↑(2 ^ w - 1 - x.toNat + 1 % 2 ^ w) % ↑(2 ^ w)
      b := ↑(2 ^ w - x.toNat) % ↑(2 ^ w)
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 31.778209 ms, 
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 68.173875 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 32.092458 ms, 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 67.437209 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (-x == ~~~x + 1#w)]
     Consider the following assignment:
     BitVec.ofBool (-x == ~~~x + 1#w) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 311.446250 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 305.468083 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 86.848709 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 86.993375 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 7.173292 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 6.930459 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 5.812125 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 89.177542 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 6.448917 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 86.266541 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 7.945333 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.184542 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.027709 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.978417 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       c ≥ 0
@@ -74,26 +74,26 @@ TACSTART
      a := ↑(2 ^ w - x.toNat) % ↑(2 ^ w)
      b := ↑2 ^ w
      c := ↑(x.toNat + (2 ^ w - 1 % 2 ^ w)) % ↑(2 ^ w) MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 33.856291 ms, 
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 73.111958 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 29.895167 ms, 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 67.217750 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (-x == ~~~(x + -1#w))]
     Consider the following assignment:
     BitVec.ofBool (-x == ~~~(x + -1#w)) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 315.354166 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 318.289667 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 90.294000 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 89.134666 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 8.135042 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 7.791042 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 6.281208 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 75.240750 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 6.131291 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 78.985625 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.215834 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.238042 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.199833 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.783750 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       c ≥ 0
@@ -105,26 +105,26 @@ TACSTART
      a := ↑((2 ^ w - x.toNat) % 2 ^ w + (2 ^ w - 1 % 2 ^ w)) % ↑(2 ^ w)
      b := ↑2 ^ w
      c := ↑x.toNat MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 29.592709 ms, 
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 67.635042 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 28.977708 ms, 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 66.556125 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (~~~x == -x + -1#w)]
     Consider the following assignment:
     BitVec.ofBool (~~~x == -x + -1#w) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 303.469250 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 305.543792 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 84.242959 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 83.214542 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 13.436708 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 13.062791 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 10.273917 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 82.613458 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 9.832875 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 82.936334 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.829459 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.334750 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.879166 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.250959 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -136,26 +136,26 @@ TACSTART
      a := ↑(x.toNat + 1 % 2 ^ w) % ↑(2 ^ w)
      b := ↑(2 ^ w - (2 ^ w - 1 - x.toNat)) % ↑(2 ^ w)
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 29.894917 ms, 
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 67.067125 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 30.458750 ms, 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 66.613875 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (-~~~x == x + 1#w)]
     Consider the following assignment:
     BitVec.ofBool (-~~~x == x + 1#w) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 314.788375 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 311.993000 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 89.752667 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 88.567125 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 7.125250 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 6.899459 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 5.286375 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 88.059958 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 5.660292 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 85.752709 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.404583 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.553584 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.968000 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.158875 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       c ≥ 0
@@ -167,26 +167,26 @@ TACSTART
      a := ↑(x.toNat + (2 ^ w - 1 % 2 ^ w)) % ↑(2 ^ w)
      b := ↑2 ^ w
      c := ↑(2 ^ w - x.toNat) % ↑(2 ^ w) MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 30.539416 ms, 
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 63.286750 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 30.340959 ms, 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 68.066042 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (~~~(-x) == x + -1#w)]
     Consider the following assignment:
     BitVec.ofBool (~~~(-x) == x + -1#w) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 327.312292 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 321.735625 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 91.298792 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 89.798292 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 12.145542 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 11.778500 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 25.787708 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 90.639708 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 23.819167 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 88.746459 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.085417 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.867459 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.789750 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.179292 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -198,27 +198,27 @@ TACSTART
      a := ↑((x.toNat + (2 ^ w - (2 ^ w - 1 - y.toNat))) % 2 ^ w + (2 ^ w - 1 % 2 ^ w)) % ↑(2 ^ w)
      b := ↑(x.toNat + y.toNat) % ↑(2 ^ w)
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 51.758959 ms, 
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 69.506417 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 53.730084 ms, 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 70.013000 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (x + y == x + -~~~y + -1#w)]
     Consider the following assignment:
     BitVec.ofBool (x + y == x + -~~~y + -1#w) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 396.373084 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 402.298041 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 87.761375 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 87.563500 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 21.914625 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 22.037958 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 33.544791 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 80.421167 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 33.738250 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 81.446625 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 10.275042 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 11.060750 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.770750 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.334375 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -230,33 +230,33 @@ TACSTART
      a := ↑((x ^^^ y).toNat + 2 % 2 ^ w * (x &&& y).toNat % 2 ^ w) % ↑(2 ^ w)
      b := ↑(x.toNat + y.toNat) % ↑(2 ^ w)
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 54.177625 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 55.604750 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).add (AutoStructs.Term.var 1))
             (((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)).add (AutoStructs.Term.var 2))) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 70.145625 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 65.870666 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (x + y == (x ^^^ y) + 2#w * (x &&& y))]
     Consider the following assignment:
     BitVec.ofBool (x + y == (x ^^^ y) + 2#w * (x &&& y)) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 373.439125 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 375.917500 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 82.734166 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 83.851458 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 15.021625 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 15.699042 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 21.758250 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 78.965250 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 21.258042 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 77.227708 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.299000 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.411375 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.758583 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.975458 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -268,27 +268,27 @@ TACSTART
      a := ↑((x ||| y).toNat + (x &&& y).toNat) % ↑(2 ^ w)
      b := ↑(x.toNat + y.toNat) % ↑(2 ^ w)
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 43.727375 ms, 
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 69.229084 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 42.859209 ms, 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 68.559708 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (x + y == (x ||| y) + (x &&& y))]
     Consider the following assignment:
     BitVec.ofBool (x + y == (x ||| y) + (x &&& y)) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 330.410792 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 329.306500 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 88.138167 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 91.100084 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 19.196375 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 21.163542 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 29.065417 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 90.827417 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 29.960250 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 93.101000 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 10.697750 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 10.882208 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.268958 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.105709 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -300,33 +300,33 @@ TACSTART
      a := ↑(2 % 2 ^ w * (x ||| y).toNat % 2 ^ w + (2 ^ w - (x ^^^ y).toNat)) % ↑(2 ^ w)
      b := ↑(x.toNat + y.toNat) % ↑(2 ^ w)
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 53.734083 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 53.302084 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).add (AutoStructs.Term.var 1))
             ((AutoStructs.Term.var 2).sub ((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)))) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 70.510417 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 70.666625 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (x + y == 2#w * (x ||| y) + -(x ^^^ y))]
     Consider the following assignment:
     BitVec.ofBool (x + y == 2#w * (x ||| y) + -(x ^^^ y)) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 413.799792 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 410.251959 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 88.623334 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 89.664500 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 17.162125 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 17.362375 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.051000 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 91.224167 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.435500 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 90.970959 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.772541 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.121875 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.794333 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.390667 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -338,27 +338,27 @@ TACSTART
      a := ↑((x.toNat + (2 ^ w - 1 - y.toNat)) % 2 ^ w + 1 % 2 ^ w) % ↑(2 ^ w)
      b := ↑(x.toNat + (2 ^ w - y.toNat)) % ↑(2 ^ w)
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 39.492250 ms, 
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 69.974958 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 40.436875 ms, 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 70.660250 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (x + -y == x + ~~~y + 1#w)]
     Consider the following assignment:
     BitVec.ofBool (x + -y == x + ~~~y + 1#w) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 351.534708 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 347.176208 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 86.725291 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 90.586708 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 27.879459 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 20.771625 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 21.736500 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 102.077167 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 20.129666 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 103.472875 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 10.691459 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 10.317916 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.988292 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.087375 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -370,33 +370,33 @@ TACSTART
      a := ↑((x ^^^ y).toNat + (2 ^ w - 2 % 2 ^ w * (~~~x &&& y).toNat % 2 ^ w)) % ↑(2 ^ w)
      b := ↑(x.toNat + (2 ^ w - y.toNat)) % ↑(2 ^ w)
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 42.847208 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 44.360709 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).sub (AutoStructs.Term.var 1))
             (((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)).sub (AutoStructs.Term.var 2))) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 70.540833 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 72.531500 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (x + -y == (x ^^^ y) + -(2#w * (~~~x &&& y)))]
     Consider the following assignment:
     BitVec.ofBool (x + -y == (x ^^^ y) + -(2#w * (~~~x &&& y))) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 388.594041 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 397.388125 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 83.529125 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 87.331291 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 14.223250 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 14.404500 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 14.219250 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 101.592334 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.884250 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 96.449625 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.170417 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.246917 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.812625 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.881542 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -408,27 +408,27 @@ TACSTART
      a := ↑((x &&& ~~~y).toNat + (2 ^ w - (~~~x &&& y).toNat)) % ↑(2 ^ w)
      b := ↑(x.toNat + (2 ^ w - y.toNat)) % ↑(2 ^ w)
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 37.495334 ms, 
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 69.967375 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 36.389875 ms, 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 70.194291 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (x + -y == (x &&& ~~~y) + -(~~~x &&& y))]
     Consider the following assignment:
     BitVec.ofBool (x + -y == (x &&& ~~~y) + -(~~~x &&& y)) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 345.380792 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 334.413917 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 89.737125 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 90.111791 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 21.667083 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 19.935500 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 21.530125 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 103.220917 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 21.555792 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 104.486250 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 10.095834 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 10.345750 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.839834 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.911208 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -440,33 +440,33 @@ TACSTART
      a := ↑(2 % 2 ^ w * (x &&& ~~~y).toNat % 2 ^ w + (2 ^ w - (x ^^^ y).toNat)) % ↑(2 ^ w)
      b := ↑(x.toNat + (2 ^ w - y.toNat)) % ↑(2 ^ w)
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 42.822292 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 59.035750 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).sub (AutoStructs.Term.var 1))
             ((AutoStructs.Term.var 2).sub ((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)))) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 70.627291 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 72.173166 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (x + -y == 2#w * (x &&& ~~~y) + -(x ^^^ y))]
     Consider the following assignment:
     BitVec.ofBool (x + -y == 2#w * (x &&& ~~~y) + -(x ^^^ y)) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 402.571042 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 409.045500 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 92.519959 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 93.419917 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 13.336916 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 12.420500 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 11.623542 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 86.558792 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 10.828542 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 85.087167 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 10.207625 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.943334 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.677542 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.646458 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -478,27 +478,27 @@ TACSTART
      a := ↑((x ||| y).toNat + (2 ^ w - (x &&& y).toNat)) % ↑(2 ^ w)
      b := ↑(x ^^^ y).toNat
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 32.420042 ms, 
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 69.765666 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 31.136542 ms, 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 68.966084 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (x ^^^ y == (x ||| y) + -(x &&& y))]
     Consider the following assignment:
     BitVec.ofBool (x ^^^ y == (x ||| y) + -(x &&& y)) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 302.881750 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 314.180250 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 94.097584 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 93.285875 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 12.194083 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 11.761750 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 10.137125 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 81.211500 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 9.654833 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 84.119500 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.617500 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.680833 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.483250 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.499375 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -510,27 +510,27 @@ TACSTART
      a := ↑((x ||| y).toNat + (2 ^ w - y.toNat)) % ↑(2 ^ w)
      b := ↑(x &&& ~~~y).toNat
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 33.693083 ms, 
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 69.984000 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 30.789292 ms, 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 69.180333 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (x &&& ~~~y == (x ||| y) + -y)]
     Consider the following assignment:
     BitVec.ofBool (x &&& ~~~y == (x ||| y) + -y) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 306.927584 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 317.230750 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 91.663542 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 93.509083 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 10.329334 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 10.599417 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 7.808292 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 77.263917 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 8.248083 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 78.454750 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.603333 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.715417 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.059500 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.178042 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -542,27 +542,27 @@ TACSTART
      a := ↑(x.toNat + (2 ^ w - (x &&& y).toNat)) % ↑(2 ^ w)
      b := ↑(x &&& ~~~y).toNat
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 29.474042 ms, 
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 68.432083 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 30.113375 ms, 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 69.003041 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (x &&& ~~~y == x + -(x &&& y))]
     Consider the following assignment:
     BitVec.ofBool (x &&& ~~~y == x + -(x &&& y)) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 295.448834 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 299.079208 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 103.930458 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 94.381041 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 7.964167 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 7.883833 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 9.097208 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 97.664625 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 9.197208 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 99.552041 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.176500 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.646708 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.884542 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.533875 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       c ≥ 0
@@ -574,27 +574,27 @@ TACSTART
      a := ↑((y.toNat + (2 ^ w - x.toNat)) % 2 ^ w + (2 ^ w - 1 % 2 ^ w)) % ↑(2 ^ w)
      b := ↑2 ^ w
      c := ↑(x.toNat + (2 ^ w - y.toNat)) % ↑(2 ^ w) MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 39.101625 ms, 
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 70.090042 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 39.524334 ms, 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 69.534125 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (~~~(x + -y) == y + -x + -1#w)]
     Consider the following assignment:
     BitVec.ofBool (~~~(x + -y) == y + -x + -1#w) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 383.887458 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 389.333542 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 90.112750 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 88.162625 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 9.163250 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 9.206125 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 6.904667 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 89.693375 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 6.797208 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 86.487250 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.574833 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.880417 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.816042 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.974125 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       c ≥ 0
@@ -606,26 +606,26 @@ TACSTART
      a := ↑(2 ^ w - 1 - x.toNat + y.toNat) % ↑(2 ^ w)
      b := ↑2 ^ w
      c := ↑(x.toNat + (2 ^ w - y.toNat)) % ↑(2 ^ w) MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 32.414166 ms, 
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 67.842958 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 33.822625 ms, 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 68.683833 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (~~~(x + -y) == ~~~x + y)]
     Consider the following assignment:
     BitVec.ofBool (~~~(x + -y) == ~~~x + y) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 308.761125 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 320.824375 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 103.760000 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 98.298459 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 14.133834 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 14.180000 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 15.878334 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 88.075375 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 16.457542 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 87.644042 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 10.253792 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 10.326916 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.789542 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.783500 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       c ≥ 0
@@ -637,27 +637,27 @@ TACSTART
      a := ↑(((x &&& y).toNat + (2 ^ w - (x ||| y).toNat)) % 2 ^ w + (2 ^ w - 1 % 2 ^ w)) % ↑(2 ^ w)
      b := ↑2 ^ w
      c := ↑(x ^^^ y).toNat MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 42.066417 ms, 
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 70.791833 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 41.524750 ms, 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 72.231500 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (~~~(x ^^^ y) == (x &&& y) + -(x ||| y) + -1#w)]
     Consider the following assignment:
     BitVec.ofBool (~~~(x ^^^ y) == (x &&& y) + -(x ||| y) + -1#w) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 390.684000 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 392.915750 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 94.248250 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 95.986083 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 14.466083 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 14.410292 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.194125 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 70.628083 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.091125 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 73.662750 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 24.584208 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 10.022125 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.166042 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.259292 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       c ≥ 0
@@ -669,27 +669,27 @@ TACSTART
      a := ↑((x &&& y).toNat + (2 ^ w - 1 - (x ||| y).toNat)) % ↑(2 ^ w)
      b := ↑2 ^ w
      c := ↑(x ^^^ y).toNat MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 33.930208 ms, 
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 68.806917 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 34.327083 ms, 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 69.321292 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (~~~(x ^^^ y) == (x &&& y) + ~~~(x ||| y))]
     Consider the following assignment:
     BitVec.ofBool (~~~(x ^^^ y) == (x &&& y) + ~~~(x ||| y)) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 309.989166 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 311.575833 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 88.514375 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 89.044708 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 13.381583 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 13.037417 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 10.620000 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 68.263917 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 10.551875 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 72.761417 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.219792 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.511334 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.370375 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.039709 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -701,27 +701,27 @@ TACSTART
      a := ↑((x &&& ~~~y).toNat + y.toNat) % ↑(2 ^ w)
      b := ↑(x ||| y).toNat
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 31.735750 ms, 
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 67.710625 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 32.552958 ms, 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 67.317833 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (x ||| y == (x &&& ~~~y) + y)]
     Consider the following assignment:
     BitVec.ofBool (x ||| y == (x &&& ~~~y) + y) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 291.025167 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 289.951709 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 88.022625 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 88.353458 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 12.250708 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 12.126833 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 9.367833 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 82.354375 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 9.921709 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 81.071208 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.322750 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.458084 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.499792 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.713584 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -733,13 +733,13 @@ TACSTART
      a := ↑((~~~x ||| y).toNat + (2 ^ w - (2 ^ w - 1 - x.toNat))) % ↑(2 ^ w)
      b := ↑(x &&& y).toNat
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 30.036250 ms, 
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 68.752208 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 31.209291 ms, 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 68.771250 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (x &&& y == (~~~x ||| y) + -~~~x)]
     Consider the following assignment:
     BitVec.ofBool (x &&& y == (~~~x ||| y) + -~~~x) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 307.046708 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 312.781209 ms, 
 TACEND

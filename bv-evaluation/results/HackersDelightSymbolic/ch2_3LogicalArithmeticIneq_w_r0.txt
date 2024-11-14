@@ -22,20 +22,20 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:198:6: dec
 ⚠ [892/899] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.523541 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.611500 ms, MSGSTART 
     no applicable extensionality theorem found for
       Bool MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 15.478458 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 16.314000 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 11.722917 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 61.239292 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 12.320666 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 63.876958 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.654416 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.244583 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.485459 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.470708 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 33.589750 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 36.401666 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.atom (AutoStructs.Relation.unsigned AutoStructs.RelationOrdering.le)
@@ -43,30 +43,30 @@ TACSTART
             ((AutoStructs.Term.var 0).add (AutoStructs.Term.var 1))) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 65.833125 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 66.065167 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (x ||| y >ᵤ x + y)]
     Consider the following assignment:
     BitVec.ofBool (x ||| y >ᵤ x + y) = 0x1#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 251.077875 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 264.941792 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:25:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.614458 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.724875 ms, MSGSTART 
     no applicable extensionality theorem found for
       Bool MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 15.005334 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 15.146167 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 11.589042 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 64.938958 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 12.896542 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 63.289959 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.058042 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.604583 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.739500 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.621917 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 33.582208 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 33.700416 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.atom (AutoStructs.Relation.unsigned AutoStructs.RelationOrdering.lt)
@@ -74,57 +74,57 @@ TACSTART
             ((AutoStructs.Term.var 0).or (AutoStructs.Term.var 1))) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 64.364125 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 68.554125 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (x ||| y >ᵤ x + y)]
     Consider the following assignment:
     BitVec.ofBool (x ||| y >ᵤ x + y) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 259.662041 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 261.564041 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:30:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.620042 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.799209 ms, MSGSTART 
     no applicable extensionality theorem found for
       Bool MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 14.113291 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 15.305584 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 9.977083 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 71.539167 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 11.032333 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 71.458750 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 11.885875 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 13.605208 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.420916 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.948125 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 43.148375 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 39.734958 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.atom (AutoStructs.Relation.unsigned AutoStructs.RelationOrdering.le)
             (AutoStructs.Term.var 0) ((AutoStructs.Term.var 1).xor (AutoStructs.Term.var 2))) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 73.961708 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 74.746792 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        ((if (x + -y).getLsbD (w - 1) = true then -(x + -y) else x + -y) >ᵤ x ^^^ y)]
     Consider the following assignment:
     BitVec.ofBool ((if (x + -y).getLsbD (w - 1) = true then -(x + -y) else x + -y) >ᵤ x ^^^ y) = 0x1#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 283.223708 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 297.740834 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:35:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 2.129583 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.556834 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       x = y ↔ ((x - y).abs - 1#w).msb = true MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 8.770833 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 7.749250 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 5.596875 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 81.010000 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 5.828875 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 82.622541 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool PASS, TIME_ELAPSED 21.647208 ms, 
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 8.289958 ms, MSGSTART 
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 21.700250 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 8.972209 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       a ≥ 0
@@ -132,7 +132,7 @@ TACSTART
     where
      a := ↑y.toNat
      b := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 54.888791 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 56.075542 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.binop AutoStructs.Binop.equiv
@@ -140,7 +140,7 @@ TACSTART
             (AutoStructs.Formula.msbSet ((AutoStructs.Term.var 2).sub AutoStructs.Term.one))) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 78.586125 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 79.245041 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (((if (x + -y).getLsbD (w - 1) = true then -(x + -y) else x + -y) + -1#w).getLsbD (w - 1)),
@@ -149,20 +149,20 @@ TACSTART
     BitVec.ofBool (x == y) = 0x1#1
     BitVec.ofBool (((if (x + -y).getLsbD (w - 1) = true then -(x + -y) else x + -y) + -1#w).getLsbD (w - 1)) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 332.232041 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 331.503167 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:40:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.926917 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.811000 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       x = y ↔ 0 < w ∧ (x - y).msb = false ∧ (-x + y).msb = false MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 16.158083 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 16.957584 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 23.009125 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 78.721083 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 25.253250 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 84.343292 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool PASS, TIME_ELAPSED 36.287125 ms, 
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 8.522542 ms, MSGSTART 
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 38.969792 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 8.584083 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       a ≥ 0
@@ -170,7 +170,7 @@ TACSTART
     where
      a := ↑y.toNat
      b := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 28.436959 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 29.658375 ms, MSGSTART 
     Unsupported syntax 0 < w === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -200,26 +200,26 @@ TACSTART
                       (Lean.Expr.app (Lean.Expr.const `CommSemiring.toSemiring [Lean.Level.zero]) (Lean.Expr.const `Nat []))
                       (Lean.Expr.const `Nat.instCommSemiring [])))))))))
       (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 133551)) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 12.515625 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 11.033833 ms, MSGSTART 
     None of the hypotheses are in the supported BitVec fragment.
     There are two potential fixes for this:
     1. If you are using custom BitVec constructs simplify them to built-in ones.
     2. If your problem is using only built-in ones it might currently be out of reach.
        Consider expressing it in terms of different operations that are better supported. MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 283.569458 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 296.429667 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:45:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.532875 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.621667 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       ¬x = y ↔ (-(x - y).abs).msb = true MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 7.872792 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 8.549833 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 6.994416 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 77.960208 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 6.903375 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 74.956542 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool PASS, TIME_ELAPSED 26.054459 ms, 
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 8.607250 ms, MSGSTART 
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 28.536041 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 9.446000 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -231,7 +231,7 @@ TACSTART
      a := ↑y.toNat
      b := ↑x.toNat
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 57.524125 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 55.720792 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.binop AutoStructs.Binop.equiv
@@ -240,7 +240,7 @@ TACSTART
             (AutoStructs.Formula.msbSet (AutoStructs.Term.var 2).neg)) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 81.331875 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 79.690542 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (x == y),
      BitVec.ofBool ((-if (x + -y).getLsbD (w - 1) = true then -(x + -y) else x + -y).getLsbD (w - 1))]
@@ -248,25 +248,25 @@ TACSTART
     BitVec.ofBool (x == y) = 0x1#1
     BitVec.ofBool ((-if (x + -y).getLsbD (w - 1) = true then -(x + -y) else x + -y).getLsbD (w - 1)) = 0x1#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 338.133750 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 330.732958 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:55:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.635250 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.480125 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       (y >ₛ x) = true ↔ ¬(x - y).msb = ((x.msb ^^ y.msb) && ((x - y).msb ^^ x.msb)) MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 10.891750 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 9.966750 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 11.099875 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 71.995833 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 10.515625 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 70.083875 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool PASS, TIME_ELAPSED 64.963917 ms, 
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.892791 ms, MSGSTART 
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 68.550375 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.118458 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 17.973834 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 18.640000 ms, MSGSTART 
     Equality (x - y).msb = ((x.msb ^^ y.msb) && ((x - y).msb ^^ x.msb)) has a strange type MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 79.868417 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 79.461291 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (y >ᵤ x),
      BitVec.ofBool (x.getLsbD (w - 1)),
@@ -278,24 +278,24 @@ TACSTART
     BitVec.ofBool (y >ᵤ x) = 0x1#1
     BitVec.ofBool ((x + -y).getLsbD (w - 1)) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 334.333333 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 328.670833 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:60:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.722375 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.456833 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       (y >ₛ x) = true ↔ x.msb = true ∧ 0 < w ∧ y.msb = false ∨ (0 < w ∧ x.msb = y.msb) ∧ (x - y).msb = true MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 9.462708 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 9.785875 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.390166 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 72.710666 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 15.363041 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 72.560250 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 56.672250 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 60.982500 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 8.857084 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.736416 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 21.685458 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 25.320875 ms, MSGSTART 
     Unsupported syntax 0 < w === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -325,30 +325,30 @@ TACSTART
                       (Lean.Expr.app (Lean.Expr.const `CommSemiring.toSemiring [Lean.Level.zero]) (Lean.Expr.const `Nat []))
                       (Lean.Expr.const `Nat.instCommSemiring [])))))))))
       (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 274193)) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 13.587334 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 12.712166 ms, MSGSTART 
     None of the hypotheses are in the supported BitVec fragment.
     There are two potential fixes for this:
     1. If you are using custom BitVec constructs simplify them to built-in ones.
     2. If your problem is using only built-in ones it might currently be out of reach.
        Consider expressing it in terms of different operations that are better supported. MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 266.929333 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 269.675667 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:65:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.640667 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.703167 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       (y ≥ₛ x) = true ↔ (x.msb = true ∨ 0 < w ∧ y.msb = false) ∧ (¬x.msb = y.msb ∨ 0 < w ∧ (y - x).msb = false) MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 9.298292 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 10.158583 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.088834 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 75.208875 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 15.171250 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 75.363542 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 59.908084 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 61.323167 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.493416 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 9.626875 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 23.037083 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 24.735208 ms, MSGSTART 
     Unsupported syntax 0 < w === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -378,30 +378,30 @@ TACSTART
                       (Lean.Expr.app (Lean.Expr.const `CommSemiring.toSemiring [Lean.Level.zero]) (Lean.Expr.const `Nat []))
                       (Lean.Expr.const `Nat.instCommSemiring [])))))))))
       (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 319645)) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 15.016500 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 17.164083 ms, MSGSTART 
     None of the hypotheses are in the supported BitVec fragment.
     There are two potential fixes for this:
     1. If you are using custom BitVec constructs simplify them to built-in ones.
     2. If your problem is using only built-in ones it might currently be out of reach.
        Consider expressing it in terms of different operations that are better supported. MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 267.124250 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 285.103792 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:70:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.481625 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.677000 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       (y >ᵤ x) = true ↔ (0 < w ∧ x.msb = false) ∧ y.msb = true ∨ (0 < w ∧ x.msb = y.msb) ∧ (x - y).msb = true MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 9.174667 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 8.537083 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 12.733125 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 72.391834 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.809750 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 73.690834 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 43.341458 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 42.045917 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.532500 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 8.801667 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 22.534250 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 26.262583 ms, MSGSTART 
     Unsupported syntax 0 < w === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -431,30 +431,30 @@ TACSTART
                       (Lean.Expr.app (Lean.Expr.const `CommSemiring.toSemiring [Lean.Level.zero]) (Lean.Expr.const `Nat []))
                       (Lean.Expr.const `Nat.instCommSemiring [])))))))))
       (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 368019)) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 11.275250 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 10.575625 ms, MSGSTART 
     None of the hypotheses are in the supported BitVec fragment.
     There are two potential fixes for this:
     1. If you are using custom BitVec constructs simplify them to built-in ones.
     2. If your problem is using only built-in ones it might currently be out of reach.
        Consider expressing it in terms of different operations that are better supported. MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 249.771666 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 256.851167 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:75:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.701000 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.573958 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       (y ≥ᵤ x) = true ↔ (0 < w ∧ x.msb = false ∨ y.msb = true) ∧ (¬x.msb = y.msb ∨ 0 < w ∧ (y - x).msb = false) MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 10.592625 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 9.111375 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.717125 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 72.727000 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 14.912958 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 77.673375 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 45.517917 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 47.547792 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.068458 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.633208 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 22.541459 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 23.839042 ms, MSGSTART 
     Unsupported syntax 0 < w === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -484,26 +484,26 @@ TACSTART
                       (Lean.Expr.app (Lean.Expr.const `CommSemiring.toSemiring [Lean.Level.zero]) (Lean.Expr.const `Nat []))
                       (Lean.Expr.const `Nat.instCommSemiring [])))))))))
       (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 409685)) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 12.699834 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 12.896750 ms, MSGSTART 
     None of the hypotheses are in the supported BitVec fragment.
     There are two potential fixes for this:
     1. If you are using custom BitVec constructs simplify them to built-in ones.
     2. If your problem is using only built-in ones it might currently be out of reach.
        Consider expressing it in terms of different operations that are better supported. MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 248.906459 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 260.165959 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:80:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.683167 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.551125 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       x = 0#w ↔ (x.abs - 1#w).msb = true MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 7.995125 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 7.947125 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 5.688458 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 74.382625 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 5.973125 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 82.636250 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool PASS, TIME_ELAPSED 21.292958 ms, 
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.128625 ms, MSGSTART 
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 25.004916 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.067500 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       a ≥ 0
@@ -511,7 +511,7 @@ TACSTART
     where
      a := ↑0 % ↑(2 ^ w)
      b := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 48.312125 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 48.250375 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.binop AutoStructs.Binop.equiv
@@ -519,7 +519,7 @@ TACSTART
             (AutoStructs.Formula.msbSet ((AutoStructs.Term.var 1).sub AutoStructs.Term.one))) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 75.755416 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 79.480584 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (((if x.getLsbD (w - 1) = true then -x else x) + -1#w).getLsbD (w - 1)),
@@ -528,20 +528,20 @@ TACSTART
     BitVec.ofBool (x == 0#w) = 0x1#1
     BitVec.ofBool (((if x.getLsbD (w - 1) = true then -x else x) + -1#w).getLsbD (w - 1)) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 297.861333 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 315.923708 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:85:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.512875 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.615042 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       x = 0#w ↔ 0 < w ∧ x.msb = false ∧ (-x).msb = false MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 8.076875 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 7.650833 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 10.613042 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 68.035625 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 10.093583 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 67.834458 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool PASS, TIME_ELAPSED 33.234583 ms, 
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.724125 ms, MSGSTART 
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 34.496542 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.039583 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       a ≥ 0
@@ -549,7 +549,7 @@ TACSTART
     where
      a := ↑0 % ↑(2 ^ w)
      b := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 22.367334 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 24.035834 ms, MSGSTART 
     Unsupported syntax 0 < w === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -579,26 +579,26 @@ TACSTART
                       (Lean.Expr.app (Lean.Expr.const `CommSemiring.toSemiring [Lean.Level.zero]) (Lean.Expr.const `Nat []))
                       (Lean.Expr.const `Nat.instCommSemiring [])))))))))
       (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 488142)) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 7.632209 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 9.610458 ms, MSGSTART 
     None of the hypotheses are in the supported BitVec fragment.
     There are two potential fixes for this:
     1. If you are using custom BitVec constructs simplify them to built-in ones.
     2. If your problem is using only built-in ones it might currently be out of reach.
        Consider expressing it in terms of different operations that are better supported. MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 221.909750 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 226.030000 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:90:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.575000 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.499500 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       x = 0#w ↔ (0 < w ∧ x.msb = false) ∧ (x - 1#w).msb = true MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 7.618875 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 7.660750 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 11.056125 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 71.398167 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 10.681458 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 74.857041 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool PASS, TIME_ELAPSED 33.306500 ms, 
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.492375 ms, MSGSTART 
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 32.975375 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.856250 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       a ≥ 0
@@ -606,7 +606,7 @@ TACSTART
     where
      a := ↑0 % ↑(2 ^ w)
      b := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 22.116292 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 23.758375 ms, MSGSTART 
     Unsupported syntax 0 < w === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -636,26 +636,26 @@ TACSTART
                       (Lean.Expr.app (Lean.Expr.const `CommSemiring.toSemiring [Lean.Level.zero]) (Lean.Expr.const `Nat []))
                       (Lean.Expr.const `Nat.instCommSemiring [])))))))))
       (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 523149)) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 8.711208 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 8.776958 ms, MSGSTART 
     None of the hypotheses are in the supported BitVec fragment.
     There are two potential fixes for this:
     1. If you are using custom BitVec constructs simplify them to built-in ones.
     2. If your problem is using only built-in ones it might currently be out of reach.
        Consider expressing it in terms of different operations that are better supported. MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 229.733834 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 237.224250 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:95:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.559834 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.546167 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       ¬x = 0#w ↔ (-x.abs).msb = true MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 7.334583 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 7.343750 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 5.725291 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 68.055250 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 6.264209 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 71.696000 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool PASS, TIME_ELAPSED 27.571250 ms, 
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.077333 ms, MSGSTART 
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 27.337458 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.354583 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -667,7 +667,7 @@ TACSTART
      a := ↑0 % ↑(2 ^ w)
      b := ↑x.toNat
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 49.382417 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 47.121959 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.binop AutoStructs.Binop.equiv
@@ -676,7 +676,7 @@ TACSTART
             (AutoStructs.Formula.msbSet (AutoStructs.Term.var 1).neg)) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 77.846292 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 79.384959 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (x == 0#w),
      BitVec.ofBool ((-if x.getLsbD (w - 1) = true then -x else x).getLsbD (w - 1))]
@@ -684,26 +684,26 @@ TACSTART
     BitVec.ofBool (x == 0#w) = 0x1#1
     BitVec.ofBool ((-if x.getLsbD (w - 1) = true then -x else x).getLsbD (w - 1)) = 0x1#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 304.934542 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 305.889417 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:105:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.528125 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.606042 ms, MSGSTART 
     no applicable extensionality theorem found for
       Bool MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 10.243291 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 9.957958 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 5.464291 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 52.361084 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 5.416417 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 56.812375 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 20.793958 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 22.420834 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.046667 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.851375 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 14.719750 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 13.790625 ms, MSGSTART 
     Equality (0#w >ₛ x) = x.msb has a strange type MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 68.847333 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 70.770084 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (x.getLsbD (w - 1)),
      BitVec.ofBool (0#w >ᵤ x)]
@@ -711,24 +711,24 @@ TACSTART
     BitVec.ofBool (x.getLsbD (w - 1)) = 0x1#1
     BitVec.ofBool (0#w >ᵤ x) = 0x1#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 224.636583 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 227.006042 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:110:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.706708 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.658833 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       (0#w ≥ₛ x) = true ↔ x.msb = true ∨ 0 < w ∧ (-x).msb = false MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 8.184708 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 9.268167 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 10.758542 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 66.876209 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 12.462875 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 67.558917 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 43.078292 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 43.946208 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.403750 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.095167 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 21.789375 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 21.803333 ms, MSGSTART 
     Unsupported syntax 0 < w === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -758,30 +758,30 @@ TACSTART
                       (Lean.Expr.app (Lean.Expr.const `CommSemiring.toSemiring [Lean.Level.zero]) (Lean.Expr.const `Nat []))
                       (Lean.Expr.const `Nat.instCommSemiring [])))))))))
       (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 634993)) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 10.541959 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 10.841000 ms, MSGSTART 
     None of the hypotheses are in the supported BitVec fragment.
     There are two potential fixes for this:
     1. If you are using custom BitVec constructs simplify them to built-in ones.
     2. If your problem is using only built-in ones it might currently be out of reach.
        Consider expressing it in terms of different operations that are better supported. MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 229.770667 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 234.883291 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:120:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.646041 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.598416 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       (x >ₛ 0#w) = true ↔ (-x).msb = true ∧ 0 < w ∧ x.msb = false MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 7.205166 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 8.374583 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 11.098666 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 69.630917 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 14.943042 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 71.611584 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 48.824791 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 42.421084 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.599209 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.510750 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 21.176458 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 23.969458 ms, MSGSTART 
     Unsupported syntax 0 < w === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -811,30 +811,30 @@ TACSTART
                       (Lean.Expr.app (Lean.Expr.const `CommSemiring.toSemiring [Lean.Level.zero]) (Lean.Expr.const `Nat []))
                       (Lean.Expr.const `Nat.instCommSemiring [])))))))))
       (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 673796)) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 10.414125 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 10.575584 ms, MSGSTART 
     None of the hypotheses are in the supported BitVec fragment.
     There are two potential fixes for this:
     1. If you are using custom BitVec constructs simplify them to built-in ones.
     2. If your problem is using only built-in ones it might currently be out of reach.
        Consider expressing it in terms of different operations that are better supported. MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 242.039084 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 230.790917 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:125:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.557583 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.619167 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       (x ≥ₛ 0#w) = true ↔ 0 < w ∧ x.msb = false MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 6.409125 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 6.580166 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 9.237000 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 50.896291 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 8.236708 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 56.271042 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 35.436292 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 31.543458 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.041042 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.481584 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 19.109542 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 19.290667 ms, MSGSTART 
     Unsupported syntax 0 < w === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -864,31 +864,31 @@ TACSTART
                       (Lean.Expr.app (Lean.Expr.const `CommSemiring.toSemiring [Lean.Level.zero]) (Lean.Expr.const `Nat []))
                       (Lean.Expr.const `Nat.instCommSemiring [])))))))))
       (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 711745)) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 7.729417 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 8.061708 ms, MSGSTART 
     None of the hypotheses are in the supported BitVec fragment.
     There are two potential fixes for this:
     1. If you are using custom BitVec constructs simplify them to built-in ones.
     2. If your problem is using only built-in ones it might currently be out of reach.
        Consider expressing it in terms of different operations that are better supported. MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 190.348750 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 194.826667 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:130:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.701458 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.777208 ms, MSGSTART 
     no applicable extensionality theorem found for
       Bool MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 91.158208 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 100.205166 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 67.932458 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 83.861542 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 70.021209 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 86.473750 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool PASS, TIME_ELAPSED 96.914000 ms, 
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.426042 ms, MSGSTART 
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 92.536250 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.229208 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 29.205417 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 29.599917 ms, MSGSTART 
     Equality (y >ₛ x) = (2#w ^ (w - 1) + y >ₛ x + 2#w ^ (w - 1)) has a strange type MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 79.582583 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 79.147750 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (y >ᵤ x),
      BitVec.ofBool (y.getLsbD (w - 1)),
@@ -904,25 +904,25 @@ TACSTART
     BitVec.ofBool ((2#w ^ (w - 1) + y).getLsbD (w - 1)) = 0x1#1
     BitVec.ofBool (2#w ^ (w - 1) + y >ᵤ x + 2#w ^ (w - 1)) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 522.211708 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 539.244875 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:135:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.845166 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.681208 ms, MSGSTART 
     no applicable extensionality theorem found for
       Bool MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 26.091458 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 25.788542 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 38.809166 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 93.911250 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 39.447958 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 102.953250 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool PASS, TIME_ELAPSED 58.010542 ms, 
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.920167 ms, MSGSTART 
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 58.489750 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.943042 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 42.071666 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 37.341500 ms, MSGSTART 
     Equality (y >ᵤ x) = (-2#w ^ (w - 1) + y >ₛ x - 2#w ^ (w - 1)) has a strange type MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 87.381708 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 77.103875 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (-2#w ^ (w - 1) + y >ᵤ x + -2#w ^ (w - 1)),
@@ -935,25 +935,25 @@ TACSTART
     BitVec.ofBool ((-2#w ^ (w - 1) + y).getLsbD (w - 1)) = 0x1#1
     BitVec.ofBool (-2#w ^ (w - 1) + y >ᵤ x + -2#w ^ (w - 1)) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 431.062208 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 447.983167 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:140:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.631708 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.654917 ms, MSGSTART 
     no applicable extensionality theorem found for
       Bool MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 29.625417 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 29.350166 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 33.820292 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 83.192125 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 33.544625 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 86.513750 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool PASS, TIME_ELAPSED 49.189583 ms, 
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.529167 ms, MSGSTART 
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 49.048250 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.239708 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 31.155208 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 30.434125 ms, MSGSTART 
     Equality (y >ₛ x) = !2#w ^ (w - 1) + x ≥ᵤ y + 2#w ^ (w - 1) has a strange type MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 74.816458 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 74.198000 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (y.getLsbD (w - 1)),
      BitVec.ofBool (y + 2#w ^ (w - 1) >ᵤ 2#w ^ (w - 1) + x),
@@ -965,25 +965,25 @@ TACSTART
     BitVec.ofBool (y >ᵤ x) = 0x1#1
     BitVec.ofBool (y + 2#w ^ (w - 1) >ᵤ 2#w ^ (w - 1) + x) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 387.154667 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 397.646333 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:145:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.592666 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.573042 ms, MSGSTART 
     no applicable extensionality theorem found for
       Bool MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 52.710959 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 51.347334 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 43.915792 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 85.063792 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 43.621833 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 82.153500 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool PASS, TIME_ELAPSED 43.613083 ms, 
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.066666 ms, MSGSTART 
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 45.337916 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.966667 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 28.359250 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 31.384834 ms, MSGSTART 
     Equality (y ≥ₛ x) = (2#w ^ (w - 1) + y ≥ᵤ x + 2#w ^ (w - 1)) has a strange type MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 76.859917 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 74.831291 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (y.getLsbD (w - 1)),
      BitVec.ofBool (x + 2#w ^ (w - 1) >ᵤ 2#w ^ (w - 1) + y),
@@ -995,20 +995,20 @@ TACSTART
     BitVec.ofBool (x >ᵤ y) = 0x1#1
     BitVec.ofBool (x + 2#w ^ (w - 1) >ᵤ 2#w ^ (w - 1) + y) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 408.860833 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 414.692584 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:150:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.827334 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.510125 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       x = y ↔ BitVec.carry w x (~~~y + 1#w) false = true MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 17.740625 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 15.771167 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 11.548875 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 69.331333 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.339792 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 72.576459 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool PASS, TIME_ELAPSED 19.732667 ms, 
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.355500 ms, MSGSTART 
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 20.623583 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.324750 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       a ≥ 0
@@ -1016,7 +1016,7 @@ TACSTART
     where
      a := ↑y.toNat
      b := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 15.551459 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 18.321459 ms, MSGSTART 
     Unsupported syntax BitVec.carry w x (~~~y + 1#w) false === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -1098,7 +1098,7 @@ TACSTART
                             (Lean.Expr.const `Nat []))
                           (Lean.Expr.const `Nat.instCommSemiring [])))))))))))
       (Lean.Expr.const `Bool.false []) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 72.717875 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 69.514167 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (x == y),
      BitVec.ofBool (BitVec.carry w x (~~~y + 1#w) false)]
@@ -1106,20 +1106,20 @@ TACSTART
     BitVec.ofBool (x == y) = 0x1#1
     BitVec.ofBool (BitVec.carry w x (~~~y + 1#w) false) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 264.071459 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 265.959667 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:160:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.844458 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.803250 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       ¬x = y ↔ BitVec.carry w x (~~~y) false = true MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 6.135291 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 6.363750 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 3.526791 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 50.396292 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 3.652292 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 52.205792 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool PASS, TIME_ELAPSED 23.509458 ms, 
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.062875 ms, MSGSTART 
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 24.002541 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.193083 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -1131,7 +1131,7 @@ TACSTART
      a := ↑y.toNat
      b := ↑x.toNat
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 15.489125 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 15.053792 ms, MSGSTART 
     Unsupported syntax BitVec.carry w x (~~~y) false === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -1147,7 +1147,7 @@ TACSTART
             (Lean.Expr.app (Lean.Expr.const `BitVec.instComplement []) (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1024323))))
           (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1024327))))
       (Lean.Expr.const `Bool.false []) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 70.417208 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 70.367958 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (BitVec.carry w x (~~~y) false),
@@ -1156,27 +1156,27 @@ TACSTART
     BitVec.ofBool (x == y) = 0x1#1
     BitVec.ofBool (BitVec.carry w x (~~~y) false) = 0x1#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 217.639250 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 226.603459 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:165:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.551750 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.593041 ms, MSGSTART 
     no applicable extensionality theorem found for
       Bool MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 25.529416 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 24.990000 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 34.307458 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 95.298291 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 35.175500 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 93.844750 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 24.323000 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 23.580500 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.375750 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.344625 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 33.601416 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 30.354125 ms, MSGSTART 
     Equality (y >ₛ x) =
       !BitVec.carry w (x + 2#w ^ (w - 1)) (~~~(2#w ^ (w - 1) + y) + 1#w) false has a strange type MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 80.250083 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 74.780000 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (BitVec.carry w (x + 2#w ^ (w - 1)) (~~~(2#w ^ (w - 1) + y) + 1#w) false),
@@ -1189,27 +1189,27 @@ TACSTART
     BitVec.ofBool (y >ᵤ x) = 0x1#1
     BitVec.ofBool (BitVec.carry w (x + 2#w ^ (w - 1)) (~~~(2#w ^ (w - 1) + y) + 1#w) false) = 0x1#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 374.318583 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 377.279208 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:170:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.754417 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 2.117250 ms, MSGSTART 
     no applicable extensionality theorem found for
       Bool MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 18.140959 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 18.711666 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 54.428750 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 73.956125 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 59.332584 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 73.759125 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 23.707500 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 22.983917 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.068792 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.969458 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 60.594416 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 61.756208 ms, MSGSTART 
     Equality (y >ₛ x) =
       !BitVec.carry w x (~~~y + 1#w) false ^^^ x.getMsbD (w - 1) ^^^ y.getMsbD (w - 1) has a strange type MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 76.707958 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 77.572208 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (BitVec.carry w x (~~~y + 1#w) false ^^^ (Decidable.decide (w - 1 < w) && x.getLsbD (w - 1 - (w - 1))) ^^^
@@ -1225,27 +1225,27 @@ TACSTART
       (BitVec.carry w x (~~~y + 1#w) false ^^^ (Decidable.decide (w - 1 < w) && x.getLsbD (w - 1 - (w - 1))) ^^^
         (Decidable.decide (w - 1 < w) && y.getLsbD (w - 1 - (w - 1)))) = 0x1#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 411.184542 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 415.565250 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:178:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.505084 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.573125 ms, MSGSTART 
     no applicable extensionality theorem found for
       Bool MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 24.056125 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 24.563042 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 32.575250 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 97.421916 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 35.011375 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 93.256208 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 23.670708 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 24.037417 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.365459 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.397291 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 31.714792 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 30.669834 ms, MSGSTART 
     Equality (y ≥ₛ x) =
       BitVec.carry w (y + 2#w ^ (w - 1)) (~~~(2#w ^ (w - 1) + x) + 1#w) false has a strange type MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 76.173292 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 75.981666 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (y.getLsbD (w - 1)),
      BitVec.ofBool (x >ᵤ y),
@@ -1257,27 +1257,27 @@ TACSTART
     BitVec.ofBool (x >ᵤ y) = 0x1#1
     BitVec.ofBool (BitVec.carry w (y + 2#w ^ (w - 1)) (~~~(2#w ^ (w - 1) + x) + 1#w) false) = 0x1#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 367.267583 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 373.579875 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:183:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.617000 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.507375 ms, MSGSTART 
     no applicable extensionality theorem found for
       Bool MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 21.566666 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 19.244625 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 57.967292 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 70.095042 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 57.258708 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 73.585417 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 23.236000 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 23.817000 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.908750 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.983083 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 61.200083 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 59.226750 ms, MSGSTART 
     Equality (y ≥ₛ x) =
       BitVec.carry w y (~~~x + 1#w) false ^^^ x.getMsbD (w - 1) ^^^ y.getMsbD (w - 1) has a strange type MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 77.154041 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 76.811958 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (x.getLsbD (w - 1)),
      BitVec.ofBool (y.getLsbD (w - 1)),
@@ -1293,26 +1293,26 @@ TACSTART
       (BitVec.carry w y (~~~x + 1#w) false ^^^ (Decidable.decide (w - 1 < w) && x.getLsbD (w - 1 - (w - 1))) ^^^
         (Decidable.decide (w - 1 < w) && y.getLsbD (w - 1 - (w - 1)))) = 0x1#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 419.327750 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 410.582000 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:188:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.571667 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.722417 ms, MSGSTART 
     no applicable extensionality theorem found for
       Bool MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 14.844000 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 16.423709 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 12.508875 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 67.310083 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 12.033958 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 71.598583 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 11.385166 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 11.152750 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.445375 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.135041 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 16.334959 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 17.823792 ms, MSGSTART 
     Equality (y >ᵤ x) = !BitVec.carry w x (~~~y + 1#w) false has a strange type MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 68.569042 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 68.539500 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (y >ᵤ x),
      BitVec.ofBool (BitVec.carry w x (~~~y + 1#w) false)]
@@ -1320,26 +1320,26 @@ TACSTART
     BitVec.ofBool (y >ᵤ x) = 0x1#1
     BitVec.ofBool (BitVec.carry w x (~~~y + 1#w) false) = 0x1#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 244.338084 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 246.114584 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:193:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.572208 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.532959 ms, MSGSTART 
     no applicable extensionality theorem found for
       Bool MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 15.267792 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 15.600167 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 12.135917 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 68.975500 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 12.679708 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 65.337417 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 11.649916 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 11.200250 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.462000 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.464959 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 15.110083 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 16.189083 ms, MSGSTART 
     Equality (y ≥ᵤ x) = BitVec.carry w y (~~~x + 1#w) false has a strange type MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 68.288083 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 69.893709 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (x >ᵤ y),
      BitVec.ofBool (BitVec.carry w y (~~~x + 1#w) false)]
@@ -1347,20 +1347,20 @@ TACSTART
     BitVec.ofBool (x >ᵤ y) = 0x1#1
     BitVec.ofBool (BitVec.carry w y (~~~x + 1#w) false) = 0x1#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 248.884208 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 257.318291 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:198:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.717375 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.594000 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       x = 0#w ↔ BitVec.carry w (~~~x) (1#w) false = true MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 7.885041 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 8.073792 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 3.920291 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 57.123292 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 3.785458 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 55.883708 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool PASS, TIME_ELAPSED 18.906583 ms, 
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.908708 ms, MSGSTART 
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 20.158459 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.957542 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       a ≥ 0
@@ -1368,7 +1368,7 @@ TACSTART
     where
      a := ↑0 % ↑(2 ^ w)
      b := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 16.511083 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 14.571708 ms, MSGSTART 
     Unsupported syntax BitVec.carry w (~~~x) (1#w) false === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -1410,7 +1410,7 @@ TACSTART
                           (Lean.Expr.const `Nat []))
                         (Lean.Expr.const `Nat.instCommSemiring []))))))))))
       (Lean.Expr.const `Bool.false []) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 70.892417 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 70.567083 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (BitVec.carry w (~~~x) (1#w) false),
@@ -1419,20 +1419,20 @@ TACSTART
     BitVec.ofBool (x == 0#w) = 0x1#1
     BitVec.ofBool (BitVec.carry w (~~~x) (1#w) false) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 230.786458 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 237.543667 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:203:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.544292 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.758375 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       ¬x = 0#w ↔ BitVec.carry w x (BitVec.allOnes w) false = true MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 6.753709 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 7.392709 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 3.609166 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 84.870834 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 4.466333 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 83.576625 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool PASS, TIME_ELAPSED 23.490958 ms, 
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.960417 ms, MSGSTART 
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 25.967292 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.148958 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -1444,7 +1444,7 @@ TACSTART
      a := ↑0 % ↑(2 ^ w)
      b := ↑x.toNat
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 16.493417 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 17.193750 ms, MSGSTART 
     Unsupported syntax BitVec.carry w x (-1#w) false === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -1466,7 +1466,7 @@ TACSTART
                 (Lean.Expr.lit (Lean.Literal.natVal 1)))
               (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 1)))))))
       (Lean.Expr.const `Bool.false []) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 70.289125 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 71.822125 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (BitVec.carry w x (BitVec.allOnes w) false),
@@ -1475,26 +1475,26 @@ TACSTART
     BitVec.ofBool (x == 0#w) = 0x1#1
     BitVec.ofBool (BitVec.carry w x (BitVec.allOnes w) false) = 0x1#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 254.262959 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 255.142750 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:208:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.646208 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.546334 ms, MSGSTART 
     no applicable extensionality theorem found for
       Bool MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 9.660333 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 9.170084 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 5.354042 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 54.066041 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 4.841458 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 53.229500 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 20.201208 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 22.858792 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 0.822625 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 0.893750 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 13.180959 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 13.478042 ms, MSGSTART 
     Equality (0#w >ₛ x) = BitVec.carry w x x false has a strange type MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 66.349291 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 69.723500 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (BitVec.carry w x x false),
@@ -1505,26 +1505,26 @@ TACSTART
     BitVec.ofBool (0#w >ᵤ x) = 0x1#1
     BitVec.ofBool (BitVec.carry w x x false) = 0x1#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 220.090875 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 220.399208 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:213:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.904875 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.763708 ms, MSGSTART 
     no applicable extensionality theorem found for
       Bool MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 12.088709 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 12.342833 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 22.152958 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 88.852917 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 24.112416 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 91.718125 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 25.926416 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 26.209750 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.543834 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.701125 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 31.550916 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 31.705750 ms, MSGSTART 
     Equality (0#w ≥ₛ x) = BitVec.carry w (2#w ^ (w - 1)) (-2#w ^ (w - 1) - x) false has a strange type MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 78.361250 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 77.816625 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (x.getLsbD (w - 1)),
      BitVec.ofBool (x == 0#w),
@@ -1534,24 +1534,24 @@ TACSTART
     BitVec.ofBool (x == 0#w) = 0x1#1
     BitVec.ofBool (BitVec.carry w (2#w ^ (w - 1)) (-2#w ^ (w - 1) + -x) false) = 0x1#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 351.474708 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 362.099125 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:218:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.442667 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.636000 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       AdditionNoOverflows? x y ↔ (y >ᵤ ~~~x) = true MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 8.757959 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 8.288709 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 3.401375 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 49.760458 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 3.157083 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 51.990000 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 14.832458 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 14.258500 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.036917 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 0.937125 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 12.947125 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 14.977500 ms, MSGSTART 
     Unsupported syntax AdditionNoOverflows? x y === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -1559,30 +1559,30 @@ TACSTART
           (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1440318)))
         (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1440320)))
       (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1440322)) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 1.536167 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 1.650750 ms, MSGSTART 
     None of the hypotheses are in the supported BitVec fragment.
     There are two potential fixes for this:
     1. If you are using custom BitVec constructs simplify them to built-in ones.
     2. If your problem is using only built-in ones it might currently be out of reach.
        Consider expressing it in terms of different operations that are better supported. MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 138.358916 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 139.337416 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:223:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.596125 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.602875 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       AdditionNoOverflows? x y ↔ (x >ᵤ x + y) = true MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 14.351209 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 14.523125 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 9.082958 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 59.460917 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 9.111542 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 59.730083 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 16.668625 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 16.332167 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.398666 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.351542 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 16.643000 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 14.640042 ms, MSGSTART 
     Unsupported syntax AdditionNoOverflows? x y === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -1590,30 +1590,30 @@ TACSTART
           (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1455178)))
         (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1455180)))
       (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1455182)) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 2.809875 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 2.999917 ms, MSGSTART 
     None of the hypotheses are in the supported BitVec fragment.
     There are two potential fixes for this:
     1. If you are using custom BitVec constructs simplify them to built-in ones.
     2. If your problem is using only built-in ones it might currently be out of reach.
        Consider expressing it in terms of different operations that are better supported. MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 172.285250 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 174.649250 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:228:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.458000 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.747084 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       AdditionNoOverflows? x (y + 1#w) ↔ (y ≥ᵤ ~~~x) = true MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 17.972541 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 20.146375 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 11.325500 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 65.164833 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 11.475042 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 67.534875 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 16.621792 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 17.685417 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.582041 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.062917 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 15.651333 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 17.632333 ms, MSGSTART 
     Unsupported syntax AdditionNoOverflows? x (y + 1#w) === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -1685,30 +1685,30 @@ TACSTART
                           (Lean.Expr.const `CommSemiring.toSemiring [Lean.Level.zero])
                           (Lean.Expr.const `Nat []))
                         (Lean.Expr.const `Nat.instCommSemiring [])))))))))) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 3.783792 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 4.901208 ms, MSGSTART 
     None of the hypotheses are in the supported BitVec fragment.
     There are two potential fixes for this:
     1. If you are using custom BitVec constructs simplify them to built-in ones.
     2. If your problem is using only built-in ones it might currently be out of reach.
        Consider expressing it in terms of different operations that are better supported. MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 189.322458 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 190.502542 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:233:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.655792 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.618917 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       AdditionNoOverflows? x (y + 1#w) ↔ (x ≥ᵤ y + 1#w + x) = true MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 107.685709 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 101.900000 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.285291 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 74.726709 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.965333 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 74.105583 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 18.286666 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 17.124000 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.628208 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.741167 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 15.783416 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 15.361959 ms, MSGSTART 
     Unsupported syntax AdditionNoOverflows? x (y + 1#w) === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -1780,30 +1780,30 @@ TACSTART
                           (Lean.Expr.const `CommSemiring.toSemiring [Lean.Level.zero])
                           (Lean.Expr.const `Nat []))
                         (Lean.Expr.const `Nat.instCommSemiring [])))))))))) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 4.452959 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 3.908833 ms, MSGSTART 
     None of the hypotheses are in the supported BitVec fragment.
     There are two potential fixes for this:
     1. If you are using custom BitVec constructs simplify them to built-in ones.
     2. If your problem is using only built-in ones it might currently be out of reach.
        Consider expressing it in terms of different operations that are better supported. MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 297.527875 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 290.660416 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:238:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.582875 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.490208 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       AdditionNoOverflows? x (~~~y + 1#w) ↔ (y >ᵤ x) = true MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 15.361667 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 16.305583 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 11.858792 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 67.671625 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 10.701792 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 69.297541 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 17.610792 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 16.379000 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.530333 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.712292 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 16.178416 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 28.636666 ms, MSGSTART 
     Unsupported syntax AdditionNoOverflows? x (~~~y + 1#w) === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -1881,30 +1881,30 @@ TACSTART
                           (Lean.Expr.const `CommSemiring.toSemiring [Lean.Level.zero])
                           (Lean.Expr.const `Nat []))
                         (Lean.Expr.const `Nat.instCommSemiring [])))))))))) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 3.201084 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 3.601459 ms, MSGSTART 
     None of the hypotheses are in the supported BitVec fragment.
     There are two potential fixes for this:
     1. If you are using custom BitVec constructs simplify them to built-in ones.
     2. If your problem is using only built-in ones it might currently be out of reach.
        Consider expressing it in terms of different operations that are better supported. MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 191.227041 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 187.898625 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:243:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.550792 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.722000 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       AdditionNoOverflows? x (~~~y + 1#w) ↔ (x - y >ᵤ x) = true MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 28.115333 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 27.200458 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.465125 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 78.976208 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 14.763666 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 78.191625 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 18.444875 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 21.607792 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.932667 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.171500 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 18.312709 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 17.961291 ms, MSGSTART 
     Unsupported syntax AdditionNoOverflows? x (~~~y + 1#w) === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -1982,30 +1982,30 @@ TACSTART
                           (Lean.Expr.const `CommSemiring.toSemiring [Lean.Level.zero])
                           (Lean.Expr.const `Nat []))
                         (Lean.Expr.const `Nat.instCommSemiring [])))))))))) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 6.596666 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 6.179541 ms, MSGSTART 
     None of the hypotheses are in the supported BitVec fragment.
     There are two potential fixes for this:
     1. If you are using custom BitVec constructs simplify them to built-in ones.
     2. If your problem is using only built-in ones it might currently be out of reach.
        Consider expressing it in terms of different operations that are better supported. MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 247.541000 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 236.523042 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:248:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.445500 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.558917 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       AdditionNoOverflows? x (~~~y) ↔ (y ≥ᵤ x) = true MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 7.585500 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 8.119250 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 3.136584 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 52.452291 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 3.111834 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 50.388667 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 15.711875 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 16.361917 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.196625 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 0.941208 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 13.097833 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 13.587125 ms, MSGSTART 
     Unsupported syntax AdditionNoOverflows? x (~~~y) === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -2019,30 +2019,30 @@ TACSTART
             (Lean.Expr.app (Lean.Expr.const `BitVec []) (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1607119))))
           (Lean.Expr.app (Lean.Expr.const `BitVec.instComplement []) (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1607119))))
         (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1607123))) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 2.077291 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 1.924458 ms, MSGSTART 
     None of the hypotheses are in the supported BitVec fragment.
     There are two potential fixes for this:
     1. If you are using custom BitVec constructs simplify them to built-in ones.
     2. If your problem is using only built-in ones it might currently be out of reach.
        Consider expressing it in terms of different operations that are better supported. MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 138.590125 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 140.617459 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:253:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.630208 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.534292 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       AdditionNoOverflows? x (~~~y) ↔ (x + (-y - 1#w) ≥ᵤ x) = true MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 20.472084 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 22.883875 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 18.114708 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 75.550709 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 17.818583 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 79.631292 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 21.914875 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 20.351750 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.599791 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.296583 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 19.300208 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 19.178334 ms, MSGSTART 
     Unsupported syntax AdditionNoOverflows? x (~~~y) === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -2056,29 +2056,29 @@ TACSTART
             (Lean.Expr.app (Lean.Expr.const `BitVec []) (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1622131))))
           (Lean.Expr.app (Lean.Expr.const `BitVec.instComplement []) (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1622131))))
         (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1622135))) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 9.428542 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 9.336709 ms, MSGSTART 
     None of the hypotheses are in the supported BitVec fragment.
     There are two potential fixes for this:
     1. If you are using custom BitVec constructs simplify them to built-in ones.
     2. If your problem is using only built-in ones it might currently be out of reach.
        Consider expressing it in terms of different operations that are better supported. MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 222.808584 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 227.746208 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:258:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.524167 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.596500 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       UnsignedMultiplicationOverflows? x y ↔ ¬first32Bits (x * y) = 0#32 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 24.890208 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 11.430833 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 9.588208 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 99.494167 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 9.168583 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 99.052958 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool PASS, TIME_ELAPSED 28.857166 ms, 
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.703917 ms, MSGSTART 
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 27.083541 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.556625 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 15.725875 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 14.300208 ms, MSGSTART 
     Unsupported syntax UnsignedMultiplicationOverflows? x y === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -2090,26 +2090,26 @@ TACSTART
             (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 64)))))
         (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1654852)))
       (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1654853)) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 6.050791 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 5.501042 ms, MSGSTART 
     None of the hypotheses are in the supported BitVec fragment.
     There are two potential fixes for this:
     1. If you are using custom BitVec constructs simplify them to built-in ones.
     2. If your problem is using only built-in ones it might currently be out of reach.
        Consider expressing it in terms of different operations that are better supported. MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 253.469916 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 250.304000 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:269:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.808667 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.609666 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       SignedMultiplicationOverflows? x y ↔ ¬first32Bits (x * y) = last32Bits (x * y) >>> 31 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 12.510833 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 11.131208 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 10.747875 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 101.283625 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 9.103833 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 99.958000 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool PASS, TIME_ELAPSED 27.823583 ms, 
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.392834 ms, MSGSTART 
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 27.109958 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.118333 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       0 ≤ b ≤ 4294967295
@@ -2118,7 +2118,7 @@ TACSTART
     where
      a := ↑(last32Bits (x * y)).toNat / 2147483648
      b := ↑(last32Bits (x * y)).toNat MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 15.670750 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 14.779416 ms, MSGSTART 
     Unsupported syntax SignedMultiplicationOverflows? x y === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -2130,27 +2130,27 @@ TACSTART
             (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 64)))))
         (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1680831)))
       (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1680832)) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 5.553500 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 6.162000 ms, MSGSTART 
     None of the hypotheses are in the supported BitVec fragment.
     There are two potential fixes for this:
     1. If you are using custom BitVec constructs simplify them to built-in ones.
     2. If your problem is using only built-in ones it might currently be out of reach.
        Consider expressing it in terms of different operations that are better supported. MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 267.373917 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 265.763250 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:274:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.733084 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.788459 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       (2 ^ w).succ.le (x.toNat * y.toNat) MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 5.770583 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 6.942166 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 1.591791 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 8.712750 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 1.875250 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 8.542541 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 6.378209 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 6.005458 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.589334 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.506042 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       d ≥ 1
@@ -2163,7 +2163,7 @@ TACSTART
      b := ↑(x.toNat * y.toNat % 2 ^ w) / ↑z.toNat
      c := ↑2 ^ w
      d := ↑y.toNat MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 9.803708 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 10.693750 ms, MSGSTART 
     Unsupported syntax UnsignedMultiplicationOverflows? x y === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -2171,27 +2171,27 @@ TACSTART
           (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1708552)))
         (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1708554)))
       (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1708556)) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 61.082834 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 66.053542 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (x * y / z == x)]
     Consider the following assignment:
     BitVec.ofBool (x * y / z == x) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 106.468917 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 104.436792 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:279:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.702958 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 2.013167 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       (x.toInt * y.toInt - (2 ^ (w - 1) + 1)).NonNeg MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 5.893916 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 5.822334 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 1.725292 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 7.441375 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 1.564375 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 7.988167 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 6.000709 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 7.609375 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.610416 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.949291 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 1
@@ -2203,7 +2203,7 @@ TACSTART
      a := ↑0 % ↑(2 ^ w)
      b := ↑y.toNat
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 11.145750 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 13.895666 ms, MSGSTART 
     Unsupported syntax SignedMultiplicationOverflows? x y === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -2211,27 +2211,27 @@ TACSTART
           (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1716058)))
         (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1716060)))
       (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1716062)) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 8.633375 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 8.852958 ms, MSGSTART 
     None of the hypotheses are in the supported BitVec fragment.
     There are two potential fixes for this:
     1. If you are using custom BitVec constructs simplify them to built-in ones.
     2. If your problem is using only built-in ones it might currently be out of reach.
        Consider expressing it in terms of different operations that are better supported. MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 50.264209 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 48.426708 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:284:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.555333 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.594583 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       32 ≤ numberOfLeadingZeros x + numberOfLeadingZeros y ↔ ¬UnsignedMultiplicationOverflows? x y MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 10.957750 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 11.896333 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 14.510750 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 25.701250 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 15.263584 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 22.700583 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 16.245709 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 15.543833 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.690333 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.513541 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -2240,7 +2240,7 @@ TACSTART
     where
      a := ↑(numberOfLeadingZeros x)
      b := ↑(numberOfLeadingZeros y) MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 19.201084 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 20.251208 ms, MSGSTART 
     Unsupported syntax 32 ≤ numberOfLeadingZeros x + numberOfLeadingZeros y === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -2330,27 +2330,27 @@ TACSTART
                 (Lean.Expr.lit (Lean.Literal.natVal 64)))
               (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 64)))))
           (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1725921)))) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 2.988125 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 3.555417 ms, MSGSTART 
     None of the hypotheses are in the supported BitVec fragment.
     There are two potential fixes for this:
     1. If you are using custom BitVec constructs simplify them to built-in ones.
     2. If your problem is using only built-in ones it might currently be out of reach.
        Consider expressing it in terms of different operations that are better supported. MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 102.001000 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 105.639167 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:296:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.437542 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.525917 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       numberOfLeadingZeros x + numberOfLeadingZeros y ≤ 30 ↔ UnsignedMultiplicationOverflows? x y MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 14.383833 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 14.616375 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.058500 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 21.106125 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.111875 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 19.839166 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 14.696458 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.758625 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.626375 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.524916 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -2359,7 +2359,7 @@ TACSTART
     where
      a := ↑(numberOfLeadingZeros x)
      b := ↑(numberOfLeadingZeros y) MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 17.510750 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 17.284542 ms, MSGSTART 
     Unsupported syntax numberOfLeadingZeros x + numberOfLeadingZeros y ≤ 30 === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -2447,26 +2447,26 @@ TACSTART
                 (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
                 (Lean.Expr.lit (Lean.Literal.natVal 28)))
               (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 28))))))) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 2.838542 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 3.168750 ms, MSGSTART 
     None of the hypotheses are in the supported BitVec fragment.
     There are two potential fixes for this:
     1. If you are using custom BitVec constructs simplify them to built-in ones.
     2. If your problem is using only built-in ones it might currently be out of reach.
        Consider expressing it in terms of different operations that are better supported. MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 98.877875 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 100.827375 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:301:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 2.547625 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.564208 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       SignedDivisionOverflows?? x y ↔ y = 0#w ∨ x.toInt = -2147483648 ∧ y = BitVec.allOnes w MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 9.194000 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 9.482584 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 32.217375 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 87.715167 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 32.547125 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 85.324250 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool PASS, TIME_ELAPSED 60.689667 ms, 
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.331333 ms, MSGSTART 
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 57.798791 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.329833 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       c ≥ 0
@@ -2480,7 +2480,7 @@ TACSTART
      b := ↑0 % ↑(2 ^ w)
      c := ↑y.toNat
      d := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 41.272708 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 44.955666 ms, MSGSTART 
     Unsupported syntax SignedDivisionOverflows?? x y === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -2488,29 +2488,29 @@ TACSTART
           (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1769982)))
         (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1769984)))
       (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1769986)) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 5.832459 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 5.640541 ms, MSGSTART 
     None of the hypotheses are in the supported BitVec fragment.
     There are two potential fixes for this:
     1. If you are using custom BitVec constructs simplify them to built-in ones.
     2. If your problem is using only built-in ones it might currently be out of reach.
        Consider expressing it in terms of different operations that are better supported. MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 311.614959 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 310.469166 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:308:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.734208 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.525333 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       SignedDivisionOverflows?? x (BitVec.setWidth 64 y) ↔ ¬y = 0#32 ∧ x < BitVec.setWidth 64 y <<< 32 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 7.282834 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 6.473542 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 5.902625 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 89.932833 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 5.361833 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 96.873291 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool PASS, TIME_ELAPSED 33.633375 ms, 
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.750709 ms, MSGSTART 
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 33.720541 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.330375 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 15.760541 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 14.605834 ms, MSGSTART 
     Unsupported syntax SignedDivisionOverflows?? x (BitVec.setWidth 64 y) === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -2536,29 +2536,29 @@ TACSTART
               (Lean.Expr.lit (Lean.Literal.natVal 64)))
             (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 64)))))
         (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1825931))) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 7.250959 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 6.620583 ms, MSGSTART 
     None of the hypotheses are in the supported BitVec fragment.
     There are two potential fixes for this:
     1. If you are using custom BitVec constructs simplify them to built-in ones.
     2. If your problem is using only built-in ones it might currently be out of reach.
        Consider expressing it in terms of different operations that are better supported. MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 247.336125 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 263.393417 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:313:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.666625 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.808125 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       SignedDivisionOverflows?? x (BitVec.setWidth 64 y) ↔ ¬y = 0#32 ∧ x >>> 32 < BitVec.setWidth 64 y MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 7.207166 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 7.398459 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 5.796000 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 91.750541 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 6.144000 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 106.925583 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool PASS, TIME_ELAPSED 31.984042 ms, 
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.131209 ms, MSGSTART 
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 31.706667 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.934542 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 14.081375 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 15.969667 ms, MSGSTART 
     Unsupported syntax SignedDivisionOverflows?? x (BitVec.setWidth 64 y) === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -2584,26 +2584,26 @@ TACSTART
               (Lean.Expr.lit (Lean.Literal.natVal 64)))
             (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 64)))))
         (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1853304))) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 6.452209 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 6.781917 ms, MSGSTART 
     None of the hypotheses are in the supported BitVec fragment.
     There are two potential fixes for this:
     1. If you are using custom BitVec constructs simplify them to built-in ones.
     2. If your problem is using only built-in ones it might currently be out of reach.
        Consider expressing it in terms of different operations that are better supported. MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 250.342459 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 256.357750 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:318:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 81.295292 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 83.092708 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 31.842375 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 30.321959 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 21.342042 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 58.844750 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 21.631750 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 57.448209 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.740708 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.942125 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.511875 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.805125 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -2615,34 +2615,34 @@ TACSTART
      a := ↑(y.toNat + (signedDifferenceOrZero x y).toNat) % ↑(2 ^ w)
      b := ↑(signedMaxBitVec x y).toNat
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 51.431084 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 50.787833 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.atom AutoStructs.Relation.eq (AutoStructs.Term.var 0)
             ((AutoStructs.Term.var 1).add (AutoStructs.Term.var 2))) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 68.269959 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 68.093125 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (signedMaxBitVec x y == y + signedDifferenceOrZero x y)]
     Consider the following assignment:
     BitVec.ofBool (signedMaxBitVec x y == y + signedDifferenceOrZero x y) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 365.595916 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 361.404041 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:341:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 82.922833 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 82.203250 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 18.772875 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 18.897292 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 11.687042 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 69.747459 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 11.264167 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 66.745125 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.228750 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.464917 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.785917 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.606459 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -2654,34 +2654,34 @@ TACSTART
      a := ↑(x.toNat + (2 ^ w - (signedDifferenceOrZero x y).toNat)) % ↑(2 ^ w)
      b := ↑(signedMinBitVec x y).toNat
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 49.121917 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 50.316417 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.atom AutoStructs.Relation.eq (AutoStructs.Term.var 0)
             ((AutoStructs.Term.var 1).sub (AutoStructs.Term.var 2))) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 70.066417 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 69.361833 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (signedMinBitVec x y == x + -signedDifferenceOrZero x y)]
     Consider the following assignment:
     BitVec.ofBool (signedMinBitVec x y == x + -signedDifferenceOrZero x y) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 361.659208 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 363.227041 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:346:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 81.876083 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 81.973166 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 22.813542 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 23.163750 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 15.491916 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 57.685333 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 14.861834 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 59.034417 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.294833 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.193083 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.802125 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.048375 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -2693,34 +2693,34 @@ TACSTART
      a := ↑(y.toNat + (unsignedDifferenceOrZero x y).toNat) % ↑(2 ^ w)
      b := ↑(unsignedMaxBitVec x y).toNat
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 43.503083 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 43.206500 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.atom AutoStructs.Relation.eq (AutoStructs.Term.var 0)
             ((AutoStructs.Term.var 1).add (AutoStructs.Term.var 2))) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 66.698208 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 67.655250 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (unsignedMaxBitVec x y == y + unsignedDifferenceOrZero x y)]
     Consider the following assignment:
     BitVec.ofBool (unsignedMaxBitVec x y == y + unsignedDifferenceOrZero x y) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 340.675375 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 347.113375 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:351:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 85.669125 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 88.342667 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 13.438208 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 13.623000 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 7.912708 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 67.416625 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 8.971875 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 66.005791 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.270917 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.449375 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.620375 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.912459 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -2732,34 +2732,34 @@ TACSTART
      a := ↑(x.toNat + (2 ^ w - (unsignedDifferenceOrZero x y).toNat)) % ↑(2 ^ w)
      b := ↑(unsignedMinBitVec x y).toNat
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 55.040209 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 41.609125 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.atom AutoStructs.Relation.eq (AutoStructs.Term.var 0)
             ((AutoStructs.Term.var 1).sub (AutoStructs.Term.var 2))) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 68.227875 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 65.864875 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (unsignedMinBitVec x y == x + -unsignedDifferenceOrZero x y)]
     Consider the following assignment:
     BitVec.ofBool (unsignedMinBitVec x y == x + -unsignedDifferenceOrZero x y) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 350.878542 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 342.628125 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:356:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 89.723167 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 91.871375 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 24.663750 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 24.873166 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 15.630834 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 71.494958 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 16.396042 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 71.869833 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.731417 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.214709 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.161917 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.089459 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -2771,34 +2771,34 @@ TACSTART
      a := ↑(x - y &&& leBitmask x y).toNat
      b := ↑(signedDifferenceOrZero x y).toNat
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 54.577083 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 55.624209 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.atom AutoStructs.Relation.eq (AutoStructs.Term.var 0)
             (((AutoStructs.Term.var 1).sub (AutoStructs.Term.var 2)).and (AutoStructs.Term.var 3))) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 71.358875 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 70.532542 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (signedDifferenceOrZero x y == x + -y &&& leBitmask x y)]
     Consider the following assignment:
     BitVec.ofBool (signedDifferenceOrZero x y == x + -y &&& leBitmask x y) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 386.350459 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 390.882333 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:364:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 98.126292 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 95.982750 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 24.084250 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 24.437917 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 15.604458 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 52.372208 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 33.847208 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 52.621084 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 10.025000 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 7.899083 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.513959 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.758208 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -2810,7 +2810,7 @@ TACSTART
      a := ↑((x ^^^ y) &&& leBitmask x y ^^^ y).toNat
      b := ↑(signedMaxBitVec x y).toNat
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 46.591167 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 48.935500 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.atom AutoStructs.Relation.eq (AutoStructs.Term.var 0)
@@ -2818,27 +2818,27 @@ TACSTART
               (AutoStructs.Term.var 2))) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 67.386958 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 66.432667 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (signedMaxBitVec x y == (x ^^^ y) &&& leBitmask x y ^^^ y)]
     Consider the following assignment:
     BitVec.ofBool (signedMaxBitVec x y == (x ^^^ y) &&& leBitmask x y ^^^ y) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 357.181875 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 357.034000 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:369:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 96.193875 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 96.922625 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 23.766125 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 23.792958 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 15.760167 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 51.730958 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 16.518833 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 52.714708 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.061875 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.342375 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.803458 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.873000 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -2850,7 +2850,7 @@ TACSTART
      a := ↑((x ^^^ y) &&& leBitmask y x ^^^ y).toNat
      b := ↑(signedMinBitVec x y).toNat
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 50.259292 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 51.270209 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.atom AutoStructs.Relation.eq (AutoStructs.Term.var 0)
@@ -2858,27 +2858,27 @@ TACSTART
               (AutoStructs.Term.var 2))) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 67.811084 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 67.956125 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (signedMinBitVec x y == (x ^^^ y) &&& leBitmask y x ^^^ y)]
     Consider the following assignment:
     BitVec.ofBool (signedMinBitVec x y == (x ^^^ y) &&& leBitmask y x ^^^ y) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 374.718292 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 357.752709 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:374:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 94.320334 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 91.503792 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 18.081875 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 16.975834 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 12.429042 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 73.114209 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 12.008875 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 68.386500 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.579000 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.408250 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.262917 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.311125 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -2890,34 +2890,34 @@ TACSTART
      a := ↑(x - y &&& ~~~carryBitmask x y).toNat
      b := ↑(unsignedDifferenceOrZero x y).toNat
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 52.870709 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 53.342333 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.atom AutoStructs.Relation.eq (AutoStructs.Term.var 0)
             (((AutoStructs.Term.var 1).sub (AutoStructs.Term.var 2)).and (AutoStructs.Term.var 3).not)) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 71.011709 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 71.497500 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (unsignedDifferenceOrZero x y == x + -y &&& ~~~carryBitmask x y)]
     Consider the following assignment:
     BitVec.ofBool (unsignedDifferenceOrZero x y == x + -y &&& ~~~carryBitmask x y) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 386.910667 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 386.759250 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:382:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 85.934625 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 85.837250 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 20.585584 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 19.460459 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 14.722292 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 79.140125 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 14.651917 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 79.491875 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.138750 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.472958 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.013750 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.229583 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -2929,7 +2929,7 @@ TACSTART
      a := ↑(x.toNat + (2 ^ w - (x - y &&& carryBitmask x y).toNat)) % ↑(2 ^ w)
      b := ↑(unsignedMaxBitVec x y).toNat
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 62.426209 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 61.707583 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.atom AutoStructs.Relation.eq (AutoStructs.Term.var 0)
@@ -2937,27 +2937,27 @@ TACSTART
               (((AutoStructs.Term.var 1).sub (AutoStructs.Term.var 2)).and (AutoStructs.Term.var 3)))) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 71.617542 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 71.033833 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (unsignedMaxBitVec x y == x + -(x + -y &&& carryBitmask x y))]
     Consider the following assignment:
     BitVec.ofBool (unsignedMaxBitVec x y == x + -(x + -y &&& carryBitmask x y)) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 418.835792 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 407.634250 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:387:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 90.282083 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 89.480458 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 31.867708 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 32.796959 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 31.758208 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 72.027209 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 33.703208 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 75.297250 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 10.507875 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 10.371042 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.459333 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.150958 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -2969,7 +2969,7 @@ TACSTART
      a := ↑(y.toNat + (-y + x &&& carryBitmask x y).toNat) % ↑(2 ^ w)
      b := ↑(unsignedMinBitVec x y).toNat
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 80.239541 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 80.886458 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.atom AutoStructs.Relation.eq (AutoStructs.Term.var 0)
@@ -2977,27 +2977,27 @@ TACSTART
               (((AutoStructs.Term.var 1).neg.add (AutoStructs.Term.var 2)).and (AutoStructs.Term.var 3)))) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 70.016792 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 70.270792 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (unsignedMinBitVec x y == y + (-y + x &&& carryBitmask x y))]
     Consider the following assignment:
     BitVec.ofBool (unsignedMinBitVec x y == y + (-y + x &&& carryBitmask x y)) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 442.519417 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 442.665584 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:392:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 151.324583 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 151.758250 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 29.715292 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 29.899042 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 19.916541 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 59.036333 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 20.346459 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 59.907292 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.503875 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.528917 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.936625 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.783208 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       0 ≤ f ≤ 4294967295
@@ -3012,14 +3012,14 @@ TACSTART
      c := ↑(d &&& (~~~d ^^^ ((x ^^^ y) &&& (d ^^^ x)) >>> 31)).toNat
      e := ↑(signedDifferenceOrZero x y).toNat
      f := ↑y.toNat MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 49.690292 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 45.965750 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.atom AutoStructs.Relation.eq (AutoStructs.Term.var 0)
             ((AutoStructs.Term.var 1).and ((AutoStructs.Term.var 1).not.xor (AutoStructs.Term.var 2)))) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 74.809958 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 75.078583 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [signedDifferenceOrZero x y]
     Consider the following assignment:
@@ -3028,20 +3028,20 @@ TACSTART
     y = 0x00000000#32
     signedDifferenceOrZero x y = 0xffffffff#32
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 447.322917 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 443.865083 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:400:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 183.896583 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 190.761708 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 21.284791 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 21.491333 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 16.775500 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 62.144750 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 16.781208 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 65.288708 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 10.591583 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 10.332125 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.385375 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.224791 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       0 ≤ f ≤ 4294967295
@@ -3056,14 +3056,14 @@ TACSTART
      c := ↑(d &&& ~~~((~~~x &&& y ||| ~~~(x ^^^ y) &&& d) >>> 31)).toNat
      e := ↑(unsignedDifferenceOrZero x y).toNat
      f := ↑y.toNat MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 40.674750 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 38.080250 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.atom AutoStructs.Relation.eq (AutoStructs.Term.var 0)
             ((AutoStructs.Term.var 1).and (AutoStructs.Term.var 2).not)) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 78.290125 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 78.576625 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [unsignedDifferenceOrZero x y]
     Consider the following assignment:
@@ -3072,20 +3072,20 @@ TACSTART
     y = 0x00000000#32
     unsignedDifferenceOrZero x y = 0x7fffffff#32
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 462.642416 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 473.849750 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:405:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 107.146041 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 107.618042 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 25.071375 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 25.232875 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 16.534541 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 71.481417 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 17.051667 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 78.389167 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.763458 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 10.131208 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.340917 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.836334 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       0 ≤ b ≤ 4294967295
@@ -3094,14 +3094,14 @@ TACSTART
     where
      a := ↑(x - y &&& ~~~((x - y) >>> 31)).toNat
      b := ↑(signedDifferenceOrZero x y).toNat MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 58.457583 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 58.014959 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.atom AutoStructs.Relation.eq (AutoStructs.Term.var 0)
             (((AutoStructs.Term.var 1).sub (AutoStructs.Term.var 2)).and (AutoStructs.Term.var 3).not)) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 75.471834 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 75.465417 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [signedDifferenceOrZero x y]
     Consider the following assignment:
@@ -3109,20 +3109,20 @@ TACSTART
     x = 0xffffffff#32
     y = 0xffffffff#32
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 430.902209 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 427.455375 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:410:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 93.081958 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 93.109958 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 26.152292 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 25.929875 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 17.211334 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 79.289666 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 17.321542 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 78.821375 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.984208 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 11.031041 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.897333 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.885334 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       0 ≤ d ≤ 4294967295
@@ -3135,7 +3135,7 @@ TACSTART
      b := ↑(x.toNat + (2 ^ 32 - (x - y &&& (x - y) >>> 31).toNat)) / 4294967296
      c := ↑(signedMaxBitVec x y).toNat
      d := ↑(x - y &&& (x - y) >>> 31).toNat MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 66.470792 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 67.525208 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.atom AutoStructs.Relation.eq (AutoStructs.Term.var 0)
@@ -3143,7 +3143,7 @@ TACSTART
               (((AutoStructs.Term.var 1).sub (AutoStructs.Term.var 2)).and (AutoStructs.Term.var 3)))) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 78.967291 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 79.013583 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [signedMaxBitVec x y]
     Consider the following assignment:
@@ -3151,20 +3151,20 @@ TACSTART
     x = 0x00000000#32
     y = 0x00000000#32
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 437.155125 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 444.524250 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:415:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 93.096916 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 98.494958 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 35.915875 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 37.588958 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 32.931834 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 76.012459 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 32.467167 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 73.880500 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 10.929417 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 11.285167 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.078917 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.892208 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       0 ≤ d ≤ 4294967295
@@ -3177,7 +3177,7 @@ TACSTART
      b := ↑(-y + x &&& (-y + x) >>> 31).toNat
      c := ↑(y.toNat + (-y + x &&& (-y + x) >>> 31).toNat) / 4294967296
      d := ↑(signedMinBitVec x y).toNat MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 85.833583 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 85.033958 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.atom AutoStructs.Relation.eq (AutoStructs.Term.var 0)
@@ -3185,7 +3185,7 @@ TACSTART
               (((AutoStructs.Term.var 1).neg.add (AutoStructs.Term.var 2)).and (AutoStructs.Term.var 3)))) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 76.989375 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 78.370208 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [signedMinBitVec x y]
     Consider the following assignment:
@@ -3193,24 +3193,24 @@ TACSTART
     y = 0x00000000#32
     x = 0x80000001#32
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 482.268291 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 484.150833 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:420:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.586708 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.563208 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       (x >ₛ y) = true ↔ (signedDifferenceOrZero x y).msb = true ∨ (-signedDifferenceOrZero x y).msb = true MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 7.132875 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 7.920084 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 6.865916 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 63.295917 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 6.395375 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 61.134959 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 32.342417 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 32.891958 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.908958 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.225834 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 93.158750 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 95.994333 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.binop AutoStructs.Binop.equiv
@@ -3220,7 +3220,7 @@ TACSTART
               (AutoStructs.Formula.msbSet (AutoStructs.Term.var 2).neg))) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 79.401833 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 79.180542 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [signedDifferenceOrZero x y]
     Consider the following assignment:
@@ -3228,24 +3228,24 @@ TACSTART
     x = 0xffffffff#32
     signedDifferenceOrZero x y = 0xffffffff#32
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 338.074417 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 336.343750 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:425:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.566584 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.550792 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       (x >ᵤ y) = true ↔ (unsignedDifferenceOrZero x y).msb = true ∨ (-unsignedDifferenceOrZero x y).msb = true MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 7.687041 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 7.526500 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 6.665292 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 61.962250 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 6.375833 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 61.560750 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 20.689416 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 21.083750 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.061709 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.814167 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 61.470208 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 61.813500 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.binop AutoStructs.Binop.equiv
@@ -3255,7 +3255,7 @@ TACSTART
               (AutoStructs.Formula.msbSet (AutoStructs.Term.var 2).neg))) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 75.340292 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 76.597166 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [unsignedDifferenceOrZero x y]
     Consider the following assignment:
@@ -3263,25 +3263,25 @@ TACSTART
     x = 0xffffffff#32
     unsignedDifferenceOrZero x y = 0xffffffff#32
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 288.607958 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 294.902084 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:430:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.654792 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.771916 ms, MSGSTART 
     applyExtTheorem only applies to equations, not
       BitVec.carry w x y false = true ↔
         (unsignedDifferenceOrZero x (~~~y)).msb = true ∨ (-unsignedDifferenceOrZero x (~~~y)).msb = true MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 8.289542 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 8.782875 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 7.253334 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 62.490667 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 7.656125 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 65.500625 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 18.431417 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 19.816417 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.680625 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.700375 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 18.123041 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 18.360166 ms, MSGSTART 
     Unsupported syntax BitVec.carry w x y false === Lean.Expr.app
       (Lean.Expr.app
         (Lean.Expr.app
@@ -3297,7 +3297,7 @@ TACSTART
           (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 2727205)))
         (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 2727210)))
       (Lean.Expr.const `Bool.false []) MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 75.413917 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 81.434000 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (BitVec.carry w x y false),
@@ -3306,20 +3306,20 @@ TACSTART
     BitVec.ofBool (BitVec.carry w x y false) = 0x1#1
     unsignedDifferenceOrZero x (~~~y) = 0x00000000#32
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 255.738875 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 250.839291 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:435:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 91.389250 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 90.313167 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 29.448542 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 30.866667 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 24.788083 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 69.018667 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 24.698416 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 68.357792 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.818000 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.739375 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.385166 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.694667 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -3332,14 +3332,14 @@ TACSTART
         2 ^ w - (x.toNat + (2 ^ w - y.toNat)) % 2 ^ w
       else (x.toNat + (2 ^ w - y.toNat)) % 2 ^ w)
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 72.181750 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 71.451542 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.atom AutoStructs.Relation.eq (AutoStructs.Term.var 0)
             ((AutoStructs.Term.var 1).add (AutoStructs.Term.var 2))) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 73.280625 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 74.807959 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        ((if (x + -y).getLsbD (w - 1) = true then -(x + -y) else x + -y) ==
@@ -3349,20 +3349,20 @@ TACSTART
       ((if (x + -y).getLsbD (w - 1) = true then -(x + -y) else x + -y) ==
         signedDifferenceOrZero x y + signedDifferenceOrZero y x) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 417.971334 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 416.402125 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:442:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 90.058208 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 91.641583 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 24.550084 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 32.872750 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 19.581292 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 69.315291 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 20.116042 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 72.292083 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.951584 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 10.666417 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 8.001833 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.970250 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -3375,14 +3375,14 @@ TACSTART
         2 ^ w - (x.toNat + (2 ^ w - y.toNat)) % 2 ^ w
       else (x.toNat + (2 ^ w - y.toNat)) % 2 ^ w)
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 52.803500 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 53.849125 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.atom AutoStructs.Relation.eq (AutoStructs.Term.var 0)
             ((AutoStructs.Term.var 1).add (AutoStructs.Term.var 2))) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 70.920291 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 74.805792 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        ((if (x + -y).getLsbD (w - 1) = true then -(x + -y) else x + -y) ==
@@ -3392,26 +3392,26 @@ TACSTART
       ((if (x + -y).getLsbD (w - 1) = true then -(x + -y) else x + -y) ==
         unsignedDifferenceOrZero x y + unsignedDifferenceOrZero y x) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 398.824709 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 406.398125 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:447:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.603208 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 1.578958 ms, MSGSTART 
     no applicable extensionality theorem found for
       Bool MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 8.456833 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 8.611833 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 4.481208 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 48.287375 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 4.561167 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 50.362292 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.354041 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.934292 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 0.749000 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 0.751791 ms, MSGSTART 
     omega could not prove the goal:
     No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 13.315542 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 13.341667 ms, MSGSTART 
     Equality BitVec.carry w x y false = (x >ᵤ ~~~y) has a strange type MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 66.608208 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 66.119208 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (BitVec.carry w x y false),
@@ -3420,20 +3420,20 @@ TACSTART
     BitVec.ofBool (BitVec.carry w x y false) = 0x1#1
     BitVec.ofBool (x >ᵤ ~~~y) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 203.415625 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 201.777500 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:452:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 88.128250 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 80.322084 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 29.041583 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 28.760834 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 14.737417 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 49.669125 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 14.593291 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 48.088917 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 7.228750 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 7.304834 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.696292 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.385416 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -3445,33 +3445,33 @@ TACSTART
      a := ↑(signedDifferenceOrZero x y).toNat
      b := ↑(signedDifferenceOrZero (~~~x) (~~~y)).toNat
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 62.271541 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 61.908083 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.atom AutoStructs.Relation.eq (AutoStructs.Term.var 0) (AutoStructs.Term.var 1)) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 61.578916 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 66.282500 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (signedDifferenceOrZero (~~~x) (~~~y) == signedDifferenceOrZero x y)]
     Consider the following assignment:
     BitVec.ofBool (signedDifferenceOrZero (~~~x) (~~~y) == signedDifferenceOrZero x y) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 345.916208 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 353.836167 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:457:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 79.537875 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 79.095875 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 13.903500 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 13.752292 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib PASS, TIME_ELAPSED 6.783750 ms, 
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 50.590583 ms, MSGSTART 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 7.228375 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 48.103500 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 7.126000 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 7.097000 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.417709 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 1.291041 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -3483,19 +3483,19 @@ TACSTART
      a := ↑(unsignedDifferenceOrZero x y).toNat
      b := ↑(unsignedDifferenceOrZero (~~~x) (~~~y)).toNat
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 43.077333 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 43.175333 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.atom AutoStructs.Relation.eq (AutoStructs.Term.var 0) (AutoStructs.Term.var 1)) =
         true
     is false MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 65.908667 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 66.334500 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (unsignedDifferenceOrZero (~~~x) (~~~y) == unsignedDifferenceOrZero x y)]
     Consider the following assignment:
     BitVec.ofBool (unsignedDifferenceOrZero (~~~x) (~~~y) == unsignedDifferenceOrZero x y) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 307.676709 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 309.588000 ms, 
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:462:8: warning: declaration uses 'sorry'
