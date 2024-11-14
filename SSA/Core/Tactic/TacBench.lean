@@ -49,7 +49,7 @@ inductive Result
 
 def Result.toMessageData : Result → MessageData
 | .ok item timeMs => m!"TACBENCH {item.name} PASS, TIME_ELAPSED {timeMs} ms, "
-| .err item timeMs e => m!"TACBENCH {item.name} FAIL, TIME_ELAPSED {timeMs} ms, {indentD e.toMessageData}"
+| .err item timeMs e => m!"TACBENCH {item.name} FAIL, TIME_ELAPSED {timeMs} ms, MSGSTART {indentD e.toMessageData} MSGEND"
 
 instance : ToMessageData Result where
   toMessageData := Result.toMessageData
@@ -61,7 +61,8 @@ def hermeticRun (g : MVarId) (item : Item) : TacticM Result := g.withContext do
     -- TODO: think if we need this, I'm just stealing from Henrik at this point.
     -- We can configure more options here to enable/disable tracing as needed.
     withOptions setTraceOptions <| withoutModifyingEnv <| withoutModifyingState <| withFreshTraceState do
-      evalTactic item.tac
+      withoutRecover do
+        evalTactic item.tac
       let t2 ← IO.monoNanosNow
       return .ok item (Nat.deltaInMs t2 t1)
   catch e =>
@@ -92,13 +93,15 @@ end TacBench
 
 
 section Examples
-theorem eg1 : 1 = 1 := by
-  tac_bench ["rfl" : rfl, "wrong" : (rw [Nat.add_comm]), "success" : simp, "done" : done, "sorry" : sorry]
+/-
+theorem eg1 (x : Nat) : 1 = x := by
+  tac_bench ["rfl" : rfl, "wrong" : (rw [Nat.add_comm]), "success" : simp, "ring_done" : foo, "sorry" : sorry]
   sorry
 
 theorem eg2 (x y : BitVec 8) : x * y = y * x := by
   tac_bench ["bv_decide" :  bv_decide, "ac_nf" : ac_nf]
   sorry
+-/
 
 end Examples
 
