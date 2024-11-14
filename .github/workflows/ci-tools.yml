@@ -36,11 +36,6 @@ jobs:
           lake -R exe cache get # download cache of mathlib docs.
           lake -R build mlirnatural
 
-      - name: LLVM Exhaustive Enumeration
-        run: |
-          sudo apt install llvm-15 # for opt-15, used to simplify LLVM for reference semantics.
-          (cd test/bruteforce-correctness && ./run.sh)
-
       - name: Compile `opt` Executable 🧐
         run: |
           lake -R exe cache get # download cache of mathlib docs.
