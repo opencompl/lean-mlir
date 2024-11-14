@@ -289,6 +289,8 @@ macro "bv_bench": tactic =>
             "bv_of_bool" : (bv_of_bool; done),
             "bv_omega" : (bv_omega; done),
             "bv_automata_classic" : (bv_automata_classic; done),
+            "simp" : (simp; done),
+            "bv_normalize" : (bv_normalize; done),
             "bv_decide" : (bv_decide; done),
             "bv_auto" : (bv_auto; done)
           ]
