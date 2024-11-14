@@ -12,15 +12,15 @@ reps = 1
 
 bv_width = [4, 8, 16, 32, 64]
 
-for file in os.listdir(results_dir):
-    file_path = os.path.join(results_dir, file)
-    try:
-        if os.path.isfile(file_path) or os.path.islink(file_path):
-            os.unlink(file_path)
-        elif os.path.isdir(file_path):
-            shutil.rmtree(file_path)
-    except Exception as e:
-        print('Failed to delete %s. Reason: %s' % (file_path, e))
+# for file in os.listdir(results_dir):
+#     file_path = os.path.join(results_dir, file)
+#     try:
+#         if os.path.isfile(file_path) or os.path.islink(file_path):
+#             os.unlink(file_path)
+#         elif os.path.isdir(file_path):
+#             shutil.rmtree(file_path)
+#     except Exception as e:
+#         print('Failed to delete %s. Reason: %s' % (file_path, e))
 
 for file in os.listdir(benchmark_dir_list):
     print(file)
