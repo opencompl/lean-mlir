@@ -112,8 +112,6 @@ def AutoStructs.Term.toExpr (t : Term) : Expr :=
   | .sub t1 t2 => mkApp2 (mkConst ``sub) t1.toExpr t2.toExpr
   | .not t => mkApp (mkConst ``Term.not) t.toExpr
   | .neg t => mkApp (mkConst ``neg) t.toExpr
-  | .incr t => mkApp (mkConst ``incr) t.toExpr
-  | .decr t => mkApp (mkConst ``decr) t.toExpr
 
 def AutoStructs.Relation.toExpr (rel : Relation) : Expr :=
   open Relation in
@@ -174,13 +172,13 @@ def addAsVar (e : Expr) : M AutoStructs.Term := do
     set ({varMap, invMap } : State)
     pure (.var v)
 
--- TODO(leo): make this work
+-- TODO: make this work
 def checkBVs (es : List Expr) : M Bool := do
   for e in es do
     let_expr BitVec _ := e | return false
   pure true
 
--- TODO(leo): make the shortcuts better
+-- TODO: make the shortcuts better
 partial def parseTerm (e : Expr) : M AutoStructs.Term := do
   match_expr e with
   | OfNat.ofNat α n _ =>
@@ -368,7 +366,6 @@ elab "bv_automata_inner" : tactic => do
     let (φ, st) ← parseFormula e|>.run default
     assertSame φ st
 
--- TODO(leo): make the tactic more structured (in Coq `bv_inner; [by simp | by ...])
 macro "bv_automata'" : tactic =>
   `(tactic| (
      bv_automata_inner
@@ -409,8 +406,21 @@ theorem ult_iff_not_ule : (x <ᵤ y) ↔ ¬ (y ≤ᵤ x) := by bv_automata'
 
 theorem sub_neg_sub : (x - y) = - (y - x) := by bv_automata'
 
-theorem eq_iff_not_sub_or_sub :
-    x = y ↔ (~~~ (x - y ||| y - x)).msb := by bv_automata'
+-- only for w > 0
+-- theorem eq_iff_not_sub_or_sub :
+--     x = y ↔ (~~~ (x - y ||| y - x)).msb := by bv_automata'
+
+theorem zulip_example :
+  ¬(n <ᵤ ~~~k) ∨
+    (((a + k - a <ᵤ a + k + 1#64 - a) ∧ (a + k - a <ᵤ a + k + 1#64 + n - a)) ∧
+        a + k + 1#64 + n - (a + k + 1#64) <ᵤ a - (a + k + 1#64)) ∧
+      a + k + 1#64 + n - (a + k + 1#64) <ᵤ a + k - (a + k + 1#64) := by
+  bv_automata'
+
+theorem zulip_example' :
+    ¬(n <ᵤ ~~~k) ∨
+    (((k <ᵤ k + 1) ∧ (k <ᵤ k + 1 + n)) ∧ n <ᵤ -k - 1) ∧ n <ᵤ -1 := by
+  bv_automata'
 
 theorem lt_iff_sub_xor_xor_and_sub_xor :
     (x <ₛ y) ↔ ((x - y) ^^^ ((x ^^^ y) &&& ((x - y) ^^^ x))).msb := by
