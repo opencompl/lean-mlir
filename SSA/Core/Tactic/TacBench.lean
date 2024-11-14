@@ -80,6 +80,10 @@ def parseTacBenchItem : TSyntax ``tacBenchItem → TacticM Item
 @[tactic tacBench]
 def evalTacBench : Tactic := fun
 | `(tactic| tac_bench [$tacBenchItems:tacBenchItem,*]) => do
+    let thmName : String :=
+      match (← getLCtx).decls.toArray.get? 0 with
+      | .some (.some decl) => decl.userName.toString
+      | _ => "unknown-theorem"
     let g ← getMainGoal
     let items ← tacBenchItems.getElems.mapM parseTacBenchItem
     -- logInfo m!{← hermeticRun g tac}
@@ -87,7 +91,7 @@ def evalTacBench : Tactic := fun
     for item in items do
       let out ← hermeticRun g item
       msg := msg ++ m!"\n" ++ out.toMessageData
-    logInfo m!"TACSTART{.nestD msg}\nTACEND"
+    logInfo m!"TACSTART NAME {thmName} ENDNAME {.nestD msg}\nTACEND"
 | _ => throwUnsupportedSyntax
 end TacBench
 
