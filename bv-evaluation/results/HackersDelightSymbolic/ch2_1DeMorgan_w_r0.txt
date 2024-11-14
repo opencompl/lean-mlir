@@ -2683,8 +2683,8 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:198:6: dec
 ⚠ [892/899] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
 TACSTART
-  TACBENCH auto PASS, TIME_ELAPSED 116.694279 ms, 
-  TACBENCH ring FAIL, TIME_ELAPSED 81.544370 ms, MSGSTART 
+  TACBENCH auto PASS, TIME_ELAPSED 115.072939 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 80.483120 ms, MSGSTART 
     internal exception #4 MSGEND
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_1DeMorgan.lean:14:39: error: unsolved goals
@@ -2692,8 +2692,8 @@ w : ℕ
 x y : BitVec w
 ⊢ ~~~(x &&& y) = ~~~x ||| ~~~y
 TACSTART
-  TACBENCH auto PASS, TIME_ELAPSED 120.105559 ms, 
-  TACBENCH ring FAIL, TIME_ELAPSED 84.025719 ms, MSGSTART 
+  TACBENCH auto PASS, TIME_ELAPSED 113.980729 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 87.283970 ms, MSGSTART 
     internal exception #4 MSGEND
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_1DeMorgan.lean:18:39: error: unsolved goals
@@ -2701,8 +2701,8 @@ w : ℕ
 x y : BitVec w
 ⊢ ~~~(x ||| y) = ~~~x &&& ~~~y
 TACSTART
-  TACBENCH auto PASS, TIME_ELAPSED 328.466239 ms, 
-  TACBENCH ring FAIL, TIME_ELAPSED 115.857069 ms, MSGSTART 
+  TACBENCH auto PASS, TIME_ELAPSED 326.902189 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 114.341919 ms, MSGSTART 
     internal exception #4 MSGEND
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_1DeMorgan.lean:22:31: error: unsolved goals
@@ -2710,8 +2710,8 @@ w : ℕ
 x : BitVec w
 ⊢ ~~~(x + 1) = ~~~x - 1
 TACSTART
-  TACBENCH auto PASS, TIME_ELAPSED 309.860739 ms, 
-  TACBENCH ring FAIL, TIME_ELAPSED 112.114339 ms, MSGSTART 
+  TACBENCH auto PASS, TIME_ELAPSED 306.945419 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 110.975039 ms, MSGSTART 
     internal exception #4 MSGEND
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_1DeMorgan.lean:26:31: error: unsolved goals
@@ -2719,8 +2719,8 @@ w : ℕ
 x : BitVec w
 ⊢ ~~~(x - 1) = ~~~x + 1
 TACSTART
-  TACBENCH auto PASS, TIME_ELAPSED 295.298039 ms, 
-  TACBENCH ring FAIL, TIME_ELAPSED 124.098779 ms, MSGSTART 
+  TACBENCH auto PASS, TIME_ELAPSED 292.016329 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 122.347779 ms, MSGSTART 
     internal exception #4 MSGEND
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_1DeMorgan.lean:30:25: error: unsolved goals
@@ -2728,8 +2728,8 @@ w : ℕ
 x : BitVec w
 ⊢ ~~~(-x) = x - 1
 TACSTART
-  TACBENCH auto PASS, TIME_ELAPSED 108.329309 ms, 
-  TACBENCH ring FAIL, TIME_ELAPSED 78.171370 ms, MSGSTART 
+  TACBENCH auto PASS, TIME_ELAPSED 107.195520 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 76.915420 ms, MSGSTART 
     internal exception #4 MSGEND
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_1DeMorgan.lean:34:35: error: unsolved goals
@@ -2737,8 +2737,8 @@ w : ℕ
 x y : BitVec w
 ⊢ ~~~(x ^^^ y) = ~~~x ^^^ y
 TACSTART
-  TACBENCH auto PASS, TIME_ELAPSED 107.876499 ms, 
-  TACBENCH ring FAIL, TIME_ELAPSED 78.016230 ms, MSGSTART 
+  TACBENCH auto PASS, TIME_ELAPSED 106.751929 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 76.714780 ms, MSGSTART 
     internal exception #4 MSGEND
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_1DeMorgan.lean:38:35: error: unsolved goals
@@ -2746,8 +2746,8 @@ w : ℕ
 x y : BitVec w
 ⊢ ~~~(x ^^^ y) = ~~~x ^^^ y
 TACSTART
-  TACBENCH auto PASS, TIME_ELAPSED 303.022788 ms, 
-  TACBENCH ring FAIL, TIME_ELAPSED 124.514930 ms, MSGSTART 
+  TACBENCH auto PASS, TIME_ELAPSED 298.691549 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 122.589789 ms, MSGSTART 
     internal exception #4 MSGEND
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_1DeMorgan.lean:42:31: error: unsolved goals
@@ -2755,8 +2755,8 @@ w : ℕ
 x y : BitVec w
 ⊢ ~~~(x + y) = ~~~x - y
 TACSTART
-  TACBENCH auto PASS, TIME_ELAPSED 298.498559 ms, 
-  TACBENCH ring FAIL, TIME_ELAPSED 120.916750 ms, MSGSTART 
+  TACBENCH auto PASS, TIME_ELAPSED 293.288599 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 119.713569 ms, MSGSTART 
     internal exception #4 MSGEND
 TACEND
 SSA/Projects/InstCombine/HackersDelight/ch2_1DeMorgan.lean:46:31: error: unsolved goals
