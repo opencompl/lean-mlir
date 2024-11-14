@@ -26,6 +26,7 @@ def clear_folder():
 def run_file(file: str):
     file_path = BENCHMARK_DIR + file
     file_title = file.split('.')[0]
+    subprocess.Popen('sed -i -E \'s,simp_alive_benchmark,bv_bench,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
 
     for r in range(REPS):
         log_file_path = RESULTS_DIR + file_title + '_' + 'r' + str(r) + '.txt'
@@ -33,7 +34,7 @@ def run_file(file: str):
             cmd = 'lake lean ' + file_path
             print(cmd)
             subprocess.Popen(cmd, cwd=ROOT_DIR, stdout=log_file, stderr=log_file, shell=True).wait()
-    subprocess.Popen('sed -i -E \'s,bv_compare\'\\\'\',sorry,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
+    subprocess.Popen('sed -i -E \'s,bv_bench,simp_alive_benchmark,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
 
 def process(jobs: int):
     os.makedirs(RESULTS_DIR, exist_ok=True)
