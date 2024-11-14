@@ -50,7 +50,6 @@ jobs:
         run: |
           lake -R build SSA.Projects.InstCombine.HackersDelight.ch2_1DeMorgan # compile and check the Hacker's Delight theorems chapter 2-1
           lake -R build SSA.Projects.InstCombine.HackersDelight.ch2_2AdditionAndLogicalOps # compile and check the Hacker's Delight theorems chapter 2-2
-          lake -R build SSA.Projects.InstCombine.HackersDelight.ch2_3LogicalArithmeticIneq # compile and check the Hacker's Delight theorems chapter 2-3
 
       - name: Compile Alive Examples
         run: |

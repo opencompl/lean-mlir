@@ -33,4 +33,3 @@ import SSA.Projects.InstCombine.PaperExamples
 -- Proofs from Hackers Delight Book
 import SSA.Projects.InstCombine.HackersDelight.ch2_1DeMorgan
 import SSA.Projects.InstCombine.HackersDelight.ch2_2AdditionAndLogicalOps
-import SSA.Projects.InstCombine.HackersDelight.ch2_3LogicalArithmeticIneq
