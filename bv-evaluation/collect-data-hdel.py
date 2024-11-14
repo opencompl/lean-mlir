@@ -231,3 +231,4 @@ for file in os.listdir(benchmark_dir):
 
         df.to_csv(raw_data_dir+'bvw'+str(bvw)+'_'+file.split('.')[0]+'_proved_data.csv')
         df_ceg.to_csv(raw_data_dir+'bvw'+str(bvw)+'_'+file.split('.')[0]+'_ceg_data.csv')
+        df_err_sorted.to_csv(raw_data_dir+'bvw'+str(bvw)+'_'+file.split('.')[0]+'_err_data.csv')
