@@ -93,6 +93,7 @@ end TacBench
 
 
 section Examples
+/-
 theorem eg1 (x : Nat) : 1 = x := by
   tac_bench ["rfl" : rfl, "wrong" : (rw [Nat.add_comm]), "success" : simp, "ring_done" : foo, "sorry" : sorry]
   sorry
@@ -100,6 +101,7 @@ theorem eg1 (x : Nat) : 1 = x := by
 theorem eg2 (x y : BitVec 8) : x * y = y * x := by
   tac_bench ["bv_decide" :  bv_decide, "ac_nf" : ac_nf]
   sorry
+-/
 
 end Examples
 

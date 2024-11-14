@@ -8,6 +8,7 @@ import SSA.Experimental.Bits.Fast.Tactic
 import SSA.Experimental.Bits.AutoStructs.Tactic
 import SSA.Experimental.Bits.AutoStructs.ForLean
 import Std.Tactic.BVDecide
+import SSA.Core.Tactic.TacBench
 import Leanwuzla
 
 open Lean
