@@ -68,7 +68,7 @@ def run():
             out = pd.concat([out, df])
 
     print(out)
-    df.to_csv(raw_data_dir + 'hdel_symbolic.csv')
+    out.to_csv(raw_data_dir + 'hdel_symbolic.csv')
 
 if __name__ == "__main__":
     run()
