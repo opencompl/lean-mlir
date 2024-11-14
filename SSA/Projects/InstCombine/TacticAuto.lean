@@ -212,12 +212,6 @@ macro "bv_auto": tactic =>
         try bv_eliminate_bool
         repeat (split)
         <;> try simp (config := {failIfUnchanged := false})
-        /-
-        Solve tries each arm in order, falling through
-        if the goal is not closed.
-        Note that all goals are tried with the original state
-        (i.e. backtracking semantics).
-        -/
         try solve
           | bv_bitwise
           | bv_ac
