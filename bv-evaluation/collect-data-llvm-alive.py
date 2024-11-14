@@ -5,8 +5,8 @@ import os
 import re
 
 benchmark_dir = "../SSA/Projects/InstCombine/"
-res_dir = "results/alive-sym/"
-raw_data_dir = '../../paper-lean-bitvectors/raw-data/alive-sym/'
+res_dir = "results/alive-symbolic/"
+raw_data_dir = '../../paper-lean-bitvectors/raw-data/alive-symbolic/'
 reps = 1
 
 
@@ -69,7 +69,7 @@ def run():
         out = pd.concat([out, df])
 
     print(out)
-    out.to_csv(raw_data_dir + 'instcombine_symbolic.csv')
+    out.to_csv(raw_data_dir + 'alive_symbolic.csv')
 
 if __name__ == "__main__":
     run()
