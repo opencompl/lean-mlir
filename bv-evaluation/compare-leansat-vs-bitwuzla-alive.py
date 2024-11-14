@@ -6,7 +6,7 @@ import shutil
 
 ROOT_DIR = subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).decode('utf-8').strip()
 
-RESULTS_DIR = ROOT_DIR + '/bv-evaluation/results/alive-bench/'
+RESULTS_DIR = ROOT_DIR + '/bv-evaluation/results/alive-symbolic/'
 
 BENCHMARK_DIR = ROOT_DIR + '/SSA/Projects/InstCombine/'
 
@@ -27,7 +27,7 @@ def run_file(file: str):
     file_path = BENCHMARK_DIR + file
     file_title = file.split('.')[0]
     subprocess.Popen('sed -i -E \'s,try alive_auto,simp_alive_split,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
-    subprocess.Popen('sed -i -E \'s,all_goals sorry,bv_bench,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
+    subprocess.Popen('sed -i -E \'s,sorry,bv_bench,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
 
     for r in range(REPS):
         log_file_path = RESULTS_DIR + file_title + '_' + 'r' + str(r) + '.txt'
@@ -36,7 +36,7 @@ def run_file(file: str):
             print(cmd)
             subprocess.Popen(cmd, cwd=ROOT_DIR, stdout=log_file, stderr=log_file, shell=True).wait()
     subprocess.Popen('sed -i -E \'s,simp_alive_split,try alive_auto,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
-    subprocess.Popen('sed -i -E \'s,bv_bench,all_goals sorry,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
+    subprocess.Popen('sed -i -E \'s,bv_bench,sorry,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
 
 
 def process(jobs: int):
