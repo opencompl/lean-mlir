@@ -3,9 +3,10 @@ import numpy as np
 import pandas as pd
 import os 
 
+paper_directory = '../../paper-lean-bitvectors/'
 benchmark_dir = "../SSA/Projects/InstCombine/HackersDelight/"
 res_dir = "results/HackersDelight/"
-raw_data_dir = '../../paper-lean-bitvectors/raw-data/HackersDelight/'
+raw_data_dir = paper_directory + 'raw-data/HackersDelight/'
 reps = 1
 
 bv_width = [4, 8, 16, 32, 64]

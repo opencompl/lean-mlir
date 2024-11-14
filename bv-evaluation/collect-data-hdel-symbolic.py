@@ -4,9 +4,10 @@ import pandas as pd
 import os 
 import re
 
+paper_directory = '../../paper-lean-bitvectors/'
 benchmark_dir = "../SSA/Projects/InstCombine/HackersDelight/"
 res_dir = "results/HackersDelightSymbolic/"
-raw_data_dir = '../../paper-lean-bitvectors/raw-data/HackersDelight/'
+raw_data_dir = paper_directory + 'raw-data/HackersDelightSymbolic/'
 reps = 1
 
 
@@ -69,7 +70,7 @@ def run():
             out = pd.concat([out, df])
 
     print(out)
-    out.to_csv(raw_data_dir + 'hdel_symbolic.csv')
+    out.to_csv(raw_data_dir + 'hackersDelightSymbolic.csv')
 
 if __name__ == "__main__":
     run()
