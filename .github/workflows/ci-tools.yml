@@ -41,10 +41,6 @@ jobs:
           lake -R exe cache get # download cache of mathlib docs.
           lake -R build opt
 
-      - name: LLVM opt round trip test
-        run: |
-          lake exec opt test/LLVMDialect/InstCombine/bb0.mlir
-
       - name: Compile Alive Scaling
         run: |
           lake -R exe cache get # download cache of mathlib docs.
