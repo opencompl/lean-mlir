@@ -1,0 +1,221 @@
+⚠ [881/899] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [884/899] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:349:4: declaration uses 'sorry'
+⚠ [885/899] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:26:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:33:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:40:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:43:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:54:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:58:8: declaration uses 'sorry'
+⚠ [891/899] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:56:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:129:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:164:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:198:6: declaration uses 'sorry'
+⚠ [892/899] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+TACSTART
+  TACBENCH auto PASS, TIME_ELAPSED 327.100708 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 83.787042 ms, MSGSTART 
+    internal exception #4 MSGEND
+TACEND
+SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:14:22: error: unsolved goals
+w : ℕ
+x : BitVec w
+⊢ -x = ~~~x + 1
+TACSTART
+  TACBENCH auto PASS, TIME_ELAPSED 327.286375 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 91.843125 ms, MSGSTART 
+    internal exception #4 MSGEND
+TACEND
+SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:18:24: error: unsolved goals
+w : ℕ
+x : BitVec w
+⊢ -x = ~~~(x - 1)
+TACSTART
+  TACBENCH auto PASS, TIME_ELAPSED 313.432666 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 84.299125 ms, MSGSTART 
+    internal exception #4 MSGEND
+TACEND
+SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:22:22: error: unsolved goals
+w : ℕ
+x : BitVec w
+⊢ ~~~x = -x - 1
+TACSTART
+  TACBENCH auto PASS, TIME_ELAPSED 334.438625 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 90.357375 ms, MSGSTART 
+    internal exception #4 MSGEND
+TACEND
+SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:26:23: error: unsolved goals
+w : ℕ
+x : BitVec w
+⊢ -~~~x = x + 1
+TACSTART
+  TACBENCH auto PASS, TIME_ELAPSED 340.450333 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 96.204875 ms, MSGSTART 
+    internal exception #4 MSGEND
+TACEND
+SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:30:24: error: unsolved goals
+w : ℕ
+x : BitVec w
+⊢ ~~~(-x) = x - 1
+TACSTART
+  TACBENCH auto PASS, TIME_ELAPSED 421.688667 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 99.885541 ms, MSGSTART 
+    internal exception #4 MSGEND
+TACEND
+SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:34:29: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ x + y = x - ~~~y - 1
+TACSTART
+  TACBENCH auto PASS, TIME_ELAPSED 393.989333 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 84.920541 ms, MSGSTART 
+    internal exception #4 MSGEND
+TACEND
+SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:38:41: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ x + y = (x ^^^ y) + 2 * (x &&& y)
+TACSTART
+  TACBENCH auto PASS, TIME_ELAPSED 340.111708 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 83.917750 ms, MSGSTART 
+    internal exception #4 MSGEND
+TACEND
+SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:42:37: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ x + y = (x ||| y) + (x &&& y)
+TACSTART
+  TACBENCH auto PASS, TIME_ELAPSED 430.207416 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 102.644917 ms, MSGSTART 
+    internal exception #4 MSGEND
+TACEND
+SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:46:41: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ x + y = 2 * (x ||| y) - (x ^^^ y)
+TACSTART
+  TACBENCH auto PASS, TIME_ELAPSED 361.337500 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 97.296542 ms, MSGSTART 
+    internal exception #4 MSGEND
+TACEND
+SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:50:29: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ x - y = x + ~~~y + 1
+TACSTART
+  TACBENCH auto PASS, TIME_ELAPSED 401.689791 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 108.961250 ms, MSGSTART 
+    internal exception #4 MSGEND
+TACEND
+SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:54:45: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ x - y = (x ^^^ y) - 2 * (~~~x &&& y)
+TACSTART
+  TACBENCH auto PASS, TIME_ELAPSED 346.023875 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 112.063042 ms, MSGSTART 
+    internal exception #4 MSGEND
+TACEND
+SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:58:45: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ x - y = (x &&& ~~~y) - (~~~x &&& y)
+TACSTART
+  TACBENCH auto PASS, TIME_ELAPSED 431.219416 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 110.986791 ms, MSGSTART 
+    internal exception #4 MSGEND
+TACEND
+SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:62:45: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ x - y = 2 * (x &&& ~~~y) - (x ^^^ y)
+TACSTART
+  TACBENCH auto PASS, TIME_ELAPSED 328.948458 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 91.086333 ms, MSGSTART 
+    internal exception #4 MSGEND
+TACEND
+SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:66:39: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ x ^^^ y = (x ||| y) - (x &&& y)
+TACSTART
+  TACBENCH auto PASS, TIME_ELAPSED 321.112458 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 89.473000 ms, MSGSTART 
+    internal exception #4 MSGEND
+TACEND
+SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:70:35: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ x &&& ~~~y = (x ||| y) - y
+TACSTART
+  TACBENCH auto PASS, TIME_ELAPSED 305.152375 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 87.482666 ms, MSGSTART 
+    internal exception #4 MSGEND
+TACEND
+SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:74:35: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ x &&& ~~~y = x - (x &&& y)
+TACSTART
+  TACBENCH auto PASS, TIME_ELAPSED 394.306417 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 109.410875 ms, MSGSTART 
+    internal exception #4 MSGEND
+TACEND
+SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:78:31: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ ~~~(x - y) = y - x - 1
+TACSTART
+  TACBENCH auto PASS, TIME_ELAPSED 321.316500 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 87.167125 ms, MSGSTART 
+    internal exception #4 MSGEND
+TACEND
+SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:82:30: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ ~~~(x - y) = ~~~x + y
+TACSTART
+  TACBENCH auto PASS, TIME_ELAPSED 408.244500 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 96.118583 ms, MSGSTART 
+    internal exception #4 MSGEND
+TACEND
+SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:86:49: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ ~~~(x ^^^ y) = (x &&& y) - (x ||| y) - 1
+TACSTART
+  TACBENCH auto PASS, TIME_ELAPSED 329.505208 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 78.957125 ms, MSGSTART 
+    internal exception #4 MSGEND
+TACEND
+SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:90:49: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ ~~~(x ^^^ y) = (x &&& y) + ~~~(x ||| y)
+TACSTART
+  TACBENCH auto PASS, TIME_ELAPSED 322.493459 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 77.341500 ms, MSGSTART 
+    internal exception #4 MSGEND
+TACEND
+SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:94:35: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ x ||| y = (x &&& ~~~y) + y
+TACSTART
+  TACBENCH auto PASS, TIME_ELAPSED 319.650084 ms, 
+  TACBENCH ring FAIL, TIME_ELAPSED 91.484541 ms, MSGSTART 
+    internal exception #4 MSGEND
+TACEND
+SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean:98:39: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ x &&& y = (~~~x ||| y) - ~~~x
