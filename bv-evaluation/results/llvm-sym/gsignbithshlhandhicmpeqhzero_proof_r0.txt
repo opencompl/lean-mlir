@@ -1,0 +1,141 @@
+⚠ [673/898] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:26:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:33:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:40:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:43:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:54:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:58:8: declaration uses 'sorry'
+⚠ [884/898] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [887/898] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:349:4: declaration uses 'sorry'
+⚠ [893/898] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:56:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:129:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:164:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:198:6: declaration uses 'sorry'
+⚠ [894/898] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 276.508289 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 70.566291 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 52.717229 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 325.396379 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 51.605110 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 9.828500 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 4294967295
+      0 ≤ a ≤ 4294967295
+      a - b ≥ 1
+    where
+     a := ↑(↑32).toNat
+     b := ↑x✝.toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 68.720159 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).and (AutoStructs.Term.var 1))
+            AutoStructs.Term.zero) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 131.669170 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 783.760969 ms, 
+TACEND
+/home/luisacicolini/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsignbithshlhandhicmpeqhzero_proof.lean:11:8: warning: declaration uses 'sorry'
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 266.954579 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 44.211760 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 33.074979 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 301.051521 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 60.657570 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 12.501210 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 4294967295
+      0 ≤ a ≤ 4294967295
+      a - b ≥ 1
+    where
+     a := ↑(↑32).toNat
+     b := ↑x✝.toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 77.164309 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).and AutoStructs.Term.one)
+            AutoStructs.Term.zero) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 136.652090 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 861.769607 ms, 
+TACEND
+/home/luisacicolini/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsignbithshlhandhicmpeqhzero_proof.lean:22:8: warning: declaration uses 'sorry'
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 164.945839 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 36.916040 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 29.042880 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 221.006029 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 163.731389 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 9.651730 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ d ≤ 1
+      0 ≤ c ≤ 1
+      c - d ≥ 1
+      0 ≤ b ≤ 4294967295
+      0 ≤ a ≤ 4294967295
+      a - b ≥ 1
+    where
+     a := ↑(↑32).toNat
+     b := ↑x✝.toNat
+     c := ↑(ofBool (2147483648#32 <<< x✝ &&& x✝¹ != 0#32)).toNat
+     d := ↑(ofBool (0#32 >ₛ 2147483648#32 <<< x✝ &&& x✝¹)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 34.235640 ms, MSGSTART 
+    Equality (0#32 >ₛ 2147483648#32 <<< x✝.toNat &&& x✝¹) =
+      (2147483648#32 <<< x✝.toNat &&& x✝¹ != 0#32) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 148.846660 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 745.699588 ms, 
+TACEND
+/home/luisacicolini/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsignbithshlhandhicmpeqhzero_proof.lean:32:8: warning: declaration uses 'sorry'
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 154.340469 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 40.635550 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 19.462750 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 155.566190 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 33.986040 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 9.060210 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 4294967295
+      0 ≤ a ≤ 4294967295
+      a - b ≥ 1
+    where
+     a := ↑(↑32).toNat
+     b := ↑x✝.toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 56.008860 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.unop AutoStructs.Unop.neg
+            (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).and (AutoStructs.Term.var 1))
+              AutoStructs.Term.one)) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 109.165699 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 376.910299 ms, 
+TACEND
+/home/luisacicolini/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gsignbithshlhandhicmpeqhzero_proof.lean:43:8: warning: declaration uses 'sorry'

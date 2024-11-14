@@ -1,0 +1,346 @@
+⚠ [673/898] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:26:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:33:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:40:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:43:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:54:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:58:8: declaration uses 'sorry'
+⚠ [884/898] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [887/898] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:349:4: declaration uses 'sorry'
+⚠ [893/898] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:56:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:129:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:164:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:198:6: declaration uses 'sorry'
+⚠ [894/898] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 153.753319 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 64.416740 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 50.086209 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 365.894859 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 91.238620 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.717360 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ &&& 129#8 == 1#8)).toNat
+     b := ↑(ofBool (signExtend 32 x✝ &&& 2147483649#32 == 1#32)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 48.463650 ms, MSGSTART 
+    application type mismatch
+      if n = 2 then x✝ else if n = 1 then 2147483649#32 else if n = 0 then signExtend 32 x✝ else BitVec.zero 32
+    argument
+      if n = 1 then 2147483649#32 else if n = 0 then signExtend 32 x✝ else BitVec.zero 32
+    has type
+      BitVec 32 : Type
+    but is expected to have type
+      BitVec 8 : Type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 115.683649 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 742.393558 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 162.499100 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 60.294519 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 50.350739 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 310.453380 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 85.213161 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.623929 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ &&& 129#8 != 1#8)).toNat
+     b := ↑(ofBool (signExtend 32 x✝ &&& 2147483649#32 != 1#32)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 34.530811 ms, MSGSTART 
+    Equality (signExtend 32 x✝ &&& 2147483649#32 != 1#32) = (x✝ &&& 129#8 != 1#8) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 115.170389 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 751.760949 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 137.469429 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 48.177490 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 38.288650 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 263.530568 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 82.439530 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.606680 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ &&& 130#8 == 2#8)).toNat
+     b := ↑(ofBool (signExtend 32 x✝ &&& 1073741826#32 == 2#32)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 48.551959 ms, MSGSTART 
+    application type mismatch
+      if n = 3 then x✝
+      else if n = 2 then 2#32 else if n = 1 then 1073741826#32 else if n = 0 then signExtend 32 x✝ else BitVec.zero 32
+    argument
+      if n = 2 then 2#32 else if n = 1 then 1073741826#32 else if n = 0 then signExtend 32 x✝ else BitVec.zero 32
+    has type
+      BitVec 32 : Type
+    but is expected to have type
+      BitVec 8 : Type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 125.440910 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 563.899218 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 165.166379 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 61.200160 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 48.178589 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 309.674659 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 79.618760 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.221660 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ &&& 130#8 != 2#8)).toNat
+     b := ↑(ofBool (signExtend 32 x✝ &&& 1073741826#32 != 2#32)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 19.824900 ms, MSGSTART 
+    Equality (signExtend 32 x✝ &&& 1073741826#32 != 2#32) = (x✝ &&& 130#8 != 2#8) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 101.932470 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 617.423947 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 115.822889 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 27.188310 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 21.196630 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 213.557809 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 36.059979 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 8.248950 ms, MSGSTART 
+    omega could not prove the goal:
+    No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 64.115610 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.unop AutoStructs.Unop.neg
+            (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).and (AutoStructs.Term.var 1))
+              (AutoStructs.Term.var 2))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 90.717550 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 372.411080 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 112.699759 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 25.268050 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 18.901700 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 154.542919 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 33.579890 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.402070 ms, MSGSTART 
+    omega could not prove the goal:
+    No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 53.192210 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.unop AutoStructs.Unop.neg
+            (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).and (AutoStructs.Term.var 1))
+              (AutoStructs.Term.var 2))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 84.607369 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 495.324629 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 111.941919 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 25.140800 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 28.856980 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 172.115639 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 32.588030 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.171570 ms, MSGSTART 
+    omega could not prove the goal:
+    No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 51.366130 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.unop AutoStructs.Unop.neg
+            (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).and (AutoStructs.Term.var 1))
+              (AutoStructs.Term.var 2))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 85.071319 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 346.634699 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 109.503440 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 24.990990 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 18.049100 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 177.442129 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 34.003510 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.062500 ms, MSGSTART 
+    omega could not prove the goal:
+    No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 47.843870 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.unop AutoStructs.Unop.neg
+            (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).and (AutoStructs.Term.var 1))
+              AutoStructs.Term.one)) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 81.890049 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 424.861229 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 106.928439 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 23.671540 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 17.203410 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 137.371680 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 29.823870 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.734390 ms, MSGSTART 
+    omega could not prove the goal:
+    No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 44.823479 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.unop AutoStructs.Unop.neg
+            (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).and (AutoStructs.Term.var 1))
+              AutoStructs.Term.one)) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 80.741870 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 312.868509 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 149.484479 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 42.223700 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 26.091360 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 221.397739 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 36.094540 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.055570 ms, MSGSTART 
+    omega could not prove the goal:
+    No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 50.230280 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.unop AutoStructs.Unop.neg
+            (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).and (AutoStructs.Term.var 1))
+              (AutoStructs.Term.var 2))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 83.760039 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 325.923599 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 139.416000 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 24.079250 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 16.595170 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 141.393769 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 35.229900 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.764220 ms, MSGSTART 
+    omega could not prove the goal:
+    No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 46.802940 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.unop AutoStructs.Unop.neg
+            (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).and (AutoStructs.Term.var 1))
+              (AutoStructs.Term.var 2))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 81.487929 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 316.366679 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 140.209210 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 23.667950 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 16.296600 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 147.824509 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 36.670220 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.065070 ms, MSGSTART 
+    omega could not prove the goal:
+    No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 51.160399 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.unop AutoStructs.Unop.neg
+            (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).and (AutoStructs.Term.var 1))
+              (AutoStructs.Term.var 2))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 82.381460 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 319.115609 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 139.688730 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 23.805960 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 16.329520 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 134.841709 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 34.430830 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.568090 ms, MSGSTART 
+    omega could not prove the goal:
+    No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 43.402460 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.unop AutoStructs.Unop.neg
+            (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).and (AutoStructs.Term.var 1))
+              AutoStructs.Term.one)) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 81.438069 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 304.889679 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 170.122269 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 23.063820 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 16.003310 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 133.028799 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 34.576630 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.586580 ms, MSGSTART 
+    omega could not prove the goal:
+    No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 41.564300 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.unop AutoStructs.Unop.neg
+            (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).and (AutoStructs.Term.var 1))
+              AutoStructs.Term.one)) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 87.033999 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 312.041509 ms, 
+TACEND

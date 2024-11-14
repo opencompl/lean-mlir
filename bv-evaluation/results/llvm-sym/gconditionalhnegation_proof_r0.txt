@@ -1,0 +1,173 @@
+⚠ [673/898] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:26:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:33:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:40:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:43:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:54:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:58:8: declaration uses 'sorry'
+⚠ [884/898] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [892/898] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:56:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:129:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:164:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:198:6: declaration uses 'sorry'
+⚠ [893/898] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+⚠ [894/898] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:349:4: declaration uses 'sorry'
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 166.731480 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 338.029288 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 295.721748 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 338.890089 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 20.767840 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 12.583610 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 255
+      0 ≤ b ≤ 255
+      1 ≤ 256*a + c ≤ 256
+      256*a + b + c ≤ 255
+    where
+     a := ↑(0 % 2 ^ 8 + (2 ^ 8 - x✝.toNat)) / 256
+     b := ↑(signExtend 8 1#1 + x✝ ^^^ signExtend 8 1#1).toNat
+     c := ↑x✝.toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 68.255211 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).add (AutoStructs.Term.var 1)).xor (AutoStructs.Term.var 0))
+            (AutoStructs.Term.var 1).neg) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 96.273410 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 1076.059795 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 39.084069 ms, 
+  TACBENCH bv_ac PASS, TIME_ELAPSED 23.622420 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 10.092850 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 285.599479 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 23.606550 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.718370 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑x✝.toNat
+     b := ↑(signExtend 8 0#1 + x✝ ^^^ signExtend 8 0#1).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 23.975720 ms, MSGSTART 
+    no goals to be solved MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 87.173200 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 11.189720 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 153.044409 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 319.835829 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 283.118759 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 308.166888 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 24.778620 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 16.969040 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 255
+      0 ≤ b ≤ 255
+      1 ≤ 256*a + c ≤ 256
+      256*a + b + c ≤ 255
+    where
+     a := ↑(0 % 2 ^ 8 + (2 ^ 8 - x✝.toNat)) / 256
+     b := ↑(signExtend 8 1#1 + x✝ ^^^ signExtend 8 1#1).toNat
+     c := ↑x✝.toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 82.449810 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).add (AutoStructs.Term.var 1)).xor (AutoStructs.Term.var 0))
+            (AutoStructs.Term.var 1).neg) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 103.101950 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 1109.973206 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 23.299480 ms, 
+  TACBENCH bv_ac PASS, TIME_ELAPSED 23.877839 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 8.769890 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 261.363280 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 22.724060 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.648730 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑x✝.toNat
+     b := ↑(signExtend 8 0#1 + x✝ ^^^ signExtend 8 0#1).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 22.522890 ms, MSGSTART 
+    no goals to be solved MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 79.167039 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 15.912840 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 111.535639 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac PASS, TIME_ELAPSED 49.418990 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 50.339680 ms, 
+  TACBENCH bv_ring PASS, TIME_ELAPSED 147.439160 ms, 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 20.367010 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.615120 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(x✝¹ + signExtend 8 x✝ ^^^ signExtend 8 x✝²).toNat
+     b := ↑(signExtend 8 x✝ + x✝¹ ^^^ signExtend 8 x✝²).toNat MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 113.740239 ms, 
+  TACBENCH bv_decide PASS, TIME_ELAPSED 84.998879 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 111.138770 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 108.671120 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac PASS, TIME_ELAPSED 31.628540 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 27.604440 ms, 
+  TACBENCH bv_ring PASS, TIME_ELAPSED 99.118239 ms, 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 14.828131 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.766400 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(x✝¹ + signExtend 8 x✝ ^^^ signExtend 8 x✝).toNat
+     b := ↑(signExtend 8 x✝ + x✝¹ ^^^ signExtend 8 x✝).toNat MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 47.535690 ms, 
+  TACBENCH bv_decide PASS, TIME_ELAPSED 76.007460 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 109.002720 ms, 
+TACEND

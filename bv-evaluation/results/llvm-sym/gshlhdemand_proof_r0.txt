@@ -1,0 +1,1040 @@
+⚠ [880/898] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:26:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:33:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:40:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:43:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:54:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:58:8: declaration uses 'sorry'
+⚠ [886/898] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:56:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:129:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:164:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:198:6: declaration uses 'sorry'
+⚠ [890/898] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [893/898] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:349:4: declaration uses 'sorry'
+⚠ [894/898] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+/home/luisacicolini/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:13:70: error: (deterministic) timeout at `whnf`, maximum number of heartbeats (200000) has been reached
+Use `set_option maxHeartbeats <num>` to set the limit.
+Additional diagnostic information may be available using the `set_option diagnostics true` command.
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 425.774578 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 51.203170 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 37.715150 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 92.768510 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 14.189169 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 8.746870 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 4294967295
+      0 ≤ b ≤ 4294967295
+      b - c ≥ 1
+      2 ≤ a ≤ 4294967295
+    where
+     a := ↑(↑32).toNat
+     b := ↑(x✝.srem 1073741823#32 &&& 2147483648#32).toNat
+     c := ↑(x✝.srem 1073741823#32 <<< 1#32 &&& 2147483648#32).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 50.024770 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).and (AutoStructs.Term.var 1))
+            ((AutoStructs.Term.var 2).and (AutoStructs.Term.var 1))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 489.575208 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 1162.421785 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 319.343108 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 51.445150 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 37.867990 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 89.629729 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 13.217880 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 8.256550 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 4294967295
+      0 ≤ b ≤ 4294967295
+      b - c ≥ 1
+      2 ≤ a ≤ 4294967295
+    where
+     a := ↑(↑32).toNat
+     b := ↑(x✝.srem 2#32 &&& 4294967292#32).toNat
+     c := ↑(x✝.srem 2#32 <<< 1#32 &&& 4294967292#32).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 44.929400 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).and (AutoStructs.Term.var 1))
+            ((AutoStructs.Term.var 2).and (AutoStructs.Term.var 1))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 1585.642074 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 2152.682281 ms, 
+TACEND
+/home/luisacicolini/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:50:4: error: tactic 'simp' failed, nested error:
+(deterministic) timeout at `whnf`, maximum number of heartbeats (200000) has been reached
+Use `set_option maxHeartbeats <num>` to set the limit.
+Additional diagnostic information may be available using the `set_option diagnostics true` command.
+/home/luisacicolini/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:47:35: error: (deterministic) timeout at `whnf`, maximum number of heartbeats (200000) has been reached
+Use `set_option maxHeartbeats <num>` to set the limit.
+Additional diagnostic information may be available using the `set_option diagnostics true` command.
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 0.677080 ms, MSGSTART 
+    applyExtTheorem only applies to equations, not
+      some (x✝.srem 536870912#32 <<< 1#32 &&& 3221225474#32) ⊑ none MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 20.039590 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 19.917260 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 87.364240 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.397890 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 8.903780 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 4294967295
+      0 ≤ b ≤ 4294967295
+      b - c ≥ 1
+      2 ≤ a ≤ 4294967295
+    where
+     a := ↑(↑32).toNat
+     b := ↑(x✝.srem 536870912#32).toNat
+     c := ↑((x✝.srem 536870912#32 <<< 1#32).sshiftRight' 1#32).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 20.016880 ms, MSGSTART 
+    Unsupported syntax some (x✝.srem 536870912#32 <<< 1 &&& 3221225474#32) ⊑ none === Lean.Expr.app
+      (Lean.Expr.app
+        (Lean.Expr.app
+          (Lean.Expr.const `BitVec.Refinement [Lean.Level.zero])
+          (Lean.Expr.app
+            (Lean.Expr.const `BitVec [])
+            (Lean.Expr.app
+              (Lean.Expr.app
+                (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                (Lean.Expr.lit (Lean.Literal.natVal 32)))
+              (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+        (Lean.Expr.app
+          (Lean.Expr.app
+            (Lean.Expr.const `Option.some [Lean.Level.zero])
+            (Lean.Expr.app
+              (Lean.Expr.const `BitVec [])
+              (Lean.Expr.app
+                (Lean.Expr.app
+                  (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                  (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+          (Lean.Expr.app
+            (Lean.Expr.app
+              (Lean.Expr.app
+                (Lean.Expr.app
+                  (Lean.Expr.app
+                    (Lean.Expr.app
+                      (Lean.Expr.const `HAnd.hAnd [Lean.Level.zero, Lean.Level.zero, Lean.Level.zero])
+                      (Lean.Expr.app
+                        (Lean.Expr.const `BitVec [])
+                        (Lean.Expr.app
+                          (Lean.Expr.app
+                            (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                            (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                          (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                    (Lean.Expr.app
+                      (Lean.Expr.const `BitVec [])
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                          (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                        (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                  (Lean.Expr.app
+                    (Lean.Expr.const `BitVec [])
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                        (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                      (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                (Lean.Expr.app
+                  (Lean.Expr.app
+                    (Lean.Expr.const `instHAndOfAndOp [Lean.Level.zero])
+                    (Lean.Expr.app
+                      (Lean.Expr.const `BitVec [])
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                          (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                        (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                  (Lean.Expr.app
+                    (Lean.Expr.const `BitVec.instAndOp [])
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                        (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                      (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32)))))))
+              (Lean.Expr.app
+                (Lean.Expr.app
+                  (Lean.Expr.app
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.const `HShiftLeft.hShiftLeft [Lean.Level.zero, Lean.Level.zero, Lean.Level.zero])
+                          (Lean.Expr.app
+                            (Lean.Expr.const `BitVec [])
+                            (Lean.Expr.app
+                              (Lean.Expr.app
+                                (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                                (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                              (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                        (Lean.Expr.const `Nat []))
+                      (Lean.Expr.app
+                        (Lean.Expr.const `BitVec [])
+                        (Lean.Expr.app
+                          (Lean.Expr.app
+                            (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                            (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                          (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                    (Lean.Expr.app
+                      (Lean.Expr.const `BitVec.instHShiftLeftNat [])
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                          (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                        (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                  (Lean.Expr.app
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.const `BitVec.srem [])
+                        (Lean.Expr.app
+                          (Lean.Expr.app
+                            (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                            (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                          (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32)))))
+                      (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1961212)))
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.const `BitVec.ofNat [])
+                        (Lean.Expr.app
+                          (Lean.Expr.app
+                            (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                            (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                          (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32)))))
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                          (Lean.Expr.lit (Lean.Literal.natVal 536870912)))
+                        (Lean.Expr.app
+                          (Lean.Expr.const `instOfNatNat [])
+                          (Lean.Expr.lit (Lean.Literal.natVal 536870912)))))))
+                (Lean.Expr.app
+                  (Lean.Expr.app
+                    (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                    (Lean.Expr.lit (Lean.Literal.natVal 1)))
+                  (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 1))))))
+            (Lean.Expr.app
+              (Lean.Expr.app
+                (Lean.Expr.const `BitVec.ofNat [])
+                (Lean.Expr.app
+                  (Lean.Expr.app
+                    (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                    (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                  (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32)))))
+              (Lean.Expr.app
+                (Lean.Expr.app
+                  (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                  (Lean.Expr.lit (Lean.Literal.natVal 3221225474)))
+                (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 3221225474))))))))
+      (Lean.Expr.app
+        (Lean.Expr.const `Option.none [Lean.Level.zero])
+        (Lean.Expr.app
+          (Lean.Expr.const `BitVec [])
+          (Lean.Expr.app
+            (Lean.Expr.app
+              (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+              (Lean.Expr.lit (Lean.Literal.natVal 32)))
+            (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32)))))) MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 471.006918 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 690.504727 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 0.601350 ms, MSGSTART 
+    applyExtTheorem only applies to equations, not
+      some (x✝.srem 1073741824#32 <<< 1#32 &&& 2#32) ⊑ none MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 20.219230 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 19.489770 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 86.150810 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.304870 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 8.785090 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 4294967295
+      0 ≤ b ≤ 4294967295
+      b - c ≥ 1
+      2 ≤ a ≤ 4294967295
+    where
+     a := ↑(↑32).toNat
+     b := ↑(x✝.srem 1073741824#32).toNat
+     c := ↑((x✝.srem 1073741824#32 <<< 1#32).sshiftRight' 1#32).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 18.513710 ms, MSGSTART 
+    Unsupported syntax some (x✝.srem 1073741824#32 <<< 1 &&& 2#32) ⊑ none === Lean.Expr.app
+      (Lean.Expr.app
+        (Lean.Expr.app
+          (Lean.Expr.const `BitVec.Refinement [Lean.Level.zero])
+          (Lean.Expr.app
+            (Lean.Expr.const `BitVec [])
+            (Lean.Expr.app
+              (Lean.Expr.app
+                (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                (Lean.Expr.lit (Lean.Literal.natVal 32)))
+              (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+        (Lean.Expr.app
+          (Lean.Expr.app
+            (Lean.Expr.const `Option.some [Lean.Level.zero])
+            (Lean.Expr.app
+              (Lean.Expr.const `BitVec [])
+              (Lean.Expr.app
+                (Lean.Expr.app
+                  (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                  (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+          (Lean.Expr.app
+            (Lean.Expr.app
+              (Lean.Expr.app
+                (Lean.Expr.app
+                  (Lean.Expr.app
+                    (Lean.Expr.app
+                      (Lean.Expr.const `HAnd.hAnd [Lean.Level.zero, Lean.Level.zero, Lean.Level.zero])
+                      (Lean.Expr.app
+                        (Lean.Expr.const `BitVec [])
+                        (Lean.Expr.app
+                          (Lean.Expr.app
+                            (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                            (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                          (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                    (Lean.Expr.app
+                      (Lean.Expr.const `BitVec [])
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                          (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                        (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                  (Lean.Expr.app
+                    (Lean.Expr.const `BitVec [])
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                        (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                      (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                (Lean.Expr.app
+                  (Lean.Expr.app
+                    (Lean.Expr.const `instHAndOfAndOp [Lean.Level.zero])
+                    (Lean.Expr.app
+                      (Lean.Expr.const `BitVec [])
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                          (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                        (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                  (Lean.Expr.app
+                    (Lean.Expr.const `BitVec.instAndOp [])
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                        (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                      (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32)))))))
+              (Lean.Expr.app
+                (Lean.Expr.app
+                  (Lean.Expr.app
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.const `HShiftLeft.hShiftLeft [Lean.Level.zero, Lean.Level.zero, Lean.Level.zero])
+                          (Lean.Expr.app
+                            (Lean.Expr.const `BitVec [])
+                            (Lean.Expr.app
+                              (Lean.Expr.app
+                                (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                                (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                              (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                        (Lean.Expr.const `Nat []))
+                      (Lean.Expr.app
+                        (Lean.Expr.const `BitVec [])
+                        (Lean.Expr.app
+                          (Lean.Expr.app
+                            (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                            (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                          (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                    (Lean.Expr.app
+                      (Lean.Expr.const `BitVec.instHShiftLeftNat [])
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                          (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                        (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                  (Lean.Expr.app
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.const `BitVec.srem [])
+                        (Lean.Expr.app
+                          (Lean.Expr.app
+                            (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                            (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                          (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32)))))
+                      (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 2006740)))
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.const `BitVec.ofNat [])
+                        (Lean.Expr.app
+                          (Lean.Expr.app
+                            (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                            (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                          (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32)))))
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                          (Lean.Expr.lit (Lean.Literal.natVal 1073741824)))
+                        (Lean.Expr.app
+                          (Lean.Expr.const `instOfNatNat [])
+                          (Lean.Expr.lit (Lean.Literal.natVal 1073741824)))))))
+                (Lean.Expr.app
+                  (Lean.Expr.app
+                    (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                    (Lean.Expr.lit (Lean.Literal.natVal 1)))
+                  (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 1))))))
+            (Lean.Expr.app
+              (Lean.Expr.app
+                (Lean.Expr.const `BitVec.ofNat [])
+                (Lean.Expr.app
+                  (Lean.Expr.app
+                    (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                    (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                  (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32)))))
+              (Lean.Expr.app
+                (Lean.Expr.app
+                  (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                  (Lean.Expr.lit (Lean.Literal.natVal 2)))
+                (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 2))))))))
+      (Lean.Expr.app
+        (Lean.Expr.const `Option.none [Lean.Level.zero])
+        (Lean.Expr.app
+          (Lean.Expr.const `BitVec [])
+          (Lean.Expr.app
+            (Lean.Expr.app
+              (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+              (Lean.Expr.lit (Lean.Literal.natVal 32)))
+            (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32)))))) MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 525.962107 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 789.312507 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 0.607490 ms, MSGSTART 
+    applyExtTheorem only applies to equations, not
+      some (x✝.srem 4#32 <<< 1#32 &&& 4294967292#32) ⊑ none MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 20.077290 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 19.484960 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 86.749899 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.354140 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 8.915510 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 4294967295
+      0 ≤ b ≤ 4294967295
+      b - c ≥ 1
+      2 ≤ a ≤ 4294967295
+    where
+     a := ↑(↑32).toNat
+     b := ↑(x✝.srem 4#32).toNat
+     c := ↑((x✝.srem 4#32 <<< 1#32).sshiftRight' 1#32).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 18.774020 ms, MSGSTART 
+    Unsupported syntax some (x✝.srem 4#32 <<< 1 &&& 4294967292#32) ⊑ none === Lean.Expr.app
+      (Lean.Expr.app
+        (Lean.Expr.app
+          (Lean.Expr.const `BitVec.Refinement [Lean.Level.zero])
+          (Lean.Expr.app
+            (Lean.Expr.const `BitVec [])
+            (Lean.Expr.app
+              (Lean.Expr.app
+                (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                (Lean.Expr.lit (Lean.Literal.natVal 32)))
+              (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+        (Lean.Expr.app
+          (Lean.Expr.app
+            (Lean.Expr.const `Option.some [Lean.Level.zero])
+            (Lean.Expr.app
+              (Lean.Expr.const `BitVec [])
+              (Lean.Expr.app
+                (Lean.Expr.app
+                  (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                  (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+          (Lean.Expr.app
+            (Lean.Expr.app
+              (Lean.Expr.app
+                (Lean.Expr.app
+                  (Lean.Expr.app
+                    (Lean.Expr.app
+                      (Lean.Expr.const `HAnd.hAnd [Lean.Level.zero, Lean.Level.zero, Lean.Level.zero])
+                      (Lean.Expr.app
+                        (Lean.Expr.const `BitVec [])
+                        (Lean.Expr.app
+                          (Lean.Expr.app
+                            (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                            (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                          (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                    (Lean.Expr.app
+                      (Lean.Expr.const `BitVec [])
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                          (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                        (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                  (Lean.Expr.app
+                    (Lean.Expr.const `BitVec [])
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                        (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                      (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                (Lean.Expr.app
+                  (Lean.Expr.app
+                    (Lean.Expr.const `instHAndOfAndOp [Lean.Level.zero])
+                    (Lean.Expr.app
+                      (Lean.Expr.const `BitVec [])
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                          (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                        (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                  (Lean.Expr.app
+                    (Lean.Expr.const `BitVec.instAndOp [])
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                        (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                      (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32)))))))
+              (Lean.Expr.app
+                (Lean.Expr.app
+                  (Lean.Expr.app
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.const `HShiftLeft.hShiftLeft [Lean.Level.zero, Lean.Level.zero, Lean.Level.zero])
+                          (Lean.Expr.app
+                            (Lean.Expr.const `BitVec [])
+                            (Lean.Expr.app
+                              (Lean.Expr.app
+                                (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                                (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                              (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                        (Lean.Expr.const `Nat []))
+                      (Lean.Expr.app
+                        (Lean.Expr.const `BitVec [])
+                        (Lean.Expr.app
+                          (Lean.Expr.app
+                            (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                            (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                          (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                    (Lean.Expr.app
+                      (Lean.Expr.const `BitVec.instHShiftLeftNat [])
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                          (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                        (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                  (Lean.Expr.app
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.const `BitVec.srem [])
+                        (Lean.Expr.app
+                          (Lean.Expr.app
+                            (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                            (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                          (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32)))))
+                      (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 2052382)))
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.const `BitVec.ofNat [])
+                        (Lean.Expr.app
+                          (Lean.Expr.app
+                            (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                            (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                          (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32)))))
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                          (Lean.Expr.lit (Lean.Literal.natVal 4)))
+                        (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 4)))))))
+                (Lean.Expr.app
+                  (Lean.Expr.app
+                    (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                    (Lean.Expr.lit (Lean.Literal.natVal 1)))
+                  (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 1))))))
+            (Lean.Expr.app
+              (Lean.Expr.app
+                (Lean.Expr.const `BitVec.ofNat [])
+                (Lean.Expr.app
+                  (Lean.Expr.app
+                    (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                    (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                  (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32)))))
+              (Lean.Expr.app
+                (Lean.Expr.app
+                  (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                  (Lean.Expr.lit (Lean.Literal.natVal 4294967292)))
+                (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 4294967292))))))))
+      (Lean.Expr.app
+        (Lean.Expr.const `Option.none [Lean.Level.zero])
+        (Lean.Expr.app
+          (Lean.Expr.const `BitVec [])
+          (Lean.Expr.app
+            (Lean.Expr.app
+              (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+              (Lean.Expr.lit (Lean.Literal.natVal 32)))
+            (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32)))))) MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 1363.118304 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 1473.889344 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 216.547339 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 16.382450 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 12.935650 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 109.587019 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.529810 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 16.035380 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      f ≥ 0
+      0 ≤ f - 4294967296*g ≤ 4294967295
+      0 ≤ f - 4294967296*g - 65536*h ≤ 65535
+      c ≥ 0
+      0 ≤ c - 4294967296*d ≤ 4294967295
+      0 ≤ c - 4294967296*d - 65536*e ≤ 65535
+      c - 4294967296*d - 65536*e - f + 4294967296*g + 65536*h ≥ 1
+      0 ≤ b ≤ 4294967295
+      0 ≤ a ≤ 4294967295
+      a - b ≥ 1
+    where
+     a := ↑(↑32).toNat
+     b := ↑x✝¹.toNat
+     c := ↑(x✝.toNat % 2 ^ 32) * ↑(2 ^ x✝¹.toNat)
+     d := ↑(x✝.toNat % 2 ^ 32 * 2 ^ x✝¹.toNat) / 4294967296
+     e := ↑(x✝.toNat % 2 ^ 32 * 2 ^ x✝¹.toNat % 2 ^ 32) / 65536
+     f := ↑(signExtend 32 x✝).toNat * ↑(2 ^ x✝¹.toNat)
+     g := ↑((signExtend 32 x✝).toNat * 2 ^ x✝¹.toNat) / 4294967296
+     h := ↑((signExtend 32 x✝).toNat * 2 ^ x✝¹.toNat % 2 ^ 32) / 65536 MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 43.915800 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq (AutoStructs.Term.var 0) (AutoStructs.Term.var 1)) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 82.901490 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 537.975837 ms, 
+TACEND
+/home/luisacicolini/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:91:8: warning: declaration uses 'sorry'
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 158.371079 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 16.913810 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.570210 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 112.071750 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.650370 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 16.291219 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      f ≥ 0
+      0 ≤ f - 4294967296*g ≤ 4294967295
+      0 ≤ f - 4294967296*g - 32*h ≤ 31
+      c ≥ 0
+      0 ≤ c - 4294967296*d ≤ 4294967295
+      0 ≤ c - 4294967296*d - 32*e ≤ 31
+      c - 4294967296*d - 32*e - f + 4294967296*g + 32*h ≥ 1
+      0 ≤ b ≤ 4294967295
+      0 ≤ a ≤ 4294967295
+      a - b ≥ 1
+    where
+     a := ↑(↑32).toNat
+     b := ↑x✝¹.toNat
+     c := ↑(x✝.toNat % 2 ^ 32) * ↑(2 ^ x✝¹.toNat)
+     d := ↑(x✝.toNat % 2 ^ 32 * 2 ^ x✝¹.toNat) / 4294967296
+     e := ↑(x✝.toNat % 2 ^ 32 * 2 ^ x✝¹.toNat % 2 ^ 32) / 32
+     f := ↑(signExtend 32 x✝).toNat * ↑(2 ^ x✝¹.toNat)
+     g := ↑((signExtend 32 x✝).toNat * 2 ^ x✝¹.toNat) / 4294967296
+     h := ↑((signExtend 32 x✝).toNat * 2 ^ x✝¹.toNat % 2 ^ 32) / 32 MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 43.084010 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq (AutoStructs.Term.var 0) (AutoStructs.Term.var 1)) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 83.950790 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 542.821908 ms, 
+TACEND
+/home/luisacicolini/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:101:8: warning: declaration uses 'sorry'
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 163.243129 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 21.999980 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 19.176030 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 78.019080 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 13.693870 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.709240 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ d ≤ 4294967295
+      0 ≤ c ≤ 4294967295
+      c - d ≥ 1
+      0 ≤ b ≤ 4294967295
+      0 ≤ a ≤ 4294967295
+      a - b ≥ 1
+    where
+     a := ↑(↑32).toNat
+     b := ↑x✝¹.toNat
+     c := ↑(zeroExtend 32 x✝ <<< x✝¹ &&& 65535#32).toNat
+     d := ↑(signExtend 32 x✝ <<< x✝¹ &&& 65535#32).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 47.895740 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).and (AutoStructs.Term.var 1))
+            ((AutoStructs.Term.var 2).and (AutoStructs.Term.var 1))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 84.685819 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 492.801038 ms, 
+TACEND
+/home/luisacicolini/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:111:8: warning: declaration uses 'sorry'
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 228.996309 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 24.002260 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 26.183159 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 89.333680 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 14.637320 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.110870 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ d ≤ 4294967295
+      0 ≤ c ≤ 4294967295
+      c - d ≥ 1
+      0 ≤ b ≤ 4294967295
+      0 ≤ a ≤ 4294967295
+      a - b ≥ 1
+    where
+     a := ↑(↑32).toNat
+     b := ↑x✝¹.toNat
+     c := ↑((x✝ ||| 65537#32) <<< x✝¹ &&& 65536#32).toNat
+     d := ↑((x✝ ||| 196609#32) <<< x✝¹ &&& 65536#32).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 46.004880 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).and (AutoStructs.Term.var 1))
+            ((AutoStructs.Term.var 2).and (AutoStructs.Term.var 1))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 136.018289 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 716.147087 ms, 
+TACEND
+/home/luisacicolini/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:121:8: warning: declaration uses 'sorry'
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 193.698019 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 19.085000 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 18.596540 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 123.949090 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.919189 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 17.274270 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      f ≥ 0
+      0 ≤ f - 4294967296*g ≤ 4294967295
+      0 ≤ f - 4294967296*g - 256*h ≤ 255
+      c ≥ 0
+      0 ≤ c - 4294967296*d ≤ 4294967295
+      0 ≤ c - 4294967296*d - 256*e ≤ 255
+      c - 4294967296*d - 256*e - f + 4294967296*g + 256*h ≥ 1
+      0 ≤ b ≤ 4294967295
+      0 ≤ a ≤ 4294967295
+      a - b ≥ 1
+    where
+     a := ↑(↑32).toNat
+     b := ↑x✝¹.toNat
+     c := ↑x✝.toNat * ↑(2 ^ x✝¹.toNat)
+     d := ↑(x✝.toNat * 2 ^ x✝¹.toNat) / 4294967296
+     e := ↑(x✝.toNat * 2 ^ x✝¹.toNat % 2 ^ 32) / 256
+     f := ↑(x✝ &&& 255#32).toNat * ↑(2 ^ x✝¹.toNat)
+     g := ↑((x✝ &&& 255#32).toNat * 2 ^ x✝¹.toNat) / 4294967296
+     h := ↑((x✝ &&& 255#32).toNat * 2 ^ x✝¹.toNat % 2 ^ 32) / 256 MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 39.983180 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq (AutoStructs.Term.var 0) (AutoStructs.Term.var 1)) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 161.353550 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 736.508296 ms, 
+TACEND
+/home/luisacicolini/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:132:8: warning: declaration uses 'sorry'
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 0.629340 ms, MSGSTART 
+    applyExtTheorem only applies to equations, not
+      some (truncate 32 (x✝.sshiftRight' 31#40) <<< 16#32) ⊑ none MSGEND
+  TACBENCH bv_ac PASS, TIME_ELAPSED 11.434650 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 10.479070 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 127.374329 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 11.587750 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega PASS, TIME_ELAPSED 10.378070 ms, 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 19.321070 ms, MSGSTART 
+    Unsupported syntax some (setWidth 32 (x✝.sshiftRight 31) <<< 16) ⊑ none === Lean.Expr.app
+      (Lean.Expr.app
+        (Lean.Expr.app
+          (Lean.Expr.const `BitVec.Refinement [Lean.Level.zero])
+          (Lean.Expr.app
+            (Lean.Expr.const `BitVec [])
+            (Lean.Expr.app
+              (Lean.Expr.app
+                (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                (Lean.Expr.lit (Lean.Literal.natVal 32)))
+              (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+        (Lean.Expr.app
+          (Lean.Expr.app
+            (Lean.Expr.const `Option.some [Lean.Level.zero])
+            (Lean.Expr.app
+              (Lean.Expr.const `BitVec [])
+              (Lean.Expr.app
+                (Lean.Expr.app
+                  (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                  (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+          (Lean.Expr.app
+            (Lean.Expr.app
+              (Lean.Expr.app
+                (Lean.Expr.app
+                  (Lean.Expr.app
+                    (Lean.Expr.app
+                      (Lean.Expr.const `HShiftLeft.hShiftLeft [Lean.Level.zero, Lean.Level.zero, Lean.Level.zero])
+                      (Lean.Expr.app
+                        (Lean.Expr.const `BitVec [])
+                        (Lean.Expr.app
+                          (Lean.Expr.app
+                            (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                            (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                          (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                    (Lean.Expr.const `Nat []))
+                  (Lean.Expr.app
+                    (Lean.Expr.const `BitVec [])
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                        (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                      (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                (Lean.Expr.app
+                  (Lean.Expr.const `BitVec.instHShiftLeftNat [])
+                  (Lean.Expr.app
+                    (Lean.Expr.app
+                      (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                      (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                    (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+              (Lean.Expr.app
+                (Lean.Expr.app
+                  (Lean.Expr.app
+                    (Lean.Expr.const `BitVec.setWidth [])
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                        (Lean.Expr.lit (Lean.Literal.natVal 40)))
+                      (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 40)))))
+                  (Lean.Expr.app
+                    (Lean.Expr.app
+                      (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                      (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                    (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32)))))
+                (Lean.Expr.app
+                  (Lean.Expr.app
+                    (Lean.Expr.app
+                      (Lean.Expr.const `BitVec.sshiftRight [])
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                          (Lean.Expr.lit (Lean.Literal.natVal 40)))
+                        (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 40)))))
+                    (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 2324166)))
+                  (Lean.Expr.app
+                    (Lean.Expr.app
+                      (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                      (Lean.Expr.lit (Lean.Literal.natVal 31)))
+                    (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 31)))))))
+            (Lean.Expr.app
+              (Lean.Expr.app
+                (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                (Lean.Expr.lit (Lean.Literal.natVal 16)))
+              (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 16)))))))
+      (Lean.Expr.app
+        (Lean.Expr.const `Option.none [Lean.Level.zero])
+        (Lean.Expr.app
+          (Lean.Expr.const `BitVec [])
+          (Lean.Expr.app
+            (Lean.Expr.app
+              (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+              (Lean.Expr.lit (Lean.Literal.natVal 32)))
+            (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32)))))) MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 8.375890 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 145.067140 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 0.679410 ms, MSGSTART 
+    applyExtTheorem only applies to equations, not
+      some (truncate 32 (x✝.sshiftRight' 31#40) <<< 16#32) ⊑ none MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 11.349100 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 10.521940 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 125.964999 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 11.283910 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 9.764580 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ d ≤ 1099511627775
+      0 ≤ c ≤ 1099511627775
+      c - d ≥ 1
+      17 ≤ b ≤ 4294967295
+      32 ≤ a ≤ 1099511627775
+    where
+     a := ↑(↑40).toNat
+     b := ↑(↑32).toNat
+     c := ↑(x✝.sshiftRight' 15#40).toNat
+     d := ↑(signExtend 40 (truncate 32 (x✝.sshiftRight' 15#40))).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 18.393490 ms, MSGSTART 
+    Unsupported syntax some (setWidth 32 (x✝.sshiftRight 31) <<< 16) ⊑ none === Lean.Expr.app
+      (Lean.Expr.app
+        (Lean.Expr.app
+          (Lean.Expr.const `BitVec.Refinement [Lean.Level.zero])
+          (Lean.Expr.app
+            (Lean.Expr.const `BitVec [])
+            (Lean.Expr.app
+              (Lean.Expr.app
+                (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                (Lean.Expr.lit (Lean.Literal.natVal 32)))
+              (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+        (Lean.Expr.app
+          (Lean.Expr.app
+            (Lean.Expr.const `Option.some [Lean.Level.zero])
+            (Lean.Expr.app
+              (Lean.Expr.const `BitVec [])
+              (Lean.Expr.app
+                (Lean.Expr.app
+                  (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                  (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+          (Lean.Expr.app
+            (Lean.Expr.app
+              (Lean.Expr.app
+                (Lean.Expr.app
+                  (Lean.Expr.app
+                    (Lean.Expr.app
+                      (Lean.Expr.const `HShiftLeft.hShiftLeft [Lean.Level.zero, Lean.Level.zero, Lean.Level.zero])
+                      (Lean.Expr.app
+                        (Lean.Expr.const `BitVec [])
+                        (Lean.Expr.app
+                          (Lean.Expr.app
+                            (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                            (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                          (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                    (Lean.Expr.const `Nat []))
+                  (Lean.Expr.app
+                    (Lean.Expr.const `BitVec [])
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                        (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                      (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                (Lean.Expr.app
+                  (Lean.Expr.const `BitVec.instHShiftLeftNat [])
+                  (Lean.Expr.app
+                    (Lean.Expr.app
+                      (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                      (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                    (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+              (Lean.Expr.app
+                (Lean.Expr.app
+                  (Lean.Expr.app
+                    (Lean.Expr.const `BitVec.setWidth [])
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                        (Lean.Expr.lit (Lean.Literal.natVal 40)))
+                      (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 40)))))
+                  (Lean.Expr.app
+                    (Lean.Expr.app
+                      (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                      (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                    (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32)))))
+                (Lean.Expr.app
+                  (Lean.Expr.app
+                    (Lean.Expr.app
+                      (Lean.Expr.const `BitVec.sshiftRight [])
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                          (Lean.Expr.lit (Lean.Literal.natVal 40)))
+                        (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 40)))))
+                    (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 2324166)))
+                  (Lean.Expr.app
+                    (Lean.Expr.app
+                      (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                      (Lean.Expr.lit (Lean.Literal.natVal 31)))
+                    (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 31)))))))
+            (Lean.Expr.app
+              (Lean.Expr.app
+                (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                (Lean.Expr.lit (Lean.Literal.natVal 16)))
+              (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 16)))))))
+      (Lean.Expr.app
+        (Lean.Expr.const `Option.none [Lean.Level.zero])
+        (Lean.Expr.app
+          (Lean.Expr.const `BitVec [])
+          (Lean.Expr.app
+            (Lean.Expr.app
+              (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+              (Lean.Expr.lit (Lean.Literal.natVal 32)))
+            (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32)))))) MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 82.479400 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 371.943948 ms, 
+TACEND
+/home/luisacicolini/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gshlhdemand_proof.lean:144:106: error: (deterministic) timeout at `whnf`, maximum number of heartbeats (200000) has been reached
+Use `set_option maxHeartbeats <num>` to set the limit.
+Additional diagnostic information may be available using the `set_option diagnostics true` command.

@@ -1,0 +1,110 @@
+⚠ [880/898] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [883/898] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:349:4: declaration uses 'sorry'
+⚠ [884/898] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:26:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:33:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:40:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:43:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:54:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:58:8: declaration uses 'sorry'
+⚠ [890/898] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:56:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:129:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:164:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:198:6: declaration uses 'sorry'
+⚠ [891/898] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 113.036700 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 31.703990 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 31.483170 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 186.035359 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 16.905810 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 12.959600 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ e ≤ 4294967295
+      0 ≤ d ≤ 4294967295
+      0 ≤ b ≤ 4294967295
+      -4294967296 ≤ b - 4294967296*c - e ≤ -1
+      1 ≤ 4294967296*a + d ≤ 4294967296
+      4294967296*a + b - 4294967296*c + d - e ≤ -1
+    where
+     a := ↑(0 % 2 ^ 32 + (2 ^ 32 - (x✝ ^^^ x✝¹).toNat)) / 4294967296
+     b := ↑(x✝ &&& x✝¹).toNat
+     c := ↑((x✝ &&& x✝¹).toNat + (2 ^ 32 - (x✝ ||| x✝¹).toNat)) / 4294967296
+     d := ↑(x✝ ^^^ x✝¹).toNat
+     e := ↑(x✝ ||| x✝¹).toNat MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 58.134541 ms, 
+  TACBENCH bv_decide PASS, TIME_ELAPSED 107.531829 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 717.243226 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 146.744369 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 49.004220 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 45.621560 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 281.250459 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 29.269060 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 22.301020 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ e ≤ 4294967295
+      0 ≤ d ≤ 4294967295
+      0 ≤ b ≤ 4294967295
+      -4294967296 ≤ b - 4294967296*c - e ≤ -1
+      1 ≤ 4294967296*a + d ≤ 4294967296
+      4294967296*a + b - 4294967296*c + d - e ≤ -1
+    where
+     a := ↑(0 % 2 ^ 32 + (2 ^ 32 - (x✝ ^^^ x✝¹).toNat)) / 4294967296
+     b := ↑(x✝ &&& x✝¹).toNat
+     c := ↑((x✝ &&& x✝¹).toNat + (2 ^ 32 - (x✝¹ ||| x✝).toNat)) / 4294967296
+     d := ↑(x✝ ^^^ x✝¹).toNat
+     e := ↑(x✝¹ ||| x✝).toNat MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 85.594039 ms, 
+  TACBENCH bv_decide PASS, TIME_ELAPSED 131.153790 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 797.606397 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 110.584269 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 45.986210 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 44.803970 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 271.984989 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 22.170899 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 12.304330 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ e ≤ 4294967295
+      0 ≤ d ≤ 4294967295
+      0 ≤ b ≤ 4294967295
+      -4294967296 ≤ b - 4294967296*c - d ≤ -1
+      1 ≤ 4294967296*a + e ≤ 4294967296
+      4294967296*a + b - 4294967296*c - d + e ≤ -1
+    where
+     a := ↑(0 % 2 ^ 32 + (2 ^ 32 - (x✝ ^^^ x✝¹).toNat)) / 4294967296
+     b := ↑(x✝ &&& x✝¹).toNat
+     c := ↑((x✝ &&& x✝¹).toNat + (2 ^ 32 - (x✝¹ ||| x✝).toNat)) / 4294967296
+     d := ↑(x✝¹ ||| x✝).toNat
+     e := ↑(x✝ ^^^ x✝¹).toNat MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 41.911250 ms, 
+  TACBENCH bv_decide PASS, TIME_ELAPSED 103.429030 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 503.772969 ms, 
+TACEND

@@ -1,0 +1,177 @@
+⚠ [673/898] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:26:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:33:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:40:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:43:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:54:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:58:8: declaration uses 'sorry'
+⚠ [884/898] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [887/898] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:349:4: declaration uses 'sorry'
+⚠ [893/898] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:56:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:129:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:164:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:198:6: declaration uses 'sorry'
+⚠ [894/898] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 159.770620 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 36.204360 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 28.894560 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 343.558979 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 61.399239 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.386470 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝¹ ^^^ -1#8 ≥ᵤ x✝)).toNat
+     b := ↑(ofBool (x✝ + x✝¹ ≥ᵤ x✝¹)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 32.545090 ms, MSGSTART 
+    Equality (x✝ + x✝¹ ≥ᵤ x✝¹) = (x✝¹ ^^^ 255#8 ≥ᵤ x✝) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 128.513110 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 648.182117 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 171.285930 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 34.760160 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 34.639359 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 330.993669 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 63.459050 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.397979 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ ^^^ -1#8 ≥ᵤ x✝¹)).toNat
+     b := ↑(ofBool (x✝ + x✝¹ ≥ᵤ x✝)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 34.151780 ms, MSGSTART 
+    Equality (x✝ + x✝¹ ≥ᵤ x✝) = (x✝ ^^^ 255#8 ≥ᵤ x✝¹) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 127.768700 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 623.970569 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 157.726320 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 35.336010 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 28.431310 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 233.808229 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 36.786400 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.804691 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ ^^^ -1#8 ≥ᵤ x✝¹)).toNat
+     b := ↑(ofBool (x✝¹ + x✝ ≥ᵤ x✝)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 20.817020 ms, MSGSTART 
+    Equality (x✝¹ + x✝ ≥ᵤ x✝) = (x✝ ^^^ 255#8 ≥ᵤ x✝¹) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 100.860399 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 556.259689 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 66.777470 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 23.614720 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 26.577800 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 160.664619 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 49.463590 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.667080 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ == 0#8)).toNat
+     b := ↑(ofBool (x✝ + x✝¹ == x✝¹)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 37.808800 ms, MSGSTART 
+    no goals to be solved MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 95.240390 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 30.405290 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 119.867170 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 26.058000 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 18.940480 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 154.068449 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 61.129121 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.529659 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ != 0#8)).toNat
+     b := ↑(ofBool (x✝ + x✝¹ != x✝¹)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 17.190831 ms, MSGSTART 
+    Equality (x✝ + x✝¹ != x✝¹) = (x✝ != 0#8) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 96.253339 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 535.547228 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 163.425359 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 42.953980 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 30.557890 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 178.798979 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 47.136281 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.964670 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ != 0#8)).toNat
+     b := ↑(ofBool (x✝ >ᵤ x✝ + 31#8 &&& 31#8)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 19.236139 ms, MSGSTART 
+    Equality (x✝ >ᵤ x✝ + 31#8 &&& 31#8) = (x✝ != 0#8) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 99.811900 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 599.532617 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 146.275419 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 55.376860 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 45.503780 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 189.557669 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 47.477600 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.235950 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ * x✝ != 0#8)).toNat
+     b := ↑(ofBool (x✝ * x✝ >ᵤ x✝ * x✝ + 127#8 &&& 127#8)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 19.047530 ms, MSGSTART 
+    Equality (x✝ * x✝ >ᵤ x✝ * x✝ + 127#8 &&& 127#8) = (x✝ * x✝ != 0#8) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 101.060159 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 539.139928 ms, 
+TACEND

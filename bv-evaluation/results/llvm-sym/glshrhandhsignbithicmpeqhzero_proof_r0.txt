@@ -1,0 +1,273 @@
+⚠ [880/898] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [883/898] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:349:4: declaration uses 'sorry'
+⚠ [884/898] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:26:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:33:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:40:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:43:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:54:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:58:8: declaration uses 'sorry'
+⚠ [890/898] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:56:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:129:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:164:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:198:6: declaration uses 'sorry'
+⚠ [891/898] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 166.983219 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 38.606170 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 30.526310 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 310.607939 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 142.390689 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 9.401971 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ d ≤ 1
+      0 ≤ c ≤ 1
+      c - d ≥ 1
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(↑8).toNat
+     b := ↑x✝¹.toNat
+     c := ↑(ofBool (x✝ >>> x✝¹ >ₛ -1#8)).toNat
+     d := ↑(ofBool (x✝ >>> x✝¹ &&& 128#8 == 0#8)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 34.159299 ms, MSGSTART 
+    Equality (x✝ >>> x✝¹.toNat &&& 128#8 == 0#8) = (x✝ >>> x✝¹.toNat >ₛ 255#8) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 121.475450 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 716.165348 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 143.358540 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 31.457190 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 25.826490 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 192.482089 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 85.978730 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.572320 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ d ≤ 1
+      0 ≤ c ≤ 1
+      c - d ≥ 1
+      0 ≤ b ≤ 65535
+      0 ≤ a ≤ 65535
+      a - b ≥ 1
+    where
+     a := ↑(↑16).toNat
+     b := ↑x✝¹.toNat
+     c := ↑(ofBool (x✝ >>> x✝¹ >ₛ -1#16)).toNat
+     d := ↑(ofBool (x✝ >>> x✝¹ &&& 32768#16 == 0#16)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 23.701630 ms, MSGSTART 
+    Equality (x✝ >>> x✝¹.toNat &&& 32768#16 == 0#16) = (x✝ >>> x✝¹.toNat >ₛ 65535#16) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 111.378770 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 521.146308 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 185.740309 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 51.963360 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 40.475410 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 282.862929 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 139.192009 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.452610 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ d ≤ 1
+      0 ≤ c ≤ 1
+      c - d ≥ 1
+      0 ≤ b ≤ 4294967295
+      0 ≤ a ≤ 4294967295
+      a - b ≥ 1
+    where
+     a := ↑(↑32).toNat
+     b := ↑x✝¹.toNat
+     c := ↑(ofBool (x✝ >>> x✝¹ >ₛ -1#32)).toNat
+     d := ↑(ofBool (x✝ >>> x✝¹ &&& 2147483648#32 == 0#32)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 24.784700 ms, MSGSTART 
+    Equality (x✝ >>> x✝¹.toNat &&& 2147483648#32 == 0#32) =
+      (x✝ >>> x✝¹.toNat >ₛ 4294967295#32) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 129.758440 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 575.122197 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 135.753570 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 49.416970 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 37.942440 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 284.288918 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 82.162979 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.378320 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ d ≤ 1
+      0 ≤ c ≤ 1
+      c - d ≥ 1
+      0 ≤ b ≤ 18446744073709551615
+      0 ≤ a ≤ 18446744073709551615
+      a - b ≥ 1
+    where
+     a := ↑(↑64).toNat
+     b := ↑x✝¹.toNat
+     c := ↑(ofBool (x✝ >>> x✝¹ >ₛ -1#64)).toNat
+     d := ↑(ofBool (x✝ >>> x✝¹ &&& 9223372036854775808#64 == 0#64)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 27.388060 ms, MSGSTART 
+    Equality (x✝ >>> x✝¹.toNat &&& 9223372036854775808#64 == 0#64) =
+      (x✝ >>> x✝¹.toNat >ₛ 18446744073709551615#64) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 189.880660 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 524.941078 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 131.294039 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 30.214230 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 20.906460 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 142.895059 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 87.386440 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.167560 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ d ≤ 1
+      0 ≤ c ≤ 1
+      c - d ≥ 1
+      0 ≤ b ≤ 4294967295
+      0 ≤ a ≤ 4294967295
+      a - b ≥ 1
+    where
+     a := ↑(↑32).toNat
+     b := ↑x✝¹.toNat
+     c := ↑(ofBool (0#32 >ₛ x✝ >>> x✝¹)).toNat
+     d := ↑(ofBool (x✝ >>> x✝¹ &&& 2147483648#32 != 0#32)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 19.595560 ms, MSGSTART 
+    Equality (x✝ >>> x✝¹.toNat &&& 2147483648#32 != 0#32) = (0#32 >ₛ x✝ >>> x✝¹.toNat) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 130.940299 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 463.138258 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 163.868099 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 36.044050 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 28.947930 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 190.150119 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 49.847560 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 10.003160 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 4294967295
+      0 ≤ a ≤ 4294967295
+      a - b ≥ 1
+    where
+     a := ↑(↑32).toNat
+     b := ↑x✝.toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 48.224730 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).and (AutoStructs.Term.var 1))
+            AutoStructs.Term.zero) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 113.684589 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 624.771228 ms, 
+TACEND
+/home/luisacicolini/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshrhandhsignbithicmpeqhzero_proof.lean:66:8: warning: declaration uses 'sorry'
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 122.239129 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 21.841150 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 19.263260 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 137.687449 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 49.548960 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.173380 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ d ≤ 1
+      0 ≤ c ≤ 1
+      c - d ≥ 1
+      0 ≤ b ≤ 4294967295
+      0 ≤ a ≤ 4294967295
+      a - b ≥ 1
+    where
+     a := ↑(↑32).toNat
+     b := ↑x✝.toNat
+     c := ↑(ofBool (x✝ != 0#32)).toNat
+     d := ↑(ofBool (2147483648#32 >>> x✝ &&& 2147483648#32 == 0#32)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 19.869950 ms, MSGSTART 
+    Equality (2147483648#32 >>> x✝.toNat &&& 2147483648#32 == 0#32) = (x✝ != 0#32) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 215.378079 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 435.484878 ms, 
+TACEND
+/home/luisacicolini/lean-mlir/SSA/Projects/InstCombine/tests/proofs/glshrhandhsignbithicmpeqhzero_proof.lean:77:8: warning: declaration uses 'sorry'
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 132.327900 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 97.712399 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 76.925350 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 146.720379 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 95.397680 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.558840 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ d ≤ 1
+      0 ≤ c ≤ 1
+      c - d ≥ 1
+      0 ≤ b ≤ 4294967295
+      0 ≤ a ≤ 4294967295
+      a - b ≥ 1
+    where
+     a := ↑(↑32).toNat
+     b := ↑x✝¹.toNat
+     c := ↑(ofBool (0#32 >ₛ x✝ >>> x✝¹)).toNat
+     d := ↑(ofBool (0#32 >ₛ x✝ >>> x✝¹ &&& 2147483648#32)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 18.336760 ms, MSGSTART 
+    Equality (0#32 >ₛ x✝ >>> x✝¹.toNat &&& 2147483648#32) = (0#32 >ₛ x✝ >>> x✝¹.toNat) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 136.994419 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 505.679728 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 115.708119 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 30.510230 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 21.392050 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 137.475149 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 30.718310 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 8.137910 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 4294967295
+      0 ≤ a ≤ 4294967295
+      a - b ≥ 1
+    where
+     a := ↑(↑32).toNat
+     b := ↑x✝¹.toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 46.164310 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.unop AutoStructs.Unop.neg
+            (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).and (AutoStructs.Term.var 1))
+              AutoStructs.Term.one)) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 94.031400 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 325.260258 ms, 
+TACEND

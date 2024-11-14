@@ -1,0 +1,644 @@
+⚠ [880/898] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [883/898] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:349:4: declaration uses 'sorry'
+⚠ [884/898] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:26:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:33:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:40:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:43:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:54:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:58:8: declaration uses 'sorry'
+⚠ [890/898] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:56:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:129:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:164:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:198:6: declaration uses 'sorry'
+⚠ [891/898] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+/home/luisacicolini/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gicmphshlhnsw_proof.lean:13:45: error: (deterministic) timeout at `whnf`, maximum number of heartbeats (200000) has been reached
+Use `set_option maxHeartbeats <num>` to set the limit.
+Additional diagnostic information may be available using the `set_option diagnostics true` command.
+/home/luisacicolini/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gicmphshlhnsw_proof.lean:24:48: error: (deterministic) timeout at `whnf`, maximum number of heartbeats (200000) has been reached
+Use `set_option maxHeartbeats <num>` to set the limit.
+Additional diagnostic information may be available using the `set_option diagnostics true` command.
+/home/luisacicolini/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gicmphshlhnsw_proof.lean:35:45: error: (deterministic) timeout at `whnf`, maximum number of heartbeats (200000) has been reached
+Use `set_option maxHeartbeats <num>` to set the limit.
+Additional diagnostic information may be available using the `set_option diagnostics true` command.
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 143.057659 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 71.119660 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 14.009430 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 125.647759 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 41.215140 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.510590 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 1
+      0 ≤ b ≤ 1
+      b - c ≥ 1
+      6 ≤ a ≤ 4294967295
+    where
+     a := ↑(↑32).toNat
+     b := ↑(ofBool (x✝ == 0#32)).toNat
+     c := ↑(ofBool (x✝ <<< 5#32 == 0#32)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 47.647460 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.binop AutoStructs.Binop.equiv
+            (AutoStructs.Formula.atom AutoStructs.Relation.eq (AutoStructs.Term.var 0) AutoStructs.Term.zero)
+            (AutoStructs.Formula.atom AutoStructs.Relation.eq (AutoStructs.Term.var 1) AutoStructs.Term.zero)) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 109.540770 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 350.644758 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 130.345830 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 28.729249 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 18.064190 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 133.443120 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 78.583810 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.613879 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 1
+      0 ≤ b ≤ 1
+      b - c ≥ 1
+      2 ≤ a ≤ 255
+    where
+     a := ↑(↑8).toNat
+     b := ↑(ofBool (x✝ != 192#8)).toNat
+     c := ↑(ofBool (x✝ <<< 1#8 >ₛ 128#8)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 18.238120 ms, MSGSTART 
+    Equality (x✝ <<< 1 >ₛ 128#8) = (x✝ != 192#8) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 107.460790 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 499.534768 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 131.344700 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 75.543830 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 40.531499 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 138.248080 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 117.319139 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.434150 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 1
+      0 ≤ b ≤ 1
+      b - c ≥ 1
+      2 ≤ a ≤ 255
+    where
+     a := ↑(↑8).toNat
+     b := ↑(ofBool (x✝ >ₛ 192#8)).toNat
+     c := ↑(ofBool (x✝ <<< 1#8 >ₛ 129#8)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 17.352270 ms, MSGSTART 
+    Equality (x✝ <<< 1 >ₛ 129#8) = (x✝ >ₛ 192#8) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 110.737130 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 556.773177 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 182.749880 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 75.515069 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 40.311410 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 130.672010 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 117.247679 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.355990 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 1
+      0 ≤ b ≤ 1
+      b - c ≥ 1
+      2 ≤ a ≤ 255
+    where
+     a := ↑(↑8).toNat
+     b := ↑(ofBool (x✝ >ₛ 248#8)).toNat
+     c := ↑(ofBool (x✝ <<< 1#8 >ₛ 240#8)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 16.839750 ms, MSGSTART 
+    Equality (x✝ <<< 1 >ₛ 240#8) = (x✝ >ₛ 248#8) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 109.527060 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 497.743518 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 132.601570 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 76.316099 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 41.182850 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 160.466329 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 117.956920 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.432470 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 1
+      0 ≤ b ≤ 1
+      b - c ≥ 1
+      2 ≤ a ≤ 255
+    where
+     a := ↑(↑8).toNat
+     b := ↑(ofBool (x✝ >ₛ -1#8)).toNat
+     c := ↑(ofBool (x✝ <<< 1#8 >ₛ 254#8)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 17.873280 ms, MSGSTART 
+    Equality (x✝ <<< 1 >ₛ 254#8) = (x✝ >ₛ 255#8) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 208.717229 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 598.982577 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 187.787609 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 73.392290 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 38.767290 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 122.746309 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 117.830580 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.428530 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 1
+      0 ≤ b ≤ 1
+      b - c ≥ 1
+      2 ≤ a ≤ 255
+    where
+     a := ↑(↑8).toNat
+     b := ↑(ofBool (x✝ >ₛ 0#8)).toNat
+     c := ↑(ofBool (x✝ <<< 1#8 >ₛ 1#8)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 17.942310 ms, MSGSTART 
+    Equality (x✝ <<< 1 >ₛ 1#8) = (x✝ >ₛ 0#8) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 112.395409 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 489.070648 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 181.751890 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 73.327579 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 38.727070 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 129.773790 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 116.864609 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.317720 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 1
+      0 ≤ b ≤ 1
+      b - c ≥ 1
+      2 ≤ a ≤ 255
+    where
+     a := ↑(↑8).toNat
+     b := ↑(ofBool (x✝ >ₛ 8#8)).toNat
+     c := ↑(ofBool (x✝ <<< 1#8 >ₛ 16#8)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 16.908760 ms, MSGSTART 
+    Equality (x✝ <<< 1 >ₛ 16#8) = (x✝ >ₛ 8#8) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 108.743170 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 490.979787 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 131.749520 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 73.077809 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 38.406260 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 129.369640 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 117.731909 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.522690 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 1
+      0 ≤ b ≤ 1
+      b - c ≥ 1
+      2 ≤ a ≤ 255
+    where
+     a := ↑(↑8).toNat
+     b := ↑(ofBool (x✝ >ₛ 62#8)).toNat
+     c := ↑(ofBool (x✝ <<< 1#8 >ₛ 124#8)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 17.670180 ms, MSGSTART 
+    Equality (x✝ <<< 1 >ₛ 124#8) = (x✝ >ₛ 62#8) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 109.998760 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 492.016418 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 129.587100 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 26.948549 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 17.840360 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 135.783730 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 72.591089 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.721930 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 1
+      0 ≤ b ≤ 1
+      b - c ≥ 1
+      2 ≤ a ≤ 255
+    where
+     a := ↑(↑8).toNat
+     b := ↑(ofBool (x✝ == 63#8)).toNat
+     c := ↑(ofBool (x✝ <<< 1#8 >ₛ 125#8)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 19.858150 ms, MSGSTART 
+    Equality (x✝ <<< 1 >ₛ 125#8) = (x✝ == 63#8) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 106.499900 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 486.637718 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 128.735100 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 304.975719 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 116.861609 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 130.126900 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 72.822489 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.655650 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 1
+      0 ≤ b ≤ 1
+      b - c ≥ 1
+      8 ≤ a ≤ 255
+    where
+     a := ↑(↑8).toNat
+     b := ↑(ofBool (x✝ == 0#8)).toNat
+     c := ↑(ofBool (x✝ <<< 7#8 >ₛ 128#8)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 18.606500 ms, MSGSTART 
+    Equality (x✝ <<< 7 >ₛ 128#8) = (x✝ == 0#8) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 155.586160 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 876.993376 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 131.147099 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 1099.949816 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 509.923167 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 159.232480 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 118.774889 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.446430 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 1
+      0 ≤ b ≤ 1
+      b - c ≥ 1
+      8 ≤ a ≤ 255
+    where
+     a := ↑(↑8).toNat
+     b := ↑(ofBool (x✝ >ₛ -1#8)).toNat
+     c := ↑(ofBool (x✝ <<< 7#8 >ₛ 129#8)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 17.576740 ms, MSGSTART 
+    Equality (x✝ <<< 7 >ₛ 129#8) = (x✝ >ₛ 255#8) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 158.463659 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 1902.574702 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 230.016869 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 1099.382806 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 511.586668 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 159.345529 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 118.634320 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.594111 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 1
+      0 ≤ b ≤ 1
+      b - c ≥ 1
+      8 ≤ a ≤ 255
+    where
+     a := ↑(↑8).toNat
+     b := ↑(ofBool (x✝ >ₛ -1#8)).toNat
+     c := ↑(ofBool (x✝ <<< 7#8 >ₛ 254#8)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 18.009829 ms, MSGSTART 
+    Equality (x✝ <<< 7 >ₛ 254#8) = (x✝ >ₛ 255#8) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 108.597550 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 1919.150422 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 130.765770 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 27.586409 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 18.192940 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 151.890330 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 73.740559 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.686180 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 1
+      0 ≤ b ≤ 1
+      b - c ≥ 1
+      2 ≤ a ≤ 255
+    where
+     a := ↑(↑8).toNat
+     b := ↑(ofBool (x✝ == 192#8)).toNat
+     c := ↑(ofBool (128#8 ≥ₛ x✝ <<< 1#8)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 19.265070 ms, MSGSTART 
+    Equality (128#8 ≥ₛ x✝ <<< 1) = (x✝ == 192#8) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 107.235990 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 489.066618 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 131.654550 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 66.063020 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 35.601139 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 128.949540 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 116.250379 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.354410 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 1
+      0 ≤ b ≤ 1
+      b - c ≥ 1
+      2 ≤ a ≤ 255
+    where
+     a := ↑(↑8).toNat
+     b := ↑(ofBool (193#8 >ₛ x✝)).toNat
+     c := ↑(ofBool (129#8 ≥ₛ x✝ <<< 1#8)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 16.880820 ms, MSGSTART 
+    Equality (129#8 ≥ₛ x✝ <<< 1) = (193#8 >ₛ x✝) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 110.187130 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 479.110748 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 131.006980 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 65.730839 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 35.594020 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 127.128230 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 115.431929 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.297540 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 1
+      0 ≤ b ≤ 1
+      b - c ≥ 1
+      2 ≤ a ≤ 255
+    where
+     a := ↑(↑8).toNat
+     b := ↑(ofBool (249#8 >ₛ x✝)).toNat
+     c := ↑(ofBool (240#8 ≥ₛ x✝ <<< 1#8)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 16.735030 ms, MSGSTART 
+    Equality (240#8 ≥ₛ x✝ <<< 1) = (249#8 >ₛ x✝) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 210.644499 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 477.736178 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 131.946200 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 63.745120 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 34.323050 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 124.643610 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 115.549579 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.265240 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 1
+      0 ≤ b ≤ 1
+      b - c ≥ 1
+      2 ≤ a ≤ 255
+    where
+     a := ↑(↑8).toNat
+     b := ↑(ofBool (0#8 >ₛ x✝)).toNat
+     c := ↑(ofBool (254#8 ≥ₛ x✝ <<< 1#8)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 16.655110 ms, MSGSTART 
+    Equality (254#8 ≥ₛ x✝ <<< 1) = (0#8 >ₛ x✝) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 109.903360 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 466.507858 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 130.504340 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 89.273939 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 46.057180 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 119.382450 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 87.376399 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.161380 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 1
+      0 ≤ b ≤ 1
+      b - c ≥ 1
+      2 ≤ a ≤ 255
+    where
+     a := ↑(↑8).toNat
+     b := ↑(ofBool (1#8 >ₛ x✝)).toNat
+     c := ↑(ofBool (1#8 ≥ₛ x✝ <<< 1#8)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 16.722570 ms, MSGSTART 
+    Equality (1#8 ≥ₛ x✝ <<< 1) = (1#8 >ₛ x✝) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 108.888590 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 464.190078 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 131.250279 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 62.633640 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 34.116890 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 128.478139 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 116.320600 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.336330 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 1
+      0 ≤ b ≤ 1
+      b - c ≥ 1
+      2 ≤ a ≤ 255
+    where
+     a := ↑(↑8).toNat
+     b := ↑(ofBool (9#8 >ₛ x✝)).toNat
+     c := ↑(ofBool (16#8 ≥ₛ x✝ <<< 1#8)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 17.031219 ms, MSGSTART 
+    Equality (16#8 ≥ₛ x✝ <<< 1) = (9#8 >ₛ x✝) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 110.270490 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 470.701848 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 130.694139 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 62.307320 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 33.847970 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 129.187579 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 115.229710 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.296460 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 1
+      0 ≤ b ≤ 1
+      b - c ≥ 1
+      2 ≤ a ≤ 255
+    where
+     a := ↑(↑8).toNat
+     b := ↑(ofBool (63#8 >ₛ x✝)).toNat
+     c := ↑(ofBool (124#8 ≥ₛ x✝ <<< 1#8)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 17.122160 ms, MSGSTART 
+    Equality (124#8 ≥ₛ x✝ <<< 1) = (63#8 >ₛ x✝) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 109.296569 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 473.386698 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 129.198080 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 30.655849 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 18.480040 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 132.365740 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 77.782389 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.602621 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 1
+      0 ≤ b ≤ 1
+      b - c ≥ 1
+      2 ≤ a ≤ 255
+    where
+     a := ↑(↑8).toNat
+     b := ↑(ofBool (x✝ != 63#8)).toNat
+     c := ↑(ofBool (125#8 ≥ₛ x✝ <<< 1#8)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 18.251359 ms, MSGSTART 
+    Equality (125#8 ≥ₛ x✝ <<< 1) = (x✝ != 63#8) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 107.781580 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 488.510208 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 129.409200 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 385.044848 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 155.465060 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 128.055599 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 77.443830 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.587240 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 1
+      0 ≤ b ≤ 1
+      b - c ≥ 1
+      8 ≤ a ≤ 255
+    where
+     a := ↑(↑8).toNat
+     b := ↑(ofBool (x✝ != 0#8)).toNat
+     c := ↑(ofBool (128#8 ≥ₛ x✝ <<< 7#8)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 17.577900 ms, MSGSTART 
+    Equality (128#8 ≥ₛ x✝ <<< 7) = (x✝ != 0#8) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 106.677649 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 858.563307 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 130.520440 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 1002.127265 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 462.426428 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 124.706029 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 115.827190 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.334801 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 1
+      0 ≤ b ≤ 1
+      b - c ≥ 1
+      8 ≤ a ≤ 255
+    where
+     a := ↑(↑8).toNat
+     b := ↑(ofBool (0#8 >ₛ x✝)).toNat
+     c := ↑(ofBool (129#8 ≥ₛ x✝ <<< 7#8)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 17.072669 ms, MSGSTART 
+    Equality (129#8 ≥ₛ x✝ <<< 7) = (0#8 >ₛ x✝) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 109.788930 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 1776.215733 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 130.248010 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 1006.454695 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 461.261518 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 123.643710 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 114.747759 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.308760 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 1
+      0 ≤ b ≤ 1
+      b - c ≥ 1
+      8 ≤ a ≤ 255
+    where
+     a := ↑(↑8).toNat
+     b := ↑(ofBool (0#8 >ₛ x✝)).toNat
+     c := ↑(ofBool (254#8 ≥ₛ x✝ <<< 7#8)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 16.360500 ms, MSGSTART 
+    Equality (254#8 ≥ₛ x✝ <<< 7) = (0#8 >ₛ x✝) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 109.857340 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 1784.978642 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 135.512779 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 22.461040 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 14.711540 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 133.382699 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 42.106380 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.587020 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 1
+      0 ≤ b ≤ 1
+      b - c ≥ 1
+      2 ≤ a ≤ 255
+    where
+     a := ↑(↑8).toNat
+     b := ↑(ofBool (x✝ == 6#8)).toNat
+     c := ↑(ofBool (x✝ <<< 1#8 == 12#8)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 66.559390 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.binop AutoStructs.Binop.equiv
+            (AutoStructs.Formula.atom AutoStructs.Relation.eq (AutoStructs.Term.var 0) (AutoStructs.Term.var 1))
+            (AutoStructs.Formula.atom AutoStructs.Relation.eq (AutoStructs.Term.var 2) (AutoStructs.Term.var 3))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 103.156740 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 364.806308 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 126.470340 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 145.323459 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 65.651460 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 134.549389 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 53.907290 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.595880 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 1
+      0 ≤ b ≤ 1
+      b - c ≥ 1
+      7 ≤ a ≤ 255
+    where
+     a := ↑(↑8).toNat
+     b := ↑(ofBool (x✝ != 254#8)).toNat
+     c := ↑(ofBool (x✝ <<< 6#8 != 128#8)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 18.066520 ms, MSGSTART 
+    Equality (x✝ <<< 6 != 128#8) = (x✝ != 254#8) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 103.603979 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 567.352148 ms, 
+TACEND

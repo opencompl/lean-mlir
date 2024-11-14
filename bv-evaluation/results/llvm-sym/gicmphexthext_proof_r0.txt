@@ -1,0 +1,950 @@
+⚠ [673/898] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:26:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:33:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:40:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:43:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:54:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:58:8: declaration uses 'sorry'
+⚠ [889/898] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:56:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:129:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:164:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:198:6: declaration uses 'sorry'
+⚠ [890/898] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [893/898] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:349:4: declaration uses 'sorry'
+⚠ [894/898] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 378.707780 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 36.727390 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 10.724570 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 148.524149 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 76.457390 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.975850 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ >ᵤ x✝¹)).toNat
+     b := ↑(ofBool (zeroExtend 32 x✝ >ₛ zeroExtend 32 x✝¹)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 15.965720 ms, MSGSTART 
+    Equality (setWidth 32 x✝ >ₛ setWidth 32 x✝¹) = (x✝ >ᵤ x✝¹) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 127.254989 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 656.211248 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 145.662380 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 37.792400 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 20.176690 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 203.361440 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 78.660999 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.869620 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ == x✝¹)).toNat
+     b := ↑(ofBool (zeroExtend 32 x✝ == zeroExtend 32 x✝¹)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 38.556990 ms, MSGSTART 
+    application type mismatch
+      if n = 2 then x✝ else if n = 1 then setWidth 32 x✝¹ else if n = 0 then setWidth 32 x✝ else BitVec.zero 32
+    argument
+      if n = 1 then setWidth 32 x✝¹ else if n = 0 then setWidth 32 x✝ else BitVec.zero 32
+    has type
+      BitVec 32 : Type
+    but is expected to have type
+      BitVec 8 : Type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 113.699470 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 407.993259 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 164.119089 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 39.359080 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 23.343119 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 287.231580 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 114.713039 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.260030 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝¹ ≥ᵤ zeroExtend 16 x✝)).toNat
+     b := ↑(ofBool (zeroExtend 32 x✝¹ ≥ₛ zeroExtend 32 x✝)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 20.461700 ms, MSGSTART 
+    Equality (setWidth 32 x✝¹ ≥ₛ setWidth 32 x✝) = (x✝¹ ≥ᵤ setWidth 16 x✝) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 122.687989 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 734.580577 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 161.201229 ms, 
+  TACBENCH bv_ac PASS, TIME_ELAPSED 12.824531 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 14.423830 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 223.573439 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 41.412320 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.514640 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (zeroExtend 9 x✝¹ ≥ᵤ x✝)).toNat
+     b := ↑(ofBool (zeroExtend 32 x✝¹ ≥ᵤ zeroExtend 32 x✝)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 21.298300 ms, MSGSTART 
+    Equality (setWidth 32 x✝¹ ≥ᵤ setWidth 32 x✝) = (setWidth 9 x✝¹ ≥ᵤ x✝) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 104.083609 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 204.149060 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 187.432460 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 266.381249 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 111.036510 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 150.095010 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 135.940289 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.654370 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝¹ >ₛ x✝)).toNat
+     b := ↑(ofBool (signExtend 32 x✝¹ >ₛ signExtend 32 x✝)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 14.797600 ms, MSGSTART 
+    Equality (signExtend 32 x✝¹ >ₛ signExtend 32 x✝) = (x✝¹ >ₛ x✝) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 111.779680 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 986.686926 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 141.479179 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 44.558170 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 20.814610 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 126.036050 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 33.865460 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.487760 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝¹ >ᵤ x✝)).toNat
+     b := ↑(ofBool (signExtend 32 x✝¹ >ᵤ signExtend 32 x✝)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 13.749310 ms, MSGSTART 
+    Equality (signExtend 32 x✝¹ >ᵤ signExtend 32 x✝) = (x✝¹ >ᵤ x✝) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 90.732529 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 418.692449 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 117.220120 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 55.403299 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 28.957020 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 222.213310 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 90.936990 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.067890 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ != x✝¹)).toNat
+     b := ↑(ofBool (signExtend 32 x✝ != signExtend 32 x✝¹)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 21.380189 ms, MSGSTART 
+    Equality (signExtend 32 x✝ != signExtend 32 x✝¹) = (x✝ != x✝¹) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 111.510120 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 556.572478 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 172.627489 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 377.749370 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 179.530989 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 245.596039 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 119.594660 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.438939 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (signExtend 8 x✝ ≥ₛ x✝¹)).toNat
+     b := ↑(ofBool (signExtend 32 x✝ ≥ₛ signExtend 32 x✝¹)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 13.140500 ms, MSGSTART 
+    Equality (signExtend 32 x✝ ≥ₛ signExtend 32 x✝¹) = (signExtend 8 x✝ ≥ₛ x✝¹) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 133.592730 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 1014.340286 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 127.831050 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 106.054719 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 53.206230 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 112.653650 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 119.573959 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.688550 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ >ₛ x✝¹)).toNat
+     b := ↑(ofBool (zeroExtend 32 x✝ >ₛ signExtend 32 x✝¹)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 13.894890 ms, MSGSTART 
+    Equality (setWidth 32 x✝ >ₛ signExtend 32 x✝¹) = (x✝ >ₛ x✝¹) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 106.143650 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 510.983797 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 110.799860 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 15.660450 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 9.464790 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 110.589439 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 29.528990 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.503170 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ >ᵤ x✝¹)).toNat
+     b := ↑(ofBool (zeroExtend 32 x✝ >ᵤ signExtend 32 x✝¹)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 13.773460 ms, MSGSTART 
+    Equality (setWidth 32 x✝ >ᵤ signExtend 32 x✝¹) = (x✝ >ᵤ x✝¹) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 94.389880 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 337.662618 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 125.786390 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 14.792300 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 11.151310 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 119.199439 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 41.128340 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.910110 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ == x✝¹)).toNat
+     b := ↑(ofBool (zeroExtend 32 x✝ == signExtend 32 x✝¹)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 20.907180 ms, MSGSTART 
+    application type mismatch
+      if n = 2 then x✝ else if n = 1 then signExtend 32 x✝¹ else if n = 0 then setWidth 32 x✝ else BitVec.zero 32
+    argument
+      if n = 1 then signExtend 32 x✝¹ else if n = 0 then setWidth 32 x✝ else BitVec.zero 32
+    has type
+      BitVec 32 : Type
+    but is expected to have type
+      BitVec 8 : Type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 194.390959 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 372.079079 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 125.462449 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 120.200390 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 59.615599 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 154.973870 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 115.733399 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.472780 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝¹ ≥ₛ signExtend 16 x✝)).toNat
+     b := ↑(ofBool (signExtend 32 x✝¹ ≥ₛ zeroExtend 32 x✝)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 12.719280 ms, MSGSTART 
+    Equality (signExtend 32 x✝¹ ≥ₛ setWidth 32 x✝) = (x✝¹ ≥ₛ signExtend 16 x✝) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 106.961630 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 616.980057 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 110.868820 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 19.387320 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 11.333940 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 155.402149 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 28.540920 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.460660 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (signExtend 9 x✝¹ ≥ᵤ x✝)).toNat
+     b := ↑(ofBool (signExtend 32 x✝¹ ≥ᵤ zeroExtend 32 x✝)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 13.147080 ms, MSGSTART 
+    Equality (signExtend 32 x✝¹ ≥ᵤ setWidth 32 x✝) = (signExtend 9 x✝¹ ≥ᵤ x✝) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 92.290320 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 361.287408 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 122.645080 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 99.983539 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 50.524910 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 106.410890 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 113.406339 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.353450 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝¹ >ₛ x✝)).toNat
+     b := ↑(ofBool (zeroExtend 32 x✝¹ >ₛ signExtend 32 x✝)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 12.879180 ms, MSGSTART 
+    Equality (setWidth 32 x✝¹ >ₛ signExtend 32 x✝) = (x✝¹ >ₛ x✝) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 104.875230 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 482.028068 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 109.136460 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 26.028590 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 14.919190 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 107.076629 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 27.868640 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.380170 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝¹ >ᵤ x✝)).toNat
+     b := ↑(ofBool (zeroExtend 32 x✝¹ >ᵤ signExtend 32 x✝)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 13.014270 ms, MSGSTART 
+    Equality (setWidth 32 x✝¹ >ᵤ signExtend 32 x✝) = (x✝¹ >ᵤ x✝) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 89.840790 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 257.498689 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 125.281909 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 162.037010 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 77.480819 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 152.287860 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 115.779889 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.546660 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (signExtend 8 x✝ ≥ₛ x✝¹)).toNat
+     b := ↑(ofBool (signExtend 32 x✝ ≥ₛ zeroExtend 32 x✝¹)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 13.918220 ms, MSGSTART 
+    Equality (signExtend 32 x✝ ≥ₛ setWidth 32 x✝¹) = (signExtend 8 x✝ ≥ₛ x✝¹) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 106.983910 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 706.521247 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 160.053630 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 25.683880 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.671150 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 153.935679 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 28.508000 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.488980 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ ≥ᵤ signExtend 16 x✝¹)).toNat
+     b := ↑(ofBool (signExtend 32 x✝ ≥ᵤ zeroExtend 32 x✝¹)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 13.408750 ms, MSGSTART 
+    Equality (signExtend 32 x✝ ≥ᵤ setWidth 32 x✝¹) = (x✝ ≥ᵤ signExtend 16 x✝¹) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 92.129239 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 370.501229 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 235.907859 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 111.742289 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 57.734180 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 167.219600 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 119.114010 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.795240 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      1 ≤ c ≤ 255
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (127#8 / x✝ >ₛ x✝¹)).toNat
+     b := ↑(ofBool (zeroExtend 32 (127#8 / x✝) >ₛ signExtend 32 x✝¹)).toNat
+     c := ↑x✝.toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 15.722850 ms, MSGSTART 
+    Equality (setWidth 32 (127#8 / x✝) >ₛ signExtend 32 x✝¹) = (127#8 / x✝ >ₛ x✝¹) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 167.482309 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 641.473978 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 178.877110 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 21.584869 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 24.695580 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 170.249260 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 30.222099 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.941990 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ &&& 127#8 >ᵤ x✝¹)).toNat
+     b := ↑(ofBool (zeroExtend 32 (x✝ &&& 127#8) >ᵤ signExtend 32 x✝¹)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 22.575590 ms, MSGSTART 
+    Equality (setWidth 32 x✝ &&& 127#32 >ᵤ signExtend 32 x✝¹) = (x✝ &&& 127#8 >ᵤ x✝¹) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 88.103050 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 411.030668 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 129.633600 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 21.681960 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 16.702150 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 175.152949 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 42.880670 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.796620 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 1
+      0 ≤ b ≤ 1
+      b - c ≥ 1
+      2 ≤ a ≤ 255
+    where
+     a := ↑(↑8).toNat
+     b := ↑(ofBool (x✝ >>> 1#8 == x✝¹)).toNat
+     c := ↑(ofBool (zeroExtend 32 (x✝ >>> 1#8) == signExtend 32 x✝¹)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 26.103839 ms, MSGSTART 
+    application type mismatch
+      if n = 2 then x✝ >>> 1
+      else if n = 1 then signExtend 32 x✝¹ else if n = 0 then setWidth 32 (x✝ >>> 1) else BitVec.zero 32
+    argument
+      if n = 1 then signExtend 32 x✝¹ else if n = 0 then setWidth 32 (x✝ >>> 1) else BitVec.zero 32
+    has type
+      BitVec 32 : Type
+    but is expected to have type
+      BitVec 8 : Type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 95.421900 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 497.129708 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 0.542350 ms, MSGSTART 
+    applyExtTheorem only applies to equations, not
+      some (ofBool (signExtend 32 x✝¹ ≥ₛ zeroExtend 32 (x✝ &&& 12#8))) ⊑ none MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 9.803420 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 17.598610 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 170.816169 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 37.552010 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.770240 ms, MSGSTART 
+    omega could not prove the goal:
+    No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 22.165200 ms, MSGSTART 
+    Unsupported syntax some (ofBool (signExtend 32 x✝¹ ≥ₛ setWidth 32 x✝ &&& 12#32)) ⊑ none === Lean.Expr.app
+      (Lean.Expr.app
+        (Lean.Expr.app
+          (Lean.Expr.const `BitVec.Refinement [Lean.Level.zero])
+          (Lean.Expr.app
+            (Lean.Expr.const `BitVec [])
+            (Lean.Expr.app
+              (Lean.Expr.app
+                (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                (Lean.Expr.lit (Lean.Literal.natVal 1)))
+              (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 1))))))
+        (Lean.Expr.app
+          (Lean.Expr.app
+            (Lean.Expr.const `Option.some [Lean.Level.zero])
+            (Lean.Expr.app
+              (Lean.Expr.const `BitVec [])
+              (Lean.Expr.app
+                (Lean.Expr.app
+                  (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                  (Lean.Expr.lit (Lean.Literal.natVal 1)))
+                (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 1))))))
+          (Lean.Expr.app
+            (Lean.Expr.const `BitVec.ofBool [])
+            (Lean.Expr.app
+              (Lean.Expr.app
+                (Lean.Expr.app
+                  (Lean.Expr.const `BitVec.sle [])
+                  (Lean.Expr.app
+                    (Lean.Expr.app
+                      (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                      (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                    (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32)))))
+                (Lean.Expr.app
+                  (Lean.Expr.app
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.app
+                            (Lean.Expr.const `HAnd.hAnd [Lean.Level.zero, Lean.Level.zero, Lean.Level.zero])
+                            (Lean.Expr.app
+                              (Lean.Expr.const `BitVec [])
+                              (Lean.Expr.app
+                                (Lean.Expr.app
+                                  (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                                  (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                                (Lean.Expr.app
+                                  (Lean.Expr.const `instOfNatNat [])
+                                  (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                          (Lean.Expr.app
+                            (Lean.Expr.const `BitVec [])
+                            (Lean.Expr.app
+                              (Lean.Expr.app
+                                (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                                (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                              (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                        (Lean.Expr.app
+                          (Lean.Expr.const `BitVec [])
+                          (Lean.Expr.app
+                            (Lean.Expr.app
+                              (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                              (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                            (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.const `instHAndOfAndOp [Lean.Level.zero])
+                          (Lean.Expr.app
+                            (Lean.Expr.const `BitVec [])
+                            (Lean.Expr.app
+                              (Lean.Expr.app
+                                (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                                (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                              (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                        (Lean.Expr.app
+                          (Lean.Expr.const `BitVec.instAndOp [])
+                          (Lean.Expr.app
+                            (Lean.Expr.app
+                              (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                              (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                            (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32)))))))
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.const `BitVec.setWidth [])
+                          (Lean.Expr.app
+                            (Lean.Expr.app
+                              (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                              (Lean.Expr.lit (Lean.Literal.natVal 8)))
+                            (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 8)))))
+                        (Lean.Expr.app
+                          (Lean.Expr.app
+                            (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                            (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                          (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32)))))
+                      (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 821166))))
+                  (Lean.Expr.app
+                    (Lean.Expr.app
+                      (Lean.Expr.const `BitVec.ofNat [])
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                          (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                        (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32)))))
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                        (Lean.Expr.lit (Lean.Literal.natVal 12)))
+                      (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 12)))))))
+              (Lean.Expr.app
+                (Lean.Expr.app
+                  (Lean.Expr.app
+                    (Lean.Expr.const `BitVec.signExtend [])
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                        (Lean.Expr.lit (Lean.Literal.natVal 16)))
+                      (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 16)))))
+                  (Lean.Expr.app
+                    (Lean.Expr.app
+                      (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                      (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                    (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32)))))
+                (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 821165)))))))
+      (Lean.Expr.app
+        (Lean.Expr.const `Option.none [Lean.Level.zero])
+        (Lean.Expr.app
+          (Lean.Expr.const `BitVec [])
+          (Lean.Expr.app
+            (Lean.Expr.app
+              (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+              (Lean.Expr.lit (Lean.Literal.natVal 1)))
+            (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 1)))))) MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 81.948199 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 408.546279 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 143.170360 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 111.686700 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 71.384310 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 217.029689 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 120.295869 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.410650 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝¹ ≥ₛ zeroExtend 16 (x✝ &&& 12#8))).toNat
+     b := ↑(ofBool (signExtend 32 x✝¹ ≥ₛ zeroExtend 32 (x✝ &&& 12#8))).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 27.338080 ms, MSGSTART 
+    Equality (signExtend 32 x✝¹ ≥ₛ setWidth 32 x✝ &&& 12#32) =
+      (x✝¹ ≥ₛ setWidth 16 x✝ &&& 12#16) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 112.033820 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 662.295927 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 118.609569 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 25.405430 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 15.000550 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 169.182009 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 30.401930 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 8.272140 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (signExtend 9 x✝¹ ≥ᵤ x✝ % 254#9)).toNat
+     b := ↑(ofBool (signExtend 32 x✝¹ ≥ᵤ zeroExtend 32 (x✝ % 254#9))).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 14.658690 ms, MSGSTART 
+    Equality (signExtend 32 x✝¹ ≥ᵤ setWidth 32 (x✝ % 254#9)) =
+      (signExtend 9 x✝¹ ≥ᵤ x✝ % 254#9) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 100.234860 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 409.868638 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 128.912089 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 115.889040 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 69.223300 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 169.094419 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 115.679489 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.828060 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝¹ &&& 126#8 >ₛ x✝)).toNat
+     b := ↑(ofBool (zeroExtend 32 (x✝¹ &&& 126#8) >ₛ signExtend 32 x✝)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 21.621180 ms, MSGSTART 
+    Equality (setWidth 32 x✝¹ &&& 126#32 >ₛ signExtend 32 x✝) = (x✝¹ &&& 126#8 >ₛ x✝) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 152.155930 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 649.695807 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 112.277139 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 21.524469 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 15.298670 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 166.823540 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 30.065989 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.400330 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 1
+      0 ≤ b ≤ 1
+      b - c ≥ 1
+      7 ≤ a ≤ 255
+    where
+     a := ↑(↑8).toNat
+     b := ↑(ofBool (x✝¹ >>> 6#8 >ᵤ x✝)).toNat
+     c := ↑(ofBool (zeroExtend 32 (x✝¹ >>> 6#8) >ᵤ signExtend 32 x✝)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 18.155570 ms, MSGSTART 
+    Equality (setWidth 32 (x✝¹ >>> 6) >ᵤ signExtend 32 x✝) = (x✝¹ >>> 6 >ᵤ x✝) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 91.592260 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 487.216198 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 222.564569 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 32.849950 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 19.455570 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 179.937019 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 54.095830 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 8.716110 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ != x✝¹ / 6#8)).toNat
+     b := ↑(ofBool (signExtend 32 x✝ != zeroExtend 32 (x✝¹ / 6#8))).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 16.935200 ms, MSGSTART 
+    Equality (signExtend 32 x✝ != setWidth 32 (x✝¹ / 6#8)) = (x✝ != x✝¹ / 6#8) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 151.012339 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 467.334558 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 0.548590 ms, MSGSTART 
+    applyExtTheorem only applies to equations, not
+      some (ofBool (signExtend 32 x✝ ≥ᵤ zeroExtend 32 (x✝¹ &&& 12#8))) ⊑ none MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 9.954300 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 17.570550 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 169.154269 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 17.702930 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.761230 ms, MSGSTART 
+    omega could not prove the goal:
+    No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 22.467910 ms, MSGSTART 
+    Unsupported syntax some (ofBool (signExtend 32 x✝ ≥ᵤ setWidth 32 x✝¹ &&& 12#32)) ⊑ none === Lean.Expr.app
+      (Lean.Expr.app
+        (Lean.Expr.app
+          (Lean.Expr.const `BitVec.Refinement [Lean.Level.zero])
+          (Lean.Expr.app
+            (Lean.Expr.const `BitVec [])
+            (Lean.Expr.app
+              (Lean.Expr.app
+                (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                (Lean.Expr.lit (Lean.Literal.natVal 1)))
+              (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 1))))))
+        (Lean.Expr.app
+          (Lean.Expr.app
+            (Lean.Expr.const `Option.some [Lean.Level.zero])
+            (Lean.Expr.app
+              (Lean.Expr.const `BitVec [])
+              (Lean.Expr.app
+                (Lean.Expr.app
+                  (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                  (Lean.Expr.lit (Lean.Literal.natVal 1)))
+                (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 1))))))
+          (Lean.Expr.app
+            (Lean.Expr.const `BitVec.ofBool [])
+            (Lean.Expr.app
+              (Lean.Expr.app
+                (Lean.Expr.app
+                  (Lean.Expr.const `BitVec.ule [])
+                  (Lean.Expr.app
+                    (Lean.Expr.app
+                      (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                      (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                    (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32)))))
+                (Lean.Expr.app
+                  (Lean.Expr.app
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.app
+                            (Lean.Expr.const `HAnd.hAnd [Lean.Level.zero, Lean.Level.zero, Lean.Level.zero])
+                            (Lean.Expr.app
+                              (Lean.Expr.const `BitVec [])
+                              (Lean.Expr.app
+                                (Lean.Expr.app
+                                  (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                                  (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                                (Lean.Expr.app
+                                  (Lean.Expr.const `instOfNatNat [])
+                                  (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                          (Lean.Expr.app
+                            (Lean.Expr.const `BitVec [])
+                            (Lean.Expr.app
+                              (Lean.Expr.app
+                                (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                                (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                              (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                        (Lean.Expr.app
+                          (Lean.Expr.const `BitVec [])
+                          (Lean.Expr.app
+                            (Lean.Expr.app
+                              (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                              (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                            (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.const `instHAndOfAndOp [Lean.Level.zero])
+                          (Lean.Expr.app
+                            (Lean.Expr.const `BitVec [])
+                            (Lean.Expr.app
+                              (Lean.Expr.app
+                                (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                                (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                              (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32))))))
+                        (Lean.Expr.app
+                          (Lean.Expr.const `BitVec.instAndOp [])
+                          (Lean.Expr.app
+                            (Lean.Expr.app
+                              (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                              (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                            (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32)))))))
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.const `BitVec.setWidth [])
+                          (Lean.Expr.app
+                            (Lean.Expr.app
+                              (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                              (Lean.Expr.lit (Lean.Literal.natVal 8)))
+                            (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 8)))))
+                        (Lean.Expr.app
+                          (Lean.Expr.app
+                            (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                            (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                          (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32)))))
+                      (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1074733))))
+                  (Lean.Expr.app
+                    (Lean.Expr.app
+                      (Lean.Expr.const `BitVec.ofNat [])
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                          (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                        (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32)))))
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                        (Lean.Expr.lit (Lean.Literal.natVal 12)))
+                      (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 12)))))))
+              (Lean.Expr.app
+                (Lean.Expr.app
+                  (Lean.Expr.app
+                    (Lean.Expr.const `BitVec.signExtend [])
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                        (Lean.Expr.lit (Lean.Literal.natVal 16)))
+                      (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 16)))))
+                  (Lean.Expr.app
+                    (Lean.Expr.app
+                      (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                      (Lean.Expr.lit (Lean.Literal.natVal 32)))
+                    (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 32)))))
+                (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 1074734)))))))
+      (Lean.Expr.app
+        (Lean.Expr.const `Option.none [Lean.Level.zero])
+        (Lean.Expr.app
+          (Lean.Expr.const `BitVec [])
+          (Lean.Expr.app
+            (Lean.Expr.app
+              (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+              (Lean.Expr.lit (Lean.Literal.natVal 1)))
+            (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 1)))))) MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 74.130030 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 479.117888 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 178.749790 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 23.343090 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 31.398929 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 215.851849 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 31.216190 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.472520 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ ≥ᵤ zeroExtend 16 (x✝¹ &&& 12#8))).toNat
+     b := ↑(ofBool (signExtend 32 x✝ ≥ᵤ zeroExtend 32 (x✝¹ &&& 12#8))).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 27.597760 ms, MSGSTART 
+    Equality (signExtend 32 x✝ ≥ᵤ setWidth 32 x✝¹ &&& 12#32) =
+      (x✝ ≥ᵤ setWidth 16 x✝¹ &&& 12#16) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 97.127390 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 434.036338 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 281.504999 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 26.058700 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 22.477199 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 130.383960 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 30.362250 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.442460 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑((x✝ ||| x✝¹) ^^^ 1#1).toNat
+     b := ↑(ofBool (zeroExtend 32 x✝ == signExtend 32 x✝¹)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 45.545580 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq (AutoStructs.Term.var 0)
+            (((AutoStructs.Term.var 1).or (AutoStructs.Term.var 2)).xor AutoStructs.Term.one)) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 82.963559 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 322.862129 ms, 
+TACEND

@@ -1,0 +1,547 @@
+⚠ [673/898] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:26:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:33:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:40:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:43:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:54:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:58:8: declaration uses 'sorry'
+⚠ [884/898] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [887/898] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:349:4: declaration uses 'sorry'
+⚠ [893/898] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:56:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:129:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:164:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:198:6: declaration uses 'sorry'
+⚠ [894/898] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 204.845959 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 23.486630 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.087530 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 101.623750 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 38.600940 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.529969 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ ≥ᵤ x✝¹)).toNat
+     b := ↑(ofBool (x✝ == x✝)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 46.334050 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq AutoStructs.Term.one (AutoStructs.Term.var 0)) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 114.291480 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 377.864848 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 185.453341 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 25.273240 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 15.108840 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 123.198600 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 63.625829 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 8.981800 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ ≥ᵤ x✝¹)).toNat
+     b := ↑(ofBool (x✝¹ == x✝)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 24.979950 ms, MSGSTART 
+    Equality (x✝¹ == x✝) = (x✝ ≥ᵤ x✝¹) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 138.770650 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 349.535138 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 168.719229 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 21.940080 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 11.193330 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 105.285620 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 55.422000 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 8.444470 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝¹ ≥ᵤ x✝)).toNat
+     b := ↑(ofBool (x✝ == x✝¹)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 22.816460 ms, MSGSTART 
+    Equality (x✝ == x✝¹) = (x✝¹ ≥ᵤ x✝) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 130.673321 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 293.062040 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 125.416259 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 22.177640 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.033530 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 87.726150 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 30.892400 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.081240 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝¹ ≥ᵤ x✝)).toNat
+     b := ↑(ofBool (x✝¹ == x✝¹)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 33.989050 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq AutoStructs.Term.one (AutoStructs.Term.var 0)) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 98.589879 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 199.660460 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 230.063898 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 152.678370 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 14.000340 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 173.204339 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 33.795140 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.727440 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ + 3#32 ≥ᵤ x✝¹)).toNat
+     b := ↑(ofBool (x✝ + 3#32 == x✝ + 3#32)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 53.130460 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq AutoStructs.Term.one (AutoStructs.Term.var 0)) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 117.022939 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 518.000449 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 153.111490 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 220.651299 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 25.416370 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 225.205708 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 70.172820 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 10.113630 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ + 3#32 ≥ᵤ x✝¹)).toNat
+     b := ↑(ofBool (x✝ + 3#32 == x✝¹)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 27.956330 ms, MSGSTART 
+    Equality (x✝ + 3#32 == x✝¹) = (x✝ + 3#32 ≥ᵤ x✝¹) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 139.290320 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 723.909237 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 195.737799 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 113.760691 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 23.108980 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 181.340279 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 43.588200 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.476660 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ + 3#32 ≥ᵤ x✝¹)).toNat
+     b := ↑(ofBool (x✝ + 3#32 == x✝¹)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 17.343300 ms, MSGSTART 
+    Equality (x✝ + 3#32 == x✝¹) = (x✝ + 3#32 ≥ᵤ x✝¹) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 108.893180 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 505.415997 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 157.051279 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 103.327840 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 16.576350 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 161.141089 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 29.803370 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 8.171110 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ + 3#32 ≥ᵤ x✝¹)).toNat
+     b := ↑(ofBool (x✝ + 3#32 == x✝ + 3#32)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 44.018660 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq AutoStructs.Term.one (AutoStructs.Term.var 0)) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 113.809479 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 255.697359 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 125.235990 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 13.464100 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 5.735880 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 63.218929 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 28.055480 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.758530 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ ≥ᵤ x✝¹)).toNat
+     b := ↑(ofBool (x✝ ≥ᵤ x✝)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 12.357010 ms, MSGSTART 
+    Equality (x✝ ≥ᵤ x✝) = (x✝ ≥ᵤ x✝¹) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 101.941620 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 166.470899 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 124.724420 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 22.664390 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 9.851200 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 71.224489 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 41.010500 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.677640 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝¹ ≥ᵤ x✝)).toNat
+     b := ↑(ofBool (x✝¹ ≥ᵤ x✝¹)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 19.090710 ms, MSGSTART 
+    Equality (x✝¹ ≥ᵤ x✝¹) = (x✝¹ ≥ᵤ x✝) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 155.343379 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 186.115290 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 145.689620 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 143.535209 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 26.417560 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 140.434250 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 30.458310 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.720779 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ + 3#32 ≥ᵤ x✝¹)).toNat
+     b := ↑(ofBool (x✝ + 3#32 ≥ᵤ x✝ + 3#32)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 13.796840 ms, MSGSTART 
+    Equality (x✝ + 3#32 ≥ᵤ x✝ + 3#32) = (x✝ + 3#32 ≥ᵤ x✝¹) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 107.868990 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 451.212658 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 137.198429 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 121.245440 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 26.945669 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 147.511640 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 31.531170 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.157120 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ + 3#32 ≥ᵤ x✝¹)).toNat
+     b := ↑(ofBool (x✝ + 3#32 ≥ᵤ x✝ + 3#32)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 15.049310 ms, MSGSTART 
+    Equality (x✝ + 3#32 ≥ᵤ x✝ + 3#32) = (x✝ + 3#32 ≥ᵤ x✝¹) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 107.987909 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 424.912598 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 116.080019 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 13.903550 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 8.480130 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 64.637930 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 30.951400 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.852450 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝¹ >ᵤ x✝)).toNat
+     b := ↑(ofBool (x✝ != x✝)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 27.498830 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq AutoStructs.Term.zero (AutoStructs.Term.var 0)) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 91.596519 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 184.863179 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 122.779099 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 13.843390 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 6.670740 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 64.025120 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 38.772780 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.881930 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝¹ >ᵤ x✝)).toNat
+     b := ↑(ofBool (x✝¹ != x✝)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 12.539270 ms, MSGSTART 
+    Equality (x✝¹ != x✝) = (x✝¹ >ᵤ x✝) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 100.330769 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 217.885619 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 119.602319 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 13.983000 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 6.686550 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 64.081490 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 38.344340 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.779610 ms, MSGSTART 
+    omega could not prove the goal:
+    No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 12.885780 ms, MSGSTART 
+    Equality (x✝ != x✝¹) = (x✝ >ᵤ x✝¹) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 95.990779 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 213.222879 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 48.915650 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 13.410250 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 8.325290 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 63.251710 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 30.654010 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.286040 ms, MSGSTART 
+    omega could not prove the goal:
+    No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 26.715400 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq AutoStructs.Term.zero (AutoStructs.Term.var 0)) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 86.511539 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 118.463790 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 121.770669 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 72.207100 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 12.398170 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 147.355959 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 33.102850 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.716090 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝¹ >ᵤ x✝ + 3#32)).toNat
+     b := ↑(ofBool (x✝ + 3#32 != x✝ + 3#32)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 29.165560 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq AutoStructs.Term.zero (AutoStructs.Term.var 0)) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 97.320750 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 270.225319 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 128.414009 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 70.692420 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.544230 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 143.136839 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 44.080240 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.722210 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝¹ >ᵤ x✝ + 3#32)).toNat
+     b := ↑(ofBool (x✝ + 3#32 != x✝¹)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 14.734840 ms, MSGSTART 
+    Equality (x✝ + 3#32 != x✝¹) = (x✝¹ >ᵤ x✝ + 3#32) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 108.903499 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 454.626559 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 228.172200 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 45.273099 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.907960 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 144.940500 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 44.127130 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.663039 ms, MSGSTART 
+    omega could not prove the goal:
+    No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 14.404910 ms, MSGSTART 
+    Equality (x✝ + 3#32 != x✝¹) = (x✝¹ >ᵤ x✝ + 3#32) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 203.094580 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 501.799927 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 52.268820 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 44.556319 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 12.091390 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 143.724460 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 33.184830 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.193860 ms, MSGSTART 
+    omega could not prove the goal:
+    No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 29.455009 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq AutoStructs.Term.zero (AutoStructs.Term.var 0)) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 93.144640 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 203.424089 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 119.230959 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 13.596560 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 5.705080 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 59.867730 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 27.565100 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.469000 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝¹ >ᵤ x✝)).toNat
+     b := ↑(ofBool (x✝ >ᵤ x✝)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 11.298780 ms, MSGSTART 
+    Equality (x✝ >ᵤ x✝) = (x✝¹ >ᵤ x✝) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 98.045069 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 162.782369 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 165.604979 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 13.383370 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 5.693940 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 58.938120 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 27.370560 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.887260 ms, MSGSTART 
+    omega could not prove the goal:
+    No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 11.402370 ms, MSGSTART 
+    Equality (x✝¹ >ᵤ x✝¹) = (x✝ >ᵤ x✝¹) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 194.007629 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 159.764769 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 141.537790 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 148.257839 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 26.491930 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 140.344989 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 31.203680 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.597380 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝¹ >ᵤ x✝ + 3#32)).toNat
+     b := ↑(ofBool (x✝ + 3#32 >ᵤ x✝ + 3#32)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 13.659480 ms, MSGSTART 
+    Equality (x✝ + 3#32 >ᵤ x✝ + 3#32) = (x✝¹ >ᵤ x✝ + 3#32) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 106.108530 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 433.795418 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 172.914619 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 127.017110 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 26.760580 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 139.602739 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 31.270880 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.095290 ms, MSGSTART 
+    omega could not prove the goal:
+    No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 13.606780 ms, MSGSTART 
+    Equality (x✝ + 3#32 >ᵤ x✝ + 3#32) = (x✝¹ >ᵤ x✝ + 3#32) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 100.787119 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 410.461339 ms, 
+TACEND

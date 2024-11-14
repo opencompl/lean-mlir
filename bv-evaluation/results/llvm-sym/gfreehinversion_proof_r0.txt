@@ -1,0 +1,1893 @@
+⚠ [880/898] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [883/898] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:349:4: declaration uses 'sorry'
+⚠ [884/898] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:26:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:33:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:40:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:43:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:54:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:58:8: declaration uses 'sorry'
+⚠ [890/898] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:56:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:129:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:164:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:198:6: declaration uses 'sorry'
+⚠ [891/898] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 174.958230 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 26.397210 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 18.425459 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 173.798920 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 23.029150 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.913830 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(x✝ ^^^ x✝¹).toNat
+     b := ↑(x✝ ^^^ -1#8 ^^^ x✝¹ ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 75.506790 ms, 
+  TACBENCH bv_decide PASS, TIME_ELAPSED 85.410670 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 334.955209 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 205.686199 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac PASS, TIME_ELAPSED 26.700660 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 27.823629 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 181.238550 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 25.123360 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.584850 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(x✝ ^^^ 132#8 ^^^ x✝¹).toNat
+     b := ↑(x✝ ^^^ 123#8 ^^^ x✝¹ ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 108.010680 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            ((((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)).xor (AutoStructs.Term.var 2)).xor
+              (AutoStructs.Term.var 3))
+            (((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 4)).xor (AutoStructs.Term.var 2))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 86.847589 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 340.275759 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 163.918449 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 23.637090 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 22.298790 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 188.328629 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 18.458631 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.942830 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(x✝ ^^^ x✝²).toNat
+     b := ↑(x✝ ^^^ -1#8 ^^^ x✝² ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 62.794079 ms, 
+  TACBENCH bv_decide PASS, TIME_ELAPSED 81.725760 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 305.355208 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 145.193910 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac PASS, TIME_ELAPSED 15.958160 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 16.072190 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 121.485280 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 14.620090 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.519300 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(x✝¹ ^^^ 132#8 ^^^ x✝²).toNat
+     b := ↑(x✝¹ ^^^ 123#8 ^^^ x✝² ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 66.361860 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            ((((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)).xor (AutoStructs.Term.var 2)).xor
+              (AutoStructs.Term.var 3))
+            (((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 4)).xor (AutoStructs.Term.var 2))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 75.367750 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 294.584939 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 52.449750 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 13.970190 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.663890 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 110.364240 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 13.300579 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.152950 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(x✝ ^^^ x✝¹).toNat
+     b := ↑(x✝ ^^^ (x✝¹ ^^^ -1#8) ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 44.930220 ms, 
+  TACBENCH bv_decide PASS, TIME_ELAPSED 77.073780 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 136.438519 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 132.846709 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac PASS, TIME_ELAPSED 16.362610 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 16.403440 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 120.364560 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 13.929250 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.369260 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(x✝ ^^^ (x✝¹ ^^^ 132#8)).toNat
+     b := ↑(x✝ ^^^ (x✝¹ ^^^ 123#8) ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 63.864629 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).xor ((AutoStructs.Term.var 1).xor (AutoStructs.Term.var 2))).xor
+              (AutoStructs.Term.var 3))
+            ((AutoStructs.Term.var 0).xor ((AutoStructs.Term.var 1).xor (AutoStructs.Term.var 4)))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 80.278550 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 256.787659 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 75.829500 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 19.975379 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 19.696840 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 125.720400 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 13.934700 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.407150 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(x✝ ^^^ x✝¹).toNat
+     b := ↑(x✝ ^^^ (x✝¹ ^^^ -1#8) ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 43.619510 ms, 
+  TACBENCH bv_decide PASS, TIME_ELAPSED 71.167449 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 138.354610 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 145.796270 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac PASS, TIME_ELAPSED 19.573190 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 19.858799 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 136.213660 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 14.186000 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.407210 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(x✝ ^^^ (x✝² ^^^ 132#8)).toNat
+     b := ↑(x✝ ^^^ (x✝² ^^^ 123#8) ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 62.795890 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).xor ((AutoStructs.Term.var 1).xor (AutoStructs.Term.var 2))).xor
+              (AutoStructs.Term.var 3))
+            ((AutoStructs.Term.var 0).xor ((AutoStructs.Term.var 1).xor (AutoStructs.Term.var 4)))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 73.319939 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 256.042289 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 162.605489 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 18.260460 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 19.104010 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 181.910959 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 14.581270 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.897130 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ d ≤ 255
+      0 ≤ c ≤ 255
+      0 ≤ a ≤ 255
+      a - 256*b - c - d ≥ -255
+      -256 ≤ a - 256*b - d ≤ -1
+    where
+     a := ↑x✝.toNat
+     b := ↑(x✝.toNat + (2 ^ 8 - x✝¹.toNat)) / 256
+     c := ↑((x✝ ^^^ -1#8) + x✝¹ ^^^ -1#8).toNat
+     d := ↑x✝¹.toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 53.362130 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            ((((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)).add (AutoStructs.Term.var 2)).xor
+              (AutoStructs.Term.var 1))
+            ((AutoStructs.Term.var 0).sub (AutoStructs.Term.var 2))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 112.723049 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 605.427558 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 116.252380 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 21.589250 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 21.866550 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 164.724499 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 15.859320 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 8.676690 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ d ≤ 255
+      0 ≤ c ≤ 255
+      0 ≤ a ≤ 255
+      a - 256*b - c - d ≥ -255
+      -256 ≤ a - 256*b - d ≤ -1
+    where
+     a := ↑(x✝ ^^^ 132#8).toNat
+     b := ↑((x✝ ^^^ 132#8).toNat + (2 ^ 8 - x✝¹.toNat)) / 256
+     c := ↑((x✝ ^^^ 123#8) + x✝¹ ^^^ -1#8).toNat
+     d := ↑x✝¹.toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 108.628280 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            ((((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)).add (AutoStructs.Term.var 2)).xor
+              (AutoStructs.Term.var 3))
+            (((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 4)).sub (AutoStructs.Term.var 2))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 92.474389 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 680.186297 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 113.302259 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 19.245940 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 19.389130 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 220.543799 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 14.859500 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.888640 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ d ≤ 255
+      0 ≤ c ≤ 255
+      0 ≤ a ≤ 255
+      a - 256*b - c - d ≥ -255
+      -256 ≤ a - 256*b - d ≤ -1
+    where
+     a := ↑x✝.toNat
+     b := ↑(x✝.toNat + (2 ^ 8 - x✝².toNat)) / 256
+     c := ↑((x✝ ^^^ -1#8) + x✝² ^^^ -1#8).toNat
+     d := ↑x✝².toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 52.760360 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            ((((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)).add (AutoStructs.Term.var 2)).xor
+              (AutoStructs.Term.var 1))
+            ((AutoStructs.Term.var 0).sub (AutoStructs.Term.var 2))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 83.007120 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 596.965877 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 113.149059 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 21.659770 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 21.652900 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 163.202109 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 15.311960 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 8.043820 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ d ≤ 255
+      0 ≤ c ≤ 255
+      0 ≤ a ≤ 255
+      a - 256*b - c - d ≥ -255
+      -256 ≤ a - 256*b - d ≤ -1
+    where
+     a := ↑(x✝¹ ^^^ 132#8).toNat
+     b := ↑((x✝¹ ^^^ 132#8).toNat + (2 ^ 8 - x✝².toNat)) / 256
+     c := ↑((x✝¹ ^^^ 123#8) + x✝² ^^^ -1#8).toNat
+     d := ↑x✝².toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 103.784820 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            ((((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)).add (AutoStructs.Term.var 2)).xor
+              (AutoStructs.Term.var 3))
+            (((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 4)).sub (AutoStructs.Term.var 2))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 88.121890 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 691.291737 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 212.144300 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 18.526329 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 19.346550 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 192.634310 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 16.059869 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 8.524380 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ d ≤ 255
+      0 ≤ c ≤ 255
+      0 ≤ a ≤ 255
+      a - 256*b - c - d ≥ -255
+      -256 ≤ a - 256*b - d ≤ -1
+    where
+     a := ↑x✝¹.toNat
+     b := ↑(x✝¹.toNat + (2 ^ 8 - x✝.toNat)) / 256
+     c := ↑(x✝ + (x✝¹ ^^^ -1#8) ^^^ -1#8).toNat
+     d := ↑x✝.toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 57.227400 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).add ((AutoStructs.Term.var 1).xor (AutoStructs.Term.var 2))).xor
+              (AutoStructs.Term.var 2))
+            ((AutoStructs.Term.var 1).sub (AutoStructs.Term.var 0))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 189.580239 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 803.715437 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 214.547669 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 21.961970 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 22.345100 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 166.970729 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 15.924460 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 8.402820 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ d ≤ 255
+      0 ≤ c ≤ 255
+      0 ≤ a ≤ 255
+      a - 256*b - c - d ≥ -255
+      -256 ≤ a - 256*b - d ≤ -1
+    where
+     a := ↑(x✝¹ ^^^ 132#8).toNat
+     b := ↑((x✝¹ ^^^ 132#8).toNat + (2 ^ 8 - x✝.toNat)) / 256
+     c := ↑(x✝ + (x✝¹ ^^^ 123#8) ^^^ -1#8).toNat
+     d := ↑x✝.toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 102.607259 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).add ((AutoStructs.Term.var 1).xor (AutoStructs.Term.var 2))).xor
+              (AutoStructs.Term.var 3))
+            (((AutoStructs.Term.var 1).xor (AutoStructs.Term.var 4)).sub (AutoStructs.Term.var 0))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 90.462830 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 876.505066 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 134.642310 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 19.525189 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 30.349330 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 195.151500 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 14.531669 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.617140 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ d ≤ 255
+      0 ≤ c ≤ 255
+      0 ≤ a ≤ 255
+      a - 256*b - c - d ≥ -255
+      -256 ≤ a - 256*b - d ≤ -1
+    where
+     a := ↑x✝¹.toNat
+     b := ↑(x✝¹.toNat + (2 ^ 8 - x✝.toNat)) / 256
+     c := ↑(x✝ + (x✝¹ ^^^ -1#8) ^^^ -1#8).toNat
+     d := ↑x✝.toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 52.086340 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).add ((AutoStructs.Term.var 1).xor (AutoStructs.Term.var 2))).xor
+              (AutoStructs.Term.var 2))
+            ((AutoStructs.Term.var 1).sub (AutoStructs.Term.var 0))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 86.434820 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 599.336377 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 112.340490 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 21.523300 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 21.650489 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 162.732900 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 15.618210 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 8.185520 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ d ≤ 255
+      0 ≤ c ≤ 255
+      0 ≤ a ≤ 255
+      a - 256*b - c - d ≥ -255
+      -256 ≤ a - 256*b - d ≤ -1
+    where
+     a := ↑(x✝² ^^^ 132#8).toNat
+     b := ↑((x✝² ^^^ 132#8).toNat + (2 ^ 8 - x✝.toNat)) / 256
+     c := ↑(x✝ + (x✝² ^^^ 123#8) ^^^ -1#8).toNat
+     d := ↑x✝.toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 98.492049 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).add ((AutoStructs.Term.var 1).xor (AutoStructs.Term.var 2))).xor
+              (AutoStructs.Term.var 3))
+            (((AutoStructs.Term.var 1).xor (AutoStructs.Term.var 4)).sub (AutoStructs.Term.var 0))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 138.849590 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 697.702827 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 111.854360 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 18.788680 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 20.778910 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 204.745429 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 14.604530 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.651920 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ d ≤ 255
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      0 ≤ a + b - 256*c ≤ 255
+      a + b - 256*c - d ≥ 1
+    where
+     a := ↑x✝.toNat
+     b := ↑x✝¹.toNat
+     c := ↑(x✝.toNat + x✝¹.toNat) / 256
+     d := ↑((x✝ ^^^ -1#8) - x✝¹ ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 54.907349 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            ((((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)).sub (AutoStructs.Term.var 2)).xor
+              (AutoStructs.Term.var 1))
+            ((AutoStructs.Term.var 0).add (AutoStructs.Term.var 2))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 84.684800 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 574.135278 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 112.925160 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 21.175940 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 23.158750 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 162.207469 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 15.243580 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.785060 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ d ≤ 255
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      0 ≤ a + b - 256*c ≤ 255
+      a + b - 256*c - d ≥ 1
+    where
+     a := ↑(x✝ ^^^ 132#8).toNat
+     b := ↑x✝¹.toNat
+     c := ↑((x✝ ^^^ 132#8).toNat + x✝¹.toNat) / 256
+     d := ↑((x✝ ^^^ 123#8) - x✝¹ ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 102.716010 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            ((((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)).sub (AutoStructs.Term.var 2)).xor
+              (AutoStructs.Term.var 3))
+            (((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 4)).add (AutoStructs.Term.var 2))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 82.677539 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 629.183388 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 162.925159 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 18.786610 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 20.469460 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 175.772329 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 13.993570 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.297630 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ d ≤ 255
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      0 ≤ a + b - 256*c ≤ 255
+      a + b - 256*c - d ≥ 1
+    where
+     a := ↑x✝.toNat
+     b := ↑x✝².toNat
+     c := ↑(x✝.toNat + x✝².toNat) / 256
+     d := ↑((x✝ ^^^ -1#8) - x✝² ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 53.486390 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            ((((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)).sub (AutoStructs.Term.var 2)).xor
+              (AutoStructs.Term.var 1))
+            ((AutoStructs.Term.var 0).add (AutoStructs.Term.var 2))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 232.992469 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 610.856187 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 112.515690 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 21.011510 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 22.381440 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 157.819699 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 15.255110 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.778750 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ d ≤ 255
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      0 ≤ a + b - 256*c ≤ 255
+      a + b - 256*c - d ≥ 1
+    where
+     a := ↑(x✝¹ ^^^ 132#8).toNat
+     b := ↑x✝².toNat
+     c := ↑((x✝¹ ^^^ 132#8).toNat + x✝².toNat) / 256
+     d := ↑((x✝¹ ^^^ 123#8) - x✝² ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 102.673079 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            ((((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)).sub (AutoStructs.Term.var 2)).xor
+              (AutoStructs.Term.var 3))
+            (((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 4)).add (AutoStructs.Term.var 2))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 82.783930 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 682.625617 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 117.525539 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 256.215729 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 139.551150 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 199.009729 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 14.940270 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 10.651500 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ d ≤ 255
+      0 ≤ c ≤ 255
+      0 ≤ c + d - 256*e ≤ 255
+      0 ≤ b ≤ 255
+      255 ≤ 256*a + c + d - 256*e ≤ 510
+      256*a + b + c + d - 256*e ≤ 509
+    where
+     a := ↑(254 % 2 ^ 8 + (2 ^ 8 - (x✝¹.toNat + x✝.toNat) % 2 ^ 8)) / 256
+     b := ↑(x✝ - (x✝¹ ^^^ -1#8) ^^^ -1#8).toNat
+     c := ↑x✝¹.toNat
+     d := ↑x✝.toNat
+     e := ↑(x✝¹.toNat + x✝.toNat) / 256 MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 88.420119 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).sub ((AutoStructs.Term.var 1).xor (AutoStructs.Term.var 2))).xor
+              (AutoStructs.Term.var 2))
+            ((AutoStructs.Term.var 3).sub ((AutoStructs.Term.var 1).add (AutoStructs.Term.var 0)))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 147.678900 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 1249.866424 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 119.499279 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 263.286229 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 143.833970 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 183.352299 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 15.499630 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 10.957370 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ d ≤ 255
+      0 ≤ c ≤ 255
+      0 ≤ c + d - 256*e ≤ 255
+      0 ≤ b ≤ 255
+      255 ≤ 256*a + c + d - 256*e ≤ 510
+      256*a + b + c + d - 256*e ≤ 509
+    where
+     a := ↑(254 % 2 ^ 8 + (2 ^ 8 - ((x✝¹ ^^^ 132#8).toNat + x✝.toNat) % 2 ^ 8)) / 256
+     b := ↑(x✝ - (x✝¹ ^^^ 123#8) ^^^ -1#8).toNat
+     c := ↑(x✝¹ ^^^ 132#8).toNat
+     d := ↑x✝.toNat
+     e := ↑((x✝¹ ^^^ 132#8).toNat + x✝.toNat) / 256 MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 277.158919 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).sub ((AutoStructs.Term.var 1).xor (AutoStructs.Term.var 2))).xor
+              (AutoStructs.Term.var 3))
+            ((AutoStructs.Term.var 4).sub
+              (((AutoStructs.Term.var 1).xor (AutoStructs.Term.var 5)).add (AutoStructs.Term.var 0)))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 92.107669 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 1556.319024 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 186.754229 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 258.396279 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 140.133829 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 201.118519 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 14.968120 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 10.791930 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ d ≤ 255
+      0 ≤ c ≤ 255
+      0 ≤ c + d - 256*e ≤ 255
+      0 ≤ b ≤ 255
+      255 ≤ 256*a + c + d - 256*e ≤ 510
+      256*a + b + c + d - 256*e ≤ 509
+    where
+     a := ↑(254 % 2 ^ 8 + (2 ^ 8 - (x✝¹.toNat + x✝.toNat) % 2 ^ 8)) / 256
+     b := ↑(x✝ - (x✝¹ ^^^ -1#8) ^^^ -1#8).toNat
+     c := ↑x✝¹.toNat
+     d := ↑x✝.toNat
+     e := ↑(x✝¹.toNat + x✝.toNat) / 256 MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 87.826140 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).sub ((AutoStructs.Term.var 1).xor (AutoStructs.Term.var 2))).xor
+              (AutoStructs.Term.var 2))
+            ((AutoStructs.Term.var 3).sub ((AutoStructs.Term.var 1).add (AutoStructs.Term.var 0)))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 98.206490 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 1301.985704 ms, 
+TACEND
+/home/luisacicolini/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gfreehinversion_proof.lean:68:85: error: (deterministic) timeout at `whnf`, maximum number of heartbeats (200000) has been reached
+Use `set_option maxHeartbeats <num>` to set the limit.
+Additional diagnostic information may be available using the `set_option diagnostics true` command.
+/home/luisacicolini/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gfreehinversion_proof.lean:84:4: error: maximum recursion depth has been reached
+use `set_option maxRecDepth <num>` to increase limit
+use `set_option diagnostics true` to get diagnostic information
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 112.033799 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 25.854870 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 22.644390 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 105.291870 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.516520 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.150780 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ d ≤ 255
+      0 ≤ c ≤ 255
+      c - d ≥ 1
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(↑8).toNat
+     b := ↑x✝¹.toNat
+     c := ↑(x✝.sshiftRight' x✝¹).toNat
+     d := ↑((x✝ ^^^ -1#8).sshiftRight' x✝¹ ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 56.443869 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1))
+            (AutoStructs.Term.var 2)) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 85.830320 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 433.255278 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 113.550559 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 31.224080 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 26.046580 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 114.535829 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 13.245750 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.412820 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ d ≤ 255
+      0 ≤ c ≤ 255
+      c - d ≥ 1
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(↑8).toNat
+     b := ↑x✝¹.toNat
+     c := ↑((x✝ ^^^ 132#8).sshiftRight' x✝¹).toNat
+     d := ↑((x✝ ^^^ 123#8).sshiftRight' x✝¹ ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 61.281090 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1))
+            (AutoStructs.Term.var 2)) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 88.033470 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 463.172728 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 113.422579 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 26.830140 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 22.686000 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 105.647490 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.572470 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.164880 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ d ≤ 255
+      0 ≤ c ≤ 255
+      c - d ≥ 1
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(↑8).toNat
+     b := ↑x✝².toNat
+     c := ↑(x✝.sshiftRight' x✝²).toNat
+     d := ↑((x✝ ^^^ -1#8).sshiftRight' x✝² ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 56.995510 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1))
+            (AutoStructs.Term.var 2)) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 87.378349 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 433.272568 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 114.080389 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 31.413620 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 26.952460 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 117.327899 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 13.098010 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.410001 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ d ≤ 255
+      0 ≤ c ≤ 255
+      c - d ≥ 1
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(↑8).toNat
+     b := ↑x✝².toNat
+     c := ↑((x✝¹ ^^^ 132#8).sshiftRight' x✝²).toNat
+     d := ↑((x✝¹ ^^^ 123#8).sshiftRight' x✝² ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 61.001479 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1))
+            (AutoStructs.Term.var 2)) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 88.647410 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 465.366408 ms, 
+TACEND
+/home/luisacicolini/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gfreehinversion_proof.lean:88:8: warning: declaration uses 'sorry'
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 144.948059 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac PASS, TIME_ELAPSED 15.034639 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 15.238460 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 115.344040 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 13.751260 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.300780 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(x✝¹ ^^^ x✝ ^^^ 210#8).toNat
+     b := ↑(x✝ ^^^ (x✝¹ ^^^ 45#8) ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 60.940300 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).xor ((AutoStructs.Term.var 1).xor (AutoStructs.Term.var 2))).xor
+              (AutoStructs.Term.var 3))
+            (((AutoStructs.Term.var 1).xor (AutoStructs.Term.var 0)).xor (AutoStructs.Term.var 4))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 73.808429 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 253.599599 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 146.531359 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac PASS, TIME_ELAPSED 15.716570 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 15.582240 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 114.991690 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 13.810010 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.303490 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(x✝¹ ^^^ x✝ ^^^ 210#8).toNat
+     b := ↑(x✝ ^^^ (x✝¹ ^^^ 45#8) ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 61.915519 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).xor ((AutoStructs.Term.var 1).xor (AutoStructs.Term.var 2))).xor
+              (AutoStructs.Term.var 3))
+            (((AutoStructs.Term.var 1).xor (AutoStructs.Term.var 0)).xor (AutoStructs.Term.var 4))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 73.770030 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 255.223699 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 146.315649 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac PASS, TIME_ELAPSED 15.224140 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 15.504140 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 114.513180 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 13.486830 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.297140 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(x✝¹ ^^^ x✝ ^^^ 210#8).toNat
+     b := ↑(x✝ ^^^ (x✝¹ ^^^ 45#8) ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 61.448889 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).xor ((AutoStructs.Term.var 1).xor (AutoStructs.Term.var 2))).xor
+              (AutoStructs.Term.var 3))
+            (((AutoStructs.Term.var 1).xor (AutoStructs.Term.var 0)).xor (AutoStructs.Term.var 4))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 74.125950 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 253.864279 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 35.153830 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 10.122350 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 9.666160 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 105.167360 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.058029 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.710640 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑x✝.toNat
+     b := ↑(x✝ ^^^ -1#8 ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 32.449280 ms, 
+  TACBENCH bv_decide PASS, TIME_ELAPSED 71.043010 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 115.341750 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 33.904180 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 10.401690 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 9.712450 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 104.462420 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.011469 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.688980 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑x✝¹.toNat
+     b := ↑(x✝¹ ^^^ -1#8 ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 32.802030 ms, 
+  TACBENCH bv_decide PASS, TIME_ELAPSED 71.541800 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 113.786110 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 143.577910 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac PASS, TIME_ELAPSED 15.295050 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 15.398309 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 115.740260 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 13.481960 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.302450 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(x✝¹ ^^^ x✝ ^^^ 210#8).toNat
+     b := ↑(x✝ ^^^ (x✝¹ ^^^ 45#8) ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 61.207790 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).xor ((AutoStructs.Term.var 1).xor (AutoStructs.Term.var 2))).xor
+              (AutoStructs.Term.var 3))
+            (((AutoStructs.Term.var 1).xor (AutoStructs.Term.var 0)).xor (AutoStructs.Term.var 4))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 73.648559 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 252.526329 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 34.919110 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 10.030400 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 9.622290 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 103.078500 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 11.882890 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.705900 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑x✝².toNat
+     b := ↑(x✝² ^^^ -1#8 ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 32.046679 ms, 
+  TACBENCH bv_decide PASS, TIME_ELAPSED 71.100600 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 115.764470 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 143.670110 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac PASS, TIME_ELAPSED 15.501300 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 15.573080 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 114.956489 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 13.437400 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.238310 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(x✝¹ ^^^ x✝ ^^^ 210#8).toNat
+     b := ↑(x✝ ^^^ (x✝¹ ^^^ 45#8) ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 61.151860 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).xor ((AutoStructs.Term.var 1).xor (AutoStructs.Term.var 2))).xor
+              (AutoStructs.Term.var 3))
+            (((AutoStructs.Term.var 1).xor (AutoStructs.Term.var 0)).xor (AutoStructs.Term.var 4))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 73.665739 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 252.945509 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 117.076650 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac PASS, TIME_ELAPSED 14.246850 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.634920 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 114.247519 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.905730 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.938740 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(x✝ ^^^ 132#8).toNat
+     b := ↑(x✝ ^^^ 123#8 ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 45.149040 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)).xor (AutoStructs.Term.var 2))
+            ((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 3))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 71.388350 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 220.688829 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 119.771270 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac PASS, TIME_ELAPSED 14.079550 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.586809 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 112.876960 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.695260 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.986170 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(x✝¹ ^^^ 132#8).toNat
+     b := ↑(x✝¹ ^^^ 123#8 ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 45.124490 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)).xor (AutoStructs.Term.var 2))
+            ((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 3))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 72.003609 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 224.317170 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 146.070379 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac PASS, TIME_ELAPSED 15.118360 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 15.574960 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 114.858390 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 13.596519 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.280780 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(x✝¹ ^^^ x✝ ^^^ 210#8).toNat
+     b := ↑(x✝ ^^^ (x✝¹ ^^^ 45#8) ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 61.568710 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).xor ((AutoStructs.Term.var 1).xor (AutoStructs.Term.var 2))).xor
+              (AutoStructs.Term.var 3))
+            (((AutoStructs.Term.var 1).xor (AutoStructs.Term.var 0)).xor (AutoStructs.Term.var 4))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 74.690710 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 353.480168 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 118.504949 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac PASS, TIME_ELAPSED 13.829310 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.618460 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 113.903639 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.676990 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.999270 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(x✝² ^^^ 132#8).toNat
+     b := ↑(x✝² ^^^ 123#8 ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 44.991010 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)).xor (AutoStructs.Term.var 2))
+            ((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 3))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 71.722990 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 222.599169 ms, 
+TACEND
+/home/luisacicolini/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gfreehinversion_proof.lean:104:113: error: (deterministic) timeout at `whnf`, maximum number of heartbeats (200000) has been reached
+Use `set_option maxHeartbeats <num>` to set the limit.
+Additional diagnostic information may be available using the `set_option diagnostics true` command.
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 33.115999 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 9.990890 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 9.481570 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 101.687980 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 11.843820 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.646920 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑x✝.toNat
+     b := ↑(x✝ ^^^ -1#8 ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 31.295120 ms, 
+  TACBENCH bv_decide PASS, TIME_ELAPSED 71.148040 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 113.587379 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 114.889989 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac PASS, TIME_ELAPSED 13.294360 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.266990 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 112.953800 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.837390 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.992219 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(x✝ ^^^ 132#8).toNat
+     b := ↑(x✝ ^^^ 123#8 ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 45.329970 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)).xor (AutoStructs.Term.var 2))
+            ((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 3))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 72.370190 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 219.400769 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 34.265330 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 10.054920 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 9.554950 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 103.566630 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 11.743080 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.680790 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑x✝.toNat
+     b := ↑(x✝ ^^^ -1#8 ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 31.777309 ms, 
+  TACBENCH bv_decide PASS, TIME_ELAPSED 71.678270 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 116.257440 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 115.362000 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac PASS, TIME_ELAPSED 13.392270 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.323910 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 114.139689 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.842840 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.991390 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(x✝¹ ^^^ 132#8).toNat
+     b := ↑(x✝¹ ^^^ 123#8 ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 44.605020 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)).xor (AutoStructs.Term.var 2))
+            ((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 3))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 72.854370 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 222.596109 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 117.584959 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac PASS, TIME_ELAPSED 13.709970 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.470570 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 114.441290 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.983260 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.969840 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(x✝ ^^^ 210#8).toNat
+     b := ↑(x✝ ^^^ 45#8 ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 44.609330 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)).xor (AutoStructs.Term.var 2))
+            ((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 3))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 93.828049 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 230.046179 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 118.187079 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac PASS, TIME_ELAPSED 14.028780 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.451710 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 114.094839 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.885880 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.990170 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(x✝¹ ^^^ 210#8).toNat
+     b := ↑(x✝¹ ^^^ 45#8 ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 45.309990 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)).xor (AutoStructs.Term.var 2))
+            ((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 3))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 72.999680 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 223.474319 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 118.416810 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac PASS, TIME_ELAPSED 14.300579 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.484160 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 114.988180 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.768800 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.952680 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(x✝¹ ^^^ 210#8).toNat
+     b := ↑(x✝¹ ^^^ 45#8 ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 45.011500 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)).xor (AutoStructs.Term.var 2))
+            ((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 3))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 73.000269 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 221.566599 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 34.307109 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 10.165490 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 9.681930 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 103.813650 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 11.643190 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.596230 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑x✝.toNat
+     b := ↑(x✝ ^^^ -1#8 ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 30.772420 ms, 
+  TACBENCH bv_decide PASS, TIME_ELAPSED 71.369019 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 114.576439 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 114.495689 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac PASS, TIME_ELAPSED 14.294370 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.532250 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 114.783020 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.988889 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.004400 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(x✝² ^^^ 210#8).toNat
+     b := ↑(x✝² ^^^ 45#8 ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 45.094150 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)).xor (AutoStructs.Term.var 2))
+            ((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 3))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 73.259780 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 222.922749 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 118.382040 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac PASS, TIME_ELAPSED 14.324550 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.459640 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 116.793109 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 13.089150 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.016900 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(x✝¹ ^^^ 210#8).toNat
+     b := ↑(x✝¹ ^^^ 45#8 ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 44.976010 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)).xor (AutoStructs.Term.var 2))
+            ((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 3))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 73.391170 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 224.769339 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 118.307389 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac PASS, TIME_ELAPSED 14.751300 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.682630 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 114.220880 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.871540 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.976030 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(x✝ ^^^ 132#8).toNat
+     b := ↑(x✝ ^^^ 123#8 ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 44.766369 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)).xor (AutoStructs.Term.var 2))
+            ((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 3))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 71.976350 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 221.865889 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 117.524560 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac PASS, TIME_ELAPSED 14.062830 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.500510 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 113.435919 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.847340 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.970860 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(x✝² ^^^ 210#8).toNat
+     b := ↑(x✝² ^^^ 45#8 ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 44.441010 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)).xor (AutoStructs.Term.var 2))
+            ((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 3))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 72.473300 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 222.805129 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 117.400340 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac PASS, TIME_ELAPSED 14.162989 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.599270 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 114.782660 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.970780 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.967710 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(x✝² ^^^ 210#8).toNat
+     b := ↑(x✝² ^^^ 45#8 ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 45.036100 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)).xor (AutoStructs.Term.var 2))
+            ((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 3))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 73.000709 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 223.340359 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 34.617539 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 10.140320 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 9.613340 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 103.196850 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 11.953360 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.693060 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑x✝.toNat
+     b := ↑(x✝ ^^^ -1#8 ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 31.832710 ms, 
+  TACBENCH bv_decide PASS, TIME_ELAPSED 72.271459 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 114.915859 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 132.968239 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac PASS, TIME_ELAPSED 14.059190 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 13.411370 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 113.137529 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 13.028740 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.022640 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 255
+      0 ≤ a ≤ 255
+      a - b ≥ 1
+    where
+     a := ↑(x✝¹ ^^^ 132#8).toNat
+     b := ↑(x✝¹ ^^^ 123#8 ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 44.851250 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq
+            (((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)).xor (AutoStructs.Term.var 2))
+            ((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 3))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 72.272740 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 221.314769 ms, 
+TACEND
+/home/luisacicolini/lean-mlir/SSA/Projects/InstCombine/tests/proofs/gfreehinversion_proof.lean:117:98: error: (deterministic) timeout at `whnf`, maximum number of heartbeats (200000) has been reached
+Use `set_option maxHeartbeats <num>` to set the limit.
+Additional diagnostic information may be available using the `set_option diagnostics true` command.
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 0.616930 ms, MSGSTART 
+    applyExtTheorem only applies to equations, not
+      some ((x✝ ^^^ -1#8) >>> 1#8 ^^^ -1#8) ⊑ none MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 13.903380 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 15.420430 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 112.360260 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.451250 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.104139 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      2 ≤ a ≤ 255
+    where
+     a := ↑(↑8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 19.274900 ms, MSGSTART 
+    Unsupported syntax some ((x✝ ^^^ 255#8) >>> 1 ^^^ 255#8) ⊑ none === Lean.Expr.app
+      (Lean.Expr.app
+        (Lean.Expr.app
+          (Lean.Expr.const `BitVec.Refinement [Lean.Level.zero])
+          (Lean.Expr.app
+            (Lean.Expr.const `BitVec [])
+            (Lean.Expr.app
+              (Lean.Expr.app
+                (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                (Lean.Expr.lit (Lean.Literal.natVal 8)))
+              (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 8))))))
+        (Lean.Expr.app
+          (Lean.Expr.app
+            (Lean.Expr.const `Option.some [Lean.Level.zero])
+            (Lean.Expr.app
+              (Lean.Expr.const `BitVec [])
+              (Lean.Expr.app
+                (Lean.Expr.app
+                  (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                  (Lean.Expr.lit (Lean.Literal.natVal 8)))
+                (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 8))))))
+          (Lean.Expr.app
+            (Lean.Expr.app
+              (Lean.Expr.app
+                (Lean.Expr.app
+                  (Lean.Expr.app
+                    (Lean.Expr.app
+                      (Lean.Expr.const `HXor.hXor [Lean.Level.zero, Lean.Level.zero, Lean.Level.zero])
+                      (Lean.Expr.app
+                        (Lean.Expr.const `BitVec [])
+                        (Lean.Expr.app
+                          (Lean.Expr.app
+                            (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                            (Lean.Expr.lit (Lean.Literal.natVal 8)))
+                          (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 8))))))
+                    (Lean.Expr.app
+                      (Lean.Expr.const `BitVec [])
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                          (Lean.Expr.lit (Lean.Literal.natVal 8)))
+                        (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 8))))))
+                  (Lean.Expr.app
+                    (Lean.Expr.const `BitVec [])
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                        (Lean.Expr.lit (Lean.Literal.natVal 8)))
+                      (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 8))))))
+                (Lean.Expr.app
+                  (Lean.Expr.app
+                    (Lean.Expr.const `instHXorOfXor [Lean.Level.zero])
+                    (Lean.Expr.app
+                      (Lean.Expr.const `BitVec [])
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                          (Lean.Expr.lit (Lean.Literal.natVal 8)))
+                        (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 8))))))
+                  (Lean.Expr.app
+                    (Lean.Expr.const `BitVec.instXor [])
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                        (Lean.Expr.lit (Lean.Literal.natVal 8)))
+                      (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 8)))))))
+              (Lean.Expr.app
+                (Lean.Expr.app
+                  (Lean.Expr.app
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.const `HShiftRight.hShiftRight [Lean.Level.zero, Lean.Level.zero, Lean.Level.zero])
+                          (Lean.Expr.app
+                            (Lean.Expr.const `BitVec [])
+                            (Lean.Expr.app
+                              (Lean.Expr.app
+                                (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                                (Lean.Expr.lit (Lean.Literal.natVal 8)))
+                              (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 8))))))
+                        (Lean.Expr.const `Nat []))
+                      (Lean.Expr.app
+                        (Lean.Expr.const `BitVec [])
+                        (Lean.Expr.app
+                          (Lean.Expr.app
+                            (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                            (Lean.Expr.lit (Lean.Literal.natVal 8)))
+                          (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 8))))))
+                    (Lean.Expr.app
+                      (Lean.Expr.const `BitVec.instHShiftRightNat [])
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                          (Lean.Expr.lit (Lean.Literal.natVal 8)))
+                        (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 8))))))
+                  (Lean.Expr.app
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.app
+                            (Lean.Expr.app
+                              (Lean.Expr.const `HXor.hXor [Lean.Level.zero, Lean.Level.zero, Lean.Level.zero])
+                              (Lean.Expr.app
+                                (Lean.Expr.const `BitVec [])
+                                (Lean.Expr.app
+                                  (Lean.Expr.app
+                                    (Lean.Expr.app
+                                      (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero])
+                                      (Lean.Expr.const `Nat []))
+                                    (Lean.Expr.lit (Lean.Literal.natVal 8)))
+                                  (Lean.Expr.app
+                                    (Lean.Expr.const `instOfNatNat [])
+                                    (Lean.Expr.lit (Lean.Literal.natVal 8))))))
+                            (Lean.Expr.app
+                              (Lean.Expr.const `BitVec [])
+                              (Lean.Expr.app
+                                (Lean.Expr.app
+                                  (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                                  (Lean.Expr.lit (Lean.Literal.natVal 8)))
+                                (Lean.Expr.app
+                                  (Lean.Expr.const `instOfNatNat [])
+                                  (Lean.Expr.lit (Lean.Literal.natVal 8))))))
+                          (Lean.Expr.app
+                            (Lean.Expr.const `BitVec [])
+                            (Lean.Expr.app
+                              (Lean.Expr.app
+                                (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                                (Lean.Expr.lit (Lean.Literal.natVal 8)))
+                              (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 8))))))
+                        (Lean.Expr.app
+                          (Lean.Expr.app
+                            (Lean.Expr.const `instHXorOfXor [Lean.Level.zero])
+                            (Lean.Expr.app
+                              (Lean.Expr.const `BitVec [])
+                              (Lean.Expr.app
+                                (Lean.Expr.app
+                                  (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                                  (Lean.Expr.lit (Lean.Literal.natVal 8)))
+                                (Lean.Expr.app
+                                  (Lean.Expr.const `instOfNatNat [])
+                                  (Lean.Expr.lit (Lean.Literal.natVal 8))))))
+                          (Lean.Expr.app
+                            (Lean.Expr.const `BitVec.instXor [])
+                            (Lean.Expr.app
+                              (Lean.Expr.app
+                                (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                                (Lean.Expr.lit (Lean.Literal.natVal 8)))
+                              (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 8)))))))
+                      (Lean.Expr.fvar (Lean.Name.mkNum `_uniq 2305669)))
+                    (Lean.Expr.app
+                      (Lean.Expr.app
+                        (Lean.Expr.const `BitVec.ofNat [])
+                        (Lean.Expr.app
+                          (Lean.Expr.app
+                            (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                            (Lean.Expr.lit (Lean.Literal.natVal 8)))
+                          (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 8)))))
+                      (Lean.Expr.app
+                        (Lean.Expr.app
+                          (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                          (Lean.Expr.lit (Lean.Literal.natVal 255)))
+                        (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 255)))))))
+                (Lean.Expr.app
+                  (Lean.Expr.app
+                    (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                    (Lean.Expr.lit (Lean.Literal.natVal 1)))
+                  (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 1))))))
+            (Lean.Expr.app
+              (Lean.Expr.app
+                (Lean.Expr.const `BitVec.ofNat [])
+                (Lean.Expr.app
+                  (Lean.Expr.app
+                    (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                    (Lean.Expr.lit (Lean.Literal.natVal 8)))
+                  (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 8)))))
+              (Lean.Expr.app
+                (Lean.Expr.app
+                  (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+                  (Lean.Expr.lit (Lean.Literal.natVal 255)))
+                (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 255))))))))
+      (Lean.Expr.app
+        (Lean.Expr.const `Option.none [Lean.Level.zero])
+        (Lean.Expr.app
+          (Lean.Expr.const `BitVec [])
+          (Lean.Expr.app
+            (Lean.Expr.app
+              (Lean.Expr.app (Lean.Expr.const `OfNat.ofNat [Lean.Level.zero]) (Lean.Expr.const `Nat []))
+              (Lean.Expr.lit (Lean.Literal.natVal 8)))
+            (Lean.Expr.app (Lean.Expr.const `instOfNatNat []) (Lean.Expr.lit (Lean.Literal.natVal 8)))))) MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 78.800900 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 292.859509 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 183.814499 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 20.377880 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 22.012600 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 120.763249 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 14.485470 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 8.065240 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ c ≤ 255
+      0 ≤ b ≤ 255
+      b - c ≥ 1
+      2 ≤ a ≤ 255
+    where
+     a := ↑(↑8).toNat
+     b := ↑(x✝ >>> 1#8 ||| 128#8).toNat
+     c := ↑((x✝ ^^^ -1#8) >>> 1#8 ^^^ -1#8).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 52.419860 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1))
+            ((AutoStructs.Term.var 2).or (AutoStructs.Term.var 3))) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 103.099980 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 541.481457 ms, 
+TACEND

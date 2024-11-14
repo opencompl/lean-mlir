@@ -1,0 +1,182 @@
+⚠ [880/898] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [883/898] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:349:4: declaration uses 'sorry'
+⚠ [884/898] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:26:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:33:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:40:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:43:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:54:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:58:8: declaration uses 'sorry'
+⚠ [890/898] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:56:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:129:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:164:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:198:6: declaration uses 'sorry'
+⚠ [891/898] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 62.708761 ms, 
+  TACBENCH bv_ac PASS, TIME_ELAPSED 12.089860 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 41.469509 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 148.856590 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 13.289420 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.821300 ms, MSGSTART 
+    omega could not prove the goal:
+    No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 47.838349 ms, MSGSTART 
+    no goals to be solved MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 4.251780 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 40.472020 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 53.692290 ms, 
+  TACBENCH bv_ac PASS, TIME_ELAPSED 11.700470 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 38.077599 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 143.419080 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 13.272230 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 24.355829 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ a ≤ 4294967295
+      a ≥ 1
+    where
+     a := ↑(0#32 &&& 1#32).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 47.365540 ms, MSGSTART 
+    no goals to be solved MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 3.295240 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 41.365390 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 20.803339 ms, 
+  TACBENCH bv_ac PASS, TIME_ELAPSED 11.216369 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 3.853150 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 104.824420 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.138850 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega PASS, TIME_ELAPSED 34.512690 ms, 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 13.673700 ms, MSGSTART 
+    no goals to be solved MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 2.607420 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 6.860550 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 217.396909 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 21.048970 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 62.592940 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 192.012820 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 21.638910 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 23.923960 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      1 ≤ c ≤ 4294967295
+      a ≥ 0
+      0 ≤ a - 4294967296*b ≤ 41
+    where
+     a := ↑(42 % 2 ^ 32 / x✝.toNat) * ↑x✝.toNat
+     b := ↑(42 % 2 ^ 32 / x✝.toNat * x✝.toNat) / 4294967296
+     c := ↑x✝.toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 139.137319 ms, MSGSTART 
+    tactic 'native_decide' evaluated that the proposition
+      formulaIsUniversal
+          (AutoStructs.Formula.atom AutoStructs.Relation.eq (AutoStructs.Term.var 0) (AutoStructs.Term.var 1)) =
+        true
+    is false MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 604.867638 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 1558.706245 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 55.503579 ms, 
+  TACBENCH bv_ac PASS, TIME_ELAPSED 10.901300 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 40.986790 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 145.801899 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 13.907240 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 15.244230 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ a ≤ 1
+      0 ≤ a - 4294967296*b ≤ 4294967295
+      a - 4294967296*b ≥ 1
+    where
+     a := ↑(1#1 ^^^ 1#1).toNat
+     b := ↑(1#1 ^^^ 1#1).toNat / 4294967296 MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 52.425570 ms, MSGSTART 
+    no goals to be solved MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 14.450120 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 44.084110 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 61.403670 ms, 
+  TACBENCH bv_ac PASS, TIME_ELAPSED 12.967000 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 37.309420 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 186.818719 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 14.034590 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 46.697190 ms, MSGSTART 
+    omega could not prove the goal:
+    No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants. MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 49.095360 ms, MSGSTART 
+    no goals to be solved MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 15.506010 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 40.119610 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 33.309310 ms, 
+  TACBENCH bv_ac PASS, TIME_ELAPSED 8.767819 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 6.110060 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 112.327830 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 11.452810 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 10.426020 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 4294967294
+      3 ≤ a ≤ 4294967295
+    where
+     a := ↑(↑32).toNat
+     b := ↑((4294967294#32).sshiftRight' 2#32).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 15.612930 ms, MSGSTART 
+    no goals to be solved MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 71.766160 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 9.921700 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 20.601380 ms, 
+  TACBENCH bv_ac PASS, TIME_ELAPSED 7.566380 ms, 
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 5.637170 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 74.534850 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 10.724830 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.200300 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 4294967293
+      1 ≤ a ≤ 4294967295
+    where
+     a := ↑(↑32).toNat
+     b := ↑((4294967294#32).sshiftRight' 0#32).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 14.537480 ms, MSGSTART 
+    no goals to be solved MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 74.343380 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 16.183289 ms, 
+TACEND

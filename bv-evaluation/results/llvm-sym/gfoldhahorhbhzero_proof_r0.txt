@@ -1,0 +1,90 @@
+⚠ [880/898] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [883/898] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:349:4: declaration uses 'sorry'
+⚠ [884/898] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:26:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:29:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:31:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:33:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:36:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:38:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:40:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:43:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:54:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:58:8: declaration uses 'sorry'
+⚠ [890/898] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:56:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:129:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:164:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:198:6: declaration uses 'sorry'
+⚠ [891/898] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 163.212429 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 64.806520 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 32.462179 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 225.953979 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 195.607289 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.031570 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ == 0#32) ^^^ ofBool (x✝¹ == 0#32)).toNat
+     b := ↑(ofBool (x✝ == 0#32) &&& ofBool (x✝¹ != 0#32) ||| ofBool (x✝ != 0#32) &&& ofBool (x✝¹ == 0#32)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 36.821941 ms, MSGSTART 
+    Equality (x✝ == 0#32 && x✝¹ != 0#32 || x✝ != 0#32 && x✝¹ == 0#32) =
+      (x✝ == 0#32 ^^ x✝¹ == 0#32) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 153.345979 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 443.600079 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 147.580780 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 50.433190 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 30.476650 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 136.604649 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 128.015320 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.668820 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ == x✝¹) ^^^ ofBool (x✝² == x✝¹)).toNat
+     b := ↑(ofBool (x✝ == x✝¹) &&& ofBool (x✝² != x✝¹) ||| ofBool (x✝ != x✝¹) &&& ofBool (x✝² == x✝¹)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 28.201590 ms, MSGSTART 
+    Equality (x✝ == x✝¹ && x✝² != x✝¹ || x✝ != x✝¹ && x✝² == x✝¹) = (x✝ == x✝¹ ^^ x✝² == x✝¹) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 130.226799 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 340.130639 ms, 
+TACEND
+TACSTART
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 137.536119 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 43.088180 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 30.368059 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 87.809880 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool PASS, TIME_ELAPSED 124.672540 ms, 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.452389 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      0 ≤ b ≤ 1
+      0 ≤ a ≤ 1
+      a - b ≥ 1
+    where
+     a := ↑(ofBool (x✝ == x✝¹) ^^^ ofBool (x✝² == x✝³)).toNat
+     b := ↑(ofBool (x✝ == x✝¹) &&& ofBool (x✝² != x✝³) ||| ofBool (x✝ != x✝¹) &&& ofBool (x✝² == x✝³)).toNat MSGEND
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 25.054770 ms, MSGSTART 
+    Equality (x✝ == x✝¹ && x✝² != x✝³ || x✝ != x✝¹ && x✝² == x✝³) = (x✝ == x✝¹ ^^ x✝² == x✝³) has a strange type MSGEND
+  TACBENCH bv_decide PASS, TIME_ELAPSED 132.361870 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 336.926489 ms, 
+TACEND
