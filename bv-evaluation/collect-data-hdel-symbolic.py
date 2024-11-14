@@ -20,7 +20,7 @@ col = [
 
 
 
-def parse_tacbenches(raw):
+def parse_tacbenches(file_name, raw):
     # Regular expression to match TACBENCH entries
     tac_bench_pattern = re.compile(
         r"TACBENCH\s+(\w+)\s+(PASS|FAIL),\s+TIME_ELAPSED\s+([\d.]+)\s+ms,(?:\s*MSGSTART(.*?)MSGEND)?",
@@ -39,6 +39,7 @@ def parse_tacbenches(raw):
             time_elapsed = float(match.group(3))
             error_message = match.group(4).strip() if match.group(4) else None  # Only if MSGSTART-MSGEND present
             new.append({
+                "filename" : file_name,
                 "guid":guid,
                 "name": tactic_name,
                 "status": status,
@@ -58,7 +59,7 @@ def run():
     out = None
     for file in os.listdir(benchmark_dir):
         with open(res_dir+file.split(".")[0]+"_"+str("w")+"_r"+str("0")+".txt") as res_file:
-                results = parse_tacbenches(res_file.read())
+                results = parse_tacbenches(file.split(".")[0], res_file.read())
 
         df = pd.DataFrame(results)
         print(df)
