@@ -26,7 +26,7 @@ for file in os.listdir(benchmark_dir_list):
     subprocess.Popen(f'git checkout -- '+benchmark_dir_list+file, shell=True).wait()
     subprocess.Popen('gsed -i -E \'s/variable \\{x y z : BitVec .+\\}/variable \\{x y z : BitVec '+str(bvw)+'\\}/g\' '+benchmark_dir_list+file, shell=True).wait()
     # replace any sorrys with bv_compare'
-    TACTIC = 'tac_bench [ "auto" : (bv_auto; done), "ring" : (ring; done) ]'
+    TACTIC = 'bv_bench'
     subprocess.Popen(f'gsed -i -E \'s@all_goals sorry@{TACTIC}@g\' '+benchmark_dir_list+file, shell=True).wait()
     for r in range(reps):
         print(f'cd .. && lake lean '+benchmark_dir+file+' 2>&1 |" tee '+results_dir+file.split(".")[0]+'_'+str(bvw)+'_'+'r'+str(r)+'.txt')

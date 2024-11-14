@@ -22,75 +22,252 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:198:6: dec
 ⚠ [892/899] Replayed SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/AutoStructs/FiniteStateMachine.lean:111:8: declaration uses 'sorry'
 TACSTART
-  TACBENCH auto PASS, TIME_ELAPSED 88.791583 ms, 
-  TACBENCH ring FAIL, TIME_ELAPSED 67.553375 ms, MSGSTART 
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 30.458000 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 12.243833 ms, MSGSTART 
     internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 9.129584 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 53.765875 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.069625 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.903791 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑(~~~x ||| ~~~y).toNat
+     b := ↑2 ^ w
+     c := ↑(x &&& y).toNat MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 31.799916 ms, 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 66.334167 ms, MSGSTART 
+    The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
+       (~~~(x &&& y) == ~~~x ||| ~~~y)]
+    Consider the following assignment:
+    BitVec.ofBool (~~~(x &&& y) == ~~~x ||| ~~~y) = 0x0#1
+     MSGEND
+  TACBENCH bv_auto PASS, TIME_ELAPSED 85.463584 ms, 
 TACEND
-SSA/Projects/InstCombine/HackersDelight/ch2_1DeMorgan.lean:14:39: error: unsolved goals
-w : ℕ
-x y : BitVec w
-⊢ ~~~(x &&& y) = ~~~x ||| ~~~y
 TACSTART
-  TACBENCH auto PASS, TIME_ELAPSED 91.473834 ms, 
-  TACBENCH ring FAIL, TIME_ELAPSED 65.437959 ms, MSGSTART 
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 29.167792 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 11.485042 ms, MSGSTART 
     internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 8.617125 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 53.060459 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.328750 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.474875 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑(~~~x &&& ~~~y).toNat
+     b := ↑2 ^ w
+     c := ↑(x ||| y).toNat MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 34.214916 ms, 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 67.020125 ms, MSGSTART 
+    The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
+       (~~~(x ||| y) == ~~~x &&& ~~~y)]
+    Consider the following assignment:
+    BitVec.ofBool (~~~(x ||| y) == ~~~x &&& ~~~y) = 0x0#1
+     MSGEND
+  TACBENCH bv_auto PASS, TIME_ELAPSED 82.660625 ms, 
 TACEND
-SSA/Projects/InstCombine/HackersDelight/ch2_1DeMorgan.lean:18:39: error: unsolved goals
-w : ℕ
-x y : BitVec w
-⊢ ~~~(x ||| y) = ~~~x &&& ~~~y
 SSA/Projects/InstCombine/HackersDelight/ch2_1DeMorgan.lean:21:8: warning: declaration uses 'sorry'
 TACSTART
-  TACBENCH auto PASS, TIME_ELAPSED 371.155667 ms, 
-  TACBENCH ring FAIL, TIME_ELAPSED 86.976916 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 84.874583 ms, MSGSTART 
     internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 11.690709 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 10.132292 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 81.775917 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.839542 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.169333 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑(2 ^ w - 1 - x.toNat + 1 % 2 ^ w) % ↑(2 ^ w)
+     b := ↑2 ^ w
+     c := ↑(x.toNat + (2 ^ w - 1 % 2 ^ w)) % ↑(2 ^ w) MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 34.908875 ms, 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 68.728833 ms, MSGSTART 
+    The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
+       (~~~(x + -1#w) == ~~~x + 1#w)]
+    Consider the following assignment:
+    BitVec.ofBool (~~~(x + -1#w) == ~~~x + 1#w) = 0x0#1
+     MSGEND
+  TACBENCH bv_auto PASS, TIME_ELAPSED 334.019041 ms, 
 TACEND
-SSA/Projects/InstCombine/HackersDelight/ch2_1DeMorgan.lean:27:31: error: unsolved goals
-w : ℕ
-x : BitVec w
-⊢ ~~~(x - 1) = ~~~x + 1
 TACSTART
-  TACBENCH auto PASS, TIME_ELAPSED 353.810333 ms, 
-  TACBENCH ring FAIL, TIME_ELAPSED 100.727084 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 88.009250 ms, MSGSTART 
     internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 7.456791 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 5.692792 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 87.964625 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.619584 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.038375 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑(x.toNat + (2 ^ w - 1 % 2 ^ w)) % ↑(2 ^ w)
+     b := ↑2 ^ w
+     c := ↑(2 ^ w - x.toNat) % ↑(2 ^ w) MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 29.723291 ms, 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 67.462875 ms, MSGSTART 
+    The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (~~~(-x) == x + -1#w)]
+    Consider the following assignment:
+    BitVec.ofBool (~~~(-x) == x + -1#w) = 0x0#1
+     MSGEND
+  TACBENCH bv_auto PASS, TIME_ELAPSED 322.861875 ms, 
 TACEND
-SSA/Projects/InstCombine/HackersDelight/ch2_1DeMorgan.lean:31:25: error: unsolved goals
-w : ℕ
-x : BitVec w
-⊢ ~~~(-x) = x - 1
 TACSTART
-  TACBENCH auto PASS, TIME_ELAPSED 88.749375 ms, 
-  TACBENCH ring FAIL, TIME_ELAPSED 61.967042 ms, MSGSTART 
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 29.295834 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 10.587875 ms, MSGSTART 
     internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 7.466000 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 51.496250 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.386833 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.724000 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑(~~~x ^^^ y).toNat
+     b := ↑2 ^ w
+     c := ↑(x ^^^ y).toNat MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 28.976750 ms, 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 66.185000 ms, MSGSTART 
+    The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
+       (~~~(x ^^^ y) == ~~~x ^^^ y)]
+    Consider the following assignment:
+    BitVec.ofBool (~~~(x ^^^ y) == ~~~x ^^^ y) = 0x0#1
+     MSGEND
+  TACBENCH bv_auto PASS, TIME_ELAPSED 81.106833 ms, 
 TACEND
-SSA/Projects/InstCombine/HackersDelight/ch2_1DeMorgan.lean:35:35: error: unsolved goals
-w : ℕ
-x y : BitVec w
-⊢ ~~~(x ^^^ y) = ~~~x ^^^ y
 TACSTART
-  TACBENCH auto PASS, TIME_ELAPSED 88.324541 ms, 
-  TACBENCH ring FAIL, TIME_ELAPSED 64.849917 ms, MSGSTART 
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 26.105542 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 11.057250 ms, MSGSTART 
     internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 7.589042 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 49.579459 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 7.998875 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.860167 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑(~~~x ^^^ y).toNat
+     b := ↑2 ^ w
+     c := ↑(x ^^^ y).toNat MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 27.536291 ms, 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 65.944250 ms, MSGSTART 
+    The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
+       (~~~(x ^^^ y) == ~~~x ^^^ y)]
+    Consider the following assignment:
+    BitVec.ofBool (~~~(x ^^^ y) == ~~~x ^^^ y) = 0x0#1
+     MSGEND
+  TACBENCH bv_auto PASS, TIME_ELAPSED 80.515625 ms, 
 TACEND
-SSA/Projects/InstCombine/HackersDelight/ch2_1DeMorgan.lean:39:35: error: unsolved goals
-w : ℕ
-x y : BitVec w
-⊢ ~~~(x ^^^ y) = ~~~x ^^^ y
 TACSTART
-  TACBENCH auto PASS, TIME_ELAPSED 364.182625 ms, 
-  TACBENCH ring FAIL, TIME_ELAPSED 91.692750 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 87.997583 ms, MSGSTART 
     internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 9.291708 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 6.312958 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 85.139750 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.205458 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.378125 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑(2 ^ w - 1 - x.toNat + (2 ^ w - y.toNat)) % ↑(2 ^ w)
+     b := ↑2 ^ w
+     c := ↑(x.toNat + y.toNat) % ↑(2 ^ w) MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 33.322500 ms, 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 67.262458 ms, MSGSTART 
+    The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (~~~(x + y) == ~~~x + -y)]
+    Consider the following assignment:
+    BitVec.ofBool (~~~(x + y) == ~~~x + -y) = 0x0#1
+     MSGEND
+  TACBENCH bv_auto PASS, TIME_ELAPSED 330.243625 ms, 
 TACEND
-SSA/Projects/InstCombine/HackersDelight/ch2_1DeMorgan.lean:43:31: error: unsolved goals
-w : ℕ
-x y : BitVec w
-⊢ ~~~(x + y) = ~~~x - y
 TACSTART
-  TACBENCH auto PASS, TIME_ELAPSED 325.882959 ms, 
-  TACBENCH ring FAIL, TIME_ELAPSED 87.753125 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 87.285583 ms, MSGSTART 
     internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 9.742917 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib PASS, TIME_ELAPSED 6.771250 ms, 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 84.905459 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.879667 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.977084 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑(2 ^ w - 1 - x.toNat + y.toNat) % ↑(2 ^ w)
+     b := ↑2 ^ w
+     c := ↑(x.toNat + (2 ^ w - y.toNat)) % ↑(2 ^ w) MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 32.607625 ms, 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 68.043084 ms, MSGSTART 
+    The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (~~~(x + -y) == ~~~x + y)]
+    Consider the following assignment:
+    BitVec.ofBool (~~~(x + -y) == ~~~x + y) = 0x0#1
+     MSGEND
+  TACBENCH bv_auto PASS, TIME_ELAPSED 317.792125 ms, 
 TACEND
-SSA/Projects/InstCombine/HackersDelight/ch2_1DeMorgan.lean:47:31: error: unsolved goals
-w : ℕ
-x y : BitVec w
-⊢ ~~~(x - y) = ~~~x + y
