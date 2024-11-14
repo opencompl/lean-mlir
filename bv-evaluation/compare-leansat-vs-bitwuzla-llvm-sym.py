@@ -6,11 +6,11 @@ import shutil
 
 ROOT_DIR = subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).decode('utf-8').strip()
 
-RESULTS_DIR = ROOT_DIR + '/bv-evaluation/results/llvm/'
+RESULTS_DIR = ROOT_DIR + '/bv-evaluation/results/llvm-bench/'
 
 BENCHMARK_DIR = ROOT_DIR + '/SSA/Projects/InstCombine/tests/proofs/'
 
-REPS = 1 
+REPS = 1
 
 def clear_folder():
     for file in os.listdir(RESULTS_DIR):
@@ -26,6 +26,7 @@ def clear_folder():
 def run_file(file: str):
     file_path = BENCHMARK_DIR + file
     file_title = file.split('.')[0]
+    subprocess.Popen('sed -i -E \'s,simp_alive_benchmark,bv_bench,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
 
     for r in range(REPS):
         log_file_path = RESULTS_DIR + file_title + '_' + 'r' + str(r) + '.txt'
@@ -33,6 +34,7 @@ def run_file(file: str):
             cmd = 'lake lean ' + file_path
             print(cmd)
             subprocess.Popen(cmd, cwd=ROOT_DIR, stdout=log_file, stderr=log_file, shell=True).wait()
+    subprocess.Popen('sed -i -E \'s,bv_bench,simp_alive_benchmark,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
 
 def process(jobs: int):
     os.makedirs(RESULTS_DIR, exist_ok=True)
