@@ -20,8 +20,7 @@ theorem not_or_eq_not_and_not :
 
 theorem not_add_one_eq_not_sub_one :
     ~~~ (x + 1) = ~~~ x - 1 := by
-  -- all_goals sorry -- maximal recursion depth has been reached
-  sorry
+  all_goals sorry
 
 theorem not_sub_one_eq_not_add_one :
     ~~~ (x - 1) = ~~~ x + 1 := by
