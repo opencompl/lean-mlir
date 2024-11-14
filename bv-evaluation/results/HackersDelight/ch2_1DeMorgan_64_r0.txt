@@ -1,18 +1,18 @@
-Bitwuzla proved the goal after 76.344488ms, solving context: 0.000000ms
-LeanSAT proved the goal after 90.906758ms: rewriting 18.213560ms, bitblasting 0.000000ms, SAT solving 60.012268ms, LRAT trimming 2.493786ms, LRAT checking 6.482724ms
-Bitwuzla proved the goal after 75.410616ms, solving context: 0.000000ms
-LeanSAT proved the goal after 94.709794ms: rewriting 22.823580ms, bitblasting 0.000000ms, SAT solving 57.855809ms, LRAT trimming 2.332491ms, LRAT checking 9.236750ms
-Bitwuzla proved the goal after 10.758261ms, solving context: 0.000000ms
-LeanSAT proved the goal after 10.488843ms: rewriting 10.478273ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
-Bitwuzla proved the goal after 78.438370ms, solving context: 3.000000ms
-LeanSAT proved the goal after 107.762676ms: rewriting 19.112365ms, bitblasting 0.000000ms, SAT solving 58.231899ms, LRAT trimming 15.577947ms, LRAT checking 12.014062ms
-Bitwuzla proved the goal after 9.792941ms, solving context: 0.000000ms
-LeanSAT proved the goal after 9.778002ms: rewriting 9.767121ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
-Bitwuzla proved the goal after 71.203217ms, solving context: 3.000000ms
-LeanSAT proved the goal after 93.847838ms: rewriting 19.808150ms, bitblasting 0.000000ms, SAT solving 58.350271ms, LRAT trimming 2.674767ms, LRAT checking 10.110018ms
-Bitwuzla proved the goal after 72.144923ms, solving context: 4.000000ms
-LeanSAT proved the goal after 82.271662ms: rewriting 13.836981ms, bitblasting 0.000000ms, SAT solving 53.957462ms, LRAT trimming 2.511910ms, LRAT checking 9.159174ms
-Bitwuzla proved the goal after 80.453361ms, solving context: 0.000000ms
-LeanSAT proved the goal after 189.144441ms: rewriting 21.783347ms, bitblasting 0.000000ms, SAT solving 108.223626ms, LRAT trimming 31.299384ms, LRAT checking 23.698521ms
-Bitwuzla proved the goal after 81.815172ms, solving context: 8.000000ms
-LeanSAT proved the goal after 268.171398ms: rewriting 23.703960ms, bitblasting 0.000000ms, SAT solving 158.524127ms, LRAT trimming 41.947799ms, LRAT checking 39.456867ms
+Bitwuzla proved the goal after 69.998729ms, solving context: 0.000000ms
+LeanSAT proved the goal after 75.948530ms: rewriting 10.160041ms, bitblasting 0.000000ms, SAT solving 58.814769ms, LRAT trimming 0.000000ms, LRAT checking 4.030650ms
+Bitwuzla proved the goal after 69.857710ms, solving context: 0.000000ms
+LeanSAT proved the goal after 76.557489ms: rewriting 10.885740ms, bitblasting 0.000000ms, SAT solving 58.783798ms, LRAT trimming 1.001801ms, LRAT checking 3.908490ms
+Bitwuzla proved the goal after 7.556310ms, solving context: 0.000000ms
+LeanSAT proved the goal after 7.508580ms: rewriting 7.494200ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+Bitwuzla proved the goal after 73.162649ms, solving context: 1.000000ms
+LeanSAT proved the goal after 93.697010ms: rewriting 14.265841ms, bitblasting 0.000000ms, SAT solving 58.746868ms, LRAT trimming 6.846971ms, LRAT checking 10.842370ms
+Bitwuzla proved the goal after 7.091490ms, solving context: 0.000000ms
+LeanSAT proved the goal after 7.117160ms: rewriting 7.097330ms, bitblasting 0.000000ms, SAT solving 0.000000ms, LRAT trimming 0.000000ms, LRAT checking 0.000000ms
+Bitwuzla proved the goal after 68.036259ms, solving context: 2.000000ms
+LeanSAT proved the goal after 75.536370ms: rewriting 9.078160ms, bitblasting 0.000000ms, SAT solving 58.817699ms, LRAT trimming 1.107300ms, LRAT checking 4.327201ms
+Bitwuzla proved the goal after 68.175340ms, solving context: 2.000000ms
+LeanSAT proved the goal after 75.183080ms: rewriting 9.127190ms, bitblasting 0.000000ms, SAT solving 58.756200ms, LRAT trimming 1.080900ms, LRAT checking 3.033280ms
+Bitwuzla proved the goal after 75.281490ms, solving context: 0.000000ms
+LeanSAT proved the goal after 115.566059ms: rewriting 16.121479ms, bitblasting 0.000000ms, SAT solving 58.731850ms, LRAT trimming 15.332160ms, LRAT checking 21.066140ms
+Bitwuzla proved the goal after 75.219560ms, solving context: 5.000000ms
+LeanSAT proved the goal after 193.951868ms: rewriting 16.081379ms, bitblasting 0.000000ms, SAT solving 109.030530ms, LRAT trimming 30.763180ms, LRAT checking 33.739429ms
