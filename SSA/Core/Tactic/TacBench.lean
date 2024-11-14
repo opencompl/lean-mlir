@@ -15,6 +15,7 @@ open Lean.Parser.Tactic
 open Lean Meta Elab Tactic
 open Lean.Meta
 
+namespace TacBench
 /--
 Run `tac_bench <name> <tacticSeq>` to run a sequence of tactics whose runtime is benchmarked.
 This does not affect the current goal state, and thus allow multiple `tac_bench` statements to be run in sequence.
@@ -69,7 +70,7 @@ def hermeticRun (g : MVarId) (item : Item) : TacticM Result := g.withContext do
 
 
 
-def parseTacBenchItem : TSyntax `tacBenchItem → TacticM Item
+def parseTacBenchItem : TSyntax ``tacBenchItem → TacticM Item
 | `(tacBenchItem| $name:str : $tac:tacticSeq) => 
      return { name := name.getString, tac := tac : Item }
 | _ => throwUnsupportedSyntax
@@ -87,6 +88,7 @@ def evalTacBench : Tactic := fun
       msg := msg ++ m!"\n" ++ out.toMessageData
     logInfo m!"TACSTART{.nestD msg}\nTACEND"
 | _ => throwUnsupportedSyntax
+end TacBench
 
 
 section Examples
