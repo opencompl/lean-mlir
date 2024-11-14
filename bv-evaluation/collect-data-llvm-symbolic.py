@@ -5,8 +5,8 @@ import os
 import re
 
 benchmark_dir = "../SSA/Projects/InstCombine/tests/proofs/"
-res_dir = "results/llvm-sym/"
-raw_data_dir = '../../paper-lean-bitvectors/raw-data/instcombine-sym/'
+res_dir = "results/llvm-symbolic/"
+raw_data_dir = '../../paper-lean-bitvectors/raw-data/Instcombine-symbolic/'
 reps = 1
 
 
