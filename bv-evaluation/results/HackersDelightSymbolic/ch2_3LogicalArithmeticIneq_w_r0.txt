@@ -1,0 +1,304 @@
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:16:2: error: no goals to be solved
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:21:2: error: no goals to be solved
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:26:24: error: unsolved goals
+w : ℕ
+x y : BitVec w
+h : AdditionNoOverflows? x y
+⊢ (x + y ≥ᵤ x ||| y) = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:31:26: error: unsolved goals
+w : ℕ
+x y : BitVec w
+h : ¬AdditionNoOverflows? x y
+⊢ (x ||| y >ᵤ x + y) = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:36:30: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (x ^^^ y ≥ᵤ (x - y).abs) = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:41:37: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ x = y ↔ ((x - y).abs - 1#w).msb = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:46:43: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ x = y ↔ 0 < w ∧ (x - y).msb = false ∧ (-x + y).msb = false
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:53:2: error: no goals to be solved
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:56:34: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ ¬x = y ↔ (-(x - y).abs).msb = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:61:68: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (y >ₛ x) = true ↔ ¬(x - y).msb = ((x.msb ^^ y.msb) && ((x - y).msb ^^ x.msb))
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:66:70: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (y >ₛ x) = true ↔ x.msb = true ∧ 0 < w ∧ y.msb = false ∨ (0 < w ∧ x.msb = y.msb) ∧ (x - y).msb = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:71:70: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (y ≥ₛ x) = true ↔ (x.msb = true ∨ 0 < w ∧ y.msb = false) ∧ (¬x.msb = y.msb ∨ 0 < w ∧ (y - x).msb = false)
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:76:70: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (y >ᵤ x) = true ↔ (0 < w ∧ x.msb = false) ∧ y.msb = true ∨ (0 < w ∧ x.msb = y.msb) ∧ (x - y).msb = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:81:70: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (y ≥ᵤ x) = true ↔ (0 < w ∧ x.msb = false ∨ y.msb = true) ∧ (¬x.msb = y.msb ∨ 0 < w ∧ (y - x).msb = false)
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:86:31: error: unsolved goals
+w : ℕ
+x : BitVec w
+⊢ x = 0#w ↔ (x.abs - 1#w).msb = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:91:36: error: unsolved goals
+w : ℕ
+x : BitVec w
+⊢ x = 0#w ↔ 0 < w ∧ x.msb = false ∧ (-x).msb = false
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:96:37: error: unsolved goals
+w : ℕ
+x : BitVec w
+⊢ x = 0#w ↔ (0 < w ∧ x.msb = false) ∧ (x - 1#w).msb = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:103:2: error: no goals to be solved
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:106:30: error: unsolved goals
+w : ℕ
+x : BitVec w
+⊢ ¬x = 0#w ↔ (-x.abs).msb = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:111:24: error: unsolved goals
+w : ℕ
+x : BitVec w
+⊢ (0#w >ₛ x) = x.msb
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:118:2: error: no goals to be solved
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:121:39: error: unsolved goals
+w : ℕ
+x : BitVec w
+⊢ (0#w ≥ₛ x) = true ↔ x.msb = true ∨ 0 < w ∧ (-x).msb = false
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:126:37: error: unsolved goals
+w : ℕ
+x : BitVec w
+⊢ (x >ₛ 0#w) = true ↔ (-x).msb = true ∧ 0 < w ∧ x.msb = false
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:131:30: error: unsolved goals
+w : ℕ
+x : BitVec w
+⊢ (x ≥ₛ 0#w) = true ↔ 0 < w ∧ x.msb = false
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:136:55: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (y >ₛ x) = (2#w ^ (w - 1) + y >ₛ x + 2#w ^ (w - 1))
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:141:55: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (y >ᵤ x) = (-2#w ^ (w - 1) + y >ₛ x - 2#w ^ (w - 1))
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:146:61: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (y >ₛ x) = !2#w ^ (w - 1) + x ≥ᵤ y + 2#w ^ (w - 1)
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:151:57: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (y ≥ₛ x) = (2#w ^ (w - 1) + y ≥ᵤ x + 2#w ^ (w - 1))
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:158:2: error: no goals to be solved
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:161:54: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ x = y ↔ BitVec.carry w x (~~~y + 1#w) false = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:166:50: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ ¬x = y ↔ BitVec.carry w x (~~~y) false = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:171:90: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (y >ₛ x) = !BitVec.carry w (x + 2#w ^ (w - 1)) (~~~(2#w ^ (w - 1) + y) + 1#w) false
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:179:100: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (y >ₛ x) = !BitVec.carry w x (~~~y + 1#w) false ^^^ x.getMsbD (w - 1) ^^^ y.getMsbD (w - 1)
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:184:87: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (y ≥ₛ x) = BitVec.carry w (y + 2#w ^ (w - 1)) (~~~(2#w ^ (w - 1) + x) + 1#w) false
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:189:101: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (y ≥ₛ x) = BitVec.carry w y (~~~x + 1#w) false ^^^ x.getMsbD (w - 1) ^^^ y.getMsbD (w - 1)
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:194:57: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (y >ᵤ x) = !BitVec.carry w x (~~~y + 1#w) false
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:199:55: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (y ≥ᵤ x) = BitVec.carry w y (~~~x + 1#w) false
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:204:48: error: unsolved goals
+w : ℕ
+x : BitVec w
+⊢ x = 0#w ↔ BitVec.carry w (~~~x) (1#w) false = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:209:45: error: unsolved goals
+w : ℕ
+x : BitVec w
+⊢ ¬x = 0#w ↔ BitVec.carry w x (BitVec.allOnes w) false = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:214:45: error: unsolved goals
+w : ℕ
+x : BitVec w
+⊢ (0#w >ₛ x) = BitVec.carry w x x false
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:219:76: error: unsolved goals
+w : ℕ
+x : BitVec w
+⊢ (0#w ≥ₛ x) = BitVec.carry w (2#w ^ (w - 1)) (-2#w ^ (w - 1) - x) false
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:224:45: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ AdditionNoOverflows? x y ↔ (y >ᵤ ~~~x) = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:229:45: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ AdditionNoOverflows? x y ↔ (x >ᵤ x + y) = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:234:51: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ AdditionNoOverflows? x (y + 1#w) ↔ (y ≥ᵤ ~~~x) = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:239:55: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ AdditionNoOverflows? x (y + 1#w) ↔ (x ≥ᵤ y + 1#w + x) = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:244:51: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ AdditionNoOverflows? x (~~~y + 1#w) ↔ (y >ᵤ x) = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:249:55: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ AdditionNoOverflows? x (~~~y + 1#w) ↔ (x - y >ᵤ x) = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:254:47: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ AdditionNoOverflows? x (~~~y) ↔ (y ≥ᵤ x) = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:259:55: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ AdditionNoOverflows? x (~~~y) ↔ (x + (-y - 1#w) ≥ᵤ x) = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:270:86: error: unsolved goals
+x y : BitVec 64
+⊢ UnsignedMultiplicationOverflows? x y ↔ ¬first32Bits (x * y) = 0#32
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:275:92: error: unsolved goals
+x y : BitVec 64
+⊢ SignedMultiplicationOverflows? x y ↔ ¬first32Bits (x * y) = last32Bits (x * y) >>> 31
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:280:62: error: unsolved goals
+w : ℕ
+x y z : BitVec w
+h : y.toNat ≠ 0
+a✝ : x * y / z ≠ x
+⊢ UnsignedMultiplicationOverflows? x y
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:285:95: error: unsolved goals
+w : ℕ
+x y z : BitVec w
+h : y.toNat ≠ 0
+a✝ : y < 0 ∧ x.toInt = -2 ^ 31 ∨ x * y / z ≠ x
+⊢ SignedMultiplicationOverflows? x y
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:297:101: error: unsolved goals
+x y : BitVec 64
+⊢ 32 ≤ numberOfLeadingZeros x + numberOfLeadingZeros y ↔ ¬UnsignedMultiplicationOverflows? x y
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:302:99: error: unsolved goals
+x y : BitVec 64
+⊢ numberOfLeadingZeros x + numberOfLeadingZeros y ≤ 30 ↔ UnsignedMultiplicationOverflows? x y
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:309:78: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ SignedDivisionOverflows?? x y ↔ y = 0#w ∨ x.toInt = -2147483648 ∧ y = BitVec.allOnes w
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:314:94: error: unsolved goals
+x : BitVec 64
+y : BitVec 32
+⊢ SignedDivisionOverflows?? x (BitVec.setWidth 64 y) ↔ ¬y = 0#32 ∧ x < BitVec.setWidth 64 y <<< 32
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:319:94: error: unsolved goals
+x y✝ : BitVec 64
+y : BitVec 32
+⊢ SignedDivisionOverflows?? x (BitVec.setWidth 64 y) ↔ ¬y = 0#32 ∧ x >>> 32 < BitVec.setWidth 64 y
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:342:60: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ signedMaxBitVec x y = y + signedDifferenceOrZero x y
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:347:60: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ signedMinBitVec x y = x - signedDifferenceOrZero x y
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:352:64: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ unsignedMaxBitVec x y = y + unsignedDifferenceOrZero x y
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:357:64: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ unsignedMinBitVec x y = x - unsignedDifferenceOrZero x y
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:365:61: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ signedDifferenceOrZero x y = x - y &&& leBitmask x y
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:370:65: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ signedMaxBitVec x y = (x ^^^ y) &&& leBitmask x y ^^^ y
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:375:65: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ signedMinBitVec x y = (x ^^^ y) &&& leBitmask y x ^^^ y
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:383:73: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ unsignedDifferenceOrZero x y = x - y &&& ~~~carryBitmask x y
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:388:66: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ unsignedMaxBitVec x y = x - (x - y &&& carryBitmask x y)
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:393:66: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ unsignedMinBitVec x y = y + (-y + x &&& carryBitmask x y)
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:401:87: error: unsolved goals
+x y d : BitVec 32
+h : d = x - y
+⊢ signedDifferenceOrZero x y = d &&& (~~~d ^^^ ((x ^^^ y) &&& (d ^^^ x)) >>> 31)
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:406:97: error: unsolved goals
+x y d : BitVec 32
+h : d = x - y
+⊢ unsignedDifferenceOrZero x y = d &&& ~~~((~~~x &&& y ||| ~~~(x ^^^ y) &&& d) >>> 31)
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:411:69: error: unsolved goals
+x y : BitVec 32
+⊢ signedDifferenceOrZero x y = x - y &&& ~~~((x - y) >>> 31)
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:416:64: error: unsolved goals
+x y : BitVec 32
+⊢ signedMaxBitVec x y = x - (x - y &&& (x - y) >>> 31)
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:421:64: error: unsolved goals
+x y : BitVec 32
+⊢ signedMinBitVec x y = y + (-y + x &&& (-y + x) >>> 31)
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:426:85: error: unsolved goals
+x y : BitVec 32
+⊢ (x >ₛ y) = true ↔ (signedDifferenceOrZero x y).msb = true ∨ (-signedDifferenceOrZero x y).msb = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:431:89: error: unsolved goals
+x y : BitVec 32
+⊢ (x >ᵤ y) = true ↔ (unsignedDifferenceOrZero x y).msb = true ∨ (-unsignedDifferenceOrZero x y).msb = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:436:116: error: unsolved goals
+w : ℕ
+x y : BitVec 32
+⊢ BitVec.carry w x y false = true ↔
+    (unsignedDifferenceOrZero x (~~~y)).msb = true ∨ (-unsignedDifferenceOrZero x (~~~y)).msb = true
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:443:77: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (x - y).abs = signedDifferenceOrZero x y + signedDifferenceOrZero y x
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:448:81: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ (x - y).abs = unsignedDifferenceOrZero x y + unsignedDifferenceOrZero y x
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:453:47: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ BitVec.carry w x y false = (x >ᵤ ~~~y)
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:458:75: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ signedDifferenceOrZero (~~~x) (~~~y) = signedDifferenceOrZero x y
+SSA/Projects/InstCombine/HackersDelight/ch2_3LogicalArithmeticIneq.lean:463:79: error: unsolved goals
+w : ℕ
+x y : BitVec w
+⊢ unsignedDifferenceOrZero (~~~x) (~~~y) = unsignedDifferenceOrZero x y
